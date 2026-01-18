@@ -1,0 +1,2117 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="FFXIV 即時市場查詢工具">
+    <meta name="keywords" content="FFXIV,最終幻想,市場,Universalis">
+    <title>FFXIV 市場查詢工具</title>
+    <link rel="stylesheet" href="assets/css/jquery-ui.min.css">
+    <link rel="stylesheet" href="assets/css/jquery-ui.structure.min.css">
+    <link rel="stylesheet" href="assets/css/jquery-ui.theme.min.css">
+    <style>
+        :root {
+            --primary: #667eea;
+            --primary-dark: #764ba2;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --info: #17a2b8;
+            --light: #f8f9fa;
+            --dark: #333;
+            --gray: #6c757d;
+            --border-color: #dee2e6;
+            --shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            --radius: 0.375rem;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: var(--dark);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .page-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            text-align: center;
+            color: white;
+            margin-bottom: 2rem;
+            padding: 2rem 0;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 0.75rem;
+        }
+
+        .page-header h1 {
+            font-size: clamp(1.5rem, 5vw, 3rem);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .page-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+
+        .server-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            color: white;
+        }
+
+        .badge-link {
+            color: white;
+            cursor: pointer;
+            opacity: 0.8;
+            text-decoration: underline;
+            margin-left: 0.5rem;
+        }
+
+        .badge-link:hover {
+            opacity: 1;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+
+        .panel-header h3 {
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        .btn-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .btn-close:hover {
+            opacity: 0.8;
+        }
+
+        .panel-body {
+            padding: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .input-group input {
+            flex: 1;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-block {
+            width: 100%;
+        }
+
+        .form-text {
+            display: block;
+            margin-top: 0.25rem;
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: var(--radius);
+            margin-bottom: 1rem;
+        }
+
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .results-header {
+            margin-bottom: 1rem;
+        }
+
+        .results-header strong {
+            color: var(--primary);
+        }
+
+        .results-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: var(--light);
+            border-radius: var(--radius);
+            border-left: 4px solid var(--primary);
+            transition: var(--transition);
+        }
+
+        .result-item:hover {
+            background: #e8eaf6;
+        }
+
+        .result-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 0.5rem;
+            margin-right: 0.75rem;
+            object-fit: cover;
+            background: #e9ecef;
+            border: 1px solid #e0e0e0;
+            flex-shrink: 0;
+        }
+
+        .result-details {
+            flex: 1;
+        }
+
+        .result-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .result-meta {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        .result-id {
+            margin-right: 0.5rem;
+        }
+
+        .result-category {
+            display: inline-block;
+            margin-left: 0.5rem;
+            padding: 0.2rem 0.4rem;
+            background: var(--warning);
+            color: var(--dark);
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .result-level {
+            display: inline-block;
+            margin-left: 0.5rem;
+            padding: 0.2rem 0.4rem;
+            background: var(--info);
+            color: white;
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .item-result-btn {
+            margin-left: auto;
+        }
+
+        /* 職業篩選樣式 */
+        .job-filter-container {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: var(--radius);
+            border-left: 4px solid var(--primary);
+            display: none;
+        }
+
+        .job-filter-container.active {
+            display: block;
+        }
+
+        .job-filter-container label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            color: var(--dark);
+        }
+
+        .job-filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .filter-btn {
+            padding: 0.4rem 0.8rem;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--dark);
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .filter-btn-active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+            box-shadow: 0 0.25rem 0.5rem rgba(102, 126, 234, 0.3);
+        }
+
+        .info-row {
+            display: flex;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-row .label {
+            font-weight: 600;
+            width: 150px;
+            color: var(--gray);
+        }
+
+        .info-row .value {
+            flex: 1;
+            word-break: break-word;
+        }
+
+        .price-row {
+            margin-bottom: 1.5rem;
+        }
+
+        .price-type {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .price-row div {
+            margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+        }
+
+        .message-container {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            z-index: 2000;
+            max-width: 400px;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1999;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-overlay p {
+            color: white;
+            font-weight: 600;
+        }
+
+        .page-footer {
+            text-align: center;
+            color: white;
+            margin-top: 3rem;
+            padding: 2rem;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 0.5rem;
+            }
+
+            .page-header {
+                padding: 1.5rem 1rem;
+            }
+
+            .main-content {
+                gap: 1rem;
+            }
+
+            .message-container {
+                right: 1rem;
+                left: 1rem;
+                max-width: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-container">
+        <!-- 頁面頭部 -->
+        <header class="page-header">
+            <h1>⚔️ FFXIV 市場查詢</h1>
+            <p>即時查詢最終幻想 XIV 市場板價格和數據</p>
+            <div class="server-badge">
+                <span id="serverBadge">未選擇伺服器</span>
+                <span id="languageBadge"></span>
+                <a href="javascript:resetServerSelection()" class="badge-link">切換</a>
+            </div>
+        </header>
+
+        <!-- 主內容區 -->
+        <main class="main-content">
+            <!-- 左側欄：查詢面板 -->
+            <div class="sidebar sidebar-left">
+                <!-- 數據中心和伺服器選擇 -->
+                <section class="panel" id="serverSelectPanel">
+                    <div class="panel-header">
+                        <h3>🌍 伺服器選擇</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="dcSelect">數據中心</label>
+                            <select id="dcSelect" class="form-control">
+                                <option value="">-- 選擇數據中心 --</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="worldSelect">伺服器</label>
+                            <select id="worldSelect" class="form-control" disabled>
+                                <option value="">-- 先選擇數據中心 --</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="languageSelect">搜尋語言</label>
+                            <select id="languageSelect" class="form-control">
+                                <option value="tc" selected>繁體中文</option>
+                                <option value="en">English (英文)</option>
+                            </select>
+                            <small class="form-text">選擇搜尋時使用的語言</small>
+                        </div>
+
+                        <button id="confirmBtn" class="btn btn-primary btn-block" disabled>
+                            ✓ 確認伺服器
+                        </button>
+                    </div>
+                </section>
+
+
+                <!-- 物品搜尋 -->
+                <section class="panel" id="searchPanel" style="display: none;">
+                    <div class="panel-header">
+                        <h3>🔍 物品搜尋</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="searchQuery">物品名稱</label>
+                            <div class="input-group">
+                                <input type="text" id="searchQuery" class="form-control" placeholder="輸入物品名稱搜尋...">
+                                <button class="btn btn-primary btn-small" onclick="searchItemByName()">搜尋</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 物品 ID 查詢 -->
+                <section class="panel" id="idSearchPanel" style="display: none;">
+                    <div class="panel-header">
+                        <h3>🆔 按 ID 查詢</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="itemIdInput">物品 ID</label>
+                            <input type="number" id="itemIdInput" class="form-control" placeholder="輸入物品 ID" min="1">
+                        </div>
+                        <button class="btn btn-primary btn-block" onclick="queryItemById()">
+                            查詢詳細信息
+                        </button>
+                    </div>
+                </section>
+            </div>
+
+            <!-- 右側欄：結果展示 -->
+            <div class="sidebar sidebar-right">
+                <!-- 搜尋結果卡 -->
+                <section class="panel" id="searchResultsPanel" style="display: none;">
+                    <div class="panel-header">
+                        <h3>🔍 搜尋結果</h3>
+                        <button class="btn-close" onclick="clearSearchResults()">×</button>
+                    </div>
+                    <div class="panel-body">
+                        <div id="searchResultsHeader" class="results-header">
+                            <span>找到 <strong id="resultCount">0</strong> 個物品</span>
+                        </div>
+                        <div id="jobFilterContainer" class="job-filter-container">
+                            <label>職業篩選</label>
+                            <div id="jobFilterButtons" class="job-filter-buttons"></div>
+                        </div>
+                        <div id="resultsList" class="results-list"></div>
+                    </div>
+                </section>
+
+                <!-- 物品信息卡 -->
+                <section class="panel" id="itemInfoPanel" style="display: none;">
+                    <div class="panel-header">
+                        <h3 id="itemTitle">物品信息</h3>
+                        <button class="btn-close" onclick="clearItemInfo()">×</button>
+                    </div>
+                    <div class="panel-body">
+                        <div id="itemInfoContent" class="item-info"></div>
+                    </div>
+                </section>
+
+                <!-- 價格信息卡 -->
+                <section class="panel" id="pricePanel" style="display: none;">
+                    <div class="panel-header">
+                        <h3>📊 價格信息</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div id="priceContent" class="price-grid"></div>
+                    </div>
+                </section>
+
+                <!-- 合成表卡 -->
+                <section class="panel" id="craftPanel" style="display: none;">
+                    <div class="panel-header">
+                        <h3>🔨 合成表</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div id="craftContent" class="recipes-container"></div>
+                    </div>
+                </section>
+
+                <!-- 製造成本卡 -->
+                <section class="panel" id="craftingCostPanel" style="display: none;">
+                    <div class="panel-header">
+                        <h3>💰 製造成本計算</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="craftQuantity">製造數量</label>
+                            <input type="number" id="craftQuantity" class="form-control" value="1" min="1">
+                        </div>
+                        <button class="btn btn-primary btn-block" onclick="calculateCraftingCost()">
+                            計算成本
+                        </button>
+                        <div id="craftingCostContent" style="margin-top: 1rem;"></div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- 加載指示器 -->
+        <div id="globalLoading" class="loading-overlay" style="display: none;">
+            <div>
+                <div class="spinner"></div>
+                <p>查詢中...</p>
+            </div>
+        </div>
+
+        <!-- 全局消息提示 -->
+        <div id="messageContainer" class="message-container"></div>
+    </div>
+
+    <!-- 腳部 -->
+    <footer class="page-footer">
+        <p>© 2026 FFXIV 市場查詢工具 | 由 Universalis API 提供數據</p>
+        <p><small>此工具與 Square Enix 無關。FINAL FANTASY XIV © Square Enix</small></p>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="assets/js/jquery-4.0.0.min.js"></script>
+    <script src="assets/js/jquery-ui.min.js"></script>
+
+    <script>
+        // ==================== 全局狀態 ====================
+        const state = {
+            selectedServer: localStorage.getItem('selectedServer') || null,
+            selectedDatacenter: localStorage.getItem('selectedDatacenter') || null,
+            selectedLanguage: localStorage.getItem('selectedLanguage') || 'tc',
+            isLoading: false,
+            serversByDC: null,
+            datacenters: null,
+            isDataLoaded: false,
+            isDatacentersLoaded: false,
+            isWorldsLoaded: false,
+            lastItemPriceData: null
+        };
+
+        let fullSearchResults = [];
+        let currentJobFilter = 'ALL';
+
+        // ==================== 配置 ====================
+        const config = {
+            xivApiUrl: 'https://xivapi.com',
+            universalisUrl: 'https://universalis.app/api/v2',
+            timeout: 15000
+        };
+
+        const DEFAULT_ICON = 'data:image/gif;base64,R0lGODlhAQABAAAAACw=';
+
+        // ==================== 初始化 ====================
+        $(document).ready(function () {
+            console.log('jQuery ready');
+            initializeApp();
+
+            // 在物品搜尋輸入框按下 Enter 直接觸發搜尋
+            $('#searchQuery').on('keydown', function (e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    searchItemByName();
+                }
+            });
+        });
+
+        function initializeApp() {
+            console.log('=== FFXIV 市場查詢工具 - 初始化開始 ===');
+            console.log('📦 LocalStorage 狀態:');
+            console.log('  - selectedServer:', state.selectedServer);
+            console.log('  - selectedDatacenter:', state.selectedDatacenter);
+            console.log('  - selectedLanguage:', state.selectedLanguage);
+
+            // 無論如何都先預加載數據中心和伺服器數據
+            console.log('🚀 開始預加載數據中心和伺服器列表...');
+            loadAllDataInBackground();
+
+            if (state.selectedServer && state.selectedDatacenter) {
+                console.log('✓ 找到已保存的伺服器配置，直接進入主頁面');
+                showMainContent();
+            } else {
+                console.log('ℹ 未找到伺服器配置，顯示選擇面板');
+            }
+
+            showServerSelectionPanel();
+        }
+
+        // 在背景加載數據（不阻塞UI）
+        function loadAllDataInBackground() {
+            console.log('背景加載數據中心和伺服器列表...');
+
+            let datacentersData = null;
+            let worldsData = null;
+
+            // 同時請求兩個 API
+            Promise.all([
+                // 請求數據中心列表
+                $.ajax({
+                    url: 'https://universalis.app/api/v2/data-centers',
+                    type: 'GET',
+                    dataType: 'json',
+                    timeout: 10000
+                }).then(response => {
+                    console.log('✓ 數據中心 API 完成');
+                    datacentersData = Array.isArray(response) ? response : (response.datacenters || []);
+                    return datacentersData;
+                }).catch(error => {
+                    console.warn('數據中心 API 失敗:', error);
+                    return null;
+                }),
+
+                // 請求伺服器列表
+                $.ajax({
+                    url: 'https://universalis.app/api/v2/worlds',
+                    type: 'GET',
+                    dataType: 'json',
+                    timeout: 10000
+                }).then(response => {
+                    console.log('✓ 伺服器 API 完成');
+                    worldsData = response;
+                    return response;
+                }).catch(error => {
+                    console.warn('伺服器 API 失敗:', error);
+                    return null;
+                })
+            ]).then(() => {
+                // 兩個 API 都完成了
+                if (datacentersData && datacentersData.length > 0) {
+                    state.datacenters = datacentersData;
+                    state.isDatacentersLoaded = true;
+                    console.log('✓ 數據中心數據已緩存:', datacentersData.length, '個');
+                }
+
+                if (worldsData && Array.isArray(worldsData) && worldsData.length > 0) {
+                    // 使用 ID 匹配方式構建映射
+                    if (datacentersData && datacentersData.length > 0) {
+                        buildServersByDCMapWithIDs(datacentersData, worldsData);
+                    } else {
+                        buildServersByDCMapWithNames(worldsData);
+                    }
+                    state.isWorldsLoaded = true;
+                    console.log('✓ 伺服器數據已緩存:', Object.keys(state.serversByDC || {}).length, '個數據中心');
+                }
+
+                state.isDataLoaded = true;
+                console.log('✅ 所有數據加載完成並已緩存');
+            });
+        }
+
+        // 顯示伺服器選擇面板
+        function showServerSelectionPanel() {
+            console.log('顯示伺服器選擇面板');
+
+            // 如果數據已加載，直接渲染
+            if (state.isDataLoaded && state.datacenters) {
+                renderDatacenterOptions(state.datacenters);
+                $('#dcSelect').prop('disabled', false);
+            } else {
+                // 等待數據加載
+                $('#dcSelect').prop('disabled', true).html('<option value="">-- 載入中... --</option>');
+
+                // 監聽數據加載完成
+                const checkInterval = setInterval(() => {
+                    if (state.isDataLoaded && state.datacenters) {
+                        clearInterval(checkInterval);
+                        renderDatacenterOptions(state.datacenters);
+                        $('#dcSelect').prop('disabled', false);
+                        showMessage('數據加載完成，請選擇伺服器', 'success');
+                    }
+                }, 100);
+            }
+
+            // 綁定事件
+            bindServerSelectionEvents();
+        }
+
+        // 綁定伺服器選擇事件
+        function bindServerSelectionEvents() {
+            // 綁定數據中心選擇事件
+            $('#dcSelect').off('change').on('change', function () {
+                const dc = $(this).val();
+                console.log('數據中心選擇變化:', dc);
+
+                if (dc) {
+                    loadServersByDatacenter(dc);
+                } else {
+                    resetServerSelect();
+                }
+            });
+
+            // 綁定伺服器選擇事件
+            $('#worldSelect').off('change').on('change', function () {
+                const world = $(this).val();
+                $('#confirmBtn').prop('disabled', !world);
+            });
+
+            // 綁定確認按鈕事件
+            $('#confirmBtn').off('click').on('click', function () {
+                confirmServerSelection();
+            });
+        }
+
+        // ==================== 伺服器選擇相關函數 ====================
+
+        // 渲染數據中心選項
+        function renderDatacenterOptions(datacenters) {
+            let html = '<option value="">-- 選擇數據中心 --</option>';
+
+            // 確保數據格式正確
+            if (!Array.isArray(datacenters)) {
+                console.error('數據中心格式錯誤:', datacenters);
+                return;
+            }
+
+            datacenters.sort((a, b) => {
+                const nameA = a.name || a;
+                const nameB = b.name || b;
+                return nameA.localeCompare(nameB);
+            });
+
+            datacenters.forEach(dc => {
+                const name = dc.name || dc;
+                const region = dc.region || '';
+                if (region) {
+                    html += `<option value="${escapeHtml(name)}">${escapeHtml(name)} (${escapeHtml(region)})</option>`;
+                } else {
+                    html += `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`;
+                }
+            });
+
+            $('#dcSelect').html(html);
+            console.log('數據中心選項已更新，共', datacenters.length, '個');
+        }
+
+        // 構建數據中心->伺服器映射表（使用ID匹配 - 正確方式）
+        function buildServersByDCMapWithIDs(datacenters, worlds) {
+            console.log('=== 使用 ID 匹配方式構建映射表 ===');
+
+            // 先建立 world ID -> world name 的映射
+            const worldIdToName = {};
+            worlds.forEach(world => {
+                if (world.id && world.name) {
+                    worldIdToName[world.id] = world.name;
+                }
+            });
+
+            console.log('世界ID映射表:', Object.keys(worldIdToName).length, '個世界');
+
+            // 根據數據中心的 worlds ID 列表構建映射
+            const newServersByDC = {};
+            let totalServers = 0;
+
+            datacenters.forEach(dc => {
+                const dcName = dc.name;
+                const worldIds = dc.worlds || [];
+
+                if (dcName && Array.isArray(worldIds) && worldIds.length > 0) {
+                    newServersByDC[dcName] = [];
+
+                    worldIds.forEach(worldId => {
+                        const worldName = worldIdToName[worldId];
+                        if (worldName) {
+                            newServersByDC[dcName].push(worldName);
+                            totalServers++;
+                        }
+                    });
+
+                    // 排序
+                    newServersByDC[dcName].sort();
+                }
+            });
+
+            if (totalServers > 0) {
+                state.serversByDC = newServersByDC;
+                console.log('✓ 使用ID匹配成功構建映射表');
+                console.log('- 數據中心數量:', Object.keys(newServersByDC).length);
+                console.log('- 伺服器總數:', totalServers);
+                console.log('- 詳細映射:', state.serversByDC);
+            } else {
+                console.warn('ID匹配失敗，保留備用列表');
+            }
+        }
+
+        // 構建數據中心->伺服器映射表（使用名稱匹配 - 備用方式）
+        function buildServersByDCMapWithNames(worlds) {
+            console.log('=== 使用名稱匹配方式構建映射表 ===');
+
+            // 先保留備用列表
+            const fallbackServers = state.serversByDC;
+            const newServersByDC = {};
+
+            // 使用 dataCenter 屬性分組
+            let successCount = 0;
+            worlds.forEach(world => {
+                const dc = world.dataCenter || world.datacenter;  // 支援兩種格式
+                const serverName = world.name;
+
+                if (dc && serverName) {
+                    if (!newServersByDC[dc]) {
+                        newServersByDC[dc] = [];
+                    }
+                    newServersByDC[dc].push(serverName);
+                    successCount++;
+                }
+            });
+
+            // 如果成功解析了數據，使用新數據，否則保留備用數據
+            if (successCount > 0) {
+                state.serversByDC = newServersByDC;
+
+                // 對每個數據中心的伺服器列表進行排序
+                Object.keys(state.serversByDC).forEach(dc => {
+                    state.serversByDC[dc].sort();
+                });
+
+                console.log('✓ 使用名稱匹配成功構建映射表');
+                console.log('- 數據中心數量:', Object.keys(state.serversByDC).length);
+                console.log('- 伺服器總數:', successCount);
+                console.log('- 詳細映射:', state.serversByDC);
+            } else {
+                console.warn('名稱匹配失敗，保留備用列表');
+                state.serversByDC = fallbackServers;
+            }
+        }
+
+        // 根據數據中心加載伺服器列表（直接從預加載的變數讀取）
+        function loadServersByDatacenter(datacenter) {
+            console.log('=== 從變數讀取伺服器列表 ===');
+            console.log('選擇的數據中心:', datacenter);
+
+            if (!datacenter) {
+                resetServerSelect();
+                return;
+            }
+
+            // 確保數據已加載
+            if (!state.isDataLoaded) {
+                console.warn('數據尚未加載完成，請稍候');
+                showMessage('數據載入中，請稍候...', 'info');
+                return;
+            }
+
+            // 檢查映射表
+            if (!state.serversByDC || Object.keys(state.serversByDC).length === 0) {
+                console.error('伺服器映射表為空');
+                showMessage('伺服器數據異常', 'danger');
+                return;
+            }
+
+            console.log('可用的數據中心列表:', Object.keys(state.serversByDC).join(', '));
+
+            // 檢查該數據中心是否有伺服器
+            if (!state.serversByDC[datacenter]) {
+                console.warn('找不到數據中心:', datacenter);
+                console.log('嘗試大小寫不敏感匹配...');
+
+                // 嘗試大小寫不敏感匹配
+                const dcLower = datacenter.toLowerCase();
+                const matchedDC = Object.keys(state.serversByDC).find(key => key.toLowerCase() === dcLower);
+
+                if (matchedDC) {
+                    console.log('找到匹配的數據中心:', matchedDC);
+                    loadServersByDatacenter(matchedDC);
+                    return;
+                }
+
+                showMessage(`找不到數據中心 "${datacenter}" 的伺服器\n可用: ${Object.keys(state.serversByDC).join(', ')}`, 'warning');
+                resetServerSelect();
+                return;
+            }
+
+            // 渲染伺服器選項
+            const servers = state.serversByDC[datacenter];
+            console.log('找到伺服器列表:', servers);
+
+            if (!Array.isArray(servers) || servers.length === 0) {
+                console.warn('伺服器列表為空');
+                showMessage('該數據中心沒有可用的伺服器', 'warning');
+                resetServerSelect();
+                return;
+            }
+
+            let html = '<option value="">-- 選擇伺服器 --</option>';
+
+            servers.forEach(server => {
+                html += `<option value="${escapeHtml(server)}">${escapeHtml(server)}</option>`;
+            });
+
+            $('#worldSelect').html(html).prop('disabled', false);
+            $('#confirmBtn').prop('disabled', true);
+
+            console.log('✓ 伺服器列表已更新，共', servers.length, '個伺服器');
+        }
+
+        // 重置伺服器選擇框
+        function resetServerSelect() {
+            $('#worldSelect').html('<option value="">-- 先選擇數據中心 --</option>').prop('disabled', true);
+            $('#confirmBtn').prop('disabled', true);
+        }
+
+        // 確認伺服器選擇
+        function confirmServerSelection() {
+            const datacenter = $('#dcSelect').val();
+            const world = $('#worldSelect').val();
+
+            if (!datacenter || !world) {
+                showMessage('請選擇數據中心和伺服器', 'warning');
+                return;
+            }
+
+            // 保存選擇
+            state.selectedDatacenter = datacenter;
+            state.selectedServer = world;
+            localStorage.setItem('selectedDatacenter', datacenter);
+            localStorage.setItem('selectedServer', world);
+
+            console.log('已選擇:', datacenter, '-', world);
+            showMessage(`已選擇伺服器: ${world} (${datacenter})`, 'success');
+
+            // 更新顯示
+            updateServerDisplay();
+
+            // 顯示主功能介面
+            showMainContent();
+        }
+
+        // 更新伺服器顯示
+        function updateServerDisplay() {
+            const server = state.selectedServer || '未選擇';
+            const datacenter = state.selectedDatacenter || '';
+            const language = state.selectedLanguage || 'tc';
+            const languageText = language === 'tc' ? '繁中' : (language === 'en' ? 'EN' : language);
+
+            if (datacenter) {
+                $('#serverBadge').text(`${server} (${datacenter})`);
+            } else {
+                $('#serverBadge').text(server);
+            }
+
+            $('#languageBadge').text(`語言: ${languageText}`);
+        }
+
+        // 顯示主內容（隱藏伺服器選擇面板）
+        function showMainContent() {
+            console.log('顯示主內容區域');
+            $('#serverSelectPanel').hide();
+            $('#searchPanel').show();
+            $('#idSearchPanel').show();
+            updateServerDisplay();
+        }
+
+        // 重置伺服器選擇（清除已保存的設定）
+        function resetServerSelection() {
+            console.log('重置伺服器選擇');
+
+            // 清除 LocalStorage
+            localStorage.removeItem('selectedServer');
+            localStorage.removeItem('selectedDatacenter');
+
+            // 清除狀態
+            state.selectedServer = null;
+            state.selectedDatacenter = null;
+
+            // 重置UI
+            $('#serverSelectPanel').show();
+            $('#searchPanel').hide();
+            $('#idSearchPanel').hide();
+            $('#dcSelect').val('');
+            $('#worldSelect').html('<option value="">-- 先選擇數據中心 --</option>').prop('disabled', true);
+            $('#confirmBtn').prop('disabled', true);
+            $('#serverBadge').text('未選擇伺服器');
+
+            // 清除結果面板
+            clearSearchResults();
+            clearItemInfo();
+
+            showMessage('已重置伺服器選擇', 'info');
+        }
+
+        // 使用 PHP API 搜尋物品
+        function searchItemByName() {
+            const query = $('#searchQuery').val().trim();
+
+            if (!query) {
+                showMessage('請輸入物品名稱', 'warning');
+                return;
+            }
+
+            // 調用原有的搜尋函數
+            searchItems();
+        }
+
+        function searchItems() {
+            const query = $('#searchQuery').val().trim();
+
+            if (!query) {
+                showMessage('請輸入物品名稱', 'warning');
+                return;
+            }
+
+            showGlobalLoading(true);
+            const loadingTimeout = setTimeout(function () {
+                if (state.isLoading) {
+                    showGlobalLoading(false);
+                    showMessage('搜尋超時，請稍後重試', 'warning');
+                }
+            }, 12000);
+            console.log('Searching for item:', query);
+
+            // 取得語言設定
+            const language = state.selectedLanguage || 'tc';
+
+            if (language === 'tc') {
+                // 繁體中文：使用 tnze.yyyy.games API
+                searchFromTnzeAPI(query).then(items => {
+                    clearTimeout(loadingTimeout);
+                    showGlobalLoading(false);
+
+                    if (items.length === 0) {
+                        showMessage('未找到符合的物品', 'warning');
+                        return;
+                    }
+
+                    fullSearchResults = items;
+                    displaySearchResults(fullSearchResults);
+                }).catch(err => {
+                    console.error('Search error:', err);
+                    clearTimeout(loadingTimeout);
+                    showGlobalLoading(false);
+                    showMessage('搜尋失敗：' + err.message, 'danger');
+                });
+            } else {
+                // 英文：使用 XIVAPI
+                searchFromXIVAPI(query, 'en').then(items => {
+                    clearTimeout(loadingTimeout);
+                    showGlobalLoading(false);
+
+                    if (items.length === 0) {
+                        showMessage('未找到符合的物品', 'warning');
+                        return;
+                    }
+
+                    fullSearchResults = items;
+                    displaySearchResults(fullSearchResults);
+                }).catch(err => {
+                    console.error('Search error:', err);
+                    clearTimeout(loadingTimeout);
+                    showGlobalLoading(false);
+                    showMessage('搜尋失敗：' + err.message, 'danger');
+                });
+            }
+        }
+
+        // 從 tnze.yyyy.games API 搜尋 (繁體中文)
+        function searchFromTnzeAPI(query) {
+            return new Promise((resolve, reject) => {
+                const results = [];
+                const seenItemIds = new Set();
+                let pageId = 0;
+                const maxPages = 2;
+
+                function fetchPage() {
+                    if (pageId >= maxPages) {
+                        resolve(results);
+                        return;
+                    }
+
+                    const searchName = '%' + query + '%';
+                    const url = 'https://tnze.yyyy.games/api/datasource/zh-TW/recipe_table?' + $.param({
+                        page_id: pageId,
+                        search_name: searchName
+                    });
+
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        dataType: 'json',
+                        timeout: 8000
+                    }).then(response => {
+                        if (!response || !response.data || !Array.isArray(response.data) || response.data.length === 0) {
+                            resolve(results);
+                            return;
+                        }
+
+                        response.data.forEach(recipe => {
+                            const itemId = parseInt(recipe.item_id) || 0;
+                            const itemName = recipe.item_name || '';
+
+                            if (itemId > 0 && itemName && !seenItemIds.has(itemId)) {
+                                seenItemIds.add(itemId);
+                                results.push({
+                                    id: itemId,
+                                    name: itemName,
+                                    category: recipe.job || '未分類',
+                                    level: parseInt(recipe.item_level) || 0,
+                                    rarity: 0,
+                                    icon: null
+                                });
+                            }
+                        });
+
+                        pageId++;
+                        if (pageId >= maxPages) {
+                            resolve(results);
+                        } else {
+                            fetchPage();
+                        }
+                    }).catch(err => {
+                        console.warn('Tnze API 第', pageId, '頁失敗:', err);
+                        if (results.length > 0) {
+                            resolve(results);
+                        } else {
+                            reject(new Error('API 查詢失敗'));
+                        }
+                    });
+                }
+
+                fetchPage();
+            });
+        }
+
+        // 從 XIVAPI 搜尋 (英文)
+        function searchFromXIVAPI(query, language) {
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    url: 'https://xivapi.com/search',
+                    type: 'GET',
+                    data: {
+                        indexes: 'item',
+                        string: query,
+                        language: language
+                    },
+                    dataType: 'json',
+                    timeout: 10000
+                }).then(response => {
+                    if (!response.Results || response.Results.length === 0) {
+                        resolve([]);
+                        return;
+                    }
+
+                    const items = response.Results.map(result => ({
+                        id: result.ID,
+                        name: result.Name,
+                        category: (result.ItemSearchCategory && result.ItemSearchCategory.Name) || 'Uncategorized',
+                        level: result.LevelItem || 0,
+                        rarity: result.Rarity || 0,
+                        icon: result.Icon || null
+                    }));
+
+                    resolve(items);
+                }).catch(err => {
+                    reject(err);
+                });
+            });
+        }
+
+        function displaySearchResults(items) {
+            fullSearchResults = Array.isArray(items) ? items : [];
+            currentJobFilter = 'ALL';
+
+            renderJobFilter(fullSearchResults);
+            renderResultsList(getFilteredResults());
+            $('#searchResultsPanel').show();
+            showMessage('搜尋完成，找到 ' + fullSearchResults.length + ' 個物品', 'success');
+        }
+
+        function renderResultsList(items) {
+            $('#resultCount').text(items.length);
+
+            let html = '';
+            items.forEach(function (item) {
+                let categoryHtml = item.category ? '<span class="result-category">' + escapeHtml(item.category) + '</span>' : '';
+                let levelHtml = item.level ? '<span class="result-level">LV: ' + item.level + '</span>' : '';
+
+                html += '<div class="result-item">';
+                html += '<div class="result-details">';
+                html += '<div class="result-name">' + escapeHtml(item.name) + '</div>';
+                html += '<div class="result-meta">';
+                html += '<span class="result-id">ID: ' + item.id + '</span>';
+                html += categoryHtml;
+                html += levelHtml;
+                html += '</div></div>';
+                html += '<button class="btn btn-small btn-primary item-result-btn" onclick="queryItemById(' + item.id + ')">查詢</button>';
+                html += '</div>';
+            });
+
+            $('#resultsList').html(html);
+        }
+
+        function renderJobFilter(items) {
+            const categoryMap = new Map();
+
+            (items || []).forEach(item => {
+                const category = (item.category || '').trim();
+                if (category) {
+                    const key = category.toLowerCase();
+                    const existing = categoryMap.get(key) || { name: category, count: 0 };
+                    existing.count += 1;
+                    existing.name = existing.name || category;
+                    categoryMap.set(key, existing);
+                }
+            });
+
+            const $container = $('#jobFilterContainer');
+            const $buttons = $('#jobFilterButtons');
+
+            if (categoryMap.size === 0) {
+                $container.removeClass('active');
+                $buttons.html('');
+                return;
+            }
+
+            const totalCount = (items || []).length;
+            let html = '<button class="filter-btn filter-btn-active" data-job="ALL">全部 (' + totalCount + ')</button>';
+            const sortedCategories = Array.from(categoryMap.entries()).sort((a, b) => a[1].name.localeCompare(b[1].name));
+
+            sortedCategories.forEach(([key, data]) => {
+                html += '<button class="filter-btn" data-job="' + escapeHtml(key) + '">' + escapeHtml(data.name) + ' (' + data.count + ')</button>';
+            });
+
+            $buttons.html(html);
+            $container.addClass('active');
+
+            $('#jobFilterButtons .filter-btn').off('click').on('click', function () {
+                const selected = $(this).data('job');
+                currentJobFilter = selected;
+
+                $('#jobFilterButtons .filter-btn').removeClass('filter-btn-active');
+                $(this).addClass('filter-btn-active');
+
+                renderResultsList(getFilteredResults());
+            });
+        }
+
+        function getFilteredResults() {
+            if (currentJobFilter === 'ALL') {
+                return fullSearchResults;
+            }
+
+            return fullSearchResults.filter(item => {
+                const category = (item.category || '').trim().toLowerCase();
+                return category === currentJobFilter;
+            });
+        }
+
+        function clearSearchResults() {
+            $('#searchResultsPanel').hide();
+            $('#resultsList').html('');
+            $('#searchQuery').val('');
+            fullSearchResults = [];
+            currentJobFilter = 'ALL';
+            $('#jobFilterContainer').removeClass('active');
+            $('#jobFilterButtons').html('');
+        }
+
+        // ==================== 物品查詢 ====================
+        let currentItemId = null;
+
+        function queryItemById(itemId) {
+            if (!itemId) {
+                itemId = $('#itemIdInput').val().trim();
+            }
+
+            if (!itemId) {
+                showMessage('請輸入物品 ID', 'warning');
+                return;
+            }
+
+            currentItemId = itemId;
+            showGlobalLoading(true);
+            console.log('Querying item ID:', itemId);
+
+            // 使用 XIVAPI 獲取物品信息
+            $.ajax({
+                url: 'https://xivapi.com/Item/' + encodeURIComponent(itemId),
+                type: 'GET',
+                dataType: 'json',
+                timeout: 10000,
+                success: function (response) {
+                    console.log('XIVAPI item response:', response);
+
+                    if (!response.ID) {
+                        showMessage('找不到物品 ID: ' + itemId, 'danger');
+                        showGlobalLoading(false);
+                        return;
+                    }
+
+                    const itemData = {
+                        item: {
+                            id: response.ID,
+                            name: response.Name,
+                            description: response.Description
+                        },
+                        world: state.selectedServer,
+                        price: null
+                    };
+
+                    displayItemInfo(itemData);
+                    showMessage('物品信息已載入', 'success');
+
+                    // 嘗試從 Universalis 獲取價格，並自動計算合成成本
+                    if (state.selectedServer) {
+                        getItemPrice(response.ID)
+                            .always(() => {
+                                showGlobalLoading(false);
+                                autoCalculateCraftingCost();
+                            });
+                    } else {
+                        showGlobalLoading(false);
+                    }
+
+                    // 顯示製造成本計算面板
+                    $('#craftingCostPanel').show();
+                },
+                error: function (xhr, status, error) {
+                    console.log('XIVAPI item error:', status, error, xhr);
+                    showMessage('查詢失敗。物品 ID 可能不存在。', 'danger');
+                    showGlobalLoading(false);
+                }
+            });
+        }
+
+        function displayItemInfo(data) {
+            const item = data.item;
+            const price = data.price;
+
+            $('#itemTitle').text(item.name + ' (ID: ' + item.id + ')');
+            $('#itemInfoContent').html(
+                '<div class="info-row">' +
+                '<span class="label">物品名稱：</span>' +
+                '<span class="value">' + escapeHtml(item.name) + '</span>' +
+                '</div>' +
+                '<div class="info-row">' +
+                '<span class="label">物品 ID：</span>' +
+                '<span class="value">' + item.id + '</span>' +
+                '</div>' +
+                '<div class="info-row">' +
+                '<span class="label">伺服器：</span>' +
+                '<span class="value">' + escapeHtml(data.world) + '</span>' +
+                '</div>'
+            );
+            $('#itemInfoPanel').show();
+
+            // 依 index.php 邏輯載入配方詳情，含子材料成本
+            loadRecipeDetailsForItem(item.id, item.name);
+        }
+
+        function getItemPrice(itemId) {
+            if (!state.selectedServer) {
+                console.log('No server selected, skipping price lookup');
+                return $.Deferred().resolve();
+            }
+
+            console.log('Getting price for item', itemId, 'on server', state.selectedServer);
+
+            return $.ajax({
+                url: 'https://universalis.app/api/v2/' + encodeURIComponent(state.selectedServer) + '/' + encodeURIComponent(itemId),
+                type: 'GET',
+                dataType: 'json',
+                timeout: 10000
+            }).then(function (response) {
+                console.log('Universalis price response:', response);
+
+                if (response.averagePriceNQ || response.averagePriceHQ || response.minPriceNQ || response.minPriceHQ) {
+                    const price = {
+                        nq_min: response.minPriceNQ ? '✓ ' + response.minPriceNQ : '無',
+                        nq_avg: response.averagePriceNQ ? Math.round(response.averagePriceNQ) : '無',
+                        hq_min: response.minPriceHQ ? '✓ ' + response.minPriceHQ : '無',
+                        hq_avg: response.averagePriceHQ ? Math.round(response.averagePriceHQ) : '無'
+                    };
+
+                    // 緩存成品市場價，供成本區塊顯示
+                    state.lastItemPriceData = price;
+
+                    $('#priceContent').html(
+                        '<div class="price-row">' +
+                        '<div class="price-type">NQ (Normal Quality)</div>' +
+                        '<div>最低: <strong>' + price.nq_min + '</strong> 金幣</div>' +
+                        '<div>平均: <strong>' + price.nq_avg + '</strong> 金幣</div>' +
+                        '</div>' +
+                        '<div class="price-row">' +
+                        '<div class="price-type">HQ (High Quality)</div>' +
+                        '<div>最低: <strong>' + price.hq_min + '</strong> 金幣</div>' +
+                        '<div>平均: <strong>' + price.hq_avg + '</strong> 金幣</div>' +
+                        '</div>'
+                    );
+                    $('#pricePanel').show();
+                } else {
+                    console.log('No price data available');
+                }
+            }).catch(function (xhr, status, error) {
+                console.log('Universalis error:', status, error);
+            });
+        }
+
+        function clearItemInfo() {
+            $('#itemInfoPanel').hide();
+            $('#pricePanel').hide();
+            $('#craftPanel').hide();
+            $('#craftContent').html('');
+            $('#craftingCostPanel').hide();
+            $('#itemIdInput').val('');
+            currentItemId = null;
+            state.lastItemPriceData = null;
+        }
+
+        // ==================== 製造成本計算 ====================
+
+        function calculateCraftingCost() {
+            if (!currentItemId) {
+                showMessage('請先查詢物品', 'warning');
+                return;
+            }
+
+            const quantity = parseInt($('#craftQuantity').val()) || 1;
+
+            if (!state.selectedServer) {
+                showMessage('請選擇伺服器', 'warning');
+                return;
+            }
+
+            showGlobalLoading(true);
+            console.log('Calculating crafting cost for item:', currentItemId, 'quantity:', quantity);
+
+            // 先從 XIVAPI 獲取食譜信息
+            $.ajax({
+                url: 'https://xivapi.com/Item/' + currentItemId,
+                type: 'GET',
+                dataType: 'json',
+                timeout: config.timeout,
+                success: function (itemResponse) {
+                    console.log('Item response:', itemResponse);
+
+                    if (!itemResponse.Recipes || itemResponse.Recipes.length === 0) {
+                        showMessage('找不到該物品的食譜', 'warning');
+                        showGlobalLoading(false);
+                        return;
+                    }
+
+                    const recipeId = itemResponse.Recipes[0].ID;
+                    console.log('Found recipe ID:', recipeId);
+
+                    // 獲取食譜詳細信息
+                    $.ajax({
+                        url: 'https://xivapi.com/Recipe/' + recipeId,
+                        type: 'GET',
+                        dataType: 'json',
+                        timeout: config.timeout,
+                        success: function (recipeResponse) {
+                            console.log('Recipe details:', recipeResponse);
+                            calculateAndDisplayCost(recipeResponse, quantity);
+                            showGlobalLoading(false);
+                        },
+                        error: function (xhr, status, error) {
+                            console.log('Recipe details error:', status, error);
+                            showGlobalLoading(false);
+                            showMessage('獲取食譜詳情失敗', 'danger');
+                        }
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.log('Item lookup error:', status, error);
+                    showGlobalLoading(false);
+                    showMessage('查詢物品失敗：' + error, 'danger');
+                }
+            });
+        }
+
+        // 自動計算合成成本（在有伺服器且已有 currentItemId 時觸發）
+        function autoCalculateCraftingCost() {
+            if (!state.selectedServer) {
+                return;
+            }
+            if (!currentItemId) {
+                return;
+            }
+            // 使用當前輸入的數量（預設 1）
+            calculateCraftingCost();
+        }
+
+        function calculateAndDisplayCost(recipe, quantity) {
+            if (!recipe) {
+                showMessage('無效的食譜信息', 'danger');
+                return;
+            }
+
+            const ingredients = [];
+            let totalCost = 0;
+
+            // 提取材料列表
+            for (let i = 0; i <= 9; i++) {
+                const ingredientKey = 'ItemIngredient' + i;
+                const amountKey = 'AmountIngredient' + i;
+
+                if (recipe[ingredientKey] && recipe[ingredientKey].ID) {
+                    const itemId = recipe[ingredientKey].ID;
+                    const requiredAmount = (recipe[amountKey] || 0) * quantity;
+                    const icon = recipe[ingredientKey].IconHD || recipe[ingredientKey].Icon || null;
+
+                    if (requiredAmount > 0) {
+                        ingredients.push({
+                            id: itemId,
+                            name: recipe[ingredientKey].Name || '未知',
+                            requiredAmount: requiredAmount,
+                            unitPrice: 0,
+                            icon: icon
+                        });
+                    }
+                }
+            }
+
+            if (ingredients.length === 0) {
+                showMessage('無法解析食譜材料', 'warning');
+                return;
+            }
+
+            console.log('Ingredients found:', ingredients);
+
+            // 批量查詢材料價格
+            const itemIds = ingredients.map(i => i.id).join(',');
+            $.ajax({
+                url: 'https://universalis.app/api/v2/aggregated/' + encodeURIComponent(state.selectedServer) + '/' + itemIds,
+                type: 'GET',
+                dataType: 'json',
+                timeout: config.timeout,
+                success: function (priceResponse) {
+                    console.log('Price response:', priceResponse);
+
+                    // 更新材料價格
+                    if (priceResponse.results) {
+                        priceResponse.results.forEach(function (result) {
+                            const itemId = result.itemID || result.itemId;
+                            const ingredient = ingredients.find(i => i.id === itemId);
+
+                            if (ingredient && result.nq) {
+                                // 使用 NQ 最低價格或平均價格
+                                const unit = result.nq.minListing?.world?.price ||
+                                    result.nq.averageSalePrice?.world?.price || 0;
+                                ingredient.unitPrice = roundPrice(unit);
+                                totalCost += ingredient.unitPrice * ingredient.requiredAmount;
+                            }
+                        });
+                    }
+
+                    // 顯示結果
+                    totalCost = roundPrice(totalCost);
+                    const costPerUnit = quantity > 0 ? roundPrice(totalCost / quantity) : 0;
+                    displayCraftingCost({
+                        ingredients: ingredients,
+                        totalCost: totalCost,
+                        costPerUnit: costPerUnit
+                    });
+                    showMessage('成本計算完成', 'success');
+                },
+                error: function (xhr, status, error) {
+                    console.log('Price lookup error:', status, error);
+                    showMessage('無法獲取材料價格，請稍後重試', 'warning');
+
+                    // 仍然顯示材料列表，但價格為 0
+                    const costPerUnit = 0;
+                    displayCraftingCost({
+                        ingredients: ingredients,
+                        totalCost: 0,
+                        costPerUnit: costPerUnit
+                    });
+                }
+            });
+        }
+
+        function displayCraftingCost(data) {
+            let html = '';
+
+            if (data.ingredients && data.ingredients.length > 0) {
+                html += '<h4 style="margin-bottom: 1rem; color: var(--primary);">📦 所需材料</h4>';
+                html += '<div style="overflow-y: auto; max-height: 300px; margin-bottom: 1.5rem;">';
+
+                data.ingredients.forEach(function (ingredient) {
+                    const totalCost = roundPrice((ingredient.unitPrice || 0) * ingredient.requiredAmount);
+                    const iconUrl = getIconUrl(ingredient.icon);
+                    html += '<div style="display: flex; justify-content: space-between; padding: 0.5rem; border-bottom: 1px solid var(--border-color);">';
+                    html += '<div style="display:flex; align-items:center; gap:0.5rem;">';
+                    html += '<img src="' + iconUrl + '" alt="' + escapeHtml(ingredient.name) + ' icon" style="width:36px; height:36px; border-radius:0.5rem; border:1px solid var(--border-color); object-fit: cover; background:#e9ecef;">';
+                    html += '<div>';
+                    html += '<strong>' + escapeHtml(ingredient.name) + '</strong><br>';
+                    html += '<small style="color: var(--gray);">數量: ' + ingredient.requiredAmount + ' | 單價: ' + (ingredient.unitPrice || '0') + ' G</small>';
+                    html += '</div>';
+                    html += '</div>';
+                    html += '<div style="text-align: right;">';
+                    html += '<strong>' + totalCost.toLocaleString() + ' G</strong>';
+                    html += '</div>';
+                    html += '</div>';
+                });
+
+                html += '</div>';
+            }
+
+            html += '<div style="background: #e8f4f8; padding: 1rem; border-radius: 0.375rem; margin-top: 1rem;">';
+            html += '<div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">';
+            html += '<span>總成本：</span>';
+            html += '<strong style="color: var(--danger);">' + (data.totalCost || 0).toLocaleString() + ' G</strong>';
+            html += '</div>';
+            html += '<div style="display: flex; justify-content: space-between;">';
+            html += '<span>平均成本（單位）：</span>';
+            html += '<strong style="color: var(--primary);">' + (data.costPerUnit || 0).toLocaleString() + ' G</strong>';
+            html += '</div>';
+            html += '</div>';
+
+            // 顯示成品市場價 (使用緩存的價格數據)
+            if (state.lastItemPriceData) {
+                html += '<div style="background: #fff9e6; padding: 1rem; border-radius: 0.375rem; margin-top: 0.75rem; border: 1px solid var(--border-color);">';
+                html += '<div style="font-weight: 600; margin-bottom: 0.5rem;">成品市場價（' + escapeHtml(state.selectedServer || '-') + '）</div>';
+                html += '<div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">';
+                html += '<span>NQ 最低 / 平均：</span>';
+                html += '<strong>' + escapeHtml(state.lastItemPriceData.nq_min) + ' / ' + escapeHtml(state.lastItemPriceData.nq_avg) + ' G</strong>';
+                html += '</div>';
+                html += '<div style="display: flex; justify-content: space-between;">';
+                html += '<span>HQ 最低 / 平均：</span>';
+                html += '<strong>' + escapeHtml(state.lastItemPriceData.hq_min) + ' / ' + escapeHtml(state.lastItemPriceData.hq_avg) + ' G</strong>';
+                html += '</div>';
+                html += '</div>';
+            }
+
+            $('#craftingCostContent').html(html);
+            $('#craftingCostPanel').show();
+            showMessage('成本計算完成', 'success');
+        }
+
+        // ==================== 合成表（含子材料成本） ====================
+        async function loadRecipeDetailsForItem(itemId, itemName) {
+            console.log('loadRecipeDetailsForItem', itemId, itemName);
+            $('#craftPanel').hide();
+            $('#craftContent').html('');
+
+            if (!itemId) {
+                return;
+            }
+
+            // 沒選伺服器時，只顯示配方結構不算成本
+            const hasServer = Boolean(state.selectedServer);
+
+            try {
+                showGlobalLoading(true);
+
+                // 先取得物品可用的配方列表，取第一個
+                const itemResponse = await $.ajax({
+                    url: config.xivApiUrl + '/Item/' + encodeURIComponent(itemId),
+                    type: 'GET',
+                    dataType: 'json',
+                    timeout: config.timeout
+                });
+
+                const recipes = (itemResponse && itemResponse.Recipes) || [];
+                if (!recipes.length) {
+                    console.log('No recipes for item', itemId);
+                    return;
+                }
+
+                const primaryRecipeId = recipes[0].ID;
+                const recipeDetail = await fetchRecipeDetail(primaryRecipeId);
+                const recipeCost = await buildRecipeCost(recipeDetail, hasServer);
+
+                // 取得每個材料的子配方與成本（若有）
+                await attachSubRecipeCosts(recipeCost.ingredients, hasServer);
+
+                renderRecipeDetails(recipeDetail, recipeCost, itemName);
+            } catch (error) {
+                console.warn('loadRecipeDetailsForItem error', error);
+                showMessage('載入配方詳情失敗', 'warning');
+            } finally {
+                showGlobalLoading(false);
+            }
+        }
+
+        async function fetchRecipeDetail(recipeId) {
+            return $.ajax({
+                url: config.xivApiUrl + '/Recipe/' + encodeURIComponent(recipeId),
+                type: 'GET',
+                dataType: 'json',
+                timeout: config.timeout
+            });
+        }
+
+        function collectIngredients(recipeDetail) {
+            const ingredients = [];
+            for (let i = 0; i <= 9; i++) {
+                const item = recipeDetail['ItemIngredient' + i];
+                const amount = recipeDetail['AmountIngredient' + i];
+                if (item && item.ID && amount > 0) {
+                    ingredients.push({
+                        id: item.ID,
+                        name: item.Name || '未知',
+                        amount: amount,
+                        icon: item.IconHD || item.Icon || null,
+                        unitPrice: 0,
+                        totalCost: 0,
+                        subRecipe: null
+                    });
+                }
+            }
+            return ingredients;
+        }
+
+        async function getAggregatedPrices(itemIds) {
+            if (!itemIds || !itemIds.length || !state.selectedServer) {
+                return null;
+            }
+
+            try {
+                const response = await $.ajax({
+                    url: 'https://universalis.app/api/v2/aggregated/' + encodeURIComponent(state.selectedServer) + '/' + itemIds.join(','),
+                    type: 'GET',
+                    dataType: 'json',
+                    timeout: config.timeout
+                });
+                return response.results || [];
+            } catch (err) {
+                console.warn('Aggregated price fetch failed', err);
+                return null;
+            }
+        }
+
+        async function buildRecipeCost(recipeDetail, hasServer) {
+            const ingredients = collectIngredients(recipeDetail);
+            const itemIds = ingredients.map(i => i.id);
+            let priceMap = {};
+
+            if (hasServer) {
+                const aggResults = await getAggregatedPrices(itemIds);
+                if (aggResults) {
+                    aggResults.forEach(res => {
+                        const id = res.itemID || res.itemId;
+                        const unit = res.nq?.minListing?.world?.price || res.nq?.averageSalePrice?.world?.price || res.minPriceNQ || 0;
+                        priceMap[id] = roundPrice(unit);
+                    });
+                }
+            }
+
+            let totalCost = 0;
+            ingredients.forEach(ing => {
+                ing.unitPrice = roundPrice(priceMap[ing.id]);
+                ing.totalCost = roundPrice(ing.unitPrice * ing.amount);
+                totalCost += ing.totalCost;
+            });
+
+            const yields = recipeDetail.AmountResult || recipeDetail.AmountResultHQ || 1;
+            totalCost = roundPrice(totalCost);
+            const costPerUnit = yields > 0 ? roundPrice(totalCost / yields) : totalCost;
+
+            return {
+                recipe: {
+                    id: recipeDetail.ID,
+                    classJob: (recipeDetail.ClassJob && (recipeDetail.ClassJob.Abbreviation || recipeDetail.ClassJob.Name)) || '-',
+                    level: (recipeDetail.RecipeLevelTable && (recipeDetail.RecipeLevelTable.ClassJobLevel || recipeDetail.RecipeLevelTable.Name)) || '-',
+                    difficulty: recipeDetail.Difficulty || '-',
+                    durability: recipeDetail.Durability || '-',
+                    resultItem: {
+                        id: recipeDetail.ItemResult?.ID || '',
+                        name: recipeDetail.ItemResult?.Name || '成品'
+                    }
+                },
+                ingredients,
+                totalCost,
+                yields,
+                costPerUnit
+            };
+        }
+
+        async function fetchSubRecipeCost(itemId, hasServer) {
+            try {
+                const itemResponse = await $.ajax({
+                    url: config.xivApiUrl + '/Item/' + encodeURIComponent(itemId),
+                    type: 'GET',
+                    dataType: 'json',
+                    timeout: config.timeout
+                });
+                const recipes = (itemResponse && itemResponse.Recipes) || [];
+                if (!recipes.length) return null;
+
+                const recipeDetail = await fetchRecipeDetail(recipes[0].ID);
+                return await buildRecipeCost(recipeDetail, hasServer);
+            } catch (err) {
+                console.warn('fetchSubRecipeCost error for', itemId, err);
+                return null;
+            }
+        }
+
+        async function attachSubRecipeCosts(ingredients, hasServer) {
+            for (const ing of ingredients) {
+                const subCost = await fetchSubRecipeCost(ing.id, hasServer);
+                if (subCost) {
+                    ing.subRecipe = subCost;
+                }
+            }
+        }
+
+        function renderRecipeDetails(recipeDetail, recipeCost, itemName) {
+            const headerName = itemName || recipeCost.recipe.resultItem.name;
+            let html = '';
+
+            html += '<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.25rem; border-radius: 0.75rem; margin-bottom: 1rem;">';
+            html += '<h4 style="margin:0 0 0.5rem 0;">' + escapeHtml(headerName) + '</h4>';
+            html += '<div style="display:flex; gap:1rem; flex-wrap:wrap; font-size:0.9rem; opacity:0.9;">';
+            html += '<span>職業: ' + escapeHtml(recipeCost.recipe.classJob) + '</span>';
+            html += '<span>等級: ' + escapeHtml(recipeCost.recipe.level) + '</span>';
+            html += '<span>難度: ' + escapeHtml(recipeCost.recipe.difficulty) + '</span>';
+            html += '<span>耐久: ' + escapeHtml(recipeCost.recipe.durability) + '</span>';
+            html += '<span>產出: x' + recipeCost.yields + '</span>';
+            html += '</div>';
+            html += '</div>';
+
+            html += '<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin-bottom: 1rem;">';
+            html += '<div style="background:#f8f9fa; padding:1rem; border-radius:0.5rem; border-left:4px solid #28a745;">';
+            html += '<div style="font-size:0.9rem; color:#666;">製作總成本</div>';
+            html += '<div style="font-size:1.4rem; font-weight:700; color:#28a745;">' + recipeCost.totalCost.toLocaleString() + ' G</div>';
+            html += '<div style="font-size:0.85rem; color:#555;">單個: ' + recipeCost.costPerUnit.toLocaleString() + ' G</div>';
+            html += '</div>';
+            html += '<div style="background:#f8f9fa; padding:1rem; border-radius:0.5rem; border-left:4px solid #007bff;">';
+            html += '<div style="font-size:0.9rem; color:#666;">成品</div>';
+            html += '<div style="font-size:1.1rem; font-weight:700; color:#007bff;">' + escapeHtml(recipeCost.recipe.resultItem.name) + ' x' + recipeCost.yields + '</div>';
+            html += '</div>';
+            html += '</div>';
+
+            html += '<h5 style="margin:0 0 0.5rem 0;">所需材料及成本</h5>';
+            html += '<div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap:0.75rem;">';
+
+            recipeCost.ingredients.forEach(ing => {
+                const iconUrl = getIconUrl(ing.icon);
+                html += '<div style="background:white; border:1px solid #e5e7eb; border-radius:0.75rem; padding:0.9rem; box-shadow:0 2px 4px rgba(0,0,0,0.06);">';
+                html += '<div style="display:flex; align-items:center; gap:0.75rem;">';
+                html += '<img src="' + iconUrl + '" alt="' + escapeHtml(ing.name) + ' icon" style="width:42px; height:42px; border-radius:0.5rem; border:1px solid var(--border-color); object-fit:cover; background:#e9ecef;">';
+                html += '<div style="flex:1;">';
+                html += '<div style="font-weight:700;">' + escapeHtml(ing.name) + '</div>';
+                html += '<div style="color:#666; font-size:0.9rem;">需要 x' + ing.amount + '</div>';
+                html += '</div>';
+                html += '</div>';
+
+                html += '<div style="margin-top:0.5rem; padding-top:0.5rem; border-top:1px solid #f0f0f0; font-size:0.95rem; color:#333;">';
+                html += '<div style="display:flex; justify-content:space-between; margin-bottom:0.25rem;">';
+                html += '<span>市場單價</span>';
+                html += '<strong style="color:#0066cc;">' + (ing.unitPrice || 0).toLocaleString() + ' G</strong>';
+                html += '</div>';
+                html += '<div style="display:flex; justify-content:space-between;">';
+                html += '<span>購買小計</span>';
+                html += '<strong style="color:#e74c3c;">' + (ing.totalCost || 0).toLocaleString() + ' G</strong>';
+                html += '</div>';
+                html += '</div>';
+
+                if (ing.subRecipe) {
+                    const sub = ing.subRecipe;
+                    const subUnit = roundPrice(sub.costPerUnit || 0);
+                    const craftTotal = roundPrice(subUnit * ing.amount);
+                    const saving = roundPrice((ing.totalCost || 0) - craftTotal);
+                    const subTotal = roundPrice(sub.totalCost || 0);
+                    const savingColor = saving > 0 ? '#28a745' : '#dc3545';
+                    const savingLabel = saving > 0 ? '製作省' : (saving < 0 ? '購買省' : '持平');
+
+                    html += '<div style="margin-top:0.6rem; padding:0.65rem; background:#f8f9fa; border-radius:0.5rem; border-left:3px solid #28a745;">';
+                    html += '<div style="font-weight:700; font-size:0.95rem; color:#28a745; margin-bottom:0.35rem;">可製作：' + escapeHtml(sub.recipe.resultItem.name) + ' x' + sub.yields + '</div>';
+                    html += '<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:0.25rem;">';
+                    html += '<span>子配方總成本</span><strong>' + subTotal.toLocaleString() + ' G</strong>';
+                    html += '</div>';
+                    html += '<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:0.25rem;">';
+                    html += '<span>子配方單個成本</span><strong>' + subUnit.toLocaleString() + ' G</strong>';
+                    html += '</div>';
+                    html += '<div style="display:flex; justify-content:space-between; font-size:0.9rem; color:' + savingColor + '; font-weight:700;">';
+                    html += '<span>' + savingLabel + '</span><span>' + Math.abs(saving).toLocaleString() + ' G</span>';
+                    html += '</div>';
+
+                    if (sub.ingredients && sub.ingredients.length > 0) {
+                        html += '<div style="margin-top:0.5rem; font-size:0.85rem; color:#555;">子材料：</div>';
+                        sub.ingredients.forEach(subIng => {
+                            const subIcon = getIconUrl(subIng.icon);
+                            html += '<div style="display:flex; align-items:center; justify-content:space-between; gap:0.35rem; padding:0.2rem 0;">';
+                            html += '<div style="display:flex; align-items:center; gap:0.35rem;">';
+                            html += '<img src="' + subIcon + '" style="width:20px; height:20px; border-radius:0.35rem; border:1px solid #e5e7eb; background:#f1f3f5; object-fit:cover;">';
+                            html += '<span>' + escapeHtml(subIng.name) + ' x' + subIng.amount + '</span>';
+                            html += '</div>';
+                            html += '<span style="color:#0066cc; font-weight:600;">' + (subIng.totalCost || 0).toLocaleString() + ' G</span>';
+                            html += '</div>';
+                        });
+                    }
+
+                    html += '</div>';
+                }
+
+                html += '</div>';
+            });
+
+            html += '</div>';
+
+            $('#craftContent').html(html);
+            $('#craftPanel').show();
+        }
+
+        // ==================== UI 輔助函數 ====================
+        function showGlobalLoading(show) {
+            if (show) {
+                $('#globalLoading').show();
+            } else {
+                $('#globalLoading').hide();
+            }
+            state.isLoading = show;
+        }
+
+        function getIconUrl(iconPath) {
+            if (!iconPath) {
+                return DEFAULT_ICON;
+            }
+            if (iconPath.startsWith('http')) {
+                return iconPath;
+            }
+            return config.xivApiUrl + iconPath;
+        }
+
+        function roundPrice(value) {
+            const num = Number(value) || 0;
+            return Math.round(num);
+        }
+
+        function showMessage(msg, type) {
+            type = type || 'info';
+            const typeMap = {
+                'danger': 'alert-danger',
+                'success': 'alert-success',
+                'warning': 'alert-warning',
+                'info': 'alert-info'
+            };
+
+            const $container = $('#messageContainer');
+            const alertClass = typeMap[type] || 'alert-info';
+            const $alert = $('<div class="alert ' + alertClass + '">' + escapeHtml(msg) + '</div>');
+
+            $container.append($alert);
+            setTimeout(function () {
+                $alert.fadeOut(function () {
+                    $alert.remove();
+                });
+            }, 4000);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+
+    </script>
+</body>
+
+</html>
