@@ -1,728 +1,1558 @@
-/**
- * FFXIV 市場查詢工具 - JavaScript 邏輯層
- * 改進版 v2.0
- * 
- * 改進：
- * - 模塊化架構
- * - 統一的狀態管理
- * - 改進的錯誤處理
- * - 加強的用戶反饋
- */
+// ==================== 全局狀態 ====================
+const state = {
+    selectedServer: localStorage.getItem('selectedServer') || null,
+    selectedDatacenter: localStorage.getItem('selectedDatacenter') || null,
+    selectedLanguage: localStorage.getItem('selectedLanguage') || 'tc',
+    isLoading: false,
+    serversByDC: null,
+    datacenters: null,
+    isDataLoaded: false,
+    isDatacentersLoaded: false,
+    isWorldsLoaded: false,
+    lastItemPriceData: null
+};
 
-const App = (() => {
-    'use strict';
+let fullSearchResults = [];
+let currentJobFilter = 'ALL';
 
-    // ==================== 狀態管理 ====================
-    const state = {
-        selectedServer: localStorage.getItem('selectedServer') || null,
-        selectedDatacenter: localStorage.getItem('selectedDatacenter') || null,
-        selectedLanguage: localStorage.getItem('selectedLanguage') || 'auto',
-        searchResults: [],
-        isLoading: false
-    };
+// ==================== 配置 ====================
+const config = {
+    xivApiUrl: 'https://xivapi.com',
+    universalisUrl: 'https://universalis.app/api/v2',
+    tcSearchUrl: 'https://tc-ffxiv-item-search-service.onrender.com/items/search',
+    timeout: 15000
+};
 
-    // ==================== 配置 ====================
-    const config = {
-        apiUrl: 'api.php',
-        timeout: 15000  // 物品查詢需要較長時間，15秒超時
-    };
+const DEFAULT_ICON = 'data:image/gif;base64,R0lGODlhAQABAAAAACw=';
 
-    // ==================== API 調用 ====================
-    const api = {
-        call: async (action, params = {}) => {
-            console.log('API調用:', action, '參數:', params);
-            const formData = new FormData();
-            formData.append('action', action);
-            
-            Object.entries(params).forEach(([key, value]) => {
-                formData.append(key, value);
+// ==================== 初始化 ====================
+$(document).ready(function () {
+    console.log('jQuery ready');
+    initializeApp();
+
+    // 在物品搜尋輸入框按下 Enter 直接觸發搜尋
+    $('#searchQuery').on('keydown', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            searchItemByName();
+        }
+    });
+});
+
+function initializeApp() {
+    console.log('=== FFXIV 市場查詢工具 - 初始化開始 ===');
+    console.log('📦 LocalStorage 狀態:');
+    console.log('  - selectedServer:', state.selectedServer);
+    console.log('  - selectedDatacenter:', state.selectedDatacenter);
+    console.log('  - selectedLanguage:', state.selectedLanguage);
+
+    // 無論如何都先預加載數據中心和伺服器數據
+    console.log('🚀 開始預加載數據中心和伺服器列表...');
+    loadAllDataInBackground();
+
+    if (state.selectedServer && state.selectedDatacenter) {
+        console.log('✓ 找到已保存的伺服器配置，直接進入主頁面');
+        showMainContent();
+    } else {
+        console.log('ℹ 未找到伺服器配置，顯示選擇面板');
+    }
+
+    showServerSelectionPanel();
+}
+
+// 在背景加載數據（不阻塞UI）
+function loadAllDataInBackground() {
+    console.log('背景加載數據中心和伺服器列表...');
+
+    let datacentersData = null;
+    let worldsData = null;
+
+    // 同時請求兩個 API
+    Promise.all([
+        // 請求數據中心列表
+        $.ajax({
+            url: 'https://universalis.app/api/v2/data-centers',
+            type: 'GET',
+            dataType: 'json',
+            timeout: 10000
+        }).then(response => {
+            console.log('✓ 數據中心 API 完成');
+            datacentersData = Array.isArray(response) ? response : (response.datacenters || []);
+            return datacentersData;
+        }).catch(error => {
+            console.warn('數據中心 API 失敗:', error);
+            return null;
+        }),
+
+        // 請求伺服器列表
+        $.ajax({
+            url: 'https://universalis.app/api/v2/worlds',
+            type: 'GET',
+            dataType: 'json',
+            timeout: 10000
+        }).then(response => {
+            console.log('✓ 伺服器 API 完成');
+            worldsData = response;
+            return response;
+        }).catch(error => {
+            console.warn('伺服器 API 失敗:', error);
+            return null;
+        })
+    ]).then(() => {
+        // 兩個 API 都完成了
+        if (datacentersData && datacentersData.length > 0) {
+            state.datacenters = datacentersData;
+            state.isDatacentersLoaded = true;
+            console.log('✓ 數據中心數據已緩存:', datacentersData.length, '個');
+        }
+
+        if (worldsData && Array.isArray(worldsData) && worldsData.length > 0) {
+            // 使用 ID 匹配方式構建映射
+            if (datacentersData && datacentersData.length > 0) {
+                buildServersByDCMapWithIDs(datacentersData, worldsData);
+            } else {
+                buildServersByDCMapWithNames(worldsData);
+            }
+            state.isWorldsLoaded = true;
+            console.log('✓ 伺服器數據已緩存:', Object.keys(state.serversByDC || {}).length, '個數據中心');
+        }
+
+        state.isDataLoaded = true;
+        console.log('✅ 所有數據加載完成並已緩存');
+    });
+}
+
+// 顯示伺服器選擇面板
+function showServerSelectionPanel() {
+    console.log('顯示伺服器選擇面板');
+
+    // 如果數據已加載，直接渲染
+    if (state.isDataLoaded && state.datacenters) {
+        renderDatacenterOptions(state.datacenters);
+        $('#dcSelect').prop('disabled', false);
+    } else {
+        // 等待數據加載
+        $('#dcSelect').prop('disabled', true).html('<option value="">-- 載入中... --</option>');
+
+        // 監聽數據加載完成
+        const checkInterval = setInterval(() => {
+            if (state.isDataLoaded && state.datacenters) {
+                clearInterval(checkInterval);
+                renderDatacenterOptions(state.datacenters);
+                $('#dcSelect').prop('disabled', false);
+                showMessage('數據加載完成，請選擇伺服器', 'success');
+            }
+        }, 100);
+    }
+
+    // 綁定事件
+    bindServerSelectionEvents();
+}
+
+// 綁定伺服器選擇事件
+function bindServerSelectionEvents() {
+    // 綁定數據中心選擇事件
+    $('#dcSelect').off('change').on('change', function () {
+        const dc = $(this).val();
+        console.log('數據中心選擇變化:', dc);
+
+        if (dc) {
+            loadServersByDatacenter(dc);
+        } else {
+            resetServerSelect();
+        }
+    });
+
+    // 綁定伺服器選擇事件
+    $('#worldSelect').off('change').on('change', function () {
+        const world = $(this).val();
+        $('#confirmBtn').prop('disabled', !world);
+    });
+
+    // 綁定確認按鈕事件
+    $('#confirmBtn').off('click').on('click', function () {
+        confirmServerSelection();
+    });
+}
+
+// ==================== 伺服器選擇相關函數 ====================
+
+// 渲染數據中心選項
+function renderDatacenterOptions(datacenters) {
+    let html = '<option value="">-- 選擇數據中心 --</option>';
+
+    // 確保數據格式正確
+    if (!Array.isArray(datacenters)) {
+        console.error('數據中心格式錯誤:', datacenters);
+        return;
+    }
+
+    datacenters.sort((a, b) => {
+        const nameA = a.name || a;
+        const nameB = b.name || b;
+        return nameA.localeCompare(nameB);
+    });
+
+    datacenters.forEach(dc => {
+        const name = dc.name || dc;
+        const region = dc.region || '';
+        if (region) {
+            html += `<option value="${escapeHtml(name)}">${escapeHtml(name)} (${escapeHtml(region)})</option>`;
+        } else {
+            html += `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`;
+        }
+    });
+
+    $('#dcSelect').html(html);
+    console.log('數據中心選項已更新，共', datacenters.length, '個');
+}
+
+// 構建數據中心->伺服器映射表（使用ID匹配 - 正確方式）
+function buildServersByDCMapWithIDs(datacenters, worlds) {
+    console.log('=== 使用 ID 匹配方式構建映射表 ===');
+
+    // 先建立 world ID -> world name 的映射
+    const worldIdToName = {};
+    worlds.forEach(world => {
+        if (world.id && world.name) {
+            worldIdToName[world.id] = world.name;
+        }
+    });
+
+    console.log('世界ID映射表:', Object.keys(worldIdToName).length, '個世界');
+
+    // 根據數據中心的 worlds ID 列表構建映射
+    const newServersByDC = {};
+    let totalServers = 0;
+
+    datacenters.forEach(dc => {
+        const dcName = dc.name;
+        const worldIds = dc.worlds || [];
+
+        if (dcName && Array.isArray(worldIds) && worldIds.length > 0) {
+            newServersByDC[dcName] = [];
+
+            worldIds.forEach(worldId => {
+                const worldName = worldIdToName[worldId];
+                if (worldName) {
+                    newServersByDC[dcName].push(worldName);
+                    totalServers++;
+                }
             });
 
-            try {
-                showGlobalLoading(true);
-                
-                const response = await fetch(config.apiUrl, {
-                    method: 'POST',
-                    body: formData,
-                    signal: AbortSignal.timeout(config.timeout)
+            // 排序
+            newServersByDC[dcName].sort();
+        }
+    });
+
+    if (totalServers > 0) {
+        state.serversByDC = newServersByDC;
+        console.log('✓ 使用ID匹配成功構建映射表');
+        console.log('- 數據中心數量:', Object.keys(newServersByDC).length);
+        console.log('- 伺服器總數:', totalServers);
+        console.log('- 詳細映射:', state.serversByDC);
+    } else {
+        console.warn('ID匹配失敗，保留備用列表');
+    }
+}
+
+// 構建數據中心->伺服器映射表（使用名稱匹配 - 備用方式）
+function buildServersByDCMapWithNames(worlds) {
+    console.log('=== 使用名稱匹配方式構建映射表 ===');
+
+    // 先保留備用列表
+    const fallbackServers = state.serversByDC;
+    const newServersByDC = {};
+
+    // 使用 dataCenter 屬性分組
+    let successCount = 0;
+    worlds.forEach(world => {
+        const dc = world.dataCenter || world.datacenter;  // 支援兩種格式
+        const serverName = world.name;
+
+        if (dc && serverName) {
+            if (!newServersByDC[dc]) {
+                newServersByDC[dc] = [];
+            }
+            newServersByDC[dc].push(serverName);
+            successCount++;
+        }
+    });
+
+    // 如果成功解析了數據，使用新數據，否則保留備用數據
+    if (successCount > 0) {
+        state.serversByDC = newServersByDC;
+
+        // 對每個數據中心的伺服器列表進行排序
+        Object.keys(state.serversByDC).forEach(dc => {
+            state.serversByDC[dc].sort();
+        });
+
+        console.log('✓ 使用名稱匹配成功構建映射表');
+        console.log('- 數據中心數量:', Object.keys(state.serversByDC).length);
+        console.log('- 伺服器總數:', successCount);
+        console.log('- 詳細映射:', state.serversByDC);
+    } else {
+        console.warn('名稱匹配失敗，保留備用列表');
+        state.serversByDC = fallbackServers;
+    }
+}
+
+// 根據數據中心加載伺服器列表（直接從預加載的變數讀取）
+function loadServersByDatacenter(datacenter) {
+    console.log('=== 從變數讀取伺服器列表 ===');
+    console.log('選擇的數據中心:', datacenter);
+
+    if (!datacenter) {
+        resetServerSelect();
+        return;
+    }
+
+    // 確保數據已加載
+    if (!state.isDataLoaded) {
+        console.warn('數據尚未加載完成，請稍候');
+        showMessage('數據載入中，請稍候...', 'info');
+        return;
+    }
+
+    // 檢查映射表
+    if (!state.serversByDC || Object.keys(state.serversByDC).length === 0) {
+        console.error('伺服器映射表為空');
+        showMessage('伺服器數據異常', 'danger');
+        return;
+    }
+
+    console.log('可用的數據中心列表:', Object.keys(state.serversByDC).join(', '));
+
+    // 檢查該數據中心是否有伺服器
+    if (!state.serversByDC[datacenter]) {
+        console.warn('找不到數據中心:', datacenter);
+        console.log('嘗試大小寫不敏感匹配...');
+
+        // 嘗試大小寫不敏感匹配
+        const dcLower = datacenter.toLowerCase();
+        const matchedDC = Object.keys(state.serversByDC).find(key => key.toLowerCase() === dcLower);
+
+        if (matchedDC) {
+            console.log('找到匹配的數據中心:', matchedDC);
+            loadServersByDatacenter(matchedDC);
+            return;
+        }
+
+        showMessage(`找不到數據中心 "${datacenter}" 的伺服器\n可用: ${Object.keys(state.serversByDC).join(', ')}`, 'warning');
+        resetServerSelect();
+        return;
+    }
+
+    // 渲染伺服器選項
+    const servers = state.serversByDC[datacenter];
+    console.log('找到伺服器列表:', servers);
+
+    if (!Array.isArray(servers) || servers.length === 0) {
+        console.warn('伺服器列表為空');
+        showMessage('該數據中心沒有可用的伺服器', 'warning');
+        resetServerSelect();
+        return;
+    }
+
+    let html = '<option value="">-- 選擇伺服器 --</option>';
+
+    servers.forEach(server => {
+        html += `<option value="${escapeHtml(server)}">${escapeHtml(server)}</option>`;
+    });
+
+    $('#worldSelect').html(html).prop('disabled', false);
+    $('#confirmBtn').prop('disabled', true);
+
+    console.log('✓ 伺服器列表已更新，共', servers.length, '個伺服器');
+}
+
+// 重置伺服器選擇框
+function resetServerSelect() {
+    $('#worldSelect').html('<option value="">-- 先選擇數據中心 --</option>').prop('disabled', true);
+    $('#confirmBtn').prop('disabled', true);
+}
+
+// 確認伺服器選擇
+function confirmServerSelection() {
+    const datacenter = $('#dcSelect').val();
+    const world = $('#worldSelect').val();
+
+    if (!datacenter || !world) {
+        showMessage('請選擇數據中心和伺服器', 'warning');
+        return;
+    }
+
+    // 保存選擇
+    state.selectedDatacenter = datacenter;
+    state.selectedServer = world;
+    localStorage.setItem('selectedDatacenter', datacenter);
+    localStorage.setItem('selectedServer', world);
+
+    console.log('已選擇:', datacenter, '-', world);
+    showMessage(`已選擇伺服器: ${world} (${datacenter})`, 'success');
+
+    // 更新顯示
+    updateServerDisplay();
+
+    // 顯示主功能介面
+    showMainContent();
+}
+
+// 更新伺服器顯示
+function updateServerDisplay() {
+    const server = state.selectedServer || '未選擇';
+    const datacenter = state.selectedDatacenter || '';
+    const language = state.selectedLanguage || 'tc';
+    const languageText = language === 'tc' ? '繁中' : (language === 'en' ? 'EN' : language);
+
+    if (datacenter) {
+        $('#serverBadge').text(`${server} (${datacenter})`);
+    } else {
+        $('#serverBadge').text(server);
+    }
+
+    $('#languageBadge').text(`語言: ${languageText}`);
+}
+
+// 顯示主內容（隱藏伺服器選擇面板）
+function showMainContent() {
+    console.log('顯示主內容區域');
+    $('#serverSelectPanel').hide();
+    $('#searchPanel').show();
+    $('#idSearchPanel').show();
+    updateServerDisplay();
+}
+
+// 重置伺服器選擇（清除已保存的設定）
+function resetServerSelection() {
+    console.log('重置伺服器選擇');
+
+    // 清除 LocalStorage
+    localStorage.removeItem('selectedServer');
+    localStorage.removeItem('selectedDatacenter');
+
+    // 清除狀態
+    state.selectedServer = null;
+    state.selectedDatacenter = null;
+
+    // 重置UI
+    $('#serverSelectPanel').show();
+    $('#searchPanel').hide();
+    $('#idSearchPanel').hide();
+    $('#dcSelect').val('');
+    $('#worldSelect').html('<option value="">-- 先選擇數據中心 --</option>').prop('disabled', true);
+    $('#confirmBtn').prop('disabled', true);
+    $('#serverBadge').text('未選擇伺服器');
+
+    // 清除結果面板
+    clearSearchResults();
+    clearItemInfo();
+
+    showMessage('已重置伺服器選擇', 'info');
+}
+
+// 使用 PHP API 搜尋物品
+function searchItemByName() {
+    const query = $('#searchQuery').val().trim();
+
+    if (!query) {
+        showMessage('請輸入物品名稱', 'warning');
+        return;
+    }
+
+    // 調用原有的搜尋函數
+    searchItems();
+}
+
+function searchItems() {
+    const query = $('#searchQuery').val().trim();
+
+    if (!query) {
+        showMessage('請輸入物品名稱', 'warning');
+        return;
+    }
+
+    showGlobalLoading(true);
+    const loadingTimeout = setTimeout(function () {
+        if (state.isLoading) {
+            showGlobalLoading(false);
+            showMessage('搜尋超時，請稍後重試', 'warning');
+        }
+    }, 12000);
+    console.log('Searching for item:', query);
+
+    // 取得語言設定
+    const language = state.selectedLanguage || 'tc';
+
+    if (language === 'tc') {
+        // 繁體中文：同時查詢兩個API並整合結果
+        console.log('🔍 同時查詢 tc-search-service 和 tnze API...');
+        
+        Promise.allSettled([
+            searchFromTcService(query),
+            searchFromTnzeAPI(query)
+        ]).then(results => {
+            const tcResult = results[0].status === 'fulfilled' ? results[0].value : [];
+            const tnzeResult = results[1].status === 'fulfilled' ? results[1].value : [];
+            
+            console.log('✅ tc-search-service 結果:', tcResult.length, '個物品');
+            console.log('✅ tnze API 結果:', tnzeResult.length, '個物品');
+            
+            // 整合結果並去重
+            const mergedItems = mergeAndDeduplicateItems(tcResult, tnzeResult);
+            
+            clearTimeout(loadingTimeout);
+            showGlobalLoading(false);
+
+            if (mergedItems.length === 0) {
+                showMessage('未找到符合的物品', 'warning');
+                return;
+            }
+
+            console.log('📊 整合後結果:', mergedItems.length, '個物品');
+            fullSearchResults = mergedItems;
+            displaySearchResults(fullSearchResults);
+        }).catch(err => {
+            console.error('Search error:', err);
+            clearTimeout(loadingTimeout);
+            showGlobalLoading(false);
+            showMessage('搜尋失敗：' + err.message, 'danger');
+        });
+    } else {
+        // 英文：使用 XIVAPI
+        searchFromXIVAPI(query, 'en').then(items => {
+            clearTimeout(loadingTimeout);
+            showGlobalLoading(false);
+
+            if (items.length === 0) {
+                showMessage('未找到符合的物品', 'warning');
+                return;
+            }
+
+            fullSearchResults = items;
+            displaySearchResults(fullSearchResults);
+        }).catch(err => {
+            console.error('Search error:', err);
+            clearTimeout(loadingTimeout);
+            showGlobalLoading(false);
+            showMessage('搜尋失敗：' + err.message, 'danger');
+        });
+    }
+}
+
+// 從 tc-ffxiv-item-search-service 搜尋 (繁體中文，優先使用)
+function searchFromTcService(query) {
+    const url = config.tcSearchUrl + '?' + $.param({
+        sheets: 'Items',
+        query: query,
+        language: 'tc',
+        limit: 100,
+        field: 'Name,ItemSearchCategory.Name,Icon,LevelItem.todo,Rarity'
+    });
+
+    console.log('🔍 tc-search-service 請求 URL:', url);
+
+    return $.ajax({
+        url: url,
+        type: 'GET',
+        dataType: 'json',
+        timeout: config.timeout,
+        headers: {
+            'Accept': '*/*',
+            'Accept-Language': 'zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7',
+            'Referer': 'https://universalis.app/'
+        },
+        crossDomain: true,
+        xhrFields: {
+            withCredentials: false
+        }
+    }).then(response => {
+        console.log('✅ tc-search-service 完整回應:', response);
+        console.log('📦 response 類型:', typeof response);
+        console.log('🔑 response 鍵值:', Object.keys(response || {}));
+        
+        // 嘗試多種可能的數據結構
+        let rawItems = [];
+        
+        // 情況1: response 本身就是陣列
+        if (Array.isArray(response)) {
+            rawItems = response;
+            console.log('✓ response 本身是陣列，長度:', rawItems.length);
+        }
+        // 情況2: response.items
+        else if (response && response.items) {
+            rawItems = Array.isArray(response.items) ? response.items : [];
+            console.log('✓ 使用 response.items，長度:', rawItems.length);
+        }
+        // 情況3: response.results
+        else if (response && response.results) {
+            rawItems = Array.isArray(response.results) ? response.results : [];
+            console.log('✓ 使用 response.results，長度:', rawItems.length);
+        }
+        // 情況4: response.data
+        else if (response && response.data) {
+            rawItems = Array.isArray(response.data) ? response.data : [];
+            console.log('✓ 使用 response.data，長度:', rawItems.length);
+        }
+        else {
+            console.warn('⚠ 無法識別的 response 結構');
+        }
+
+        if (rawItems.length === 0) {
+            console.warn('tc-search-service 返回空結果');
+            return [];
+        }
+
+        console.log('原始物品範例 (前3個):', rawItems.slice(0, 3));
+
+        const items = rawItems.map(item => {
+            const id = item.ID || item.id;
+            const name = item.Name || item.name;
+            if (!id || !name) {
+                return null;
+            }
+
+            return {
+                id: id,
+                name: name,
+                category: (item.ItemSearchCategory && item.ItemSearchCategory.Name) || item.category || '未分類',
+                level: item.LevelItem || item.level || 0,
+                rarity: item.Rarity || item.rarity || 0,
+                icon: item.Icon || null
+            };
+        }).filter(Boolean);
+
+        console.log('處理後的物品數量:', items.length);
+        return items;
+    }).catch(err => {
+        console.error('❌ tc-search-service 請求失敗:', err);
+        console.error('錯誤狀態:', err.status);
+        console.error('錯誤訊息:', err.statusText);
+        console.error('回應內容:', err.responseText);
+        return [];
+    });
+}
+
+// 整合並去重兩個API的結果
+function mergeAndDeduplicateItems(tcItems, tnzeItems) {
+    const itemMap = new Map();
+    
+    // 優先使用 tc-search-service 的結果
+    tcItems.forEach(item => {
+        if (item.id) {
+            itemMap.set(item.id, item);
+        }
+    });
+    
+    // 補充 tnze API 的結果（只添加 tc-search-service 沒有的物品）
+    tnzeItems.forEach(item => {
+        if (item.id && !itemMap.has(item.id)) {
+            itemMap.set(item.id, item);
+        }
+    });
+    
+    // 轉換為陣列並按 ID 排序
+    const mergedArray = Array.from(itemMap.values());
+    mergedArray.sort((a, b) => a.id - b.id);
+    
+    console.log('🔄 去重前總數:', tcItems.length + tnzeItems.length);
+    console.log('✨ 去重後總數:', mergedArray.length);
+    console.log('🗑️ 剔除重複:', (tcItems.length + tnzeItems.length) - mergedArray.length, '個');
+    
+    return mergedArray;
+}
+
+// 從 tnze.yyyy.games API 搜尋 (繁體中文)
+function searchFromTnzeAPI(query) {
+    return new Promise((resolve, reject) => {
+        const results = [];
+        const seenItemIds = new Set();
+        let pageId = 0;
+        const maxPages = 2;
+
+        function fetchPage() {
+            if (pageId >= maxPages) {
+                resolve(results);
+                return;
+            }
+
+            const searchName = '%' + query + '%';
+            const url = 'https://tnze.yyyy.games/api/datasource/zh-TW/recipe_table?' + $.param({
+                page_id: pageId,
+                search_name: searchName
+            });
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                timeout: 8000
+            }).then(response => {
+                if (!response || !response.data || !Array.isArray(response.data) || response.data.length === 0) {
+                    resolve(results);
+                    return;
+                }
+
+                response.data.forEach(recipe => {
+                    const itemId = parseInt(recipe.item_id) || 0;
+                    const itemName = recipe.item_name || '';
+
+                    if (itemId > 0 && itemName && !seenItemIds.has(itemId)) {
+                        seenItemIds.add(itemId);
+                        results.push({
+                            id: itemId,
+                            name: itemName,
+                            category: recipe.job || '未分類',
+                            level: parseInt(recipe.item_level) || 0,
+                            rarity: 0,
+                            icon: null
+                        });
+                    }
                 });
 
-                console.log('API響應狀態:', response.status, action);
-
-                if (!response.ok) {
-                    throw new Error('HTTP ' + response.status + ': ' + response.statusText);
-                }
-
-                const data = await response.json();
-                console.log('API響應數據:', action, data);
-                
-                if (data.error) {
-                    throw new Error(data.message || '請求失敗');
-                }
-
-                return data.data;
-            } catch (error) {
-                console.error('API調用錯誤:', action, error);
-                if (error.name === 'TimeoutError' || error.name === 'AbortError') {
-                    showMessage('請求逾時，請稍後重試或檢查網路連線', 'danger');
+                pageId++;
+                if (pageId >= maxPages) {
+                    resolve(results);
                 } else {
-                    showMessage(error.message || '請求失敗，請重試', 'danger');
+                    fetchPage();
                 }
-                throw error;
-            } finally {
+            }).catch(err => {
+                console.warn('Tnze API 第', pageId, '頁失敗:', err);
+                if (results.length > 0) {
+                    resolve(results);
+                } else {
+                    reject(new Error('API 查詢失敗'));
+                }
+            });
+        }
+
+        fetchPage();
+    });
+}
+
+// 從 XIVAPI 搜尋 (英文)
+function searchFromXIVAPI(query, language) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: 'https://xivapi.com/search',
+            type: 'GET',
+            data: {
+                indexes: 'item',
+                string: query,
+                language: language
+            },
+            dataType: 'json',
+            timeout: 10000
+        }).then(response => {
+            if (!response.Results || response.Results.length === 0) {
+                resolve([]);
+                return;
+            }
+
+            const items = response.Results.map(result => ({
+                id: result.ID,
+                name: result.Name,
+                category: (result.ItemSearchCategory && result.ItemSearchCategory.Name) || 'Uncategorized',
+                level: result.LevelItem || 0,
+                rarity: result.Rarity || 0,
+                icon: result.Icon || null
+            }));
+
+            resolve(items);
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}
+
+function displaySearchResults(items) {
+    fullSearchResults = Array.isArray(items) ? items : [];
+    currentJobFilter = 'ALL';
+
+    renderJobFilter(fullSearchResults);
+    renderResultsList(getFilteredResults());
+    $('#searchResultsPanel').show();
+    showMessage('搜尋完成，找到 ' + fullSearchResults.length + ' 個物品', 'success');
+}
+
+function renderResultsList(items) {
+    $('#resultCount').text(items.length);
+
+    let html = '';
+    items.forEach(function (item) {
+        let categoryHtml = item.category ? '<span class="result-category">' + escapeHtml(item.category) + '</span>' : '';
+        let levelHtml = item.level ? '<span class="result-level">LV: ' + item.level + '</span>' : '';
+
+        html += '<div class="result-item">';
+        html += '<div class="result-details">';
+        html += '<div class="result-name">' + escapeHtml(item.name) + '</div>';
+        html += '<div class="result-meta">';
+        html += '<span class="result-id">ID: ' + item.id + '</span>';
+        html += categoryHtml;
+        html += levelHtml;
+        html += '</div></div>';
+        html += '<button class="btn btn-small btn-primary item-result-btn" onclick="queryItemById(' + item.id + ')">查詢</button>';
+        html += '</div>';
+    });
+
+    $('#resultsList').html(html);
+}
+
+function renderJobFilter(items) {
+    const categoryMap = new Map();
+
+    (items || []).forEach(item => {
+        const category = (item.category || '').trim();
+        if (category) {
+            const key = category.toLowerCase();
+            const existing = categoryMap.get(key) || { name: category, count: 0 };
+            existing.count += 1;
+            existing.name = existing.name || category;
+            categoryMap.set(key, existing);
+        }
+    });
+
+    const $container = $('#jobFilterContainer');
+    const $buttons = $('#jobFilterButtons');
+
+    if (categoryMap.size === 0) {
+        $container.removeClass('active');
+        $buttons.html('');
+        return;
+    }
+
+    const totalCount = (items || []).length;
+    let html = '<button class="filter-btn filter-btn-active" data-job="ALL">全部 (' + totalCount + ')</button>';
+    const sortedCategories = Array.from(categoryMap.entries()).sort((a, b) => a[1].name.localeCompare(b[1].name));
+
+    sortedCategories.forEach(([key, data]) => {
+        html += '<button class="filter-btn" data-job="' + escapeHtml(key) + '">' + escapeHtml(data.name) + ' (' + data.count + ')</button>';
+    });
+
+    $buttons.html(html);
+    $container.addClass('active');
+
+    $('#jobFilterButtons .filter-btn').off('click').on('click', function () {
+        const selected = $(this).data('job');
+        currentJobFilter = selected;
+
+        $('#jobFilterButtons .filter-btn').removeClass('filter-btn-active');
+        $(this).addClass('filter-btn-active');
+
+        renderResultsList(getFilteredResults());
+    });
+}
+
+function getFilteredResults() {
+    if (currentJobFilter === 'ALL') {
+        return fullSearchResults;
+    }
+
+    return fullSearchResults.filter(item => {
+        const category = (item.category || '').trim().toLowerCase();
+        return category === currentJobFilter;
+    });
+}
+
+function clearSearchResults() {
+    $('#searchResultsPanel').hide();
+    $('#resultsList').html('');
+    $('#searchQuery').val('');
+    fullSearchResults = [];
+    currentJobFilter = 'ALL';
+    $('#jobFilterContainer').removeClass('active');
+    $('#jobFilterButtons').html('');
+}
+
+// ==================== 物品查詢 ====================
+let currentItemId = null;
+
+function queryItemById(itemId) {
+    if (!itemId) {
+        itemId = $('#itemIdInput').val().trim();
+    }
+
+    if (!itemId) {
+        showMessage('請輸入物品 ID', 'warning');
+        return;
+    }
+
+    currentItemId = itemId;
+    showGlobalLoading(true);
+    console.log('Querying item ID:', itemId);
+
+    // 使用 XIVAPI 獲取物品信息
+    $.ajax({
+        url: 'https://xivapi.com/Item/' + encodeURIComponent(itemId),
+        type: 'GET',
+        dataType: 'json',
+        timeout: 10000,
+        success: function (response) {
+            console.log('XIVAPI item response:', response);
+
+            if (!response.ID) {
+                showMessage('找不到物品 ID: ' + itemId, 'danger');
+                showGlobalLoading(false);
+                return;
+            }
+
+            const itemData = {
+                item: {
+                    id: response.ID,
+                    name: response.Name,
+                    description: response.Description
+                },
+                world: state.selectedServer,
+                price: null
+            };
+
+            displayItemInfo(itemData);
+            showMessage('物品信息已載入', 'success');
+
+            // 嘗試從 Universalis 獲取價格，並自動計算合成成本
+            if (state.selectedServer) {
+                getItemPrice(response.ID)
+                    .always(() => {
+                        showGlobalLoading(false);
+                        autoCalculateCraftingCost();
+                    });
+            } else {
                 showGlobalLoading(false);
             }
-        },
 
-        getDatacenters: async () => {
-            return api.call('get_datacenters');
+            // 顯示製造成本計算面板
+            $('#craftingCostPanel').show();
         },
-
-        getWorlds: async (datacenter) => {
-            return api.call('get_worlds', { datacenter });
-        },
-
-        searchItems: async (query, language = 'auto') => {
-            return api.call('search_item_by_name', { query, language });
-        },
-
-        getItemInfo: async (itemId) => {
-            return api.call('item_overview', {
-                item_id: itemId,
-                world: state.selectedServer,
-                quantity: 1
-            });
-        },
-
-        queryPrice: async (items) => {
-            return api.call('query_price', {
-                world: state.selectedServer,
-                items: Array.isArray(items) ? items.join(',') : items
-            });
-        },
-
-        searchRecipes: async (itemId) => {
-            return api.call('search_recipe_by_item', { item_id: itemId });
-        },
-
-        calculateCraftCost: async (recipeId) => {
-            return api.call('calculate_craft_cost', {
-                recipe_id: recipeId,
-                world: state.selectedServer
-            });
+        error: function (xhr, status, error) {
+            console.log('XIVAPI item error:', status, error, xhr);
+            showMessage('查詢失敗。物品 ID 可能不存在。', 'danger');
+            showGlobalLoading(false);
         }
-    };
+    });
+}
 
-    // ==================== UI 操作 ====================
-    const ui = {
-        init: () => {
-            if (state.selectedServer && state.selectedDatacenter) {
-                ui.showMainContent();
-            } else {
-                ui.initializeServerSelection();
-            }
+function displayItemInfo(data) {
+    const item = data.item;
+    const price = data.price;
 
-            // 事件綁定
-            ui.bindEvents();
-        },
+    $('#itemTitle').text(item.name + ' (ID: ' + item.id + ')');
+    $('#itemInfoContent').html(
+        '<div class="info-row">' +
+        '<span class="label">物品名稱：</span>' +
+        '<span class="value">' + escapeHtml(item.name) + '</span>' +
+        '</div>' +
+        '<div class="info-row">' +
+        '<span class="label">物品 ID：</span>' +
+        '<span class="value">' + item.id + '</span>' +
+        '</div>' +
+        '<div class="info-row">' +
+        '<span class="label">伺服器：</span>' +
+        '<span class="value">' + escapeHtml(data.world) + '</span>' +
+        '</div>'
+    );
+    $('#itemInfoPanel').show();
 
-        bindEvents: () => {
-            $(document).on('change', '#dcSelect', ui.onDatacenterChange);
-            $(document).on('change', '#worldSelect', ui.onWorldChange);
-            $(document).on('change', '#languageSelect', ui.onLanguageChange);
-            $(document).on('change', '#searchLanguage', ui.onLanguageChange);
-            $(document).on('click', '#confirmBtn', ui.onConfirmSelection);
-            $(document).on('click', '.item-result-btn', ui.onSelectItem);
-            $(document).on('keypress', '#quickSearch', function(e) {
-                if (e.which === 13 || e.keyCode === 13) {
-                    e.preventDefault();
-                    performQuickSearch();
-                }
-            });
-        },
+    // 依 index.php 邏輯載入配方詳情，含子材料成本
+    loadRecipeDetailsForItem(item.id, item.name);
+}
 
-        initializeServerSelection: async function() {
-            try {
-                const dcData = await api.getDatacenters();
-                const $select = $('#dcSelect');
-                
-                dcData.datacenters.forEach(function(dc) {
-                    const name = dc.name || dc;
-                    $select.append('<option value="' + name + '">' + name + '</option>');
-                });
-                
-                // 初始化語言選擇
-                $('#languageSelect').val(state.selectedLanguage);
-            } catch (error) {
-                showMessage('無法載入數據中心', 'danger');
-            }
-        },
-
-        onDatacenterChange: async function() {
-            const dc = $(this).val();
-            const $worldSelect = $('#worldSelect');
-            
-            $worldSelect.find('option:not(:first)').remove();
-            $worldSelect.prop('disabled', !dc);
-
-            if (dc) {
-                try {
-                    const worldData = await api.getWorlds(dc);
-                    worldData.worlds.forEach(function(world) {
-                        const name = typeof world === 'object' ? (world.name || world.id) : world;
-                        $worldSelect.append('<option value="' + name + '">' + name + '</option>');
-                    });
-                } catch (error) {
-                    showMessage('無法載入伺服器列表', 'warning');
-                }
-            }
-
-            ui.updateConfirmButton();
-        },
-
-        onWorldChange: () => {
-            ui.updateConfirmButton();
-        },
-
-        onLanguageChange: function() {
-            const language = $(this).val();
-            state.selectedLanguage = language;
-            localStorage.setItem('selectedLanguage', language);
-        },
-
-        updateConfirmButton: () => {
-            const canConfirm = $('#dcSelect').val() && $('#worldSelect').val();
-            $('#confirmBtn').prop('disabled', !canConfirm);
-        },
-
-        onConfirmSelection: () => {
-            const dc = $('#dcSelect').val();
-            const world = $('#worldSelect').val();
-
-            if (dc && world) {
-                state.selectedDatacenter = dc;
-                state.selectedServer = world;
-                localStorage.setItem('selectedDatacenter', dc);
-                localStorage.setItem('selectedServer', world);
-                ui.showMainContent();
-            }
-        },
-
-        showMainContent: () => {
-            $('#initialModal').hide();
-            $('#mainContainer').show();
-            $('#serverBadge').text(state.selectedServer);
-            // 初始化語言選擇
-            $('#searchLanguage').val(state.selectedLanguage);
-        },
-
-        onSelectItem: function() {
-            const itemId = $(this).data('item-id');
-            const itemName = $(this).data('item-name');
-            
-            $('#itemIdInput').val(itemId);
-            queryItemById();
-        }
-    };
-
-    // ==================== 搜尋功能 ====================
-    window.performQuickSearch = async function() {
-        const query = $('#quickSearch').val().trim();
-        if (!query) {
-            showMessage('請輸入物品名稱', 'warning');
-            return;
-        }
-
-        try {
-            const language = $('#searchLanguage').val() || state.selectedLanguage;
-            state.selectedLanguage = language;
-            localStorage.setItem('selectedLanguage', language);
-            
-            // 顯示搜尋中的提示
-            showMessage('搜尋中...', 'info');
-            
-            const results = await api.searchItems(query, language);
-            displaySearchResults(results.items, results.total);
-        } catch (error) {
-            if (error.name === 'AbortError') {
-                showMessage('搜尋逾時，請稍後重試', 'danger');
-            }
-            // 其他錯誤已由 api.call 處理
-        }
-    };
-
-    // 保存完整的搜尋結果用於篩選
-    let fullSearchResults = [];
-
-    window.clearSearchResults = function() {
-        $('#searchResultsPanel').hide();
-        $('#resultsList').html('');
-        $('#jobFilterContainer').hide();
-        $('#jobFilterButtons').html('');
-        $('#quickSearch').val('');
-        fullSearchResults = [];
-    };
-
-    function displaySearchResults(items, total) {
-        const $resultsPanel = $('#searchResultsPanel');
-        const $list = $('#resultsList');
-        
-        // 保存完整結果
-        fullSearchResults = items;
-        
-        $('#resultCount').text(total || items.length);
-        
-        // 提取所有職業並建立篩選按鈕
-        const jobs = extractJobsFromItems(items);
-        if (jobs.length > 0) {
-            renderJobFilterButtons(jobs);
-        }
-        
-        // 顯示所有結果
-        renderSearchResultsList(items);
-        $resultsPanel.show();
+function getItemPrice(itemId) {
+    if (!state.selectedServer) {
+        console.log('No server selected, skipping price lookup');
+        return $.Deferred().resolve();
     }
 
-    // 從物品陣列中提取職業列表
-    function extractJobsFromItems(items) {
-        const jobsSet = new Set();
-        items.forEach(function(item) {
-            if (item.category && item.category !== '未分類') {
-                jobsSet.add(item.category);
-            }
-        });
-        return Array.from(jobsSet).sort();
-    }
+    console.log('Getting price for item', itemId, 'on server', state.selectedServer);
 
-    // 渲染職業篩選按鈕
-    function renderJobFilterButtons(jobs) {
-        const $filterContainer = $('#jobFilterContainer');
-        const $filterButtons = $('#jobFilterButtons');
-        
-        let html = '<button class="filter-btn filter-btn-active" data-job="all">全部 (' + fullSearchResults.length + ')</button>';
-        
-        jobs.forEach(function(job) {
-            const count = fullSearchResults.filter(item => item.category === job).length;
-            html += '<button class="filter-btn" data-job="' + escapeHtml(job) + '">' + escapeHtml(job) + ' (' + count + ')</button>';
-        });
-        
-        $filterButtons.html(html);
-        $filterContainer.show();
-        
-        // 綁定篩選按鈕點擊事件
-        $filterButtons.find('.filter-btn').off('click').on('click', function() {
-            const selectedJob = $(this).attr('data-job');
-            filterSearchResultsByJob(selectedJob);
-            
-            // 更新按鈕樣式
-            $filterButtons.find('.filter-btn').removeClass('filter-btn-active');
-            $(this).addClass('filter-btn-active');
-        });
-    }
+    return $.ajax({
+        url: 'https://universalis.app/api/v2/' + encodeURIComponent(state.selectedServer) + '/' + encodeURIComponent(itemId),
+        type: 'GET',
+        dataType: 'json',
+        timeout: 10000
+    }).then(function (response) {
+        console.log('Universalis price response:', response);
 
-    // 按職業篩選搜尋結果
-    function filterSearchResultsByJob(job) {
-        let filteredItems = fullSearchResults;
-        
-        if (job !== 'all') {
-            filteredItems = fullSearchResults.filter(function(item) {
-                return item.category === job;
-            });
-        }
-        
-        renderSearchResultsList(filteredItems);
-        $('#resultCount').text(filteredItems.length + ' / ' + fullSearchResults.length);
-    }
+        if (response.averagePriceNQ || response.averagePriceHQ || response.minPriceNQ || response.minPriceHQ) {
+            const price = {
+                nq_min: response.minPriceNQ ? '✓ ' + response.minPriceNQ : '無',
+                nq_avg: response.averagePriceNQ ? Math.round(response.averagePriceNQ) : '無',
+                hq_min: response.minPriceHQ ? '✓ ' + response.minPriceHQ : '無',
+                hq_avg: response.averagePriceHQ ? Math.round(response.averagePriceHQ) : '無'
+            };
 
-    // 渲染搜尋結果列表
-    function renderSearchResultsList(items) {
-        const $list = $('#resultsList');
-        
-        let html = '';
-        items.forEach(function(item) {
-            let categoryHtml = item.category ? '<span class="result-category">' + escapeHtml(item.category) + '</span>' : '';
-            let levelHtml = item.level ? '<span class="result-level">LV: ' + item.level + '</span>' : '';
-            
-            html += '<div class="result-item">';
-            html += '<div class="result-details">';
-            html += '<div class="result-name">' + escapeHtml(item.name) + '</div>';
-            html += '<div class="result-meta">';
-            html += '<span class="result-id">ID: ' + item.id + '</span>';
-            html += categoryHtml;
-            html += levelHtml;
-            html += '</div></div>';
-            html += '<button class="btn btn-small btn-primary item-result-btn" data-item-id="' + item.id + '" data-item-name="' + escapeHtml(item.name) + '">查詢</button>';
-            html += '</div>';
-        });
-        
-        $list.html(html);
-    }
+            // 緩存成品市場價，供成本區塊顯示
+            state.lastItemPriceData = price;
 
-    // ==================== 物品查詢 ====================
-    window.queryItemById = async function() {
-        const itemId = $('#itemIdInput').val().trim();
-        if (!itemId) {
-            showMessage('請輸入物品 ID', 'warning');
-            return;
-        }
-
-        try {
-            const itemData = await api.getItemInfo(itemId);
-            displayItemInfo(itemData);
-        } catch (error) {
-            // 錯誤已由 api.call 處理
-        }
-    };
-
-    function displayItemInfo(data) {
-        const item = data.item;
-        const price = data.price;
-
-        // 物品信息
-        $('#itemTitle').text(item.name + ' (ID: ' + item.id + ')');
-        $('#itemInfoContent').html(
-            '<div class="info-row">' +
-                '<span class="label">物品名稱：</span>' +
-                '<span class="value">' + escapeHtml(item.name) + '</span>' +
-            '</div>' +
-            '<div class="info-row">' +
-                '<span class="label">物品 ID：</span>' +
-                '<span class="value">' + item.id + '</span>' +
-            '</div>' +
-            '<div class="info-row">' +
-                '<span class="label">伺服器：</span>' +
-                '<span class="value">' + escapeHtml(data.world) + '</span>' +
-            '</div>'
-        );
-        $('#itemInfoPanel').show();
-
-        // 價格信息
-        if (price) {
             $('#priceContent').html(
                 '<div class="price-row">' +
-                    '<div class="price-type">NQ (Normal Quality)</div>' +
-                    '<div class="price-value">' +
-                        '<div>最低: <strong>' + (price.nq_min || '無') + '</strong> 金幣</div>' +
-                        '<div>平均: <strong>' + (price.nq_avg || '無') + '</strong> 金幣</div>' +
-                    '</div>' +
+                '<div class="price-type">NQ (Normal Quality)</div>' +
+                '<div>最低: <strong>' + price.nq_min + '</strong> 金幣</div>' +
+                '<div>平均: <strong>' + price.nq_avg + '</strong> 金幣</div>' +
                 '</div>' +
                 '<div class="price-row">' +
-                    '<div class="price-type">HQ (High Quality)</div>' +
-                    '<div class="price-value">' +
-                        '<div>最低: <strong>' + (price.hq_min || '無') + '</strong> 金幣</div>' +
-                        '<div>平均: <strong>' + (price.hq_avg || '無') + '</strong> 金幣</div>' +
-                    '</div>' +
+                '<div class="price-type">HQ (High Quality)</div>' +
+                '<div>最低: <strong>' + price.hq_min + '</strong> 金幣</div>' +
+                '<div>平均: <strong>' + price.hq_avg + '</strong> 金幣</div>' +
                 '</div>'
             );
             $('#pricePanel').show();
+        } else {
+            console.log('No price data available');
         }
-        
-        // 查詢合成表
-        loadRecipesForItem(item.id);
+    }).catch(function (xhr, status, error) {
+        console.log('Universalis error:', status, error);
+    });
+}
+
+function clearItemInfo() {
+    $('#itemInfoPanel').hide();
+    $('#pricePanel').hide();
+    $('#craftPanel').hide();
+    $('#craftContent').html('');
+    $('#craftingCostPanel').hide();
+    $('#itemIdInput').val('');
+    currentItemId = null;
+    state.lastItemPriceData = null;
+}
+
+// ==================== 製造成本計算 ====================
+
+function calculateCraftingCost() {
+    if (!currentItemId) {
+        showMessage('請先查詢物品', 'warning');
+        return;
     }
 
-    // ==================== 合成表查詢 ====================
-    async function loadRecipesForItem(itemId) {
-        try {
-            const recipes = await api.searchRecipes(itemId);
-            console.log('收到的配方數據:', recipes);
-            if (recipes && recipes.recipes && recipes.recipes.length > 0) {
-                // 直接載入第一個配方的詳情，不顯示配方列表
-                const firstRecipe = recipes.recipes[0];
-                console.log('直接載入配方:', firstRecipe.name);
-                loadRecipeDetails(firstRecipe.id, firstRecipe.name);
-            } else {
-                console.log('沒有配方數據');
-                $('#craftPanel').hide();
-                $('#recipePanel').hide();
+    const quantity = parseInt($('#craftQuantity').val()) || 1;
+
+    if (!state.selectedServer) {
+        showMessage('請選擇伺服器', 'warning');
+        return;
+    }
+
+    showGlobalLoading(true);
+    console.log('Calculating crafting cost for item:', currentItemId, 'quantity:', quantity);
+
+    // 先從 XIVAPI 獲取食譜信息
+    $.ajax({
+        url: 'https://xivapi.com/Item/' + currentItemId,
+        type: 'GET',
+        dataType: 'json',
+        timeout: config.timeout,
+        success: function (itemResponse) {
+            console.log('Item response:', itemResponse);
+
+            if (!itemResponse.Recipes || itemResponse.Recipes.length === 0) {
+                showMessage('找不到該物品的食譜', 'warning');
+                showGlobalLoading(false);
+                return;
             }
-        } catch (error) {
-            console.error('查詢配方時發生錯誤:', error);
-            // 可能沒有合成表，這不算錯誤
-            $('#craftPanel').hide();
-            $('#recipePanel').hide();
+
+            const recipeId = itemResponse.Recipes[0].ID;
+            console.log('Found recipe ID:', recipeId);
+
+            // 獲取食譜詳細信息
+            $.ajax({
+                url: 'https://xivapi.com/Recipe/' + recipeId,
+                type: 'GET',
+                dataType: 'json',
+                timeout: config.timeout,
+                success: function (recipeResponse) {
+                    console.log('Recipe details:', recipeResponse);
+                    calculateAndDisplayCost(recipeResponse, quantity);
+                    showGlobalLoading(false);
+                },
+                error: function (xhr, status, error) {
+                    console.log('Recipe details error:', status, error);
+                    showGlobalLoading(false);
+                    showMessage('獲取食譜詳情失敗', 'danger');
+                }
+            });
+        },
+        error: function (xhr, status, error) {
+            console.log('Item lookup error:', status, error);
+            showGlobalLoading(false);
+            showMessage('查詢物品失敗：' + error, 'danger');
+        }
+    });
+}
+
+// 自動計算合成成本（在有伺服器且已有 currentItemId 時觸發）
+function autoCalculateCraftingCost() {
+    if (!state.selectedServer) {
+        return;
+    }
+    if (!currentItemId) {
+        return;
+    }
+    // 使用當前輸入的數量（預設 1）
+    calculateCraftingCost();
+}
+
+function calculateAndDisplayCost(recipe, quantity) {
+    if (!recipe) {
+        showMessage('無效的食譜信息', 'danger');
+        return;
+    }
+
+    const ingredients = [];
+    let totalCost = 0;
+
+    // 提取材料列表
+    for (let i = 0; i <= 9; i++) {
+        const ingredientKey = 'ItemIngredient' + i;
+        const amountKey = 'AmountIngredient' + i;
+
+        if (recipe[ingredientKey] && recipe[ingredientKey].ID) {
+            const itemId = recipe[ingredientKey].ID;
+            const requiredAmount = (recipe[amountKey] || 0) * quantity;
+            const icon = recipe[ingredientKey].IconHD || recipe[ingredientKey].Icon || null;
+
+            if (requiredAmount > 0) {
+                ingredients.push({
+                    id: itemId,
+                    name: recipe[ingredientKey].Name || '未知',
+                    requiredAmount: requiredAmount,
+                    unitPrice: 0,
+                    icon: icon
+                });
+            }
         }
     }
 
-    function displayRecipes(recipes, itemId) {
-        const $craftPanel = $('#craftPanel');
-        const $craftContent = $('#craftContent');
-        
-        console.log('displayRecipes 收到的配方數量:', recipes ? recipes.length : 0);
-        
-        if (!recipes || recipes.length === 0) {
-            console.log('沒有配方或配方列表為空，隱藏面板');
-            $craftPanel.hide();
+    if (ingredients.length === 0) {
+        showMessage('無法解析食譜材料', 'warning');
+        return;
+    }
+
+    console.log('Ingredients found:', ingredients);
+
+    // 批量查詢材料價格
+    const itemIds = ingredients.map(i => i.id).join(',');
+    $.ajax({
+        url: 'https://universalis.app/api/v2/aggregated/' + encodeURIComponent(state.selectedServer) + '/' + itemIds,
+        type: 'GET',
+        dataType: 'json',
+        timeout: config.timeout,
+        success: function (priceResponse) {
+            console.log('Price response:', priceResponse);
+
+            // 更新材料價格
+            if (priceResponse.results) {
+                priceResponse.results.forEach(function (result) {
+                    const itemId = result.itemID || result.itemId;
+                    const ingredient = ingredients.find(i => i.id === itemId);
+
+                    if (ingredient && result.nq) {
+                        // 使用 NQ 最低價格或平均價格
+                        const unit = result.nq.minListing?.world?.price ||
+                            result.nq.averageSalePrice?.world?.price || 0;
+                        ingredient.unitPrice = roundPrice(unit);
+                        totalCost += ingredient.unitPrice * ingredient.requiredAmount;
+                    }
+                });
+            }
+
+            // 顯示結果
+            totalCost = roundPrice(totalCost);
+            const costPerUnit = quantity > 0 ? roundPrice(totalCost / quantity) : 0;
+            displayCraftingCost({
+                ingredients: ingredients,
+                totalCost: totalCost,
+                costPerUnit: costPerUnit
+            });
+            showMessage('成本計算完成', 'success');
+        },
+        error: function (xhr, status, error) {
+            console.log('Price lookup error:', status, error);
+            showMessage('無法獲取材料價格，請稍後重試', 'warning');
+
+            // 仍然顯示材料列表，但價格為 0
+            const costPerUnit = 0;
+            displayCraftingCost({
+                ingredients: ingredients,
+                totalCost: 0,
+                costPerUnit: costPerUnit
+            });
+        }
+    });
+}
+
+function displayCraftingCost(data) {
+    let html = '';
+
+    if (data.ingredients && data.ingredients.length > 0) {
+        html += '<h4 style="margin-bottom: 1rem; color: var(--primary);">📦 所需材料</h4>';
+        html += '<div style="overflow-y: auto; max-height: 300px; margin-bottom: 1.5rem;">';
+
+        data.ingredients.forEach(function (ingredient) {
+            const totalCost = roundPrice((ingredient.unitPrice || 0) * ingredient.requiredAmount);
+            const iconUrl = getIconUrl(ingredient.icon);
+            html += '<div style="display: flex; justify-content: space-between; padding: 0.5rem; border-bottom: 1px solid var(--border-color);">';
+            html += '<div style="display:flex; align-items:center; gap:0.5rem;">';
+            html += '<img src="' + iconUrl + '" alt="' + escapeHtml(ingredient.name) + ' icon" style="width:36px; height:36px; border-radius:0.5rem; border:1px solid var(--border-color); object-fit: cover; background:#e9ecef;">';
+            html += '<div>';
+            html += '<strong>' + escapeHtml(ingredient.name) + '</strong><br>';
+            html += '<small style="color: var(--gray);">數量: ' + ingredient.requiredAmount + ' | 單價: ' + (ingredient.unitPrice || '0') + ' G</small>';
+            html += '</div>';
+            html += '</div>';
+            html += '<div style="text-align: right;">';
+            html += '<strong>' + totalCost.toLocaleString() + ' G</strong>';
+            html += '</div>';
+            html += '</div>';
+        });
+
+        html += '</div>';
+    }
+
+    html += '<div style="background: #e8f4f8; padding: 1rem; border-radius: 0.375rem; margin-top: 1rem;">';
+    html += '<div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">';
+    html += '<span>總成本：</span>';
+    html += '<strong style="color: var(--danger);">' + (data.totalCost || 0).toLocaleString() + ' G</strong>';
+    html += '</div>';
+    html += '<div style="display: flex; justify-content: space-between;">';
+    html += '<span>平均成本（單位）：</span>';
+    html += '<strong style="color: var(--primary);">' + (data.costPerUnit || 0).toLocaleString() + ' G</strong>';
+    html += '</div>';
+    html += '</div>';
+
+    // 顯示成品市場價 (使用緩存的價格數據)
+    if (state.lastItemPriceData) {
+        html += '<div style="background: #fff9e6; padding: 1rem; border-radius: 0.375rem; margin-top: 0.75rem; border: 1px solid var(--border-color);">';
+        html += '<div style="font-weight: 600; margin-bottom: 0.5rem;">成品市場價（' + escapeHtml(state.selectedServer || '-') + '）</div>';
+        html += '<div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">';
+        html += '<span>NQ 最低 / 平均：</span>';
+        html += '<strong>' + escapeHtml(state.lastItemPriceData.nq_min) + ' / ' + escapeHtml(state.lastItemPriceData.nq_avg) + ' G</strong>';
+        html += '</div>';
+        html += '<div style="display: flex; justify-content: space-between;">';
+        html += '<span>HQ 最低 / 平均：</span>';
+        html += '<strong>' + escapeHtml(state.lastItemPriceData.hq_min) + ' / ' + escapeHtml(state.lastItemPriceData.hq_avg) + ' G</strong>';
+        html += '</div>';
+        html += '</div>';
+    }
+
+    $('#craftingCostContent').html(html);
+    $('#craftingCostPanel').show();
+    showMessage('成本計算完成', 'success');
+}
+
+// ==================== 合成表（含子材料成本） ====================
+async function loadRecipeDetailsForItem(itemId, itemName) {
+    console.log('loadRecipeDetailsForItem', itemId, itemName);
+    $('#craftPanel').hide();
+    $('#craftContent').html('');
+
+    if (!itemId) {
+        return;
+    }
+
+    // 沒選伺服器時，只顯示配方結構不算成本
+    const hasServer = Boolean(state.selectedServer);
+
+    try {
+        showGlobalLoading(true);
+
+        // 先取得物品可用的配方列表，取第一個
+        const itemResponse = await $.ajax({
+            url: config.xivApiUrl + '/Item/' + encodeURIComponent(itemId),
+            type: 'GET',
+            dataType: 'json',
+            timeout: config.timeout
+        });
+
+        const recipes = (itemResponse && itemResponse.Recipes) || [];
+        if (!recipes.length) {
+            console.log('No recipes for item', itemId);
             return;
         }
-        
-        let html = '<div class="recipes-list">';
-        recipes.forEach(function(recipe) {
-            html += '\n                <div class="recipe-item" style="cursor: pointer; padding: 10px; border: 1px solid #ddd; margin-bottom: 5px; border-radius: 4px;" onclick="loadRecipeDetails(' + recipe.id + ', \'' + escapeHtml(recipe.name) + '\')">\n                    <div><strong>' + escapeHtml(recipe.name) + '</strong></div>\n                    <div style="font-size: 12px; color: #666;">配方ID: ' + recipe.id + '</div>\n                </div>\n            ';
-        });
-        html += '</div>';
-        
-        $craftContent.html(html);
-        $craftPanel.show();
-        console.log('配方面板已顯示，共 ' + recipes.length + ' 個配方');
+
+        const primaryRecipeId = recipes[0].ID;
+        const recipeDetail = await fetchRecipeDetail(primaryRecipeId);
+        const recipeCost = await buildRecipeCost(recipeDetail, hasServer);
+
+        // 取得每個材料的子配方與成本（若有）
+        await attachSubRecipeCosts(recipeCost.ingredients, hasServer);
+
+        renderRecipeDetails(recipeDetail, recipeCost, itemName);
+    } catch (error) {
+        console.warn('loadRecipeDetailsForItem error', error);
+        showMessage('載入配方詳情失敗', 'warning');
+    } finally {
+        showGlobalLoading(false);
     }
+}
 
-    window.loadRecipeDetails = async function(recipeId, recipeName) {
-        try {
-            showGlobalLoading(true);
-            const costData = await api.calculateCraftCost(recipeId);
-            
-            // 同時查詢所有材料的配方詳情（包括子材料價格）
-            const ingredientsWithRecipes = await Promise.all(
-                costData.ingredients.map(async function(ing) {
-                    try {
-                        // 先查詢該材料有哪些配方
-                        const recipes = await api.searchRecipes(ing.id);
-                        
-                        // 如果有配方，查詢第一個配方的完整成本（包括子材料）
-                        let recipeCostData = null;
-                        if (recipes.recipes && recipes.recipes.length > 0) {
-                            const firstRecipe = recipes.recipes[0];
-                            recipeCostData = await api.calculateCraftCost(firstRecipe.id);
-                        }
-                        
-                        return {
-                            ...ing,
-                            recipes: recipes.recipes || [],
-                            recipeCostData: recipeCostData
-                        };
-                    } catch (error) {
-                        return {
-                            ...ing,
-                            recipes: [],
-                            recipeCostData: null
-                        };
-                    }
-                })
-            );
-            
-            costData.ingredients = ingredientsWithRecipes;
-            displayRecipeDetails(costData, recipeName);
-        } catch (error) {
-            // 錯誤已由 api.call 處理
-        } finally {
-            showGlobalLoading(false);
-        }
-    };
-
-    function displayRecipeDetails(data, recipeName) {
-        const $recipePanel = $('#recipePanel');
-        const recipe = data.recipe;
-        const ingredients = data.ingredients;
-        const totalCost = data.totalCost;
-        const costPerItem = data.costPerItem;
-        const yields = data.yields;
-        
-        let ingredientsHtml = '<div class="ingredients-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 15px; margin-top: 15px;">';
-        ingredients.forEach(function(ing, index) {
-            const iconUrl = ing.icon ? 'https://xivapi.com' + ing.icon : '';
-            const iconHtml = iconUrl ? '<img src="' + iconUrl + '" alt="' + escapeHtml(ing.name) + '" style="width: 40px; height: 40px;" onerror="this.src=\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2240%22 height=%2240%22%3E%3Crect fill=%22%23ddd%22 width=%2240%22 height=%2240%22/%3E%3C/svg%3E\'">' : '';
-            
-            // 材料配方詳情
-            let recipeDetailsHtml = '';
-            if (ing.recipeCostData) {
-                const rData = ing.recipeCostData;
-                const rRecipe = rData.recipe;
-                const yields = rData.yields || 1;
-                const costPerItem = yields > 0 ? Math.round(rData.totalCost / yields) : rData.totalCost;
-                
-                recipeDetailsHtml = '<div style="margin-top: 8px; padding: 8px; background: #f8f9fa; border-radius: 4px; border-left: 3px solid #28a745;">';
-                recipeDetailsHtml += '<div style="font-size: 11px; font-weight: bold; color: #28a745; margin-bottom: 6px;">📋 ' + escapeHtml(ing.recipes[0].name) + '</div>';
-                recipeDetailsHtml += '<div style="display: flex; justify-content: space-between; font-size: 11px; color: #666; margin-bottom: 4px;">';
-                recipeDetailsHtml += '<span>產出: <strong>' + yields + '</strong> 個</span>';
-                recipeDetailsHtml += '<span>總成本: <span style="color: #e74c3c; font-weight: bold;">' + rData.totalCost.toLocaleString() + '</span> 金幣</span>';
-                recipeDetailsHtml += '</div>';
-                recipeDetailsHtml += '<div style="font-size: 11px; color: #0066cc; font-weight: bold; margin-bottom: 4px;">單個成本: ' + costPerItem.toLocaleString() + ' 金幣</div>';
-                
-                // 子材料列表
-                if (rData.ingredients && rData.ingredients.length > 0) {
-                    recipeDetailsHtml += '<div style="font-size: 10px; color: #666; margin-top: 4px; padding-top: 4px; border-top: 1px dashed #ddd;">需要材料：</div>';
-                    rData.ingredients.forEach(function(subIng) {
-                        const subIcon = subIng.icon ? 'https://xivapi.com' + subIng.icon : '';
-                        const subIconHtml = subIcon ? '<img src="' + subIcon + '" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 3px;" onerror="this.style.display=\'none\'">' : '';
-                        recipeDetailsHtml += '<div style="font-size: 10px; color: #555; padding: 2px 0; display: flex; justify-content: space-between;">';
-                        recipeDetailsHtml += '<span>' + subIconHtml + escapeHtml(subIng.name) + ' x' + subIng.amount + '</span>';
-                        recipeDetailsHtml += '<span style="color: #0066cc;">' + subIng.totalCost.toLocaleString() + '金</span>';
-                        recipeDetailsHtml += '</div>';
-                    });
-                }
-                
-                // 成本比較
-                const marketCost = ing.totalCost;
-                const craftCost = costPerItem * ing.amount;
-                const saving = marketCost - craftCost;
-                if (saving !== 0) {
-                    const savingClass = saving > 0 ? 'color: #28a745' : 'color: #dc3545';
-                    const savingText = saving > 0 ? '💰 製作省' : '⚠️ 購買省';
-                    recipeDetailsHtml += '<div style="margin-top: 6px; padding-top: 6px; border-top: 1px solid #ddd; font-size: 11px; ' + savingClass + '; font-weight: bold;">';
-                    recipeDetailsHtml += savingText + ' ' + Math.abs(saving).toLocaleString() + ' 金幣';
-                    recipeDetailsHtml += '</div>';
-                }
-                
-                recipeDetailsHtml += '</div>';
-            } else if (ing.recipes && ing.recipes.length > 0) {
-                recipeDetailsHtml = '<div style="margin-top: 8px; padding: 6px; background: #fff3cd; border-radius: 4px;">';
-                recipeDetailsHtml += '<div style="font-size: 11px; color: #856404;">可製作（' + ing.recipes.length + '個配方）</div>';
-                recipeDetailsHtml += '</div>';
-            } else {
-                recipeDetailsHtml = '<div style="margin-top: 8px; padding: 6px; background: #e7f3ff; border-radius: 4px;">';
-                recipeDetailsHtml += '<div style="font-size: 11px; color: #004085;">💎 採集/購買獲得</div>';
-                recipeDetailsHtml += '</div>';
-            }
-            
-            ingredientsHtml += '\n                <div class="ingredient-card" style="border: 1px solid #ddd; border-radius: 8px; padding: 12px; background: white; transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">\n                    <div style="display: flex; align-items: center; margin-bottom: 8px;">\n                        ' + iconHtml + '\n                        <div style="margin-left: 10px; flex: 1;">\n                            <div style="font-weight: bold; font-size: 14px; margin-bottom: 2px;">' + escapeHtml(ing.name) + '</div>\n                            <div style="font-size: 12px; color: #666;">需要 x' + ing.amount + '</div>\n                        </div>\n                    </div>\n                    <div style="border-top: 1px solid #eee; padding-top: 8px; margin-top: 8px;">\n                        <div style="font-size: 12px; color: #666;">市場單價: <span style="color: #0066cc; font-weight: bold;">' + ing.unitPrice.toLocaleString() + '</span> 金幣</div>\n                        <div style="font-size: 13px; color: #333; margin-top: 4px;">購買小計: <span style="color: #e74c3c; font-weight: bold;">' + ing.totalCost.toLocaleString() + '</span> 金幣</div>\n                    </div>\n                    ' + recipeDetailsHtml + '\n                </div>\n            ';
-        });
-        ingredientsHtml += '</div>';
-        
-        const recipeHtml = '\n            <div class="recipe-details">\n                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px;">\n                    <h4 style="margin: 0 0 10px 0; font-size: 18px;">' + escapeHtml(recipeName) + '</h4>\n                    <div style="display: flex; gap: 20px; font-size: 13px; opacity: 0.9;">\n                        <div>職業: ' + recipe.classJob + '</div>\n                        <div>等級: ' + recipe.level + '</div>\n                        <div>難度: ' + recipe.difficulty + '</div>\n                        <div>耐久: ' + recipe.durability + '</div>\n                    </div>\n                </div>\n                \n                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">\n                    <div style="padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #28a745;">\n                        <div style="font-size: 12px; color: #666; margin-bottom: 5px;">成品</div>\n                        <div style="font-weight: bold; font-size: 16px;">' + escapeHtml(recipe.resultItem.name) + ' x' + yields + '</div>\n                    </div>\n                    <div style="padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #007bff;">\n                        <div style="font-size: 12px; color: #666; margin-bottom: 5px;">製作成本</div>\n                        <div style="font-weight: bold; font-size: 16px; color: #007bff;">' + totalCost.toLocaleString() + ' 金幣</div>\n                        <div style="font-size: 12px; color: #666; margin-top: 3px;">單個: ' + costPerItem.toLocaleString() + ' 金幣</div>\n                    </div>\n                </div>\n                \n                <div style="margin-bottom: 10px;">\n                    <h5 style="margin: 0; font-size: 16px; color: #333;">所需材料及配方</h5>\n                </div>\n                ' + ingredientsHtml + '\n            </div>\n        ';
-        
-        $('#recipeDetails').html(recipeHtml);
-        $recipePanel.show();
-    }
-
-    /**
-     * 查詢材料的合成鏈（循環查詢）
-     * @param {number} itemId 材料ID
-     * @param {string} itemName 材料名稱
-     * @param {Event} event 點擊事件
-     */
-    window.queryMaterialChain = async function(itemId, itemName, event) {
-        if (event) {
-            event.stopPropagation();
-        }
-        
-        try {
-            showMessage('查詢 ' + itemName + ' 的合成方式...', 'info');
-            
-            // 查詢材料的市價
-            const priceData = await api.queryPrice(itemId);
-            
-            // 查詢該材料的合成表
-            const recipes = await api.searchRecipes(itemId);
-            
-            // 顯示材料信息和合成表
-            displayMaterialChain(itemId, itemName, priceData, recipes.recipes);
-            
-        } catch (error) {
-            showMessage('無法查詢 ' + itemName + ' 的資訊', 'warning');
-        }
-    };
-
-    /**
-     * 顯示材料信息和合成鏈
-     */
-    function displayMaterialChain(itemId, itemName, priceData, recipes) {
-        const $recipePanel = $('#recipePanel');
-        
-        let html = '<div class="material-chain-container">';
-        html += '<div style="margin-bottom: 15px; padding: 10px; background: #e8f4f8; border-radius: 4px; border-left: 4px solid #0066cc;">';
-        html += '<h4 style="margin: 0 0 10px 0; color: #0066cc;">' + escapeHtml(itemName) + '</h4>';
-        html += '<div style="font-size: 12px; color: #666;">物品ID: ' + itemId + '</div>';
-        html += '</div>';
-        
-        // 顯示市價
-        if (priceData && priceData.results && priceData.results.length > 0) {
-            const item = priceData.results[0];
-            html += '<div style="margin-bottom: 15px; padding: 10px; background: #f5f5f5; border-radius: 4px;">';
-            html += '<div style="font-weight: 600; color: #0066cc;">市場價格</div>';
-            html += '<div style="font-size: 12px; margin-top: 5px;">';
-            
-            // 處理聚合API的響應格式
-            if (item.minPriceNQ) {
-                html += '<div>NQ最低: <strong>' + (item.minPriceNQ || '無') + '</strong> 金幣</div>';
-                html += '<div>HQ最低: <strong>' + (item.minPriceHQ || '無') + '</strong> 金幣</div>';
-            } else if (item.nq_min) {
-                html += '<div>NQ最低: <strong>' + (item.nq_min || '無') + '</strong> 金幣</div>';
-                html += '<div>HQ最低: <strong>' + (item.hq_min || '無') + '</strong> 金幣</div>';
-            }
-            html += '</div></div>';
-        }
-        
-        // 顯示合成方式
-        if (recipes && recipes.length > 0) {
-            html += '<div style="margin-bottom: 10px; font-weight: 600; color: #333;">可被製作的方式：</div>';
-            html += '<div class="nested-recipes">';
-            recipes.forEach(function(recipe) {
-                html += '<div class="nested-recipe-item" onclick="loadRecipeDetails(' + recipe.id + ', &quot;' + escapeHtml(recipe.name) + '&quot;)">';
-                html += '<div><strong>' + escapeHtml(recipe.name) + '</strong></div>';
-                html += '<div style="font-size: 12px; color: #666;">配方ID: ' + recipe.id + ' → 點擊查看成本</div>';
-                html += '</div>';
-            });
-            html += '</div>';
-        } else {
-            html += '<div style="padding: 10px; background: #fff3cd; border-radius: 4px; border-left: 4px solid #ffc107; color: #666;">';
-            html += '此物品無合成方式（採集物品或購買品）';
-            html += '</div>';
-        }
-        
-        html += '<div style="margin-top: 15px;"><button class="btn btn-small btn-primary" onclick="$(\'#recipePanel\').show();">← 返回配方</button></div>';
-        html += '</div>';
-        
-        $recipePanel.html(html).show();
-    }
-
-    window.clearItemInfo = function() {
-        $('#itemInfoPanel').hide();
-        $('#pricePanel').hide();
-        $('#itemIdInput').val('');
-    };
-
-    // ==================== 伺服器選擇 ====================
-    window.resetServerSelection = function() {
-        state.selectedServer = null;
-        state.selectedDatacenter = null;
-        localStorage.removeItem('selectedServer');
-        localStorage.removeItem('selectedDatacenter');
-        $('#initialModal').show();
-        $('#mainContainer').hide();
-        location.reload();
-    };
-
-    // ==================== UI 輔助函數 ====================
-    function showGlobalLoading(show) {
-        const $loading = $('#globalLoading');
-        if (show) {
-            $loading.show();
-        } else {
-            $loading.hide();
-        }
-        state.isLoading = show;
-    }
-
-    function showMessage(msg, type) {
-        type = type || 'info';
-        const typeMap = {
-            'danger': 'alert-danger',
-            'success': 'alert-success',
-            'warning': 'alert-warning',
-            'info': 'alert-info'
-        };
-
-        const $container = $('#messageContainer');
-        const alertClass = typeMap[type] || 'alert-info';
-        const $alert = $('<div class="alert ' + alertClass + '">' + escapeHtml(msg) + '</div>');
-        
-        $container.append($alert);
-        setTimeout(function() {
-            $alert.fadeOut(function() {
-                $alert.remove();
-            });
-        }, 4000);
-    }
-
-    function escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
-
-    // ==================== 初始化 ====================
-    $(document).ready(function() {
-        ui.init();
+async function fetchRecipeDetail(recipeId) {
+    return $.ajax({
+        url: config.xivApiUrl + '/Recipe/' + encodeURIComponent(recipeId),
+        type: 'GET',
+        dataType: 'json',
+        timeout: config.timeout
     });
-})();
+}
+
+function collectIngredients(recipeDetail) {
+    const ingredients = [];
+    for (let i = 0; i <= 9; i++) {
+        const item = recipeDetail['ItemIngredient' + i];
+        const amount = recipeDetail['AmountIngredient' + i];
+        if (item && item.ID && amount > 0) {
+            ingredients.push({
+                id: item.ID,
+                name: item.Name || '未知',
+                amount: amount,
+                icon: item.IconHD || item.Icon || null,
+                unitPrice: 0,
+                totalCost: 0,
+                subRecipe: null
+            });
+        }
+    }
+    return ingredients;
+}
+
+async function getAggregatedPrices(itemIds) {
+    if (!itemIds || !itemIds.length || !state.selectedServer) {
+        return null;
+    }
+
+    try {
+        const response = await $.ajax({
+            url: 'https://universalis.app/api/v2/aggregated/' + encodeURIComponent(state.selectedServer) + '/' + itemIds.join(','),
+            type: 'GET',
+            dataType: 'json',
+            timeout: config.timeout
+        });
+        return response.results || [];
+    } catch (err) {
+        console.warn('Aggregated price fetch failed', err);
+        return null;
+    }
+}
+
+async function buildRecipeCost(recipeDetail, hasServer) {
+    const ingredients = collectIngredients(recipeDetail);
+    const itemIds = ingredients.map(i => i.id);
+    let priceMap = {};
+
+    if (hasServer) {
+        const aggResults = await getAggregatedPrices(itemIds);
+        if (aggResults) {
+            aggResults.forEach(res => {
+                const id = res.itemID || res.itemId;
+                const unit = res.nq?.minListing?.world?.price || res.nq?.averageSalePrice?.world?.price || res.minPriceNQ || 0;
+                priceMap[id] = roundPrice(unit);
+            });
+        }
+    }
+
+    let totalCost = 0;
+    ingredients.forEach(ing => {
+        ing.unitPrice = roundPrice(priceMap[ing.id]);
+        ing.totalCost = roundPrice(ing.unitPrice * ing.amount);
+        totalCost += ing.totalCost;
+    });
+
+    const yields = recipeDetail.AmountResult || recipeDetail.AmountResultHQ || 1;
+    totalCost = roundPrice(totalCost);
+    const costPerUnit = yields > 0 ? roundPrice(totalCost / yields) : totalCost;
+
+    return {
+        recipe: {
+            id: recipeDetail.ID,
+            classJob: (recipeDetail.ClassJob && (recipeDetail.ClassJob.Abbreviation || recipeDetail.ClassJob.Name)) || '-',
+            level: (recipeDetail.RecipeLevelTable && (recipeDetail.RecipeLevelTable.ClassJobLevel || recipeDetail.RecipeLevelTable.Name)) || '-',
+            difficulty: recipeDetail.Difficulty || '-',
+            durability: recipeDetail.Durability || '-',
+            resultItem: {
+                id: recipeDetail.ItemResult?.ID || '',
+                name: recipeDetail.ItemResult?.Name || '成品'
+            }
+        },
+        ingredients,
+        totalCost,
+        yields,
+        costPerUnit
+    };
+}
+
+async function fetchSubRecipeCost(itemId, hasServer) {
+    try {
+        const itemResponse = await $.ajax({
+            url: config.xivApiUrl + '/Item/' + encodeURIComponent(itemId),
+            type: 'GET',
+            dataType: 'json',
+            timeout: config.timeout
+        });
+        const recipes = (itemResponse && itemResponse.Recipes) || [];
+        if (!recipes.length) return null;
+
+        const recipeDetail = await fetchRecipeDetail(recipes[0].ID);
+        return await buildRecipeCost(recipeDetail, hasServer);
+    } catch (err) {
+        console.warn('fetchSubRecipeCost error for', itemId, err);
+        return null;
+    }
+}
+
+async function attachSubRecipeCosts(ingredients, hasServer) {
+    for (const ing of ingredients) {
+        const subCost = await fetchSubRecipeCost(ing.id, hasServer);
+        if (subCost) {
+            ing.subRecipe = subCost;
+        }
+    }
+}
+
+function renderRecipeDetails(recipeDetail, recipeCost, itemName) {
+    const headerName = itemName || recipeCost.recipe.resultItem.name;
+    let html = '';
+
+    html += '<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.25rem; border-radius: 0.75rem; margin-bottom: 1rem;">';
+    html += '<h4 style="margin:0 0 0.5rem 0;">' + escapeHtml(headerName) + '</h4>';
+    html += '<div style="display:flex; gap:1rem; flex-wrap:wrap; font-size:0.9rem; opacity:0.9;">';
+    html += '<span>職業: ' + escapeHtml(recipeCost.recipe.classJob) + '</span>';
+    html += '<span>等級: ' + escapeHtml(recipeCost.recipe.level) + '</span>';
+    html += '<span>難度: ' + escapeHtml(recipeCost.recipe.difficulty) + '</span>';
+    html += '<span>耐久: ' + escapeHtml(recipeCost.recipe.durability) + '</span>';
+    html += '<span>產出: x' + recipeCost.yields + '</span>';
+    html += '</div>';
+    html += '</div>';
+
+    html += '<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin-bottom: 1rem;">';
+    html += '<div style="background:#f8f9fa; padding:1rem; border-radius:0.5rem; border-left:4px solid #28a745;">';
+    html += '<div style="font-size:0.9rem; color:#666;">製作總成本</div>';
+    html += '<div style="font-size:1.4rem; font-weight:700; color:#28a745;">' + recipeCost.totalCost.toLocaleString() + ' G</div>';
+    html += '<div style="font-size:0.85rem; color:#555;">單個: ' + recipeCost.costPerUnit.toLocaleString() + ' G</div>';
+    html += '</div>';
+    html += '<div style="background:#f8f9fa; padding:1rem; border-radius:0.5rem; border-left:4px solid #007bff;">';
+    html += '<div style="font-size:0.9rem; color:#666;">成品</div>';
+    html += '<div style="font-size:1.1rem; font-weight:700; color:#007bff;">' + escapeHtml(recipeCost.recipe.resultItem.name) + ' x' + recipeCost.yields + '</div>';
+    html += '</div>';
+    html += '</div>';
+
+    html += '<h5 style="margin:0 0 0.5rem 0;">所需材料及成本</h5>';
+    html += '<div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap:0.75rem;">';
+
+    recipeCost.ingredients.forEach(ing => {
+        const iconUrl = getIconUrl(ing.icon);
+        html += '<div style="background:white; border:1px solid #e5e7eb; border-radius:0.75rem; padding:0.9rem; box-shadow:0 2px 4px rgba(0,0,0,0.06);">';
+        html += '<div style="display:flex; align-items:center; gap:0.75rem;">';
+        html += '<img src="' + iconUrl + '" alt="' + escapeHtml(ing.name) + ' icon" style="width:42px; height:42px; border-radius:0.5rem; border:1px solid var(--border-color); object-fit:cover; background:#e9ecef;">';
+        html += '<div style="flex:1;">';
+        html += '<div style="font-weight:700;">' + escapeHtml(ing.name) + '</div>';
+        html += '<div style="color:#666; font-size:0.9rem;">需要 x' + ing.amount + '</div>';
+        html += '</div>';
+        html += '</div>';
+
+        html += '<div style="margin-top:0.5rem; padding-top:0.5rem; border-top:1px solid #f0f0f0; font-size:0.95rem; color:#333;">';
+        html += '<div style="display:flex; justify-content:space-between; margin-bottom:0.25rem;">';
+        html += '<span>市場單價</span>';
+        html += '<strong style="color:#0066cc;">' + (ing.unitPrice || 0).toLocaleString() + ' G</strong>';
+        html += '</div>';
+        html += '<div style="display:flex; justify-content:space-between;">';
+        html += '<span>購買小計</span>';
+        html += '<strong style="color:#e74c3c;">' + (ing.totalCost || 0).toLocaleString() + ' G</strong>';
+        html += '</div>';
+        html += '</div>';
+
+        if (ing.subRecipe) {
+            const sub = ing.subRecipe;
+            const subUnit = roundPrice(sub.costPerUnit || 0);
+            const craftTotal = roundPrice(subUnit * ing.amount);
+            const saving = roundPrice((ing.totalCost || 0) - craftTotal);
+            const subTotal = roundPrice(sub.totalCost || 0);
+            const savingColor = saving > 0 ? '#28a745' : '#dc3545';
+            const savingLabel = saving > 0 ? '製作省' : (saving < 0 ? '購買省' : '持平');
+
+            html += '<div style="margin-top:0.6rem; padding:0.65rem; background:#f8f9fa; border-radius:0.5rem; border-left:3px solid #28a745;">';
+            html += '<div style="font-weight:700; font-size:0.95rem; color:#28a745; margin-bottom:0.35rem;">可製作：' + escapeHtml(sub.recipe.resultItem.name) + ' x' + sub.yields + '</div>';
+            html += '<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:0.25rem;">';
+            html += '<span>子配方總成本</span><strong>' + subTotal.toLocaleString() + ' G</strong>';
+            html += '</div>';
+            html += '<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:0.25rem;">';
+            html += '<span>子配方單個成本</span><strong>' + subUnit.toLocaleString() + ' G</strong>';
+            html += '</div>';
+            html += '<div style="display:flex; justify-content:space-between; font-size:0.9rem; color:' + savingColor + '; font-weight:700;">';
+            html += '<span>' + savingLabel + '</span><span>' + Math.abs(saving).toLocaleString() + ' G</span>';
+            html += '</div>';
+
+            if (sub.ingredients && sub.ingredients.length > 0) {
+                html += '<div style="margin-top:0.5rem; font-size:0.85rem; color:#555;">子材料：</div>';
+                sub.ingredients.forEach(subIng => {
+                    const subIcon = getIconUrl(subIng.icon);
+                    html += '<div style="display:flex; align-items:center; justify-content:space-between; gap:0.35rem; padding:0.2rem 0;">';
+                    html += '<div style="display:flex; align-items:center; gap:0.35rem;">';
+                    html += '<img src="' + subIcon + '" style="width:20px; height:20px; border-radius:0.35rem; border:1px solid #e5e7eb; background:#f1f3f5; object-fit:cover;">';
+                    html += '<span>' + escapeHtml(subIng.name) + ' x' + subIng.amount + '</span>';
+                    html += '</div>';
+                    html += '<span style="color:#0066cc; font-weight:600;">' + (subIng.totalCost || 0).toLocaleString() + ' G</span>';
+                    html += '</div>';
+                });
+            }
+
+            html += '</div>';
+        }
+
+        html += '</div>';
+    });
+
+    html += '</div>';
+
+    $('#craftContent').html(html);
+    $('#craftPanel').show();
+}
+
+// ==================== UI 輔助函數 ====================
+function showGlobalLoading(show) {
+    if (show) {
+        $('#globalLoading').show();
+    } else {
+        $('#globalLoading').hide();
+    }
+    state.isLoading = show;
+}
+
+function getIconUrl(iconPath) {
+    if (!iconPath) {
+        return DEFAULT_ICON;
+    }
+    if (iconPath.startsWith('http')) {
+        return iconPath;
+    }
+    return config.xivApiUrl + iconPath;
+}
+
+function roundPrice(value) {
+    const num = Number(value) || 0;
+    return Math.round(num);
+}
+
+function showMessage(msg, type) {
+    type = type || 'info';
+    const typeMap = {
+        'danger': 'alert-danger',
+        'success': 'alert-success',
+        'warning': 'alert-warning',
+        'info': 'alert-info'
+    };
+
+    const $container = $('#messageContainer');
+    const alertClass = typeMap[type] || 'alert-info';
+    const $alert = $('<div class="alert ' + alertClass + '">' + escapeHtml(msg) + '</div>');
+
+    $container.append($alert);
+    setTimeout(function () {
+        $alert.fadeOut(function () {
+            $alert.remove();
+        });
+    }, 4000);
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
