@@ -486,20 +486,20 @@ function searchItems() {
     const language = state.selectedLanguage || 'tc';
 
     if (language === 'tc') {
-        // 繁體中文：同時查詢兩個API並整合結果
-        console.log('🔍 同時查詢 tc-search-service 和 tnze API...');
+        // 繁體中文：同時查詢兩個API並整合結果（優先使用 tnze.yyyy.games）
+        console.log('🔍 同時查詢 tnze API 和 tc-search-service...');
         
         Promise.allSettled([
-            searchFromTcService(query),
-            searchFromTnzeAPI(query)
+            searchFromTnzeAPI(query),
+            searchFromTcService(query)
         ]).then(results => {
-            const tcResult = results[0].status === 'fulfilled' ? results[0].value : [];
-            const tnzeResult = results[1].status === 'fulfilled' ? results[1].value : [];
+            const tnzeResult = results[0].status === 'fulfilled' ? results[0].value : [];
+            const tcResult = results[1].status === 'fulfilled' ? results[1].value : [];
             
+            console.log('✅ tnze API 結果:', tnzeResult.length, '個物品 (優先)');
             console.log('✅ tc-search-service 結果:', tcResult.length, '個物品');
-            console.log('✅ tnze API 結果:', tnzeResult.length, '個物品');
             
-            // 整合結果並去重
+            // 整合結果並去重（tnze 優先）
             const mergedItems = mergeAndDeduplicateItems(tcResult, tnzeResult);
             
             clearTimeout(loadingTimeout);
@@ -543,26 +543,27 @@ function searchItems() {
 
 // 從 tc-ffxiv-item-search-service 搜尋 (繁體中文，優先使用)
 function searchFromTcService(query) {
-    const url = config.tcSearchUrl + '?' + $.param({
+    // 構建原始 API URL
+    const apiUrl = config.tcSearchUrl + '?' + $.param({
         sheets: 'Items',
         query: query,
         language: 'tc',
         limit: 100,
         field: 'Name,ItemSearchCategory.Name,Icon,LevelItem.todo,Rarity'
     });
+    
+    // 使用 CORS 代理
+    const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(apiUrl);
 
-    console.log('🔍 tc-search-service 請求 URL:', url);
+    console.log('🔍 tc-search-service 原始 URL:', apiUrl);
+    console.log('🔗 CORS 代理 URL:', proxyUrl);
+    console.log('⏱️ 超時設置:', config.timeout, 'ms');
 
     return $.ajax({
-        url: url,
+        url: proxyUrl,
         type: 'GET',
         dataType: 'json',
         timeout: config.timeout,
-        headers: {
-            'Accept': '*/*',
-            'Accept-Language': 'zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7',
-            'Referer': 'https://universalis.app/'
-        },
         crossDomain: true,
         xhrFields: {
             withCredentials: false
@@ -626,10 +627,24 @@ function searchFromTcService(query) {
         console.log('處理後的物品數量:', items.length);
         return items;
     }).catch(err => {
-        console.error('❌ tc-search-service 請求失敗:', err);
-        console.error('錯誤狀態:', err.status);
-        console.error('錯誤訊息:', err.statusText);
-        console.error('回應內容:', err.responseText);
+        console.error('❌ tc-search-service 請求失敗');
+        console.error('錯誤類型:', err.type || 'unknown');
+        console.error('錯誤狀態碼:', err.status || 'N/A');
+        console.error('錯誤訊息:', err.statusText || err.message);
+        
+        if (err.responseText) {
+            console.error('回應內容:', err.responseText);
+        }
+        
+        if (err.type === 'error') {
+            console.error('⚠️ 可能是 CORS 錯誤或網路連接問題');
+        } else if (err.type === 'timeout') {
+            console.error('⚠️ 請求超時 (' + config.timeout + 'ms)');
+        } else if (err.status === 0) {
+            console.error('⚠️ 無法連接到伺服器 - 檢查 URL 或網路');
+        }
+        
+        console.error('完整錯誤對象:', err);
         return [];
     });
 }
@@ -638,15 +653,15 @@ function searchFromTcService(query) {
 function mergeAndDeduplicateItems(tcItems, tnzeItems) {
     const itemMap = new Map();
     
-    // 優先使用 tc-search-service 的結果
-    tcItems.forEach(item => {
+    // 優先使用 tnze.yyyy.games 的結果
+    tnzeItems.forEach(item => {
         if (item.id) {
             itemMap.set(item.id, item);
         }
     });
     
-    // 補充 tnze API 的結果（只添加 tc-search-service 沒有的物品）
-    tnzeItems.forEach(item => {
+    // 補充 tc-search-service 的結果（只添加 tnze 沒有的物品）
+    tcItems.forEach(item => {
         if (item.id && !itemMap.has(item.id)) {
             itemMap.set(item.id, item);
         }
@@ -669,10 +684,11 @@ function searchFromTnzeAPI(query) {
         const results = [];
         const seenItemIds = new Set();
         let pageId = 0;
-        const maxPages = 2;
+        const maxPages = 5;
 
         function fetchPage() {
             if (pageId >= maxPages) {
+                console.log('🎯 tnze API 搜索完成，共', results.length, '個物品');
                 resolve(results);
                 return;
             }
@@ -687,7 +703,7 @@ function searchFromTnzeAPI(query) {
                 url: url,
                 type: 'GET',
                 dataType: 'json',
-                timeout: 8000
+                timeout: 12000
             }).then(response => {
                 if (!response || !response.data || !Array.isArray(response.data) || response.data.length === 0) {
                     resolve(results);
@@ -784,7 +800,7 @@ function renderResultsList(items) {
         let categoryHtml = item.category ? '<span class="result-category">' + escapeHtml(item.category) + '</span>' : '';
         let levelHtml = item.level ? '<span class="result-level">LV: ' + item.level + '</span>' : '';
 
-        html += '<div class="result-item">';
+        html += '<div class="result-item" data-item-id="' + item.id + '">';
         html += '<div class="result-details">';
         html += '<div class="result-name">' + escapeHtml(item.name) + '</div>';
         html += '<div class="result-meta">';
@@ -878,6 +894,12 @@ function queryItemById(itemId) {
         return;
     }
 
+    // 移除所有已查詢的標記
+    $('.result-item').removeClass('queried');
+    
+    // 標記當前查詢的物品
+    $('.result-item[data-item-id="' + itemId + '"]').addClass('queried');
+
     currentItemId = itemId;
     showGlobalLoading(true);
     console.log('Querying item ID:', itemId);
@@ -937,20 +959,36 @@ function displayItemInfo(data) {
     const price = data.price;
 
     $('#itemTitle').text(item.name + ' (ID: ' + item.id + ')');
-    $('#itemInfoContent').html(
-        '<div class="info-row">' +
-        '<span class="label">物品名稱：</span>' +
-        '<span class="value">' + escapeHtml(item.name) + '</span>' +
-        '</div>' +
-        '<div class="info-row">' +
-        '<span class="label">物品 ID：</span>' +
-        '<span class="value">' + item.id + '</span>' +
-        '</div>' +
-        '<div class="info-row">' +
-        '<span class="label">伺服器：</span>' +
-        '<span class="value">' + escapeHtml(data.world) + '</span>' +
-        '</div>'
-    );
+    
+    // 建立左右佈局：左邊物品信息，右邊價格信息
+    let infoHtml = '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">';
+    
+    // 左邊：物品信息
+    infoHtml += '<div>';
+    infoHtml += '<h4 style="margin: 0 0 0.75rem 0; color: var(--primary);">📋 物品信息</h4>';
+    infoHtml += '<div class="info-row">';
+    infoHtml += '<span class="label">物品名稱：</span>';
+    infoHtml += '<span class="value">' + escapeHtml(item.name) + '</span>';
+    infoHtml += '</div>';
+    infoHtml += '<div class="info-row">';
+    infoHtml += '<span class="label">物品 ID：</span>';
+    infoHtml += '<span class="value">' + item.id + '</span>';
+    infoHtml += '</div>';
+    infoHtml += '<div class="info-row">';
+    infoHtml += '<span class="label">伺服器：</span>';
+    infoHtml += '<span class="value">' + escapeHtml(data.world) + '</span>';
+    infoHtml += '</div>';
+    infoHtml += '</div>';
+    
+    // 右邊：價格信息（占位，稍後填充）
+    infoHtml += '<div id="priceInfoContainer">';
+    infoHtml += '<h4 style="margin: 0 0 0.75rem 0; color: var(--primary);">💰 市場價格</h4>';
+    infoHtml += '<div id="priceContent" style="color: #999;">載入中...</div>';
+    infoHtml += '</div>';
+    
+    infoHtml += '</div>';
+    
+    $('#itemInfoContent').html(infoHtml);
     $('#itemInfoPanel').show();
 
     // 依 index.php 邏輯載入配方詳情，含子材料成本
@@ -984,6 +1022,7 @@ function getItemPrice(itemId) {
             // 緩存成品市場價，供成本區塊顯示
             state.lastItemPriceData = price;
 
+            // 填充到右側價格信息容器
             $('#priceContent').html(
                 '<div class="price-row">' +
                 '<div class="price-type">NQ (Normal Quality)</div>' +
@@ -996,12 +1035,13 @@ function getItemPrice(itemId) {
                 '<div>平均: <strong>' + price.hq_avg + '</strong> 金幣</div>' +
                 '</div>'
             );
-            $('#pricePanel').show();
         } else {
             console.log('No price data available');
+            $('#priceContent').html('<div style="color: #999;">無市場價格數據</div>');
         }
     }).catch(function (xhr, status, error) {
         console.log('Universalis error:', status, error);
+        $('#priceContent').html('<div style="color: #e74c3c;">載入價格失敗</div>');
     });
 }
 
@@ -1034,7 +1074,7 @@ function calculateCraftingCost() {
     showGlobalLoading(true);
     console.log('Calculating crafting cost for item:', currentItemId, 'quantity:', quantity);
 
-    // 先從 XIVAPI 獲取食譜信息
+    // 先從 XIVAPI 獲取合成信息
     $.ajax({
         url: 'https://xivapi.com/Item/' + currentItemId,
         type: 'GET',
@@ -1044,7 +1084,7 @@ function calculateCraftingCost() {
             console.log('Item response:', itemResponse);
 
             if (!itemResponse.Recipes || itemResponse.Recipes.length === 0) {
-                showMessage('找不到該物品的食譜', 'warning');
+                showMessage('找不到該物品的合成', 'warning');
                 showGlobalLoading(false);
                 return;
             }
@@ -1052,7 +1092,7 @@ function calculateCraftingCost() {
             const recipeId = itemResponse.Recipes[0].ID;
             console.log('Found recipe ID:', recipeId);
 
-            // 獲取食譜詳細信息
+            // 獲取合成詳細信息
             $.ajax({
                 url: 'https://xivapi.com/Recipe/' + recipeId,
                 type: 'GET',
@@ -1066,7 +1106,7 @@ function calculateCraftingCost() {
                 error: function (xhr, status, error) {
                     console.log('Recipe details error:', status, error);
                     showGlobalLoading(false);
-                    showMessage('獲取食譜詳情失敗', 'danger');
+                    showMessage('獲取合成詳情失敗', 'danger');
                 }
             });
         },
@@ -1092,7 +1132,7 @@ function autoCalculateCraftingCost() {
 
 function calculateAndDisplayCost(recipe, quantity) {
     if (!recipe) {
-        showMessage('無效的食譜信息', 'danger');
+        showMessage('無效的合成信息', 'danger');
         return;
     }
 
@@ -1122,7 +1162,7 @@ function calculateAndDisplayCost(recipe, quantity) {
     }
 
     if (ingredients.length === 0) {
-        showMessage('無法解析食譜材料', 'warning');
+        showMessage('無法解析合成材料', 'warning');
         return;
     }
 
@@ -1264,6 +1304,113 @@ async function loadRecipeDetailsForItem(itemId, itemName) {
         const recipes = (itemResponse && itemResponse.Recipes) || [];
         if (!recipes.length) {
             console.log('No recipes for item', itemId);
+            
+            // 隱藏製造成本計算面板
+            $('#craftingCostPanel').hide();
+            
+            // 構建無合成表面板
+            let html = '';
+            html += '<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.25rem; border-radius: 0.75rem; margin-bottom: 1rem;">';
+            html += '<h4 style="margin:0 0 0.5rem 0;">' + escapeHtml(itemName || itemResponse.Name) + '</h4>';
+            html += '<div style="font-size:0.9rem; opacity:0.9;">';
+            html += '<span>此物品無合成表 (ID: ' + itemId + ')</span>';
+            html += '</div>';
+            html += '</div>';
+            
+            // 添加市場價格查詢中的提示
+            if (hasServer) {
+                html += '<div id="priceLoading" style="background:#e3f2fd; padding:1rem; border-radius:0.5rem; border-left:4px solid #2196F3; margin-top:0.5rem;">';
+                html += '<div style="display:flex; align-items:center; gap:0.5rem;">';
+                html += '<span style="display:inline-block; width:16px; height:16px; border:2px solid #2196F3; border-top-color:transparent; border-radius:50%; animation:spin 1s linear infinite;"></span>';
+                html += '<span style="color:#1976D2;">正在查詢市場價格...</span>';
+                html += '</div>';
+                html += '</div>';
+                html += '<style>';
+                html += '@keyframes spin { to { transform: rotate(360deg); } }';
+                html += '</style>';
+            }
+            
+            $('#craftContent').html(html);
+            $('#craftPanel').show();
+            
+            // 查不到合成表時，嘗試顯示市場單價（填充到右側價格區域）
+            if (hasServer) {
+                // 直接請求 Universalis API
+                $.ajax({
+                    url: 'https://universalis.app/api/v2/' + encodeURIComponent(state.selectedServer) + '/' + encodeURIComponent(itemId),
+                    type: 'GET',
+                    dataType: 'json',
+                    timeout: 10000
+                }).done(function(priceResponse) {
+                    console.log('🔍 loadRecipeDetailsForItem 市場價格回應:', priceResponse);
+                    
+                    // 檢查是否有任何價格數據
+                    const hasPriceData = priceResponse && (
+                        (priceResponse.averagePriceNQ && priceResponse.averagePriceNQ > 0) ||
+                        (priceResponse.averagePriceHQ && priceResponse.averagePriceHQ > 0) ||
+                        (priceResponse.minPriceNQ && priceResponse.minPriceNQ > 0) ||
+                        (priceResponse.minPriceHQ && priceResponse.minPriceHQ > 0)
+                    );
+                    
+                    console.log('💰 是否有價格數據:', hasPriceData);
+                    
+                    if (hasPriceData) {
+                        // 移除加載提示
+                        $('#priceLoading').remove();
+                        
+                        // 將價格數據填充到右側價格容器
+                        let priceHtml = '';
+                        
+                        // NQ 價格
+                        priceHtml += '<div class="price-row">';
+                        priceHtml += '<div class="price-type">NQ (Normal Quality)</div>';
+                        if (priceResponse.minPriceNQ) {
+                            priceHtml += '<div>最低: <strong>' + priceResponse.minPriceNQ.toLocaleString() + '</strong> 金幣</div>';
+                        }
+                        if (priceResponse.averagePriceNQ) {
+                            priceHtml += '<div>平均: <strong>' + Math.round(priceResponse.averagePriceNQ).toLocaleString() + '</strong> 金幣</div>';
+                        }
+                        if (!priceResponse.minPriceNQ && !priceResponse.averagePriceNQ) {
+                            priceHtml += '<div style="color:#999;">無市場資料</div>';
+                        }
+                        priceHtml += '</div>';
+                        
+                        // HQ 價格
+                        priceHtml += '<div class="price-row">';
+                        priceHtml += '<div class="price-type">HQ (High Quality)</div>';
+                        if (priceResponse.minPriceHQ) {
+                            priceHtml += '<div>最低: <strong>' + priceResponse.minPriceHQ.toLocaleString() + '</strong> 金幣</div>';
+                        }
+                        if (priceResponse.averagePriceHQ) {
+                            priceHtml += '<div>平均: <strong>' + Math.round(priceResponse.averagePriceHQ).toLocaleString() + '</strong> 金幣</div>';
+                        }
+                        if (!priceResponse.minPriceHQ && !priceResponse.averagePriceHQ) {
+                            priceHtml += '<div style="color:#999;">無市場資料</div>';
+                        }
+                        priceHtml += '</div>';
+                        
+                        $('#priceContent').html(priceHtml);
+                    } else {
+                        // 即使無價格數據也替換加載提示為提醒
+                        $('#priceLoading').replaceWith(
+                            '<div style="background:#fff3cd; padding:1rem; border-radius:0.5rem; border-left:4px solid #ffc107; margin-top:0.5rem;">' +
+                            '<div style="color:#856404;">ℹ️ 此物品在 ' + escapeHtml(state.selectedServer) + ' 伺服器暫無市場價格</div>' +
+                            '</div>'
+                        );
+                        $('#priceContent').html('<div style="color:#999;">暫無市場價格</div>');
+                    }
+                }).fail(function(err) {
+                    console.warn('❌ loadRecipeDetailsForItem 查詢市場價格失敗:', err.statusText);
+                    
+                    // 移除加載提示，顯示失敗提示
+                    $('#priceLoading').replaceWith(
+                        '<div style="background:#ffebee; padding:1rem; border-radius:0.5rem; border-left:4px solid #f44336; margin-top:0.5rem;">' +
+                        '<div style="color:#c62828;">⚠️ 市場價格查詢失敗</div>' +
+                        '</div>'
+                    );
+                });
+            }
+            
             return;
         }
 
@@ -1375,6 +1522,52 @@ async function buildRecipeCost(recipeDetail, hasServer) {
         yields,
         costPerUnit
     };
+}
+// 顯示無合成表但有市場價格的物品
+function renderNoRecipeWithPrice(itemName, itemId, priceResponse) {
+    let html = '';
+
+    html += '<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.25rem; border-radius: 0.75rem; margin-bottom: 1rem;">';
+    html += '<h4 style="margin:0 0 0.5rem 0;">' + escapeHtml(itemName) + '</h4>';
+    html += '<div style="font-size:0.9rem; opacity:0.9;">';
+    html += '<span>此物品無合成表 (ID: ' + itemId + ')</span>';
+    html += '</div>';
+    html += '</div>';
+
+    if (priceResponse.averagePriceNQ || priceResponse.averagePriceHQ || priceResponse.minPriceNQ || priceResponse.minPriceHQ) {
+        html += '<div style="background:#fff9e6; padding:1rem; border-radius:0.5rem; border:1px solid #ffc069; margin-top:0.5rem;">';
+        html += '<h5 style="margin:0 0 0.75rem 0; color:#cc7700;">📊 市場價格 (' + escapeHtml(state.selectedServer) + ')</h5>';
+        
+        html += '<div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem;">';
+        
+        // NQ 價格
+        html += '<div style="background:white; padding:0.75rem; border-radius:0.5rem; border-left:3px solid #1890ff;">';
+        html += '<div style="font-weight:700; color:#1890ff; margin-bottom:0.5rem;">NQ (Normal Quality)</div>';
+        if (priceResponse.minPriceNQ) {
+            html += '<div style="margin-bottom:0.25rem;"><span style="color:#666;">最低</span>: <strong>' + priceResponse.minPriceNQ.toLocaleString() + ' G</strong></div>';
+        }
+        if (priceResponse.averagePriceNQ) {
+            html += '<div><span style="color:#666;">平均</span>: <strong>' + Math.round(priceResponse.averagePriceNQ).toLocaleString() + ' G</strong></div>';
+        }
+        html += '</div>';
+        
+        // HQ 價格
+        html += '<div style="background:white; padding:0.75rem; border-radius:0.5rem; border-left:3px solid #faad14;">';
+        html += '<div style="font-weight:700; color:#faad14; margin-bottom:0.5rem;">HQ (High Quality)</div>';
+        if (priceResponse.minPriceHQ) {
+            html += '<div style="margin-bottom:0.25rem;"><span style="color:#666;">最低</span>: <strong>' + priceResponse.minPriceHQ.toLocaleString() + ' G</strong></div>';
+        }
+        if (priceResponse.averagePriceHQ) {
+            html += '<div><span style="color:#666;">平均</span>: <strong>' + Math.round(priceResponse.averagePriceHQ).toLocaleString() + ' G</strong></div>';
+        }
+        html += '</div>';
+        
+        html += '</div>';
+        html += '</div>';
+    }
+
+    $('#craftContent').html(html);
+    $('#craftPanel').show();
 }
 
 async function fetchSubRecipeCost(itemId, hasServer) {
