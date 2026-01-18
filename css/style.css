@@ -1,0 +1,410 @@
+﻿/* ==========================================
+   FFXIV 市場查詢工具 - 現代化樣式表 v2.0
+   ========================================== */
+
+:root {
+    --primary: #667eea;
+    --primary-dark: #764ba2;
+    --success: #28a745;
+    --danger: #dc3545;
+    --warning: #ffc107;
+    --info: #17a2b8;
+    --light: #f8f9fa;
+    --dark: #333;
+    --gray: #6c757d;
+    --border-color: #dee2e6;
+    --shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    --radius: 0.375rem;
+    --transition: all 0.3s ease;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+    font-size: 1rem; line-height: 1.5;
+    color: var(--dark);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    min-height: 100vh; padding: 1rem;
+}
+
+.page-container { max-width: 1400px; margin: 0 auto; }
+
+.page-header {
+    text-align: center; color: white; margin-bottom: 2rem; padding: 2rem 0;
+    background: rgba(0, 0, 0, 0.1); border-radius: 0.75rem;
+}
+
+.page-header h1 { font-size: clamp(1.5rem, 5vw, 3rem); margin-bottom: 0.5rem; font-weight: 700; }
+.page-header p { font-size: 1.1rem; opacity: 0.9; margin-bottom: 1rem; }
+
+.server-badge {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius);
+    font-weight: 600;
+}
+
+.badge-link { color: white; cursor: pointer; opacity: 0.8; }
+.badge-link:hover { opacity: 1; }
+
+.main-content {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.sidebar { display: flex; flex-direction: column; gap: 1.5rem; }
+
+.panel {
+    background: white; border-radius: 0.75rem; box-shadow: var(--shadow);
+    overflow: hidden; transition: var(--transition);
+}
+
+.panel:hover { box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); }
+
+.panel-header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white; padding: 1rem 1.5rem;
+    display: flex; justify-content: space-between; align-items: center;
+}
+
+.panel-header h3 { margin: 0; font-size: 1.1rem; font-weight: 600; }
+.panel-body { padding: 1.5rem; }
+
+.form-group { margin-bottom: 1.25rem; }
+.form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; }
+.form-text { display: block; margin-top: 0.35rem; font-size: 0.875rem; color: var(--gray); }
+
+.form-control {
+    width: 100%; padding: 0.75rem; border: 2px solid var(--border-color);
+    border-radius: var(--radius); font-size: 1rem; transition: var(--transition);
+}
+
+.form-control:focus {
+    outline: none; border-color: var(--primary);
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.input-group {
+    display: flex; gap: 0.5rem;
+}
+
+.input-group .form-control { flex: 1; }
+.input-group .btn { flex-shrink: 0; }
+
+.btn {
+    padding: 0.75rem 1.5rem; border: none; border-radius: var(--radius);
+    font-size: 1rem; font-weight: 600; cursor: pointer; transition: var(--transition);
+    text-decoration: none; display: inline-block; text-align: center;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 1rem rgba(102, 126, 234, 0.4);
+}
+
+.btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.btn-block { display: block; width: 100%; }
+.btn-small { padding: 0.5rem 1rem; font-size: 0.875rem; }
+.btn-close { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; padding: 0; }
+
+.search-results {
+    margin-top: 1rem; border: 1px solid var(--border-color);
+    border-radius: var(--radius); background: var(--light);
+}
+
+.results-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.75rem 1rem; border-bottom: 1px solid var(--border-color);
+}
+
+.results-list { max-height: 400px; overflow-y: auto; }
+
+.result-item {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.75rem 0.5rem; border-bottom: 1px solid var(--border-color);
+    transition: var(--transition);
+}
+
+.result-item:hover { background: var(--light); border-radius: var(--radius); }
+
+.result-icon {
+    width: 40px; height: 40px; flex-shrink: 0;
+    border-radius: var(--radius); border: 1px solid var(--border-color);
+    object-fit: cover;
+}
+
+.result-details {
+    flex: 1; min-width: 0;
+}
+
+.result-name { font-weight: 600; margin-bottom: 0.25rem; font-size: 0.95rem; }
+.result-meta { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.result-id { font-size: 0.75rem; color: var(--gray); }
+.result-category { font-size: 0.75rem; color: var(--primary); background: rgba(102, 126, 234, 0.1); padding: 0.15rem 0.35rem; border-radius: 0.25rem; }
+
+.result-item .btn-small { flex-shrink: 0; min-width: 70px; }
+
+.item-info { display: flex; flex-direction: column; gap: 0.75rem; }
+
+.info-row {
+    display: flex; justify-content: space-between; padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.info-row .label { font-weight: 600; color: var(--primary); }
+
+.price-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+
+.price-row {
+    padding: 1rem; background: var(--light); border-radius: var(--radius);
+    border-left: 4px solid var(--primary);
+}
+
+.recipes-container {
+    max-height: 300px; overflow-y: auto;
+}
+
+.recipe-item {
+    padding: 0.75rem; border: 1px solid var(--border-color);
+    margin-bottom: 0.5rem; border-radius: var(--radius);
+    cursor: pointer; transition: var(--transition);
+}
+
+.recipe-item:hover {
+    background: var(--light); border-color: var(--primary);
+    transform: translateX(2px);
+}
+
+.recipe-item strong {
+    display: block; color: var(--primary); font-weight: 600;
+}
+
+.recipe-item small {
+    display: block; color: var(--gray); font-size: 0.75rem; margin-top: 0.25rem;
+}
+
+.recipe-details {
+    background: var(--light); padding: 1rem; border-radius: var(--radius);
+}
+
+.recipe-details h4 {
+    color: var(--primary); margin-bottom: 0.75rem;
+}
+
+.ingredients-list {
+    margin-top: 0.75rem;
+}
+
+.ingredient-item {
+    padding: 0.75rem; background: white; border-radius: var(--radius);
+    margin-bottom: 0.5rem; border-left: 3px solid var(--primary);
+}
+
+.ingredient-item strong {
+    color: var(--dark); font-weight: 600;
+}
+
+.ingredient-item small {
+    color: var(--gray); display: block; margin-top: 0.25rem;
+}
+
+.material-chain-container {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.nested-recipes {
+    max-height: 300px; overflow-y: auto; margin-top: 0.75rem;
+}
+
+.nested-recipe-item {
+    padding: 0.75rem; background: white; border: 1px solid var(--border-color);
+    border-radius: var(--radius); margin-bottom: 0.5rem;
+    cursor: pointer; transition: var(--transition);
+    border-left: 3px solid var(--info);
+}
+
+.nested-recipe-item:hover {
+    background: var(--light); border-color: var(--info);
+    transform: translateX(2px);
+}
+
+.nested-recipe-item strong {
+    display: block; color: var(--info); font-weight: 600;
+}
+
+.nested-recipe-item small {
+    display: block; color: var(--gray); font-size: 0.75rem; margin-top: 0.25rem;
+}
+
+.modal {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 1000; display: none; align-items: center; justify-content: center;
+}
+
+.modal-backdrop {
+    background: rgba(0, 0, 0, 0.5); display: flex;
+}
+
+.modal-dialog { width: 100%; max-width: 500px; }
+
+.modal-content {
+    background: white; border-radius: 0.75rem;
+    box-shadow: 0 2rem 4rem rgba(0, 0, 0, 0.3); overflow: hidden;
+}
+
+.modal-header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white; padding: 2rem; text-align: center;
+}
+
+.modal-header h2 { margin: 0 0 0.5rem 0; }
+.modal-header p { margin: 0; opacity: 0.9; }
+
+.modal-body { padding: 2rem; }
+.modal-footer { padding: 1.5rem 2rem; background: var(--light); display: flex; justify-content: center; }
+
+.alert {
+    padding: 1rem; border-radius: var(--radius); margin-bottom: 1rem;
+}
+
+.alert-danger { background: #f8d7da; color: #721c24; border-left: 4px solid var(--danger); }
+.alert-success { background: #d4edda; color: #155724; border-left: 4px solid var(--success); }
+.alert-warning { background: #fff3cd; color: #856404; border-left: 4px solid var(--warning); }
+.alert-info { background: #d1ecf1; color: #0c5460; border-left: 4px solid var(--info); }
+
+.loading-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.3); display: none; align-items: center;
+    justify-content: center; z-index: 999;
+}
+
+.loading-overlay.active { display: flex; }
+
+.spinner {
+    width: 50px; height: 50px; border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.message-container {
+    position: fixed; top: 2rem; right: 2rem; z-index: 2000; max-width: 400px;
+}
+
+.close-link { color: var(--danger); cursor: pointer; text-decoration: none; }
+.close-link:hover { text-decoration: underline; }
+
+.page-footer {
+    text-align: center; color: white; margin-top: 3rem; padding: 2rem; opacity: 0.8;
+}
+
+@media (max-width: 1024px) {
+    .main-content { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+    body { padding: 0.5rem; }
+    .page-header { padding: 1.5rem 1rem; }
+    .main-content { gap: 1rem; }
+    .modal-dialog { margin: 0 1rem; }
+    .message-container { right: 1rem; left: 1rem; max-width: none; }
+}
+
+.loading { display: none; text-align: center; }
+.loading.active { display: block; }
+/* ==================== 職業篩選樣式 ==================== */
+.job-filter-container {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: var(--radius);
+    border-left: 4px solid var(--primary);
+}
+
+.job-filter-container label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+    color: var(--dark);
+}
+
+.job-filter-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.filter-btn {
+    padding: 0.4rem 0.8rem;
+    background: white;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--dark);
+    transition: var(--transition);
+    white-space: nowrap;
+}
+
+.filter-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: rgba(102, 126, 234, 0.1);
+}
+
+.filter-btn-active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+    box-shadow: 0 0.25rem 0.5rem rgba(102, 126, 234, 0.3);
+}
+
+/* 搜尋結果項目中的等級和職業顯示 */
+.result-level {
+    display: inline-block;
+    margin-left: 0.5rem;
+    padding: 0.2rem 0.4rem;
+    background: var(--info);
+    color: white;
+    border-radius: 0.25rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.result-category {
+    display: inline-block;
+    margin-left: 0.5rem;
+    padding: 0.2rem 0.4rem;
+    background: var(--warning);
+    color: var(--dark);
+    border-radius: 0.25rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .job-filter-buttons {
+        gap: 0.25rem;
+    }
+    
+    .filter-btn {
+        padding: 0.35rem 0.6rem;
+        font-size: 0.85rem;
+    }
+}
