@@ -1,0 +1,2 @@
+# ffxiv_craft_universalis
+查詢FFXIV的配方價格
