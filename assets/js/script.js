@@ -8,12 +8,13 @@ const state = {
     datacenters: null,
     isDataLoaded: false,
     isDatacentersLoaded: false,
-    isWorldsLoaded: false,
-    lastItemPriceData: null
+    isWorldsLoaded: false
+    // 注意：不再使用 lastItemPriceData，價格直接附在 currentItem.price 中
 };
 
 let fullSearchResults = [];
 let currentJobFilter = 'ALL';
+let currentItem = null;  // 存儲當前查詢的物品（包含價格信息）
 
 // ==================== 配置 ====================
 const config = {
@@ -145,6 +146,10 @@ function showServerSelectionPanel() {
         }, 100);
     }
 
+    // 設置語言選擇器的值（從 localStorage 讀取）
+    const savedLanguage = state.selectedLanguage || 'tc';
+    $('#languageSelect').val(savedLanguage);
+
     // 綁定事件
     bindServerSelectionEvents();
 }
@@ -167,6 +172,21 @@ function bindServerSelectionEvents() {
     $('#worldSelect').off('change').on('change', function () {
         const world = $(this).val();
         $('#confirmBtn').prop('disabled', !world);
+    });
+
+    // 綁定語言選擇事件
+    $('#languageSelect').off('change').on('change', function () {
+        const selectedLang = $(this).val();
+        console.log('語言選擇變化:', selectedLang);
+        
+        // 更新 state 和 localStorage
+        state.selectedLanguage = selectedLang;
+        localStorage.setItem('selectedLanguage', selectedLang);
+        
+        // 更新顯示
+        updateServerDisplay();
+        
+        showMessage('語言已切換為: ' + (selectedLang === 'tc' ? '繁體中文' : 'English'), 'success');
     });
 
     // 綁定確認按鈕事件
@@ -490,7 +510,7 @@ function searchItems() {
         console.log('🔍 同時查詢 tnze API 和 tc-search-service...');
         
         Promise.allSettled([
-            searchFromTnzeAPI(query),
+            searchFromTnzeAPI(query, 'zh-TW'),
             searchFromTcService(query)
         ]).then(results => {
             const tnzeResult = results[0].status === 'fulfilled' ? results[0].value : [];
@@ -520,8 +540,10 @@ function searchItems() {
             showMessage('搜尋失敗：' + err.message, 'danger');
         });
     } else {
-        // 英文：使用 XIVAPI
-        searchFromXIVAPI(query, 'en').then(items => {
+        // 英文：使用 tnze API 英文端點
+        console.log('🔍 使用 tnze API 搜尋英文物品...');
+        
+        searchFromTnzeAPI(query, 'en').then(items => {
             clearTimeout(loadingTimeout);
             showGlobalLoading(false);
 
@@ -678,8 +700,11 @@ function mergeAndDeduplicateItems(tcItems, tnzeItems) {
     return mergedArray;
 }
 
-// 從 tnze.yyyy.games API 搜尋 (繁體中文)
-function searchFromTnzeAPI(query) {
+// 從 tnze.yyyy.games API 搜尋 (支援多語言)
+function searchFromTnzeAPI(query, language = 'zh-TW') {
+    const languageCode = language === 'en' ? 'en' : 'zh-TW';
+    const categoryLabel = languageCode === 'en' ? 'Uncategorized' : '未分類';
+    
     return new Promise((resolve, reject) => {
         const results = [];
         const seenItemIds = new Set();
@@ -688,13 +713,13 @@ function searchFromTnzeAPI(query) {
 
         function fetchPage() {
             if (pageId >= maxPages) {
-                console.log('🎯 tnze API 搜索完成，共', results.length, '個物品');
+                console.log('🎯 tnze API (' + languageCode + ') 搜索完成，共', results.length, '個物品');
                 resolve(results);
                 return;
             }
 
             const searchName = '%' + query + '%';
-            const url = 'https://tnze.yyyy.games/api/datasource/zh-TW/recipe_table?' + $.param({
+            const url = 'https://tnze.yyyy.games/api/datasource/' + languageCode + '/recipe_table?' + $.param({
                 page_id: pageId,
                 search_name: searchName
             });
@@ -719,8 +744,9 @@ function searchFromTnzeAPI(query) {
                         results.push({
                             id: itemId,
                             name: itemName,
-                            category: recipe.job || '未分類',
+                            category: recipe.job || categoryLabel,
                             level: parseInt(recipe.item_level) || 0,
+                            recipeLevel: parseInt(recipe.rlv) || 0,  // 添加配方難度
                             rarity: 0,
                             icon: null
                         });
@@ -734,11 +760,11 @@ function searchFromTnzeAPI(query) {
                     fetchPage();
                 }
             }).catch(err => {
-                console.warn('Tnze API 第', pageId, '頁失敗:', err);
+                console.warn('tnze API (' + languageCode + ') 第', pageId, '頁失敗:', err);
                 if (results.length > 0) {
                     resolve(results);
                 } else {
-                    reject(new Error('API 查詢失敗'));
+                    reject(new Error('tnze API 查詢失敗'));
                 }
             });
         }
@@ -747,37 +773,41 @@ function searchFromTnzeAPI(query) {
     });
 }
 
-// 從 XIVAPI 搜尋 (英文)
-function searchFromXIVAPI(query, language) {
+// 英文搜尋使用統一的 tnze API (searchFromTnzeAPI 函數已支援多語言)
+
+// 通過物品ID獲取物品信息（支持多語言）
+// 返回標準 Item 對象
+function getItemInfoById(itemId, language = 'zh-TW') {
+    const languageCode = language === 'en' ? 'en' : 'zh-TW';
+    
     return new Promise((resolve, reject) => {
         $.ajax({
-            url: 'https://xivapi.com/search',
+            url: 'https://tnze.yyyy.games/api/datasource/' + languageCode + '/item_info',
             type: 'GET',
             data: {
-                indexes: 'item',
-                string: query,
-                language: language
+                item_id: itemId
             },
             dataType: 'json',
             timeout: 10000
         }).then(response => {
-            if (!response.Results || response.Results.length === 0) {
-                resolve([]);
-                return;
+            if (response && response.id) {
+                // 映射為標準 Item 格式
+                resolve({
+                    id: response.id,
+                    name: response.name || '',
+                    level: response.level || 0,
+                    recipeLevel: response.rlv || 0,  // 製作難度
+                    canBeHQ: Boolean(response.can_be_hq),  // 轉換為布爾值
+                    icon: null,  // tnze API 不提供 icon
+                    category: '未分類',  // tnze API 只有 category_id
+                    rarity: 0  // tnze API 不提供 rarity
+                });
+            } else {
+                resolve(null);
             }
-
-            const items = response.Results.map(result => ({
-                id: result.ID,
-                name: result.Name,
-                category: (result.ItemSearchCategory && result.ItemSearchCategory.Name) || 'Uncategorized',
-                level: result.LevelItem || 0,
-                rarity: result.Rarity || 0,
-                icon: result.Icon || null
-            }));
-
-            resolve(items);
         }).catch(err => {
-            reject(err);
+            console.warn('獲取物品信息失敗 (ID:', itemId, '):', err);
+            resolve(null);
         });
     });
 }
@@ -799,6 +829,7 @@ function renderResultsList(items) {
     items.forEach(function (item) {
         let categoryHtml = item.category ? '<span class="result-category">' + escapeHtml(item.category) + '</span>' : '';
         let levelHtml = item.level ? '<span class="result-level">LV: ' + item.level + '</span>' : '';
+        let recipeLevelHtml = item.recipeLevel ? '<span class="result-level" style="background:#9c27b0;">RLV: ' + item.recipeLevel + '</span>' : '';
 
         html += '<div class="result-item" data-item-id="' + item.id + '">';
         html += '<div class="result-details">';
@@ -807,6 +838,7 @@ function renderResultsList(items) {
         html += '<span class="result-id">ID: ' + item.id + '</span>';
         html += categoryHtml;
         html += levelHtml;
+        html += recipeLevelHtml;
         html += '</div></div>';
         html += '<button class="btn btn-small btn-primary item-result-btn" onclick="queryItemById(' + item.id + ')">查詢</button>';
         html += '</div>';
@@ -919,32 +951,90 @@ function queryItemById(itemId) {
                 return;
             }
 
-            const itemData = {
-                item: {
+            // 如果是繁中，獲取中文名稱
+            const currentLanguage = state.selectedLanguage || 'tc';
+            if (currentLanguage === 'tc') {
+                getItemInfoById(response.ID, 'zh-TW').then(function(chineseInfo) {
+                    const itemName = (chineseInfo && chineseInfo.name) ? chineseInfo.name : response.Name;
+                    
+                    const itemData = {
+                        item: {
+                            id: response.ID,
+                            name: itemName,
+                            description: response.Description
+                        },
+                        world: state.selectedServer,
+                        price: null
+                    };
+
+                    // 設置 currentItem（標準 Item 對象）
+                    currentItem = {
+                        id: response.ID,
+                        name: itemName,
+                        icon: response.Icon || null,
+                        level: response.LevelItem || 0,
+                        category: response.ItemSearchCategory?.Name || '未分類',
+                        rarity: response.Rarity || 0,
+                        canBeHQ: Boolean(response.CanBeHq)
+                    };
+
+                    displayItemInfo(itemData);
+                    showMessage('物品信息已載入', 'success');
+
+                    // 嘗試從 Universalis 獲取價格，並自動計算合成成本
+                    if (state.selectedServer) {
+                        getItemPrice(response.ID)
+                            .always(() => {
+                                showGlobalLoading(false);
+                                autoCalculateCraftingCost();
+                            });
+                    } else {
+                        showGlobalLoading(false);
+                    }
+
+                    // 顯示製造成本計算面板
+                    $('#craftingCostPanel').show();
+                });
+            } else {
+                // 英文直接使用
+                const itemData = {
+                    item: {
+                        id: response.ID,
+                        name: response.Name,
+                        description: response.Description
+                    },
+                    world: state.selectedServer,
+                    price: null
+                };
+
+                // 設置 currentItem（標準 Item 對象）
+                currentItem = {
                     id: response.ID,
                     name: response.Name,
-                    description: response.Description
-                },
-                world: state.selectedServer,
-                price: null
-            };
+                    icon: response.Icon || null,
+                    level: response.LevelItem || 0,
+                    category: response.ItemSearchCategory?.Name || '未分類',
+                    rarity: response.Rarity || 0,
+                    canBeHQ: Boolean(response.CanBeHq)
+                };
 
-            displayItemInfo(itemData);
-            showMessage('物品信息已載入', 'success');
+                displayItemInfo(itemData);
+                showMessage('物品信息已載入', 'success');
 
-            // 嘗試從 Universalis 獲取價格，並自動計算合成成本
-            if (state.selectedServer) {
-                getItemPrice(response.ID)
-                    .always(() => {
-                        showGlobalLoading(false);
-                        autoCalculateCraftingCost();
-                    });
-            } else {
-                showGlobalLoading(false);
+                // 嘗試從 Universalis 獲取價格，並自動計算合成成本
+                if (state.selectedServer) {
+                    getItemPrice(response.ID)
+                        .always(() => {
+                            showGlobalLoading(false);
+                            autoCalculateCraftingCost();
+                        });
+                } else {
+                    showGlobalLoading(false);
+                }
+
+                // 顯示製造成本計算面板
+                $('#craftingCostPanel').show();
             }
-
-            // 顯示製造成本計算面板
-            $('#craftingCostPanel').show();
         },
         error: function (xhr, status, error) {
             console.log('XIVAPI item error:', status, error, xhr);
@@ -1010,31 +1100,44 @@ function getItemPrice(itemId) {
         timeout: 10000
     }).then(function (response) {
         console.log('Universalis price response:', response);
+        console.log('lastUploadTime:', response.lastUploadTime);
 
         if (response.averagePriceNQ || response.averagePriceHQ || response.minPriceNQ || response.minPriceHQ) {
+            // 映射為標準 price 對象格式
             const price = {
-                nq_min: response.minPriceNQ ? '✓ ' + response.minPriceNQ : '無',
-                nq_avg: response.averagePriceNQ ? Math.round(response.averagePriceNQ) : '無',
-                hq_min: response.minPriceHQ ? '✓ ' + response.minPriceHQ : '無',
-                hq_avg: response.averagePriceHQ ? Math.round(response.averagePriceHQ) : '無'
+                nqMin: response.minPriceNQ || 0,
+                nqAvg: Math.round(response.averagePriceNQ) || 0,
+                hqMin: response.minPriceHQ || 0,
+                hqAvg: Math.round(response.averagePriceHQ) || 0,
+                lastUploadTime: response.lastUploadTime || null,
+                server: state.selectedServer
             };
+            
+            console.log('Saved price data:', price);
 
-            // 緩存成品市場價，供成本區塊顯示
-            state.lastItemPriceData = price;
+            // 將價格附加到 currentItem
+            if (currentItem && currentItem.id === itemId) {
+                currentItem.price = price;
+            }
 
             // 填充到右側價格信息容器
-            $('#priceContent').html(
-                '<div class="price-row">' +
+            let priceHtml = '<div class="price-row">' +
                 '<div class="price-type">NQ (Normal Quality)</div>' +
-                '<div>最低: <strong>' + price.nq_min + '</strong> 金幣</div>' +
-                '<div>平均: <strong>' + price.nq_avg + '</strong> 金幣</div>' +
+                '<div>最低: <strong>' + price.nqMin.toLocaleString() + ' G</strong></div>' +
+                '<div>平均: <strong>' + price.nqAvg.toLocaleString() + ' G</strong></div>' +
                 '</div>' +
                 '<div class="price-row">' +
                 '<div class="price-type">HQ (High Quality)</div>' +
-                '<div>最低: <strong>' + price.hq_min + '</strong> 金幣</div>' +
-                '<div>平均: <strong>' + price.hq_avg + '</strong> 金幣</div>' +
-                '</div>'
-            );
+                '<div>最低: <strong>' + price.hqMin.toLocaleString() + ' G</strong></div>' +
+                '<div>平均: <strong>' + price.hqAvg.toLocaleString() + ' G</strong></div>' +
+                '</div>';
+            
+            // 添加更新時間
+            if (price.lastUploadTime) {
+                priceHtml += '<div style="font-size: 0.85rem; color: #999; margin-top: 0.75rem; text-align: right; padding-top: 0.5rem; border-top: 1px solid #e5e7eb;">更新：' + formatUpdateTime(price.lastUploadTime) + '</div>';
+            }
+            
+            $('#priceContent').html(priceHtml);
         } else {
             console.log('No price data available');
             $('#priceContent').html('<div style="color: #999;">無市場價格數據</div>');
@@ -1053,7 +1156,7 @@ function clearItemInfo() {
     $('#craftingCostPanel').hide();
     $('#itemIdInput').val('');
     currentItemId = null;
-    state.lastItemPriceData = null;
+    currentItem = null;  // 清除當前物品
 }
 
 // ==================== 製造成本計算 ====================
@@ -1138,84 +1241,129 @@ function calculateAndDisplayCost(recipe, quantity) {
 
     const ingredients = [];
     let totalCost = 0;
+    const currentLanguage = state.selectedLanguage || 'tc';
 
     // 提取材料列表
+    const promises = [];
     for (let i = 0; i <= 9; i++) {
         const ingredientKey = 'ItemIngredient' + i;
         const amountKey = 'AmountIngredient' + i;
 
         if (recipe[ingredientKey] && recipe[ingredientKey].ID) {
             const itemId = recipe[ingredientKey].ID;
-            const requiredAmount = (recipe[amountKey] || 0) * quantity;
+            const amount = (recipe[amountKey] || 0) * quantity;  // 使用 amount
             const icon = recipe[ingredientKey].IconHD || recipe[ingredientKey].Icon || null;
+            let itemName = recipe[ingredientKey].Name || '未知';
 
-            if (requiredAmount > 0) {
-                ingredients.push({
-                    id: itemId,
-                    name: recipe[ingredientKey].Name || '未知',
-                    requiredAmount: requiredAmount,
-                    unitPrice: 0,
-                    icon: icon
-                });
+            if (amount > 0) {
+                // 如果是繁中，通過ID獲取中文名稱
+                if (currentLanguage === 'tc') {
+                    const promise = getItemInfoById(itemId, 'zh-TW').then(itemInfo => {
+                        if (itemInfo && itemInfo.name) {
+                            itemName = itemInfo.name;
+                        }
+                        return {
+                            id: itemId,
+                            name: itemName,
+                            amount: amount,  // 使用 amount 而非 requiredAmount
+                            unitPrice: 0,
+                            icon: icon,
+                            level: itemInfo?.level || 0,
+                            recipeLevel: itemInfo?.recipeLevel || 0,
+                            category: itemInfo?.category || '未分類',
+                            rarity: itemInfo?.rarity || 0,
+                            canBeHQ: itemInfo?.canBeHQ || false
+                        };
+                    });
+                    promises.push(promise);
+                } else {
+                    ingredients.push({
+                        id: itemId,
+                        name: itemName,
+                        amount: amount,  // 使用 amount 而非 requiredAmount
+                        unitPrice: 0,
+                        icon: icon,
+                        level: 0,
+                        recipeLevel: 0,
+                        category: '未分類',
+                        rarity: 0,
+                        canBeHQ: false
+                    });
+                }
             }
         }
     }
 
-    if (ingredients.length === 0) {
-        showMessage('無法解析合成材料', 'warning');
-        return;
-    }
+    // 等待所有中文名稱獲取完成
+    const processIngredients = currentLanguage === 'tc' ? 
+        Promise.all(promises).then(results => results) : 
+        Promise.resolve(ingredients);
 
-    console.log('Ingredients found:', ingredients);
+    processIngredients.then(finalIngredients => {
+        if (currentLanguage === 'tc') {
+            ingredients.push(...finalIngredients);
+        }
 
-    // 批量查詢材料價格
-    const itemIds = ingredients.map(i => i.id).join(',');
-    $.ajax({
-        url: 'https://universalis.app/api/v2/aggregated/' + encodeURIComponent(state.selectedServer) + '/' + itemIds,
-        type: 'GET',
-        dataType: 'json',
-        timeout: config.timeout,
-        success: function (priceResponse) {
-            console.log('Price response:', priceResponse);
+        if (ingredients.length === 0) {
+            showMessage('無法解析合成材料', 'warning');
+            return;
+        }
 
-            // 更新材料價格
-            if (priceResponse.results) {
-                priceResponse.results.forEach(function (result) {
-                    const itemId = result.itemID || result.itemId;
-                    const ingredient = ingredients.find(i => i.id === itemId);
+        console.log('Ingredients found:', ingredients);
 
-                    if (ingredient && result.nq) {
-                        // 使用 NQ 最低價格或平均價格
-                        const unit = result.nq.minListing?.world?.price ||
-                            result.nq.averageSalePrice?.world?.price || 0;
-                        ingredient.unitPrice = roundPrice(unit);
-                        totalCost += ingredient.unitPrice * ingredient.requiredAmount;
-                    }
+        // 批量查詢材料價格
+        const itemIds = ingredients.map(i => i.id).join(',');
+        $.ajax({
+            url: 'https://universalis.app/api/v2/aggregated/' + encodeURIComponent(state.selectedServer) + '/' + itemIds,
+            type: 'GET',
+            dataType: 'json',
+            timeout: config.timeout,
+            success: function (priceResponse) {
+                console.log('Price response:', priceResponse);
+
+                // 更新材料價格
+                if (priceResponse.results) {
+                    priceResponse.results.forEach(function (result) {
+                        const itemId = result.itemID || result.itemId;
+                        const ingredient = ingredients.find(i => i.id === itemId);
+
+                        if (ingredient && result.nq) {
+                            // 使用 NQ 最低價格或平均價格
+                            const unit = result.nq.minListing?.world?.price ||
+                                result.nq.averageSalePrice?.world?.price || 0;
+                            ingredient.unitPrice = roundPrice(unit);
+                            ingredient.lastUploadTime = result.lastUploadTime || null;  // 保存更新時間
+                            totalCost += ingredient.unitPrice * ingredient.amount;  // 使用 amount
+                        }
+                    });
+                }
+
+                // 顯示結果
+                totalCost = roundPrice(totalCost);
+                const costPerUnit = quantity > 0 ? roundPrice(totalCost / quantity) : 0;
+                displayCraftingCost({
+                    ingredients: ingredients,
+                    totalCost: totalCost,
+                    costPerUnit: costPerUnit
+                });
+                showMessage('成本計算完成', 'success');
+            },
+            error: function (xhr, status, error) {
+                console.log('Price lookup error:', status, error);
+                showMessage('無法獲取材料價格，請稍後重試', 'warning');
+
+                // 仍然顯示材料列表，但價格為 0
+                const costPerUnit = 0;
+                displayCraftingCost({
+                    ingredients: ingredients,
+                    totalCost: 0,
+                    costPerUnit: costPerUnit
                 });
             }
-
-            // 顯示結果
-            totalCost = roundPrice(totalCost);
-            const costPerUnit = quantity > 0 ? roundPrice(totalCost / quantity) : 0;
-            displayCraftingCost({
-                ingredients: ingredients,
-                totalCost: totalCost,
-                costPerUnit: costPerUnit
-            });
-            showMessage('成本計算完成', 'success');
-        },
-        error: function (xhr, status, error) {
-            console.log('Price lookup error:', status, error);
-            showMessage('無法獲取材料價格，請稍後重試', 'warning');
-
-            // 仍然顯示材料列表，但價格為 0
-            const costPerUnit = 0;
-            displayCraftingCost({
-                ingredients: ingredients,
-                totalCost: 0,
-                costPerUnit: costPerUnit
-            });
-        }
+        });
+    }).catch(error => {
+        console.error('Error fetching Chinese names:', error);
+        showMessage('無法獲取材料資訊', 'warning');
     });
 }
 
@@ -1227,14 +1375,21 @@ function displayCraftingCost(data) {
         html += '<div style="overflow-y: auto; max-height: 300px; margin-bottom: 1.5rem;">';
 
         data.ingredients.forEach(function (ingredient) {
-            const totalCost = roundPrice((ingredient.unitPrice || 0) * ingredient.requiredAmount);
+            const totalCost = roundPrice((ingredient.unitPrice || 0) * ingredient.amount);  // 使用 amount
             const iconUrl = getIconUrl(ingredient.icon);
             html += '<div style="display: flex; justify-content: space-between; padding: 0.5rem; border-bottom: 1px solid var(--border-color);">';
             html += '<div style="display:flex; align-items:center; gap:0.5rem;">';
             html += '<img src="' + iconUrl + '" alt="' + escapeHtml(ingredient.name) + ' icon" style="width:36px; height:36px; border-radius:0.5rem; border:1px solid var(--border-color); object-fit: cover; background:#e9ecef;">';
             html += '<div>';
             html += '<strong>' + escapeHtml(ingredient.name) + '</strong><br>';
-            html += '<small style="color: var(--gray);">數量: ' + ingredient.requiredAmount + ' | 單價: ' + (ingredient.unitPrice || '0') + ' G</small>';
+            let infoText = '數量: ' + ingredient.amount + ' | 單價: ' + (ingredient.unitPrice || '0') + ' G';
+            if (ingredient.recipeLevel) {
+                infoText += ' | RLV: ' + ingredient.recipeLevel;
+            }
+            html += '<small style="color: var(--gray);">' + infoText + '</small>';
+            if (ingredient.lastUploadTime) {
+                html += '<div style="font-size: 0.75rem; color: #999; margin-top: 0.125rem;">市場更新：' + formatUpdateTime(ingredient.lastUploadTime) + '</div>';
+            }
             html += '</div>';
             html += '</div>';
             html += '<div style="text-align: right;">';
@@ -1257,23 +1412,36 @@ function displayCraftingCost(data) {
     html += '</div>';
     html += '</div>';
 
-    // 顯示成品市場價 (使用緩存的價格數據)
-    if (state.lastItemPriceData) {
+    // 顯示成品市場價 (使用 currentItem.price 而非 state.lastItemPriceData)
+    if (currentItem && currentItem.price) {
+        const price = currentItem.price;
         html += '<div style="background: #fff9e6; padding: 1rem; border-radius: 0.375rem; margin-top: 0.75rem; border: 1px solid var(--border-color);">';
-        html += '<div style="font-weight: 600; margin-bottom: 0.5rem;">成品市場價（' + escapeHtml(state.selectedServer || '-') + '）</div>';
+        html += '<div style="font-weight: 600; margin-bottom: 0.5rem;">成品市場價（' + escapeHtml(price.server || '-') + '）</div>';
         html += '<div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">';
         html += '<span>NQ 最低 / 平均：</span>';
-        html += '<strong>' + escapeHtml(state.lastItemPriceData.nq_min) + ' / ' + escapeHtml(state.lastItemPriceData.nq_avg) + ' G</strong>';
+        html += '<strong>' + price.nqMin.toLocaleString() + ' / ' + price.nqAvg.toLocaleString() + ' G</strong>';
         html += '</div>';
         html += '<div style="display: flex; justify-content: space-between;">';
         html += '<span>HQ 最低 / 平均：</span>';
-        html += '<strong>' + escapeHtml(state.lastItemPriceData.hq_min) + ' / ' + escapeHtml(state.lastItemPriceData.hq_avg) + ' G</strong>';
+        html += '<strong>' + price.hqMin.toLocaleString() + ' / ' + price.hqAvg.toLocaleString() + ' G</strong>';
         html += '</div>';
+        if (price.lastUploadTime) {
+            console.log('Displaying update time for finished product:', price.lastUploadTime);
+            html += '<div style="font-size: 0.85rem; color: #999; margin-top: 0.5rem; text-align: right;">更新：' + formatUpdateTime(price.lastUploadTime) + '</div>';
+        } else {
+            console.log('No lastUploadTime in price');
+        }
         html += '</div>';
     }
 
     $('#craftingCostContent').html(html);
     $('#craftingCostPanel').show();
+    
+    // 如果合成表有內容，也一併顯示
+    if ($('#craftContent').html().trim() !== '') {
+        $('#craftPanel').show();
+    }
+    
     showMessage('成本計算完成', 'success');
 }
 
@@ -1418,10 +1586,19 @@ async function loadRecipeDetailsForItem(itemId, itemName) {
         const recipeDetail = await fetchRecipeDetail(primaryRecipeId);
         const recipeCost = await buildRecipeCost(recipeDetail, hasServer);
 
-        // 取得每個材料的子配方與成本（若有）
-        await attachSubRecipeCosts(recipeCost.ingredients, hasServer);
-
+        // 先顯示基本合成表（快速顯示）
         renderRecipeDetails(recipeDetail, recipeCost, itemName);
+        showGlobalLoading(false);
+
+        // 異步查詢子材料的配方（背景加載，不阻塞顯示）
+        if (hasServer) {
+            attachSubRecipeCosts(recipeCost.ingredients, hasServer).then(() => {
+                // 子材料加載完成後更新顯示
+                renderRecipeDetails(recipeDetail, recipeCost, itemName);
+            }).catch(err => {
+                console.warn('子材料查詢失敗:', err);
+            });
+        }
     } catch (error) {
         console.warn('loadRecipeDetailsForItem error', error);
         showMessage('載入配方詳情失敗', 'warning');
@@ -1439,23 +1616,53 @@ async function fetchRecipeDetail(recipeId) {
     });
 }
 
-function collectIngredients(recipeDetail) {
+async function collectIngredients(recipeDetail) {
     const ingredients = [];
+    const currentLanguage = state.selectedLanguage || 'tc';
+    
+    // 先收集所有材料的基本信息
+    const items = [];
     for (let i = 0; i <= 9; i++) {
         const item = recipeDetail['ItemIngredient' + i];
         const amount = recipeDetail['AmountIngredient' + i];
         if (item && item.ID && amount > 0) {
-            ingredients.push({
+            items.push({
                 id: item.ID,
                 name: item.Name || '未知',
                 amount: amount,
-                icon: item.IconHD || item.Icon || null,
-                unitPrice: 0,
-                totalCost: 0,
-                subRecipe: null
+                icon: item.IconHD || item.Icon || null
             });
         }
     }
+    
+    // 如果選擇繁中語言，並行獲取所有中文名稱
+    if (currentLanguage === 'tc' && items.length > 0) {
+        const namePromises = items.map(item => 
+            getItemInfoById(item.id, 'zh-TW').then(itemInfo => {
+                if (itemInfo && itemInfo.name) {
+                    item.name = itemInfo.name;
+                    console.log('✓ 更新材料名稱:', item.id, '->', item.name);
+                }
+            }).catch(err => {
+                console.warn('獲取材料名稱失敗:', item.id, err);
+            })
+        );
+        await Promise.all(namePromises);
+    }
+    
+    // 組裝最終結果
+    items.forEach(item => {
+        ingredients.push({
+            id: item.id,
+            name: item.name,
+            amount: item.amount,
+            icon: item.icon,
+            unitPrice: 0,
+            totalCost: 0,
+            subRecipe: null
+        });
+    });
+    
     return ingredients;
 }
 
@@ -1471,7 +1678,31 @@ async function getAggregatedPrices(itemIds) {
             dataType: 'json',
             timeout: config.timeout
         });
-        return response.results || [];
+        // 為每個結果添加時間戳
+        const results = response.results || [];
+        console.log('Aggregated prices response:', response);
+        console.log('Results count:', results.length);
+        results.forEach(item => {
+            // 嘗試從多個位置獲取時間戳（毫秒級）
+            let uploadTimeMs = null;
+            
+            // 優先從 worldUploadTimes 獲取
+            if (item.worldUploadTimes && item.worldUploadTimes.length > 0) {
+                uploadTimeMs = item.worldUploadTimes[0].timestamp;
+            }
+            // 或從最近購買記錄獲取
+            else if (item.nq?.recentPurchase?.world?.timestamp) {
+                uploadTimeMs = item.nq.recentPurchase.world.timestamp;
+            }
+            else if (item.hq?.recentPurchase?.world?.timestamp) {
+                uploadTimeMs = item.hq.recentPurchase.world.timestamp;
+            }
+            
+            // 轉換為秒級時間戳
+            item.lastUploadTime = uploadTimeMs ? Math.floor(uploadTimeMs / 1000) : null;
+            console.log('Item', item.itemID || item.itemId, 'lastUploadTime:', item.lastUploadTime, '(from ms:', uploadTimeMs, ')');
+        });
+        return results;
     } catch (err) {
         console.warn('Aggregated price fetch failed', err);
         return null;
@@ -1479,7 +1710,7 @@ async function getAggregatedPrices(itemIds) {
 }
 
 async function buildRecipeCost(recipeDetail, hasServer) {
-    const ingredients = collectIngredients(recipeDetail);
+    const ingredients = await collectIngredients(recipeDetail);
     const itemIds = ingredients.map(i => i.id);
     let priceMap = {};
 
@@ -1489,14 +1720,28 @@ async function buildRecipeCost(recipeDetail, hasServer) {
             aggResults.forEach(res => {
                 const id = res.itemID || res.itemId;
                 const unit = res.nq?.minListing?.world?.price || res.nq?.averageSalePrice?.world?.price || res.minPriceNQ || 0;
-                priceMap[id] = roundPrice(unit);
+                
+                priceMap[id] = {
+                    price: roundPrice(unit),
+                    lastUploadTime: res.lastUploadTime  // 已在 getAggregatedPrices 中處理
+                };
+                console.log('PriceMap for item', id, '- price:', priceMap[id].price, 'uploadTime:', res.lastUploadTime);
             });
         }
     }
 
     let totalCost = 0;
     ingredients.forEach(ing => {
-        ing.unitPrice = roundPrice(priceMap[ing.id]);
+        const priceData = priceMap[ing.id];
+        if (priceData && typeof priceData === 'object') {
+            ing.unitPrice = priceData.price || 0;
+            ing.priceUpdateTime = priceData.lastUploadTime;
+            console.log('✓ Ingredient', ing.name, '(ID:', ing.id, ') - unitPrice:', ing.unitPrice, 'priceUpdateTime:', ing.priceUpdateTime);
+        } else {
+            ing.unitPrice = roundPrice(priceData || 0);
+            ing.priceUpdateTime = null;
+            console.log('✗ Ingredient', ing.name, '(ID:', ing.id, ') - No price data');
+        }
         ing.totalCost = roundPrice(ing.unitPrice * ing.amount);
         totalCost += ing.totalCost;
     });
@@ -1504,6 +1749,18 @@ async function buildRecipeCost(recipeDetail, hasServer) {
     const yields = recipeDetail.AmountResult || recipeDetail.AmountResultHQ || 1;
     totalCost = roundPrice(totalCost);
     const costPerUnit = yields > 0 ? roundPrice(totalCost / yields) : totalCost;
+
+    // 獲取成品名稱（如果是繁中則通過ID重新獲取）
+    let resultItemName = recipeDetail.ItemResult?.Name || '成品';
+    const currentLanguage = state.selectedLanguage || 'tc';
+    
+    if (currentLanguage === 'tc' && recipeDetail.ItemResult?.ID) {
+        const resultInfo = await getItemInfoById(recipeDetail.ItemResult.ID, 'zh-TW');
+        if (resultInfo && resultInfo.name) {
+            resultItemName = resultInfo.name;
+            console.log('✓ 更新成品名稱:', recipeDetail.ItemResult.ID, '->', resultItemName);
+        }
+    }
 
     return {
         recipe: {
@@ -1514,7 +1771,7 @@ async function buildRecipeCost(recipeDetail, hasServer) {
             durability: recipeDetail.Durability || '-',
             resultItem: {
                 id: recipeDetail.ItemResult?.ID || '',
-                name: recipeDetail.ItemResult?.Name || '成品'
+                name: resultItemName
             }
         },
         ingredients,
@@ -1590,12 +1847,15 @@ async function fetchSubRecipeCost(itemId, hasServer) {
 }
 
 async function attachSubRecipeCosts(ingredients, hasServer) {
-    for (const ing of ingredients) {
+    // 並行查詢所有子材料的配方
+    const promises = ingredients.map(async (ing) => {
         const subCost = await fetchSubRecipeCost(ing.id, hasServer);
         if (subCost) {
             ing.subRecipe = subCost;
         }
-    }
+    });
+    
+    await Promise.all(promises);
 }
 
 function renderRecipeDetails(recipeDetail, recipeCost, itemName) {
@@ -1635,7 +1895,11 @@ function renderRecipeDetails(recipeDetail, recipeCost, itemName) {
         html += '<img src="' + iconUrl + '" alt="' + escapeHtml(ing.name) + ' icon" style="width:42px; height:42px; border-radius:0.5rem; border:1px solid var(--border-color); object-fit:cover; background:#e9ecef;">';
         html += '<div style="flex:1;">';
         html += '<div style="font-weight:700;">' + escapeHtml(ing.name) + '</div>';
-        html += '<div style="color:#666; font-size:0.9rem;">需要 x' + ing.amount + '</div>';
+        let ingInfo = '需要 x' + ing.amount;
+        if (ing.recipeLevel) {
+            ingInfo += ' | RLV: ' + ing.recipeLevel;
+        }
+        html += '<div style="color:#666; font-size:0.9rem;">' + ingInfo + '</div>';
         html += '</div>';
         html += '</div>';
 
@@ -1648,6 +1912,12 @@ function renderRecipeDetails(recipeDetail, recipeCost, itemName) {
         html += '<span>購買小計</span>';
         html += '<strong style="color:#e74c3c;">' + (ing.totalCost || 0).toLocaleString() + ' G</strong>';
         html += '</div>';
+        if (ing.priceUpdateTime) {
+            console.log('Displaying update time for ingredient', ing.name, ':', ing.priceUpdateTime);
+            html += '<div style="font-size:0.8rem; color:#999; margin-top:0.25rem; text-align:right;">更新：' + formatUpdateTime(ing.priceUpdateTime) + '</div>';
+        } else {
+            console.log('No priceUpdateTime for ingredient', ing.name);
+        }
         html += '</div>';
 
         if (ing.subRecipe) {
@@ -1749,3 +2019,32 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
+function formatUpdateTime(timestamp) {
+    if (!timestamp) return '未知';
+    
+    const date = new Date(timestamp * 1000); // Universalis 使用秒級時間戳
+    const now = new Date();
+    const diff = Math.floor((now - date) / 1000); // 秒數差異
+    
+    if (diff < 60) {
+        return '剛剛';
+    } else if (diff < 3600) {
+        const minutes = Math.floor(diff / 60);
+        return minutes + ' 分鐘前';
+    } else if (diff < 86400) {
+        const hours = Math.floor(diff / 3600);
+        return hours + ' 小時前';
+    } else if (diff < 604800) {
+        const days = Math.floor(diff / 86400);
+        return days + ' 天前';
+    } else {
+        // 超過一週顯示完整日期
+        return date.toLocaleDateString('zh-TW', { 
+            year: 'numeric', 
+            month: '2-digit', 
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
+}
