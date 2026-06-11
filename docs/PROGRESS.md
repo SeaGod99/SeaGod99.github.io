@@ -3,7 +3,7 @@
 > **給 Claude / 後續對話的指示**：開始任何工作前先讀本檔。完成任何功能或資料變更後，**必須更新本檔**（狀態表 + 更新紀錄），並同步 `data/_meta.json` 的 status。
 > 規格細節見 `docs/feature-specs.md`，資料格式見 `data/SCHEMA.md`。
 
-**最後更新**：2026-06-11（第二輪：mounts/barding 補 itemId 與繁中名、dungeons 名稱台服化校正；monsters 待本機跑 patch-monster-names.mjs）
+**最後更新**：2026-06-11（第二輪：mounts/barding 補 itemId 與繁中名、dungeons 名稱台服化校正；monsters 名稱台服化完成）
 **網站**：https://seagod99.github.io ｜ GitHub Pages 純靜態 ｜ 遊戲版本 7.2
 
 ---
@@ -147,7 +147,7 @@
 | 庫 | 問題 | 修法 |
 |----|------|------|
 | mounts | ~~282/385 無繁中名、無 itemId~~ **已修（06-11）**：itemId 348/385、繁中名 337/385（缺 48 筆=台服未開放）。tw-mounts.json 不存在，走 itemId→tw-items（259）＋CN+OpenCC（56），nameSource 欄區分。**遺留：原 103 筆手動名大量錯位（78/100 配錯坐騎），sources/patch 可能同樣錯位，需人工校對** | 完成 |
-| monsters | 14361 筆名稱全是簡轉繁，非台服官方 | **腳本已備（06-11），待本機跑 `node scripts/patch-monster-names.mjs`**（tw-mobs 614KB，沙箱抓不全）；build-monsters.mjs 已改 tw-mobs 優先 |
+| monsters | ~~14361 筆名稱全是簡轉繁~~ **已修（06-11 本機跑 patch-monster-names.mjs）**：改名 2381、官方同名 11040（皆標 nameSource:"tw-mobs"）、tw-mobs 無資料保留簡轉繁 793（另佔位 147） | 完成 |
 | dungeons | ~~OpenCC 過度轉換~~ **已修（06-11）**：校正 108/386（含 託託/托托、利維亞桑→真 利維坦殲滅戰 等官方譯名差異），35 筆台服未開放保留。注意 tw-places 沒有副本任務全名，實際用 **tw-instances.json + CFC raw 對應**（patch-dungeon-names.mjs，含離線快取） | 完成，報告見 docs/dungeons-名稱校正報告.md |
 | blue-magic | learnFrom.detail 是簡轉繁 | 前端用 contentId 查 dungeons 名（已記於二之一） |
 | barding | ~~itemId 全 null~~ **已修（06-11）**：itemId 100/106（6 筆遊戲內無道具屬正常）；12 筆無繁中名全屬台服未開放，依原則不補 | 完成 |
@@ -180,7 +180,7 @@
 1. 驗收四個「開發中」頁面（weather / gathering / mounts / minions），補 sources/patch 手動欄位
 2. 同步 `data/_meta.json` status；更新 README.md 的工具清單（已過時）
 2-1. 資料品質小修：~~mounts 補 itemId~~（06-11 完成）；**新增：mounts 原手動 sources/patch 疑似錯位需人工校對（同名稱錯位問題）**；om 40 筆 npc 譯名以 npcs.json 為準；blue-magic learnFromMob 轉怪物 id（做青魔頁前）；dungeons rewards/unlock 待填充（量大，做副本相關功能時再填）
-2-2. **繁中化升級（見二之二）**：~~mounts 補繁中名~~、~~dungeons 校正~~（06-11 完成）；**monsters 待本機跑 `node scripts/patch-monster-names.mjs`**；抽 scripts/lib/common.mjs 共用函式庫（未做）
+2-2. **繁中化升級（見二之二）**：~~mounts 補繁中名~~、~~dungeons 校正~~（06-11 完成）；~~monsters 台服化~~（06-11 完成）；抽 scripts/lib/common.mjs 共用函式庫（未做）
 3. **git commit**：data/、collections/、market/、docs/、assets/ 大量檔案尚未 commit（git status 一大串 untracked）
 4. 製作利潤計算機（繁中空缺，規劃優先）
 5. 幻卡追蹤頁面（資料已備，sources 待補：NPC 對戰需方案 A+C）
@@ -190,7 +190,7 @@
 
 ## 五、更新紀錄
 
-- **2026-06-11（第二輪）**：mounts 補 itemId 348/385、繁中名 337/385（nameSource：tw-items 259／cn-opencc 56；發現原 103 筆手動名大量錯位已覆蓋，sources/patch 待人工校對）；barding 補 itemId 100/106；dungeons 名稱台服化校正 108/386（tw-instances + CFC 對應，報告 docs/dungeons-名稱校正報告.md）；monsters 交本機腳本 scripts/patch-monster-names.mjs（tw-mobs 沙箱抓不全，一筆未動）；build-mounts/build-barding/build-monsters/patch-dungeon-names 同步更新。
+- **2026-06-11（第二輪）**：mounts 補 itemId 348/385、繁中名 337/385（nameSource：tw-items 259／cn-opencc 56；發現原 103 筆手動名大量錯位已覆蓋，sources/patch 待人工校對）；barding 補 itemId 100/106；dungeons 名稱台服化校正 108/386（tw-instances + CFC 對應，報告 docs/dungeons-名稱校正報告.md）；monsters 本機跑 patch-monster-names.mjs 完成台服化（改名 2381／同名 11040／無資料 793）；build-mounts/build-barding/build-monsters/patch-dungeon-names 同步更新。
 
 - **2026-06-11**：地圖 ID 統一修正完成（待辦 #0）。maps.json 重 key 成遊戲 Map sheet row id 並擴充 67→210 張（地名 tw-places 優先）；fishing-spots 307 筆補 coords.mapId（territory→map 對應）；gathering 濾除 EventItem 偽 id 356 次、剔除 232 個純偽 id 節點（965→733）、141 筆 mapId=0 加 mapMissing 標記。新增 scripts/validate-links.mjs（全庫連結驗證）、rekey-maps.mjs；改 build-fishing / build-gathering / download-maps。mapId 類斷鏈 17444＋17958＋524 → 全部歸零。SCHEMA.md 明文 mapId=Map sheet row id；_meta.json 同步 maps/gathering/fishes/fishing-spots。底圖 8 張待本機補（docs/待補底圖清單.md）。
 - **2026-06-10**：建立本進度文件；盤點 repo 實際狀態（比先前紀錄多了 weather/gathering 工具頁、mounts/minions 收藏頁、dungeons/barding/blue-magic/monsters/obtainable-methods/fishes 等資料庫）。
