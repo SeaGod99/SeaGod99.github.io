@@ -120,6 +120,9 @@ ARR 2.x / HW 3.x / SB 4.x / ShB 5.x / EW 6.x / DT 7.x
 "coords": { "mapId": 132, "x": 11.5, "y": 13.2 }
 ```
 
+**`mapId` 定義（2026-06-11 地圖ID統一修正計畫定案）**：`mapId` = **遊戲 Map sheet 的 row id**（XIVAPI v2 `/sheet/Map` 的 `row_id`），全站唯一標準，`maps.json` 主鍵即此 id。Teamcraft 來源資料（npcs/monsters/gathering）原生就是這套 id，不需轉換。
+`territoryId`（TerritoryType row id，見 fishing-spots）與 `coords.zoneId`（同為 territory 系，見 gathering）**僅為輔助欄位**，顯示與跨庫連結一律用 `mapId`；territory→map 對應表在 `out_data/territory-map.json`（build-fishing.mjs 會用）。
+
 ### 1.8 職業字典（`JOBS`）— 台服官方譯名
 
 全資料庫（製作 recipes、採集 gathering、釣魚 fishing…）的 `job` 欄位**一律用台服官方譯名**。
@@ -226,9 +229,12 @@ ARR 2.x / HW 3.x / SB 4.x / ShB 5.x / EW 6.x / DT 7.x
 }
 ```
 
-`type`：`city`（主城）/`field`（野外）/`housing`（居住區）。
-`sizeFactor` + `offsetX/Y` 供遊戲座標↔像素換算。`weatherRates` 供天氣演算法（風脈/採集/釣魚共用）。
-`image`：底圖。`key` 為 XIVAPI 的 Map 圖層代號；`local` 是下載後 repo 內路徑（前端 `<img src>` 用）；`url` 為來源。
+**`id` = 遊戲 Map sheet row id**（2026-06-11 起，不再用自編連號；見 1.7）。
+`type`：`city`（主城）/`field`（野外）/`housing`（居住區）/`dungeon`（副本）/`instance`（特殊區域，含副本內部圖、活動圖）。
+`sizeFactor` + `offsetX/Y` 供遊戲座標↔像素換算。`weatherRates` 供天氣演算法（風脈/採集/釣魚共用；目前僅手動策展的 67 張有，新擴充的副本/特殊圖無）。
+`image`：底圖。`key` 為 XIVAPI 的 Map 圖層代號；`local` 是下載後 repo 內路徑（前端 `<img src>` 用）；`url` 為來源。**底圖只下載 field/city/housing；dungeon/instance 僅留 `url`**，需要時 `node scripts/download-maps.mjs --all` 再抓。
+`nameMissing: true`：tw-places 與 nameEn 皆查不到名稱（無 PlaceName 的特殊圖），前端勿顯示。
+地名繁中來源優先序：本機 `out_data/places.msgpack`（台服官方）→ Teamcraft `tw/tw-places.json` → 中國服 PlaceName.csv + OpenCC → `nameEn` + `nameMissing: true`（地名不適用 tw-items 的「對不到即隱藏」原則，那是物品專屬）。
 **圖片下載**（本機執行，需 Node 18+）：
 1. `node scripts/fix-mapkeys.mjs` — 從 XIVAPI 撈每張地圖正確的 `mapKey` 回填 maps.json（手動推測的 key 多會 404，這步修正）。
 2. `node scripts/download-maps.mjs` — 抓底圖進 `/assets/maps/`，略過已存在檔案、可重複執行補檔。
@@ -293,7 +299,8 @@ ARR 2.x / HW 3.x / SB 4.x / ShB 5.x / EW 6.x / DT 7.x
 | `level` | 採集等級 |
 | `items` | 可採集物品 id 陣列（外連 items 主表取名稱） |
 | `hiddenItems` | 隱藏物品（需高採集力或特定手法才出） |
-| `coords` | `mapId`/`zoneId` 連 maps；`x`/`y` 為地圖座標；`radius` 為節點群分布半徑 |
+| `coords` | `mapId` 連 maps（= Map sheet row id，見 1.7）；`zoneId` 為 TerritoryType id（輔助欄位）；`x`/`y` 為地圖座標；`radius` 為節點群分布半徑 |
+| `mapMissing` | Teamcraft 來源無地圖資訊（mapId=0）的節點標記，前端地圖功能須跳過（僅該類節點有此欄位） |
 | `limited` | 是否限時節點 |
 | `spawns` | 限時點的 ET 開始整點陣列（如 `[9]` = ET 9:00 出現）；非限時為 `[]` |
 | `duration` | 限時點持續分鐘數（ET），如 180 = 3 ET 小時 |
@@ -301,6 +308,7 @@ ARR 2.x / HW 3.x / SB 4.x / ShB 5.x / EW 6.x / DT 7.x
 | `ephemeral` | 靈砂節點（以太還元用） |
 
 物品繁中名稱不存在本表，由 `items` id 連 items 主表顯示。資料來源 Teamcraft `nodes.json`（座標/時間/物品）。
+**EventItem 過濾（2026-06-11 起）**：`items`/`hiddenItems` 中 ≥2000000 的 id 是 EventItem 偽 id（風脈/任務採集點專用，不在 items.json 的物品 id 空間），build 時一律過濾；過濾後完全沒有物品的節點整筆剔除。
 
 **前端顯示規則（重要）**：採集點產物 / hiddenItems 的 itemId 若在 items.json 對不到名稱，代表**台服尚未開放**該物品（Teamcraft 跟國際服較新版）→ **前端直接不顯示該物品**，不標示、不留空、不可 fallback 去 XIVAPI 抓名稱。物品名稱以 tw-items 為唯一真實來源。
 

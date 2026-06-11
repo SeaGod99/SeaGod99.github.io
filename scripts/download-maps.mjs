@@ -3,8 +3,12 @@
 // 為什麼要本機跑：Cowork 沙箱擋外部網站，無法在那邊下載；在你自己電腦跑沒這限制。
 //
 // 執行方式（在 repo 根目錄）：
-//   node scripts/download-maps.mjs
+//   node scripts/download-maps.mjs          ← 預設只抓野外/主城（type: field/city/housing）
+//   node scripts/download-maps.mjs --all    ← 連副本/特殊區域（dungeon/instance）一起抓
 // 需求：Node 18+（內建 fetch）。會自動跳過已存在的檔案，可重複執行補檔。
+//
+// 2026-06-11 地圖ID統一修正計畫決議：底圖只下載野外/主城；
+// 副本/特殊區域保留 image.url 欄位，需要時再抓（前端可直接用 url 或之後 --all 補）。
 
 import { readFile, mkdir, writeFile, access } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
@@ -21,8 +25,12 @@ async function main() {
   const db = JSON.parse(await readFile(MAPS_JSON, "utf8"));
   await mkdir(OUT_DIR, { recursive: true });
 
-  const entries = db.data.filter((m) => m.image?.url);
-  console.log(`共 ${entries.length} 張地圖待處理 → ${OUT_DIR}`);
+  const all = process.argv.includes("--all");
+  const WANT_TYPES = new Set(["field", "city", "housing"]);
+  const entries = db.data.filter(
+    (m) => m.image?.url && (all || WANT_TYPES.has(m.type))
+  );
+  console.log(`共 ${entries.length} 張地圖待處理（${all ? "全部類型" : "field/city/housing"}）→ ${OUT_DIR}`);
 
   let ok = 0, skip = 0, fail = 0;
   for (const m of entries) {

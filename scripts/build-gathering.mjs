@@ -49,8 +49,10 @@ async function main() {
     // 過濾佔位節點：無 type 對照、無座標、或完全沒物品
     if (!(n.type in TYPE_MAP)) continue;
     if (n.map == null || n.x == null) continue;
-    const items = Array.isArray(n.items) ? n.items.filter(Boolean) : [];
-    const hidden = Array.isArray(n.hiddenItems) ? n.hiddenItems.filter(Boolean) : [];
+    // 過濾 EventItem 偽 id（≥2000000，非 items.json 的物品 id 空間，連不到主表）
+    const isRealItem = (id) => id < 2000000;
+    const items = Array.isArray(n.items) ? n.items.filter(Boolean).filter(isRealItem) : [];
+    const hidden = Array.isArray(n.hiddenItems) ? n.hiddenItems.filter(Boolean).filter(isRealItem) : [];
     if (!items.length && !hidden.length) continue;
 
     const t = TYPE_MAP[n.type];
@@ -75,6 +77,8 @@ async function main() {
       duration: n.duration ?? 0,
       legendary: !!n.legendary,
       ephemeral: !!n.ephemeral,
+      // Teamcraft 無地圖資訊的節點（map=0）保留但標記，前端地圖功能須跳過
+      ...(!n.map ? { mapMissing: true } : {}),
     });
   }
 

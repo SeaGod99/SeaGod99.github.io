@@ -189,6 +189,33 @@ async function main() {
     return ja ? converter(ja) : null;
   };
 
+  // ---------- territoryId → mapId 對應（遊戲 Map sheet row id，全站統一 ID 空間） ----------
+  // 優先讀本機 out_data/territory-map.json（{territoryId: mapId}）；沒有就打 XIVAPI TerritoryType sheet
+  console.log("載入 territory→map 對應…");
+  let territoryMap = {};
+  const TERRITORY_MAP_LOCAL = join(__dirname, "..", "out_data", "territory-map.json");
+  try {
+    territoryMap = JSON.parse(await readFile(TERRITORY_MAP_LOCAL, "utf8"));
+    console.log(`  本機對應 ${Object.keys(territoryMap).length} 筆`);
+  } catch {
+    console.log("  本機檔不存在，改抓 XIVAPI TerritoryType…");
+    let after = 0;
+    while (true) {
+      const res = await fetch(`https://v2.xivapi.com/api/sheet/TerritoryType?fields=Map%40as%28raw%29&limit=500&after=${after}`);
+      if (!res.ok) throw new Error(`TerritoryType HTTP ${res.status}`);
+      const json = await res.json();
+      const rows = json.rows || [];
+      if (!rows.length) break;
+      for (const r of rows) {
+        const m = r.fields["Map@as(raw)"];
+        if (m) territoryMap[r.row_id] = m;
+      }
+      after = rows[rows.length - 1].row_id;
+      if (rows.length < 500) break;
+    }
+    console.log(`  XIVAPI 對應 ${Object.keys(territoryMap).length} 筆`);
+  }
+
   // ---------- 建立釣點資料 ----------
   console.log("建立釣點資料…");
   const spotsOut = [];
@@ -200,6 +227,7 @@ async function main() {
       .filter((f) => f.location === spotId)
       .map((f) => f._id);
 
+    const mapId = territoryMap[spot.territory_id] ?? null;
     spotsOut.push({
       id: spotId,
       name: spotName(spotId, spot.name_ja),
@@ -207,7 +235,7 @@ async function main() {
       nameJa: spot.name_ja || "",
       territoryId: spot.territory_id ?? null,
       coords: spot.map_coords
-        ? { x: spot.map_coords[0], y: spot.map_coords[1] }
+        ? { mapId, x: spot.map_coords[0], y: spot.map_coords[1] }
         : null,
       fishes,
     });

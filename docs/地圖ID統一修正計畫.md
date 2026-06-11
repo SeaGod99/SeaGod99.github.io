@@ -94,9 +94,31 @@ build-gathering.mjs 加過濾後重跑（來源 Teamcraft nodes.json）。
 
 ## 進度勾選
 
-- [ ] 第 0 步 commit 現況
-- [ ] 第 1 步 validate-links.mjs + 基準數字
-- [ ] 第 2 步 maps.json 重 key + 擴充
-- [ ] 第 3 步 fishing-spots 補 mapId
-- [ ] 第 4 步 gathering 清理
-- [ ] 第 5 步 驗證收尾 + 文件更新
+- [x] 第 0 步 commit 現況（f878cda 基準快照）
+- [x] 第 1 步 validate-links.mjs + 基準數字
+- [x] 第 2 步 maps.json 重 key + 擴充
+- [x] 第 3 步 fishing-spots 補 mapId
+- [x] 第 4 步 gathering 清理
+- [x] 第 5 步 驗證收尾 + 文件更新
+
+## 執行結果（2026-06-11 完成）
+
+**mapId 類斷鏈：修正前 → 修正後**
+
+| 連結 | 修正前 | 修正後 |
+|------|-------:|-------:|
+| npcs.coords.mapId → maps | 17444 / 22079 | 0 |
+| monsters.positions[].mapId → maps | 17958 / 21757 | 0 |
+| gathering.coords.mapId → maps | 524 / 965 | 0 |
+| fishing-spots.coords.mapId → maps | 307 筆無此欄位 | 0（307 筆全補上） |
+
+其餘斷鏈全為台服未開放（預期內，前端過濾）；gathering items 斷鏈 468 → 112（EventItem 偽 id 356 次全清除，剩 112 為台服未開放物品）。
+
+**各檔變更**
+
+- maps.json：67 張重 key 成 Map sheet row id + 擴充至 210 張（type 分布：field 47 / city 23 / housing 6 / dungeon 36 / instance 98）。2 張無 PlaceName 的特殊圖（id 274、356，a2fc/a2fh）記 `nameMissing: true`。新擴充條目暫無 weatherRates/patch。
+- fishing-spots.json：307 筆 coords 全補 `mapId`（territory→map 對應表 `out_data/territory-map.json`，94 筆）；`territoryId` 保留為輔助欄位。
+- gathering.json：過濾 EventItem 偽 id 356 次；232 個「只剩偽 id」節點整筆剔除（965 → 733）；mapId=0 節點剩 141 筆，保留並加 `mapMissing: true`。
+- 腳本：build-fishing.mjs 加 territory→map（本機檔優先、XIVAPI fallback）；build-gathering.mjs 加 EventItem 過濾與 mapMissing；download-maps.mjs 預設只抓 field/city/housing（`--all` 才抓副本圖）。
+
+**留待本機執行**：底圖下載（沙箱抓不到 XIVAPI 圖片資產）——見 `docs/待補底圖清單.md`，缺 8 張 field/city 圖，本機跑 `node scripts/download-maps.mjs` 即可。

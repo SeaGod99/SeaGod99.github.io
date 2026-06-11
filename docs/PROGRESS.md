@@ -3,7 +3,7 @@
 > **給 Claude / 後續對話的指示**：開始任何工作前先讀本檔。完成任何功能或資料變更後，**必須更新本檔**（狀態表 + 更新紀錄），並同步 `data/_meta.json` 的 status。
 > 規格細節見 `docs/feature-specs.md`，資料格式見 `data/SCHEMA.md`。
 
-**最後更新**：2026-06-10（補齊全工具清單；完成資料庫連結驗證，發現 mapId ID 空間不一致）
+**最後更新**：2026-06-11（地圖 ID 統一修正完成，mapId 類斷鏈全數歸零）
 **網站**：https://seagod99.github.io ｜ GitHub Pages 純靜態 ｜ 遊戲版本 7.2
 
 ---
@@ -71,9 +71,9 @@
 | 庫 | 筆數 | 來源 | 更新 |
 |------|------|------|------|
 | items | 43748 | tw-items.msgpack + XIVAPI | — |
-| maps | 67 | XIVAPI（底圖在 /assets/maps/） | — |
+| maps | 210 | XIVAPI + tw-places（id=Map sheet row id；底圖在 /assets/maps/，缺 8 張待本機補） | 06-11 |
 | recipes | 14182 | Teamcraft | — |
-| gathering | （已填） | Teamcraft nodes | — |
+| gathering | 733 | Teamcraft nodes（已濾 EventItem 偽 id；141 筆 mapMissing） | 06-11 |
 | npcs | 22079 | Teamcraft tw-npcs + 位置 | 06-08 |
 | minions | 581 | XIVAPI + items（圖在 /assets/minions/） | 06-05 |
 | mounts | 385 | XIVAPI + manual（圖在 /assets/mounts/） | 06-04 |
@@ -83,7 +83,7 @@
 | blue-magic | 124 | XIVAPI | 06-09 |
 | monsters | 14361 | datamining-cn + Teamcraft + XIVAPI | 06-09 |
 | obtainable-methods | 36336 | mixed | 06-08 |
-| fishes / fishing-spots | 1104 / 307 | fish-tracker + items | 06-08 |
+| fishes / fishing-spots | 1104 / 307 | fish-tracker + items（spots 已補 coords.mapId） | 06-11 |
 
 仍為空（0 bytes）：aether-currents（**擱置不做**，2026-06-02 決定）、emotes、exploration-log、orchestrion、squadron、fishing（由 fishes.json 取代）。
 
@@ -93,7 +93,9 @@
 
 ## 二之一、資料庫連結對應驗證（2026-06-10 全量檢查）
 
-### 【重大，必須先修】mapId 兩套 ID 空間不一致
+### 【已修復 2026-06-11】mapId 兩套 ID 空間不一致
+
+**已完成**：maps.json 重 key 成遊戲 Map sheet row id 並擴充至 210 張；fishing-spots 307 筆全補 coords.mapId；gathering 清除 EventItem 偽 id（965→733 節點）。mapId 類斷鏈 17444/17958/524 → 全部歸零。詳見 `docs/地圖ID統一修正計畫.md` 執行結果。底圖 8 張待本機補抓（`docs/待補底圖清單.md`）。以下保留原始問題紀錄：
 
 `maps.json` 用的是**自編連號 id**（2–305，手動策展 67 張）；但 Teamcraft 來源的庫（npcs、monsters、gathering）用的是**遊戲 Map sheet row id**。例：紅玉海在 maps.json 是 83，monsters/npcs 引用的是 371；庫爾札斯西部高地 maps=60 vs 引用 211；雷克蘭德 maps=100 vs 引用 491。
 
@@ -174,7 +176,7 @@
 
 ## 四、待辦（依優先序）
 
-0. **修 mapId ID 空間不一致** — 計畫已定案可動工，見 `docs/地圖ID統一修正計畫.md`（含 gathering EventItem 過濾、fishing-spots 補 mapId；三個待決事項已於 06-10 確認）
+0. ~~修 mapId ID 空間不一致~~ — **完成（2026-06-11）**，見 `docs/地圖ID統一修正計畫.md` 執行結果。遺留：底圖 8 張待本機跑 `node scripts/download-maps.mjs` 補抓（`docs/待補底圖清單.md`）；新擴充地圖無 weatherRates/patch，需要時再補
 1. 驗收四個「開發中」頁面（weather / gathering / mounts / minions），補 sources/patch 手動欄位
 2. 同步 `data/_meta.json` status；更新 README.md 的工具清單（已過時）
 2-1. 資料品質小修：mounts 補 itemId 欄位；om 40 筆 npc 譯名以 npcs.json 為準；blue-magic learnFromMob 轉怪物 id（做青魔頁前）；dungeons rewards/unlock 待填充（量大，做副本相關功能時再填）
@@ -188,6 +190,7 @@
 
 ## 五、更新紀錄
 
+- **2026-06-11**：地圖 ID 統一修正完成（待辦 #0）。maps.json 重 key 成遊戲 Map sheet row id 並擴充 67→210 張（地名 tw-places 優先）；fishing-spots 307 筆補 coords.mapId（territory→map 對應）；gathering 濾除 EventItem 偽 id 356 次、剔除 232 個純偽 id 節點（965→733）、141 筆 mapId=0 加 mapMissing 標記。新增 scripts/validate-links.mjs（全庫連結驗證）、rekey-maps.mjs；改 build-fishing / build-gathering / download-maps。mapId 類斷鏈 17444＋17958＋524 → 全部歸零。SCHEMA.md 明文 mapId=Map sheet row id；_meta.json 同步 maps/gathering/fishes/fishing-spots。底圖 8 張待本機補（docs/待補底圖清單.md）。
 - **2026-06-10**：建立本進度文件；盤點 repo 實際狀態（比先前紀錄多了 weather/gathering 工具頁、mounts/minions 收藏頁、dungeons/barding/blue-magic/monsters/obtainable-methods/fishes 等資料庫）。
 - 2026-06-09：blue-magic、monsters 資料更新。
 - 2026-06-08：npcs（22079）、triple-triad（425）、obtainable-methods、fishes/fishing-spots 完成。
