@@ -1,13 +1,13 @@
 {
   "schema": "mounts",
   "patch": "7.2",
-  "updated": "2026-06-04",
-  "source": "xivapi+manual",
+  "updated": "2026-06-11",
+  "source": "xivapi+tw-items+cn-opencc+manual",
   "count": 385,
   "data": [
     {
       "id": 1,
-      "name": "陸行鳥",
+      "name": "專屬陸行鳥",
       "nameEn": "company chocobo",
       "seats": 1,
       "icon": "/i/004000/004001_hr1.png",
@@ -20,7 +20,9 @@
           "detail": "職業等級達 20 可購買"
         }
       ],
-      "patch": "2.0"
+      "patch": "2.0",
+      "itemId": 6001,
+      "nameSource": "cn-opencc"
     },
     {
       "name": "黑陸行鳥",
@@ -32,7 +34,8 @@
         }
       ],
       "nameEn": null,
-      "icon": null
+      "icon": null,
+      "itemId": null
     },
     {
       "name": "戰馬",
@@ -44,11 +47,12 @@
         }
       ],
       "nameEn": null,
-      "icon": null
+      "icon": null,
+      "itemId": null
     },
     {
       "id": 4,
-      "name": "逐影騎乘",
+      "name": "古卜",
       "nameEn": "goobbue",
       "seats": 1,
       "icon": "/i/004000/004003_hr1.png",
@@ -61,11 +65,13 @@
           "detail": "成就「戰鬥在外野之一」"
         }
       ],
-      "patch": "2.0"
+      "patch": "2.0",
+      "itemId": 6002,
+      "nameSource": "tw-items"
     },
     {
       "id": 5,
-      "name": "鐵姆拉牛",
+      "name": "遺產陸行鳥",
       "nameEn": "legacy chocobo",
       "seats": 1,
       "icon": "/i/004000/004002_hr1.png",
@@ -78,11 +84,13 @@
           "detail": "莫頓城巨城廢墟（困難）"
         }
       ],
-      "patch": "2.0"
+      "patch": "2.0",
+      "itemId": 6006,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 6,
-      "name": "陸行鳥帽",
+      "name": "魔導裝甲",
       "nameEn": "magitek armor",
       "seats": 1,
       "icon": "/i/004000/004006_hr1.png",
@@ -95,7 +103,9 @@
           "detail": "金碟 MGP 兌換"
         }
       ],
-      "patch": "2.0"
+      "patch": "2.0",
+      "itemId": 6008,
+      "nameSource": "tw-items"
     },
     {
       "name": "盧德西特天馬",
@@ -107,11 +117,12 @@
         }
       ],
       "nameEn": null,
-      "icon": null
+      "icon": null,
+      "itemId": null
     },
     {
       "id": 8,
-      "name": "大型銅齒幸運蟲",
+      "name": "夸爾",
       "nameEn": "coeurl",
       "seats": 1,
       "icon": "/i/004000/004005_hr1.png",
@@ -124,11 +135,13 @@
           "detail": "金碟 MGP 兌換"
         }
       ],
-      "patch": "2.0"
+      "patch": "2.0",
+      "itemId": 6007,
+      "nameSource": "tw-items"
     },
     {
       "id": 9,
-      "name": "天之龍",
+      "name": "冥鬼之眼",
       "nameEn": "ahriman",
       "seats": 1,
       "icon": "/i/004000/004004_hr1.png",
@@ -141,7 +154,9 @@
           "detail": "巴哈姆特邊境（第五層）"
         }
       ],
-      "patch": "2.0"
+      "patch": "2.0",
+      "itemId": 6009,
+      "nameSource": "cn-opencc"
     },
     {
       "name": "大型甲蟲",
@@ -153,7 +168,8 @@
         }
       ],
       "nameEn": null,
-      "icon": null
+      "icon": null,
+      "itemId": null
     },
     {
       "name": "法爾法德",
@@ -165,7 +181,8 @@
         }
       ],
       "nameEn": null,
-      "icon": null
+      "icon": null,
+      "itemId": null
     },
     {
       "name": "加魯達的羽翼",
@@ -177,7 +194,8 @@
         }
       ],
       "nameEn": null,
-      "icon": null
+      "icon": null,
+      "itemId": null
     },
     {
       "name": "伊夫利特的追焰",
@@ -189,7 +207,8 @@
         }
       ],
       "nameEn": null,
-      "icon": null
+      "icon": null,
+      "itemId": null
     },
     {
       "name": "泰坦的命石",
@@ -201,11 +220,12 @@
         }
       ],
       "nameEn": null,
-      "icon": null
+      "icon": null,
+      "itemId": null
     },
     {
       "id": 15,
-      "name": "牛頭人",
+      "name": "獨角獸",
       "nameEn": "unicorn",
       "seats": 1,
       "icon": "/i/004000/004007_hr1.png",
@@ -218,7 +238,9 @@
           "detail": "哈卡茲宮（困難）"
         }
       ],
-      "patch": "2.2"
+      "patch": "2.2",
+      "itemId": 6269,
+      "nameSource": "tw-items"
     },
     {
       "name": "水晶蟲族飛空艇",
@@ -230,7 +252,8 @@
         }
       ],
       "nameEn": null,
-      "icon": null
+      "icon": null,
+      "itemId": null
     },
     {
       "name": "白虎",
@@ -242,11 +265,12 @@
         }
       ],
       "nameEn": null,
-      "icon": null
+      "icon": null,
+      "itemId": null
     },
     {
       "id": 18,
-      "name": "歡笑宮廷陸行鳥",
+      "name": "凶惡巨獸",
       "nameEn": "behemoth",
       "seats": 1,
       "icon": "/i/004000/004008_hr1.png",
@@ -259,11 +283,13 @@
           "detail": "萊姆利亞歡笑宮廷"
         }
       ],
-      "patch": "2.3"
+      "patch": "2.3",
+      "itemId": 6990,
+      "nameSource": "tw-items"
     },
     {
       "id": 19,
-      "name": "佩加索斯",
+      "name": "兵隊火蛟",
       "nameEn": "cavalry drake",
       "seats": 1,
       "icon": "/i/004000/004009_hr1.png",
@@ -276,11 +302,13 @@
           "detail": "極神「女神Shiva」"
         }
       ],
-      "patch": "2.4"
+      "patch": "2.4",
+      "itemId": 6991,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 20,
-      "name": "閃光戰馬",
+      "name": "月桂冠古卜",
       "nameEn": "laurel goobbue",
       "seats": 1,
       "icon": "/i/004000/004010_hr1.png",
@@ -293,11 +321,13 @@
           "detail": "成就「偉大的航海家」"
         }
       ],
-      "patch": "2.5"
+      "patch": "2.5",
+      "itemId": 6992,
+      "nameSource": "tw-items"
     },
     {
       "id": 21,
-      "name": "希斯塔尼飛龍",
+      "name": "魔導裝甲丙型",
       "nameEn": "gilded magitek armor",
       "seats": 1,
       "icon": "/i/004000/004011_hr1.png",
@@ -310,11 +340,13 @@
           "detail": "完成蒼天之理主線"
         }
       ],
-      "patch": "3.0"
+      "patch": "3.0",
+      "itemId": 6993,
+      "nameSource": "tw-items"
     },
     {
       "id": 22,
-      "name": "極龍",
+      "name": "夢魘",
       "nameEn": "nightmare",
       "seats": 1,
       "icon": "/i/004000/004012_hr1.png",
@@ -327,7 +359,9 @@
           "detail": "極神「相克龍」"
         }
       ],
-      "patch": "3.0"
+      "patch": "3.0",
+      "itemId": 6994,
+      "nameSource": "tw-items"
     },
     {
       "name": "冰霜之龍",
@@ -339,7 +373,8 @@
         }
       ],
       "nameEn": null,
-      "icon": null
+      "icon": null,
+      "itemId": null
     },
     {
       "name": "浮空機",
@@ -351,11 +386,12 @@
         }
       ],
       "nameEn": null,
-      "icon": null
+      "icon": null,
+      "itemId": null
     },
     {
       "id": 25,
-      "name": "赤色格里芬",
+      "name": "胖陸行鳥",
       "nameEn": "fat chocobo",
       "seats": 1,
       "icon": "/i/004000/004013_hr1.png",
@@ -368,11 +404,13 @@
           "detail": "成就「蒼天騎士」"
         }
       ],
-      "patch": "3.1"
+      "patch": "3.1",
+      "itemId": 7553,
+      "nameSource": "tw-items"
     },
     {
       "id": 26,
-      "name": "馬芙里特",
+      "name": "兵隊水龍蜥",
       "nameEn": "cavalry elbst",
       "seats": 1,
       "icon": "/i/004000/004014_hr1.png",
@@ -385,11 +423,13 @@
           "detail": "極神「剛魂 Ravana」"
         }
       ],
-      "patch": "3.1"
+      "patch": "3.1",
+      "itemId": 7554,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 27,
-      "name": "寢室貘",
+      "name": "爆彈吊椅",
       "nameEn": "bomb palanquin",
       "seats": 1,
       "icon": "/i/004000/004015_hr1.png",
@@ -402,11 +442,13 @@
           "detail": "Mog 工房商店"
         }
       ],
-      "patch": "3.2"
+      "patch": "3.2",
+      "itemId": 7555,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 28,
-      "name": "辛蒙德鳥",
+      "name": "火妖馬埃馱恩",
       "nameEn": "Aithon",
       "seats": 1,
       "icon": "/i/004000/004016_hr1.png",
@@ -419,11 +461,13 @@
           "detail": "極神「偉大的神明 Bismarck」"
         }
       ],
-      "patch": "3.2"
+      "patch": "3.2",
+      "itemId": 7844,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 29,
-      "name": "希臘神牛",
+      "name": "風妖馬刻桑圖司",
       "nameEn": "Xanthos",
       "seats": 1,
       "icon": "/i/004000/004017_hr1.png",
@@ -436,11 +480,13 @@
           "detail": "亞歷山大黃金之篇（零式）"
         }
       ],
-      "patch": "3.2"
+      "patch": "3.2",
+      "itemId": 7845,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 30,
-      "name": "奧爾特羅斯",
+      "name": "土妖馬古爾法克西",
       "nameEn": "Gullfaxi",
       "seats": 1,
       "icon": "/i/004000/004018_hr1.png",
@@ -453,11 +499,13 @@
           "detail": "極神「海神 Leviathan」"
         }
       ],
-      "patch": "3.3"
+      "patch": "3.3",
+      "itemId": 7846,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 31,
-      "name": "哈迪斯",
+      "name": "水妖馬艾恩巴爾",
       "nameEn": "Enbarr",
       "seats": 1,
       "icon": "/i/004000/004019_hr1.png",
@@ -470,11 +518,13 @@
           "detail": "絕境「絕巴哈姆特討滅戰」"
         }
       ],
-      "patch": "3.4"
+      "patch": "3.4",
+      "itemId": 7847,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 32,
-      "name": "幻龍",
+      "name": "戰獅",
       "nameEn": "warlion",
       "seats": 1,
       "icon": "/i/004000/004020_hr1.png",
@@ -487,11 +537,13 @@
           "detail": "極神「龍神 Nidhogg」"
         }
       ],
-      "patch": "3.5"
+      "patch": "3.5",
+      "itemId": 7848,
+      "nameSource": "tw-items"
     },
     {
       "id": 33,
-      "name": "凜藍鵜鶘",
+      "name": "戰熊",
       "nameEn": "warbear",
       "seats": 1,
       "icon": "/i/004000/004021_hr1.png",
@@ -504,11 +556,13 @@
           "detail": "傳說狩獵貨幣兌換"
         }
       ],
-      "patch": "3.5"
+      "patch": "3.5",
+      "itemId": 7849,
+      "nameSource": "tw-items"
     },
     {
       "id": 34,
-      "name": "紅蓮陸行鳥",
+      "name": "大陸行鳥",
       "nameEn": "draught chocobo",
       "seats": 2,
       "icon": "/i/004000/004022_hr1.png",
@@ -521,11 +575,13 @@
           "detail": "完成紅蓮之狂潮主線"
         }
       ],
-      "patch": "4.0"
+      "patch": "4.0",
+      "itemId": 8207,
+      "nameSource": "tw-items"
     },
     {
       "id": 35,
-      "name": "九尾狐",
+      "name": "恐狼",
       "nameEn": "direwolf",
       "seats": 1,
       "icon": "/i/004000/004023_hr1.png",
@@ -538,11 +594,13 @@
           "detail": "極神「悲哭者 Lakshmi」"
         }
       ],
-      "patch": "4.0"
+      "patch": "4.0",
+      "itemId": 8208,
+      "nameSource": "tw-items"
     },
     {
       "id": 36,
-      "name": "赤焰鳳凰",
+      "name": "黑渦戰馬",
       "nameEn": "storm warsteed",
       "seats": 1,
       "icon": "/i/004000/004024_hr1.png",
@@ -555,11 +613,13 @@
           "detail": "絕境「絕神兵討滅戰」"
         }
       ],
-      "patch": "4.0"
+      "patch": "4.0",
+      "itemId": 8209,
+      "nameSource": "tw-items"
     },
     {
       "id": 37,
-      "name": "金色陸行鳥",
+      "name": "雙蛇戰馬",
       "nameEn": "serpent warsteed",
       "seats": 1,
       "icon": "/i/004000/004025_hr1.png",
@@ -572,11 +632,13 @@
           "detail": "超越天堂"
         }
       ],
-      "patch": "4.1"
+      "patch": "4.1",
+      "itemId": 8210,
+      "nameSource": "tw-items"
     },
     {
       "id": 38,
-      "name": "骨幻獸",
+      "name": "不滅戰馬",
       "nameEn": "flame warsteed",
       "seats": 1,
       "icon": "/i/004000/004026_hr1.png",
@@ -589,7 +651,9 @@
           "detail": "副本掉落可於市場購買"
         }
       ],
-      "patch": "4.1"
+      "patch": "4.1",
+      "itemId": 8211,
+      "nameSource": "tw-items"
     },
     {
       "name": "魚人王",
@@ -601,11 +665,12 @@
         }
       ],
       "nameEn": null,
-      "icon": null
+      "icon": null,
+      "itemId": null
     },
     {
       "id": 40,
-      "name": "神鷹",
+      "name": "雷妖馬瑪卡布",
       "nameEn": "Markab",
       "seats": 1,
       "icon": "/i/004000/004027_hr1.png",
@@ -618,11 +683,13 @@
           "detail": "極神「魔后 Shinryu」"
         }
       ],
-      "patch": "4.3"
+      "patch": "4.3",
+      "itemId": 8212,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 41,
-      "name": "帝王幻象",
+      "name": "典禮陸行鳥",
       "nameEn": "ceremony chocobo",
       "seats": 2,
       "icon": "/i/004000/004031_hr1.png",
@@ -635,11 +702,13 @@
           "detail": "極神「邪神 Byakko」"
         }
       ],
-      "patch": "4.4"
+      "patch": "4.4",
+      "itemId": 8702,
+      "nameSource": "tw-items"
     },
     {
       "id": 42,
-      "name": "精靈",
+      "name": "斯雷普尼爾",
       "nameEn": "Sleipnir",
       "seats": 1,
       "icon": "/i/004000/004028_hr1.png",
@@ -652,11 +721,13 @@
           "detail": "奧米加白金之篇（零式）"
         }
       ],
-      "patch": "4.4"
+      "patch": "4.4",
+      "itemId": 8726,
+      "nameSource": "tw-items"
     },
     {
       "id": 43,
-      "name": "黃金幻象",
+      "name": "冰妖馬玻瑞阿斯",
       "nameEn": "Boreas",
       "seats": 1,
       "icon": "/i/004000/004029_hr1.png",
@@ -669,11 +740,13 @@
           "detail": "極神「刑神 Tsukuyomi」"
         }
       ],
-      "patch": "4.5"
+      "patch": "4.5",
+      "itemId": 9354,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 44,
-      "name": "黑騎士",
+      "name": "遊行陸行鳥",
       "nameEn": "parade chocobo",
       "seats": 1,
       "icon": "/i/004000/004030_hr1.png",
@@ -686,11 +759,13 @@
           "detail": "絕境「絕龍詩討滅戰」"
         }
       ],
-      "patch": "4.5"
+      "patch": "4.5",
+      "itemId": 9353,
+      "nameSource": "tw-items"
     },
     {
       "id": 45,
-      "name": "水鳥",
+      "name": "黑陸行鳥",
       "nameEn": "black chocobo",
       "seats": 1,
       "icon": "/i/004000/004036_hr1.png",
@@ -703,11 +778,13 @@
           "detail": "傳說狩獵貨幣兌換"
         }
       ],
-      "patch": "4.5"
+      "patch": "4.5",
+      "itemId": 12075,
+      "nameSource": "tw-items"
     },
     {
       "id": 46,
-      "name": "漆黑陸行鳥",
+      "name": "堅鋼龜",
       "nameEn": "adamantoise",
       "seats": 1,
       "icon": "/i/004000/004034_hr1.png",
@@ -720,11 +797,13 @@
           "detail": "完成暗影之逆焰主線"
         }
       ],
-      "patch": "5.0"
+      "patch": "5.0",
+      "itemId": 10078,
+      "nameSource": "tw-items"
     },
     {
       "id": 47,
-      "name": "隕星陸行鳥",
+      "name": "麒麟",
       "nameEn": "Kirin",
       "seats": 1,
       "icon": "/i/004000/004032_hr1.png",
@@ -737,11 +816,13 @@
           "detail": "極神「冥界女王 Titania」"
         }
       ],
-      "patch": "5.0"
+      "patch": "5.0",
+      "itemId": 10080,
+      "nameSource": "tw-items"
     },
     {
       "id": 48,
-      "name": "玫瑰幻象",
+      "name": "騎乘系統",
       "nameEn": "logistics system",
       "seats": 1,
       "icon": "/i/004000/004033_hr1.png",
@@ -754,11 +835,13 @@
           "detail": "極神「邪龍 Innocence」"
         }
       ],
-      "patch": "5.0"
+      "patch": "5.0",
+      "itemId": 10081,
+      "nameSource": "tw-items"
     },
     {
       "id": 49,
-      "name": "蛇女神",
+      "name": "芬里爾",
       "nameEn": "Fenrir",
       "seats": 1,
       "icon": "/i/004000/004035_hr1.png",
@@ -771,11 +854,13 @@
           "detail": "極神「破滅 Hades」"
         }
       ],
-      "patch": "5.1"
+      "patch": "5.1",
+      "itemId": 10079,
+      "nameSource": "tw-items"
     },
     {
       "id": 50,
-      "name": "白銀幻象",
+      "name": "塵世幻龍",
       "nameEn": "Midgardsormr",
       "seats": 1,
       "icon": "/i/004000/004037_hr1.png",
@@ -788,7 +873,9 @@
           "detail": "伊甸墮落之篇（零式）"
         }
       ],
-      "patch": "5.1"
+      "patch": "5.1",
+      "itemId": null,
+      "nameSource": "cn-opencc"
     },
     {
       "name": "馬車",
@@ -800,11 +887,12 @@
         }
       ],
       "nameEn": null,
-      "icon": null
+      "icon": null,
+      "itemId": null
     },
     {
       "id": 52,
-      "name": "不死鳥",
+      "name": "紅大陸行鳥",
       "nameEn": "amber draught chocobo",
       "seats": 2,
       "icon": "/i/004000/004044_hr1.png",
@@ -817,11 +905,13 @@
           "detail": "極神「縹緲 Emerald Weapon」"
         }
       ],
-      "patch": "5.3"
+      "patch": "5.3",
+      "itemId": 12993,
+      "nameSource": "tw-items"
     },
     {
       "id": 53,
-      "name": "千幻之龍",
+      "name": "騰雲蛇",
       "nameEn": "sanuwa",
       "seats": 1,
       "icon": "/i/004000/004038_hr1.png",
@@ -834,11 +924,13 @@
           "detail": "伊甸誓約之篇（零式）"
         }
       ],
-      "patch": "5.4"
+      "patch": "5.4",
+      "itemId": 12071,
+      "nameSource": "tw-items"
     },
     {
       "id": 54,
-      "name": "龍騎士座騎",
+      "name": "獅鷲",
       "nameEn": "griffin",
       "seats": 1,
       "icon": "/i/004000/004039_hr1.png",
@@ -851,11 +943,13 @@
           "detail": "絕境「絕亞歷山大討滅戰」"
         }
       ],
-      "patch": "5.4"
+      "patch": "5.4",
+      "itemId": 12072,
+      "nameSource": "tw-items"
     },
     {
       "id": 55,
-      "name": "銀月幻象",
+      "name": "破魔艇",
       "nameEn": "manacutter",
       "seats": 1,
       "icon": "/i/004000/004040_hr1.png",
@@ -868,11 +962,13 @@
           "detail": "極神「無盡 Diamond Weapon」"
         }
       ],
-      "patch": "5.5"
+      "patch": "5.5",
+      "itemId": 12073,
+      "nameSource": "tw-items"
     },
     {
       "id": 56,
-      "name": "地獄馬",
+      "name": "戰豹",
       "nameEn": "war panther",
       "seats": 1,
       "icon": "/i/004000/004041_hr1.png",
@@ -885,7 +981,9 @@
           "detail": "傳說狩獵貨幣兌換"
         }
       ],
-      "patch": "5.5"
+      "patch": "5.5",
+      "itemId": 12074,
+      "nameSource": "tw-items"
     },
     {
       "name": "萬物終焉陸行鳥",
@@ -897,11 +995,12 @@
         }
       ],
       "nameEn": null,
-      "icon": null
+      "icon": null,
+      "itemId": null
     },
     {
       "id": 58,
-      "name": "白鯨",
+      "name": "哥布林戰車",
       "nameEn": "gobwalker",
       "seats": 1,
       "icon": "/i/004000/004042_hr1.png",
@@ -914,11 +1013,13 @@
           "detail": "極神「諸天神 Zodiark」"
         }
       ],
-      "patch": "6.0"
+      "patch": "6.0",
+      "itemId": 12076,
+      "nameSource": "tw-items"
     },
     {
       "id": 59,
-      "name": "炎獄幻象",
+      "name": "雙塔尼亞",
       "nameEn": "Twintania",
       "seats": 1,
       "icon": "/i/004000/004043_hr1.png",
@@ -931,7 +1032,9 @@
           "detail": "極神「星占師 Hydaelyn」"
         }
       ],
-      "patch": "6.0"
+      "patch": "6.0",
+      "itemId": 12992,
+      "nameSource": "tw-items"
     },
     {
       "name": "彩虹天馬",
@@ -943,7 +1046,8 @@
         }
       ],
       "nameEn": null,
-      "icon": null
+      "icon": null,
+      "itemId": null
     },
     {
       "name": "骷髏幻象",
@@ -955,11 +1059,12 @@
         }
       ],
       "nameEn": null,
-      "icon": null
+      "icon": null,
+      "itemId": null
     },
     {
       "id": 62,
-      "name": "水晶龍",
+      "name": "魔女掃帚",
       "nameEn": "witch's broom",
       "seats": 1,
       "icon": "/i/004000/004045_hr1.png",
@@ -972,7 +1077,9 @@
           "detail": "絕境「絕欧米茄討滅戰」"
         }
       ],
-      "patch": "6.1"
+      "patch": "6.1",
+      "itemId": 13098,
+      "nameSource": "tw-items"
     },
     {
       "name": "白鷺",
@@ -984,7 +1091,8 @@
         }
       ],
       "nameEn": null,
-      "icon": null
+      "icon": null,
+      "itemId": null
     },
     {
       "name": "金翅大鵬",
@@ -996,7 +1104,8 @@
         }
       ],
       "nameEn": null,
-      "icon": null
+      "icon": null,
+      "itemId": null
     },
     {
       "name": "地底幻象",
@@ -1008,7 +1117,8 @@
         }
       ],
       "nameEn": null,
-      "icon": null
+      "icon": null,
+      "itemId": null
     },
     {
       "name": "冰雪幻象",
@@ -1020,11 +1130,12 @@
         }
       ],
       "nameEn": null,
-      "icon": null
+      "icon": null,
+      "itemId": null
     },
     {
       "id": 67,
-      "name": "萬魔殿頂點幻象",
+      "name": "天馬",
       "nameEn": "pegasus",
       "seats": 1,
       "icon": "/i/004000/004047_hr1.png",
@@ -1037,11 +1148,13 @@
           "detail": "萬魔殿天獄之篇（零式）"
         }
       ],
-      "patch": "6.4"
+      "patch": "6.4",
+      "itemId": 13287,
+      "nameSource": "tw-items"
     },
     {
       "id": 68,
-      "name": "終末天使",
+      "name": "莉維亞專用魔導裝甲",
       "nameEn": "White Devil",
       "seats": 1,
       "icon": "/i/004000/004048_hr1.png",
@@ -1054,11 +1167,13 @@
           "detail": "絕境「絕龍詩 再演」"
         }
       ],
-      "patch": "6.4"
+      "patch": "6.4",
+      "itemId": 13689,
+      "nameSource": "tw-items"
     },
     {
       "id": 69,
-      "name": "光之守護者",
+      "name": "尼祿專用魔導裝甲",
       "nameEn": "Red Baron",
       "seats": 1,
       "icon": "/i/004000/004049_hr1.png",
@@ -1071,11 +1186,13 @@
           "detail": "極神「悟道者 Zeromus」"
         }
       ],
-      "patch": "6.5"
+      "patch": "6.5",
+      "itemId": 13690,
+      "nameSource": "tw-items"
     },
     {
       "id": 70,
-      "name": "幻影狩獵獸",
+      "name": "雙足飛龍",
       "nameEn": "wyvern",
       "seats": 1,
       "icon": "/i/004000/004050_hr1.png",
@@ -1088,11 +1205,13 @@
           "detail": "傳說狩獵貨幣兌換"
         }
       ],
-      "patch": "6.5"
+      "patch": "6.5",
+      "itemId": 13288,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 71,
-      "name": "黃金之鄉陸行鳥",
+      "name": "SDS芬里爾",
       "nameEn": "SDS Fenrir",
       "seats": 1,
       "icon": "/i/004000/004135_hr1.png",
@@ -1105,11 +1224,13 @@
           "detail": "完成金曦之遺輝主線"
         }
       ],
-      "patch": "7.0"
+      "patch": "7.0",
+      "itemId": 23981,
+      "nameSource": "tw-items"
     },
     {
       "id": 72,
-      "name": "雷雨幻象",
+      "name": "恐甲螞蜓",
       "nameEn": "kongamato",
       "seats": 1,
       "icon": "/i/004000/004051_hr1.png",
@@ -1122,11 +1243,13 @@
           "detail": "極神「轟鳴者 Valigarmanda」"
         }
       ],
-      "patch": "7.0"
+      "patch": "7.0",
+      "itemId": 14082,
+      "nameSource": "tw-items"
     },
     {
       "id": 73,
-      "name": "骨龍",
+      "name": "祖",
       "nameEn": "zu",
       "seats": 1,
       "icon": "/i/004000/004052_hr1.png",
@@ -1139,11 +1262,13 @@
           "detail": "阿卡迪亞樂園序篇（零式）"
         }
       ],
-      "patch": "7.0"
+      "patch": "7.0",
+      "itemId": 14083,
+      "nameSource": "tw-items"
     },
     {
       "id": 74,
-      "name": "混沌幻象",
+      "name": "貝努鳥",
       "nameEn": "bennu",
       "seats": 1,
       "icon": "/i/004000/004053_hr1.png",
@@ -1156,11 +1281,13 @@
           "detail": "絕境「絕伊甸討滅戰」"
         }
       ],
-      "patch": "7.05"
+      "patch": "7.05",
+      "itemId": 14084,
+      "nameSource": "tw-items"
     },
     {
       "id": 75,
-      "name": "熔岩幻象",
+      "name": "白雲獵鷹",
       "nameEn": "white lanner",
       "seats": 1,
       "icon": "/i/004000/004054_hr1.png",
@@ -1173,11 +1300,13 @@
           "detail": "極神「石化者 Sphene」"
         }
       ],
-      "patch": "7.1"
+      "patch": "7.1",
+      "itemId": 14085,
+      "nameSource": "tw-items"
     },
     {
       "id": 76,
-      "name": "黃金戰馬",
+      "name": "怒武獵鷹",
       "nameEn": "rose lanner",
       "seats": 1,
       "icon": "/i/004000/004055_hr1.png",
@@ -1190,11 +1319,13 @@
           "detail": "阿卡迪亞樂園正篇（零式）"
         }
       ],
-      "patch": "7.1"
+      "patch": "7.1",
+      "itemId": 14086,
+      "nameSource": "tw-items"
     },
     {
       "id": 77,
-      "name": "奇美拉",
+      "name": "圓桌獵鷹",
       "nameEn": "round lanner",
       "seats": 1,
       "icon": "/i/004000/004056_hr1.png",
@@ -1207,11 +1338,13 @@
           "detail": "極神「天道者 Zoraal Ja」"
         }
       ],
-      "patch": "7.2"
+      "patch": "7.2",
+      "itemId": 14087,
+      "nameSource": "tw-items"
     },
     {
       "id": 78,
-      "name": "虛空飛龍",
+      "name": "戰爭獵鷹",
       "nameEn": "warring lanner",
       "seats": 1,
       "icon": "/i/004000/004057_hr1.png",
@@ -1224,11 +1357,13 @@
           "detail": "阿卡迪亞樂園秘境（零式）"
         }
       ],
-      "patch": "7.2"
+      "patch": "7.2",
+      "itemId": 14088,
+      "nameSource": "tw-items"
     },
     {
       "id": 80,
-      "name": "Gloria-class airship",
+      "name": "榮耀號",
       "nameEn": "Gloria-class airship",
       "seats": 1,
       "icon": "/i/004000/004058_hr1.png",
@@ -1237,11 +1372,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 14089,
+      "nameSource": "tw-items"
     },
     {
       "id": 81,
-      "name": "flying cumulus",
+      "name": "筋斗雲",
       "nameEn": "flying cumulus",
       "seats": 1,
       "icon": "/i/004000/004059_hr1.png",
@@ -1250,11 +1386,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 14982,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 82,
-      "name": "original fat chocobo",
+      "name": "初代胖陸行鳥",
       "nameEn": "original fat chocobo",
       "seats": 1,
       "icon": "/i/004000/004060_hr1.png",
@@ -1263,11 +1400,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 14090,
+      "nameSource": "tw-items"
     },
     {
       "id": 83,
-      "name": "Astrope",
+      "name": "天陽馬阿斯特洛珀",
       "nameEn": "Astrope",
       "seats": 2,
       "icon": "/i/004000/004061_hr1.png",
@@ -1276,11 +1414,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 15433,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 84,
-      "name": "fat moogle",
+      "name": "胖莫古利",
       "nameEn": "fat moogle",
       "seats": 2,
       "icon": "/i/004000/004062_hr1.png",
@@ -1289,11 +1428,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 15430,
+      "nameSource": "tw-items"
     },
     {
       "id": 86,
-      "name": "cloud mallow",
+      "name": "孢雲棉花糖",
       "nameEn": "cloud mallow",
       "seats": 1,
       "icon": "/i/004000/004063_hr1.png",
@@ -1302,11 +1442,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 15429,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 87,
-      "name": "Whisper-go",
+      "name": "威斯帕號",
       "nameEn": "Whisper-go",
       "seats": 1,
       "icon": "/i/004000/004064_hr1.png",
@@ -1315,11 +1456,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 15431,
+      "nameSource": "tw-items"
     },
     {
       "id": 90,
-      "name": "dark lanner",
+      "name": "暗黑獵鷹",
       "nameEn": "dark lanner",
       "seats": 1,
       "icon": "/i/004000/004065_hr1.png",
@@ -1328,11 +1470,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 15432,
+      "nameSource": "tw-items"
     },
     {
       "id": 91,
-      "name": "aerodynamics system",
+      "name": "浮空系統",
       "nameEn": "aerodynamics system",
       "seats": 1,
       "icon": "/i/004000/004066_hr1.png",
@@ -1341,11 +1484,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 15932,
+      "nameSource": "tw-items"
     },
     {
       "id": 92,
-      "name": "disembodied head",
+      "name": "顱浮巨像",
       "nameEn": "disembodied head",
       "seats": 1,
       "icon": "/i/004000/004068_hr1.png",
@@ -1354,11 +1498,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 15933,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 93,
-      "name": "managarm",
+      "name": "逐月幻狼瑪納加爾姆",
       "nameEn": "managarm",
       "seats": 1,
       "icon": "/i/004000/004067_hr1.png",
@@ -1367,11 +1512,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 15934,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 94,
-      "name": "Whisper A-go-go",
+      "name": "威斯帕前進號",
       "nameEn": "Whisper A-go-go",
       "seats": 1,
       "icon": "/i/004000/004069_hr1.png",
@@ -1380,11 +1526,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 15946,
+      "nameSource": "tw-items"
     },
     {
       "id": 95,
-      "name": "Goten",
+      "name": "轟天",
       "nameEn": "Goten",
       "seats": 1,
       "icon": "/i/004000/004074_hr1.png",
@@ -1393,11 +1540,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 16565,
+      "nameSource": "tw-items"
     },
     {
       "id": 96,
-      "name": "Ginga",
+      "name": "銀牙",
       "nameEn": "Ginga",
       "seats": 1,
       "icon": "/i/004000/004075_hr1.png",
@@ -1406,11 +1554,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 16566,
+      "nameSource": "tw-items"
     },
     {
       "id": 97,
-      "name": "mystic panda",
+      "name": "仙術熊貓",
       "nameEn": "mystic panda",
       "seats": 1,
       "icon": "/i/004000/004070_hr1.png",
@@ -1419,11 +1568,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 16561,
+      "nameSource": "tw-items"
     },
     {
       "id": 98,
-      "name": "Sophic lanner",
+      "name": "睿智獵鷹",
       "nameEn": "Sophic lanner",
       "seats": 1,
       "icon": "/i/004000/004071_hr1.png",
@@ -1432,11 +1582,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 16562,
+      "nameSource": "tw-items"
     },
     {
       "id": 99,
-      "name": "Starlight bear",
+      "name": "星芒熊",
       "nameEn": "Starlight bear",
       "seats": 1,
       "icon": "/i/004000/004102_hr1.png",
@@ -1445,11 +1596,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 21050,
+      "nameSource": "tw-items"
     },
     {
       "id": 100,
-      "name": "胖貓咪",
+      "name": "黑天馬",
       "nameEn": "black pegasus",
       "seats": 1,
       "icon": "/i/004000/004072_hr1.png",
@@ -1462,11 +1614,13 @@
           "detail": "Mog 工房商店"
         }
       ],
-      "patch": "2.0"
+      "patch": "2.0",
+      "itemId": 16564,
+      "nameSource": "tw-items"
     },
     {
       "id": 101,
-      "name": "光之鳥",
+      "name": "阿里達烏斯",
       "nameEn": "Arrhidaeus",
       "seats": 1,
       "icon": "/i/004000/004073_hr1.png",
@@ -1479,11 +1633,13 @@
           "detail": "Mog 工房商店"
         }
       ],
-      "patch": "3.0"
+      "patch": "3.0",
+      "itemId": 16563,
+      "nameSource": "tw-items"
     },
     {
       "id": 102,
-      "name": "蒼白幻象",
+      "name": "雷剛",
       "nameEn": "Raigo",
       "seats": 1,
       "icon": "/i/004000/004076_hr1.png",
@@ -1496,11 +1652,13 @@
           "detail": "Mog 工房商店"
         }
       ],
-      "patch": "3.0"
+      "patch": "3.0",
+      "itemId": 16567,
+      "nameSource": "tw-items"
     },
     {
       "id": 103,
-      "name": "帝國機甲",
+      "name": "尼祿專用魔導裝甲",
       "nameEn": "Red Baron",
       "seats": 1,
       "icon": "/i/000000/000000_hr1.png",
@@ -1513,11 +1671,13 @@
           "detail": "Mog 工房商店"
         }
       ],
-      "patch": "4.0"
+      "patch": "4.0",
+      "itemId": null,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 104,
-      "name": "彩虹陸行鳥",
+      "name": "厲鬼獵鷹",
       "nameEn": "Demonic lanner",
       "seats": 1,
       "icon": "/i/004000/004077_hr1.png",
@@ -1530,11 +1690,13 @@
           "detail": "Mog 工房商店"
         }
       ],
-      "patch": "3.0"
+      "patch": "3.0",
+      "itemId": 17007,
+      "nameSource": "tw-items"
     },
     {
       "id": 105,
-      "name": "白虎幻象",
+      "name": "鳳皇",
       "nameEn": "Firebird",
       "seats": 1,
       "icon": "/i/004000/004078_hr1.png",
@@ -1547,11 +1709,13 @@
           "detail": "Mog 工房商店"
         }
       ],
-      "patch": "5.0"
+      "patch": "5.0",
+      "itemId": 17008,
+      "nameSource": "tw-items"
     },
     {
       "id": 106,
-      "name": "水精靈",
+      "name": "彩蛋系統",
       "nameEn": "eggshilaration system",
       "seats": 1,
       "icon": "/i/004000/004079_hr1.png",
@@ -1564,11 +1728,13 @@
           "detail": "Mog 工房商店"
         }
       ],
-      "patch": "6.0"
+      "patch": "6.0",
+      "itemId": 17009,
+      "nameSource": "tw-items"
     },
     {
       "id": 108,
-      "name": "lone hellhound",
+      "name": "孤傲煉獄獵犬",
       "nameEn": "lone hellhound",
       "seats": 1,
       "icon": "/i/004000/004080_hr1.png",
@@ -1577,11 +1743,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 17010,
+      "nameSource": "tw-items"
     },
     {
       "id": 109,
-      "name": "pack hellhound",
+      "name": "首領煉獄獵犬",
       "nameEn": "pack hellhound",
       "seats": 1,
       "icon": "/i/004000/004081_hr1.png",
@@ -1590,11 +1757,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 17011,
+      "nameSource": "tw-items"
     },
     {
       "id": 110,
-      "name": "Yo-Kai 飛天板",
+      "name": "賢者座椅",
       "nameEn": "Archon throne",
       "seats": 1,
       "icon": "/i/004000/004084_hr1.png",
@@ -1607,11 +1775,13 @@
           "detail": "妖怪手錶聯名活動（2016）"
         }
       ],
-      "patch": "3.3"
+      "patch": "3.3",
+      "itemId": 17012,
+      "nameSource": "tw-items"
     },
     {
       "id": 111,
-      "name": "鏡面騎士",
+      "name": "希爾德拉",
       "nameEn": "Syldra",
       "seats": 1,
       "icon": "/i/004000/004085_hr1.png",
@@ -1624,11 +1794,13 @@
           "detail": "妖怪手錶聯名（任務）"
         }
       ],
-      "patch": "3.3"
+      "patch": "3.3",
+      "itemId": 16037,
+      "nameSource": "tw-items"
     },
     {
       "id": 112,
-      "name": "FF15 帝國飛行艦",
+      "name": "飛隼號",
       "nameEn": "Falcon",
       "seats": 1,
       "icon": "/i/004000/004086_hr1.png",
@@ -1641,11 +1813,13 @@
           "detail": "FF15 聯名活動（2017）"
         }
       ],
-      "patch": "4.1"
+      "patch": "4.1",
+      "itemId": 20548,
+      "nameSource": "tw-items"
     },
     {
       "id": 113,
-      "name": "FF16 魔法盔甲",
+      "name": "孤傲妖精犬",
       "nameEn": "lone faehound",
       "seats": 1,
       "icon": "/i/004000/004082_hr1.png",
@@ -1658,7 +1832,9 @@
           "detail": "FF16 聯名活動（2023）"
         }
       ],
-      "patch": "6.5"
+      "patch": "6.5",
+      "itemId": 17675,
+      "nameSource": "tw-items"
     },
     {
       "name": "南瓜馬車",
@@ -1670,11 +1846,12 @@
         }
       ],
       "nameEn": null,
-      "icon": null
+      "icon": null,
+      "itemId": null
     },
     {
       "id": 114,
-      "name": "pack faehound",
+      "name": "首領妖精犬",
       "nameEn": "pack faehound",
       "seats": 1,
       "icon": "/i/004000/004083_hr1.png",
@@ -1683,11 +1860,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 17676,
+      "nameSource": "tw-items"
     },
     {
       "id": 115,
-      "name": "blissful kamuy",
+      "name": "極樂神威",
       "nameEn": "blissful kamuy",
       "seats": 1,
       "icon": "/i/004000/004087_hr1.png",
@@ -1696,11 +1874,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 20549,
+      "nameSource": "tw-items"
     },
     {
       "id": 116,
-      "name": "reveling kamuy",
+      "name": "狂歡神威",
       "nameEn": "reveling kamuy",
       "seats": 1,
       "icon": "/i/004000/004088_hr1.png",
@@ -1709,11 +1888,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 20550,
+      "nameSource": "tw-items"
     },
     {
       "id": 121,
-      "name": "馴鹿陸行鳥",
+      "name": "魔導獵手",
       "nameEn": "magitek predator",
       "seats": 1,
       "icon": "/i/004000/004089_hr1.png",
@@ -1726,11 +1906,13 @@
           "detail": "星靈節限定活動"
         }
       ],
-      "patch": "2.2"
+      "patch": "2.2",
+      "itemId": 20551,
+      "nameSource": "tw-items"
     },
     {
       "id": 122,
-      "name": "復活節陸行鳥",
+      "name": "鬥獅",
       "nameEn": "battle lion",
       "seats": 1,
       "icon": "/i/004000/004090_hr1.png",
@@ -1743,11 +1925,13 @@
           "detail": "卵祭節限定活動"
         }
       ],
-      "patch": "2.2"
+      "patch": "2.2",
+      "itemId": 20552,
+      "nameSource": "tw-items"
     },
     {
       "id": 123,
-      "name": "battle bear",
+      "name": "鬥熊",
       "nameEn": "battle bear",
       "seats": 1,
       "icon": "/i/004000/004091_hr1.png",
@@ -1756,11 +1940,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 20553,
+      "nameSource": "tw-items"
     },
     {
       "id": 124,
-      "name": "battle panther",
+      "name": "鬥豹",
       "nameEn": "battle panther",
       "seats": 1,
       "icon": "/i/004000/004092_hr1.png",
@@ -1769,11 +1954,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 20554,
+      "nameSource": "tw-items"
     },
     {
       "id": 125,
-      "name": "yol",
+      "name": "胡鷹",
       "nameEn": "yol",
       "seats": 1,
       "icon": "/i/004000/004093_hr1.png",
@@ -1782,11 +1968,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 20555,
+      "nameSource": "tw-items"
     },
     {
       "id": 126,
-      "name": "Alte Roite",
+      "name": "老者",
       "nameEn": "Alte Roite",
       "seats": 1,
       "icon": "/i/004000/004094_hr1.png",
@@ -1795,11 +1982,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 20556,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 127,
-      "name": "Centurio tiger",
+      "name": "兵團虎",
       "nameEn": "Centurio tiger",
       "seats": 1,
       "icon": "/i/004000/004095_hr1.png",
@@ -1808,11 +1996,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 20557,
+      "nameSource": "tw-items"
     },
     {
       "id": 128,
-      "name": "commandeered magitek armor",
+      "name": "捕獲的魔導裝甲",
       "nameEn": "commandeered magitek armor",
       "seats": 1,
       "icon": "/i/000000/000000_hr1.png",
@@ -1821,11 +2010,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": null,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 130,
-      "name": "深海幻影",
+      "name": "伊克西翁",
       "nameEn": "Ixion",
       "seats": 1,
       "icon": "/i/004000/004096_hr1.png",
@@ -1838,7 +2028,9 @@
           "detail": "潛水艇探索 Sub-海域 Z"
         }
       ],
-      "patch": "5.3"
+      "patch": "5.3",
+      "itemId": 20637,
+      "nameSource": "tw-items"
     },
     {
       "name": "虛空漁夫",
@@ -1850,11 +2042,12 @@
         }
       ],
       "nameEn": null,
-      "icon": null
+      "icon": null,
+      "itemId": null
     },
     {
       "id": 133,
-      "name": "legendary kamuy",
+      "name": "夢幻神威",
       "nameEn": "legendary kamuy",
       "seats": 1,
       "icon": "/i/004000/004101_hr1.png",
@@ -1863,11 +2056,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 21047,
+      "nameSource": "tw-items"
     },
     {
       "id": 135,
-      "name": "Nezha chariot",
+      "name": "風火輪",
       "nameEn": "Nezha chariot",
       "seats": 1,
       "icon": "/i/004000/004097_hr1.png",
@@ -1876,11 +2070,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 21049,
+      "nameSource": "tw-items"
     },
     {
       "id": 136,
-      "name": "striped ray",
+      "name": "斑鰩",
       "nameEn": "striped ray",
       "seats": 1,
       "icon": "/i/004000/004103_hr1.png",
@@ -1889,11 +2084,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 21048,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 138,
-      "name": "Aquamarine Carbuncle",
+      "name": "海藍寶石獸",
       "nameEn": "Aquamarine Carbuncle",
       "seats": 1,
       "icon": "/i/004000/004104_hr1.png",
@@ -1902,11 +2098,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 21051,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 139,
-      "name": "Citrine Carbuncle",
+      "name": "黃水晶寶石獸",
       "nameEn": "Citrine Carbuncle",
       "seats": 1,
       "icon": "/i/004000/004105_hr1.png",
@@ -1915,11 +2112,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 21192,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 140,
-      "name": "煙火座騎",
+      "name": "飛行座椅",
       "nameEn": "flying chair",
       "seats": 1,
       "icon": "/i/004000/004106_hr1.png",
@@ -1932,11 +2130,13 @@
           "detail": "金碟 MGP 兌換 200,000"
         }
       ],
-      "patch": "3.2"
+      "patch": "3.2",
+      "itemId": 21052,
+      "nameSource": "tw-items"
     },
     {
       "id": 141,
-      "name": "陸行鳥衝浪板",
+      "name": "魔導復仇者騎乘型",
       "nameEn": "magitek avenger",
       "seats": 1,
       "icon": "/i/004000/004107_hr1.png",
@@ -1949,11 +2149,13 @@
           "detail": "金碟 MGP 兌換"
         }
       ],
-      "patch": "5.1"
+      "patch": "5.1",
+      "itemId": 21053,
+      "nameSource": "tw-items"
     },
     {
       "id": 142,
-      "name": "korpokkur kolossus",
+      "name": "葉大妖",
       "nameEn": "korpokkur kolossus",
       "seats": 1,
       "icon": "/i/004000/004108_hr1.png",
@@ -1962,11 +2164,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 21054,
+      "nameSource": "tw-items"
     },
     {
       "id": 143,
-      "name": "Red Hare",
+      "name": "赤兔馬",
       "nameEn": "Red Hare",
       "seats": 1,
       "icon": "/i/004000/004109_hr1.png",
@@ -1975,11 +2178,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 21902,
+      "nameSource": "tw-items"
     },
     {
       "id": 144,
-      "name": "auspicious kamuy",
+      "name": "白帝神威",
       "nameEn": "auspicious kamuy",
       "seats": 1,
       "icon": "/i/004000/004110_hr1.png",
@@ -1988,11 +2192,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 21903,
+      "nameSource": "tw-items"
     },
     {
       "id": 145,
-      "name": "magitek death claw",
+      "name": "拘束型魔導死亡爪",
       "nameEn": "magitek death claw",
       "seats": 1,
       "icon": "/i/004000/004111_hr1.png",
@@ -2001,11 +2206,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 21906,
+      "nameSource": "tw-items"
     },
     {
       "id": 146,
-      "name": "marid",
+      "name": "魔象",
       "nameEn": "marid",
       "seats": 1,
       "icon": "/i/004000/004112_hr1.png",
@@ -2014,11 +2220,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 21904,
+      "nameSource": "tw-items"
     },
     {
       "id": 147,
-      "name": "marid",
+      "name": "力氣大的魔象",
       "nameEn": "marid",
       "seats": 1,
       "icon": "/i/000000/000000_hr1.png",
@@ -2027,11 +2234,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": null,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 148,
-      "name": "true griffin",
+      "name": "真獅鷲",
       "nameEn": "true griffin",
       "seats": 1,
       "icon": "/i/004000/004113_hr1.png",
@@ -2040,11 +2248,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 22459,
+      "nameSource": "tw-items"
     },
     {
       "id": 149,
-      "name": "true griffin",
+      "name": "真獅鷲",
       "nameEn": "true griffin",
       "seats": 1,
       "icon": "/i/000000/000000_hr1.png",
@@ -2053,11 +2262,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": null,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 150,
-      "name": "黑暗騎士",
+      "name": "暴龍",
       "nameEn": "tyrannosaur",
       "seats": 1,
       "icon": "/i/004000/004116_hr1.png",
@@ -2070,11 +2280,13 @@
           "detail": "Crystal Conflict 系列 25"
         }
       ],
-      "patch": "4.0"
+      "patch": "4.0",
+      "itemId": 21907,
+      "nameSource": "tw-items"
     },
     {
       "id": 151,
-      "name": "末日幻象",
+      "name": "雷迦利亞G型",
       "nameEn": "Regalia Type-G",
       "seats": 4,
       "icon": "/i/004000/004138_hr1.png",
@@ -2087,11 +2299,13 @@
           "detail": "Crystalline Conflict 積分"
         }
       ],
-      "patch": "6.0"
+      "patch": "6.0",
+      "itemId": 24624,
+      "nameSource": "tw-items"
     },
     {
       "id": 152,
-      "name": "broken heart (right)",
+      "name": "飛天半心椅（右）",
       "nameEn": "broken heart (right)",
       "seats": 1,
       "icon": "/i/004000/004114_hr1.png",
@@ -2100,11 +2314,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 21908,
+      "nameSource": "tw-items"
     },
     {
       "id": 153,
-      "name": "broken heart (left)",
+      "name": "飛天半心椅（左）",
       "nameEn": "broken heart (left)",
       "seats": 1,
       "icon": "/i/004000/004115_hr1.png",
@@ -2113,11 +2328,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 21909,
+      "nameSource": "tw-items"
     },
     {
       "id": 154,
-      "name": "Typhon",
+      "name": "杜彭老師",
       "nameEn": "Typhon",
       "seats": 1,
       "icon": "/i/004000/004136_hr1.png",
@@ -2126,11 +2342,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 21910,
+      "nameSource": "tw-items"
     },
     {
       "id": 156,
-      "name": "Air Force",
+      "name": "空軍裝甲",
       "nameEn": "Air Force",
       "seats": 1,
       "icon": "/i/004000/004117_hr1.png",
@@ -2139,11 +2356,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 21905,
+      "nameSource": "tw-items"
     },
     {
       "id": 158,
-      "name": "lunar kamuy",
+      "name": "幽夜神威",
       "nameEn": "lunar kamuy",
       "seats": 1,
       "icon": "/i/004000/004127_hr1.png",
@@ -2152,11 +2370,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 23020,
+      "nameSource": "tw-items"
     },
     {
       "id": 159,
-      "name": "dodo",
+      "name": "渡渡鳥",
       "nameEn": "dodo",
       "seats": 1,
       "icon": "/i/004000/004122_hr1.png",
@@ -2165,11 +2384,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 23023,
+      "nameSource": "tw-items"
     },
     {
       "id": 160,
-      "name": "戰鬥馬",
+      "name": "鬚鯨",
       "nameEn": "Indigo whale",
       "seats": 2,
       "icon": "/i/004000/004119_hr1.png",
@@ -2182,11 +2402,13 @@
           "detail": "成就「剿滅危機」"
         }
       ],
-      "patch": "2.0"
+      "patch": "2.0",
+      "itemId": 23021,
+      "nameSource": "tw-items"
     },
     {
       "id": 161,
-      "name": "白金陸行鳥",
+      "name": "火龍",
       "nameEn": "Rathalos",
       "seats": 1,
       "icon": "/i/004000/004125_hr1.png",
@@ -2199,11 +2421,13 @@
           "detail": "成就「萬能的陸行鳥」"
         }
       ],
-      "patch": "2.0"
+      "patch": "2.0",
+      "itemId": 22600,
+      "nameSource": "tw-items"
     },
     {
       "id": 162,
-      "name": "古老陸行鳥",
+      "name": "魔導運輸器",
       "nameEn": "magitek conveyor",
       "seats": 1,
       "icon": "/i/004000/004123_hr1.png",
@@ -2216,11 +2440,13 @@
           "detail": "成就「FATE 征服者」"
         }
       ],
-      "patch": "4.0"
+      "patch": "4.0",
+      "itemId": 23025,
+      "nameSource": "tw-items"
     },
     {
       "id": 163,
-      "name": "宇宙船",
+      "name": "原型運輸器",
       "nameEn": "prototype conveyor",
       "seats": 1,
       "icon": "/i/004000/004124_hr1.png",
@@ -2233,11 +2459,13 @@
           "detail": "成就「漂流者」"
         }
       ],
-      "patch": "5.0"
+      "patch": "5.0",
+      "itemId": 23123,
+      "nameSource": "tw-items"
     },
     {
       "id": 164,
-      "name": "火鳳凰",
+      "name": "巨鯰魚神轎",
       "nameEn": "mikoshi",
       "seats": 1,
       "icon": "/i/004000/004118_hr1.png",
@@ -2250,11 +2478,13 @@
           "detail": "成就「終焉傳說」"
         }
       ],
-      "patch": "6.0"
+      "patch": "6.0",
+      "itemId": 23022,
+      "nameSource": "tw-items"
     },
     {
       "id": 166,
-      "name": "Juedi",
+      "name": "絕地",
       "nameEn": "Juedi",
       "seats": 1,
       "icon": "/i/004000/004126_hr1.png",
@@ -2263,11 +2493,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 23024,
+      "nameSource": "tw-items"
     },
     {
       "id": 167,
-      "name": "logistics node",
+      "name": "輸送系統",
       "nameEn": "logistics node",
       "seats": 1,
       "icon": "/i/004000/004121_hr1.png",
@@ -2276,11 +2507,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 23125,
+      "nameSource": "tw-items"
     },
     {
       "id": 168,
-      "name": "safeguard system",
+      "name": "護送系統",
       "nameEn": "safeguard system",
       "seats": 1,
       "icon": "/i/004000/004120_hr1.png",
@@ -2289,11 +2521,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 23124,
+      "nameSource": "tw-items"
     },
     {
       "id": 170,
-      "name": "Grani",
+      "name": "格拉尼",
       "nameEn": "Grani",
       "seats": 1,
       "icon": "/i/004000/004128_hr1.png",
@@ -2302,11 +2535,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 23982,
+      "nameSource": "tw-items"
     },
     {
       "id": 171,
-      "name": "fatter cat",
+      "name": "貓大胖",
       "nameEn": "fatter cat",
       "seats": 1,
       "icon": "/i/004000/004129_hr1.png",
@@ -2315,11 +2549,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 23983,
+      "nameSource": "tw-items"
     },
     {
       "id": 172,
-      "name": "euphonious kamuy",
+      "name": "朱焰神威",
       "nameEn": "euphonious kamuy",
       "seats": 1,
       "icon": "/i/004000/004130_hr1.png",
@@ -2328,11 +2563,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 23984,
+      "nameSource": "tw-items"
     },
     {
       "id": 173,
-      "name": "Model O",
+      "name": "歐米茄",
       "nameEn": "Model O",
       "seats": 1,
       "icon": "/i/004000/004131_hr1.png",
@@ -2341,11 +2577,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 23985,
+      "nameSource": "tw-items"
     },
     {
       "id": 174,
-      "name": "magitek sky armor",
+      "name": "魔導浮空裝甲",
       "nameEn": "magitek sky armor",
       "seats": 1,
       "icon": "/i/004000/004132_hr1.png",
@@ -2354,11 +2591,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 23986,
+      "nameSource": "tw-items"
     },
     {
       "id": 175,
-      "name": "magicked carpet",
+      "name": "魔法飛毯",
       "nameEn": "magicked carpet",
       "seats": 1,
       "icon": "/i/004000/004147_hr1.png",
@@ -2367,11 +2605,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 24627,
+      "nameSource": "tw-items"
     },
     {
       "id": 176,
-      "name": "magna roader",
+      "name": "魔導機車大魔",
       "nameEn": "magna roader",
       "seats": 1,
       "icon": "/i/004000/004133_hr1.png",
@@ -2380,11 +2619,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 23987,
+      "nameSource": "tw-items"
     },
     {
       "id": 177,
-      "name": "fat black chocobo",
+      "name": "黑色胖陸行鳥",
       "nameEn": "fat black chocobo",
       "seats": 1,
       "icon": "/i/004000/004134_hr1.png",
@@ -2393,11 +2633,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 23988,
+      "nameSource": "tw-items"
     },
     {
       "id": 178,
-      "name": "Eldthurs",
+      "name": "火巨人",
       "nameEn": "Eldthurs",
       "seats": 1,
       "icon": "/i/004000/004137_hr1.png",
@@ -2406,11 +2647,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 24219,
+      "nameSource": "tw-items"
     },
     {
       "id": 179,
-      "name": "maxima roader",
+      "name": "改良型魔導機車大魔",
       "nameEn": "maxima roader",
       "seats": 1,
       "icon": "/i/004000/004139_hr1.png",
@@ -2419,11 +2661,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 24622,
+      "nameSource": "tw-items"
     },
     {
       "id": 180,
-      "name": "Sabotender Emperador",
+      "name": "帝王仙人掌怪",
       "nameEn": "Sabotender Emperador",
       "seats": 1,
       "icon": "/i/004000/004140_hr1.png",
@@ -2432,11 +2675,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 24628,
+      "nameSource": "tw-items"
     },
     {
       "id": 181,
-      "name": "kamuy of the Nine Tails",
+      "name": "九尾神威",
       "nameEn": "kamuy of the Nine Tails",
       "seats": 1,
       "icon": "/i/004000/004141_hr1.png",
@@ -2445,11 +2689,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 24625,
+      "nameSource": "tw-items"
     },
     {
       "id": 182,
-      "name": "hallowed kamuy",
+      "name": "青君神威",
       "nameEn": "hallowed kamuy",
       "seats": 1,
       "icon": "/i/004000/004142_hr1.png",
@@ -2458,11 +2703,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 24623,
+      "nameSource": "tw-items"
     },
     {
       "id": 183,
-      "name": "war tiger",
+      "name": "戰虎",
       "nameEn": "war tiger",
       "seats": 1,
       "icon": "/i/004000/004143_hr1.png",
@@ -2471,11 +2717,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 24629,
+      "nameSource": "tw-items"
     },
     {
       "id": 184,
-      "name": "Eurekan petrel",
+      "name": "優雷卡鹽藍燕",
       "nameEn": "Eurekan petrel",
       "seats": 1,
       "icon": "/i/004000/004144_hr1.png",
@@ -2484,11 +2731,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 24630,
+      "nameSource": "tw-items"
     },
     {
       "id": 185,
-      "name": "magitek avenger A1",
+      "name": "魔導復仇者寒冷地區特製型",
       "nameEn": "magitek avenger A1",
       "seats": 1,
       "icon": "/i/004000/004145_hr1.png",
@@ -2497,11 +2745,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 24631,
+      "nameSource": "tw-items"
     },
     {
       "id": 186,
-      "name": "Demi-Ozma",
+      "name": "半靈奧斯瑪",
       "nameEn": "Demi-Ozma",
       "seats": 1,
       "icon": "/i/004000/004146_hr1.png",
@@ -2510,11 +2759,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 24626,
+      "nameSource": "tw-items"
     },
     {
       "id": 187,
-      "name": "amaro",
+      "name": "阿馬羅",
       "nameEn": "amaro",
       "seats": 1,
       "icon": "/i/004000/004156_hr1.png",
@@ -2523,11 +2773,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 27967,
+      "nameSource": "tw-items"
     },
     {
       "id": 188,
-      "name": "skyslipper",
+      "name": "氣墊船",
       "nameEn": "skyslipper",
       "seats": 4,
       "icon": "/i/004000/004149_hr1.png",
@@ -2536,11 +2787,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 26779,
+      "nameSource": "tw-items"
     },
     {
       "id": 189,
-      "name": "fae gwiber",
+      "name": "仙子玲龍",
       "nameEn": "fae gwiber",
       "seats": 1,
       "icon": "/i/004000/004148_hr1.png",
@@ -2549,11 +2801,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 26778,
+      "nameSource": "tw-items"
     },
     {
       "id": 190,
-      "name": "triceratops",
+      "name": "三角龍",
       "nameEn": "triceratops",
       "seats": 1,
       "icon": "/i/004000/004150_hr1.png",
@@ -2562,11 +2815,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 26780,
+      "nameSource": "tw-items"
     },
     {
       "id": 191,
-      "name": "ironfrog mover",
+      "name": "青蛙號M",
       "nameEn": "ironfrog mover",
       "seats": 1,
       "icon": "/i/004000/004151_hr1.png",
@@ -2575,11 +2829,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 26781,
+      "nameSource": "tw-items"
     },
     {
       "id": 192,
-      "name": "innocent gwiber",
+      "name": "無瑕玲龍",
       "nameEn": "innocent gwiber",
       "seats": 1,
       "icon": "/i/004000/004153_hr1.png",
@@ -2588,11 +2843,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 26783,
+      "nameSource": "tw-items"
     },
     {
       "id": 193,
-      "name": "magicked bed",
+      "name": "魔法飛床",
       "nameEn": "magicked bed",
       "seats": 1,
       "icon": "/i/004000/004152_hr1.png",
@@ -2601,11 +2857,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 26782,
+      "nameSource": "tw-items"
     },
     {
       "id": 194,
-      "name": "Circus ahriman",
+      "name": "大陸之眼",
       "nameEn": "Circus ahriman",
       "seats": 1,
       "icon": "/i/004000/004154_hr1.png",
@@ -2614,11 +2871,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 26784,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 195,
-      "name": "sunspun cumulus",
+      "name": "金斗雲",
       "nameEn": "sunspun cumulus",
       "seats": 1,
       "icon": "/i/004000/004155_hr1.png",
@@ -2627,11 +2885,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 25057,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 197,
-      "name": "battle tiger",
+      "name": "鬥虎",
       "nameEn": "battle tiger",
       "seats": 1,
       "icon": "/i/004000/004157_hr1.png",
@@ -2640,11 +2899,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 27971,
+      "nameSource": "tw-items"
     },
     {
       "id": 200,
-      "name": "morbol",
+      "name": "毛爾波爾",
       "nameEn": "morbol",
       "seats": 1,
       "icon": "/i/004000/004158_hr1.png",
@@ -2653,11 +2913,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 28116,
+      "nameSource": "tw-items"
     },
     {
       "id": 201,
-      "name": "portly porxie",
+      "name": "豬大仙",
       "nameEn": "portly porxie",
       "seats": 1,
       "icon": "/i/004000/004159_hr1.png",
@@ -2666,11 +2927,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 28117,
+      "nameSource": "tw-items"
     },
     {
       "id": 202,
-      "name": "Epimetheus",
+      "name": "厄毗米修斯",
       "nameEn": "Epimetheus",
       "seats": 1,
       "icon": "/i/004000/004160_hr1.png",
@@ -2679,11 +2941,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 28118,
+      "nameSource": "tw-items"
     },
     {
       "id": 203,
-      "name": "Menoetius",
+      "name": "墨諾提俄斯",
       "nameEn": "Menoetius",
       "seats": 1,
       "icon": "/i/004000/004161_hr1.png",
@@ -2692,11 +2955,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 28119,
+      "nameSource": "tw-items"
     },
     {
       "id": 204,
-      "name": "Construct VII",
+      "name": "建築7號",
       "nameEn": "Construct VII",
       "seats": 1,
       "icon": "/i/004000/004162_hr1.png",
@@ -2705,11 +2969,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 28120,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 205,
-      "name": "shadow gwiber",
+      "name": "暗影玲龍",
       "nameEn": "shadow gwiber",
       "seats": 1,
       "icon": "/i/004000/004163_hr1.png",
@@ -2718,11 +2983,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 28121,
+      "nameSource": "tw-items"
     },
     {
       "id": 206,
-      "name": "spriggan stonecarrier",
+      "name": "搬運魔石精",
       "nameEn": "spriggan stonecarrier",
       "seats": 1,
       "icon": "/i/004000/004164_hr1.png",
@@ -2731,11 +2997,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 28122,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 207,
-      "name": "forgiven reticence",
+      "name": "得到寬恕的沉默",
       "nameEn": "forgiven reticence",
       "seats": 1,
       "icon": "/i/004000/004165_hr1.png",
@@ -2744,11 +3011,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 28123,
+      "nameSource": "tw-items"
     },
     {
       "id": 208,
-      "name": "dhalmel",
+      "name": "長頸駝",
       "nameEn": "dhalmel",
       "seats": 1,
       "icon": "/i/004000/004166_hr1.png",
@@ -2757,11 +3025,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 28124,
+      "nameSource": "tw-items"
     },
     {
       "id": 209,
-      "name": "albino karakul",
+      "name": "白化黑羊",
       "nameEn": "albino karakul",
       "seats": 1,
       "icon": "/i/004000/004167_hr1.png",
@@ -2770,11 +3039,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 28125,
+      "nameSource": "tw-items"
     },
     {
       "id": 211,
-      "name": "ufiti",
+      "name": "巫菲提",
       "nameEn": "ufiti",
       "seats": 1,
       "icon": "/i/004000/004168_hr1.png",
@@ -2783,11 +3053,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 28917,
+      "nameSource": "tw-items"
     },
     {
       "id": 212,
-      "name": "deinonychus",
+      "name": "恐爪龍",
       "nameEn": "deinonychus",
       "seats": 1,
       "icon": "/i/004000/004208_hr1.png",
@@ -2796,11 +3067,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 33684,
+      "nameSource": "tw-items"
     },
     {
       "id": 213,
-      "name": "Construct 14",
+      "name": "勞動十四號",
       "nameEn": "Construct 14",
       "seats": 1,
       "icon": "/i/004000/004175_hr1.png",
@@ -2809,11 +3081,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 30102,
+      "nameSource": "tw-items"
     },
     {
       "id": 214,
-      "name": "kingly peacock",
+      "name": "王孔雀",
       "nameEn": "kingly peacock",
       "seats": 1,
       "icon": "/i/004000/004176_hr1.png",
@@ -2822,11 +3095,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 28508,
+      "nameSource": "tw-items"
     },
     {
       "id": 215,
-      "name": "Great Vessel of Ronka",
+      "name": "水蛇大人的罐子",
       "nameEn": "Great Vessel of Ronka",
       "seats": 1,
       "icon": "/i/004000/004174_hr1.png",
@@ -2835,11 +3109,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 30103,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 216,
-      "name": "pteranodon",
+      "name": "無齒翼龍",
       "nameEn": "pteranodon",
       "seats": 1,
       "icon": "/i/004000/004169_hr1.png",
@@ -2848,11 +3123,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 30104,
+      "nameSource": "tw-items"
     },
     {
       "id": 217,
-      "name": "ruby gwiber",
+      "name": "紅寶石玲龍",
       "nameEn": "ruby gwiber",
       "seats": 1,
       "icon": "/i/004000/004170_hr1.png",
@@ -2861,11 +3137,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 30105,
+      "nameSource": "tw-items"
     },
     {
       "id": 218,
-      "name": "hybodus",
+      "name": "弓鮫",
       "nameEn": "hybodus",
       "seats": 1,
       "icon": "/i/004000/004171_hr1.png",
@@ -2874,11 +3151,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 30106,
+      "nameSource": "tw-items"
     },
     {
       "id": 219,
-      "name": "Ramuh",
+      "name": "拉姆",
       "nameEn": "Ramuh",
       "seats": 1,
       "icon": "/i/004000/004172_hr1.png",
@@ -2887,11 +3165,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 30107,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 220,
-      "name": "Rubellite Carbuncle",
+      "name": "紅電氣寶石獸",
       "nameEn": "Rubellite Carbuncle",
       "seats": 1,
       "icon": "/i/004000/004173_hr1.png",
@@ -2900,11 +3179,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 30108,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 222,
-      "name": "chocobo carriage",
+      "name": "陸行鳥篷車",
       "nameEn": "chocobo carriage",
       "seats": 4,
       "icon": "/i/004000/004177_hr1.png",
@@ -2913,11 +3193,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 30859,
+      "nameSource": "tw-items"
     },
     {
       "id": 223,
-      "name": "Rolling Tankard",
+      "name": "矮人戰車",
       "nameEn": "Rolling Tankard",
       "seats": 1,
       "icon": "/i/004000/004178_hr1.png",
@@ -2926,11 +3207,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 30860,
+      "nameSource": "tw-items"
     },
     {
       "id": 224,
-      "name": "Gabriel α",
+      "name": "加百列α",
       "nameEn": "Gabriel α",
       "seats": 1,
       "icon": "/i/004000/004179_hr1.png",
@@ -2939,11 +3221,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 30861,
+      "nameSource": "tw-items"
     },
     {
       "id": 225,
-      "name": "megalotragus",
+      "name": "碩山羊",
       "nameEn": "megalotragus",
       "seats": 1,
       "icon": "/i/004000/004180_hr1.png",
@@ -2952,11 +3235,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 30862,
+      "nameSource": "tw-items"
     },
     {
       "id": 226,
-      "name": "gwiber of light",
+      "name": "光之玲龍",
       "nameEn": "gwiber of light",
       "seats": 1,
       "icon": "/i/004000/004181_hr1.png",
@@ -2965,11 +3249,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 30863,
+      "nameSource": "tw-items"
     },
     {
       "id": 228,
-      "name": "Jibanyan couch",
+      "name": "吉胖喵沙發",
       "nameEn": "Jibanyan couch",
       "seats": 1,
       "icon": "/i/004000/004182_hr1.png",
@@ -2978,11 +3263,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 30864,
+      "nameSource": "tw-items"
     },
     {
       "id": 229,
-      "name": "magitek hyperconveyor",
+      "name": "改良型魔導運輸器",
       "nameEn": "magitek hyperconveyor",
       "seats": 1,
       "icon": "/i/004000/004183_hr1.png",
@@ -2991,11 +3277,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 31396,
+      "nameSource": "tw-items"
     },
     {
       "id": 230,
-      "name": "Ehll Tou",
+      "name": "艾爾·圖",
       "nameEn": "Ehll Tou",
       "seats": 1,
       "icon": "/i/004000/004184_hr1.png",
@@ -3004,11 +3291,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 30866,
+      "nameSource": "tw-items"
     },
     {
       "id": 231,
-      "name": "Incitatus",
+      "name": "英西塔土斯",
       "nameEn": "Incitatus",
       "seats": 1,
       "icon": "/i/004000/004185_hr1.png",
@@ -3017,11 +3305,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 30865,
+      "nameSource": "tw-items"
     },
     {
       "id": 232,
-      "name": "snowman",
+      "name": "雪人",
       "nameEn": "snowman",
       "seats": 1,
       "icon": "/i/004000/004186_hr1.png",
@@ -3030,11 +3319,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 32837,
+      "nameSource": "tw-items"
     },
     {
       "id": 233,
-      "name": "Lunar Whale",
+      "name": "真月魔導鯨",
       "nameEn": "Lunar Whale",
       "seats": 8,
       "icon": "/i/004000/004187_hr1.png",
@@ -3043,11 +3333,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 32838,
+      "nameSource": "tw-items"
     },
     {
       "id": 234,
-      "name": "Eden",
+      "name": "伊甸",
       "nameEn": "Eden",
       "seats": 1,
       "icon": "/i/004000/004188_hr1.png",
@@ -3056,11 +3347,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 32839,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 235,
-      "name": "Cerberus",
+      "name": "地獄三頭犬",
       "nameEn": "Cerberus",
       "seats": 4,
       "icon": "/i/004000/004189_hr1.png",
@@ -3069,11 +3361,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 32840,
+      "nameSource": "tw-items"
     },
     {
       "id": 236,
-      "name": "big shell",
+      "name": "大殼蟹",
       "nameEn": "big shell",
       "seats": 1,
       "icon": "/i/004000/004190_hr1.png",
@@ -3082,11 +3375,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 32841,
+      "nameSource": "tw-items"
     },
     {
       "id": 237,
-      "name": "Arion",
+      "name": "阿里翁",
       "nameEn": "Arion",
       "seats": 1,
       "icon": "/i/004000/004191_hr1.png",
@@ -3095,11 +3389,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 32842,
+      "nameSource": "tw-items"
     },
     {
       "id": 238,
-      "name": "emerald gwiber",
+      "name": "綠寶石玲龍",
       "nameEn": "emerald gwiber",
       "seats": 1,
       "icon": "/i/004000/004192_hr1.png",
@@ -3108,11 +3403,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 32843,
+      "nameSource": "tw-items"
     },
     {
       "id": 239,
-      "name": "prototype roader",
+      "name": "原型魔導機車大魔",
       "nameEn": "prototype roader",
       "seats": 1,
       "icon": "/i/004000/004193_hr1.png",
@@ -3121,11 +3417,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 32844,
+      "nameSource": "tw-items"
     },
     {
       "id": 240,
-      "name": "chocorpokkur",
+      "name": "巧克力小妖",
       "nameEn": "chocorpokkur",
       "seats": 1,
       "icon": "/i/004000/004194_hr1.png",
@@ -3134,11 +3431,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 32845,
+      "nameSource": "tw-items"
     },
     {
       "id": 241,
-      "name": "Gabriel Mark III",
+      "name": "加百列III號機",
       "nameEn": "Gabriel Mark III",
       "seats": 1,
       "icon": "/i/004000/004195_hr1.png",
@@ -3147,11 +3445,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 32846,
+      "nameSource": "tw-items"
     },
     {
       "id": 242,
-      "name": "antelope doe",
+      "name": "雌羚羊",
       "nameEn": "antelope doe",
       "seats": 1,
       "icon": "/i/004000/004197_hr1.png",
@@ -3160,11 +3459,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 33674,
+      "nameSource": "tw-items"
     },
     {
       "id": 243,
-      "name": "antelope stag",
+      "name": "雄羚羊",
       "nameEn": "antelope stag",
       "seats": 1,
       "icon": "/i/004000/004198_hr1.png",
@@ -3173,11 +3473,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 33675,
+      "nameSource": "tw-items"
     },
     {
       "id": 245,
-      "name": "Landerwaffe",
+      "name": "黑鋼機龍連達巴非",
       "nameEn": "Landerwaffe",
       "seats": 2,
       "icon": "/i/004000/004199_hr1.png",
@@ -3186,11 +3487,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 33218,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 246,
-      "name": "Al-iklil",
+      "name": "王冠號",
       "nameEn": "Al-iklil",
       "seats": 2,
       "icon": "/i/004000/004200_hr1.png",
@@ -3199,11 +3501,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 33676,
+      "nameSource": "tw-items"
     },
     {
       "id": 247,
-      "name": "Cruise Chaser",
+      "name": "巡航驅逐者",
       "nameEn": "Cruise Chaser",
       "seats": 2,
       "icon": "/i/004000/004201_hr1.png",
@@ -3212,11 +3515,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 33677,
+      "nameSource": "tw-items"
     },
     {
       "id": 248,
-      "name": "Construct VI-S",
+      "name": "建築06S號",
       "nameEn": "Construct VI-S",
       "seats": 1,
       "icon": "/i/004000/004196_hr1.png",
@@ -3225,11 +3529,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 33145,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 249,
-      "name": "diamond gwiber",
+      "name": "鑽石玲龍",
       "nameEn": "diamond gwiber",
       "seats": 1,
       "icon": "/i/004000/004209_hr1.png",
@@ -3238,11 +3543,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 33685,
+      "nameSource": "tw-items"
     },
     {
       "id": 250,
-      "name": "polar bear",
+      "name": "極地熊",
       "nameEn": "polar bear",
       "seats": 1,
       "icon": "/i/004000/004210_hr1.png",
@@ -3251,11 +3557,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 33686,
+      "nameSource": "tw-items"
     },
     {
       "id": 252,
-      "name": "gilded mikoshi",
+      "name": "巨鯰魚金轎",
       "nameEn": "gilded mikoshi",
       "seats": 1,
       "icon": "/i/004000/004211_hr1.png",
@@ -3264,11 +3571,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 33687,
+      "nameSource": "tw-items"
     },
     {
       "id": 253,
-      "name": "Resplendent Vessel of Ronka",
+      "name": "金蛇大人的罐子",
       "nameEn": "Resplendent Vessel of Ronka",
       "seats": 1,
       "icon": "/i/004000/004212_hr1.png",
@@ -3277,11 +3585,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 33688,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 254,
-      "name": "magicked card",
+      "name": "魔法幻卡",
       "nameEn": "magicked card",
       "seats": 1,
       "icon": "/i/004000/004213_hr1.png",
@@ -3290,11 +3599,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 33689,
+      "nameSource": "tw-items"
     },
     {
       "id": 255,
-      "name": "island mandragora",
+      "name": "海島曼德拉草",
       "nameEn": "island mandragora",
       "seats": 1,
       "icon": "/i/004000/004202_hr1.png",
@@ -3303,11 +3613,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 33678,
+      "nameSource": "tw-items"
     },
     {
       "id": 256,
-      "name": "island Onion Prince",
+      "name": "海島洋蔥王子",
       "nameEn": "island Onion Prince",
       "seats": 1,
       "icon": "/i/004000/004203_hr1.png",
@@ -3316,11 +3627,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 33679,
+      "nameSource": "tw-items"
     },
     {
       "id": 257,
-      "name": "island Eggplant Knight",
+      "name": "海島茄子騎士",
       "nameEn": "island Eggplant Knight",
       "seats": 1,
       "icon": "/i/004000/004204_hr1.png",
@@ -3329,11 +3641,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 33680,
+      "nameSource": "tw-items"
     },
     {
       "id": 258,
-      "name": "island Garlic Jester",
+      "name": "海島蒜頭明星",
       "nameEn": "island Garlic Jester",
       "seats": 1,
       "icon": "/i/004000/004205_hr1.png",
@@ -3342,11 +3655,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 33681,
+      "nameSource": "tw-items"
     },
     {
       "id": 259,
-      "name": "island Tomato King",
+      "name": "海島番茄國王",
       "nameEn": "island Tomato King",
       "seats": 1,
       "icon": "/i/004000/004206_hr1.png",
@@ -3355,11 +3669,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 33682,
+      "nameSource": "tw-items"
     },
     {
       "id": 260,
-      "name": "island Mandragora Queen",
+      "name": "海島曼德拉王后",
       "nameEn": "island Mandragora Queen",
       "seats": 1,
       "icon": "/i/004000/004207_hr1.png",
@@ -3368,11 +3683,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 33683,
+      "nameSource": "tw-items"
     },
     {
       "id": 261,
-      "name": "lynx of eternal darkness",
+      "name": "永暗猞猁",
       "nameEn": "lynx of eternal darkness",
       "seats": 1,
       "icon": "/i/004000/004214_hr1.png",
@@ -3381,11 +3697,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 36000,
+      "nameSource": "tw-items"
     },
     {
       "id": 262,
-      "name": "lynx of divine light",
+      "name": "聖光猞猁",
       "nameEn": "lynx of divine light",
       "seats": 1,
       "icon": "/i/004000/004215_hr1.png",
@@ -3394,11 +3711,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 36001,
+      "nameSource": "tw-items"
     },
     {
       "id": 263,
-      "name": "Argos",
+      "name": "阿爾戈斯",
       "nameEn": "Argos",
       "seats": 1,
       "icon": "/i/004000/004216_hr1.png",
@@ -3407,11 +3725,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 36002,
+      "nameSource": "tw-items"
     },
     {
       "id": 264,
-      "name": "dreadnaught",
+      "name": "恐慌裝甲",
       "nameEn": "dreadnaught",
       "seats": 1,
       "icon": "/i/004000/004217_hr1.png",
@@ -3420,11 +3739,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 36006,
+      "nameSource": "tw-items"
     },
     {
       "id": 265,
-      "name": "Demi-Phoinix",
+      "name": "亞靈菲尼克斯",
       "nameEn": "Demi-Phoinix",
       "seats": 1,
       "icon": "/i/004000/004218_hr1.png",
@@ -3433,11 +3753,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 36008,
+      "nameSource": "tw-items"
     },
     {
       "id": 266,
-      "name": "Calydontis",
+      "name": "卡呂冬堤斯",
       "nameEn": "Calydontis",
       "seats": 1,
       "icon": "/i/004000/004219_hr1.png",
@@ -3446,11 +3767,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 36003,
+      "nameSource": "tw-items"
     },
     {
       "id": 267,
-      "name": "Victor",
+      "name": "優勝犬",
       "nameEn": "Victor",
       "seats": 1,
       "icon": "/i/004000/004220_hr1.png",
@@ -3459,11 +3781,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 36004,
+      "nameSource": "tw-items"
     },
     {
       "id": 268,
-      "name": "level checker",
+      "name": "等級檢測儀",
       "nameEn": "level checker",
       "seats": 1,
       "icon": "/i/004000/004221_hr1.png",
@@ -3472,11 +3795,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 36007,
+      "nameSource": "tw-items"
     },
     {
       "id": 269,
-      "name": "Papa Paissa",
+      "name": "猴面雀爸爸",
       "nameEn": "Papa Paissa",
       "seats": 1,
       "icon": "/i/004000/004222_hr1.png",
@@ -3485,11 +3809,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 36009,
+      "nameSource": "tw-items"
     },
     {
       "id": 273,
-      "name": "wivre",
+      "name": "犀蜴",
       "nameEn": "wivre",
       "seats": 1,
       "icon": "/i/004000/004223_hr1.png",
@@ -3498,11 +3823,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 36005,
+      "nameSource": "tw-items"
     },
     {
       "id": 274,
-      "name": "porxie king",
+      "name": "仙子豬大王",
       "nameEn": "porxie king",
       "seats": 1,
       "icon": "/i/004000/004224_hr1.png",
@@ -3511,11 +3837,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 36010,
+      "nameSource": "tw-items"
     },
     {
       "id": 277,
-      "name": "Garlond GL-II",
+      "name": "加隆德GL-II",
       "nameEn": "Garlond GL-II",
       "seats": 1,
       "icon": "/i/004000/004235_hr1.png",
@@ -3524,11 +3851,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 38455,
+      "nameSource": "tw-items"
     },
     {
       "id": 279,
-      "name": "mechanical lotus",
+      "name": "機巧蓮座",
       "nameEn": "mechanical lotus",
       "seats": 1,
       "icon": "/i/004000/004098_hr1.png",
@@ -3537,11 +3865,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 36632,
+      "nameSource": "tw-items"
     },
     {
       "id": 280,
-      "name": "Fylgja",
+      "name": "菲爾亞",
       "nameEn": "Fylgja",
       "seats": 1,
       "icon": "/i/004000/004225_hr1.png",
@@ -3550,11 +3879,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 36905,
+      "nameSource": "tw-items"
     },
     {
       "id": 281,
-      "name": "alkonost",
+      "name": "阿爾科諾斯特",
       "nameEn": "alkonost",
       "seats": 1,
       "icon": "/i/004000/004226_hr1.png",
@@ -3563,11 +3893,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 36906,
+      "nameSource": "tw-items"
     },
     {
       "id": 282,
-      "name": "island buffalo",
+      "name": "海島水牛",
       "nameEn": "island buffalo",
       "seats": 1,
       "icon": "/i/004000/004265_hr1.png",
@@ -3576,11 +3907,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 40382,
+      "nameSource": "tw-items"
     },
     {
       "id": 283,
-      "name": "brachiosaur",
+      "name": "腕龍",
       "nameEn": "brachiosaur",
       "seats": 1,
       "icon": "/i/004000/004304_hr1.png",
@@ -3589,11 +3921,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 45071,
+      "nameSource": "tw-items"
     },
     {
       "id": 284,
-      "name": "pod 602",
+      "name": "輔助機602",
       "nameEn": "pod 602",
       "seats": 1,
       "icon": "/i/004000/004227_hr1.png",
@@ -3602,11 +3935,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 36910,
+      "nameSource": "tw-items"
     },
     {
       "id": 285,
-      "name": "moon-hopper",
+      "name": "月面躍動機",
       "nameEn": "moon-hopper",
       "seats": 1,
       "icon": "/i/004000/004245_hr1.png",
@@ -3615,11 +3949,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 39485,
+      "nameSource": "tw-items"
     },
     {
       "id": 286,
-      "name": "island alligator",
+      "name": "海島短吻鱷",
       "nameEn": "island alligator",
       "seats": 1,
       "icon": "/i/004000/004255_hr1.png",
@@ -3628,11 +3963,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 39495,
+      "nameSource": "tw-items"
     },
     {
       "id": 287,
-      "name": "hippo cart",
+      "name": "河馬車",
       "nameEn": "hippo cart",
       "seats": 1,
       "icon": "/i/004000/004228_hr1.png",
@@ -3641,11 +3977,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 36907,
+      "nameSource": "tw-items"
     },
     {
       "id": 288,
-      "name": "troll",
+      "name": "巨怪",
       "nameEn": "troll",
       "seats": 1,
       "icon": "/i/004000/004229_hr1.png",
@@ -3654,11 +3991,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 36904,
+      "nameSource": "tw-items"
     },
     {
       "id": 290,
-      "name": "UFO",
+      "name": "不明飛行物體？",
       "nameEn": "UFO",
       "seats": 1,
       "icon": "/i/004000/004230_hr1.png",
@@ -3667,11 +4005,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 36908,
+      "nameSource": "tw-items"
     },
     {
       "id": 291,
-      "name": "vinegaroon",
+      "name": "醋蠍龍",
       "nameEn": "vinegaroon",
       "seats": 1,
       "icon": "/i/004000/004231_hr1.png",
@@ -3680,11 +4019,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 36909,
+      "nameSource": "tw-items"
     },
     {
       "id": 292,
-      "name": "Orthos craklaw",
+      "name": "正統裂鉗蟹",
       "nameEn": "Orthos craklaw",
       "seats": 1,
       "icon": "/i/004000/004232_hr1.png",
@@ -3693,11 +4033,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 36911,
+      "nameSource": "tw-items"
     },
     {
       "id": 293,
-      "name": "bluefeather lynx",
+      "name": "藍羽猞猁",
       "nameEn": "bluefeather lynx",
       "seats": 1,
       "icon": "/i/004000/004233_hr1.png",
@@ -3706,11 +4047,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 36912,
+      "nameSource": "tw-items"
     },
     {
       "id": 294,
-      "name": "megashiba",
+      "name": "大大柴",
       "nameEn": "megashiba",
       "seats": 1,
       "icon": "/i/004000/004234_hr1.png",
@@ -3719,11 +4061,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 36913,
+      "nameSource": "tw-items"
     },
     {
       "id": 297,
-      "name": "traveling supporter",
+      "name": "旅行協助機",
       "nameEn": "traveling supporter",
       "seats": 1,
       "icon": "/i/004000/004264_hr1.png",
@@ -3732,11 +4075,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 40383,
+      "nameSource": "tw-items"
     },
     {
       "id": 298,
-      "name": "Miw Miisv",
+      "name": "繆·繆咻",
       "nameEn": "Miw Miisv",
       "seats": 1,
       "icon": "/i/004000/004236_hr1.png",
@@ -3745,11 +4089,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 38456,
+      "nameSource": "tw-items"
     },
     {
       "id": 299,
-      "name": "wondrous lanner",
+      "name": "幻奇獵鷹",
       "nameEn": "wondrous lanner",
       "seats": 1,
       "icon": "/i/004000/004237_hr1.png",
@@ -3758,11 +4103,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 38457,
+      "nameSource": "tw-items"
     },
     {
       "id": 300,
-      "name": "magicked umbrella",
+      "name": "魔法雨傘",
       "nameEn": "magicked umbrella",
       "seats": 1,
       "icon": "/i/004000/004238_hr1.png",
@@ -3771,11 +4117,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 38458,
+      "nameSource": "tw-items"
     },
     {
       "id": 301,
-      "name": "magicked parasol",
+      "name": "魔法陽傘",
       "nameEn": "magicked parasol",
       "seats": 1,
       "icon": "/i/004000/004239_hr1.png",
@@ -3784,11 +4131,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 38459,
+      "nameSource": "tw-items"
     },
     {
       "id": 302,
-      "name": "Starlight steed",
+      "name": "幻象閃電",
       "nameEn": "Starlight steed",
       "seats": 1,
       "icon": "/i/004000/004240_hr1.png",
@@ -3797,11 +4145,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 38460,
+      "nameSource": "tw-items"
     },
     {
       "id": 303,
-      "name": "Sil'dihn throne",
+      "name": "希拉狄哈王座",
       "nameEn": "Sil'dihn throne",
       "seats": 1,
       "icon": "/i/004000/004243_hr1.png",
@@ -3810,11 +4159,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 38461,
+      "nameSource": "tw-items"
     },
     {
       "id": 304,
-      "name": "silkie",
+      "name": "羽衣精",
       "nameEn": "silkie",
       "seats": 1,
       "icon": "/i/004000/004244_hr1.png",
@@ -3823,11 +4173,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 38462,
+      "nameSource": "tw-items"
     },
     {
       "id": 305,
-      "name": "sunforged",
+      "name": "炎靈獸",
       "nameEn": "sunforged",
       "seats": 1,
       "icon": "/i/004000/004241_hr1.png",
@@ -3836,11 +4187,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 38463,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 306,
-      "name": "lynx of imperious wind",
+      "name": "煞風猞猁",
       "nameEn": "lynx of imperious wind",
       "seats": 1,
       "icon": "/i/004000/004242_hr1.png",
@@ -3849,11 +4201,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 38464,
+      "nameSource": "tw-items"
     },
     {
       "id": 308,
-      "name": "aeturna",
+      "name": "永恆",
       "nameEn": "aeturna",
       "seats": 1,
       "icon": "/i/004000/004246_hr1.png",
@@ -3862,11 +4215,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 39486,
+      "nameSource": "tw-items"
     },
     {
       "id": 310,
-      "name": "set of ceruleum balloons",
+      "name": "青磷氣球",
       "nameEn": "set of ceruleum balloons",
       "seats": 1,
       "icon": "/i/004000/004247_hr1.png",
@@ -3875,11 +4229,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 39487,
+      "nameSource": "tw-items"
     },
     {
       "id": 311,
-      "name": "Anden III",
+      "name": "安登三世",
       "nameEn": "Anden III",
       "seats": 1,
       "icon": "/i/004000/004248_hr1.png",
@@ -3888,11 +4243,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 39488,
+      "nameSource": "tw-items"
     },
     {
       "id": 312,
-      "name": "Blackjack",
+      "name": "黑傑克號",
       "nameEn": "Blackjack",
       "seats": 4,
       "icon": "/i/004000/004249_hr1.png",
@@ -3901,11 +4257,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 39489,
+      "nameSource": "tw-items"
     },
     {
       "id": 313,
-      "name": "Phaethon",
+      "name": "法厄同",
       "nameEn": "Phaethon",
       "seats": 1,
       "icon": "/i/004000/004250_hr1.png",
@@ -3914,11 +4271,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 39490,
+      "nameSource": "tw-items"
     },
     {
       "id": 314,
-      "name": "Pinky",
+      "name": "粉紅",
       "nameEn": "Pinky",
       "seats": 1,
       "icon": "/i/004000/004251_hr1.png",
@@ -3927,11 +4285,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 39491,
+      "nameSource": "tw-items"
     },
     {
       "id": 315,
-      "name": "lynx of righteous fire",
+      "name": "煬火猞猁",
       "nameEn": "lynx of righteous fire",
       "seats": 1,
       "icon": "/i/004000/004252_hr1.png",
@@ -3940,11 +4299,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 39492,
+      "nameSource": "tw-items"
     },
     {
       "id": 316,
-      "name": "magitek avenger G1",
+      "name": "魔導復仇者金色塗裝特製型",
       "nameEn": "magitek avenger G1",
       "seats": 1,
       "icon": "/i/004000/004253_hr1.png",
@@ -3953,11 +4313,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 39493,
+      "nameSource": "tw-items"
     },
     {
       "id": 317,
-      "name": "Chrysomallos",
+      "name": "克律索馬羅斯",
       "nameEn": "Chrysomallos",
       "seats": 1,
       "icon": "/i/004000/004254_hr1.png",
@@ -3966,11 +4327,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 39494,
+      "nameSource": "tw-items"
     },
     {
       "id": 318,
-      "name": "Garlond GL-IS",
+      "name": "加隆德GL-IS",
       "nameEn": "Garlond GL-IS",
       "seats": 2,
       "icon": "/i/004000/004256_hr1.png",
@@ -3979,11 +4341,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 40384,
+      "nameSource": "tw-items"
     },
     {
       "id": 319,
-      "name": "megaloambystoma",
+      "name": "巨型鈍口螈",
       "nameEn": "megaloambystoma",
       "seats": 1,
       "icon": "/i/004000/004257_hr1.png",
@@ -3992,11 +4355,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 40385,
+      "nameSource": "tw-items"
     },
     {
       "id": 320,
-      "name": "Rising Phoenix",
+      "name": "新生鳳凰",
       "nameEn": "Rising Phoenix",
       "seats": 1,
       "icon": "/i/004000/004258_hr1.png",
@@ -4005,11 +4369,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 40386,
+      "nameSource": "tw-items"
     },
     {
       "id": 321,
-      "name": "burabura chochin",
+      "name": "蕩悠悠",
       "nameEn": "burabura chochin",
       "seats": 1,
       "icon": "/i/004000/004259_hr1.png",
@@ -4018,11 +4383,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 40387,
+      "nameSource": "tw-items"
     },
     {
       "id": 322,
-      "name": "Shishioji",
+      "name": "獅子王子",
       "nameEn": "Shishioji",
       "seats": 1,
       "icon": "/i/004000/004260_hr1.png",
@@ -4031,11 +4397,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 40388,
+      "nameSource": "tw-items"
     },
     {
       "id": 323,
-      "name": "shadow wolf",
+      "name": "影狼",
       "nameEn": "shadow wolf",
       "seats": 1,
       "icon": "/i/004000/004261_hr1.png",
@@ -4044,11 +4411,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 40389,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 324,
-      "name": "magicked children's bed",
+      "name": "魔法兒童床",
       "nameEn": "magicked children's bed",
       "seats": 1,
       "icon": "/i/004000/004262_hr1.png",
@@ -4057,11 +4425,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 40390,
+      "nameSource": "tw-items"
     },
     {
       "id": 325,
-      "name": "lynx of fallen shadow",
+      "name": "暗影猞猁",
       "nameEn": "lynx of fallen shadow",
       "seats": 1,
       "icon": "/i/004000/004263_hr1.png",
@@ -4070,11 +4439,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 40391,
+      "nameSource": "tw-items"
     },
     {
       "id": 326,
-      "name": "Torgal",
+      "name": "托加爾",
       "nameEn": "Torgal",
       "seats": 1,
       "icon": "/i/004000/004266_hr1.png",
@@ -4083,11 +4453,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 41487,
+      "nameSource": "tw-items"
     },
     {
       "id": 327,
-      "name": "Ark",
+      "name": "方舟",
       "nameEn": "Ark",
       "seats": 1,
       "icon": "/i/004000/004267_hr1.png",
@@ -4096,11 +4467,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 41488,
+      "nameSource": "tw-items"
     },
     {
       "id": 328,
-      "name": "apocryphal Bahamut",
+      "name": "幽願巴哈姆特",
       "nameEn": "apocryphal Bahamut",
       "seats": 1,
       "icon": "/i/004000/004268_hr1.png",
@@ -4109,11 +4481,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 41489,
+      "nameSource": "tw-items"
     },
     {
       "id": 329,
-      "name": "crescent moon",
+      "name": "弦月",
       "nameEn": "crescent moon",
       "seats": 1,
       "icon": "/i/004000/004269_hr1.png",
@@ -4122,11 +4495,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 41490,
+      "nameSource": "tw-items"
     },
     {
       "id": 330,
-      "name": "Rhiyes",
+      "name": "糖豆犀牛",
       "nameEn": "Rhiyes",
       "seats": 1,
       "icon": "/i/004000/004270_hr1.png",
@@ -4135,11 +4509,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 41491,
+      "nameSource": "tw-items"
     },
     {
       "id": 331,
-      "name": "oppressor",
+      "name": "壓迫者",
       "nameEn": "oppressor",
       "seats": 1,
       "icon": "/i/004000/004271_hr1.png",
@@ -4148,11 +4523,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 41492,
+      "nameSource": "tw-items"
     },
     {
       "id": 332,
-      "name": "lynx of abyssal grief",
+      "name": "深淵猞猁",
       "nameEn": "lynx of abyssal grief",
       "seats": 1,
       "icon": "/i/004000/004272_hr1.png",
@@ -4161,11 +4537,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 41493,
+      "nameSource": "tw-items"
     },
     {
       "id": 333,
-      "name": "sabotender de la luna",
+      "name": "月光仙人掌怪",
       "nameEn": "sabotender de la luna",
       "seats": 1,
       "icon": "/i/004000/004273_hr1.png",
@@ -4174,11 +4551,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 41494,
+      "nameSource": "tw-items"
     },
     {
       "id": 334,
-      "name": "spectral Statice",
+      "name": "斯塔緹絲幻影",
       "nameEn": "spectral Statice",
       "seats": 1,
       "icon": "/i/004000/004274_hr1.png",
@@ -4187,11 +4565,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 41495,
+      "nameSource": "tw-items"
     },
     {
       "id": 335,
-      "name": "Garlond GL-IIT",
+      "name": "加隆德GL-IIT",
       "nameEn": "Garlond GL-IIT",
       "seats": 2,
       "icon": "/i/004000/004275_hr1.png",
@@ -4200,11 +4579,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 41496,
+      "nameSource": "tw-items"
     },
     {
       "id": 336,
-      "name": "Peatie",
+      "name": "皮蒂",
       "nameEn": "Peatie",
       "seats": 1,
       "icon": "/i/004000/004276_hr1.png",
@@ -4213,7 +4593,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 41497,
+      "nameSource": "tw-items"
     },
     {
       "id": 337,
@@ -4226,11 +4607,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 41498
     },
     {
       "id": 338,
-      "name": "quaqua",
+      "name": "庫阿庫阿",
       "nameEn": "quaqua",
       "seats": 1,
       "icon": "/i/004000/004278_hr1.png",
@@ -4239,11 +4621,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 41499,
+      "nameSource": "tw-items"
     },
     {
       "id": 339,
-      "name": "island Peerifool",
+      "name": "海島皮里福爾",
       "nameEn": "island Peerifool",
       "seats": 1,
       "icon": "/i/004000/004279_hr1.png",
@@ -4252,11 +4635,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 41649,
+      "nameSource": "tw-items"
     },
     {
       "id": 340,
-      "name": "island adenium",
+      "name": "海島沙漠玫瑰",
       "nameEn": "island adenium",
       "seats": 1,
       "icon": "/i/004000/004280_hr1.png",
@@ -4265,11 +4649,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 41650,
+      "nameSource": "tw-items"
     },
     {
       "id": 342,
-      "name": "ty'aitya",
+      "name": "小鳴鼠",
       "nameEn": "ty'aitya",
       "seats": 1,
       "icon": "/i/004000/004292_hr1.png",
@@ -4278,11 +4663,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 43590,
+      "nameSource": "tw-items"
     },
     {
       "id": 343,
-      "name": "air-wheeler A9",
+      "name": "飛梭A9",
       "nameEn": "air-wheeler A9",
       "seats": 1,
       "icon": "/i/004000/004281_hr1.png",
@@ -4291,11 +4677,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 43591,
+      "nameSource": "tw-items"
     },
     {
       "id": 344,
-      "name": "alpaca",
+      "name": "羊駝",
       "nameEn": "alpaca",
       "seats": 1,
       "icon": "/i/004000/004282_hr1.png",
@@ -4304,11 +4691,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 43592,
+      "nameSource": "tw-items"
     },
     {
       "id": 345,
-      "name": "wings of ruin",
+      "name": "天災之翼",
       "nameEn": "wings of ruin",
       "seats": 1,
       "icon": "/i/004000/004283_hr1.png",
@@ -4317,11 +4705,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 43593,
+      "nameSource": "tw-items"
     },
     {
       "id": 346,
-      "name": "wings of resolve",
+      "name": "奇蹟之翼",
       "nameEn": "wings of resolve",
       "seats": 1,
       "icon": "/i/004000/004284_hr1.png",
@@ -4330,11 +4719,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 43594,
+      "nameSource": "tw-items"
     },
     {
       "id": 347,
-      "name": "outrunner",
+      "name": "外勤機",
       "nameEn": "outrunner",
       "seats": 1,
       "icon": "/i/004000/004285_hr1.png",
@@ -4343,11 +4733,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 43595,
+      "nameSource": "tw-items"
     },
     {
       "id": 348,
-      "name": "mehwapyarra",
+      "name": "梅瓦皮亞拉",
       "nameEn": "mehwapyarra",
       "seats": 1,
       "icon": "/i/004000/004286_hr1.png",
@@ -4356,11 +4747,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 43596,
+      "nameSource": "tw-items"
     },
     {
       "id": 349,
-      "name": "monowheel S1",
+      "name": "獨輪車S1",
       "nameEn": "monowheel S1",
       "seats": 1,
       "icon": "/i/004000/004287_hr1.png",
@@ -4369,11 +4761,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 43597,
+      "nameSource": "tw-items"
     },
     {
       "id": 350,
-      "name": "rroneek",
+      "name": "犎牛",
       "nameEn": "rroneek",
       "seats": 1,
       "icon": "/i/004000/004288_hr1.png",
@@ -4382,11 +4775,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 43598,
+      "nameSource": "tw-items"
     },
     {
       "id": 351,
-      "name": "Ullr",
+      "name": "烏勒爾",
       "nameEn": "Ullr",
       "seats": 1,
       "icon": "/i/004000/004289_hr1.png",
@@ -4395,11 +4789,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 43599,
+      "nameSource": "tw-items"
     },
     {
       "id": 352,
-      "name": "qeziigural",
+      "name": "凱吉古拉",
       "nameEn": "qeziigural",
       "seats": 1,
       "icon": "/i/004000/004290_hr1.png",
@@ -4408,11 +4803,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 43600,
+      "nameSource": "tw-items"
     },
     {
       "id": 353,
-      "name": "automatoise",
+      "name": "半機器龜",
       "nameEn": "automatoise",
       "seats": 1,
       "icon": "/i/004000/004291_hr1.png",
@@ -4421,11 +4817,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 44245,
+      "nameSource": "tw-items"
     },
     {
       "id": 354,
-      "name": "mountain zu",
+      "name": "浪祖",
       "nameEn": "mountain zu",
       "seats": 1,
       "icon": "/i/004000/004293_hr1.png",
@@ -4434,11 +4831,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 41802,
+      "nameSource": "tw-items"
     },
     {
       "id": 356,
-      "name": "barreltender",
+      "name": "酒桶仙人掌怪",
       "nameEn": "barreltender",
       "seats": 1,
       "icon": "/i/004000/004294_hr1.png",
@@ -4447,11 +4845,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 44502,
+      "nameSource": "tw-items"
     },
     {
       "id": 357,
-      "name": "eggeater",
+      "name": "食蛋獸",
       "nameEn": "eggeater",
       "seats": 1,
       "icon": "/i/004000/004306_hr1.png",
@@ -4460,11 +4859,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 44503,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 358,
-      "name": "punutiy",
+      "name": "海牛",
       "nameEn": "punutiy",
       "seats": 1,
       "icon": "/i/004000/004296_hr1.png",
@@ -4473,7 +4873,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 44497,
+      "nameSource": "tw-items"
     },
     {
       "id": 359,
@@ -4486,11 +4887,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 44504
     },
     {
       "id": 360,
-      "name": "shroud of Darkness",
+      "name": "暗黑羽衣",
       "nameEn": "shroud of Darkness",
       "seats": 1,
       "icon": "/i/004000/004298_hr1.png",
@@ -4499,11 +4901,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 44501,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 361,
-      "name": "dais of Darkness",
+      "name": "暗黑領域",
       "nameEn": "dais of Darkness",
       "seats": 1,
       "icon": "/i/004000/004299_hr1.png",
@@ -4512,11 +4915,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 44500,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 362,
-      "name": "hovering hot pot",
+      "name": "風火鍋",
       "nameEn": "hovering hot pot",
       "seats": 1,
       "icon": "/i/004000/004300_hr1.png",
@@ -4525,11 +4929,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 44498,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 363,
-      "name": "wings of eternity",
+      "name": "永恆之翼",
       "nameEn": "wings of eternity",
       "seats": 1,
       "icon": "/i/004000/004301_hr1.png",
@@ -4538,11 +4943,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 44499,
+      "nameSource": "tw-items"
     },
     {
       "id": 364,
-      "name": "vacuum suit",
+      "name": "強力機兵",
       "nameEn": "vacuum suit",
       "seats": 1,
       "icon": "/i/004000/004302_hr1.png",
@@ -4551,11 +4957,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 44505,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 365,
-      "name": "venturous kamuy",
+      "name": "商賈神威",
       "nameEn": "venturous kamuy",
       "seats": 1,
       "icon": "/i/004000/004303_hr1.png",
@@ -4564,7 +4971,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 44958,
+      "nameSource": "tw-items"
     },
     {
       "id": 368,
@@ -4577,7 +4985,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": null,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 371,
@@ -4590,11 +4999,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 50435
     },
     {
       "id": 372,
-      "name": "demon haul",
+      "name": "惡魔板",
       "nameEn": "demon haul",
       "seats": 1,
       "icon": "/i/004000/004307_hr1.png",
@@ -4603,11 +5013,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 47978,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 373,
-      "name": "petalodus",
+      "name": "瓣齒鯊",
       "nameEn": "petalodus",
       "seats": 1,
       "icon": "/i/004000/004308_hr1.png",
@@ -4616,11 +5027,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 47979,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 374,
-      "name": "snowstreamer",
+      "name": "雪人裝扮",
       "nameEn": "snowstreamer",
       "seats": 1,
       "icon": "/i/004000/004305_hr1.png",
@@ -4629,7 +5041,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 45577,
+      "nameSource": "tw-items"
     },
     {
       "id": 378,
@@ -4642,7 +5055,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": null,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 379,
@@ -4655,11 +5069,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 47334
     },
     {
       "id": 381,
-      "name": "branchbearer",
+      "name": "擬鳥枝",
       "nameEn": "branchbearer",
       "seats": 1,
       "icon": "/i/004000/004310_hr1.png",
@@ -4668,11 +5083,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 47977,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 382,
-      "name": "air-wheeler C9",
+      "name": "飛梭C9",
       "nameEn": "air-wheeler C9",
       "seats": 4,
       "icon": "/i/004000/004311_hr1.png",
@@ -4681,11 +5097,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 47974,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 383,
-      "name": "ancient airship",
+      "name": "古代魔法船",
       "nameEn": "ancient airship",
       "seats": 4,
       "icon": "/i/004000/004312_hr1.png",
@@ -4694,11 +5111,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 47975,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 385,
-      "name": "high mobility vacuum suit",
+      "name": "高機動型強力機兵",
       "nameEn": "high mobility vacuum suit",
       "seats": 1,
       "icon": "/i/004000/004316_hr1.png",
@@ -4707,7 +5125,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 48232,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 386,
@@ -4720,11 +5139,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 47973
     },
     {
       "id": 388,
-      "name": "His Royal Headness on Parade",
+      "name": "進擊的好腦袋",
       "nameEn": "His Royal Headness on Parade",
       "seats": 1,
       "icon": "/i/004000/004313_hr1.png",
@@ -4733,11 +5153,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 47980,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 389,
-      "name": "wings of the knighthood",
+      "name": "騎士之翼",
       "nameEn": "wings of the knighthood",
       "seats": 1,
       "icon": "/i/004000/004314_hr1.png",
@@ -4746,11 +5167,12 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 47976,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 390,
-      "name": "magitek slasher",
+      "name": "魔導螳螂",
       "nameEn": "magitek slasher",
       "seats": 1,
       "icon": "/i/004000/004315_hr1.png",
@@ -4759,7 +5181,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "itemId": 48231,
+      "nameSource": "cn-opencc"
     },
     {
       "id": 393,
@@ -4772,7 +5195,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 46830
     },
     {
       "id": 394,
@@ -4785,7 +5209,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 50436
     },
     {
       "id": 395,
@@ -4798,7 +5223,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 46831
     },
     {
       "id": 396,
@@ -4811,7 +5237,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 46827
     },
     {
       "id": 397,
@@ -4824,7 +5251,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 46828
     },
     {
       "id": 398,
@@ -4837,7 +5265,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 46833
     },
     {
       "id": 399,
@@ -4850,7 +5279,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 46834
     },
     {
       "id": 400,
@@ -4863,7 +5293,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 46829
     },
     {
       "id": 401,
@@ -4876,7 +5307,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 46825
     },
     {
       "id": 402,
@@ -4889,7 +5321,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 47336
     },
     {
       "id": 403,
@@ -4902,7 +5335,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 46832
     },
     {
       "id": 404,
@@ -4915,7 +5349,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": null
     },
     {
       "id": 405,
@@ -4928,7 +5363,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": null
     },
     {
       "id": 407,
@@ -4941,7 +5377,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 46826
     },
     {
       "id": 408,
@@ -4954,7 +5391,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 47335
     },
     {
       "id": 409,
@@ -4967,7 +5405,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 52257
     },
     {
       "id": 411,
@@ -4980,7 +5419,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 50437
     },
     {
       "id": 412,
@@ -4993,7 +5433,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 50438
     },
     {
       "id": 413,
@@ -5006,7 +5447,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 50439
     },
     {
       "id": 414,
@@ -5019,7 +5461,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 50440
     },
     {
       "id": 415,
@@ -5032,7 +5475,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 50441
     },
     {
       "id": 416,
@@ -5045,7 +5489,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 50442
     },
     {
       "id": 417,
@@ -5058,7 +5503,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 52258
     },
     {
       "id": 419,
@@ -5071,7 +5517,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 52640
     },
     {
       "id": 420,
@@ -5084,7 +5531,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 52259
     },
     {
       "id": 421,
@@ -5097,7 +5545,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 50443
     },
     {
       "id": 422,
@@ -5110,7 +5559,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 50444
     },
     {
       "id": 423,
@@ -5123,7 +5573,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": null
     },
     {
       "id": 424,
@@ -5136,7 +5587,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": null
     },
     {
       "id": 425,
@@ -5149,7 +5601,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 50445
     },
     {
       "id": 426,
@@ -5162,7 +5615,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 50446
     },
     {
       "id": 427,
@@ -5175,7 +5629,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 50447
     },
     {
       "id": 428,
@@ -5188,7 +5643,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 50448
     },
     {
       "id": 432,
@@ -5201,7 +5657,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 52262
     },
     {
       "id": 433,
@@ -5214,7 +5671,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": null
     },
     {
       "id": 438,
@@ -5227,7 +5685,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 52267
     },
     {
       "id": 439,
@@ -5240,7 +5699,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": null
     },
     {
       "id": 440,
@@ -5253,7 +5713,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 52268
     },
     {
       "id": 441,
@@ -5266,7 +5727,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": null
     },
     {
       "id": 444,
@@ -5279,7 +5741,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 52270
     },
     {
       "id": 445,
@@ -5292,7 +5755,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 52271
     },
     {
       "id": 446,
@@ -5305,7 +5769,8 @@
       "description": null,
       "sources": [],
       "patch": null,
-      "_noTwName": true
+      "_noTwName": true,
+      "itemId": 52272
     }
   ]
 }

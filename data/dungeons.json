@@ -1,8 +1,8 @@
 {
   "schema": "dungeons",
   "patch": "7.2",
-  "updated": "2026-06-05",
-  "source": "xivapi",
+  "updated": "2026-06-11",
+  "source": "xivapi+teamcraft-tw-instances",
   "count": 386,
   "data": [
     {
@@ -379,7 +379,7 @@
     },
     {
       "id": 7,
-      "name": "魔獸領域日影地修煉所",
+      "name": "魔獸領域日影地修練所",
       "nameEn": "Halatali",
       "type": "dungeon",
       "patch": null,
@@ -472,7 +472,7 @@
     },
     {
       "id": 830,
-      "name": "究極神兵破壞作戰",
+      "name": "究極武器破壞作戰",
       "nameEn": "the Porta Decumana",
       "type": "trial_hard",
       "patch": null,
@@ -503,7 +503,7 @@
     },
     {
       "id": 1,
-      "name": "監獄廢墟託託·拉克千獄",
+      "name": "監獄廢墟托托·拉克千獄",
       "nameEn": "the Thousand Maws of Toto–Rak",
       "type": "dungeon",
       "patch": null,
@@ -658,7 +658,7 @@
     },
     {
       "id": 47,
-      "name": "消滅惡徒團伙寄生蜂團！",
+      "name": "消滅惡徒團夥寄生蜂團！",
       "nameEn": "Stinging Back",
       "type": "guildhest",
       "patch": null,
@@ -720,7 +720,7 @@
     },
     {
       "id": 8,
-      "name": "休養勝地佈雷福洛克斯野營地",
+      "name": "休養勝地布雷福洛克斯野營地",
       "nameEn": "Brayflox's Longstop",
       "type": "dungeon",
       "patch": null,
@@ -844,7 +844,7 @@
     },
     {
       "id": 9,
-      "name": "古代遺蹟喀恩埋沒聖堂",
+      "name": "古代遺跡喀恩埋沒聖堂",
       "nameEn": "the Sunken Temple of Qarn",
       "type": "dungeon",
       "patch": null,
@@ -999,7 +999,7 @@
     },
     {
       "id": 50,
-      "name": "討伐汙染源頭魔界花！",
+      "name": "討伐污染源頭毛爾波爾！",
       "nameEn": "More than a Feeler",
       "type": "guildhest",
       "patch": null,
@@ -1030,7 +1030,7 @@
     },
     {
       "id": 76,
-      "name": "大橋上的決鬥",
+      "name": "吉爾伽美什殲滅戰",
       "nameEn": "Battle on the Big Bridge",
       "type": "trial_hard",
       "patch": null,
@@ -1154,7 +1154,7 @@
     },
     {
       "id": 81,
-      "name": "艾瑪吉娜杯鬥技大會決賽",
+      "name": "艾瑪姬娜杯鬥技大會決賽",
       "nameEn": "the Dragon's Neck",
       "type": "trial_hard",
       "patch": null,
@@ -1278,7 +1278,7 @@
     },
     {
       "id": 85,
-      "name": "無限城的死鬥",
+      "name": "真 吉爾伽美什殲滅戰",
       "nameEn": "Battle in the Big Keep",
       "type": "trial_hard",
       "patch": null,
@@ -1371,7 +1371,7 @@
     },
     {
       "id": 53,
-      "name": "討伐爆彈怪的女王！",
+      "name": "討伐炸彈的女王！",
       "nameEn": "Long Live the Queen",
       "type": "guildhest",
       "patch": null,
@@ -1402,7 +1402,7 @@
     },
     {
       "id": 59,
-      "name": "伊弗利特殲滅戰",
+      "name": "真 伊弗利特殲滅戰",
       "nameEn": "the Bowl of Embers (Hard)",
       "type": "trial_hard",
       "patch": null,
@@ -1526,7 +1526,7 @@
     },
     {
       "id": 61,
-      "name": "迦樓羅殲滅戰",
+      "name": "真 迦樓羅殲滅戰",
       "nameEn": "the Howling Eye (Hard)",
       "type": "trial_hard",
       "patch": null,
@@ -1650,7 +1650,7 @@
     },
     {
       "id": 60,
-      "name": "泰坦殲滅戰",
+      "name": "真 泰坦殲滅戰",
       "nameEn": "the Navel (Hard)",
       "type": "trial_hard",
       "patch": null,
@@ -1743,7 +1743,7 @@
     },
     {
       "id": 66,
-      "name": "莫古力賢王殲滅戰",
+      "name": "善王莫古爾·莫古XII世殲滅戰",
       "nameEn": "Thornmarch (Hard)",
       "type": "trial_hard",
       "patch": null,
@@ -1836,7 +1836,7 @@
     },
     {
       "id": 72,
-      "name": "利維亞桑殲滅戰",
+      "name": "真 利維坦殲滅戰",
       "nameEn": "the Whorleater (Hard)",
       "type": "trial_hard",
       "patch": null,
@@ -1929,7 +1929,7 @@
     },
     {
       "id": 77,
-      "name": "拉姆殲滅戰",
+      "name": "真 拉姆殲滅戰",
       "nameEn": "the Striking Tree (Hard)",
       "type": "trial_hard",
       "patch": null,
@@ -2022,7 +2022,7 @@
     },
     {
       "id": 79,
-      "name": "希瓦殲滅戰",
+      "name": "真 濕婆殲滅戰",
       "nameEn": "the Akh Afah Amphitheatre (Hard)",
       "type": "trial_hard",
       "patch": null,
@@ -2115,7 +2115,7 @@
     },
     {
       "id": 82,
-      "name": "奧丁殲滅戰",
+      "name": "奧汀殲滅戰",
       "nameEn": "Urth's Fount",
       "type": "trial_hard",
       "patch": null,
@@ -2177,7 +2177,7 @@
     },
     {
       "id": 22,
-      "name": "腐壞遺蹟無限城市街古蹟",
+      "name": "腐壞遺跡無限城市街古跡",
       "nameEn": "the Lost City of Amdapor",
       "type": "dungeon",
       "patch": null,
@@ -2239,7 +2239,7 @@
     },
     {
       "id": 21,
-      "name": "劍鬥領域日影地修煉所",
+      "name": "劍鬥領域日影地修練所",
       "nameEn": "Halatali (Hard)",
       "type": "dungeon",
       "patch": null,
@@ -2270,7 +2270,7 @@
     },
     {
       "id": 20,
-      "name": "紛爭要地佈雷福洛克斯野營地",
+      "name": "紛爭要地布雷福洛克斯野營地",
       "nameEn": "Brayflox's Longstop (Hard)",
       "type": "dungeon",
       "patch": null,
@@ -2456,7 +2456,7 @@
     },
     {
       "id": 26,
-      "name": "甦醒遺蹟喀恩埋沒聖堂",
+      "name": "甦醒遺跡喀恩埋沒聖堂",
       "nameEn": "the Sunken Temple of Qarn (Hard)",
       "type": "dungeon",
       "patch": null,
@@ -2859,7 +2859,7 @@
     },
     {
       "id": 34,
-      "name": "聖教中樞伊修加德教皇廳",
+      "name": "聖教中樞伊修加爾德教皇廳",
       "nameEn": "the Vault",
       "type": "dungeon",
       "patch": null,
@@ -2983,7 +2983,7 @@
     },
     {
       "id": 38,
-      "name": "血戰蒼穹魔科學研究所",
+      "name": "蒼天聖戰 魔科學研究所",
       "nameEn": "the Aetherochemical Research Facility",
       "type": "dungeon",
       "patch": null,
@@ -3107,7 +3107,7 @@
     },
     {
       "id": 35,
-      "name": "博物戰艦無限迴廊",
+      "name": "博物戰艦無限回廊",
       "nameEn": "the Fractal Continuum",
       "type": "dungeon",
       "patch": null,
@@ -3355,7 +3355,7 @@
     },
     {
       "id": 140,
-      "name": "神聖遺蹟無限城市街古蹟",
+      "name": "神聖遺跡無限城市街古跡",
       "nameEn": "the Lost City of Amdapor (Hard)",
       "type": "dungeon",
       "patch": null,
@@ -3820,7 +3820,7 @@
     },
     {
       "id": 238,
-      "name": "漂流海域妖歌海",
+      "name": "漂流海域賽蓮海",
       "nameEn": "the Sirensong Sea",
       "type": "dungeon",
       "patch": null,
@@ -4068,7 +4068,7 @@
     },
     {
       "id": 242,
-      "name": "巨炮要塞帝國白山堡",
+      "name": "巨砲要塞帝國白山堡",
       "nameEn": "Castrum Abania",
       "type": "dungeon",
       "patch": null,
@@ -4130,7 +4130,7 @@
     },
     {
       "id": 247,
-      "name": "鏖戰紅蓮阿拉米格",
+      "name": "紅蓮決戰阿拉米格",
       "nameEn": "Ala Mhigo",
       "type": "dungeon",
       "patch": null,
@@ -4285,7 +4285,7 @@
     },
     {
       "id": 279,
-      "name": "沉沒神殿斯卡拉遺蹟",
+      "name": "沉沒神殿斯卡拉遺跡",
       "nameEn": "the Drowned City of Skalla",
       "type": "dungeon",
       "patch": null,
@@ -4440,7 +4440,7 @@
     },
     {
       "id": 285,
-      "name": "瘋狂戰艦無限迴廊",
+      "name": "瘋狂戰艦無限回廊",
       "nameEn": "the Fractal Continuum (Hard)",
       "type": "dungeon",
       "patch": null,
@@ -4502,7 +4502,7 @@
     },
     {
       "id": 536,
-      "name": "風水靈廟巖燕廟",
+      "name": "風水靈廟岩燕廟",
       "nameEn": "the Swallow's Compass",
       "type": "dungeon",
       "patch": null,
@@ -4626,7 +4626,7 @@
     },
     {
       "id": 584,
-      "name": "汙染庭園聖茉夏娜植物園",
+      "name": "污染庭園聖茉夏娜植物園",
       "nameEn": "Saint Mocianne's Arboretum (Hard)",
       "type": "dungeon",
       "patch": null,
@@ -4750,7 +4750,7 @@
     },
     {
       "id": 676,
-      "name": "遇襲集落水灘村",
+      "name": "殺戮鄉村水灘村",
       "nameEn": "Holminster Switch",
       "type": "dungeon",
       "patch": null,
@@ -4874,7 +4874,7 @@
     },
     {
       "id": 651,
-      "name": "文明古蹟奇坦那神影洞",
+      "name": "文明古跡奇坦那神影洞",
       "nameEn": "the Qitana Ravel",
       "type": "dungeon",
       "patch": null,
@@ -5060,7 +5060,7 @@
     },
     {
       "id": 652,
-      "name": "末日暗影亞馬烏羅提",
+      "name": "終末幻想亞馬烏羅提",
       "nameEn": "Amaurot",
       "type": "dungeon",
       "patch": null,
@@ -5339,7 +5339,7 @@
     },
     {
       "id": 737,
-      "name": "暗影決戰諾弗蘭特",
+      "name": "漆黑決戰諾弗蘭特",
       "nameEn": "the Heroes' Gauntlet",
       "type": "dungeon",
       "patch": null,
@@ -5370,7 +5370,7 @@
     },
     {
       "id": 746,
-      "name": "魔術工房瑪託雅工作室",
+      "name": "魔術工坊瑪托雅工作室",
       "nameEn": "Matoya's Relict",
       "type": "dungeon",
       "patch": null,
@@ -5959,7 +5959,7 @@
     },
     {
       "id": 844,
-      "name": "近東秘寶阿爾扎達爾海底遺蹟群",
+      "name": "近東秘寶阿爾扎達爾海底遺跡群",
       "nameEn": "Alzadaal's Legacy",
       "type": "dungeon",
       "patch": null,
@@ -6052,7 +6052,7 @@
     },
     {
       "id": 779,
-      "name": "希望之炮臺：“塔”",
+      "name": "希望之砲臺：“塔”",
       "nameEn": "the Tower at Paradigm's Breach",
       "type": "alliance_raid",
       "patch": null,
@@ -6176,7 +6176,7 @@
     },
     {
       "id": 68,
-      "name": "究極神兵假想作戰",
+      "name": "究極幻想 究極武器破壞作戰",
       "nameEn": "the Minstrel's Ballad: Ultima's Bane",
       "type": "trial_hard",
       "patch": null,
@@ -6238,7 +6238,7 @@
     },
     {
       "id": 826,
-      "name": "叢林競流生息河岸",
+      "name": "叢林激流生息河岸",
       "nameEn": "Ihuykatumu",
       "type": "dungeon",
       "patch": null,
@@ -6269,7 +6269,7 @@
     },
     {
       "id": 65,
-      "name": "迦樓羅殲殛戰",
+      "name": "極 迦樓羅殲滅戰",
       "nameEn": "the Howling Eye (Extreme)",
       "type": "trial_ex",
       "patch": null,
@@ -6331,7 +6331,7 @@
     },
     {
       "id": 824,
-      "name": "通天絕壁沃刻佐莫山",
+      "name": "通天絕壁沃克佐莫山",
       "nameEn": "Worqor Zormor",
       "type": "dungeon",
       "patch": null,
@@ -6362,7 +6362,7 @@
     },
     {
       "id": 64,
-      "name": "泰坦殲殛戰",
+      "name": "極 泰坦殲滅戰",
       "nameEn": "the Navel (Extreme)",
       "type": "trial_ex",
       "patch": null,
@@ -6455,7 +6455,7 @@
     },
     {
       "id": 63,
-      "name": "伊弗利特殲殛戰",
+      "name": "極 伊弗利特殲滅戰",
       "nameEn": "the Bowl of Embers (Extreme)",
       "type": "trial_ex",
       "patch": null,
@@ -6548,7 +6548,7 @@
     },
     {
       "id": 67,
-      "name": "莫古力賢王殲殛戰",
+      "name": "極王莫古爾·莫古XII世殲滅戰",
       "nameEn": "Thornmarch (Extreme)",
       "type": "trial_ex",
       "patch": null,
@@ -6641,7 +6641,7 @@
     },
     {
       "id": 73,
-      "name": "利維亞桑殲殛戰",
+      "name": "極 利維坦殲滅戰",
       "nameEn": "the Whorleater (Extreme)",
       "type": "trial_ex",
       "patch": null,
@@ -6703,7 +6703,7 @@
     },
     {
       "id": 827,
-      "name": "憶中金曦亞歷山德里亞",
+      "name": "記憶幻想亞歷山德里亞",
       "nameEn": "Alexandria",
       "type": "dungeon",
       "patch": null,
@@ -6734,7 +6734,7 @@
     },
     {
       "id": 78,
-      "name": "拉姆殲殛戰",
+      "name": "極 拉姆殲滅戰",
       "nameEn": "the Striking Tree (Extreme)",
       "type": "trial_ex",
       "patch": null,
@@ -6796,7 +6796,7 @@
     },
     {
       "id": 834,
-      "name": "荒野秘境仙人刺谷",
+      "name": "荒野秘境仙人掌谷",
       "nameEn": "Tender Valley",
       "type": "dungeon",
       "patch": null,
@@ -6827,7 +6827,7 @@
     },
     {
       "id": 80,
-      "name": "希瓦殲殛戰",
+      "name": "極 濕婆殲滅戰",
       "nameEn": "the Akh Afah Amphitheatre (Extreme)",
       "type": "trial_ex",
       "patch": null,
@@ -6889,7 +6889,7 @@
     },
     {
       "id": 981,
-      "name": "噩夢樂園迷途鬼區",
+      "name": "惡夢樂園迷途鬼區",
       "nameEn": "The Strayborough Deadwalk",
       "type": "dungeon",
       "patch": null,
@@ -7044,7 +7044,7 @@
     },
     {
       "id": 86,
-      "name": "羅波那殲滅戰",
+      "name": "真 羅波那殲滅戰",
       "nameEn": "Thok ast Thok (Hard)",
       "type": "trial_hard",
       "patch": null,
@@ -7137,7 +7137,7 @@
     },
     {
       "id": 88,
-      "name": "俾斯麥殲滅戰",
+      "name": "真 俾斯麥殲滅戰",
       "nameEn": "the Limitless Blue (Hard)",
       "type": "trial_hard",
       "patch": null,
@@ -7323,7 +7323,7 @@
     },
     {
       "id": 169,
-      "name": "尼德霍格徵龍戰",
+      "name": "尼德霍格征龍戰",
       "nameEn": "the Final Steps of Faith",
       "type": "trial_hard",
       "patch": null,
@@ -7385,7 +7385,7 @@
     },
     {
       "id": 134,
-      "name": "薩菲洛特殲滅戰",
+      "name": "魔神賽菲羅特殲滅戰",
       "nameEn": "Containment Bay S1T7",
       "type": "trial_hard",
       "patch": null,
@@ -7447,7 +7447,7 @@
     },
     {
       "id": 183,
-      "name": "索菲婭殲滅戰",
+      "name": "女神索菲亞殲滅戰",
       "nameEn": "Containment Bay P1T6",
       "type": "trial_hard",
       "patch": null,
@@ -7509,7 +7509,7 @@
     },
     {
       "id": 223,
-      "name": "祖爾宛殲滅戰",
+      "name": "鬼神祖爾宛殲滅戰",
       "nameEn": "Containment Bay Z1T9",
       "type": "trial_hard",
       "patch": null,
@@ -7664,7 +7664,7 @@
     },
     {
       "id": 89,
-      "name": "俾斯麥殲殛戰",
+      "name": "極 俾斯麥殲滅戰",
       "nameEn": "the Limitless Blue (Extreme)",
       "type": "trial_ex",
       "patch": null,
@@ -7726,7 +7726,7 @@
     },
     {
       "id": 87,
-      "name": "羅波那殲殛戰",
+      "name": "極 羅波那殲滅戰",
       "nameEn": "Thok ast Thok (Extreme)",
       "type": "trial_ex",
       "patch": null,
@@ -7788,7 +7788,7 @@
     },
     {
       "id": 91,
-      "name": "圓桌騎士幻想殲滅戰",
+      "name": "蒼天幻想 圓桌騎士殲滅戰",
       "nameEn": "the Minstrel's Ballad: Thordan's Reign",
       "type": "trial_hard",
       "patch": null,
@@ -7850,7 +7850,7 @@
     },
     {
       "id": 170,
-      "name": "尼德霍格傳奇徵龍戰",
+      "name": "極 尼德霍格征龍戰",
       "nameEn": "the Minstrel's Ballad: Nidhogg's Rage",
       "type": "trial_hard",
       "patch": null,
@@ -7912,7 +7912,7 @@
     },
     {
       "id": 135,
-      "name": "薩菲洛特殲殛戰",
+      "name": "極 魔神賽菲羅特殲滅戰",
       "nameEn": "Containment Bay S1T7 (Extreme)",
       "type": "trial_ex",
       "patch": null,
@@ -7974,7 +7974,7 @@
     },
     {
       "id": 184,
-      "name": "索菲婭殲殛戰",
+      "name": "極 女神索菲亞殲滅戰",
       "nameEn": "Containment Bay P1T6 (Extreme)",
       "type": "trial_ex",
       "patch": null,
@@ -8036,7 +8036,7 @@
     },
     {
       "id": 224,
-      "name": "祖爾宛殲殛戰",
+      "name": "極 鬼神祖爾宛殲滅戰",
       "nameEn": "Containment Bay Z1T9 (Extreme)",
       "type": "trial_ex",
       "patch": null,
@@ -8222,7 +8222,7 @@
     },
     {
       "id": 595,
-      "name": "保鏢殲滅戰",
+      "name": "真 保鑣殲滅戰",
       "nameEn": "Kugane Ohashi",
       "type": "trial_hard",
       "patch": null,
@@ -8346,7 +8346,7 @@
     },
     {
       "id": 290,
-      "name": "白虎鎮魂戰",
+      "name": "白虎征魂戰",
       "nameEn": "the Jade Stoa",
       "type": "trial_hard",
       "patch": null,
@@ -8408,7 +8408,7 @@
     },
     {
       "id": 596,
-      "name": "朱雀鎮魂戰",
+      "name": "朱雀征魂戰",
       "nameEn": "Hells' Kier",
       "type": "trial_hard",
       "patch": null,
@@ -8470,7 +8470,7 @@
     },
     {
       "id": 637,
-      "name": "青龍鎮魂戰",
+      "name": "青龍征魂戰",
       "nameEn": "the Wreath of Snakes",
       "type": "trial_hard",
       "patch": null,
@@ -8873,7 +8873,7 @@
     },
     {
       "id": 244,
-      "name": "須佐之男殲殛戰",
+      "name": "極 須佐之男殲滅戰",
       "nameEn": "the Pool of Tribute (Extreme)",
       "type": "trial_ex",
       "patch": null,
@@ -8935,7 +8935,7 @@
     },
     {
       "id": 264,
-      "name": "吉祥天女殲殛戰",
+      "name": "極 吉祥天女殲滅戰",
       "nameEn": "Emanation (Extreme)",
       "type": "trial_ex",
       "patch": null,
@@ -8997,7 +8997,7 @@
     },
     {
       "id": 278,
-      "name": "神龍夢幻殲滅戰",
+      "name": "極 神龍殲滅戰",
       "nameEn": "the Minstrel's Ballad: Shinryu's Domain",
       "type": "trial_hard",
       "patch": null,
@@ -9059,7 +9059,7 @@
     },
     {
       "id": 538,
-      "name": "月讀幽夜殲滅戰",
+      "name": "極 月讀殲滅戰",
       "nameEn": "the Minstrel's Ballad: Tsukuyomi's Pain",
       "type": "trial_hard",
       "patch": null,
@@ -9121,7 +9121,7 @@
     },
     {
       "id": 475,
-      "name": "火龍上位狩獵戰",
+      "name": "極 火龍狩獵戰",
       "nameEn": "the Great Hunt (Extreme)",
       "type": "trial_ex",
       "patch": null,
@@ -9183,7 +9183,7 @@
     },
     {
       "id": 291,
-      "name": "白虎詩魂戰",
+      "name": "極 白虎征魂戰",
       "nameEn": "the Jade Stoa (Extreme)",
       "type": "trial_ex",
       "patch": null,
@@ -9245,7 +9245,7 @@
     },
     {
       "id": 597,
-      "name": "朱雀詩魂戰",
+      "name": "極 朱雀征魂戰",
       "nameEn": "Hells' Kier (Extreme)",
       "type": "trial_ex",
       "patch": null,
@@ -9307,7 +9307,7 @@
     },
     {
       "id": 638,
-      "name": "青龍詩魂戰",
+      "name": "極 青龍征魂戰",
       "nameEn": "the Wreath of Snakes (Extreme)",
       "type": "trial_ex",
       "patch": null,
@@ -9524,7 +9524,7 @@
     },
     {
       "id": 687,
-      "name": "哈迪斯殲滅戰",
+      "name": "黑迪斯殲滅戰",
       "nameEn": "the Dying Gasp",
       "type": "trial_hard",
       "patch": null,
@@ -9555,7 +9555,7 @@
     },
     {
       "id": 717,
-      "name": "紅寶石神兵破壞作戰",
+      "name": "紅寶石武器破壞作戰",
       "nameEn": "Cinder Drift",
       "type": "trial_hard",
       "patch": null,
@@ -9617,7 +9617,7 @@
     },
     {
       "id": 762,
-      "name": "綠寶石神兵破壞作戰",
+      "name": "綠寶石武器破壞作戰",
       "nameEn": "Castrum Marinum",
       "type": "trial_hard",
       "patch": null,
@@ -9648,7 +9648,7 @@
     },
     {
       "id": 781,
-      "name": "鑽石神兵捕獲作戰",
+      "name": "鑽石武器捕獲作戰",
       "nameEn": "the Cloud Deck",
       "type": "trial_hard",
       "patch": null,
@@ -9989,7 +9989,7 @@
     },
     {
       "id": 658,
-      "name": "緹坦妮雅殲殛戰",
+      "name": "極 緹坦妮雅殲滅戰",
       "nameEn": "the Dancing Plague (Extreme)",
       "type": "trial_ex",
       "patch": null,
@@ -10051,7 +10051,7 @@
     },
     {
       "id": 667,
-      "name": "無瑕靈君殲殛戰",
+      "name": "極 無瑕靈君殲滅戰",
       "nameEn": "the Crown of the Immaculate (Extreme)",
       "type": "trial_ex",
       "patch": null,
@@ -10113,7 +10113,7 @@
     },
     {
       "id": 693,
-      "name": "哈迪斯孤念殲滅戰",
+      "name": "極 黑迪斯殲滅戰",
       "nameEn": "the Minstrel's Ballad: Hades's Elegy",
       "type": "trial_hard",
       "patch": null,
@@ -10144,7 +10144,7 @@
     },
     {
       "id": 718,
-      "name": "紅寶石神兵狂想作戰",
+      "name": "極 紅寶石武器破壞作戰",
       "nameEn": "Cinder Drift (Extreme)",
       "type": "trial_ex",
       "patch": null,
@@ -10175,7 +10175,7 @@
     },
     {
       "id": 725,
-      "name": "博茲雅堡壘追憶戰",
+      "name": "極 博茲雅堡壘追憶戰",
       "nameEn": "Memoria Misera (Extreme)",
       "type": "trial_ex",
       "patch": null,
@@ -10206,7 +10206,7 @@
     },
     {
       "id": 739,
-      "name": "光之戰士幻耀殲滅戰",
+      "name": "極 光之戰士殲滅戰",
       "nameEn": "the Seat of Sacrifice (Extreme)",
       "type": "trial_ex",
       "patch": null,
@@ -10268,7 +10268,7 @@
     },
     {
       "id": 763,
-      "name": "綠寶石神兵狂想作戰",
+      "name": "極 綠寶石武器破壞作戰",
       "nameEn": "Castrum Marinum (Extreme)",
       "type": "trial_ex",
       "patch": null,
@@ -10299,7 +10299,7 @@
     },
     {
       "id": 782,
-      "name": "鑽石神兵狂想作戰",
+      "name": "極 鑽石武器捕獲作戰",
       "nameEn": "the Cloud Deck (Extreme)",
       "type": "trial_ex",
       "patch": null,
@@ -10640,7 +10640,7 @@
     },
     {
       "id": 802,
-      "name": "佐迪亞克殲滅戰",
+      "name": "佐狄亞克殲滅戰",
       "nameEn": "the Dark Inside",
       "type": "trial_hard",
       "patch": null,
@@ -10795,7 +10795,7 @@
     },
     {
       "id": 870,
-      "name": "巴爾巴莉希婭殲滅戰",
+      "name": "巴爾巴莉希亞殲滅戰",
       "nameEn": "Storm's Crown",
       "type": "trial_hard",
       "patch": null,
@@ -10950,7 +10950,7 @@
     },
     {
       "id": 803,
-      "name": "佐迪亞克暝暗殲滅戰",
+      "name": "極 佐狄亞克殲滅戰",
       "nameEn": "the Minstrel's Ballad: Zodiark's Fall",
       "type": "trial_hard",
       "patch": null,
@@ -10981,7 +10981,7 @@
     },
     {
       "id": 791,
-      "name": "海德林暉光殲滅戰",
+      "name": "極 海德林殲滅戰",
       "nameEn": "the Minstrel's Ballad: Hydaelyn's Call",
       "type": "trial_hard",
       "patch": null,
@@ -11043,7 +11043,7 @@
     },
     {
       "id": 871,
-      "name": "巴爾巴莉希婭殲殛戰",
+      "name": "極 巴爾巴莉希亞殲滅戰",
       "nameEn": "Storm's Crown (Extreme)",
       "type": "trial_ex",
       "patch": null,
@@ -11074,7 +11074,7 @@
     },
     {
       "id": 924,
-      "name": "盧比坎特殲殛戰",
+      "name": "極 盧比坎特殲滅戰",
       "nameEn": "Mount Ordeals (Extreme)",
       "type": "trial_ex",
       "patch": null,
@@ -11105,7 +11105,7 @@
     },
     {
       "id": 950,
-      "name": "高貝扎殲殛戰",
+      "name": "極 高貝扎殲滅戰",
       "nameEn": "the Voidcast Dais (Extreme)",
       "type": "trial_ex",
       "patch": null,
@@ -11136,7 +11136,7 @@
     },
     {
       "id": 965,
-      "name": "澤羅姆斯殲殛戰",
+      "name": "極 澤羅姆斯殲滅戰",
       "nameEn": "the Abyssal Fracture (Extreme)",
       "type": "trial_ex",
       "patch": null,
@@ -11167,7 +11167,7 @@
     },
     {
       "id": 832,
-      "name": "豔翼蛇鳥殲滅戰",
+      "name": "艷翼蛇鳥殲滅戰",
       "nameEn": "Worqor Lar Dor",
       "type": "trial_hard",
       "patch": null,
@@ -11415,7 +11415,7 @@
     },
     {
       "id": 833,
-      "name": "豔翼蛇鳥殲殛戰",
+      "name": "極 艷翼蛇鳥殲滅戰",
       "nameEn": "Worqor Lar Dor (Extreme)",
       "type": "trial_ex",
       "patch": null,
@@ -11446,7 +11446,7 @@
     },
     {
       "id": 996,
-      "name": "佐拉加殲殛戰",
+      "name": "極 佐拉加殲滅戰",
       "nameEn": "Everkeep (Extreme)",
       "type": "trial_ex",
       "patch": null,
@@ -11477,7 +11477,7 @@
     },
     {
       "id": 1017,
-      "name": "永恆女王憶想殲滅戰",
+      "name": "極 永恆女王殲滅戰",
       "nameEn": "the Minstrel's Ballad: Sphene's Burden",
       "type": "trial_hard",
       "patch": null,
@@ -11663,7 +11663,7 @@
     },
     {
       "id": 280,
-      "name": "巴哈姆特絕境戰",
+      "name": "絕 巴哈姆特殲滅戰",
       "nameEn": "the Unending Coil of Bahamut (Ultimate)",
       "type": "ultimate",
       "patch": null,
@@ -11694,7 +11694,7 @@
     },
     {
       "id": 539,
-      "name": "究極神兵絕境戰",
+      "name": "絕 究極武器破壞作戰",
       "nameEn": "the Weapon's Refrain (Ultimate)",
       "type": "ultimate",
       "patch": null,
@@ -11725,7 +11725,7 @@
     },
     {
       "id": 694,
-      "name": "亞歷山大絕境戰",
+      "name": "絕 亞歷山大殲滅戰",
       "nameEn": "the Epic of Alexander (Ultimate)",
       "type": "ultimate",
       "patch": null,
@@ -11756,7 +11756,7 @@
     },
     {
       "id": 788,
-      "name": "幻想龍詩絕境戰",
+      "name": "絕 龍詩戰爭",
       "nameEn": "Dragonsong's Reprise (Ultimate)",
       "type": "ultimate",
       "patch": null,
@@ -11787,7 +11787,7 @@
     },
     {
       "id": 908,
-      "name": "歐米茄絕境驗證戰",
+      "name": "絕 歐米茄驗證戰",
       "nameEn": "the Omega Protocol (Ultimate)",
       "type": "ultimate",
       "patch": null,

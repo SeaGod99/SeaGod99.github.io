@@ -8,37 +8,198 @@
     "territoryId": "TerritoryType row id，僅輔助欄位（fishing-spots、gathering.coords.zoneId），顯示/連結一律用 mapId"
   },
   "sourceTypes": [
-    "主線任務", "任務", "副本掉落", "高難度副本", "絕境", "狩獵", "PvP",
-    "成就", "金碟", "商店", "製作", "採集", "市場板", "探索航行",
-    "節慶活動", "聯名活動", "信任系統", "藍魔", "其他"
+    "主線任務",
+    "任務",
+    "副本掉落",
+    "高難度副本",
+    "絕境",
+    "狩獵",
+    "PvP",
+    "成就",
+    "金碟",
+    "商店",
+    "製作",
+    "採集",
+    "市場板",
+    "探索航行",
+    "節慶活動",
+    "聯名活動",
+    "信任系統",
+    "藍魔",
+    "其他"
   ],
   "patches": [
-    { "label": "ARR 2.x", "min": "2.0", "max": "2.9" },
-    { "label": "HW 3.x",  "min": "3.0", "max": "3.9" },
-    { "label": "SB 4.x",  "min": "4.0", "max": "4.9" },
-    { "label": "ShB 5.x", "min": "5.0", "max": "5.9" },
-    { "label": "EW 6.x",  "min": "6.0", "max": "6.9" },
-    { "label": "DT 7.x",  "min": "7.0", "max": "7.9" }
+    {
+      "label": "ARR 2.x",
+      "min": "2.0",
+      "max": "2.9"
+    },
+    {
+      "label": "HW 3.x",
+      "min": "3.0",
+      "max": "3.9"
+    },
+    {
+      "label": "SB 4.x",
+      "min": "4.0",
+      "max": "4.9"
+    },
+    {
+      "label": "ShB 5.x",
+      "min": "5.0",
+      "max": "5.9"
+    },
+    {
+      "label": "EW 6.x",
+      "min": "6.0",
+      "max": "6.9"
+    },
+    {
+      "label": "DT 7.x",
+      "min": "7.0",
+      "max": "7.9"
+    }
   ],
   "databases": [
-    { "schema": "items",            "file": "items.json",            "name": "全物品",       "source": "mixed",     "status": "script-ready" },
-    { "schema": "maps",             "file": "maps.json",             "name": "地圖／區域",   "source": "xivapi+tw-places", "status": "populated", "updated": "2026-06-11" },
-    { "schema": "npcs",             "file": "npcs.json",             "name": "NPC",          "source": "xivapi",    "status": "example" },
-    { "schema": "aether-currents",  "file": "aether-currents.json",  "name": "風脈泉",       "source": "teamcraft", "status": "example" },
-    { "schema": "gathering",        "file": "gathering.json",        "name": "採集點",       "source": "teamcraft", "status": "populated", "updated": "2026-06-11" },
-    { "schema": "recipes",          "file": "recipes.json",          "name": "製作配方",     "source": "teamcraft", "status": "script-ready" },
-    { "schema": "dungeons",         "file": "dungeons.json",         "name": "副本",         "source": "manual",    "status": "example" },
-    { "schema": "triple-triad",     "file": "triple-triad.json",     "name": "幻卡",         "source": "manual",    "status": "example" },
-    { "schema": "blue-magic",       "file": "blue-magic.json",       "name": "青魔法",       "source": "teamcraft", "status": "example" },
-    { "schema": "exploration-log",  "file": "exploration-log.json",  "name": "探索筆記",     "source": "manual",    "status": "example" },
-    { "schema": "emotes",           "file": "emotes.json",           "name": "表情",         "source": "manual",    "status": "example" },
-    { "schema": "orchestrion",      "file": "orchestrion.json",      "name": "樂譜",         "source": "manual",    "status": "example" },
-    { "schema": "minions",          "file": "minions.json",          "name": "寵物",         "source": "manual",    "status": "example" },
-    { "schema": "mounts",           "file": "mounts.json",           "name": "坐騎",         "source": "manual",    "status": "migrated" },
-    { "schema": "barding",          "file": "barding.json",          "name": "鳥鞍",         "source": "manual",    "status": "example" },
-    { "schema": "squadron",         "file": "squadron.json",         "name": "冒險者小隊",   "source": "manual",    "status": "example" },
-    { "schema": "fishing",          "file": "fishing.json",          "name": "釣魚（舊，停用）", "source": "teamcraft", "status": "superseded-by-fishes" },
-    { "schema": "fishes",           "file": "fishes.json",           "name": "魚",           "source": "fish-tracker+items", "status": "populated", "updated": "2026-06-08" },
-    { "schema": "fishing-spots",    "file": "fishing-spots.json",    "name": "釣場",         "source": "fish-tracker+items", "status": "populated", "updated": "2026-06-11" }
+    {
+      "schema": "items",
+      "file": "items.json",
+      "name": "全物品",
+      "source": "mixed",
+      "status": "script-ready"
+    },
+    {
+      "schema": "maps",
+      "file": "maps.json",
+      "name": "地圖／區域",
+      "source": "xivapi+tw-places",
+      "status": "populated",
+      "updated": "2026-06-11"
+    },
+    {
+      "schema": "npcs",
+      "file": "npcs.json",
+      "name": "NPC",
+      "source": "xivapi",
+      "status": "example"
+    },
+    {
+      "schema": "aether-currents",
+      "file": "aether-currents.json",
+      "name": "風脈泉",
+      "source": "teamcraft",
+      "status": "example"
+    },
+    {
+      "schema": "gathering",
+      "file": "gathering.json",
+      "name": "採集點",
+      "source": "teamcraft",
+      "status": "populated",
+      "updated": "2026-06-11"
+    },
+    {
+      "schema": "recipes",
+      "file": "recipes.json",
+      "name": "製作配方",
+      "source": "teamcraft",
+      "status": "script-ready"
+    },
+    {
+      "schema": "dungeons",
+      "file": "dungeons.json",
+      "name": "副本",
+      "source": "xivapi+tw-instances",
+      "status": "filled",
+      "updated": "2026-06-11"
+    },
+    {
+      "schema": "triple-triad",
+      "file": "triple-triad.json",
+      "name": "幻卡",
+      "source": "manual",
+      "status": "example"
+    },
+    {
+      "schema": "blue-magic",
+      "file": "blue-magic.json",
+      "name": "青魔法",
+      "source": "teamcraft",
+      "status": "example"
+    },
+    {
+      "schema": "exploration-log",
+      "file": "exploration-log.json",
+      "name": "探索筆記",
+      "source": "manual",
+      "status": "example"
+    },
+    {
+      "schema": "emotes",
+      "file": "emotes.json",
+      "name": "表情",
+      "source": "manual",
+      "status": "example"
+    },
+    {
+      "schema": "orchestrion",
+      "file": "orchestrion.json",
+      "name": "樂譜",
+      "source": "manual",
+      "status": "example"
+    },
+    {
+      "schema": "minions",
+      "file": "minions.json",
+      "name": "寵物",
+      "source": "manual",
+      "status": "example"
+    },
+    {
+      "schema": "mounts",
+      "file": "mounts.json",
+      "name": "坐騎",
+      "source": "xivapi+tw-items+cn-opencc+manual",
+      "status": "filled",
+      "updated": "2026-06-11"
+    },
+    {
+      "schema": "barding",
+      "file": "barding.json",
+      "name": "鳥鞍",
+      "source": "xivapi+tw-items",
+      "status": "filled",
+      "updated": "2026-06-11"
+    },
+    {
+      "schema": "squadron",
+      "file": "squadron.json",
+      "name": "冒險者小隊",
+      "source": "manual",
+      "status": "example"
+    },
+    {
+      "schema": "fishing",
+      "file": "fishing.json",
+      "name": "釣魚（舊，停用）",
+      "source": "teamcraft",
+      "status": "superseded-by-fishes"
+    },
+    {
+      "schema": "fishes",
+      "file": "fishes.json",
+      "name": "魚",
+      "source": "fish-tracker+items",
+      "status": "populated",
+      "updated": "2026-06-08"
+    },
+    {
+      "schema": "fishing-spots",
+      "file": "fishing-spots.json",
+      "name": "釣場",
+      "source": "fish-tracker+items",
+      "status": "populated",
+      "updated": "2026-06-11"
+    }
   ]
 }

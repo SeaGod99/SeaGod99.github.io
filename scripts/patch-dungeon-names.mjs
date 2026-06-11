@@ -1,140 +1,148 @@
 /**
  * patch-dungeon-names.mjs
- * 從 thewakingsands ContentFinderCondition.csv（簡中）補 dungeons.json 的 name 欄位
- * 再用 OpenCC 轉繁體（需安裝 opencc-js 或 node-opencc）
+ * 用台服官方副本名（Teamcraft tw/tw-instances.json）校正 data/dungeons.json 的 name 欄位。
+ *
+ * 背景（docs/PROGRESS.md 二之二）：
+ *   dungeons.json 原名稱來自中國服 ContentFinderCondition.csv + OpenCC 簡轉繁，
+ *   有過度轉換（佈/布、託/托、蹟/跡、煉/練…）與譯名差異（利維亞桑/利維坦、神兵/武器…）。
+ *   台服官方副本任務名在 Teamcraft tw-instances.json（key = 遊戲 CFC.Content 值，
+ *   即 InstanceContent id：迷宮 1+、集團戰 10001+、討滅戰 20001+、大型任務 30001+）。
+ *   注意：tw-places.json 只有 PlaceName（ARR 初版迷宮以外的副本「任務全名」不在其中），
+ *   所以副本名校正用 tw-instances，不用 tw-places。
+ *
+ * 對應鏈：dungeons[].id（= ContentFinderCondition row id）
+ *   → ContentFinderCondition.Content（XIVAPI v2，fields=Content@as(raw)）
+ *   → tw-instances[Content].tw（台服官方名）
+ *
+ * 線上來源失敗時改用本地快取（沙箱離線可跑）：
+ *   out_data/tw-instances-cache.json   tw-instances 子集（2026-06-11 staging）
+ *   out_data/cfc-content.json          CFC id → Content id（2026-06-11 XIVAPI）
+ *
+ * tw-instances 沒有的（台服未開放內容）保留原名不動，列入報告。
+ * 產出 diff 報告：docs/dungeons-名稱校正報告.md
  *
  * 用法：node scripts/patch-dungeon-names.mjs
- * 需求：Node 18+
- *
- * 若不想安裝 opencc，腳本會先輸出簡中版本，並在 TODO 中標記需轉換的項目
  */
 
-import { readFileSync, writeFileSync, existsSync } from 'fs';
-import { resolve, dirname } from 'path';
+import { readFileSync, writeFileSync, copyFileSync } from 'fs';
+import { resolve, dirname, join } from 'path';
 import { fileURLToPath } from 'url';
-import { createRequire } from 'module';
+import { tmpdir } from 'os';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const DUNGEONS_PATH = resolve(__dirname, '../data/dungeons.json');
-const CSV_URL = 'https://raw.githubusercontent.com/thewakingsands/ffxiv-datamining-cn/master/ContentFinderCondition.csv';
+const ROOT = resolve(__dirname, '..');
+const DUNGEONS_PATH = join(ROOT, 'data', 'dungeons.json');
+const REPORT_PATH = join(ROOT, 'docs', 'dungeons-名稱校正報告.md');
+const TWI_CACHE = join(ROOT, 'out_data', 'tw-instances-cache.json');
+const CFC_CACHE = join(ROOT, 'out_data', 'cfc-content.json');
 
-// 台服特有用詞修正（OpenCC 轉換後再套）
-// 台服有些用詞與 OpenCC 標準繁中不同
-const TW_GAME_FIXES = {
-  '魔導': '魔导',   // 台服保留簡體「魔导」
-  '復甦': '復甦',   // 已正確，不需修改
-};
+const TWI_URL = 'https://raw.githubusercontent.com/ffxiv-teamcraft/ffxiv-teamcraft/staging/libs/data/src/lib/json/tw/tw-instances.json';
+const XIVAPI = 'https://v2.xivapi.com/api/sheet/ContentFinderCondition';
 
-// opencc-js 轉換器（lazy init）
-let openccConverter = null;
-async function getConverter() {
-  if (openccConverter) return openccConverter;
+// 台服官方副本名：線上抓 Teamcraft，失敗用快取
+async function loadTwInstances() {
   try {
-    const require = createRequire(import.meta.url);
-    const OpenCC = require('opencc-js');
-    openccConverter = OpenCC.Converter({ from: 'cn', to: 'tw' });
-    console.log('  使用 opencc-js 轉換');
-  } catch {
-    console.warn('  ⚠ opencc-js 未安裝，使用內建字表（品質較低）');
-    console.warn('    建議：npm install opencc-js');
-    openccConverter = builtinS2T;
+    const res = await fetch(TWI_URL);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const raw = await res.json();
+    const map = {};
+    for (const [id, v] of Object.entries(raw)) if (v && v.tw) map[id] = v.tw;
+    console.log(`tw-instances（線上）：${Object.keys(map).length} 筆`);
+    writeFileSync(TWI_CACHE, JSON.stringify(raw, null, 1) + '\n'); // 更新快取
+    return map;
+  } catch (e) {
+    const raw = JSON.parse(readFileSync(TWI_CACHE, 'utf8'));
+    const map = {};
+    for (const [id, v] of Object.entries(raw)) if (v && v.tw) map[id] = v.tw;
+    console.log(`tw-instances（快取，線上失敗：${e.message}）：${Object.keys(map).length} 筆`);
+    return map;
   }
-  return openccConverter;
 }
 
-function builtinS2T(str) {
-  const TABLE = '監獄廢靈鐵鋼銀戰場傳說毀滅遺聖審覺復魂無盡絕決麗龍風時間臨斷炼擇歷險層樓階級偵碼頭導師長對話陣線權貴榮惡夢樹峽熱帶島尋記憶實驗終結歸還隱紋織細絲運轉變態勢園藝術館宮橋門關鎮莊邊際國區鄉遠廣紅綠藍黃曉霧煙塵礦脈湧濤淵灣嶺叢灘澤濕窟壇墳陵塚鎖鏈籠綁縛讨伐尔处团队还'.split('');
-  const MAP = {
-    '监':'監','狱':'獄','废':'廢','灵':'靈','铁':'鐵','钢':'鋼','银':'銀',
-    '战':'戰','场':'場','传':'傳','说':'說','毁':'毀','灭':'滅','遗':'遺',
-    '圣':'聖','审':'審','觉':'覺','复':'復','苏':'甦','魂':'魂','无':'無',
-    '尽':'盡','绝':'絕','决':'決','丽':'麗','龙':'龍','风':'風','时':'時',
-    '间':'間','临':'臨','断':'斷','炼':'煉','择':'擇','历':'歷','险':'險',
-    '层':'層','楼':'樓','阶':'階','级':'級','侦':'偵','码':'碼','头':'頭',
-    '导':'導','师':'師','长':'長','对':'對','话':'話','阵':'陣','线':'線',
-    '权':'權','贵':'貴','荣':'榮','恶':'惡','梦':'夢','树':'樹','峡':'峽',
-    '热':'熱','带':'帶','岛':'島','寻':'尋','记':'記','忆':'憶','实':'實',
-    '验':'驗','终':'終','结':'結','归':'歸','还':'還','隐':'隱','纹':'紋',
-    '织':'織','细':'細','丝':'絲','运':'運','转':'轉','变':'變','态':'態',
-    '势':'勢','园':'園','艺':'藝','术':'術','馆':'館','宫':'宮','桥':'橋',
-    '门':'門','关':'關','镇':'鎮','庄':'莊','边':'邊','际':'際','国':'國',
-    '区':'區','乡':'鄉','远':'遠','广':'廣','红':'紅','绿':'綠','蓝':'藍',
-    '黄':'黃','晓':'曉','雾':'霧','烟':'煙','尘':'塵','矿':'礦','脉':'脈',
-    '涌':'湧','涛':'濤','渊':'淵','湾':'灣','岭':'嶺','丛':'叢','滩':'灘',
-    '泽':'澤','湿':'濕','窟':'窟','坛':'壇','坟':'墳','陵':'陵','冢':'塚',
-    '锁':'鎖','链':'鏈','笼':'籠','绑':'綁','缚':'縛','讨':'討','伐':'伐',
-    '尔':'爾','处':'處','团':'團','队':'隊',
-  };
-  return str.split('').map(c => MAP[c] || c).join('');
+// CFC id → Content id：線上抓 XIVAPI（@as(raw) 避免巢狀展開），失敗用快取
+async function loadCfcContent() {
+  try {
+    const map = {};
+    let after = 0;
+    while (true) {
+      const url = `${XIVAPI}?fields=${encodeURIComponent('Content@as(raw)')}&limit=500&after=${after}`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      const rows = json.rows || [];
+      for (const r of rows) {
+        const c = r.fields?.['Content@as(raw)'];
+        if (c) map[r.row_id] = c;
+      }
+      if (rows.length < 500) break;
+      after = rows[rows.length - 1].row_id;
+    }
+    console.log(`CFC→Content（線上）：${Object.keys(map).length} 筆`);
+    writeFileSync(CFC_CACHE, JSON.stringify(map) + '\n'); // 更新快取
+    return map;
+  } catch (e) {
+    const map = JSON.parse(readFileSync(CFC_CACHE, 'utf8'));
+    console.log(`CFC→Content（快取，線上失敗：${e.message}）：${Object.keys(map).length} 筆`);
+    return map;
+  }
 }
 
 async function main() {
-  console.log('=== patch-dungeon-names.mjs ===');
+  console.log('=== patch-dungeon-names.mjs（台服官方名校正）===');
+  const db = JSON.parse(readFileSync(DUNGEONS_PATH, 'utf8'));
+  const [twInstances, cfcContent] = await Promise.all([loadTwInstances(), loadCfcContent()]);
 
-  // 下載 CSV
-  console.log('下載 ContentFinderCondition.csv（簡中）...');
-  const res = await fetch(CSV_URL);
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const csvText = await res.text();
+  const changed = [];   // { id, type, old, new }
+  const same = [];      // 已是官方名
+  const unmatched = []; // 台服未開放（tw-instances 無此 Content）
 
-  // 解析 CSV：key=col[0], Name=col[44]
-  const lines = csvText.split('\n');
-  const zhNames = {};
-  for (let i = 3; i < lines.length; i++) {  // 跳過 3 行 header
-    const cols = lines[i].split(',');
-    if (cols.length < 45) continue;
-    const key = cols[0].trim().replace(/^"/, '').replace(/"$/, '');
-    const name = cols[44].trim().replace(/^"/, '').replace(/"$/, '');
-    if (/^\d+$/.test(key) && name) {
-      zhNames[parseInt(key)] = name;
-    }
-  }
-  console.log(`  CSV 解析完成：${Object.keys(zhNames).length} 筆簡中名稱`);
-
-  // 讀取 dungeons.json
-  const raw = readFileSync(DUNGEONS_PATH, 'utf-8');
-  const db = JSON.parse(raw);
-
-  const convert = await getConverter();
-  let hit = 0, miss = 0;
-  for (const entry of db.data) {
-    const zhName = zhNames[entry.id];
-    if (zhName) {
-      entry.name = convert(zhName);
-      hit++;
-    } else {
-      miss++;
-    }
+  for (const d of db.data) {
+    const content = cfcContent[d.id];
+    const tw = content != null ? twInstances[content] : undefined;
+    if (!tw) { unmatched.push(d); continue; }
+    if (d.name === tw) { same.push(d); continue; }
+    changed.push({ id: d.id, type: d.type, old: d.name, new: tw });
+    d.name = tw;
   }
 
-  db.count = db.data.length;
   db.updated = new Date().toISOString().slice(0, 10);
+  db.source = 'xivapi+teamcraft-tw-instances';
 
-  function sanitize(key, val) {
-    if (typeof val === 'string') return val.replace(/\0/g, '').replace(/[\x01-\x08\x0b\x0c\x0e-\x1f]/g, '');
-    return val;
-  }
-  const outStr = JSON.stringify(db, sanitize, 2);
-  // 確保無多餘 null bytes
-  const buf = Buffer.from(outStr + '\n', 'utf-8');
-  const clean = buf.filter(b => b !== 0);
-  writeFileSync(DUNGEONS_PATH, clean);
+  // 先寫 temp 再複製（避免掛載寫入截斷），並回讀驗證
+  const tmp = join(tmpdir(), 'dungeons_patch.json');
+  writeFileSync(tmp, JSON.stringify(db, null, 2) + '\n');
+  JSON.parse(readFileSync(tmp, 'utf8'));
+  copyFileSync(tmp, DUNGEONS_PATH);
+  JSON.parse(readFileSync(DUNGEONS_PATH, 'utf8'));
 
-  console.log(`\n完成：${hit} 筆補名、${miss} 筆無對照（name=null）`);
+  // diff 報告
+  const lines = [];
+  lines.push('# dungeons.json 名稱校正報告（台服官方名）');
+  lines.push('');
+  lines.push(`產生時間：${db.updated} ｜ 來源：Teamcraft tw-instances.json（staging）＋ XIVAPI CFC.Content 對應`);
+  lines.push('');
+  lines.push(`- 總筆數：${db.data.length}`);
+  lines.push(`- 改名：${changed.length}`);
+  lines.push(`- 原本就與官方一致：${same.length}`);
+  lines.push(`- 無台服官方名（未開放內容，保留簡轉繁名）：${unmatched.length}`);
+  lines.push('');
+  lines.push('## 改名清單（舊 → 新）');
+  lines.push('');
+  lines.push('| CFC id | type | 舊名（CN+OpenCC） | 新名（台服官方） |');
+  lines.push('|---|---|---|---|');
+  for (const c of changed) lines.push(`| ${c.id} | ${c.type} | ${c.old} | ${c.new} |`);
+  lines.push('');
+  lines.push('## 無官方名清單（保留原名）');
+  lines.push('');
+  lines.push('| CFC id | type | 現名 | nameEn |');
+  lines.push('|---|---|---|---|');
+  for (const d of unmatched) lines.push(`| ${d.id} | ${d.type} | ${d.name} | ${d.nameEn} |`);
+  lines.push('');
+  writeFileSync(REPORT_PATH, lines.join('\n'));
+
+  console.log(`\n完成：改名 ${changed.length}、一致 ${same.length}、無官方名 ${unmatched.length}（共 ${db.data.length}）`);
   console.log('→', DUNGEONS_PATH);
-
-  // 顯示範例
-  console.log('\n範例（前10）：');
-  for (const x of db.data.slice(0, 10)) {
-    console.log(`  [${x.id}] ${x.name ?? '(無)'} / ${x.nameEn}`);
-  }
-
-  if (miss > 0) {
-    console.log(`\n⚠ ${miss} 筆無簡中對照（可能是新版本副本，台服尚未開放）`);
-    const missing = db.data.filter(x => !x.name);
-    missing.slice(0, 5).forEach(x => console.log(`  ${x.id} ${x.nameEn}`));
-    if (missing.length > 5) console.log(`  ... 等 ${missing.length} 筆`);
-  }
+  console.log('→', REPORT_PATH);
 }
 
-main().catch(err => { console.error(err); process.exit(1); });
+main().catch((e) => { console.error(e); process.exit(1); });

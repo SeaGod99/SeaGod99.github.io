@@ -5,7 +5,8 @@
 //   這樣可以確保討伐怪（S/A/B）即使沒有 Teamcraft 座標也能出現。
 //
 // 來源：
-//   thewakingsands BNpcName.csv      row_id → 簡中名（主表，全怪）
+//   Teamcraft tw/tw-mobs.json        baseid(=BNpcName row_id) → { tw: 台服官方名 }（名稱第一優先）
+//   thewakingsands BNpcName.csv      row_id → 簡中名（主表，全怪；OpenCC 簡轉繁為 fallback）
 //   Teamcraft mobs.json              baseid(=BNpcName row_id) → { en, ja }
 //   Teamcraft monsters.json          monsterId → { baseid, positions[{map,zoneid,level,hp,x,y,z}] }
 //   Teamcraft drop-sources.json      monsterId → itemId[]
@@ -18,7 +19,8 @@
 // 輸出欄位（每筆）：
 //   id          - Teamcraft monsterId（無座標資料時為 null）
 //   baseId      - BNpcName row_id
-//   name        - 繁中名（簡中轉換，無則 null）
+//   name        - 繁中名（優先 tw-mobs 台服官方名；無則 CN+OpenCC 簡轉繁）
+//   nameSource  - "tw-mobs"（僅官方名時存在；fallback 簡轉繁不標）
 //   nameEn      - 英文名（來自 mobs.json，無則 null）
 //   nameJa      - 日文名（來自 mobs.json，無則 null）
 //   huntRank    - null | "SS" | "S" | "A" | "B"（討伐怪等級）
@@ -44,6 +46,8 @@ const ITEMS_FILE = join(DATA, "items.json");
 
 const TC_BASE =
   "https://raw.githubusercontent.com/ffxiv-teamcraft/ffxiv-teamcraft/master/libs/data/src/lib/json";
+const TC_TW_BASE =
+  "https://raw.githubusercontent.com/ffxiv-teamcraft/ffxiv-teamcraft/staging/libs/data/src/lib/json/tw";
 const CN_BASE =
   "https://raw.githubusercontent.com/thewakingsands/ffxiv-datamining-cn/master";
 const XIVAPI = "https://v2.xivapi.com/api/sheet";
@@ -139,6 +143,20 @@ async function fetchMobs() {
     map.set(Number(idStr), { en, ja });
   }
   console.log(`  mobs 共 ${map.size} 筆`);
+  return map;
+}
+
+// Teamcraft tw-mobs.json：baseId → 台服官方繁中名（名稱第一優先來源）
+// 佔位值（含日文假名如「ラベル削除予定」、全形問號）視為無資料
+async function fetchTwMobs() {
+  const data = await fetchJson(`${TC_TW_BASE}/tw-mobs.json`, "tw-mobs.json");
+  const map = new Map();
+  for (const [idStr, v] of Object.entries(data)) {
+    const tw = v && v.tw;
+    if (!tw || /[぀-ヿ]/.test(tw) || /^[？?]+$/.test(tw)) continue;
+    map.set(Number(idStr), tw);
+  }
+  console.log(`  tw-mobs（台服官方名）共 ${map.size} 筆`);
   return map;
 }
 
@@ -264,7 +282,7 @@ async function main() {
 
   // 2. 抓遠端資料（並行）
   console.log("抓取遠端資料…");
-  const [tcMonsters, tcDrops, cnNames, mobs, huntTargets, mapPlaceIds, placeNames] =
+  const [tcMonsters, tcDrops, cnNames, mobs, huntTargets, mapPlaceIds, placeNames, twMobs] =
     await Promise.all([
       fetchJson(`${TC_BASE}/monsters.json`, "monsters.json"),
       fetchJson(`${TC_BASE}/drop-sources.json`, "drop-sources.json"),
@@ -273,6 +291,7 @@ async function main() {
       fetchHuntTargets(),
       fetchMapPlaceIds(),
       fetchCnPlaceNames(),
+      fetchTwMobs(),
     ]);
   console.log(`\n  monsters(Teamcraft) 共 ${Object.keys(tcMonsters).length} 筆`);
   console.log(`  drop-sources 共 ${Object.keys(tcDrops).length} 筆`);
@@ -349,16 +368,20 @@ async function main() {
     // 代表 monsterId（取第一個，無則 null）
     const id = monsterIds.length > 0 ? monsterIds[0] : null;
 
-    data.push({
+    // 名稱優先序：tw-mobs 台服官方名 → CN+OpenCC 簡轉繁（fallback，不標 nameSource）
+    const twName = twMobs.get(baseId) ?? null;
+    const entry = {
       id,
       baseId,
-      name: nameTw,
+      name: twName ?? nameTw,
       nameEn: nameData.en,
       nameJa: nameData.ja,
       huntRank,
       positions,
       drops,
-    });
+    };
+    if (twName) entry.nameSource = "tw-mobs";
+    data.push(entry);
   }
 
   // 排序：討伐怪優先（S>A>B），其次按 baseId
@@ -374,13 +397,14 @@ async function main() {
   const huntCount = data.filter((d) => d.huntRank).length;
   const withDrops = data.filter((d) => d.drops.length > 0).length;
   const withTw = data.filter((d) => d.name).length;
+  const withOfficial = data.filter((d) => d.nameSource === "tw-mobs").length;
   const withPos = data.filter((d) => d.positions.length > 0).length;
 
   const out = {
     schema: "monsters",
     patch: "7.2",
     updated: new Date().toISOString().slice(0, 10),
-    source: "datamining-cn+teamcraft+xivapi+items",
+    source: "tw-mobs+datamining-cn+teamcraft+xivapi+items",
     count: data.length,
     data,
   };
@@ -394,7 +418,7 @@ async function main() {
     const ws = createWriteStream(TMP, { encoding: "utf8", flags: "w" });
     ws.on("error", reject);
     ws.on("finish", resolve);
-    ws.write('{"schema":"monsters","patch":"7.2","updated":"' + out.updated + '","source":"datamining-cn+teamcraft+xivapi+items","count":' + data.length + ',"data":[');
+    ws.write('{"schema":"monsters","patch":"7.2","updated":"' + out.updated + '","source":"tw-mobs+datamining-cn+teamcraft+xivapi+items","count":' + data.length + ',"data":[');
     for (let i = 0; i < data.length; i++) {
       ws.write(JSON.stringify(data[i]));
       if (i < data.length - 1) ws.write(",");
@@ -416,7 +440,7 @@ async function main() {
 
   console.log(`\n✓ 寫入 ${OUT}`);
   console.log(`  總計 ${data.length} 筆（略過無英文名 ${noEngName} 筆）`);
-  console.log(`  有繁中名：${withTw} 筆`);
+  console.log(`  有繁中名：${withTw} 筆（台服官方 tw-mobs ${withOfficial} 筆，其餘 CN+OpenCC fallback）`);
   console.log(`  討伐怪（Hunt）：${huntCount} 筆`);
   console.log(`  有座標（戶外怪）：${withPos} 筆`);
   console.log(`  有掉落物：${withDrops} 筆`);
