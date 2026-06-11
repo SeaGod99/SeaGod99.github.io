@@ -1,184 +1,685 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="FFXIV 即時市場查詢工具">
-    <meta name="keywords" content="FFXIV,最終幻想,市場,Universalis">
-    <title>FFXIV 市場查詢工具</title>
-    <link rel="stylesheet" href="assets/css/jquery-ui.min.css">
-    <link rel="stylesheet" href="assets/css/jquery-ui.structure.min.css">
-    <link rel="stylesheet" href="assets/css/jquery-ui.theme.min.css">
-    <link rel="stylesheet" href="assets/css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="水神的工具箱 — 為 FFXIV 繁中玩家打造的冒險者工具集合">
+  <meta name="keywords" content="FFXIV, FF14, 最終幻想XIV, 繁體中文, 工具, 市場, 採集, 天書奇談, 仙人微彩">
+  <meta property="og:title" content="水神的工具箱 | FFXIV 繁中工具站">
+  <meta property="og:description" content="為 FFXIV 繁中玩家打造的冒險者工具集合">
+  <title>水神的工具箱 | FFXIV 繁中工具站</title>
+  <style>
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── Design tokens ── */
+    :root {
+      --bg-base:    #0a0c10;
+      --bg-surface: #0f1117;
+      --bg-card:    #14181f;
+      --bg-card-hover: #1a1f2b;
+      --border:     rgba(255,255,255,0.07);
+      --border-hover: rgba(200,169,110,0.4);
+
+      --gold:       #c8a96e;
+      --gold-light: #e2c98a;
+      --gold-dim:   rgba(200,169,110,0.15);
+      --blue:       #4fc3f7;
+      --blue-dim:   rgba(79,195,247,0.12);
+      --green:      #4ade80;
+      --green-dim:  rgba(74,222,128,0.12);
+      --purple:     #a78bfa;
+      --purple-dim: rgba(167,139,250,0.12);
+      --red:        #f87171;
+      --red-dim:    rgba(248,113,113,0.12);
+
+      --text-primary:   #e8eaf0;
+      --text-secondary: #8892a4;
+      --text-muted:     #4a5568;
+
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --shadow-card: 0 2px 16px rgba(0,0,0,0.4);
+      --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    /* ── Base ── */
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Background texture ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 0%, rgba(200,169,110,0.05) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(79,195,247,0.04) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Header ── */
+    .site-header {
+      padding: 60px 0 48px;
+      text-align: center;
+    }
+
+    .site-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .logo-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--gold-dim);
+      border: 1px solid rgba(200,169,110,0.3);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .logo-text {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--gold-light);
+      letter-spacing: 0.5px;
+    }
+
+    .site-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-top: 6px;
+      letter-spacing: 0.3px;
+    }
+
+    .header-divider {
+      width: 60px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 20px auto 0;
+    }
+
+    /* ── Section ── */
+    .section {
+      margin-bottom: 48px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-icon {
+      font-size: 18px;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--text-secondary);
+    }
+
+    .section-count {
+      margin-left: auto;
+      font-size: 11px;
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.05);
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+
+    /* ── Card Grid ── */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    /* ── Tool Card ── */
+    .tool-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: var(--transition);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tool-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: transparent;
+      transition: var(--transition);
+    }
+
+    .tool-card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-card);
+    }
+
+    .tool-card:hover::before {
+      background: linear-gradient(90deg, var(--gold), transparent);
+    }
+
+    /* Card with link */
+    .tool-card.available { cursor: pointer; }
+    .tool-card.wip { cursor: default; opacity: 0.55; }
+    .tool-card.wip:hover { transform: none; box-shadow: none; border-color: var(--border); }
+    .tool-card.wip:hover::before { background: transparent; }
+
+    .card-emoji {
+      font-size: 26px;
+      line-height: 1;
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.3;
+    }
+
+    .card-desc {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      flex: 1;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 4px;
+    }
+
+    .card-badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 20px;
+      letter-spacing: 0.3px;
+    }
+
+    .badge-ready {
+      background: rgba(74,222,128,0.15);
+      color: #4ade80;
+      border: 1px solid rgba(74,222,128,0.25);
+    }
+    .badge-wip {
+      background: rgba(148,163,184,0.1);
+      color: #64748b;
+      border: 1px solid rgba(148,163,184,0.15);
+    }
+    .badge-new {
+      background: rgba(200,169,110,0.15);
+      color: var(--gold);
+      border: 1px solid rgba(200,169,110,0.25);
+    }
+    .badge-api {
+      background: rgba(79,195,247,0.12);
+      color: var(--blue);
+      border: 1px solid rgba(79,195,247,0.2);
+    }
+
+    .card-arrow {
+      font-size: 14px;
+      color: var(--text-muted);
+      transition: var(--transition);
+    }
+    .tool-card:hover .card-arrow { color: var(--gold); transform: translateX(3px); }
+
+    /* Color accents per section */
+    .section-daily   .tool-card:hover { border-color: rgba(79,195,247,0.4); }
+    .section-daily   .tool-card:hover::before { background: linear-gradient(90deg, var(--blue), transparent); }
+    .section-collect .tool-card:hover { border-color: rgba(167,139,250,0.4); }
+    .section-collect .tool-card:hover::before { background: linear-gradient(90deg, var(--purple), transparent); }
+    .section-battle  .tool-card:hover { border-color: rgba(248,113,113,0.4); }
+    .section-battle  .tool-card:hover::before { background: linear-gradient(90deg, var(--red), transparent); }
+    .section-life    .tool-card:hover { border-color: rgba(74,222,128,0.4); }
+    .section-life    .tool-card:hover::before { background: linear-gradient(90deg, var(--green), transparent); }
+
+    /* ── WIP Banner ── */
+    .wip-banner {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      margin-bottom: 40px;
+    }
+    .wip-banner-icon { font-size: 16px; }
+
+    /* ── Footer ── */
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 0 40px;
+      text-align: center;
+    }
+    .footer-text {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 2;
+    }
+    .footer-text a {
+      color: var(--text-secondary);
+      transition: var(--transition);
+    }
+    .footer-text a:hover { color: var(--gold); }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .site-header { padding: 40px 0 32px; }
+      .logo-text { font-size: 22px; }
+      .card-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .tool-card { padding: 16px; }
+    }
+    @media (max-width: 380px) {
+      .card-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
-
 <body>
-    <div class="page-container">
-        <!-- 頁面頭部 -->
-        <header class="page-header">
-            <h1>⚔️ FFXIV 市場查詢</h1>
-            <p>即時查詢最終幻想 XIV 市場板價格和數據</p>
-            <div class="server-badge">
-                <span id="serverBadge">未選擇伺服器</span>
-                <span id="languageBadge"></span>
-                <a href="javascript:resetServerSelection()" class="badge-link">切換</a>
-            </div>
-        </header>
 
-        <!-- 主內容區 -->
-        <main class="main-content">
-            <!-- 左側欄：查詢面板 -->
-            <div class="sidebar sidebar-left">
-                <!-- 數據中心和伺服器選擇 -->
-                <section class="panel" id="serverSelectPanel">
-                    <div class="panel-header">
-                        <h3>🌍 伺服器選擇</h3>
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <label for="dcSelect">數據中心</label>
-                            <select id="dcSelect" class="form-control">
-                                <option value="">-- 選擇數據中心 --</option>
-                            </select>
-                        </div>
+<div class="container">
 
-                        <div class="form-group">
-                            <label for="worldSelect">伺服器</label>
-                            <select id="worldSelect" class="form-control" disabled>
-                                <option value="">-- 先選擇數據中心 --</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="languageSelect">搜尋語言</label>
-                            <select id="languageSelect" class="form-control">
-                                <option value="tc" selected>繁體中文</option>
-                                <option value="en">English (英文)</option>
-                            </select>
-                            <small class="form-text">選擇搜尋時使用的語言</small>
-                        </div>
-
-                        <button id="confirmBtn" class="btn btn-primary btn-block" disabled>
-                            ✓ 確認伺服器
-                        </button>
-                    </div>
-                </section>
-
-
-                <!-- 物品搜尋 -->
-                <section class="panel" id="searchPanel" style="display: none;">
-                    <div class="panel-header">
-                        <h3>🔍 物品搜尋</h3>
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <label for="searchQuery">物品名稱</label>
-                            <div class="input-group">
-                                <input type="text" id="searchQuery" class="form-control" placeholder="輸入物品名稱搜尋...">
-                                <button class="btn btn-primary btn-small" onclick="searchItemByName()">搜尋</button>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- 物品 ID 查詢 - 已停用 -->
-                <section class="panel" id="idSearchPanel" style="display: none;">
-                </section>
-            </div>
-
-            <!-- 右側欄：結果展示 -->
-            <div class="sidebar sidebar-right">
-                <!-- 搜尋結果卡 -->
-                <section class="panel" id="searchResultsPanel" style="display: none;">
-                    <div class="panel-header">
-                        <h3>🔍 搜尋結果</h3>
-                        <button class="btn-close" onclick="clearSearchResults()">×</button>
-                    </div>
-                    <div class="panel-body">
-                        <div id="searchResultsHeader" class="results-header">
-                            <span>找到 <strong id="resultCount">0</strong> 個物品</span>
-                        </div>
-                        <div id="jobFilterContainer" class="job-filter-container">
-                            <label>職業篩選</label>
-                            <div id="jobFilterButtons" class="job-filter-buttons"></div>
-                        </div>
-                        <div id="resultsList" class="results-list"></div>
-                    </div>
-                </section>
-
-                <!-- 物品信息卡 -->
-                <section class="panel" id="itemInfoPanel" style="display: none;">
-                    <div class="panel-header">
-                        <h3 id="itemTitle">物品信息</h3>
-                        <button class="btn-close" onclick="clearItemInfo()">×</button>
-                    </div>
-                    <div class="panel-body">
-                        <div id="itemInfoContent" class="item-info"></div>
-                    </div>
-                </section>
-
-                <!-- 價格信息卡 -->
-                <section class="panel" id="pricePanel" style="display: none;">
-                    <div class="panel-header">
-                        <h3>📊 價格信息</h3>
-                    </div>
-                    <div class="panel-body">
-                        <div id="priceContent" class="price-grid"></div>
-                    </div>
-                </section>
-
-                <!-- 合成表卡 -->
-                <section class="panel" id="craftPanel" style="display: none;">
-                    <div class="panel-header">
-                        <h3>🔨 合成表</h3>
-                    </div>
-                    <div class="panel-body">
-                        <div id="craftContent" class="recipes-container"></div>
-                    </div>
-                </section>
-
-                <!-- 製造成本卡 -->
-                <section class="panel" id="craftingCostPanel" style="display: none;">
-                    <div class="panel-header">
-                        <h3>💰 製造成本計算</h3>
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <label for="craftQuantity">製造數量</label>
-                            <input type="number" id="craftQuantity" class="form-control" value="1" min="1">
-                        </div>
-                        <button class="btn btn-primary btn-block" onclick="calculateCraftingCost()">
-                            計算成本
-                        </button>
-                        <div id="craftingCostContent" style="margin-top: 1rem;"></div>
-                    </div>
-                </section>
-            </div>
-        </main>
-
-        <!-- 加載指示器 -->
-        <div id="globalLoading" class="loading-overlay" style="display: none;">
-            <div>
-                <div class="spinner"></div>
-                <p>查詢中...</p>
-            </div>
-        </div>
-
-        <!-- 全局消息提示 -->
-        <div id="messageContainer" class="message-container"></div>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="site-logo">
+      <div class="logo-icon">⚓</div>
+      <div class="logo-text">水神的工具箱</div>
     </div>
+    <p class="site-subtitle">為 FFXIV 繁中玩家打造的冒險者工具集合</p>
+    <div class="header-divider"></div>
+  </header>
 
-    <!-- 腳部 -->
-    <footer class="page-footer">
-        <p>© 2026 FFXIV 市場查詢工具 | 由 Universalis API 提供數據</p>
-        <p><small>此工具與 Square Enix 無關。FINAL FANTASY XIV © Square Enix</small></p>
-    </footer>
+  <!-- WIP notice -->
+  <div class="wip-banner">
+    <span class="wip-banner-icon">🛠️</span>
+    <span>工具站持續建設中，標示「可用」的功能已可使用，其餘即將推出。</span>
+  </div>
 
-    <!-- jQuery -->
-    <script src="assets/js/jquery-4.0.0.min.js"></script>
-    <script src="assets/js/jquery-ui.min.js"></script>
-    <script src="assets/js/script.js"></script>
+  <!-- ── 日常工具 ── -->
+  <section class="section section-daily">
+    <div class="section-header">
+      <span class="section-icon">📅</span>
+      <span class="section-title">日常工具</span>
+      <span class="section-count">7 項</span>
+    </div>
+    <div class="card-grid">
+
+      <a href="tools/weather/" class="tool-card available">
+        <div class="card-emoji">⛅</div>
+        <div class="card-title">艾歐澤亞天氣預報</div>
+        <div class="card-desc">即時天氣、多地圖概覽、目標天氣搜尋與天氣鏈搜尋</div>
+        <div class="card-footer">
+          <span class="card-badge badge-ready">可用</span>
+          <span class="card-badge badge-new">新</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="tools/wondrous-tails/" class="tool-card available">
+        <div class="card-emoji">📖</div>
+        <div class="card-title">天書奇談計算器</div>
+        <div class="card-desc">即時計算連線機率，建議保留或再想想</div>
+        <div class="card-footer">
+          <span class="card-badge badge-ready">可用</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="tools/cactpot/" class="tool-card available">
+        <div class="card-emoji">🎰</div>
+        <div class="card-title">仙人微彩計算機</div>
+        <div class="card-desc">期望值分析，建議最佳翻牌與選線策略</div>
+        <div class="card-footer">
+          <span class="card-badge badge-ready">可用</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="tools/gathering/" class="tool-card available">
+        <div class="card-emoji">⛏️</div>
+        <div class="card-title">限時採集節點查詢</div>
+        <div class="card-desc">傳說／稀有採集點開放時間、座標與職業，依 ET 即時更新</div>
+        <div class="card-footer">
+          <span class="card-badge badge-ready">可用</span>
+          <span class="card-badge badge-new">新</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <div class="tool-card wip">
+        <div class="card-emoji">🔪</div>
+        <div class="card-title">B 怪討伐路線</div>
+        <div class="card-desc">各版本 B 怪出沒位置與每日討伐路線規劃</div>
+        <div class="card-footer">
+          <span class="card-badge badge-wip">即將推出</span>
+        </div>
+      </div>
+
+      <div class="tool-card wip">
+        <div class="card-emoji">🌬️</div>
+        <div class="card-title">風脈泉追蹤器</div>
+        <div class="card-desc">各版本野外風脈泉位置與開啟進度</div>
+        <div class="card-footer">
+          <span class="card-badge badge-wip">即將推出</span>
+        </div>
+      </div>
+
+      <div class="tool-card wip">
+        <div class="card-emoji">👗</div>
+        <div class="card-title">時尚品鑑推薦</div>
+        <div class="card-desc">本週品鑑裝備建議與市場查價整合</div>
+        <div class="card-footer">
+          <span class="card-badge badge-wip">即將推出</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── 收藏 / 成就 ── -->
+  <section class="section section-collect">
+    <div class="section-header">
+      <span class="section-icon">🏆</span>
+      <span class="section-title">收藏 / 成就</span>
+      <span class="section-count">11 項</span>
+    </div>
+    <div class="card-grid">
+
+      <a href="collections/mounts/" class="tool-card available">
+        <div class="card-emoji">🐎</div>
+        <div class="card-title">坐騎收藏追蹤</div>
+        <div class="card-desc">查詢取得來源、版本篩選、追蹤擁有進度</div>
+        <div class="card-footer">
+          <span class="card-badge badge-ready">可用</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="minions/" class="tool-card available">
+        <div class="card-emoji">🐣</div>
+        <div class="card-title">寵物收藏追蹤</div>
+        <div class="card-desc">查詢取得來源、篩選搜尋、追蹤擁有進度</div>
+        <div class="card-footer">
+          <span class="card-badge badge-ready">可用</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <div class="tool-card wip">
+        <div class="card-emoji">🎵</div>
+        <div class="card-title">樂譜收藏追蹤</div>
+        <div class="card-desc">演奏團樂譜來源查詢，追蹤蒐集進度</div>
+        <div class="card-footer">
+          <span class="card-badge badge-wip">即將推出</span>
+        </div>
+      </div>
+
+      <div class="tool-card wip">
+        <div class="card-emoji">💃</div>
+        <div class="card-title">表情收藏追蹤</div>
+        <div class="card-desc">表情動作來源查詢，追蹤擁有進度</div>
+        <div class="card-footer">
+          <span class="card-badge badge-wip">即將推出</span>
+        </div>
+      </div>
+
+      <div class="tool-card wip">
+        <div class="card-emoji">💇</div>
+        <div class="card-title">髮型收藏追蹤</div>
+        <div class="card-desc">髮型樣式來源查詢，追蹤擁有進度</div>
+        <div class="card-footer">
+          <span class="card-badge badge-wip">即將推出</span>
+        </div>
+      </div>
+
+      <div class="tool-card wip">
+        <div class="card-emoji">🦜</div>
+        <div class="card-title">鳥鞍收藏追蹤</div>
+        <div class="card-desc">陸行鳥鞍具來源查詢，追蹤擁有進度</div>
+        <div class="card-footer">
+          <span class="card-badge badge-wip">即將推出</span>
+        </div>
+      </div>
+
+      <div class="tool-card wip">
+        <div class="card-emoji">🖼️</div>
+        <div class="card-title">肖像收藏追蹤</div>
+        <div class="card-desc">肖像框、背景、姿勢來源查詢與進度追蹤</div>
+        <div class="card-footer">
+          <span class="card-badge badge-wip">即將推出</span>
+        </div>
+      </div>
+
+      <div class="tool-card wip">
+        <div class="card-emoji">👘</div>
+        <div class="card-title">時尚裝備收藏追蹤</div>
+        <div class="card-desc">幻化用時尚裝備來源查詢，追蹤擁有進度</div>
+        <div class="card-footer">
+          <span class="card-badge badge-wip">即將推出</span>
+        </div>
+      </div>
+
+      <div class="tool-card wip">
+        <div class="card-emoji">👁️</div>
+        <div class="card-title">探索筆記追蹤器</div>
+        <div class="card-desc">全版本景觀查詢，天氣與時間提醒</div>
+        <div class="card-footer">
+          <span class="card-badge badge-wip">即將推出</span>
+        </div>
+      </div>
+
+      <div class="tool-card wip">
+        <div class="card-emoji">💙</div>
+        <div class="card-title">青魔法術收藏</div>
+        <div class="card-desc">法術來源追蹤與習得路線建議</div>
+        <div class="card-footer">
+          <span class="card-badge badge-wip">即將推出</span>
+        </div>
+      </div>
+
+      <div class="tool-card wip">
+        <div class="card-emoji">🃏</div>
+        <div class="card-title">幻卡追蹤</div>
+        <div class="card-desc">幻卡取得來源與對戰策略查詢</div>
+        <div class="card-footer">
+          <span class="card-badge badge-wip">即將推出</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── 戰鬥 / 副本 ── -->
+  <section class="section section-battle">
+    <div class="section-header">
+      <span class="section-icon">⚔️</span>
+      <span class="section-title">戰鬥 / 副本</span>
+      <span class="section-count">3 項</span>
+    </div>
+    <div class="card-grid">
+
+      <a href="https://gearing.ffsusu.com/" target="_blank" rel="noopener" class="tool-card available">
+        <div class="card-emoji">🛡️</div>
+        <div class="card-title">配裝規劃器</div>
+        <div class="card-desc">全職業裝備規劃、魔晶石鑲嵌、食物加成、一鍵分享</div>
+        <div class="card-footer">
+          <span class="card-badge badge-ready">外部連結</span>
+          <span class="card-arrow">↗</span>
+        </div>
+      </a>
+
+      <div class="tool-card wip">
+        <div class="card-emoji">🏰</div>
+        <div class="card-title">冒險者小隊計算機</div>
+        <div class="card-desc">最佳小隊組合與任務訓練模擬</div>
+        <div class="card-footer">
+          <span class="card-badge badge-wip">即將推出</span>
+        </div>
+      </div>
+
+      <div class="tool-card wip">
+        <div class="card-emoji">⚡</div>
+        <div class="card-title">優雷卡 / 禁地天氣・NM</div>
+        <div class="card-desc">NM 出現條件、天氣計時、禁地兵裝</div>
+        <div class="card-footer">
+          <span class="card-badge badge-wip">即將推出</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── 生活職 ── -->
+  <section class="section section-life">
+    <div class="section-header">
+      <span class="section-icon">🌿</span>
+      <span class="section-title">生活職（採集 / 製作 / 市場）</span>
+      <span class="section-count">8 項</span>
+    </div>
+    <div class="card-grid">
+
+      <a href="market/" class="tool-card available">
+        <div class="card-emoji">📊</div>
+        <div class="card-title">市場查價 + 比價</div>
+        <div class="card-desc">各伺服器即時市場比較、歷史價格趨勢</div>
+        <div class="card-footer">
+          <span class="card-badge badge-ready">可用</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <div class="tool-card wip">
+        <div class="card-emoji">💰</div>
+        <div class="card-title">製作利潤計算機</div>
+        <div class="card-desc">素材成本 vs 成品售價，快速算出最佳利潤</div>
+        <div class="card-footer">
+          <span class="card-badge badge-new">繁中獨有</span>
+        </div>
+      </div>
+
+      <div class="tool-card wip">
+        <div class="card-emoji">🔍</div>
+        <div class="card-title">物品 / 製作搜尋</div>
+        <div class="card-desc">查詢配方、素材展開、採集點位置</div>
+        <div class="card-footer">
+          <span class="card-badge badge-wip">即將推出</span>
+        </div>
+      </div>
+
+      <div class="tool-card wip">
+        <div class="card-emoji">🗺️</div>
+        <div class="card-title">藏寶圖採集點查詢</div>
+        <div class="card-desc">G8～G18 精確位置，支援組隊模式</div>
+        <div class="card-footer">
+          <span class="card-badge badge-wip">即將推出</span>
+        </div>
+      </div>
+
+      <div class="tool-card wip">
+        <div class="card-emoji">🌱</div>
+        <div class="card-title">園藝配種計算</div>
+        <div class="card-desc">配種結果預測，最佳基因組合建議</div>
+        <div class="card-footer">
+          <span class="card-badge badge-wip">即將推出</span>
+        </div>
+      </div>
+
+      <div class="tool-card wip">
+        <div class="card-emoji">🏝️</div>
+        <div class="card-title">無人島開拓工具</div>
+        <div class="card-desc">採集素材座標、天氣預報、牧場動物</div>
+        <div class="card-footer">
+          <span class="card-badge badge-wip">即將推出</span>
+        </div>
+      </div>
+
+      <div class="tool-card wip">
+        <div class="card-emoji">🎣</div>
+        <div class="card-title">釣魚紀錄追蹤</div>
+        <div class="card-desc">釣魚手冊進度、釣魚王條件、天氣與時間提醒</div>
+        <div class="card-footer">
+          <span class="card-badge badge-wip">即將推出</span>
+        </div>
+      </div>
+
+      <div class="tool-card wip">
+        <div class="card-emoji">⛏️</div>
+        <div class="card-title">採集紀錄追蹤</div>
+        <div class="card-desc">採礦／園藝手冊進度，追蹤各版本解鎖狀態</div>
+        <div class="card-footer">
+          <span class="card-badge badge-wip">即將推出</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="container">
+    <p class="footer-text">
+      水神的工具箱 &nbsp;·&nbsp;
+      <a href="https://github.com/SeaGod99/SeaGod99.github.io" target="_blank">GitHub</a>
+      &nbsp;·&nbsp; 資料來源：
+      <a href="https://xivapi.com" target="_blank">XIVAPI</a>、
+      <a href="https://universalis.app" target="_blank">Universalis</a>、
+      <a href="https://ffxivteamcraft.com" target="_blank">Teamcraft</a>
+    </p>
+    <p class="footer-text" style="margin-top:4px">
+      FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具
+    </p>
+  </div>
+</footer>
+
 </body>
-
 </html>

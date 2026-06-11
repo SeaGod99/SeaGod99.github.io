@@ -1,0 +1,24 @@
+{
+  "schema": "emotes",
+  "patch": "7.2",
+  "updated": "2026-05-29",
+  "source": "manual",
+  "count": 1,
+  "data": [
+    {
+      "id": 1,
+      "name": "歡呼",
+      "nameEn": "Cheer",
+      "command": "/cheer",
+      "itemId": null,
+      "icon": "/i/064000/064001.png",
+      "sources": [
+        {
+          "type": "其他",
+          "detail": "預設動作"
+        }
+      ],
+      "patch": "2.0"
+    }
+  ]
+}

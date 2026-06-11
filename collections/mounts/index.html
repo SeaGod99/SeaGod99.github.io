@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FF14 坐騎收藏追蹤 — 查詢取得來源、版本篩選、記錄擁有進度">
+  <title>坐騎收藏追蹤 | 水神的工具箱</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-base:    #0a0c10;
+      --bg-surface: #0f1117;
+      --bg-card:    #14181f;
+      --bg-card-hover: #1a1f2b;
+      --border:     rgba(255,255,255,0.07);
+      --border-hover: rgba(200,169,110,0.4);
+
+      --gold:       #c8a96e;
+      --gold-light: #e2c98a;
+      --gold-dim:   rgba(200,169,110,0.15);
+      --purple:     #a78bfa;
+      --purple-dim: rgba(167,139,250,0.12);
+      --green:      #4ade80;
+      --green-dim:  rgba(74,222,128,0.12);
+      --blue:       #4fc3f7;
+      --red:        #f87171;
+
+      --text-primary:   #e8eaf0;
+      --text-secondary: #8892a4;
+      --text-muted:     #4a5568;
+
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --transition: 0.18s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 0%, rgba(167,139,250,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(200,169,110,0.04) 0%, transparent 60%);
+      pointer-events: none; z-index: 0;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Header ── */
+    .page-header {
+      padding: 36px 0 28px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 28px;
+    }
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      padding: 6px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      transition: var(--transition);
+    }
+    .back-btn:hover { color: var(--gold); border-color: var(--border-hover); }
+
+    .page-title-wrap { flex: 1; }
+
+    .page-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--gold-light);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .page-subtitle {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    /* ── Progress bar ── */
+    .progress-bar-wrap {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .progress-info {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--gold-light);
+      white-space: nowrap;
+    }
+    .progress-info span {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--text-secondary);
+      margin-left: 6px;
+    }
+
+    .progress-track {
+      flex: 1;
+      height: 8px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--purple), var(--gold));
+      border-radius: 99px;
+      transition: width 0.4s ease;
+    }
+
+    .progress-pct {
+      font-size: 14px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+
+    /* ── Toolbar ── */
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+      align-items: center;
+    }
+
+    .search-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 180px;
+    }
+    .search-icon {
+      position: absolute;
+      left: 11px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+    .search-input {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-size: 13px;
+      padding: 8px 12px 8px 34px;
+      outline: none;
+      transition: var(--transition);
+    }
+    .search-input:focus { border-color: rgba(167,139,250,0.5); }
+    .search-input::placeholder { color: var(--text-muted); }
+
+    .own-toggle {
+      display: flex;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+    .own-btn {
+      padding: 8px 14px;
+      font-size: 12px;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+    .own-btn.active { background: var(--purple-dim); color: var(--purple); }
+    .own-btn:hover:not(.active) { color: var(--text-primary); }
+
+    .clear-btn {
+      padding: 8px 14px;
+      font-size: 12px;
+      cursor: pointer;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+    .clear-btn:hover { color: var(--red); border-color: rgba(248,113,113,0.4); }
+
+    /* ── Filter tags ── */
+    .filter-section {
+      margin-bottom: 18px;
+    }
+    .filter-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .filter-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .filter-tag {
+      padding: 4px 12px;
+      font-size: 12px;
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      cursor: pointer;
+      background: transparent;
+      color: var(--text-secondary);
+      transition: var(--transition);
+    }
+    .filter-tag:hover { color: var(--text-primary); border-color: rgba(255,255,255,0.2); }
+    .filter-tag.active {
+      background: var(--purple-dim);
+      border-color: rgba(167,139,250,0.4);
+      color: var(--purple);
+    }
+
+    /* ── Result count ── */
+    .result-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+    .result-meta em { color: var(--text-secondary); font-style: normal; }
+
+    /* ── Mount grid ── */
+    .mount-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 10px;
+    }
+
+    /* ── Mount card ── */
+    .mount-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      cursor: pointer;
+      transition: var(--transition);
+      user-select: none;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .mount-card:hover {
+      background: var(--bg-card-hover);
+      border-color: rgba(167,139,250,0.3);
+    }
+    .mount-card.owned {
+      border-color: rgba(167,139,250,0.5);
+      background: rgba(167,139,250,0.06);
+    }
+    .mount-card.owned::before {
+      content: '✓';
+      position: absolute;
+      top: 8px; right: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--purple);
+    }
+
+    .mount-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.3;
+      padding-right: 16px;
+    }
+    .mount-card.owned .mount-name { color: var(--purple); }
+
+    .mount-patch {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .mount-sources {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 2px;
+    }
+
+    .source-tag {
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 99px;
+      background: var(--purple-dim);
+      color: var(--purple);
+      border: 1px solid rgba(167,139,250,0.2);
+      white-space: nowrap;
+    }
+    .source-tag.type-高難度副本 { background: rgba(248,113,113,0.1); color: var(--red); border-color: rgba(248,113,113,0.2); }
+    .source-tag.type-副本掉落   { background: rgba(79,195,247,0.1);  color: var(--blue); border-color: rgba(79,195,247,0.2); }
+    .source-tag.type-主線任務   { background: rgba(74,222,128,0.1);  color: var(--green); border-color: rgba(74,222,128,0.2); }
+    .source-tag.type-商店       { background: rgba(200,169,110,0.12); color: var(--gold); border-color: rgba(200,169,110,0.25); }
+    .source-tag.type-節慶活動   { background: rgba(200,169,110,0.12); color: var(--gold); border-color: rgba(200,169,110,0.25); }
+    .source-tag.type-聯名活動   { background: rgba(200,169,110,0.12); color: var(--gold); border-color: rgba(200,169,110,0.25); }
+    .source-tag.type-成就       { background: rgba(255,200,80,0.1);  color: #ffc850; border-color: rgba(255,200,80,0.2); }
+    .source-tag.type-PvP        { background: rgba(248,113,113,0.1); color: var(--red); border-color: rgba(248,113,113,0.2); }
+    .source-tag.type-狩獵       { background: rgba(248,113,113,0.1); color: var(--red); border-color: rgba(248,113,113,0.2); }
+    .source-tag.type-探索航行   { background: rgba(79,195,247,0.1);  color: var(--blue); border-color: rgba(79,195,247,0.2); }
+    .source-tag.type-金碟       { background: rgba(255,200,80,0.1);  color: #ffc850; border-color: rgba(255,200,80,0.2); }
+
+    /* ── Tooltip on hover ── */
+    .mount-detail {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.4;
+      display: none;
+    }
+    .mount-card:hover .mount-detail { display: block; }
+
+    /* ── Empty state ── */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    /* ── Footer ── */
+    .page-footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 0 32px;
+      text-align: center;
+      margin-top: 48px;
+    }
+    .footer-text { font-size: 12px; color: var(--text-muted); }
+    .footer-text a { color: var(--text-secondary); transition: var(--transition); }
+    .footer-text a:hover { color: var(--gold); }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .page-header { flex-wrap: wrap; padding: 24px 0 20px; }
+      .mount-grid { grid-template-columns: 1fr 1fr; }
+      .progress-bar-wrap { flex-wrap: wrap; }
+    }
+    @media (max-width: 380px) {
+      .mount-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <header class="page-header">
+    <a href="../../" class="back-btn">← 返回工具箱</a>
+    <div class="page-title-wrap">
+      <h1 class="page-title">🐎 坐騎收藏追蹤</h1>
+      <p class="page-subtitle">點擊坐騎卡片標記已擁有，進度自動儲存於瀏覽器</p>
+    </div>
+  </header>
+
+  <!-- Progress -->
+  <div class="progress-bar-wrap">
+    <div class="progress-info">
+      <span id="ownedCount">0</span> / <span id="totalCount">0</span>
+      <span>已擁有</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill" style="width:0%"></div>
+    </div>
+    <div class="progress-pct" id="progressPct">0%</div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" type="text" id="searchInput" placeholder="搜尋坐騎名稱…" autocomplete="off">
+    </div>
+    <div class="own-toggle">
+      <button class="own-btn active" data-own="all">全部</button>
+      <button class="own-btn" data-own="owned">已擁有</button>
+      <button class="own-btn" data-own="missing">未擁有</button>
+    </div>
+    <button class="clear-btn" id="clearBtn">清除進度</button>
+  </div>
+
+  <!-- Source filter -->
+  <div class="filter-section">
+    <div class="filter-label">來源篩選</div>
+    <div class="filter-tags" id="sourceFilters"></div>
+  </div>
+
+  <!-- Patch filter -->
+  <div class="filter-section">
+    <div class="filter-label">版本篩選</div>
+    <div class="filter-tags" id="patchFilters"></div>
+  </div>
+
+  <!-- Result meta -->
+  <div class="result-meta" id="resultMeta"></div>
+
+  <!-- Grid -->
+  <div class="mount-grid" id="mountGrid"></div>
+
+  <div class="empty-state" id="emptyState" style="display:none">
+    找不到符合條件的坐騎
+  </div>
+
+</div>
+
+<!-- Footer -->
+<footer class="page-footer">
+  <div class="container">
+    <p class="footer-text">
+      <a href="../../">水神的工具箱</a> · 資料來源：遊戲本體、<a href="https://xivapi.com" target="_blank">XIVAPI</a>
+    </p>
+    <p class="footer-text" style="margin-top:4px">
+      FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具
+    </p>
+  </div>
+</footer>
+
+<script src="mounts.js"></script>
+<script>
+(function() {
+  const STORAGE_KEY = 'ffxiv_mounts_owned';
+
+  // ── State ──
+  let owned = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
+  let filterOwn = 'all';       // all | owned | missing
+  let filterSource = null;     // string | null
+  let filterPatch = null;      // string | null
+  let searchQ = '';
+
+  // ── Save ──
+  function save() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify([...owned]));
+  }
+
+  // ── Toggle ──
+  function toggle(id) {
+    if (owned.has(id)) owned.delete(id);
+    else owned.add(id);
+    save();
+    updateProgress();
+    renderGrid();
+  }
+
+  // ── Progress ──
+  function updateProgress() {
+    const total = MOUNT_DATA.length;
+    const count = MOUNT_DATA.filter(m => owned.has(m.id)).length;
+    const pct = total ? Math.round(count / total * 100) : 0;
+    document.getElementById('ownedCount').textContent = count;
+    document.getElementById('totalCount').textContent = total;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressPct').textContent = pct + '%';
+  }
+
+  // ── Render source filters ──
+  function renderSourceFilters() {
+    const wrap = document.getElementById('sourceFilters');
+    wrap.innerHTML = '';
+    SOURCE_TYPES.forEach(type => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-tag' + (filterSource === type ? ' active' : '');
+      btn.textContent = type;
+      btn.addEventListener('click', () => {
+        filterSource = filterSource === type ? null : type;
+        renderSourceFilters();
+        renderGrid();
+      });
+      wrap.appendChild(btn);
+    });
+  }
+
+  // ── Render patch filters ──
+  function renderPatchFilters() {
+    const wrap = document.getElementById('patchFilters');
+    wrap.innerHTML = '';
+    PATCHES.forEach(p => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-tag' + (filterPatch === p.label ? ' active' : '');
+      btn.textContent = p.label;
+      btn.addEventListener('click', () => {
+        filterPatch = filterPatch === p.label ? null : p.label;
+        renderPatchFilters();
+        renderGrid();
+      });
+      wrap.appendChild(btn);
+    });
+  }
+
+  // ── Filter mounts ──
+  function filtered() {
+    return MOUNT_DATA.filter(m => {
+      // ownership
+      if (filterOwn === 'owned'   && !owned.has(m.id)) return false;
+      if (filterOwn === 'missing' &&  owned.has(m.id)) return false;
+
+      // source
+      if (filterSource && !m.sources.some(s => s.type === filterSource)) return false;
+
+      // patch
+      if (filterPatch) {
+        const band = PATCHES.find(p => p.label === filterPatch);
+        if (band && (m.patch < band.min || m.patch > band.max)) return false;
+      }
+
+      // search
+      if (searchQ && !m.name.includes(searchQ)) return false;
+
+      return true;
+    });
+  }
+
+  // ── Render grid ──
+  function renderGrid() {
+    const list = filtered();
+    const grid = document.getElementById('mountGrid');
+    const empty = document.getElementById('emptyState');
+    const meta = document.getElementById('resultMeta');
+
+    grid.innerHTML = '';
+    if (list.length === 0) {
+      grid.style.display = 'none';
+      empty.style.display = '';
+    } else {
+      grid.style.display = '';
+      empty.style.display = 'none';
+    }
+
+    const ownedInView = list.filter(m => owned.has(m.id)).length;
+    meta.innerHTML = `顯示 <em>${list.length}</em> / ${MOUNT_DATA.length} 隻 · 已擁有 <em>${ownedInView}</em> / ${list.length}`;
+
+    list.forEach(m => {
+      const isOwned = owned.has(m.id);
+      const card = document.createElement('div');
+      card.className = 'mount-card' + (isOwned ? ' owned' : '');
+
+      const sourceTags = m.sources.map(s =>
+        `<span class="source-tag type-${s.type}">${s.type}</span>`
+      ).join('');
+
+      const detailText = m.sources.map(s => s.detail).join('、');
+
+      card.innerHTML = `
+        <div class="mount-name">${m.name}</div>
+        <div class="mount-patch">ver ${m.patch}</div>
+        <div class="mount-sources">${sourceTags}</div>
+        <div class="mount-detail">${detailText}</div>
+      `;
+
+      card.addEventListener('click', () => toggle(m.id));
+      grid.appendChild(card);
+    });
+  }
+
+  // ── Own-toggle buttons ──
+  document.querySelectorAll('.own-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterOwn = btn.dataset.own;
+      document.querySelectorAll('.own-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderGrid();
+    });
+  });
+
+  // ── Search ──
+  document.getElementById('searchInput').addEventListener('input', e => {
+    searchQ = e.target.value.trim();
+    renderGrid();
+  });
+
+  // ── Clear ──
+  document.getElementById('clearBtn').addEventListener('click', () => {
+    if (!confirm('確定要清除所有擁有記錄嗎？')) return;
+    owned.clear();
+    save();
+    updateProgress();
+    renderGrid();
+  });
+
+  // ── Init ──
+  renderSourceFilters();
+  renderPatchFilters();
+  updateProgress();
+  renderGrid();
+})();
+</script>
+</body>
+</html>

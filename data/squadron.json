@@ -1,0 +1,33 @@
+{
+  "schema": "squadron",
+  "patch": "7.2",
+  "updated": "2026-05-29",
+  "source": "manual",
+  "count": 2,
+  "data": [
+    {
+      "kind": "recruit",
+      "id": 1,
+      "name": "範例成員",
+      "race": "人族",
+      "role": "DPS",
+      "attributes": {
+        "physical": 0,
+        "mental": 0,
+        "tactical": 0
+      }
+    },
+    {
+      "kind": "mission",
+      "id": 101,
+      "name": "範例訓練任務",
+      "require": {
+        "physical": 230,
+        "mental": 200,
+        "tactical": 180
+      },
+      "rewardExp": 5000,
+      "rewardItem": null
+    }
+  ]
+}

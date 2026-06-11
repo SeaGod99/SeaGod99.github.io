@@ -1,0 +1,1942 @@
+{
+  "schema": "maps",
+  "patch": "7.2",
+  "updated": "2026-05-29",
+  "source": "xivapi",
+  "count": 67,
+  "data": [
+    {
+      "id": 2,
+      "name": "格里達尼亞新街",
+      "nameEn": "New Gridania",
+      "region": "黑衣森林",
+      "zone": "格里達尼亞",
+      "type": "city",
+      "sizeFactor": 200,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "小雨",
+          "rate": 15
+        },
+        {
+          "weather": "晴朗",
+          "rate": 5
+        },
+        {
+          "weather": "碧空",
+          "rate": 15
+        }
+      ],
+      "image": {
+        "key": "f1t1/00",
+        "local": "/assets/maps/f1t1_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/f1t1/00"
+      },
+      "patch": "2.0"
+    },
+    {
+      "id": 3,
+      "name": "格里達尼亞舊街",
+      "nameEn": "Old Gridania",
+      "region": "黑衣森林",
+      "zone": "格里達尼亞",
+      "type": "city",
+      "sizeFactor": 200,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "小雨",
+          "rate": 15
+        },
+        {
+          "weather": "晴朗",
+          "rate": 5
+        },
+        {
+          "weather": "碧空",
+          "rate": 15
+        }
+      ],
+      "image": {
+        "key": "f1t2/00",
+        "local": "/assets/maps/f1t2_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/f1t2/00"
+      },
+      "patch": "2.0"
+    },
+    {
+      "id": 11,
+      "name": "利姆薩·羅敏薩上層甲板",
+      "nameEn": "Limsa Lominsa Upper Decks",
+      "region": "拉諾西亞",
+      "zone": "利姆薩·羅敏薩",
+      "type": "city",
+      "sizeFactor": 200,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "陰天",
+          "rate": 20
+        },
+        {
+          "weather": "碧空",
+          "rate": 10
+        }
+      ],
+      "image": {
+        "key": "s1t1/01",
+        "local": "/assets/maps/s1t1_01.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/s1t1/01"
+      },
+      "patch": "2.0"
+    },
+    {
+      "id": 12,
+      "name": "利姆薩·羅敏薩下層甲板",
+      "nameEn": "Limsa Lominsa Lower Decks",
+      "region": "拉諾西亞",
+      "zone": "利姆薩·羅敏薩",
+      "type": "city",
+      "sizeFactor": 200,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "陰天",
+          "rate": 20
+        },
+        {
+          "weather": "碧空",
+          "rate": 10
+        }
+      ],
+      "image": {
+        "key": "s1t2/01",
+        "local": "/assets/maps/s1t2_01.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/s1t2/01"
+      },
+      "patch": "2.0"
+    },
+    {
+      "id": 13,
+      "name": "烏爾達哈現世迷宮街",
+      "nameEn": "Ul'dah - Steps of Nald",
+      "region": "薩納蘭",
+      "zone": "烏爾達哈",
+      "type": "city",
+      "sizeFactor": 200,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "碧空",
+          "rate": 40
+        },
+        {
+          "weather": "陰天",
+          "rate": 5
+        }
+      ],
+      "image": {
+        "key": "w1t1/01",
+        "local": "/assets/maps/w1t1_01.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/w1t1/01"
+      },
+      "patch": "2.0"
+    },
+    {
+      "id": 14,
+      "name": "烏爾達哈娜爾神測之間",
+      "nameEn": "Ul'dah - Steps of Thal",
+      "region": "薩納蘭",
+      "zone": "烏爾達哈",
+      "type": "city",
+      "sizeFactor": 200,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "碧空",
+          "rate": 40
+        },
+        {
+          "weather": "陰天",
+          "rate": 5
+        }
+      ],
+      "image": {
+        "key": "w1t2/01",
+        "local": "/assets/maps/w1t2_01.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/w1t2/01"
+      },
+      "patch": "2.0"
+    },
+    {
+      "id": 53,
+      "name": "伊修加德砲台",
+      "nameEn": "Foundation",
+      "region": "庫爾札斯",
+      "zone": "伊修加德",
+      "type": "city",
+      "sizeFactor": 200,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "降雪",
+          "rate": 60
+        },
+        {
+          "weather": "陰天",
+          "rate": 10
+        }
+      ],
+      "image": {
+        "key": "r2t1/00",
+        "local": "/assets/maps/r2t1_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/r2t1/00"
+      },
+      "patch": "3.0"
+    },
+    {
+      "id": 54,
+      "name": "伊修加德神聖城",
+      "nameEn": "The Pillars",
+      "region": "庫爾札斯",
+      "zone": "伊修加德",
+      "type": "city",
+      "sizeFactor": 200,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "降雪",
+          "rate": 60
+        },
+        {
+          "weather": "陰天",
+          "rate": 10
+        }
+      ],
+      "image": {
+        "key": "r2t2/00",
+        "local": "/assets/maps/r2t2_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/r2t2/00"
+      },
+      "patch": "3.0"
+    },
+    {
+      "id": 133,
+      "name": "黃金港",
+      "nameEn": "Kugane",
+      "region": "奧薩德",
+      "zone": "黃金港",
+      "type": "city",
+      "sizeFactor": 200,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "小雨",
+          "rate": 10
+        },
+        {
+          "weather": "陰天",
+          "rate": 10
+        },
+        {
+          "weather": "晴朗",
+          "rate": 20
+        }
+      ],
+      "image": {
+        "key": "e3t1/00",
+        "local": "/assets/maps/e3t1_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/e3t1/00"
+      },
+      "patch": "4.0"
+    },
+    {
+      "id": 131,
+      "name": "水晶都",
+      "nameEn": "The Crystarium",
+      "region": "諾弗蘭特",
+      "zone": "水晶都",
+      "type": "city",
+      "sizeFactor": 200,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "碧空",
+          "rate": 20
+        },
+        {
+          "weather": "晴朗",
+          "rate": 20
+        }
+      ],
+      "image": {
+        "key": "n4t1/00",
+        "local": "/assets/maps/n4t1_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/n4t1/00"
+      },
+      "patch": "5.0"
+    },
+    {
+      "id": 132,
+      "name": "游末邦",
+      "nameEn": "Eulmore",
+      "region": "諾弗蘭特",
+      "zone": "游末邦",
+      "type": "city",
+      "sizeFactor": 200,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "強風",
+          "rate": 10
+        },
+        {
+          "weather": "陰天",
+          "rate": 5
+        },
+        {
+          "weather": "晴朗",
+          "rate": 25
+        }
+      ],
+      "image": {
+        "key": "n4t2/01",
+        "local": "/assets/maps/n4t2_01.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/n4t2/01"
+      },
+      "patch": "5.0"
+    },
+    {
+      "id": 182,
+      "name": "舊薩雷安",
+      "nameEn": "Old Sharlayan",
+      "region": "北洋",
+      "zone": "舊薩雷安",
+      "type": "city",
+      "sizeFactor": 200,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "碧空",
+          "rate": 10
+        },
+        {
+          "weather": "晴朗",
+          "rate": 30
+        }
+      ],
+      "image": {
+        "key": "k5t1/00",
+        "local": "/assets/maps/k5t1_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/k5t1/00"
+      },
+      "patch": "6.0"
+    },
+    {
+      "id": 183,
+      "name": "拉札罕",
+      "nameEn": "Radz-at-Han",
+      "region": "薩維奈島",
+      "zone": "拉札罕",
+      "type": "city",
+      "sizeFactor": 200,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "薄霧",
+          "rate": 10
+        },
+        {
+          "weather": "小雨",
+          "rate": 5
+        },
+        {
+          "weather": "晴朗",
+          "rate": 25
+        }
+      ],
+      "image": {
+        "key": "m5t1/00",
+        "local": "/assets/maps/m5t1_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/m5t1/00"
+      },
+      "patch": "6.0"
+    },
+    {
+      "id": 216,
+      "name": "圖拉揚",
+      "nameEn": "Tuliyollal",
+      "region": "圖拉爾",
+      "zone": "圖拉揚",
+      "type": "city",
+      "sizeFactor": 180,
+      "offsetX": 50,
+      "offsetY": -70,
+      "weatherRates": [
+        {
+          "weather": "碧空",
+          "rate": 40
+        },
+        {
+          "weather": "薄霧",
+          "rate": 5
+        }
+      ],
+      "image": {
+        "key": "y6t1/00",
+        "local": "/assets/maps/y6t1_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/y6t1/00"
+      },
+      "patch": "7.0"
+    },
+    {
+      "id": 217,
+      "name": "索利尚",
+      "nameEn": "Solution Nine",
+      "region": "圖拉爾",
+      "zone": "索利尚",
+      "type": "city",
+      "sizeFactor": 180,
+      "offsetX": 0,
+      "offsetY": 90,
+      "weatherRates": [
+        {
+          "weather": "晴朗",
+          "rate": 100
+        }
+      ],
+      "image": {
+        "key": "x6t1/00",
+        "local": "/assets/maps/x6t1_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/x6t1/00"
+      },
+      "patch": "7.0"
+    },
+    {
+      "id": 20,
+      "name": "中拉諾西亞",
+      "nameEn": "Middle La Noscea",
+      "region": "拉諾西亞",
+      "zone": "中拉諾西亞",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "陰天",
+          "rate": 20
+        },
+        {
+          "weather": "碧空",
+          "rate": 10
+        }
+      ],
+      "image": {
+        "key": "s1f1/00",
+        "local": "/assets/maps/s1f1_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/s1f1/00"
+      },
+      "patch": "2.0"
+    },
+    {
+      "id": 21,
+      "name": "拉諾西亞低地",
+      "nameEn": "Lower La Noscea",
+      "region": "拉諾西亞",
+      "zone": "拉諾西亞低地",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "陰天",
+          "rate": 20
+        },
+        {
+          "weather": "碧空",
+          "rate": 10
+        }
+      ],
+      "image": {
+        "key": "s1f2/00",
+        "local": "/assets/maps/s1f2_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/s1f2/00"
+      },
+      "patch": "2.0"
+    },
+    {
+      "id": 22,
+      "name": "東拉諾西亞",
+      "nameEn": "Eastern La Noscea",
+      "region": "拉諾西亞",
+      "zone": "東拉諾西亞",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "薄霧",
+          "rate": 5
+        },
+        {
+          "weather": "碧空",
+          "rate": 40
+        }
+      ],
+      "image": {
+        "key": "s1f3/01",
+        "local": "/assets/maps/s1f3_01.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/s1f3/01"
+      },
+      "patch": "2.0"
+    },
+    {
+      "id": 23,
+      "name": "西拉諾西亞",
+      "nameEn": "Western La Noscea",
+      "region": "拉諾西亞",
+      "zone": "西拉諾西亞",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "薄霧",
+          "rate": 10
+        },
+        {
+          "weather": "碧空",
+          "rate": 20
+        }
+      ],
+      "image": {
+        "key": "s1f4/00",
+        "local": "/assets/maps/s1f4_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/s1f4/00"
+      },
+      "patch": "2.0"
+    },
+    {
+      "id": 24,
+      "name": "拉諾西亞高地",
+      "nameEn": "Upper La Noscea",
+      "region": "拉諾西亞",
+      "zone": "拉諾西亞高地",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "碧空",
+          "rate": 30
+        }
+      ],
+      "image": {
+        "key": "s1f5/00",
+        "local": "/assets/maps/s1f5_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/s1f5/00"
+      },
+      "patch": "2.0"
+    },
+    {
+      "id": 25,
+      "name": "外地拉諾西亞",
+      "nameEn": "Outer La Noscea",
+      "region": "拉諾西亞",
+      "zone": "外地拉諾西亞",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "碧空",
+          "rate": 30
+        }
+      ],
+      "image": {
+        "key": "s1f6/00",
+        "local": "/assets/maps/s1f6_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/s1f6/00"
+      },
+      "patch": "2.0"
+    },
+    {
+      "id": 26,
+      "name": "黑衣森林中央林區",
+      "nameEn": "Central Shroud",
+      "region": "黑衣森林",
+      "zone": "黑衣森林中央林區",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "打雷",
+          "rate": 5
+        },
+        {
+          "weather": "小雨",
+          "rate": 10
+        },
+        {
+          "weather": "晴朗",
+          "rate": 5
+        },
+        {
+          "weather": "碧空",
+          "rate": 15
+        }
+      ],
+      "image": {
+        "key": "f1f1/00",
+        "local": "/assets/maps/f1f1_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/f1f1/00"
+      },
+      "patch": "2.0"
+    },
+    {
+      "id": 27,
+      "name": "黑衣森林東部林區",
+      "nameEn": "East Shroud",
+      "region": "黑衣森林",
+      "zone": "黑衣森林東部林區",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "打雷",
+          "rate": 5
+        },
+        {
+          "weather": "小雨",
+          "rate": 10
+        },
+        {
+          "weather": "晴朗",
+          "rate": 5
+        },
+        {
+          "weather": "碧空",
+          "rate": 15
+        }
+      ],
+      "image": {
+        "key": "f1f2/00",
+        "local": "/assets/maps/f1f2_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/f1f2/00"
+      },
+      "patch": "2.0"
+    },
+    {
+      "id": 28,
+      "name": "黑衣森林南部林區",
+      "nameEn": "South Shroud",
+      "region": "黑衣森林",
+      "zone": "黑衣森林南部林區",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "薄霧",
+          "rate": 5
+        },
+        {
+          "weather": "打雷",
+          "rate": 10
+        },
+        {
+          "weather": "陰天",
+          "rate": 5
+        },
+        {
+          "weather": "晴朗",
+          "rate": 20
+        }
+      ],
+      "image": {
+        "key": "f1f3/00",
+        "local": "/assets/maps/f1f3_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/f1f3/00"
+      },
+      "patch": "2.0"
+    },
+    {
+      "id": 29,
+      "name": "黑衣森林北部林區",
+      "nameEn": "North Shroud",
+      "region": "黑衣森林",
+      "zone": "黑衣森林北部林區",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "薄霧",
+          "rate": 5
+        },
+        {
+          "weather": "小雨",
+          "rate": 10
+        },
+        {
+          "weather": "陰天",
+          "rate": 5
+        },
+        {
+          "weather": "晴朗",
+          "rate": 20
+        }
+      ],
+      "image": {
+        "key": "f1f4/00",
+        "local": "/assets/maps/f1f4_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/f1f4/00"
+      },
+      "patch": "2.0"
+    },
+    {
+      "id": 30,
+      "name": "西薩納蘭",
+      "nameEn": "Western Thanalan",
+      "region": "薩納蘭",
+      "zone": "西薩納蘭",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "碧空",
+          "rate": 40
+        },
+        {
+          "weather": "陰天",
+          "rate": 5
+        }
+      ],
+      "image": {
+        "key": "w1f1/00",
+        "local": "/assets/maps/w1f1_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/w1f1/00"
+      },
+      "patch": "2.0"
+    },
+    {
+      "id": 31,
+      "name": "中薩納蘭",
+      "nameEn": "Central Thanalan",
+      "region": "薩納蘭",
+      "zone": "中薩納蘭",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "揚沙",
+          "rate": 15
+        },
+        {
+          "weather": "碧空",
+          "rate": 25
+        }
+      ],
+      "image": {
+        "key": "w1f2/00",
+        "local": "/assets/maps/w1f2_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/w1f2/00"
+      },
+      "patch": "2.0"
+    },
+    {
+      "id": 32,
+      "name": "東薩納蘭",
+      "nameEn": "Eastern Thanalan",
+      "region": "薩納蘭",
+      "zone": "東薩納蘭",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "碧空",
+          "rate": 40
+        },
+        {
+          "weather": "暴雨",
+          "rate": 10
+        }
+      ],
+      "image": {
+        "key": "w1f3/00",
+        "local": "/assets/maps/w1f3_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/w1f3/00"
+      },
+      "patch": "2.0"
+    },
+    {
+      "id": 33,
+      "name": "南薩納蘭",
+      "nameEn": "Southern Thanalan",
+      "region": "薩納蘭",
+      "zone": "南薩納蘭",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "熱浪",
+          "rate": 20
+        },
+        {
+          "weather": "碧空",
+          "rate": 20
+        }
+      ],
+      "image": {
+        "key": "w1f4/01",
+        "local": "/assets/maps/w1f4_01.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/w1f4/01"
+      },
+      "patch": "2.0"
+    },
+    {
+      "id": 34,
+      "name": "北薩納蘭",
+      "nameEn": "Northern Thanalan",
+      "region": "薩納蘭",
+      "zone": "北薩納蘭",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "碧空",
+          "rate": 5
+        },
+        {
+          "weather": "晴朗",
+          "rate": 10
+        },
+        {
+          "weather": "陰天",
+          "rate": 15
+        },
+        {
+          "weather": "薄霧",
+          "rate": 20
+        }
+      ],
+      "image": {
+        "key": "w1f5/00",
+        "local": "/assets/maps/w1f5_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/w1f5/00"
+      },
+      "patch": "2.0"
+    },
+    {
+      "id": 40,
+      "name": "摩杜納",
+      "nameEn": "Mor Dhona",
+      "region": "摩杜納",
+      "zone": "摩杜納",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "陰天",
+          "rate": 15
+        },
+        {
+          "weather": "妖霧",
+          "rate": 15
+        },
+        {
+          "weather": "晴朗",
+          "rate": 10
+        }
+      ],
+      "image": {
+        "key": "l1f1/01",
+        "local": "/assets/maps/l1f1_01.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/l1f1/01"
+      },
+      "patch": "2.0"
+    },
+    {
+      "id": 41,
+      "name": "庫爾札斯中央高地",
+      "nameEn": "Coerthas Central Highlands",
+      "region": "庫爾札斯",
+      "zone": "庫爾札斯中央高地",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "暴雪",
+          "rate": 20
+        },
+        {
+          "weather": "降雪",
+          "rate": 20
+        },
+        {
+          "weather": "陰天",
+          "rate": 10
+        }
+      ],
+      "image": {
+        "key": "r1f1/00",
+        "local": "/assets/maps/r1f1_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/r1f1/00"
+      },
+      "patch": "2.0"
+    },
+    {
+      "id": 60,
+      "name": "庫爾札斯西部高地",
+      "nameEn": "Coerthas Western Highlands",
+      "region": "庫爾札斯",
+      "zone": "庫爾札斯西部高地",
+      "type": "field",
+      "sizeFactor": 95,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "暴雪",
+          "rate": 20
+        },
+        {
+          "weather": "降雪",
+          "rate": 20
+        },
+        {
+          "weather": "陰天",
+          "rate": 10
+        }
+      ],
+      "image": {
+        "key": "r2f1/00",
+        "local": "/assets/maps/r2f1_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/r2f1/00"
+      },
+      "patch": "3.0"
+    },
+    {
+      "id": 61,
+      "name": "龍堡內陸低地",
+      "nameEn": "The Dravanian Forelands",
+      "region": "龍堡",
+      "zone": "龍堡內陸低地",
+      "type": "field",
+      "sizeFactor": 95,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "陰天",
+          "rate": 10
+        },
+        {
+          "weather": "碧空",
+          "rate": 20
+        }
+      ],
+      "image": {
+        "key": "d2f1/00",
+        "local": "/assets/maps/d2f1_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/d2f1/00"
+      },
+      "patch": "3.0"
+    },
+    {
+      "id": 62,
+      "name": "龍堡參天高地",
+      "nameEn": "The Dravanian Hinterlands",
+      "region": "龍堡",
+      "zone": "龍堡參天高地",
+      "type": "field",
+      "sizeFactor": 95,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "陰天",
+          "rate": 10
+        },
+        {
+          "weather": "碧空",
+          "rate": 20
+        }
+      ],
+      "image": {
+        "key": "d2f2/00",
+        "local": "/assets/maps/d2f2_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/d2f2/00"
+      },
+      "patch": "3.0"
+    },
+    {
+      "id": 63,
+      "name": "翻雲半島",
+      "nameEn": "The Churning Mists",
+      "region": "龍堡",
+      "zone": "翻雲半島",
+      "type": "field",
+      "sizeFactor": 95,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "陰天",
+          "rate": 10
+        },
+        {
+          "weather": "放電現象",
+          "rate": 10
+        },
+        {
+          "weather": "碧空",
+          "rate": 10
+        }
+      ],
+      "image": {
+        "key": "d2f3/00",
+        "local": "/assets/maps/d2f3_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/d2f3/00"
+      },
+      "patch": "3.0"
+    },
+    {
+      "id": 64,
+      "name": "阿巴拉提亞雲海",
+      "nameEn": "The Sea of Clouds",
+      "region": "阿巴拉提亞",
+      "zone": "阿巴拉提亞雲海",
+      "type": "field",
+      "sizeFactor": 95,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "碧空",
+          "rate": 30
+        }
+      ],
+      "image": {
+        "key": "a2f1/00",
+        "local": "/assets/maps/a2f1_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/a2f1/00"
+      },
+      "patch": "3.0"
+    },
+    {
+      "id": 65,
+      "name": "魔大陸阿濟茲拉",
+      "nameEn": "Azys Lla",
+      "region": "阿巴拉提亞",
+      "zone": "魔大陸阿濟茲拉",
+      "type": "field",
+      "sizeFactor": 95,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "晴朗",
+          "rate": 35
+        }
+      ],
+      "image": {
+        "key": "a2f2/00",
+        "local": "/assets/maps/a2f2_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/a2f2/00"
+      },
+      "patch": "3.0"
+    },
+    {
+      "id": 80,
+      "name": "基拉巴尼亞邊區",
+      "nameEn": "The Fringes",
+      "region": "基拉巴尼亞",
+      "zone": "基拉巴尼亞邊區",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "碧空",
+          "rate": 15
+        },
+        {
+          "weather": "晴朗",
+          "rate": 30
+        }
+      ],
+      "image": {
+        "key": "g3f1/00",
+        "local": "/assets/maps/g3f1_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/g3f1/00"
+      },
+      "patch": "4.0"
+    },
+    {
+      "id": 81,
+      "name": "基拉巴尼亞山區",
+      "nameEn": "The Peaks",
+      "region": "基拉巴尼亞",
+      "zone": "基拉巴尼亞山區",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "碧空",
+          "rate": 10
+        },
+        {
+          "weather": "晴朗",
+          "rate": 40
+        }
+      ],
+      "image": {
+        "key": "g3f2/00",
+        "local": "/assets/maps/g3f2_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/g3f2/00"
+      },
+      "patch": "4.0"
+    },
+    {
+      "id": 82,
+      "name": "基拉巴尼亞湖區",
+      "nameEn": "The Lochs",
+      "region": "基拉巴尼亞",
+      "zone": "基拉巴尼亞湖區",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "碧空",
+          "rate": 20
+        },
+        {
+          "weather": "晴朗",
+          "rate": 20
+        }
+      ],
+      "image": {
+        "key": "g3f3/00",
+        "local": "/assets/maps/g3f3_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/g3f3/00"
+      },
+      "patch": "4.0"
+    },
+    {
+      "id": 83,
+      "name": "紅玉海",
+      "nameEn": "The Ruby Sea",
+      "region": "奧薩德",
+      "zone": "紅玉海",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "打雷",
+          "rate": 10
+        },
+        {
+          "weather": "陰天",
+          "rate": 5
+        },
+        {
+          "weather": "晴朗",
+          "rate": 25
+        }
+      ],
+      "image": {
+        "key": "e3f1/00",
+        "local": "/assets/maps/e3f1_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/e3f1/00"
+      },
+      "patch": "4.0"
+    },
+    {
+      "id": 84,
+      "name": "延夏",
+      "nameEn": "Yanxia",
+      "region": "奧薩德",
+      "zone": "延夏",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "暴雨",
+          "rate": 5
+        },
+        {
+          "weather": "小雨",
+          "rate": 5
+        },
+        {
+          "weather": "陰天",
+          "rate": 5
+        },
+        {
+          "weather": "晴朗",
+          "rate": 25
+        }
+      ],
+      "image": {
+        "key": "e3f2/00",
+        "local": "/assets/maps/e3f2_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/e3f2/00"
+      },
+      "patch": "4.0"
+    },
+    {
+      "id": 85,
+      "name": "太陽神草原",
+      "nameEn": "The Azim Steppe",
+      "region": "奧薩德",
+      "zone": "太陽神草原",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "強風",
+          "rate": 5
+        },
+        {
+          "weather": "小雨",
+          "rate": 2
+        },
+        {
+          "weather": "薄霧",
+          "rate": 1
+        },
+        {
+          "weather": "陰天",
+          "rate": 2
+        },
+        {
+          "weather": "晴朗",
+          "rate": 30
+        }
+      ],
+      "image": {
+        "key": "e3f3/00",
+        "local": "/assets/maps/e3f3_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/e3f3/00"
+      },
+      "patch": "4.0"
+    },
+    {
+      "id": 100,
+      "name": "雷克蘭德",
+      "nameEn": "Lakeland",
+      "region": "諾弗蘭特",
+      "zone": "雷克蘭德",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "碧空",
+          "rate": 20
+        },
+        {
+          "weather": "晴朗",
+          "rate": 20
+        }
+      ],
+      "image": {
+        "key": "n4f1/00",
+        "local": "/assets/maps/n4f1_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/n4f1/00"
+      },
+      "patch": "5.0"
+    },
+    {
+      "id": 101,
+      "name": "珂露西亞島",
+      "nameEn": "Kholusia",
+      "region": "諾弗蘭特",
+      "zone": "珂露西亞島",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "強風",
+          "rate": 10
+        },
+        {
+          "weather": "陰天",
+          "rate": 5
+        },
+        {
+          "weather": "晴朗",
+          "rate": 25
+        }
+      ],
+      "image": {
+        "key": "n4f2/00",
+        "local": "/assets/maps/n4f2_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/n4f2/00"
+      },
+      "patch": "5.0"
+    },
+    {
+      "id": 102,
+      "name": "安穆·艾蘭",
+      "nameEn": "Amh Araeng",
+      "region": "諾弗蘭特",
+      "zone": "安穆·艾蘭",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "晴朗",
+          "rate": 45
+        },
+        {
+          "weather": "碧空",
+          "rate": 10
+        }
+      ],
+      "image": {
+        "key": "n4f3/00",
+        "local": "/assets/maps/n4f3_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/n4f3/00"
+      },
+      "patch": "5.0"
+    },
+    {
+      "id": 103,
+      "name": "伊爾美格",
+      "nameEn": "Il Mheg",
+      "region": "諾弗蘭特",
+      "zone": "伊爾美格",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "小雨",
+          "rate": 10
+        },
+        {
+          "weather": "陰天",
+          "rate": 5
+        },
+        {
+          "weather": "碧空",
+          "rate": 5
+        },
+        {
+          "weather": "晴朗",
+          "rate": 25
+        }
+      ],
+      "image": {
+        "key": "n4f4/00",
+        "local": "/assets/maps/n4f4_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/n4f4/00"
+      },
+      "patch": "5.0"
+    },
+    {
+      "id": 104,
+      "name": "拉凱提卡大森林",
+      "nameEn": "The Rak'tika Greatwood",
+      "region": "諾弗蘭特",
+      "zone": "拉凱提卡大森林",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "薄霧",
+          "rate": 10
+        },
+        {
+          "weather": "碧空",
+          "rate": 5
+        },
+        {
+          "weather": "晴朗",
+          "rate": 25
+        }
+      ],
+      "image": {
+        "key": "n4f5/00",
+        "local": "/assets/maps/n4f5_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/n4f5/00"
+      },
+      "patch": "5.0"
+    },
+    {
+      "id": 105,
+      "name": "黑風海",
+      "nameEn": "The Tempest",
+      "region": "諾弗蘭特",
+      "zone": "黑風海",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "陰天",
+          "rate": 20
+        },
+        {
+          "weather": "晴朗",
+          "rate": 40
+        }
+      ],
+      "image": {
+        "key": "n4f6/00",
+        "local": "/assets/maps/n4f6_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/n4f6/00"
+      },
+      "patch": "5.0"
+    },
+    {
+      "id": 140,
+      "name": "嘉雷馬",
+      "nameEn": "Labyrinthos",
+      "region": "北洋",
+      "zone": "嘉雷馬",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "碧空",
+          "rate": 15
+        },
+        {
+          "weather": "晴朗",
+          "rate": 30
+        }
+      ],
+      "image": {
+        "key": "k5f1/00",
+        "local": "/assets/maps/k5f1_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/k5f1/00"
+      },
+      "patch": "6.0"
+    },
+    {
+      "id": 141,
+      "name": "薩維奈島",
+      "nameEn": "Thavnair",
+      "region": "薩維奈島",
+      "zone": "薩維奈島",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "薄霧",
+          "rate": 10
+        },
+        {
+          "weather": "碧空",
+          "rate": 10
+        },
+        {
+          "weather": "晴朗",
+          "rate": 25
+        }
+      ],
+      "image": {
+        "key": "m5f1/00",
+        "local": "/assets/maps/m5f1_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/m5f1/00"
+      },
+      "patch": "6.0"
+    },
+    {
+      "id": 142,
+      "name": "加雷馬",
+      "nameEn": "Garlemald",
+      "region": "北洋",
+      "zone": "加雷馬",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "降雪",
+          "rate": 45
+        },
+        {
+          "weather": "陰天",
+          "rate": 20
+        }
+      ],
+      "image": {
+        "key": "m5f2/00",
+        "local": "/assets/maps/m5f2_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/m5f2/00"
+      },
+      "patch": "6.0"
+    },
+    {
+      "id": 143,
+      "name": "瑪雷象牙海岸",
+      "nameEn": "Mare Lamentorum",
+      "region": "月球",
+      "zone": "瑪雷象牙海岸",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "靈風",
+          "rate": 15
+        },
+        {
+          "weather": "晴朗",
+          "rate": 55
+        }
+      ],
+      "image": {
+        "key": "u5f1/00",
+        "local": "/assets/maps/u5f1_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/u5f1/00"
+      },
+      "patch": "6.0"
+    },
+    {
+      "id": 144,
+      "name": "遺塵之地",
+      "nameEn": "Ultima Thule",
+      "region": "宇宙",
+      "zone": "遺塵之地",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "Astromagnetic Storms",
+          "rate": 15
+        },
+        {
+          "weather": "晴朗",
+          "rate": 55
+        }
+      ],
+      "image": {
+        "key": "u5f2/00",
+        "local": "/assets/maps/u5f2_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/u5f2/00"
+      },
+      "patch": "6.0"
+    },
+    {
+      "id": 145,
+      "name": "埃爾庇斯",
+      "nameEn": "Elpis",
+      "region": "遠古",
+      "zone": "埃爾庇斯",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "陰天",
+          "rate": 25
+        },
+        {
+          "weather": "晴朗",
+          "rate": 30
+        }
+      ],
+      "image": {
+        "key": "n5f1/00",
+        "local": "/assets/maps/n5f1_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/n5f1/00"
+      },
+      "patch": "6.0"
+    },
+    {
+      "id": 160,
+      "name": "奧闊帕恰山",
+      "nameEn": "Urqopacha",
+      "region": "圖拉爾",
+      "zone": "奧闊帕恰山",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "碧空",
+          "rate": 20
+        },
+        {
+          "weather": "晴朗",
+          "rate": 10
+        }
+      ],
+      "image": {
+        "key": "y6f1/00",
+        "local": "/assets/maps/y6f1_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/y6f1/00"
+      },
+      "patch": "7.0"
+    },
+    {
+      "id": 161,
+      "name": "科扎瑪烏卡",
+      "nameEn": "Kozama'uka",
+      "region": "圖拉爾",
+      "zone": "科扎瑪烏卡",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "碧空",
+          "rate": 25
+        },
+        {
+          "weather": "晴朗",
+          "rate": 10
+        }
+      ],
+      "image": {
+        "key": "y6f2/00",
+        "local": "/assets/maps/y6f2_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/y6f2/00"
+      },
+      "patch": "7.0"
+    },
+    {
+      "id": 162,
+      "name": "亞克特爾雨林",
+      "nameEn": "Yak T'el",
+      "region": "圖拉爾",
+      "zone": "亞克特爾雨林",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "碧空",
+          "rate": 15
+        },
+        {
+          "weather": "晴朗",
+          "rate": 25
+        }
+      ],
+      "image": {
+        "key": "y6f3/00",
+        "local": "/assets/maps/y6f3_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/y6f3/00"
+      },
+      "patch": "7.0"
+    },
+    {
+      "id": 163,
+      "name": "夏勞尼荒野",
+      "nameEn": "Shaaloani",
+      "region": "圖拉爾",
+      "zone": "夏勞尼荒野",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "碧空",
+          "rate": 5
+        },
+        {
+          "weather": "晴朗",
+          "rate": 40
+        }
+      ],
+      "image": {
+        "key": "x6f1/00",
+        "local": "/assets/maps/x6f1_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/x6f1/00"
+      },
+      "patch": "7.0"
+    },
+    {
+      "id": 164,
+      "name": "遺產之地",
+      "nameEn": "Heritage Found",
+      "region": "圖拉爾",
+      "zone": "遺產之地",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "晴朗",
+          "rate": 5
+        },
+        {
+          "weather": "陰天",
+          "rate": 15
+        },
+        {
+          "weather": "放電現象",
+          "rate": 45
+        }
+      ],
+      "image": {
+        "key": "x6f2/00",
+        "local": "/assets/maps/x6f2_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/x6f2/00"
+      },
+      "patch": "7.0"
+    },
+    {
+      "id": 165,
+      "name": "生記憶之地",
+      "nameEn": "Living Memory",
+      "region": "圖拉爾",
+      "zone": "生記憶之地",
+      "type": "field",
+      "sizeFactor": 100,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "小雨",
+          "rate": 10
+        },
+        {
+          "weather": "陰天",
+          "rate": 10
+        },
+        {
+          "weather": "晴朗",
+          "rate": 40
+        }
+      ],
+      "image": {
+        "key": "x6f3/00",
+        "local": "/assets/maps/x6f3_00.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/x6f3/00"
+      },
+      "patch": "7.0"
+    },
+    {
+      "id": 301,
+      "name": "海霧村",
+      "nameEn": "Mist",
+      "region": "拉諾西亞",
+      "zone": "海霧村",
+      "type": "housing",
+      "sizeFactor": 200,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "陰天",
+          "rate": 20
+        },
+        {
+          "weather": "碧空",
+          "rate": 10
+        }
+      ],
+      "image": {
+        "key": "s1h1/01",
+        "local": "/assets/maps/s1h1_01.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/s1h1/01"
+      },
+      "patch": "2.1"
+    },
+    {
+      "id": 302,
+      "name": "薰衣草苗圃",
+      "nameEn": "The Lavender Beds",
+      "region": "黑衣森林",
+      "zone": "薰衣草苗圃",
+      "type": "housing",
+      "sizeFactor": 200,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "陰天",
+          "rate": 5
+        },
+        {
+          "weather": "小雨",
+          "rate": 10
+        },
+        {
+          "weather": "晴朗",
+          "rate": 5
+        },
+        {
+          "weather": "碧空",
+          "rate": 15
+        }
+      ],
+      "image": {
+        "key": "f1h1/01",
+        "local": "/assets/maps/f1h1_01.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/f1h1/01"
+      },
+      "patch": "2.1"
+    },
+    {
+      "id": 303,
+      "name": "高腳孤丘",
+      "nameEn": "The Goblet",
+      "region": "薩納蘭",
+      "zone": "高腳孤丘",
+      "type": "housing",
+      "sizeFactor": 200,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "碧空",
+          "rate": 40
+        },
+        {
+          "weather": "陰天",
+          "rate": 5
+        }
+      ],
+      "image": {
+        "key": "w1h1/01",
+        "local": "/assets/maps/w1h1_01.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/w1h1/01"
+      },
+      "patch": "2.1"
+    },
+    {
+      "id": 304,
+      "name": "白銀鄉",
+      "nameEn": "Shirogane",
+      "region": "奧薩德",
+      "zone": "白銀鄉",
+      "type": "housing",
+      "sizeFactor": 200,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "小雨",
+          "rate": 10
+        },
+        {
+          "weather": "陰天",
+          "rate": 10
+        },
+        {
+          "weather": "晴朗",
+          "rate": 20
+        }
+      ],
+      "image": {
+        "key": "e1h1/01",
+        "local": "/assets/maps/e1h1_01.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/e1h1/01"
+      },
+      "patch": "4.3"
+    },
+    {
+      "id": 305,
+      "name": "穹頂皓天",
+      "nameEn": "Empyreum",
+      "region": "庫爾札斯",
+      "zone": "穹頂皓天",
+      "type": "housing",
+      "sizeFactor": 200,
+      "offsetX": 0,
+      "offsetY": 0,
+      "weatherRates": [
+        {
+          "weather": "降雪",
+          "rate": 5
+        },
+        {
+          "weather": "晴朗",
+          "rate": 15
+        },
+        {
+          "weather": "碧空",
+          "rate": 20
+        }
+      ],
+      "image": {
+        "key": "r1h1/01",
+        "local": "/assets/maps/r1h1_01.jpg",
+        "url": "https://v2.xivapi.com/api/asset/map/r1h1/01"
+      },
+      "patch": "5.5"
+    }
+  ]
+}

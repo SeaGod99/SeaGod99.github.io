@@ -1,0 +1,24 @@
+{
+  "schema": "orchestrion",
+  "patch": "7.2",
+  "updated": "2026-05-29",
+  "source": "manual",
+  "count": 1,
+  "data": [
+    {
+      "id": 1,
+      "name": "序曲",
+      "nameEn": "Prelude",
+      "number": 1,
+      "itemId": 12727,
+      "category": "蒼天",
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "某副本掉落"
+        }
+      ],
+      "patch": "3.0"
+    }
+  ]
+}

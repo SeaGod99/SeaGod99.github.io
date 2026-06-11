@@ -1,0 +1,5311 @@
+{
+  "schema": "mounts",
+  "patch": "7.2",
+  "updated": "2026-06-04",
+  "source": "xivapi+manual",
+  "count": 385,
+  "data": [
+    {
+      "id": 1,
+      "name": "陸行鳥",
+      "nameEn": "company chocobo",
+      "seats": 1,
+      "icon": "/i/004000/004001_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004001_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004001_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "主線任務",
+          "detail": "職業等級達 20 可購買"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "name": "黑陸行鳥",
+      "patch": "2.0",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "完成「向騎乘進發！」任務"
+        }
+      ],
+      "nameEn": null,
+      "icon": null
+    },
+    {
+      "name": "戰馬",
+      "patch": "2.0",
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": "狼群評價達 A 階"
+        }
+      ],
+      "nameEn": null,
+      "icon": null
+    },
+    {
+      "id": 4,
+      "name": "逐影騎乘",
+      "nameEn": "goobbue",
+      "seats": 1,
+      "icon": "/i/004000/004003_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004003_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004003_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "成就「戰鬥在外野之一」"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 5,
+      "name": "鐵姆拉牛",
+      "nameEn": "legacy chocobo",
+      "seats": 1,
+      "icon": "/i/004000/004002_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004002_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004002_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "莫頓城巨城廢墟（困難）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 6,
+      "name": "陸行鳥帽",
+      "nameEn": "magitek armor",
+      "seats": 1,
+      "icon": "/i/004000/004006_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004006_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004006_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "金碟",
+          "detail": "金碟 MGP 兌換"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "name": "盧德西特天馬",
+      "patch": "2.0",
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "成就「盧德西特之星」"
+        }
+      ],
+      "nameEn": null,
+      "icon": null
+    },
+    {
+      "id": 8,
+      "name": "大型銅齒幸運蟲",
+      "nameEn": "coeurl",
+      "seats": 1,
+      "icon": "/i/004000/004005_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004005_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004005_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "金碟",
+          "detail": "金碟 MGP 兌換"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 9,
+      "name": "天之龍",
+      "nameEn": "ahriman",
+      "seats": 1,
+      "icon": "/i/004000/004004_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004004_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004004_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "巴哈姆特邊境（第五層）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "name": "大型甲蟲",
+      "patch": "2.0",
+      "sources": [
+        {
+          "type": "市場板",
+          "detail": "可於市場購買"
+        }
+      ],
+      "nameEn": null,
+      "icon": null
+    },
+    {
+      "name": "法爾法德",
+      "patch": "2.0",
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極神「極地神」"
+        }
+      ],
+      "nameEn": null,
+      "icon": null
+    },
+    {
+      "name": "加魯達的羽翼",
+      "patch": "2.0",
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極神「風神加魯達」"
+        }
+      ],
+      "nameEn": null,
+      "icon": null
+    },
+    {
+      "name": "伊夫利特的追焰",
+      "patch": "2.0",
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極神「火神伊夫利特」"
+        }
+      ],
+      "nameEn": null,
+      "icon": null
+    },
+    {
+      "name": "泰坦的命石",
+      "patch": "2.0",
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極神「土神泰坦」"
+        }
+      ],
+      "nameEn": null,
+      "icon": null
+    },
+    {
+      "id": 15,
+      "name": "牛頭人",
+      "nameEn": "unicorn",
+      "seats": 1,
+      "icon": "/i/004000/004007_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004007_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004007_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "哈卡茲宮（困難）"
+        }
+      ],
+      "patch": "2.2"
+    },
+    {
+      "name": "水晶蟲族飛空艇",
+      "patch": "2.3",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "我方飛空艇「解鎖飛空艇」"
+        }
+      ],
+      "nameEn": null,
+      "icon": null
+    },
+    {
+      "name": "白虎",
+      "patch": "2.3",
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極神「白虎三巴」"
+        }
+      ],
+      "nameEn": null,
+      "icon": null
+    },
+    {
+      "id": 18,
+      "name": "歡笑宮廷陸行鳥",
+      "nameEn": "behemoth",
+      "seats": 1,
+      "icon": "/i/004000/004008_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004008_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004008_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "萊姆利亞歡笑宮廷"
+        }
+      ],
+      "patch": "2.3"
+    },
+    {
+      "id": 19,
+      "name": "佩加索斯",
+      "nameEn": "cavalry drake",
+      "seats": 1,
+      "icon": "/i/004000/004009_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004009_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004009_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極神「女神Shiva」"
+        }
+      ],
+      "patch": "2.4"
+    },
+    {
+      "id": 20,
+      "name": "閃光戰馬",
+      "nameEn": "laurel goobbue",
+      "seats": 1,
+      "icon": "/i/004000/004010_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004010_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004010_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "成就「偉大的航海家」"
+        }
+      ],
+      "patch": "2.5"
+    },
+    {
+      "id": 21,
+      "name": "希斯塔尼飛龍",
+      "nameEn": "gilded magitek armor",
+      "seats": 1,
+      "icon": "/i/004000/004011_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004011_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004011_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "主線任務",
+          "detail": "完成蒼天之理主線"
+        }
+      ],
+      "patch": "3.0"
+    },
+    {
+      "id": 22,
+      "name": "極龍",
+      "nameEn": "nightmare",
+      "seats": 1,
+      "icon": "/i/004000/004012_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004012_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004012_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極神「相克龍」"
+        }
+      ],
+      "patch": "3.0"
+    },
+    {
+      "name": "冰霜之龍",
+      "patch": "3.0",
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極神「祈龍 Nidhogg」"
+        }
+      ],
+      "nameEn": null,
+      "icon": null
+    },
+    {
+      "name": "浮空機",
+      "patch": "3.0",
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "真代達羅斯"
+        }
+      ],
+      "nameEn": null,
+      "icon": null
+    },
+    {
+      "id": 25,
+      "name": "赤色格里芬",
+      "nameEn": "fat chocobo",
+      "seats": 1,
+      "icon": "/i/004000/004013_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004013_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004013_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "成就「蒼天騎士」"
+        }
+      ],
+      "patch": "3.1"
+    },
+    {
+      "id": 26,
+      "name": "馬芙里特",
+      "nameEn": "cavalry elbst",
+      "seats": 1,
+      "icon": "/i/004000/004014_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004014_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004014_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極神「剛魂 Ravana」"
+        }
+      ],
+      "patch": "3.1"
+    },
+    {
+      "id": 27,
+      "name": "寢室貘",
+      "nameEn": "bomb palanquin",
+      "seats": 1,
+      "icon": "/i/004000/004015_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004015_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004015_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "Mog 工房商店"
+        }
+      ],
+      "patch": "3.2"
+    },
+    {
+      "id": 28,
+      "name": "辛蒙德鳥",
+      "nameEn": "Aithon",
+      "seats": 1,
+      "icon": "/i/004000/004016_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004016_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004016_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極神「偉大的神明 Bismarck」"
+        }
+      ],
+      "patch": "3.2"
+    },
+    {
+      "id": 29,
+      "name": "希臘神牛",
+      "nameEn": "Xanthos",
+      "seats": 1,
+      "icon": "/i/004000/004017_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004017_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004017_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "亞歷山大黃金之篇（零式）"
+        }
+      ],
+      "patch": "3.2"
+    },
+    {
+      "id": 30,
+      "name": "奧爾特羅斯",
+      "nameEn": "Gullfaxi",
+      "seats": 1,
+      "icon": "/i/004000/004018_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004018_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004018_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極神「海神 Leviathan」"
+        }
+      ],
+      "patch": "3.3"
+    },
+    {
+      "id": 31,
+      "name": "哈迪斯",
+      "nameEn": "Enbarr",
+      "seats": 1,
+      "icon": "/i/004000/004019_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004019_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004019_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "絕境「絕巴哈姆特討滅戰」"
+        }
+      ],
+      "patch": "3.4"
+    },
+    {
+      "id": 32,
+      "name": "幻龍",
+      "nameEn": "warlion",
+      "seats": 1,
+      "icon": "/i/004000/004020_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004020_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004020_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極神「龍神 Nidhogg」"
+        }
+      ],
+      "patch": "3.5"
+    },
+    {
+      "id": 33,
+      "name": "凜藍鵜鶘",
+      "nameEn": "warbear",
+      "seats": 1,
+      "icon": "/i/004000/004021_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004021_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004021_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "狩獵",
+          "detail": "傳說狩獵貨幣兌換"
+        }
+      ],
+      "patch": "3.5"
+    },
+    {
+      "id": 34,
+      "name": "紅蓮陸行鳥",
+      "nameEn": "draught chocobo",
+      "seats": 2,
+      "icon": "/i/004000/004022_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004022_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004022_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "主線任務",
+          "detail": "完成紅蓮之狂潮主線"
+        }
+      ],
+      "patch": "4.0"
+    },
+    {
+      "id": 35,
+      "name": "九尾狐",
+      "nameEn": "direwolf",
+      "seats": 1,
+      "icon": "/i/004000/004023_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004023_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004023_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極神「悲哭者 Lakshmi」"
+        }
+      ],
+      "patch": "4.0"
+    },
+    {
+      "id": 36,
+      "name": "赤焰鳳凰",
+      "nameEn": "storm warsteed",
+      "seats": 1,
+      "icon": "/i/004000/004024_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004024_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004024_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "絕境「絕神兵討滅戰」"
+        }
+      ],
+      "patch": "4.0"
+    },
+    {
+      "id": 37,
+      "name": "金色陸行鳥",
+      "nameEn": "serpent warsteed",
+      "seats": 1,
+      "icon": "/i/004000/004025_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004025_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004025_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "超越天堂"
+        }
+      ],
+      "patch": "4.1"
+    },
+    {
+      "id": 38,
+      "name": "骨幻獸",
+      "nameEn": "flame warsteed",
+      "seats": 1,
+      "icon": "/i/004000/004026_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004026_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004026_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "市場板",
+          "detail": "副本掉落可於市場購買"
+        }
+      ],
+      "patch": "4.1"
+    },
+    {
+      "name": "魚人王",
+      "patch": "4.2",
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極神「神武 Susano」"
+        }
+      ],
+      "nameEn": null,
+      "icon": null
+    },
+    {
+      "id": 40,
+      "name": "神鷹",
+      "nameEn": "Markab",
+      "seats": 1,
+      "icon": "/i/004000/004027_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004027_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004027_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極神「魔后 Shinryu」"
+        }
+      ],
+      "patch": "4.3"
+    },
+    {
+      "id": 41,
+      "name": "帝王幻象",
+      "nameEn": "ceremony chocobo",
+      "seats": 2,
+      "icon": "/i/004000/004031_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004031_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004031_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極神「邪神 Byakko」"
+        }
+      ],
+      "patch": "4.4"
+    },
+    {
+      "id": 42,
+      "name": "精靈",
+      "nameEn": "Sleipnir",
+      "seats": 1,
+      "icon": "/i/004000/004028_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004028_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004028_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "奧米加白金之篇（零式）"
+        }
+      ],
+      "patch": "4.4"
+    },
+    {
+      "id": 43,
+      "name": "黃金幻象",
+      "nameEn": "Boreas",
+      "seats": 1,
+      "icon": "/i/004000/004029_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004029_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004029_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極神「刑神 Tsukuyomi」"
+        }
+      ],
+      "patch": "4.5"
+    },
+    {
+      "id": 44,
+      "name": "黑騎士",
+      "nameEn": "parade chocobo",
+      "seats": 1,
+      "icon": "/i/004000/004030_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004030_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004030_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "絕境",
+          "detail": "絕境「絕龍詩討滅戰」"
+        }
+      ],
+      "patch": "4.5"
+    },
+    {
+      "id": 45,
+      "name": "水鳥",
+      "nameEn": "black chocobo",
+      "seats": 1,
+      "icon": "/i/004000/004036_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004036_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004036_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "狩獵",
+          "detail": "傳說狩獵貨幣兌換"
+        }
+      ],
+      "patch": "4.5"
+    },
+    {
+      "id": 46,
+      "name": "漆黑陸行鳥",
+      "nameEn": "adamantoise",
+      "seats": 1,
+      "icon": "/i/004000/004034_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004034_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004034_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "主線任務",
+          "detail": "完成暗影之逆焰主線"
+        }
+      ],
+      "patch": "5.0"
+    },
+    {
+      "id": 47,
+      "name": "隕星陸行鳥",
+      "nameEn": "Kirin",
+      "seats": 1,
+      "icon": "/i/004000/004032_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004032_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004032_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極神「冥界女王 Titania」"
+        }
+      ],
+      "patch": "5.0"
+    },
+    {
+      "id": 48,
+      "name": "玫瑰幻象",
+      "nameEn": "logistics system",
+      "seats": 1,
+      "icon": "/i/004000/004033_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004033_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004033_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極神「邪龍 Innocence」"
+        }
+      ],
+      "patch": "5.0"
+    },
+    {
+      "id": 49,
+      "name": "蛇女神",
+      "nameEn": "Fenrir",
+      "seats": 1,
+      "icon": "/i/004000/004035_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004035_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004035_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極神「破滅 Hades」"
+        }
+      ],
+      "patch": "5.1"
+    },
+    {
+      "id": 50,
+      "name": "白銀幻象",
+      "nameEn": "Midgardsormr",
+      "seats": 1,
+      "icon": "/i/004000/004037_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004037_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004037_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "伊甸墮落之篇（零式）"
+        }
+      ],
+      "patch": "5.1"
+    },
+    {
+      "name": "馬車",
+      "patch": "5.2",
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極神「英雄 Ruby Weapon」"
+        }
+      ],
+      "nameEn": null,
+      "icon": null
+    },
+    {
+      "id": 52,
+      "name": "不死鳥",
+      "nameEn": "amber draught chocobo",
+      "seats": 2,
+      "icon": "/i/004000/004044_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004044_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004044_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極神「縹緲 Emerald Weapon」"
+        }
+      ],
+      "patch": "5.3"
+    },
+    {
+      "id": 53,
+      "name": "千幻之龍",
+      "nameEn": "sanuwa",
+      "seats": 1,
+      "icon": "/i/004000/004038_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004038_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004038_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "伊甸誓約之篇（零式）"
+        }
+      ],
+      "patch": "5.4"
+    },
+    {
+      "id": 54,
+      "name": "龍騎士座騎",
+      "nameEn": "griffin",
+      "seats": 1,
+      "icon": "/i/004000/004039_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004039_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004039_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "絕境「絕亞歷山大討滅戰」"
+        }
+      ],
+      "patch": "5.4"
+    },
+    {
+      "id": 55,
+      "name": "銀月幻象",
+      "nameEn": "manacutter",
+      "seats": 1,
+      "icon": "/i/004000/004040_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004040_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004040_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極神「無盡 Diamond Weapon」"
+        }
+      ],
+      "patch": "5.5"
+    },
+    {
+      "id": 56,
+      "name": "地獄馬",
+      "nameEn": "war panther",
+      "seats": 1,
+      "icon": "/i/004000/004041_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004041_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004041_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "狩獵",
+          "detail": "傳說狩獵貨幣兌換"
+        }
+      ],
+      "patch": "5.5"
+    },
+    {
+      "name": "萬物終焉陸行鳥",
+      "patch": "6.0",
+      "sources": [
+        {
+          "type": "主線任務",
+          "detail": "完成曉月之終途主線"
+        }
+      ],
+      "nameEn": null,
+      "icon": null
+    },
+    {
+      "id": 58,
+      "name": "白鯨",
+      "nameEn": "gobwalker",
+      "seats": 1,
+      "icon": "/i/004000/004042_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004042_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004042_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極神「諸天神 Zodiark」"
+        }
+      ],
+      "patch": "6.0"
+    },
+    {
+      "id": 59,
+      "name": "炎獄幻象",
+      "nameEn": "Twintania",
+      "seats": 1,
+      "icon": "/i/004000/004043_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004043_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004043_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極神「星占師 Hydaelyn」"
+        }
+      ],
+      "patch": "6.0"
+    },
+    {
+      "name": "彩虹天馬",
+      "patch": "6.0",
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "萬魔殿煉獄之篇（零式）"
+        }
+      ],
+      "nameEn": null,
+      "icon": null
+    },
+    {
+      "name": "骷髏幻象",
+      "patch": "6.1",
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極神「邪龍 Endsinger」"
+        }
+      ],
+      "nameEn": null,
+      "icon": null
+    },
+    {
+      "id": 62,
+      "name": "水晶龍",
+      "nameEn": "witch's broom",
+      "seats": 1,
+      "icon": "/i/004000/004045_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004045_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004045_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "絕境「絕欧米茄討滅戰」"
+        }
+      ],
+      "patch": "6.1"
+    },
+    {
+      "name": "白鷺",
+      "patch": "6.2",
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極神「毀滅者 Barbariccia」"
+        }
+      ],
+      "nameEn": null,
+      "icon": null
+    },
+    {
+      "name": "金翅大鵬",
+      "patch": "6.2",
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "萬魔殿邊境之篇（零式）"
+        }
+      ],
+      "nameEn": null,
+      "icon": null
+    },
+    {
+      "name": "地底幻象",
+      "patch": "6.3",
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極神「殺戮者 Rubicante」"
+        }
+      ],
+      "nameEn": null,
+      "icon": null
+    },
+    {
+      "name": "冰雪幻象",
+      "patch": "6.4",
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極神「縊死者 Golbez」"
+        }
+      ],
+      "nameEn": null,
+      "icon": null
+    },
+    {
+      "id": 67,
+      "name": "萬魔殿頂點幻象",
+      "nameEn": "pegasus",
+      "seats": 1,
+      "icon": "/i/004000/004047_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004047_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004047_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "萬魔殿天獄之篇（零式）"
+        }
+      ],
+      "patch": "6.4"
+    },
+    {
+      "id": 68,
+      "name": "終末天使",
+      "nameEn": "White Devil",
+      "seats": 1,
+      "icon": "/i/004000/004048_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004048_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004048_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "絕境「絕龍詩 再演」"
+        }
+      ],
+      "patch": "6.4"
+    },
+    {
+      "id": 69,
+      "name": "光之守護者",
+      "nameEn": "Red Baron",
+      "seats": 1,
+      "icon": "/i/004000/004049_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004049_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004049_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極神「悟道者 Zeromus」"
+        }
+      ],
+      "patch": "6.5"
+    },
+    {
+      "id": 70,
+      "name": "幻影狩獵獸",
+      "nameEn": "wyvern",
+      "seats": 1,
+      "icon": "/i/004000/004050_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004050_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004050_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "狩獵",
+          "detail": "傳說狩獵貨幣兌換"
+        }
+      ],
+      "patch": "6.5"
+    },
+    {
+      "id": 71,
+      "name": "黃金之鄉陸行鳥",
+      "nameEn": "SDS Fenrir",
+      "seats": 1,
+      "icon": "/i/004000/004135_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004135_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004135_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "主線任務",
+          "detail": "完成金曦之遺輝主線"
+        }
+      ],
+      "patch": "7.0"
+    },
+    {
+      "id": 72,
+      "name": "雷雨幻象",
+      "nameEn": "kongamato",
+      "seats": 1,
+      "icon": "/i/004000/004051_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004051_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004051_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極神「轟鳴者 Valigarmanda」"
+        }
+      ],
+      "patch": "7.0"
+    },
+    {
+      "id": 73,
+      "name": "骨龍",
+      "nameEn": "zu",
+      "seats": 1,
+      "icon": "/i/004000/004052_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004052_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004052_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "阿卡迪亞樂園序篇（零式）"
+        }
+      ],
+      "patch": "7.0"
+    },
+    {
+      "id": 74,
+      "name": "混沌幻象",
+      "nameEn": "bennu",
+      "seats": 1,
+      "icon": "/i/004000/004053_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004053_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004053_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "絕境「絕伊甸討滅戰」"
+        }
+      ],
+      "patch": "7.05"
+    },
+    {
+      "id": 75,
+      "name": "熔岩幻象",
+      "nameEn": "white lanner",
+      "seats": 1,
+      "icon": "/i/004000/004054_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004054_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004054_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極神「石化者 Sphene」"
+        }
+      ],
+      "patch": "7.1"
+    },
+    {
+      "id": 76,
+      "name": "黃金戰馬",
+      "nameEn": "rose lanner",
+      "seats": 1,
+      "icon": "/i/004000/004055_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004055_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004055_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "阿卡迪亞樂園正篇（零式）"
+        }
+      ],
+      "patch": "7.1"
+    },
+    {
+      "id": 77,
+      "name": "奇美拉",
+      "nameEn": "round lanner",
+      "seats": 1,
+      "icon": "/i/004000/004056_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004056_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004056_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極神「天道者 Zoraal Ja」"
+        }
+      ],
+      "patch": "7.2"
+    },
+    {
+      "id": 78,
+      "name": "虛空飛龍",
+      "nameEn": "warring lanner",
+      "seats": 1,
+      "icon": "/i/004000/004057_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004057_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004057_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "阿卡迪亞樂園秘境（零式）"
+        }
+      ],
+      "patch": "7.2"
+    },
+    {
+      "id": 80,
+      "name": "Gloria-class airship",
+      "nameEn": "Gloria-class airship",
+      "seats": 1,
+      "icon": "/i/004000/004058_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004058_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004058_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 81,
+      "name": "flying cumulus",
+      "nameEn": "flying cumulus",
+      "seats": 1,
+      "icon": "/i/004000/004059_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004059_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004059_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 82,
+      "name": "original fat chocobo",
+      "nameEn": "original fat chocobo",
+      "seats": 1,
+      "icon": "/i/004000/004060_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004060_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004060_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 83,
+      "name": "Astrope",
+      "nameEn": "Astrope",
+      "seats": 2,
+      "icon": "/i/004000/004061_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004061_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004061_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 84,
+      "name": "fat moogle",
+      "nameEn": "fat moogle",
+      "seats": 2,
+      "icon": "/i/004000/004062_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004062_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004062_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 86,
+      "name": "cloud mallow",
+      "nameEn": "cloud mallow",
+      "seats": 1,
+      "icon": "/i/004000/004063_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004063_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004063_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 87,
+      "name": "Whisper-go",
+      "nameEn": "Whisper-go",
+      "seats": 1,
+      "icon": "/i/004000/004064_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004064_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004064_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 90,
+      "name": "dark lanner",
+      "nameEn": "dark lanner",
+      "seats": 1,
+      "icon": "/i/004000/004065_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004065_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004065_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 91,
+      "name": "aerodynamics system",
+      "nameEn": "aerodynamics system",
+      "seats": 1,
+      "icon": "/i/004000/004066_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004066_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004066_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 92,
+      "name": "disembodied head",
+      "nameEn": "disembodied head",
+      "seats": 1,
+      "icon": "/i/004000/004068_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004068_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004068_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 93,
+      "name": "managarm",
+      "nameEn": "managarm",
+      "seats": 1,
+      "icon": "/i/004000/004067_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004067_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004067_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 94,
+      "name": "Whisper A-go-go",
+      "nameEn": "Whisper A-go-go",
+      "seats": 1,
+      "icon": "/i/004000/004069_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004069_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004069_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 95,
+      "name": "Goten",
+      "nameEn": "Goten",
+      "seats": 1,
+      "icon": "/i/004000/004074_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004074_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004074_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 96,
+      "name": "Ginga",
+      "nameEn": "Ginga",
+      "seats": 1,
+      "icon": "/i/004000/004075_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004075_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004075_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 97,
+      "name": "mystic panda",
+      "nameEn": "mystic panda",
+      "seats": 1,
+      "icon": "/i/004000/004070_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004070_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004070_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 98,
+      "name": "Sophic lanner",
+      "nameEn": "Sophic lanner",
+      "seats": 1,
+      "icon": "/i/004000/004071_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004071_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004071_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 99,
+      "name": "Starlight bear",
+      "nameEn": "Starlight bear",
+      "seats": 1,
+      "icon": "/i/004000/004102_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004102_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004102_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 100,
+      "name": "胖貓咪",
+      "nameEn": "black pegasus",
+      "seats": 1,
+      "icon": "/i/004000/004072_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004072_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004072_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "Mog 工房商店"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 101,
+      "name": "光之鳥",
+      "nameEn": "Arrhidaeus",
+      "seats": 1,
+      "icon": "/i/004000/004073_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004073_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004073_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "Mog 工房商店"
+        }
+      ],
+      "patch": "3.0"
+    },
+    {
+      "id": 102,
+      "name": "蒼白幻象",
+      "nameEn": "Raigo",
+      "seats": 1,
+      "icon": "/i/004000/004076_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004076_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004076_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "Mog 工房商店"
+        }
+      ],
+      "patch": "3.0"
+    },
+    {
+      "id": 103,
+      "name": "帝國機甲",
+      "nameEn": "Red Baron",
+      "seats": 1,
+      "icon": "/i/000000/000000_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F000000%2F000000_hr1.tex&format=png",
+      "iconPath": "ui/icon/000000/000000_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "Mog 工房商店"
+        }
+      ],
+      "patch": "4.0"
+    },
+    {
+      "id": 104,
+      "name": "彩虹陸行鳥",
+      "nameEn": "Demonic lanner",
+      "seats": 1,
+      "icon": "/i/004000/004077_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004077_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004077_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "Mog 工房商店"
+        }
+      ],
+      "patch": "3.0"
+    },
+    {
+      "id": 105,
+      "name": "白虎幻象",
+      "nameEn": "Firebird",
+      "seats": 1,
+      "icon": "/i/004000/004078_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004078_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004078_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "Mog 工房商店"
+        }
+      ],
+      "patch": "5.0"
+    },
+    {
+      "id": 106,
+      "name": "水精靈",
+      "nameEn": "eggshilaration system",
+      "seats": 1,
+      "icon": "/i/004000/004079_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004079_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004079_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "Mog 工房商店"
+        }
+      ],
+      "patch": "6.0"
+    },
+    {
+      "id": 108,
+      "name": "lone hellhound",
+      "nameEn": "lone hellhound",
+      "seats": 1,
+      "icon": "/i/004000/004080_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004080_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004080_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 109,
+      "name": "pack hellhound",
+      "nameEn": "pack hellhound",
+      "seats": 1,
+      "icon": "/i/004000/004081_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004081_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004081_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 110,
+      "name": "Yo-Kai 飛天板",
+      "nameEn": "Archon throne",
+      "seats": 1,
+      "icon": "/i/004000/004084_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004084_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004084_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "聯名活動",
+          "detail": "妖怪手錶聯名活動（2016）"
+        }
+      ],
+      "patch": "3.3"
+    },
+    {
+      "id": 111,
+      "name": "鏡面騎士",
+      "nameEn": "Syldra",
+      "seats": 1,
+      "icon": "/i/004000/004085_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004085_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004085_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "聯名活動",
+          "detail": "妖怪手錶聯名（任務）"
+        }
+      ],
+      "patch": "3.3"
+    },
+    {
+      "id": 112,
+      "name": "FF15 帝國飛行艦",
+      "nameEn": "Falcon",
+      "seats": 1,
+      "icon": "/i/004000/004086_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004086_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004086_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "聯名活動",
+          "detail": "FF15 聯名活動（2017）"
+        }
+      ],
+      "patch": "4.1"
+    },
+    {
+      "id": 113,
+      "name": "FF16 魔法盔甲",
+      "nameEn": "lone faehound",
+      "seats": 1,
+      "icon": "/i/004000/004082_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004082_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004082_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "聯名活動",
+          "detail": "FF16 聯名活動（2023）"
+        }
+      ],
+      "patch": "6.5"
+    },
+    {
+      "name": "南瓜馬車",
+      "patch": "2.2",
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": "全靈節限定活動"
+        }
+      ],
+      "nameEn": null,
+      "icon": null
+    },
+    {
+      "id": 114,
+      "name": "pack faehound",
+      "nameEn": "pack faehound",
+      "seats": 1,
+      "icon": "/i/004000/004083_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004083_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004083_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 115,
+      "name": "blissful kamuy",
+      "nameEn": "blissful kamuy",
+      "seats": 1,
+      "icon": "/i/004000/004087_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004087_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004087_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 116,
+      "name": "reveling kamuy",
+      "nameEn": "reveling kamuy",
+      "seats": 1,
+      "icon": "/i/004000/004088_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004088_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004088_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 121,
+      "name": "馴鹿陸行鳥",
+      "nameEn": "magitek predator",
+      "seats": 1,
+      "icon": "/i/004000/004089_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004089_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004089_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": "星靈節限定活動"
+        }
+      ],
+      "patch": "2.2"
+    },
+    {
+      "id": 122,
+      "name": "復活節陸行鳥",
+      "nameEn": "battle lion",
+      "seats": 1,
+      "icon": "/i/004000/004090_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004090_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004090_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": "卵祭節限定活動"
+        }
+      ],
+      "patch": "2.2"
+    },
+    {
+      "id": 123,
+      "name": "battle bear",
+      "nameEn": "battle bear",
+      "seats": 1,
+      "icon": "/i/004000/004091_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004091_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004091_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 124,
+      "name": "battle panther",
+      "nameEn": "battle panther",
+      "seats": 1,
+      "icon": "/i/004000/004092_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004092_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004092_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 125,
+      "name": "yol",
+      "nameEn": "yol",
+      "seats": 1,
+      "icon": "/i/004000/004093_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004093_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004093_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 126,
+      "name": "Alte Roite",
+      "nameEn": "Alte Roite",
+      "seats": 1,
+      "icon": "/i/004000/004094_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004094_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004094_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 127,
+      "name": "Centurio tiger",
+      "nameEn": "Centurio tiger",
+      "seats": 1,
+      "icon": "/i/004000/004095_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004095_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004095_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 128,
+      "name": "commandeered magitek armor",
+      "nameEn": "commandeered magitek armor",
+      "seats": 1,
+      "icon": "/i/000000/000000_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F000000%2F000000_hr1.tex&format=png",
+      "iconPath": "ui/icon/000000/000000_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 130,
+      "name": "深海幻影",
+      "nameEn": "Ixion",
+      "seats": 1,
+      "icon": "/i/004000/004096_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004096_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004096_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "探索航行",
+          "detail": "潛水艇探索 Sub-海域 Z"
+        }
+      ],
+      "patch": "5.3"
+    },
+    {
+      "name": "虛空漁夫",
+      "patch": "3.0",
+      "sources": [
+        {
+          "type": "探索航行",
+          "detail": "飛空艇探索 D-海域"
+        }
+      ],
+      "nameEn": null,
+      "icon": null
+    },
+    {
+      "id": 133,
+      "name": "legendary kamuy",
+      "nameEn": "legendary kamuy",
+      "seats": 1,
+      "icon": "/i/004000/004101_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004101_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004101_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 135,
+      "name": "Nezha chariot",
+      "nameEn": "Nezha chariot",
+      "seats": 1,
+      "icon": "/i/004000/004097_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004097_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004097_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 136,
+      "name": "striped ray",
+      "nameEn": "striped ray",
+      "seats": 1,
+      "icon": "/i/004000/004103_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004103_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004103_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 138,
+      "name": "Aquamarine Carbuncle",
+      "nameEn": "Aquamarine Carbuncle",
+      "seats": 1,
+      "icon": "/i/004000/004104_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004104_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004104_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 139,
+      "name": "Citrine Carbuncle",
+      "nameEn": "Citrine Carbuncle",
+      "seats": 1,
+      "icon": "/i/004000/004105_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004105_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004105_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 140,
+      "name": "煙火座騎",
+      "nameEn": "flying chair",
+      "seats": 1,
+      "icon": "/i/004000/004106_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004106_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004106_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "金碟",
+          "detail": "金碟 MGP 兌換 200,000"
+        }
+      ],
+      "patch": "3.2"
+    },
+    {
+      "id": 141,
+      "name": "陸行鳥衝浪板",
+      "nameEn": "magitek avenger",
+      "seats": 1,
+      "icon": "/i/004000/004107_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004107_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004107_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "金碟",
+          "detail": "金碟 MGP 兌換"
+        }
+      ],
+      "patch": "5.1"
+    },
+    {
+      "id": 142,
+      "name": "korpokkur kolossus",
+      "nameEn": "korpokkur kolossus",
+      "seats": 1,
+      "icon": "/i/004000/004108_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004108_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004108_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 143,
+      "name": "Red Hare",
+      "nameEn": "Red Hare",
+      "seats": 1,
+      "icon": "/i/004000/004109_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004109_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004109_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 144,
+      "name": "auspicious kamuy",
+      "nameEn": "auspicious kamuy",
+      "seats": 1,
+      "icon": "/i/004000/004110_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004110_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004110_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 145,
+      "name": "magitek death claw",
+      "nameEn": "magitek death claw",
+      "seats": 1,
+      "icon": "/i/004000/004111_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004111_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004111_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 146,
+      "name": "marid",
+      "nameEn": "marid",
+      "seats": 1,
+      "icon": "/i/004000/004112_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004112_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004112_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 147,
+      "name": "marid",
+      "nameEn": "marid",
+      "seats": 1,
+      "icon": "/i/000000/000000_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F000000%2F000000_hr1.tex&format=png",
+      "iconPath": "ui/icon/000000/000000_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 148,
+      "name": "true griffin",
+      "nameEn": "true griffin",
+      "seats": 1,
+      "icon": "/i/004000/004113_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004113_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004113_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 149,
+      "name": "true griffin",
+      "nameEn": "true griffin",
+      "seats": 1,
+      "icon": "/i/000000/000000_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F000000%2F000000_hr1.tex&format=png",
+      "iconPath": "ui/icon/000000/000000_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 150,
+      "name": "黑暗騎士",
+      "nameEn": "tyrannosaur",
+      "seats": 1,
+      "icon": "/i/004000/004116_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004116_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004116_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": "Crystal Conflict 系列 25"
+        }
+      ],
+      "patch": "4.0"
+    },
+    {
+      "id": 151,
+      "name": "末日幻象",
+      "nameEn": "Regalia Type-G",
+      "seats": 4,
+      "icon": "/i/004000/004138_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004138_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004138_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": "Crystalline Conflict 積分"
+        }
+      ],
+      "patch": "6.0"
+    },
+    {
+      "id": 152,
+      "name": "broken heart (right)",
+      "nameEn": "broken heart (right)",
+      "seats": 1,
+      "icon": "/i/004000/004114_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004114_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004114_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 153,
+      "name": "broken heart (left)",
+      "nameEn": "broken heart (left)",
+      "seats": 1,
+      "icon": "/i/004000/004115_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004115_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004115_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 154,
+      "name": "Typhon",
+      "nameEn": "Typhon",
+      "seats": 1,
+      "icon": "/i/004000/004136_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004136_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004136_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 156,
+      "name": "Air Force",
+      "nameEn": "Air Force",
+      "seats": 1,
+      "icon": "/i/004000/004117_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004117_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004117_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 158,
+      "name": "lunar kamuy",
+      "nameEn": "lunar kamuy",
+      "seats": 1,
+      "icon": "/i/004000/004127_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004127_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004127_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 159,
+      "name": "dodo",
+      "nameEn": "dodo",
+      "seats": 1,
+      "icon": "/i/004000/004122_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004122_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004122_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 160,
+      "name": "戰鬥馬",
+      "nameEn": "Indigo whale",
+      "seats": 2,
+      "icon": "/i/004000/004119_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004119_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004119_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "成就「剿滅危機」"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 161,
+      "name": "白金陸行鳥",
+      "nameEn": "Rathalos",
+      "seats": 1,
+      "icon": "/i/004000/004125_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004125_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004125_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "成就「萬能的陸行鳥」"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 162,
+      "name": "古老陸行鳥",
+      "nameEn": "magitek conveyor",
+      "seats": 1,
+      "icon": "/i/004000/004123_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004123_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004123_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "成就「FATE 征服者」"
+        }
+      ],
+      "patch": "4.0"
+    },
+    {
+      "id": 163,
+      "name": "宇宙船",
+      "nameEn": "prototype conveyor",
+      "seats": 1,
+      "icon": "/i/004000/004124_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004124_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004124_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "成就「漂流者」"
+        }
+      ],
+      "patch": "5.0"
+    },
+    {
+      "id": 164,
+      "name": "火鳳凰",
+      "nameEn": "mikoshi",
+      "seats": 1,
+      "icon": "/i/004000/004118_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004118_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004118_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "成就「終焉傳說」"
+        }
+      ],
+      "patch": "6.0"
+    },
+    {
+      "id": 166,
+      "name": "Juedi",
+      "nameEn": "Juedi",
+      "seats": 1,
+      "icon": "/i/004000/004126_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004126_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004126_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 167,
+      "name": "logistics node",
+      "nameEn": "logistics node",
+      "seats": 1,
+      "icon": "/i/004000/004121_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004121_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004121_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 168,
+      "name": "safeguard system",
+      "nameEn": "safeguard system",
+      "seats": 1,
+      "icon": "/i/004000/004120_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004120_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004120_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 170,
+      "name": "Grani",
+      "nameEn": "Grani",
+      "seats": 1,
+      "icon": "/i/004000/004128_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004128_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004128_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 171,
+      "name": "fatter cat",
+      "nameEn": "fatter cat",
+      "seats": 1,
+      "icon": "/i/004000/004129_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004129_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004129_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 172,
+      "name": "euphonious kamuy",
+      "nameEn": "euphonious kamuy",
+      "seats": 1,
+      "icon": "/i/004000/004130_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004130_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004130_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 173,
+      "name": "Model O",
+      "nameEn": "Model O",
+      "seats": 1,
+      "icon": "/i/004000/004131_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004131_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004131_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 174,
+      "name": "magitek sky armor",
+      "nameEn": "magitek sky armor",
+      "seats": 1,
+      "icon": "/i/004000/004132_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004132_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004132_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 175,
+      "name": "magicked carpet",
+      "nameEn": "magicked carpet",
+      "seats": 1,
+      "icon": "/i/004000/004147_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004147_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004147_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 176,
+      "name": "magna roader",
+      "nameEn": "magna roader",
+      "seats": 1,
+      "icon": "/i/004000/004133_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004133_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004133_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 177,
+      "name": "fat black chocobo",
+      "nameEn": "fat black chocobo",
+      "seats": 1,
+      "icon": "/i/004000/004134_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004134_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004134_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 178,
+      "name": "Eldthurs",
+      "nameEn": "Eldthurs",
+      "seats": 1,
+      "icon": "/i/004000/004137_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004137_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004137_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 179,
+      "name": "maxima roader",
+      "nameEn": "maxima roader",
+      "seats": 1,
+      "icon": "/i/004000/004139_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004139_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004139_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 180,
+      "name": "Sabotender Emperador",
+      "nameEn": "Sabotender Emperador",
+      "seats": 1,
+      "icon": "/i/004000/004140_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004140_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004140_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 181,
+      "name": "kamuy of the Nine Tails",
+      "nameEn": "kamuy of the Nine Tails",
+      "seats": 1,
+      "icon": "/i/004000/004141_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004141_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004141_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 182,
+      "name": "hallowed kamuy",
+      "nameEn": "hallowed kamuy",
+      "seats": 1,
+      "icon": "/i/004000/004142_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004142_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004142_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 183,
+      "name": "war tiger",
+      "nameEn": "war tiger",
+      "seats": 1,
+      "icon": "/i/004000/004143_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004143_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004143_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 184,
+      "name": "Eurekan petrel",
+      "nameEn": "Eurekan petrel",
+      "seats": 1,
+      "icon": "/i/004000/004144_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004144_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004144_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 185,
+      "name": "magitek avenger A1",
+      "nameEn": "magitek avenger A1",
+      "seats": 1,
+      "icon": "/i/004000/004145_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004145_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004145_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 186,
+      "name": "Demi-Ozma",
+      "nameEn": "Demi-Ozma",
+      "seats": 1,
+      "icon": "/i/004000/004146_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004146_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004146_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 187,
+      "name": "amaro",
+      "nameEn": "amaro",
+      "seats": 1,
+      "icon": "/i/004000/004156_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004156_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004156_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 188,
+      "name": "skyslipper",
+      "nameEn": "skyslipper",
+      "seats": 4,
+      "icon": "/i/004000/004149_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004149_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004149_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 189,
+      "name": "fae gwiber",
+      "nameEn": "fae gwiber",
+      "seats": 1,
+      "icon": "/i/004000/004148_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004148_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004148_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 190,
+      "name": "triceratops",
+      "nameEn": "triceratops",
+      "seats": 1,
+      "icon": "/i/004000/004150_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004150_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004150_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 191,
+      "name": "ironfrog mover",
+      "nameEn": "ironfrog mover",
+      "seats": 1,
+      "icon": "/i/004000/004151_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004151_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004151_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 192,
+      "name": "innocent gwiber",
+      "nameEn": "innocent gwiber",
+      "seats": 1,
+      "icon": "/i/004000/004153_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004153_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004153_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 193,
+      "name": "magicked bed",
+      "nameEn": "magicked bed",
+      "seats": 1,
+      "icon": "/i/004000/004152_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004152_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004152_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 194,
+      "name": "Circus ahriman",
+      "nameEn": "Circus ahriman",
+      "seats": 1,
+      "icon": "/i/004000/004154_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004154_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004154_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 195,
+      "name": "sunspun cumulus",
+      "nameEn": "sunspun cumulus",
+      "seats": 1,
+      "icon": "/i/004000/004155_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004155_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004155_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 197,
+      "name": "battle tiger",
+      "nameEn": "battle tiger",
+      "seats": 1,
+      "icon": "/i/004000/004157_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004157_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004157_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 200,
+      "name": "morbol",
+      "nameEn": "morbol",
+      "seats": 1,
+      "icon": "/i/004000/004158_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004158_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004158_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 201,
+      "name": "portly porxie",
+      "nameEn": "portly porxie",
+      "seats": 1,
+      "icon": "/i/004000/004159_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004159_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004159_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 202,
+      "name": "Epimetheus",
+      "nameEn": "Epimetheus",
+      "seats": 1,
+      "icon": "/i/004000/004160_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004160_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004160_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 203,
+      "name": "Menoetius",
+      "nameEn": "Menoetius",
+      "seats": 1,
+      "icon": "/i/004000/004161_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004161_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004161_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 204,
+      "name": "Construct VII",
+      "nameEn": "Construct VII",
+      "seats": 1,
+      "icon": "/i/004000/004162_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004162_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004162_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 205,
+      "name": "shadow gwiber",
+      "nameEn": "shadow gwiber",
+      "seats": 1,
+      "icon": "/i/004000/004163_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004163_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004163_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 206,
+      "name": "spriggan stonecarrier",
+      "nameEn": "spriggan stonecarrier",
+      "seats": 1,
+      "icon": "/i/004000/004164_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004164_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004164_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 207,
+      "name": "forgiven reticence",
+      "nameEn": "forgiven reticence",
+      "seats": 1,
+      "icon": "/i/004000/004165_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004165_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004165_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 208,
+      "name": "dhalmel",
+      "nameEn": "dhalmel",
+      "seats": 1,
+      "icon": "/i/004000/004166_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004166_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004166_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 209,
+      "name": "albino karakul",
+      "nameEn": "albino karakul",
+      "seats": 1,
+      "icon": "/i/004000/004167_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004167_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004167_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 211,
+      "name": "ufiti",
+      "nameEn": "ufiti",
+      "seats": 1,
+      "icon": "/i/004000/004168_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004168_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004168_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 212,
+      "name": "deinonychus",
+      "nameEn": "deinonychus",
+      "seats": 1,
+      "icon": "/i/004000/004208_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004208_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004208_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 213,
+      "name": "Construct 14",
+      "nameEn": "Construct 14",
+      "seats": 1,
+      "icon": "/i/004000/004175_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004175_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004175_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 214,
+      "name": "kingly peacock",
+      "nameEn": "kingly peacock",
+      "seats": 1,
+      "icon": "/i/004000/004176_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004176_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004176_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 215,
+      "name": "Great Vessel of Ronka",
+      "nameEn": "Great Vessel of Ronka",
+      "seats": 1,
+      "icon": "/i/004000/004174_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004174_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004174_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 216,
+      "name": "pteranodon",
+      "nameEn": "pteranodon",
+      "seats": 1,
+      "icon": "/i/004000/004169_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004169_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004169_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 217,
+      "name": "ruby gwiber",
+      "nameEn": "ruby gwiber",
+      "seats": 1,
+      "icon": "/i/004000/004170_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004170_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004170_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 218,
+      "name": "hybodus",
+      "nameEn": "hybodus",
+      "seats": 1,
+      "icon": "/i/004000/004171_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004171_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004171_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 219,
+      "name": "Ramuh",
+      "nameEn": "Ramuh",
+      "seats": 1,
+      "icon": "/i/004000/004172_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004172_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004172_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 220,
+      "name": "Rubellite Carbuncle",
+      "nameEn": "Rubellite Carbuncle",
+      "seats": 1,
+      "icon": "/i/004000/004173_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004173_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004173_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 222,
+      "name": "chocobo carriage",
+      "nameEn": "chocobo carriage",
+      "seats": 4,
+      "icon": "/i/004000/004177_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004177_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004177_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 223,
+      "name": "Rolling Tankard",
+      "nameEn": "Rolling Tankard",
+      "seats": 1,
+      "icon": "/i/004000/004178_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004178_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004178_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 224,
+      "name": "Gabriel α",
+      "nameEn": "Gabriel α",
+      "seats": 1,
+      "icon": "/i/004000/004179_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004179_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004179_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 225,
+      "name": "megalotragus",
+      "nameEn": "megalotragus",
+      "seats": 1,
+      "icon": "/i/004000/004180_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004180_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004180_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 226,
+      "name": "gwiber of light",
+      "nameEn": "gwiber of light",
+      "seats": 1,
+      "icon": "/i/004000/004181_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004181_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004181_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 228,
+      "name": "Jibanyan couch",
+      "nameEn": "Jibanyan couch",
+      "seats": 1,
+      "icon": "/i/004000/004182_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004182_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004182_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 229,
+      "name": "magitek hyperconveyor",
+      "nameEn": "magitek hyperconveyor",
+      "seats": 1,
+      "icon": "/i/004000/004183_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004183_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004183_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 230,
+      "name": "Ehll Tou",
+      "nameEn": "Ehll Tou",
+      "seats": 1,
+      "icon": "/i/004000/004184_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004184_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004184_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 231,
+      "name": "Incitatus",
+      "nameEn": "Incitatus",
+      "seats": 1,
+      "icon": "/i/004000/004185_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004185_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004185_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 232,
+      "name": "snowman",
+      "nameEn": "snowman",
+      "seats": 1,
+      "icon": "/i/004000/004186_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004186_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004186_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 233,
+      "name": "Lunar Whale",
+      "nameEn": "Lunar Whale",
+      "seats": 8,
+      "icon": "/i/004000/004187_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004187_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004187_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 234,
+      "name": "Eden",
+      "nameEn": "Eden",
+      "seats": 1,
+      "icon": "/i/004000/004188_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004188_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004188_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 235,
+      "name": "Cerberus",
+      "nameEn": "Cerberus",
+      "seats": 4,
+      "icon": "/i/004000/004189_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004189_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004189_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 236,
+      "name": "big shell",
+      "nameEn": "big shell",
+      "seats": 1,
+      "icon": "/i/004000/004190_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004190_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004190_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 237,
+      "name": "Arion",
+      "nameEn": "Arion",
+      "seats": 1,
+      "icon": "/i/004000/004191_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004191_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004191_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 238,
+      "name": "emerald gwiber",
+      "nameEn": "emerald gwiber",
+      "seats": 1,
+      "icon": "/i/004000/004192_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004192_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004192_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 239,
+      "name": "prototype roader",
+      "nameEn": "prototype roader",
+      "seats": 1,
+      "icon": "/i/004000/004193_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004193_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004193_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 240,
+      "name": "chocorpokkur",
+      "nameEn": "chocorpokkur",
+      "seats": 1,
+      "icon": "/i/004000/004194_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004194_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004194_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 241,
+      "name": "Gabriel Mark III",
+      "nameEn": "Gabriel Mark III",
+      "seats": 1,
+      "icon": "/i/004000/004195_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004195_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004195_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 242,
+      "name": "antelope doe",
+      "nameEn": "antelope doe",
+      "seats": 1,
+      "icon": "/i/004000/004197_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004197_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004197_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 243,
+      "name": "antelope stag",
+      "nameEn": "antelope stag",
+      "seats": 1,
+      "icon": "/i/004000/004198_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004198_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004198_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 245,
+      "name": "Landerwaffe",
+      "nameEn": "Landerwaffe",
+      "seats": 2,
+      "icon": "/i/004000/004199_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004199_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004199_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 246,
+      "name": "Al-iklil",
+      "nameEn": "Al-iklil",
+      "seats": 2,
+      "icon": "/i/004000/004200_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004200_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004200_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 247,
+      "name": "Cruise Chaser",
+      "nameEn": "Cruise Chaser",
+      "seats": 2,
+      "icon": "/i/004000/004201_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004201_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004201_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 248,
+      "name": "Construct VI-S",
+      "nameEn": "Construct VI-S",
+      "seats": 1,
+      "icon": "/i/004000/004196_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004196_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004196_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 249,
+      "name": "diamond gwiber",
+      "nameEn": "diamond gwiber",
+      "seats": 1,
+      "icon": "/i/004000/004209_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004209_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004209_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 250,
+      "name": "polar bear",
+      "nameEn": "polar bear",
+      "seats": 1,
+      "icon": "/i/004000/004210_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004210_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004210_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 252,
+      "name": "gilded mikoshi",
+      "nameEn": "gilded mikoshi",
+      "seats": 1,
+      "icon": "/i/004000/004211_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004211_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004211_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 253,
+      "name": "Resplendent Vessel of Ronka",
+      "nameEn": "Resplendent Vessel of Ronka",
+      "seats": 1,
+      "icon": "/i/004000/004212_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004212_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004212_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 254,
+      "name": "magicked card",
+      "nameEn": "magicked card",
+      "seats": 1,
+      "icon": "/i/004000/004213_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004213_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004213_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 255,
+      "name": "island mandragora",
+      "nameEn": "island mandragora",
+      "seats": 1,
+      "icon": "/i/004000/004202_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004202_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004202_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 256,
+      "name": "island Onion Prince",
+      "nameEn": "island Onion Prince",
+      "seats": 1,
+      "icon": "/i/004000/004203_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004203_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004203_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 257,
+      "name": "island Eggplant Knight",
+      "nameEn": "island Eggplant Knight",
+      "seats": 1,
+      "icon": "/i/004000/004204_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004204_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004204_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 258,
+      "name": "island Garlic Jester",
+      "nameEn": "island Garlic Jester",
+      "seats": 1,
+      "icon": "/i/004000/004205_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004205_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004205_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 259,
+      "name": "island Tomato King",
+      "nameEn": "island Tomato King",
+      "seats": 1,
+      "icon": "/i/004000/004206_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004206_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004206_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 260,
+      "name": "island Mandragora Queen",
+      "nameEn": "island Mandragora Queen",
+      "seats": 1,
+      "icon": "/i/004000/004207_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004207_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004207_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 261,
+      "name": "lynx of eternal darkness",
+      "nameEn": "lynx of eternal darkness",
+      "seats": 1,
+      "icon": "/i/004000/004214_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004214_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004214_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 262,
+      "name": "lynx of divine light",
+      "nameEn": "lynx of divine light",
+      "seats": 1,
+      "icon": "/i/004000/004215_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004215_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004215_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 263,
+      "name": "Argos",
+      "nameEn": "Argos",
+      "seats": 1,
+      "icon": "/i/004000/004216_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004216_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004216_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 264,
+      "name": "dreadnaught",
+      "nameEn": "dreadnaught",
+      "seats": 1,
+      "icon": "/i/004000/004217_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004217_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004217_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 265,
+      "name": "Demi-Phoinix",
+      "nameEn": "Demi-Phoinix",
+      "seats": 1,
+      "icon": "/i/004000/004218_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004218_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004218_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 266,
+      "name": "Calydontis",
+      "nameEn": "Calydontis",
+      "seats": 1,
+      "icon": "/i/004000/004219_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004219_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004219_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 267,
+      "name": "Victor",
+      "nameEn": "Victor",
+      "seats": 1,
+      "icon": "/i/004000/004220_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004220_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004220_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 268,
+      "name": "level checker",
+      "nameEn": "level checker",
+      "seats": 1,
+      "icon": "/i/004000/004221_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004221_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004221_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 269,
+      "name": "Papa Paissa",
+      "nameEn": "Papa Paissa",
+      "seats": 1,
+      "icon": "/i/004000/004222_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004222_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004222_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 273,
+      "name": "wivre",
+      "nameEn": "wivre",
+      "seats": 1,
+      "icon": "/i/004000/004223_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004223_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004223_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 274,
+      "name": "porxie king",
+      "nameEn": "porxie king",
+      "seats": 1,
+      "icon": "/i/004000/004224_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004224_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004224_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 277,
+      "name": "Garlond GL-II",
+      "nameEn": "Garlond GL-II",
+      "seats": 1,
+      "icon": "/i/004000/004235_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004235_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004235_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 279,
+      "name": "mechanical lotus",
+      "nameEn": "mechanical lotus",
+      "seats": 1,
+      "icon": "/i/004000/004098_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004098_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004098_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 280,
+      "name": "Fylgja",
+      "nameEn": "Fylgja",
+      "seats": 1,
+      "icon": "/i/004000/004225_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004225_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004225_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 281,
+      "name": "alkonost",
+      "nameEn": "alkonost",
+      "seats": 1,
+      "icon": "/i/004000/004226_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004226_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004226_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 282,
+      "name": "island buffalo",
+      "nameEn": "island buffalo",
+      "seats": 1,
+      "icon": "/i/004000/004265_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004265_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004265_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 283,
+      "name": "brachiosaur",
+      "nameEn": "brachiosaur",
+      "seats": 1,
+      "icon": "/i/004000/004304_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004304_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004304_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 284,
+      "name": "pod 602",
+      "nameEn": "pod 602",
+      "seats": 1,
+      "icon": "/i/004000/004227_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004227_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004227_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 285,
+      "name": "moon-hopper",
+      "nameEn": "moon-hopper",
+      "seats": 1,
+      "icon": "/i/004000/004245_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004245_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004245_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 286,
+      "name": "island alligator",
+      "nameEn": "island alligator",
+      "seats": 1,
+      "icon": "/i/004000/004255_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004255_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004255_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 287,
+      "name": "hippo cart",
+      "nameEn": "hippo cart",
+      "seats": 1,
+      "icon": "/i/004000/004228_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004228_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004228_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 288,
+      "name": "troll",
+      "nameEn": "troll",
+      "seats": 1,
+      "icon": "/i/004000/004229_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004229_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004229_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 290,
+      "name": "UFO",
+      "nameEn": "UFO",
+      "seats": 1,
+      "icon": "/i/004000/004230_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004230_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004230_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 291,
+      "name": "vinegaroon",
+      "nameEn": "vinegaroon",
+      "seats": 1,
+      "icon": "/i/004000/004231_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004231_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004231_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 292,
+      "name": "Orthos craklaw",
+      "nameEn": "Orthos craklaw",
+      "seats": 1,
+      "icon": "/i/004000/004232_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004232_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004232_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 293,
+      "name": "bluefeather lynx",
+      "nameEn": "bluefeather lynx",
+      "seats": 1,
+      "icon": "/i/004000/004233_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004233_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004233_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 294,
+      "name": "megashiba",
+      "nameEn": "megashiba",
+      "seats": 1,
+      "icon": "/i/004000/004234_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004234_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004234_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 297,
+      "name": "traveling supporter",
+      "nameEn": "traveling supporter",
+      "seats": 1,
+      "icon": "/i/004000/004264_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004264_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004264_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 298,
+      "name": "Miw Miisv",
+      "nameEn": "Miw Miisv",
+      "seats": 1,
+      "icon": "/i/004000/004236_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004236_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004236_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 299,
+      "name": "wondrous lanner",
+      "nameEn": "wondrous lanner",
+      "seats": 1,
+      "icon": "/i/004000/004237_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004237_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004237_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 300,
+      "name": "magicked umbrella",
+      "nameEn": "magicked umbrella",
+      "seats": 1,
+      "icon": "/i/004000/004238_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004238_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004238_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 301,
+      "name": "magicked parasol",
+      "nameEn": "magicked parasol",
+      "seats": 1,
+      "icon": "/i/004000/004239_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004239_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004239_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 302,
+      "name": "Starlight steed",
+      "nameEn": "Starlight steed",
+      "seats": 1,
+      "icon": "/i/004000/004240_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004240_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004240_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 303,
+      "name": "Sil'dihn throne",
+      "nameEn": "Sil'dihn throne",
+      "seats": 1,
+      "icon": "/i/004000/004243_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004243_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004243_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 304,
+      "name": "silkie",
+      "nameEn": "silkie",
+      "seats": 1,
+      "icon": "/i/004000/004244_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004244_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004244_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 305,
+      "name": "sunforged",
+      "nameEn": "sunforged",
+      "seats": 1,
+      "icon": "/i/004000/004241_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004241_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004241_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 306,
+      "name": "lynx of imperious wind",
+      "nameEn": "lynx of imperious wind",
+      "seats": 1,
+      "icon": "/i/004000/004242_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004242_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004242_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 308,
+      "name": "aeturna",
+      "nameEn": "aeturna",
+      "seats": 1,
+      "icon": "/i/004000/004246_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004246_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004246_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 310,
+      "name": "set of ceruleum balloons",
+      "nameEn": "set of ceruleum balloons",
+      "seats": 1,
+      "icon": "/i/004000/004247_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004247_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004247_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 311,
+      "name": "Anden III",
+      "nameEn": "Anden III",
+      "seats": 1,
+      "icon": "/i/004000/004248_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004248_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004248_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 312,
+      "name": "Blackjack",
+      "nameEn": "Blackjack",
+      "seats": 4,
+      "icon": "/i/004000/004249_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004249_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004249_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 313,
+      "name": "Phaethon",
+      "nameEn": "Phaethon",
+      "seats": 1,
+      "icon": "/i/004000/004250_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004250_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004250_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 314,
+      "name": "Pinky",
+      "nameEn": "Pinky",
+      "seats": 1,
+      "icon": "/i/004000/004251_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004251_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004251_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 315,
+      "name": "lynx of righteous fire",
+      "nameEn": "lynx of righteous fire",
+      "seats": 1,
+      "icon": "/i/004000/004252_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004252_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004252_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 316,
+      "name": "magitek avenger G1",
+      "nameEn": "magitek avenger G1",
+      "seats": 1,
+      "icon": "/i/004000/004253_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004253_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004253_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 317,
+      "name": "Chrysomallos",
+      "nameEn": "Chrysomallos",
+      "seats": 1,
+      "icon": "/i/004000/004254_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004254_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004254_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 318,
+      "name": "Garlond GL-IS",
+      "nameEn": "Garlond GL-IS",
+      "seats": 2,
+      "icon": "/i/004000/004256_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004256_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004256_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 319,
+      "name": "megaloambystoma",
+      "nameEn": "megaloambystoma",
+      "seats": 1,
+      "icon": "/i/004000/004257_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004257_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004257_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 320,
+      "name": "Rising Phoenix",
+      "nameEn": "Rising Phoenix",
+      "seats": 1,
+      "icon": "/i/004000/004258_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004258_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004258_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 321,
+      "name": "burabura chochin",
+      "nameEn": "burabura chochin",
+      "seats": 1,
+      "icon": "/i/004000/004259_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004259_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004259_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 322,
+      "name": "Shishioji",
+      "nameEn": "Shishioji",
+      "seats": 1,
+      "icon": "/i/004000/004260_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004260_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004260_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 323,
+      "name": "shadow wolf",
+      "nameEn": "shadow wolf",
+      "seats": 1,
+      "icon": "/i/004000/004261_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004261_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004261_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 324,
+      "name": "magicked children's bed",
+      "nameEn": "magicked children's bed",
+      "seats": 1,
+      "icon": "/i/004000/004262_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004262_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004262_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 325,
+      "name": "lynx of fallen shadow",
+      "nameEn": "lynx of fallen shadow",
+      "seats": 1,
+      "icon": "/i/004000/004263_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004263_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004263_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 326,
+      "name": "Torgal",
+      "nameEn": "Torgal",
+      "seats": 1,
+      "icon": "/i/004000/004266_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004266_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004266_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 327,
+      "name": "Ark",
+      "nameEn": "Ark",
+      "seats": 1,
+      "icon": "/i/004000/004267_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004267_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004267_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 328,
+      "name": "apocryphal Bahamut",
+      "nameEn": "apocryphal Bahamut",
+      "seats": 1,
+      "icon": "/i/004000/004268_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004268_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004268_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 329,
+      "name": "crescent moon",
+      "nameEn": "crescent moon",
+      "seats": 1,
+      "icon": "/i/004000/004269_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004269_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004269_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 330,
+      "name": "Rhiyes",
+      "nameEn": "Rhiyes",
+      "seats": 1,
+      "icon": "/i/004000/004270_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004270_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004270_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 331,
+      "name": "oppressor",
+      "nameEn": "oppressor",
+      "seats": 1,
+      "icon": "/i/004000/004271_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004271_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004271_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 332,
+      "name": "lynx of abyssal grief",
+      "nameEn": "lynx of abyssal grief",
+      "seats": 1,
+      "icon": "/i/004000/004272_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004272_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004272_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 333,
+      "name": "sabotender de la luna",
+      "nameEn": "sabotender de la luna",
+      "seats": 1,
+      "icon": "/i/004000/004273_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004273_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004273_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 334,
+      "name": "spectral Statice",
+      "nameEn": "spectral Statice",
+      "seats": 1,
+      "icon": "/i/004000/004274_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004274_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004274_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 335,
+      "name": "Garlond GL-IIT",
+      "nameEn": "Garlond GL-IIT",
+      "seats": 2,
+      "icon": "/i/004000/004275_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004275_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004275_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 336,
+      "name": "Peatie",
+      "nameEn": "Peatie",
+      "seats": 1,
+      "icon": "/i/004000/004276_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004276_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004276_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 337,
+      "name": "Alsvid",
+      "nameEn": "Alsvid",
+      "seats": 1,
+      "icon": "/i/004000/004277_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004277_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004277_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 338,
+      "name": "quaqua",
+      "nameEn": "quaqua",
+      "seats": 1,
+      "icon": "/i/004000/004278_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004278_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004278_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 339,
+      "name": "island Peerifool",
+      "nameEn": "island Peerifool",
+      "seats": 1,
+      "icon": "/i/004000/004279_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004279_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004279_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 340,
+      "name": "island adenium",
+      "nameEn": "island adenium",
+      "seats": 1,
+      "icon": "/i/004000/004280_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004280_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004280_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 342,
+      "name": "ty'aitya",
+      "nameEn": "ty'aitya",
+      "seats": 1,
+      "icon": "/i/004000/004292_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004292_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004292_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 343,
+      "name": "air-wheeler A9",
+      "nameEn": "air-wheeler A9",
+      "seats": 1,
+      "icon": "/i/004000/004281_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004281_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004281_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 344,
+      "name": "alpaca",
+      "nameEn": "alpaca",
+      "seats": 1,
+      "icon": "/i/004000/004282_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004282_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004282_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 345,
+      "name": "wings of ruin",
+      "nameEn": "wings of ruin",
+      "seats": 1,
+      "icon": "/i/004000/004283_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004283_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004283_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 346,
+      "name": "wings of resolve",
+      "nameEn": "wings of resolve",
+      "seats": 1,
+      "icon": "/i/004000/004284_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004284_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004284_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 347,
+      "name": "outrunner",
+      "nameEn": "outrunner",
+      "seats": 1,
+      "icon": "/i/004000/004285_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004285_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004285_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 348,
+      "name": "mehwapyarra",
+      "nameEn": "mehwapyarra",
+      "seats": 1,
+      "icon": "/i/004000/004286_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004286_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004286_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 349,
+      "name": "monowheel S1",
+      "nameEn": "monowheel S1",
+      "seats": 1,
+      "icon": "/i/004000/004287_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004287_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004287_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 350,
+      "name": "rroneek",
+      "nameEn": "rroneek",
+      "seats": 1,
+      "icon": "/i/004000/004288_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004288_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004288_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 351,
+      "name": "Ullr",
+      "nameEn": "Ullr",
+      "seats": 1,
+      "icon": "/i/004000/004289_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004289_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004289_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 352,
+      "name": "qeziigural",
+      "nameEn": "qeziigural",
+      "seats": 1,
+      "icon": "/i/004000/004290_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004290_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004290_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 353,
+      "name": "automatoise",
+      "nameEn": "automatoise",
+      "seats": 1,
+      "icon": "/i/004000/004291_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004291_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004291_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 354,
+      "name": "mountain zu",
+      "nameEn": "mountain zu",
+      "seats": 1,
+      "icon": "/i/004000/004293_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004293_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004293_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 356,
+      "name": "barreltender",
+      "nameEn": "barreltender",
+      "seats": 1,
+      "icon": "/i/004000/004294_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004294_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004294_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 357,
+      "name": "eggeater",
+      "nameEn": "eggeater",
+      "seats": 1,
+      "icon": "/i/004000/004306_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004306_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004306_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 358,
+      "name": "punutiy",
+      "nameEn": "punutiy",
+      "seats": 1,
+      "icon": "/i/004000/004296_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004296_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004296_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 359,
+      "name": "Alexandrian axe beak",
+      "nameEn": "Alexandrian axe beak",
+      "seats": 1,
+      "icon": "/i/004000/004297_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004297_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004297_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 360,
+      "name": "shroud of Darkness",
+      "nameEn": "shroud of Darkness",
+      "seats": 1,
+      "icon": "/i/004000/004298_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004298_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004298_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 361,
+      "name": "dais of Darkness",
+      "nameEn": "dais of Darkness",
+      "seats": 1,
+      "icon": "/i/004000/004299_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004299_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004299_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 362,
+      "name": "hovering hot pot",
+      "nameEn": "hovering hot pot",
+      "seats": 1,
+      "icon": "/i/004000/004300_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004300_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004300_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 363,
+      "name": "wings of eternity",
+      "nameEn": "wings of eternity",
+      "seats": 1,
+      "icon": "/i/004000/004301_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004301_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004301_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 364,
+      "name": "vacuum suit",
+      "nameEn": "vacuum suit",
+      "seats": 1,
+      "icon": "/i/004000/004302_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004302_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004302_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 365,
+      "name": "venturous kamuy",
+      "nameEn": "venturous kamuy",
+      "seats": 1,
+      "icon": "/i/004000/004303_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004303_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004303_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 368,
+      "name": "CHL P-0005",
+      "nameEn": "CHL P-0005",
+      "seats": 1,
+      "icon": "/i/000000/000000_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F000000%2F000000_hr1.tex&format=png",
+      "iconPath": "ui/icon/000000/000000_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 371,
+      "name": "cosmic countenance",
+      "nameEn": "cosmic countenance",
+      "seats": 1,
+      "icon": "/i/004000/004330_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004330_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004330_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 372,
+      "name": "demon haul",
+      "nameEn": "demon haul",
+      "seats": 1,
+      "icon": "/i/004000/004307_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004307_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004307_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 373,
+      "name": "petalodus",
+      "nameEn": "petalodus",
+      "seats": 1,
+      "icon": "/i/004000/004308_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004308_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004308_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 374,
+      "name": "snowstreamer",
+      "nameEn": "snowstreamer",
+      "seats": 1,
+      "icon": "/i/004000/004305_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004305_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004305_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 378,
+      "name": "CHL W-0001",
+      "nameEn": "CHL W-0001",
+      "seats": 1,
+      "icon": "/i/000000/000000_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F000000%2F000000_hr1.tex&format=png",
+      "iconPath": "ui/icon/000000/000000_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 379,
+      "name": "pilgrim's protector",
+      "nameEn": "pilgrim's protector",
+      "seats": 1,
+      "icon": "/i/004000/004317_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004317_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004317_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 381,
+      "name": "branchbearer",
+      "nameEn": "branchbearer",
+      "seats": 1,
+      "icon": "/i/004000/004310_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004310_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004310_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 382,
+      "name": "air-wheeler C9",
+      "nameEn": "air-wheeler C9",
+      "seats": 4,
+      "icon": "/i/004000/004311_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004311_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004311_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 383,
+      "name": "ancient airship",
+      "nameEn": "ancient airship",
+      "seats": 4,
+      "icon": "/i/004000/004312_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004312_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004312_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 385,
+      "name": "high mobility vacuum suit",
+      "nameEn": "high mobility vacuum suit",
+      "seats": 1,
+      "icon": "/i/004000/004316_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004316_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004316_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 386,
+      "name": "warp loader",
+      "nameEn": "warp loader",
+      "seats": 1,
+      "icon": "/i/004000/004309_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004309_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004309_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 388,
+      "name": "His Royal Headness on Parade",
+      "nameEn": "His Royal Headness on Parade",
+      "seats": 1,
+      "icon": "/i/004000/004313_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004313_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004313_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 389,
+      "name": "wings of the knighthood",
+      "nameEn": "wings of the knighthood",
+      "seats": 1,
+      "icon": "/i/004000/004314_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004314_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004314_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 390,
+      "name": "magitek slasher",
+      "nameEn": "magitek slasher",
+      "seats": 1,
+      "icon": "/i/004000/004315_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004315_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004315_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 393,
+      "name": "Vurgar the Loyal",
+      "nameEn": "Vurgar the Loyal",
+      "seats": 1,
+      "icon": "/i/004000/004318_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004318_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004318_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 394,
+      "name": "wanyudo",
+      "nameEn": "wanyudo",
+      "seats": 1,
+      "icon": "/i/004000/004331_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004331_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004331_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 395,
+      "name": "forgiven mimicry",
+      "nameEn": "forgiven mimicry",
+      "seats": 1,
+      "icon": "/i/004000/004319_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004319_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004319_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 396,
+      "name": "Ambulario",
+      "nameEn": "Ambulario",
+      "seats": 1,
+      "icon": "/i/004000/004320_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004320_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004320_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 397,
+      "name": "shagcoat cat",
+      "nameEn": "shagcoat cat",
+      "seats": 1,
+      "icon": "/i/004000/004321_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004321_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004321_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 398,
+      "name": "Seikret",
+      "nameEn": "Seikret",
+      "seats": 1,
+      "icon": "/i/004000/004322_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004322_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004322_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 399,
+      "name": "Felyne support team cart",
+      "nameEn": "Felyne support team cart",
+      "seats": 1,
+      "icon": "/i/004000/004323_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004323_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004323_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 400,
+      "name": "yan",
+      "nameEn": "yan",
+      "seats": 1,
+      "icon": "/i/004000/004324_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004324_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004324_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 401,
+      "name": "interstellar dhalmel",
+      "nameEn": "interstellar dhalmel",
+      "seats": 1,
+      "icon": "/i/004000/004325_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004325_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004325_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 402,
+      "name": "cosmoboard",
+      "nameEn": "cosmoboard",
+      "seats": 1,
+      "icon": "/i/004000/004326_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004326_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004326_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 403,
+      "name": "chandelier of First Light",
+      "nameEn": "chandelier of First Light",
+      "seats": 1,
+      "icon": "/i/004000/004327_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004327_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004327_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 404,
+      "name": "CHL P-0006",
+      "nameEn": "CHL P-0006",
+      "seats": 1,
+      "icon": "/i/000000/000000_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F000000%2F000000_hr1.tex&format=png",
+      "iconPath": "ui/icon/000000/000000_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 405,
+      "name": "CHL W-0002",
+      "nameEn": "CHL W-0002",
+      "seats": 1,
+      "icon": "/i/000000/000000_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F000000%2F000000_hr1.tex&format=png",
+      "iconPath": "ui/icon/000000/000000_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 407,
+      "name": "wings of death",
+      "nameEn": "wings of death",
+      "seats": 1,
+      "icon": "/i/004000/004328_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004328_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004328_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 408,
+      "name": "ornamental shrublet",
+      "nameEn": "ornamental shrublet",
+      "seats": 1,
+      "icon": "/i/004000/004329_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004329_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004329_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 409,
+      "name": "interstellar leafkin",
+      "nameEn": "interstellar leafkin",
+      "seats": 1,
+      "icon": "/i/004000/004344_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004344_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004344_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 411,
+      "name": "dynamite",
+      "nameEn": "dynamite",
+      "seats": 1,
+      "icon": "/i/004000/004332_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004332_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004332_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 412,
+      "name": "genie of the lamp",
+      "nameEn": "genie of the lamp",
+      "seats": 1,
+      "icon": "/i/004000/004333_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004333_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004333_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 413,
+      "name": "Lowrider T1RANT",
+      "nameEn": "Lowrider T1RANT",
+      "seats": 1,
+      "icon": "/i/004000/004334_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004334_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004334_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 414,
+      "name": "uolon",
+      "nameEn": "uolon",
+      "seats": 1,
+      "icon": "/i/004000/004335_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004335_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004335_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 415,
+      "name": "volatile gravity vacuum suit",
+      "nameEn": "volatile gravity vacuum suit",
+      "seats": 1,
+      "icon": "/i/004000/004336_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004336_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004336_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 416,
+      "name": "cosmic armored weapon",
+      "nameEn": "cosmic armored weapon",
+      "seats": 1,
+      "icon": "/i/004000/004337_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004337_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004337_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 417,
+      "name": "inflatable mograft",
+      "nameEn": "inflatable mograft",
+      "seats": 1,
+      "icon": "/i/004000/004345_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004345_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004345_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 419,
+      "name": "スターライトスレイ",
+      "nameEn": "スターライトスレイ",
+      "seats": 1,
+      "icon": "/i/004000/004359_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004359_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004359_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 420,
+      "name": "wings of legacy",
+      "nameEn": "wings of legacy",
+      "seats": 1,
+      "icon": "/i/004000/004346_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004346_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004346_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 421,
+      "name": "Hardy-Daytona",
+      "nameEn": "Hardy-Daytona",
+      "seats": 1,
+      "icon": "/i/004000/004338_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004338_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004338_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 422,
+      "name": "wings of mist",
+      "nameEn": "wings of mist",
+      "seats": 1,
+      "icon": "/i/004000/004339_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004339_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004339_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 423,
+      "name": "CHL P-0006B",
+      "nameEn": "CHL P-0006B",
+      "seats": 1,
+      "icon": "/i/000000/000000_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F000000%2F000000_hr1.tex&format=png",
+      "iconPath": "ui/icon/000000/000000_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 424,
+      "name": "CAM-I",
+      "nameEn": "CAM-I",
+      "seats": 1,
+      "icon": "/i/000000/000000_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F000000%2F000000_hr1.tex&format=png",
+      "iconPath": "ui/icon/000000/000000_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 425,
+      "name": "rapid-fab vacuum suit",
+      "nameEn": "rapid-fab vacuum suit",
+      "seats": 1,
+      "icon": "/i/004000/004340_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004340_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004340_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 426,
+      "name": "alert red warp loader",
+      "nameEn": "alert red warp loader",
+      "seats": 1,
+      "icon": "/i/004000/004341_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004341_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004341_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 427,
+      "name": "royal magicked carpet",
+      "nameEn": "royal magicked carpet",
+      "seats": 1,
+      "icon": "/i/004000/004342_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004342_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004342_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 428,
+      "name": "Turali snowman",
+      "nameEn": "Turali snowman",
+      "seats": 1,
+      "icon": "/i/004000/004343_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004343_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004343_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 432,
+      "name": "rocket punch",
+      "nameEn": "rocket punch",
+      "seats": 1,
+      "icon": "/i/004000/004348_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004348_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004348_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 433,
+      "name": "xenoscaping vacuum suit",
+      "nameEn": "xenoscaping vacuum suit",
+      "seats": 1,
+      "icon": "/i/000000/000000_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F000000%2F000000_hr1.tex&format=png",
+      "iconPath": "ui/icon/000000/000000_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 438,
+      "name": "cosmic armored weapon beta",
+      "nameEn": "cosmic armored weapon beta",
+      "seats": 1,
+      "icon": "/i/004000/004353_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004353_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004353_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 439,
+      "name": "CAM-II",
+      "nameEn": "CAM-II",
+      "seats": 1,
+      "icon": "/i/000000/000000_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F000000%2F000000_hr1.tex&format=png",
+      "iconPath": "ui/icon/000000/000000_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 440,
+      "name": "cosmic predator",
+      "nameEn": "cosmic predator",
+      "seats": 1,
+      "icon": "/i/004000/004354_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004354_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004354_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 441,
+      "name": "CPD-I",
+      "nameEn": "CPD-I",
+      "seats": 1,
+      "icon": "/i/000000/000000_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F000000%2F000000_hr1.tex&format=png",
+      "iconPath": "ui/icon/000000/000000_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 444,
+      "name": "wings of nihility",
+      "nameEn": "wings of nihility",
+      "seats": 1,
+      "icon": "/i/004000/004356_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004356_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004356_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 445,
+      "name": "excavating vacuum suit",
+      "nameEn": "excavating vacuum suit",
+      "seats": 1,
+      "icon": "/i/004000/004357_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004357_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004357_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    },
+    {
+      "id": 446,
+      "name": "carbide grey warp loader",
+      "nameEn": "carbide grey warp loader",
+      "seats": 1,
+      "icon": "/i/004000/004358_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004358_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004358_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true
+    }
+  ]
+}

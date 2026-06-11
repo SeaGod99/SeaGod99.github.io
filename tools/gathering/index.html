@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FFXIV 限時採集節點查詢與艾歐澤亞時間計時器 — 傳說、稀有採集點開放時間、座標、採集職業一覽">
+  <meta name="keywords" content="FFXIV, FF14, 限時採集, 傳說採集, 採集節點, 採礦工, 園藝工, ET, 艾歐澤亞時間, 繁體中文">
+  <title>限時採集節點查詢 | 水神的工具箱</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg-base:    #0a0c10;
+      --bg-surface: #0f1117;
+      --bg-card:    #14181f;
+      --bg-card-hover: #1a1f2b;
+      --border:     rgba(255,255,255,0.07);
+      --border-hover: rgba(200,169,110,0.4);
+      --gold:       #c8a96e;
+      --gold-light: #e2c98a;
+      --gold-dim:   rgba(200,169,110,0.15);
+      --blue:       #4fc3f7;
+      --blue-dim:   rgba(79,195,247,0.12);
+      --green:      #4ade80;
+      --green-dim:  rgba(74,222,128,0.12);
+      --purple:     #a78bfa;
+      --purple-dim: rgba(167,139,250,0.12);
+      --red:        #f87171;
+      --red-dim:    rgba(248,113,113,0.12);
+      --text-primary:   #e8eaf0;
+      --text-secondary: #8892a4;
+      --text-muted:     #4a5568;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --shadow-card: 0 2px 16px rgba(0,0,0,0.4);
+      --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 0%, rgba(200,169,110,0.05) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(79,195,247,0.04) 0%, transparent 60%);
+      pointer-events: none; z-index: 0;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 1; }
+
+    .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-secondary); font-size:13px; margin:24px 0; transition:var(--transition);}
+    .back-link:hover { color: var(--gold); }
+
+    .tool-header { text-align:center; padding: 12px 0 24px; }
+    .tool-title { font-size: 26px; font-weight:700; color: var(--gold-light); }
+    .tool-subtitle { font-size: 14px; color: var(--text-secondary); margin-top:6px; }
+    .header-divider { width:60px; height:1px; background:linear-gradient(90deg,transparent,var(--gold),transparent); margin:16px auto 0;}
+
+    /* ── ET clock bar ── */
+    .et-bar {
+      display:flex; align-items:center; justify-content:center; gap:24px; flex-wrap:wrap;
+      background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md);
+      padding:16px 20px; margin-bottom:24px;
+    }
+    .et-block { text-align:center; }
+    .et-label { font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); }
+    .et-value { font-size:26px; font-weight:700; font-variant-numeric: tabular-nums; color:var(--gold-light); letter-spacing:1px; }
+    .et-sub { font-size:11px; color:var(--text-secondary); }
+    .et-divider { width:1px; height:36px; background:var(--border); }
+
+    /* ── controls ── */
+    .controls { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px; align-items:center; }
+    .search-box { flex:1; min-width:200px; position:relative; }
+    .search-box input {
+      width:100%; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md);
+      padding:11px 14px 11px 38px; color:var(--text-primary); font-size:14px; outline:none; transition:var(--transition);
+    }
+    .search-box input:focus { border-color:var(--border-hover); }
+    .search-box .icon { position:absolute; left:13px; top:50%; transform:translateY(-50%); color:var(--text-muted); font-size:14px; }
+
+    .filter-group { display:flex; gap:6px; flex-wrap:wrap; }
+    .chip {
+      background:var(--bg-card); border:1px solid var(--border); border-radius:20px;
+      padding:7px 14px; font-size:12.5px; color:var(--text-secondary); cursor:pointer; transition:var(--transition); user-select:none;
+    }
+    .chip:hover { border-color:var(--border-hover); color:var(--text-primary); }
+    .chip.active { background:var(--gold-dim); border-color:rgba(200,169,110,0.4); color:var(--gold-light); }
+    .chip.mine.active { background:var(--blue-dim); border-color:rgba(79,195,247,0.4); color:var(--blue); }
+    .chip.btn.active   { background:var(--green-dim); border-color:rgba(74,222,128,0.4); color:var(--green); }
+
+    .toggle-open { margin-left:auto; }
+
+    .result-meta { font-size:12px; color:var(--text-muted); margin-bottom:12px; }
+
+    /* ── node list ── */
+    .node-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(330px,1fr)); gap:14px; }
+    .node-card {
+      background:var(--bg-card); border:1px solid var(--border); border-left:3px solid var(--border);
+      border-radius:var(--radius-md); padding:16px 18px; transition:var(--transition); position:relative;
+    }
+    .node-card:hover { background:var(--bg-card-hover); }
+    .node-card.is-open  { border-left-color:var(--green); }
+    .node-card.is-soon  { border-left-color:var(--gold); }
+    .node-card.is-closed{ border-left-color:var(--border); opacity:0.72; }
+
+    .node-top { display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+    .node-job { font-size:22px; line-height:1; margin-top:2px; }
+    .node-titles { flex:1; min-width:0; }
+    .node-name { font-size:15px; font-weight:600; color:var(--text-primary); }
+    .node-loc { font-size:12px; color:var(--text-secondary); margin-top:2px; }
+
+    .status-pill { font-size:11px; font-weight:700; padding:3px 9px; border-radius:20px; white-space:nowrap; }
+    .pill-open  { background:rgba(74,222,128,0.15); color:var(--green); border:1px solid rgba(74,222,128,0.3); }
+    .pill-soon  { background:var(--gold-dim); color:var(--gold-light); border:1px solid rgba(200,169,110,0.3); }
+    .pill-closed{ background:rgba(148,163,184,0.1); color:#64748b; border:1px solid rgba(148,163,184,0.15); }
+
+    .node-meta { display:flex; flex-wrap:wrap; gap:6px 14px; font-size:12px; color:var(--text-secondary); margin-top:8px; }
+    .node-meta b { color:var(--text-primary); font-weight:600; }
+    .coords { font-variant-numeric:tabular-nums; color:var(--blue); }
+    .windows { display:flex; gap:6px; flex-wrap:wrap; margin-top:10px; }
+    .win { font-size:11px; font-variant-numeric:tabular-nums; padding:2px 8px; border-radius:var(--radius-sm);
+           background:rgba(255,255,255,0.04); border:1px solid var(--border); color:var(--text-secondary); }
+    .win.now { background:rgba(74,222,128,0.12); border-color:rgba(74,222,128,0.3); color:var(--green); }
+    .countdown { font-variant-numeric:tabular-nums; font-weight:600; }
+    .countdown.open { color:var(--green); }
+    .countdown.soon { color:var(--gold-light); }
+    .countdown.closed { color:var(--text-muted); }
+
+    .badge-ver { font-size:10px; padding:1px 7px; border-radius:20px; background:var(--purple-dim); color:var(--purple); border:1px solid rgba(167,139,250,0.2); }
+
+    .empty { text-align:center; color:var(--text-muted); padding:48px 0; font-size:14px; }
+
+    .info-note { font-size:11.5px; color:var(--text-muted); margin:28px 0 0; line-height:1.8; text-align:center; }
+
+    .site-footer { border-top:1px solid var(--border); padding:28px 0 36px; text-align:center; margin-top:40px; }
+    .footer-text { font-size:12px; color:var(--text-muted); line-height:2; }
+    .footer-text a { color:var(--text-secondary); }
+    .footer-text a:hover { color:var(--gold); }
+
+    @media (max-width:600px){
+      .node-grid { grid-template-columns:1fr; }
+      .et-bar { gap:14px; }
+      .et-value { font-size:22px; }
+      .toggle-open { margin-left:0; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← 返回工具箱</a>
+
+  <div class="tool-header">
+    <div class="tool-title">⛏️ 限時採集節點查詢</div>
+    <p class="tool-subtitle">傳說・稀有採集點的開放時間、座標與採集職業，依艾歐澤亞時間即時更新</p>
+    <div class="header-divider"></div>
+  </div>
+
+  <!-- ET clock -->
+  <div class="et-bar">
+    <div class="et-block">
+      <div class="et-label">艾歐澤亞時間 (ET)</div>
+      <div class="et-value" id="etClock">--:--</div>
+      <div class="et-sub" id="etPhase">—</div>
+    </div>
+    <div class="et-divider"></div>
+    <div class="et-block">
+      <div class="et-label">本地時間</div>
+      <div class="et-value" id="ltClock" style="color:var(--text-primary)">--:--:--</div>
+      <div class="et-sub">1 ET 小時 ≈ 2 分 55 秒</div>
+    </div>
+  </div>
+
+  <!-- controls -->
+  <div class="controls">
+    <div class="search-box">
+      <span class="icon">🔍</span>
+      <input type="text" id="search" placeholder="搜尋物品名稱、地點或版本…" autocomplete="off">
+    </div>
+    <div class="filter-group" id="jobFilters">
+      <span class="chip btn active" data-job="all">全部職業</span>
+      <span class="chip btn" data-job="採礦工">⛏️ 採礦工</span>
+      <span class="chip btn" data-job="園藝工">🌿 園藝工</span>
+    </div>
+    <span class="chip mine toggle-open" id="openOnly" data-on="0">僅顯示開放中</span>
+  </div>
+
+  <div class="result-meta" id="resultMeta"></div>
+
+  <div class="node-grid" id="nodeGrid"></div>
+  <div class="empty" id="emptyState" style="display:none">找不到符合條件的採集節點，試試其他關鍵字。</div>
+
+  <p class="info-note">
+    開放時段以艾歐澤亞時間 (ET) 計算，無需網路、即時更新。<br>
+    資料為精選常用傳說／稀有採集節點，持續擴充中。實際座標以遊戲內為準。
+  </p>
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <p class="footer-text">
+      水神的工具箱 &nbsp;·&nbsp;
+      <a href="../../">回首頁</a> &nbsp;·&nbsp;
+      資料來源：<a href="https://ffxivteamcraft.com" target="_blank" rel="noopener">Teamcraft</a>、社群整理
+    </p>
+    <p class="footer-text" style="margin-top:4px">
+      FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具
+    </p>
+  </div>
+</footer>
+
+<script>
+/* ─────────────────────────────────────────────
+   艾歐澤亞時間 (Eorzea Time)
+   ET 流速 = 現實時間 × 3600/175 (1 ET 天 = 70 真實分鐘)
+   ───────────────────────────────────────────── */
+const EORZEA_MULT = 3600 / 175; // ≈ 20.5714
+
+function getEorzeaDate(now = Date.now()) {
+  const et = now * EORZEA_MULT;
+  const totalMinutes = Math.floor(et / 60000);
+  const hours = Math.floor(totalMinutes / 60) % 24;
+  const minutes = totalMinutes % 60;
+  return { hours, minutes, totalMinutes };
+}
+
+/* 把 ET 小時(可能跨午夜)正規化到 0-23 */
+function norm(h) { return ((h % 24) + 24) % 24; }
+
+/* ─────────────────────────────────────────────
+   採集節點資料
+   windows: 每個元素 [開始ET時, 開始ET分(預設0)]，節點持續 durH 小時
+   多數限時節點開放 2 ET 小時。跨午夜時段已用 norm() 處理。
+   ───────────────────────────────────────────── */
+const DUR_H = 2; // 標準開放 2 ET 小時
+
+const NODES = [
+  // ── 曉月版 (6.x) ──
+  { name:'純化的卡魯心', job:'採礦工', map:'外地拉哈', region:'曉月之終途', coords:[8.5,16.2], type:'傳說', ver:'6.x', windows:[0,8,16] },
+  { name:'矮人棉花', job:'園藝工', map:'薩維奈島', region:'曉月之終途', coords:[27.0,16.0], type:'傳說', ver:'6.x', windows:[4,12,20] },
+  { name:'白金礦', job:'採礦工', map:'迷津', region:'曉月之終途', coords:[33.0,17.0], type:'稀有', ver:'6.x', windows:[2,14] },
+  { name:'曉月靈芝', job:'園藝工', map:'加雷馬', region:'曉月之終途', coords:[30.0,28.0], type:'稀有', ver:'6.x', windows:[6,18] },
+
+  // ── 黎明版 (7.x) ──
+  { name:'金剛石礦', job:'採礦工', map:'奧闊帕恰山', region:'黃金的遺產', coords:[18.0,29.0], type:'傳說', ver:'7.x', windows:[0,8,16] },
+  { name:'蘿卜草', job:'園藝工', map:'庫爾札斯西部', region:'黃金的遺產', coords:[12.5,11.5], type:'傳說', ver:'7.x', windows:[4,12,20] },
+  { name:'雷晶岩', job:'採礦工', map:'亞克特爾雨林', region:'黃金的遺產', coords:[24.0,21.0], type:'稀有', ver:'7.x', windows:[2,14] },
+  { name:'閃耀苔', job:'園藝工', map:'謝爾達萊', region:'黃金的遺產', coords:[31.0,8.0], type:'稀有', ver:'7.x', windows:[10,22] },
+
+  // ── 漆黑版 (5.x) 經典 ──
+  { name:'水晶化硫磺', job:'採礦工', map:'珂露西亞島', region:'漆黑的反叛者', coords:[26.0,30.0], type:'傳說', ver:'5.x', windows:[0,8,16] },
+  { name:'高純度生體水銀', job:'園藝工', map:'拉凱提卡大森林', region:'漆黑的反叛者', coords:[14.0,30.0], type:'傳說', ver:'5.x', windows:[4,12,20] },
+
+  // ── 紅蓮版 (4.x) 經典 ──
+  { name:'多瑪鋼礦', job:'採礦工', map:'紅玉海', region:'紅蓮的解放者', coords:[28.0,15.0], type:'傳說', ver:'4.x', windows:[0,8,16] },
+  { name:'白楊木原木', job:'園藝工', map:'太陽神草原', region:'紅蓮的解放者', coords:[30.0,23.0], type:'傳說', ver:'4.x', windows:[4,12,20] },
+];
+
+/* ─────────────────────────────────────────────
+   狀態計算
+   回傳 { state:'open'|'soon'|'closed', secsLeft, nextStartH }
+   secsLeft = 真實秒數到 狀態結束(open) 或 下次開放(soon/closed)
+   ───────────────────────────────────────────── */
+const ET_HOUR_REAL_MS = 175000 / 60; // 一個 ET 小時 = 175000/60 真實秒? 不，重算：
+// 1 ET 小時 = 60 ET 分鐘。 真實毫秒 = 60*60*1000 / EORZEA_MULT
+const REAL_MS_PER_ET_HOUR = (60 * 60 * 1000) / EORZEA_MULT; // ≈ 175000 ms = 175 秒
+
+function nodeStatus(node, now = Date.now()) {
+  const e = getEorzeaDate(now);
+  const curH = e.hours;
+  const curMinFloat = e.minutes + e.totalMinutes % 1; // 分鐘(整數)
+  // 目前在這個 ET 小時內已過的真實毫秒比例
+  const etMinNow = e.hours * 60 + e.minutes;
+  const realMsIntoCurrentEtMinute = (now * EORZEA_MULT) % 60000;
+
+  // 檢查是否在任一開放時段內
+  for (const startH of node.windows) {
+    const s = norm(startH);
+    // 開放區間 [s, s+DUR_H)（ET 小時）
+    let withinOpen = false;
+    let endH = s + DUR_H;
+    // 處理跨午夜
+    if (endH <= 24) {
+      withinOpen = curH >= s && curH < endH;
+    } else {
+      withinOpen = curH >= s || curH < (endH - 24);
+    }
+    if (withinOpen) {
+      // 計算到結束的 ET 分鐘數
+      let etEndMin = (endH % 24) * 60;
+      let etNowMin = etMinNow;
+      let diffEtMin = etEndMin - etNowMin;
+      if (diffEtMin <= 0) diffEtMin += 24 * 60;
+      const realMs = (diffEtMin * 60000) / EORZEA_MULT - realMsIntoCurrentEtMinute;
+      return { state:'open', secsLeft: Math.max(0, Math.round(realMs/1000)), startH:s };
+    }
+  }
+
+  // 不在開放中 → 找下一次最近的開放
+  let bestEtMin = Infinity;
+  let nextStart = null;
+  for (const startH of node.windows) {
+    const s = norm(startH);
+    let etStartMin = s * 60;
+    let etNowMin = etMinNow;
+    let diff = etStartMin - etNowMin;
+    if (diff <= 0) diff += 24 * 60;
+    if (diff < bestEtMin) { bestEtMin = diff; nextStart = s; }
+  }
+  const realMs = (bestEtMin * 60000) / EORZEA_MULT - realMsIntoCurrentEtMinute;
+  const secsLeft = Math.max(0, Math.round(realMs/1000));
+  // 30 真實分鐘內視為「即將開放」
+  const state = secsLeft <= 30*60 ? 'soon' : 'closed';
+  return { state, secsLeft, startH: nextStart };
+}
+
+function fmtCountdown(secs) {
+  const h = Math.floor(secs/3600);
+  const m = Math.floor((secs%3600)/60);
+  const s = secs%60;
+  if (h > 0) return `${h}時${String(m).padStart(2,'0')}分`;
+  if (m > 0) return `${m}分${String(s).padStart(2,'0')}秒`;
+  return `${s}秒`;
+}
+
+function fmtEtWindow(startH) {
+  const s = norm(startH), e = norm(startH + DUR_H);
+  return `${String(s).padStart(2,'0')}:00–${String(e).padStart(2,'0')}:00`;
+}
+
+/* ─────────────────────────────────────────────
+   渲染
+   ───────────────────────────────────────────── */
+const grid = document.getElementById('nodeGrid');
+const emptyState = document.getElementById('emptyState');
+const resultMeta = document.getElementById('resultMeta');
+
+let filterJob = 'all';
+let openOnly = false;
+let searchTerm = '';
+
+function jobEmoji(job){ return job === '採礦工' ? '⛏️' : '🌿'; }
+
+function passesFilter(node){
+  if (filterJob !== 'all' && node.job !== filterJob) return false;
+  if (searchTerm) {
+    const hay = `${node.name} ${node.map} ${node.region} ${node.ver} ${node.type} ${node.job}`.toLowerCase();
+    if (!hay.includes(searchTerm)) return false;
+  }
+  return true;
+}
+
+function render(){
+  const now = Date.now();
+  let list = NODES.filter(passesFilter).map(n => ({ n, st: nodeStatus(n, now) }));
+
+  if (openOnly) list = list.filter(x => x.st.state === 'open');
+
+  // 排序：開放中 → 即將 → 其他，各組依倒數時間升序
+  const rank = { open:0, soon:1, closed:2 };
+  list.sort((a,b)=>{
+    if (rank[a.st.state] !== rank[b.st.state]) return rank[a.st.state]-rank[b.st.state];
+    return a.st.secsLeft - b.st.secsLeft;
+  });
+
+  if (list.length === 0){
+    grid.innerHTML = ''; emptyState.style.display='block'; resultMeta.textContent='';
+    return;
+  }
+  emptyState.style.display='none';
+  const openCount = list.filter(x=>x.st.state==='open').length;
+  resultMeta.textContent = `共 ${list.length} 個節點，其中 ${openCount} 個目前開放中`;
+
+  grid.innerHTML = list.map(({n, st}) => {
+    const cls = st.state==='open'?'is-open':st.state==='soon'?'is-soon':'is-closed';
+    const pill = st.state==='open'
+      ? '<span class="status-pill pill-open">● 開放中</span>'
+      : st.state==='soon'
+        ? '<span class="status-pill pill-soon">即將開放</span>'
+        : '<span class="status-pill pill-closed">未開放</span>';
+    const cdLabel = st.state==='open' ? '剩餘' : '距開放';
+    const cdCls = st.state==='open'?'open':st.state==='soon'?'soon':'closed';
+    const wins = n.windows.map(h=>{
+      const isNow = st.state==='open' && norm(h)===st.startH;
+      return `<span class="win ${isNow?'now':''}">${fmtEtWindow(h)}</span>`;
+    }).join('');
+    return `
+      <div class="node-card ${cls}">
+        <div class="node-top">
+          <div class="node-job">${jobEmoji(n.job)}</div>
+          <div class="node-titles">
+            <div class="node-name">${n.name}</div>
+            <div class="node-loc">${n.map} · ${n.region} <span class="badge-ver">${n.ver}</span></div>
+          </div>
+          ${pill}
+        </div>
+        <div class="node-meta">
+          <span>職業：<b>${n.job}</b></span>
+          <span>類型：<b>${n.type}</b></span>
+          <span>座標：<b class="coords">X:${n.coords[0]} Y:${n.coords[1]}</b></span>
+        </div>
+        <div class="node-meta" style="margin-top:6px">
+          <span>${cdLabel}：<b class="countdown ${cdCls}">${fmtCountdown(st.secsLeft)}</b></span>
+        </div>
+        <div class="windows">${wins}</div>
+      </div>`;
+  }).join('');
+}
+
+/* ── ET 時鐘 ── */
+function tickClock(){
+  const e = getEorzeaDate();
+  document.getElementById('etClock').textContent =
+    `${String(e.hours).padStart(2,'0')}:${String(e.minutes).padStart(2,'0')}`;
+  const phase = e.hours>=5 && e.hours<17 ? '☀️ 白天' : (e.hours>=17 && e.hours<19 ? '🌆 黃昏' : '🌙 夜晚');
+  document.getElementById('etPhase').textContent = phase;
+  const lt = new Date();
+  document.getElementById('ltClock').textContent =
+    `${String(lt.getHours()).padStart(2,'0')}:${String(lt.getMinutes()).padStart(2,'0')}:${String(lt.getSeconds()).padStart(2,'0')}`;
+}
+
+/* ── 事件 ── */
+document.getElementById('search').addEventListener('input', e=>{
+  searchTerm = e.target.value.trim().toLowerCase(); render();
+});
+document.getElementById('jobFilters').addEventListener('click', e=>{
+  const chip = e.target.closest('.chip'); if(!chip) return;
+  document.querySelectorAll('#jobFilters .chip').forEach(c=>c.classList.remove('active'));
+  chip.classList.add('active');
+  filterJob = chip.dataset.job;
+  render();
+});
+document.getElementById('openOnly').addEventListener('click', e=>{
+  const chip = e.target;
+  openOnly = !openOnly;
+  chip.classList.toggle('active', openOnly);
+  render();
+});
+
+/* ── 啟動 ── */
+tickClock();
+render();
+setInterval(tickClock, 1000);
+setInterval(render, 1000); // 每秒更新倒數與排序
+</script>
+</body>
+</html>

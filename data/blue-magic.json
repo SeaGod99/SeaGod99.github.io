@@ -1,0 +1,2475 @@
+{
+  "schema": "blue-magic",
+  "patch": "7.2",
+  "updated": "2026-06-09",
+  "source": "xivapi",
+  "count": 124,
+  "data": [
+    {
+      "id": 3,
+      "no": 1,
+      "name": "水炮",
+      "nameEn": "Water Cannon",
+      "icon": "/i/072000/072203.png",
+      "rank": 1,
+      "aspect": "水",
+      "type": "魔法",
+      "learnFrom": [],
+      "patch": "4.5",
+      "learnFromMob": []
+    },
+    {
+      "id": 20,
+      "no": 2,
+      "name": "火焰放射",
+      "nameEn": "Flame Thrower",
+      "icon": "/i/072000/072220.png",
+      "rank": 4,
+      "aspect": "火",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 20,
+          "detail": "布雷弗洛克斯的露營地（困難）"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": []
+    },
+    {
+      "id": 8,
+      "no": 3,
+      "name": "水之吐息",
+      "nameEn": "Aqua Breath",
+      "icon": "/i/072000/072208.png",
+      "rank": 4,
+      "aspect": "水",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 81,
+          "detail": "龍頸"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": [
+        "利維亞桑（The Whorleater）",
+        "奧爾特羅斯"
+      ]
+    },
+    {
+      "id": 7,
+      "no": 4,
+      "name": "狂飛亂舞",
+      "nameEn": "Flying Frenzy",
+      "icon": "/i/072000/072207.png",
+      "rank": 3,
+      "aspect": null,
+      "type": "物理",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 17,
+          "detail": "塞壬燈塔"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": []
+    },
+    {
+      "id": 16,
+      "no": 5,
+      "name": "鑽頭炮",
+      "nameEn": "Drill Cannons",
+      "icon": "/i/072000/072216.png",
+      "rank": 2,
+      "aspect": null,
+      "type": "物理",
+      "learnFrom": [
+        {
+          "type": "野外",
+          "mapId": 46,
+          "detail": "薩納蘭北部"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": [
+        "廢棄的魔導先鋒（Raubahn's Push）",
+        "魔導先鋒強化型（Raubahn's Push）"
+      ]
+    },
+    {
+      "id": 5,
+      "no": 6,
+      "name": "高壓電",
+      "nameEn": "High Voltage",
+      "icon": "/i/072000/072205.png",
+      "rank": 4,
+      "aspect": "雷",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 93,
+          "detail": "巴哈姆特大迷宮 邂逅篇1"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": [
+        "自衛系統（Meteor Fissure）",
+        "鬥獸系統"
+      ]
+    },
+    {
+      "id": 19,
+      "no": 7,
+      "name": "瞬間移動",
+      "nameEn": "Loom",
+      "icon": "/i/072000/072219.png",
+      "rank": 1,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "野外",
+          "mapId": 46,
+          "detail": "薩納蘭北部"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": [
+        "巴爾澤芬（The Lost City of Amdapor）",
+        "但他林（The Tam-Tara Deepcroft (Hard)）",
+        "永恆不滅的菲蘭德副耀士"
+      ]
+    },
+    {
+      "id": 25,
+      "no": 8,
+      "name": "蜂刺",
+      "nameEn": "Final Sting",
+      "icon": "/i/072000/072225.png",
+      "rank": 2,
+      "aspect": null,
+      "type": "物理",
+      "learnFrom": [
+        {
+          "type": "野外",
+          "mapId": 30,
+          "detail": "拉諾西亞中部"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": [
+        "殺手胡蜂（Three-malm Bend）",
+        "聖堂蜂（The Sunken Temple of Qarn）"
+      ]
+    },
+    {
+      "id": 4,
+      "no": 9,
+      "name": "痛苦之歌",
+      "nameEn": "Song of Torment",
+      "icon": "/i/072000/072204.png",
+      "rank": 2,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 17,
+          "detail": "塞壬燈塔"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": []
+    },
+    {
+      "id": 22,
+      "no": 10,
+      "name": "炫目射線",
+      "nameEn": "Glower",
+      "icon": "/i/072000/072222.png",
+      "rank": 4,
+      "aspect": "雷",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 5,
+          "detail": "黃金谷"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": []
+    },
+    {
+      "id": 9,
+      "no": 11,
+      "name": "地裂",
+      "nameEn": "Plaincracker",
+      "icon": "/i/072000/072209.png",
+      "rank": 2,
+      "aspect": "土",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 18,
+          "detail": "銅鈴銅礦（困難）"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": [
+        "啟示者（Blue Sky）",
+        "玄巖巨像（The Floating City of Nym）",
+        "泥土巨像"
+      ]
+    },
+    {
+      "id": 11,
+      "no": 12,
+      "name": "振毛",
+      "nameEn": "Bristle",
+      "icon": "/i/072000/072211.png",
+      "rank": 2,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "野外",
+          "mapId": 55,
+          "detail": "黑衣森林東部林區"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": [
+        "懸賞魔物：憤怒母豬（Lifemend Stump）",
+        "狂野疣豬（The Bramble Patch）"
+      ]
+    },
+    {
+      "id": 24,
+      "no": 13,
+      "name": "白風",
+      "nameEn": "White Wind",
+      "icon": "/i/072000/072224.png",
+      "rank": 3,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [],
+      "patch": "4.5",
+      "learnFromMob": []
+    },
+    {
+      "id": 32,
+      "no": 14,
+      "name": "五級石化",
+      "nameEn": "Level 5 Petrify",
+      "icon": "/i/072000/072232.png",
+      "rank": 2,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 6,
+          "detail": "豪庫修别墅"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": [
+        "莊園的石像（Ground Floor (Haukke Manor)）"
+      ]
+    },
+    {
+      "id": 18,
+      "no": 15,
+      "name": "尖銳之刃",
+      "nameEn": "Sharpened Knife",
+      "icon": "/i/072000/072218.png",
+      "rank": 4,
+      "aspect": null,
+      "type": "物理",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 10,
+          "detail": "放浪神宮殿"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": [
+        "瑪貝利（Upper La Noscea）"
+      ]
+    },
+    {
+      "id": 36,
+      "no": 16,
+      "name": "冰刺",
+      "nameEn": "Ice Spikes",
+      "icon": "/i/072000/072236.png",
+      "rank": 1,
+      "aspect": "冰",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "野外",
+          "mapId": 54,
+          "detail": "黑衣森林中央林區"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": [
+        "啟示者（Blue Sky）",
+        "竊賊小魔精（Chocobo Forest）"
+      ]
+    },
+    {
+      "id": 13,
+      "no": 17,
+      "name": "吸血",
+      "nameEn": "Blood Drain",
+      "icon": "/i/072000/072213.png",
+      "rank": 1,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "野外",
+          "mapId": 31,
+          "detail": "拉諾西亞低地"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": [
+        "漆黑蝙蝠（Sastasha）",
+        "洞穴蝙蝠（Blind Iron Mines）",
+        "沙蚤"
+      ]
+    },
+    {
+      "id": 10,
+      "no": 18,
+      "name": "橡果炸彈",
+      "nameEn": "Acorn Bomb",
+      "icon": "/i/072000/072210.png",
+      "rank": 1,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "野外",
+          "mapId": 57,
+          "detail": "黑衣森林北部林區"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": [
+        "幼體樹精（Treespeak）"
+      ]
+    },
+    {
+      "id": 14,
+      "no": 19,
+      "name": "投擲炸彈",
+      "nameEn": "Bomb Toss",
+      "icon": "/i/072000/072214.png",
+      "rank": 2,
+      "aspect": "火",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "野外",
+          "mapId": 30,
+          "detail": "拉諾西亞中部"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": [
+        "哥布林漁師（Summerford）",
+        "哥布林賭徒（Summerford）",
+        "法外哥布林（Central Shroud）"
+      ]
+    },
+    {
+      "id": 29,
+      "no": 20,
+      "name": "弱點暴露",
+      "nameEn": "Off-guard",
+      "icon": "/i/072000/072229.png",
+      "rank": 2,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [],
+      "patch": "4.5",
+      "learnFromMob": []
+    },
+    {
+      "id": 26,
+      "no": 21,
+      "name": "自爆",
+      "nameEn": "Self-destruct",
+      "icon": "/i/072000/072226.png",
+      "rank": 1,
+      "aspect": "火",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "野外",
+          "mapId": 42,
+          "detail": "薩納蘭西部"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": [
+        "爆破爆彈怪（Shaft E1）",
+        "瓦斯彈怪（Halatali）",
+        "滑行爆彈怪"
+      ]
+    },
+    {
+      "id": 27,
+      "no": 22,
+      "name": "輸血",
+      "nameEn": "Transfusion",
+      "icon": "/i/072000/072227.png",
+      "rank": 2,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [],
+      "patch": "4.5",
+      "learnFromMob": []
+    },
+    {
+      "id": 21,
+      "no": 23,
+      "name": "恐嚇",
+      "nameEn": "Faze",
+      "icon": "/i/072000/072221.png",
+      "rank": 3,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "野外",
+          "mapId": 32,
+          "detail": "拉諾西亞東部"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": [
+        "盧恩人烘鷗手（Gullperch Tower）",
+        "盧恩人搗亂者"
+      ]
+    },
+    {
+      "id": 41,
+      "no": 24,
+      "name": "飛沙丁魚",
+      "nameEn": "Flying Sardine",
+      "icon": "/i/072000/072241.png",
+      "rank": 1,
+      "aspect": null,
+      "type": "物理",
+      "learnFrom": [
+        {
+          "type": "野外",
+          "mapId": 32,
+          "detail": "拉諾西亞東部"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": [
+        "碧企鵝（Bloodshore）"
+      ]
+    },
+    {
+      "id": 1,
+      "no": 25,
+      "name": "噴嚏",
+      "nameEn": "Snort",
+      "icon": "/i/072000/072201.png",
+      "rank": 4,
+      "aspect": "風",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 81,
+          "detail": "龍頸"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": [
+        "提豐（Halatali (Zone)）"
+      ]
+    },
+    {
+      "id": 2,
+      "no": 26,
+      "name": "四噸重物",
+      "nameEn": "4-tonze Weight",
+      "icon": "/i/072000/072202.png",
+      "rank": 4,
+      "aspect": null,
+      "type": "物理",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 81,
+          "detail": "龍頸"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": [
+        "奧爾特羅斯（Halatali (Zone)）"
+      ]
+    },
+    {
+      "id": 17,
+      "no": 27,
+      "name": "凝視",
+      "nameEn": "the Look",
+      "icon": "/i/072000/072217.png",
+      "rank": 2,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 14,
+          "detail": "阿姆達普爾古城"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": [
+        "阿難塔波嘉（The Presence Chamber (Amdapor Keep)）",
+        "拜書魔（The Great Gubal Library (Hard) (Zone)）",
+        "暗黑扎哈克"
+      ]
+    },
+    {
+      "id": 6,
+      "no": 28,
+      "name": "口臭",
+      "nameEn": "Bad Breath",
+      "icon": "/i/072000/072206.png",
+      "rank": 3,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "野外",
+          "mapId": 54,
+          "detail": "黑衣森林中央林區"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": [
+        "金藤魔界花（The Aurum Vale）",
+        "臭套索花（Sorrel Haven）",
+        "守財夫人"
+      ]
+    },
+    {
+      "id": 42,
+      "no": 29,
+      "name": "金剛防禦",
+      "nameEn": "Diamondback",
+      "icon": "/i/072000/072242.png",
+      "rank": 4,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 25,
+          "detail": "石衛城（困難）"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": [
+        "庫卡龍龜（The Stone Vigil (Hard) (Zone)）"
+      ]
+    },
+    {
+      "id": 35,
+      "no": 30,
+      "name": "鬥氣守護",
+      "nameEn": "Mighty Guard",
+      "icon": "/i/072000/072235.png",
+      "rank": 4,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [],
+      "patch": "4.5",
+      "learnFromMob": []
+    },
+    {
+      "id": 30,
+      "no": 31,
+      "name": "黏舌頭",
+      "nameEn": "Sticky Tongue",
+      "icon": "/i/072000/072230.png",
+      "rank": 4,
+      "aspect": null,
+      "type": "物理",
+      "learnFrom": [
+        {
+          "type": "野外",
+          "mapId": 42,
+          "detail": "薩納蘭西部"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": [
+        "杖蟾蜍（Moraby Bay）",
+        "跳崖豹（Western Thanalan）",
+        "地底夜蟾蜍（The Aurum Vale）",
+        "夜蟾蜍"
+      ]
+    },
+    {
+      "id": 28,
+      "no": 32,
+      "name": "蟾蜍油",
+      "nameEn": "Toad Oil",
+      "icon": "/i/072000/072228.png",
+      "rank": 3,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "野外",
+          "mapId": 42,
+          "detail": "薩納蘭西部"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": []
+    },
+    {
+      "id": 37,
+      "no": 33,
+      "name": "山羊之聲",
+      "nameEn": "the Ram's Voice",
+      "icon": "/i/072000/072237.png",
+      "rank": 2,
+      "aspect": "冰",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 12,
+          "detail": "刀鳴洞穴"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": [
+        "阿帕德馬克（Blue Sky）",
+        "啟示者（Blue Sky）",
+        "奇美拉"
+      ]
+    },
+    {
+      "id": 38,
+      "no": 34,
+      "name": "龍之聲",
+      "nameEn": "the Dragon's Voice",
+      "icon": "/i/072000/072238.png",
+      "rank": 2,
+      "aspect": "雷",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 12,
+          "detail": "刀鳴洞穴"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": [
+        "阿帕德馬克（Blue Sky）",
+        "啟示者（Blue Sky）",
+        "奇美拉"
+      ]
+    },
+    {
+      "id": 23,
+      "no": 35,
+      "name": "導彈",
+      "nameEn": "Missile",
+      "icon": "/i/072000/072223.png",
+      "rank": 4,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 85,
+          "detail": "大城砦之戰"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": []
+    },
+    {
+      "id": 15,
+      "no": 36,
+      "name": "千針",
+      "nameEn": "1000 Needles",
+      "icon": "/i/072000/072215.png",
+      "rank": 4,
+      "aspect": null,
+      "type": "物理",
+      "learnFrom": [
+        {
+          "type": "野外",
+          "mapId": 45,
+          "detail": "薩納蘭南部"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": [
+        "仙人花（Broken Water）",
+        "仙人刺舞蹈家（Broken Water）",
+        "仙人刺逃兵"
+      ]
+    },
+    {
+      "id": 40,
+      "no": 37,
+      "name": "墨汁噴射",
+      "nameEn": "Ink Jet",
+      "icon": "/i/072000/072240.png",
+      "rank": 3,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 28,
+          "detail": "薩薩塔（困難）"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": [
+        "克拉肯（Sastasha (Hard)）"
+      ]
+    },
+    {
+      "id": 43,
+      "no": 38,
+      "name": "火焰投槍",
+      "nameEn": "Fire Angon",
+      "icon": "/i/072000/072243.png",
+      "rank": 3,
+      "aspect": null,
+      "type": "物理",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 30,
+          "detail": "放浪神宮殿（困難）"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": []
+    },
+    {
+      "id": 33,
+      "no": 39,
+      "name": "月之笛",
+      "nameEn": "Moon Flute",
+      "icon": "/i/072000/072233.png",
+      "rank": 1,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [],
+      "patch": "4.5",
+      "learnFromMob": []
+    },
+    {
+      "id": 31,
+      "no": 40,
+      "name": "尾刺",
+      "nameEn": "Tail Screw",
+      "icon": "/i/072000/072231.png",
+      "rank": 4,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 28,
+          "detail": "薩薩塔（困難）"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": [
+        "粗暴理髮師（Rustrock）",
+        "巨鉗蝦（Strategeion - 4F）",
+        "峭壁巨鉗蝦"
+      ]
+    },
+    {
+      "id": 12,
+      "no": 41,
+      "name": "精神衝擊",
+      "nameEn": "Mind Blast",
+      "icon": "/i/072000/072212.png",
+      "rank": 1,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 2,
+          "detail": "坦姆·塔拉神廟"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": [
+        "爆破者（Machinery Bay 67）"
+      ]
+    },
+    {
+      "id": 34,
+      "no": 42,
+      "name": "死亡宣告",
+      "nameEn": "Doom",
+      "icon": "/i/072000/072234.png",
+      "rank": 4,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [],
+      "patch": "4.5",
+      "learnFromMob": []
+    },
+    {
+      "id": 39,
+      "no": 43,
+      "name": "奇異之光",
+      "nameEn": "Peculiar Light",
+      "icon": "/i/072000/072239.png",
+      "rank": 2,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "野外",
+          "mapId": 67,
+          "detail": "摩杜納"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": [
+        "靜水泥沼蠑螈（Fogfens）",
+        "衝浪水蜥（Mudstop Watergush）"
+      ]
+    },
+    {
+      "id": 44,
+      "no": 44,
+      "name": "羽毛雨",
+      "nameEn": "Feather Rain",
+      "icon": "/i/072000/072244.png",
+      "rank": 5,
+      "aspect": "風",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 65,
+          "detail": "嚎哭之眼（極難）"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": []
+    },
+    {
+      "id": 45,
+      "no": 45,
+      "name": "熔岩爆發",
+      "nameEn": "Eruption",
+      "icon": "/i/072000/072245.png",
+      "rank": 5,
+      "aspect": "火",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 63,
+          "detail": "灼熱炭盆（極難）"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": []
+    },
+    {
+      "id": 46,
+      "no": 46,
+      "name": "山崩",
+      "nameEn": "Mountain Buster",
+      "icon": "/i/072000/072246.png",
+      "rank": 5,
+      "aspect": null,
+      "type": "物理",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 64,
+          "detail": "大地之臍（極難）"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": []
+    },
+    {
+      "id": 47,
+      "no": 47,
+      "name": "雷擊",
+      "nameEn": "Shock Strike",
+      "icon": "/i/072000/072247.png",
+      "rank": 5,
+      "aspect": "雷",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 78,
+          "detail": "雷神木（極難）"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": [
+        "拉姆（The Striking Tree）"
+      ]
+    },
+    {
+      "id": 48,
+      "no": 48,
+      "name": "冰之舞",
+      "nameEn": "Glass Dance",
+      "icon": "/i/072000/072248.png",
+      "rank": 5,
+      "aspect": "冰",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 80,
+          "detail": "阿法圓形競技場（極難）"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": [
+        "希瓦（Akh Afah Amphitheatre）"
+      ]
+    },
+    {
+      "id": 49,
+      "no": 49,
+      "name": "波濤之衣",
+      "nameEn": "Veil of the Whorl",
+      "icon": "/i/072000/072249.png",
+      "rank": 5,
+      "aspect": "水",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 73,
+          "detail": "海神之嗥（極難）"
+        }
+      ],
+      "patch": "4.5",
+      "learnFromMob": [
+        "利維亞桑（The Whorleater）"
+      ]
+    },
+    {
+      "id": 50,
+      "no": 50,
+      "name": "山風",
+      "nameEn": "Alpine Draft",
+      "icon": "/i/072000/072251.png",
+      "rank": 2,
+      "aspect": "風",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 36,
+          "detail": "黃昏前哨站"
+        }
+      ],
+      "patch": "5.1",
+      "learnFromMob": [
+        "獅鷲（The Sea of Clouds）",
+        "鷹頭獅"
+      ]
+    },
+    {
+      "id": 51,
+      "no": 51,
+      "name": "波動波",
+      "nameEn": "Protean Wave",
+      "icon": "/i/072000/072252.png",
+      "rank": 3,
+      "aspect": "水",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 114,
+          "detail": "亞歷山大機神城 起動篇2"
+        }
+      ],
+      "patch": "5.1",
+      "learnFromMob": [
+        "有生命活水（Condensate Demineralizer 9）",
+        "水之式神"
+      ]
+    },
+    {
+      "id": 52,
+      "no": 52,
+      "name": "寒流",
+      "nameEn": "Northerlies",
+      "icon": "/i/072000/072253.png",
+      "rank": 4,
+      "aspect": "冰",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "野外",
+          "mapId": 2200,
+          "detail": "庫爾札斯西部高地"
+        }
+      ],
+      "patch": "5.1",
+      "learnFromMob": [
+        "孤獨大腳雪人（The Bed of Bones）",
+        "米勒卡（Coerthas Western Highlands）",
+        "板岩大腳雪人"
+      ]
+    },
+    {
+      "id": 53,
+      "no": 53,
+      "name": "靜電感應",
+      "nameEn": "Electrogenesis",
+      "icon": "/i/072000/072254.png",
+      "rank": 2,
+      "aspect": "雷",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "野外",
+          "mapId": 2100,
+          "detail": "雲海"
+        }
+      ],
+      "patch": "5.1",
+      "learnFromMob": [
+        "雷牙（Voor Sian Siran）"
+      ]
+    },
+    {
+      "id": 54,
+      "no": 54,
+      "name": "冰刀斬",
+      "nameEn": "Kaltstrahl",
+      "icon": "/i/072000/072255.png",
+      "rank": 2,
+      "aspect": null,
+      "type": "物理",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 112,
+          "detail": "亞歷山大機神城 起動篇1"
+        }
+      ],
+      "patch": "5.1",
+      "learnFromMob": [
+        "浮士德（Machinery Bay 44）"
+      ]
+    },
+    {
+      "id": 55,
+      "no": 55,
+      "name": "深淵貫穿",
+      "nameEn": "Abyssal Transfixion",
+      "icon": "/i/072000/072256.png",
+      "rank": 4,
+      "aspect": null,
+      "type": "物理",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 31,
+          "detail": "古巴拉大圖書館"
+        }
+      ],
+      "patch": "5.1",
+      "learnFromMob": [
+        "上級惡魔（The Paths of Creation）"
+      ]
+    },
+    {
+      "id": 56,
+      "no": 56,
+      "name": "啾啾聲",
+      "nameEn": "Chirp",
+      "icon": "/i/072000/072257.png",
+      "rank": 1,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "野外",
+          "mapId": 2100,
+          "detail": "雲海"
+        }
+      ],
+      "patch": "5.1",
+      "learnFromMob": [
+        "猴面雀（Cloudtop）",
+        "斯奎克（The Sea of Clouds）"
+      ]
+    },
+    {
+      "id": 57,
+      "no": 57,
+      "name": "恐怖音波",
+      "nameEn": "Eerie Soundwave",
+      "icon": "/i/072000/072258.png",
+      "rank": 2,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "野外",
+          "mapId": 2101,
+          "detail": "阿吉斯·拉"
+        }
+      ],
+      "patch": "5.1",
+      "learnFromMob": [
+        "疫蟲（Beta Quadrant）"
+      ]
+    },
+    {
+      "id": 58,
+      "no": 58,
+      "name": "呸姆治療",
+      "nameEn": "Pom Cure",
+      "icon": "/i/072000/072259.png",
+      "rank": 3,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 66,
+          "detail": "荊棘冠（困難）"
+        }
+      ],
+      "patch": "5.1",
+      "learnFromMob": [
+        "茸茸之愈 庫普洛·奇普（Thornmarch）"
+      ]
+    },
+    {
+      "id": 59,
+      "no": 59,
+      "name": "哥布林皮膚",
+      "nameEn": "Gobskin",
+      "icon": "/i/072000/072260.png",
+      "rank": 4,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "野外",
+          "mapId": 2001,
+          "detail": "龍族領地後地"
+        }
+      ],
+      "patch": "5.1",
+      "learnFromMob": [
+        "機工兵 斯利普金克斯（The Dravanian Hinterlands）"
+      ]
+    },
+    {
+      "id": 60,
+      "no": 60,
+      "name": "魔法之鎚",
+      "nameEn": "Magic Hammer",
+      "icon": "/i/072000/072261.png",
+      "rank": 2,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 196,
+          "detail": "古巴拉大圖書館（困難）"
+        }
+      ],
+      "patch": "5.1",
+      "learnFromMob": [
+        "艾匹羅基（Blue Sky）"
+      ]
+    },
+    {
+      "id": 61,
+      "no": 61,
+      "name": "迴避",
+      "nameEn": "Avail",
+      "icon": "/i/072000/072262.png",
+      "rank": 1,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 41,
+          "detail": "聖莫西安植物園"
+        }
+      ],
+      "patch": "5.1",
+      "learnFromMob": []
+    },
+    {
+      "id": 62,
+      "no": 62,
+      "name": "蛙腿",
+      "nameEn": "Frog Legs",
+      "icon": "/i/072000/072263.png",
+      "rank": 1,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "野外",
+          "mapId": 2001,
+          "detail": "龍族領地後地"
+        }
+      ],
+      "patch": "5.1",
+      "learnFromMob": [
+        "孤獨的貝洛·羅格（The Ruling Quarter）",
+        "智蛙（The Ruling Quarter）"
+      ]
+    },
+    {
+      "id": 63,
+      "no": 63,
+      "name": "音爆",
+      "nameEn": "Sonic Boom",
+      "icon": "/i/072000/072264.png",
+      "rank": 4,
+      "aspect": "風",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 17,
+          "detail": "塞壬燈塔"
+        }
+      ],
+      "patch": "5.1",
+      "learnFromMob": [
+        "安祖（The Gauntlet）",
+        "角祖（Outer La Noscea）"
+      ]
+    },
+    {
+      "id": 64,
+      "no": 64,
+      "name": "口哨",
+      "nameEn": "Whistle",
+      "icon": "/i/072000/072265.png",
+      "rank": 3,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "野外",
+          "mapId": 2100,
+          "detail": "雲海"
+        }
+      ],
+      "patch": "5.1",
+      "learnFromMob": [
+        "長頸駝（Last Step）",
+        "長頸駱（Mount Yorn）"
+      ]
+    },
+    {
+      "id": 65,
+      "no": 65,
+      "name": "白騎士之旅",
+      "nameEn": "White Knight's Tour",
+      "icon": "/i/072000/072266.png",
+      "rank": 2,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 34,
+          "detail": "聖教騎士團教堂"
+        }
+      ],
+      "patch": "5.1",
+      "learnFromMob": [
+        "白騎士（The Vault (Zone)）"
+      ]
+    },
+    {
+      "id": 66,
+      "no": 66,
+      "name": "黑騎士之旅",
+      "nameEn": "Black Knight's Tour",
+      "icon": "/i/072000/072267.png",
+      "rank": 2,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 34,
+          "detail": "聖教騎士團教堂"
+        }
+      ],
+      "patch": "5.1",
+      "learnFromMob": [
+        "黑騎士（The Vault (Zone)）"
+      ]
+    },
+    {
+      "id": 67,
+      "no": 67,
+      "name": "五級死亡",
+      "nameEn": "Level 5 Death",
+      "icon": "/i/072000/072268.png",
+      "rank": 4,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 31,
+          "detail": "古巴拉大圖書館"
+        }
+      ],
+      "patch": "5.1",
+      "learnFromMob": [
+        "64頁（Middle Floors）"
+      ]
+    },
+    {
+      "id": 68,
+      "no": 68,
+      "name": "發射器",
+      "nameEn": "Launcher",
+      "icon": "/i/072000/072269.png",
+      "rank": 2,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 219,
+          "detail": "貝爾薩斯長城"
+        }
+      ],
+      "patch": "5.1",
+      "learnFromMob": [
+        "武裝重甲（Magitek Installation）",
+        "多瑪武裝重甲（Hall of the Four Pillars）",
+        "伽馬"
+      ]
+    },
+    {
+      "id": 69,
+      "no": 69,
+      "name": "永恆射線",
+      "nameEn": "Perpetual Ray",
+      "icon": "/i/072000/072270.png",
+      "rank": 4,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 115,
+          "detail": "亞歷山大機神城 起動篇4"
+        }
+      ],
+      "patch": "5.1",
+      "learnFromMob": [
+        "操縱者（The Burden of the Father）"
+      ]
+    },
+    {
+      "id": 70,
+      "no": 70,
+      "name": "仙人掌守護",
+      "nameEn": "Cactguard",
+      "icon": "/i/072000/072271.png",
+      "rank": 1,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 26,
+          "detail": "卡爾恩沉沒神殿（困難）"
+        }
+      ],
+      "patch": "5.1",
+      "learnFromMob": [
+        "仙人刺守衛（The Sunken Temple of Qarn (Hard) (Zone)）"
+      ]
+    },
+    {
+      "id": 71,
+      "no": 71,
+      "name": "復仇爆破",
+      "nameEn": "Revenge Blast",
+      "icon": "/i/072000/072272.png",
+      "rank": 2,
+      "aspect": null,
+      "type": "物理",
+      "learnFrom": [],
+      "patch": "5.1",
+      "learnFromMob": []
+    },
+    {
+      "id": 72,
+      "no": 72,
+      "name": "天使耳語",
+      "nameEn": "Angel Whisper",
+      "icon": "/i/072000/072273.png",
+      "rank": 4,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [],
+      "patch": "5.15",
+      "learnFromMob": []
+    },
+    {
+      "id": 73,
+      "no": 73,
+      "name": "蛻皮",
+      "nameEn": "Exuviation",
+      "icon": "/i/072000/072274.png",
+      "rank": 2,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "野外",
+          "mapId": 2100,
+          "detail": "雲海"
+        }
+      ],
+      "patch": "5.15",
+      "learnFromMob": [
+        "阿巴拉提亞瓦魔蛾（The Blue Window）"
+      ]
+    },
+    {
+      "id": 74,
+      "no": 74,
+      "name": "反流",
+      "nameEn": "Reflux",
+      "icon": "/i/072000/072275.png",
+      "rank": 3,
+      "aspect": "雷",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 39,
+          "detail": "龍巢"
+        }
+      ],
+      "patch": "5.15",
+      "learnFromMob": [
+        "雲上雙足飛龍（Four Arms）"
+      ]
+    },
+    {
+      "id": 75,
+      "no": 75,
+      "name": "吞噬",
+      "nameEn": "Devour",
+      "icon": "/i/072000/072276.png",
+      "rank": 1,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 93,
+          "detail": "巴哈姆特大迷宮 邂逅篇1"
+        }
+      ],
+      "patch": "5.15",
+      "learnFromMob": [
+        "神杖小蛇（Allagan Megastructure）"
+      ]
+    },
+    {
+      "id": 76,
+      "no": 76,
+      "name": "濃縮天秤",
+      "nameEn": "Condensed Libra",
+      "icon": "/i/072000/072277.png",
+      "rank": 3,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 196,
+          "detail": "古巴拉大圖書館（困難）"
+        }
+      ],
+      "patch": "5.15",
+      "learnFromMob": [
+        "鬥場抄寫員（Blue Sky）"
+      ]
+    },
+    {
+      "id": 77,
+      "no": 77,
+      "name": "以太模仿",
+      "nameEn": "Aetheric Mimicry",
+      "icon": "/i/072000/072278.png",
+      "rank": 4,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 40,
+          "detail": "塞壬燈塔（困難）"
+        }
+      ],
+      "patch": "5.15",
+      "learnFromMob": [
+        "腐化物（Fuel Chamber）"
+      ]
+    },
+    {
+      "id": 78,
+      "no": 78,
+      "name": "索帕那卡",
+      "nameEn": "Surpanakha",
+      "icon": "/i/072000/072279.png",
+      "rank": 5,
+      "aspect": "土",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 86,
+          "detail": "托克阿斯托克（困難）"
+        }
+      ],
+      "patch": "5.15",
+      "learnFromMob": []
+    },
+    {
+      "id": 79,
+      "no": 79,
+      "name": "類星體",
+      "nameEn": "Quasar",
+      "icon": "/i/072000/072280.png",
+      "rank": 5,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 183,
+          "detail": "禁獄P1T6"
+        }
+      ],
+      "patch": "5.15",
+      "learnFromMob": []
+    },
+    {
+      "id": 80,
+      "no": 80,
+      "name": "J踢",
+      "nameEn": "J Kick",
+      "icon": "/i/072000/072281.png",
+      "rank": 5,
+      "aspect": null,
+      "type": "物理",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 139,
+          "detail": "亞歷山大機神城 律動篇4"
+        }
+      ],
+      "patch": "5.15",
+      "learnFromMob": [
+        "殘暴正義號（The Burden of the Son）"
+      ]
+    },
+    {
+      "id": 81,
+      "no": 81,
+      "name": "三叉矛擊",
+      "nameEn": "Triple Trident",
+      "icon": "/i/072000/072282.png",
+      "rank": 1,
+      "aspect": null,
+      "type": "物理",
+      "learnFrom": [
+        {
+          "type": "野外",
+          "mapId": 2410,
+          "detail": "揚夏"
+        }
+      ],
+      "patch": "5.25",
+      "learnFromMob": [
+        "惠比壽鯰魚精（Valley of the Fallen Rainbow）",
+        "鯰魚精小偷（The Glittering Basin）"
+      ]
+    },
+    {
+      "id": 82,
+      "no": 82,
+      "name": "刺激",
+      "nameEn": "Tingle",
+      "icon": "/i/072000/072283.png",
+      "rank": 2,
+      "aspect": "雷",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "野外",
+          "mapId": 2410,
+          "detail": "揚夏"
+        }
+      ],
+      "patch": "5.25",
+      "learnFromMob": [
+        "惠比壽鯰魚精（Valley of the Fallen Rainbow）"
+      ]
+    },
+    {
+      "id": 83,
+      "no": 83,
+      "name": "榻榻米翻轉",
+      "nameEn": "Tatami-gaeshi",
+      "icon": "/i/072000/072284.png",
+      "rank": 3,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 262,
+          "detail": "黃金宮殿"
+        }
+      ],
+      "patch": "5.25",
+      "learnFromMob": []
+    },
+    {
+      "id": 84,
+      "no": 84,
+      "name": "寒霧",
+      "nameEn": "Cold Fog",
+      "icon": "/i/072000/072285.png",
+      "rank": 4,
+      "aspect": "冰",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 585,
+          "detail": "灼熱地帶"
+        }
+      ],
+      "patch": "5.25",
+      "learnFromMob": []
+    },
+    {
+      "id": 85,
+      "no": 85,
+      "name": "讚美詩",
+      "nameEn": "Stotram",
+      "icon": "/i/072000/072286.png",
+      "rank": 2,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 263,
+          "detail": "神體顯現"
+        }
+      ],
+      "patch": "5.25",
+      "learnFromMob": []
+    },
+    {
+      "id": 86,
+      "no": 86,
+      "name": "聖光射線",
+      "nameEn": "Saintly Beam",
+      "icon": "/i/072000/072287.png",
+      "rank": 2,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 286,
+          "detail": "歐米茄機神城 小宇宙篇1"
+        }
+      ],
+      "patch": "5.25",
+      "learnFromMob": []
+    },
+    {
+      "id": 87,
+      "no": 87,
+      "name": "汙穢洪水",
+      "nameEn": "Feculent Flood",
+      "icon": "/i/072000/072288.png",
+      "rank": 1,
+      "aspect": "土",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 584,
+          "detail": "聖莫西安植物園（困難）"
+        }
+      ],
+      "patch": "5.25",
+      "learnFromMob": [
+        "泥人（Il Mheg）",
+        "枯腐泥妖（Kingsloam）"
+      ]
+    },
+    {
+      "id": 88,
+      "no": 88,
+      "name": "天使點心",
+      "nameEn": "Angel's Snack",
+      "icon": "/i/072000/072289.png",
+      "rank": 3,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [],
+      "patch": "5.25",
+      "learnFromMob": []
+    },
+    {
+      "id": 89,
+      "no": 89,
+      "name": "龜甲之門",
+      "nameEn": "Chelonian Gate",
+      "icon": "/i/072000/072290.png",
+      "rank": 4,
+      "aspect": "水",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 284,
+          "detail": "魔界島蓋子"
+        }
+      ],
+      "patch": "5.25",
+      "learnFromMob": []
+    },
+    {
+      "id": 90,
+      "no": 90,
+      "name": "毀滅之薔薇",
+      "nameEn": "The Rose of Destruction",
+      "icon": "/i/072000/072291.png",
+      "rank": 2,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 236,
+          "detail": "拳神殿"
+        }
+      ],
+      "patch": "5.25",
+      "learnFromMob": []
+    },
+    {
+      "id": 91,
+      "no": 91,
+      "name": "本能直覺",
+      "nameEn": "Basic Instinct",
+      "icon": "/i/072000/072292.png",
+      "rank": 2,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "野外",
+          "mapId": 34,
+          "detail": "拉諾西亞高地"
+        }
+      ],
+      "patch": "5.25",
+      "learnFromMob": [
+        "高階長鬚豹（Fool Falls）"
+      ]
+    },
+    {
+      "id": 92,
+      "no": 92,
+      "name": "超高頻振動",
+      "nameEn": "Ultravibration",
+      "icon": "/i/072000/072293.png",
+      "rank": 1,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "野外",
+          "mapId": 2407,
+          "detail": "基拉巴尼亞山岳地帯"
+        }
+      ],
+      "patch": "5.25",
+      "learnFromMob": [
+        "恐甲螞蜓（Wightrock）"
+      ]
+    },
+    {
+      "id": 93,
+      "no": 93,
+      "name": "燃燒",
+      "nameEn": "Blaze",
+      "icon": "/i/072000/072294.png",
+      "rank": 2,
+      "aspect": "冰",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 252,
+          "detail": "歐米茄機神城 次元篇1"
+        }
+      ],
+      "patch": "5.25",
+      "learnFromMob": []
+    },
+    {
+      "id": 94,
+      "no": 94,
+      "name": "芥末炸彈",
+      "nameEn": "Mustard Bomb",
+      "icon": "/i/072000/072295.png",
+      "rank": 4,
+      "aspect": "火",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 589,
+          "detail": "歐米茄機神城 宇宙篇3"
+        }
+      ],
+      "patch": "5.25",
+      "learnFromMob": [
+        "歐米茄（Final Verification）"
+      ]
+    },
+    {
+      "id": 95,
+      "no": 95,
+      "name": "龍之力量",
+      "nameEn": "Dragon Force",
+      "icon": "/i/072000/072296.png",
+      "rank": 3,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [],
+      "patch": "5.25",
+      "learnFromMob": []
+    },
+    {
+      "id": 96,
+      "no": 96,
+      "name": "以太火花",
+      "nameEn": "Aetherial Spark",
+      "icon": "/i/072000/072297.png",
+      "rank": 1,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "野外",
+          "mapId": 2408,
+          "detail": "阿拉戈海"
+        }
+      ],
+      "patch": "5.25",
+      "learnFromMob": [
+        "陀魯婆（The White Aisle）"
+      ]
+    },
+    {
+      "id": 97,
+      "no": 97,
+      "name": "水流牽引",
+      "nameEn": "Hydro Pull",
+      "icon": "/i/072000/072298.png",
+      "rank": 4,
+      "aspect": "水",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 279,
+          "detail": "水都斯卡拉"
+        }
+      ],
+      "patch": "5.25",
+      "learnFromMob": [
+        "凱爾派（The Green Screams）"
+      ]
+    },
+    {
+      "id": 98,
+      "no": 98,
+      "name": "水之詛咒",
+      "nameEn": "Malediction of Water",
+      "icon": "/i/072000/072299.png",
+      "rank": 2,
+      "aspect": "水",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 536,
+          "detail": "燕王盤"
+        }
+      ],
+      "patch": "5.25",
+      "learnFromMob": []
+    },
+    {
+      "id": 99,
+      "no": 99,
+      "name": "喬科流星",
+      "nameEn": "Choco Meteor",
+      "icon": "/i/072000/072300.png",
+      "rank": 1,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "野外",
+          "mapId": 2000,
+          "detail": "龍族領地前地"
+        }
+      ],
+      "patch": "5.25",
+      "learnFromMob": [
+        "追獵種陸行鳥（Chocobo Forest）"
+      ]
+    },
+    {
+      "id": 100,
+      "no": 100,
+      "name": "魔導魔法",
+      "nameEn": "Matra Magic",
+      "icon": "/i/072000/072301.png",
+      "rank": 3,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [],
+      "patch": "5.25",
+      "learnFromMob": []
+    },
+    {
+      "id": 101,
+      "no": 101,
+      "name": "外圍合成",
+      "nameEn": "Peripheral Synthesis",
+      "icon": "/i/072000/072302.png",
+      "rank": 4,
+      "aspect": null,
+      "type": "物理",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 589,
+          "detail": "歐米茄機神城 宇宙篇3"
+        }
+      ],
+      "patch": "5.25",
+      "learnFromMob": [
+        "歐米茄（Final Verification）"
+      ]
+    },
+    {
+      "id": 102,
+      "no": 102,
+      "name": "極終",
+      "nameEn": "Both Ends",
+      "icon": "/i/072000/072303.png",
+      "rank": 5,
+      "aspect": null,
+      "type": "物理",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 536,
+          "detail": "燕王盤"
+        }
+      ],
+      "patch": "5.25",
+      "learnFromMob": []
+    },
+    {
+      "id": 103,
+      "no": 103,
+      "name": "鬼魅連擊",
+      "nameEn": "Phantom Flurry",
+      "icon": "/i/072000/072304.png",
+      "rank": 5,
+      "aspect": null,
+      "type": "物理",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 596,
+          "detail": "魔界島歸處"
+        }
+      ],
+      "patch": "5.25",
+      "learnFromMob": [
+        "朱雀（Hells' Kier (Zone)）"
+      ]
+    },
+    {
+      "id": 104,
+      "no": 104,
+      "name": "夜之花",
+      "nameEn": "Nightbloom",
+      "icon": "/i/072000/072305.png",
+      "rank": 5,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 537,
+          "detail": "河川要塞"
+        }
+      ],
+      "patch": "6.1",
+      "learnFromMob": [
+        "月讀（Castrum Fluminis (Zone)）"
+      ]
+    },
+    {
+      "id": 105,
+      "no": 105,
+      "name": "哥布林重擊",
+      "nameEn": "Goblin Punch",
+      "icon": "/i/072000/072306.png",
+      "rank": 1,
+      "aspect": null,
+      "type": "物理",
+      "learnFrom": [
+        {
+          "type": "野外",
+          "mapId": 2954,
+          "detail": "庫洛西亞"
+        }
+      ],
+      "patch": "6.1",
+      "learnFromMob": [
+        "大哥布林（Cracked Shell Beach）"
+      ]
+    },
+    {
+      "id": 106,
+      "no": 106,
+      "name": "旋轉",
+      "nameEn": "Right Round",
+      "icon": "/i/072000/072307.png",
+      "rank": 2,
+      "aspect": null,
+      "type": "物理",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 656,
+          "detail": "瑪利卡之井"
+        }
+      ],
+      "patch": "6.1",
+      "learnFromMob": []
+    },
+    {
+      "id": 107,
+      "no": 107,
+      "name": "護盾陣",
+      "nameEn": "Schiltron",
+      "icon": "/i/072000/072308.png",
+      "rank": 1,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "野外",
+          "mapId": 2955,
+          "detail": "安·阿拉恩"
+        }
+      ],
+      "patch": "6.1",
+      "learnFromMob": [
+        "長尾犰狳（Ladle）",
+        "金剛鳩摩羅（Thavnair）"
+      ]
+    },
+    {
+      "id": 108,
+      "no": 108,
+      "name": "再水化",
+      "nameEn": "Rehydration",
+      "icon": "/i/072000/072309.png",
+      "rank": 1,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "野外",
+          "mapId": 2955,
+          "detail": "安·阿拉恩"
+        }
+      ],
+      "patch": "6.1",
+      "learnFromMob": [
+        "滑溜犰狳（Qasr Sharl）"
+      ]
+    },
+    {
+      "id": 109,
+      "no": 109,
+      "name": "魔法之息",
+      "nameEn": "Breath of Magic",
+      "icon": "/i/072000/072310.png",
+      "rank": 3,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [],
+      "patch": "6.1",
+      "learnFromMob": []
+    },
+    {
+      "id": 110,
+      "no": 110,
+      "name": "狂暴",
+      "nameEn": "Wild Rage",
+      "icon": "/i/072000/072311.png",
+      "rank": 4,
+      "aspect": null,
+      "type": "物理",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 737,
+          "detail": "英雄試煉"
+        }
+      ],
+      "patch": "6.1",
+      "learnFromMob": []
+    },
+    {
+      "id": 111,
+      "no": 111,
+      "name": "泥炭皮",
+      "nameEn": "Peat Pelt",
+      "icon": "/i/072000/072312.png",
+      "rank": 2,
+      "aspect": "土",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 746,
+          "detail": "瑪托雅的遺蹟"
+        }
+      ],
+      "patch": "6.1",
+      "learnFromMob": [
+        "土泥人（Clayclot Cauldron）"
+      ]
+    },
+    {
+      "id": 112,
+      "no": 112,
+      "name": "深層清潔",
+      "nameEn": "Deep Clean",
+      "icon": "/i/072000/072313.png",
+      "rank": 3,
+      "aspect": null,
+      "type": "物理",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 692,
+          "detail": "大宇宙"
+        }
+      ],
+      "patch": "6.1",
+      "learnFromMob": []
+    },
+    {
+      "id": 113,
+      "no": 113,
+      "name": "紅寶石動力",
+      "nameEn": "Ruby Dynamics",
+      "icon": "/i/072000/072314.png",
+      "rank": 4,
+      "aspect": null,
+      "type": "物理",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 717,
+          "detail": "煤渣漂移"
+        }
+      ],
+      "patch": "6.1",
+      "learnFromMob": []
+    },
+    {
+      "id": 114,
+      "no": 114,
+      "name": "占卜盧恩",
+      "nameEn": "Divination Rune",
+      "icon": "/i/072000/072315.png",
+      "rank": 4,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 657,
+          "detail": "妖精の宴（極難）"
+        }
+      ],
+      "patch": "6.1",
+      "learnFromMob": []
+    },
+    {
+      "id": 115,
+      "no": 115,
+      "name": "次元移位",
+      "nameEn": "Dimensional Shift",
+      "icon": "/i/072000/072316.png",
+      "rank": 4,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 653,
+          "detail": "伊甸希望樂園 覺醒篇1"
+        }
+      ],
+      "patch": "6.1",
+      "learnFromMob": []
+    },
+    {
+      "id": 116,
+      "no": 116,
+      "name": "信念詠嘆調",
+      "nameEn": "Conviction Marcato",
+      "icon": "/i/072000/072317.png",
+      "rank": 3,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 659,
+          "detail": "古爾格山"
+        }
+      ],
+      "patch": "6.1",
+      "learnFromMob": []
+    },
+    {
+      "id": 117,
+      "no": 117,
+      "name": "力場",
+      "nameEn": "Force Field",
+      "icon": "/i/072000/072318.png",
+      "rank": 3,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [],
+      "patch": "6.1",
+      "learnFromMob": []
+    },
+    {
+      "id": 118,
+      "no": 118,
+      "name": "翼翅懲戒",
+      "nameEn": "Winged Reprobation",
+      "icon": "/i/072000/072319.png",
+      "rank": 3,
+      "aspect": null,
+      "type": "物理",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 666,
+          "detail": "純白之冠"
+        }
+      ],
+      "patch": "6.1",
+      "learnFromMob": []
+    },
+    {
+      "id": 119,
+      "no": 119,
+      "name": "激光眼",
+      "nameEn": "Laser Eye",
+      "icon": "/i/072000/072320.png",
+      "rank": 3,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 758,
+          "detail": "伊甸誓約樂園 共鳴篇4"
+        }
+      ],
+      "patch": "6.1",
+      "learnFromMob": []
+    },
+    {
+      "id": 120,
+      "no": 120,
+      "name": "糖果杖",
+      "nameEn": "Candy Cane",
+      "icon": "/i/072000/072321.png",
+      "rank": 2,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 649,
+          "detail": "多恩·梅格"
+        }
+      ],
+      "patch": "6.1",
+      "learnFromMob": []
+    },
+    {
+      "id": 121,
+      "no": 121,
+      "name": "不滅之炎",
+      "nameEn": "Mortal Flame",
+      "icon": "/i/072000/072322.png",
+      "rank": 3,
+      "aspect": "火",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 692,
+          "detail": "大宇宙"
+        }
+      ],
+      "patch": "6.1",
+      "learnFromMob": []
+    },
+    {
+      "id": 122,
+      "no": 122,
+      "name": "海洋之歌",
+      "nameEn": "Sea Shanty",
+      "icon": "/i/072000/072323.png",
+      "rank": 5,
+      "aspect": "水",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 746,
+          "detail": "瑪托雅的遺蹟"
+        }
+      ],
+      "patch": "6.1",
+      "learnFromMob": []
+    },
+    {
+      "id": 123,
+      "no": 123,
+      "name": "啟示錄",
+      "nameEn": "Apokalypsis",
+      "icon": "/i/072000/072324.png",
+      "rank": 5,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 652,
+          "detail": "阿瑪烏洛特"
+        }
+      ],
+      "patch": "6.1",
+      "learnFromMob": []
+    },
+    {
+      "id": 124,
+      "no": 124,
+      "name": "凡人終途",
+      "nameEn": "Being Mortal",
+      "icon": "/i/072000/072325.png",
+      "rank": 5,
+      "aspect": "無",
+      "type": "魔法",
+      "learnFrom": [
+        {
+          "type": "副本",
+          "contentId": 657,
+          "detail": "妖精の宴（極難）"
+        }
+      ],
+      "patch": "6.1",
+      "learnFromMob": []
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "schema": "aether-currents",
+  "patch": "7.2",
+  "updated": "2026-05-29",
+  "source": "teamcraft",
+  "count": 2,
+  "data": [
+    {
+      "id": 1,
+      "name": "風脈泉 #1",
+      "zone": "庫爾札斯西部高地",
+      "patch": "3.0",
+      "type": "field",
+      "coords": {
+        "mapId": 397,
+        "x": 30.1,
+        "y": 25.8
+      },
+      "questId": null
+    },
+    {
+      "id": 2,
+      "name": "任務風脈",
+      "zone": "庫爾札斯西部高地",
+      "patch": "3.0",
+      "type": "quest",
+      "coords": null,
+      "questId": 67890
+    }
+  ]
+}

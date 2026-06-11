@@ -1,0 +1,21 @@
+{
+  "schema": "exploration-log",
+  "patch": "7.2",
+  "updated": "2026-05-29",
+  "source": "manual",
+  "count": 1,
+  "data": [
+    {
+      "id": 1,
+      "name": "格里達尼亞瞭望點",
+      "zone": "格里達尼亞新街",
+      "coords": {
+        "mapId": 132,
+        "x": 12,
+        "y": 13
+      },
+      "trigger": "情緒動作「眺望」",
+      "patch": "2.0"
+    }
+  ]
+}

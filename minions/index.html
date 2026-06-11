@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FFXIV 寵物收藏追蹤 — 查詢所有隨從寵物、來源篩選、勾選擁有進度">
+  <title>寵物收藏追蹤 | 水神的工具箱</title>
+  <style>
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── Design tokens（與首頁一致）── */
+    :root {
+      --bg-base:    #0a0c10;
+      --bg-surface: #0f1117;
+      --bg-card:    #14181f;
+      --bg-card-hover: #1a1f2b;
+      --border:     rgba(255,255,255,0.07);
+      --border-hover: rgba(200,169,110,0.4);
+
+      --gold:       #c8a96e;
+      --gold-light: #e2c98a;
+      --gold-dim:   rgba(200,169,110,0.15);
+      --blue:       #4fc3f7;
+      --blue-dim:   rgba(79,195,247,0.12);
+      --green:      #4ade80;
+      --green-dim:  rgba(74,222,128,0.12);
+      --purple:     #a78bfa;
+      --purple-dim: rgba(167,139,250,0.12);
+
+      --text-primary:   #e8eaf0;
+      --text-secondary: #8892a4;
+      --text-muted:     #4a5568;
+
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --shadow-card: 0 2px 16px rgba(0,0,0,0.4);
+      --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 0%, rgba(200,169,110,0.05) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(79,195,247,0.04) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Header ── */
+    .site-header {
+      padding: 40px 0 32px;
+    }
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+    .header-nav a { color: var(--text-secondary); transition: var(--transition); }
+    .header-nav a:hover { color: var(--gold); }
+    .header-nav .sep { color: var(--text-muted); }
+
+    .page-title {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 8px;
+    }
+    .page-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--gold-dim);
+      border: 1px solid rgba(200,169,110,0.3);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+    .page-title h1 {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--gold-light);
+      letter-spacing: -0.3px;
+    }
+    .page-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-left: 58px;
+    }
+
+    /* ── Progress bar ── */
+    .progress-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .progress-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+    .progress-bar-wrap {
+      flex: 1;
+      height: 8px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+      border-radius: 99px;
+      transition: width 0.4s ease;
+    }
+    .progress-count {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--gold-light);
+      white-space: nowrap;
+    }
+    .progress-count span {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--text-muted);
+    }
+
+    /* ── Controls ── */
+    .controls {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .search-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 200px;
+    }
+    .search-wrap .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 15px;
+      pointer-events: none;
+    }
+    .search-input {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 10px 12px 10px 36px;
+      color: var(--text-primary);
+      font-size: 14px;
+      outline: none;
+      transition: var(--transition);
+    }
+    .search-input:focus {
+      border-color: rgba(200,169,110,0.4);
+      background: var(--bg-card-hover);
+    }
+    .search-input::placeholder { color: var(--text-muted); }
+
+    .filter-group {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      padding: 8px 14px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+    .filter-btn:hover {
+      border-color: rgba(200,169,110,0.3);
+      color: var(--text-primary);
+    }
+    .filter-btn.active {
+      background: var(--gold-dim);
+      border-color: rgba(200,169,110,0.5);
+      color: var(--gold-light);
+    }
+
+    .source-select {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      padding: 8px 32px 8px 12px;
+      font-size: 13px;
+      cursor: pointer;
+      outline: none;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238892a4' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      transition: var(--transition);
+    }
+    .source-select:focus { border-color: rgba(200,169,110,0.4); }
+
+    /* ── Stats bar ── */
+    .stats-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .stats-bar strong { color: var(--text-secondary); }
+
+    /* ── Grid ── */
+    .minion-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+      gap: 8px;
+    }
+
+    .minion-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 10px 6px 8px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      position: relative;
+      user-select: none;
+    }
+    .minion-card:hover {
+      border-color: rgba(200,169,110,0.3);
+      background: var(--bg-card-hover);
+      transform: translateY(-1px);
+    }
+    .minion-card.owned {
+      border-color: rgba(74,222,128,0.4);
+      background: rgba(74,222,128,0.05);
+    }
+    .minion-card.owned .minion-name {
+      color: var(--green);
+    }
+
+    .minion-icon-wrap {
+      position: relative;
+      width: 48px;
+      height: 48px;
+    }
+    .minion-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-sm);
+      object-fit: cover;
+      background: rgba(255,255,255,0.04);
+      display: block;
+    }
+    .minion-icon.loading {
+      background: rgba(255,255,255,0.06);
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    .check-badge {
+      position: absolute;
+      bottom: -4px;
+      right: -4px;
+      width: 18px;
+      height: 18px;
+      background: var(--green);
+      border: 2px solid var(--bg-base);
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: #0a0c10;
+      font-weight: 700;
+    }
+    .minion-card.owned .check-badge { display: flex; }
+
+    .minion-name {
+      font-size: 11px;
+      color: var(--text-secondary);
+      text-align: center;
+      line-height: 1.3;
+      word-break: break-all;
+      max-width: 100%;
+    }
+
+    /* ── Loading/Empty states ── */
+    .state-msg {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+    }
+    .state-msg .state-icon {
+      font-size: 36px;
+      margin-bottom: 12px;
+    }
+    .state-msg p { font-size: 14px; }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 32px;
+      height: 32px;
+      border: 3px solid rgba(200,169,110,0.2);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 12px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* ── Tooltip ── */
+    .tooltip {
+      position: fixed;
+      background: var(--bg-card);
+      border: 1px solid rgba(200,169,110,0.3);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      max-width: 220px;
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0;
+      transition: opacity 0.15s;
+      line-height: 1.5;
+    }
+    .tooltip.show { opacity: 1; }
+    .tooltip .tt-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gold-light);
+      margin-bottom: 4px;
+    }
+    .tooltip .tt-source {
+      display: inline-block;
+      font-size: 11px;
+      background: var(--gold-dim);
+      color: var(--gold);
+      border-radius: 4px;
+      padding: 1px 6px;
+      margin-top: 4px;
+    }
+
+    /* ── Footer ── */
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 0 36px;
+      text-align: center;
+      margin-top: 48px;
+    }
+    .footer-text {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 2;
+    }
+    .footer-text a { color: var(--text-secondary); transition: var(--transition); }
+    .footer-text a:hover { color: var(--gold); }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .controls { flex-direction: column; }
+      .search-wrap { min-width: 100%; }
+      .minion-grid { grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: 6px; }
+      .progress-section { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <header class="site-header">
+    <nav class="header-nav">
+      <a href="/">⚓ 水神的工具箱</a>
+      <span class="sep">›</span>
+      <span>寵物收藏追蹤</span>
+    </nav>
+    <div class="page-title">
+      <div class="page-icon">🐣</div>
+      <h1>寵物收藏追蹤</h1>
+    </div>
+    <p class="page-subtitle">查詢所有隨從寵物的取得來源，追蹤你的收藏進度</p>
+  </header>
+
+  <!-- Progress -->
+  <div class="progress-section">
+    <div class="progress-label">收藏進度</div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+    </div>
+    <div class="progress-count" id="progressCount">
+      0 <span>/ — 隻</span>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" class="search-input" id="searchInput" placeholder="搜尋寵物名稱…">
+    </div>
+    <div class="filter-group">
+      <button class="filter-btn active" data-filter="all">全部</button>
+      <button class="filter-btn" data-filter="owned">已擁有</button>
+      <button class="filter-btn" data-filter="missing">未擁有</button>
+    </div>
+    <select class="source-select" id="sourceSelect">
+      <option value="">所有來源</option>
+    </select>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-bar">
+    <span>顯示 <strong id="visibleCount">0</strong> 隻</span>
+    <span id="loadingNote" style="color:var(--gold);font-size:12px;display:none">資料載入中…</span>
+  </div>
+
+  <!-- Grid -->
+  <div class="minion-grid" id="minionGrid">
+    <div class="state-msg">
+      <div class="loading-spinner"></div>
+      <p>正在從 XIVAPI 載入寵物資料…</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="container">
+    <p class="footer-text">
+      水神的工具箱 &nbsp;·&nbsp;
+      <a href="https://github.com/SeaGod99/SeaGod99.github.io" target="_blank">GitHub</a>
+      &nbsp;·&nbsp; 資料來源：
+      <a href="https://v2.xivapi.com" target="_blank">XIVAPI v2</a>
+    </p>
+    <p class="footer-text" style="margin-top:4px">
+      FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具
+    </p>
+  </div>
+</footer>
+
+<!-- Tooltip -->
+<div class="tooltip" id="tooltip">
+  <div class="tt-name" id="ttName"></div>
+  <div id="ttDesc"></div>
+  <div id="ttSource"></div>
+</div>
+
+<script>
+  // ── 常數 ──
+  const XIVAPI   = 'https://v2.xivapi.com';
+  const ICON_BASE = 'https://v2.xivapi.com';
+  const LS_KEY   = 'seagod_minions_owned_v1';
+  const LIMIT    = 500;
+
+  // ── 狀態 ──
+  let allMinions  = [];   // { id, name, icon, source, desc }
+  let ownedSet    = new Set(JSON.parse(localStorage.getItem(LS_KEY) || '[]'));
+  let filterOwn   = 'all';  // 'all' | 'owned' | 'missing'
+  let filterSource = '';
+  let searchQ     = '';
+
+  // ── 工具函式 ──
+  const $  = id => document.getElementById(id);
+  const saveOwned = () => localStorage.setItem(LS_KEY, JSON.stringify([...ownedSet]));
+
+  function iconUrl(path) {
+    if (!path) return '';
+    // path 形如 /i/040000/040001.png 或 完整 URL
+    if (path.startsWith('http')) return path;
+    return ICON_BASE + path;
+  }
+
+  // 根據 Tooltip 文字嘗試萃取來源標籤
+  function guessSource(tooltip) {
+    if (!tooltip) return '';
+    const t = tooltip;
+    if (/任務/.test(t) || /Quest/.test(t)) return '任務';
+    if (/商店|Vendor|Gil|gil/.test(t)) return '商店';
+    if (/副本|Dungeon|Instance/.test(t)) return '副本';
+    if (/藏寶圖|Treasure/.test(t)) return '藏寶圖';
+    if (/試煉|Trial/.test(t)) return '試煉';
+    if (/絕境戰|Raid/.test(t)) return '副本';
+    if (/季節|Seasonal|節慶/.test(t)) return '活動';
+    if (/MOGSTATION|MOGY|Mog Station|商城/.test(t)) return '商城';
+    if (/成就|Achievement/.test(t)) return '成就';
+    if (/釣魚|Fishing/.test(t)) return '釣魚';
+    if (/製作|Craft/.test(t)) return '製作';
+    if (/採集|Gathering/.test(t)) return '採集';
+    if (/迷宮/.test(t)) return '副本';
+    return '其他';
+  }
+
+  // ── 資料載入（分頁抓取）──
+  async function loadAllMinions() {
+    $('loadingNote').style.display = '';
+    const results = [];
+    let after = null;
+
+    try {
+      while (true) {
+        let url = `${XIVAPI}/api/sheet/Companion?fields=Name,Icon,Description&language=tw&limit=${LIMIT}`;
+        if (after !== null) url += `&after=${after}`;
+
+        const res  = await fetch(url);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        const rows = data.rows ?? [];
+
+        for (const row of rows) {
+          const name = row.fields?.Name;
+          if (!name || name.trim() === '') continue;  // 跳過空資料列
+
+          const icon = row.fields?.Icon?.path ?? '';
+          const desc = row.fields?.Description ?? '';
+          results.push({
+            id:     row.row_id,
+            name,
+            icon,
+            source: guessSource(desc),
+            desc,
+          });
+        }
+
+        // 分頁：如果回傳不足 LIMIT 筆，已到末頁
+        if (rows.length < LIMIT) break;
+        after = rows[rows.length - 1].row_id;
+      }
+    } catch (e) {
+      console.error('載入寵物資料失敗', e);
+      $('minionGrid').innerHTML = `
+        <div class="state-msg">
+          <div class="state-icon">⚠️</div>
+          <p>資料載入失敗，請重新整理頁面。<br><small style="color:var(--text-muted)">${e.message}</small></p>
+        </div>`;
+      $('loadingNote').style.display = 'none';
+      return;
+    }
+
+    allMinions = results;
+    $('loadingNote').style.display = 'none';
+    buildSourceFilter();
+    render();
+  }
+
+  // ── 來源篩選選項 ──
+  function buildSourceFilter() {
+    const sources = [...new Set(allMinions.map(m => m.source).filter(Boolean))].sort();
+    const sel = $('sourceSelect');
+    for (const s of sources) {
+      const opt = document.createElement('option');
+      opt.value = s;
+      opt.textContent = s;
+      sel.appendChild(opt);
+    }
+  }
+
+  // ── 渲染 ──
+  function render() {
+    const q = searchQ.toLowerCase();
+    const visible = allMinions.filter(m => {
+      if (q && !m.name.toLowerCase().includes(q)) return false;
+      if (filterSource && m.source !== filterSource) return false;
+      if (filterOwn === 'owned'   && !ownedSet.has(m.id)) return false;
+      if (filterOwn === 'missing' &&  ownedSet.has(m.id)) return false;
+      return true;
+    });
+
+    $('visibleCount').textContent = visible.length;
+
+    // 進度
+    const total   = allMinions.length;
+    const owned   = ownedSet.size;
+    const pct     = total > 0 ? (owned / total * 100).toFixed(1) : 0;
+    $('progressFill').style.width = pct + '%';
+    $('progressCount').innerHTML  = `${owned} <span>/ ${total} 隻</span>`;
+
+    if (visible.length === 0) {
+      $('minionGrid').innerHTML = `
+        <div class="state-msg">
+          <div class="state-icon">🔍</div>
+          <p>找不到符合條件的寵物</p>
+        </div>`;
+      return;
+    }
+
+    const frag = document.createDocumentFragment();
+    for (const m of visible) {
+      const card = document.createElement('div');
+      card.className = 'minion-card' + (ownedSet.has(m.id) ? ' owned' : '');
+      card.dataset.id = m.id;
+
+      const imgSrc = iconUrl(m.icon);
+      card.innerHTML = `
+        <div class="minion-icon-wrap">
+          <img class="minion-icon loading" src="${imgSrc}" alt="${m.name}"
+               loading="lazy" decoding="async"
+               onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'48\' height=\'48\'><rect fill=\'%23ffffff08\' width=\'48\' height=\'48\' rx=\'6\'/></svg>'">
+          <div class="check-badge">✓</div>
+        </div>
+        <div class="minion-name">${m.name}</div>
+      `;
+
+      // 圖示載入完成後移除 loading 動畫
+      card.querySelector('img').addEventListener('load', function() {
+        this.classList.remove('loading');
+      });
+
+      card.addEventListener('click', () => toggleOwned(m.id, card));
+      card.addEventListener('mouseenter', e => showTooltip(e, m));
+      card.addEventListener('mouseleave', hideTooltip);
+      card.addEventListener('mousemove', moveTooltip);
+
+      frag.appendChild(card);
+    }
+
+    $('minionGrid').innerHTML = '';
+    $('minionGrid').appendChild(frag);
+  }
+
+  // ── 擁有切換 ──
+  function toggleOwned(id, card) {
+    if (ownedSet.has(id)) {
+      ownedSet.delete(id);
+      card.classList.remove('owned');
+    } else {
+      ownedSet.add(id);
+      card.classList.add('owned');
+    }
+    saveOwned();
+    updateProgress();
+
+    // 若在「已擁有」或「未擁有」篩選下，切換後需重渲
+    if (filterOwn !== 'all') render();
+  }
+
+  function updateProgress() {
+    const total = allMinions.length;
+    const owned = ownedSet.size;
+    const pct   = total > 0 ? (owned / total * 100).toFixed(1) : 0;
+    $('progressFill').style.width = pct + '%';
+    $('progressCount').innerHTML  = `${owned} <span>/ ${total} 隻</span>`;
+  }
+
+  // ── Tooltip ──
+  let ttTarget = null;
+  function showTooltip(e, m) {
+    ttTarget = m;
+    $('ttName').textContent    = m.name;
+    $('ttDesc').textContent    = m.desc || '';
+    $('ttSource').innerHTML    = m.source ? `<span class="tt-source">${m.source}</span>` : '';
+    $('tooltip').classList.add('show');
+    moveTooltip(e);
+  }
+  function hideTooltip() {
+    $('tooltip').classList.remove('show');
+    ttTarget = null;
+  }
+  function moveTooltip(e) {
+    const tt = $('tooltip');
+    const x  = e.clientX + 14;
+    const y  = e.clientY + 14;
+    const w  = tt.offsetWidth;
+    const h  = tt.offsetHeight;
+    tt.style.left = (x + w > window.innerWidth  ? x - w - 20 : x) + 'px';
+    tt.style.top  = (y + h > window.innerHeight ? y - h - 20 : y) + 'px';
+  }
+
+  // ── 事件監聽 ──
+  $('searchInput').addEventListener('input', e => {
+    searchQ = e.target.value;
+    render();
+  });
+
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      filterOwn = btn.dataset.filter;
+      render();
+    });
+  });
+
+  $('sourceSelect').addEventListener('change', e => {
+    filterSource = e.target.value;
+    render();
+  });
+
+  // ── 啟動 ──
+  loadAllMinions();
+</script>
+</body>
+</html>

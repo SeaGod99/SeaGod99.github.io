@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>仙人微彩計算機 | 水神的工具箱</title>
+  <style>
+    :root {
+      --bg-base:    #0a0c10;
+      --bg-surface: #0f1117;
+      --bg-card:    #14181f;
+      --bg-card-hover: #1a1f2b;
+      --border:     rgba(255,255,255,0.08);
+      --gold:       #c8a96e;
+      --gold-light: #e2c98a;
+      --gold-dim:   rgba(200,169,110,0.15);
+      --blue:       #4fc3f7;
+      --blue-dim:   rgba(79,195,247,0.12);
+      --green:      #4ade80;
+      --green-dim:  rgba(74,222,128,0.12);
+      --red:        #f87171;
+      --yellow:     #fbbf24;
+      --purple:     #a78bfa;
+      --text-primary:   #e8eaf0;
+      --text-secondary: #8892a4;
+      --text-muted:     #4a5568;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --transition: 0.15s ease;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      min-height: 100vh;
+      font-size: 18px;
+      -webkit-font-smoothing: antialiased;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background: radial-gradient(ellipse 70% 40% at 50% 0%, rgba(79,195,247,0.04) 0%, transparent 60%);
+      pointer-events: none; z-index: 0;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* Nav */
+    .nav {
+      position: relative; z-index: 10;
+      display: flex; align-items: center; gap: 8px;
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-back { font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 4px; transition: color var(--transition); }
+    .nav-back:hover { color: var(--gold); }
+    .nav-sep { color: var(--text-muted); font-size: 12px; }
+    .nav-current { font-size: 12px; color: var(--text-muted); }
+
+    /* Layout */
+    .container {
+      max-width: 900px; margin: 0 auto;
+      padding: 40px 20px 60px;
+      position: relative; z-index: 1;
+    }
+    .page-header { text-align: center; margin-bottom: 32px; }
+    .page-icon { font-size: 40px; margin-bottom: 12px; }
+    .page-title { font-size: 26px; font-weight: 700; color: var(--gold-light); margin-bottom: 6px; }
+    .page-desc { font-size: 15px; color: var(--text-secondary); }
+
+    /* Tabs */
+    .tabs {
+      display: flex; gap: 0;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 4px;
+      margin-bottom: 28px;
+      width: fit-content;
+    }
+    .tab-btn {
+      padding: 7px 18px;
+      border-radius: 7px;
+      font-size: 13px; font-weight: 500;
+      cursor: pointer; border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      transition: var(--transition);
+    }
+    .tab-btn.active {
+      background: var(--gold-dim);
+      color: var(--gold-light);
+      border: 1px solid rgba(200,169,110,0.25);
+    }
+
+    /* ── MINI CACTPOT ── */
+    .mini-layout {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+    @media (max-width: 640px) { .mini-layout { grid-template-columns: 1fr; } }
+
+    .mini-board-wrap { }
+    .board-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 10px; }
+
+    .mini-board {
+      display: grid;
+      grid-template-columns: repeat(3, 96px);
+      gap: 8px;
+    }
+    .mini-cell {
+      width: 96px; height: 96px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      transition: background var(--transition), border-color var(--transition);
+      position: relative;
+      cursor: pointer;
+    }
+    .mini-cell:hover { border-color: rgba(200,169,110,0.3); }
+    .mini-cell.revealed {
+      background: rgba(79,195,247,0.08);
+      border-color: rgba(79,195,247,0.4);
+    }
+    .mini-cell.best-line {
+      background: rgba(200,169,110,0.15);
+      border-color: rgba(200,169,110,0.6);
+    }
+    .mini-cell.best-line.revealed {
+      background: rgba(200,169,110,0.2);
+    }
+    .mini-cell input {
+      width: 100%; height: 100%;
+      background: transparent; border: none; outline: none;
+      text-align: center;
+      font-size: 32px; font-weight: 800;
+      color: var(--text-primary);
+      font-family: inherit;
+      cursor: pointer;
+      caret-color: var(--gold);
+    }
+    .mini-cell.revealed input { color: var(--blue); }
+    .mini-cell.best-line input { color: var(--gold-light); }
+    .mini-cell input::placeholder { color: var(--text-muted); font-size: 20px; font-weight: 400; }
+
+    /* Inline number picker below board */
+    .num-picker {
+      display: none;
+      margin-top: 10px;
+      background: var(--bg-card);
+      border: 1px solid rgba(200,169,110,0.3);
+      border-radius: var(--radius-md);
+      padding: 10px;
+    }
+    .num-picker.show { display: block; }
+    .num-picker-title { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; letter-spacing: 0.5px; text-transform: uppercase; }
+    .num-picker-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+    .num-picker-btn {
+      padding: 8px 0;
+      border-radius: var(--radius-sm);
+      text-align: center; font-size: 15px; font-weight: 700;
+      cursor: pointer; border: 1px solid var(--border);
+      background: var(--bg-card-hover); color: var(--text-primary);
+      transition: var(--transition);
+    }
+    .num-picker-btn:hover:not(:disabled) { background: var(--gold-dim); color: var(--gold-light); border-color: rgba(200,169,110,0.4); }
+    .num-picker-btn:disabled { opacity: 0.2; cursor: not-allowed; }
+    .num-picker-btn.clear-btn { color: var(--red); }
+
+    /* Line selector */
+    .line-selector {
+      margin-top: 12px;
+    }
+    .line-btns {
+      display: flex; flex-wrap: wrap; gap: 6px;
+    }
+    .line-btn {
+      padding: 5px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 12px; font-weight: 500;
+      cursor: pointer; border: none;
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+      transition: var(--transition);
+    }
+    .line-btn:hover { border-color: rgba(200,169,110,0.3); color: var(--gold); }
+    .line-btn.selected { background: var(--gold-dim); color: var(--gold-light); border-color: rgba(200,169,110,0.4); }
+
+    /* Results panel */
+    .results-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+    .panel-head {
+      padding: 10px 14px;
+      font-size: 11px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.8px;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+    }
+    .panel-body { padding: 14px; }
+
+    .ev-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 15px;
+    }
+    .ev-row:last-child { border-bottom: none; }
+    .ev-label { color: var(--text-secondary); }
+    .ev-val { font-weight: 700; font-size: 16px; }
+    .ev-val.best { color: var(--gold-light); }
+    .ev-val.second { color: var(--blue); }
+    .ev-bar-wrap {
+      flex: 1; margin: 0 10px;
+      height: 3px; background: var(--border);
+      border-radius: 2px; overflow: hidden;
+    }
+    .ev-bar { height: 100%; border-radius: 2px; transition: width 0.3s ease; }
+
+    .highlight-box {
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      background: var(--gold-dim);
+      border: 1px solid rgba(200,169,110,0.25);
+      font-size: 13px;
+      display: flex; gap: 8px;
+      align-items: flex-start;
+    }
+    .hl-icon { font-size: 16px; flex-shrink: 0; }
+    .hl-title { font-weight: 600; color: var(--gold-light); margin-bottom: 3px; }
+    .hl-body { font-size: 12px; color: var(--text-secondary); }
+
+    /* ── MGP Table ── */
+    .mgp-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 15px;
+    }
+    .mgp-table th {
+      text-align: left;
+      padding: 10px 14px;
+      font-size: 13px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.6px;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+    }
+    .mgp-table td {
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+    .mgp-table tr:last-child td { border-bottom: none; }
+    .mgp-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .mgp-table .num-col { text-align: right; color: var(--text-primary); font-weight: 500; font-variant-numeric: tabular-nums; }
+    .mgp-table .sum-col { text-align: right; font-weight: 600; color: var(--gold-light); }
+    .rank-1 td { background: rgba(200,169,110,0.06); }
+    .rank-2 td { background: rgba(79,195,247,0.04); }
+
+    /* Number picker overlay */
+    .picker-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 100;
+      align-items: center; justify-content: center;
+    }
+    .picker-overlay.show { display: flex; }
+    .picker-box {
+      background: #1a1f2b;
+      border: 1px solid rgba(200,169,110,0.3);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      width: 280px;
+    }
+    .picker-title { font-size: 13px; font-weight: 600; color: var(--gold-light); margin-bottom: 14px; }
+    .picker-grid {
+      display: grid; grid-template-columns: repeat(5,1fr); gap: 6px;
+    }
+    .picker-num {
+      padding: 10px 0;
+      border-radius: var(--radius-sm);
+      text-align: center; font-size: 14px; font-weight: 700;
+      cursor: pointer; border: none;
+      background: var(--bg-card); color: var(--text-primary);
+      border: 1px solid var(--border);
+      transition: var(--transition);
+    }
+    .picker-num:hover { background: var(--gold-dim); color: var(--gold-light); border-color: rgba(200,169,110,0.4); }
+    .picker-num:disabled { opacity: 0.25; cursor: not-allowed; }
+    .picker-cancel {
+      margin-top: 12px; width: 100%;
+      padding: 9px; border-radius: var(--radius-sm);
+      background: transparent; color: var(--text-secondary);
+      border: 1px solid var(--border); cursor: pointer; font-size: 13px;
+      transition: var(--transition);
+    }
+    .picker-cancel:hover { border-color: rgba(255,255,255,0.2); color: var(--text-primary); }
+
+    /* Buttons */
+    .btn-row { display: flex; gap: 8px; margin-top: 14px; }
+    .btn {
+      flex: 1; padding: 9px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 12.5px; font-weight: 600;
+      cursor: pointer; border: none;
+      transition: var(--transition); outline: none;
+    }
+    .btn-primary { background: var(--gold-dim); color: var(--gold-light); border: 1px solid rgba(200,169,110,0.3); }
+    .btn-primary:hover { background: rgba(200,169,110,0.25); }
+    .btn-ghost { background: transparent; color: var(--text-secondary); border: 1px solid var(--border); }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.2); color: var(--text-primary); }
+
+    .section-gap { margin-bottom: 20px; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Payout section */
+    .payout-section {
+      margin-top: 40px;
+      border-top: 1px solid var(--border);
+      padding-top: 28px;
+    }
+    .section-title {
+      font-size: 13px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.8px;
+      color: var(--text-muted); margin-bottom: 14px;
+    }
+
+    .info-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+    .info-box strong { color: var(--gold); }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="../../" class="nav-back">⚓ 水神的工具箱</a>
+  <span class="nav-sep">/</span>
+  <span class="nav-current">仙人微彩計算機</span>
+</nav>
+
+<div class="container">
+  <div class="page-header">
+    <div class="page-icon">🎰</div>
+    <h1 class="page-title">仙人微彩計算機</h1>
+    <p class="page-desc">期望值分析，建議最佳翻牌與選線策略</p>
+  </div>
+
+  <div class="info-box">
+    遊戲規則：9 格數字 <strong>1～9</strong>，隨機配置。先翻開 <strong>1 格</strong>，再自選翻開 <strong>3 格</strong>（共 4 格已知），最後選擇 <strong>1 條連線</strong>（橫、縱、斜）獲得獎金。<br>
+    點擊格子或直接輸入數字，工具會根據目前資訊計算每條線的 <strong>期望 MGP</strong>。
+  </div>
+
+  <div class="mini-layout">
+    <!-- Board -->
+    <div class="mini-board-wrap">
+      <div class="board-label">3×3 格盤（點擊或輸入 1–9）</div>
+      <div class="mini-board" id="miniBoard"></div>
+      <!-- Inline number picker -->
+      <div class="num-picker" id="numPicker">
+        <div class="num-picker-title" id="numPickerTitle">選擇數字</div>
+        <div class="num-picker-grid" id="numPickerGrid"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="resetMini()">重置</button>
+      </div>
+      <div style="margin-top:16px">
+        <div class="board-label">選擇連線查看期望值</div>
+        <div class="line-btns" id="lineBtns"></div>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div>
+      <div class="results-panel section-gap">
+        <div class="panel-head">各連線期望 MGP</div>
+        <div class="panel-body" id="evTable"></div>
+      </div>
+      <div id="bestSuggestion"></div>
+    </div>
+  </div>
+
+  <!-- ── Payout Table（常駐顯示）── -->
+  <div class="payout-section">
+    <div class="section-title">獎金對照表（三數總和 → MGP）</div>
+    <div class="info-box" style="margin-bottom:16px">
+      連線三個數字的<strong>總和</strong>決定獎金。總和 <strong>6</strong>（1+2+3）為最高獎 <strong>10,000 MGP</strong>。
+    </div>
+    <div class="results-panel">
+      <div class="panel-body" style="padding:0">
+        <table class="mgp-table">
+          <thead>
+            <tr>
+              <th>三數總和</th>
+              <th class="num-col">MGP 獎金</th>
+              <th>三數總和</th>
+              <th class="num-col">MGP 獎金</th>
+            </tr>
+          </thead>
+          <tbody id="payoutBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Payout table (sum → MGP) ──
+const PAYOUT = {
+  6: 10000, 7: 36, 8: 720, 9: 360, 10: 80,
+  11: 252,  12: 108, 13: 72, 14: 54, 15: 180,
+  16: 72,  17: 180, 18: 119, 19: 36, 20: 306,
+  21: 1080, 22: 144, 23: 1800, 24: 3600
+};
+
+// All 8 lines: [row0, row1, row2, col0, col1, col2, diag↘, diag↗]
+const LINES_MINI = [
+  [0,1,2], [3,4,5], [6,7,8],  // rows
+  [0,3,6], [1,4,7], [2,5,8],  // cols
+  [0,4,8],                    // diag
+  [2,4,6]                     // anti-diag
+];
+const LINE_NAMES = ['橫 1', '橫 2', '橫 3', '縱 1', '縱 2', '縱 3', '斜 ↘', '斜 ↗'];
+
+// ── State ──
+let cells = new Array(9).fill(null); // null = unknown
+let pickerTarget = -1;
+let selectedLine = -1;
+const MAX_REVEAL = 4;
+
+// ── Init ──
+function initMiniBoard() {
+  const board = document.getElementById('miniBoard');
+  board.innerHTML = '';
+  for (let i = 0; i < 9; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'mini-cell';
+    cell.dataset.idx = i;
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.inputMode = 'numeric';
+    input.maxLength = 1;
+    input.placeholder = '?';
+    input.dataset.idx = i;
+
+    // 直接鍵盤輸入
+    input.addEventListener('keydown', e => {
+      const n = parseInt(e.key);
+      if (n >= 1 && n <= 9) {
+        e.preventDefault();
+        trySetCell(i, n, input);
+      } else if (e.key === 'Backspace' || e.key === 'Delete') {
+        e.preventDefault();
+        clearCell(i);
+      }
+    });
+    input.addEventListener('input', e => {
+      const n = parseInt(input.value);
+      if (n >= 1 && n <= 9) {
+        trySetCell(i, n, input);
+      } else {
+        input.value = cells[i] ?? '';
+      }
+    });
+    // 點格子打開 inline picker
+    input.addEventListener('focus', () => openInlinePicker(i));
+    cell.appendChild(input);
+    board.appendChild(cell);
+  }
+  initLineBtns();
+  updateMini();
+}
+
+function trySetCell(idx, n, input) {
+  const used = new Set(cells.filter((v, i) => v !== null && i !== idx));
+  if (used.has(n)) { input.value = cells[idx] ?? ''; return; } // 數字已被用
+  const revealedCount = cells.filter(v => v !== null).length;
+  if (cells[idx] === null && revealedCount >= MAX_REVEAL) { input.value = ''; return; }
+  cells[idx] = n;
+  closeInlinePicker();
+  updateMini();
+}
+
+function clearCell(idx) {
+  cells[idx] = null;
+  updateMini();
+}
+
+function initLineBtns() {
+  const wrap = document.getElementById('lineBtns');
+  wrap.innerHTML = '';
+  LINE_NAMES.forEach((name, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'line-btn';
+    btn.textContent = name;
+    btn.addEventListener('click', () => { selectedLine = (selectedLine === i ? -1 : i); updateMini(); });
+    wrap.appendChild(btn);
+  });
+}
+
+function resetMini() {
+  cells.fill(null);
+  selectedLine = -1;
+  closeInlinePicker();
+  updateMini();
+}
+
+// ── Inline Picker ──
+function openInlinePicker(idx) {
+  const revealedCount = cells.filter(v => v !== null).length;
+  if (cells[idx] === null && revealedCount >= MAX_REVEAL) {
+    closeInlinePicker();
+    return;
+  }
+  pickerTarget = idx;
+  const picker = document.getElementById('numPicker');
+  const grid = document.getElementById('numPickerGrid');
+  const used = new Set(cells.filter((v, i) => v !== null && i !== idx));
+
+  document.getElementById('numPickerTitle').textContent = `格子 ${idx + 1}：選擇數字`;
+  grid.innerHTML = '';
+  for (let n = 1; n <= 9; n++) {
+    const btn = document.createElement('button');
+    btn.className = 'num-picker-btn';
+    btn.textContent = n;
+    if (used.has(n)) btn.disabled = true;
+    btn.addEventListener('mousedown', e => {
+      e.preventDefault(); // 防止 input blur 先觸發
+      cells[idx] = n;
+      closeInlinePicker();
+      updateMini();
+    });
+    grid.appendChild(btn);
+  }
+  // 清除按鈕
+  const clearBtn = document.createElement('button');
+  clearBtn.className = 'num-picker-btn clear-btn';
+  clearBtn.textContent = '✕ 清除';
+  clearBtn.style.gridColumn = 'span 5';
+  clearBtn.addEventListener('mousedown', e => {
+    e.preventDefault();
+    clearCell(idx);
+    closeInlinePicker();
+  });
+  grid.appendChild(clearBtn);
+  picker.classList.add('show');
+}
+
+function closeInlinePicker() {
+  document.getElementById('numPicker').classList.remove('show');
+  pickerTarget = -1;
+}
+
+// 點擊格盤外關閉 picker
+document.addEventListener('click', e => {
+  const board = document.getElementById('miniBoard');
+  const picker = document.getElementById('numPicker');
+  if (!board.contains(e.target) && !picker.contains(e.target)) {
+    closeInlinePicker();
+  }
+});
+
+// ── Core EV calculation ──
+
+// Given known cells, compute all possible completions and average payout for a line
+function computeLineEV(lineIdx) {
+  const line = LINES_MINI[lineIdx];
+  const known = line.filter(i => cells[i] !== null).map(i => cells[i]);
+  const unknown = line.filter(i => cells[i] === null);
+  const allNums = [1,2,3,4,5,6,7,8,9];
+  const usedElsewhere = new Set(cells.filter((v,i) => v !== null && !line.includes(i)));
+
+  if (unknown.length === 0) {
+    // All known
+    const sum = line.reduce((s,i) => s + cells[i], 0);
+    return PAYOUT[sum] || 0;
+  }
+
+  // Enumerate possible combinations for unknown slots
+  const available = allNums.filter(n => !new Set([...known, ...usedElsewhere]).has(n));
+
+  if (unknown.length === 1) {
+    const knownSum = known.reduce((a,b) => a+b, 0);
+    let total = 0, count = 0;
+    for (const n of available) {
+      total += (PAYOUT[knownSum + n] || 0);
+      count++;
+    }
+    return count > 0 ? total / count : 0;
+  }
+
+  if (unknown.length === 2) {
+    const knownSum = known.reduce((a,b) => a+b, 0);
+    let total = 0, count = 0;
+    for (let a = 0; a < available.length; a++) {
+      for (let b = a+1; b < available.length; b++) {
+        total += (PAYOUT[knownSum + available[a] + available[b]] || 0);
+        count++;
+      }
+    }
+    return count > 0 ? total / count : 0;
+  }
+
+  // All 3 unknown
+  let total = 0, count = 0;
+  for (let a = 0; a < available.length; a++) {
+    for (let b = a+1; b < available.length; b++) {
+      for (let c = b+1; c < available.length; c++) {
+        total += (PAYOUT[available[a]+available[b]+available[c]] || 0);
+        count++;
+      }
+    }
+  }
+  return count > 0 ? total / count : 0;
+}
+
+// ── Update UI ──
+function updateMini() {
+  // Update board cells
+  const cellEls = document.querySelectorAll('.mini-cell');
+  const bestLineIdx = getBestLine();
+
+  cellEls.forEach((el, i) => {
+    const isInSelected = selectedLine >= 0 && LINES_MINI[selectedLine].includes(i);
+    const isInBest = bestLineIdx >= 0 && LINES_MINI[bestLineIdx].includes(i);
+
+    el.className = 'mini-cell';
+    if (cells[i] !== null) el.classList.add('revealed');
+    if (selectedLine >= 0 && isInSelected) el.classList.add('best-line');
+    else if (selectedLine < 0 && isInBest) el.classList.add('best-line');
+
+    const input = el.querySelector('input');
+    if (input) input.value = cells[i] ?? '';
+  });
+
+  // Update line buttons
+  const lineBtns = document.querySelectorAll('.line-btn');
+  lineBtns.forEach((btn, i) => {
+    btn.classList.toggle('selected', i === selectedLine);
+  });
+
+  // Compute EVs for all lines
+  const evs = LINES_MINI.map((_, i) => computeLineEV(i));
+  const maxEV = Math.max(...evs);
+
+  // EV table
+  const evTable = document.getElementById('evTable');
+  evTable.innerHTML = '';
+  const sorted = evs.map((ev, i) => ({ev, i})).sort((a,b) => b.ev - a.ev);
+
+  sorted.forEach(({ev, i}, rank) => {
+    const row = document.createElement('div');
+    row.className = 'ev-row';
+    const pct = maxEV > 0 ? (ev / maxEV * 100) : 0;
+    const color = rank === 0 ? 'var(--gold-light)' : rank === 1 ? 'var(--blue)' : 'var(--text-secondary)';
+    const isSelected = i === selectedLine;
+    row.style.cssText = isSelected ? 'background:rgba(200,169,110,0.06);border-radius:4px;padding:8px 4px;' : '';
+    row.innerHTML = `
+      <span class="ev-label" style="${isSelected ? 'color:var(--gold)' : ''}">${LINE_NAMES[i]}${isSelected ? ' ◀' : ''}</span>
+      <div class="ev-bar-wrap"><div class="ev-bar" style="width:${pct}%;background:${color}"></div></div>
+      <span class="ev-val ${rank===0?'best':rank===1?'second':''}">${Math.round(ev).toLocaleString()}</span>
+    `;
+    evTable.appendChild(row);
+  });
+
+  // Best suggestion
+  const sug = document.getElementById('bestSuggestion');
+  if (maxEV > 0) {
+    const bestLines = sorted.filter(x => Math.abs(x.ev - maxEV) < 1).map(x => LINE_NAMES[x.i]).join('、');
+    sug.innerHTML = `
+      <div class="highlight-box">
+        <span class="hl-icon">💡</span>
+        <div>
+          <div class="hl-title">建議選擇：${bestLines}</div>
+          <div class="hl-body">期望值 <strong style="color:var(--gold-light)">${Math.round(maxEV).toLocaleString()} MGP</strong>，為目前已知資訊下的最佳選擇。輸入更多數字可提升準確度。</div>
+        </div>
+      </div>
+    `;
+  } else {
+    sug.innerHTML = '';
+  }
+}
+
+function getBestLine() {
+  const evs = LINES_MINI.map((_, i) => computeLineEV(i));
+  const max = Math.max(...evs);
+  if (max <= 0) return -1;
+  return evs.indexOf(max);
+}
+
+// ── Payout Table ──
+function initPayoutTable() {
+  const body = document.getElementById('payoutBody');
+  const entries = Object.entries(PAYOUT).map(([k,v]) => ({sum: parseInt(k), mgp: v}));
+  entries.sort((a,b) => b.mgp - a.mgp);
+
+  // Sort by sum for display
+  const bySum = Object.entries(PAYOUT).sort((a,b) => parseInt(a[0]) - parseInt(b[0]));
+  const maxMgp = Math.max(...Object.values(PAYOUT));
+
+  body.innerHTML = '';
+  for (let r = 0; r < Math.ceil(bySum.length / 2); r++) {
+    const tr = document.createElement('tr');
+    const left = bySum[r];
+    const right = bySum[r + Math.ceil(bySum.length / 2)];
+    if (parseInt(left[1]) === maxMgp) tr.className = 'rank-1';
+
+    tr.innerHTML = `
+      <td>${left[0]}</td>
+      <td class="sum-col">${parseInt(left[1]).toLocaleString()}</td>
+      ${right ? `<td>${right[0]}</td><td class="sum-col">${parseInt(right[1]).toLocaleString()}</td>` : '<td></td><td></td>'}
+    `;
+    body.appendChild(tr);
+  }
+}
+
+// ── Start ──
+initMiniBoard();
+initPayoutTable();
+</script>
+</body>
+</html>
