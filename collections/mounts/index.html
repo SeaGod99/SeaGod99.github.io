@@ -206,7 +206,7 @@
     .own-btn.active { background: var(--purple-dim); color: var(--purple); }
     .own-btn:hover:not(.active) { color: var(--text-primary); }
 
-    .clear-btn {
+    .icon-btn {
       padding: 8px 14px;
       font-size: 12px;
       cursor: pointer;
@@ -217,6 +217,7 @@
       transition: var(--transition);
       white-space: nowrap;
     }
+    .icon-btn:hover { color: var(--text-primary); border-color: rgba(255,255,255,0.2); }
     .clear-btn:hover { color: var(--red); border-color: rgba(248,113,113,0.4); }
 
     /* ── Filter tags ── */
@@ -298,6 +299,28 @@
       color: var(--purple);
     }
 
+    .mount-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .mount-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      background: rgba(255,255,255,0.04);
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .mount-icon.placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: var(--text-muted);
+    }
+
     .mount-name {
       font-size: 13px;
       font-weight: 600;
@@ -308,6 +331,11 @@
     .mount-card.owned .mount-name { color: var(--purple); }
 
     .mount-patch {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .mount-seats {
       font-size: 10px;
       color: var(--text-muted);
     }
@@ -328,9 +356,16 @@
       border: 1px solid rgba(167,139,250,0.2);
       white-space: nowrap;
     }
+    .source-tag.placeholder {
+      background: rgba(255,255,255,0.04);
+      color: var(--text-muted);
+      border-color: var(--border);
+    }
     .source-tag.type-高難度副本 { background: rgba(248,113,113,0.1); color: var(--red); border-color: rgba(248,113,113,0.2); }
+    .source-tag.type-絕境       { background: rgba(248,113,113,0.1); color: var(--red); border-color: rgba(248,113,113,0.2); }
     .source-tag.type-副本掉落   { background: rgba(79,195,247,0.1);  color: var(--blue); border-color: rgba(79,195,247,0.2); }
     .source-tag.type-主線任務   { background: rgba(74,222,128,0.1);  color: var(--green); border-color: rgba(74,222,128,0.2); }
+    .source-tag.type-任務       { background: rgba(74,222,128,0.1);  color: var(--green); border-color: rgba(74,222,128,0.2); }
     .source-tag.type-商店       { background: rgba(200,169,110,0.12); color: var(--gold); border-color: rgba(200,169,110,0.25); }
     .source-tag.type-節慶活動   { background: rgba(200,169,110,0.12); color: var(--gold); border-color: rgba(200,169,110,0.25); }
     .source-tag.type-聯名活動   { background: rgba(200,169,110,0.12); color: var(--gold); border-color: rgba(200,169,110,0.25); }
@@ -339,6 +374,7 @@
     .source-tag.type-狩獵       { background: rgba(248,113,113,0.1); color: var(--red); border-color: rgba(248,113,113,0.2); }
     .source-tag.type-探索航行   { background: rgba(79,195,247,0.1);  color: var(--blue); border-color: rgba(79,195,247,0.2); }
     .source-tag.type-金碟       { background: rgba(255,200,80,0.1);  color: #ffc850; border-color: rgba(255,200,80,0.2); }
+    .source-tag.type-市場板     { background: rgba(255,255,255,0.06); color: var(--text-secondary); border-color: var(--border); }
 
     /* ── Tooltip on hover ── */
     .mount-detail {
@@ -415,13 +451,22 @@
       <button class="own-btn" data-own="owned">已擁有</button>
       <button class="own-btn" data-own="missing">未擁有</button>
     </div>
-    <button class="clear-btn" id="clearBtn">清除進度</button>
+    <button class="icon-btn" id="exportBtn">匯出進度</button>
+    <button class="icon-btn" id="importBtn">匯入進度</button>
+    <input type="file" id="importFile" accept="application/json" style="display:none">
+    <button class="icon-btn clear-btn" id="clearBtn">清除進度</button>
   </div>
 
   <!-- Source filter -->
   <div class="filter-section">
     <div class="filter-label">來源篩選</div>
     <div class="filter-tags" id="sourceFilters"></div>
+  </div>
+
+  <!-- Seats filter -->
+  <div class="filter-section">
+    <div class="filter-label">座位數</div>
+    <div class="filter-tags" id="seatsFilters"></div>
   </div>
 
   <!-- Patch filter -->
@@ -454,17 +499,37 @@
   </div>
 </footer>
 
-<script src="mounts.js"></script>
 <script>
 (function() {
   const STORAGE_KEY = 'ffxiv_mounts_owned';
+  const DATA_URL = '../../data/mounts.json';
+  const ICON_BASE = '../../assets/mounts/';
 
   // ── State ──
+  let MOUNT_DATA = [];
+  let SOURCE_TYPES = [];
+  let PATCHES = [];
   let owned = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
   let filterOwn = 'all';       // all | owned | missing
   let filterSource = null;     // string | null
+  let filterSeats = null;      // number | null
   let filterPatch = null;      // string | null
   let searchQ = '';
+
+  // ── Patch bands (derived from data) ──
+  const PATCH_BANDS = [
+    { label: 'ARR 2.x', min: '2.0', max: '2.9' },
+    { label: 'HW 3.x',  min: '3.0', max: '3.9' },
+    { label: 'SB 4.x',  min: '4.0', max: '4.9' },
+    { label: 'ShB 5.x', min: '5.0', max: '5.9' },
+    { label: 'EW 6.x',  min: '6.0', max: '6.9' },
+    { label: 'DT 7.x',  min: '7.0', max: '7.9' },
+  ];
+
+  // ── Unique key for an item (use id when present, otherwise name) ──
+  function keyOf(m) {
+    return m.id != null ? 'id:' + m.id : 'name:' + m.name;
+  }
 
   // ── Save ──
   function save() {
@@ -472,9 +537,9 @@
   }
 
   // ── Toggle ──
-  function toggle(id) {
-    if (owned.has(id)) owned.delete(id);
-    else owned.add(id);
+  function toggle(k) {
+    if (owned.has(k)) owned.delete(k);
+    else owned.add(k);
     save();
     updateProgress();
     renderGrid();
@@ -483,7 +548,7 @@
   // ── Progress ──
   function updateProgress() {
     const total = MOUNT_DATA.length;
-    const count = MOUNT_DATA.filter(m => owned.has(m.id)).length;
+    const count = MOUNT_DATA.filter(m => owned.has(keyOf(m))).length;
     const pct = total ? Math.round(count / total * 100) : 0;
     document.getElementById('ownedCount').textContent = count;
     document.getElementById('totalCount').textContent = total;
@@ -502,6 +567,25 @@
       btn.addEventListener('click', () => {
         filterSource = filterSource === type ? null : type;
         renderSourceFilters();
+        renderGrid();
+      });
+      wrap.appendChild(btn);
+    });
+  }
+
+  // ── Render seats filters ──
+  function renderSeatsFilters() {
+    const wrap = document.getElementById('seatsFilters');
+    wrap.innerHTML = '';
+    const seatsValues = [...new Set(MOUNT_DATA.map(m => m.seats).filter(s => s != null))].sort((a,b) => a-b);
+    const labelMap = { 1: '單人', 2: '雙人', 4: '四人', 8: '八人' };
+    seatsValues.forEach(s => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-tag' + (filterSeats === s ? ' active' : '');
+      btn.textContent = labelMap[s] || (s + '人');
+      btn.addEventListener('click', () => {
+        filterSeats = filterSeats === s ? null : s;
+        renderSeatsFilters();
         renderGrid();
       });
       wrap.appendChild(btn);
@@ -528,21 +612,33 @@
   // ── Filter mounts ──
   function filtered() {
     return MOUNT_DATA.filter(m => {
+      const k = keyOf(m);
+
       // ownership
-      if (filterOwn === 'owned'   && !owned.has(m.id)) return false;
-      if (filterOwn === 'missing' &&  owned.has(m.id)) return false;
+      if (filterOwn === 'owned'   && !owned.has(k)) return false;
+      if (filterOwn === 'missing' &&  owned.has(k)) return false;
 
       // source
-      if (filterSource && !m.sources.some(s => s.type === filterSource)) return false;
+      if (filterSource && !(m.sources || []).some(s => s.type === filterSource)) return false;
+
+      // seats
+      if (filterSeats != null && m.seats !== filterSeats) return false;
 
       // patch
       if (filterPatch) {
-        const band = PATCHES.find(p => p.label === filterPatch);
-        if (band && (m.patch < band.min || m.patch > band.max)) return false;
+        const band = PATCH_BANDS.find(p => p.label === filterPatch);
+        if (band) {
+          if (!m.patch || m.patch < band.min || m.patch > band.max) return false;
+        }
       }
 
       // search
-      if (searchQ && !m.name.includes(searchQ)) return false;
+      if (searchQ) {
+        const q = searchQ.toLowerCase();
+        const nameMatch = m.name && m.name.toLowerCase().includes(q);
+        const enMatch = m.nameEn && m.nameEn.toLowerCase().includes(q);
+        if (!nameMatch && !enMatch) return false;
+      }
 
       return true;
     });
@@ -564,30 +660,83 @@
       empty.style.display = 'none';
     }
 
-    const ownedInView = list.filter(m => owned.has(m.id)).length;
+    const ownedInView = list.filter(m => owned.has(keyOf(m))).length;
     meta.innerHTML = `顯示 <em>${list.length}</em> / ${MOUNT_DATA.length} 隻 · 已擁有 <em>${ownedInView}</em> / ${list.length}`;
 
     list.forEach(m => {
-      const isOwned = owned.has(m.id);
+      const k = keyOf(m);
+      const isOwned = owned.has(k);
       const card = document.createElement('div');
       card.className = 'mount-card' + (isOwned ? ' owned' : '');
 
-      const sourceTags = m.sources.map(s =>
-        `<span class="source-tag type-${s.type}">${s.type}</span>`
-      ).join('');
+      const sources = m.sources || [];
+      const sourceTags = sources.length
+        ? sources.map(s => `<span class="source-tag type-${s.type}">${s.type}</span>`).join('')
+        : `<span class="source-tag placeholder">待補充</span>`;
 
-      const detailText = m.sources.map(s => s.detail).join('、');
+      const detailText = sources.length
+        ? sources.map(s => s.detail).filter(Boolean).join('、')
+        : '取得方式待補充';
+
+      const iconHtml = m.icon
+        ? `<img class="mount-icon" src="${ICON_BASE}${m.icon.split('/').pop()}" alt="" loading="lazy">`
+        : `<div class="mount-icon placeholder">🐎</div>`;
+
+      const seatsLabelMap = { 1: '單人', 2: '雙人', 4: '四人', 8: '八人' };
+      const seatsLabel = m.seats != null ? seatsLabelMap[m.seats] || (m.seats + '人') : '';
 
       card.innerHTML = `
-        <div class="mount-name">${m.name}</div>
-        <div class="mount-patch">ver ${m.patch}</div>
+        <div class="mount-head">
+          ${iconHtml}
+          <div style="flex:1; min-width:0;">
+            <div class="mount-name">${m.name}</div>
+            <div class="mount-patch">${m.patch ? 'ver ' + m.patch : ''}${seatsLabel ? ' · ' + seatsLabel : ''}</div>
+          </div>
+        </div>
         <div class="mount-sources">${sourceTags}</div>
         <div class="mount-detail">${detailText}</div>
       `;
 
-      card.addEventListener('click', () => toggle(m.id));
+      card.addEventListener('click', () => toggle(k));
       grid.appendChild(card);
     });
+  }
+
+  // ── Export / Import ──
+  function exportProgress() {
+    const payload = {
+      schema: 'mounts-progress',
+      exported: new Date().toISOString(),
+      owned: [...owned]
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'mounts-progress.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  function importProgress(file) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const data = JSON.parse(e.target.result);
+        const list = Array.isArray(data) ? data : data.owned;
+        if (!Array.isArray(list)) throw new Error('格式錯誤');
+        owned = new Set(list);
+        save();
+        updateProgress();
+        renderGrid();
+        alert('匯入成功，共 ' + owned.size + ' 筆已取得記錄');
+      } catch (err) {
+        alert('匯入失敗：檔案格式不正確');
+      }
+    };
+    reader.readAsText(file);
   }
 
   // ── Own-toggle buttons ──
@@ -606,7 +755,17 @@
     renderGrid();
   });
 
-  // ── Clear ──
+  // ── Export / Import / Clear ──
+  document.getElementById('exportBtn').addEventListener('click', exportProgress);
+  document.getElementById('importBtn').addEventListener('click', () => {
+    document.getElementById('importFile').click();
+  });
+  document.getElementById('importFile').addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (file) importProgress(file);
+    e.target.value = '';
+  });
+
   document.getElementById('clearBtn').addEventListener('click', () => {
     if (!confirm('確定要清除所有擁有記錄嗎？')) return;
     owned.clear();
@@ -615,11 +774,41 @@
     renderGrid();
   });
 
-  // ── Init ──
-  renderSourceFilters();
-  renderPatchFilters();
-  updateProgress();
-  renderGrid();
+  // ── Init: load data ──
+  fetch(DATA_URL)
+    .then(res => {
+      if (!res.ok) throw new Error('無法載入資料 (' + res.status + ')');
+      return res.json();
+    })
+    .then(json => {
+      const raw = (json && json.data) ? json.data : [];
+      // 過濾掉無繁中名稱的項目（台服未開放）
+      MOUNT_DATA = raw.filter(m => m.name);
+
+      // 來源類型清單（依資料動態產生）
+      const typeSet = new Set();
+      MOUNT_DATA.forEach(m => (m.sources || []).forEach(s => { if (s.type) typeSet.add(s.type); }));
+      SOURCE_TYPES = [...typeSet].sort();
+
+      // 版本清單（只顯示資料中實際出現的版本區間）
+      const patchSet = new Set(MOUNT_DATA.map(m => m.patch).filter(Boolean));
+      PATCHES = PATCH_BANDS.filter(band =>
+        [...patchSet].some(p => p >= band.min && p <= band.max)
+      );
+
+      renderSourceFilters();
+      renderSeatsFilters();
+      renderPatchFilters();
+      updateProgress();
+      renderGrid();
+    })
+    .catch(err => {
+      const grid = document.getElementById('mountGrid');
+      const empty = document.getElementById('emptyState');
+      grid.style.display = 'none';
+      empty.style.display = '';
+      empty.textContent = '資料載入失敗：' + err.message;
+    });
 })();
 </script>
 </body>

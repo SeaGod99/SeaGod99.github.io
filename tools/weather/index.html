@@ -139,13 +139,13 @@
       <button class="grp-btn" id="grp-hw"        onclick="setGroup('hw')">3.0 蒼天</button>
       <button class="grp-btn" id="grp-sb"        onclick="setGroup('sb')">4.0 紅蓮</button>
       <button class="grp-btn" id="grp-shb"       onclick="setGroup('shb')">5.0 暗影</button>
-      <button class="grp-btn" id="grp-ew"        onclick="setGroup('ew')">6.0 曉月 ⚠️</button>
-      <button class="grp-btn" id="grp-dt"        onclick="setGroup('dt')">7.0 金曦 ⚠️</button>
-      <button class="grp-btn" id="grp-eureka"    onclick="setGroup('eureka')">優雷卡/禁地</button>
+      <button class="grp-btn" id="grp-ew"        onclick="setGroup('ew')">6.0 曉月</button>
+      <button class="grp-btn" id="grp-dt"        onclick="setGroup('dt')">7.0 金曦</button>
+      <button class="grp-btn" id="grp-eureka"    onclick="setGroup('eureka')">優雷卡 ⚠️</button>
       <select id="zone-sel" onchange="onZoneChange()"></select>
     </div>
     <div id="unverified-notice" style="display:none;background:rgba(248,190,0,0.12);border:1px solid rgba(248,190,0,0.4);border-radius:7px;padding:9px 14px;font-size:13px;color:#f8be00;margin-bottom:14px;">
-      ⚠️ 此分組的天氣資料為推測值，尚未經遊戲 datamining 驗證，可能不準確。如發現錯誤歡迎回報。
+      ⚠️ 優雷卡天氣表為社群推測值（maps.json 無官方資料），可能不完全準確。如發現錯誤歡迎回報。
     </div>
     <div class="sec-title">未來 24 個天氣時段</div>
     <div class="forecast-grid" id="forecast-grid"></div>
@@ -165,9 +165,9 @@
       <button class="grp-btn" id="mgrp-hw"        onclick="setMGroup('hw')">3.0 蒼天</button>
       <button class="grp-btn" id="mgrp-sb"        onclick="setMGroup('sb')">4.0 紅蓮</button>
       <button class="grp-btn" id="mgrp-shb"       onclick="setMGroup('shb')">5.0 暗影</button>
-      <button class="grp-btn" id="mgrp-ew"        onclick="setMGroup('ew')">6.0 曉月 ⚠️</button>
-      <button class="grp-btn" id="mgrp-dt"        onclick="setMGroup('dt')">7.0 金曦 ⚠️</button>
-      <button class="grp-btn" id="mgrp-eureka"    onclick="setMGroup('eureka')">優雷卡/禁地</button>
+      <button class="grp-btn" id="mgrp-ew"        onclick="setMGroup('ew')">6.0 曉月</button>
+      <button class="grp-btn" id="mgrp-dt"        onclick="setMGroup('dt')">7.0 金曦</button>
+      <button class="grp-btn" id="mgrp-eureka"    onclick="setMGroup('eureka')">優雷卡 ⚠️</button>
     </div>
     <div class="mz-grid" id="mz-grid"></div>
   </div>
@@ -192,296 +192,142 @@
 
 </main>
 
-<script>
-// ============================================================
-// 天氣算法（來源：eorzea-weather npm 套件 v3.2.0）
-// ============================================================
-const WEATHER_PERIOD = 1400000; // 8 ET 小時 = 1400 現實秒
-
-function calcSeed(date) {
-  // 完全對應 eorzea-weather 套件的算法
-  var n = Math.floor(date.getTime() / 1000);
-  var r = n / 175;
-  var a = (n / 4200) << 32 >>> 0; // = Math.floor(n/4200)
-  var t = 100 * a + (r + 8 - r % 8) % 24;
-  var s = (t << 11 ^ t) >>> 0;
-  return ((s >>> 8 ^ s) >>> 0) % 100;
-}
-
-function periodStart(ms) {
-  return Math.floor(ms / WEATHER_PERIOD) * WEATHER_PERIOD;
-}
+<script type="module">
+import {
+  WEATHER_PERIOD, periodStart, wi,
+  initWeatherTables, getWeatherAt, getWeatherTable,
+  fmtET, fmtRT, fmtCountdown
+} from '../../assets/js/eorzea-weather.js';
 
 // ============================================================
-// 天氣表（來源：eorzea-weather npm 套件 v3.2.0，解析後轉為累積機率表）
-// 格式：[累積上限, 天氣key]，seed < 上限時為該天氣
+// 地圖分組定義（mapId 對應 data/maps.json，同版本野外＋城市合併）
+// 6.0/7.0 天氣表已由 maps.json weatherRates 提供（台服官方資料），不再是推測值
 // ============================================================
-const W = {
-  // ARR 外野
-  middleLaNoscea:           [[20,'clouds'],[50,'clearSkies'],[70,'fairSkies'],[80,'wind'],[90,'fog'],[100,'rain']],
-  lowerLaNoscea:            [[20,'clouds'],[50,'clearSkies'],[70,'fairSkies'],[80,'wind'],[90,'fog'],[100,'rain']],
-  upperLaNoscea:            [[30,'clearSkies'],[50,'fairSkies'],[70,'clouds'],[80,'fog'],[90,'thunder'],[100,'thunderstorms']],
-  easternLaNoscea:          [[5,'fog'],[50,'clearSkies'],[80,'fairSkies'],[90,'clouds'],[95,'rain'],[100,'showers']],
-  westernLaNoscea:          [[10,'fog'],[40,'clearSkies'],[60,'fairSkies'],[80,'clouds'],[90,'wind'],[100,'gales']],
-  outerLaNoscea:            [[30,'clearSkies'],[50,'fairSkies'],[70,'clouds'],[85,'fog'],[100,'rain']],
-  centralThanalan:          [[15,'dustStorms'],[55,'clearSkies'],[75,'fairSkies'],[85,'clouds'],[95,'fog'],[100,'rain']],
-  easternThanalan:          [[40,'clearSkies'],[60,'fairSkies'],[70,'clouds'],[80,'fog'],[85,'rain'],[100,'showers']],
-  westernThanalan:          [[40,'clearSkies'],[60,'fairSkies'],[85,'clouds'],[95,'fog'],[100,'rain']],
-  southernThanalan:         [[20,'heatWaves'],[60,'clearSkies'],[80,'fairSkies'],[90,'clouds'],[100,'fog']],
-  northernThanalan:         [[5,'clearSkies'],[20,'fairSkies'],[50,'clouds'],[100,'fog']],
-  centralShroud:            [[5,'thunder'],[20,'rain'],[30,'fog'],[40,'clouds'],[55,'fairSkies'],[85,'clearSkies'],[100,'fairSkies']],
-  eastShroud:               [[5,'thunder'],[20,'rain'],[30,'fog'],[40,'clouds'],[55,'fairSkies'],[85,'clearSkies'],[100,'fairSkies']],
-  southShroud:              [[5,'fog'],[10,'thunderstorms'],[25,'thunder'],[30,'fog'],[40,'clouds'],[70,'fairSkies'],[100,'clearSkies']],
-  northShroud:              [[5,'fog'],[10,'showers'],[25,'rain'],[30,'fog'],[40,'clouds'],[70,'fairSkies'],[100,'clearSkies']],
-  morDhona:                 [[15,'clouds'],[30,'fog'],[60,'gloom'],[75,'clearSkies'],[100,'fairSkies']],
-  // HW 外野
-  coerthasCentralHighlands: [[20,'blizzards'],[60,'snow'],[70,'fairSkies'],[75,'clearSkies'],[90,'clouds'],[100,'fog']],
-  coerthasWesternHighlands: [[20,'blizzards'],[60,'snow'],[70,'fairSkies'],[75,'clearSkies'],[90,'clouds'],[100,'fog']],
-  theSeaOfClouds:           [[30,'clearSkies'],[60,'fairSkies'],[70,'clouds'],[80,'fog'],[90,'wind'],[100,'umbralWind']],
-  azysLla:                  [[35,'fairSkies'],[70,'clouds'],[100,'thunder']],
-  theDravanianForelands:    [[10,'clouds'],[20,'fog'],[30,'thunder'],[40,'dustStorms'],[70,'clearSkies'],[100,'fairSkies']],
-  theDravanianHinterlands:  [[10,'clouds'],[20,'fog'],[30,'rain'],[40,'showers'],[70,'clearSkies'],[100,'fairSkies']],
-  theChurningMists:         [[10,'clouds'],[20,'gales'],[40,'umbralStatic'],[70,'clearSkies'],[100,'fairSkies']],
-  idyllshire:               [[10,'clouds'],[20,'fog'],[30,'rain'],[40,'showers'],[70,'clearSkies'],[100,'fairSkies']],
-  // SB 外野
-  theFringes:               [[15,'clearSkies'],[60,'fairSkies'],[80,'clouds'],[90,'fog'],[100,'thunder']],
-  thePeaks:                 [[10,'clearSkies'],[60,'fairSkies'],[75,'clouds'],[85,'fog'],[95,'wind'],[100,'dustStorms']],
-  theLochs:                 [[20,'clearSkies'],[60,'fairSkies'],[80,'clouds'],[90,'fog'],[100,'thunderstorms']],
-  theRubySea:               [[10,'thunder'],[20,'wind'],[35,'clouds'],[75,'fairSkies'],[100,'clearSkies']],
-  yanxia:                   [[5,'showers'],[15,'rain'],[25,'fog'],[40,'clouds'],[80,'fairSkies'],[100,'clearSkies']],
-  theAzimSteppe:            [[5,'gales'],[10,'wind'],[17,'rain'],[25,'fog'],[35,'clouds'],[75,'fairSkies'],[100,'clearSkies']],
-  kugane:                   [[10,'rain'],[20,'fog'],[40,'clouds'],[80,'fairSkies'],[100,'clearSkies']],
-  rhalgrsReach:             [[15,'clearSkies'],[60,'fairSkies'],[80,'clouds'],[90,'fog'],[100,'thunder']],
-  // ShB 外野
-  lakeland:                 [[20,'clearSkies'],[60,'fairSkies'],[75,'clouds'],[85,'fog'],[95,'rain'],[100,'thunderstorms']],
-  kholusia:                 [[10,'gales'],[20,'rain'],[30,'fog'],[45,'clouds'],[85,'fairSkies'],[100,'clearSkies']],
-  amhAraeng:                [[45,'fairSkies'],[60,'clouds'],[70,'dustStorms'],[80,'heatWaves'],[100,'clearSkies']],
-  ilMheg:                   [[10,'rain'],[20,'fog'],[35,'clouds'],[45,'thunderstorms'],[60,'clearSkies'],[100,'fairSkies']],
-  theRaktikaGreatwood:      [[10,'fog'],[20,'rain'],[30,'umbralWind'],[45,'clearSkies'],[85,'fairSkies'],[100,'clouds']],
-  theTempest:               [[20,'clouds'],[80,'fairSkies'],[100,'clearSkies']],
-  eulmore:                  [[10,'gales'],[20,'rain'],[30,'fog'],[45,'clouds'],[85,'fairSkies'],[100,'clearSkies']],
-  // EW 外野
-  theCrystarium:            [[20,'clearSkies'],[60,'fairSkies'],[75,'clouds'],[85,'fog'],[95,'rain'],[100,'thunderstorms']],
-  // (EW zones handled via labyrinthos etc. — not in pkg, added below)
-  // 城市/住宅
-  limsaLominsa:             [[20,'clouds'],[50,'clearSkies'],[80,'fairSkies'],[90,'fog'],[100,'rain']],
-  gridania:                 [[20,'rain'],[30,'fog'],[40,'clouds'],[55,'fairSkies'],[85,'clearSkies'],[100,'fairSkies']],
-  uldah:                    [[40,'clearSkies'],[60,'fairSkies'],[85,'clouds'],[95,'fog'],[100,'rain']],
-  ishgard:                  [[60,'snow'],[70,'fairSkies'],[75,'clearSkies'],[90,'clouds'],[100,'fog']],
-  shirogane:                [[10,'rain'],[20,'fog'],[40,'clouds'],[80,'fairSkies'],[100,'clearSkies']],
-  mist:                     [[20,'clouds'],[50,'clearSkies'],[80,'fairSkies'],[90,'fog'],[100,'rain']],
-  theLavenderBeds:          [[5,'clouds'],[20,'rain'],[30,'fog'],[40,'clouds'],[55,'fairSkies'],[85,'clearSkies'],[100,'fairSkies']],
-  theGoblet:                [[40,'clearSkies'],[60,'fairSkies'],[85,'clouds'],[95,'fog'],[100,'rain']],
-  wolvesDenPier:            [[20,'clouds'],[50,'clearSkies'],[80,'fairSkies'],[90,'fog'],[100,'thunderstorms']],
-  // 優雷卡 / 禁地
-  eurekaAnemos:             [[30,'fairSkies'],[60,'gales'],[90,'showers'],[100,'snow']],
-  eurekaPagos:              [[10,'fairSkies'],[28,'fog'],[46,'heatWaves'],[64,'snow'],[82,'thunder'],[100,'blizzards']],
-  eurekaPyros:              [[10,'fairSkies'],[28,'heatWaves'],[46,'thunder'],[64,'blizzards'],[82,'umbralWind'],[100,'snow']],
-  eurekaHydatos:            [[12,'fairSkies'],[34,'showers'],[56,'gloom'],[78,'thunderstorms'],[100,'snow']],
-  bozjanSouthernFront:      [[52,'fairSkies'],[64,'rain'],[76,'wind'],[88,'thunder'],[100,'dustStorms']],
-  zadnor:                   [[60,'fairSkies'],[70,'rain'],[80,'wind'],[90,'thunder'],[100,'snow']],
-  theDiadem:                [[30,'fairSkies'],[60,'fog'],[90,'wind'],[100,'umbralWind']],
-  // 6.0 曉月之終途（資料來自訓練資料推測，可能不準確）
-  labyrinthos:              [[15,'clearSkies'],[60,'fairSkies'],[75,'clouds'],[82,'fog'],[90,'thunder'],[95,'thunderstorms'],[100,'snow']],
-  thavnair:                 [[45,'fairSkies'],[60,'clouds'],[70,'rain'],[80,'showers'],[90,'thunder'],[100,'fog']],
-  garlemald:                [[45,'clouds'],[60,'fog'],[75,'snow'],[85,'blizzards'],[100,'thunder']],
-  mareLamentorum:           [[15,'clouds'],[30,'fog'],[60,'gloom'],[75,'clearSkies'],[100,'fairSkies']],
-  elpis:                    [[45,'fairSkies'],[60,'clearSkies'],[70,'clouds'],[80,'rain'],[90,'showers'],[100,'thunderstorms']],
-  ultimaThule:              [[30,'fairSkies'],[45,'clouds'],[60,'fog'],[75,'umbralWind'],[90,'umbralStatic'],[100,'snow']],
-  oldSharlayan:             [[20,'clouds'],[50,'clearSkies'],[80,'fairSkies'],[90,'fog'],[100,'rain']],
-  radzAtHan:                [[45,'fairSkies'],[60,'clearSkies'],[70,'clouds'],[80,'fog'],[100,'rain']],
-  // 7.0 金曦之遺輝（資料來自訓練資料推測，可能不準確）
-  urqopacha:                [[30,'clearSkies'],[60,'fairSkies'],[75,'clouds'],[82,'fog'],[90,'wind'],[95,'rain'],[100,'thunderstorms']],
-  kozamauka:                [[15,'clearSkies'],[50,'fairSkies'],[75,'clouds'],[82,'fog'],[90,'rain'],[95,'showers'],[100,'thunderstorms']],
-  yakTel:                   [[15,'clearSkies'],[50,'fairSkies'],[75,'clouds'],[82,'fog'],[90,'rain'],[95,'showers'],[100,'thunderstorms']],
-  shaaloani:                [[20,'clearSkies'],[50,'fairSkies'],[65,'clouds'],[75,'fog'],[85,'heatWaves'],[95,'dustStorms'],[100,'wind']],
-  heritageFound:            [[15,'clearSkies'],[50,'fairSkies'],[70,'clouds'],[80,'fog'],[90,'rain'],[100,'thunderstorms']],
-  livingMemory:             [[15,'clearSkies'],[50,'fairSkies'],[65,'clouds'],[75,'fog'],[85,'rain'],[95,'showers'],[100,'thunder']],
-};
-
-// 天氣中文名稱與圖示
-const WI = {
-  clearSkies:   { name:'晴朗', icon:'🌤️' },
-  fairSkies:    { name:'晴天', icon:'☀️' },
-  clouds:       { name:'多雲', icon:'⛅' },
-  fog:          { name:'薄霧', icon:'🌫️' },
-  wind:         { name:'強風', icon:'💨' },
-  gales:        { name:'疾風', icon:'🌬️' },
-  rain:         { name:'雨天', icon:'🌧️' },
-  showers:      { name:'驟雨', icon:'🌦️' },
-  thunderstorms:{ name:'雷雨', icon:'⛈️' },
-  thunder:      { name:'雷電', icon:'🌩️' },
-  snow:         { name:'降雪', icon:'❄️' },
-  blizzards:    { name:'暴雪', icon:'🌨️' },
-  heatWaves:    { name:'灼熱', icon:'🔥' },
-  dustStorms:   { name:'沙暴', icon:'🌪️' },
-  gloom:        { name:'幽暗', icon:'🌑' },
-  umbralWind:   { name:'靈風', icon:'🌀' },
-  umbralStatic: { name:'靈電', icon:'⚡' },
-};
-function wi(key) { return WI[key] || { name: key, icon: '❓' }; }
-
-// 地圖分組定義（同版本野外＋城市合併）
 const GROUPS = {
-  // 2.0 ARR — 依地區分組
   lanoscea: {
     label: '拉諾西亞',
     zones: [
-      { key:'limsaLominsa',    name:'利姆薩·羅明薩' },   // 主城
-      { key:'mist',            name:'薄霧村' },            // 住宅
-      { key:'wolvesDenPier',   name:'狼獄停船場' },        // 住宅
-      { key:'middleLaNoscea',  name:'中拉諾西亞' },
-      { key:'lowerLaNoscea',   name:'下拉諾西亞' },
-      { key:'upperLaNoscea',   name:'上拉諾西亞' },
-      { key:'easternLaNoscea', name:'東拉諾西亞' },
-      { key:'westernLaNoscea', name:'西拉諾西亞' },
-      { key:'outerLaNoscea',   name:'外拉諾西亞' },
+      { mapId:11, name:'利姆薩·羅敏薩上層甲板' },
+      { mapId:12, name:'利姆薩·羅敏薩下層甲板' },
+      { mapId:72, name:'海霧村' },
+      { mapId:15, name:'中拉諾西亞' },
+      { mapId:16, name:'拉諾西亞低地' },
+      { mapId:19, name:'拉諾西亞高地' },
+      { mapId:17, name:'東拉諾西亞' },
+      { mapId:18, name:'西拉諾西亞' },
+      { mapId:30, name:'外地拉諾西亞' },
     ]
   },
   thanalan: {
     label: '薩納蘭',
     zones: [
-      { key:'uldah',            name:'烏爾達哈' },          // 主城
-      { key:'theGoblet',        name:'高腳孤丘' },          // 住宅
-      { key:'centralThanalan',  name:'中薩納蘭' },
-      { key:'easternThanalan',  name:'東薩納蘭' },
-      { key:'westernThanalan',  name:'西薩納蘭' },
-      { key:'southernThanalan', name:'南薩納蘭' },
-      { key:'northernThanalan', name:'北薩納蘭' },
+      { mapId:13, name:'烏爾達哈現世迷宮街' },
+      { mapId:14, name:'烏爾達哈娜爾神測之間' },
+      { mapId:83, name:'高腳孤丘' },
+      { mapId:21, name:'中薩納蘭' },
+      { mapId:22, name:'東薩納蘭' },
+      { mapId:20, name:'西薩納蘭' },
+      { mapId:23, name:'南薩納蘭' },
+      { mapId:24, name:'北薩納蘭' },
     ]
   },
   shroud: {
     label: '黑衣森林',
     zones: [
-      { key:'gridania',        name:'格里達尼亞' },          // 主城
-      { key:'theLavenderBeds', name:'薰衣草苗圃' },          // 住宅
-      { key:'centralShroud',   name:'黑衣森林：中央林' },
-      { key:'eastShroud',      name:'黑衣森林：東部林' },
-      { key:'southShroud',     name:'黑衣森林：南部林' },
-      { key:'northShroud',     name:'黑衣森林：北部林' },
-      { key:'morDhona',        name:'摩都納' },
+      { mapId:2, name:'格里達尼亞新街' },
+      { mapId:3, name:'格里達尼亞舊街' },
+      { mapId:82, name:'薰衣草苗圃' },
+      { mapId:4, name:'黑衣森林中央林區' },
+      { mapId:5, name:'黑衣森林東部林區' },
+      { mapId:6, name:'黑衣森林南部林區' },
+      { mapId:7, name:'黑衣森林北部林區' },
+      { mapId:25, name:'摩杜納' },
     ]
   },
-  // 3.0 蒼天
   hw: {
     label: '3.0 蒼天之禁書',
     zones: [
-      { key:'ishgard',                  name:'伊修加德' },           // 主城
-      { key:'coerthasCentralHighlands', name:'科爾西亞斯中央高地' },
-      { key:'coerthasWesternHighlands', name:'科爾西亞斯西部高地' },
-      { key:'theSeaOfClouds',           name:'阿巴拉提亞雲海' },
-      { key:'azysLla',                  name:'阿吉斯拉' },
-      { key:'theDravanianForelands',    name:'高地德拉瓦尼亞' },
-      { key:'theDravanianHinterlands',  name:'低地德拉瓦尼亞' },
-      { key:'theChurningMists',         name:'翻騰霧海' },
-      { key:'idyllshire',               name:'幽靜林' },
+      { mapId:218, name:'伊修加德砲台' },
+      { mapId:219, name:'伊修加德神聖城' },
+      { mapId:53,  name:'庫爾札斯中央高地' },
+      { mapId:211, name:'庫爾札斯西部高地' },
+      { mapId:215, name:'阿巴拉提亞雲海' },
+      { mapId:216, name:'魔大陸阿濟茲拉' },
+      { mapId:212, name:'龍堡內陸低地' },
+      { mapId:213, name:'龍堡參天高地' },
+      { mapId:214, name:'翻雲半島' },
     ]
   },
-  // 4.0 紅蓮
   sb: {
     label: '4.0 紅蓮之狂潮',
     zones: [
-      { key:'kugane',        name:'紅玉宮' },                        // 主城
-      { key:'shirogane',     name:'白銀鄉' },                        // 住宅
-      { key:'theFringes',    name:'基拉巴尼亞邊境地帶' },
-      { key:'thePeaks',      name:'基拉巴尼亞山岳地帶' },
-      { key:'theLochs',      name:'基拉巴尼亞湖畔地帶' },
-      { key:'theRubySea',    name:'紅玉海' },
-      { key:'yanxia',        name:'延夏' },
-      { key:'theAzimSteppe', name:'阿芝姆草原' },
-      { key:'rhalgrsReach',  name:'拉爾加之境' },
+      { mapId:370, name:'黃金港' },
+      { mapId:364, name:'白銀鄉' },
+      { mapId:367, name:'基拉巴尼亞邊區' },
+      { mapId:368, name:'基拉巴尼亞山區' },
+      { mapId:369, name:'基拉巴尼亞湖區' },
+      { mapId:371, name:'紅玉海' },
+      { mapId:354, name:'延夏' },
+      { mapId:372, name:'太陽神草原' },
     ]
   },
-  // 5.0 暗影
   shb: {
     label: '5.0 暗影之逆焰',
     zones: [
-      { key:'eulmore',             name:'尤爾莫亞' },                // 主城
-      { key:'theCrystarium',       name:'水晶都' },                  // 主城
-      { key:'lakeland',            name:'萊克蘭' },
-      { key:'kholusia',            name:'科魯西亞島' },
-      { key:'amhAraeng',           name:'安姆‧阿朗' },
-      { key:'ilMheg',              name:'妖精郷伊爾‧美格' },
-      { key:'theRaktikaGreatwood', name:'拉克提卡大森林' },
-      { key:'theTempest',          name:'風暴海' },
+      { mapId:498, name:'游末邦' },
+      { mapId:497, name:'水晶都' },
+      { mapId:491, name:'雷克蘭德' },
+      { mapId:492, name:'珂露西亞島' },
+      { mapId:493, name:'安穆·艾蘭' },
+      { mapId:494, name:'伊爾美格' },
+      { mapId:495, name:'拉凱提卡大森林' },
+      { mapId:496, name:'黑風海' },
     ]
   },
-  // 6.0 曉月
   ew: {
-    label: '6.0 曉月之終途 ⚠️',
-    unverified: true,
+    label: '6.0 曉月之終途',
     zones: [
-      { key:'oldSharlayan',   name:'舊薩雷安' },                     // 主城
-      { key:'radzAtHan',      name:'拉茲‧阿特‧漢' },                // 主城
-      { key:'labyrinthos',    name:'拉比林托斯' },
-      { key:'thavnair',       name:'薩夫納爾' },
-      { key:'garlemald',      name:'迦雷馬' },
-      { key:'mareLamentorum', name:'哀嘆之海' },
-      { key:'elpis',          name:'艾璞斯' },
-      { key:'ultimaThule',    name:'終極天涯' },
+      { mapId:693, name:'舊薩雷安' },
+      { mapId:694, name:'拉札罕' },
+      { mapId:679, name:'穹頂皓天' },
+      { mapId:695, name:'嘉雷馬' },
+      { mapId:697, name:'加雷馬' },
+      { mapId:696, name:'薩維奈島' },
+      { mapId:698, name:'瑪雷象牙海岸' },
+      { mapId:699, name:'遺塵之地' },
+      { mapId:700, name:'埃爾庇斯' },
     ]
   },
-  // 7.0 金曦
   dt: {
-    label: '7.0 金曦之遺輝 ⚠️',
-    unverified: true,
+    label: '7.0 金曦之遺輝',
     zones: [
-      { key:'urqopacha',    name:'烏爾科帕查' },
-      { key:'kozamauka',    name:'科薩莫卡' },
-      { key:'yakTel',       name:'亞克‧特爾' },
-      { key:'shaaloani',    name:'沙洛阿尼' },
-      { key:'heritageFound',name:'傳承之地' },
-      { key:'livingMemory', name:'活著的記憶' },
+      { mapId:855, name:'圖拉揚' },
+      { mapId:856, name:'索利尚' },
+      { mapId:857, name:'奧闊帕恰山' },
+      { mapId:858, name:'科扎瑪烏卡' },
+      { mapId:859, name:'亞克特爾雨林' },
+      { mapId:860, name:'夏勞尼荒野' },
+      { mapId:861, name:'遺產之地' },
+      { mapId:862, name:'生記憶之地' },
     ]
   },
-  // 優雷卡 / 禁地
   eureka: {
-    label: '優雷卡/禁地',
+    label: '優雷卡',
+    unverified: true,
     zones: [
-      { key:'eurekaAnemos',        name:'優雷卡 安尼摩斯' },
-      { key:'eurekaPagos',         name:'優雷卡 帕格斯' },
-      { key:'eurekaPyros',         name:'優雷卡 派羅斯' },
-      { key:'eurekaHydatos',       name:'優雷卡 海達托斯' },
-      { key:'bozjanSouthernFront', name:'波茲雅南方戰線' },
-      { key:'zadnor',              name:'扎德諾爾高原' },
-      { key:'theDiadem',           name:'帝亞德姆諸島' },
+      { mapId:414, name:'優雷卡常風之地' },
+      { mapId:467, name:'優雷卡恆冰之地' },
+      { mapId:484, name:'優雷卡湧火之地' },
+      { mapId:515, name:'優雷卡豐水之地' },
     ]
   }
 };
-
-// 查天氣
-function lookupWeather(zoneKey, seed) {
-  const table = W[zoneKey];
-  if (!table) return 'clearSkies';
-  for (const [lim, key] of table) { if (seed < lim) return key; }
-  return table[table.length-1][1];
-}
-function getWeatherAt(zoneKey, ms) {
-  return lookupWeather(zoneKey, calcSeed(new Date(periodStart(ms))));
-}
-
-// 格式化
-function fmtET(ms) {
-  const etSec = ms / 1000 * (24 * 3600 / 4200);
-  const h = String(Math.floor(etSec / 3600) % 24).padStart(2,'0');
-  const m = String(Math.floor(etSec / 60) % 60).padStart(2,'0');
-  return `ET ${h}:${m}`;
-}
-function fmtRT(ms) {
-  const d = new Date(ms);
-  return `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
-}
-function fmtCountdown(ms) {
-  const s = Math.max(0, Math.round(ms / 1000));
-  const m = Math.floor(s / 60), ss = s % 60;
-  return `${m}分 ${String(ss).padStart(2,'0')}秒後`;
-}
 
 // ============================================================
 // State
 // ============================================================
 let curGroup = 'lanoscea';
-let curZone  = 'middleLaNoscea';
+let curZone  = 11;
 let selWeathers = new Set();
 let curMGroup = 'lanoscea';
 
@@ -493,7 +339,7 @@ function populateZoneSel(selId, groupKey) {
   sel.innerHTML = '';
   for (const z of GROUPS[groupKey].zones) {
     const o = document.createElement('option');
-    o.value = z.key; o.textContent = z.name;
+    o.value = z.mapId; o.textContent = z.name;
     sel.appendChild(o);
   }
 }
@@ -502,7 +348,7 @@ function setGroup(g) {
   curGroup = g;
   Object.keys(GROUPS).forEach(k => document.getElementById('grp-'+k)?.classList.toggle('active', k===g));
   populateZoneSel('zone-sel', g);
-  curZone = document.getElementById('zone-sel').value;
+  curZone = Number(document.getElementById('zone-sel').value);
   selWeathers.clear();
   // 顯示/隱藏未驗證警告
   const notice = document.getElementById('unverified-notice');
@@ -511,7 +357,7 @@ function setGroup(g) {
 }
 
 function onZoneChange() {
-  curZone = document.getElementById('zone-sel').value;
+  curZone = Number(document.getElementById('zone-sel').value);
   selWeathers.clear();
   renderForecast(); renderChips(); renderSearch();
 }
@@ -535,7 +381,7 @@ function renderForecast() {
 }
 
 function renderChips() {
-  const weathers = [...new Set(W[curZone]?.map(([,k])=>k) || [])];
+  const weathers = [...new Set(getWeatherTable(curZone)?.map(([,k])=>k) || [])];
   document.getElementById('weather-chips').innerHTML = weathers.map(w => {
     const info = wi(w);
     return `<button class="chip${selWeathers.has(w)?' on':''}" onclick="toggleW('${w}')">${info.icon} ${info.name}</button>`;
@@ -589,7 +435,7 @@ function renderMulti() {
   document.getElementById('mz-grid').innerHTML = zones.map(z => {
     const cells = [0,1,2].map(i => {
       const t = cur + i * WEATHER_PERIOD;
-      const w = getWeatherAt(z.key, t);
+      const w = getWeatherAt(z.mapId, t);
       const info = wi(w);
       const diff = t - now;
       const when = i===0 ? '現在' : '+'+Math.round(diff/60000)+'分';
@@ -606,7 +452,7 @@ function renderMulti() {
 // ============================================================
 // Chain search tab
 // ============================================================
-let chainZone = 'easternLaNoscea';
+let chainZone = 17; // 東拉諾西亞
 
 function initChain() {
   // 用所有地圖做 chain zone select
@@ -614,15 +460,15 @@ function initChain() {
   const sel = document.getElementById('chain-zone');
   const seen = new Set();
   allZones.forEach(z => {
-    if (!seen.has(z.key)) { seen.add(z.key); const o=document.createElement('option'); o.value=z.key; o.textContent=z.name; sel.appendChild(o); }
+    if (!seen.has(z.mapId)) { seen.add(z.mapId); const o=document.createElement('option'); o.value=z.mapId; o.textContent=z.name; sel.appendChild(o); }
   });
   sel.value = chainZone;
   onChainZoneChange();
 }
 
 function onChainZoneChange() {
-  chainZone = document.getElementById('chain-zone').value;
-  const weathers = [...new Set(W[chainZone]?.map(([,k])=>k) || [])];
+  chainZone = Number(document.getElementById('chain-zone').value);
+  const weathers = [...new Set(getWeatherTable(chainZone)?.map(([,k])=>k) || [])];
   const mkOpts = () => '<option value="">（任意）</option>' +
     weathers.map(w => { const i=wi(w); return `<option value="${w}">${i.icon} ${i.name}</option>`; }).join('');
   document.getElementById('chain-prev').innerHTML = mkOpts();
@@ -689,9 +535,21 @@ function tick() {
 }
 
 // ============================================================
+// Expose handlers used by inline onclick="" (module scope is not global)
+// ============================================================
+window.switchTab = switchTab;
+window.setGroup = setGroup;
+window.setMGroup = setMGroup;
+window.onZoneChange = onZoneChange;
+window.onChainZoneChange = onChainZoneChange;
+window.renderChain = renderChain;
+window.toggleW = toggleW;
+
+// ============================================================
 // Init
 // ============================================================
-document.addEventListener('DOMContentLoaded', () => {
+(async function init() {
+  await initWeatherTables('../../data/maps.json');
   // 初始化分組按鈕（只顯示對應到 GROUPS 的按鈕）
   Object.keys(GROUPS).forEach(k => {
     const btn = document.getElementById('grp-'+k);
@@ -706,7 +564,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderForecast(); renderSearch(); renderChain();
     if (document.getElementById('tab-multi').classList.contains('active')) renderMulti();
   }, 20000);
-});
+})();
 </script>
 </body>
 </html>
