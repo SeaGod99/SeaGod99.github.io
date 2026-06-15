@@ -133,8 +133,35 @@
     .countdown.closed { color:var(--text-muted); }
 
     .badge-ver { font-size:10px; padding:1px 7px; border-radius:20px; background:var(--purple-dim); color:var(--purple); border:1px solid rgba(167,139,250,0.2); }
+    .badge-tag { font-size:10px; padding:1px 7px; border-radius:20px; border:1px solid var(--border); color:var(--text-secondary); }
+    .badge-legendary { background:rgba(200,169,110,0.12); color:var(--gold-light); border-color:rgba(200,169,110,0.3); }
+    .badge-ephemeral { background:var(--blue-dim); color:var(--blue); border-color:rgba(79,195,247,0.25); }
 
     .empty { text-align:center; color:var(--text-muted); padding:48px 0; font-size:14px; }
+
+    .items-list { font-size:12px; color:var(--text-secondary); margin-top:6px; line-height:1.7; }
+    .items-list b { color:var(--text-primary); font-weight:500; }
+
+    .track-btn {
+      position:absolute; top:14px; right:16px; background:none; border:1px solid var(--border);
+      border-radius:var(--radius-sm); width:30px; height:30px; font-size:14px; cursor:pointer;
+      color:var(--text-muted); transition:var(--transition); display:flex; align-items:center; justify-content:center;
+    }
+    .track-btn:hover { border-color:var(--border-hover); color:var(--text-primary); }
+    .track-btn.on { color:var(--gold-light); border-color:rgba(200,169,110,0.4); background:var(--gold-dim); }
+
+    .flag-btn {
+      font-size:11px; padding:2px 10px; border-radius:var(--radius-sm); border:1px solid var(--border);
+      background:rgba(255,255,255,0.03); color:var(--blue); cursor:pointer; transition:var(--transition);
+    }
+    .flag-btn:hover { border-color:rgba(79,195,247,0.4); background:var(--blue-dim); }
+    .flag-btn.copied { color:var(--green); border-color:rgba(74,222,128,0.4); background:var(--green-dim); }
+
+    .select-box select {
+      background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md);
+      padding:9px 12px; color:var(--text-primary); font-size:13px; outline:none; cursor:pointer;
+    }
+    .select-box select:hover { border-color:var(--border-hover); }
 
     .info-note { font-size:11.5px; color:var(--text-muted); margin:28px 0 0; line-height:1.8; text-align:center; }
 
@@ -180,14 +207,26 @@
   <div class="controls">
     <div class="search-box">
       <span class="icon">🔍</span>
-      <input type="text" id="search" placeholder="搜尋物品名稱、地點或版本…" autocomplete="off">
+      <input type="text" id="search" placeholder="搜尋物品名稱或地點…" autocomplete="off">
     </div>
     <div class="filter-group" id="jobFilters">
       <span class="chip btn active" data-job="all">全部職業</span>
       <span class="chip btn" data-job="採礦工">⛏️ 採礦工</span>
       <span class="chip btn" data-job="園藝工">🌿 園藝工</span>
     </div>
+    <div class="select-box">
+      <select id="verSel"><option value="all">全部版本</option></select>
+    </div>
+    <div class="select-box">
+      <select id="mapSel"><option value="all">全部地圖</option></select>
+    </div>
+    <div class="filter-group" id="typeFilters">
+      <span class="chip btn active" data-type="all">全部類型</span>
+      <span class="chip btn" data-type="legendary">傳說</span>
+      <span class="chip btn" data-type="ephemeral">靈砂</span>
+    </div>
     <span class="chip mine toggle-open" id="openOnly" data-on="0">僅顯示開放中</span>
+    <span class="chip mine" id="trackOnly" data-on="0">⭐ 只看追蹤</span>
   </div>
 
   <div class="result-meta" id="resultMeta"></div>
@@ -197,7 +236,7 @@
 
   <p class="info-note">
     開放時段以艾歐澤亞時間 (ET) 計算，無需網路、即時更新。<br>
-    資料為精選常用傳說／稀有採集節點，持續擴充中。實際座標以遊戲內為準。
+    物品名稱對應台服資料；若節點產物在台服尚未開放則不列出。實際座標以遊戲內為準。
   </p>
 </div>
 
@@ -214,7 +253,7 @@
   </div>
 </footer>
 
-<script>
+<script type="module">
 /* ─────────────────────────────────────────────
    艾歐澤亞時間 (Eorzea Time)
    ET 流速 = 現實時間 × 3600/175 (1 ET 天 = 70 真實分鐘)
@@ -229,97 +268,97 @@ function getEorzeaDate(now = Date.now()) {
   return { hours, minutes, totalMinutes };
 }
 
-/* 把 ET 小時(可能跨午夜)正規化到 0-23 */
-function norm(h) { return ((h % 24) + 24) % 24; }
+const TRACK_KEY = 'ffxiv_gathering_tracked';
+let trackedIds = new Set();
+try { trackedIds = new Set(JSON.parse(localStorage.getItem(TRACK_KEY) || '[]')); } catch(e) {}
+function saveTracked(){ localStorage.setItem(TRACK_KEY, JSON.stringify([...trackedIds])); }
 
 /* ─────────────────────────────────────────────
-   採集節點資料
-   windows: 每個元素 [開始ET時, 開始ET分(預設0)]，節點持續 durH 小時
-   多數限時節點開放 2 ET 小時。跨午夜時段已用 norm() 處理。
+   資料載入
    ───────────────────────────────────────────── */
-const DUR_H = 2; // 標準開放 2 ET 小時
+let ITEMS = new Map();   // itemId -> name
+let MAPS  = new Map();   // mapId  -> {name, region, patch}
+let NODES = [];          // 處理後的限時節點列表
 
-const NODES = [
-  // ── 曉月版 (6.x) ──
-  { name:'純化的卡魯心', job:'採礦工', map:'外地拉哈', region:'曉月之終途', coords:[8.5,16.2], type:'傳說', ver:'6.x', windows:[0,8,16] },
-  { name:'矮人棉花', job:'園藝工', map:'薩維奈島', region:'曉月之終途', coords:[27.0,16.0], type:'傳說', ver:'6.x', windows:[4,12,20] },
-  { name:'白金礦', job:'採礦工', map:'迷津', region:'曉月之終途', coords:[33.0,17.0], type:'稀有', ver:'6.x', windows:[2,14] },
-  { name:'曉月靈芝', job:'園藝工', map:'加雷馬', region:'曉月之終途', coords:[30.0,28.0], type:'稀有', ver:'6.x', windows:[6,18] },
+async function loadData(){
+  const [gathering, items, maps] = await Promise.all([
+    fetch('../../data/gathering.json').then(r=>r.json()),
+    fetch('../../data/items.json').then(r=>r.json()),
+    fetch('../../data/maps.json').then(r=>r.json()),
+  ]);
+  ITEMS = new Map(items.data.map(i => [i.id, i.name]));
+  MAPS  = new Map(maps.data.map(m => [m.id, m]));
 
-  // ── 黎明版 (7.x) ──
-  { name:'金剛石礦', job:'採礦工', map:'奧闊帕恰山', region:'黃金的遺產', coords:[18.0,29.0], type:'傳說', ver:'7.x', windows:[0,8,16] },
-  { name:'蘿卜草', job:'園藝工', map:'庫爾札斯西部', region:'黃金的遺產', coords:[12.5,11.5], type:'傳說', ver:'7.x', windows:[4,12,20] },
-  { name:'雷晶岩', job:'採礦工', map:'亞克特爾雨林', region:'黃金的遺產', coords:[24.0,21.0], type:'稀有', ver:'7.x', windows:[2,14] },
-  { name:'閃耀苔', job:'園藝工', map:'謝爾達萊', region:'黃金的遺產', coords:[31.0,8.0], type:'稀有', ver:'7.x', windows:[10,22] },
-
-  // ── 漆黑版 (5.x) 經典 ──
-  { name:'水晶化硫磺', job:'採礦工', map:'珂露西亞島', region:'漆黑的反叛者', coords:[26.0,30.0], type:'傳說', ver:'5.x', windows:[0,8,16] },
-  { name:'高純度生體水銀', job:'園藝工', map:'拉凱提卡大森林', region:'漆黑的反叛者', coords:[14.0,30.0], type:'傳說', ver:'5.x', windows:[4,12,20] },
-
-  // ── 紅蓮版 (4.x) 經典 ──
-  { name:'多瑪鋼礦', job:'採礦工', map:'紅玉海', region:'紅蓮的解放者', coords:[28.0,15.0], type:'傳說', ver:'4.x', windows:[0,8,16] },
-  { name:'白楊木原木', job:'園藝工', map:'太陽神草原', region:'紅蓮的解放者', coords:[30.0,23.0], type:'傳說', ver:'4.x', windows:[4,12,20] },
-];
+  NODES = gathering.data
+    .filter(n => n.limited === true)
+    .map(n => {
+      const map = MAPS.get(n.coords.mapId);
+      const itemNames = (n.items || [])
+        .map(id => ITEMS.get(id))
+        .filter(Boolean); // 對不到名稱 = 台服未開放，直接不顯示
+      return {
+        id: n.id,
+        job: n.job,
+        typeName: n.typeName,
+        level: n.level,
+        itemNames,
+        mapId: n.coords.mapId,
+        mapName: map ? map.name : null,
+        mapMissing: !!n.mapMissing || n.coords.mapId === 0 || !map,
+        region: map ? map.region : null,
+        patch: map ? map.patch : null,
+        x: n.coords.x, y: n.coords.y,
+        spawns: n.spawns || [],
+        duration: n.duration || 0, // 分鐘 (ET)
+        legendary: !!n.legendary,
+        ephemeral: !!n.ephemeral,
+      };
+    })
+    .filter(n => n.itemNames.length > 0); // 全部產物皆台服未開放 → 整節點隱藏
+}
 
 /* ─────────────────────────────────────────────
-   狀態計算
-   回傳 { state:'open'|'soon'|'closed', secsLeft, nextStartH }
-   secsLeft = 真實秒數到 狀態結束(open) 或 下次開放(soon/closed)
+   狀態計算（以 ET 小時為單位）
+   spawns: ET 開始整點陣列；duration: 分鐘（ET）
+   回傳 { state:'open'|'soon'|'closed', secsLeft, startH }
    ───────────────────────────────────────────── */
-const ET_HOUR_REAL_MS = 175000 / 60; // 一個 ET 小時 = 175000/60 真實秒? 不，重算：
-// 1 ET 小時 = 60 ET 分鐘。 真實毫秒 = 60*60*1000 / EORZEA_MULT
-const REAL_MS_PER_ET_HOUR = (60 * 60 * 1000) / EORZEA_MULT; // ≈ 175000 ms = 175 秒
+function nodeStatus(node, now = Date.now()){
+  if (!node.spawns.length) return { state:'closed', secsLeft: Infinity, startH:null };
+  const durEtMin = node.duration; // ET 分鐘
+  const durHours = durEtMin / 60;
+  const curEtMin = (now * EORZEA_MULT / 60000) % (24*60);
 
-function nodeStatus(node, now = Date.now()) {
-  const e = getEorzeaDate(now);
-  const curH = e.hours;
-  const curMinFloat = e.minutes + e.totalMinutes % 1; // 分鐘(整數)
-  // 目前在這個 ET 小時內已過的真實毫秒比例
-  const etMinNow = e.hours * 60 + e.minutes;
-  const realMsIntoCurrentEtMinute = (now * EORZEA_MULT) % 60000;
-
-  // 檢查是否在任一開放時段內
-  for (const startH of node.windows) {
-    const s = norm(startH);
-    // 開放區間 [s, s+DUR_H)（ET 小時）
-    let withinOpen = false;
-    let endH = s + DUR_H;
-    // 處理跨午夜
-    if (endH <= 24) {
-      withinOpen = curH >= s && curH < endH;
-    } else {
-      withinOpen = curH >= s || curH < (endH - 24);
-    }
-    if (withinOpen) {
-      // 計算到結束的 ET 分鐘數
-      let etEndMin = (endH % 24) * 60;
-      let etNowMin = etMinNow;
-      let diffEtMin = etEndMin - etNowMin;
-      if (diffEtMin <= 0) diffEtMin += 24 * 60;
-      const realMs = (diffEtMin * 60000) / EORZEA_MULT - realMsIntoCurrentEtMinute;
-      return { state:'open', secsLeft: Math.max(0, Math.round(realMs/1000)), startH:s };
+  // 檢查是否在任一開放區間
+  for (const startH of node.spawns) {
+    const s = ((startH % 24)+24)%24;
+    const startMin = s * 60;
+    let diffMin = curEtMin - startMin;
+    if (diffMin < 0) diffMin += 24*60;
+    if (diffMin < durEtMin) {
+      // 開放中，剩餘 = (durEtMin - diffMin) ET 分鐘 → 真實毫秒
+      const remainEtMin = durEtMin - diffMin;
+      const realMs = (remainEtMin * 60000) / EORZEA_MULT;
+      return { state:'open', secsLeft: Math.max(0, Math.round(realMs/1000)), startH: s };
     }
   }
 
-  // 不在開放中 → 找下一次最近的開放
-  let bestEtMin = Infinity;
-  let nextStart = null;
-  for (const startH of node.windows) {
-    const s = norm(startH);
-    let etStartMin = s * 60;
-    let etNowMin = etMinNow;
-    let diff = etStartMin - etNowMin;
-    if (diff <= 0) diff += 24 * 60;
-    if (diff < bestEtMin) { bestEtMin = diff; nextStart = s; }
+  // 找下一次開放
+  let bestDiff = Infinity, nextStart = null;
+  for (const startH of node.spawns) {
+    const s = ((startH % 24)+24)%24;
+    const startMin = s * 60;
+    let diff = startMin - curEtMin;
+    if (diff <= 0) diff += 24*60;
+    if (diff < bestDiff) { bestDiff = diff; nextStart = s; }
   }
-  const realMs = (bestEtMin * 60000) / EORZEA_MULT - realMsIntoCurrentEtMinute;
+  const realMs = (bestDiff * 60000) / EORZEA_MULT;
   const secsLeft = Math.max(0, Math.round(realMs/1000));
-  // 30 真實分鐘內視為「即將開放」
   const state = secsLeft <= 30*60 ? 'soon' : 'closed';
   return { state, secsLeft, startH: nextStart };
 }
 
-function fmtCountdown(secs) {
+function fmtCountdown(secs){
+  if (!isFinite(secs)) return '—';
   const h = Math.floor(secs/3600);
   const m = Math.floor((secs%3600)/60);
   const s = secs%60;
@@ -328,31 +367,49 @@ function fmtCountdown(secs) {
   return `${s}秒`;
 }
 
-function fmtEtWindow(startH) {
-  const s = norm(startH), e = norm(startH + DUR_H);
-  return `${String(s).padStart(2,'0')}:00–${String(e).padStart(2,'0')}:00`;
+function fmtEtWindow(startH, durMin){
+  const s = ((startH % 24)+24)%24;
+  const endTotalMin = s*60 + durMin;
+  const eH = Math.floor(endTotalMin/60) % 24;
+  const eM = endTotalMin % 60;
+  if (eM === 0) return `${String(s).padStart(2,'0')}:00–${String(eH).padStart(2,'0')}:00`;
+  return `${String(s).padStart(2,'0')}:00–${String(eH).padStart(2,'0')}:${String(eM).padStart(2,'0')}`;
 }
 
 /* ─────────────────────────────────────────────
-   渲染
+   篩選 / 排序
    ───────────────────────────────────────────── */
 const grid = document.getElementById('nodeGrid');
 const emptyState = document.getElementById('emptyState');
 const resultMeta = document.getElementById('resultMeta');
 
 let filterJob = 'all';
+let filterType = 'all';
+let filterVer = 'all';
+let filterMap = 'all';
 let openOnly = false;
+let trackOnly = false;
 let searchTerm = '';
 
 function jobEmoji(job){ return job === '採礦工' ? '⛏️' : '🌿'; }
 
 function passesFilter(node){
   if (filterJob !== 'all' && node.job !== filterJob) return false;
+  if (filterVer !== 'all' && node.patch !== filterVer) return false;
+  if (filterMap !== 'all' && String(node.mapId) !== filterMap) return false;
+  if (filterType === 'legendary' && !node.legendary) return false;
+  if (filterType === 'ephemeral' && !node.ephemeral) return false;
+  if (trackOnly && !trackedIds.has(node.id)) return false;
   if (searchTerm) {
-    const hay = `${node.name} ${node.map} ${node.region} ${node.ver} ${node.type} ${node.job}`.toLowerCase();
+    const hay = `${node.itemNames.join(' ')} ${node.mapName||''} ${node.region||''}`.toLowerCase();
     if (!hay.includes(searchTerm)) return false;
   }
   return true;
+}
+
+function teamcraftFlag(node){
+  if (node.mapMissing) return null;
+  return `/coord ${node.x.toFixed(1)} ${node.y.toFixed(1)} ${node.mapName||''}`.trim();
 }
 
 function render(){
@@ -385,31 +442,63 @@ function render(){
         : '<span class="status-pill pill-closed">未開放</span>';
     const cdLabel = st.state==='open' ? '剩餘' : '距開放';
     const cdCls = st.state==='open'?'open':st.state==='soon'?'soon':'closed';
-    const wins = n.windows.map(h=>{
-      const isNow = st.state==='open' && norm(h)===st.startH;
-      return `<span class="win ${isNow?'now':''}">${fmtEtWindow(h)}</span>`;
+    const wins = n.spawns.map(h=>{
+      const isNow = st.state==='open' && ((h%24)+24)%24===st.startH;
+      return `<span class="win ${isNow?'now':''}">${fmtEtWindow(h, n.duration)}</span>`;
     }).join('');
+    const loc = n.mapMissing
+      ? '地圖未知'
+      : `${n.mapName}${n.region ? ' · '+n.region : ''}`;
+    const verBadge = n.patch ? `<span class="badge-ver">${n.patch}</span>` : '';
+    const tagBadges = [
+      n.legendary ? '<span class="badge-tag badge-legendary">傳說</span>' : '',
+      n.ephemeral ? '<span class="badge-tag badge-ephemeral">靈砂</span>' : '',
+    ].join('');
+    const flag = teamcraftFlag(n);
+    const flagBtn = flag
+      ? `<button class="flag-btn" data-flag="${flag.replace(/"/g,'&quot;')}">📋 ${flag}</button>`
+      : '';
+    const tracked = trackedIds.has(n.id);
     return `
       <div class="node-card ${cls}">
+        <button class="track-btn ${tracked?'on':''}" data-track="${n.id}" title="加入追蹤">${tracked?'★':'☆'}</button>
         <div class="node-top">
           <div class="node-job">${jobEmoji(n.job)}</div>
           <div class="node-titles">
-            <div class="node-name">${n.name}</div>
-            <div class="node-loc">${n.map} · ${n.region} <span class="badge-ver">${n.ver}</span></div>
+            <div class="node-name">${n.itemNames.join('、')}</div>
+            <div class="node-loc">${loc} ${verBadge}</div>
           </div>
           ${pill}
         </div>
         <div class="node-meta">
           <span>職業：<b>${n.job}</b></span>
-          <span>類型：<b>${n.type}</b></span>
-          <span>座標：<b class="coords">X:${n.coords[0]} Y:${n.coords[1]}</b></span>
+          <span>節點：<b>${n.typeName}</b>（採集 Lv.${n.level}）</span>
+          ${n.mapMissing ? '' : `<span>座標：<b class="coords">X:${n.x.toFixed(1)} Y:${n.y.toFixed(1)}</b></span>`}
+          ${tagBadges}
         </div>
         <div class="node-meta" style="margin-top:6px">
           <span>${cdLabel}：<b class="countdown ${cdCls}">${fmtCountdown(st.secsLeft)}</b></span>
+          ${flagBtn}
         </div>
         <div class="windows">${wins}</div>
       </div>`;
   }).join('');
+}
+
+/* ── 篩選器初始化 ── */
+function populateSelectors(){
+  const verSel = document.getElementById('verSel');
+  const patches = [...new Set(NODES.map(n=>n.patch).filter(Boolean))].sort();
+  patches.forEach(p=>{
+    const o = document.createElement('option'); o.value=p; o.textContent=p; verSel.appendChild(o);
+  });
+
+  const mapSel = document.getElementById('mapSel');
+  const mapEntries = new Map();
+  NODES.forEach(n=>{ if(!n.mapMissing) mapEntries.set(n.mapId, n.mapName); });
+  [...mapEntries.entries()].sort((a,b)=>a[1].localeCompare(b[1],'zh-Hant')).forEach(([id,name])=>{
+    const o = document.createElement('option'); o.value=String(id); o.textContent=name; mapSel.appendChild(o);
+  });
 }
 
 /* ── ET 時鐘 ── */
@@ -435,18 +524,61 @@ document.getElementById('jobFilters').addEventListener('click', e=>{
   filterJob = chip.dataset.job;
   render();
 });
+document.getElementById('typeFilters').addEventListener('click', e=>{
+  const chip = e.target.closest('.chip'); if(!chip) return;
+  document.querySelectorAll('#typeFilters .chip').forEach(c=>c.classList.remove('active'));
+  chip.classList.add('active');
+  filterType = chip.dataset.type;
+  render();
+});
+document.getElementById('verSel').addEventListener('change', e=>{
+  filterVer = e.target.value; render();
+});
+document.getElementById('mapSel').addEventListener('change', e=>{
+  filterMap = e.target.value; render();
+});
 document.getElementById('openOnly').addEventListener('click', e=>{
   const chip = e.target;
   openOnly = !openOnly;
   chip.classList.toggle('active', openOnly);
   render();
 });
+document.getElementById('trackOnly').addEventListener('click', e=>{
+  const chip = e.target;
+  trackOnly = !trackOnly;
+  chip.classList.toggle('active', trackOnly);
+  render();
+});
+grid.addEventListener('click', e=>{
+  const trackBtn = e.target.closest('[data-track]');
+  if (trackBtn) {
+    const id = Number(trackBtn.dataset.track);
+    if (trackedIds.has(id)) trackedIds.delete(id); else trackedIds.add(id);
+    saveTracked();
+    render();
+    return;
+  }
+  const flagBtn = e.target.closest('[data-flag]');
+  if (flagBtn) {
+    const text = flagBtn.dataset.flag;
+    navigator.clipboard?.writeText(text).then(()=>{
+      flagBtn.classList.add('copied');
+      flagBtn.textContent = '✅ 已複製';
+      setTimeout(()=>{ flagBtn.classList.remove('copied'); flagBtn.textContent = `📋 ${text}`; }, 1500);
+    });
+  }
+});
 
 /* ── 啟動 ── */
-tickClock();
-render();
-setInterval(tickClock, 1000);
-setInterval(render, 1000); // 每秒更新倒數與排序
+(async function init(){
+  await loadData();
+  populateSelectors();
+  tickClock();
+  render();
+  setInterval(tickClock, 1000);
+  setInterval(render, 1000); // 每秒更新倒數與排序
+})();
 </script>
 </body>
 </html>
+                                                                                                                                                    

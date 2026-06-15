@@ -19,8 +19,8 @@
 | — | 入口頁面 | `/index.html` | 完成 |
 | 1.1 | 天書奇談計算器 | `/tools/wondrous-tails/` | 完成（Monte Carlo） |
 | 1.2 | 仙人微彩計算機 | `/tools/cactpot/` | 完成（期望值） |
-| 1.3 | 限時採集節點查詢 | `/tools/gathering/` | 開發中（**僅骨架，12筆寫死示範資料，未接733筆gathering.json/items/maps，等同重新開發**，06-15驗收） |
-| — | 天氣預報 | `/tools/weather/` | 開發中（演算法正確、UI完整，但天氣表寫死未接maps.json weatherRates，6.0/7.0表未驗證，未抽共用模組，06-15驗收） |
+| 1.3 | 限時採集節點查詢 | `/tools/gathering/` | 完成（改接 gathering.json/items.json/maps.json，limited 225 筆→213 筆顯示，篩選/排序/追蹤清單/Teamcraft flag 補齊，06-15重做） |
+| — | 天氣預報 | `/tools/weather/` | 完成（改用共用模組 assets/js/eorzea-weather.js，天氣表接 maps.json weatherRates，mapId 統一，06-15重做） |
 | 1.4 | B 怪討伐路線 | `/tools/hunt-b/` | 規劃中（monsters.json 已備） |
 | 1.5 | 風脈泉追蹤器 | `/tools/aether-currents/` | 擱置（2026-06-02） |
 | 1.6 | 時尚品鑑推薦 | `/tools/fashion-report/` | 規劃中（每週更新，需半自動） |
@@ -29,8 +29,8 @@
 
 | # | 工具 | 路徑 | 狀態 |
 |---|------|------|------|
-| 2.1 | 坐騎收藏追蹤 | `/collections/mounts/` | 開發中（**mounts.js硬編碼88筆，未接385筆mounts.json，無圖片；sources抽查13%錯位**，06-15驗收） |
-| 2.2 | 寵物收藏追蹤 | `/minions/` | 開發中（**即時打XIVAPI、未接本機minions.json/assets圖片，source靠猜描述字串，需整頁重做**，06-15驗收） |
+| 2.1 | 坐騎收藏追蹤 | `/collections/mounts/` | 完成（改接 data/mounts.json 385筆+圖片，篩選/追蹤重做，06-15重做） |
+| 2.2 | 寵物收藏追蹤 | `/minions/` | 完成（整頁重做，改接 data/minions.json+本機圖示，source 欄位修正，06-15重做） |
 | 2.3 | 樂譜收藏追蹤 | `/collections/orchestrion/` | 規劃中（資料庫空） |
 | 2.4 | 表情收藏追蹤 | `/collections/emotes/` | 規劃中（資料庫空） |
 | 2.5 | 髮型收藏追蹤 | `/collections/hairstyles/` | 規劃中（無資料庫） |
@@ -177,11 +177,7 @@
 ## 四、待辦（依優先序）
 
 0. ~~修 mapId ID 空間不一致~~ — **完成（2026-06-11）**，見 `docs/地圖ID統一修正計畫.md` 執行結果。遺留：底圖 8 張待本機跑 `node scripts/download-maps.mjs` 補抓（`docs/待補底圖清單.md`）；新擴充地圖無 weatherRates/patch，需要時再補
-1. **06-15 驗收結論：四個「開發中」頁面皆未對接已備資料庫，工作量遠大於「補欄位」，需重新開發前端資料層**：
-   - 1a. **天氣預報**（`/tools/weather/`）：抽出共用模組 `assets/js/eorzea-weather.js`（calcSeed/getWeatherAt/WEATHER_PERIOD），天氣表改接 `data/maps.json.weatherRates`（需統一中英文天氣名稱對照），驗證/標註6.0/7.0猜測天氣表。此項優先，因 1b/2.9/3.3/4.7 都依賴它。
-   - 1b. **限時採集節點查詢**（`/tools/gathering/`）：改接 `data/gathering.json`（733筆）、`items.json`、`maps.json`；篩選 `limited===true`；正確使用 `duration`（分鐘）算倒數；處理 `mapId=0`/`mapMissing`；補篩選/排序/追蹤清單等規格功能。等同重新開發。
-   - 1c. **坐騎收藏**（`/collections/mounts/`）：`mounts.js` 改為讀取 `data/mounts.json`（385筆）並補圖片顯示（架構優先於資料校對）；之後人工校對 sources/patch 錯位（抽查13%錯位，id 100+手動區段預期更嚴重）。
-   - 1d. **寵物收藏**（`/minions/`）：整頁重做，改 fetch `/data/minions.json`、圖示改 `/assets/minions/`、source 改用 sources 欄（空值隱藏該欄）、確認61筆未開放項目隱藏邏輯。
+1. ~~06-15 驗收結論：四個「開發中」頁面皆未對接已備資料庫，需重新開發前端資料層~~ — **完成（2026-06-15）**：weather（共用模組+maps.json）、gathering（gathering.json/items.json/maps.json+篩選/追蹤）、mounts（mounts.json+圖片）、minions（整頁重做）皆已重做完成。
 2. 同步 `data/_meta.json` status；更新 README.md 的工具清單（已過時）
 2-1. 資料品質小修：~~mounts 補 itemId~~（06-11 完成）；mounts sources/patch 人工校對（併入 1c）；om 40 筆 npc 譯名以 npcs.json 為準；blue-magic learnFromMob 轉怪物 id（做青魔頁前）；dungeons rewards/unlock 待填充（量大，做副本相關功能時再填）
 2-2. **繁中化升級（見二之二）**：~~mounts 補繁中名~~、~~dungeons 校正~~（06-11 完成）；~~monsters 台服化~~（06-11 完成）；抽 scripts/lib/common.mjs 共用函式庫（未做）
@@ -193,6 +189,7 @@
 
 ## 五、更新紀錄
 
+- **2026-06-15（重做完成）**：四頁面資料對接重做全部完成。新增共用模組 `assets/js/eorzea-weather.js`（calcSeed/getWeatherAt/initWeatherTables 等，weather 與 gathering 共用 ET 換算）；weather 改用 mapId 統一、天氣表接 maps.json weatherRates；gathering 改接 gathering.json(733筆，limited 225→213筆顯示)/items.json/maps.json，補篩選（職業/版本/地圖/類型）、排序、追蹤清單（localStorage）、Teamcraft flag複製；mounts 改接 mounts.json 385筆+圖片；minions 整頁重做改接 minions.json+本機圖示。四頁面狀態由「開發中」改為「完成」。
 - **2026-06-15**：四頁面驗收（weather/gathering/mounts/minions）——發現皆為草稿/示範資料，未對接已備資料庫，狀態改標註具體缺陷；待辦#1重寫為「四頁面資料對接重做」，順序：weather共用模組 → gathering → mounts → minions；製作利潤計算機（原#4）順延至此之後。
 - **2026-06-11（第二輪）**：mounts 補 itemId 348/385、繁中名 337/385（nameSource：tw-items 259／cn-opencc 56；發現原 103 筆手動名大量錯位已覆蓋，sources/patch 待人工校對）；barding 補 itemId 100/106；dungeons 名稱台服化校正 108/386（tw-instances + CFC 對應，報告 docs/dungeons-名稱校正報告.md）；monsters 本機跑 patch-monster-names.mjs 完成台服化（改名 2381／同名 11040／無資料 793）；build-mounts/build-barding/build-monsters/patch-dungeon-names 同步更新。
 
@@ -205,3 +202,4 @@
 - 2026-06-02：風脈泉 aether-currents 決定擱置。
 - 2026-05-31：無人島攻略工具規劃完成。
 - 2026-05-29：統一資料庫架構建立（SCHEMA.md）。
+                                                                                                                                                                                                                                                                                                                                                                         
