@@ -519,7 +519,7 @@
 (function() {
   const STORAGE_KEY = 'ffxiv_triadcards_owned';
   const DATA_URL = '../../data/triple-triad.json';
-  const ICON_BASE = 'https://xivapi.com/i/';
+  const ICON_BASE = '../../assets/triple-triad/';
 
   // ── State ──
   let TT_DATA = [];
@@ -668,9 +668,7 @@
 
       const typeTag = c.type ? `<span class="tag type-tag">${c.type}</span>` : '';
 
-      const iconHtml = c.icon
-        ? `<img class="tt-icon" src="${ICON_BASE}${String(c.icon).slice(0,3)}000/${c.icon}_hr1.png" alt="" loading="lazy" onerror="this.onerror=null;this.src='${ICON_BASE}${String(c.icon).slice(0,3)}000/${c.icon}.png'">`
-        : `<div class="tt-icon placeholder">🃏</div>`;
+      const iconHtml = `<img class="tt-icon" src="${ICON_BASE}${c.id}.webp" alt="" loading="lazy" onerror="this.onerror=null;this.outerHTML='<div class=&quot;tt-icon placeholder&quot;>🃏</div>'">`;
 
       const num = c.numbers || {};
       const fmtNum = n => (n === 10 ? 'A' : n);
@@ -841,4 +839,7 @@
       const grid = document.getElementById('ttGrid');
       const empty = document.getElementById('emptyState');
       grid.style.display = 'none';
-   
+      empty.style.display = '';
+      empty.textContent = '資料載入失敗：' + err.message;
+    });
+}
