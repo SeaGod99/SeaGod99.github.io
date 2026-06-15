@@ -1,8 +1,8 @@
 {
   "schema": "minions",
   "patch": "7.2",
-  "updated": "2026-06-05",
-  "source": "xivapi+teamcraft+items",
+  "updated": "2026-06-15",
+  "source": "xivapi+teamcraft+items+obtainable-methods",
   "count": 581,
   "data": [
     {
@@ -17,7 +17,16 @@
       "race": "Critter",
       "marketable": true,
       "patch": "2.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "NPC商店",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 9,
@@ -31,7 +40,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "黑渦團 / 需 黑渦團軍票 x20000 / NPC：黑渦團補給負責人"
+        }
+      ]
     },
     {
       "id": 10,
@@ -45,7 +59,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "雙蛇黨 / 需 雙蛇黨軍票 x20000 / NPC：雙蛇黨補給負責人"
+        }
+      ]
     },
     {
       "id": 11,
@@ -59,7 +78,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "不滅隊 / 需 不滅隊軍票 x20000 / NPC：不滅隊補給負責人"
+        }
+      ]
     },
     {
       "id": 54,
@@ -73,7 +97,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "Master of the Rolls / 需 成就幣 x2 / NPC：喬納森"
+        }
+      ]
     },
     {
       "id": 128,
@@ -103,8 +132,8 @@
       "patch": "2.1",
       "sources": [
         {
-          "type": "成就",
-          "detail": "Leaving a Good Impression II"
+          "type": "成就獎勵",
+          "detail": null
         }
       ]
     },
@@ -120,7 +149,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "2.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "寵物交易（消耗金碟幣） / 需 金碟幣 x20000 / NPC：寵物兌換員、紀念品兌換員"
+        }
+      ]
     },
     {
       "id": 237,
@@ -149,7 +183,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "6.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 79,
@@ -205,7 +244,16 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "4.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "稀少慶典神典石 / 需 稀少慶典神典石 x1"
+        },
+        {
+          "type": "NPC商店",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 313,
@@ -233,7 +281,16 @@
       "race": "Monster",
       "marketable": true,
       "patch": "2.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "NPC商店",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 5,
@@ -261,7 +318,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "3.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "百智隊成員 / 需 兵團徽章 x400 / NPC：阿爾多蘭"
+        }
+      ]
     },
     {
       "id": 12,
@@ -275,7 +337,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 13,
@@ -289,7 +356,16 @@
       "race": "Critter",
       "marketable": true,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "NPC商店",
+          "detail": null
+        },
+        {
+          "type": "危命任務",
+          "detail": "Lv.26"
+        }
+      ]
     },
     {
       "id": 14,
@@ -303,7 +379,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 15,
@@ -317,7 +398,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 17,
@@ -331,7 +417,16 @@
       "race": "Critter",
       "marketable": true,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "亞拉戈詩學神典石（其他） / 需 亞拉戈詩學神典石 x3 / NPC：奧里亞娜"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 18,
@@ -345,7 +440,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "危命任務",
+          "detail": "Lv.49"
+        }
+      ]
     },
     {
       "id": 19,
@@ -359,7 +459,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 20,
@@ -373,7 +478,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "2.51",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "寵物交易（消耗金碟幣） / 需 金碟幣 x20000 / NPC：寵物兌換員、紀念品兌換員"
+        }
+      ]
     },
     {
       "id": 22,
@@ -387,7 +497,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 23,
@@ -401,7 +516,16 @@
       "race": "Monster",
       "marketable": true,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "深層迷宮 · 共 1 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "3 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 24,
@@ -430,7 +554,16 @@
       "race": "Monster",
       "marketable": true,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "NPC商店",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 26,
@@ -444,7 +577,16 @@
       "race": "Monster",
       "marketable": true,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "NPC商店",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 27,
@@ -458,7 +600,16 @@
       "race": "Monster",
       "marketable": true,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "深層迷宮 · 共 1 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "3 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 28,
@@ -472,7 +623,20 @@
       "race": "Critter",
       "marketable": true,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "亞拉戈詩學神典石（其他） / 需 亞拉戈詩學神典石 x3 / NPC：奧里亞娜"
+        },
+        {
+          "type": "兌換",
+          "detail": "季節活動報酬 / 需 幸運彩蛋2016 x5 / NPC：彩蛋預言師"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 29,
@@ -486,7 +650,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 30,
@@ -515,7 +684,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 32,
@@ -529,7 +703,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 33,
@@ -543,7 +722,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 34,
@@ -557,7 +741,16 @@
       "race": "Monster",
       "marketable": true,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        },
+        {
+          "type": "危命任務",
+          "detail": "Lv.32"
+        }
+      ]
     },
     {
       "id": 35,
@@ -571,7 +764,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 36,
@@ -585,7 +783,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "Master of the Rolls / 需 成就幣 x2 / NPC：喬納森"
+        }
+      ]
     },
     {
       "id": 225,
@@ -599,7 +802,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "3.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "季節活動報酬 / 需 南瓜餅乾2017 x6 / NPC：奇怪的店員"
+        }
+      ]
     },
     {
       "id": 37,
@@ -613,7 +821,16 @@
       "race": "Monster",
       "marketable": true,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "亞拉戈詩學神典石（其他） / 需 亞拉戈詩學神典石 x3 / NPC：奧里亞娜"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 48,
@@ -627,7 +844,16 @@
       "race": "Critter",
       "marketable": true,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "採集獲得",
+          "detail": "採集 Lv.50"
+        },
+        {
+          "type": "時間限定",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 86,
@@ -641,7 +867,16 @@
       "race": "Critter",
       "marketable": true,
       "patch": "2.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "園藝獲得",
+          "detail": "種子：洋蔥王子種子"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 87,
@@ -655,7 +890,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "2.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "園藝獲得",
+          "detail": "種子：茄子騎士種子"
+        }
+      ]
     },
     {
       "id": 88,
@@ -669,7 +909,16 @@
       "race": "Critter",
       "marketable": true,
       "patch": "2.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "園藝獲得",
+          "detail": "種子：蒜頭明星種子"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 89,
@@ -683,7 +932,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "2.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "園藝獲得",
+          "detail": "種子：番茄國王種子"
+        }
+      ]
     },
     {
       "id": 90,
@@ -697,7 +951,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "2.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "園藝獲得",
+          "detail": "種子：曼德拉王后種子"
+        }
+      ]
     },
     {
       "id": 159,
@@ -711,7 +970,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "3.07",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 473,
@@ -725,7 +989,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "6.35",
-      "sources": []
+      "sources": [
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 38,
@@ -739,7 +1008,20 @@
       "race": "Monster",
       "marketable": true,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "採集獲得",
+          "detail": "採集 Lv.50"
+        },
+        {
+          "type": "時間限定",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 39,
@@ -753,7 +1035,16 @@
       "race": "Critter",
       "marketable": true,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 40,
@@ -769,8 +1060,8 @@
       "patch": "2.28",
       "sources": [
         {
-          "type": "成就",
-          "detail": "Out of Sight Out of Mind"
+          "type": "成就獎勵",
+          "detail": null
         }
       ]
     },
@@ -786,7 +1077,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 42,
@@ -800,7 +1096,16 @@
       "race": "Monster",
       "marketable": true,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 44,
@@ -814,7 +1119,16 @@
       "race": "Monster",
       "marketable": true,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 45,
@@ -828,7 +1142,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "2.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 46,
@@ -842,7 +1161,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "2.45",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 47,
@@ -856,7 +1180,16 @@
       "race": "Monster",
       "marketable": true,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 56,
@@ -870,7 +1203,20 @@
       "race": "Monster",
       "marketable": true,
       "patch": "2.2",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "深層迷宮 · 共 1 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        },
+        {
+          "type": "雇員探險",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 57,
@@ -884,7 +1230,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "2.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰／深層迷宮 · 共 2 個副本掉落"
+        }
+      ]
     },
     {
       "id": 80,
@@ -898,7 +1249,16 @@
       "race": "Critter",
       "marketable": true,
       "patch": "2.2",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰／深層迷宮 · 共 2 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 82,
@@ -912,7 +1272,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "2.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "同盟徽章（其他） / 需 同盟徽章 x500 / NPC：狩獵任務負責人"
+        }
+      ]
     },
     {
       "id": 83,
@@ -926,7 +1291,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "2.51",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "寵物交易（消耗金碟幣） / 需 金碟幣 x10000 / NPC：寵物兌換員、紀念品兌換員"
+        }
+      ]
     },
     {
       "id": 93,
@@ -940,7 +1310,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "2.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "同盟徽章（其他） / 需 同盟徽章 x440 / NPC：狩獵任務負責人"
+        }
+      ]
     },
     {
       "id": 102,
@@ -954,7 +1329,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "2.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 111,
@@ -968,7 +1348,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "2.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "雇員探險",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 420,
@@ -982,7 +1367,16 @@
       "race": "Monster",
       "marketable": false,
       "patch": "6.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        },
+        {
+          "type": "商城購買",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 112,
@@ -996,7 +1390,16 @@
       "race": "Monster",
       "marketable": true,
       "patch": "2.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰／深層迷宮 · 共 2 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 136,
@@ -1010,7 +1413,20 @@
       "race": "Monster",
       "marketable": true,
       "patch": "3.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 139,
@@ -1024,7 +1440,16 @@
       "race": "Critter",
       "marketable": true,
       "patch": "3.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "3 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 384,
@@ -1052,7 +1477,16 @@
       "race": "Monster",
       "marketable": true,
       "patch": "3.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰／深層迷宮 · 共 2 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 143,
@@ -1066,7 +1500,20 @@
       "race": "Monster",
       "marketable": true,
       "patch": "3.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 144,
@@ -1080,7 +1527,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "3.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "百智隊成員 / 需 兵團徽章 x400 / NPC：阿爾多蘭"
+        }
+      ]
     },
     {
       "id": 157,
@@ -1094,7 +1546,20 @@
       "race": "Monster",
       "marketable": true,
       "patch": "3.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "Scrip Exchange / 需 蒼天街振興票 x800 / NPC：艾妮"
+        },
+        {
+          "type": "副本",
+          "detail": "深層迷宮 · 共 1 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 372,
@@ -1138,8 +1603,8 @@
       "patch": "3.1",
       "sources": [
         {
-          "type": "成就",
-          "detail": "A Load of Verminion II"
+          "type": "成就獎勵",
+          "detail": null
         }
       ]
     },
@@ -1155,7 +1620,20 @@
       "race": "Critter",
       "marketable": true,
       "patch": "3.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "需 幻巧葉 x150"
+        },
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "4 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 178,
@@ -1169,7 +1647,16 @@
       "race": "Monster",
       "marketable": true,
       "patch": "3.15",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 179,
@@ -1183,7 +1670,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "3.15",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 180,
@@ -1197,7 +1689,16 @@
       "race": "Critter",
       "marketable": true,
       "patch": "3.15",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "4 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 181,
@@ -1211,7 +1712,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "3.15",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 183,
@@ -1225,7 +1731,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "3.15",
-      "sources": []
+      "sources": [
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 189,
@@ -1239,7 +1750,16 @@
       "race": "Monster",
       "marketable": true,
       "patch": "3.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 190,
@@ -1253,7 +1773,16 @@
       "race": "Poppet",
       "marketable": true,
       "patch": "3.55b",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "Scrip Exchange / 需 蒼天街振興票 x800 / NPC：艾妮"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 194,
@@ -1267,7 +1796,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "3.55b",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "Scrip Exchange / 需 蒼天街振興票 x800 / NPC：艾妮"
+        }
+      ]
     },
     {
       "id": 196,
@@ -1281,7 +1815,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "3.35",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "格爾莫拉陶器碎片 / 需 格爾莫拉陶器碎片 x3 / NPC：艾·烏納·科特羅"
+        }
+      ]
     },
     {
       "id": 198,
@@ -1295,7 +1834,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "3.35",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "格爾莫拉陶器碎片 / 需 格爾莫拉陶器碎片 x3 / NPC：艾·烏納·科特羅"
+        }
+      ]
     },
     {
       "id": 216,
@@ -1309,7 +1853,16 @@
       "race": "Critter",
       "marketable": true,
       "patch": "3.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "3 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 226,
@@ -1323,7 +1876,16 @@
       "race": "Critter",
       "marketable": true,
       "patch": "3.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 234,
@@ -1339,8 +1901,8 @@
       "patch": "3.5",
       "sources": [
         {
-          "type": "成就",
-          "detail": "Mama Said Knock You Out III"
+          "type": "成就獎勵",
+          "detail": null
         }
       ]
     },
@@ -1358,8 +1920,8 @@
       "patch": "3.5",
       "sources": [
         {
-          "type": "成就",
-          "detail": "How Can I Help III"
+          "type": "成就獎勵",
+          "detail": null
         }
       ]
     },
@@ -1390,7 +1952,16 @@
       "race": "Monster",
       "marketable": true,
       "patch": "4.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 254,
@@ -1404,7 +1975,16 @@
       "race": "Monster",
       "marketable": true,
       "patch": "4.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 269,
@@ -1418,7 +1998,16 @@
       "race": "Monster",
       "marketable": true,
       "patch": "4.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "深層迷宮 · 共 1 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 274,
@@ -1432,7 +2021,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "4.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "道具交易 / 需 伊克西翁的雷角 x5 / NPC：艾西娜"
+        }
+      ]
     },
     {
       "id": 285,
@@ -1446,7 +2040,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "4.25",
-      "sources": []
+      "sources": [
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 287,
@@ -1460,7 +2059,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "4.25",
-      "sources": []
+      "sources": [
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 295,
@@ -1474,7 +2078,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "4.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 315,
@@ -1488,7 +2097,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "4.45",
-      "sources": []
+      "sources": [
+        {
+          "type": "寶箱/容器",
+          "detail": "3 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 318,
@@ -1502,7 +2116,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "4.55",
-      "sources": []
+      "sources": [
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 290,
@@ -1516,7 +2135,16 @@
       "race": "Monster",
       "marketable": true,
       "patch": "4.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "3 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 312,
@@ -1530,7 +2158,16 @@
       "race": "Monster",
       "marketable": true,
       "patch": "4.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 317,
@@ -1558,7 +2195,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "4.55",
-      "sources": []
+      "sources": [
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 336,
@@ -1572,7 +2214,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "5.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 338,
@@ -1586,7 +2233,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "5.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "寶石商人 / 需 雙色寶石 x400 / NPC：廣域交易商 哈爾登"
+        }
+      ]
     },
     {
       "id": 339,
@@ -1600,7 +2252,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "5.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 347,
@@ -1614,7 +2271,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "5.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 352,
@@ -1628,7 +2290,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "5.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 353,
@@ -1642,7 +2309,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "5.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "雇員探險",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 355,
@@ -1656,7 +2328,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "5.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "雇員探險",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 357,
@@ -1670,7 +2347,16 @@
       "race": "Poppet",
       "marketable": true,
       "patch": "5.11",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "Scrip Exchange / 需 蒼天街振興票 x1200 / NPC：艾妮"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 361,
@@ -1684,7 +2370,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "5.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 366,
@@ -1698,7 +2389,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "5.2",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "深層迷宮 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 367,
@@ -1714,8 +2410,8 @@
       "patch": "5.21",
       "sources": [
         {
-          "type": "成就",
-          "detail": "Gathering in the Air"
+          "type": "成就獎勵",
+          "detail": null
         }
       ]
     },
@@ -1731,7 +2427,12 @@
       "race": "Poppet",
       "marketable": true,
       "patch": "5.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 388,
@@ -1759,7 +2460,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "5.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 406,
@@ -1787,7 +2493,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "5.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "寶石商人 / 需 雙色寶石 x400 / NPC：廣域交易商 古拉姆索"
+        }
+      ]
     },
     {
       "id": 423,
@@ -1801,7 +2512,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "6.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "寶石商人 / 需 雙色寶石 x500 / NPC：廣域交易商 N-1499"
+        }
+      ]
     },
     {
       "id": 433,
@@ -1815,7 +2531,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "6.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 443,
@@ -1829,7 +2550,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "6.05",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "深層迷宮 · 共 2 個副本掉落"
+        }
+      ]
     },
     {
       "id": 434,
@@ -1843,7 +2569,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "6.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 438,
@@ -1857,7 +2588,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "6.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "雇員探險",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 442,
@@ -1871,7 +2607,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "6.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "道具交易 / 需 明燈天王的寶珠 x5 / NPC：涅斯瓦孜"
+        }
+      ]
     },
     {
       "id": 424,
@@ -1885,7 +2626,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "6.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 426,
@@ -1899,7 +2645,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "6.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 450,
@@ -1913,7 +2664,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "6.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 457,
@@ -1927,7 +2683,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "6.28",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "密文幣 / 需 密文幣 x8 / NPC：N-0598"
+        }
+      ]
     },
     {
       "id": 463,
@@ -1941,7 +2702,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "6.28",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "異界戰爭 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 468,
@@ -1955,7 +2721,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "6.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "貝殼兌換 / 需 謝爾達萊青船幣 x4000 / NPC：貿易小員"
+        }
+      ]
     },
     {
       "id": 484,
@@ -1969,7 +2740,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "6.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "深層迷宮 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 485,
@@ -1983,7 +2759,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "6.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "深層迷宮 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 480,
@@ -1997,7 +2778,12 @@
       "race": "Gadget",
       "marketable": true,
       "patch": "6.45",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "異界戰爭 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 515,
@@ -2011,7 +2797,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "7.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 517,
@@ -2025,7 +2816,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "7.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 519,
@@ -2039,7 +2835,12 @@
       "race": "Gadget",
       "marketable": true,
       "patch": "7.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 521,
@@ -2053,7 +2854,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "7.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 523,
@@ -2067,7 +2873,12 @@
       "race": "Poppet",
       "marketable": true,
       "patch": "7.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 510,
@@ -2081,7 +2892,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "7.05",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "深層迷宮 · 共 2 個副本掉落"
+        }
+      ]
     },
     {
       "id": 545,
@@ -2232,8 +3048,8 @@
       "patch": "3.1",
       "sources": [
         {
-          "type": "成就",
-          "detail": "Challenge Accepted"
+          "type": "成就獎勵",
+          "detail": null
         }
       ]
     },
@@ -2263,7 +3079,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "3.15",
-      "sources": []
+      "sources": [
+        {
+          "type": "大型任務",
+          "detail": "大型任務 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 147,
@@ -2277,7 +3098,16 @@
       "race": "Gadget",
       "marketable": true,
       "patch": "3.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 358,
@@ -2291,7 +3121,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "5.18",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "交換報酬 / 需 同盟徽章 x400 / NPC：淚男子拉圖加"
+        }
+      ]
     },
     {
       "id": 215,
@@ -2305,7 +3140,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "3.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "大型任務",
+          "detail": "大型任務 · 共 2 個副本掉落"
+        }
+      ]
     },
     {
       "id": 259,
@@ -2319,7 +3159,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "4.01",
-      "sources": []
+      "sources": [
+        {
+          "type": "大型任務",
+          "detail": "大型任務 · 共 2 個副本掉落"
+        }
+      ]
     },
     {
       "id": 281,
@@ -2333,7 +3178,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "4.2",
-      "sources": []
+      "sources": [
+        {
+          "type": "大型任務",
+          "detail": "大型任務 · 共 2 個副本掉落"
+        }
+      ]
     },
     {
       "id": 305,
@@ -2347,7 +3197,16 @@
       "race": "Monster",
       "marketable": false,
       "patch": "4.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "稀少慶典神典石 / 需 稀少慶典神典石 x7"
+        },
+        {
+          "type": "大型任務",
+          "detail": "大型任務 · 共 2 個副本掉落"
+        }
+      ]
     },
     {
       "id": 344,
@@ -2361,7 +3220,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "5.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "需 庫洛獎狀：銀獎 x1 / NPC：庫洛·阿里亞珀"
+        }
+      ]
     },
     {
       "id": 345,
@@ -2375,7 +3239,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "5.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "需 庫洛獎狀：銀獎 x1 / NPC：庫洛·阿里亞珀"
+        }
+      ]
     },
     {
       "id": 341,
@@ -2389,7 +3258,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "5.01",
-      "sources": []
+      "sources": [
+        {
+          "type": "大型任務",
+          "detail": "大型任務 · 共 2 個副本掉落"
+        }
+      ]
     },
     {
       "id": 440,
@@ -2403,7 +3277,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "6.05",
-      "sources": []
+      "sources": [
+        {
+          "type": "大型任務",
+          "detail": "大型任務 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 524,
@@ -2417,7 +3296,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "7.01",
-      "sources": []
+      "sources": [
+        {
+          "type": "大型任務",
+          "detail": "大型任務 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 576,
@@ -2446,7 +3330,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "2.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "大型任務",
+          "detail": "大型任務 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 537,
@@ -2475,7 +3364,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "3.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "大型任務",
+          "detail": "大型任務 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 195,
@@ -2489,7 +3383,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "3.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "大型任務",
+          "detail": "大型任務 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 232,
@@ -2503,7 +3402,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "3.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "大型任務",
+          "detail": "大型任務 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 299,
@@ -2517,7 +3421,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "4.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "大型任務",
+          "detail": "大型任務 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 363,
@@ -2531,7 +3440,16 @@
       "race": "Monster",
       "marketable": true,
       "patch": "5.21",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "Scrip Exchange / 需 蒼天街振興票 x1200 / NPC：艾妮"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 404,
@@ -2545,7 +3463,16 @@
       "race": "Monster",
       "marketable": true,
       "patch": "5.45",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "共 1 個副本掉落"
+        },
+        {
+          "type": "怪物掉落",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 451,
@@ -2559,7 +3486,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "6.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "大型任務",
+          "detail": "大型任務 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 474,
@@ -2573,7 +3505,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "6.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "大型任務",
+          "detail": "大型任務 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 494,
@@ -2587,7 +3524,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "6.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "大型任務",
+          "detail": "大型任務 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 528,
@@ -2601,7 +3543,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "7.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "大型任務",
+          "detail": "大型任務 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 557,
@@ -2630,7 +3577,16 @@
       "race": "Critter",
       "marketable": true,
       "patch": "2.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        },
+        {
+          "type": "雇員探險",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 95,
@@ -2644,7 +3600,16 @@
       "race": "Critter",
       "marketable": true,
       "patch": "2.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 97,
@@ -2658,7 +3623,16 @@
       "race": "Critter",
       "marketable": true,
       "patch": "2.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "深層迷宮 · 共 1 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "4 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 421,
@@ -2672,7 +3646,16 @@
       "race": "Critter",
       "marketable": false,
       "patch": "6.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        },
+        {
+          "type": "商城購買",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 103,
@@ -2686,7 +3669,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "3.25",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城購買",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 110,
@@ -2700,7 +3688,16 @@
       "race": "Critter",
       "marketable": true,
       "patch": "2.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        },
+        {
+          "type": "雇員探險",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 595,
@@ -2729,7 +3726,16 @@
       "race": "Critter",
       "marketable": true,
       "patch": "3.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰／深層迷宮 · 共 2 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 529,
@@ -2743,7 +3749,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "7.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 141,
@@ -2757,7 +3768,20 @@
       "race": "Critter",
       "marketable": true,
       "patch": "3.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "需 幻巧葉 x150"
+        },
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰／深層迷宮 · 共 2 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 146,
@@ -2771,7 +3795,16 @@
       "race": "Critter",
       "marketable": true,
       "patch": "3.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        },
+        {
+          "type": "雇員探險",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 197,
@@ -2785,7 +3818,20 @@
       "race": "Critter",
       "marketable": true,
       "patch": "3.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "稀少慶典神典石 / 需 稀少慶典神典石 x7"
+        },
+        {
+          "type": "副本",
+          "detail": "深層迷宮 · 共 1 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "3 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 242,
@@ -2799,7 +3845,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "4.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "道具交易 / 需 殺生石碎片 x3 / NPC：艾西娜"
+        }
+      ]
     },
     {
       "id": 243,
@@ -2813,7 +3864,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "4.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "兵團徽章交易 / 需 兵團徽章 x800 / NPC：艾斯特麗爾德、琉金"
+        }
+      ]
     },
     {
       "id": 246,
@@ -2827,7 +3883,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "4.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "寶箱/容器",
+          "detail": "3 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 267,
@@ -2841,7 +3902,16 @@
       "race": "Critter",
       "marketable": true,
       "patch": "4.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "寶箱/容器",
+          "detail": "3 個寶箱/容器"
+        },
+        {
+          "type": "雇員探險",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 333,
@@ -2855,7 +3925,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "5.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 271,
@@ -2869,7 +3944,16 @@
       "race": "Critter",
       "marketable": true,
       "patch": "4.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "寶箱/容器",
+          "detail": "3 個寶箱/容器"
+        },
+        {
+          "type": "雇員探險",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 279,
@@ -2883,7 +3967,16 @@
       "race": "Critter",
       "marketable": true,
       "patch": "4.2",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "3 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 288,
@@ -2897,7 +3990,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "4.2",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "Master of the Rolls / 需 成就幣 x2 / NPC：喬納森"
+        }
+      ]
     },
     {
       "id": 292,
@@ -2911,7 +4009,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "4.35",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "需 天之陶器碎片 x10 / NPC：海盜眾的物資負責人"
+        }
+      ]
     },
     {
       "id": 316,
@@ -2925,7 +4028,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "4.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "深層迷宮 · 共 3 個副本掉落"
+        }
+      ]
     },
     {
       "id": 330,
@@ -2939,7 +4047,16 @@
       "race": "Critter",
       "marketable": true,
       "patch": "4.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "深層迷宮 · 共 3 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 334,
@@ -2953,7 +4070,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "5.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 506,
@@ -2967,7 +4089,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "6.51",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "異界戰爭 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 337,
@@ -2981,7 +4108,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "5.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 369,
@@ -2995,7 +4127,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "5.2",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "橡果幣 / 需 橡果幣 x8 / NPC：于咕盧利·瑪喏櫨"
+        }
+      ]
     },
     {
       "id": 370,
@@ -3009,7 +4146,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "5.2",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "橡果幣 / 需 橡果幣 x8 / NPC：于咕盧利·瑪喏櫨"
+        }
+      ]
     },
     {
       "id": 492,
@@ -3023,7 +4165,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "7.15",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 350,
@@ -3037,7 +4184,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "5.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "寶石商人 / 需 雙色寶石 x400 / NPC：廣域交易商 奈櫟"
+        }
+      ]
     },
     {
       "id": 356,
@@ -3051,7 +4203,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "5.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "遠航探索",
+          "detail": "共 5 種航線"
+        }
+      ]
     },
     {
       "id": 387,
@@ -3065,7 +4222,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "5.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "需 幻巧葉 x400"
+        }
+      ]
     },
     {
       "id": 409,
@@ -3079,7 +4241,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "5.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "需 幻巧葉 x400"
+        }
+      ]
     },
     {
       "id": 422,
@@ -3093,7 +4260,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "6.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "雇員探險",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 428,
@@ -3107,7 +4279,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "6.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "狩獵任務的戰利品交易 / 需 狩獵任務的戰利品 x800 / NPC：嘉·拉克莎、維爾梅塔"
+        }
+      ]
     },
     {
       "id": 431,
@@ -3121,7 +4298,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "6.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 432,
@@ -3135,7 +4317,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "6.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "雇員探險",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 435,
@@ -3149,7 +4336,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "6.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 445,
@@ -3163,7 +4355,12 @@
       "race": "Poppet",
       "marketable": true,
       "patch": "6.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "雇員探險",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 462,
@@ -3177,7 +4374,16 @@
       "race": "Critter",
       "marketable": true,
       "patch": "6.28",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "需 幻巧葉 x400"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 448,
@@ -3191,7 +4397,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "6.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "雇員探險",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 464,
@@ -3205,7 +4416,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "6.28",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "異界戰爭 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 467,
@@ -3219,7 +4435,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "6.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "需 幻巧葉 x400"
+        }
+      ]
     },
     {
       "id": 483,
@@ -3233,7 +4454,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "6.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "需 幻巧葉 x400"
+        }
+      ]
     },
     {
       "id": 486,
@@ -3247,7 +4473,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "6.45",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "異界戰爭 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 490,
@@ -3261,7 +4492,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "6.45",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "異界戰爭 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 509,
@@ -3275,7 +4511,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "7.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "寶石商人 / 需 雙色寶石 x700 / NPC：廣域交易商 特普利"
+        }
+      ]
     },
     {
       "id": 594,
@@ -3304,7 +4545,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "7.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "雇員探險",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 512,
@@ -3318,7 +4564,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "7.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "寶石商人 / 需 雙色寶石 x700 / NPC：廣域交易商 拉爾·烏魯可"
+        }
+      ]
     },
     {
       "id": 514,
@@ -3346,7 +4597,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "7.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "狩獵任務的戰利品交易 / 需 狩獵任務的戰利品 x800 / NPC：流布加"
+        }
+      ]
     },
     {
       "id": 532,
@@ -3360,7 +4616,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "7.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 533,
@@ -3374,7 +4635,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "7.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "遠航探索",
+          "detail": "共 1 種航線"
+        }
+      ]
     },
     {
       "id": 543,
@@ -3463,7 +4729,16 @@
       "race": "Critter",
       "marketable": true,
       "patch": "2.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "精製獲得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 241,
@@ -3477,7 +4752,16 @@
       "race": "Critter",
       "marketable": true,
       "patch": "4.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "寶箱/容器",
+          "detail": "4 個寶箱/容器"
+        },
+        {
+          "type": "雇員探險",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 329,
@@ -3491,7 +4775,16 @@
       "race": "Critter",
       "marketable": true,
       "patch": "4.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "遠航探索",
+          "detail": "共 5 種航線"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "3 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 481,
@@ -3505,7 +4798,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "6.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "貝殼兌換 / 需 謝爾達萊青船幣 x4000 / NPC：貿易小員"
+        }
+      ]
     },
     {
       "id": 579,
@@ -3534,7 +4832,16 @@
       "race": "Critter",
       "marketable": true,
       "patch": "4.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "4 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 272,
@@ -3548,7 +4855,16 @@
       "race": "Critter",
       "marketable": true,
       "patch": "4.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "3 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 273,
@@ -3562,7 +4878,16 @@
       "race": "Critter",
       "marketable": true,
       "patch": "4.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "寶箱/容器",
+          "detail": "3 個寶箱/容器"
+        },
+        {
+          "type": "雇員探險",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 283,
@@ -3576,7 +4901,16 @@
       "race": "Critter",
       "marketable": true,
       "patch": "4.2",
-      "sources": []
+      "sources": [
+        {
+          "type": "遠航探索",
+          "detail": "共 8 種航線"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "3 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 340,
@@ -3590,7 +4924,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "5.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "狩獵任務的戰利品交易 / 需 狩獵任務的戰利品 x800 / NPC：賽櫟、伊爾弗洛伊"
+        }
+      ]
     },
     {
       "id": 359,
@@ -3604,7 +4943,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "5.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "雇員探險",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 375,
@@ -3620,8 +4964,8 @@
       "patch": "5.2",
       "sources": [
         {
-          "type": "成就",
-          "detail": "No More Fish in the Sea I"
+          "type": "成就獎勵",
+          "detail": null
         }
       ]
     },
@@ -3639,8 +4983,8 @@
       "patch": "5.21",
       "sources": [
         {
-          "type": "成就",
-          "detail": "Crafting in the Air"
+          "type": "成就獎勵",
+          "detail": null
         }
       ]
     },
@@ -3658,8 +5002,8 @@
       "patch": "5.4",
       "sources": [
         {
-          "type": "成就",
-          "detail": "On a Boat IV"
+          "type": "成就獎勵",
+          "detail": null
         }
       ]
     },
@@ -3677,8 +5021,8 @@
       "patch": "5.5",
       "sources": [
         {
-          "type": "成就",
-          "detail": "Double-backwards Somersault"
+          "type": "成就獎勵",
+          "detail": null
         }
       ]
     },
@@ -3694,7 +5038,16 @@
       "race": "Monster",
       "marketable": true,
       "patch": "6.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "遠航探索",
+          "detail": "共 3 種航線"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 479,
@@ -3710,8 +5063,8 @@
       "patch": "6.4",
       "sources": [
         {
-          "type": "成就",
-          "detail": "Near, Far, Wherever Fish Are II"
+          "type": "成就獎勵",
+          "detail": null
         }
       ]
     },
@@ -3727,7 +5080,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "7.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 578,
@@ -3786,7 +5144,16 @@
       "race": "Critter",
       "marketable": true,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "深層迷宮 · 共 1 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "4 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 121,
@@ -3800,7 +5167,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "3.25",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城購買",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 137,
@@ -3814,7 +5186,16 @@
       "race": "Critter",
       "marketable": true,
       "patch": "3.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰／深層迷宮 · 共 2 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 138,
@@ -3828,7 +5209,16 @@
       "race": "Critter",
       "marketable": true,
       "patch": "3.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰／深層迷宮 · 共 2 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 162,
@@ -3842,7 +5232,16 @@
       "race": "Critter",
       "marketable": true,
       "patch": "3.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "Scrip Exchange / 需 蒼天街振興票 x800 / NPC：艾妮"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "4 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 164,
@@ -3858,8 +5257,8 @@
       "patch": "3.1",
       "sources": [
         {
-          "type": "成就",
-          "detail": "The Road of Verminion I"
+          "type": "成就獎勵",
+          "detail": null
         }
       ]
     },
@@ -3875,7 +5274,16 @@
       "race": "Critter",
       "marketable": true,
       "patch": "4.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "3 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 349,
@@ -3889,7 +5297,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "5.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 371,
@@ -3903,7 +5316,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "5.2",
-      "sources": []
+      "sources": [
+        {
+          "type": "遠航探索",
+          "detail": "共 4 種航線"
+        }
+      ]
     },
     {
       "id": 408,
@@ -3919,8 +5337,8 @@
       "patch": "5.5",
       "sources": [
         {
-          "type": "成就",
-          "detail": "Mine, Mine, Mine"
+          "type": "成就獎勵",
+          "detail": null
         }
       ]
     },
@@ -3936,7 +5354,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "6.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "雇員探險",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 478,
@@ -3950,7 +5373,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "6.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 491,
@@ -3964,7 +5392,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "6.51",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "異界戰爭 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 550,
@@ -3993,7 +5426,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "7.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "雇員探險",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 531,
@@ -4007,7 +5445,16 @@
       "race": "Critter",
       "marketable": true,
       "patch": "7.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "遠航探索",
+          "detail": "共 2 種航線"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 561,
@@ -4051,7 +5498,12 @@
       "race": "Poppet",
       "marketable": true,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 256,
@@ -4065,7 +5517,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "4.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "兵團徽章交易 / 需 兵團徽章 x800 / NPC：艾斯特麗爾德、琉金"
+        }
+      ]
     },
     {
       "id": 253,
@@ -4079,7 +5536,12 @@
       "race": "Poppet",
       "marketable": true,
       "patch": "4.01",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "深層迷宮 · 共 2 個副本掉落"
+        }
+      ]
     },
     {
       "id": 289,
@@ -4093,7 +5555,12 @@
       "race": "Poppet",
       "marketable": true,
       "patch": "4.2",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "深層迷宮 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 302,
@@ -4107,7 +5574,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "4.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "鯰魚小判 / 需 鯰魚小判 x7 / NPC：魚商"
+        }
+      ]
     },
     {
       "id": 335,
@@ -4121,7 +5593,16 @@
       "race": "Poppet",
       "marketable": true,
       "patch": "5.05",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "深層迷宮 · 共 1 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 342,
@@ -4135,7 +5616,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "5.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "海狸商人 / 需 緹坦妮雅的羽毛 x1 / NPC：大河狸"
+        }
+      ]
     },
     {
       "id": 407,
@@ -4149,7 +5635,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "5.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "深層迷宮 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 566,
@@ -4178,7 +5669,12 @@
       "race": "Poppet",
       "marketable": true,
       "patch": "6.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "雇員探險",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 472,
@@ -4192,7 +5688,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "6.35",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "胡蘿蔔幣 / 需 胡蘿蔔幣 x8 / NPC：發財威"
+        }
+      ]
     },
     {
       "id": 520,
@@ -4206,7 +5707,12 @@
       "race": "Poppet",
       "marketable": true,
       "patch": "7.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "雇員探險",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 554,
@@ -4235,7 +5741,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "2.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "Master of the Rolls / 需 成就幣 x2 / NPC：喬納森"
+        }
+      ]
     },
     {
       "id": 158,
@@ -4249,7 +5760,20 @@
       "race": "Poppet",
       "marketable": true,
       "patch": "3.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 362,
@@ -4263,7 +5787,16 @@
       "race": "Poppet",
       "marketable": true,
       "patch": "5.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "最新的稀少神典石"
+        },
+        {
+          "type": "雇員探險",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 50,
@@ -4277,7 +5810,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "NPC商店",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 123,
@@ -4291,7 +5829,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "2.35",
-      "sources": []
+      "sources": [
+        {
+          "type": "NPC商店",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 58,
@@ -4305,7 +5848,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "NPC商店",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 124,
@@ -4319,7 +5867,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "2.35",
-      "sources": []
+      "sources": [
+        {
+          "type": "NPC商店",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 125,
@@ -4333,7 +5886,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "2.35",
-      "sources": []
+      "sources": [
+        {
+          "type": "NPC商店",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 59,
@@ -4347,7 +5905,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "2.35",
-      "sources": []
+      "sources": [
+        {
+          "type": "NPC商店",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 60,
@@ -4361,7 +5924,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "2.2",
-      "sources": []
+      "sources": [
+        {
+          "type": "NPC商店",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 126,
@@ -4375,7 +5943,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "2.35",
-      "sources": []
+      "sources": [
+        {
+          "type": "NPC商店",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 61,
@@ -4389,7 +5962,16 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "2.2",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "最新的稀少神典石"
+        },
+        {
+          "type": "NPC商店",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 127,
@@ -4403,7 +5985,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "2.35",
-      "sources": []
+      "sources": [
+        {
+          "type": "NPC商店",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 175,
@@ -4417,7 +6004,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "3.15",
-      "sources": []
+      "sources": [
+        {
+          "type": "NPC商店",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 156,
@@ -4431,7 +6023,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "3.15",
-      "sources": []
+      "sources": [
+        {
+          "type": "NPC商店",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 135,
@@ -4445,7 +6042,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "3.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "NPC商店",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 172,
@@ -4459,7 +6061,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "3.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "NPC商店",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 184,
@@ -4473,7 +6080,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "3.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "NPC商店",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 235,
@@ -4487,7 +6099,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "3.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "NPC商店",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 266,
@@ -4501,7 +6118,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "4.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "珊瑚幣 / 需 珊瑚幣 x5 / NPC：床單"
+        }
+      ]
     },
     {
       "id": 323,
@@ -4515,7 +6137,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "4.56",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "珊瑚幣 / 需 珊瑚幣 x5 / NPC：床單"
+        }
+      ]
     },
     {
       "id": 277,
@@ -4529,7 +6156,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "4.2",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "魔金錫幣 / 需 魔金錫幣 x7 / NPC：摩偷羅"
+        }
+      ]
     },
     {
       "id": 322,
@@ -4543,7 +6175,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "4.56",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "魔金錫幣 / 需 魔金錫幣 x7 / NPC：摩偷羅"
+        }
+      ]
     },
     {
       "id": 326,
@@ -4557,7 +6194,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "5.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "狩獵任務的戰利品交易 / 需 狩獵任務的戰利品 x800 / NPC：賽櫟、伊爾弗洛伊"
+        }
+      ]
     },
     {
       "id": 354,
@@ -4571,7 +6213,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "5.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "幻晶幣 / 需 幻晶幣 x8 / NPC：由兒·歐兒"
+        }
+      ]
     },
     {
       "id": 562,
@@ -4600,7 +6247,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "6.28",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "星鈷幣 / 需 星鈷幣 x8 / NPC：甘妲"
+        }
+      ]
     },
     {
       "id": 168,
@@ -4614,7 +6266,20 @@
       "race": "Monster",
       "marketable": true,
       "patch": "3.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "3 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 169,
@@ -4628,7 +6293,16 @@
       "race": "Monster",
       "marketable": true,
       "patch": "3.15",
-      "sources": []
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 170,
@@ -4642,7 +6316,20 @@
       "race": "Monster",
       "marketable": true,
       "patch": "3.15",
-      "sources": []
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 171,
@@ -4656,7 +6343,20 @@
       "race": "Monster",
       "marketable": true,
       "patch": "3.15",
-      "sources": []
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 185,
@@ -4670,7 +6370,20 @@
       "race": "Monster",
       "marketable": true,
       "patch": "3.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 186,
@@ -4684,7 +6397,20 @@
       "race": "Monster",
       "marketable": true,
       "patch": "3.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 76,
@@ -4698,7 +6424,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "2.2",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "Master of the Rolls / 需 成就幣 x2 / NPC：喬納森"
+        }
+      ]
     },
     {
       "id": 263,
@@ -4712,7 +6443,20 @@
       "race": "Monster",
       "marketable": true,
       "patch": "4.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 265,
@@ -4726,7 +6470,20 @@
       "race": "Monster",
       "marketable": true,
       "patch": "4.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 261,
@@ -4740,7 +6497,20 @@
       "race": "Monster",
       "marketable": true,
       "patch": "4.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "4 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 262,
@@ -4754,7 +6524,20 @@
       "race": "Monster",
       "marketable": true,
       "patch": "4.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "3 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 275,
@@ -4768,7 +6551,20 @@
       "race": "Monster",
       "marketable": true,
       "patch": "4.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "3 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 297,
@@ -4796,7 +6592,20 @@
       "race": "Monster",
       "marketable": true,
       "patch": "4.2",
-      "sources": []
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "3 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 303,
@@ -4810,7 +6619,20 @@
       "race": "Monster",
       "marketable": true,
       "patch": "4.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "3 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 343,
@@ -4838,7 +6660,20 @@
       "race": "Monster",
       "marketable": true,
       "patch": "4.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "3 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 482,
@@ -4852,7 +6687,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "6.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "戰利水晶（其他） / 需 戰利水晶 x1000 / NPC：戰利水晶交易員"
+        }
+      ]
     },
     {
       "id": 493,
@@ -4909,7 +6749,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "6.28",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 471,
@@ -4923,7 +6768,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "6.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 488,
@@ -4937,7 +6787,16 @@
       "race": "Monster",
       "marketable": true,
       "patch": "6.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 497,
@@ -4951,7 +6810,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "6.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 91,
@@ -4965,7 +6829,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "2.38",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城購買",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 177,
@@ -4979,7 +6848,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "3.35",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 331,
@@ -4993,7 +6867,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "5.05",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 98,
@@ -5007,7 +6886,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "2.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "NPC商店",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 99,
@@ -5021,7 +6905,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "2.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "NPC商店",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 217,
@@ -5035,7 +6924,12 @@
       "race": "Poppet",
       "marketable": true,
       "patch": "3.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "需 庫洛獎狀：銅獎 x1 / NPC：庫洛·阿里亞珀"
+        }
+      ]
     },
     {
       "id": 107,
@@ -5049,7 +6943,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "2.38",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城購買",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 248,
@@ -5063,7 +6962,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "4.01",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 108,
@@ -5077,7 +6981,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "2.38",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城購買",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 109,
@@ -5091,7 +7000,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "2.45",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城購買",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 429,
@@ -5105,7 +7019,12 @@
       "race": "Poppet",
       "marketable": true,
       "patch": "6.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "需 庫洛獎狀：銀獎 x1 / NPC：庫洛·阿里亞珀"
+        }
+      ]
     },
     {
       "id": 118,
@@ -5121,8 +7040,8 @@
       "patch": "2.4",
       "sources": [
         {
-          "type": "成就",
-          "detail": "Out of a Bind I"
+          "type": "成就獎勵",
+          "detail": null
         }
       ]
     },
@@ -5152,7 +7071,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "3.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 131,
@@ -5166,7 +7090,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "3.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城購買",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 218,
@@ -5180,7 +7109,16 @@
       "race": "Poppet",
       "marketable": true,
       "patch": "3.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "需 庫洛獎狀：銅獎 x1 / NPC：庫洛·阿里亞珀"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 132,
@@ -5194,7 +7132,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "3.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城購買",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 320,
@@ -5222,7 +7165,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "3.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 192,
@@ -5236,7 +7184,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "3.35",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 525,
@@ -5250,7 +7203,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "7.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 224,
@@ -5264,7 +7222,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "3.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 21,
@@ -5278,7 +7241,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "2.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 476,
@@ -5292,7 +7260,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "6.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 71,
@@ -5306,7 +7279,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "Master of the Rolls / 需 成就幣 x2 / NPC：喬納森"
+        }
+      ]
     },
     {
       "id": 72,
@@ -5365,7 +7343,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "4.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 84,
@@ -5379,7 +7362,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "2.45",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "Master of the Rolls / 需 成就幣 x2 / NPC：喬納森"
+        }
+      ]
     },
     {
       "id": 145,
@@ -5393,7 +7381,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "3.05",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 150,
@@ -5407,7 +7400,16 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "3.07",
-      "sources": []
+      "sources": [
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        },
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 249,
@@ -5421,7 +7423,16 @@
       "race": "Poppet",
       "marketable": true,
       "patch": "4.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 173,
@@ -5435,7 +7446,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "3.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 174,
@@ -5449,7 +7465,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "3.15",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "寵物交易（消耗金碟幣） / 需 金碟幣 x30000 / NPC：寵物兌換員、紀念品兌換員"
+        }
+      ]
     },
     {
       "id": 193,
@@ -5463,7 +7484,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "3.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 219,
@@ -5477,7 +7503,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "3.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "寶箱/容器",
+          "detail": "4 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 228,
@@ -5491,7 +7522,16 @@
       "race": "Poppet",
       "marketable": true,
       "patch": "3.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "需 庫洛獎狀：銅獎 x1 / NPC：庫洛·阿里亞珀"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 360,
@@ -5505,7 +7545,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "5.11",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "Scrip Exchange / 需 蒼天街振興票 x1200 / NPC：艾妮"
+        }
+      ]
     },
     {
       "id": 250,
@@ -5519,7 +7564,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "4.01",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 251,
@@ -5547,7 +7597,16 @@
       "race": "Poppet",
       "marketable": true,
       "patch": "4.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "需 庫洛獎狀：銅獎 x1 / NPC：庫洛·阿里亞珀"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 298,
@@ -5561,7 +7620,16 @@
       "race": "Poppet",
       "marketable": true,
       "patch": "4.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "需 庫洛獎狀：銅獎 x1 / NPC：庫洛·阿里亞珀"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 260,
@@ -5575,7 +7643,16 @@
       "race": "Poppet",
       "marketable": true,
       "patch": "4.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "需 庫洛獎狀：銅獎 x1 / NPC：庫洛·阿里亞珀"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 293,
@@ -5589,7 +7666,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "4.35",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 282,
@@ -5603,7 +7685,20 @@
       "race": "Poppet",
       "marketable": true,
       "patch": "4.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 294,
@@ -5617,7 +7712,20 @@
       "race": "Poppet",
       "marketable": true,
       "patch": "4.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 252,
@@ -5631,7 +7739,16 @@
       "race": "Monster",
       "marketable": true,
       "patch": "4.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 325,
@@ -5659,7 +7776,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "5.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 332,
@@ -5673,7 +7795,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "5.2",
-      "sources": []
+      "sources": [
+        {
+          "type": "大型任務",
+          "detail": "大型任務 · 共 2 個副本掉落"
+        }
+      ]
     },
     {
       "id": 376,
@@ -5701,7 +7828,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "5.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 382,
@@ -5715,7 +7847,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "5.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 398,
@@ -5729,7 +7866,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "5.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "大型任務",
+          "detail": "大型任務 · 共 2 個副本掉落"
+        }
+      ]
     },
     {
       "id": 412,
@@ -5743,7 +7885,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "5.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "季節活動報酬1 / 需 金碟幣 x21000 / NPC：特別紀念品兌換員"
+        }
+      ]
     },
     {
       "id": 416,
@@ -5785,7 +7932,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "5.55",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "需 博茲雅晶簇 x100"
+        }
+      ]
     },
     {
       "id": 441,
@@ -5799,7 +7951,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "6.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 455,
@@ -5813,7 +7970,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "6.28",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 477,
@@ -5827,7 +7989,12 @@
       "race": "Poppet",
       "marketable": true,
       "patch": "6.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "深層迷宮 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 465,
@@ -5841,7 +8008,12 @@
       "race": "Poppet",
       "marketable": true,
       "patch": "6.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 466,
@@ -5855,7 +8027,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "6.28",
-      "sources": []
+      "sources": [
+        {
+          "type": "大型任務",
+          "detail": "大型任務 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 487,
@@ -5869,7 +8046,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "6.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "大型任務",
+          "detail": "大型任務 · 共 2 個副本掉落"
+        }
+      ]
     },
     {
       "id": 538,
@@ -5883,7 +8065,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "7.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 526,
@@ -5968,7 +8155,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "2.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "Master of the Rolls / 需 成就幣 x2 / NPC：喬納森"
+        }
+      ]
     },
     {
       "id": 122,
@@ -5982,7 +8174,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "2.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "討伐戰",
+          "detail": "討伐戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 104,
@@ -5996,7 +8193,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "2.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "討伐戰",
+          "detail": "討伐戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 119,
@@ -6067,7 +8269,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "4.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 427,
@@ -6081,7 +8288,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "6.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 591,
@@ -6110,7 +8322,16 @@
       "race": "Poppet",
       "marketable": true,
       "patch": "2.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "NPC商店",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 6,
@@ -6126,8 +8347,8 @@
       "patch": "2.1",
       "sources": [
         {
-          "type": "成就",
-          "detail": "Bump on a Log: Maelstrom"
+          "type": "成就獎勵",
+          "detail": null
         }
       ]
     },
@@ -6145,8 +8366,8 @@
       "patch": "2.1",
       "sources": [
         {
-          "type": "成就",
-          "detail": "Bump on a Log: Order of the Twin Adder"
+          "type": "成就獎勵",
+          "detail": null
         }
       ]
     },
@@ -6164,8 +8385,8 @@
       "patch": "2.1",
       "sources": [
         {
-          "type": "成就",
-          "detail": "Bump on a Log: Immortal Flames"
+          "type": "成就獎勵",
+          "detail": null
         }
       ]
     },
@@ -6181,7 +8402,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "3.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 4,
@@ -6209,7 +8435,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 151,
@@ -6251,7 +8482,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "3.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "雜貨 / 需 狼印戰績 x15000 / NPC：狼印戰績交易員"
+        }
+      ]
     },
     {
       "id": 227,
@@ -6265,7 +8501,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "3.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "NPC商店",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 231,
@@ -6279,7 +8520,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "3.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 255,
@@ -6293,7 +8539,20 @@
       "race": "Monster",
       "marketable": true,
       "patch": "4.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 268,
@@ -6307,7 +8566,16 @@
       "race": "Critter",
       "marketable": true,
       "patch": "4.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        },
+        {
+          "type": "雇員探險",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 280,
@@ -6321,7 +8589,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "4.2",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 286,
@@ -6335,7 +8608,12 @@
       "race": "Poppet",
       "marketable": true,
       "patch": "4.25",
-      "sources": []
+      "sources": [
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 296,
@@ -6349,7 +8627,12 @@
       "race": "Poppet",
       "marketable": true,
       "patch": "4.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "寶箱/容器",
+          "detail": "3 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 314,
@@ -6363,7 +8646,12 @@
       "race": "Poppet",
       "marketable": true,
       "patch": "4.45",
-      "sources": []
+      "sources": [
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 307,
@@ -6377,7 +8665,16 @@
       "race": "Monster",
       "marketable": false,
       "patch": "4.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "需 南瓜餅乾2019 x5 / NPC：奇怪的店員"
+        },
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 308,
@@ -6391,7 +8688,16 @@
       "race": "Monster",
       "marketable": false,
       "patch": "4.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "需 南瓜餅乾2019 x5 / NPC：奇怪的店員"
+        },
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 368,
@@ -6405,7 +8711,12 @@
       "race": "Gadget",
       "marketable": false,
       "patch": "5.2",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "寶石商人 / 需 雙色寶石 x400 / NPC：廣域交易商 蘇兒·拉德"
+        }
+      ]
     },
     {
       "id": 374,
@@ -6419,7 +8730,12 @@
       "race": "Poppet",
       "marketable": true,
       "patch": "5.2",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 379,
@@ -6433,7 +8749,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "5.2",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "寵物交易（消耗金碟幣） / 需 金碟幣 x30000 / NPC：寵物兌換員、紀念品兌換員"
+        }
+      ]
     },
     {
       "id": 456,
@@ -6447,7 +8768,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "6.28",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "貝殼兌換 / 需 謝爾達萊青船幣 x4000 / NPC：貿易小員"
+        }
+      ]
     },
     {
       "id": 496,
@@ -6461,7 +8787,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "6.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "貝殼兌換 / 需 謝爾達萊青船幣 x4000 / NPC：貿易小員"
+        }
+      ]
     },
     {
       "id": 534,
@@ -6475,7 +8806,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "7.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "旅翼幣 / 需 旅翼幣 x8 / NPC：帕弗利"
+        }
+      ]
     },
     {
       "id": 580,
@@ -6519,7 +8855,12 @@
       "race": "Gadget",
       "marketable": true,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 113,
@@ -6547,7 +8888,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 55,
@@ -6575,7 +8921,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "2.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 149,
@@ -6589,7 +8940,12 @@
       "race": "Gadget",
       "marketable": false,
       "patch": "3.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 257,
@@ -6603,7 +8959,16 @@
       "race": "Poppet",
       "marketable": true,
       "patch": "4.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 321,
@@ -6617,7 +8982,16 @@
       "race": "Monster",
       "marketable": true,
       "patch": "4.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 324,
@@ -6631,7 +9005,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "4.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "雜貨 / 需 狼印戰績 x15000 / NPC：狼印戰績交易員"
+        }
+      ]
     },
     {
       "id": 348,
@@ -6645,7 +9024,16 @@
       "race": "Gadget",
       "marketable": true,
       "patch": "5.05",
-      "sources": []
+      "sources": [
+        {
+          "type": "遠航探索",
+          "detail": "共 5 種航線"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 397,
@@ -6659,7 +9047,12 @@
       "race": "Gadget",
       "marketable": true,
       "patch": "5.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "遠航探索",
+          "detail": "共 3 種航線"
+        }
+      ]
     },
     {
       "id": 351,
@@ -6673,7 +9066,12 @@
       "race": "Gadget",
       "marketable": false,
       "patch": "5.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "道具交易 / 需 畏懼裝甲的齒輪 x6 / NPC：法薩德"
+        }
+      ]
     },
     {
       "id": 383,
@@ -6687,7 +9085,12 @@
       "race": "Gadget",
       "marketable": true,
       "patch": "5.35",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 389,
@@ -6701,7 +9104,12 @@
       "race": "Gadget",
       "marketable": true,
       "patch": "5.35",
-      "sources": []
+      "sources": [
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 411,
@@ -6715,7 +9123,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "5.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 425,
@@ -6729,7 +9142,12 @@
       "race": "Poppet",
       "marketable": true,
       "patch": "6.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 437,
@@ -6743,7 +9161,12 @@
       "race": "Gadget",
       "marketable": false,
       "patch": "6.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 446,
@@ -6757,7 +9180,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "6.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "戰利水晶（其他） / 需 戰利水晶 x1000 / NPC：戰利水晶交易員"
+        }
+      ]
     },
     {
       "id": 458,
@@ -6771,7 +9199,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "6.28",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "戰利水晶（其他） / 需 戰利水晶 x1000 / NPC：戰利水晶交易員"
+        }
+      ]
     },
     {
       "id": 459,
@@ -6785,7 +9218,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "6.28",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "戰利水晶（其他） / 需 戰利水晶 x1000 / NPC：戰利水晶交易員"
+        }
+      ]
     },
     {
       "id": 447,
@@ -6799,7 +9237,12 @@
       "race": "Poppet",
       "marketable": true,
       "patch": "6.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 475,
@@ -6813,7 +9256,16 @@
       "race": "Gadget",
       "marketable": true,
       "patch": "6.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 449,
@@ -6827,7 +9279,12 @@
       "race": "Gadget",
       "marketable": true,
       "patch": "6.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "雇員探險",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 452,
@@ -6855,7 +9312,12 @@
       "race": "Gadget",
       "marketable": true,
       "patch": "7.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 522,
@@ -6869,7 +9331,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "7.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "迷宮挑戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 535,
@@ -6883,7 +9350,12 @@
       "race": "Poppet",
       "marketable": true,
       "patch": "7.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "需 幻巧葉 x400"
+        }
+      ]
     },
     {
       "id": 539,
@@ -6897,7 +9369,12 @@
       "race": "Gadget",
       "marketable": true,
       "patch": "7.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "深層迷宮 · 共 2 個副本掉落"
+        }
+      ]
     },
     {
       "id": 544,
@@ -7016,7 +9493,12 @@
       "race": "Gadget",
       "marketable": false,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "Master of the Rolls / 需 成就幣 x2 / NPC：喬納森"
+        }
+      ]
     },
     {
       "id": 65,
@@ -7030,7 +9512,12 @@
       "race": "Gadget",
       "marketable": false,
       "patch": "2.2",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "給我聖靈藥 / 需 聖靈藥 x1 / NPC：魔法甕"
+        }
+      ]
     },
     {
       "id": 236,
@@ -7044,7 +9531,12 @@
       "race": "Gadget",
       "marketable": false,
       "patch": "3.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "給我聖靈藥 / 需 高級聖靈藥 x1 / NPC：魔法甕"
+        }
+      ]
     },
     {
       "id": 66,
@@ -7058,7 +9550,12 @@
       "race": "Gadget",
       "marketable": true,
       "patch": "2.2",
-      "sources": []
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 328,
@@ -7072,7 +9569,12 @@
       "race": "Gadget",
       "marketable": false,
       "patch": "4.56",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "珊瑚幣 / 需 珊瑚幣 x5 / NPC：床單"
+        }
+      ]
     },
     {
       "id": 81,
@@ -7086,7 +9588,16 @@
       "race": "Gadget",
       "marketable": true,
       "patch": "2.2",
-      "sources": []
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 96,
@@ -7100,7 +9611,16 @@
       "race": "Gadget",
       "marketable": true,
       "patch": "2.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        },
+        {
+          "type": "雇員探險",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 154,
@@ -7114,7 +9634,16 @@
       "race": "Gadget",
       "marketable": true,
       "patch": "3.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        },
+        {
+          "type": "危命任務",
+          "detail": "Lv.57"
+        }
+      ]
     },
     {
       "id": 140,
@@ -7128,7 +9657,20 @@
       "race": "Gadget",
       "marketable": true,
       "patch": "3.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 105,
@@ -7142,7 +9684,16 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "2.45",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "落芒星 / 需 黃色落芒星 x1 / NPC：送禮人偶012號"
+        },
+        {
+          "type": "兌換",
+          "detail": "落芒星 / 需 綠色落芒星 x6 / NPC：送禮人偶012號"
+        }
+      ]
     },
     {
       "id": 116,
@@ -7185,7 +9736,20 @@
       "race": "Gadget",
       "marketable": true,
       "patch": "4.2",
-      "sources": []
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "3 個寶箱/容器"
+        }
+      ]
     },
     {
       "id": 291,
@@ -7199,7 +9763,12 @@
       "race": "Gadget",
       "marketable": false,
       "patch": "4.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "雜貨 / 需 狼印戰績 x15000 / NPC：狼印戰績交易員"
+        }
+      ]
     },
     {
       "id": 346,
@@ -7213,7 +9782,12 @@
       "race": "Gadget",
       "marketable": false,
       "patch": "5.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "道具交易 / 需 古塔尼亞的角 x6 / NPC：法薩德"
+        }
+      ]
     },
     {
       "id": 386,
@@ -7227,7 +9801,12 @@
       "race": "Gadget",
       "marketable": true,
       "patch": "5.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "園藝獲得",
+          "detail": "種子：亞拉戈西瓜種子"
+        }
+      ]
     },
     {
       "id": 413,
@@ -7241,7 +9820,12 @@
       "race": "Gadget",
       "marketable": true,
       "patch": "5.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "遠航探索",
+          "detail": "共 2 種航線"
+        }
+      ]
     },
     {
       "id": 414,
@@ -7255,7 +9839,12 @@
       "race": "Gadget",
       "marketable": true,
       "patch": "5.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 436,
@@ -7269,7 +9858,16 @@
       "race": "Gadget",
       "marketable": true,
       "patch": "6.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 489,
@@ -7283,7 +9881,12 @@
       "race": "Poppet",
       "marketable": true,
       "patch": "6.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "遠航探索",
+          "detail": "共 2 種航線"
+        }
+      ]
     },
     {
       "id": 495,
@@ -7297,7 +9900,12 @@
       "race": "Gadget",
       "marketable": true,
       "patch": "6.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "需 幻巧葉 x400"
+        }
+      ]
     },
     {
       "id": 516,
@@ -7311,7 +9919,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "7.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 536,
@@ -7355,7 +9968,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "Master of the Rolls / 需 成就幣 x2 / NPC：喬納森"
+        }
+      ]
     },
     {
       "id": 68,
@@ -7428,7 +10046,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "2.2",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "Master of the Rolls / 需 成就幣 x2 / NPC：喬納森"
+        }
+      ]
     },
     {
       "id": 167,
@@ -7442,7 +10065,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "3.07",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "Master of the Rolls / 需 成就幣 x2 / NPC：喬納森"
+        }
+      ]
     },
     {
       "id": 92,
@@ -7456,7 +10084,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "2.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "大型任務",
+          "detail": "大型任務 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 129,
@@ -7540,7 +10173,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "5.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城購買",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 402,
@@ -7554,7 +10192,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "5.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城購買",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 403,
@@ -7568,7 +10211,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "5.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城購買",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 238,
@@ -7610,7 +10258,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "4.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城購買",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 310,
@@ -7624,7 +10277,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "4.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城購買",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 311,
@@ -7638,7 +10296,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "4.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城購買",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 573,
@@ -7682,7 +10345,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "6.45",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 504,
@@ -7724,7 +10392,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "3.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城購買",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 221,
@@ -7738,7 +10411,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "3.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城購買",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 222,
@@ -7752,7 +10430,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "3.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城購買",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 63,
@@ -7766,7 +10449,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 589,
@@ -7795,7 +10483,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "6.58",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 270,
@@ -7809,7 +10502,16 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "4.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "稀少慶典神典石 / 需 稀少慶典神典石 x7"
+        },
+        {
+          "type": "大型任務",
+          "detail": "大型任務 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 117,
@@ -7823,7 +10525,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "2.51",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "寵物交易（消耗金碟幣） / 需 金碟幣 x10000 / NPC：寵物兌換員、紀念品兌換員"
+        }
+      ]
     },
     {
       "id": 187,
@@ -7837,7 +10544,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "3.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "寵物交易（消耗金碟幣） / 需 金碟幣 x30000 / NPC：寵物兌換員、紀念品兌換員"
+        }
+      ]
     },
     {
       "id": 380,
@@ -7851,7 +10563,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "5.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "綠蛙幣 / 需 綠蛙幣 x8 / NPC：蜜茲特"
+        }
+      ]
     },
     {
       "id": 62,
@@ -7865,7 +10582,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "2.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 200,
@@ -8117,7 +10839,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "4.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 301,
@@ -8131,7 +10858,16 @@
       "race": "Critter",
       "marketable": false,
       "patch": "4.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "需 火龍的上鱗 x5 / NPC：猛漢工匠"
+        },
+        {
+          "type": "討伐戰",
+          "detail": "討伐戰 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 551,
@@ -8175,7 +10911,12 @@
       "race": "Gadget",
       "marketable": false,
       "patch": "5.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "大型任務",
+          "detail": "大型任務 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 365,
@@ -8189,7 +10930,12 @@
       "race": "Gadget",
       "marketable": false,
       "patch": "5.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "大型任務",
+          "detail": "大型任務 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 394,
@@ -8203,7 +10949,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "5.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "大型任務",
+          "detail": "大型任務 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 395,
@@ -8217,7 +10968,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "5.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "大型任務",
+          "detail": "大型任務 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 415,
@@ -8231,7 +10987,12 @@
       "race": "Gadget",
       "marketable": false,
       "patch": "5.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "大型任務",
+          "detail": "大型任務 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 419,
@@ -8245,7 +11006,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "5.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "大型任務",
+          "detail": "大型任務 · 共 1 個副本掉落"
+        }
+      ]
     },
     {
       "id": 470,
@@ -8259,7 +11025,12 @@
       "race": "Gadget",
       "marketable": false,
       "patch": "6.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "寵物交易（消耗金碟幣） / 需 金碟幣 x30000 / NPC：寵物兌換員、紀念品兌換員"
+        }
+      ]
     },
     {
       "id": 499,
@@ -8273,7 +11044,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "6.51",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "獎品兌換 / 需 金碟聲譽 x350 / NPC：金碟聲譽兌換員"
+        }
+      ]
     },
     {
       "id": 500,
@@ -8287,7 +11063,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "6.51",
-      "sources": []
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "獎品兌換 / 需 金碟聲譽 x350 / NPC：金碟聲譽兌換員"
+        }
+      ]
     }
   ]
 }
