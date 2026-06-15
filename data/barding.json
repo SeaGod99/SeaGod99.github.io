@@ -1,8 +1,8 @@
 {
   "schema": "barding",
   "patch": "7.2",
-  "updated": "2026-06-11",
-  "source": "xivapi+tw-items (icons local)",
+  "updated": "2026-06-15",
+  "source": "xivapi+tw-items+obtainable-methods (icons local)",
   "count": 106,
   "data": [
     {
@@ -26,7 +26,12 @@
       "iconHead": "/assets/barding/058501_hr1.png",
       "iconBody": "/assets/barding/058502_hr1.png",
       "iconLegs": "/assets/barding/058503_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "黑渦團 / 需 黑渦團軍票 x4000 / NPC：黑渦團補給負責人"
+        }
+      ],
       "patch": ""
     },
     {
@@ -38,7 +43,12 @@
       "iconHead": "/assets/barding/058504_hr1.png",
       "iconBody": "/assets/barding/058505_hr1.png",
       "iconLegs": "/assets/barding/058506_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "黑渦團 / 需 黑渦團軍票 x6000 / NPC：黑渦團補給負責人"
+        }
+      ],
       "patch": ""
     },
     {
@@ -50,7 +60,12 @@
       "iconHead": "/assets/barding/058507_hr1.png",
       "iconBody": "/assets/barding/058508_hr1.png",
       "iconLegs": "/assets/barding/058509_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "黑渦團 / 需 黑渦團軍票 x8000 / NPC：黑渦團補給負責人"
+        }
+      ],
       "patch": ""
     },
     {
@@ -74,7 +89,12 @@
       "iconHead": "/assets/barding/058510_hr1.png",
       "iconBody": "/assets/barding/058511_hr1.png",
       "iconLegs": "/assets/barding/058512_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "雙蛇黨 / 需 雙蛇黨軍票 x4000 / NPC：雙蛇黨補給負責人"
+        }
+      ],
       "patch": ""
     },
     {
@@ -86,7 +106,12 @@
       "iconHead": "/assets/barding/058513_hr1.png",
       "iconBody": "/assets/barding/058514_hr1.png",
       "iconLegs": "/assets/barding/058515_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "雙蛇黨 / 需 雙蛇黨軍票 x6000 / NPC：雙蛇黨補給負責人"
+        }
+      ],
       "patch": ""
     },
     {
@@ -98,7 +123,12 @@
       "iconHead": "/assets/barding/058516_hr1.png",
       "iconBody": "/assets/barding/058517_hr1.png",
       "iconLegs": "/assets/barding/058518_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "雙蛇黨 / 需 雙蛇黨軍票 x8000 / NPC：雙蛇黨補給負責人"
+        }
+      ],
       "patch": ""
     },
     {
@@ -122,7 +152,12 @@
       "iconHead": "/assets/barding/058519_hr1.png",
       "iconBody": "/assets/barding/058520_hr1.png",
       "iconLegs": "/assets/barding/058521_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "不滅隊 / 需 不滅隊軍票 x4000 / NPC：不滅隊補給負責人"
+        }
+      ],
       "patch": ""
     },
     {
@@ -134,7 +169,12 @@
       "iconHead": "/assets/barding/058522_hr1.png",
       "iconBody": "/assets/barding/058523_hr1.png",
       "iconLegs": "/assets/barding/058524_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "不滅隊 / 需 不滅隊軍票 x6000 / NPC：不滅隊補給負責人"
+        }
+      ],
       "patch": ""
     },
     {
@@ -146,7 +186,12 @@
       "iconHead": "/assets/barding/058525_hr1.png",
       "iconBody": "/assets/barding/058526_hr1.png",
       "iconLegs": "/assets/barding/058527_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "不滅隊 / 需 不滅隊軍票 x8000 / NPC：不滅隊補給負責人"
+        }
+      ],
       "patch": ""
     },
     {
@@ -194,7 +239,12 @@
       "iconHead": "/assets/barding/058537_hr1.png",
       "iconBody": "/assets/barding/058538_hr1.png",
       "iconLegs": "/assets/barding/058539_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "道具交易（其他） / 需 奧汀披風 x5 / NPC：艾里娜"
+        }
+      ],
       "patch": ""
     },
     {
@@ -218,7 +268,12 @@
       "iconHead": "/assets/barding/058543_hr1.png",
       "iconBody": "/assets/barding/000000_hr1.png",
       "iconLegs": "/assets/barding/000000_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "Master of the Rolls / 需 成就幣 x3 / NPC：喬納森"
+        }
+      ],
       "patch": ""
     },
     {
@@ -230,7 +285,12 @@
       "iconHead": "/assets/barding/058546_hr1.png",
       "iconBody": "/assets/barding/058547_hr1.png",
       "iconLegs": "/assets/barding/058548_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "Master of the Rolls / 需 成就幣 x3 / NPC：喬納森"
+        }
+      ],
       "patch": ""
     },
     {
@@ -242,7 +302,12 @@
       "iconHead": "/assets/barding/058561_hr1.png",
       "iconBody": "/assets/barding/000000_hr1.png",
       "iconLegs": "/assets/barding/000000_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "成就獎勵",
+          "detail": null
+        }
+      ],
       "patch": ""
     },
     {
@@ -254,7 +319,12 @@
       "iconHead": "/assets/barding/058564_hr1.png",
       "iconBody": "/assets/barding/058565_hr1.png",
       "iconLegs": "/assets/barding/058566_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城購買",
+          "detail": null
+        }
+      ],
       "patch": ""
     },
     {
@@ -266,7 +336,16 @@
       "iconHead": "/assets/barding/058567_hr1.png",
       "iconBody": "/assets/barding/058568_hr1.png",
       "iconLegs": "/assets/barding/058569_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        }
+      ],
       "patch": ""
     },
     {
@@ -278,7 +357,12 @@
       "iconHead": "/assets/barding/058570_hr1.png",
       "iconBody": "/assets/barding/058571_hr1.png",
       "iconLegs": "/assets/barding/058572_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "Master of the Rolls / 需 成就幣 x3 / NPC：喬納森"
+        }
+      ],
       "patch": ""
     },
     {
@@ -290,7 +374,12 @@
       "iconHead": "/assets/barding/058573_hr1.png",
       "iconBody": "/assets/barding/000000_hr1.png",
       "iconLegs": "/assets/barding/000000_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城購買",
+          "detail": null
+        }
+      ],
       "patch": ""
     },
     {
@@ -302,7 +391,16 @@
       "iconHead": "/assets/barding/058576_hr1.png",
       "iconBody": "/assets/barding/058577_hr1.png",
       "iconLegs": "/assets/barding/058578_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        }
+      ],
       "patch": ""
     },
     {
@@ -314,7 +412,12 @@
       "iconHead": "/assets/barding/058579_hr1.png",
       "iconBody": "/assets/barding/000000_hr1.png",
       "iconLegs": "/assets/barding/000000_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "成就獎勵",
+          "detail": null
+        }
+      ],
       "patch": ""
     },
     {
@@ -326,7 +429,12 @@
       "iconHead": "/assets/barding/058582_hr1.png",
       "iconBody": "/assets/barding/058583_hr1.png",
       "iconLegs": "/assets/barding/058584_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "惡魔餅乾 / 需 惡魔餅乾 x10 / NPC：奇怪的店員"
+        }
+      ],
       "patch": ""
     },
     {
@@ -338,7 +446,16 @@
       "iconHead": "/assets/barding/058585_hr1.png",
       "iconBody": "/assets/barding/058586_hr1.png",
       "iconLegs": "/assets/barding/058587_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        }
+      ],
       "patch": ""
     },
     {
@@ -350,7 +467,12 @@
       "iconHead": "/assets/barding/058591_hr1.png",
       "iconBody": "/assets/barding/058592_hr1.png",
       "iconLegs": "/assets/barding/058593_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "交換獎品（學習/收錄類·其他） / 需 金碟幣 x20000 / NPC：紀念品兌換員"
+        }
+      ],
       "patch": ""
     },
     {
@@ -362,7 +484,12 @@
       "iconHead": "/assets/barding/058588_hr1.png",
       "iconBody": "/assets/barding/058589_hr1.png",
       "iconLegs": "/assets/barding/058590_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城購買",
+          "detail": null
+        }
+      ],
       "patch": ""
     },
     {
@@ -374,7 +501,12 @@
       "iconHead": "/assets/barding/058594_hr1.png",
       "iconBody": "/assets/barding/058595_hr1.png",
       "iconLegs": "/assets/barding/058596_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "危命任務",
+          "detail": "Lv.56"
+        }
+      ],
       "patch": ""
     },
     {
@@ -386,7 +518,12 @@
       "iconHead": "/assets/barding/058597_hr1.png",
       "iconBody": "/assets/barding/058598_hr1.png",
       "iconLegs": "/assets/barding/058599_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "百智隊成員 / 需 兵團徽章 x350 / NPC：阿爾多蘭"
+        }
+      ],
       "patch": ""
     },
     {
@@ -398,7 +535,20 @@
       "iconHead": "/assets/barding/058603_hr1.png",
       "iconBody": "/assets/barding/058604_hr1.png",
       "iconLegs": "/assets/barding/058605_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "3 個寶箱/容器"
+        }
+      ],
       "patch": ""
     },
     {
@@ -410,7 +560,20 @@
       "iconHead": "/assets/barding/058606_hr1.png",
       "iconBody": "/assets/barding/058607_hr1.png",
       "iconLegs": "/assets/barding/058608_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        }
+      ],
       "patch": ""
     },
     {
@@ -434,7 +597,12 @@
       "iconHead": "/assets/barding/058612_hr1.png",
       "iconBody": "/assets/barding/058613_hr1.png",
       "iconLegs": "/assets/barding/058614_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        }
+      ],
       "patch": ""
     },
     {
@@ -446,7 +614,12 @@
       "iconHead": "/assets/barding/058615_hr1.png",
       "iconBody": "/assets/barding/058616_hr1.png",
       "iconLegs": "/assets/barding/058617_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        }
+      ],
       "patch": ""
     },
     {
@@ -458,7 +631,12 @@
       "iconHead": "/assets/barding/058618_hr1.png",
       "iconBody": "/assets/barding/058619_hr1.png",
       "iconLegs": "/assets/barding/058620_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "Master of the Rolls / 需 成就幣 x3 / NPC：喬納森"
+        }
+      ],
       "patch": ""
     },
     {
@@ -470,7 +648,12 @@
       "iconHead": "/assets/barding/058621_hr1.png",
       "iconBody": "/assets/barding/058622_hr1.png",
       "iconLegs": "/assets/barding/058623_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "蠻神裝備交易2 / 需 蒼天甲胄碎片 x15 / NPC：貝爾塔娜"
+        }
+      ],
       "patch": ""
     },
     {
@@ -482,7 +665,20 @@
       "iconHead": "/assets/barding/058624_hr1.png",
       "iconBody": "/assets/barding/058626_hr1.png",
       "iconLegs": "/assets/barding/058625_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "3 個寶箱/容器"
+        }
+      ],
       "patch": ""
     },
     {
@@ -494,7 +690,12 @@
       "iconHead": "/assets/barding/058627_hr1.png",
       "iconBody": "/assets/barding/058629_hr1.png",
       "iconLegs": "/assets/barding/058628_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ],
       "patch": ""
     },
     {
@@ -506,7 +707,12 @@
       "iconHead": "/assets/barding/058630_hr1.png",
       "iconBody": "/assets/barding/058632_hr1.png",
       "iconLegs": "/assets/barding/058631_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城購買",
+          "detail": null
+        }
+      ],
       "patch": ""
     },
     {
@@ -518,7 +724,12 @@
       "iconHead": "/assets/barding/058633_hr1.png",
       "iconBody": "/assets/barding/058635_hr1.png",
       "iconLegs": "/assets/barding/058634_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "成就獎勵",
+          "detail": null
+        }
+      ],
       "patch": ""
     },
     {
@@ -530,7 +741,20 @@
       "iconHead": "/assets/barding/058636_hr1.png",
       "iconBody": "/assets/barding/058638_hr1.png",
       "iconLegs": "/assets/barding/058637_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "3 個寶箱/容器"
+        }
+      ],
       "patch": ""
     },
     {
@@ -542,7 +766,12 @@
       "iconHead": "/assets/barding/058639_hr1.png",
       "iconBody": "/assets/barding/058641_hr1.png",
       "iconLegs": "/assets/barding/058640_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城購買",
+          "detail": null
+        }
+      ],
       "patch": ""
     },
     {
@@ -554,7 +783,20 @@
       "iconHead": "/assets/barding/058642_hr1.png",
       "iconBody": "/assets/barding/058644_hr1.png",
       "iconLegs": "/assets/barding/058643_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "3 個寶箱/容器"
+        }
+      ],
       "patch": ""
     },
     {
@@ -566,7 +808,12 @@
       "iconHead": "/assets/barding/058645_hr1.png",
       "iconBody": "/assets/barding/058647_hr1.png",
       "iconLegs": "/assets/barding/058646_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        }
+      ],
       "patch": ""
     },
     {
@@ -578,7 +825,12 @@
       "iconHead": "/assets/barding/058648_hr1.png",
       "iconBody": "/assets/barding/058650_hr1.png",
       "iconLegs": "/assets/barding/058649_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "交換獎品（學習/收錄類·其他） / 需 金碟幣 x150000 / NPC：紀念品兌換員"
+        }
+      ],
       "patch": ""
     },
     {
@@ -590,7 +842,12 @@
       "iconHead": "/assets/barding/058651_hr1.png",
       "iconBody": "/assets/barding/058653_hr1.png",
       "iconLegs": "/assets/barding/058652_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城購買",
+          "detail": null
+        }
+      ],
       "patch": ""
     },
     {
@@ -602,7 +859,12 @@
       "iconHead": "/assets/barding/058654_hr1.png",
       "iconBody": "/assets/barding/058656_hr1.png",
       "iconLegs": "/assets/barding/058655_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城購買",
+          "detail": null
+        }
+      ],
       "patch": ""
     },
     {
@@ -614,7 +876,20 @@
       "iconHead": "/assets/barding/058657_hr1.png",
       "iconBody": "/assets/barding/058659_hr1.png",
       "iconLegs": "/assets/barding/058658_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "3 個寶箱/容器"
+        }
+      ],
       "patch": ""
     },
     {
@@ -626,7 +901,20 @@
       "iconHead": "/assets/barding/058660_hr1.png",
       "iconBody": "/assets/barding/058662_hr1.png",
       "iconLegs": "/assets/barding/058661_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        }
+      ],
       "patch": ""
     },
     {
@@ -638,7 +926,12 @@
       "iconHead": "/assets/barding/058663_hr1.png",
       "iconBody": "/assets/barding/058665_hr1.png",
       "iconLegs": "/assets/barding/058664_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "危命任務",
+          "detail": "Lv.68"
+        }
+      ],
       "patch": ""
     },
     {
@@ -650,7 +943,20 @@
       "iconHead": "/assets/barding/058666_hr1.png",
       "iconBody": "/assets/barding/058668_hr1.png",
       "iconLegs": "/assets/barding/058667_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ],
       "patch": ""
     },
     {
@@ -662,7 +968,12 @@
       "iconHead": "/assets/barding/058669_hr1.png",
       "iconBody": "/assets/barding/058671_hr1.png",
       "iconLegs": "/assets/barding/058670_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "道具交易 / 需 著名兵團成員的手冊 x4 / NPC：艾西娜"
+        }
+      ],
       "patch": ""
     },
     {
@@ -686,7 +997,12 @@
       "iconHead": "/assets/barding/058675_hr1.png",
       "iconBody": "/assets/barding/058677_hr1.png",
       "iconLegs": "/assets/barding/058676_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城購買",
+          "detail": null
+        }
+      ],
       "patch": ""
     },
     {
@@ -698,7 +1014,20 @@
       "iconHead": "/assets/barding/058678_hr1.png",
       "iconBody": "/assets/barding/058680_hr1.png",
       "iconLegs": "/assets/barding/058679_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ],
       "patch": ""
     },
     {
@@ -710,7 +1039,12 @@
       "iconHead": "/assets/barding/058681_hr1.png",
       "iconBody": "/assets/barding/058683_hr1.png",
       "iconLegs": "/assets/barding/058682_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "道具交易 / 需 伊克西翁的雷角 x5 / NPC：艾西娜"
+        }
+      ],
       "patch": ""
     },
     {
@@ -722,7 +1056,16 @@
       "iconHead": "/assets/barding/058684_hr1.png",
       "iconBody": "/assets/barding/058686_hr1.png",
       "iconLegs": "/assets/barding/058685_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "最新的稀少神典石"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ],
       "patch": ""
     },
     {
@@ -734,7 +1077,20 @@
       "iconHead": "/assets/barding/058687_hr1.png",
       "iconBody": "/assets/barding/058689_hr1.png",
       "iconLegs": "/assets/barding/058688_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        }
+      ],
       "patch": ""
     },
     {
@@ -746,7 +1102,12 @@
       "iconHead": "/assets/barding/058690_hr1.png",
       "iconBody": "/assets/barding/058692_hr1.png",
       "iconLegs": "/assets/barding/058691_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "雜貨·釣餌 / 需 大地紫票 x800 / NPC：羅薇娜商會的商人、工票交易員"
+        }
+      ],
       "patch": ""
     },
     {
@@ -758,7 +1119,20 @@
       "iconHead": "/assets/barding/058693_hr1.png",
       "iconBody": "/assets/barding/058695_hr1.png",
       "iconLegs": "/assets/barding/058694_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        }
+      ],
       "patch": ""
     },
     {
@@ -770,7 +1144,20 @@
       "iconHead": "/assets/barding/058696_hr1.png",
       "iconBody": "/assets/barding/058698_hr1.png",
       "iconLegs": "/assets/barding/058697_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ],
       "patch": ""
     },
     {
@@ -782,7 +1169,12 @@
       "iconHead": "/assets/barding/058699_hr1.png",
       "iconBody": "/assets/barding/058701_hr1.png",
       "iconLegs": "/assets/barding/058700_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ],
       "patch": ""
     },
     {
@@ -794,7 +1186,20 @@
       "iconHead": "/assets/barding/058702_hr1.png",
       "iconBody": "/assets/barding/058704_hr1.png",
       "iconLegs": "/assets/barding/058703_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ],
       "patch": ""
     },
     {
@@ -806,7 +1211,12 @@
       "iconHead": "/assets/barding/058705_hr1.png",
       "iconBody": "/assets/barding/058707_hr1.png",
       "iconLegs": "/assets/barding/058706_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "討伐戰",
+          "detail": "討伐戰 · 共 1 個副本掉落"
+        }
+      ],
       "patch": ""
     },
     {
@@ -818,7 +1228,16 @@
       "iconHead": "/assets/barding/058708_hr1.png",
       "iconBody": "/assets/barding/058710_hr1.png",
       "iconLegs": "/assets/barding/058709_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ],
       "patch": ""
     },
     {
@@ -830,7 +1249,16 @@
       "iconHead": "/assets/barding/058711_hr1.png",
       "iconBody": "/assets/barding/058713_hr1.png",
       "iconLegs": "/assets/barding/058712_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ],
       "patch": ""
     },
     {
@@ -842,7 +1270,12 @@
       "iconHead": "/assets/barding/058714_hr1.png",
       "iconBody": "/assets/barding/058716_hr1.png",
       "iconLegs": "/assets/barding/058715_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "寶石商人 / 需 雙色寶石 x350 / NPC：廣域交易商 佩德蘿尼爾"
+        }
+      ],
       "patch": ""
     },
     {
@@ -854,7 +1287,12 @@
       "iconHead": "/assets/barding/058717_hr1.png",
       "iconBody": "/assets/barding/058719_hr1.png",
       "iconLegs": "/assets/barding/058718_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "寶石商人 / 需 雙色寶石 x350 / NPC：廣域交易商 秀梅"
+        }
+      ],
       "patch": ""
     },
     {
@@ -866,7 +1304,16 @@
       "iconHead": "/assets/barding/058720_hr1.png",
       "iconBody": "/assets/barding/058722_hr1.png",
       "iconLegs": "/assets/barding/058721_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ],
       "patch": ""
     },
     {
@@ -878,7 +1325,12 @@
       "iconHead": "/assets/barding/058723_hr1.png",
       "iconBody": "/assets/barding/058725_hr1.png",
       "iconLegs": "/assets/barding/058724_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "需 星芒祭執行委員的證書2020 x2 / NPC：星芒祭執行委員"
+        }
+      ],
       "patch": ""
     },
     {
@@ -890,7 +1342,16 @@
       "iconHead": "/assets/barding/058726_hr1.png",
       "iconBody": "/assets/barding/058728_hr1.png",
       "iconLegs": "/assets/barding/058727_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ],
       "patch": ""
     },
     {
@@ -902,7 +1363,16 @@
       "iconHead": "/assets/barding/058729_hr1.png",
       "iconBody": "/assets/barding/058731_hr1.png",
       "iconLegs": "/assets/barding/058730_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "Scrip Exchange / 需 蒼天街振興票 x1200 / NPC：艾妮"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ],
       "patch": ""
     },
     {
@@ -914,7 +1384,16 @@
       "iconHead": "/assets/barding/058732_hr1.png",
       "iconBody": "/assets/barding/058734_hr1.png",
       "iconLegs": "/assets/barding/058733_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ],
       "patch": ""
     },
     {
@@ -926,7 +1405,16 @@
       "iconHead": "/assets/barding/058735_hr1.png",
       "iconBody": "/assets/barding/058737_hr1.png",
       "iconLegs": "/assets/barding/058736_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ],
       "patch": ""
     },
     {
@@ -938,7 +1426,16 @@
       "iconHead": "/assets/barding/058738_hr1.png",
       "iconBody": "/assets/barding/058740_hr1.png",
       "iconLegs": "/assets/barding/058739_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "共 1 個副本掉落"
+        },
+        {
+          "type": "怪物掉落",
+          "detail": null
+        }
+      ],
       "patch": ""
     },
     {
@@ -950,7 +1447,12 @@
       "iconHead": "/assets/barding/058741_hr1.png",
       "iconBody": "/assets/barding/058743_hr1.png",
       "iconLegs": "/assets/barding/058742_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ],
       "patch": ""
     },
     {
@@ -962,7 +1464,16 @@
       "iconHead": "/assets/barding/058744_hr1.png",
       "iconBody": "/assets/barding/058746_hr1.png",
       "iconLegs": "/assets/barding/058745_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ],
       "patch": ""
     },
     {
@@ -974,7 +1485,16 @@
       "iconHead": "/assets/barding/058747_hr1.png",
       "iconBody": "/assets/barding/058749_hr1.png",
       "iconLegs": "/assets/barding/058748_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ],
       "patch": ""
     },
     {
@@ -986,7 +1506,16 @@
       "iconHead": "/assets/barding/058750_hr1.png",
       "iconBody": "/assets/barding/058752_hr1.png",
       "iconLegs": "/assets/barding/058751_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ],
       "patch": ""
     },
     {
@@ -998,7 +1527,12 @@
       "iconHead": "/assets/barding/058753_hr1.png",
       "iconBody": "/assets/barding/058755_hr1.png",
       "iconLegs": "/assets/barding/058754_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ],
       "patch": ""
     },
     {
@@ -1010,7 +1544,12 @@
       "iconHead": "/assets/barding/058756_hr1.png",
       "iconBody": "/assets/barding/058758_hr1.png",
       "iconLegs": "/assets/barding/058757_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "道具交易 / 需 明燈天王的寶珠 x3 / NPC：涅斯瓦孜"
+        }
+      ],
       "patch": ""
     },
     {
@@ -1022,7 +1561,16 @@
       "iconHead": "/assets/barding/058759_hr1.png",
       "iconBody": "/assets/barding/058761_hr1.png",
       "iconLegs": "/assets/barding/058760_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ],
       "patch": ""
     },
     {
@@ -1034,7 +1582,12 @@
       "iconHead": "/assets/barding/058762_hr1.png",
       "iconBody": "/assets/barding/058764_hr1.png",
       "iconLegs": "/assets/barding/058763_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "戰利水晶（其他） / 需 戰利水晶 x1000 / NPC：戰利水晶交易員"
+        }
+      ],
       "patch": ""
     },
     {
@@ -1046,7 +1599,16 @@
       "iconHead": "/assets/barding/058768_hr1.png",
       "iconBody": "/assets/barding/058770_hr1.png",
       "iconLegs": "/assets/barding/058769_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ],
       "patch": ""
     },
     {
@@ -1058,7 +1620,12 @@
       "iconHead": "/assets/barding/058765_hr1.png",
       "iconBody": "/assets/barding/058767_hr1.png",
       "iconLegs": "/assets/barding/058766_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "貝殼兌換 / 需 謝爾達萊青船幣 x4000 / NPC：貿易小員"
+        }
+      ],
       "patch": ""
     },
     {
@@ -1070,7 +1637,16 @@
       "iconHead": "/assets/barding/058771_hr1.png",
       "iconBody": "/assets/barding/058773_hr1.png",
       "iconLegs": "/assets/barding/058772_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ],
       "patch": ""
     },
     {
@@ -1082,7 +1658,12 @@
       "iconHead": "/assets/barding/058774_hr1.png",
       "iconBody": "/assets/barding/058776_hr1.png",
       "iconLegs": "/assets/barding/058775_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "寶箱/容器",
+          "detail": "3 個寶箱/容器"
+        }
+      ],
       "patch": ""
     },
     {
@@ -1094,7 +1675,16 @@
       "iconHead": "/assets/barding/058777_hr1.png",
       "iconBody": "/assets/barding/058779_hr1.png",
       "iconLegs": "/assets/barding/058778_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ],
       "patch": ""
     },
     {
@@ -1106,7 +1696,12 @@
       "iconHead": "/assets/barding/058780_hr1.png",
       "iconBody": "/assets/barding/058782_hr1.png",
       "iconLegs": "/assets/barding/058781_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "貝殼兌換 / 需 謝爾達萊青船幣 x4000 / NPC：貿易小員"
+        }
+      ],
       "patch": ""
     },
     {
@@ -1118,7 +1713,16 @@
       "iconHead": "/assets/barding/058783_hr1.png",
       "iconBody": "/assets/barding/058785_hr1.png",
       "iconLegs": "/assets/barding/058784_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ],
       "patch": ""
     },
     {
@@ -1130,7 +1734,12 @@
       "iconHead": "/assets/barding/058786_hr1.png",
       "iconBody": "/assets/barding/058788_hr1.png",
       "iconLegs": "/assets/barding/058787_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ],
       "patch": ""
     },
     {
@@ -1142,7 +1751,12 @@
       "iconHead": "/assets/barding/058789_hr1.png",
       "iconBody": "/assets/barding/058791_hr1.png",
       "iconLegs": "/assets/barding/058790_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "寶石商人 / 需 雙色寶石 x450 / NPC：廣域交易商 米特佩"
+        }
+      ],
       "patch": ""
     },
     {
@@ -1154,7 +1768,16 @@
       "iconHead": "/assets/barding/058792_hr1.png",
       "iconBody": "/assets/barding/058794_hr1.png",
       "iconLegs": "/assets/barding/058793_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ],
       "patch": ""
     },
     {
@@ -1166,7 +1789,16 @@
       "iconHead": "/assets/barding/058795_hr1.png",
       "iconBody": "/assets/barding/058797_hr1.png",
       "iconLegs": "/assets/barding/058796_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ],
       "patch": ""
     },
     {
@@ -1178,7 +1810,12 @@
       "iconHead": "/assets/barding/058798_hr1.png",
       "iconBody": "/assets/barding/058800_hr1.png",
       "iconLegs": "/assets/barding/058799_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "狩獵任務的戰利品交易 / 需 狩獵任務的戰利品 x640 / NPC：流布加"
+        }
+      ],
       "patch": ""
     },
     {
@@ -1190,7 +1827,16 @@
       "iconHead": "/assets/barding/058801_hr1.png",
       "iconBody": "/assets/barding/058803_hr1.png",
       "iconLegs": "/assets/barding/058802_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ],
       "patch": ""
     },
     {
@@ -1202,7 +1848,12 @@
       "iconHead": "/assets/barding/058804_hr1.png",
       "iconBody": "/assets/barding/058806_hr1.png",
       "iconLegs": "/assets/barding/058805_hr1.png",
-      "sources": [],
+      "sources": [
+        {
+          "type": "任務獎勵",
+          "detail": null
+        }
+      ],
       "patch": ""
     },
     {

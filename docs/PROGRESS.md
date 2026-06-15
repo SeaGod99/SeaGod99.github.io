@@ -34,12 +34,12 @@
 | 2.3 | 樂譜收藏追蹤 | `/collections/orchestrion/` | 規劃中（資料庫空） |
 | 2.4 | 表情收藏追蹤 | `/collections/emotes/` | 規劃中（資料庫空） |
 | 2.5 | 髮型收藏追蹤 | `/collections/hairstyles/` | 規劃中（無資料庫） |
-| 2.6 | 鳥鞍收藏追蹤 | `/collections/barding/` | 規劃中（barding.json 106 筆已備） |
+| 2.6 | 鳥鞍收藏追蹤 | `/collections/barding/` | 規劃中（barding.json 106 筆，91 筆已補 sources，待做頁面） |
 | 2.7 | 肖像收藏追蹤 | `/collections/portraits/` | 規劃中 |
 | 2.8 | 時尚裝備收藏追蹤 | `/collections/glamour/` | 規劃中（量大，先做熱門系列） |
 | 2.9 | 探索筆記追蹤器 | `/collections/sightseeing/` | 規劃中（資料庫空；需天氣演算法） |
 | 2.10 | 青魔法術收藏 | `/collections/blue-magic/` | 完成（改接 data/blue-magic.json 124筆，副本來源用 contentId 對 dungeons.json 取繁中名，野外/怪物來源並列，14筆無資料標待補充，06-15新增） |
-| 2.11 | 幻卡追蹤 | `/collections/triple-triad/` | 規劃中（triple-triad.json 425 筆已備） |
+| 2.11 | 幻卡追蹤 | `/collections/triple-triad/` | 規劃中（triple-triad.json 425 筆，sources 425/425 已備，NPC對戰 864/934 已補地點，待做頁面） |
 
 ### 戰鬥／副本
 
@@ -182,17 +182,17 @@
 2-1. 資料品質小修：~~mounts 補 itemId~~（06-11 完成）；mounts sources/patch 人工校對（併入 1c）；om 40 筆 npc 譯名以 npcs.json 為準；blue-magic learnFromMob 轉怪物 id（做青魔頁前）；dungeons rewards/unlock 待填充（量大，做副本相關功能時再填）
 2-2. **繁中化升級（見二之二）**：~~mounts 補繁中名~~、~~dungeons 校正~~（06-11 完成）；~~monsters 台服化~~（06-11 完成）；抽 scripts/lib/common.mjs 共用函式庫（未做）
 3. 製作利潤計算機（繁中空缺，規劃優先；排在四頁面重做之後）
-4. 幻卡追蹤頁面（資料已備，sources 待補：NPC 對戰需方案 A+C）
+4. ~~幻卡追蹤頁面 sources 待補~~ — **資料已補齊（2026-06-15）**：sources 425/425、NPC對戰地點 864/934 已補（npcs.json+maps.json），待做頁面
 5. 無人島攻略工具第一期：動物時鐘（見 `docs/無人島攻略工具規劃.md`，待建 4 個 island-* 庫）
 6. 其餘收藏追蹤頁（樂譜/表情/髮型/鳥鞍/肖像/時尚裝備/探索筆記/青魔/幻卡）
 7. 其他規劃：B 怪路線、時尚品鑑、冒險者小隊計算機、優雷卡天氣 NM、藏寶圖、園藝配種、釣魚/採集紀錄
 
 ## 五、更新紀錄
 
+- **2026-06-15（鳥鞍/幻卡資料補齊）**：新增 `scripts/patch-barding-sources.mjs`，比對 obtainable-methods.json 補上 barding.json sources 91/106 筆（itemId=null 6筆、無對應資料 9筆未補）；新增 `scripts/patch-triple-triad-locations.mjs`，用 npcs.json（npcId→coords）+ maps.json（mapId→繁中地名）補上 triple-triad.json 中 NPC對戰 sources 的地點資訊 864/934 筆（70筆找不到對應NPC）。兩者皆為「待做頁面」前置資料準備，_meta.json 同步更新。
 - **2026-06-15（青魔法術收藏新增）**：新增 `/collections/blue-magic/`，套用收藏共通規格（進度條/已習得勾選/篩選/搜尋/匯出匯入）。資料接 data/blue-magic.json 124筆，副本來源（learnFrom.type=副本）改用 contentId 查 data/dungeons.json 取得正確繁中名（detail 簡轉繁字串不可直接用）；野外來源用 detail；learnFromMob 一併顯示。圖示用 XIVAPI v1 網址。14 筆無習得資料標示「待補充」。入口頁卡片由「即將推出」改為可用連結。
 - **2026-06-15（重做完成）**：四頁面資料對接重做全部完成。新增共用模組 `assets/js/eorzea-weather.js`（calcSeed/getWeatherAt/initWeatherTables 等，weather 與 gathering 共用 ET 換算）；weather 改用 mapId 統一、天氣表接 maps.json weatherRates；gathering 改接 gathering.json(733筆，limited 225→213筆顯示)/items.json/maps.json，補篩選（職業/版本/地圖/類型）、排序、追蹤清單（localStorage）、Teamcraft flag複製；mounts 改接 mounts.json 385筆+圖片；minions 整頁重做改接 minions.json+本機圖示。四頁面狀態由「開發中」改為「完成」。
 - **2026-06-15**：四頁面驗收（weather/gathering/mounts/minions）——發現皆為草稿/示範資料，未對接已備資料庫，狀態改標註具體缺陷；待辦#1重寫為「四頁面資料對接重做」，順序：weather共用模組 → gathering → mounts → minions；製作利潤計算機（原#4）順延至此之後。
 - **2026-06-11（第二輪）**：mounts 補 itemId 348/385、繁中名 337/385（nameSource：tw-items 259／cn-opencc 56；發現原 103 筆手動名大量錯位已覆蓋，sources/patch 待人工校對）；barding 補 itemId 100/106；dungeons 名稱台服化校正 108/386（tw-instances + CFC 對應，報告 docs/dungeons-名稱校正報告.md）；monsters 本機跑 patch-monster-names.mjs 完成台服化（改名 2381／同名 11040／無資料 793）；build-mounts/build-barding/build-monsters/patch-dungeon-names 同步更新。
 
-- **2026-06-11**：地圖 ID 統一修正完成（待辦 #0）。maps.json 重 key 成遊戲 Map sheet row id 並擴充 67→210 張（地名 tw-places 優先）；fishing-spots 307 筆補 coords.mapId（territory→map 對應）；gathering 濾除 EventItem 偽 id 356 次、剔除 232 個純偽 id 節點（965→733）、141 筆 mapId=0 加 mapMissing 標記。新增 scripts/validate-links.mjs（全庫連結驗證）、rekey-maps.mjs；改 build-fishing / build-gathering / download-maps。mapId 類斷鏈 17444＋17958＋524 → 全部歸零。SCHEMA.md 明文 mapId=Map sheet row id；_meta.json 同步 maps/gathering/fishes/fishing-spots。底圖 8 張待本機補（docs/待補底圖清單.md）。
-- **2026-06-10**：
+- **2026-06-11*
