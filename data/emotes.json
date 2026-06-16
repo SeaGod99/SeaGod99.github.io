@@ -1,24 +1,2929 @@
 {
   "schema": "emotes",
   "patch": "7.2",
-  "updated": "2026-05-29",
-  "source": "manual",
-  "count": 1,
+  "updated": "2026-06-16",
+  "source": "xivapi+tw-items",
+  "count": 292,
   "data": [
     {
       "id": 1,
-      "name": "歡呼",
+      "name": null,
+      "nameEn": "Surprised",
+      "command": "/surprised",
+      "itemId": null,
+      "icon": "/i/246000/246201.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 2,
+      "name": null,
+      "nameEn": "Angry",
+      "command": "/angry",
+      "itemId": null,
+      "icon": "/i/246000/246202.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 3,
+      "name": null,
+      "nameEn": "Furious",
+      "command": "/furious",
+      "itemId": null,
+      "icon": "/i/246000/246203.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 4,
+      "name": null,
+      "nameEn": "Blush",
+      "command": "/blush",
+      "itemId": null,
+      "icon": "/i/246000/246204.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 5,
+      "name": null,
+      "nameEn": "Bow",
+      "command": "/bow",
+      "itemId": null,
+      "icon": "/i/246000/246205.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 6,
+      "name": null,
       "nameEn": "Cheer",
       "command": "/cheer",
       "itemId": null,
-      "icon": "/i/064000/064001.png",
-      "sources": [
-        {
-          "type": "其他",
-          "detail": "預設動作"
-        }
-      ],
-      "patch": "2.0"
+      "icon": "/i/246000/246206.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 7,
+      "name": null,
+      "nameEn": "Clap",
+      "command": "/clap",
+      "itemId": null,
+      "icon": "/i/246000/246207.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 8,
+      "name": null,
+      "nameEn": "Beckon",
+      "command": "/beckon",
+      "itemId": null,
+      "icon": "/i/246000/246208.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 9,
+      "name": null,
+      "nameEn": "Comfort",
+      "command": "/comfort",
+      "itemId": null,
+      "icon": "/i/246000/246209.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 10,
+      "name": null,
+      "nameEn": "Cry",
+      "command": "/cry",
+      "itemId": null,
+      "icon": "/i/246000/246210.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 11,
+      "name": null,
+      "nameEn": "Dance",
+      "command": "/dance",
+      "itemId": null,
+      "icon": "/i/246000/246211.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 12,
+      "name": null,
+      "nameEn": "Doubt",
+      "command": "/doubt",
+      "itemId": null,
+      "icon": "/i/246000/246212.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 13,
+      "name": null,
+      "nameEn": "Doze",
+      "command": "/doze",
+      "itemId": null,
+      "icon": "/i/246000/246213.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 14,
+      "name": null,
+      "nameEn": "Fume",
+      "command": "/fume",
+      "itemId": null,
+      "icon": "/i/246000/246214.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 15,
+      "name": null,
+      "nameEn": "Goodbye",
+      "command": "/goodbye",
+      "itemId": null,
+      "icon": "/i/246000/246215.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 16,
+      "name": null,
+      "nameEn": "Wave",
+      "command": "/wave",
+      "itemId": null,
+      "icon": "/i/246000/246216.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 17,
+      "name": null,
+      "nameEn": "Huh",
+      "command": "/huh",
+      "itemId": null,
+      "icon": "/i/246000/246217.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 18,
+      "name": null,
+      "nameEn": "Joy",
+      "command": "/joy",
+      "itemId": null,
+      "icon": "/i/246000/246218.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 19,
+      "name": null,
+      "nameEn": "Kneel",
+      "command": "/kneel",
+      "itemId": null,
+      "icon": "/i/246000/246219.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 20,
+      "name": null,
+      "nameEn": "Chuckle",
+      "command": "/chuckle",
+      "itemId": null,
+      "icon": "/i/246000/246220.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 21,
+      "name": null,
+      "nameEn": "Laugh",
+      "command": "/laugh",
+      "itemId": null,
+      "icon": "/i/246000/246221.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 22,
+      "name": null,
+      "nameEn": "Lookout",
+      "command": "/lookout",
+      "itemId": null,
+      "icon": "/i/246000/246222.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 23,
+      "name": null,
+      "nameEn": "Me",
+      "command": "/me",
+      "itemId": null,
+      "icon": "/i/246000/246223.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 24,
+      "name": null,
+      "nameEn": "No",
+      "command": "/no",
+      "itemId": null,
+      "icon": "/i/246000/246224.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 25,
+      "name": null,
+      "nameEn": "Deny",
+      "command": "/deny",
+      "itemId": null,
+      "icon": "/i/246000/246225.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 26,
+      "name": null,
+      "nameEn": "Panic",
+      "command": "/panic",
+      "itemId": null,
+      "icon": "/i/246000/246226.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 27,
+      "name": null,
+      "nameEn": "Point",
+      "command": "/point",
+      "itemId": null,
+      "icon": "/i/246000/246227.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 28,
+      "name": null,
+      "nameEn": "Poke",
+      "command": "/poke",
+      "itemId": null,
+      "icon": "/i/246000/246228.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 29,
+      "name": null,
+      "nameEn": "Congratulate",
+      "command": "/congratulate",
+      "itemId": null,
+      "icon": "/i/246000/246229.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 30,
+      "name": null,
+      "nameEn": "Psych",
+      "command": "/psych",
+      "itemId": null,
+      "icon": "/i/246000/246230.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 31,
+      "name": null,
+      "nameEn": "Salute",
+      "command": "/salute",
+      "itemId": null,
+      "icon": "/i/246000/246231.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 32,
+      "name": null,
+      "nameEn": "Shocked",
+      "command": "/shocked",
+      "itemId": null,
+      "icon": "/i/246000/246232.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 33,
+      "name": null,
+      "nameEn": "Shrug",
+      "command": "/shrug",
+      "itemId": null,
+      "icon": "/i/246000/246233.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 34,
+      "name": null,
+      "nameEn": "Rally",
+      "command": "/rally",
+      "itemId": null,
+      "icon": "/i/246000/246234.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 35,
+      "name": null,
+      "nameEn": "Soothe",
+      "command": "/soothe",
+      "itemId": null,
+      "icon": "/i/246000/246235.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 36,
+      "name": null,
+      "nameEn": "Stagger",
+      "command": "/stagger",
+      "itemId": null,
+      "icon": "/i/246000/246236.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 37,
+      "name": null,
+      "nameEn": "Stretch",
+      "command": "/stretch",
+      "itemId": null,
+      "icon": "/i/246000/246237.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 38,
+      "name": null,
+      "nameEn": "Sulk",
+      "command": "/sulk",
+      "itemId": null,
+      "icon": "/i/246000/246238.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 39,
+      "name": null,
+      "nameEn": "Think",
+      "command": "/think",
+      "itemId": null,
+      "icon": "/i/246000/246239.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 40,
+      "name": null,
+      "nameEn": "Upset",
+      "command": "/upset",
+      "itemId": null,
+      "icon": "/i/246000/246240.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 41,
+      "name": null,
+      "nameEn": "Welcome",
+      "command": "/welcome",
+      "itemId": null,
+      "icon": "/i/246000/246241.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 42,
+      "name": null,
+      "nameEn": "Yes",
+      "command": "/yes",
+      "itemId": null,
+      "icon": "/i/246000/246242.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 43,
+      "name": null,
+      "nameEn": "Thumbs Up",
+      "command": "/thumbsup",
+      "itemId": null,
+      "icon": "/i/246000/246243.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 44,
+      "name": null,
+      "nameEn": "Examine Self",
+      "command": "/examineself",
+      "itemId": null,
+      "icon": "/i/246000/246244.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 45,
+      "name": null,
+      "nameEn": "Pose",
+      "command": "/pose",
+      "itemId": null,
+      "icon": "/i/246000/246245.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 46,
+      "name": null,
+      "nameEn": "Blow Kiss",
+      "command": "/blowkiss",
+      "itemId": null,
+      "icon": "/i/246000/246249.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 47,
+      "name": null,
+      "nameEn": "Grovel",
+      "command": "/grovel",
+      "itemId": null,
+      "icon": "/i/246000/246251.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 48,
+      "name": null,
+      "nameEn": "Happy",
+      "command": "/happy",
+      "itemId": null,
+      "icon": "/i/246000/246252.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 49,
+      "name": null,
+      "nameEn": "Disappointed",
+      "command": "/disappointed",
+      "itemId": null,
+      "icon": "/i/246000/246253.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 50,
+      "name": null,
+      "nameEn": "Sit",
+      "command": "/lounge",
+      "itemId": null,
+      "icon": "/i/246000/246256.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 52,
+      "name": null,
+      "nameEn": "Sit on Ground",
+      "command": "/groundsit",
+      "itemId": null,
+      "icon": "/i/246000/246254.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 54,
+      "name": null,
+      "nameEn": "Air Quotes",
+      "command": "/airquotes",
+      "itemId": null,
+      "icon": "/i/246000/246263.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 55,
+      "name": null,
+      "nameEn": "Storm Salute",
+      "command": "/gcsalute",
+      "itemId": null,
+      "icon": "/i/246000/246246.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 56,
+      "name": null,
+      "nameEn": "Serpent Salute",
+      "command": "/gcsalute",
+      "itemId": null,
+      "icon": "/i/246000/246247.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 57,
+      "name": null,
+      "nameEn": "Flame Salute",
+      "command": "/gcsalute",
+      "itemId": null,
+      "icon": "/i/246000/246248.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 58,
+      "name": null,
+      "nameEn": "Pray",
+      "command": "/pray",
+      "itemId": null,
+      "icon": "/i/246000/246264.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 59,
+      "name": null,
+      "nameEn": "Imperial Salute",
+      "command": "/imperialsalute",
+      "itemId": 23,
+      "icon": "/i/246000/246266.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 60,
+      "name": null,
+      "nameEn": "Visor",
+      "command": "/visor",
+      "itemId": null,
+      "icon": "/i/246000/246265.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 62,
+      "name": null,
+      "nameEn": "Megaflare",
+      "command": "/megaflare",
+      "itemId": 379,
+      "icon": "/i/246000/246327.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 63,
+      "name": null,
+      "nameEn": "Crimson Lotus",
+      "command": "/crimsonlotus",
+      "itemId": 378,
+      "icon": "/i/246000/246328.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 64,
+      "name": null,
+      "nameEn": "Charmed",
+      "command": "/charmed",
+      "itemId": 384,
+      "icon": "/i/246000/246329.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 65,
+      "name": null,
+      "nameEn": "Cheer On: Blue",
+      "command": "/cheeronblue",
+      "itemId": 381,
+      "icon": "/i/246000/246330.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 66,
+      "name": null,
+      "nameEn": "Cheer Wave: Yellow",
+      "command": "/cheerwaveyellow",
+      "itemId": 382,
+      "icon": "/i/246000/246331.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 67,
+      "name": null,
+      "nameEn": "Cheer Jump: Red",
+      "command": "/cheerjumpred",
+      "itemId": 383,
+      "icon": "/i/246000/246332.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 68,
+      "name": null,
+      "nameEn": "Straight Face",
+      "command": "/straightface",
+      "itemId": null,
+      "icon": "/i/246000/246101.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 69,
+      "name": null,
+      "nameEn": "Smile",
+      "command": "/smile",
+      "itemId": null,
+      "icon": "/i/246000/246102.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 70,
+      "name": null,
+      "nameEn": "Grin",
+      "command": "/grin",
+      "itemId": null,
+      "icon": "/i/246000/246103.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 71,
+      "name": null,
+      "nameEn": "Smirk",
+      "command": "/smirk",
+      "itemId": null,
+      "icon": "/i/246000/246104.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 72,
+      "name": null,
+      "nameEn": "Taunt",
+      "command": "/taunt",
+      "itemId": null,
+      "icon": "/i/246000/246105.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 73,
+      "name": null,
+      "nameEn": "Shut Eyes",
+      "command": "/shuteyes",
+      "itemId": null,
+      "icon": "/i/246000/246106.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 74,
+      "name": null,
+      "nameEn": "Sad",
+      "command": "/sad",
+      "itemId": null,
+      "icon": "/i/246000/246107.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 75,
+      "name": null,
+      "nameEn": "Scared",
+      "command": "/scared",
+      "itemId": null,
+      "icon": "/i/246000/246108.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 76,
+      "name": null,
+      "nameEn": "Amazed",
+      "command": "/amazed",
+      "itemId": null,
+      "icon": "/i/246000/246109.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 77,
+      "name": null,
+      "nameEn": "Ouch",
+      "command": "/ouch",
+      "itemId": null,
+      "icon": "/i/246000/246110.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 78,
+      "name": null,
+      "nameEn": "Annoyed",
+      "command": "/annoyed",
+      "itemId": null,
+      "icon": "/i/246000/246111.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 79,
+      "name": null,
+      "nameEn": "Alert",
+      "command": "/alert",
+      "itemId": null,
+      "icon": "/i/246000/246112.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 80,
+      "name": null,
+      "nameEn": "Worried",
+      "command": "/worried",
+      "itemId": null,
+      "icon": "/i/246000/246113.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 81,
+      "name": null,
+      "nameEn": "Big Grin",
+      "command": "/biggrin",
+      "itemId": 388,
+      "icon": "/i/246000/246125.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 82,
+      "name": null,
+      "nameEn": "Reflect",
+      "command": "/reflect",
+      "itemId": 389,
+      "icon": "/i/246000/246126.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 83,
+      "name": null,
+      "nameEn": "Furrow",
+      "command": "/furrow",
+      "itemId": null,
+      "icon": "/i/246000/246127.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 84,
+      "name": null,
+      "nameEn": "Scoff",
+      "command": "/scoff",
+      "itemId": null,
+      "icon": "/i/246000/246128.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 85,
+      "name": null,
+      "nameEn": "Throw",
+      "command": "/throw",
+      "itemId": 24,
+      "icon": "/i/246000/246250.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 90,
+      "name": null,
+      "nameEn": "Change Pose",
+      "command": "/changepose",
+      "itemId": null,
+      "icon": "/i/246000/246268.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 101,
+      "name": null,
+      "nameEn": "Step Dance",
+      "command": "/stepdance",
+      "itemId": 27,
+      "icon": "/i/246000/246269.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 102,
+      "name": null,
+      "nameEn": "Harvest Dance",
+      "command": "/harvestdance",
+      "itemId": 28,
+      "icon": "/i/246000/246270.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 103,
+      "name": null,
+      "nameEn": "Ball Dance",
+      "command": "/balldance",
+      "itemId": 29,
+      "icon": "/i/246000/246271.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 104,
+      "name": null,
+      "nameEn": "Manderville Dance",
+      "command": "/mandervilledance",
+      "itemId": 30,
+      "icon": "/i/246000/246272.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 105,
+      "name": null,
+      "nameEn": "Pet",
+      "command": "/stroke",
+      "itemId": null,
+      "icon": "/i/246000/246267.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 106,
+      "name": null,
+      "nameEn": "Hand Over",
+      "command": "/handover",
+      "itemId": null,
+      "icon": "/i/246000/246273.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 109,
+      "name": null,
+      "nameEn": "Bomb Dance",
+      "command": "/bombdance",
+      "itemId": 98,
+      "icon": "/i/246000/246274.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 110,
+      "name": null,
+      "nameEn": "Huzzah",
+      "command": "/hurray",
+      "itemId": 225,
+      "icon": "/i/246000/246275.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 111,
+      "name": null,
+      "nameEn": "Slap",
+      "command": "/slap",
+      "itemId": null,
+      "icon": "/i/246000/246276.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 112,
+      "name": null,
+      "nameEn": "Hug",
+      "command": "/hug",
+      "itemId": null,
+      "icon": "/i/246000/246277.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 113,
+      "name": null,
+      "nameEn": "Embrace",
+      "command": "/embrace",
+      "itemId": 229,
+      "icon": "/i/246000/246278.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 114,
+      "name": null,
+      "nameEn": "Most Gentlemanly",
+      "command": "/hildibrand",
+      "itemId": 244,
+      "icon": "/i/246000/246279.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 115,
+      "name": null,
+      "nameEn": "Fist Bump",
+      "command": "/fistbump",
+      "itemId": 259,
+      "icon": "/i/246000/246280.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 118,
+      "name": null,
+      "nameEn": "Thavnairian Dance",
+      "command": "/thavdance",
+      "itemId": 288,
+      "icon": "/i/246000/246282.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 119,
+      "name": null,
+      "nameEn": "Gold Dance",
+      "command": "/golddance",
+      "itemId": 289,
+      "icon": "/i/246000/246283.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 120,
+      "name": null,
+      "nameEn": "Sundrop Dance",
+      "command": "/sundance",
+      "itemId": 283,
+      "icon": "/i/246000/246284.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 121,
+      "name": null,
+      "nameEn": "Battle Stance",
+      "command": "/battlestance",
+      "itemId": 305,
+      "icon": "/i/246000/246285.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 122,
+      "name": null,
+      "nameEn": "Victory",
+      "command": "/victorypose",
+      "itemId": 306,
+      "icon": "/i/246000/246286.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 123,
+      "name": null,
+      "nameEn": "Backflip",
+      "command": "/backflip",
+      "itemId": 308,
+      "icon": "/i/246000/246287.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 124,
+      "name": null,
+      "nameEn": "Eastern Greeting",
+      "command": "/easterngreeting",
+      "itemId": 309,
+      "icon": "/i/246000/246288.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 125,
+      "name": null,
+      "nameEn": "Eureka",
+      "command": "/eureka",
+      "itemId": 304,
+      "icon": "/i/246000/246289.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 126,
+      "name": null,
+      "nameEn": "Moogle Dance",
+      "command": "/mogdance",
+      "itemId": 67862,
+      "icon": "/i/246000/246290.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 127,
+      "name": null,
+      "nameEn": "Haurchefant",
+      "command": "/haurchefant",
+      "itemId": 318,
+      "icon": "/i/246000/246291.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 128,
+      "name": null,
+      "nameEn": "Eastern Stretch",
+      "command": "/easternstretch",
+      "itemId": 323,
+      "icon": "/i/246000/246292.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 129,
+      "name": null,
+      "nameEn": "Eastern Dance",
+      "command": "/easterndance",
+      "itemId": 324,
+      "icon": "/i/246000/246293.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 130,
+      "name": null,
+      "nameEn": "Red Ranger Pose A",
+      "command": "/rangerpose1r",
+      "itemId": 315,
+      "icon": "/i/246000/246294.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 131,
+      "name": null,
+      "nameEn": "Black Ranger Pose A",
+      "command": "/rangerpose2r",
+      "itemId": 316,
+      "icon": "/i/246000/246295.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 132,
+      "name": null,
+      "nameEn": "Yellow Ranger Pose A",
+      "command": "/rangerpose3r",
+      "itemId": 317,
+      "icon": "/i/246000/246296.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 133,
+      "name": null,
+      "nameEn": "Wink (Right)",
+      "command": "/wink",
+      "itemId": null,
+      "icon": "/i/246000/246118.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 134,
+      "name": null,
+      "nameEn": "Red Ranger Pose B",
+      "command": "/rangerpose1l",
+      "itemId": 315,
+      "icon": "/i/246000/246297.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 135,
+      "name": null,
+      "nameEn": "Black Ranger Pose B",
+      "command": "/rangerpose2l",
+      "itemId": 316,
+      "icon": "/i/246000/246298.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 136,
+      "name": null,
+      "nameEn": "Yellow Ranger Pose B",
+      "command": "/rangerpose3l",
+      "itemId": 317,
+      "icon": "/i/246000/246299.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 137,
+      "name": null,
+      "nameEn": "Facepalm",
+      "command": "/facepalm",
+      "itemId": null,
+      "icon": "/i/246000/246301.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 138,
+      "name": null,
+      "nameEn": "Zantetsuken",
+      "command": "/zantetsuken",
+      "itemId": 328,
+      "icon": "/i/246000/246302.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 139,
+      "name": null,
+      "nameEn": "Flex",
+      "command": "/flex",
+      "itemId": null,
+      "icon": "/i/246000/246303.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 140,
+      "name": null,
+      "nameEn": "Pay Respects",
+      "command": "/respect",
+      "itemId": null,
+      "icon": "/i/246000/246304.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 141,
+      "name": null,
+      "nameEn": "Sneer",
+      "command": "/sneer",
+      "itemId": null,
+      "icon": "/i/246000/246119.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 142,
+      "name": null,
+      "nameEn": "Pretty Please",
+      "command": "/prettyplease",
+      "itemId": 331,
+      "icon": "/i/246000/246305.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 143,
+      "name": null,
+      "nameEn": "Play Dead",
+      "command": "/playdead",
+      "itemId": 330,
+      "icon": "/i/246000/246306.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 144,
+      "name": null,
+      "nameEn": "Diamond Dust",
+      "command": "/iceheart",
+      "itemId": 329,
+      "icon": "/i/246000/246307.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 145,
+      "name": null,
+      "nameEn": "Moonlift Dance",
+      "command": "/moonlift",
+      "itemId": 332,
+      "icon": "/i/246000/246308.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 146,
+      "name": null,
+      "nameEn": "Dote",
+      "command": "/dote",
+      "itemId": 333,
+      "icon": "/i/246000/246309.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 148,
+      "name": null,
+      "nameEn": "Spectacles",
+      "command": "/spectacles",
+      "itemId": 334,
+      "icon": "/i/246000/246310.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 149,
+      "name": null,
+      "nameEn": "Songbird",
+      "command": "/songbird",
+      "itemId": 335,
+      "icon": "/i/246000/246311.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 150,
+      "name": null,
+      "nameEn": "Water Float",
+      "command": "/waterfloat",
+      "itemId": null,
+      "icon": "/i/246000/246312.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 151,
+      "name": null,
+      "nameEn": "Water Flip",
+      "command": "/waterflip",
+      "itemId": 340,
+      "icon": "/i/246000/246313.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 152,
+      "name": null,
+      "nameEn": "Pucker Up",
+      "command": "/puckerup",
+      "itemId": null,
+      "icon": "/i/246000/246120.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 153,
+      "name": null,
+      "nameEn": "Power Up",
+      "command": "/powerup",
+      "itemId": 343,
+      "icon": "/i/246000/246314.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 154,
+      "name": null,
+      "nameEn": "Eastern Bow",
+      "command": "/easternbow",
+      "itemId": 68016,
+      "icon": "/i/246000/246315.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 155,
+      "name": null,
+      "nameEn": "Squats",
+      "command": "/squats",
+      "itemId": 373,
+      "icon": "/i/246000/246316.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 156,
+      "name": null,
+      "nameEn": "Push-ups",
+      "command": "/pushups",
+      "itemId": 373,
+      "icon": "/i/246000/246317.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 157,
+      "name": null,
+      "nameEn": "Sit-ups",
+      "command": "/situps",
+      "itemId": 373,
+      "icon": "/i/246000/246318.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 158,
+      "name": null,
+      "nameEn": "Breath Control",
+      "command": "/breathcontrol",
+      "itemId": 373,
+      "icon": "/i/246000/246319.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 159,
+      "name": null,
+      "nameEn": "Converse",
+      "command": "/converse",
+      "itemId": null,
+      "icon": "/i/246000/246320.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 160,
+      "name": null,
+      "nameEn": "Concentrate",
+      "command": "/concentrate",
+      "itemId": null,
+      "icon": "/i/246000/246121.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 161,
+      "name": null,
+      "nameEn": "Confused",
+      "command": "/disturbed",
+      "itemId": null,
+      "icon": "/i/246000/246122.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 162,
+      "name": null,
+      "nameEn": "Simper",
+      "command": "/simper",
+      "itemId": null,
+      "icon": "/i/246000/246123.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 163,
+      "name": null,
+      "nameEn": "Beam",
+      "command": "/beam",
+      "itemId": null,
+      "icon": "/i/246000/246124.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 164,
+      "name": null,
+      "nameEn": "Attention",
+      "command": "/attention",
+      "itemId": 375,
+      "icon": "/i/246000/246321.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 165,
+      "name": null,
+      "nameEn": "At Ease",
+      "command": "/atease",
+      "itemId": 376,
+      "icon": "/i/246000/246322.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 166,
+      "name": null,
+      "nameEn": "Box",
+      "command": "/box",
+      "itemId": 68498,
+      "icon": "/i/246000/246323.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 167,
+      "name": null,
+      "nameEn": "Ritual Prayer",
+      "command": "/ritualprayer",
+      "itemId": 374,
+      "icon": "/i/246000/246324.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 169,
+      "name": null,
+      "nameEn": "Tremble",
+      "command": "/tremble",
+      "itemId": 386,
+      "icon": "/i/246000/246333.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 170,
+      "name": null,
+      "nameEn": "Winded",
+      "command": "/winded",
+      "itemId": 385,
+      "icon": "/i/246000/246334.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 171,
+      "name": null,
+      "nameEn": "Aback",
+      "command": "/aback",
+      "itemId": 387,
+      "icon": "/i/246000/246335.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 172,
+      "name": null,
+      "nameEn": "Greeting",
+      "command": "/greet",
+      "itemId": 68558,
+      "icon": "/i/246000/246336.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 173,
+      "name": null,
+      "nameEn": "Box Step",
+      "command": "/boxstep",
+      "itemId": 260,
+      "icon": "/i/246000/246337.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 174,
+      "name": null,
+      "nameEn": "Side Step",
+      "command": "/sidestep",
+      "itemId": 261,
+      "icon": "/i/246000/246338.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 175,
+      "name": null,
+      "nameEn": "Ultima",
+      "command": "/ultima",
+      "itemId": 262,
+      "icon": "/i/246000/246339.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 176,
+      "name": null,
+      "nameEn": "Yol Dance",
+      "command": "/yoldance",
+      "itemId": 269,
+      "icon": "/i/246000/246340.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 178,
+      "name": null,
+      "nameEn": "Splash",
+      "command": "/splash",
+      "itemId": 270,
+      "icon": "/i/246000/246341.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 180,
+      "name": null,
+      "nameEn": "Sweat",
+      "command": "/sweat",
+      "itemId": 263,
+      "icon": "/i/246000/246342.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 181,
+      "name": null,
+      "nameEn": "Shiver",
+      "command": "/shiver",
+      "itemId": 264,
+      "icon": "/i/246000/246343.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 182,
+      "name": null,
+      "nameEn": "Elucidate",
+      "command": "/elucidate",
+      "itemId": 265,
+      "icon": "/i/246000/246344.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 183,
+      "name": null,
+      "nameEn": "Ponder",
+      "command": "/ponder",
+      "itemId": 68612,
+      "icon": "/i/246000/246129.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 184,
+      "name": null,
+      "nameEn": "Wink (Left)",
+      "command": "/leftwink",
+      "itemId": null,
+      "icon": "/i/246000/246130.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 185,
+      "name": null,
+      "nameEn": "Get Fantasy",
+      "command": "/getfantasy",
+      "itemId": 393,
+      "icon": "/i/246000/246345.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 186,
+      "name": null,
+      "nameEn": "Popoto Step",
+      "command": "/popotostep",
+      "itemId": 394,
+      "icon": "/i/246000/246346.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 187,
+      "name": null,
+      "nameEn": "Hum",
+      "command": "/hum",
+      "itemId": 68688,
+      "icon": "/i/246000/246347.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 188,
+      "name": null,
+      "nameEn": "Confirm",
+      "command": "/confirm",
+      "itemId": 395,
+      "icon": "/i/246000/246348.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 189,
+      "name": null,
+      "nameEn": "Scheme",
+      "command": "/scheme",
+      "itemId": 396,
+      "icon": "/i/246000/246349.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 190,
+      "name": null,
+      "nameEn": "Endure",
+      "command": "/endure",
+      "itemId": 68684,
+      "icon": "/i/246000/246131.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 191,
+      "name": null,
+      "nameEn": "Tomestone",
+      "command": "/tomestone",
+      "itemId": 406,
+      "icon": "/i/246000/246350.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 192,
+      "name": null,
+      "nameEn": "Heel Toe",
+      "command": "/heeltoe",
+      "itemId": 232,
+      "icon": "/i/246000/246351.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 193,
+      "name": null,
+      "nameEn": "Goobbue Do",
+      "command": "/goobbuedo",
+      "itemId": 233,
+      "icon": "/i/246000/246352.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 194,
+      "name": null,
+      "nameEn": "Gratuity",
+      "command": "/gratuity",
+      "itemId": 68700,
+      "icon": "/i/246000/246353.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 195,
+      "name": null,
+      "nameEn": "Fist Pump",
+      "command": "/fistpump",
+      "itemId": 234,
+      "icon": "/i/246000/246354.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 196,
+      "name": null,
+      "nameEn": "Reprimand",
+      "command": "/reprimand",
+      "itemId": 235,
+      "icon": "/i/246000/246355.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 197,
+      "name": null,
+      "nameEn": "Senor Sabotender",
+      "command": "/sabotender",
+      "itemId": 236,
+      "icon": "/i/246000/246356.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 198,
+      "name": null,
+      "nameEn": "Manderville Mambo",
+      "command": "/mandervillemambo",
+      "itemId": 68704,
+      "icon": "/i/246000/246357.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 199,
+      "name": null,
+      "nameEn": "Lali-ho",
+      "command": "/laliho",
+      "itemId": 69095,
+      "icon": "/i/246000/246358.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 200,
+      "name": null,
+      "nameEn": "Simulation M",
+      "command": "/simulationm",
+      "itemId": 75,
+      "icon": "/i/246000/246359.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 201,
+      "name": null,
+      "nameEn": "Simulation F",
+      "command": "/simulationf",
+      "itemId": 75,
+      "icon": "/i/246000/246360.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 202,
+      "name": null,
+      "nameEn": "Toast",
+      "command": "/toast",
+      "itemId": 76,
+      "icon": "/i/246000/246361.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 203,
+      "name": null,
+      "nameEn": "Lean",
+      "command": "/lean",
+      "itemId": 77,
+      "icon": "/i/246000/246363.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 204,
+      "name": null,
+      "nameEn": "Headache",
+      "command": "/headache",
+      "itemId": 78,
+      "icon": "/i/246000/246362.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 205,
+      "name": null,
+      "nameEn": "Snap",
+      "command": "/snap",
+      "itemId": 68,
+      "icon": "/i/246000/246364.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 206,
+      "name": null,
+      "nameEn": "Break Fast",
+      "command": "/breakfast",
+      "itemId": 69,
+      "icon": "/i/246000/246365.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 207,
+      "name": null,
+      "nameEn": "Read",
+      "command": "/read",
+      "itemId": 70,
+      "icon": "/i/246000/246366.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 208,
+      "name": null,
+      "nameEn": "Insist",
+      "command": "/insist",
+      "itemId": 71,
+      "icon": "/i/246000/246368.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 209,
+      "name": null,
+      "nameEn": "Consider",
+      "command": "/consider",
+      "itemId": 279,
+      "icon": "/i/246000/246367.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 210,
+      "name": null,
+      "nameEn": "Wasshoi",
+      "command": "/wasshoi",
+      "itemId": 271,
+      "icon": "/i/246000/246369.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 211,
+      "name": null,
+      "nameEn": "Flower Shower",
+      "command": "/flowershower",
+      "itemId": 272,
+      "icon": "/i/246000/246370.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 212,
+      "name": null,
+      "nameEn": "Flame Dance",
+      "command": "/flamedance",
+      "itemId": 273,
+      "icon": "/i/246000/246371.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 213,
+      "name": null,
+      "nameEn": "High Five",
+      "command": "/highfive",
+      "itemId": 275,
+      "icon": "/i/246000/246372.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 214,
+      "name": null,
+      "nameEn": "Guard",
+      "command": "/guard",
+      "itemId": 276,
+      "icon": "/i/246000/246373.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 215,
+      "name": null,
+      "nameEn": "Malevolence",
+      "command": "/malevolence",
+      "itemId": 277,
+      "icon": "/i/246000/246374.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 216,
+      "name": null,
+      "nameEn": "Bee's Knees",
+      "command": "/beesknees",
+      "itemId": 278,
+      "icon": "/i/246000/246375.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 217,
+      "name": null,
+      "nameEn": "Lali Hop",
+      "command": "/lalihop",
+      "itemId": 274,
+      "icon": "/i/246000/246376.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 220,
+      "name": null,
+      "nameEn": "Eat Rice Ball",
+      "command": "/eatriceball",
+      "itemId": 414,
+      "icon": "/i/246000/246377.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 221,
+      "name": null,
+      "nameEn": "Eat Apple",
+      "command": "/eatapple",
+      "itemId": 415,
+      "icon": "/i/246000/246378.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 222,
+      "name": null,
+      "nameEn": "Wring Hands",
+      "command": "/wringhands",
+      "itemId": 416,
+      "icon": "/i/246000/246379.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 223,
+      "name": null,
+      "nameEn": "Sweep Up",
+      "command": "/sweep",
+      "itemId": 417,
+      "icon": "/i/246000/246380.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 224,
+      "name": null,
+      "nameEn": "Paint It Black",
+      "command": "/paintblack",
+      "itemId": 418,
+      "icon": "/i/246000/246381.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 225,
+      "name": null,
+      "nameEn": "Paint It Red",
+      "command": "/paintred",
+      "itemId": 418,
+      "icon": "/i/246000/246382.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 226,
+      "name": null,
+      "nameEn": "Paint It Yellow",
+      "command": "/paintyellow",
+      "itemId": 418,
+      "icon": "/i/246000/246383.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 227,
+      "name": null,
+      "nameEn": "Paint It Blue",
+      "command": "/paintblue",
+      "itemId": 418,
+      "icon": "/i/246000/246384.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 228,
+      "name": null,
+      "nameEn": "Fake Smile",
+      "command": "/fakesmile",
+      "itemId": null,
+      "icon": "/i/246000/246132.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 229,
+      "name": null,
+      "nameEn": "Pantomime",
+      "command": "/pantomime",
+      "itemId": 237,
+      "icon": "/i/246000/246385.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 230,
+      "name": null,
+      "nameEn": "Vexed",
+      "command": "/vexed",
+      "itemId": 238,
+      "icon": "/i/246000/246386.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 231,
+      "name": null,
+      "nameEn": "Shush",
+      "command": "/shush",
+      "itemId": 69602,
+      "icon": "/i/246000/246387.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 232,
+      "name": null,
+      "nameEn": "Eat Pizza",
+      "command": "/eatpizza",
+      "itemId": 240,
+      "icon": "/i/246000/246388.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 233,
+      "name": null,
+      "nameEn": "Clutch Head",
+      "command": "/clutchhead",
+      "itemId": null,
+      "icon": "/i/246000/246391.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 234,
+      "name": null,
+      "nameEn": "Eat Chocolate",
+      "command": "/eatchocolate",
+      "itemId": 428,
+      "icon": "/i/246000/246390.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 235,
+      "name": null,
+      "nameEn": "Eat Egg",
+      "command": "/eategg",
+      "itemId": 429,
+      "icon": "/i/246000/246392.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 236,
+      "name": null,
+      "nameEn": "Content",
+      "command": "/content",
+      "itemId": null,
+      "icon": "/i/246000/246133.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 237,
+      "name": null,
+      "nameEn": "Sheathe Weapon",
+      "command": "/sheathe",
+      "itemId": 430,
+      "icon": "/i/246000/246397.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 238,
+      "name": null,
+      "nameEn": "Draw Weapon",
+      "command": "/draw",
+      "itemId": 431,
+      "icon": "/i/246000/246398.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 239,
+      "name": null,
+      "nameEn": "Drink Tea",
+      "command": "/tea",
+      "itemId": 433,
+      "icon": "/i/246000/246393.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 240,
+      "name": null,
+      "nameEn": "Determined",
+      "command": "/determined",
+      "itemId": 432,
+      "icon": "/i/246000/246394.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 241,
+      "name": null,
+      "nameEn": "Show Right",
+      "command": "/showright",
+      "itemId": 434,
+      "icon": "/i/246000/246395.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 242,
+      "name": null,
+      "nameEn": "Show Left",
+      "command": "/showleft",
+      "itemId": 434,
+      "icon": "/i/246000/246396.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 245,
+      "name": null,
+      "nameEn": "Deride",
+      "command": "/deride",
+      "itemId": 437,
+      "icon": "/i/246000/246399.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 246,
+      "name": null,
+      "nameEn": "Wow",
+      "command": "/wow",
+      "itemId": 438,
+      "icon": "/i/246000/246400.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 247,
+      "name": null,
+      "nameEn": "Eat Pumpkin Cookie",
+      "command": "/eatpumpkincookie",
+      "itemId": 439,
+      "icon": "/i/246000/246389.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 248,
+      "name": null,
+      "nameEn": "Spirit",
+      "command": "/spirit",
+      "itemId": 440,
+      "icon": "/i/246000/246401.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 249,
+      "name": null,
+      "nameEn": "Magic Trick",
+      "command": "/magictrick",
+      "itemId": 443,
+      "icon": "/i/246000/246402.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 250,
+      "name": null,
+      "nameEn": "Little Ladies' Dance",
+      "command": "/littleladiesdance",
+      "itemId": 444,
+      "icon": "/i/246000/246403.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 251,
+      "name": null,
+      "nameEn": "Linkpearl",
+      "command": "/linkpearl",
+      "itemId": 445,
+      "icon": "/i/246000/246404.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 252,
+      "name": null,
+      "nameEn": "Ear Wiggle",
+      "command": "/earwiggle",
+      "itemId": 70222,
+      "icon": "/i/246000/246405.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 256,
+      "name": null,
+      "nameEn": "Frighten",
+      "command": "/frighten",
+      "itemId": 450,
+      "icon": "/i/246000/246406.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 257,
+      "name": null,
+      "nameEn": "Advent of Light",
+      "command": "/adventoflight",
+      "itemId": 451,
+      "icon": "/i/246000/246407.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 258,
+      "name": null,
+      "nameEn": "Jump for Joy 1",
+      "command": "/jumpforjoy1",
+      "itemId": 452,
+      "icon": "/i/246000/246408.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 259,
+      "name": null,
+      "nameEn": "Jump for Joy 2",
+      "command": "/jumpforjoy2",
+      "itemId": 452,
+      "icon": "/i/246000/246409.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 260,
+      "name": null,
+      "nameEn": "Jump for Joy 3",
+      "command": "/jumpforjoy3",
+      "itemId": 452,
+      "icon": "/i/246000/246410.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 261,
+      "name": null,
+      "nameEn": "Jump for Joy 4",
+      "command": "/jumpforjoy4",
+      "itemId": 452,
+      "icon": "/i/246000/246411.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 262,
+      "name": null,
+      "nameEn": "Jump for Joy 5",
+      "command": "/jumpforjoy5",
+      "itemId": 452,
+      "icon": "/i/246000/246412.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 263,
+      "name": null,
+      "nameEn": "Hand to Heart",
+      "command": "/handtoheart",
+      "itemId": 453,
+      "icon": "/i/246000/246413.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 264,
+      "name": null,
+      "nameEn": "Cheer On: Bright",
+      "command": "/cheeronbright",
+      "itemId": 454,
+      "icon": "/i/246000/246414.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 265,
+      "name": null,
+      "nameEn": "Cheer Wave: Violet",
+      "command": "/cheerwaveviolet",
+      "itemId": 455,
+      "icon": "/i/246000/246415.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 266,
+      "name": null,
+      "nameEn": "Cheer Jump: Green",
+      "command": "/cheerjumpgreen",
+      "itemId": 456,
+      "icon": "/i/246000/246416.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 267,
+      "name": null,
+      "nameEn": "All Saints' Charm",
+      "command": "/allsaintscharm",
+      "itemId": 457,
+      "icon": "/i/246000/246417.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 269,
+      "name": null,
+      "nameEn": "Lop Hop",
+      "command": "/lophop",
+      "itemId": 458,
+      "icon": "/i/246000/246418.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 270,
+      "name": null,
+      "nameEn": "Reference",
+      "command": "/reference",
+      "itemId": 459,
+      "icon": "/i/246000/246419.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 271,
+      "name": null,
+      "nameEn": "Eat Chicken",
+      "command": "/eatchicken",
+      "itemId": 469,
+      "icon": "/i/246000/246420.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 272,
+      "name": null,
+      "nameEn": "Sundering",
+      "command": "/sundering",
+      "itemId": 470,
+      "icon": "/i/246000/246421.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 273,
+      "name": null,
+      "nameEn": "Slump",
+      "command": "/slump",
+      "itemId": 471,
+      "icon": "/i/246000/246422.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 274,
+      "name": null,
+      "nameEn": "Love Heart",
+      "command": "/loveheart",
+      "itemId": 472,
+      "icon": "/i/246000/246423.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 275,
+      "name": null,
+      "nameEn": "Humble Triumph",
+      "command": "/humbletriumph",
+      "itemId": 473,
+      "icon": "/i/246000/246424.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 276,
+      "name": null,
+      "nameEn": "Victory Reveal",
+      "command": "/victoryreveal",
+      "itemId": 474,
+      "icon": "/i/246000/246425.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 277,
+      "name": null,
+      "nameEn": "Fry Egg",
+      "command": "/fryegg",
+      "itemId": 475,
+      "icon": "/i/246000/246426.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 278,
+      "name": null,
+      "nameEn": "Uchiwasshoi",
+      "command": "/uchiwasshoi",
+      "itemId": 484,
+      "icon": "/i/246000/246427.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 279,
+      "name": null,
+      "nameEn": "Attend",
+      "command": "/attend",
+      "itemId": 490,
+      "icon": "/i/246000/246428.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 280,
+      "name": null,
+      "nameEn": "Water",
+      "command": "/water",
+      "itemId": 491,
+      "icon": "/i/246000/246429.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 281,
+      "name": null,
+      "nameEn": "Shake Drink",
+      "command": "/shakedrink",
+      "itemId": 492,
+      "icon": "/i/246000/246430.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 282,
+      "name": null,
+      "nameEn": "Pose of the Unbound",
+      "command": "/poseoftheunbound",
+      "itemId": 70725,
+      "icon": "/i/246000/246431.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 283,
+      "name": null,
+      "nameEn": "Bouquet",
+      "command": "/bouquet",
+      "itemId": 493,
+      "icon": "/i/246000/246432.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 284,
+      "name": null,
+      "nameEn": "Blow Bubbles",
+      "command": "/blowbubbles",
+      "itemId": 494,
+      "icon": "/i/246000/246433.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 285,
+      "name": null,
+      "nameEn": "Ohokaliy",
+      "command": "/ohokaliy",
+      "itemId": 70729,
+      "icon": "/i/246000/246434.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 286,
+      "name": null,
+      "nameEn": "Visage Capture",
+      "command": "/visage",
+      "itemId": 495,
+      "icon": "/i/246000/246435.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 288,
+      "name": null,
+      "nameEn": "Photograph",
+      "command": "/photograph",
+      "itemId": null,
+      "icon": "/i/246000/246436.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 291,
+      "name": null,
+      "nameEn": "Overreact",
+      "command": "/overreact",
+      "itemId": 543,
+      "icon": "/i/246000/246437.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 292,
+      "name": null,
+      "nameEn": "Twirl",
+      "command": "/twirl",
+      "itemId": 544,
+      "icon": "/i/246000/246438.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 293,
+      "name": null,
+      "nameEn": "Dazed",
+      "command": "/dazed",
+      "itemId": 545,
+      "icon": "/i/246000/246439.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 294,
+      "name": null,
+      "nameEn": "Rage",
+      "command": "/rage",
+      "itemId": 546,
+      "icon": "/i/246000/246440.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 295,
+      "name": null,
+      "nameEn": "Tomescroll",
+      "command": "/tomescroll",
+      "itemId": 406,
+      "icon": "/i/246000/246441.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 296,
+      "name": null,
+      "nameEn": "Study",
+      "command": "/study",
+      "itemId": 70,
+      "icon": "/i/246000/246442.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 297,
+      "name": null,
+      "nameEn": "Breaking",
+      "command": "/breakdance",
+      "itemId": 553,
+      "icon": "/i/246000/246453.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 298,
+      "name": null,
+      "nameEn": "Gridanian Sip",
+      "command": "/gridaniansip",
+      "itemId": 554,
+      "icon": "/i/246000/246443.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 299,
+      "name": null,
+      "nameEn": "Ul'dahn Sip",
+      "command": "/uldahnsip",
+      "itemId": 554,
+      "icon": "/i/246000/246444.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 300,
+      "name": null,
+      "nameEn": "Lominsan Sip",
+      "command": "/lominsansip",
+      "itemId": 554,
+      "icon": "/i/246000/246445.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 301,
+      "name": null,
+      "nameEn": "Gridanian Gulp",
+      "command": "/gridaniangulp",
+      "itemId": 554,
+      "icon": "/i/246000/246446.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 302,
+      "name": null,
+      "nameEn": "Ul'dahn Gulp",
+      "command": "/uldahngulp",
+      "itemId": 554,
+      "icon": "/i/246000/246447.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 303,
+      "name": null,
+      "nameEn": "Lominsan Gulp",
+      "command": "/lominsangulp",
+      "itemId": 554,
+      "icon": "/i/246000/246448.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 304,
+      "name": null,
+      "nameEn": "Limber Up",
+      "command": "/limberup",
+      "itemId": 555,
+      "icon": "/i/246000/246449.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 305,
+      "name": null,
+      "nameEn": "Drink Green Tea",
+      "command": "/drinkgreentea",
+      "itemId": 556,
+      "icon": "/i/246000/246450.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 306,
+      "name": null,
+      "nameEn": "Savor Tea",
+      "command": "/savortea",
+      "itemId": 556,
+      "icon": "/i/246000/246451.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 307,
+      "name": null,
+      "nameEn": "Pen",
+      "command": "/pen",
+      "itemId": 557,
+      "icon": "/i/246000/246452.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 308,
+      "name": null,
+      "nameEn": "Blown Away",
+      "command": "/blownaway",
+      "itemId": 577,
+      "icon": "/i/246000/246454.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 309,
+      "name": null,
+      "nameEn": "Stomp",
+      "command": "/stomp",
+      "itemId": 578,
+      "icon": "/i/246000/246455.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 310,
+      "name": null,
+      "nameEn": "Cheer Rhythm: Red",
+      "command": "/cheerrhythmred",
+      "itemId": 579,
+      "icon": "/i/246000/246456.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 311,
+      "name": null,
+      "nameEn": "Cheer Light: Yellow",
+      "command": "/cheerlightyellow",
+      "itemId": 580,
+      "icon": "/i/246000/246457.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 312,
+      "name": null,
+      "nameEn": "Delighted",
+      "command": "/delighted",
+      "itemId": 581,
+      "icon": "/i/246000/246458.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 313,
+      "name": null,
+      "nameEn": "Runway Walk",
+      "command": "/runwaywalk",
+      "itemId": 582,
+      "icon": "/i/246000/246459.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 314,
+      "name": null,
+      "nameEn": "Cheer On: Orange",
+      "command": "/cheeronorange",
+      "itemId": 583,
+      "icon": "/i/246000/246460.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 315,
+      "name": null,
+      "nameEn": "Cheer Wave: Pink",
+      "command": "/cheerwavepink",
+      "itemId": 584,
+      "icon": "/i/246000/246461.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 316,
+      "name": null,
+      "nameEn": "Cheer Jump: Indigo",
+      "command": "/cheerjumpindigo",
+      "itemId": 585,
+      "icon": "/i/246000/246462.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 317,
+      "name": null,
+      "nameEn": "Carry Book",
+      "command": "/carrybook",
+      "itemId": 586,
+      "icon": "/i/246000/246463.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 318,
+      "name": null,
+      "nameEn": "Divine Arm",
+      "command": "/divinearm",
+      "itemId": 587,
+      "icon": "/i/246000/246464.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 319,
+      "name": null,
+      "nameEn": "Divine Disk",
+      "command": "/divinedisk",
+      "itemId": 588,
+      "icon": "/i/246000/246465.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 320,
+      "name": null,
+      "nameEn": "Divine Tiara",
+      "command": "/divinetiara",
+      "itemId": 589,
+      "icon": "/i/246000/246466.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 321,
+      "name": null,
+      "nameEn": "Cheer Rhythm: Violet",
+      "command": "/cheerrhythmviolet",
+      "itemId": 590,
+      "icon": "/i/246000/246467.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 322,
+      "name": null,
+      "nameEn": "Cheer Rhythm: Bright",
+      "command": "/cheerrhythmbright",
+      "itemId": 591,
+      "icon": "/i/246000/246469.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 323,
+      "name": null,
+      "nameEn": "Cheer Light: Blue",
+      "command": "/cheerlightblue",
+      "itemId": 592,
+      "icon": "/i/246000/246468.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 324,
+      "name": null,
+      "nameEn": "Cheer Light: Green",
+      "command": "/cheerlightgreen",
+      "itemId": 593,
+      "icon": "/i/246000/246470.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 328,
+      "name": null,
+      "nameEn": "Cackle",
+      "command": "/cackle",
+      "itemId": 642,
+      "icon": "/i/246000/246473.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 329,
+      "name": null,
+      "nameEn": "Conduct",
+      "command": "/conduct",
+      "itemId": 643,
+      "icon": "/i/246000/246474.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 330,
+      "name": null,
+      "nameEn": "Eat Taco",
+      "command": "/eattaco",
+      "itemId": 644,
+      "icon": "/i/246000/246475.png",
+      "sources": [],
+      "patch": null
+    },
+    {
+      "id": 331,
+      "name": null,
+      "nameEn": "Devour Taco",
+      "command": "/devourtaco",
+      "itemId": 644,
+      "icon": "/i/246000/246476.png",
+      "sources": [],
+      "patch": null
     }
   ]
 }

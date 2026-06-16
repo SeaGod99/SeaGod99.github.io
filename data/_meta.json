@@ -132,22 +132,25 @@
       "schema": "exploration-log",
       "file": "exploration-log.json",
       "name": "探索筆記",
-      "source": "manual",
-      "status": "example"
+      "source": "xivapi+maps",
+      "status": "used",
+      "updated": "2026-06-16"
     },
     {
       "schema": "emotes",
       "file": "emotes.json",
       "name": "表情",
-      "source": "manual",
-      "status": "example"
+      "source": "xivapi+tw-items",
+      "status": "used",
+      "updated": "2026-06-16"
     },
     {
       "schema": "orchestrion",
       "file": "orchestrion.json",
       "name": "樂譜",
-      "source": "manual",
-      "status": "example"
+      "source": "xivapi+tw-items",
+      "status": "used",
+      "updated": "2026-06-16"
     },
     {
       "schema": "minions",
@@ -200,4 +203,4 @@
       "file": "fishing-spots.json",
       "name": "釣場",
       "source": "fish-tracker+items",
-      "status
+ 
