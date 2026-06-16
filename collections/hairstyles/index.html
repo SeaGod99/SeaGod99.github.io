@@ -477,7 +477,7 @@
 (function() {
   const STORAGE_KEY = 'ffxiv_hairstyles_owned';
   const DATA_URL = '../../data/hairstyles.json';
-  const ICON_BASE = 'https://xivapi.com';
+  // icons not used
 
   // ── State ──
   let HS_DATA = [];
@@ -615,9 +615,7 @@
       card.className = 'hs-card' + (isOwned ? ' owned' : '');
 
       // Icon
-      const iconHtml = h.icon
-        ? `<img class="hs-icon" src="${ICON_BASE}${h.icon}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<span class=hs-icon-placeholder>💇</span>'">`
-        : `<span class="hs-icon-placeholder">💇</span>`;
+      const iconHtml = `<span class="hs-icon-placeholder">💇</span>`;
 
       // 名稱
       const nameHtml = h.name
@@ -746,3 +744,4 @@
 </script>
 </body>
 </html>
+                                                                                                                                                                                                                

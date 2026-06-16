@@ -495,7 +495,7 @@
 (function() {
   const STORAGE_KEY = 'ffxiv_orchestrion_owned';
   const DATA_URL = '../../data/orchestrion.json';
-  const XIVAPI_ICON_BASE = 'https://xivapi.com';
+  // icons not used
 
   // Version order for filter display
   const CATEGORY_ORDER = ['原初之地', '蒼天之禁地', '紅蓮之狂潮', '暗影之逆焰', '曉月之終途', '金曦之遺輝', '未分類'];
@@ -598,9 +598,6 @@
 
   // ── Icon URL ──
   function iconUrl(r) {
-    if (r.icon && r.icon.startsWith('/i/')) {
-      return XIVAPI_ICON_BASE + r.icon;
-    }
     return null;
   }
 
@@ -639,11 +636,7 @@
       const catClass = 'cat-' + (r.category || '未分類');
       const catTag = `<span class="tag ${catClass}">${r.category || '未分類'}</span>`;
 
-      const url = iconUrl(r);
-      const iconHtml = url
-        ? `<img class="oc-icon" src="${url}" alt="" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
-          + `<div class="oc-icon-placeholder" style="display:none">🎵</div>`
-        : `<div class="oc-icon-placeholder">🎵</div>`;
+      const iconHtml = `<div class="oc-icon-placeholder">🎵</div>`;
 
       const detailLines = [];
       if (r.number) detailLines.push(`<div class="detail-line"><b>編號：</b>No.${r.number}</div>`);
@@ -786,3 +779,4 @@
 </script>
 </body>
 </html>
+                                                                                                                                                                                                                                                                                                                                                                                                          
