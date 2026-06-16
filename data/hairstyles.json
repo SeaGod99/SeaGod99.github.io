@@ -1,0 +1,321 @@
+{
+  "schema": "hairstyles",
+  "patch": "7.2",
+  "updated": "2026-06-16",
+  "source": "ffxiv-teamcraft/items.json (en names + item IDs); tw-items.msgpack (tw names); XIVAPI v2 Item (icon)",
+  "count": 39,
+  "data": [
+    {
+      "id": 10084,
+      "name": "髮型樣式：馬尾辮",
+      "nameEn": "Modern Aesthetics - Ponytails",
+      "icon": "/i/026000/026178.png",
+      "sources": ["金碟遊樂場"],
+      "patch": "2.51"
+    },
+    {
+      "id": 13703,
+      "name": "髮型樣式：拂曉盟主",
+      "nameEn": "Modern Aesthetics - Scion Special Issue",
+      "icon": "/i/026000/026178.png",
+      "sources": ["主線任務"],
+      "patch": "3.0"
+    },
+    {
+      "id": 13704,
+      "name": "髮型樣式：爆炸頭",
+      "nameEn": "Modern Aesthetics - Curls",
+      "icon": "/i/026000/026178.png",
+      "sources": ["副本掉落"],
+      "patch": "3.0"
+    },
+    {
+      "id": 13705,
+      "name": "髮型樣式：冒險者",
+      "nameEn": "Modern Aesthetics - Adventure",
+      "icon": "/i/026000/026178.png",
+      "sources": ["副本掉落"],
+      "patch": "3.0"
+    },
+    {
+      "id": 14970,
+      "name": "髮型樣式：雷光&冰雪",
+      "nameEn": "Modern Aesthetics - Pulse",
+      "icon": "/i/026000/026178.png",
+      "sources": ["聯名活動"],
+      "patch": "3.1"
+    },
+    {
+      "id": 15612,
+      "name": "髮型樣式：桑克瑞德",
+      "nameEn": "Modern Aesthetics - Scion Special Issue II",
+      "icon": "/i/026000/026178.png",
+      "sources": ["主線任務"],
+      "patch": "3.3"
+    },
+    {
+      "id": 15613,
+      "name": "髮型樣式：雅·修朵拉",
+      "nameEn": "Modern Aesthetics - Scion Special Issue III",
+      "icon": "/i/026000/026178.png",
+      "sources": ["主線任務"],
+      "patch": "3.3"
+    },
+    {
+      "id": 16703,
+      "name": "髮型樣式：長髮",
+      "nameEn": "Modern Aesthetics - Samsonian Locks",
+      "icon": "/i/026000/026178.png",
+      "sources": ["副本掉落"],
+      "patch": "3.5"
+    },
+    {
+      "id": 17471,
+      "name": "髮型樣式：金碟嘉年華",
+      "nameEn": "Modern Aesthetics - Rainmaker",
+      "icon": "/i/026000/026178.png",
+      "sources": ["金碟遊樂場"],
+      "patch": "4.0"
+    },
+    {
+      "id": 17472,
+      "name": "髮型樣式：總騎士長",
+      "nameEn": "Modern Aesthetics - Master & Commander",
+      "icon": "/i/026000/026178.png",
+      "sources": ["副本掉落"],
+      "patch": "4.0"
+    },
+    {
+      "id": 23369,
+      "name": "髮型樣式：基拉巴尼亞編髮",
+      "nameEn": "Modern Aesthetics - Gyr Abanian Plait",
+      "icon": "/i/026000/026178.png",
+      "sources": ["任務"],
+      "patch": "4.0"
+    },
+    {
+      "id": 23370,
+      "name": "髮型樣式：外翹短髮",
+      "nameEn": "Modern Aesthetics - Fashionably Feathered",
+      "icon": "/i/026000/026178.png",
+      "sources": ["市場板"],
+      "patch": "4.2"
+    },
+    {
+      "id": 24232,
+      "name": "髮型樣式：克勞德",
+      "nameEn": "Modern Aesthetics - Strife",
+      "icon": "/i/026000/026178.png",
+      "sources": ["聯名活動"],
+      "patch": "4.3"
+    },
+    {
+      "id": 24233,
+      "name": "髮型樣式：髮箍式編髮",
+      "nameEn": "Modern Aesthetics - Form and Function",
+      "icon": "/i/026000/026178.png",
+      "sources": ["市場板"],
+      "patch": "4.3"
+    },
+    {
+      "id": 24234,
+      "name": "髮型樣式：傭兵",
+      "nameEn": "Modern Aesthetics - Styled for Hire",
+      "icon": "/i/026000/026178.png",
+      "sources": ["市場板"],
+      "patch": "4.3"
+    },
+    {
+      "id": 24801,
+      "name": "髮型樣式：拉姆札&阿魯瑪",
+      "nameEn": "Modern Aesthetics - Lexen-tails",
+      "icon": "/i/026000/026178.png",
+      "sources": ["聯名活動"],
+      "patch": "4.4"
+    },
+    {
+      "id": 24802,
+      "name": "髮型樣式：諾克提斯",
+      "nameEn": "Modern Aesthetics - Lucian Locks",
+      "icon": "/i/026000/026178.png",
+      "sources": ["聯名活動"],
+      "patch": "4.4"
+    },
+    {
+      "id": 27970,
+      "name": "髮型樣式：經典長髮",
+      "nameEn": "Modern Aesthetics - Great Lengths",
+      "icon": "/i/026000/026178.png",
+      "sources": ["市場板"],
+      "patch": "5.0"
+    },
+    {
+      "id": 28615,
+      "name": "髮型樣式：傳奇",
+      "nameEn": "Modern Aesthetics - Modern Legend",
+      "icon": "/i/026000/026178.png",
+      "sources": ["副本掉落"],
+      "patch": "5.1"
+    },
+    {
+      "id": 30113,
+      "name": "髮型樣式：斜瀏海",
+      "nameEn": "Modern Aesthetics - Controlled Chaos",
+      "icon": "/i/026000/026178.png",
+      "sources": ["市場板"],
+      "patch": "5.2"
+    },
+    {
+      "id": 31406,
+      "name": "髮型樣式：聖翼",
+      "nameEn": "Modern Aesthetics - Saintly Style",
+      "icon": "/i/026000/026178.png",
+      "sources": ["副本掉落"],
+      "patch": "5.3"
+    },
+    {
+      "id": 31407,
+      "name": "髮型樣式：飛翔者",
+      "nameEn": "Modern Aesthetics - Wind Caller",
+      "icon": "/i/026000/026178.png",
+      "sources": ["市場板"],
+      "patch": "5.3"
+    },
+    {
+      "id": 32835,
+      "name": "髮型樣式：黎明辮",
+      "nameEn": "Modern Aesthetics - Early to Rise",
+      "icon": "/i/026000/026178.png",
+      "sources": ["市場板"],
+      "patch": "5.4"
+    },
+    {
+      "id": 32836,
+      "name": "髮型樣式：薩雷安神童",
+      "nameEn": "Modern Aesthetics - Sharlayan Studies",
+      "icon": "/i/026000/026178.png",
+      "sources": ["副本掉落"],
+      "patch": "5.4"
+    },
+    {
+      "id": 33706,
+      "name": "髮型樣式：側馬尾辮",
+      "nameEn": "Modern Aesthetics - Both Ways",
+      "icon": "/i/026000/026178.png",
+      "sources": ["市場板"],
+      "patch": "5.5"
+    },
+    {
+      "id": 33707,
+      "name": "髮型樣式：2B",
+      "nameEn": "Modern Aesthetics - Battle-ready Bobs",
+      "icon": "/i/026000/026178.png",
+      "sources": ["聯名活動"],
+      "patch": "5.5"
+    },
+    {
+      "id": 33708,
+      "name": "髮型樣式：9S",
+      "nameEn": "Modern Aesthetics - Scanning for Style",
+      "icon": "/i/026000/026178.png",
+      "sources": ["聯名活動"],
+      "patch": "5.5"
+    },
+    {
+      "id": 36812,
+      "name": "髮型樣式：莉瑟",
+      "nameEn": "Modern Aesthetics - Liberating Locks",
+      "icon": "/i/026000/026178.png",
+      "sources": ["副本掉落"],
+      "patch": "6.0"
+    },
+    {
+      "id": 38442,
+      "name": "髮型樣式：高馬尾辮",
+      "nameEn": "Modern Aesthetics - Tall Tails",
+      "icon": "/i/026000/026178.png",
+      "sources": ["市場板"],
+      "patch": "6.1"
+    },
+    {
+      "id": 38443,
+      "name": "髮型樣式：樸素單馬尾",
+      "nameEn": "Modern Aesthetics - Practical Ponytails",
+      "icon": "/i/026000/026178.png",
+      "sources": ["市場板"],
+      "patch": "6.1"
+    },
+    {
+      "id": 39472,
+      "name": "髮型樣式：薩雷安叛逆者",
+      "nameEn": "Modern Aesthetics - Sharlayan Rebellion",
+      "icon": "/i/026000/026178.png",
+      "sources": ["副本掉落"],
+      "patch": "6.2"
+    },
+    {
+      "id": 39473,
+      "name": "髮型樣式：寸頭",
+      "nameEn": "Modern Aesthetics - A Close Shave",
+      "icon": "/i/026000/026178.png",
+      "sources": ["市場板"],
+      "patch": "6.2"
+    },
+    {
+      "id": 40601,
+      "name": "髮型樣式：雜亂中長髮",
+      "nameEn": "Modern Aesthetics - Ambitious Ends",
+      "icon": "/i/026000/026178.png",
+      "sources": ["市場板"],
+      "patch": "6.3"
+    },
+    {
+      "id": 41465,
+      "name": "髮型樣式：側玉米壟",
+      "nameEn": "Modern Aesthetics - The Bold and the Braid",
+      "icon": "/i/026000/026178.png",
+      "sources": ["副本掉落"],
+      "patch": "6.4"
+    },
+    {
+      "id": 43606,
+      "name": "髮型樣式：二分區",
+      "nameEn": "Modern Aesthetics - It Takes Two",
+      "icon": "/i/026000/026178.png",
+      "sources": ["市場板"],
+      "patch": "6.5"
+    },
+    {
+      "id": 44506,
+      "name": "髮型樣式：微卷短髮",
+      "nameEn": "Modern Aesthetics - Doing the Wave",
+      "icon": "/i/026000/026178.png",
+      "sources": ["市場板"],
+      "patch": "7.0"
+    },
+    {
+      "id": 44865,
+      "name": "髮型樣式：編髮高馬尾",
+      "nameEn": "Modern Aesthetics - Head Hound",
+      "icon": "/i/026000/026178.png",
+      "sources": ["副本掉落"],
+      "patch": "7.0"
+    },
+    {
+      "id": 44866,
+      "name": "髮型樣式：血盟公爵",
+      "nameEn": "Modern Aesthetics - Scion Special Issue IV",
+      "icon": "/i/026000/026178.png",
+      "sources": ["主線任務"],
+      "patch": "7.0"
+    },
+    {
+      "id": 44867,
+      "name": "髮型樣式：蓬鬆短髮",
+      "nameEn": "Modern Aesthetics - Voidswept Strands",
+      "icon": "/i/026000/026178.png",
+      "sources": ["市場板"],
+      "patch": "7.0"
+    }
+  ]
+}

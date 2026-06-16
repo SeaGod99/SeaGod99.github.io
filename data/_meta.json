@@ -92,6 +92,14 @@
       "updated": "2026-06-16"
     },
     {
+      "schema": "hairstyles",
+      "file": "hairstyles.json",
+      "name": "髮型",
+      "source": "teamcraft/items.json (en+itemId); tw-items.msgpack (tw names); xivapi (icon)",
+      "status": "used",
+      "updated": "2026-06-16"
+    },
+    {
       "schema": "gathering",
       "file": "gathering.json",
       "name": "採集點",
@@ -189,15 +197,4 @@
       "file": "fishing.json",
       "name": "釣魚（舊，停用）",
       "source": "teamcraft",
-      "status": "superseded-by-fishes"
-    },
-    {
-      "schema": "fishes",
-      "file": "fishes.json",
-      "name": "魚",
-      "source": "fish-tracker+items",
-      "status": "populated",
-      "updated": "2026-06-08"
-    },
-    {
-      "schema": "fishing
+      "statu

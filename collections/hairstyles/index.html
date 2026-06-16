@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FF14 髮型收藏追蹤 — 版本篩選、來源查詢、記錄已解鎖進度">
+  <title>髮型收藏追蹤 | 水神的工具箱</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-base:    #0a0c10;
+      --bg-surface: #0f1117;
+      --bg-card:    #14181f;
+      --bg-card-hover: #1a1f2b;
+      --border:     rgba(255,255,255,0.07);
+      --border-hover: rgba(200,169,110,0.4);
+
+      --gold:       #c8a96e;
+      --gold-light: #e2c98a;
+      --gold-dim:   rgba(200,169,110,0.15);
+      --purple:     #a78bfa;
+      --purple-dim: rgba(167,139,250,0.12);
+      --green:      #4ade80;
+      --green-dim:  rgba(74,222,128,0.12);
+      --blue:       #4fc3f7;
+      --blue-dim:   rgba(79,195,247,0.12);
+      --red:        #f87171;
+
+      --text-primary:   #e8eaf0;
+      --text-secondary: #8892a4;
+      --text-muted:     #4a5568;
+
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --transition: 0.18s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 0%, rgba(200,169,110,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(167,139,250,0.04) 0%, transparent 60%);
+      pointer-events: none; z-index: 0;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Header ── */
+    .page-header {
+      padding: 36px 0 28px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 28px;
+    }
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      font-size: 13px;
+      white-space: nowrap;
+      transition: color var(--transition), border-color var(--transition);
+    }
+    .back-btn:hover { color: var(--gold); border-color: var(--gold); }
+
+    .page-title-wrap { flex: 1; min-width: 0; }
+    .page-title {
+      font-size: clamp(20px, 4vw, 28px);
+      font-weight: 700;
+      color: var(--gold-light);
+      letter-spacing: 0.02em;
+    }
+    .page-subtitle {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    /* ── Progress ── */
+    .progress-bar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+    }
+    .progress-info { font-size: 14px; color: var(--text-secondary); white-space: nowrap; }
+    .progress-info em { font-style: normal; color: var(--gold); font-weight: 600; }
+    .progress-track {
+      flex: 1;
+      height: 6px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+      border-radius: 3px;
+      transition: width 0.4s ease;
+    }
+    .progress-pct { font-size: 13px; color: var(--gold); font-weight: 600; white-space: nowrap; min-width: 36px; text-align: right; }
+
+    /* ── Toolbar ── */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .search-wrap {
+      flex: 1;
+      min-width: 200px;
+      position: relative;
+    }
+    .search-icon {
+      position: absolute;
+      left: 12px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+      pointer-events: none;
+    }
+    .search-input {
+      width: 100%;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-size: 14px;
+      padding: 9px 14px 9px 36px;
+      outline: none;
+      transition: border-color var(--transition);
+    }
+    .search-input::placeholder { color: var(--text-muted); }
+    .search-input:focus { border-color: var(--gold); }
+
+    .own-toggle {
+      display: flex;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+    .own-btn {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 13px;
+      padding: 8px 14px;
+      cursor: pointer;
+      transition: background var(--transition), color var(--transition);
+    }
+    .own-btn:hover { background: var(--gold-dim); color: var(--gold); }
+    .own-btn.active { background: var(--gold-dim); color: var(--gold); font-weight: 600; }
+
+    .icon-btn {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      font-size: 13px;
+      padding: 8px 14px;
+      cursor: pointer;
+      transition: border-color var(--transition), color var(--transition);
+      white-space: nowrap;
+    }
+    .icon-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .icon-btn.clear-btn:hover { border-color: var(--red); color: var(--red); }
+
+    /* ── Filter section ── */
+    .filter-section {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+      padding: 12px 16px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+    }
+    .filter-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+    .filter-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+    .filter-tag {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text-secondary);
+      font-size: 12px;
+      padding: 3px 10px;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .filter-tag:hover { border-color: var(--gold); color: var(--gold); }
+    .filter-tag.active { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); font-weight: 600; }
+
+    /* ── Source filters ── */
+    .source-filters { display: flex; gap: 6px; flex-wrap: wrap; }
+
+    /* ── Result meta ── */
+    .result-meta {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+    .result-meta em { font-style: normal; color: var(--text-secondary); }
+
+    /* ── Grid ── */
+    .hs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+
+    /* ── Card ── */
+    .hs-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: background var(--transition), border-color var(--transition), transform var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      user-select: none;
+      position: relative;
+      overflow: hidden;
+    }
+    .hs-card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-hover);
+      transform: translateY(-1px);
+    }
+    .hs-card.owned {
+      border-color: rgba(74,222,128,0.3);
+      background: linear-gradient(135deg, var(--bg-card), rgba(74,222,128,0.04));
+    }
+    .hs-card.owned::before {
+      content: '✓';
+      position: absolute;
+      top: 8px; right: 10px;
+      font-size: 12px;
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    .hs-icon-wrap {
+      width: 44px;
+      height: 44px;
+      flex-shrink: 0;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      background: rgba(255,255,255,0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hs-icon {
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
+      image-rendering: pixelated;
+    }
+    .hs-icon-placeholder {
+      font-size: 22px;
+    }
+
+    .hs-info { flex: 1; min-width: 0; }
+    .hs-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 2px;
+    }
+    .hs-name-en {
+      font-size: 11px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 6px;
+    }
+    .hs-tags {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+    .hs-tag {
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 3px;
+      font-weight: 500;
+    }
+    .tag-patch {
+      background: var(--purple-dim);
+      color: var(--purple);
+      border: 1px solid rgba(167,139,250,0.2);
+    }
+    .tag-source {
+      background: var(--blue-dim);
+      color: var(--blue);
+      border: 1px solid rgba(79,195,247,0.2);
+    }
+    .tag-source-event {
+      background: rgba(251,191,36,0.1);
+      color: #fbbf24;
+      border: 1px solid rgba(251,191,36,0.2);
+    }
+    .tag-source-mgp {
+      background: rgba(234,179,8,0.1);
+      color: #eab308;
+      border: 1px solid rgba(234,179,8,0.2);
+    }
+    .tag-source-quest {
+      background: var(--green-dim);
+      color: var(--green);
+      border: 1px solid rgba(74,222,128,0.2);
+    }
+
+    /* ── Empty ── */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+      font-size: 15px;
+    }
+
+    /* ── Footer ── */
+    .page-footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 0;
+      margin-top: 16px;
+    }
+    .footer-text {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+    .footer-text a:hover { color: var(--gold); }
+
+    /* ── Patch classes ── */
+    .patch-arr  { color: #60a5fa; }
+    .patch-hw   { color: #a78bfa; }
+    .patch-sb   { color: #fb923c; }
+    .patch-shb  { color: #4ade80; }
+    .patch-ew   { color: #4fc3f7; }
+    .patch-dt   { color: #e2c98a; }
+
+    @media (max-width: 600px) {
+      .hs-grid { grid-template-columns: 1fr; }
+      .toolbar { gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <header class="page-header">
+    <a href="../../" class="back-btn">← 返回工具箱</a>
+    <div class="page-title-wrap">
+      <h1 class="page-title">髮型收藏追蹤</h1>
+      <p class="page-subtitle">點擊卡片標記已解鎖，進度自動儲存於瀏覽器</p>
+    </div>
+  </header>
+
+  <!-- Progress -->
+  <div class="progress-bar-wrap">
+    <div class="progress-info">
+      <span id="ownedCount">0</span> / <span id="totalCount">0</span>
+      <span>已解鎖</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill" style="width:0%"></div>
+    </div>
+    <div class="progress-pct" id="progressPct">0%</div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" type="text" id="searchInput" placeholder="搜尋髮型名稱…" autocomplete="off">
+    </div>
+    <div class="own-toggle">
+      <button class="own-btn active" data-own="all">全部</button>
+      <button class="own-btn" data-own="owned">已解鎖</button>
+      <button class="own-btn" data-own="missing">未解鎖</button>
+    </div>
+    <button class="icon-btn" id="exportBtn">匯出進度</button>
+    <button class="icon-btn" id="importBtn">匯入進度</button>
+    <input type="file" id="importFile" accept="application/json" style="display:none">
+    <button class="icon-btn clear-btn" id="clearBtn">清除進度</button>
+  </div>
+
+  <!-- Patch filter -->
+  <div class="filter-section" id="patchFilterSection" style="display:none">
+    <div class="filter-label">版本</div>
+    <div class="filter-tags" id="patchFilters"></div>
+  </div>
+
+  <!-- Source filter -->
+  <div class="filter-section" id="sourceFilterSection" style="display:none">
+    <div class="filter-label">來源</div>
+    <div class="source-filters" id="sourceFilters"></div>
+  </div>
+
+  <!-- Result meta -->
+  <div class="result-meta" id="resultMeta"></div>
+
+  <!-- Grid -->
+  <div class="hs-grid" id="hsGrid"></div>
+
+  <div class="empty-state" id="emptyState" style="display:none">
+    找不到符合條件的髮型
+  </div>
+
+</div>
+
+<!-- Footer -->
+<footer class="page-footer">
+  <div class="container">
+    <p class="footer-text">
+      <a href="../../">水神的工具箱</a> · 資料來源：遊戲本體、<a href="https://xivapi.com" target="_blank">XIVAPI</a>
+    </p>
+    <p class="footer-text" style="margin-top:4px">
+      FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具
+    </p>
+  </div>
+</footer>
+
+<script>
+(function() {
+  const STORAGE_KEY = 'ffxiv_hairstyles_owned';
+  const DATA_URL = '../../data/hairstyles.json';
+  const ICON_BASE = 'https://xivapi.com';
+
+  // ── State ──
+  let HS_DATA = [];
+  let PATCHES = [];
+  let SOURCES = [];
+  let owned = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
+  let filterOwn = 'all';
+  let filterPatch = null;
+  let filterSource = null;
+  let searchQ = '';
+
+  // ── Key ──
+  function keyOf(h) { return 'id:' + h.id; }
+
+  // ── Save ──
+  function save() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify([...owned]));
+  }
+
+  // ── Toggle ──
+  function toggle(k) {
+    if (owned.has(k)) owned.delete(k);
+    else owned.add(k);
+    save();
+    updateProgress();
+    renderGrid();
+  }
+
+  // ── Progress ──
+  function updateProgress() {
+    const total = HS_DATA.length;
+    const count = HS_DATA.filter(h => owned.has(keyOf(h))).length;
+    const pct = total ? Math.round(count / total * 100) : 0;
+    document.getElementById('ownedCount').textContent = count;
+    document.getElementById('totalCount').textContent = total;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressPct').textContent = pct + '%';
+  }
+
+  // ── Patch label → CSS class ──
+  function patchClass(p) {
+    if (!p) return '';
+    const v = parseFloat(p);
+    if (v < 3) return 'patch-arr';
+    if (v < 4) return 'patch-hw';
+    if (v < 5) return 'patch-sb';
+    if (v < 6) return 'patch-shb';
+    if (v < 7) return 'patch-ew';
+    return 'patch-dt';
+  }
+
+  // ── Source tag class ──
+  function sourceClass(s) {
+    if (s === '聯名活動' || s === '節慶活動') return 'tag-source-event';
+    if (s === '金碟遊樂場') return 'tag-source-mgp';
+    if (s === '主線任務' || s === '任務') return 'tag-source-quest';
+    return 'tag-source';
+  }
+
+  // ── Patch filter renderer ──
+  function renderPatchFilters() {
+    const wrap = document.getElementById('patchFilters');
+    wrap.innerHTML = '';
+    PATCHES.forEach(v => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-tag' + (filterPatch === v ? ' active' : '');
+      btn.textContent = v;
+      btn.addEventListener('click', () => {
+        filterPatch = filterPatch === v ? null : v;
+        renderPatchFilters();
+        renderGrid();
+      });
+      wrap.appendChild(btn);
+    });
+  }
+
+  // ── Source filter renderer ──
+  function renderSourceFilters() {
+    const wrap = document.getElementById('sourceFilters');
+    wrap.innerHTML = '';
+    SOURCES.forEach(s => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-tag' + (filterSource === s ? ' active' : '');
+      btn.textContent = s;
+      btn.addEventListener('click', () => {
+        filterSource = filterSource === s ? null : s;
+        renderSourceFilters();
+        renderGrid();
+      });
+      wrap.appendChild(btn);
+    });
+  }
+
+  // ── Filter ──
+  function filtered() {
+    return HS_DATA.filter(h => {
+      const k = keyOf(h);
+      if (filterOwn === 'owned'   && !owned.has(k)) return false;
+      if (filterOwn === 'missing' &&  owned.has(k)) return false;
+      if (filterPatch && h.patch !== filterPatch) return false;
+      if (filterSource && !(h.sources || []).includes(filterSource)) return false;
+      if (searchQ) {
+        const q = searchQ.toLowerCase();
+        const nm = h.name   && h.name.toLowerCase().includes(q);
+        const en = h.nameEn && h.nameEn.toLowerCase().includes(q);
+        if (!nm && !en) return false;
+      }
+      return true;
+    });
+  }
+
+  // ── Render grid ──
+  function renderGrid() {
+    const list = filtered();
+    const grid = document.getElementById('hsGrid');
+    const empty = document.getElementById('emptyState');
+    const meta = document.getElementById('resultMeta');
+
+    grid.innerHTML = '';
+    if (list.length === 0) {
+      grid.style.display = 'none';
+      empty.style.display = '';
+    } else {
+      grid.style.display = '';
+      empty.style.display = 'none';
+    }
+
+    const ownedInView = list.filter(h => owned.has(keyOf(h))).length;
+    meta.innerHTML = `顯示 <em>${list.length}</em> / ${HS_DATA.length} 個 · 已解鎖 <em>${ownedInView}</em> / ${list.length}`;
+
+    list.forEach(h => {
+      const k = keyOf(h);
+      const isOwned = owned.has(k);
+      const card = document.createElement('div');
+      card.className = 'hs-card' + (isOwned ? ' owned' : '');
+
+      // Icon
+      const iconHtml = h.icon
+        ? `<img class="hs-icon" src="${ICON_BASE}${h.icon}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<span class=hs-icon-placeholder>💇</span>'">`
+        : `<span class="hs-icon-placeholder">💇</span>`;
+
+      // 名稱
+      const nameHtml = h.name
+        ? `<div class="hs-name">${h.name}</div><div class="hs-name-en">${h.nameEn}</div>`
+        : `<div class="hs-name">${h.nameEn}</div>`;
+
+      // Tags
+      const patchTag = h.patch
+        ? `<span class="hs-tag tag-patch ${patchClass(h.patch)}">${h.patch}</span>`
+        : '';
+      const sourceTags = (h.sources || []).map(s =>
+        `<span class="hs-tag ${sourceClass(s)}">${s}</span>`
+      ).join('');
+
+      card.innerHTML = `
+        <div class="hs-icon-wrap">${iconHtml}</div>
+        <div class="hs-info">
+          ${nameHtml}
+          <div class="hs-tags">${patchTag}${sourceTags}</div>
+        </div>
+      `;
+
+      card.addEventListener('click', () => toggle(k));
+      grid.appendChild(card);
+    });
+  }
+
+  // ── Export ──
+  function exportProgress() {
+    const payload = { schema: 'hairstyles', owned: [...owned], exported: new Date().toISOString() };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'hairstyles-progress.json';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  // ── Import ──
+  function importProgress(file) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const data = JSON.parse(e.target.result);
+        if (data.schema === 'hairstyles' && Array.isArray(data.owned)) {
+          owned = new Set(data.owned);
+          save();
+          updateProgress();
+          renderGrid();
+        } else {
+          alert('格式不符，請選擇髮型進度檔');
+        }
+      } catch { alert('檔案解析失敗'); }
+    };
+    reader.readAsText(file);
+  }
+
+  // ── Init ──
+  async function init() {
+    try {
+      const res = await fetch(DATA_URL);
+      if (!res.ok) throw new Error(res.status);
+      const json = await res.json();
+      HS_DATA = json.data || [];
+
+      // Collect patches & sources
+      const patchSet = new Set();
+      const sourceSet = new Set();
+      HS_DATA.forEach(h => {
+        if (h.patch) patchSet.add(h.patch);
+        (h.sources || []).forEach(s => sourceSet.add(s));
+      });
+      PATCHES = [...patchSet].sort((a, b) => parseFloat(a) - parseFloat(b));
+      SOURCES = [...sourceSet].sort();
+
+      // Show filters if data has variety
+      if (PATCHES.length > 1) {
+        document.getElementById('patchFilterSection').style.display = '';
+        renderPatchFilters();
+      }
+      if (SOURCES.length > 1) {
+        document.getElementById('sourceFilterSection').style.display = '';
+        renderSourceFilters();
+      }
+
+      updateProgress();
+      renderGrid();
+    } catch (err) {
+      document.getElementById('hsGrid').innerHTML =
+        `<div class="empty-state">資料載入失敗 (${err.message})，請稍後再試</div>`;
+    }
+  }
+
+  // ── Event listeners ──
+  document.getElementById('searchInput').addEventListener('input', e => {
+    searchQ = e.target.value.trim();
+    renderGrid();
+  });
+
+  document.querySelectorAll('.own-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.own-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      filterOwn = btn.dataset.own;
+      renderGrid();
+    });
+  });
+
+  document.getElementById('exportBtn').addEventListener('click', exportProgress);
+  document.getElementById('importBtn').addEventListener('click', () => document.getElementById('importFile').click());
+  document.getElementById('importFile').addEventListener('change', e => {
+    if (e.target.files[0]) importProgress(e.target.files[0]);
+    e.target.value = '';
+  });
+  document.getElementById('clearBtn').addEventListener('click', () => {
+    if (confirm('確定要清除所有髮型解鎖進度？')) {
+      owned.clear();
+      save();
+      updateProgress();
+      renderGrid();
+    }
+  });
+
+  init();
+})();
+</script>
+</body>
+</html>
