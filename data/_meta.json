@@ -87,8 +87,9 @@
       "schema": "aether-currents",
       "file": "aether-currents.json",
       "name": "風脈泉",
-      "source": "teamcraft",
-      "status": "example"
+      "source": "AetherCurrentCompFlgSet.csv+AetherCurrent.csv (datamining-cn); tw-quests.json (teamcraft)",
+      "status": "used",
+      "updated": "2026-06-16"
     },
     {
       "schema": "gathering",
@@ -199,8 +200,4 @@
       "updated": "2026-06-08"
     },
     {
-      "schema": "fishing-spots",
-      "file": "fishing-spots.json",
-      "name": "釣場",
-      "source": "fish-tracker+items",
- 
+      "schema": "fishing
