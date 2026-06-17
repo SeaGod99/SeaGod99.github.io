@@ -355,8 +355,19 @@ let modalJobFilter = 'all';
 
 // ─── LOAD DATA ────────────────────────────────────────────────────────────────
 async function loadData() {
-  const res = await fetch('../../data/squadron.json');
-  const json = await res.json();
+  let json = null;
+  try {
+    const res = await fetch('../../data/squadron.json');
+    if (res.ok) json = await res.json();
+  } catch(e) {
+    console.error('fetch failed:', e);
+  }
+  if (!json || !json.data) {
+    console.error('squadron.json load failed or empty');
+    document.getElementById('memberGrid').innerHTML =
+      '<div style="color:var(--red);padding:1rem;font-size:.85rem;">&#9888; 資料載入失敗，請確認 data/squadron.json 存在且可讀取。</div>';
+    return;
+  }
   const data = json.data;
   DB.recruits  = data.filter(d => d.kind === 'recruit');
   DB.missions  = data.filter(d => d.kind === 'mission');
@@ -364,6 +375,7 @@ async function loadData() {
   DB.chemCond  = data.filter(d => d.kind === 'chemistryCondition');
   DB.growths   = data.filter(d => d.kind === 'memberGrowth');
   DB.trainings = data.filter(d => d.kind === 'training');
+  console.log('DB loaded: recruits='+DB.recruits.length+' missions='+DB.missions.length);
   loadStorage();
   buildTrainingBtns();
   buildModalFilters();
