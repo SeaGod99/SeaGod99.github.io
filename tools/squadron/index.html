@@ -357,7 +357,7 @@ let modalJobFilter = 'all';
 async function loadData() {
   let json = null;
   try {
-    const res = await fetch('../../data/squadron.json');
+    const res = await fetch('../../data/squadron.json?v=' + Date.now());
     if (res.ok) json = await res.json();
   } catch(e) {
     console.error('fetch failed:', e);
