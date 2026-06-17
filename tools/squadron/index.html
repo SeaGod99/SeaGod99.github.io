@@ -3,20 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="FF14 冒險者小隊任務派遣模擬器 — 輸入隊員職業與等級，自動計算最佳派遣組合與成功率">
+  <meta name="description" content="FF14 冒險者小隊任務派遣模擬器 — 最多8名隊員、Chemistry技能、Mission Affinity 加成計算">
   <title>冒險者小隊計算機 | 水神的工具箱</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
       --bg-base:    #0a0c10;
       --bg-surface: #0f1117;
       --bg-card:    #14181f;
-      --bg-card-hover: #1a1f2b;
       --border:     rgba(255,255,255,0.07);
-      --border-hover: rgba(200,169,110,0.4);
       --gold:       #c8a96e;
-      --gold-light: #e2c98a;
       --gold-dim:   rgba(200,169,110,0.15);
       --purple:     #a78bfa;
       --purple-dim: rgba(167,139,250,0.12);
@@ -27,262 +23,114 @@
       --red:        #f87171;
       --red-dim:    rgba(248,113,113,0.12);
       --orange:     #fb923c;
-      --orange-dim: rgba(251,146,60,0.12);
+      --cyan:       #22d3ee;
+      --cyan-dim:   rgba(34,211,238,0.10);
       --text:       #e8e3d8;
       --text-dim:   #9a9590;
       --text-muted: #6b6560;
       --radius:     8px;
     }
-
-    body {
-      background: var(--bg-base);
-      color: var(--text);
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      min-height: 100vh;
-    }
+    body { background: var(--bg-base); color: var(--text); font-family: 'Segoe UI',system-ui,sans-serif; min-height:100vh; }
 
     /* NAV */
-    .nav {
-      background: var(--bg-surface);
-      border-bottom: 1px solid var(--border);
-      padding: 0 1.5rem;
-      height: 52px;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-    .nav-back {
-      color: var(--text-dim);
-      text-decoration: none;
-      font-size: 0.85rem;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      transition: color 0.2s;
-    }
-    .nav-back:hover { color: var(--gold); }
-    .nav-sep { color: var(--text-muted); font-size: 0.85rem; }
-    .nav-title { color: var(--text); font-size: 0.9rem; font-weight: 600; }
+    .nav { background:var(--bg-surface); border-bottom:1px solid var(--border); padding:0 1.5rem; height:52px; display:flex; align-items:center; gap:.75rem; }
+    .nav-back { color:var(--text-dim); text-decoration:none; font-size:.85rem; display:flex; align-items:center; gap:.4rem; transition:color .2s; }
+    .nav-back:hover { color:var(--gold); }
+    .nav-sep { color:var(--text-muted); font-size:.85rem; }
+    .nav-title { color:var(--text); font-size:.9rem; font-weight:600; }
 
     /* HERO */
-    .hero {
-      background: linear-gradient(135deg, #0f1117 0%, #141820 100%);
-      border-bottom: 1px solid var(--border);
-      padding: 2rem 1.5rem;
-    }
-    .hero-inner { max-width: 1200px; margin: 0 auto; }
-    .hero h1 { font-size: 1.6rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
-    .hero h1 span { font-size: 1.8rem; }
-    .hero p { color: var(--text-dim); margin-top: 0.4rem; font-size: 0.9rem; }
+    .hero { background:linear-gradient(135deg,#0f1117,#141820); border-bottom:1px solid var(--border); padding:2rem 1.5rem; }
+    .hero-inner { max-width:1280px; margin:0 auto; }
+    .hero h1 { font-size:1.6rem; font-weight:700; display:flex; align-items:center; gap:.5rem; }
+    .hero p { color:var(--text-dim); margin-top:.4rem; font-size:.9rem; }
 
     /* MAIN */
-    .main { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
-
-    /* SECTION */
-    .section { margin-bottom: 2rem; }
-    .section-title {
-      font-size: 0.8rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--gold);
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .main { max-width:1280px; margin:0 auto; padding:1.5rem; }
+    .section { margin-bottom:2rem; }
+    .section-title { font-size:.8rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--gold); margin-bottom:1rem; display:flex; align-items:center; gap:.5rem; }
+    .section-title::after { content:''; flex:1; height:1px; background:var(--border); }
 
     /* MEMBER GRID */
-    .member-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 0.75rem;
-    }
-    .member-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1rem;
-    }
-    .member-num {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 0.5rem;
-    }
-    .member-row {
-      display: flex;
-      gap: 0.5rem;
-      align-items: center;
-      margin-bottom: 0.5rem;
-    }
-    .member-row label { font-size: 0.8rem; color: var(--text-dim); width: 2.2rem; flex-shrink: 0; }
-    select, .level-input {
-      flex: 1;
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
-      border-radius: 5px;
-      color: var(--text);
-      padding: 0.35rem 0.5rem;
-      font-size: 0.82rem;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    select:focus, .level-input:focus { border-color: var(--gold); }
-    .member-stats {
-      display: flex;
-      gap: 0.4rem;
-      margin-top: 0.5rem;
-      flex-wrap: wrap;
-    }
-    .stat-badge {
-      font-size: 0.72rem;
-      padding: 0.15rem 0.4rem;
-      border-radius: 4px;
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
-    }
-    .stat-ph { color: var(--red); }
-    .stat-me { color: var(--blue); }
-    .stat-ta { color: var(--green); }
+    .member-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:.75rem; }
+    .member-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:.9rem; }
+    .member-card.inactive { opacity:.4; }
+    .member-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:.6rem; }
+    .member-num { font-size:.72rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:.05em; }
+    .member-toggle { display:flex; align-items:center; gap:.3rem; font-size:.75rem; color:var(--text-dim); cursor:pointer; user-select:none; }
+    .member-toggle input { accent-color:var(--gold); width:13px; height:13px; }
+    .member-row { display:grid; grid-template-columns:2.1rem 1fr; gap:.35rem; align-items:center; margin-bottom:.35rem; }
+    .member-row label { font-size:.76rem; color:var(--text-dim); }
+    select, input[type=number] { width:100%; background:var(--bg-surface); border:1px solid var(--border); border-radius:5px; color:var(--text); padding:.28rem .42rem; font-size:.78rem; outline:none; transition:border-color .2s; }
+    select:focus, input[type=number]:focus { border-color:var(--gold); }
+    select:disabled, input[type=number]:disabled { opacity:.35; cursor:not-allowed; }
+    .member-stats { display:flex; gap:.3rem; margin-top:.45rem; flex-wrap:wrap; }
+    .stat-badge { font-size:.7rem; padding:.1rem .35rem; border-radius:4px; background:var(--bg-surface); border:1px solid var(--border); }
+    .stat-ph { color:var(--red); }
+    .stat-me { color:var(--blue); }
+    .stat-ta { color:var(--green); }
+    .chem-divider { height:1px; background:var(--border); margin:.5rem 0; }
+    .chem-label { font-size:.66rem; color:var(--gold); letter-spacing:.05em; text-transform:uppercase; margin-bottom:.3rem; }
+    .chem-effect { font-size:.71rem; color:var(--cyan); margin-top:.22rem; min-height:.85rem; }
 
     /* TEAM TOTAL */
-    .team-total {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1rem 1.5rem;
-      display: flex;
-      gap: 2rem;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    .total-label { font-size: 0.8rem; color: var(--text-dim); margin-bottom: 0.25rem; }
-    .total-val { font-size: 1.4rem; font-weight: 700; }
+    .team-total { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:1rem 1.5rem; display:flex; gap:2rem; flex-wrap:wrap; align-items:center; }
+    .total-label { font-size:.78rem; color:var(--text-dim); margin-bottom:.2rem; }
+    .total-val { font-size:1.4rem; font-weight:700; }
+    .total-bonus { font-size:.72rem; color:var(--cyan); margin-left:.3rem; }
 
     /* MISSION LIST */
-    .mission-list { display: flex; flex-direction: column; gap: 0.5rem; }
-    .mission-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 0.75rem 1rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      flex-wrap: wrap;
-      transition: border-color 0.2s;
-    }
-    .mission-card.can-100 { border-color: rgba(74,222,128,0.4); }
-    .mission-card.can-partial { border-color: rgba(200,169,110,0.25); }
-    .mission-card.impossible { opacity: 0.4; }
+    .mission-list { display:flex; flex-direction:column; gap:.45rem; }
+    .mission-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; transition:border-color .2s; }
+    .mission-card.can-100 { border-color:rgba(74,222,128,.4); }
+    .mission-card.can-partial { border-color:rgba(200,169,110,.25); }
+    .mission-card.impossible { opacity:.38; }
+    .mission-main { display:flex; align-items:center; gap:1rem; padding:.6rem 1rem; flex-wrap:wrap; cursor:pointer; }
+    .mission-main:hover { background:rgba(255,255,255,.02); }
+    .mission-info { flex:1; min-width:150px; }
+    .mission-name { font-size:.88rem; font-weight:600; }
+    .mission-meta { font-size:.71rem; color:var(--text-dim); margin-top:.15rem; display:flex; gap:.4rem; flex-wrap:wrap; align-items:center; }
+    .mission-type { font-size:.63rem; padding:.06rem .38rem; border-radius:3px; font-weight:600; }
+    .type-trainee  { background:var(--blue-dim);   color:var(--blue);   border:1px solid rgba(79,195,247,.25); }
+    .type-routine  { background:var(--gold-dim);   color:var(--gold);   border:1px solid rgba(200,169,110,.25); }
+    .type-priority { background:var(--purple-dim); color:var(--purple); border:1px solid rgba(167,139,250,.25); }
+    .mission-reqs { display:flex; gap:.45rem; }
+    .req-item { font-size:.7rem; display:flex; flex-direction:column; align-items:center; gap:.06rem; }
+    .req-lbl { color:var(--text-muted); font-size:.6rem; }
+    .req-val { font-weight:700; }
+    .req-met   { color:var(--green); }
+    .req-unmet { color:var(--red); }
+    .mission-rate { min-width:66px; text-align:right; }
+    .rate-val { font-size:1.2rem; font-weight:700; }
+    .rate-100 { color:var(--green); }
+    .rate-hi  { color:var(--gold); }
+    .rate-lo  { color:var(--orange); }
+    .rate-no  { color:var(--text-muted); }
 
-    .mission-info { flex: 1; min-width: 180px; }
-    .mission-name { font-size: 0.9rem; font-weight: 600; }
-    .mission-meta { font-size: 0.75rem; color: var(--text-dim); margin-top: 0.2rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    /* AFFINITY PANEL */
+    .affinity-panel { background:rgba(34,211,238,.04); border-top:1px solid rgba(34,211,238,.15); padding:.6rem 1rem; display:none; }
+    .affinity-panel.open { display:block; }
+    .affinity-title { font-size:.68rem; color:var(--cyan); text-transform:uppercase; letter-spacing:.06em; margin-bottom:.4rem; }
+    .affinity-members { display:flex; flex-wrap:wrap; gap:.3rem; }
+    .affinity-chip { display:flex; align-items:center; gap:.28rem; background:var(--bg-surface); border:1px solid var(--border); border-radius:5px; padding:.18rem .45rem; font-size:.73rem; cursor:pointer; color:var(--text-dim); user-select:none; }
+    .affinity-chip input { accent-color:var(--cyan); width:12px; height:12px; }
+    .affinity-chip.checked { background:var(--cyan-dim); border-color:rgba(34,211,238,.4); color:var(--cyan); }
+    .affinity-note { font-size:.67rem; color:var(--text-muted); margin-top:.38rem; }
+    .affinity-bonus { font-size:.71rem; color:var(--cyan); margin-top:.32rem; }
 
-    .mission-type {
-      font-size: 0.68rem;
-      padding: 0.1rem 0.45rem;
-      border-radius: 3px;
-      font-weight: 600;
-    }
-    .type-trainee  { background: var(--blue-dim);   color: var(--blue);   border: 1px solid rgba(79,195,247,0.25); }
-    .type-routine  { background: var(--gold-dim);   color: var(--gold);   border: 1px solid rgba(200,169,110,0.25); }
-    .type-priority { background: var(--purple-dim); color: var(--purple); border: 1px solid rgba(167,139,250,0.25); }
+    /* FILTER */
+    .filter-row { display:flex; gap:.45rem; flex-wrap:wrap; margin-bottom:1rem; align-items:center; }
+    .filter-btn { font-size:.78rem; padding:.27rem .72rem; border-radius:5px; cursor:pointer; border:1px solid var(--border); background:var(--bg-surface); color:var(--text-dim); transition:all .15s; }
+    .filter-btn.active { background:var(--gold-dim); border-color:var(--gold); color:var(--gold); }
 
-    .mission-reqs {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      min-width: 200px;
-    }
-    .req-item {
-      font-size: 0.75rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.1rem;
-    }
-    .req-lbl { color: var(--text-muted); font-size: 0.65rem; }
-    .req-val { font-weight: 700; }
-    .req-met   { color: var(--green); }
-    .req-unmet { color: var(--red); }
+    /* TIP */
+    .tip { font-size:.77rem; color:var(--text-dim); background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:.68rem 1rem; margin-bottom:1rem; line-height:1.65; }
+    .tip strong { color:var(--gold); }
+    .tip .cyan { color:var(--cyan); }
 
-    .mission-rate {
-      min-width: 80px;
-      text-align: right;
-    }
-    .rate-val { font-size: 1.3rem; font-weight: 700; }
-    .rate-100 { color: var(--green); }
-    .rate-hi  { color: var(--gold); }
-    .rate-lo  { color: var(--orange); }
-    .rate-no  { color: var(--text-muted); }
-
-    /* VARIANT SELECTOR */
-    .variant-tabs {
-      display: flex;
-      gap: 0.3rem;
-      flex-wrap: wrap;
-      margin-bottom: 0.5rem;
-    }
-    .variant-tab {
-      font-size: 0.72rem;
-      padding: 0.2rem 0.6rem;
-      border-radius: 4px;
-      cursor: pointer;
-      border: 1px solid var(--border);
-      background: var(--bg-surface);
-      color: var(--text-dim);
-      transition: all 0.15s;
-    }
-    .variant-tab.active, .variant-tab:hover {
-      border-color: var(--gold);
-      color: var(--gold);
-    }
-
-    /* FILTER ROW */
-    .filter-row {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      margin-bottom: 1rem;
-      align-items: center;
-    }
-    .filter-btn {
-      font-size: 0.78rem;
-      padding: 0.3rem 0.8rem;
-      border-radius: 5px;
-      cursor: pointer;
-      border: 1px solid var(--border);
-      background: var(--bg-surface);
-      color: var(--text-dim);
-      transition: all 0.15s;
-    }
-    .filter-btn.active {
-      background: var(--gold-dim);
-      border-color: var(--gold);
-      color: var(--gold);
-    }
-
-    /* TIPS */
-    .tip {
-      font-size: 0.78rem;
-      color: var(--text-dim);
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 0.75rem 1rem;
-      margin-bottom: 1rem;
-      line-height: 1.6;
-    }
-    .tip strong { color: var(--gold); }
-
-    @media (max-width: 640px) {
-      .mission-card { flex-direction: column; align-items: flex-start; }
-      .mission-rate { text-align: left; }
+    @media (max-width:640px) {
+      .mission-main { flex-direction:column; align-items:flex-start; }
+      .mission-rate { text-align:left; }
     }
   </style>
 </head>
@@ -296,257 +144,389 @@
 <div class="hero">
   <div class="hero-inner">
     <h1><span>🏰</span> 冒險者小隊計算機</h1>
-    <p>設定隊員職業與等級，自動計算各任務的最佳派遣組合與成功率</p>
+    <p>最多8名隊員，設定職業、等級、種族與Chemistry技能；點選任務展開 Mission Affinity 面板計算加成後成功率</p>
   </div>
 </div>
 
 <div class="main">
-  <!-- MEMBER INPUT -->
   <div class="section">
-    <div class="section-title">隊員設定（最多4人）</div>
+    <div class="section-title">隊員設定（最多8人）</div>
     <div class="member-grid" id="memberGrid"></div>
   </div>
 
-  <!-- TEAM TOTAL -->
   <div class="section">
     <div class="section-title">隊伍合計屬性</div>
     <div class="team-total">
       <div>
         <div class="total-label">體能 Physical</div>
-        <div class="total-val stat-ph" id="totalPh">0</div>
+        <div style="display:flex;align-items:baseline">
+          <div class="total-val stat-ph" id="totalPh">0</div>
+          <div class="total-bonus" id="bonusPh"></div>
+        </div>
       </div>
       <div>
         <div class="total-label">精神 Mental</div>
-        <div class="total-val stat-me" id="totalMe">0</div>
+        <div style="display:flex;align-items:baseline">
+          <div class="total-val stat-me" id="totalMe">0</div>
+          <div class="total-bonus" id="bonusMe"></div>
+        </div>
       </div>
       <div>
         <div class="total-label">戰術 Tactical</div>
-        <div class="total-val stat-ta" id="totalTa">0</div>
+        <div style="display:flex;align-items:baseline">
+          <div class="total-val stat-ta" id="totalTa">0</div>
+          <div class="total-bonus" id="bonusTa"></div>
+        </div>
       </div>
+      <div id="totalChemDesc" style="font-size:.73rem;color:var(--cyan);line-height:1.6;"></div>
     </div>
   </div>
 
-  <!-- MISSION LIST -->
   <div class="section">
     <div class="section-title">任務派遣結果</div>
-
     <div class="tip">
-      <strong>成功率計算</strong>：重要任務（⚑）需 3 項屬性全達標才有 100% 成功率；一般任務每達標 1 項+20%，全達標再+20%，基礎成功率視任務而定。<br>
-      派遣時遊戲會顯示 6 種「要求組合」，選擇最適合己方屬性的組合即可。
+      <strong>成功率計算</strong>：重要任務（⚑）需3項屬性全達標才有100%；一般任務每達標+20%，全達標再+20%。<br>
+      <span class="cyan">▸ Mission Affinity</span>：點選任務展開面板，勾選有親和加成的隊員 → 其Chemistry 100%觸發且效果翻倍，屬性加成重算成功率。<br>
+      <strong>Chemistry</strong> id1–3 影響個人屬性（體/精/戰），id4–6 影響全員屬性；其餘為獎勵加成，不影響成功率。
     </div>
-
     <div class="filter-row">
-      <span style="font-size:0.8rem;color:var(--text-dim)">顯示：</span>
+      <span style="font-size:.8rem;color:var(--text-dim)">顯示：</span>
       <button class="filter-btn active" id="filterAll" onclick="setFilter('all')">全部</button>
       <button class="filter-btn" id="filterCan" onclick="setFilter('possible')">可達成</button>
       <button class="filter-btn" id="filter100" onclick="setFilter('100')">100% 達成</button>
     </div>
-
     <div class="mission-list" id="missionList"></div>
   </div>
 </div>
 
 <script>
-// ── DATA ────────────────────────────────────────────────────────────────────
 const DATA_URL = '../../data/squadron.json';
+const RACES = ['人族','精靈族','貓魅族','拉拉菲爾族','魯加族','敖龍族'];
 
-// ── STATE ───────────────────────────────────────────────────────────────────
-let squadronData = null;
-let filter = 'all';
-let members = [
-  { job: 'MRD', level: 60 },
-  { job: 'GLA', level: 60 },
-  { job: 'ARC', level: 60 },
-  { job: 'ROG', level: 60 },
-];
+// Chemistry id → which stat it boosts and whether self or all members
+// id 1-3: self stat boost; id 4-6: all-member stat boost; others: no stat effect
+const CHEM_STAT = {
+  1: { scope:'self', stat:'physical' },
+  2: { scope:'self', stat:'mental'   },
+  3: { scope:'self', stat:'tactical' },
+  4: { scope:'all',  stat:'physical' },
+  5: { scope:'all',  stat:'mental'   },
+  6: { scope:'all',  stat:'tactical' },
+};
 
-// ── LOAD ─────────────────────────────────────────────────────────────────────
-fetch(DATA_URL)
-  .then(r => r.json())
-  .then(data => {
-    squadronData = data;
-    buildMemberGrid();
-    recalc();
-  });
+let SD = null;
+let filterMode = 'all';
+let openMission = null;
+// affinityMap[missionId] = Set of member indices
+let affinityMap = {};
 
-// ── BUILD MEMBER GRID ────────────────────────────────────────────────────────
-function buildMemberGrid() {
-  const growths = squadronData.data.filter(x => x.kind === 'memberGrowth');
-  const jobOptions = growths.map(g =>
-    `<option value="${g.classAbbr}">${g.className} (${g.classAbbr})</option>`
-  ).join('');
+let members = Array.from({length:8}, (_,i) => ({
+  active: i < 4,
+  job:    ['MRD','GLA','ARC','ROG','LNC','PGL','THM','ARC'][i],
+  level:  60,
+  race:   '人族',
+  chemId: 0,
+  chemRank: 1,
+}));
 
-  const grid = document.getElementById('memberGrid');
-  grid.innerHTML = members.map((m, i) => `
-    <div class="member-card">
-      <div class="member-num">隊員 ${i + 1}</div>
-      <div class="member-row">
-        <label>職業</label>
-        <select id="job${i}" onchange="updateMember(${i},'job',this.value)">
-          ${growths.map(g =>
-            `<option value="${g.classAbbr}"${g.classAbbr===m.job?' selected':''}>${g.className}</option>`
-          ).join('')}
+fetch(DATA_URL).then(r=>r.json()).then(data=>{
+  SD = data;
+  buildGrid();
+  render();
+});
+
+function growths(){ return SD.data.filter(x=>x.kind==='memberGrowth'); }
+function chems(){   return SD.data.filter(x=>x.kind==='chemistry'); }
+function getChem(id){ return chems().find(c=>c.id===id)||null; }
+function missions(){ return SD.data.filter(x=>x.kind==='mission'); }
+
+function buildGrid(){
+  const gs = growths();
+  const cs = chems();
+  const chemOpts = ['<option value="0">── 無技能 ──</option>',
+    ...cs.map(c=>`<option value="${c.id}">${c.text.replace('{value}','?')}</option>`)
+  ].join('');
+
+  document.getElementById('memberGrid').innerHTML = members.map((m,i)=>{
+    const jobOpts = gs.map(g=>
+      `<option value="${g.classAbbr}"${g.classAbbr===m.job?' selected':''}>${g.className}</option>`
+    ).join('');
+    const raceOpts = RACES.map(r=>
+      `<option value="${r}"${r===m.race?' selected':''}>${r}</option>`
+    ).join('');
+    return `
+    <div class="member-card${m.active?'':' inactive'}" id="mc${i}">
+      <div class="member-header">
+        <span class="member-num">隊員 ${i+1}</span>
+        <label class="member-toggle">
+          <input type="checkbox" id="act${i}" ${m.active?'checked':''}
+            onchange="toggleActive(${i},this.checked)"> 出戰中
+        </label>
+      </div>
+      <div class="member-row"><label>職業</label>
+        <select id="job${i}" ${m.active?'':'disabled'} onchange="setM(${i},'job',this.value)">${jobOpts}</select>
+      </div>
+      <div class="member-row"><label>等級</label>
+        <input type="number" id="lv${i}" min="1" max="60" value="${m.level}" ${m.active?'':'disabled'}
+          onchange="setM(${i},'level',+this.value)">
+      </div>
+      <div class="member-row"><label>種族</label>
+        <select id="race${i}" ${m.active?'':'disabled'} onchange="setM(${i},'race',this.value)">${raceOpts}</select>
+      </div>
+      <div class="member-stats" id="st${i}"></div>
+      <div class="chem-divider"></div>
+      <div class="chem-label">Chemistry 技能</div>
+      <div class="member-row"><label>技能</label>
+        <select id="ch${i}" ${m.active?'':'disabled'} onchange="setM(${i},'chemId',+this.value)">${chemOpts}</select>
+      </div>
+      <div class="member-row" id="rr${i}" style="${m.chemId===0?'display:none':''}"><label>階級</label>
+        <select id="cr${i}" ${m.active?'':'disabled'} onchange="setM(${i},'chemRank',+this.value)">
+          ${[1,2,3,4,5].map(r=>`<option value="${r}"${r===m.chemRank?' selected':''}>${r}</option>`).join('')}
         </select>
       </div>
-      <div class="member-row">
-        <label>等級</label>
-        <input class="level-input" type="number" id="lv${i}" min="1" max="60" value="${m.level}"
-          onchange="updateMember(${i},'level',+this.value)">
-      </div>
-      <div class="member-stats" id="stats${i}"></div>
-    </div>
-  `).join('');
+      <div class="chem-effect" id="ce${i}"></div>
+    </div>`;
+  }).join('');
 
-  members.forEach((_, i) => updateStatBadge(i));
+  members.forEach((_,i)=>{ refreshBadge(i); refreshChemEffect(i); });
 }
 
-function updateMember(i, field, val) {
-  if (field === 'level') {
-    val = Math.max(1, Math.min(60, val || 1));
-    document.getElementById('lv' + i).value = val;
-  }
-  members[i][field] = val;
-  updateStatBadge(i);
-  recalc();
+function toggleActive(i,v){
+  members[i].active = v;
+  document.getElementById('mc'+i).classList.toggle('inactive',!v);
+  ['job','lv','race','ch','cr'].forEach(p=>{
+    const el = document.getElementById(p+i);
+    if(el) el.disabled = !v;
+  });
+  render();
 }
 
-function getMemberStats(m) {
-  if (!squadronData) return { physical: 0, mental: 0, tactical: 0 };
-  const growths = squadronData.data.filter(x => x.kind === 'memberGrowth');
-  const g = growths.find(x => x.classAbbr === m.job);
-  if (!g) return { physical: 0, mental: 0, tactical: 0 };
-  const idx = Math.max(0, Math.min(59, m.level - 1));
+function setM(i,field,val){
+  if(field==='level'){ val=Math.max(1,Math.min(60,val||1)); document.getElementById('lv'+i).value=val; }
+  members[i][field]=val;
+  if(field==='chemId') document.getElementById('rr'+i).style.display = val===0?'none':'';
+  refreshBadge(i);
+  refreshChemEffect(i);
+  render();
+}
+
+function baseStats(m){
+  if(!SD) return {physical:0,mental:0,tactical:0};
+  const g = growths().find(x=>x.classAbbr===m.job);
+  if(!g) return {physical:0,mental:0,tactical:0};
+  const idx = Math.max(0,Math.min(59,m.level-1));
+  return { physical:g.growth.physical[idx], mental:g.growth.mental[idx], tactical:g.growth.tactical[idx] };
+}
+
+function refreshBadge(i){
+  const m=members[i], s=baseStats(m);
+  document.getElementById('st'+i).innerHTML = m.active
+    ? `<span class="stat-badge stat-ph">體 ${s.physical}</span><span class="stat-badge stat-me">精 ${s.mental}</span><span class="stat-badge stat-ta">戰 ${s.tactical}</span>`
+    : '';
+}
+
+function refreshChemEffect(i){
+  const el=document.getElementById('ce'+i);
+  if(!el) return;
+  const m=members[i];
+  if(!m.active||m.chemId===0){ el.textContent=''; return; }
+  const c=getChem(m.chemId);
+  if(!c){ el.textContent=''; return; }
+  const ri=m.chemRank-1, v=c.valuesByRank[ri], ch=c.chanceByRank[ri];
+  let txt=c.text;
+  txt = v>0 ? txt.replace('{value}',v) : txt.replace('{value}',ch+'%');
+  el.textContent = `▸ ${txt}（Rank ${m.chemRank}）`;
+}
+
+// Compute team totals including chemistry, with optional affinity set
+function computeTotals(affSet){
+  const active = members.map((m,i)=>({m,i})).filter(({m})=>m.active);
+
+  // base sum
+  let base={physical:0,mental:0,tactical:0};
+  active.forEach(({m})=>{ const s=baseStats(m); base.physical+=s.physical; base.mental+=s.mental; base.tactical+=s.tactical; });
+
+  // Collect "all" scope chemistry boosts (sum across all active members)
+  let allBoost={physical:0,mental:0,tactical:0};
+  active.forEach(({m,i})=>{
+    if(m.chemId===0) return;
+    const map=CHEM_STAT[m.chemId];
+    if(!map||map.scope!=='all') return;
+    const c=getChem(m.chemId);
+    const ri=m.chemRank-1;
+    let pct=c.valuesByRank[ri];
+    if(affSet&&affSet.has(i)) pct*=2;
+    allBoost[map.stat]+=pct;
+  });
+
+  // Per-member bonus (self + share of all-boosts)
+  let bonusPh=0,bonusMe=0,bonusTa=0;
+  active.forEach(({m,i})=>{
+    const s=baseStats(m);
+    const isAff=affSet&&affSet.has(i);
+
+    let selfPh=0,selfMe=0,selfTa=0;
+    if(m.chemId!==0){
+      const map=CHEM_STAT[m.chemId];
+      if(map&&map.scope==='self'){
+        const c=getChem(m.chemId);
+        const ri=m.chemRank-1;
+        let pct=c.valuesByRank[ri];
+        if(isAff) pct*=2;
+        if(map.stat==='physical') selfPh=pct;
+        else if(map.stat==='mental') selfMe=pct;
+        else selfTa=pct;
+      }
+    }
+
+    const tPh=allBoost.physical+selfPh;
+    const tMe=allBoost.mental  +selfMe;
+    const tTa=allBoost.tactical+selfTa;
+    bonusPh+=Math.round(s.physical*tPh/100);
+    bonusMe+=Math.round(s.mental  *tMe/100);
+    bonusTa+=Math.round(s.tactical*tTa/100);
+  });
+
   return {
-    physical: g.growth.physical[idx],
-    mental:   g.growth.mental[idx],
-    tactical: g.growth.tactical[idx],
+    physical: base.physical+bonusPh,
+    mental:   base.mental  +bonusMe,
+    tactical: base.tactical+bonusTa,
+    bonusPh, bonusMe, bonusTa,
   };
 }
 
-function updateStatBadge(i) {
-  const s = getMemberStats(members[i]);
-  document.getElementById('stats' + i).innerHTML = `
-    <span class="stat-badge stat-ph">體 ${s.physical}</span>
-    <span class="stat-badge stat-me">精 ${s.mental}</span>
-    <span class="stat-badge stat-ta">戰 ${s.tactical}</span>
-  `;
+function calcMission(m,affSet){
+  const t=computeTotals(affSet);
+  const rv=m.requireVariants, n=rv.physical.length;
+  let bestRate=-1, bestReqs=null;
+  for(let v=0;v<n;v++){
+    const r={physical:rv.physical[v],mental:rv.mental[v],tactical:rv.tactical[v]};
+    const ph=t.physical>=r.physical, me=t.mental>=r.mental, ta=t.tactical>=r.tactical;
+    const cnt=[ph,me,ta].filter(Boolean).length;
+    const all=cnt===3;
+    const rate=m.success.base+cnt*m.success.perStatMet+(all?m.success.allMet:0);
+    if(rate>bestRate){ bestRate=rate; bestReqs={...r,ph,me,ta}; }
+  }
+  return { rate:Math.min(100,bestRate), reqs:bestReqs };
 }
 
-// ── RECALC ────────────────────────────────────────────────────────────────────
-function recalc() {
-  if (!squadronData) return;
-
+function render(){
+  if(!SD) return;
   // team total
-  const totals = members.reduce((acc, m) => {
-    const s = getMemberStats(m);
-    acc.physical += s.physical;
-    acc.mental   += s.mental;
-    acc.tactical += s.tactical;
-    return acc;
-  }, { physical: 0, mental: 0, tactical: 0 });
+  const t=computeTotals(null);
+  document.getElementById('totalPh').textContent=t.physical;
+  document.getElementById('totalMe').textContent=t.mental;
+  document.getElementById('totalTa').textContent=t.tactical;
+  document.getElementById('bonusPh').textContent=t.bonusPh>0?`+${t.bonusPh}`:'';
+  document.getElementById('bonusMe').textContent=t.bonusMe>0?`+${t.bonusMe}`:'';
+  document.getElementById('bonusTa').textContent=t.bonusTa>0?`+${t.bonusTa}`:'';
 
-  document.getElementById('totalPh').textContent = totals.physical;
-  document.getElementById('totalMe').textContent = totals.mental;
-  document.getElementById('totalTa').textContent = totals.tactical;
+  // chem summary
+  const lines=[];
+  members.forEach((m,i)=>{
+    if(!m.active||m.chemId===0) return;
+    const c=getChem(m.chemId), ri=m.chemRank-1;
+    const v=c.valuesByRank[ri], ch=c.chanceByRank[ri];
+    let txt=c.text; txt=v>0?txt.replace('{value}',v):txt.replace('{value}',ch+'%');
+    lines.push(`隊員${i+1}：${txt}`);
+  });
+  document.getElementById('totalChemDesc').innerHTML=lines.join('<br>');
 
   // missions
-  const missions = squadronData.data.filter(x => x.kind === 'mission');
-  const results = missions.map(m => calcMission(m, totals));
-  renderMissions(missions, results);
-}
-
-function calcMission(m, totals) {
-  const rv = m.requireVariants;
-  const variantCount = rv.physical.length;
-  let bestRate = -1;
-  let bestVariant = 0;
-  let bestReqs = null;
-
-  for (let v = 0; v < variantCount; v++) {
-    const reqs = {
-      physical: rv.physical[v],
-      mental:   rv.mental[v],
-      tactical: rv.tactical[v],
-    };
-    const phMet = totals.physical >= reqs.physical;
-    const meMet = totals.mental   >= reqs.mental;
-    const taMet = totals.tactical >= reqs.tactical;
-    const metCount = [phMet, meMet, taMet].filter(Boolean).length;
-    const allMet = metCount === 3;
-
-    const rate = m.success.base
-      + metCount * m.success.perStatMet
-      + (allMet ? m.success.allMet : 0);
-
-    if (rate > bestRate) {
-      bestRate = rate;
-      bestVariant = v;
-      bestReqs = { ...reqs, phMet, meMet, taMet };
-    }
-  }
-
-  return { rate: Math.min(100, bestRate), variant: bestVariant, reqs: bestReqs };
-}
-
-// ── RENDER MISSIONS ───────────────────────────────────────────────────────────
-const TYPE_LABEL = { trainee: '簡單', routine: '例行', priority: '優先' };
-
-function setFilter(f) {
-  filter = f;
-  ['filterAll','filterCan','filter100'].forEach(id =>
-    document.getElementById(id).classList.remove('active'));
-  document.getElementById(f === 'all' ? 'filterAll' : f === 'possible' ? 'filterCan' : 'filter100').classList.add('active');
-  if (squadronData) recalc();
-}
-
-function renderMissions(missions, results) {
-  const list = document.getElementById('missionList');
-
-  const pairs = missions.map((m, i) => ({ m, r: results[i] }));
-  // sort: 100% first, then by rate desc, then by level
-  pairs.sort((a, b) => b.r.rate - a.r.rate || a.m.level - b.m.level);
-
-  const filtered = pairs.filter(({ r }) => {
-    if (filter === '100') return r.rate >= 100;
-    if (filter === 'possible') return r.rate > 0;
-    return true;
+  const TYPE_LBL={trainee:'簡單',routine:'例行',priority:'優先'};
+  const ms=missions();
+  let pairs=ms.map(m=>{
+    const aff=affinityMap[m.id]||new Set();
+    return {m, r:calcMission(m,aff)};
   });
+  pairs.sort((a,b)=>b.r.rate-a.r.rate||a.m.level-b.m.level);
+  if(filterMode==='100') pairs=pairs.filter(p=>p.r.rate>=100);
+  else if(filterMode==='possible') pairs=pairs.filter(p=>p.r.rate>0);
 
-  list.innerHTML = filtered.map(({ m, r }) => {
-    const rateClass = r.rate >= 100 ? 'rate-100' : r.rate >= 60 ? 'rate-hi' : r.rate > 0 ? 'rate-lo' : 'rate-no';
-    const cardClass = r.rate >= 100 ? 'can-100' : r.rate > 0 ? 'can-partial' : 'impossible';
-    const typeClass = `type-${m.type}`;
-    const flagIcon = m.flagged ? '⚑ ' : '';
+  // stat-affecting chemistry members (for affinity panel)
+  const statChemMbrs=members.map((m,i)=>({m,i})).filter(({m})=>
+    m.active&&m.chemId!==0&&CHEM_STAT[m.chemId]);
 
-    return `
-      <div class="mission-card ${cardClass}">
-        <div class="mission-info">
-          <div class="mission-name">${flagIcon}${m.name}</div>
-          <div class="mission-meta">
-            <span class="mission-type ${typeClass}">${TYPE_LABEL[m.type] || m.type}</span>
-            <span>Lv ${m.level}</span>
+  document.getElementById('missionList').innerHTML = pairs.length===0
+    ? '<div style="color:var(--text-muted);text-align:center;padding:2rem">無符合條件的任務</div>'
+    : pairs.map(({m,r})=>{
+      const aff=affinityMap[m.id]||new Set();
+      const baseR=calcMission(m,new Set()).rate;
+      const isOpen=openMission===m.id;
+      const flag=m.flagged?'⚑ ':'';
+      const rCls=r.rate>=100?'rate-100':r.rate>=60?'rate-hi':r.rate>0?'rate-lo':'rate-no';
+      const cCls=r.rate>=100?'can-100':r.rate>0?'can-partial':'impossible';
+
+      const chips=statChemMbrs.map(({m:mb,i})=>{
+        const c=getChem(mb.chemId), ri=mb.chemRank-1;
+        const v=c.valuesByRank[ri], ch=c.chanceByRank[ri];
+        let txt=c.text; txt=v>0?txt.replace('{value}',v):txt.replace('{value}',ch+'%');
+        const ckd=aff.has(i);
+        return `<label class="affinity-chip${ckd?' checked':''}" onclick="toggleAff(${m.id},${i},event)">
+          <input type="checkbox" ${ckd?'checked':''}> 隊員${i+1}（${txt}）
+        </label>`;
+      }).join('');
+
+      const bonusTxt=(r.rate>baseR)?`成功率提升 +${r.rate-baseR}%（加成後 ${r.rate}%）`:'';
+      const affPanel=`
+        <div class="affinity-panel${isOpen?' open':''}" id="ap${m.id}">
+          <div class="affinity-title">⟐ Mission Affinity 親和加成</div>
+          ${statChemMbrs.length>0
+            ?`<div class="affinity-members">${chips}</div>
+              <div class="affinity-note">勾選此任務中有親和加成的隊員 → Chemistry 100% 觸發且效果翻倍</div>
+              ${bonusTxt?`<div class="affinity-bonus">${bonusTxt}</div>`:''}`
+            :`<div class="affinity-note" style="color:var(--text-muted)">目前無隊員設定影響屬性的Chemistry（id1–6），親和加成無法計算。</div>`
+          }
+        </div>`;
+
+      return `
+      <div class="mission-card ${cCls}">
+        <div class="mission-main" onclick="togglePanel(${m.id})">
+          <div class="mission-info">
+            <div class="mission-name">${flag}${m.name}</div>
+            <div class="mission-meta">
+              <span class="mission-type type-${m.type}">${TYPE_LBL[m.type]||m.type}</span>
+              <span>Lv ${m.level}</span>
+              ${aff.size>0?`<span style="color:var(--cyan)">Affinity ×${aff.size}</span>`:''}
+            </div>
+          </div>
+          <div class="mission-reqs">
+            ${[['physical','體','ph'],['mental','精','me'],['tactical','戰','ta']].map(([s,l,k])=>`
+              <div class="req-item">
+                <span class="req-lbl">${l}</span>
+                <span class="req-val ${r.reqs[k]?'req-met':'req-unmet'}">${r.reqs[s]}</span>
+              </div>`).join('')}
+          </div>
+          <div class="mission-rate">
+            <div class="rate-val ${rCls}">${r.rate}%</div>
           </div>
         </div>
-        <div class="mission-reqs">
-          ${['physical','mental','tactical'].map((stat, si) => {
-            const labels = ['體能','精神','戰術'];
-            const met = r.reqs[stat === 'physical' ? 'phMet' : stat === 'mental' ? 'meMet' : 'taMet'];
-            return `<div class="req-item">
-              <span class="req-lbl">${labels[si]}</span>
-              <span class="req-val ${met ? 'req-met' : 'req-unmet'}">${r.reqs[stat]}</span>
-            </div>`;
-          }).join('')}
-        </div>
-        <div class="mission-rate">
-          <div class="rate-val ${rateClass}">${r.rate}%</div>
-        </div>
-      </div>
-    `;
-  }).join('');
+        ${affPanel}
+      </div>`;
+    }).join('');
+}
 
-  if (filtered.length === 0) {
-    list.innerHTML = '<div style="color:var(--text-muted);text-align:center;padding:2rem;">無符合條件的任務</div>';
-  }
+function togglePanel(mid){
+  openMission = openMission===mid ? null : mid;
+  render();
+}
+
+function toggleAff(mid,idx,e){
+  e.stopPropagation();
+  if(!affinityMap[mid]) affinityMap[mid]=new Set();
+  const s=affinityMap[mid];
+  // determine from checkbox state
+  const cb=e.currentTarget.querySelector('input');
+  if(cb.checked) s.add(idx); else s.delete(idx);
+  openMission=mid;
+  render();
+}
+
+function setFilter(f){
+  filterMode=f;
+  ['filterAll','filterCan','filter100'].forEach(id=>document.getElementById(id).classList.remove('active'));
+  document.getElementById(f==='all'?'filterAll':f==='possible'?'filterCan':'filter100').classList.add('active');
+  render();
 }
 </script>
 </body>
