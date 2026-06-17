@@ -108,6 +108,14 @@
       "updated": "2026-06-11"
     },
     {
+      "schema": "gardening",
+      "file": "gardening.json",
+      "name": "園藝配種",
+      "source": "teamcraft/seeds.json; tw-items.msgpack",
+      "status": "used",
+      "updated": "2026-06-17"
+    },
+    {
       "schema": "recipes",
       "file": "recipes.json",
       "name": "製作配方",
@@ -197,4 +205,12 @@
       "file": "fishing.json",
       "name": "釣魚（舊，停用）",
       "source": "teamcraft",
-      "statu
+      "status": "superseded-by-fishes"
+    },
+    {
+      "schema": "fishes",
+      "file": "fishes.json",
+      "name": "魚",
+      "source": "fish-tracker+items",
+      "status": "populated",
+      "updated": "2026-06-08"

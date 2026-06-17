@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FF14 園藝配種計算機 — 正查兩株配種結果，反查目標植物的配種路徑">
+  <title>園藝配種計算 | 水神的工具箱</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-base:    #0a0c10;
+      --bg-surface: #0f1117;
+      --bg-card:    #14181f;
+      --bg-card-hover: #1a1f2b;
+      --border:     rgba(255,255,255,0.07);
+      --border-hover: rgba(200,169,110,0.4);
+      --gold:       #c8a96e;
+      --gold-light: #e2c98a;
+      --gold-dim:   rgba(200,169,110,0.15);
+      --purple:     #a78bfa;
+      --purple-dim: rgba(167,139,250,0.12);
+      --green:      #4ade80;
+      --green-dim:  rgba(74,222,128,0.12);
+      --blue:       #4fc3f7;
+      --blue-dim:   rgba(79,195,247,0.12);
+      --orange:     #fb923c;
+      --orange-dim: rgba(251,146,60,0.12);
+      --text:       #e8e3d8;
+      --text-dim:   #9a9590;
+      --text-muted: #6b6560;
+      --radius:     8px;
+    }
+
+    body { background: var(--bg-base); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+
+    .nav {
+      background: var(--bg-surface); border-bottom: 1px solid var(--border);
+      padding: 0 1.5rem; height: 52px; display: flex; align-items: center; gap: 0.75rem;
+    }
+    .nav-back { color: var(--text-dim); text-decoration: none; font-size: 0.85rem; display: flex; align-items: center; gap: 0.4rem; transition: color 0.2s; }
+    .nav-back:hover { color: var(--gold); }
+    .nav-sep { color: var(--text-muted); font-size: 0.85rem; }
+    .nav-title { color: var(--text); font-size: 0.9rem; font-weight: 600; }
+
+    .hero {
+      background: linear-gradient(135deg, #0f1117 0%, #0c110d 100%);
+      border-bottom: 1px solid var(--border); padding: 1.5rem;
+    }
+    .hero-inner { max-width: 900px; margin: 0 auto; }
+    .hero h1 { font-size: 1.4rem; font-weight: 700; }
+    .hero p { color: var(--text-dim); font-size: 0.85rem; margin-top: 0.3rem; }
+
+    .main { max-width: 900px; margin: 0 auto; padding: 1.5rem; }
+
+    /* TABS */
+    .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; }
+    .tab-btn {
+      padding: 0.6rem 1.4rem; font-size: 0.88rem; cursor: pointer;
+      border: none; background: none; color: var(--text-dim);
+      border-bottom: 2px solid transparent; margin-bottom: -1px;
+      transition: all 0.15s; font-weight: 500;
+    }
+    .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+    .tab-btn:hover { color: var(--text); }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* SECTION */
+    .section-title {
+      font-size: 0.8rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--gold); margin-bottom: 0.75rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    /* SEED SELECT */
+    .seed-row { display: flex; gap: 1rem; align-items: flex-start; flex-wrap: wrap; margin-bottom: 1.25rem; }
+    .seed-select-wrap { flex: 1; min-width: 200px; max-width: 340px; }
+    .seed-select-wrap label { display: block; font-size: 0.78rem; color: var(--text-dim); margin-bottom: 0.4rem; }
+    .seed-select-wrap select {
+      width: 100%; background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); color: var(--text); padding: 0.5rem 0.6rem;
+      font-size: 0.85rem; outline: none; transition: border-color 0.2s; cursor: pointer;
+    }
+    .seed-select-wrap select:focus { border-color: var(--gold); }
+
+    .cross-symbol {
+      font-size: 1.4rem; color: var(--gold); padding-top: 1.5rem; flex-shrink: 0; align-self: center;
+    }
+
+    .btn-calc {
+      background: var(--gold-dim); border: 1px solid var(--gold); color: var(--gold);
+      padding: 0.55rem 1.4rem; border-radius: var(--radius); cursor: pointer; font-size: 0.88rem;
+      font-weight: 600; transition: all 0.15s; align-self: flex-end;
+    }
+    .btn-calc:hover { background: rgba(200,169,110,0.25); }
+
+    /* RESULT CARD */
+    .result-area { margin-top: 0.5rem; }
+    .result-card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 1rem 1.25rem; margin-bottom: 0.5rem;
+    }
+    .result-empty { color: var(--text-muted); text-align: center; padding: 2rem; font-size: 0.88rem; }
+    .result-product { font-size: 1rem; font-weight: 700; color: var(--green); margin-bottom: 0.4rem; }
+    .result-detail { font-size: 0.8rem; color: var(--text-dim); display: flex; gap: 1rem; flex-wrap: wrap; }
+    .result-formula { margin-top: 0.5rem; font-size: 0.82rem; color: var(--text-dim); }
+    .result-formula .formula-line { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.3rem; }
+    .seed-chip {
+      background: var(--bg-surface); border: 1px solid var(--border); border-radius: 4px;
+      padding: 0.15rem 0.5rem; font-size: 0.75rem; color: var(--text);
+    }
+    .seed-chip.base { border-color: rgba(79,195,247,0.3); color: var(--blue); background: var(--blue-dim); }
+    .seed-chip.adj  { border-color: rgba(167,139,250,0.3); color: var(--purple); background: var(--purple-dim); }
+
+    /* REVERSE LOOKUP */
+    .reverse-search { margin-bottom: 1.25rem; }
+    .reverse-search label { display: block; font-size: 0.78rem; color: var(--text-dim); margin-bottom: 0.4rem; }
+    .reverse-search select {
+      width: 100%; max-width: 400px; background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); color: var(--text); padding: 0.5rem 0.6rem;
+      font-size: 0.85rem; outline: none; transition: border-color 0.2s; cursor: pointer;
+    }
+    .reverse-search select:focus { border-color: var(--gold); }
+
+    .path-card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 0.9rem 1.1rem; margin-bottom: 0.6rem;
+    }
+    .path-target { font-size: 0.95rem; font-weight: 700; color: var(--gold); margin-bottom: 0.6rem; }
+    .path-step { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; font-size: 0.83rem; }
+    .path-arrow { color: var(--text-muted); }
+    .path-label { color: var(--text-muted); font-size: 0.72rem; width: 2rem; }
+
+    /* SEED BROWSER */
+    .plant-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 0.5rem;
+    }
+    .plant-card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 0.75rem 1rem;
+    }
+    .plant-name { font-size: 0.88rem; font-weight: 600; }
+    .plant-seed { font-size: 0.75rem; color: var(--text-dim); margin-top: 0.2rem; }
+    .plant-dur  { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.15rem; }
+    .plant-cb   { font-size: 0.72rem; color: var(--green); margin-top: 0.2rem; }
+
+    /* SEARCH BAR (ALL TAB) */
+    .search-wrap { position: relative; margin-bottom: 1rem; }
+    .search-wrap input {
+      width: 100%; background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); color: var(--text); padding: 0.5rem 0.5rem 0.5rem 2.2rem;
+      font-size: 0.85rem; outline: none; transition: border-color 0.2s;
+    }
+    .search-wrap input:focus { border-color: var(--gold); }
+    .search-wrap .si { position: absolute; left: 0.65rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
+
+    .tip {
+      font-size: 0.78rem; color: var(--text-dim); background: var(--bg-card);
+      border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 0.75rem 1rem; margin-bottom: 1rem; line-height: 1.6;
+    }
+    .tip strong { color: var(--gold); }
+  </style>
+</head>
+<body>
+<nav class="nav">
+  <a href="../../" class="nav-back">⚓ 水神的工具箱</a>
+  <span class="nav-sep">›</span>
+  <span class="nav-title">🌱 園藝配種計算</span>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <h1>🌱 園藝配種計算</h1>
+    <p>正查：選兩株種子 → 配出什麼；反查：選目標植物 → 需要什麼種子</p>
+  </div>
+</div>
+
+<div class="main">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('forward')">🔀 正查（兩株→結果）</button>
+    <button class="tab-btn" onclick="showTab('reverse')">🔍 反查（目標→路徑）</button>
+    <button class="tab-btn" onclick="showTab('all')">📋 全部植物</button>
+  </div>
+
+  <!-- ── 正查 ── -->
+  <div class="tab-panel active" id="tab-forward">
+    <div class="tip">
+      <strong>配種規則</strong>：選「本株種子」（baseSeed）種在你的土地，「鄰株種子」（adjacentSeed）種在鄰近土地，收穫時有機率得到配種結果。
+    </div>
+
+    <div class="section-title">選擇兩株種子</div>
+    <div class="seed-row">
+      <div class="seed-select-wrap">
+        <label>🟦 本株（你的土地）</label>
+        <select id="baseSelect" onchange="calcForward()">
+          <option value="">— 選擇種子 —</option>
+        </select>
+      </div>
+      <div class="cross-symbol">×</div>
+      <div class="seed-select-wrap">
+        <label>🟪 鄰株（鄰近土地）</label>
+        <select id="adjSelect" onchange="calcForward()">
+          <option value="">— 選擇種子 —</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="section-title">配種結果</div>
+    <div class="result-area" id="forwardResult">
+      <div class="result-empty">選擇兩株種子後顯示結果</div>
+    </div>
+  </div>
+
+  <!-- ── 反查 ── -->
+  <div class="tab-panel" id="tab-reverse">
+    <div class="tip">
+      <strong>反查</strong>：選你想要的植物，顯示所有已知的配種組合（可能不只一種）。
+    </div>
+
+    <div class="reverse-search">
+      <label>目標植物</label>
+      <select id="reverseSelect" onchange="calcReverse()">
+        <option value="">— 選擇目標植物 —</option>
+      </select>
+    </div>
+
+    <div id="reverseResult">
+      <div class="result-empty">選擇目標植物後顯示配方</div>
+    </div>
+  </div>
+
+  <!-- ── 全部 ── -->
+  <div class="tab-panel" id="tab-all">
+    <div class="search-wrap">
+      <span class="si">🔍</span>
+      <input type="text" id="allSearch" placeholder="搜尋植物或種子名稱…" oninput="renderAll()">
+    </div>
+    <div class="plant-grid" id="allGrid"></div>
+  </div>
+</div>
+
+<script>
+const DATA_URL = '../../data/gardening.json';
+let gardenData = [];
+let seedOptions = []; // all unique seeds { id, name }
+
+fetch(DATA_URL).then(r => r.json()).then(d => {
+  gardenData = d.data;
+  buildSeedOptions();
+  populateSelects();
+  renderAll();
+});
+
+function buildSeedOptions() {
+  const seen = new Set();
+  gardenData.forEach(p => {
+    if (!seen.has(p.seedId)) {
+      seen.add(p.seedId);
+      seedOptions.push({ id: p.seedId, name: p.seedName });
+    }
+    p.crossBreeds.forEach(c => {
+      [c.baseSeedId, c.adjacentSeedId].forEach(sid => {
+        if (!seen.has(sid)) {
+          seen.add(sid);
+          seedOptions.push({ id: sid, name: c.baseSeedId === sid ? c.baseSeedName : c.adjacentSeedName });
+        }
+      });
+    });
+  });
+  seedOptions.sort((a, b) => a.name.localeCompare(b.name, 'zh-TW'));
+}
+
+function populateSelects() {
+  const opts = seedOptions.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+
+  ['baseSelect','adjSelect'].forEach(id => {
+    const el = document.getElementById(id);
+    el.innerHTML = '<option value="">— 選擇種子 —</option>' + opts;
+  });
+
+  // reverse: products only
+  const prodOpts = gardenData
+    .filter(p => p.crossBreeds.length > 0)
+    .sort((a, b) => a.name.localeCompare(b.name, 'zh-TW'))
+    .map(p => `<option value="${p.productId}">${p.name}</option>`)
+    .join('');
+  document.getElementById('reverseSelect').innerHTML =
+    '<option value="">— 選擇目標植物 —</option>' + prodOpts;
+}
+
+// ── FORWARD ──────────────────────────────────────────────────────────────────
+function calcForward() {
+  const baseId = +document.getElementById('baseSelect').value;
+  const adjId  = +document.getElementById('adjSelect').value;
+  const area   = document.getElementById('forwardResult');
+
+  if (!baseId || !adjId) {
+    area.innerHTML = '<div class="result-empty">選擇兩株種子後顯示結果</div>';
+    return;
+  }
+
+  // find products where any crossBreed matches (base=baseId, adj=adjId) OR (base=adjId, adj=baseId)
+  const results = [];
+  gardenData.forEach(p => {
+    p.crossBreeds.forEach(c => {
+      if ((c.baseSeedId === baseId && c.adjacentSeedId === adjId) ||
+          (c.baseSeedId === adjId  && c.adjacentSeedId === baseId)) {
+        results.push({ product: p, crossBreed: c });
+      }
+    });
+  });
+
+  if (results.length === 0) {
+    area.innerHTML = '<div class="result-empty">這兩株種子沒有已知的配種結果</div>';
+    return;
+  }
+
+  area.innerHTML = results.map(({ product: p, crossBreed: c }) => `
+    <div class="result-card">
+      <div class="result-product">🌿 ${p.name}</div>
+      <div class="result-detail">
+        <span>種子：${p.seedName}</span>
+        <span>培育時間：${p.duration}h</span>
+      </div>
+      <div class="result-formula">
+        <div class="formula-line">
+          <span style="color:var(--text-muted);font-size:0.72rem">本株</span>
+          <span class="seed-chip base">${c.baseSeedName}</span>
+          <span style="color:var(--text-muted)">×</span>
+          <span style="color:var(--text-muted);font-size:0.72rem">鄰株</span>
+          <span class="seed-chip adj">${c.adjacentSeedName}</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── REVERSE ───────────────────────────────────────────────────────────────────
+function calcReverse() {
+  const prodId = +document.getElementById('reverseSelect').value;
+  const area   = document.getElementById('reverseResult');
+
+  if (!prodId) {
+    area.innerHTML = '<div class="result-empty">選擇目標植物後顯示配方</div>';
+    return;
+  }
+
+  const product = gardenData.find(p => p.productId === prodId);
+  if (!product || product.crossBreeds.length === 0) {
+    area.innerHTML = '<div class="result-empty">此植物無已知配種配方（需直接種植種子）</div>';
+    return;
+  }
+
+  area.innerHTML = `
+    <div class="path-card">
+      <div class="path-target">目標：${product.name}</div>
+      <div style="font-size:0.8rem;color:var(--text-dim);margin-bottom:0.75rem">
+        種子：${product.seedName}　培育：${product.duration}h
+      </div>
+      <div class="section-title" style="font-size:0.72rem">已知配種組合（${product.crossBreeds.length} 種）</div>
+      ${product.crossBreeds.map((c, i) => `
+        <div class="path-step">
+          <span style="color:var(--text-muted);min-width:1.2rem;font-size:0.72rem">${i+1}.</span>
+          <span class="seed-chip base">${c.baseSeedName}</span>
+          <span style="color:var(--text-muted);font-size:0.8rem">（本株）</span>
+          <span style="color:var(--text-muted)">×</span>
+          <span class="seed-chip adj">${c.adjacentSeedName}</span>
+          <span style="color:var(--text-muted);font-size:0.8rem">（鄰株）</span>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+// ── ALL ───────────────────────────────────────────────────────────────────────
+function renderAll() {
+  const q = (document.getElementById('allSearch')?.value || '').trim().toLowerCase();
+  let data = gardenData;
+  if (q) {
+    data = data.filter(p => {
+      return p.name.toLowerCase().includes(q)
+          || p.seedName.toLowerCase().includes(q)
+          || p.nameEn.toLowerCase().includes(q);
+    });
+  }
+  data = [...data].sort((a, b) => a.name.localeCompare(b.name, 'zh-TW'));
+
+  document.getElementById('allGrid').innerHTML = data.map(p => `
+    <div class="plant-card">
+      <div class="plant-name">${p.name}</div>
+      <div class="plant-seed">🌱 ${p.seedName}</div>
+      <div class="plant-dur">⏱ 培育 ${p.duration}h</div>
+      ${p.crossBreeds.length > 0
+        ? `<div class="plant-cb">配種：${p.crossBreeds.length} 種配方</div>`
+        : ''}
+    </div>
+  `).join('');
+}
+
+// ── TABS ──────────────────────────────────────────────────────────────────────
+function showTab(id) {
+  document.querySelectorAll('.tab-panel').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>

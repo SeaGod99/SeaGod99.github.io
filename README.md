@@ -24,6 +24,10 @@
 | 💇 髮型收藏追蹤 | `/collections/hairstyles/` | 髮型樣式書來源查詢，追蹤解鎖進度 |
 | 💃 表情收藏追蹤 | `/collections/emotes/` | 表情動作來源查詢，追蹤擁有進度 |
 | 👁️ 探索筆記追蹤器 | `/collections/exploration-log/` | 全版本景觀查詢，天氣與時間提醒 |
+| 🏰 冒險者小隊計算機 | `/tools/squadron/` | 設定隊員職業等級，計算最佳任務派遣組合與成功率 |
+| 🌱 園藝配種計算 | `/tools/gardening/` | 正查兩株配種結果，反查目標植物的配種路徑 |
+| 🎣 釣魚紀錄追蹤 | `/tools/fishing/` | 1104 種魚查詢（釣場/餌/時間/天氣），追蹤已釣進度 |
+| ⛏️ 採集紀錄追蹤 | `/tools/gathering-log/` | 733 個採集節點，追蹤已採物品進度 |
 | 🛡️ 配裝規劃器 | [gearing.ffsusu.com](https://gearing.ffsusu.com/) | 外部連結，全職業配裝規劃 |
 
 ---
@@ -35,15 +39,10 @@
 
 ### 🏆 收藏 / 成就
 
-### ⚔️ 戰鬥 / 副本
-- 🏰 冒險者小隊計算機
-
 ### 🌿 生活職（採集 / 製作 / 市場）
 - 📊 市場查價 + 比價
 - 🔍 物品 / 製作搜尋
 - 🗺️ 藏寶圖採集點查詢（G8～G18）
-- 🌱 園藝配種計算
-- 🎣 釣魚紀錄追蹤
 
 ---
 
@@ -104,4 +103,13 @@ SeaGod99.github.io/
 └── assets/
     ├── css/                          # 共用樣式
     ├── js/                           # 共用腳本
-    └── {collection}/     
+    └── {collection}/                 # 各收藏頁本機圖示快取
+```
+
+---
+
+## 免責聲明
+
+本站為玩家自製的非官方工具網站，與 Square Enix 無關。
+
+FINAL FANTASY XIV © SQUARE ENIX CO., LTD.

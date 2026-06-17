@@ -3,7 +3,7 @@
 > **給 Claude / 後續對話的指示**：開始任何工作前先讀本檔。完成任何功能或資料變更後，**必須更新本檔**（狀態表 + 更新紀錄），並同步 `data/_meta.json` 的 status。
 > 規格細節見 `docs/feature-specs.md`，資料格式見 `data/SCHEMA.md`。
 
-**最後更新**：2026-06-16（移除肖像/時尚裝備/B怪/優雷卡/製作利潤計算機/無人島等6項功能；index.html section-count 更新；風脈泉追蹤器完成；髮型收藏追蹤完成）
+**最後更新**：2026-06-17（冒險者小隊計算機、園藝配種計算、釣魚紀錄追蹤、採集紀錄追蹤 完成；data/gardening.json 新增）
 **網站**：https://seagod99.github.io ｜ GitHub Pages 純靜態 ｜ 遊戲版本 7.2
 
 ---
@@ -43,7 +43,7 @@
 | # | 工具 | 路徑 | 狀態 |
 |---|------|------|------|
 | 3.1 | 配裝規劃器 | 外連 gearing.ffsusu.com | 完成（維持外連） |
-| 3.2 | 冒險者小隊計算機 | `/tools/squadron/` | 規劃中（squadron.json 空） |
+| 3.2 | 冒險者小隊計算機 | `/tools/squadron/` | 完成（squadron.json 103筆，34任務+成長表，成功率計算，06-17新增） |
 
 ### 生活職
 
@@ -52,9 +52,9 @@
 | 4.1 | 市場查價工具 | `/market/` | 規劃中 |
 | 4.3 | 物品／製作搜尋 | `/tools/item-search/` | 規劃中（items/recipes 已備） |
 | 4.4 | 藏寶圖採集點查詢 | `/tools/treasure-maps/` | 規劃中（G8–G18） |
-| 4.5 | 園藝配種計算 | `/tools/gardening/` | 規劃中 |
-| 4.7 | 釣魚紀錄追蹤 | `/tools/fishing/` | 規劃中（fishes/fishing-spots 已備） |
-| 4.8 | 採集紀錄追蹤 | — | 規劃中 |
+| 4.5 | 園藝配種計算 | `/tools/gardening/` | 完成（107種植物，正查×反查，data/gardening.json，06-17新增） |
+| 4.7 | 釣魚紀錄追蹤 | `/tools/fishing/` | 完成（fishes.json 1104筆，大魚/限時/天氣篩選，追蹤進度，06-17新增） |
+| 4.8 | 採集紀錄追蹤 | `/tools/gathering-log/` | 完成（gathering.json 733節點，採礦工/園藝工，物品勾選追蹤，06-17新增） |
 
 「開發中」頁面驗收後請改為「完成」並註記日期。
 
@@ -186,6 +186,7 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 
 ## 五、更新紀錄
 
+- **2026-06-17（小隊/配種/釣魚/採集 四頁新增）**：新增 `/tools/squadron/`（冒險者小隊任務派遣模擬器，squadron.json 34任務，9職業成長表，成功率計算，各配置自動找最高成功率 variant）；新增 `/tools/gardening/`（園藝配種計算，正查兩株→結果/反查目標→路徑，data/gardening.json 107種植物 50種有配方，來源 Teamcraft seeds.json+tw-items）；新增 `/tools/fishing/`（釣魚紀錄追蹤，fishes.json 1104筆，大魚/限時/天氣/傳承錄篩選，版本篩選，勾選追蹤）；新增 `/tools/gathering-log/`（採集紀錄追蹤，gathering.json 733節點，採礦工/園藝工，傳說/短暫/限時篩選，物品勾選追蹤）。四頁 index.html 入口卡片改為可用連結。
 - **2026-06-16（樂譜/表情/探索筆記三頁新增）**：新增 `/collections/orchestrion/`（data/orchestrion.json 724筆，618筆有繁中名，版本篩選，來源待手動補充）、`/collections/emotes/`（data/emotes.json 292筆，全暫無繁中名待補：XIVAPI UnlockLink 對應到非表情道具，需另查 tw-items；頁面以 nameEn + command 顯示）、`/collections/exploration-log/`（data/exploration-log.json 340筆，全英文景觀名+無座標待補：XIVAPI SightseeingLog 未回傳繁中名與座標，需另查 Teamcraft 資料；頁面以英文名+繁中地區顯示）。三頁入口卡片改為可用，_meta.json 同步 used。
 - **2026-06-15（待辦#2：狀態同步與 README 更新）**：README.md 重寫工具清單（對齊 index.html 實際 available/wip 卡片）與專案結構（補上 collections/mounts、barding、blue-magic、triple-triad、minions、tools/weather、gathering）；發現 index.html「市場查價＋比價」卡片標示「可用」但 `market/` 為空目錄（git 從未追蹤過任何檔案），改回「即將推出」避免死連結；確認 data/_meta.json 各庫 status 已對應目前完工狀態。另依使用者指示，待辦#3（製作利潤計算機）順延至優先序最後。
 - **2026-06-15（鳥鞍/幻卡收藏頁新增）**：新增 `/collections/barding/`（106筆，部位slot＋取得方式篩選，15筆無sources標待補充）與 `/collections/triple-triad/`（425筆，星級/類型/來源篩選，NPC對戰來源顯示地點，卡牌數值十字排版）。皆套用收藏共通規格。入口頁卡片由「即將推出」改為可用連結。
@@ -204,4 +205,3 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 - 2026-06-02：風脈泉 aether-currents 決定擱置。
 - 2026-05-31：無人島攻略工具規劃完成。
 - 2026-05-29：統一資料庫架構建立（SCHEMA.md）。
-                                                                                                                                                                                                                                                                                                                                                   

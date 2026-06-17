@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FF14 釣魚紀錄追蹤 — 1104 種魚，查詢釣場/餌/時間/天氣，追蹤已釣紀錄">
+  <title>釣魚紀錄追蹤 | 水神的工具箱</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-base:    #0a0c10;
+      --bg-surface: #0f1117;
+      --bg-card:    #14181f;
+      --bg-card-hover: #1a1f2b;
+      --border:     rgba(255,255,255,0.07);
+      --border-hover: rgba(200,169,110,0.4);
+      --gold:       #c8a96e;
+      --gold-light: #e2c98a;
+      --gold-dim:   rgba(200,169,110,0.15);
+      --purple:     #a78bfa;
+      --purple-dim: rgba(167,139,250,0.12);
+      --green:      #4ade80;
+      --green-dim:  rgba(74,222,128,0.12);
+      --blue:       #4fc3f7;
+      --blue-dim:   rgba(79,195,247,0.12);
+      --cyan:       #22d3ee;
+      --cyan-dim:   rgba(34,211,238,0.12);
+      --orange:     #fb923c;
+      --orange-dim: rgba(251,146,60,0.12);
+      --red:        #f87171;
+      --red-dim:    rgba(248,113,113,0.12);
+      --text:       #e8e3d8;
+      --text-dim:   #9a9590;
+      --text-muted: #6b6560;
+      --radius:     8px;
+    }
+
+    body { background: var(--bg-base); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+
+    .nav {
+      background: var(--bg-surface); border-bottom: 1px solid var(--border);
+      padding: 0 1.5rem; height: 52px; display: flex; align-items: center; gap: 0.75rem;
+    }
+    .nav-back { color: var(--text-dim); text-decoration: none; font-size: 0.85rem; display: flex; align-items: center; gap: 0.4rem; transition: color 0.2s; }
+    .nav-back:hover { color: var(--gold); }
+    .nav-sep { color: var(--text-muted); font-size: 0.85rem; }
+    .nav-title { color: var(--text); font-size: 0.9rem; font-weight: 600; }
+
+    .hero {
+      background: linear-gradient(135deg, #0f1117 0%, #0d1318 100%);
+      border-bottom: 1px solid var(--border); padding: 1.5rem 1.5rem;
+    }
+    .hero-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .hero h1 { font-size: 1.4rem; font-weight: 700; }
+    .progress-wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 0.3rem; }
+    .progress-text { font-size: 0.8rem; color: var(--text-dim); }
+    .progress-bar { width: 200px; height: 8px; background: var(--bg-card); border-radius: 4px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--blue), var(--cyan)); border-radius: 4px; transition: width 0.4s; }
+
+    .controls { max-width: 1200px; margin: 0 auto; padding: 1rem 1.5rem; display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; }
+
+    .search-wrap { position: relative; flex: 1; min-width: 200px; max-width: 360px; }
+    .search-wrap input {
+      width: 100%; background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); color: var(--text); padding: 0.5rem 0.5rem 0.5rem 2.2rem;
+      font-size: 0.85rem; outline: none; transition: border-color 0.2s;
+    }
+    .search-wrap input:focus { border-color: var(--gold); }
+    .search-wrap .si { position: absolute; left: 0.65rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.85rem; pointer-events: none; }
+
+    .filter-row { display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center; }
+    .filter-btn {
+      font-size: 0.75rem; padding: 0.3rem 0.7rem; border-radius: 5px; cursor: pointer;
+      border: 1px solid var(--border); background: var(--bg-surface); color: var(--text-dim); transition: all 0.15s;
+    }
+    .filter-btn.active { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); }
+
+    select.filter-select {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 5px;
+      color: var(--text-dim); padding: 0.3rem 0.6rem; font-size: 0.78rem; outline: none; cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    select.filter-select:focus { border-color: var(--gold); }
+
+    .result-info { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem 0.5rem; font-size: 0.78rem; color: var(--text-muted); }
+
+    /* FISH GRID */
+    .fish-grid {
+      max-width: 1200px; margin: 0 auto; padding: 0 1.5rem 2rem;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 0.5rem;
+    }
+
+    .fish-card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 0.75rem 1rem; display: flex; gap: 0.75rem; align-items: flex-start;
+      cursor: pointer; transition: border-color 0.2s, background 0.2s;
+      position: relative;
+    }
+    .fish-card:hover { border-color: var(--border-hover); background: var(--bg-card-hover); }
+    .fish-card.owned { border-color: rgba(74,222,128,0.3); background: rgba(74,222,128,0.04); }
+
+    .fish-check {
+      width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--border);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      font-size: 0.75rem; transition: all 0.2s; margin-top: 1px;
+    }
+    .fish-card.owned .fish-check { background: var(--green); border-color: var(--green); color: #000; }
+
+    .fish-body { flex: 1; min-width: 0; }
+    .fish-name { font-size: 0.9rem; font-weight: 600; }
+    .fish-name-en { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.1rem; }
+
+    .fish-tags { display: flex; gap: 0.3rem; flex-wrap: wrap; margin-top: 0.4rem; }
+    .tag {
+      font-size: 0.65rem; padding: 0.1rem 0.4rem; border-radius: 3px;
+      border: 1px solid; font-weight: 500;
+    }
+    .tag-big    { color: var(--purple); border-color: rgba(167,139,250,0.3); background: var(--purple-dim); }
+    .tag-time   { color: var(--gold);   border-color: rgba(200,169,110,0.3); background: var(--gold-dim); }
+    .tag-wx     { color: var(--cyan);   border-color: rgba(34,211,238,0.3);  background: var(--cyan-dim); }
+    .tag-folk   { color: var(--orange); border-color: rgba(251,146,60,0.3);  background: var(--orange-dim); }
+    .tag-snag   { color: var(--red);    border-color: rgba(248,113,113,0.3); background: var(--red-dim); }
+    .tag-eyes   { color: var(--blue);   border-color: rgba(79,195,247,0.3);  background: var(--blue-dim); }
+
+    .fish-detail { font-size: 0.75rem; color: var(--text-dim); margin-top: 0.4rem; display: flex; flex-direction: column; gap: 0.2rem; }
+    .fish-detail span { display: flex; gap: 0.4rem; align-items: baseline; }
+    .detail-label { color: var(--text-muted); width: 2rem; flex-shrink: 0; }
+    .fish-patch { position: absolute; top: 0.5rem; right: 0.65rem; font-size: 0.65rem; color: var(--text-muted); }
+
+    /* PAGINATION */
+    .pagination { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem 3rem; display: flex; gap: 0.4rem; justify-content: center; flex-wrap: wrap; }
+    .page-btn {
+      font-size: 0.8rem; padding: 0.35rem 0.7rem; border-radius: 5px; cursor: pointer;
+      border: 1px solid var(--border); background: var(--bg-card); color: var(--text-dim); transition: all 0.15s;
+    }
+    .page-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .page-btn.active { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); font-weight: 600; }
+    .page-btn:disabled { opacity: 0.3; cursor: default; }
+  </style>
+</head>
+<body>
+<nav class="nav">
+  <a href="../../" class="nav-back">⚓ 水神的工具箱</a>
+  <span class="nav-sep">›</span>
+  <span class="nav-title">🎣 釣魚紀錄追蹤</span>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <h1>🎣 釣魚紀錄追蹤</h1>
+    <div class="progress-wrap">
+      <div class="progress-text" id="progressText">載入中…</div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="search-wrap">
+    <span class="si">🔍</span>
+    <input type="text" id="searchInput" placeholder="搜尋魚名或釣場…" oninput="onFilter()">
+  </div>
+
+  <div class="filter-row">
+    <button class="filter-btn active" id="fAll"    onclick="setStatusFilter('all')">全部</button>
+    <button class="filter-btn"        id="fOwned"  onclick="setStatusFilter('owned')">已釣</button>
+    <button class="filter-btn"        id="fMissed" onclick="setStatusFilter('missing')">未釣</button>
+  </div>
+
+  <div class="filter-row">
+    <select class="filter-select" id="patchFilter" onchange="onFilter()">
+      <option value="">全版本</option>
+      <option value="2">ARR 2.x</option>
+      <option value="3">HW 3.x</option>
+      <option value="4">SB 4.x</option>
+      <option value="5">ShB 5.x</option>
+      <option value="6">EW 6.x</option>
+      <option value="7">DT 7.x</option>
+    </select>
+    <select class="filter-select" id="typeFilter" onchange="onFilter()">
+      <option value="">全種類</option>
+      <option value="big">大魚</option>
+      <option value="timed">限時</option>
+      <option value="weather">限天氣</option>
+      <option value="folklore">傳承錄</option>
+    </select>
+  </div>
+
+  <button class="filter-btn" onclick="resetAll()" style="margin-left:auto">重置篩選</button>
+</div>
+
+<div class="result-info" id="resultInfo"></div>
+<div class="fish-grid" id="fishGrid"></div>
+<div class="pagination" id="pagination"></div>
+
+<script>
+const DATA_URL = '../../data/fishes.json';
+const LS_KEY   = 'ffxiv_fishing_owned';
+const PAGE_SIZE = 60;
+
+let allFish = [];
+let filtered = [];
+let owned = new Set(JSON.parse(localStorage.getItem(LS_KEY) || '[]'));
+let page = 0;
+let statusFilter = 'all';
+
+fetch(DATA_URL).then(r => r.json()).then(d => {
+  allFish = d.data;
+  onFilter();
+});
+
+function setStatusFilter(f) {
+  statusFilter = f;
+  ['fAll','fOwned','fMissed'].forEach(id => document.getElementById(id).classList.remove('active'));
+  document.getElementById(f === 'all' ? 'fAll' : f === 'owned' ? 'fOwned' : 'fMissed').classList.add('active');
+  page = 0;
+  onFilter();
+}
+
+function onFilter() {
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  const patchMaj = document.getElementById('patchFilter').value;
+  const type     = document.getElementById('typeFilter').value;
+
+  filtered = allFish.filter(f => {
+    if (statusFilter === 'owned'   && !owned.has(f.itemId)) return false;
+    if (statusFilter === 'missing' &&  owned.has(f.itemId)) return false;
+    if (patchMaj) {
+      const maj = Math.floor(f.patch);
+      if (String(maj) !== patchMaj) return false;
+    }
+    if (type === 'big'      && !f.bigFish)                return false;
+    if (type === 'timed'    && !(f.startHour > 0 || f.endHour < 24)) return false;
+    if (type === 'weather'  && !f.weatherSet?.length)    return false;
+    if (type === 'folklore' && !f.folklore)               return false;
+    if (q) {
+      const hay = (f.name||'').toLowerCase() + ' ' + (f.nameEn||'').toLowerCase()
+                + ' ' + (f.spotName||'').toLowerCase() + ' ' + (f.spotNameEn||'').toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+
+  page = 0;
+  render();
+}
+
+function render() {
+  updateProgress();
+  const start = page * PAGE_SIZE;
+  const pageData = filtered.slice(start, start + PAGE_SIZE);
+
+  document.getElementById('resultInfo').textContent =
+    `顯示 ${filtered.length} 筆（共 ${allFish.length} 種）`;
+
+  document.getElementById('fishGrid').innerHTML = pageData.map(f => {
+    const isOwned = owned.has(f.itemId);
+    const timed   = f.startHour > 0 || f.endHour < 24;
+    const hasPrev = f.previousWeatherSet?.length;
+
+    const timeStr = timed
+      ? (f.endHour < f.startHour
+          ? `${f.startHour}:00–翌${f.endHour}:00`
+          : `${f.startHour}:00–${f.endHour}:00`)
+      : '全天';
+
+    const wxStr = [...(f.weatherSet||[]),...(f.previousWeatherSet||[])].join('、') || '';
+
+    return `
+<div class="fish-card${isOwned?' owned':''}" onclick="toggleFish(${f.itemId}, this)">
+  <div class="fish-check">${isOwned?'✓':''}</div>
+  <div class="fish-body">
+    <div class="fish-name">${f.name||f.nameEn}</div>
+    <div class="fish-name-en">${f.nameEn}</div>
+    <div class="fish-tags">
+      ${f.bigFish   ? '<span class="tag tag-big">大魚</span>' : ''}
+      ${timed       ? '<span class="tag tag-time">⏰限時</span>' : ''}
+      ${(f.weatherSet?.length) ? '<span class="tag tag-wx">🌦限天氣</span>' : ''}
+      ${f.folklore  ? '<span class="tag tag-folk">📖傳承錄</span>' : ''}
+      ${f.snagging  ? '<span class="tag tag-snag">捕撈</span>' : ''}
+      ${f.fishEyes  ? '<span class="tag tag-eyes">魚眼</span>' : ''}
+    </div>
+    <div class="fish-detail">
+      ${f.spotName  ? `<span><span class="detail-label">釣場</span>${f.spotName}</span>` : ''}
+      ${f.bait?.length ? `<span><span class="detail-label">餌</span>${f.bait.map(b=>b.name||b.nameEn).join(' → ')}</span>` : ''}
+      ${timed       ? `<span><span class="detail-label">時間</span>${timeStr} ET</span>` : ''}
+      ${wxStr       ? `<span><span class="detail-label">天氣</span>${wxStr}</span>` : ''}
+    </div>
+  </div>
+  <div class="fish-patch">${f.patch}</div>
+</div>`;
+  }).join('');
+
+  renderPagination();
+}
+
+function updateProgress() {
+  const total = allFish.length;
+  const cnt   = allFish.filter(f => owned.has(f.itemId)).length;
+  const pct   = total ? Math.round(cnt / total * 100) : 0;
+  document.getElementById('progressText').textContent = `已釣 ${cnt} / ${total}（${pct}%）`;
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+function toggleFish(id, el) {
+  if (owned.has(id)) {
+    owned.delete(id);
+    el.classList.remove('owned');
+    el.querySelector('.fish-check').textContent = '';
+  } else {
+    owned.add(id);
+    el.classList.add('owned');
+    el.querySelector('.fish-check').textContent = '✓';
+  }
+  localStorage.setItem(LS_KEY, JSON.stringify([...owned]));
+  updateProgress();
+  if (statusFilter !== 'all') onFilter();
+}
+
+function renderPagination() {
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  if (totalPages <= 1) { document.getElementById('pagination').innerHTML = ''; return; }
+
+  let html = '';
+  html += `<button class="page-btn" ${page===0?'disabled':''} onclick="goPage(${page-1})">‹</button>`;
+  for (let i = 0; i < totalPages; i++) {
+    if (totalPages > 10 && Math.abs(i - page) > 3 && i !== 0 && i !== totalPages-1) {
+      if (i === 1 || i === totalPages-2) html += `<span style="color:var(--text-muted);padding:0 0.3rem">…</span>`;
+      continue;
+    }
+    html += `<button class="page-btn${i===page?' active':''}" onclick="goPage(${i})">${i+1}</button>`;
+  }
+  html += `<button class="page-btn" ${page===totalPages-1?'disabled':''} onclick="goPage(${page+1})">›</button>`;
+  document.getElementById('pagination').innerHTML = html;
+}
+
+function goPage(p) {
+  page = p;
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function resetAll() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('patchFilter').value = '';
+  document.getElementById('typeFilter').value = '';
+  setStatusFilter('all');
+}
+</script>
+</body>
+</html>

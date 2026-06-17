@@ -1,0 +1,1969 @@
+{
+  "schema": "gardening",
+  "patch": "7.2",
+  "updated": "2026-06-17",
+  "source": "ffxiv-teamcraft/seeds.json; tw-items.msgpack",
+  "count": 107,
+  "data": [
+    {
+      "productId": 2,
+      "name": "火之碎晶",
+      "nameEn": "火之碎晶",
+      "seedId": 15865,
+      "seedName": "火晶草種子",
+      "seedNameEn": "火晶草種子",
+      "duration": 18,
+      "crossBreeds": []
+    },
+    {
+      "productId": 3,
+      "name": "冰之碎晶",
+      "nameEn": "冰之碎晶",
+      "seedId": 15866,
+      "seedName": "冰晶草種子",
+      "seedNameEn": "冰晶草種子",
+      "duration": 18,
+      "crossBreeds": []
+    },
+    {
+      "productId": 4,
+      "name": "風之碎晶",
+      "nameEn": "風之碎晶",
+      "seedId": 15867,
+      "seedName": "風晶草種子",
+      "seedNameEn": "風晶草種子",
+      "duration": 18,
+      "crossBreeds": []
+    },
+    {
+      "productId": 5,
+      "name": "土之碎晶",
+      "nameEn": "土之碎晶",
+      "seedId": 15868,
+      "seedName": "土晶草種子",
+      "seedNameEn": "土晶草種子",
+      "duration": 18,
+      "crossBreeds": []
+    },
+    {
+      "productId": 6,
+      "name": "雷之碎晶",
+      "nameEn": "雷之碎晶",
+      "seedId": 15869,
+      "seedName": "雷晶草種子",
+      "seedNameEn": "雷晶草種子",
+      "duration": 18,
+      "crossBreeds": []
+    },
+    {
+      "productId": 7,
+      "name": "水之碎晶",
+      "nameEn": "水之碎晶",
+      "seedId": 15870,
+      "seedName": "水晶草種子",
+      "seedNameEn": "水晶草種子",
+      "duration": 18,
+      "crossBreeds": []
+    },
+    {
+      "productId": 4777,
+      "name": "野洋蔥",
+      "nameEn": "野洋蔥",
+      "seedId": 7716,
+      "seedName": "野洋蔥球根",
+      "seedNameEn": "野洋蔥球根",
+      "duration": 120,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 7715,
+          "adjacentSeedName": "紅彩椒種子",
+          "baseSeedId": 17547,
+          "baseSeedName": "雲海橡果種子"
+        },
+        {
+          "adjacentSeedId": 7717,
+          "adjacentSeedName": "庫爾札斯胡蘿蔔種子",
+          "baseSeedId": 17547,
+          "baseSeedName": "雲海橡果種子"
+        },
+        {
+          "adjacentSeedId": 8174,
+          "adjacentSeedName": "塞爾法特爾沙果種子",
+          "baseSeedId": 7715,
+          "baseSeedName": "紅彩椒種子"
+        }
+      ]
+    },
+    {
+      "productId": 4778,
+      "name": "庫爾札斯胡蘿蔔",
+      "nameEn": "庫爾札斯胡蘿蔔",
+      "seedId": 7717,
+      "seedName": "庫爾札斯胡蘿蔔種子",
+      "seedNameEn": "庫爾札斯胡蘿蔔種子",
+      "duration": 120,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 7715,
+          "adjacentSeedName": "紅彩椒種子",
+          "baseSeedId": 17547,
+          "baseSeedName": "雲海橡果種子"
+        },
+        {
+          "adjacentSeedId": 7717,
+          "adjacentSeedName": "庫爾札斯胡蘿蔔種子",
+          "baseSeedId": 17547,
+          "baseSeedName": "雲海橡果種子"
+        },
+        {
+          "adjacentSeedId": 8174,
+          "adjacentSeedName": "塞爾法特爾沙果種子",
+          "baseSeedId": 7715,
+          "baseSeedName": "紅彩椒種子"
+        }
+      ]
+    },
+    {
+      "productId": 4782,
+      "name": "拉諾西亞萵苣",
+      "nameEn": "拉諾西亞萵苣",
+      "seedId": 7718,
+      "seedName": "拉諾西亞萵苣種子",
+      "seedNameEn": "拉諾西亞萵苣種子",
+      "duration": 120,
+      "crossBreeds": []
+    },
+    {
+      "productId": 4785,
+      "name": "紅彩椒",
+      "nameEn": "紅彩椒",
+      "seedId": 7715,
+      "seedName": "紅彩椒種子",
+      "seedNameEn": "紅彩椒種子",
+      "duration": 120,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 7720,
+          "adjacentSeedName": "新薯芽塊",
+          "baseSeedId": 17547,
+          "baseSeedName": "雲海橡果種子"
+        },
+        {
+          "adjacentSeedId": 7720,
+          "adjacentSeedName": "新薯芽塊",
+          "baseSeedId": 8182,
+          "baseSeedName": "克拉卡蘿蔔種子"
+        },
+        {
+          "adjacentSeedId": 8174,
+          "adjacentSeedName": "塞爾法特爾沙果種子",
+          "baseSeedId": 7720,
+          "baseSeedName": "新薯芽塊"
+        }
+      ]
+    },
+    {
+      "productId": 4787,
+      "name": "新薯",
+      "nameEn": "新薯",
+      "seedId": 7720,
+      "seedName": "新薯芽塊",
+      "seedNameEn": "新薯芽塊",
+      "duration": 120,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 7721,
+          "adjacentSeedName": "多實玉米種子",
+          "baseSeedId": 17547,
+          "baseSeedName": "雲海橡果種子"
+        },
+        {
+          "adjacentSeedId": 8174,
+          "adjacentSeedName": "塞爾法特爾沙果種子",
+          "baseSeedId": 7721,
+          "baseSeedName": "多實玉米種子"
+        },
+        {
+          "adjacentSeedId": 8177,
+          "adjacentSeedName": "瓦爾醋栗種子",
+          "baseSeedId": 7721,
+          "baseSeedName": "多實玉米種子"
+        }
+      ]
+    },
+    {
+      "productId": 4788,
+      "name": "巫茄",
+      "nameEn": "巫茄",
+      "seedId": 7722,
+      "seedName": "巫茄種子",
+      "seedNameEn": "巫茄種子",
+      "duration": 120,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 7722,
+          "adjacentSeedName": "巫茄種子",
+          "baseSeedId": 17547,
+          "baseSeedName": "雲海橡果種子"
+        },
+        {
+          "adjacentSeedId": 8174,
+          "adjacentSeedName": "塞爾法特爾沙果種子",
+          "baseSeedId": 7722,
+          "baseSeedName": "巫茄種子"
+        },
+        {
+          "adjacentSeedId": 7722,
+          "adjacentSeedName": "巫茄種子",
+          "baseSeedId": 8182,
+          "baseSeedName": "克拉卡蘿蔔種子"
+        }
+      ]
+    },
+    {
+      "productId": 4789,
+      "name": "中原甘藍",
+      "nameEn": "中原甘藍",
+      "seedId": 7723,
+      "seedName": "中原甘藍種子",
+      "seedNameEn": "中原甘藍種子",
+      "duration": 120,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 7723,
+          "adjacentSeedName": "中原甘藍種子",
+          "baseSeedId": 17547,
+          "baseSeedName": "雲海橡果種子"
+        },
+        {
+          "adjacentSeedId": 13767,
+          "adjacentSeedName": "小包心菜種子",
+          "baseSeedId": 17547,
+          "baseSeedName": "雲海橡果種子"
+        },
+        {
+          "adjacentSeedId": 8174,
+          "adjacentSeedName": "塞爾法特爾沙果種子",
+          "baseSeedId": 7723,
+          "baseSeedName": "中原甘藍種子"
+        }
+      ]
+    },
+    {
+      "productId": 4804,
+      "name": "橄欖",
+      "nameEn": "橄欖",
+      "seedId": 7719,
+      "seedName": "橄欖種子",
+      "seedNameEn": "橄欖種子",
+      "duration": 120,
+      "crossBreeds": []
+    },
+    {
+      "productId": 4808,
+      "name": "低地葡萄",
+      "nameEn": "低地葡萄",
+      "seedId": 7726,
+      "seedName": "低地葡萄種子",
+      "seedNameEn": "低地葡萄種子",
+      "duration": 120,
+      "crossBreeds": []
+    },
+    {
+      "productId": 4809,
+      "name": "拉諾西亞香橙",
+      "nameEn": "拉諾西亞香橙",
+      "seedId": 7725,
+      "seedName": "拉諾西亞香橙種子",
+      "seedNameEn": "拉諾西亞香橙種子",
+      "duration": 120,
+      "crossBreeds": []
+    },
+    {
+      "productId": 4810,
+      "name": "仙女蘋果",
+      "nameEn": "仙女蘋果",
+      "seedId": 7727,
+      "seedName": "仙女蘋果種子",
+      "seedNameEn": "仙女蘋果種子",
+      "duration": 120,
+      "crossBreeds": []
+    },
+    {
+      "productId": 4811,
+      "name": "太陽檸檬",
+      "nameEn": "太陽檸檬",
+      "seedId": 7728,
+      "seedName": "太陽檸檬種子",
+      "seedNameEn": "太陽檸檬種子",
+      "duration": 120,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 7728,
+          "adjacentSeedName": "太陽檸檬種子",
+          "baseSeedId": 17547,
+          "baseSeedName": "雲海橡果種子"
+        },
+        {
+          "adjacentSeedId": 7729,
+          "adjacentSeedName": "仙子梅種子",
+          "baseSeedId": 17547,
+          "baseSeedName": "雲海橡果種子"
+        },
+        {
+          "adjacentSeedId": 7721,
+          "adjacentSeedName": "多實玉米種子",
+          "baseSeedId": 17547,
+          "baseSeedName": "雲海橡果種子"
+        }
+      ]
+    },
+    {
+      "productId": 4812,
+      "name": "仙子梅",
+      "nameEn": "仙子梅",
+      "seedId": 7729,
+      "seedName": "仙子梅種子",
+      "seedNameEn": "仙子梅種子",
+      "duration": 120,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 17547,
+          "adjacentSeedName": "雲海橡果種子",
+          "baseSeedId": 7738,
+          "baseSeedName": "阿拉米格芥子種子"
+        },
+        {
+          "adjacentSeedId": 17547,
+          "adjacentSeedName": "雲海橡果種子",
+          "baseSeedId": 7740,
+          "baseSeedName": "甘菊種子"
+        },
+        {
+          "adjacentSeedId": 7725,
+          "adjacentSeedName": "拉諾西亞香橙種子",
+          "baseSeedId": 17547,
+          "baseSeedName": "雲海橡果種子"
+        }
+      ]
+    },
+    {
+      "productId": 4814,
+      "name": "血紅奇異果",
+      "nameEn": "血紅奇異果",
+      "seedId": 7730,
+      "seedName": "血紅奇異果種子",
+      "seedNameEn": "血紅奇異果種子",
+      "duration": 120,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 17547,
+          "adjacentSeedName": "雲海橡果種子",
+          "baseSeedId": 7730,
+          "baseSeedName": "血紅奇異果種子"
+        },
+        {
+          "adjacentSeedId": 7723,
+          "adjacentSeedName": "中原甘藍種子",
+          "baseSeedId": 17547,
+          "baseSeedName": "雲海橡果種子"
+        },
+        {
+          "adjacentSeedId": 7743,
+          "adjacentSeedName": "風茄種子",
+          "baseSeedId": 17547,
+          "baseSeedName": "雲海橡果種子"
+        }
+      ]
+    },
+    {
+      "productId": 4815,
+      "name": "羅蘭莓",
+      "nameEn": "羅蘭莓",
+      "seedId": 7732,
+      "seedName": "羅蘭莓種子",
+      "seedNameEn": "羅蘭莓種子",
+      "duration": 120,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 7733,
+          "adjacentSeedName": "蜜檸檬種子",
+          "baseSeedId": 17547,
+          "baseSeedName": "雲海橡果種子"
+        },
+        {
+          "adjacentSeedId": 8174,
+          "adjacentSeedName": "塞爾法特爾沙果種子",
+          "baseSeedId": 7734,
+          "baseSeedName": "多刺鳳梨種子"
+        },
+        {
+          "adjacentSeedId": 8177,
+          "adjacentSeedName": "瓦爾醋栗種子",
+          "baseSeedId": 7734,
+          "baseSeedName": "多刺鳳梨種子"
+        }
+      ]
+    },
+    {
+      "productId": 4816,
+      "name": "多刺鳳梨",
+      "nameEn": "多刺鳳梨",
+      "seedId": 7734,
+      "seedName": "多刺鳳梨種子",
+      "seedNameEn": "多刺鳳梨種子",
+      "duration": 120,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 7734,
+          "adjacentSeedName": "多刺鳳梨種子",
+          "baseSeedId": 7723,
+          "baseSeedName": "中原甘藍種子"
+        },
+        {
+          "adjacentSeedId": 7734,
+          "adjacentSeedName": "多刺鳳梨種子",
+          "baseSeedId": 7730,
+          "baseSeedName": "血紅奇異果種子"
+        },
+        {
+          "adjacentSeedId": 7734,
+          "adjacentSeedName": "多刺鳳梨種子",
+          "baseSeedId": 7731,
+          "baseSeedName": "晶亮蘋果種子"
+        }
+      ]
+    },
+    {
+      "productId": 4821,
+      "name": "多實玉米",
+      "nameEn": "多實玉米",
+      "seedId": 7721,
+      "seedName": "多實玉米種子",
+      "seedNameEn": "多實玉米種子",
+      "duration": 120,
+      "crossBreeds": []
+    },
+    {
+      "productId": 4829,
+      "name": "大蒜",
+      "nameEn": "大蒜",
+      "seedId": 7735,
+      "seedName": "大蒜球根",
+      "seedNameEn": "大蒜球根",
+      "duration": 120,
+      "crossBreeds": []
+    },
+    {
+      "productId": 4830,
+      "name": "黑胡椒",
+      "nameEn": "黑胡椒",
+      "seedId": 7737,
+      "seedName": "黑胡椒種子",
+      "seedNameEn": "黑胡椒種子",
+      "duration": 120,
+      "crossBreeds": []
+    },
+    {
+      "productId": 4835,
+      "name": "阿拉米格芥子",
+      "nameEn": "阿拉米格芥子",
+      "seedId": 7738,
+      "seedName": "阿拉米格芥子種子",
+      "seedNameEn": "阿拉米格芥子種子",
+      "duration": 120,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 17547,
+          "adjacentSeedName": "雲海橡果種子",
+          "baseSeedId": 7738,
+          "baseSeedName": "阿拉米格芥子種子"
+        },
+        {
+          "adjacentSeedId": 7739,
+          "adjacentSeedName": "生薑根",
+          "baseSeedId": 17547,
+          "baseSeedName": "雲海橡果種子"
+        },
+        {
+          "adjacentSeedId": 8182,
+          "adjacentSeedName": "克拉卡蘿蔔種子",
+          "baseSeedId": 7738,
+          "baseSeedName": "阿拉米格芥子種子"
+        }
+      ]
+    },
+    {
+      "productId": 4836,
+      "name": "生薑",
+      "nameEn": "生薑",
+      "seedId": 7739,
+      "seedName": "生薑根",
+      "seedNameEn": "生薑根",
+      "duration": 120,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 17547,
+          "adjacentSeedName": "雲海橡果種子",
+          "baseSeedId": 7740,
+          "baseSeedName": "甘菊種子"
+        },
+        {
+          "adjacentSeedId": 8182,
+          "adjacentSeedName": "克拉卡蘿蔔種子",
+          "baseSeedId": 7740,
+          "baseSeedName": "甘菊種子"
+        },
+        {
+          "adjacentSeedId": 8174,
+          "adjacentSeedName": "塞爾法特爾沙果種子",
+          "baseSeedId": 7740,
+          "baseSeedName": "甘菊種子"
+        }
+      ]
+    },
+    {
+      "productId": 4837,
+      "name": "中原羅勒草",
+      "nameEn": "中原羅勒草",
+      "seedId": 7742,
+      "seedName": "中原羅勒草種子",
+      "seedNameEn": "中原羅勒草種子",
+      "duration": 120,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 7742,
+          "adjacentSeedName": "中原羅勒草種子",
+          "baseSeedId": 17547,
+          "baseSeedName": "雲海橡果種子"
+        },
+        {
+          "adjacentSeedId": 8174,
+          "adjacentSeedName": "塞爾法特爾沙果種子",
+          "baseSeedId": 7742,
+          "baseSeedName": "中原羅勒草種子"
+        },
+        {
+          "adjacentSeedId": 8177,
+          "adjacentSeedName": "瓦爾醋栗種子",
+          "baseSeedId": 7742,
+          "baseSeedName": "中原羅勒草種子"
+        }
+      ]
+    },
+    {
+      "productId": 4842,
+      "name": "扁桃",
+      "nameEn": "扁桃",
+      "seedId": 7744,
+      "seedName": "扁桃種子",
+      "seedNameEn": "扁桃種子",
+      "duration": 120,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 13768,
+          "adjacentSeedName": "庫爾札斯茶樹種子",
+          "baseSeedId": 7717,
+          "baseSeedName": "庫爾札斯胡蘿蔔種子"
+        },
+        {
+          "adjacentSeedId": 13768,
+          "adjacentSeedName": "庫爾札斯茶樹種子",
+          "baseSeedId": 7737,
+          "baseSeedName": "黑胡椒種子"
+        },
+        {
+          "adjacentSeedId": 7743,
+          "adjacentSeedName": "風茄種子",
+          "baseSeedId": 7738,
+          "baseSeedName": "阿拉米格芥子種子"
+        }
+      ]
+    },
+    {
+      "productId": 4868,
+      "name": "基沙爾野菜",
+      "nameEn": "基沙爾野菜",
+      "seedId": 8572,
+      "seedName": "基沙爾種子",
+      "seedNameEn": "基沙爾種子",
+      "duration": 72,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 8174,
+          "adjacentSeedName": "塞爾法特爾沙果種子",
+          "baseSeedId": 8182,
+          "baseSeedName": "克拉卡蘿蔔種子"
+        },
+        {
+          "adjacentSeedId": 8176,
+          "adjacentSeedName": "輝鱗油梨種子",
+          "baseSeedId": 8182,
+          "baseSeedName": "克拉卡蘿蔔種子"
+        },
+        {
+          "adjacentSeedId": 8177,
+          "adjacentSeedName": "瓦爾醋栗種子",
+          "baseSeedId": 8182,
+          "baseSeedName": "克拉卡蘿蔔種子"
+        }
+      ]
+    },
+    {
+      "productId": 5346,
+      "name": "亞麻",
+      "nameEn": "亞麻",
+      "seedId": 7741,
+      "seedName": "亞麻種子",
+      "seedNameEn": "亞麻種子",
+      "duration": 120,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 7741,
+          "adjacentSeedName": "亞麻種子",
+          "baseSeedId": 17547,
+          "baseSeedName": "雲海橡果種子"
+        },
+        {
+          "adjacentSeedId": 8182,
+          "adjacentSeedName": "克拉卡蘿蔔種子",
+          "baseSeedId": 7741,
+          "baseSeedName": "亞麻種子"
+        },
+        {
+          "adjacentSeedId": 8174,
+          "adjacentSeedName": "塞爾法特爾沙果種子",
+          "baseSeedId": 7741,
+          "baseSeedName": "亞麻種子"
+        }
+      ]
+    },
+    {
+      "productId": 5539,
+      "name": "薰衣草",
+      "nameEn": "薰衣草",
+      "seedId": 7736,
+      "seedName": "薰衣草種子",
+      "seedNameEn": "薰衣草種子",
+      "duration": 120,
+      "crossBreeds": []
+    },
+    {
+      "productId": 5542,
+      "name": "甘菊",
+      "nameEn": "甘菊",
+      "seedId": 7740,
+      "seedName": "甘菊種子",
+      "seedNameEn": "甘菊種子",
+      "duration": 120,
+      "crossBreeds": []
+    },
+    {
+      "productId": 5543,
+      "name": "風茄",
+      "nameEn": "風茄",
+      "seedId": 7743,
+      "seedName": "風茄種子",
+      "seedNameEn": "風茄種子",
+      "duration": 120,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 13768,
+          "adjacentSeedName": "庫爾札斯茶樹種子",
+          "baseSeedId": 17547,
+          "baseSeedName": "雲海橡果種子"
+        },
+        {
+          "adjacentSeedId": 17547,
+          "adjacentSeedName": "雲海橡果種子",
+          "baseSeedId": 7744,
+          "baseSeedName": "扁桃種子"
+        },
+        {
+          "adjacentSeedId": 13768,
+          "adjacentSeedName": "庫爾札斯茶樹種子",
+          "baseSeedId": 8179,
+          "baseSeedName": "謝爾達萊鳳梨種子"
+        }
+      ]
+    },
+    {
+      "productId": 6146,
+      "name": "晶亮蘋果",
+      "nameEn": "晶亮蘋果",
+      "seedId": 7731,
+      "seedName": "晶亮蘋果種子",
+      "seedNameEn": "晶亮蘋果種子",
+      "duration": 120,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 7732,
+          "adjacentSeedName": "羅蘭莓種子",
+          "baseSeedId": 17547,
+          "baseSeedName": "雲海橡果種子"
+        },
+        {
+          "adjacentSeedId": 8182,
+          "adjacentSeedName": "克拉卡蘿蔔種子",
+          "baseSeedId": 7733,
+          "baseSeedName": "蜜檸檬種子"
+        },
+        {
+          "adjacentSeedId": 8174,
+          "adjacentSeedName": "塞爾法特爾沙果種子",
+          "baseSeedId": 7733,
+          "baseSeedName": "蜜檸檬種子"
+        }
+      ]
+    },
+    {
+      "productId": 6147,
+      "name": "蜜檸檬",
+      "nameEn": "蜜檸檬",
+      "seedId": 7733,
+      "seedName": "蜜檸檬種子",
+      "seedNameEn": "蜜檸檬種子",
+      "duration": 120,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 7734,
+          "adjacentSeedName": "多刺鳳梨種子",
+          "baseSeedId": 17547,
+          "baseSeedName": "雲海橡果種子"
+        },
+        {
+          "adjacentSeedId": 17547,
+          "adjacentSeedName": "雲海橡果種子",
+          "baseSeedId": 7751,
+          "baseSeedName": "黃杏種子"
+        },
+        {
+          "adjacentSeedId": 7732,
+          "adjacentSeedName": "羅蘭莓種子",
+          "baseSeedId": 7723,
+          "baseSeedName": "中原甘藍種子"
+        }
+      ]
+    },
+    {
+      "productId": 6148,
+      "name": "澤梅爾番茄",
+      "nameEn": "澤梅爾番茄",
+      "seedId": 7724,
+      "seedName": "澤梅爾番茄種子",
+      "seedNameEn": "澤梅爾番茄種子",
+      "duration": 120,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 7723,
+          "adjacentSeedName": "中原甘藍種子",
+          "baseSeedId": 7717,
+          "baseSeedName": "庫爾札斯胡蘿蔔種子"
+        },
+        {
+          "adjacentSeedId": 7722,
+          "adjacentSeedName": "巫茄種子",
+          "baseSeedId": 7721,
+          "baseSeedName": "多實玉米種子"
+        },
+        {
+          "adjacentSeedId": 7715,
+          "adjacentSeedName": "紅彩椒種子",
+          "baseSeedId": 7723,
+          "baseSeedName": "中原甘藍種子"
+        }
+      ]
+    },
+    {
+      "productId": 7591,
+      "name": "提諾爾卡茶葉",
+      "nameEn": "提諾爾卡茶葉",
+      "seedId": 7753,
+      "seedName": "提諾爾卡茶樹種子",
+      "seedNameEn": "提諾爾卡茶樹種子",
+      "duration": 144,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 7743,
+          "adjacentSeedName": "風茄種子",
+          "baseSeedId": 7742,
+          "baseSeedName": "中原羅勒草種子"
+        },
+        {
+          "adjacentSeedId": 7741,
+          "adjacentSeedName": "亞麻種子",
+          "baseSeedId": 13768,
+          "baseSeedName": "庫爾札斯茶樹種子"
+        },
+        {
+          "adjacentSeedId": 13765,
+          "adjacentSeedName": "舊世界無花果種子",
+          "baseSeedId": 7743,
+          "baseSeedName": "風茄種子"
+        }
+      ]
+    },
+    {
+      "productId": 7592,
+      "name": "黃杏",
+      "nameEn": "黃杏",
+      "seedId": 7751,
+      "seedName": "黃杏種子",
+      "seedNameEn": "黃杏種子",
+      "duration": 144,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 13765,
+          "adjacentSeedName": "舊世界無花果種子",
+          "baseSeedId": 17547,
+          "baseSeedName": "雲海橡果種子"
+        },
+        {
+          "adjacentSeedId": 13765,
+          "adjacentSeedName": "舊世界無花果種子",
+          "baseSeedId": 8182,
+          "baseSeedName": "克拉卡蘿蔔種子"
+        },
+        {
+          "adjacentSeedId": 13765,
+          "adjacentSeedName": "舊世界無花果種子",
+          "baseSeedId": 8175,
+          "baseSeedName": "多瑪青梅種子"
+        }
+      ]
+    },
+    {
+      "productId": 7593,
+      "name": "拉諾西亞韭蔥",
+      "nameEn": "拉諾西亞韭蔥",
+      "seedId": 7752,
+      "seedName": "拉諾西亞韭蔥種子",
+      "seedNameEn": "拉諾西亞韭蔥種子",
+      "duration": 144,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 7749,
+          "adjacentSeedName": "衛月新薯芽塊",
+          "baseSeedId": 17547,
+          "baseSeedName": "雲海橡果種子"
+        },
+        {
+          "adjacentSeedId": 7721,
+          "adjacentSeedName": "多實玉米種子",
+          "baseSeedId": 7723,
+          "baseSeedName": "中原甘藍種子"
+        },
+        {
+          "adjacentSeedId": 7722,
+          "adjacentSeedName": "巫茄種子",
+          "baseSeedId": 7723,
+          "baseSeedName": "中原甘藍種子"
+        }
+      ]
+    },
+    {
+      "productId": 7602,
+      "name": "星八角",
+      "nameEn": "星八角",
+      "seedId": 7748,
+      "seedName": "星八角種子",
+      "seedNameEn": "星八角種子",
+      "duration": 144,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 7742,
+          "adjacentSeedName": "中原羅勒草種子",
+          "baseSeedId": 13768,
+          "baseSeedName": "庫爾札斯茶樹種子"
+        },
+        {
+          "adjacentSeedId": 7742,
+          "adjacentSeedName": "中原羅勒草種子",
+          "baseSeedId": 7744,
+          "baseSeedName": "扁桃種子"
+        },
+        {
+          "adjacentSeedId": 13765,
+          "adjacentSeedName": "舊世界無花果種子",
+          "baseSeedId": 13768,
+          "baseSeedName": "庫爾札斯茶樹種子"
+        }
+      ]
+    },
+    {
+      "productId": 7603,
+      "name": "衛月新薯",
+      "nameEn": "衛月新薯",
+      "seedId": 7749,
+      "seedName": "衛月新薯芽塊",
+      "seedNameEn": "衛月新薯芽塊",
+      "duration": 144,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 13767,
+          "adjacentSeedName": "小包心菜種子",
+          "baseSeedId": 7723,
+          "baseSeedName": "中原甘藍種子"
+        },
+        {
+          "adjacentSeedId": 7722,
+          "adjacentSeedName": "巫茄種子",
+          "baseSeedId": 13767,
+          "baseSeedName": "小包心菜種子"
+        },
+        {
+          "adjacentSeedId": 7722,
+          "adjacentSeedName": "巫茄種子",
+          "baseSeedId": 7724,
+          "baseSeedName": "澤梅爾番茄種子"
+        }
+      ]
+    },
+    {
+      "productId": 7604,
+      "name": "皇家可可豆",
+      "nameEn": "皇家可可豆",
+      "seedId": 7750,
+      "seedName": "皇家可可豆種子",
+      "seedNameEn": "皇家可可豆種子",
+      "duration": 144,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 13765,
+          "adjacentSeedName": "舊世界無花果種子",
+          "baseSeedId": 7721,
+          "baseSeedName": "多實玉米種子"
+        },
+        {
+          "adjacentSeedId": 13765,
+          "adjacentSeedName": "舊世界無花果種子",
+          "baseSeedId": 7723,
+          "baseSeedName": "中原甘藍種子"
+        },
+        {
+          "adjacentSeedId": 13765,
+          "adjacentSeedName": "舊世界無花果種子",
+          "baseSeedId": 7741,
+          "baseSeedName": "亞麻種子"
+        }
+      ]
+    },
+    {
+      "productId": 7768,
+      "name": "哈羅妮丁菊",
+      "nameEn": "哈羅妮丁菊",
+      "seedId": 7745,
+      "seedName": "哈羅妮丁菊種子",
+      "seedNameEn": "哈羅妮丁菊種子",
+      "duration": 144,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 7740,
+          "adjacentSeedName": "甘菊種子",
+          "baseSeedId": 7746,
+          "baseSeedName": "阿澤瑪玫瑰種子"
+        }
+      ]
+    },
+    {
+      "productId": 7769,
+      "name": "阿澤瑪玫瑰",
+      "nameEn": "阿澤瑪玫瑰",
+      "seedId": 7746,
+      "seedName": "阿澤瑪玫瑰種子",
+      "seedNameEn": "阿澤瑪玫瑰種子",
+      "duration": 144,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 13768,
+          "adjacentSeedName": "庫爾札斯茶樹種子",
+          "baseSeedId": 7740,
+          "baseSeedName": "甘菊種子"
+        },
+        {
+          "adjacentSeedId": 7743,
+          "adjacentSeedName": "風茄種子",
+          "baseSeedId": 7741,
+          "baseSeedName": "亞麻種子"
+        },
+        {
+          "adjacentSeedId": 7723,
+          "adjacentSeedName": "中原甘藍種子",
+          "baseSeedId": 13768,
+          "baseSeedName": "庫爾札斯茶樹種子"
+        }
+      ]
+    },
+    {
+      "productId": 7770,
+      "name": "妮美雅百合",
+      "nameEn": "妮美雅百合",
+      "seedId": 7747,
+      "seedName": "妮美雅百合種子",
+      "seedNameEn": "妮美雅百合種子",
+      "duration": 144,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 7743,
+          "adjacentSeedName": "風茄種子",
+          "baseSeedId": 13768,
+          "baseSeedName": "庫爾札斯茶樹種子"
+        },
+        {
+          "adjacentSeedId": 7743,
+          "adjacentSeedName": "風茄種子",
+          "baseSeedId": 7744,
+          "baseSeedName": "扁桃種子"
+        },
+        {
+          "adjacentSeedId": 7753,
+          "adjacentSeedName": "提諾爾卡茶樹種子",
+          "baseSeedId": 7743,
+          "baseSeedName": "風茄種子"
+        }
+      ]
+    },
+    {
+      "productId": 7773,
+      "name": "傘葉無花果",
+      "nameEn": "傘葉無花果",
+      "seedId": 7754,
+      "seedName": "傘葉無花果種子",
+      "seedNameEn": "傘葉無花果種子",
+      "duration": 168,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 13765,
+          "adjacentSeedName": "舊世界無花果種子",
+          "baseSeedId": 7733,
+          "baseSeedName": "蜜檸檬種子"
+        },
+        {
+          "adjacentSeedId": 7750,
+          "adjacentSeedName": "皇家可可豆種子",
+          "baseSeedId": 7734,
+          "baseSeedName": "多刺鳳梨種子"
+        },
+        {
+          "adjacentSeedId": 7754,
+          "adjacentSeedName": "傘葉無花果種子",
+          "baseSeedId": 7734,
+          "baseSeedName": "多刺鳳梨種子"
+        }
+      ]
+    },
+    {
+      "productId": 7774,
+      "name": "黃麻",
+      "nameEn": "黃麻",
+      "seedId": 7755,
+      "seedName": "黃麻種子",
+      "seedNameEn": "黃麻種子",
+      "duration": 168,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 8167,
+          "adjacentSeedName": "珍珠葵種子",
+          "baseSeedId": 7743,
+          "baseSeedName": "風茄種子"
+        },
+        {
+          "adjacentSeedId": 7743,
+          "adjacentSeedName": "風茄種子",
+          "baseSeedId": 7745,
+          "baseSeedName": "哈羅妮丁菊種子"
+        },
+        {
+          "adjacentSeedId": 7748,
+          "adjacentSeedName": "星八角種子",
+          "baseSeedId": 13768,
+          "baseSeedName": "庫爾札斯茶樹種子"
+        }
+      ]
+    },
+    {
+      "productId": 7775,
+      "name": "釉質堅果",
+      "nameEn": "釉質堅果",
+      "seedId": 7756,
+      "seedName": "釉質堅果種子",
+      "seedNameEn": "釉質堅果種子",
+      "duration": 168,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 7734,
+          "adjacentSeedName": "多刺鳳梨種子",
+          "baseSeedId": 13765,
+          "baseSeedName": "舊世界無花果種子"
+        },
+        {
+          "adjacentSeedId": 7750,
+          "adjacentSeedName": "皇家可可豆種子",
+          "baseSeedId": 7751,
+          "baseSeedName": "黃杏種子"
+        },
+        {
+          "adjacentSeedId": 7754,
+          "adjacentSeedName": "傘葉無花果種子",
+          "baseSeedId": 7751,
+          "baseSeedName": "黃杏種子"
+        }
+      ]
+    },
+    {
+      "productId": 7776,
+      "name": "掃帚草",
+      "nameEn": "掃帚草",
+      "seedId": 7757,
+      "seedName": "掃帚草種子",
+      "seedNameEn": "掃帚草種子",
+      "duration": 168,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 8167,
+          "adjacentSeedName": "珍珠葵種子",
+          "baseSeedId": 13768,
+          "baseSeedName": "庫爾札斯茶樹種子"
+        },
+        {
+          "adjacentSeedId": 7745,
+          "adjacentSeedName": "哈羅妮丁菊種子",
+          "baseSeedId": 13768,
+          "baseSeedName": "庫爾札斯茶樹種子"
+        },
+        {
+          "adjacentSeedId": 7747,
+          "adjacentSeedName": "妮美雅百合種子",
+          "baseSeedId": 13768,
+          "baseSeedName": "庫爾札斯茶樹種子"
+        }
+      ]
+    },
+    {
+      "productId": 7894,
+      "name": "克里耶蘿蔔",
+      "nameEn": "克里耶蘿蔔",
+      "seedId": 8169,
+      "seedName": "克里耶蘿蔔種子",
+      "seedNameEn": "克里耶蘿蔔種子",
+      "duration": 120,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 8182,
+          "adjacentSeedName": "克拉卡蘿蔔種子",
+          "baseSeedId": 7740,
+          "baseSeedName": "甘菊種子"
+        },
+        {
+          "adjacentSeedId": 8174,
+          "adjacentSeedName": "塞爾法特爾沙果種子",
+          "baseSeedId": 7740,
+          "baseSeedName": "甘菊種子"
+        },
+        {
+          "adjacentSeedId": 8175,
+          "adjacentSeedName": "多瑪青梅種子",
+          "baseSeedId": 7740,
+          "baseSeedName": "甘菊種子"
+        }
+      ]
+    },
+    {
+      "productId": 7895,
+      "name": "西其斯菜薊",
+      "nameEn": "西其斯菜薊",
+      "seedId": 8170,
+      "seedName": "西其斯菜薊種子",
+      "seedNameEn": "西其斯菜薊種子",
+      "duration": 120,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 13768,
+          "adjacentSeedName": "庫爾札斯茶樹種子",
+          "baseSeedId": 8179,
+          "baseSeedName": "謝爾達萊鳳梨種子"
+        },
+        {
+          "adjacentSeedId": 8182,
+          "adjacentSeedName": "克拉卡蘿蔔種子",
+          "baseSeedId": 13768,
+          "baseSeedName": "庫爾札斯茶樹種子"
+        },
+        {
+          "adjacentSeedId": 8174,
+          "adjacentSeedName": "塞爾法特爾沙果種子",
+          "baseSeedId": 13768,
+          "baseSeedName": "庫爾札斯茶樹種子"
+        }
+      ]
+    },
+    {
+      "productId": 7897,
+      "name": "米梅特葫蘆",
+      "nameEn": "米梅特葫蘆",
+      "seedId": 8171,
+      "seedName": "米梅特葫蘆種子",
+      "seedNameEn": "米梅特葫蘆種子",
+      "duration": 120,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 8174,
+          "adjacentSeedName": "塞爾法特爾沙果種子",
+          "baseSeedId": 7723,
+          "baseSeedName": "中原甘藍種子"
+        },
+        {
+          "adjacentSeedId": 8177,
+          "adjacentSeedName": "瓦爾醋栗種子",
+          "baseSeedId": 7723,
+          "baseSeedName": "中原甘藍種子"
+        },
+        {
+          "adjacentSeedId": 8178,
+          "adjacentSeedName": "歐·葛莫羅漿果種子",
+          "baseSeedId": 7723,
+          "baseSeedName": "中原甘藍種子"
+        }
+      ]
+    },
+    {
+      "productId": 7898,
+      "name": "坦塔爾矮瓜",
+      "nameEn": "坦塔爾矮瓜",
+      "seedId": 8172,
+      "seedName": "坦塔爾矮瓜種子",
+      "seedNameEn": "坦塔爾矮瓜種子",
+      "duration": 120,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 8174,
+          "adjacentSeedName": "塞爾法特爾沙果種子",
+          "baseSeedId": 7722,
+          "baseSeedName": "巫茄種子"
+        },
+        {
+          "adjacentSeedId": 8174,
+          "adjacentSeedName": "塞爾法特爾沙果種子",
+          "baseSeedId": 7742,
+          "baseSeedName": "中原羅勒草種子"
+        },
+        {
+          "adjacentSeedId": 8177,
+          "adjacentSeedName": "瓦爾醋栗種子",
+          "baseSeedId": 7742,
+          "baseSeedName": "中原羅勒草種子"
+        }
+      ]
+    },
+    {
+      "productId": 7900,
+      "name": "帕薩納紅茄",
+      "nameEn": "帕薩納紅茄",
+      "seedId": 8173,
+      "seedName": "帕薩納紅茄種子",
+      "seedNameEn": "帕薩納紅茄種子",
+      "duration": 120,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 8174,
+          "adjacentSeedName": "塞爾法特爾沙果種子",
+          "baseSeedId": 7721,
+          "baseSeedName": "多實玉米種子"
+        },
+        {
+          "adjacentSeedId": 8177,
+          "adjacentSeedName": "瓦爾醋栗種子",
+          "baseSeedId": 7721,
+          "baseSeedName": "多實玉米種子"
+        },
+        {
+          "adjacentSeedId": 8178,
+          "adjacentSeedName": "歐·葛莫羅漿果種子",
+          "baseSeedId": 7721,
+          "baseSeedName": "多實玉米種子"
+        }
+      ]
+    },
+    {
+      "productId": 8023,
+      "name": "珍珠葵",
+      "nameEn": "珍珠葵",
+      "seedId": 8167,
+      "seedName": "珍珠葵種子",
+      "seedNameEn": "珍珠葵種子",
+      "duration": 144,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 13768,
+          "adjacentSeedName": "庫爾札斯茶樹種子",
+          "baseSeedId": 7744,
+          "baseSeedName": "扁桃種子"
+        },
+        {
+          "adjacentSeedId": 7753,
+          "adjacentSeedName": "提諾爾卡茶樹種子",
+          "baseSeedId": 13768,
+          "baseSeedName": "庫爾札斯茶樹種子"
+        },
+        {
+          "adjacentSeedId": 8167,
+          "adjacentSeedName": "珍珠葵種子",
+          "baseSeedId": 7742,
+          "baseSeedName": "中原羅勒草種子"
+        }
+      ]
+    },
+    {
+      "productId": 8157,
+      "name": "塞爾法特爾沙果",
+      "nameEn": "塞爾法特爾沙果",
+      "seedId": 8174,
+      "seedName": "塞爾法特爾沙果種子",
+      "seedNameEn": "塞爾法特爾沙果種子",
+      "duration": 48,
+      "crossBreeds": []
+    },
+    {
+      "productId": 8158,
+      "name": "多瑪青梅",
+      "nameEn": "多瑪青梅",
+      "seedId": 8175,
+      "seedName": "多瑪青梅種子",
+      "seedNameEn": "多瑪青梅種子",
+      "duration": 48,
+      "crossBreeds": []
+    },
+    {
+      "productId": 8159,
+      "name": "輝鱗油梨",
+      "nameEn": "輝鱗油梨",
+      "seedId": 8176,
+      "seedName": "輝鱗油梨種子",
+      "seedNameEn": "輝鱗油梨種子",
+      "duration": 48,
+      "crossBreeds": []
+    },
+    {
+      "productId": 8160,
+      "name": "瓦爾醋栗",
+      "nameEn": "瓦爾醋栗",
+      "seedId": 8177,
+      "seedName": "瓦爾醋栗種子",
+      "seedNameEn": "瓦爾醋栗種子",
+      "duration": 48,
+      "crossBreeds": []
+    },
+    {
+      "productId": 8161,
+      "name": "歐·葛莫羅漿果",
+      "nameEn": "歐·葛莫羅漿果",
+      "seedId": 8178,
+      "seedName": "歐·葛莫羅漿果種子",
+      "seedNameEn": "歐·葛莫羅漿果種子",
+      "duration": 48,
+      "crossBreeds": []
+    },
+    {
+      "productId": 8162,
+      "name": "謝爾達萊鳳梨",
+      "nameEn": "謝爾達萊鳳梨",
+      "seedId": 8179,
+      "seedName": "謝爾達萊鳳梨種子",
+      "seedNameEn": "謝爾達萊鳳梨種子",
+      "duration": 48,
+      "crossBreeds": []
+    },
+    {
+      "productId": 8163,
+      "name": "拉札漢檸檬",
+      "nameEn": "拉札漢檸檬",
+      "seedId": 8180,
+      "seedName": "拉札漢檸檬種子",
+      "seedNameEn": "拉札漢檸檬種子",
+      "duration": 48,
+      "crossBreeds": []
+    },
+    {
+      "productId": 8165,
+      "name": "克拉卡蘿蔔",
+      "nameEn": "克拉卡蘿蔔",
+      "seedId": 8182,
+      "seedName": "克拉卡蘿蔔種子",
+      "seedNameEn": "克拉卡蘿蔔種子",
+      "duration": 72,
+      "crossBreeds": []
+    },
+    {
+      "productId": 8166,
+      "name": "薩維奈圓蔥",
+      "nameEn": "薩維奈圓蔥",
+      "seedId": 8183,
+      "seedName": "薩維奈圓蔥種子",
+      "seedNameEn": "薩維奈圓蔥種子",
+      "duration": 240,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 8170,
+          "adjacentSeedName": "西其斯菜薊種子",
+          "baseSeedId": 7750,
+          "baseSeedName": "皇家可可豆種子"
+        },
+        {
+          "adjacentSeedId": 8172,
+          "adjacentSeedName": "坦塔爾矮瓜種子",
+          "baseSeedId": 7750,
+          "baseSeedName": "皇家可可豆種子"
+        },
+        {
+          "adjacentSeedId": 7750,
+          "adjacentSeedName": "皇家可可豆種子",
+          "baseSeedId": 8169,
+          "baseSeedName": "克里耶蘿蔔種子"
+        }
+      ]
+    },
+    {
+      "productId": 8192,
+      "name": "洋蔥王子",
+      "nameEn": "洋蔥王子",
+      "seedId": 8184,
+      "seedName": "洋蔥王子種子",
+      "seedNameEn": "洋蔥王子種子",
+      "duration": 168,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 7743,
+          "adjacentSeedName": "風茄種子",
+          "baseSeedId": 17547,
+          "baseSeedName": "雲海橡果種子"
+        },
+        {
+          "adjacentSeedId": 8174,
+          "adjacentSeedName": "塞爾法特爾沙果種子",
+          "baseSeedId": 7743,
+          "baseSeedName": "風茄種子"
+        },
+        {
+          "adjacentSeedId": 8178,
+          "adjacentSeedName": "歐·葛莫羅漿果種子",
+          "baseSeedId": 7743,
+          "baseSeedName": "風茄種子"
+        }
+      ]
+    },
+    {
+      "productId": 8193,
+      "name": "茄子騎士",
+      "nameEn": "茄子騎士",
+      "seedId": 8185,
+      "seedName": "茄子騎士種子",
+      "seedNameEn": "茄子騎士種子",
+      "duration": 168,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 7748,
+          "adjacentSeedName": "星八角種子",
+          "baseSeedId": 17547,
+          "baseSeedName": "雲海橡果種子"
+        },
+        {
+          "adjacentSeedId": 7722,
+          "adjacentSeedName": "巫茄種子",
+          "baseSeedId": 7743,
+          "baseSeedName": "風茄種子"
+        },
+        {
+          "adjacentSeedId": 13768,
+          "adjacentSeedName": "庫爾札斯茶樹種子",
+          "baseSeedId": 7730,
+          "baseSeedName": "血紅奇異果種子"
+        }
+      ]
+    },
+    {
+      "productId": 8194,
+      "name": "蒜頭明星",
+      "nameEn": "蒜頭明星",
+      "seedId": 8186,
+      "seedName": "蒜頭明星種子",
+      "seedNameEn": "蒜頭明星種子",
+      "duration": 168,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 7743,
+          "adjacentSeedName": "風茄種子",
+          "baseSeedId": 7736,
+          "baseSeedName": "薰衣草種子"
+        },
+        {
+          "adjacentSeedId": 7743,
+          "adjacentSeedName": "風茄種子",
+          "baseSeedId": 7717,
+          "baseSeedName": "庫爾札斯胡蘿蔔種子"
+        },
+        {
+          "adjacentSeedId": 7743,
+          "adjacentSeedName": "風茄種子",
+          "baseSeedId": 7737,
+          "baseSeedName": "黑胡椒種子"
+        }
+      ]
+    },
+    {
+      "productId": 8195,
+      "name": "番茄國王",
+      "nameEn": "番茄國王",
+      "seedId": 8187,
+      "seedName": "番茄國王種子",
+      "seedNameEn": "番茄國王種子",
+      "duration": 168,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 8167,
+          "adjacentSeedName": "珍珠葵種子",
+          "baseSeedId": 17547,
+          "baseSeedName": "雲海橡果種子"
+        },
+        {
+          "adjacentSeedId": 7745,
+          "adjacentSeedName": "哈羅妮丁菊種子",
+          "baseSeedId": 17547,
+          "baseSeedName": "雲海橡果種子"
+        },
+        {
+          "adjacentSeedId": 7747,
+          "adjacentSeedName": "妮美雅百合種子",
+          "baseSeedId": 17547,
+          "baseSeedName": "雲海橡果種子"
+        }
+      ]
+    },
+    {
+      "productId": 8196,
+      "name": "曼德拉王后",
+      "nameEn": "曼德拉王后",
+      "seedId": 8188,
+      "seedName": "曼德拉王后種子",
+      "seedNameEn": "曼德拉王后種子",
+      "duration": 168,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 7747,
+          "adjacentSeedName": "妮美雅百合種子",
+          "baseSeedId": 7743,
+          "baseSeedName": "風茄種子"
+        }
+      ]
+    },
+    {
+      "productId": 12877,
+      "name": "小包心菜",
+      "nameEn": "小包心菜",
+      "seedId": 13767,
+      "seedName": "小包心菜種子",
+      "seedNameEn": "小包心菜種子",
+      "duration": 120,
+      "crossBreeds": []
+    },
+    {
+      "productId": 12882,
+      "name": "庫爾札斯茶葉",
+      "nameEn": "庫爾札斯茶葉",
+      "seedId": 13768,
+      "seedName": "庫爾札斯茶樹種子",
+      "seedNameEn": "庫爾札斯茶樹種子",
+      "duration": 120,
+      "crossBreeds": []
+    },
+    {
+      "productId": 12884,
+      "name": "庫爾札斯青蔥",
+      "nameEn": "庫爾札斯青蔥",
+      "seedId": 13766,
+      "seedName": "庫爾札斯青蔥種子",
+      "seedNameEn": "庫爾札斯青蔥種子",
+      "duration": 120,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 20794,
+          "adjacentSeedName": "魔蕨菜孢子",
+          "baseSeedId": 7723,
+          "baseSeedName": "中原甘藍種子"
+        },
+        {
+          "adjacentSeedId": 13767,
+          "adjacentSeedName": "小包心菜種子",
+          "baseSeedId": 7749,
+          "baseSeedName": "衛月新薯芽塊"
+        },
+        {
+          "adjacentSeedId": 7724,
+          "adjacentSeedName": "澤梅爾番茄種子",
+          "baseSeedId": 7749,
+          "baseSeedName": "衛月新薯芽塊"
+        }
+      ]
+    },
+    {
+      "productId": 12896,
+      "name": "舊世界無花果",
+      "nameEn": "舊世界無花果",
+      "seedId": 13765,
+      "seedName": "舊世界無花果種子",
+      "seedNameEn": "舊世界無花果種子",
+      "duration": 120,
+      "crossBreeds": []
+    },
+    {
+      "productId": 13754,
+      "name": "血椒",
+      "nameEn": "血椒",
+      "seedId": 13755,
+      "seedName": "血椒種子",
+      "seedNameEn": "血椒種子",
+      "duration": 168,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 7756,
+          "adjacentSeedName": "釉質堅果種子",
+          "baseSeedId": 13766,
+          "baseSeedName": "庫爾札斯青蔥種子"
+        }
+      ]
+    },
+    {
+      "productId": 14071,
+      "name": "紅色古典玫瑰",
+      "nameEn": "紅色古典玫瑰",
+      "seedId": 14007,
+      "seedName": "古典玫瑰種子",
+      "seedNameEn": "古典玫瑰種子",
+      "duration": 24,
+      "crossBreeds": []
+    },
+    {
+      "productId": 15857,
+      "name": "阿爾基克薰衣草",
+      "nameEn": "阿爾基克薰衣草",
+      "seedId": 15855,
+      "seedName": "阿爾基克薰衣草種子",
+      "seedNameEn": "阿爾基克薰衣草種子",
+      "duration": 22,
+      "crossBreeds": []
+    },
+    {
+      "productId": 15858,
+      "name": "虛無界風茄",
+      "nameEn": "虛無界風茄",
+      "seedId": 15856,
+      "seedName": "虛無界風茄種子",
+      "seedNameEn": "虛無界風茄種子",
+      "duration": 12,
+      "crossBreeds": []
+    },
+    {
+      "productId": 16022,
+      "name": "紫色三色堇",
+      "nameEn": "紫色三色堇",
+      "seedId": 16016,
+      "seedName": "三色堇種子",
+      "seedNameEn": "三色堇種子",
+      "duration": 24,
+      "crossBreeds": []
+    },
+    {
+      "productId": 17048,
+      "name": "紅色櫻花",
+      "nameEn": "紅色櫻花",
+      "seedId": 17546,
+      "seedName": "櫻花樹幼苗",
+      "seedNameEn": "櫻花樹幼苗",
+      "duration": 24,
+      "crossBreeds": []
+    },
+    {
+      "productId": 17548,
+      "name": "雲海橡果",
+      "nameEn": "雲海橡果",
+      "seedId": 17547,
+      "seedName": "雲海橡果種子",
+      "seedNameEn": "雲海橡果種子",
+      "duration": 24,
+      "crossBreeds": []
+    },
+    {
+      "productId": 17999,
+      "name": "黃色雛菊",
+      "nameEn": "黃色雛菊",
+      "seedId": 17996,
+      "seedName": "雛菊種子",
+      "seedNameEn": "雛菊種子",
+      "duration": 24,
+      "crossBreeds": []
+    },
+    {
+      "productId": 20791,
+      "name": "白雲花",
+      "nameEn": "白雲花",
+      "seedId": 20792,
+      "seedName": "白雲花種子",
+      "seedNameEn": "白雲花種子",
+      "duration": 120,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 7724,
+          "adjacentSeedName": "澤梅爾番茄種子",
+          "baseSeedId": 13768,
+          "baseSeedName": "庫爾札斯茶樹種子"
+        }
+      ]
+    },
+    {
+      "productId": 20793,
+      "name": "魔蕨菜",
+      "nameEn": "魔蕨菜",
+      "seedId": 20794,
+      "seedName": "魔蕨菜孢子",
+      "seedNameEn": "魔蕨菜孢子",
+      "duration": 120,
+      "crossBreeds": [
+        {
+          "adjacentSeedId": 13765,
+          "adjacentSeedName": "舊世界無花果種子",
+          "baseSeedId": 13755,
+          "baseSeedName": "血椒種子"
+        }
+      ]
+    },
+    {
+      "productId": 20796,
+      "name": "紅色光明百合",
+      "nameEn": "紅色光明百合",
+      "seedId": 20795,
+      "seedName": "光明百合種子",
+      "seedNameEn": "光明百合種子",
+      "duration": 24,
+      "crossBreeds": []
+    },
+    {
+      "productId": 21876,
+      "name": "紅色鬱金香",
+      "nameEn": "紅色鬱金香",
+      "seedId": 21875,
+      "seedName": "鬱金香球根",
+      "seedNameEn": "鬱金香球根",
+      "duration": 24,
+      "crossBreeds": []
+    },
+    {
+      "productId": 22590,
+      "name": "紅色大麗花",
+      "nameEn": "紅色大麗花",
+      "seedId": 22589,
+      "seedName": "大麗花的球根",
+      "seedNameEn": "大麗花的球根",
+      "duration": 24,
+      "crossBreeds": []
+    },
+    {
+      "productId": 24166,
+      "name": "紅色馬蹄蓮",
+      "nameEn": "紅色馬蹄蓮",
+      "seedId": 24165,
+      "seedName": "馬蹄蓮球莖",
+      "seedNameEn": "馬蹄蓮球莖",
+      "duration": 24,
+      "crossBreeds": []
+    },
+    {
+      "productId": 24542,
+      "name": "紅色鈴蘭",
+      "nameEn": "紅色鈴蘭",
+      "seedId": 24541,
+      "seedName": "鈴蘭的幼苗",
+      "seedNameEn": "鈴蘭的幼苗",
+      "duration": 24,
+      "crossBreeds": []
+    },
+    {
+      "productId": 27321,
+      "name": "紅色繡球花",
+      "nameEn": "紅色繡球花",
+      "seedId": 27320,
+      "seedName": "繡球花的種子",
+      "seedNameEn": "繡球花的種子",
+      "duration": 24,
+      "crossBreeds": []
+    },
+    {
+      "productId": 28176,
+      "name": "紅色風鈴草",
+      "nameEn": "紅色風鈴草",
+      "seedId": 28175,
+      "seedName": "風鈴草種子",
+      "seedNameEn": "風鈴草種子",
+      "duration": 24,
+      "crossBreeds": []
+    },
+    {
+      "productId": 28948,
+      "name": "紅色風信子",
+      "nameEn": "紅色風信子",
+      "seedId": 28947,
+      "seedName": "風信子種子",
+      "seedNameEn": "風信子種子",
+      "duration": 24,
+      "crossBreeds": []
+    },
+    {
+      "productId": 30371,
+      "name": "紫色大波斯菊",
+      "nameEn": "紫色大波斯菊",
+      "seedId": 30365,
+      "seedName": "大波斯菊種子",
+      "seedNameEn": "大波斯菊種子",
+      "duration": 24,
+      "crossBreeds": []
+    },
+    {
+      "productId": 30873,
+      "name": "亞拉戈西瓜",
+      "nameEn": "亞拉戈西瓜",
+      "seedId": 30364,
+      "seedName": "亞拉戈西瓜種子",
+      "seedNameEn": "亞拉戈西瓜種子",
+      "duration": 168,
+      "crossBreeds": []
+    },
+    {
+      "productId": 32813,
+      "name": "紅色康乃馨",
+      "nameEn": "紅色康乃馨",
+      "seedId": 32812,
+      "seedName": "康乃馨種子",
+      "seedNameEn": "康乃馨種子",
+      "duration": 24,
+      "crossBreeds": []
+    },
+    {
+      "productId": 33307,
+      "name": "紅色蝴蝶蘭",
+      "nameEn": "紅色蝴蝶蘭",
+      "seedId": 33306,
+      "seedName": "蝴蝶蘭幼苗",
+      "seedNameEn": "蝴蝶蘭幼苗",
+      "duration": 24,
+      "crossBreeds": []
+    },
+    {
+      "productId": 35745,
+      "name": "紅色紫燈花",
+      "nameEn": "紅色紫燈花",
+      "seedId": 35744,
+      "seedName": "紫燈花的種子",
+      "seedNameEn": "紫燈花的種子",
+      "duration": 24,
+      "crossBreeds": []
+    },
+    {
+      "productId": 37303,
+      "name": "紅色比爾格紫羅蘭",
+      "nameEn": "紅色比爾格紫羅蘭",
+      "seedId": 37302,
+      "seedName": "比爾格紫羅蘭的種子",
+      "seedNameEn": "比爾格紫羅蘭的種子",
+      "duration": 24,
+      "crossBreeds": []
+    },
+    {
+      "productId": 38660,
+      "name": "紅色香豌豆花",
+      "nameEn": "紅色香豌豆花",
+      "seedId": 38659,
+      "seedName": "香豌豆花的種子",
+      "seedNameEn": "香豌豆花的種子",
+      "duration": 24,
+      "crossBreeds": []
+    },
+    {
+      "productId": 39461,
+      "name": "紅色牽牛花",
+      "nameEn": "紅色牽牛花",
+      "seedId": 39460,
+      "seedName": "牽牛花的種子",
+      "seedNameEn": "牽牛花的種子",
+      "duration": 24,
+      "crossBreeds": []
+    },
+    {
+      "productId": 40687,
+      "name": "紅色菊花",
+      "nameEn": "紅色菊花",
+      "seedId": 40686,
+      "seedName": "菊花種子",
+      "seedNameEn": "菊花種子",
+      "duration": 24,
+      "crossBreeds": []
+    },
+    {
+      "productId": 41161,
+      "name": "紅色魯冰花",
+      "nameEn": "紅色魯冰花",
+      "seedId": 41160,
+      "seedName": "魯冰花種子",
+      "seedNameEn": "魯冰花種子",
+      "duration": 24,
+      "crossBreeds": []
+    },
+    {
+      "productId": 43963,
+      "name": "紅色向日葵",
+      "nameEn": "紅色向日葵",
+      "seedId": 4817,
+      "seedName": "葵花籽",
+      "seedNameEn": "葵花籽",
+      "duration": 24,
+      "crossBreeds": []
+    },
+    {
+      "productId": 44833,
+      "name": "紅色卡特蘭",
+      "nameEn": "紅色卡特蘭",
+      "seedId": 44832,
+      "seedName": "卡特蘭種子",
+      "seedNameEn": "卡特蘭種子",
+      "duration": 24,
+      "crossBreeds": []
+    },
+    {
+      "productId": 46804,
+      "name": "#46804",
+      "nameEn": "#46804",
+      "seedId": 46803,
+      "seedName": "#46803",
+      "seedNameEn": "#46803",
+      "duration": 24,
+      "crossBreeds": []
+    },
+    {
+      "productId": 47951,
+      "name": "#47951",
+      "nameEn": "#47951",
+      "seedId": 47950,
+      "seedName": "#47950",
+      "seedNameEn": "#47950",
+      "duration": 24,
+      "crossBreeds": []
+    },
+    {
+      "productId": 49774,
+      "name": "#49774",
+      "nameEn": "#49774",
+      "seedId": 49773,
+      "seedName": "#49773",
+      "seedNameEn": "#49773",
+      "duration": 24,
+      "crossBreeds": []
+    }
+  ]
+}
