@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="FF14 冒險者小隊任務派遣模擬器 — 最多8名隊員、Chemistry技能、Mission Affinity 加成計算">
+  <meta name="description" content="FF14 冒險者小隊任務派遣模擬器 — NPC隊員資料庫、訓練池、Chemistry自動判斷、最佳4人組合計算">
   <title>冒險者小隊計算機 | 水神的工具箱</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -30,7 +30,7 @@
       --text-muted: #6b6560;
       --radius:     8px;
     }
-    body { background: var(--bg-base); color: var(--text); font-family: 'Segoe UI',system-ui,sans-serif; min-height:100vh; }
+    body { background:var(--bg-base); color:var(--text); font-family:'Segoe UI',system-ui,sans-serif; min-height:100vh; }
 
     /* NAV */
     .nav { background:var(--bg-surface); border-bottom:1px solid var(--border); padding:0 1.5rem; height:52px; display:flex; align-items:center; gap:.75rem; }
@@ -51,33 +51,81 @@
     .section-title { font-size:.8rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--gold); margin-bottom:1rem; display:flex; align-items:center; gap:.5rem; }
     .section-title::after { content:''; flex:1; height:1px; background:var(--border); }
 
-    /* MEMBER GRID */
-    .member-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:.75rem; }
-    .member-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:.9rem; }
-    .member-card.inactive { opacity:.4; }
-    .member-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:.6rem; }
+    /* ROSTER SECTION */
+    .roster-bar { display:flex; gap:.5rem; flex-wrap:wrap; align-items:center; margin-bottom:1rem; }
+    .btn { background:var(--bg-surface); border:1px solid var(--border); border-radius:6px; color:var(--text-dim); padding:.32rem .75rem; font-size:.78rem; cursor:pointer; transition:all .15s; }
+    .btn:hover { border-color:var(--gold); color:var(--gold); }
+    .btn-primary { background:var(--gold-dim); border-color:rgba(200,169,110,.4); color:var(--gold); }
+    .btn-primary:hover { background:rgba(200,169,110,.25); }
+    .btn-sm { padding:.22rem .55rem; font-size:.72rem; }
+    .btn-danger { border-color:rgba(248,113,113,.3); color:var(--red); }
+    .btn-danger:hover { background:var(--red-dim); border-color:rgba(248,113,113,.5); }
+    .roster-count { font-size:.78rem; color:var(--text-dim); }
+    .roster-count strong { color:var(--gold); }
+
+    /* MEMBER CARDS */
+    .member-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:.75rem; }
+    .member-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:.9rem; position:relative; }
+    .member-card.active-slot { border-color:rgba(200,169,110,.25); }
+    .member-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:.55rem; }
     .member-num { font-size:.72rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:.05em; }
-    .member-toggle { display:flex; align-items:center; gap:.3rem; font-size:.75rem; color:var(--text-dim); cursor:pointer; user-select:none; }
-    .member-toggle input { accent-color:var(--gold); width:13px; height:13px; }
-    .member-row { display:grid; grid-template-columns:2.1rem 1fr; gap:.35rem; align-items:center; margin-bottom:.35rem; }
-    .member-row label { font-size:.76rem; color:var(--text-dim); }
-    select, input[type=number] { width:100%; background:var(--bg-surface); border:1px solid var(--border); border-radius:5px; color:var(--text); padding:.28rem .42rem; font-size:.78rem; outline:none; transition:border-color .2s; }
-    select:focus, input[type=number]:focus { border-color:var(--gold); }
-    select:disabled, input[type=number]:disabled { opacity:.35; cursor:not-allowed; }
+    .member-actions { display:flex; gap:.3rem; }
+    .member-name-row { display:flex; align-items:baseline; gap:.4rem; margin-bottom:.3rem; }
+    .member-name { font-size:.9rem; font-weight:600; color:var(--text); }
+    .member-sub { font-size:.72rem; color:var(--text-dim); }
+    .member-race-badge { font-size:.65rem; padding:.05rem .3rem; border-radius:3px; background:var(--bg-surface); border:1px solid var(--border); color:var(--text-dim); }
+    .member-row { display:grid; grid-template-columns:2.2rem 1fr; gap:.32rem; align-items:center; margin-bottom:.32rem; }
+    .member-row label { font-size:.74rem; color:var(--text-dim); }
+    select, input[type=number], input[type=text] { width:100%; background:var(--bg-surface); border:1px solid var(--border); border-radius:5px; color:var(--text); padding:.28rem .42rem; font-size:.78rem; outline:none; transition:border-color .2s; }
+    select:focus, input[type=number]:focus, input[type=text]:focus { border-color:var(--gold); }
     .member-stats { display:flex; gap:.3rem; margin-top:.45rem; flex-wrap:wrap; }
     .stat-badge { font-size:.7rem; padding:.1rem .35rem; border-radius:4px; background:var(--bg-surface); border:1px solid var(--border); }
-    .stat-ph { color:var(--red); }
-    .stat-me { color:var(--blue); }
-    .stat-ta { color:var(--green); }
+    .stat-ph { color:var(--red); } .stat-me { color:var(--blue); } .stat-ta { color:var(--green); }
     .chem-divider { height:1px; background:var(--border); margin:.5rem 0; }
     .chem-label { font-size:.66rem; color:var(--gold); letter-spacing:.05em; text-transform:uppercase; margin-bottom:.3rem; }
     .chem-effect { font-size:.71rem; color:var(--cyan); margin-top:.22rem; min-height:.85rem; }
+    .chem-triggered { font-size:.68rem; padding:.08rem .3rem; border-radius:3px; margin-left:.3rem; }
+    .chem-on  { background:rgba(74,222,128,.15); color:var(--green); border:1px solid rgba(74,222,128,.3); }
+    .chem-off { background:var(--bg-surface); color:var(--text-muted); border:1px solid var(--border); }
+
+    /* EMPTY SLOT */
+    .member-empty { border:1px dashed rgba(255,255,255,.08); cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.4rem; min-height:100px; transition:border-color .2s; }
+    .member-empty:hover { border-color:rgba(200,169,110,.3); }
+    .member-empty-icon { font-size:1.4rem; opacity:.3; }
+    .member-empty-text { font-size:.75rem; color:var(--text-muted); }
 
     /* TEAM TOTAL */
     .team-total { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:1rem 1.5rem; display:flex; gap:2rem; flex-wrap:wrap; align-items:center; }
     .total-label { font-size:.78rem; color:var(--text-dim); margin-bottom:.2rem; }
     .total-val { font-size:1.4rem; font-weight:700; }
     .total-bonus { font-size:.72rem; color:var(--cyan); margin-left:.3rem; }
+    .total-pool { font-size:.72rem; color:var(--purple); margin-left:.3rem; }
+
+    /* TRAINING POOL */
+    .training-section { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:1rem 1.2rem; }
+    .training-rank-row { display:flex; gap:.5rem; align-items:center; margin-bottom:.8rem; flex-wrap:wrap; }
+    .rank-btn { border:1px solid var(--border); background:var(--bg-surface); color:var(--text-dim); border-radius:5px; padding:.25rem .7rem; font-size:.78rem; cursor:pointer; transition:all .15s; }
+    .rank-btn.active { background:var(--purple-dim); border-color:rgba(167,139,250,.4); color:var(--purple); }
+    .pool-stats { display:flex; gap:1rem; margin-bottom:.8rem; flex-wrap:wrap; }
+    .pool-stat { display:flex; flex-direction:column; gap:.2rem; }
+    .pool-stat label { font-size:.68rem; color:var(--text-dim); }
+    .pool-stat input { width:72px; text-align:center; }
+    .pool-total { font-size:.72rem; color:var(--text-dim); display:flex; align-items:center; gap:.4rem; }
+    .pool-bar { flex:1; height:6px; background:var(--bg-surface); border-radius:3px; overflow:hidden; max-width:200px; }
+    .pool-bar-fill { height:100%; background:var(--purple); border-radius:3px; transition:width .3s; }
+    .pool-over { color:var(--red); }
+    .training-btns { display:flex; gap:.4rem; flex-wrap:wrap; }
+    .train-btn { background:var(--bg-surface); border:1px solid var(--border); border-radius:5px; color:var(--text-dim); padding:.28rem .65rem; font-size:.74rem; cursor:pointer; transition:all .15s; }
+    .train-btn:hover { border-color:var(--purple); color:var(--purple); background:var(--purple-dim); }
+
+    /* MISSION SECTION */
+    .mission-controls { display:flex; gap:.6rem; flex-wrap:wrap; align-items:center; margin-bottom:1rem; }
+    .variant-sel { display:flex; gap:.3rem; align-items:center; font-size:.78rem; color:var(--text-dim); }
+    .filter-btns { display:flex; gap:.3rem; flex-wrap:wrap; }
+    .filter-btn { border:1px solid var(--border); background:var(--bg-surface); color:var(--text-dim); border-radius:5px; padding:.22rem .6rem; font-size:.73rem; cursor:pointer; transition:all .15s; }
+    .filter-btn.active { background:var(--gold-dim); border-color:rgba(200,169,110,.4); color:var(--gold); }
+    .best4-btn { background:rgba(167,139,250,.12); border:1px solid rgba(167,139,250,.3); color:var(--purple); border-radius:6px; padding:.32rem .9rem; font-size:.78rem; cursor:pointer; transition:all .15s; }
+    .best4-btn:hover { background:rgba(167,139,250,.22); }
 
     /* MISSION LIST */
     .mission-list { display:flex; flex-direction:column; gap:.45rem; }
@@ -85,8 +133,7 @@
     .mission-card.can-100 { border-color:rgba(74,222,128,.4); }
     .mission-card.can-partial { border-color:rgba(200,169,110,.25); }
     .mission-card.impossible { opacity:.38; }
-    .mission-main { display:flex; align-items:center; gap:1rem; padding:.6rem 1rem; flex-wrap:wrap; cursor:pointer; }
-    .mission-main:hover { background:rgba(255,255,255,.02); }
+    .mission-main { display:flex; align-items:center; gap:1rem; padding:.6rem 1rem; flex-wrap:wrap; cursor:default; }
     .mission-info { flex:1; min-width:150px; }
     .mission-name { font-size:.88rem; font-weight:600; }
     .mission-meta { font-size:.71rem; color:var(--text-dim); margin-top:.15rem; display:flex; gap:.4rem; flex-wrap:wrap; align-items:center; }
@@ -98,436 +145,795 @@
     .req-item { font-size:.7rem; display:flex; flex-direction:column; align-items:center; gap:.06rem; }
     .req-lbl { color:var(--text-muted); font-size:.6rem; }
     .req-val { font-weight:700; }
-    .req-met   { color:var(--green); }
-    .req-unmet { color:var(--red); }
-    .mission-rate { min-width:66px; text-align:right; }
+    .req-met   { color:var(--green); } .req-unmet { color:var(--red); }
+    .mission-rate { min-width:72px; text-align:right; }
     .rate-val { font-size:1.2rem; font-weight:700; }
-    .rate-100 { color:var(--green); }
-    .rate-hi  { color:var(--gold); }
-    .rate-lo  { color:var(--orange); }
-    .rate-no  { color:var(--text-muted); }
+    .rate-100 { color:var(--green); } .rate-hi { color:var(--gold); } .rate-lo { color:var(--orange); } .rate-no { color:var(--text-muted); }
+    .rate-bonus { font-size:.66rem; color:var(--cyan); display:block; }
+    .rate-pool  { font-size:.66rem; color:var(--purple); display:block; }
 
-    /* AFFINITY PANEL */
-    .affinity-panel { background:rgba(34,211,238,.04); border-top:1px solid rgba(34,211,238,.15); padding:.6rem 1rem; display:none; }
-    .affinity-panel.open { display:block; }
-    .affinity-title { font-size:.68rem; color:var(--cyan); text-transform:uppercase; letter-spacing:.06em; margin-bottom:.4rem; }
-    .affinity-members { display:flex; flex-wrap:wrap; gap:.3rem; }
-    .affinity-chip { display:flex; align-items:center; gap:.28rem; background:var(--bg-surface); border:1px solid var(--border); border-radius:5px; padding:.18rem .45rem; font-size:.73rem; cursor:pointer; color:var(--text-dim); user-select:none; }
-    .affinity-chip input { accent-color:var(--cyan); width:12px; height:12px; }
-    .affinity-chip.checked { background:var(--cyan-dim); border-color:rgba(34,211,238,.4); color:var(--cyan); }
-    .affinity-note { font-size:.67rem; color:var(--text-muted); margin-top:.38rem; }
-    .affinity-bonus { font-size:.71rem; color:var(--cyan); margin-top:.32rem; }
+    /* BEST-4 RESULT */
+    .best4-result { background:var(--bg-card); border:1px solid rgba(167,139,250,.3); border-radius:var(--radius); padding:1rem 1.2rem; margin-bottom:1rem; }
+    .best4-title { font-size:.78rem; font-weight:700; color:var(--purple); margin-bottom:.5rem; }
+    .best4-members { display:flex; gap:.4rem; flex-wrap:wrap; margin-bottom:.4rem; }
+    .best4-chip { background:var(--purple-dim); border:1px solid rgba(167,139,250,.3); border-radius:5px; padding:.18rem .5rem; font-size:.76rem; color:var(--purple); }
+    .best4-stats { font-size:.75rem; color:var(--text-dim); }
+
+    /* MODAL */
+    .modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,.7); display:flex; align-items:center; justify-content:center; z-index:1000; padding:1rem; }
+    .modal-backdrop.hidden { display:none; }
+    .modal { background:var(--bg-card); border:1px solid var(--border); border-radius:12px; width:100%; max-width:720px; max-height:85vh; display:flex; flex-direction:column; }
+    .modal-header { padding:1rem 1.2rem; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+    .modal-title { font-size:1rem; font-weight:700; }
+    .modal-close { background:none; border:none; color:var(--text-dim); font-size:1.2rem; cursor:pointer; padding:.2rem; line-height:1; }
+    .modal-close:hover { color:var(--text); }
+    .modal-filters { padding:.6rem 1.2rem; border-bottom:1px solid var(--border); display:flex; gap:.4rem; flex-wrap:wrap; flex-shrink:0; }
+    .modal-search { width:100%; margin-bottom:.4rem; }
+    .modal-body { overflow-y:auto; flex:1; }
+    .npc-table { width:100%; border-collapse:collapse; }
+    .npc-table th { font-size:.7rem; color:var(--text-muted); text-align:left; padding:.5rem .8rem; border-bottom:1px solid var(--border); position:sticky; top:0; background:var(--bg-card); text-transform:uppercase; letter-spacing:.05em; }
+    .npc-table td { font-size:.78rem; padding:.42rem .8rem; border-bottom:1px solid rgba(255,255,255,.04); }
+    .npc-row { cursor:pointer; transition:background .15s; }
+    .npc-row:hover { background:rgba(200,169,110,.06); }
+    .npc-row.disabled { opacity:.35; cursor:not-allowed; }
+    .npc-name { font-weight:600; }
+    .npc-race { font-size:.7rem; color:var(--text-dim); }
+    .npc-job-badge { font-size:.66rem; padding:.06rem .3rem; border-radius:3px; background:var(--bg-surface); border:1px solid var(--border); }
+    .npc-obtain { font-size:.68rem; color:var(--text-muted); max-width:160px; }
 
     /* FILTER */
-    .filter-row { display:flex; gap:.45rem; flex-wrap:wrap; margin-bottom:1rem; align-items:center; }
-    .filter-btn { font-size:.78rem; padding:.27rem .72rem; border-radius:5px; cursor:pointer; border:1px solid var(--border); background:var(--bg-surface); color:var(--text-dim); transition:all .15s; }
-    .filter-btn.active { background:var(--gold-dim); border-color:var(--gold); color:var(--gold); }
+    .filter-pill { border:1px solid var(--border); background:var(--bg-surface); color:var(--text-dim); border-radius:5px; padding:.18rem .55rem; font-size:.72rem; cursor:pointer; transition:all .15s; }
+    .filter-pill.active { background:var(--gold-dim); border-color:rgba(200,169,110,.4); color:var(--gold); }
 
-    /* TIP */
-    .tip { font-size:.77rem; color:var(--text-dim); background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:.68rem 1rem; margin-bottom:1rem; line-height:1.65; }
-    .tip strong { color:var(--gold); }
-    .tip .cyan { color:var(--cyan); }
-
-    @media (max-width:640px) {
-      .mission-main { flex-direction:column; align-items:flex-start; }
-      .mission-rate { text-align:left; }
-    }
+    /* MISC */
+    .empty-state { text-align:center; padding:2.5rem 1rem; color:var(--text-muted); font-size:.85rem; }
+    .loading { text-align:center; padding:2rem; color:var(--text-muted); }
+    .two-col { display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; }
+    @media(max-width:700px){ .two-col { grid-template-columns:1fr; } }
   </style>
 </head>
 <body>
+
 <nav class="nav">
-  <a href="../../" class="nav-back">⚓ 水神的工具箱</a>
-  <span class="nav-sep">›</span>
-  <span class="nav-title">🏰 冒險者小隊計算機</span>
+  <a href="../../" class="nav-back">&#8592; 水神的工具箱</a>
+  <span class="nav-sep">/</span>
+  <span class="nav-title">冒險者小隊計算機</span>
 </nav>
 
 <div class="hero">
   <div class="hero-inner">
-    <h1><span>🏰</span> 冒險者小隊計算機</h1>
-    <p>最多8名隊員，設定職業、等級、種族與Chemistry技能；點選任務展開 Mission Affinity 面板計算加成後成功率</p>
+    <h1>&#9876; 冒險者小隊計算機</h1>
+    <p>NPC隊員資料庫 · Chemistry自動判斷 · 訓練池模擬 · 最佳4人組合計算</p>
   </div>
 </div>
 
 <div class="main">
+
+  <!-- 小隊設定 -->
   <div class="section">
-    <div class="section-title">隊員設定（最多8人）</div>
+    <div class="section-title">小隊設定</div>
+    <div class="roster-bar">
+      <button class="btn btn-primary" onclick="openModal()">＋ 新增隊員</button>
+      <span class="roster-count">已選 <strong id="rosterCount">0</strong> / 8 位</span>
+    </div>
     <div class="member-grid" id="memberGrid"></div>
   </div>
 
+  <!-- 小隊能力總值 -->
   <div class="section">
-    <div class="section-title">隊伍合計屬性</div>
-    <div class="team-total">
+    <div class="section-title">小隊能力總值</div>
+    <div class="team-total" id="teamTotal">
       <div>
-        <div class="total-label">體能 Physical</div>
-        <div style="display:flex;align-items:baseline">
-          <div class="total-val stat-ph" id="totalPh">0</div>
-          <div class="total-bonus" id="bonusPh"></div>
-        </div>
+        <div class="total-label">體能</div>
+        <div><span class="total-val stat-ph" id="totPh">0</span><span class="total-bonus" id="bonPh"></span><span class="total-pool" id="poolPh"></span></div>
       </div>
       <div>
-        <div class="total-label">精神 Mental</div>
-        <div style="display:flex;align-items:baseline">
-          <div class="total-val stat-me" id="totalMe">0</div>
-          <div class="total-bonus" id="bonusMe"></div>
-        </div>
+        <div class="total-label">心智</div>
+        <div><span class="total-val stat-me" id="totMe">0</span><span class="total-bonus" id="bonMe"></span><span class="total-pool" id="poolMe"></span></div>
       </div>
       <div>
-        <div class="total-label">戰術 Tactical</div>
-        <div style="display:flex;align-items:baseline">
-          <div class="total-val stat-ta" id="totalTa">0</div>
-          <div class="total-bonus" id="bonusTa"></div>
-        </div>
+        <div class="total-label">戰術</div>
+        <div><span class="total-val stat-ta" id="totTa">0</span><span class="total-bonus" id="bonTa"></span><span class="total-pool" id="poolTa"></span></div>
       </div>
-      <div id="totalChemDesc" style="font-size:.73rem;color:var(--cyan);line-height:1.6;"></div>
     </div>
   </div>
 
+  <div class="two-col">
+    <!-- 訓練池 -->
+    <div class="section">
+      <div class="section-title">訓練池</div>
+      <div class="training-section">
+        <div class="training-rank-row">
+          <span style="font-size:.74rem;color:var(--text-dim);">小隊階級：</span>
+          <button class="rank-btn" id="rank1" onclick="setRank(1)">一級（上限 200）</button>
+          <button class="rank-btn" id="rank2" onclick="setRank(2)">二級（上限 280）</button>
+          <button class="rank-btn active" id="rank3" onclick="setRank(3)">三級（上限 400）</button>
+        </div>
+        <div class="pool-stats">
+          <div class="pool-stat">
+            <label class="stat-ph">體能</label>
+            <input type="number" id="poolPhInput" min="0" value="0" oninput="onPoolChange()">
+          </div>
+          <div class="pool-stat">
+            <label class="stat-me">心智</label>
+            <input type="number" id="poolMeInput" min="0" value="0" oninput="onPoolChange()">
+          </div>
+          <div class="pool-stat">
+            <label class="stat-ta">戰術</label>
+            <input type="number" id="poolTaInput" min="0" value="0" oninput="onPoolChange()">
+          </div>
+        </div>
+        <div class="pool-total">
+          <span>總計：<span id="poolTotalTxt">0</span> / <span id="poolCapTxt">400</span></span>
+          <div class="pool-bar"><div class="pool-bar-fill" id="poolBarFill" style="width:0%"></div></div>
+          <span id="poolOverTxt"></span>
+        </div>
+        <div style="margin:.7rem 0 .5rem; font-size:.72rem; color:var(--text-muted);">點擊訓練：未超上限直接加值；超上限時自動按比例重分配</div>
+        <div class="training-btns" id="trainingBtns"></div>
+      </div>
+    </div>
+
+    <!-- 任務篩選 -->
+    <div class="section">
+      <div class="section-title">任務設定</div>
+      <div class="mission-controls">
+        <div class="variant-sel">
+          <span>當週配置：</span>
+          <select id="variantSel" onchange="renderMissions()">
+            <option value="0">配置 1</option>
+            <option value="1">配置 2</option>
+            <option value="2">配置 3</option>
+            <option value="3">配置 4</option>
+            <option value="4">配置 5</option>
+            <option value="5">配置 6</option>
+          </select>
+        </div>
+        <div class="filter-btns">
+          <button class="filter-btn active" data-filter="all" onclick="setFilter(this,'all')">全部</button>
+          <button class="filter-btn" data-filter="trainee" onclick="setFilter(this,'trainee')">簡單</button>
+          <button class="filter-btn" data-filter="routine" onclick="setFilter(this,'routine')">一般</button>
+          <button class="filter-btn" data-filter="priority" onclick="setFilter(this,'priority')">優先</button>
+        </div>
+      </div>
+      <button class="best4-btn" onclick="calcBest4()" style="margin-bottom:.8rem; width:100%;">★ 計算最佳4人組合</button>
+      <div id="best4Result" style="display:none"></div>
+    </div>
+  </div>
+
+  <!-- 任務列表 -->
   <div class="section">
-    <div class="section-title">任務派遣結果</div>
-    <div class="tip">
-      <strong>成功率計算</strong>：重要任務（⚑）需3項屬性全達標才有100%；一般任務每達標+20%，全達標再+20%。<br>
-      <span class="cyan">▸ Mission Affinity</span>：點選任務展開面板，勾選有親和加成的隊員 → 其Chemistry 100%觸發且效果翻倍，屬性加成重算成功率。<br>
-      <strong>Chemistry</strong> id1–3 影響個人屬性（體/精/戰），id4–6 影響全員屬性；其餘為獎勵加成，不影響成功率。
-    </div>
-    <div class="filter-row">
-      <span style="font-size:.8rem;color:var(--text-dim)">顯示：</span>
-      <button class="filter-btn active" id="filterAll" onclick="setFilter('all')">全部</button>
-      <button class="filter-btn" id="filterCan" onclick="setFilter('possible')">可達成</button>
-      <button class="filter-btn" id="filter100" onclick="setFilter('100')">100% 達成</button>
-    </div>
+    <div class="section-title">任務列表</div>
     <div class="mission-list" id="missionList"></div>
+  </div>
+
+</div>
+
+<!-- NPC 選擇 Modal -->
+<div class="modal-backdrop hidden" id="modal" onclick="closeModalBg(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">選擇隊員</span>
+      <button class="modal-close" onclick="closeModal()">&#10005;</button>
+    </div>
+    <div class="modal-filters">
+      <input type="text" class="modal-search" id="npcSearch" placeholder="搜尋名稱..." oninput="renderNpcList()">
+      <div style="display:flex;gap:.3rem;flex-wrap:wrap;" id="racePills"></div>
+      <div style="display:flex;gap:.3rem;flex-wrap:wrap;margin-top:.3rem;" id="jobPills"></div>
+    </div>
+    <div class="modal-body">
+      <table class="npc-table">
+        <thead><tr>
+          <th>名稱</th><th>種族/性別</th><th>職業</th><th>取得方式</th>
+        </tr></thead>
+        <tbody id="npcBody"></tbody>
+      </table>
+    </div>
   </div>
 </div>
 
 <script>
-const DATA_URL = '../../data/squadron.json';
-const RACES = ['人族','精靈族','貓魅族','拉拉菲爾族','魯加族','敖龍族'];
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let DB = { recruits:[], missions:[], chemistry:[], chemCond:[], growths:[], trainings:[] };
+// roster: selected NPCs with per-member settings
+// { recruitId, level, chemId(0=none), chemRank(1-5) }
+let roster = [];
+let poolRank = 3;
+let pool = { physical:0, mental:0, tactical:0 };
+let missionFilter = 'all';
 
-// Chemistry id → which stat it boosts and whether self or all members
-// id 1-3: self stat boost; id 4-6: all-member stat boost; others: no stat effect
+const RANK_CAP = { 1:200, 2:280, 3:400 };
+const JOB_NAME = { MRD:'斧術師', GLA:'劍術師', ARC:'弓箭手', ROG:'雙劍師', LNC:'槍術師', PGL:'格鬥家', CNJ:'幻術師', THM:'咒術師', ACN:'秘術師' };
+const RACE_NAME = { hyur:'人族', elezen:'精靈族', lalafell:'拉拉菲爾族', miqote:'貓魅族', roegadyn:'魯加族', aura:'敖龍族' };
 const CHEM_STAT = {
-  1: { scope:'self', stat:'physical' },
-  2: { scope:'self', stat:'mental'   },
-  3: { scope:'self', stat:'tactical' },
-  4: { scope:'all',  stat:'physical' },
-  5: { scope:'all',  stat:'mental'   },
-  6: { scope:'all',  stat:'tactical' },
+  1:{scope:'self',stat:'physical'}, 2:{scope:'self',stat:'mental'}, 3:{scope:'self',stat:'tactical'},
+  4:{scope:'all',stat:'physical'},  5:{scope:'all',stat:'mental'},  6:{scope:'all',stat:'tactical'}
 };
 
-let SD = null;
-let filterMode = 'all';
-let openMission = null;
-// affinityMap[missionId] = Set of member indices
-let affinityMap = {};
+// Modal filter state
+let modalRaceFilter = 'all';
+let modalJobFilter = 'all';
 
-let members = Array.from({length:8}, (_,i) => ({
-  active: i < 4,
-  job:    ['MRD','GLA','ARC','ROG','LNC','PGL','THM','ARC'][i],
-  level:  60,
-  race:   '人族',
-  chemId: 0,
-  chemRank: 1,
-}));
-
-fetch(DATA_URL).then(r=>r.json()).then(data=>{
-  SD = data;
-  buildGrid();
-  render();
-});
-
-function growths(){ return SD.data.filter(x=>x.kind==='memberGrowth'); }
-function chems(){   return SD.data.filter(x=>x.kind==='chemistry'); }
-function getChem(id){ return chems().find(c=>c.id===id)||null; }
-function missions(){ return SD.data.filter(x=>x.kind==='mission'); }
-
-function buildGrid(){
-  const gs = growths();
-  const cs = chems();
-  const chemOpts = ['<option value="0">── 無技能 ──</option>',
-    ...cs.map(c=>`<option value="${c.id}">${c.text.replace('{value}','?')}</option>`)
-  ].join('');
-
-  document.getElementById('memberGrid').innerHTML = members.map((m,i)=>{
-    const jobOpts = gs.map(g=>
-      `<option value="${g.classAbbr}"${g.classAbbr===m.job?' selected':''}>${g.className}</option>`
-    ).join('');
-    const raceOpts = RACES.map(r=>
-      `<option value="${r}"${r===m.race?' selected':''}>${r}</option>`
-    ).join('');
-    return `
-    <div class="member-card${m.active?'':' inactive'}" id="mc${i}">
-      <div class="member-header">
-        <span class="member-num">隊員 ${i+1}</span>
-        <label class="member-toggle">
-          <input type="checkbox" id="act${i}" ${m.active?'checked':''}
-            onchange="toggleActive(${i},this.checked)"> 出戰中
-        </label>
-      </div>
-      <div class="member-row"><label>職業</label>
-        <select id="job${i}" ${m.active?'':'disabled'} onchange="setM(${i},'job',this.value)">${jobOpts}</select>
-      </div>
-      <div class="member-row"><label>等級</label>
-        <input type="number" id="lv${i}" min="1" max="60" value="${m.level}" ${m.active?'':'disabled'}
-          onchange="setM(${i},'level',+this.value)">
-      </div>
-      <div class="member-row"><label>種族</label>
-        <select id="race${i}" ${m.active?'':'disabled'} onchange="setM(${i},'race',this.value)">${raceOpts}</select>
-      </div>
-      <div class="member-stats" id="st${i}"></div>
-      <div class="chem-divider"></div>
-      <div class="chem-label">Chemistry 技能</div>
-      <div class="member-row"><label>技能</label>
-        <select id="ch${i}" ${m.active?'':'disabled'} onchange="setM(${i},'chemId',+this.value)">${chemOpts}</select>
-      </div>
-      <div class="member-row" id="rr${i}" style="${m.chemId===0?'display:none':''}"><label>階級</label>
-        <select id="cr${i}" ${m.active?'':'disabled'} onchange="setM(${i},'chemRank',+this.value)">
-          ${[1,2,3,4,5].map(r=>`<option value="${r}"${r===m.chemRank?' selected':''}>${r}</option>`).join('')}
-        </select>
-      </div>
-      <div class="chem-effect" id="ce${i}"></div>
-    </div>`;
-  }).join('');
-
-  members.forEach((_,i)=>{ refreshBadge(i); refreshChemEffect(i); });
+// ─── LOAD DATA ────────────────────────────────────────────────────────────────
+async function loadData() {
+  const res = await fetch('../../data/squadron.json');
+  const json = await res.json();
+  const data = json.data;
+  DB.recruits  = data.filter(d => d.kind === 'recruit');
+  DB.missions  = data.filter(d => d.kind === 'mission');
+  DB.chemistry = data.filter(d => d.kind === 'chemistry');
+  DB.chemCond  = data.filter(d => d.kind === 'chemistryCondition');
+  DB.growths   = data.filter(d => d.kind === 'memberGrowth');
+  DB.trainings = data.filter(d => d.kind === 'training');
+  loadStorage();
+  buildTrainingBtns();
+  buildModalFilters();
+  renderAll();
 }
 
-function toggleActive(i,v){
-  members[i].active = v;
-  document.getElementById('mc'+i).classList.toggle('inactive',!v);
-  ['job','lv','race','ch','cr'].forEach(p=>{
-    const el = document.getElementById(p+i);
-    if(el) el.disabled = !v;
-  });
-  render();
+// ─── STORAGE ─────────────────────────────────────────────────────────────────
+function loadStorage() {
+  try {
+    const s = JSON.parse(localStorage.getItem('squadron_v3') || '{}');
+    if (s.roster) roster = s.roster;
+    if (s.pool) pool = s.pool;
+    if (s.poolRank) poolRank = s.poolRank;
+  } catch(e) {}
+}
+function saveStorage() {
+  localStorage.setItem('squadron_v3', JSON.stringify({ roster, pool, poolRank }));
 }
 
-function setM(i,field,val){
-  if(field==='level'){ val=Math.max(1,Math.min(60,val||1)); document.getElementById('lv'+i).value=val; }
-  members[i][field]=val;
-  if(field==='chemId') document.getElementById('rr'+i).style.display = val===0?'none':'';
-  refreshBadge(i);
-  refreshChemEffect(i);
-  render();
+// ─── GROWTH ──────────────────────────────────────────────────────────────────
+function baseStats(jobAbbr, level) {
+  const g = DB.growths.find(x => x.classAbbr === jobAbbr);
+  if (!g) return { physical:0, mental:0, tactical:0 };
+  const lv = Math.max(1, Math.min(60, level)) - 1;
+  return { physical: g.growth.physical[lv], mental: g.growth.mental[lv], tactical: g.growth.tactical[lv] };
 }
 
-function baseStats(m){
-  if(!SD) return {physical:0,mental:0,tactical:0};
-  const g = growths().find(x=>x.classAbbr===m.job);
-  if(!g) return {physical:0,mental:0,tactical:0};
-  const idx = Math.max(0,Math.min(59,m.level-1));
-  return { physical:g.growth.physical[idx], mental:g.growth.mental[idx], tactical:g.growth.tactical[idx] };
+// ─── CHEMISTRY CONDITION ─────────────────────────────────────────────────────
+function checkCondition(condId, member, activeMembers) {
+  const others = activeMembers.filter(m => m !== member);
+  switch(condId) {
+    case 1:  return true; // always
+    case 2:  return true; // level >= mission level (treat as true for now)
+    case 3:  return member.level >= 50;
+    case 4:  return others.some(m => m.race === 'hyur');
+    case 5:  return others.some(m => m.race === 'elezen');
+    case 6:  return others.some(m => m.race === 'miqote');
+    case 7:  return others.some(m => m.race === 'lalafell');
+    case 8:  return others.some(m => m.race === 'roegadyn');
+    case 9:  return others.some(m => m.race === 'aura');
+    case 10: return others.some(m => m.job === 'GLA');
+    case 11: return others.some(m => m.job === 'MRD');
+    case 12: return others.some(m => m.job === 'ARC');
+    case 13: return others.some(m => m.job === 'LNC');
+    case 14: return others.some(m => m.job === 'ROG');
+    case 15: return others.some(m => m.job === 'PGL');
+    case 16: return others.some(m => m.job === 'CNJ');
+    case 17: return others.some(m => m.job === 'THM');
+    case 18: return others.some(m => m.job === 'ACN');
+    case 19: return others.some(m => m.race === member.race);
+    case 20: return !others.some(m => m.race === member.race);
+    case 21: return others.some(m => m.job === member.job);
+    case 22: return !others.some(m => m.job === member.job);
+    case 23: return new Set(activeMembers.map(m=>m.race)).size === activeMembers.length;
+    case 24: return new Set(activeMembers.map(m=>m.job)).size === activeMembers.length;
+    case 25: { const cnt = {}; activeMembers.forEach(m=>{cnt[m.race]=(cnt[m.race]||0)+1;}); return Object.values(cnt).some(v=>v>=3); }
+    case 26: { const cnt = {}; activeMembers.forEach(m=>{cnt[m.job]=(cnt[m.job]||0)+1;}); return Object.values(cnt).some(v=>v>=3); }
+    default: return false;
+  }
 }
 
-function refreshBadge(i){
-  const m=members[i], s=baseStats(m);
-  document.getElementById('st'+i).innerHTML = m.active
-    ? `<span class="stat-badge stat-ph">體 ${s.physical}</span><span class="stat-badge stat-me">精 ${s.mental}</span><span class="stat-badge stat-ta">戰 ${s.tactical}</span>`
-    : '';
+// Build "rich" member list (with race/job from recruit data)
+function getActiveMembers(rosterSubset) {
+  return rosterSubset.map(rm => {
+    const rec = DB.recruits.find(r => r.id === rm.recruitId);
+    if (!rec) return null;
+    const chem = DB.chemistry.find(c => c.id === rm.chemId);
+    const condId = rm.chemId > 0 ? getChemCondId(rm.chemId) : 0;
+    return { ...rec, level: rm.level, chemId: rm.chemId, chemRank: rm.chemRank, chem, condId };
+  }).filter(Boolean);
 }
 
-function refreshChemEffect(i){
-  const el=document.getElementById('ce'+i);
-  if(!el) return;
-  const m=members[i];
-  if(!m.active||m.chemId===0){ el.textContent=''; return; }
-  const c=getChem(m.chemId);
-  if(!c){ el.textContent=''; return; }
-  const ri=m.chemRank-1, v=c.valuesByRank[ri], ch=c.chanceByRank[ri];
-  let txt=c.text;
-  txt = v>0 ? txt.replace('{value}',v) : txt.replace('{value}',ch+'%');
-  el.textContent = `▸ ${txt}（Rank ${m.chemRank}）`;
+// Each chemistry has a condition — in real game these are assigned per member
+// For simplicity we use chemId's "common" condition (from cycleapple: 1:1, 2:2, ... etc)
+// The condition id is part of the chemistry assignment; we just use condId stored per member
+function getChemCondId(chemId) {
+  // In FF14 each chemistry has a fixed condition. We map chemId -> condId based on game data.
+  // Source: cycleapple reference — condition is stored alongside chem on each member.
+  // We let user pick condition separately.
+  return 0; // placeholder; actual condId set by member.chemCondId
 }
 
-// Compute team totals including chemistry, with optional affinity set
-function computeTotals(affSet){
-  const active = members.map((m,i)=>({m,i})).filter(({m})=>m.active);
+// ─── COMPUTE TOTALS ───────────────────────────────────────────────────────────
+function computeTotals(rosterSubset) {
+  const active = getActiveMembers(rosterSubset);
+  if (!active.length) return { ph:0, me:0, ta:0, bonPh:0, bonMe:0, bonTa:0 };
 
-  // base sum
-  let base={physical:0,mental:0,tactical:0};
-  active.forEach(({m})=>{ const s=baseStats(m); base.physical+=s.physical; base.mental+=s.mental; base.tactical+=s.tactical; });
-
-  // Collect "all" scope chemistry boosts (sum across all active members)
-  let allBoost={physical:0,mental:0,tactical:0};
-  active.forEach(({m,i})=>{
-    if(m.chemId===0) return;
-    const map=CHEM_STAT[m.chemId];
-    if(!map||map.scope!=='all') return;
-    const c=getChem(m.chemId);
-    const ri=m.chemRank-1;
-    let pct=c.valuesByRank[ri];
-    if(affSet&&affSet.has(i)) pct*=2;
-    allBoost[map.stat]+=pct;
+  // Base stats
+  let basePh=0, baseMe=0, baseTa=0;
+  active.forEach(m => {
+    const s = baseStats(m.job, m.level);
+    basePh += s.physical; baseMe += s.mental; baseTa += s.tactical;
   });
 
-  // Per-member bonus (self + share of all-boosts)
-  let bonusPh=0,bonusMe=0,bonusTa=0;
-  active.forEach(({m,i})=>{
-    const s=baseStats(m);
-    const isAff=affSet&&affSet.has(i);
-
-    let selfPh=0,selfMe=0,selfTa=0;
-    if(m.chemId!==0){
-      const map=CHEM_STAT[m.chemId];
-      if(map&&map.scope==='self'){
-        const c=getChem(m.chemId);
-        const ri=m.chemRank-1;
-        let pct=c.valuesByRank[ri];
-        if(isAff) pct*=2;
-        if(map.stat==='physical') selfPh=pct;
-        else if(map.stat==='mental') selfMe=pct;
-        else selfTa=pct;
-      }
-    }
-
-    const tPh=allBoost.physical+selfPh;
-    const tMe=allBoost.mental  +selfMe;
-    const tTa=allBoost.tactical+selfTa;
-    bonusPh+=Math.round(s.physical*tPh/100);
-    bonusMe+=Math.round(s.mental  *tMe/100);
-    bonusTa+=Math.round(s.tactical*tTa/100);
+  // Chemistry bonuses
+  // 1. Collect "all" scope boosts
+  let allBonPh=0, allBonMe=0, allBonTa=0;
+  active.forEach(m => {
+    if (!m.chemId || m.chemId < 4 || m.chemId > 6) return;
+    const cs = CHEM_STAT[m.chemId];
+    if (!cs || cs.scope !== 'all') return;
+    const triggered = m.chemCondId ? checkCondition(m.chemCondId, m, active) : true;
+    if (!triggered) return;
+    const rank = Math.max(1, Math.min(5, m.chemRank));
+    const val = m.chem ? m.chem.valuesByRank[rank-1] : 0;
+    if (cs.stat === 'physical') allBonPh += val;
+    else if (cs.stat === 'mental') allBonMe += val;
+    else if (cs.stat === 'tactical') allBonTa += val;
   });
+
+  // 2. Per-member self boosts
+  let selfBonPh=0, selfBonMe=0, selfBonTa=0;
+  active.forEach(m => {
+    if (!m.chemId || m.chemId < 1 || m.chemId > 3) return;
+    const cs = CHEM_STAT[m.chemId];
+    if (!cs || cs.scope !== 'self') return;
+    const triggered = m.chemCondId ? checkCondition(m.chemCondId, m, active) : true;
+    if (!triggered) return;
+    const rank = Math.max(1, Math.min(5, m.chemRank));
+    const val = m.chem ? m.chem.valuesByRank[rank-1] : 0;
+    const s = baseStats(m.job, m.level);
+    if (cs.stat === 'physical') selfBonPh += Math.floor(s.physical * val / 100);
+    else if (cs.stat === 'mental') selfBonMe += Math.floor(s.mental * val / 100);
+    else if (cs.stat === 'tactical') selfBonTa += Math.floor(s.tactical * val / 100);
+  });
+
+  // All-scope boosts apply to basePh etc.
+  const allBonPhAbs = Math.floor(basePh * allBonPh / 100);
+  const allBonMeAbs = Math.floor(baseMe * allBonMe / 100);
+  const allBonTaAbs = Math.floor(baseTa * allBonTa / 100);
 
   return {
-    physical: base.physical+bonusPh,
-    mental:   base.mental  +bonusMe,
-    tactical: base.tactical+bonusTa,
-    bonusPh, bonusMe, bonusTa,
+    ph: basePh + allBonPhAbs + selfBonPh,
+    me: baseMe + allBonMeAbs + selfBonMe,
+    ta: baseTa + allBonTaAbs + selfBonTa,
+    bonPh: allBonPhAbs + selfBonPh,
+    bonMe: allBonMeAbs + selfBonMe,
+    bonTa: allBonTaAbs + selfBonTa,
   };
 }
 
-function calcMission(m,affSet){
-  const t=computeTotals(affSet);
-  const rv=m.requireVariants, n=rv.physical.length;
-  let bestRate=-1, bestReqs=null;
-  for(let v=0;v<n;v++){
-    const r={physical:rv.physical[v],mental:rv.mental[v],tactical:rv.tactical[v]};
-    const ph=t.physical>=r.physical, me=t.mental>=r.mental, ta=t.tactical>=r.tactical;
-    const cnt=[ph,me,ta].filter(Boolean).length;
-    const all=cnt===3;
-    const rate=m.success.base+cnt*m.success.perStatMet+(all?m.success.allMet:0);
-    if(rate>bestRate){ bestRate=rate; bestReqs={...r,ph,me,ta}; }
+// ─── MISSION CALC ─────────────────────────────────────────────────────────────
+function calcMission(mission, rosterSubset) {
+  const v = parseInt(document.getElementById('variantSel').value) || 0;
+  const req = {
+    physical:  mission.requireVariants.physical[v],
+    mental:    mission.requireVariants.mental[v],
+    tactical:  mission.requireVariants.tactical[v],
+  };
+
+  const { ph, me, ta } = computeTotals(rosterSubset);
+  const withPool = {
+    ph: ph + (pool.physical || 0),
+    me: me + (pool.mental || 0),
+    ta: ta + (pool.tactical || 0),
+  };
+
+  function rate(totals) {
+    if (!mission.success) return 100;
+    const { base, perStatMet, allMet } = mission.success;
+    let met = 0;
+    if (totals.ph >= req.physical)  met++;
+    if (totals.me >= req.mental)    met++;
+    if (totals.ta >= req.tactical)  met++;
+    const flagged = mission.flagged;
+    if (flagged && met < 3) return 0;
+    let r = base + perStatMet * met;
+    if (met === 3) r += allMet;
+    return Math.min(100, r);
   }
-  return { rate:Math.min(100,bestRate), reqs:bestReqs };
+
+  return {
+    req,
+    base: { ph, me, ta },
+    withPool,
+    rateBase: rate({ ph, me, ta }),
+    ratePool: rate(withPool),
+    metBase:  [ph>=req.physical, me>=req.mental, ta>=req.tactical],
+    metPool:  [withPool.ph>=req.physical, withPool.me>=req.mental, withPool.ta>=req.tactical],
+  };
 }
 
-function render(){
-  if(!SD) return;
-  // team total
-  const t=computeTotals(null);
-  document.getElementById('totalPh').textContent=t.physical;
-  document.getElementById('totalMe').textContent=t.mental;
-  document.getElementById('totalTa').textContent=t.tactical;
-  document.getElementById('bonusPh').textContent=t.bonusPh>0?`+${t.bonusPh}`:'';
-  document.getElementById('bonusMe').textContent=t.bonusMe>0?`+${t.bonusMe}`:'';
-  document.getElementById('bonusTa').textContent=t.bonusTa>0?`+${t.bonusTa}`:'';
-
-  // chem summary
-  const lines=[];
-  members.forEach((m,i)=>{
-    if(!m.active||m.chemId===0) return;
-    const c=getChem(m.chemId), ri=m.chemRank-1;
-    const v=c.valuesByRank[ri], ch=c.chanceByRank[ri];
-    let txt=c.text; txt=v>0?txt.replace('{value}',v):txt.replace('{value}',ch+'%');
-    lines.push(`隊員${i+1}：${txt}`);
+// ─── BEST 4 COMBO ────────────────────────────────────────────────────────────
+function calcBest4() {
+  if (roster.length < 4) {
+    document.getElementById('best4Result').style.display = 'none';
+    alert('請至少選擇4名隊員才能計算最佳組合。');
+    return;
+  }
+  const v = parseInt(document.getElementById('variantSel').value) || 0;
+  let best = null;
+  let bestScore = -1;
+  // C(n,4)
+  const n = roster.length;
+  for (let a=0; a<n-3; a++)
+  for (let b=a+1; b<n-2; b++)
+  for (let c=b+1; c<n-1; c++)
+  for (let d=c+1; d<n;   d++) {
+    const combo = [roster[a], roster[b], roster[c], roster[d]];
+    const totals = computeTotals(combo);
+    // Score = sum across all missions of rateBase (higher is better)
+    let score = 0;
+    DB.missions.forEach(m => {
+      const req = { ph:m.requireVariants.physical[v], me:m.requireVariants.mental[v], ta:m.requireVariants.tactical[v] };
+      const { base, perStatMet, allMet } = m.success || { base:100, perStatMet:0, allMet:0 };
+      let met=0;
+      if (totals.ph >= req.ph) met++;
+      if (totals.me >= req.me) met++;
+      if (totals.ta >= req.ta) met++;
+      if (m.flagged && met<3) return;
+      let r = Math.min(100, base + perStatMet*met + (met===3 ? allMet : 0));
+      score += r;
+    });
+    if (score > bestScore) { bestScore = score; best = combo; }
+  }
+  const totals = computeTotals(best);
+  const names = best.map(rm => {
+    const rec = DB.recruits.find(r => r.id === rm.recruitId);
+    return rec ? rec.name : '?';
   });
-  document.getElementById('totalChemDesc').innerHTML=lines.join('<br>');
+  const el = document.getElementById('best4Result');
+  el.style.display = 'block';
+  el.innerHTML = `
+    <div class="best4-result">
+      <div class="best4-title">★ 最佳4人組合</div>
+      <div class="best4-members">${names.map(n=>`<span class="best4-chip">${n}</span>`).join('')}</div>
+      <div class="best4-stats">體能 <strong>${totals.ph}</strong> · 心智 <strong>${totals.me}</strong> · 戰術 <strong>${totals.ta}</strong>　（以當前Chemistry設定計算）</div>
+    </div>`;
+  renderMissions();
+}
 
-  // missions
-  const TYPE_LBL={trainee:'簡單',routine:'例行',priority:'優先'};
-  const ms=missions();
-  let pairs=ms.map(m=>{
-    const aff=affinityMap[m.id]||new Set();
-    return {m, r:calcMission(m,aff)};
+// ─── RENDER ALL ───────────────────────────────────────────────────────────────
+function renderAll() {
+  renderRoster();
+  updateTotals();
+  updatePool();
+  renderMissions();
+}
+
+// ─── RENDER ROSTER ────────────────────────────────────────────────────────────
+function renderRoster() {
+  const grid = document.getElementById('memberGrid');
+  grid.innerHTML = '';
+  document.getElementById('rosterCount').textContent = roster.length;
+
+  roster.forEach((rm, idx) => {
+    const rec = DB.recruits.find(r => r.id === rm.recruitId);
+    if (!rec) return;
+    const s = baseStats(rec.job, rm.level);
+    const card = document.createElement('div');
+    card.className = 'member-card active-slot';
+
+    // Chemistry options for this member
+    const chemOptions = ['<option value="0">無</option>',
+      ...DB.chemistry.slice(0,6).map(c => `<option value="${c.id}" ${rm.chemId===c.id?'selected':''}>${c.text.replace('{value}%','%')}</option>`)
+    ].join('');
+
+    // Chemistry condition options
+    const condOptions = ['<option value="0">自動判斷</option>',
+      ...DB.chemCond.map(cc => `<option value="${cc.id}" ${(rm.chemCondId||0)===cc.id?'selected':''}>${cc.text}</option>`)
+    ].join('');
+
+    const chem = rm.chemId ? DB.chemistry.find(c=>c.id===rm.chemId) : null;
+    const rank = Math.max(1, Math.min(5, rm.chemRank||1));
+    const chemEffectText = chem ? chem.text.replace('{value}', chem.valuesByRank[rank-1]) : '';
+
+    // Chemistry trigger check
+    const active = getActiveMembers(roster);
+    const mSelf = active.find(m => m.id === rec.id);
+    let triggered = false;
+    if (mSelf && rm.chemId && rm.chemCondId) {
+      triggered = checkCondition(rm.chemCondId, mSelf, active);
+    }
+
+    const trigBadge = rm.chemId
+      ? `<span class="chem-triggered ${triggered ? 'chem-on' : 'chem-off'}">${triggered ? '觸發' : '未觸發'}</span>`
+      : '';
+
+    card.innerHTML = `
+      <div class="member-header">
+        <span class="member-num">隊員 ${idx+1}</span>
+        <div class="member-actions">
+          <button class="btn btn-sm btn-danger" onclick="removeMember(${idx})">移除</button>
+        </div>
+      </div>
+      <div class="member-name-row">
+        <span class="member-name">${rec.name}</span>
+        <span class="member-race-badge">${rec.raceName}</span>
+        <span class="member-sub">${JOB_NAME[rec.job] || rec.job}</span>
+      </div>
+      <div class="member-row" style="grid-template-columns:2.8rem 1fr">
+        <label>等級</label>
+        <input type="number" min="1" max="60" value="${rm.level}" oninput="setLevel(${idx},this.value)">
+      </div>
+      <div class="member-stats">
+        <span class="stat-badge stat-ph">體 ${s.physical}</span>
+        <span class="stat-badge stat-me">心 ${s.mental}</span>
+        <span class="stat-badge stat-ta">戰 ${s.tactical}</span>
+      </div>
+      <div class="chem-divider"></div>
+      <div class="chem-label">吉兆（Chemistry）${trigBadge}</div>
+      <div class="member-row" style="grid-template-columns:2.8rem 1fr">
+        <label>技能</label>
+        <select onchange="setChemId(${idx},this.value)">${chemOptions}</select>
+      </div>
+      <div class="member-row" style="grid-template-columns:2.8rem 1fr">
+        <label>條件</label>
+        <select onchange="setChemCond(${idx},this.value)">${condOptions}</select>
+      </div>
+      <div class="member-row" style="grid-template-columns:2.8rem 1fr">
+        <label>等階</label>
+        <select onchange="setChemRank(${idx},this.value)">
+          ${[1,2,3,4,5].map(r=>`<option value="${r}" ${rank===r?'selected':''}>${r}階</option>`).join('')}
+        </select>
+      </div>
+      <div class="chem-effect">${chemEffectText}</div>
+    `;
+    grid.appendChild(card);
   });
-  pairs.sort((a,b)=>b.r.rate-a.r.rate||a.m.level-b.m.level);
-  if(filterMode==='100') pairs=pairs.filter(p=>p.r.rate>=100);
-  else if(filterMode==='possible') pairs=pairs.filter(p=>p.r.rate>0);
 
-  // stat-affecting chemistry members (for affinity panel)
-  const statChemMbrs=members.map((m,i)=>({m,i})).filter(({m})=>
-    m.active&&m.chemId!==0&&CHEM_STAT[m.chemId]);
+  // Empty slot hint
+  if (roster.length < 8) {
+    const empty = document.createElement('div');
+    empty.className = 'member-card member-empty';
+    empty.onclick = openModal;
+    empty.innerHTML = `<div class="member-empty-icon">＋</div><div class="member-empty-text">點擊新增隊員</div>`;
+    grid.appendChild(empty);
+  }
+}
 
-  document.getElementById('missionList').innerHTML = pairs.length===0
-    ? '<div style="color:var(--text-muted);text-align:center;padding:2rem">無符合條件的任務</div>'
-    : pairs.map(({m,r})=>{
-      const aff=affinityMap[m.id]||new Set();
-      const baseR=calcMission(m,new Set()).rate;
-      const isOpen=openMission===m.id;
-      const flag=m.flagged?'⚑ ':'';
-      const rCls=r.rate>=100?'rate-100':r.rate>=60?'rate-hi':r.rate>0?'rate-lo':'rate-no';
-      const cCls=r.rate>=100?'can-100':r.rate>0?'can-partial':'impossible';
+function removeMember(idx) {
+  roster.splice(idx, 1);
+  saveStorage();
+  renderAll();
+}
+function setLevel(idx, v) {
+  roster[idx].level = Math.max(1, Math.min(60, parseInt(v)||1));
+  saveStorage();
+  renderAll();
+}
+function setChemId(idx, v) {
+  roster[idx].chemId = parseInt(v)||0;
+  saveStorage();
+  renderAll();
+}
+function setChemCond(idx, v) {
+  roster[idx].chemCondId = parseInt(v)||0;
+  saveStorage();
+  renderAll();
+}
+function setChemRank(idx, v) {
+  roster[idx].chemRank = parseInt(v)||1;
+  saveStorage();
+  renderAll();
+}
 
-      const chips=statChemMbrs.map(({m:mb,i})=>{
-        const c=getChem(mb.chemId), ri=mb.chemRank-1;
-        const v=c.valuesByRank[ri], ch=c.chanceByRank[ri];
-        let txt=c.text; txt=v>0?txt.replace('{value}',v):txt.replace('{value}',ch+'%');
-        const ckd=aff.has(i);
-        return `<label class="affinity-chip${ckd?' checked':''}" onclick="toggleAff(${m.id},${i},event)">
-          <input type="checkbox" ${ckd?'checked':''}> 隊員${i+1}（${txt}）
-        </label>`;
-      }).join('');
+// ─── TOTALS ───────────────────────────────────────────────────────────────────
+function updateTotals() {
+  if (!roster.length) {
+    ['Ph','Me','Ta'].forEach(k=>{
+      document.getElementById('tot'+k).textContent='0';
+      document.getElementById('bon'+k).textContent='';
+      document.getElementById('pool'+k).textContent='';
+    });
+    return;
+  }
+  const { ph, me, ta, bonPh, bonMe, bonTa } = computeTotals(roster);
+  document.getElementById('totPh').textContent = ph;
+  document.getElementById('totMe').textContent = me;
+  document.getElementById('totTa').textContent = ta;
+  document.getElementById('bonPh').textContent = bonPh > 0 ? `+${bonPh}吉兆` : '';
+  document.getElementById('bonMe').textContent = bonMe > 0 ? `+${bonMe}吉兆` : '';
+  document.getElementById('bonTa').textContent = bonTa > 0 ? `+${bonTa}吉兆` : '';
+  const pp = pool.physical||0, pm = pool.mental||0, pt = pool.tactical||0;
+  document.getElementById('poolPh').textContent = pp > 0 ? `+${pp}訓練` : '';
+  document.getElementById('poolMe').textContent = pm > 0 ? `+${pm}訓練` : '';
+  document.getElementById('poolTa').textContent = pt > 0 ? `+${pt}訓練` : '';
+}
 
-      const bonusTxt=(r.rate>baseR)?`成功率提升 +${r.rate-baseR}%（加成後 ${r.rate}%）`:'';
-      const affPanel=`
-        <div class="affinity-panel${isOpen?' open':''}" id="ap${m.id}">
-          <div class="affinity-title">⟐ Mission Affinity 親和加成</div>
-          ${statChemMbrs.length>0
-            ?`<div class="affinity-members">${chips}</div>
-              <div class="affinity-note">勾選此任務中有親和加成的隊員 → Chemistry 100% 觸發且效果翻倍</div>
-              ${bonusTxt?`<div class="affinity-bonus">${bonusTxt}</div>`:''}`
-            :`<div class="affinity-note" style="color:var(--text-muted)">目前無隊員設定影響屬性的Chemistry（id1–6），親和加成無法計算。</div>`
-          }
-        </div>`;
+// ─── TRAINING POOL ────────────────────────────────────────────────────────────
+function buildTrainingBtns() {
+  const container = document.getElementById('trainingBtns');
+  DB.trainings.forEach(t => {
+    const btn = document.createElement('button');
+    btn.className = 'train-btn';
+    btn.textContent = t.name;
+    btn.title = t.desc || '';
+    btn.onclick = () => applyTraining(t);
+    container.appendChild(btn);
+  });
+}
 
-      return `
-      <div class="mission-card ${cCls}">
-        <div class="mission-main" onclick="togglePanel(${m.id})">
-          <div class="mission-info">
-            <div class="mission-name">${flag}${m.name}</div>
-            <div class="mission-meta">
-              <span class="mission-type type-${m.type}">${TYPE_LBL[m.type]||m.type}</span>
-              <span>Lv ${m.level}</span>
-              ${aff.size>0?`<span style="color:var(--cyan)">Affinity ×${aff.size}</span>`:''}
-            </div>
-          </div>
-          <div class="mission-reqs">
-            ${[['physical','體','ph'],['mental','精','me'],['tactical','戰','ta']].map(([s,l,k])=>`
-              <div class="req-item">
-                <span class="req-lbl">${l}</span>
-                <span class="req-val ${r.reqs[k]?'req-met':'req-unmet'}">${r.reqs[s]}</span>
-              </div>`).join('')}
-          </div>
-          <div class="mission-rate">
-            <div class="rate-val ${rCls}">${r.rate}%</div>
+function setRank(r) {
+  poolRank = r;
+  [1,2,3].forEach(i => {
+    document.getElementById('rank'+i).classList.toggle('active', i===r);
+  });
+  saveStorage();
+  updatePool();
+  renderMissions();
+}
+
+function onPoolChange() {
+  pool.physical  = parseInt(document.getElementById('poolPhInput').value)||0;
+  pool.mental    = parseInt(document.getElementById('poolMeInput').value)||0;
+  pool.tactical  = parseInt(document.getElementById('poolTaInput').value)||0;
+  saveStorage();
+  updatePool();
+  updateTotals();
+  renderMissions();
+}
+
+function updatePool() {
+  const cap = RANK_CAP[poolRank];
+  const total = (pool.physical||0) + (pool.mental||0) + (pool.tactical||0);
+  document.getElementById('poolCapTxt').textContent = cap;
+  document.getElementById('poolTotalTxt').textContent = total;
+  document.getElementById('poolBarFill').style.width = Math.min(100, total/cap*100) + '%';
+  document.getElementById('poolPhInput').value = pool.physical||0;
+  document.getElementById('poolMeInput').value = pool.mental||0;
+  document.getElementById('poolTaInput').value = pool.tactical||0;
+  const over = document.getElementById('poolOverTxt');
+  if (total > cap) { over.textContent = `超出 ${total-cap}`; over.className = 'pool-over'; }
+  else { over.textContent = ''; over.className = ''; }
+}
+
+function applyTraining(t) {
+  const cap = RANK_CAP[poolRank];
+  const cur = (pool.physical||0) + (pool.mental||0) + (pool.tactical||0);
+  if (cur + (t.bonus.physical + t.bonus.mental + t.bonus.tactical) > cap && t.deltaAtCap) {
+    // At cap: use deltaAtCap redistribution
+    pool.physical  = Math.max(0, (pool.physical||0)  + (t.deltaAtCap.physical||0));
+    pool.mental    = Math.max(0, (pool.mental||0)    + (t.deltaAtCap.mental||0));
+    pool.tactical  = Math.max(0, (pool.tactical||0)  + (t.deltaAtCap.tactical||0));
+  } else {
+    pool.physical  = (pool.physical||0)  + (t.bonus.physical||0);
+    pool.mental    = (pool.mental||0)    + (t.bonus.mental||0);
+    pool.tactical  = (pool.tactical||0)  + (t.bonus.tactical||0);
+  }
+  saveStorage();
+  updatePool();
+  updateTotals();
+  renderMissions();
+}
+
+// ─── FILTER ───────────────────────────────────────────────────────────────────
+function setFilter(btn, f) {
+  missionFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b===btn));
+  renderMissions();
+}
+
+// ─── RENDER MISSIONS ──────────────────────────────────────────────────────────
+function renderMissions() {
+  const list = document.getElementById('missionList');
+  let missions = DB.missions;
+  if (missionFilter !== 'all') missions = missions.filter(m => m.type === missionFilter);
+
+  if (!missions.length) { list.innerHTML = '<div class="empty-state">沒有符合的任務</div>'; return; }
+
+  const effectiveRoster = roster.length >= 4 ? roster.slice(0,4) : roster;
+
+  list.innerHTML = missions.map(m => {
+    const { req, rateBase, ratePool, metBase, metPool } = roster.length
+      ? calcMission(m, effectiveRoster)
+      : { req:{ physical:m.requireVariants.physical[0], mental:m.requireVariants.mental[0], tactical:m.requireVariants.tactical[0] }, rateBase:0, ratePool:0, metBase:[false,false,false], metPool:[false,false,false] };
+
+    const rc = ratePool>=100 ? 'rate-100' : ratePool>=60 ? 'rate-hi' : ratePool>0 ? 'rate-lo' : 'rate-no';
+    const cardCls = ratePool>=100 ? 'can-100' : ratePool>0 ? 'can-partial' : 'impossible';
+    const typeCls = 'type-' + m.type;
+    const flagStr = m.flagged ? ' ⚑' : '';
+
+    const [mb0,mb1,mb2] = metPool;
+    const v = parseInt(document.getElementById('variantSel').value)||0;
+
+    return `<div class="mission-card ${cardCls}">
+      <div class="mission-main">
+        <div class="mission-info">
+          <div class="mission-name">${m.name}${flagStr}</div>
+          <div class="mission-meta">
+            <span class="mission-type ${typeCls}">${m.typeName}</span>
+            <span>Lv.${m.level}</span>
+            ${m.rewardItem ? `<span>${m.rewardItem}</span>` : ''}
           </div>
         </div>
-        ${affPanel}
-      </div>`;
-    }).join('');
+        <div class="mission-reqs">
+          <div class="req-item"><span class="req-lbl">體</span><span class="req-val ${mb0?'req-met':'req-unmet'}">${req.physical}</span></div>
+          <div class="req-item"><span class="req-lbl">心</span><span class="req-val ${mb1?'req-met':'req-unmet'}">${req.mental}</span></div>
+          <div class="req-item"><span class="req-lbl">戰</span><span class="req-val ${mb2?'req-met':'req-unmet'}">${req.tactical}</span></div>
+        </div>
+        <div class="mission-rate">
+          ${roster.length ? `
+            <div class="rate-val ${rc}">${ratePool}%</div>
+            ${rateBase !== ratePool ? `<span class="rate-pool">（基礎${rateBase}%）</span>` : ''}
+          ` : '<div class="rate-val rate-no">—</div>'}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
 }
 
-function togglePanel(mid){
-  openMission = openMission===mid ? null : mid;
-  render();
+// ─── MODAL ────────────────────────────────────────────────────────────────────
+function buildModalFilters() {
+  const races = ['all','hyur','elezen','lalafell','miqote','roegadyn','aura'];
+  const raceNames = { all:'全部種族', hyur:'人族', elezen:'精靈族', lalafell:'拉拉菲爾族', miqote:'貓魅族', roegadyn:'魯加族', aura:'敖龍族' };
+  const jobs = ['all','GLA','MRD','LNC','PGL','ARC','ROG','CNJ','THM','ACN'];
+
+  document.getElementById('racePills').innerHTML = races.map(r =>
+    `<button class="filter-pill ${r==='all'?'active':''}" onclick="setRaceFilter('${r}',this)">${raceNames[r]||r}</button>`
+  ).join('');
+  document.getElementById('jobPills').innerHTML = jobs.map(j =>
+    `<button class="filter-pill ${j==='all'?'active':''}" onclick="setJobFilter('${j}',this)">${j==='all'?'全職業':(JOB_NAME[j]||j)}</button>`
+  ).join('');
 }
 
-function toggleAff(mid,idx,e){
-  e.stopPropagation();
-  if(!affinityMap[mid]) affinityMap[mid]=new Set();
-  const s=affinityMap[mid];
-  // determine from checkbox state
-  const cb=e.currentTarget.querySelector('input');
-  if(cb.checked) s.add(idx); else s.delete(idx);
-  openMission=mid;
-  render();
+function setRaceFilter(r, btn) {
+  modalRaceFilter = r;
+  document.querySelectorAll('#racePills .filter-pill').forEach(b => b.classList.toggle('active', b===btn));
+  renderNpcList();
+}
+function setJobFilter(j, btn) {
+  modalJobFilter = j;
+  document.querySelectorAll('#jobPills .filter-pill').forEach(b => b.classList.toggle('active', b===btn));
+  renderNpcList();
 }
 
-function setFilter(f){
-  filterMode=f;
-  ['filterAll','filterCan','filter100'].forEach(id=>document.getElementById(id).classList.remove('active'));
-  document.getElementById(f==='all'?'filterAll':f==='possible'?'filterCan':'filter100').classList.add('active');
-  render();
+function openModal() {
+  document.getElementById('modal').classList.remove('hidden');
+  document.getElementById('npcSearch').value = '';
+  renderNpcList();
 }
+function closeModal() { document.getElementById('modal').classList.add('hidden'); }
+function closeModalBg(e) { if (e.target.id==='modal') closeModal(); }
+
+function renderNpcList() {
+  const q = document.getElementById('npcSearch').value.toLowerCase();
+  const tbody = document.getElementById('npcBody');
+  const selectedIds = new Set(roster.map(r=>r.recruitId));
+
+  let npcs = DB.recruits;
+  if (modalRaceFilter !== 'all') npcs = npcs.filter(n => n.race === modalRaceFilter);
+  if (modalJobFilter !== 'all') npcs = npcs.filter(n => n.job === modalJobFilter);
+  if (q) npcs = npcs.filter(n => n.name.toLowerCase().includes(q) || n.nameEn.toLowerCase().includes(q));
+
+  if (!npcs.length) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:1.5rem;color:var(--text-muted)">沒有符合條件的隊員</td></tr>'; return; }
+
+  tbody.innerHTML = npcs.map(n => {
+    const taken = selectedIds.has(n.id);
+    const full  = roster.length >= 8;
+    const dis   = taken || (full && !taken);
+    return `<tr class="npc-row ${dis?'disabled':''}" onclick="${dis?'':`addMember(${n.id})`}">
+      <td><div class="npc-name">${n.name}</div><div style="font-size:.68rem;color:var(--text-muted)">${n.nameEn}</div></td>
+      <td><div class="npc-race">${n.raceName}</div><div style="font-size:.68rem;color:var(--text-muted)">${n.gender==='M'?'男':'女'}</div></td>
+      <td><span class="npc-job-badge">${JOB_NAME[n.job]||n.job}</span></td>
+      <td class="npc-obtain">${n.obtainFrom}</td>
+    </tr>`;
+  }).join('');
+}
+
+function addMember(recruitId) {
+  if (roster.length >= 8) return;
+  if (roster.some(r=>r.recruitId===recruitId)) return;
+  roster.push({ recruitId, level:60, chemId:0, chemCondId:0, chemRank:1 });
+  saveStorage();
+  renderNpcList();
+  renderAll();
+}
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+loadData();
 </script>
 </body>
 </html>
