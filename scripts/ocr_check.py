@@ -71,6 +71,7 @@ MIRAPRI_IMG_DIR = os.path.join(ROOT, "配裝圖片", "mirapri")
 
 OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://localhost:11434")
 MODEL = os.environ.get("OCR_MODEL", "qwen2.5vl:7b")
+OCR_MAX_EDGE = int(os.environ.get("OCR_MAX_EDGE", "1280"))  # 送進模型前縮圖的長邊；Phase 4 A/B 後可調高
 MATCH_THRESHOLD = 0.82  # 裝備名相似度門檻
 DYE_THRESHOLD = 0.80    # 染色名校正門檻
 NOT_SHOWN_BELOW = 0.70  # 低於此相似度視為「圖上沒畫」而非抓錯（同系列裝備易在 0.5~0.7 互相誤判）
@@ -210,9 +211,11 @@ def clean_pieces(pieces, dye_names):
 
 
 # ===================== OCR（Ollama） =====================
-def _encode_image(path, max_edge=1280):
+def _encode_image(path, max_edge=None):
     from PIL import Image
 
+    if max_edge is None:
+        max_edge = OCR_MAX_EDGE
     im = Image.open(path)
     if im.mode not in ("RGB", "L"):
         im = im.convert("RGB")
@@ -225,15 +228,16 @@ def _encode_image(path, max_edge=1280):
     return base64.b64encode(buf.getvalue()).decode("ascii")
 
 
-def ocr_ollama(path):
+def ocr_ollama(path, max_edge=None, model=None):
     """回傳原始 (items, dyes, pieces)；清理留到後面做。失敗丟例外。
-    pieces = [{"item": 装備名, "dyes": [染色,...]}]（逐件 item↔dye 配對，v2）。"""
+    pieces = [{"item": 装備名, "dyes": [染色,...]}]（逐件 item↔dye 配對，v2）。
+    max_edge/model 可覆寫（Phase 4 A/B 與低信心升級重讀用）。"""
     import requests
 
     payload = {
-        "model": MODEL,
+        "model": model or MODEL,
         "prompt": OCR_PROMPT,
-        "images": [_encode_image(path)],
+        "images": [_encode_image(path, max_edge)],
         "stream": False,
         "format": "json",
         "options": {"temperature": 0},
@@ -554,12 +558,14 @@ def write_report(results, args):
     rate = (tot_hit / tot_shown * 100) if tot_shown else 0
     n_extra = sum(len(r["diff"]["extra_in_ocr"]) for r in results)
     n_dye_outfits = sum(1 for r in results if r["diff"]["dyes_found"])
+    n_lowconf = sum(1 for r in results for m in r["diff"]["matched"] if m.get("score", 1) < 0.90)
 
     L = ["# OCR 檢查報告", ""]
     L.append(f"- 產生時間：{datetime.now().strftime('%Y-%m-%d %H:%M')}")
-    L.append(f"- 範圍：target=`{args.target}` mode=`{args.mode}` model=`{MODEL}`")
+    L.append(f"- 範圍：target=`{args.target}` mode=`{args.mode}` model=`{MODEL}` max_edge=`{OCR_MAX_EDGE}`")
     L.append(f"- **名稱驗證命中：{tot_hit}/{tot_shown}（{rate:.0f}%）**"
-             f"　抓漏候選：{n_extra}　有可補染色：{n_dye_outfits} 套")
+             f"　抓漏候選：{n_extra}　有可補染色：{n_dye_outfits} 套"
+             f"　信心偏低(<0.9)：{n_lowconf} 件")
     L.append("")
     L.append("命中率只算「圖上應看得到」的件數；耳飾/武器等圖上沒畫的(not_shown)收在 <sub>，不列入。")
     L.append("")
@@ -595,6 +601,12 @@ def write_report(results, args):
             names = "、".join(f"{m['name']}({m['slot']})" for m in notshown)
             L.append("")
             L.append(f"<sub>圖上沒畫(低優先)：{names}</sub>")
+        lowconf = [m for m in d["matched"] if m.get("score", 1) < 0.90]
+        if lowconf:
+            L.append("")
+            L.append("**信心偏低（已對上但相似度<0.9，建議複查）：**")
+            for m in lowconf:
+                L.append(f"- [{m['slot']}] {m['name']}　OCR「{m.get('ocr','')}」(相似{m.get('score')})")
         L.append("")
 
     L.append(f"## 全部吻合（{len(ok)}）")
