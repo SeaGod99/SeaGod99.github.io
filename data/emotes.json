@@ -1,8 +1,8 @@
 {
   "schema": "emotes",
   "patch": "7.2",
-  "updated": "2026-06-17",
-  "source": "xivapi+tw-items",
+  "updated": "2026-06-22",
+  "source": "xivapi+itemaction+cafemaker+tw-items",
   "count": 292,
   "data": [
     {
@@ -10,9 +10,16 @@
       "name": "驚訝",
       "nameEn": "Surprised",
       "command": "/surprised",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246201.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -20,9 +27,16 @@
       "name": "不滿",
       "nameEn": "Angry",
       "command": "/angry",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246202.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -30,9 +44,16 @@
       "name": "憤怒",
       "nameEn": "Furious",
       "command": "/furious",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246203.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -40,9 +61,16 @@
       "name": "害羞",
       "nameEn": "Blush",
       "command": "/blush",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246204.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -50,9 +78,16 @@
       "name": "行禮",
       "nameEn": "Bow",
       "command": "/bow",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246205.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -60,9 +95,16 @@
       "name": "加油",
       "nameEn": "Cheer",
       "command": "/cheer",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246206.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -70,9 +112,16 @@
       "name": "拍手",
       "nameEn": "Clap",
       "command": "/clap",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246207.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -80,9 +129,16 @@
       "name": "招手",
       "nameEn": "Beckon",
       "command": "/beckon",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246208.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -90,9 +146,16 @@
       "name": "安慰",
       "nameEn": "Comfort",
       "command": "/comfort",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246209.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -100,9 +163,16 @@
       "name": "哭泣",
       "nameEn": "Cry",
       "command": "/cry",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246210.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -110,9 +180,16 @@
       "name": "跳舞",
       "nameEn": "Dance",
       "command": "/dance",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246211.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -120,9 +197,16 @@
       "name": "質疑",
       "nameEn": "Doubt",
       "command": "/doubt",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246212.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -130,9 +214,16 @@
       "name": "打盹",
       "nameEn": "Doze",
       "command": "/doze",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246213.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -140,9 +231,16 @@
       "name": "後悔",
       "nameEn": "Fume",
       "command": "/fume",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246214.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -150,9 +248,16 @@
       "name": "道別",
       "nameEn": "Goodbye",
       "command": "/goodbye",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246215.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -160,9 +265,16 @@
       "name": "揮手",
       "nameEn": "Wave",
       "command": "/wave",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246216.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -170,9 +282,16 @@
       "name": "莫名",
       "nameEn": "Huh",
       "command": "/huh",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246217.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -180,9 +299,16 @@
       "name": "高興",
       "nameEn": "Joy",
       "command": "/joy",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246218.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -190,9 +316,16 @@
       "name": "下跪",
       "nameEn": "Kneel",
       "command": "/kneel",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246219.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -200,9 +333,16 @@
       "name": "輕笑",
       "nameEn": "Chuckle",
       "command": "/chuckle",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246220.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -210,9 +350,16 @@
       "name": "大笑",
       "nameEn": "Laugh",
       "command": "/laugh",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246221.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -220,9 +367,16 @@
       "name": "張望",
       "nameEn": "Lookout",
       "command": "/lookout",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246222.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -230,9 +384,16 @@
       "name": "展示",
       "nameEn": "Me",
       "command": "/me",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246223.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -240,9 +401,16 @@
       "name": "搖頭",
       "nameEn": "No",
       "command": "/no",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246224.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -250,9 +418,16 @@
       "name": "否定",
       "nameEn": "Deny",
       "command": "/deny",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246225.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -260,9 +435,16 @@
       "name": "慌張",
       "nameEn": "Panic",
       "command": "/panic",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246226.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -270,9 +452,16 @@
       "name": "指向",
       "nameEn": "Point",
       "command": "/point",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246227.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -280,9 +469,16 @@
       "name": "戳指",
       "nameEn": "Poke",
       "command": "/poke",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246228.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -290,9 +486,16 @@
       "name": "稱讚",
       "nameEn": "Congratulate",
       "command": "/congratulate",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246229.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -300,9 +503,16 @@
       "name": "激勵",
       "nameEn": "Psych",
       "command": "/psych",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246230.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -310,9 +520,16 @@
       "name": "敬禮",
       "nameEn": "Salute",
       "command": "/salute",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246231.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -320,9 +537,16 @@
       "name": "震驚",
       "nameEn": "Shocked",
       "command": "/shocked",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246232.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -330,9 +554,16 @@
       "name": "聳肩",
       "nameEn": "Shrug",
       "command": "/shrug",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246233.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -340,9 +571,16 @@
       "name": "鼓勵",
       "nameEn": "Rally",
       "command": "/rally",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246234.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -350,9 +588,16 @@
       "name": "安撫",
       "nameEn": "Soothe",
       "command": "/soothe",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246235.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -360,9 +605,16 @@
       "name": "迷糊",
       "nameEn": "Stagger",
       "command": "/stagger",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246236.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -370,19 +622,33 @@
       "name": "伸展",
       "nameEn": "Stretch",
       "command": "/stretch",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246237.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
       "id": 38,
-      "name": "慪怒",
+      "name": "慍怒",
       "nameEn": "Sulk",
       "command": "/sulk",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246238.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -390,9 +656,16 @@
       "name": "思考",
       "nameEn": "Think",
       "command": "/think",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246239.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -400,9 +673,16 @@
       "name": "失望",
       "nameEn": "Upset",
       "command": "/upset",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246240.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -410,9 +690,16 @@
       "name": "歡迎",
       "nameEn": "Welcome",
       "command": "/welcome",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246241.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -420,9 +707,16 @@
       "name": "點頭",
       "nameEn": "Yes",
       "command": "/yes",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246242.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -430,9 +724,16 @@
       "name": "肯定",
       "nameEn": "Thumbs Up",
       "command": "/thumbsup",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246243.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -440,9 +741,16 @@
       "name": "自視",
       "nameEn": "Examine Self",
       "command": "/examineself",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246244.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -450,9 +758,16 @@
       "name": "擺造型",
       "nameEn": "Pose",
       "command": "/pose",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246245.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -460,9 +775,16 @@
       "name": "飛吻",
       "nameEn": "Blow Kiss",
       "command": "/blowkiss",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246249.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -470,9 +792,16 @@
       "name": "下跪認錯",
       "nameEn": "Grovel",
       "command": "/grovel",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246251.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -480,9 +809,16 @@
       "name": "欣喜若狂",
       "nameEn": "Happy",
       "command": "/happy",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246252.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -490,9 +826,16 @@
       "name": "大失所望",
       "nameEn": "Disappointed",
       "command": "/disappointed",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246253.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -500,9 +843,16 @@
       "name": "坐下",
       "nameEn": "Sit",
       "command": "/lounge",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246256.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -510,9 +860,16 @@
       "name": "坐下到地上",
       "nameEn": "Sit on Ground",
       "command": "/groundsit",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246254.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -520,9 +877,16 @@
       "name": "引用",
       "nameEn": "Air Quotes",
       "command": "/airquotes",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246263.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -530,9 +894,16 @@
       "name": "黑渦團軍禮",
       "nameEn": "Storm Salute",
       "command": "/gcsalute",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246246.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -540,9 +911,16 @@
       "name": "雙蛇黨軍禮",
       "nameEn": "Serpent Salute",
       "command": "/gcsalute",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246247.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -550,29 +928,50 @@
       "name": "恆輝隊軍禮",
       "nameEn": "Flame Salute",
       "command": "/gcsalute",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246248.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
       "id": 58,
-      "name": "祈願",
+      "name": "祈禱",
       "nameEn": "Pray",
       "command": "/pray",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246264.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
       "id": 59,
-      "name": null,
+      "name": "帝國式軍禮",
       "nameEn": "Imperial Salute",
       "command": "/imperialsalute",
-      "itemId": 23,
+      "unlockLink": 23,
+      "itemId": null,
       "icon": "/i/246000/246266.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「另一類軍禮」獎勵"
+        }
+      ],
       "patch": null
     },
     {
@@ -580,69 +979,118 @@
       "name": "頭部裝備操作",
       "nameEn": "Visor",
       "command": "/visor",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246265.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
       "id": 62,
-      "name": null,
+      "name": "百萬核爆",
       "nameEn": "Megaflare",
       "command": "/megaflare",
-      "itemId": 379,
+      "unlockLink": 379,
+      "itemId": 22461,
       "icon": "/i/246000/246327.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·百萬火光」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 63,
-      "name": null,
+      "name": "練武",
       "nameEn": "Crimson Lotus",
       "command": "/crimsonlotus",
-      "itemId": 378,
+      "unlockLink": 378,
+      "itemId": 22460,
       "icon": "/i/246000/246328.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·練武」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 64,
-      "name": null,
+      "name": "魅惑擁抱",
       "nameEn": "Charmed",
       "command": "/charmed",
-      "itemId": 384,
+      "unlockLink": 384,
+      "itemId": 22377,
       "icon": "/i/246000/246329.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·魅惑擁抱」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 65,
-      "name": null,
+      "name": "聲援小藍",
       "nameEn": "Cheer On: Blue",
       "command": "/cheeronblue",
-      "itemId": 381,
+      "unlockLink": 381,
+      "itemId": 22378,
       "icon": "/i/246000/246330.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·聲援小藍」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 66,
-      "name": null,
+      "name": "聲援小黃",
       "nameEn": "Cheer Wave: Yellow",
       "command": "/cheerwaveyellow",
-      "itemId": 382,
+      "unlockLink": 382,
+      "itemId": 22379,
       "icon": "/i/246000/246331.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·聲援小黃」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 67,
-      "name": null,
+      "name": "聲援小紅",
       "nameEn": "Cheer Jump: Red",
       "command": "/cheerjumpred",
-      "itemId": 383,
+      "unlockLink": 383,
+      "itemId": 22380,
       "icon": "/i/246000/246332.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·聲援小紅」"
+        }
+      ],
       "patch": null
     },
     {
@@ -650,9 +1098,16 @@
       "name": "表情：平常",
       "nameEn": "Straight Face",
       "command": "/straightface",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246101.png",
-      "sources": [],
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -660,9 +1115,16 @@
       "name": "表情：微笑",
       "nameEn": "Smile",
       "command": "/smile",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246102.png",
-      "sources": [],
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -670,9 +1132,16 @@
       "name": "表情：笑顏",
       "nameEn": "Grin",
       "command": "/grin",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246103.png",
-      "sources": [],
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -680,9 +1149,16 @@
       "name": "表情：自信",
       "nameEn": "Smirk",
       "command": "/smirk",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246104.png",
-      "sources": [],
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -690,9 +1166,16 @@
       "name": "表情：無畏",
       "nameEn": "Taunt",
       "command": "/taunt",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246105.png",
-      "sources": [],
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -700,9 +1183,16 @@
       "name": "表情：閉目",
       "nameEn": "Shut Eyes",
       "command": "/shuteyes",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246106.png",
-      "sources": [],
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -710,19 +1200,33 @@
       "name": "表情：悲傷",
       "nameEn": "Sad",
       "command": "/sad",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246107.png",
-      "sources": [],
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
       "id": 75,
-      "name": "表情：恐懼",
+      "name": "表情：恐怖",
       "nameEn": "Scared",
       "command": "/scared",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246108.png",
-      "sources": [],
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -730,9 +1234,16 @@
       "name": "表情：意外",
       "nameEn": "Amazed",
       "command": "/amazed",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246109.png",
-      "sources": [],
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -740,9 +1251,16 @@
       "name": "表情：痛苦",
       "nameEn": "Ouch",
       "command": "/ouch",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246110.png",
-      "sources": [],
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -750,9 +1268,16 @@
       "name": "表情：反感",
       "nameEn": "Annoyed",
       "command": "/annoyed",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246111.png",
-      "sources": [],
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -760,9 +1285,16 @@
       "name": "表情：吃驚",
       "nameEn": "Alert",
       "command": "/alert",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246112.png",
-      "sources": [],
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -770,29 +1302,50 @@
       "name": "表情：擔心",
       "nameEn": "Worried",
       "command": "/worried",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246113.png",
-      "sources": [],
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
       "id": 81,
-      "name": null,
+      "name": "表情：咧嘴",
       "nameEn": "Big Grin",
       "command": "/biggrin",
-      "itemId": 388,
+      "unlockLink": 388,
+      "itemId": 22497,
       "icon": "/i/246000/246125.png",
-      "sources": [],
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·咧嘴」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 82,
-      "name": null,
+      "name": "表情：沉思",
       "nameEn": "Reflect",
       "command": "/reflect",
-      "itemId": 389,
+      "unlockLink": 389,
+      "itemId": 22498,
       "icon": "/i/246000/246126.png",
-      "sources": [],
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·沉思」"
+        }
+      ],
       "patch": null
     },
     {
@@ -800,9 +1353,16 @@
       "name": "表情：皺眉",
       "nameEn": "Furrow",
       "command": "/furrow",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246127.png",
-      "sources": [],
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -810,19 +1370,33 @@
       "name": "表情：苦笑",
       "nameEn": "Scoff",
       "command": "/scoff",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246128.png",
-      "sources": [],
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
       "id": 85,
-      "name": null,
+      "name": "投擲",
       "nameEn": "Throw",
       "command": "/throw",
-      "itemId": 24,
+      "unlockLink": 24,
+      "itemId": null,
       "icon": "/i/246000/246250.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「冬日的活動」獎勵"
+        }
+      ],
       "patch": null
     },
     {
@@ -830,49 +1404,84 @@
       "name": "改變姿勢",
       "nameEn": "Change Pose",
       "command": "/changepose",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246268.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
       "id": 101,
-      "name": null,
+      "name": "踢踏舞",
       "nameEn": "Step Dance",
       "command": "/stepdance",
-      "itemId": 27,
+      "unlockLink": 27,
+      "itemId": null,
       "icon": "/i/246000/246269.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「快樂的律動之舞」獎勵"
+        }
+      ],
       "patch": null
     },
     {
       "id": 102,
-      "name": null,
+      "name": "豐饒之舞",
       "nameEn": "Harvest Dance",
       "command": "/harvestdance",
-      "itemId": 28,
+      "unlockLink": 28,
+      "itemId": null,
       "icon": "/i/246000/246270.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「為誰而舞」獎勵"
+        }
+      ],
       "patch": null
     },
     {
       "id": 103,
-      "name": null,
+      "name": "宮廷之舞",
       "nameEn": "Ball Dance",
       "command": "/balldance",
-      "itemId": 29,
+      "unlockLink": 29,
+      "itemId": null,
       "icon": "/i/246000/246271.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「舞女的夢想舞臺」獎勵"
+        }
+      ],
       "patch": null
     },
     {
       "id": 104,
-      "name": null,
+      "name": "紳士之舞",
       "nameEn": "Manderville Dance",
       "command": "/mandervilledance",
-      "itemId": 30,
+      "unlockLink": 30,
+      "itemId": null,
       "icon": "/i/246000/246272.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「白髮鬼」獎勵"
+        }
+      ],
       "patch": null
     },
     {
@@ -880,9 +1489,16 @@
       "name": "撫摸",
       "nameEn": "Pet",
       "command": "/stroke",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246267.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -890,29 +1506,50 @@
       "name": "遞交",
       "nameEn": "Hand Over",
       "command": "/handover",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246273.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
       "id": 109,
-      "name": null,
+      "name": "火盆舞",
       "nameEn": "Bomb Dance",
       "command": "/bombdance",
-      "itemId": 98,
+      "unlockLink": 98,
+      "itemId": 12040,
       "icon": "/i/246000/246274.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·火盆舞」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 110,
-      "name": null,
+      "name": "勝利歡呼",
       "nameEn": "Huzzah",
       "command": "/hurray",
-      "itemId": 225,
+      "unlockLink": 225,
+      "itemId": 13004,
       "icon": "/i/246000/246275.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·勝利歡呼」"
+        }
+      ],
       "patch": null
     },
     {
@@ -920,9 +1557,16 @@
       "name": "甩巴掌",
       "nameEn": "Slap",
       "command": "/slap",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246276.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -930,189 +1574,322 @@
       "name": "擁抱",
       "nameEn": "Hug",
       "command": "/hug",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246277.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
       "id": 113,
-      "name": null,
+      "name": "深情擁抱",
       "nameEn": "Embrace",
       "command": "/embrace",
-      "itemId": 229,
+      "unlockLink": 229,
+      "itemId": null,
       "icon": "/i/246000/246278.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「天長地久」獎勵"
+        }
+      ],
       "patch": null
     },
     {
       "id": 114,
-      "name": null,
+      "name": "紳士風度",
       "nameEn": "Most Gentlemanly",
       "command": "/hildibrand",
-      "itemId": 244,
+      "unlockLink": 244,
+      "itemId": null,
       "icon": "/i/246000/246279.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「隨風而逝的結局」獎勵"
+        }
+      ],
       "patch": null
     },
     {
       "id": 115,
-      "name": null,
+      "name": "對拳",
       "nameEn": "Fist Bump",
       "command": "/fistbump",
-      "itemId": 259,
+      "unlockLink": 259,
+      "itemId": 12041,
       "icon": "/i/246000/246280.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·對拳」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 118,
-      "name": null,
+      "name": "薩維奈舞",
       "nameEn": "Thavnairian Dance",
       "command": "/thavdance",
-      "itemId": 288,
+      "unlockLink": 288,
+      "itemId": 13706,
       "icon": "/i/246000/246282.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·薩維奈舞」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 119,
-      "name": null,
+      "name": "黃金之舞",
       "nameEn": "Gold Dance",
       "command": "/golddance",
-      "itemId": 289,
+      "unlockLink": 289,
+      "itemId": 13707,
       "icon": "/i/246000/246283.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·黃金之舞」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 120,
-      "name": null,
+      "name": "太陽之舞",
       "nameEn": "Sundrop Dance",
       "command": "/sundance",
-      "itemId": 283,
+      "unlockLink": 283,
+      "itemId": null,
       "icon": "/i/246000/246284.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「敬畏之人」獎勵"
+        }
+      ],
       "patch": null
     },
     {
       "id": 121,
-      "name": null,
+      "name": "準備戰鬥",
       "nameEn": "Battle Stance",
       "command": "/battlestance",
-      "itemId": 305,
+      "unlockLink": 305,
+      "itemId": null,
       "icon": "/i/246000/246285.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「命運的齒輪」獎勵"
+        }
+      ],
       "patch": null
     },
     {
       "id": 122,
-      "name": null,
+      "name": "歡呼勝利",
       "nameEn": "Victory",
       "command": "/victorypose",
-      "itemId": 306,
+      "unlockLink": 306,
+      "itemId": null,
       "icon": "/i/246000/246286.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「四國聯合軍演」獎勵"
+        }
+      ],
       "patch": null
     },
     {
       "id": 123,
-      "name": null,
+      "name": "後空翻",
       "nameEn": "Backflip",
       "command": "/backflip",
-      "itemId": 308,
+      "unlockLink": 308,
+      "itemId": 15096,
       "icon": "/i/246000/246287.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·後空翻」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 124,
-      "name": null,
+      "name": "抱拳禮",
       "nameEn": "Eastern Greeting",
       "command": "/easterngreeting",
-      "itemId": 309,
+      "unlockLink": 309,
+      "itemId": 15095,
       "icon": "/i/246000/246288.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·抱拳禮」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 125,
-      "name": null,
+      "name": "靈光一現",
       "nameEn": "Eureka",
       "command": "/eureka",
-      "itemId": 304,
+      "unlockLink": 304,
+      "itemId": 20640,
       "icon": "/i/246000/246289.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·靈光一現」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 126,
-      "name": null,
+      "name": "莫古莫古舞",
       "nameEn": "Moogle Dance",
       "command": "/mogdance",
-      "itemId": 67862,
+      "unlockLink": 67862,
+      "itemId": null,
       "icon": "/i/246000/246290.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「 擊碎岩石的修復團！」獎勵"
+        }
+      ],
       "patch": null
     },
     {
       "id": 127,
-      "name": null,
+      "name": "太棒了！",
       "nameEn": "Haurchefant",
       "command": "/haurchefant",
-      "itemId": 318,
+      "unlockLink": 318,
+      "itemId": null,
       "icon": "/i/246000/246291.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「友人的微笑」獎勵"
+        }
+      ],
       "patch": null
     },
     {
       "id": 128,
-      "name": null,
+      "name": "熱身",
       "nameEn": "Eastern Stretch",
       "command": "/easternstretch",
-      "itemId": 323,
+      "unlockLink": 323,
+      "itemId": 15919,
       "icon": "/i/246000/246292.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·熱身」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 129,
-      "name": null,
+      "name": "東方傳統舞蹈",
       "nameEn": "Eastern Dance",
       "command": "/easterndance",
-      "itemId": 324,
+      "unlockLink": 324,
+      "itemId": 15920,
       "icon": "/i/246000/246293.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·東方傳統舞蹈」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 130,
-      "name": null,
+      "name": "戰隊演武正紅一式",
       "nameEn": "Red Ranger Pose A",
       "command": "/rangerpose1r",
-      "itemId": 315,
+      "unlockLink": 315,
+      "itemId": 15842,
       "icon": "/i/246000/246294.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·戰隊演武紅一式」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 131,
-      "name": null,
+      "name": "戰隊演武正黑二式",
       "nameEn": "Black Ranger Pose A",
       "command": "/rangerpose2r",
-      "itemId": 316,
+      "unlockLink": 316,
+      "itemId": 15843,
       "icon": "/i/246000/246295.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·戰隊演武黑二式」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 132,
-      "name": null,
+      "name": "戰隊演武正黃三式",
       "nameEn": "Yellow Ranger Pose A",
       "command": "/rangerpose3r",
-      "itemId": 317,
+      "unlockLink": 317,
+      "itemId": 15844,
       "icon": "/i/246000/246296.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·戰隊演武黃三式」"
+        }
+      ],
       "patch": null
     },
     {
@@ -1120,39 +1897,67 @@
       "name": "表情：右飛眼",
       "nameEn": "Wink (Right)",
       "command": "/wink",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246118.png",
-      "sources": [],
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
       "id": 134,
-      "name": null,
+      "name": "戰隊演武逆紅一式",
       "nameEn": "Red Ranger Pose B",
       "command": "/rangerpose1l",
-      "itemId": 315,
+      "unlockLink": 315,
+      "itemId": 15842,
       "icon": "/i/246000/246297.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·戰隊演武紅一式」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 135,
-      "name": null,
+      "name": "戰隊演武逆黑二式",
       "nameEn": "Black Ranger Pose B",
       "command": "/rangerpose2l",
-      "itemId": 316,
+      "unlockLink": 316,
+      "itemId": 15843,
       "icon": "/i/246000/246298.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·戰隊演武黑二式」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 136,
-      "name": null,
+      "name": "戰隊演武逆黃三式",
       "nameEn": "Yellow Ranger Pose B",
       "command": "/rangerpose3l",
-      "itemId": 317,
+      "unlockLink": 317,
+      "itemId": 15844,
       "icon": "/i/246000/246299.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·戰隊演武黃三式」"
+        }
+      ],
       "patch": null
     },
     {
@@ -1160,19 +1965,33 @@
       "name": "捂臉",
       "nameEn": "Facepalm",
       "command": "/facepalm",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246301.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
       "id": 138,
-      "name": null,
+      "name": "斬鐵劍",
       "nameEn": "Zantetsuken",
       "command": "/zantetsuken",
-      "itemId": 328,
+      "unlockLink": 328,
+      "itemId": 16040,
       "icon": "/i/246000/246302.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·斬鐵劍」"
+        }
+      ],
       "patch": null
     },
     {
@@ -1180,9 +1999,16 @@
       "name": "肉體之美",
       "nameEn": "Flex",
       "command": "/flex",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246303.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -1190,9 +2016,16 @@
       "name": "默哀",
       "nameEn": "Pay Respects",
       "command": "/respect",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246304.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -1200,79 +2033,135 @@
       "name": "表情：陰險",
       "nameEn": "Sneer",
       "command": "/sneer",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246119.png",
-      "sources": [],
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
       "id": 142,
-      "name": null,
+      "name": "撒嬌",
       "nameEn": "Pretty Please",
       "command": "/prettyplease",
-      "itemId": 331,
+      "unlockLink": 331,
+      "itemId": 16931,
       "icon": "/i/246000/246305.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·撒嬌」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 143,
-      "name": null,
+      "name": "裝死",
       "nameEn": "Play Dead",
       "command": "/playdead",
-      "itemId": 330,
+      "unlockLink": 330,
+      "itemId": 16930,
       "icon": "/i/246000/246306.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·裝死」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 144,
-      "name": null,
+      "name": "寒冰的幻想",
       "nameEn": "Diamond Dust",
       "command": "/iceheart",
-      "itemId": 329,
+      "unlockLink": 329,
+      "itemId": 16041,
       "icon": "/i/246000/246307.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·寒冰的幻想」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 145,
-      "name": null,
+      "name": "日月之舞",
       "nameEn": "Moonlift Dance",
       "command": "/moonlift",
-      "itemId": 332,
+      "unlockLink": 332,
+      "itemId": null,
       "icon": "/i/246000/246308.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「伊修加德的盟友們」獎勵"
+        }
+      ],
       "patch": null
     },
     {
       "id": 146,
-      "name": null,
+      "name": "表達愛意",
       "nameEn": "Dote",
       "command": "/dote",
-      "itemId": 333,
+      "unlockLink": 333,
+      "itemId": 21307,
       "icon": "/i/246000/246309.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·表達愛意」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 148,
-      "name": null,
+      "name": "託眼鏡",
       "nameEn": "Spectacles",
       "command": "/spectacles",
-      "itemId": 334,
+      "unlockLink": 334,
+      "itemId": null,
       "icon": "/i/246000/246310.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「匿名信疑雲」獎勵"
+        }
+      ],
       "patch": null
     },
     {
       "id": 149,
-      "name": null,
+      "name": "小黃鶯之舞",
       "nameEn": "Songbird",
       "command": "/songbird",
-      "itemId": 335,
+      "unlockLink": 335,
+      "itemId": 20641,
       "icon": "/i/246000/246311.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·小黃鶯之舞」"
+        }
+      ],
       "patch": null
     },
     {
@@ -1280,19 +2169,33 @@
       "name": "浮水",
       "nameEn": "Water Float",
       "command": "/waterfloat",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246312.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
       "id": 151,
-      "name": null,
+      "name": "水中翻跟頭",
       "nameEn": "Water Flip",
       "command": "/waterflip",
-      "itemId": 340,
+      "unlockLink": 340,
+      "itemId": null,
       "icon": "/i/246000/246313.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「遨遊大海！」獎勵"
+        }
+      ],
       "patch": null
     },
     {
@@ -1300,69 +2203,118 @@
       "name": "表情：嘟嘴",
       "nameEn": "Pucker Up",
       "command": "/puckerup",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246120.png",
-      "sources": [],
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
       "id": 153,
-      "name": null,
+      "name": "蓄力迸發",
       "nameEn": "Power Up",
       "command": "/powerup",
-      "itemId": 343,
+      "unlockLink": 343,
+      "itemId": 20567,
       "icon": "/i/246000/246314.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·蓄力迸發」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 154,
-      "name": null,
+      "name": "行東方禮",
       "nameEn": "Eastern Bow",
       "command": "/easternbow",
-      "itemId": 68016,
+      "unlockLink": 68016,
+      "itemId": null,
       "icon": "/i/246000/246315.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「失去鬥志的協助者」獎勵"
+        }
+      ],
       "patch": null
     },
     {
       "id": 155,
-      "name": null,
+      "name": "深蹲",
       "nameEn": "Squats",
       "command": "/squats",
-      "itemId": 373,
+      "unlockLink": 373,
+      "itemId": null,
       "icon": "/i/246000/246316.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "成就「可靠的隊長1」獎勵"
+        }
+      ],
       "patch": null
     },
     {
       "id": 156,
-      "name": null,
+      "name": "俯臥撐",
       "nameEn": "Push-ups",
       "command": "/pushups",
-      "itemId": 373,
+      "unlockLink": 373,
+      "itemId": null,
       "icon": "/i/246000/246317.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "成就「可靠的隊長1」獎勵"
+        }
+      ],
       "patch": null
     },
     {
       "id": 157,
-      "name": null,
+      "name": "仰臥起坐",
       "nameEn": "Sit-ups",
       "command": "/situps",
-      "itemId": 373,
+      "unlockLink": 373,
+      "itemId": null,
       "icon": "/i/246000/246318.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "成就「可靠的隊長1」獎勵"
+        }
+      ],
       "patch": null
     },
     {
       "id": 158,
-      "name": null,
+      "name": "深呼吸",
       "nameEn": "Breath Control",
       "command": "/breathcontrol",
-      "itemId": 373,
+      "unlockLink": 373,
+      "itemId": null,
       "icon": "/i/246000/246319.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "成就「可靠的隊長1」獎勵"
+        }
+      ],
       "patch": null
     },
     {
@@ -1370,9 +2322,16 @@
       "name": "說話",
       "nameEn": "Converse",
       "command": "/converse",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246320.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -1380,9 +2339,16 @@
       "name": "表情：認真",
       "nameEn": "Concentrate",
       "command": "/concentrate",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246121.png",
-      "sources": [],
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -1390,9 +2356,16 @@
       "name": "表情：困惑",
       "nameEn": "Confused",
       "command": "/disturbed",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246122.png",
-      "sources": [],
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -1400,9 +2373,16 @@
       "name": "表情：柔和",
       "nameEn": "Simper",
       "command": "/simper",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246123.png",
-      "sources": [],
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
@@ -1410,179 +2390,305 @@
       "name": "表情：滿足",
       "nameEn": "Beam",
       "command": "/beam",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246124.png",
-      "sources": [],
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
       "id": 164,
-      "name": null,
+      "name": "立正",
       "nameEn": "Attention",
       "command": "/attention",
-      "itemId": 375,
+      "unlockLink": 375,
+      "itemId": 21319,
       "icon": "/i/246000/246321.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·立正」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 165,
-      "name": null,
+      "name": "稍息",
       "nameEn": "At Ease",
       "command": "/atease",
-      "itemId": 376,
+      "unlockLink": 376,
+      "itemId": 21320,
       "icon": "/i/246000/246322.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·稍息」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 166,
-      "name": null,
+      "name": "練拳",
       "nameEn": "Box",
       "command": "/box",
-      "itemId": 68498,
+      "unlockLink": 68498,
+      "itemId": null,
       "icon": "/i/246000/246323.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「冒險邀請」獎勵"
+        }
+      ],
       "patch": null
     },
     {
       "id": 167,
-      "name": null,
+      "name": "祝禱",
       "nameEn": "Ritual Prayer",
       "command": "/ritualprayer",
-      "itemId": 374,
+      "unlockLink": 374,
+      "itemId": 21102,
       "icon": "/i/246000/246324.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·祝禱」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 169,
-      "name": null,
+      "name": "害怕",
       "nameEn": "Tremble",
       "command": "/tremble",
-      "itemId": 386,
+      "unlockLink": 386,
+      "itemId": 22494,
       "icon": "/i/246000/246333.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·害怕」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 170,
-      "name": null,
+      "name": "單膝跪地",
       "nameEn": "Winded",
       "command": "/winded",
-      "itemId": 385,
+      "unlockLink": 385,
+      "itemId": 22462,
       "icon": "/i/246000/246334.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·單膝跪地」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 171,
-      "name": null,
+      "name": "大吃一驚",
       "nameEn": "Aback",
       "command": "/aback",
-      "itemId": 387,
+      "unlockLink": 387,
+      "itemId": 22496,
       "icon": "/i/246000/246335.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·大吃一驚」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 172,
-      "name": null,
+      "name": "打招呼",
       "nameEn": "Greeting",
       "command": "/greet",
-      "itemId": 68558,
+      "unlockLink": 68558,
+      "itemId": null,
       "icon": "/i/246000/246336.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「千里急報」獎勵"
+        }
+      ],
       "patch": null
     },
     {
       "id": 173,
-      "name": null,
+      "name": "方形步",
       "nameEn": "Box Step",
       "command": "/boxstep",
-      "itemId": 260,
+      "unlockLink": 260,
+      "itemId": 23361,
       "icon": "/i/246000/246337.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·方形步」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 174,
-      "name": null,
+      "name": "側步",
       "nameEn": "Side Step",
       "command": "/sidestep",
-      "itemId": 261,
+      "unlockLink": 261,
+      "itemId": 23362,
       "icon": "/i/246000/246338.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·側步」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 175,
-      "name": null,
+      "name": "究極",
       "nameEn": "Ultima",
       "command": "/ultima",
-      "itemId": 262,
+      "unlockLink": 262,
+      "itemId": 23363,
       "icon": "/i/246000/246339.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·究極」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 176,
-      "name": null,
+      "name": "胡鷹之舞",
       "nameEn": "Yol Dance",
       "command": "/yoldance",
-      "itemId": 269,
+      "unlockLink": 269,
+      "itemId": 23364,
       "icon": "/i/246000/246340.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·胡鷹之舞」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 178,
-      "name": null,
+      "name": "撩水",
       "nameEn": "Splash",
       "command": "/splash",
-      "itemId": 270,
+      "unlockLink": 270,
+      "itemId": 27978,
       "icon": "/i/246000/246341.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·撩水」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 180,
-      "name": null,
+      "name": "好熱",
       "nameEn": "Sweat",
       "command": "/sweat",
-      "itemId": 263,
+      "unlockLink": 263,
+      "itemId": 23365,
       "icon": "/i/246000/246342.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·好熱」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 181,
-      "name": null,
+      "name": "好冷",
       "nameEn": "Shiver",
       "command": "/shiver",
-      "itemId": 264,
+      "unlockLink": 264,
+      "itemId": 23366,
       "icon": "/i/246000/246343.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·好冷」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 182,
-      "name": null,
+      "name": "說明",
       "nameEn": "Elucidate",
       "command": "/elucidate",
-      "itemId": 265,
+      "unlockLink": 265,
+      "itemId": 23367,
       "icon": "/i/246000/246344.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·說明」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 183,
-      "name": null,
+      "name": "表情：思索",
       "nameEn": "Ponder",
       "command": "/ponder",
-      "itemId": 68612,
+      "unlockLink": 68612,
+      "itemId": null,
       "icon": "/i/246000/246129.png",
-      "sources": [],
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「拂曉的少年」獎勵"
+        }
+      ],
       "patch": null
     },
     {
@@ -1590,419 +2696,713 @@
       "name": "表情：左飛眼",
       "nameEn": "Wink (Left)",
       "command": "/leftwink",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246130.png",
-      "sources": [],
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
       "id": 185,
-      "name": null,
+      "name": "幻想舞步",
       "nameEn": "Get Fantasy",
       "command": "/getfantasy",
-      "itemId": 393,
+      "unlockLink": 393,
+      "itemId": 24220,
       "icon": "/i/246000/246345.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·幻想舞步」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 186,
-      "name": null,
+      "name": "波波託步",
       "nameEn": "Popoto Step",
       "command": "/popotostep",
-      "itemId": 394,
+      "unlockLink": 394,
+      "itemId": 24221,
       "icon": "/i/246000/246346.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·波波托步」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 187,
-      "name": null,
+      "name": "哼歌",
       "nameEn": "Hum",
       "command": "/hum",
-      "itemId": 68688,
+      "unlockLink": 68688,
+      "itemId": null,
       "icon": "/i/246000/246347.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「硃色慕戀」獎勵"
+        }
+      ],
       "patch": null
     },
     {
       "id": 188,
-      "name": null,
+      "name": "確認",
       "nameEn": "Confirm",
       "command": "/confirm",
-      "itemId": 395,
+      "unlockLink": 395,
+      "itemId": 24222,
       "icon": "/i/246000/246348.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·確認」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 189,
-      "name": null,
+      "name": "說明計劃",
       "nameEn": "Scheme",
       "command": "/scheme",
-      "itemId": 396,
+      "unlockLink": 396,
+      "itemId": 24224,
       "icon": "/i/246000/246349.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·說明計畫」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 190,
-      "name": null,
+      "name": "表情：忍耐",
       "nameEn": "Endure",
       "command": "/endure",
-      "itemId": 68684,
+      "unlockLink": 68684,
+      "itemId": null,
       "icon": "/i/246000/246131.png",
-      "sources": [],
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「響徹於拂曉之聲」獎勵"
+        }
+      ],
       "patch": null
     },
     {
       "id": 191,
-      "name": null,
+      "name": "神典石",
       "nameEn": "Tomestone",
       "command": "/tomestone",
-      "itemId": 406,
+      "unlockLink": 406,
+      "itemId": null,
       "icon": "/i/246000/246350.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "App",
+          "detail": "下載並登入 Companion App（手機）"
+        }
+      ],
       "patch": null
     },
     {
       "id": 192,
-      "name": null,
+      "name": "趾踵步",
       "nameEn": "Heel Toe",
       "command": "/heeltoe",
-      "itemId": 232,
+      "unlockLink": 232,
+      "itemId": 25003,
       "icon": "/i/246000/246351.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·趾踵步」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 193,
-      "name": null,
+      "name": "古菩步",
       "nameEn": "Goobbue Do",
       "command": "/goobbuedo",
-      "itemId": 233,
+      "unlockLink": 233,
+      "itemId": 25004,
       "icon": "/i/246000/246352.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·古卜步」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 194,
-      "name": null,
+      "name": "心意",
       "nameEn": "Gratuity",
       "command": "/gratuity",
-      "itemId": 68700,
+      "unlockLink": 68700,
+      "itemId": null,
       "icon": "/i/246000/246353.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「三種至寶」獎勵"
+        }
+      ],
       "patch": null
     },
     {
       "id": 195,
-      "name": null,
+      "name": "振作精神",
       "nameEn": "Fist Pump",
       "command": "/fistpump",
-      "itemId": 234,
+      "unlockLink": 234,
+      "itemId": 25001,
       "icon": "/i/246000/246354.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·振作精神」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 196,
-      "name": null,
+      "name": "提醒",
       "nameEn": "Reprimand",
       "command": "/reprimand",
-      "itemId": 235,
+      "unlockLink": 235,
+      "itemId": 25002,
       "icon": "/i/246000/246355.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·提醒」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 197,
-      "name": null,
+      "name": "優雅仙人刺",
       "nameEn": "Senor Sabotender",
       "command": "/sabotender",
-      "itemId": 236,
+      "unlockLink": 236,
+      "itemId": 24235,
       "icon": "/i/246000/246356.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·優雅仙人掌怪」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 198,
-      "name": null,
+      "name": "紳士舞步",
       "nameEn": "Manderville Mambo",
       "command": "/mandervillemambo",
-      "itemId": 68704,
+      "unlockLink": 68704,
+      "itemId": null,
       "icon": "/i/246000/246357.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「最強的男人不會停歇」獎勵"
+        }
+      ],
       "patch": null
     },
     {
       "id": 199,
-      "name": null,
+      "name": "啦哩吼",
       "nameEn": "Lali-ho",
       "command": "/laliho",
-      "itemId": 69095,
+      "unlockLink": 69095,
+      "itemId": null,
       "icon": "/i/246000/246358.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「 啦哩吼！！」獎勵"
+        }
+      ],
       "patch": null
     },
     {
       "id": 200,
-      "name": null,
+      "name": "歐米茄M架勢",
       "nameEn": "Simulation M",
       "command": "/simulationm",
-      "itemId": 75,
+      "unlockLink": 75,
+      "itemId": 28610,
       "icon": "/i/246000/246359.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·歐米茄架勢」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 201,
-      "name": null,
+      "name": "歐米茄F架勢",
       "nameEn": "Simulation F",
       "command": "/simulationf",
-      "itemId": 75,
+      "unlockLink": 75,
+      "itemId": 28610,
       "icon": "/i/246000/246360.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·歐米茄架勢」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 202,
-      "name": null,
+      "name": "乾杯",
       "nameEn": "Toast",
       "command": "/toast",
-      "itemId": 76,
+      "unlockLink": 76,
+      "itemId": 28507,
       "icon": "/i/246000/246361.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·乾杯」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 203,
-      "name": null,
+      "name": "背靠",
       "nameEn": "Lean",
       "command": "/lean",
-      "itemId": 77,
+      "unlockLink": 77,
+      "itemId": 28612,
       "icon": "/i/246000/246363.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·背靠」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 204,
-      "name": null,
+      "name": "頭痛",
       "nameEn": "Headache",
       "command": "/headache",
-      "itemId": 78,
+      "unlockLink": 78,
+      "itemId": 28613,
       "icon": "/i/246000/246362.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·頭痛」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 205,
-      "name": null,
+      "name": "打響指",
       "nameEn": "Snap",
       "command": "/snap",
-      "itemId": 68,
+      "unlockLink": 68,
+      "itemId": 30109,
       "icon": "/i/246000/246364.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·打響指」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 206,
-      "name": null,
+      "name": "吃麵包",
       "nameEn": "Break Fast",
       "command": "/breakfast",
-      "itemId": 69,
+      "unlockLink": 69,
+      "itemId": 30110,
       "icon": "/i/246000/246365.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·吃麵包」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 207,
-      "name": null,
+      "name": "看書",
       "nameEn": "Read",
       "command": "/read",
-      "itemId": 70,
+      "unlockLink": 70,
+      "itemId": 30111,
       "icon": "/i/246000/246366.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·看書」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 208,
-      "name": null,
+      "name": "堅持主張",
       "nameEn": "Insist",
       "command": "/insist",
-      "itemId": 71,
+      "unlockLink": 71,
+      "itemId": 30112,
       "icon": "/i/246000/246368.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·堅持主張」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 209,
-      "name": null,
+      "name": "疑問",
       "nameEn": "Consider",
       "command": "/consider",
-      "itemId": 279,
+      "unlockLink": 279,
+      "itemId": 31338,
       "icon": "/i/246000/246367.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·疑問」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 210,
-      "name": null,
+      "name": "嘿喲",
       "nameEn": "Wasshoi",
       "command": "/wasshoi",
-      "itemId": 271,
+      "unlockLink": 271,
+      "itemId": 31398,
       "icon": "/i/246000/246369.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·嘿喲」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 211,
-      "name": null,
+      "name": "花雨",
       "nameEn": "Flower Shower",
       "command": "/flowershower",
-      "itemId": 272,
+      "unlockLink": 272,
+      "itemId": 31399,
       "icon": "/i/246000/246370.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·花雨」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 212,
-      "name": null,
+      "name": "火焰之舞",
       "nameEn": "Flame Dance",
       "command": "/flamedance",
-      "itemId": 273,
+      "unlockLink": 273,
+      "itemId": 31400,
       "icon": "/i/246000/246371.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·烈焰之舞」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 213,
-      "name": null,
+      "name": "擊掌",
       "nameEn": "High Five",
       "command": "/highfive",
-      "itemId": 275,
+      "unlockLink": 275,
+      "itemId": 31401,
       "icon": "/i/246000/246372.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·擊掌」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 214,
-      "name": null,
+      "name": "巡視",
       "nameEn": "Guard",
       "command": "/guard",
-      "itemId": 276,
+      "unlockLink": 276,
+      "itemId": 31402,
       "icon": "/i/246000/246373.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·巡視」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 215,
-      "name": null,
+      "name": "詛咒",
       "nameEn": "Malevolence",
       "command": "/malevolence",
-      "itemId": 277,
+      "unlockLink": 277,
+      "itemId": 31403,
       "icon": "/i/246000/246374.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·詛咒」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 216,
-      "name": null,
+      "name": "蜜蜂之舞",
       "nameEn": "Bee's Knees",
       "command": "/beesknees",
-      "itemId": 278,
+      "unlockLink": 278,
+      "itemId": 31404,
       "icon": "/i/246000/246375.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·蜜蜂之舞」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 217,
-      "name": null,
+      "name": "啦哩吼舞",
       "nameEn": "Lali Hop",
       "command": "/lalihop",
-      "itemId": 274,
+      "unlockLink": 274,
+      "itemId": 31405,
       "icon": "/i/246000/246376.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·啦哩吼舞」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 220,
-      "name": null,
+      "name": "吃飯糰",
       "nameEn": "Eat Rice Ball",
       "command": "/eatriceball",
-      "itemId": 414,
+      "unlockLink": 414,
+      "itemId": 32826,
       "icon": "/i/246000/246377.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·吃飯團」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 221,
-      "name": null,
+      "name": "吃蘋果",
       "nameEn": "Eat Apple",
       "command": "/eatapple",
-      "itemId": 415,
+      "unlockLink": 415,
+      "itemId": 32827,
       "icon": "/i/246000/246378.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·吃蘋果」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 222,
-      "name": null,
+      "name": "搓手",
       "nameEn": "Wring Hands",
       "command": "/wringhands",
-      "itemId": 416,
+      "unlockLink": 416,
+      "itemId": 32828,
       "icon": "/i/246000/246379.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·搓手」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 223,
-      "name": null,
+      "name": "掃地",
       "nameEn": "Sweep Up",
       "command": "/sweep",
-      "itemId": 417,
+      "unlockLink": 417,
+      "itemId": 32829,
       "icon": "/i/246000/246380.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·掃地」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 224,
-      "name": null,
+      "name": "黑色陸行鳥之筆",
       "nameEn": "Paint It Black",
       "command": "/paintblack",
-      "itemId": 418,
+      "unlockLink": 418,
+      "itemId": 32830,
       "icon": "/i/246000/246381.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·陸行鳥之筆」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 225,
-      "name": null,
+      "name": "紅色陸行鳥之筆",
       "nameEn": "Paint It Red",
       "command": "/paintred",
-      "itemId": 418,
+      "unlockLink": 418,
+      "itemId": 32830,
       "icon": "/i/246000/246382.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·陸行鳥之筆」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 226,
-      "name": null,
+      "name": "黃色陸行鳥之筆",
       "nameEn": "Paint It Yellow",
       "command": "/paintyellow",
-      "itemId": 418,
+      "unlockLink": 418,
+      "itemId": 32830,
       "icon": "/i/246000/246383.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·陸行鳥之筆」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 227,
-      "name": null,
+      "name": "藍色陸行鳥之筆",
       "nameEn": "Paint It Blue",
       "command": "/paintblue",
-      "itemId": 418,
+      "unlockLink": 418,
+      "itemId": 32830,
       "icon": "/i/246000/246384.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·陸行鳥之筆」"
+        }
+      ],
       "patch": null
     },
     {
@@ -2010,49 +3410,84 @@
       "name": "表情：假笑",
       "nameEn": "Fake Smile",
       "command": "/fakesmile",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246132.png",
-      "sources": [],
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
       "id": 229,
-      "name": null,
+      "name": "默劇",
       "nameEn": "Pantomime",
       "command": "/pantomime",
-      "itemId": 237,
+      "unlockLink": 237,
+      "itemId": 33702,
       "icon": "/i/246000/246385.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·默劇」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 230,
-      "name": null,
+      "name": "困惑",
       "nameEn": "Vexed",
       "command": "/vexed",
-      "itemId": 238,
+      "unlockLink": 238,
+      "itemId": 33703,
       "icon": "/i/246000/246386.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·困惑」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 231,
-      "name": null,
+      "name": "噓",
       "nameEn": "Shush",
       "command": "/shush",
-      "itemId": 69602,
+      "unlockLink": 69602,
+      "itemId": null,
       "icon": "/i/246000/246387.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「死鬥至黎明」獎勵"
+        }
+      ],
       "patch": null
     },
     {
       "id": 232,
-      "name": null,
+      "name": "吃披薩",
       "nameEn": "Eat Pizza",
       "command": "/eatpizza",
-      "itemId": 240,
+      "unlockLink": 240,
+      "itemId": 33705,
       "icon": "/i/246000/246388.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·吃披薩」"
+        }
+      ],
       "patch": null
     },
     {
@@ -2060,29 +3495,50 @@
       "name": "抱頭",
       "nameEn": "Clutch Head",
       "command": "/clutchhead",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246391.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
       "id": 234,
-      "name": null,
+      "name": "吃戀人巧克力",
       "nameEn": "Eat Chocolate",
       "command": "/eatchocolate",
-      "itemId": 428,
+      "unlockLink": 428,
+      "itemId": 36915,
       "icon": "/i/246000/246390.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·吃戀人巧克力」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 235,
-      "name": null,
+      "name": "吃水煮蛋",
       "nameEn": "Eat Egg",
       "command": "/eategg",
-      "itemId": 429,
+      "unlockLink": 429,
+      "itemId": 36916,
       "icon": "/i/246000/246392.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·吃水煮蛋」"
+        }
+      ],
       "patch": null
     },
     {
@@ -2090,449 +3546,764 @@
       "name": "表情：幸福",
       "nameEn": "Content",
       "command": "/content",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246133.png",
-      "sources": [],
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
       "id": 237,
-      "name": null,
+      "name": "收回武器",
       "nameEn": "Sheathe Weapon",
       "command": "/sheathe",
-      "itemId": 430,
+      "unlockLink": 430,
+      "itemId": 36919,
       "icon": "/i/246000/246397.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·收回武器」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 238,
-      "name": null,
+      "name": "亮出武器",
       "nameEn": "Draw Weapon",
       "command": "/draw",
-      "itemId": 431,
+      "unlockLink": 431,
+      "itemId": 36918,
       "icon": "/i/246000/246398.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·亮出武器」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 239,
-      "name": null,
+      "name": "飲用紅茶",
       "nameEn": "Drink Tea",
       "command": "/tea",
-      "itemId": 433,
+      "unlockLink": 433,
+      "itemId": 36921,
       "icon": "/i/246000/246393.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·飲用紅茶」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 240,
-      "name": null,
+      "name": "幹勁十足",
       "nameEn": "Determined",
       "command": "/determined",
-      "itemId": 432,
+      "unlockLink": 432,
+      "itemId": 36920,
       "icon": "/i/246000/246394.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·幹勁十足」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 241,
-      "name": null,
+      "name": "展現右側",
       "nameEn": "Show Right",
       "command": "/showright",
-      "itemId": 434,
+      "unlockLink": 434,
+      "itemId": 36922,
       "icon": "/i/246000/246395.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·展現」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 242,
-      "name": null,
+      "name": "展現左側",
       "nameEn": "Show Left",
       "command": "/showleft",
-      "itemId": 434,
+      "unlockLink": 434,
+      "itemId": 36922,
       "icon": "/i/246000/246396.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·展現」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 245,
-      "name": null,
+      "name": "叛逆精神",
       "nameEn": "Deride",
       "command": "/deride",
-      "itemId": 437,
+      "unlockLink": 437,
+      "itemId": 38569,
       "icon": "/i/246000/246399.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·叛逆精神」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 246,
-      "name": null,
+      "name": "兩眼放光",
       "nameEn": "Wow",
       "command": "/wow",
-      "itemId": 438,
+      "unlockLink": 438,
+      "itemId": 38570,
       "icon": "/i/246000/246400.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·兩眼放光」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 247,
-      "name": null,
+      "name": "吃南瓜曲奇",
       "nameEn": "Eat Pumpkin Cookie",
       "command": "/eatpumpkincookie",
-      "itemId": 439,
+      "unlockLink": 439,
+      "itemId": 38571,
       "icon": "/i/246000/246389.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·吃南瓜餅乾」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 248,
-      "name": null,
+      "name": "觀戰",
       "nameEn": "Spirit",
       "command": "/spirit",
-      "itemId": 440,
+      "unlockLink": 440,
+      "itemId": 38572,
       "icon": "/i/246000/246401.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·觀戰」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 249,
-      "name": null,
+      "name": "魔術",
       "nameEn": "Magic Trick",
       "command": "/magictrick",
-      "itemId": 443,
+      "unlockLink": 443,
+      "itemId": 39496,
       "icon": "/i/246000/246402.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·魔術」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 250,
-      "name": null,
+      "name": "公主之舞",
       "nameEn": "Little Ladies' Dance",
       "command": "/littleladiesdance",
-      "itemId": 444,
+      "unlockLink": 444,
+      "itemId": 39497,
       "icon": "/i/246000/246403.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·公主之舞」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 251,
-      "name": null,
+      "name": "通訊珠",
       "nameEn": "Linkpearl",
       "command": "/linkpearl",
-      "itemId": 445,
+      "unlockLink": 445,
+      "itemId": 39498,
       "icon": "/i/246000/246404.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·通訊珠」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 252,
-      "name": null,
+      "name": "搖兔兔耳",
       "nameEn": "Ear Wiggle",
       "command": "/earwiggle",
-      "itemId": 70222,
+      "unlockLink": 70222,
+      "itemId": null,
       "icon": "/i/246000/246405.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「 夢想永不會完結！」獎勵"
+        }
+      ],
       "patch": null
     },
     {
       "id": 256,
-      "name": null,
+      "name": "嚇唬人",
       "nameEn": "Frighten",
       "command": "/frighten",
-      "itemId": 450,
+      "unlockLink": 450,
+      "itemId": 39500,
       "icon": "/i/246000/246406.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·嚇唬人」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 257,
-      "name": null,
+      "name": "威光降臨",
       "nameEn": "Advent of Light",
       "command": "/adventoflight",
-      "itemId": 451,
+      "unlockLink": 451,
+      "itemId": 40356,
       "icon": "/i/246000/246407.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·威光降臨」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 258,
-      "name": null,
+      "name": "雀躍1",
       "nameEn": "Jump for Joy 1",
       "command": "/jumpforjoy1",
-      "itemId": 452,
+      "unlockLink": 452,
+      "itemId": 40357,
       "icon": "/i/246000/246408.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·雀躍」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 259,
-      "name": null,
+      "name": "雀躍2",
       "nameEn": "Jump for Joy 2",
       "command": "/jumpforjoy2",
-      "itemId": 452,
+      "unlockLink": 452,
+      "itemId": 40357,
       "icon": "/i/246000/246409.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·雀躍」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 260,
-      "name": null,
+      "name": "雀躍3",
       "nameEn": "Jump for Joy 3",
       "command": "/jumpforjoy3",
-      "itemId": 452,
+      "unlockLink": 452,
+      "itemId": 40357,
       "icon": "/i/246000/246410.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·雀躍」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 261,
-      "name": null,
+      "name": "雀躍4",
       "nameEn": "Jump for Joy 4",
       "command": "/jumpforjoy4",
-      "itemId": 452,
+      "unlockLink": 452,
+      "itemId": 40357,
       "icon": "/i/246000/246411.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·雀躍」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 262,
-      "name": null,
+      "name": "雀躍5",
       "nameEn": "Jump for Joy 5",
       "command": "/jumpforjoy5",
-      "itemId": 452,
+      "unlockLink": 452,
+      "itemId": 40357,
       "icon": "/i/246000/246412.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·雀躍」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 263,
-      "name": null,
+      "name": "手撫胸",
       "nameEn": "Hand to Heart",
       "command": "/handtoheart",
-      "itemId": 453,
+      "unlockLink": 453,
+      "itemId": 40358,
       "icon": "/i/246000/246413.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·手撫胸」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 264,
-      "name": null,
+      "name": "聲援小白",
       "nameEn": "Cheer On: Bright",
       "command": "/cheeronbright",
-      "itemId": 454,
+      "unlockLink": 454,
+      "itemId": 40359,
       "icon": "/i/246000/246414.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·聲援小白」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 265,
-      "name": null,
+      "name": "聲援小紫",
       "nameEn": "Cheer Wave: Violet",
       "command": "/cheerwaveviolet",
-      "itemId": 455,
+      "unlockLink": 455,
+      "itemId": 40360,
       "icon": "/i/246000/246415.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·聲援小紫」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 266,
-      "name": null,
+      "name": "聲援小綠",
       "nameEn": "Cheer Jump: Green",
       "command": "/cheerjumpgreen",
-      "itemId": 456,
+      "unlockLink": 456,
+      "itemId": 40361,
       "icon": "/i/246000/246416.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·聲援小綠」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 267,
-      "name": null,
+      "name": "守護天節的魔咒",
       "nameEn": "All Saints' Charm",
       "command": "/allsaintscharm",
-      "itemId": 457,
+      "unlockLink": 457,
+      "itemId": 40362,
       "icon": "/i/246000/246417.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·守護天節的魔咒」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 269,
-      "name": null,
+      "name": "兔兔舞",
       "nameEn": "Lop Hop",
       "command": "/lophop",
-      "itemId": 458,
+      "unlockLink": 458,
+      "itemId": 41457,
       "icon": "/i/246000/246418.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·兔兔舞」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 270,
-      "name": null,
+      "name": "比對文獻",
       "nameEn": "Reference",
       "command": "/reference",
-      "itemId": 459,
+      "unlockLink": 459,
+      "itemId": 40363,
       "icon": "/i/246000/246419.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·比對文獻」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 271,
-      "name": null,
+      "name": "吃炸雞",
       "nameEn": "Eat Chicken",
       "command": "/eatchicken",
-      "itemId": 469,
+      "unlockLink": 469,
+      "itemId": 41458,
       "icon": "/i/246000/246420.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·吃炸雞」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 272,
-      "name": null,
+      "name": "眾生離絕",
       "nameEn": "Sundering",
       "command": "/sundering",
-      "itemId": 470,
+      "unlockLink": 470,
+      "itemId": 41459,
       "icon": "/i/246000/246421.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·眾生離絕」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 273,
-      "name": null,
+      "name": "垂頭喪氣",
       "nameEn": "Slump",
       "command": "/slump",
-      "itemId": 471,
+      "unlockLink": 471,
+      "itemId": 41460,
       "icon": "/i/246000/246422.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·垂頭喪氣」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 274,
-      "name": null,
+      "name": "比心",
       "nameEn": "Love Heart",
       "command": "/loveheart",
-      "itemId": 472,
+      "unlockLink": 472,
+      "itemId": 41461,
       "icon": "/i/246000/246423.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·比心」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 275,
-      "name": null,
+      "name": "得意洋洋",
       "nameEn": "Humble Triumph",
       "command": "/humbletriumph",
-      "itemId": 473,
+      "unlockLink": 473,
+      "itemId": 41462,
       "icon": "/i/246000/246424.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·得意洋洋」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 276,
-      "name": null,
+      "name": "大獲全勝",
       "nameEn": "Victory Reveal",
       "command": "/victoryreveal",
-      "itemId": 474,
+      "unlockLink": 474,
+      "itemId": 41463,
       "icon": "/i/246000/246425.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·大獲全勝」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 277,
-      "name": null,
+      "name": "煎蛋",
       "nameEn": "Fry Egg",
       "command": "/fryegg",
-      "itemId": 475,
+      "unlockLink": 475,
+      "itemId": 41464,
       "icon": "/i/246000/246426.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·煎蛋」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 278,
-      "name": null,
+      "name": "扇大團扇",
       "nameEn": "Uchiwasshoi",
       "command": "/uchiwasshoi",
-      "itemId": 484,
+      "unlockLink": 484,
+      "itemId": 43605,
       "icon": "/i/246000/246427.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
       "id": 279,
-      "name": null,
+      "name": "待命",
       "nameEn": "Attend",
       "command": "/attend",
-      "itemId": 490,
+      "unlockLink": 490,
+      "itemId": 44508,
       "icon": "/i/246000/246428.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·待命」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 280,
-      "name": null,
+      "name": "澆水",
       "nameEn": "Water",
       "command": "/water",
-      "itemId": 491,
+      "unlockLink": 491,
+      "itemId": 44511,
       "icon": "/i/246000/246429.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·澆水」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 281,
-      "name": null,
+      "name": "調飲",
       "nameEn": "Shake Drink",
       "command": "/shakedrink",
-      "itemId": 492,
+      "unlockLink": 492,
+      "itemId": 44510,
       "icon": "/i/246000/246430.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·搖雪克杯」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 282,
-      "name": null,
+      "name": "象徵自由的姿勢",
       "nameEn": "Pose of the Unbound",
       "command": "/poseoftheunbound",
-      "itemId": 70725,
+      "unlockLink": 70725,
+      "itemId": null,
       "icon": "/i/246000/246431.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「掙脫束縛的自由」獎勵"
+        }
+      ],
       "patch": null
     },
     {
       "id": 283,
-      "name": null,
+      "name": "贈送花束",
       "nameEn": "Bouquet",
       "command": "/bouquet",
-      "itemId": 493,
+      "unlockLink": 493,
+      "itemId": 44513,
       "icon": "/i/246000/246432.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
       "id": 284,
-      "name": null,
+      "name": "吹泡泡",
       "nameEn": "Blow Bubbles",
       "command": "/blowbubbles",
-      "itemId": 494,
+      "unlockLink": 494,
+      "itemId": 44512,
       "icon": "/i/246000/246433.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·吹泡泡」"
+        }
+      ],
       "patch": null
     },
     {
       "id": 285,
-      "name": null,
+      "name": "噢霍卡利",
       "nameEn": "Ohokaliy",
       "command": "/ohokaliy",
-      "itemId": 70729,
+      "unlockLink": 70729,
+      "itemId": null,
       "icon": "/i/246000/246434.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「 新事業！圖拉爾旅行公司」獎勵"
+        }
+      ],
       "patch": null
     },
     {
       "id": 286,
-      "name": null,
+      "name": "用觸控板記錄",
       "nameEn": "Visage Capture",
       "command": "/visage",
-      "itemId": 495,
+      "unlockLink": 495,
+      "itemId": 44509,
       "icon": "/i/246000/246435.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
@@ -2540,69 +4311,118 @@
       "name": "拍照",
       "nameEn": "Photograph",
       "command": "/photograph",
+      "unlockLink": 0,
       "itemId": null,
       "icon": "/i/246000/246436.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
       "patch": null
     },
     {
       "id": 291,
-      "name": null,
+      "name": "大驚小怪",
       "nameEn": "Overreact",
       "command": "/overreact",
-      "itemId": 543,
+      "unlockLink": 543,
+      "itemId": 47982,
       "icon": "/i/246000/246437.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
       "id": 292,
-      "name": null,
+      "name": "轉圈",
       "nameEn": "Twirl",
       "command": "/twirl",
-      "itemId": 544,
+      "unlockLink": 544,
+      "itemId": 47983,
       "icon": "/i/246000/246438.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
       "id": 293,
-      "name": null,
+      "name": "暈頭轉向",
       "nameEn": "Dazed",
       "command": "/dazed",
-      "itemId": 545,
+      "unlockLink": 545,
+      "itemId": 47984,
       "icon": "/i/246000/246439.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
       "id": 294,
-      "name": null,
+      "name": "氣得發抖",
       "nameEn": "Rage",
       "command": "/rage",
-      "itemId": 546,
+      "unlockLink": 546,
+      "itemId": 47985,
       "icon": "/i/246000/246440.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
       "id": 295,
-      "name": null,
+      "name": "玩神典石",
       "nameEn": "Tomescroll",
       "command": "/tomescroll",
-      "itemId": 406,
+      "unlockLink": 406,
+      "itemId": null,
       "icon": "/i/246000/246441.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "App",
+          "detail": "下載並登入 Companion App（手機）"
+        }
+      ],
       "patch": null
     },
     {
       "id": 296,
-      "name": null,
+      "name": "認真看書",
       "nameEn": "Study",
       "command": "/study",
-      "itemId": 70,
+      "unlockLink": 70,
+      "itemId": 30111,
       "icon": "/i/246000/246442.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自「演技教材·看書」"
+        }
+      ],
       "patch": null
     },
     {
@@ -2610,9 +4430,16 @@
       "name": null,
       "nameEn": "Breaking",
       "command": "/breakdance",
-      "itemId": 553,
+      "unlockLink": 553,
+      "itemId": 46791,
       "icon": "/i/246000/246453.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
@@ -2620,9 +4447,16 @@
       "name": null,
       "nameEn": "Gridanian Sip",
       "command": "/gridaniansip",
-      "itemId": 554,
+      "unlockLink": 554,
+      "itemId": 46792,
       "icon": "/i/246000/246443.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
@@ -2630,9 +4464,16 @@
       "name": null,
       "nameEn": "Ul'dahn Sip",
       "command": "/uldahnsip",
-      "itemId": 554,
+      "unlockLink": 554,
+      "itemId": 46792,
       "icon": "/i/246000/246444.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
@@ -2640,9 +4481,16 @@
       "name": null,
       "nameEn": "Lominsan Sip",
       "command": "/lominsansip",
-      "itemId": 554,
+      "unlockLink": 554,
+      "itemId": 46792,
       "icon": "/i/246000/246445.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
@@ -2650,9 +4498,16 @@
       "name": null,
       "nameEn": "Gridanian Gulp",
       "command": "/gridaniangulp",
-      "itemId": 554,
+      "unlockLink": 554,
+      "itemId": 46792,
       "icon": "/i/246000/246446.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
@@ -2660,9 +4515,16 @@
       "name": null,
       "nameEn": "Ul'dahn Gulp",
       "command": "/uldahngulp",
-      "itemId": 554,
+      "unlockLink": 554,
+      "itemId": 46792,
       "icon": "/i/246000/246447.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
@@ -2670,9 +4532,16 @@
       "name": null,
       "nameEn": "Lominsan Gulp",
       "command": "/lominsangulp",
-      "itemId": 554,
+      "unlockLink": 554,
+      "itemId": 46792,
       "icon": "/i/246000/246448.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
@@ -2680,9 +4549,16 @@
       "name": null,
       "nameEn": "Limber Up",
       "command": "/limberup",
-      "itemId": 555,
+      "unlockLink": 555,
+      "itemId": 46795,
       "icon": "/i/246000/246449.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
@@ -2690,9 +4566,16 @@
       "name": null,
       "nameEn": "Drink Green Tea",
       "command": "/drinkgreentea",
-      "itemId": 556,
+      "unlockLink": 556,
+      "itemId": 46793,
       "icon": "/i/246000/246450.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
@@ -2700,9 +4583,16 @@
       "name": null,
       "nameEn": "Savor Tea",
       "command": "/savortea",
-      "itemId": 556,
+      "unlockLink": 556,
+      "itemId": 46793,
       "icon": "/i/246000/246451.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
@@ -2710,9 +4600,16 @@
       "name": null,
       "nameEn": "Pen",
       "command": "/pen",
-      "itemId": 557,
+      "unlockLink": 557,
+      "itemId": 46794,
       "icon": "/i/246000/246452.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
@@ -2720,9 +4617,16 @@
       "name": null,
       "nameEn": "Blown Away",
       "command": "/blownaway",
-      "itemId": 577,
+      "unlockLink": 577,
+      "itemId": 50329,
       "icon": "/i/246000/246454.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
@@ -2730,9 +4634,16 @@
       "name": null,
       "nameEn": "Stomp",
       "command": "/stomp",
-      "itemId": 578,
+      "unlockLink": 578,
+      "itemId": 50334,
       "icon": "/i/246000/246455.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
@@ -2740,9 +4651,16 @@
       "name": null,
       "nameEn": "Cheer Rhythm: Red",
       "command": "/cheerrhythmred",
-      "itemId": 579,
+      "unlockLink": 579,
+      "itemId": 50335,
       "icon": "/i/246000/246456.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
@@ -2750,9 +4668,16 @@
       "name": null,
       "nameEn": "Cheer Light: Yellow",
       "command": "/cheerlightyellow",
-      "itemId": 580,
+      "unlockLink": 580,
+      "itemId": 50336,
       "icon": "/i/246000/246457.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
@@ -2760,9 +4685,16 @@
       "name": null,
       "nameEn": "Delighted",
       "command": "/delighted",
-      "itemId": 581,
+      "unlockLink": 581,
+      "itemId": 50337,
       "icon": "/i/246000/246458.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
@@ -2770,9 +4702,16 @@
       "name": null,
       "nameEn": "Runway Walk",
       "command": "/runwaywalk",
-      "itemId": 582,
+      "unlockLink": 582,
+      "itemId": 50333,
       "icon": "/i/246000/246459.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
@@ -2780,9 +4719,16 @@
       "name": null,
       "nameEn": "Cheer On: Orange",
       "command": "/cheeronorange",
-      "itemId": 583,
+      "unlockLink": 583,
+      "itemId": 50330,
       "icon": "/i/246000/246460.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
@@ -2790,9 +4736,16 @@
       "name": null,
       "nameEn": "Cheer Wave: Pink",
       "command": "/cheerwavepink",
-      "itemId": 584,
+      "unlockLink": 584,
+      "itemId": 50331,
       "icon": "/i/246000/246461.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
@@ -2800,9 +4753,16 @@
       "name": null,
       "nameEn": "Cheer Jump: Indigo",
       "command": "/cheerjumpindigo",
-      "itemId": 585,
+      "unlockLink": 585,
+      "itemId": 50332,
       "icon": "/i/246000/246462.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
@@ -2810,9 +4770,16 @@
       "name": null,
       "nameEn": "Carry Book",
       "command": "/carrybook",
-      "itemId": 586,
+      "unlockLink": 586,
+      "itemId": 50328,
       "icon": "/i/246000/246463.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
@@ -2820,9 +4787,16 @@
       "name": null,
       "nameEn": "Divine Arm",
       "command": "/divinearm",
-      "itemId": 587,
+      "unlockLink": 587,
+      "itemId": 50464,
       "icon": "/i/246000/246464.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
@@ -2830,9 +4804,16 @@
       "name": null,
       "nameEn": "Divine Disk",
       "command": "/divinedisk",
-      "itemId": 588,
+      "unlockLink": 588,
+      "itemId": 50465,
       "icon": "/i/246000/246465.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
@@ -2840,9 +4821,16 @@
       "name": null,
       "nameEn": "Divine Tiara",
       "command": "/divinetiara",
-      "itemId": 589,
+      "unlockLink": 589,
+      "itemId": 50466,
       "icon": "/i/246000/246466.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
@@ -2850,9 +4838,16 @@
       "name": null,
       "nameEn": "Cheer Rhythm: Violet",
       "command": "/cheerrhythmviolet",
-      "itemId": 590,
+      "unlockLink": 590,
+      "itemId": 50460,
       "icon": "/i/246000/246467.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
@@ -2860,9 +4855,16 @@
       "name": null,
       "nameEn": "Cheer Rhythm: Bright",
       "command": "/cheerrhythmbright",
-      "itemId": 591,
+      "unlockLink": 591,
+      "itemId": 50461,
       "icon": "/i/246000/246469.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
@@ -2870,9 +4872,16 @@
       "name": null,
       "nameEn": "Cheer Light: Blue",
       "command": "/cheerlightblue",
-      "itemId": 592,
+      "unlockLink": 592,
+      "itemId": 50462,
       "icon": "/i/246000/246468.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
@@ -2880,9 +4889,16 @@
       "name": null,
       "nameEn": "Cheer Light: Green",
       "command": "/cheerlightgreen",
-      "itemId": 593,
+      "unlockLink": 593,
+      "itemId": 50463,
       "icon": "/i/246000/246470.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
@@ -2890,9 +4906,16 @@
       "name": null,
       "nameEn": "Cackle",
       "command": "/cackle",
-      "itemId": 642,
+      "unlockLink": 642,
+      "itemId": 52292,
       "icon": "/i/246000/246473.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
@@ -2900,9 +4923,16 @@
       "name": null,
       "nameEn": "Conduct",
       "command": "/conduct",
-      "itemId": 643,
+      "unlockLink": 643,
+      "itemId": 52293,
       "icon": "/i/246000/246474.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
@@ -2910,9 +4940,16 @@
       "name": null,
       "nameEn": "Eat Taco",
       "command": "/eattaco",
-      "itemId": 644,
+      "unlockLink": 644,
+      "itemId": 52294,
       "icon": "/i/246000/246475.png",
-      "sources": [],
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     },
     {
@@ -2920,9 +4957,16 @@
       "name": null,
       "nameEn": "Devour Taco",
       "command": "/devourtaco",
-      "itemId": 644,
+      "unlockLink": 644,
+      "itemId": 52294,
       "icon": "/i/246000/246476.png",
-      "sources": [],
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
       "patch": null
     }
   ]

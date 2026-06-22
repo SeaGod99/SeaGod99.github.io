@@ -31,7 +31,7 @@
 | 2.1 | 坐騎收藏追蹤 | `/collections/mounts/` | 完成（改接 data/mounts.json 385筆+圖片，篩選/追蹤重做，06-15重做） |
 | 2.2 | 寵物收藏追蹤 | `/minions/` | 完成（整頁重做，改接 data/minions.json+本機圖示，source 欄位修正，06-15重做） |
 | 2.3 | 樂譜收藏追蹤 | `/collections/orchestrion/` | 完成（接 data/orchestrion.json 724筆/618筆可顯示，版本篩選，06-16新增） |
-| 2.4 | 表情收藏追蹤 | `/collections/emotes/` | 完成（接 data/emotes.json 292筆；繁中名 94/292 筆補齊：預設表情（itemId=null）94 筆用 Cafemaker 簡中+OpenCC s2twp 轉繁中；有 itemId 的 198 筆因 XIVAPI UnlockLink 錯誤（對應到神典石/過期裝備而非表情書），name=null 前端隱藏；前端顯示 94 筆；06-17 完成） |
+| 2.4 | 表情收藏追蹤 | `/collections/emotes/` | 完成（接 data/emotes.json 292筆；scripts/build-emotes.mjs 重建：繁中名 260/292（Cafemaker 簡中→OpenCC，餘 32 筆為簡中服未開放之最新表情，前端隱藏）；**來源 292/292 全補齊**：預設94+動作指南書163+任務29+成就4+App2；前端加來源顯示+來源篩選（預設/動作指南書/任務/成就/App）；06-22 重建） |
 | 2.5 | 髮型收藏追蹤 | `/collections/hairstyles/` | 完成（39 筆台服已開放髮型，版本/來源篩選，06-16新增） |
 | 2.6 | 鳥鞍收藏追蹤 | `/collections/barding/` | 完成（接 data/barding.json 106筆，部位/來源篩選，15筆無sources標待補充，06-15新增） |
 | 2.9 | 探索筆記追蹤器 | `/collections/exploration-log/` | 完成（340筆，繁中景觀名已補齊：cafemaker Name_chs→手動繁化，座標因 XIVAPI SightseeingLog 不回傳而保持 null，06-17景觀名補完） |
@@ -185,6 +185,8 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 6. 其他規劃：時尚品鑑、冒險者小隊計算機、藏寶圖、園藝配種、釣魚紀錄
 
 ## 五、更新紀錄
+
+- **2026-06-22（表情來源重建，推翻舊「UnlockLink 不可修」結論）**：重新驗證 06-17 的結論——當時誤判 `Emote.UnlockLink` 為物品 id、直接查 Item 得到神典石/過期裝備，故放棄 198 筆。實測證實正確反查路徑是反向走 `Item.ItemAction`：表情書物品的 `ItemAction.Data = [UnlockLink, 5211, EmoteRowId, …]`，以 XIVAPI search `query=ItemAction.Data[1]=5211` 過濾、`Data[2]` 對回 emote。新增 `scripts/build-emotes.mjs` 重建 data/emotes.json：(1) 繁中名全 292 走 Cafemaker 簡中 Emote 名→OpenCC s2twp，補到 260/292（餘 32 為簡中服未開放之最新表情如 Breaking/各城啜飲/茶，前端隱藏）；(2) 來源分桶 240/292＝預設94（UnlockLink=0）＋動作指南書132（反查書物品，itemId 改填真實書物品 id 連市場、detail 帶 tw-items 台服書名如「演技教材·沉思」）＋任務14（UnlockLink≥65536＝Quest row id，繁中任務名走 Cafemaker→OpenCC）；(3) 餘 52 筆小值 UnlockLink、無書物品（金碟 MGP／成就／活動／聯動）後續全數補齊（見下）。schema 新增 `unlockLink`、`category` 欄位，`itemId` 正名為真實書物品 id。前端 emotes/index.html 加入來源標籤、取得方式說明、來源篩選（比照 mounts 頁）。**來源補完（同日）**：發現書物品偵測漏掉「新版書」（Data 結構改變，Data[1] 不再固定 5211、emote id 不在 Data[2]）與「Battlefield Etiquette」軍事系列書（名稱非 Ballroom）。改用唯一穩定關係 `ItemAction.Data[0] == Emote.UnlockLink`、以 `Name~"Etiquette"` ∪ `Data[1]=5211` 聯集列舉（143 本書），多救回 31 筆書物品表情（ranger/simulation/paint/jump/sip/gulp/tea/taco 等）。剩 21 筆任務/成就/App 以 build-emotes.mjs 內 MANUAL_SOURCES 補（key=unlockLink；14 任務+1 任務(水中翻+開放潛水「遨遊大海！」)+4 健身成就「可靠的隊長1」+2 Companion App「神典石」表情），繁中任務/成就名由英文名→XIVAPI row→Cafemaker→OpenCC，來源逐筆查 consolegameswiki + ffxivcollect API 佐證。**最終 292/292 全有來源**（預設94/動作指南書163/任務29/成就4/App2），未補 0。
 
 - **2026-06-22（exploration-log name 全量修正）**：修正 data/exploration-log.json 全 340 筆中 228 筆 name 欄位，改為台服官方譯名。資料來源：thewakingsands/ffxiv-datamining-tc Adventure.csv（adventureId 2162688+序號-1 映射到繁中名稱）。方法：逐一比對 adventureId→TW 景觀名，涵蓋 ARR 部分筆、HW（081-142）、SB（143-204）、ShB（205-244）、EW（245-300）、DT（301-340）全數修正。修正後無殘差（0 differences），同時修正了 ARR 中 26 筆先前 tw-places 策略未能覆蓋的景觀名（如「航海女神」→「小麥酒港的利姆萊茵像」，「潮汐之門」→「南北防波堤」等）。
 

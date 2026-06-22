@@ -29,7 +29,7 @@
 
       --text-primary:   #e8eaf0;
       --text-secondary: #8892a4;
-      --text-muted:     #4a5568;
+      --text-muted:     #717c91;
 
       --radius-sm: 6px;
       --radius-md: 10px;
@@ -371,6 +371,41 @@
       border-color: rgba(167,139,250,0.2);
     }
 
+    /* ── Source tags ── */
+    .em-sources {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      justify-content: center;
+      margin-top: 2px;
+    }
+    .source-tag {
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 99px;
+      background: var(--purple-dim);
+      color: var(--purple);
+      border: 1px solid rgba(167,139,250,0.2);
+      white-space: nowrap;
+    }
+    .source-tag.placeholder {
+      background: rgba(255,255,255,0.04);
+      color: var(--text-muted);
+      border-color: var(--border);
+    }
+    .source-tag.type-預設     { background: rgba(74,222,128,0.1);  color: var(--green); border-color: rgba(74,222,128,0.2); }
+    .source-tag.type-任務     { background: rgba(79,195,247,0.1);  color: var(--blue); border-color: rgba(79,195,247,0.2); }
+    .source-tag.type-動作指南書 { background: rgba(200,169,110,0.12); color: var(--gold); border-color: rgba(200,169,110,0.25); }
+    .source-tag.type-成就     { background: rgba(255,200,80,0.1);  color: #ffc850; border-color: rgba(255,200,80,0.2); }
+    .source-tag.type-App      { background: rgba(167,139,250,0.12); color: var(--purple); border-color: rgba(167,139,250,0.25); }
+
+    .em-detail {
+      font-size: 10px;
+      color: var(--text-muted);
+      line-height: 1.3;
+      word-break: break-word;
+    }
+
     /* ── Empty state ── */
     .empty-state {
       text-align: center;
@@ -449,6 +484,12 @@
     <div class="filter-tags" id="patchFilters"></div>
   </div>
 
+  <!-- Source filter -->
+  <div class="filter-section" id="sourceFilterSection" style="display:none">
+    <div class="filter-label">取得來源</div>
+    <div class="filter-tags" id="sourceFilters"></div>
+  </div>
+
   <!-- Result meta -->
   <div class="result-meta" id="resultMeta"></div>
 
@@ -482,9 +523,11 @@
   // ── State ──
   let EM_DATA = [];
   let PATCHES = [];
+  let SOURCE_TYPES = [];
   let owned = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
   let filterOwn = 'all';     // all | owned | missing
   let filterPatch = null;    // string | null
+  let filterSource = null;   // string | null
   let searchQ = '';
 
   // ── Unique key ──
@@ -534,6 +577,23 @@
     });
   }
 
+  // ── Source filter renderer ──
+  function renderSourceFilters() {
+    const wrap = document.getElementById('sourceFilters');
+    wrap.innerHTML = '';
+    SOURCE_TYPES.forEach(v => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-tag' + (filterSource === v ? ' active' : '');
+      btn.textContent = v;
+      btn.addEventListener('click', () => {
+        filterSource = filterSource === v ? null : v;
+        renderSourceFilters();
+        renderGrid();
+      });
+      wrap.appendChild(btn);
+    });
+  }
+
   // ── Filter ──
   function filtered() {
     return EM_DATA.filter(e => {
@@ -543,6 +603,12 @@
       if (filterOwn === 'missing' &&  owned.has(k)) return false;
 
       if (filterPatch && e.patch !== filterPatch) return false;
+
+      if (filterSource) {
+        const types = (e.sources || []).map(s => s.type);
+        const match = filterSource === '待補充' ? types.length === 0 : types.includes(filterSource);
+        if (!match) return false;
+      }
 
       if (searchQ) {
         const q = searchQ.toLowerCase();
@@ -602,10 +668,21 @@
         ? `<span class="tag patch-tag">ver ${e.patch}</span>`
         : '';
 
+      // 來源標籤 + 取得方式
+      const sources = e.sources || [];
+      const sourceTags = sources.length
+        ? sources.map(s => `<span class="source-tag type-${s.type}">${s.type}</span>`).join('')
+        : `<span class="source-tag placeholder">待補充</span>`;
+      const detailText = sources.length
+        ? sources.map(s => s.detail).filter(Boolean).join('、')
+        : '取得方式待補充';
+
       card.innerHTML = `
         <div class="em-icon-wrap">${iconHtml}</div>
         ${nameHtml}
         ${cmdHtml}
+        <div class="em-sources">${sourceTags}</div>
+        <div class="em-detail">${detailText}</div>
         <div class="em-tags">${patchHtml}</div>
       `;
 
@@ -710,6 +787,21 @@
       if (PATCHES.length > 0) {
         document.getElementById('patchFilterSection').style.display = '';
         renderPatchFilters();
+      }
+
+      // 來源類型清單（固定排序，未補的歸「待補充」）
+      const ORDER = ['預設', '動作指南書', '任務', '成就', 'App', '待補充'];
+      const typeSet = new Set();
+      EM_DATA.forEach(e => {
+        const types = (e.sources || []).map(s => s.type);
+        if (types.length === 0) typeSet.add('待補充');
+        else types.forEach(t => typeSet.add(t));
+      });
+      SOURCE_TYPES = ORDER.filter(t => typeSet.has(t))
+        .concat([...typeSet].filter(t => !ORDER.includes(t)));
+      if (SOURCE_TYPES.length > 0) {
+        document.getElementById('sourceFilterSection').style.display = '';
+        renderSourceFilters();
       }
 
       updateProgress();

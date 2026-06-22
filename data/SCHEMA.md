@@ -490,18 +490,34 @@ ARR 2.x / HW 3.x / SB 4.x / ShB 5.x / EW 6.x / DT 7.x
 
 ```json
 {
-  "id": 1,
-  "name": "歡呼",
-  "nameEn": "Cheer",
-  "command": "/cheer",
-  "itemId": null,
-  "icon": "/i/064000/064001.png",
-  "sources": [{ "type": "商店", "detail": "預設動作" }],
-  "patch": "2.0"
+  "id": 82,
+  "name": "表情：沉思",
+  "nameEn": "Reflect",
+  "command": "/reflect",
+  "unlockLink": 389,
+  "itemId": 22498,
+  "icon": "/i/246000/246126.png",
+  "category": "Expressions",
+  "sources": [{ "type": "動作指南書", "detail": "習得自「演技教材·沉思」" }],
+  "patch": null
 }
 ```
 
-`command`：文字指令。`itemId`：若由動作書解鎖，填該書物品 id。
+`command`：文字指令。`unlockLink`：`Emote.UnlockLink`，`0` 代表預設動作。`itemId`：真正的表情書物品 id（連市場查價），無對應書物品則 `null`。`category`：`EmoteCategory`（General / Special / Expressions）。
+
+**來源（sources）分桶**（由 `scripts/build-emotes.mjs` 產生，全 292 筆皆有來源）：
+
+| type | 判定 | detail | 筆數 |
+|------|------|--------|------|
+| `預設` | `unlockLink === 0` | 預設動作（角色初始即可使用） | 94 |
+| `動作指南書` | 反查到表情書物品 | 習得自「<台服書名>」（itemId 連市場；台服未開放的書無譯名時顯示泛稱） | 163 |
+| `任務` | `unlockLink >= 65536`（= Quest row id）或 `MANUAL_SOURCES` | 任務「<繁中任務名>」獎勵 | 29 |
+| `成就` | `MANUAL_SOURCES` | 成就「<繁中成就名>」獎勵 | 4 |
+| `App` | `MANUAL_SOURCES` | 下載並登入 Companion App（手機） | 2 |
+
+> ⚠️ 舊版誤把 `Emote.UnlockLink` 當成物品 id 直接查 Item，導致對應到神典石/過期裝備、198 筆 `name=null` 被隱藏。正確反查路徑：表情書物品（名為「Ballroom Etiquette」/「Battlefield Etiquette」，台服「演技教材·」）的 `ItemAction.Data[0] == Emote.UnlockLink`（一本書可解鎖共用同 UnlockLink 的多個表情）。書物品以 `Name~"Etiquette"` ∪ 舊版 `Data[1]=5211` 聯集列舉。
+>
+> 小值 `unlockLink`、無表情書者（任務/成就/App 解鎖）以 `scripts/build-emotes.mjs` 內的 `MANUAL_SOURCES`（key = unlockLink）補齊，繁中任務/成就名由英文名→XIVAPI Quest/Achievement row→Cafemaker `Name_chs`→OpenCC，來源逐筆查 FFXIV consolegameswiki + ffxivcollect API 佐證。繁中表情名走 Cafemaker 簡中 Emote 名 → OpenCC `s2twp`（與站內其他無台服譯名資料一致）。
 
 ### 2.11 orchestrion（樂譜）
 
