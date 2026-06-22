@@ -1,13 +1,13 @@
 {
   "schema": "emotes",
   "patch": "7.2",
-  "updated": "2026-06-16",
+  "updated": "2026-06-17",
   "source": "xivapi+tw-items",
   "count": 292,
   "data": [
     {
       "id": 1,
-      "name": null,
+      "name": "驚訝",
       "nameEn": "Surprised",
       "command": "/surprised",
       "itemId": null,
@@ -17,7 +17,7 @@
     },
     {
       "id": 2,
-      "name": null,
+      "name": "不滿",
       "nameEn": "Angry",
       "command": "/angry",
       "itemId": null,
@@ -27,7 +27,7 @@
     },
     {
       "id": 3,
-      "name": null,
+      "name": "憤怒",
       "nameEn": "Furious",
       "command": "/furious",
       "itemId": null,
@@ -37,7 +37,7 @@
     },
     {
       "id": 4,
-      "name": null,
+      "name": "害羞",
       "nameEn": "Blush",
       "command": "/blush",
       "itemId": null,
@@ -47,7 +47,7 @@
     },
     {
       "id": 5,
-      "name": null,
+      "name": "行禮",
       "nameEn": "Bow",
       "command": "/bow",
       "itemId": null,
@@ -57,7 +57,7 @@
     },
     {
       "id": 6,
-      "name": null,
+      "name": "加油",
       "nameEn": "Cheer",
       "command": "/cheer",
       "itemId": null,
@@ -67,7 +67,7 @@
     },
     {
       "id": 7,
-      "name": null,
+      "name": "拍手",
       "nameEn": "Clap",
       "command": "/clap",
       "itemId": null,
@@ -77,7 +77,7 @@
     },
     {
       "id": 8,
-      "name": null,
+      "name": "招手",
       "nameEn": "Beckon",
       "command": "/beckon",
       "itemId": null,
@@ -87,7 +87,7 @@
     },
     {
       "id": 9,
-      "name": null,
+      "name": "安慰",
       "nameEn": "Comfort",
       "command": "/comfort",
       "itemId": null,
@@ -97,7 +97,7 @@
     },
     {
       "id": 10,
-      "name": null,
+      "name": "哭泣",
       "nameEn": "Cry",
       "command": "/cry",
       "itemId": null,
@@ -107,7 +107,7 @@
     },
     {
       "id": 11,
-      "name": null,
+      "name": "跳舞",
       "nameEn": "Dance",
       "command": "/dance",
       "itemId": null,
@@ -117,7 +117,7 @@
     },
     {
       "id": 12,
-      "name": null,
+      "name": "質疑",
       "nameEn": "Doubt",
       "command": "/doubt",
       "itemId": null,
@@ -127,7 +127,7 @@
     },
     {
       "id": 13,
-      "name": null,
+      "name": "打盹",
       "nameEn": "Doze",
       "command": "/doze",
       "itemId": null,
@@ -137,7 +137,7 @@
     },
     {
       "id": 14,
-      "name": null,
+      "name": "後悔",
       "nameEn": "Fume",
       "command": "/fume",
       "itemId": null,
@@ -147,7 +147,7 @@
     },
     {
       "id": 15,
-      "name": null,
+      "name": "道別",
       "nameEn": "Goodbye",
       "command": "/goodbye",
       "itemId": null,
@@ -157,7 +157,7 @@
     },
     {
       "id": 16,
-      "name": null,
+      "name": "揮手",
       "nameEn": "Wave",
       "command": "/wave",
       "itemId": null,
@@ -167,7 +167,7 @@
     },
     {
       "id": 17,
-      "name": null,
+      "name": "莫名",
       "nameEn": "Huh",
       "command": "/huh",
       "itemId": null,
@@ -177,7 +177,7 @@
     },
     {
       "id": 18,
-      "name": null,
+      "name": "高興",
       "nameEn": "Joy",
       "command": "/joy",
       "itemId": null,
@@ -187,7 +187,7 @@
     },
     {
       "id": 19,
-      "name": null,
+      "name": "下跪",
       "nameEn": "Kneel",
       "command": "/kneel",
       "itemId": null,
@@ -197,7 +197,7 @@
     },
     {
       "id": 20,
-      "name": null,
+      "name": "輕笑",
       "nameEn": "Chuckle",
       "command": "/chuckle",
       "itemId": null,
@@ -207,7 +207,7 @@
     },
     {
       "id": 21,
-      "name": null,
+      "name": "大笑",
       "nameEn": "Laugh",
       "command": "/laugh",
       "itemId": null,
@@ -217,7 +217,7 @@
     },
     {
       "id": 22,
-      "name": null,
+      "name": "張望",
       "nameEn": "Lookout",
       "command": "/lookout",
       "itemId": null,
@@ -227,7 +227,7 @@
     },
     {
       "id": 23,
-      "name": null,
+      "name": "展示",
       "nameEn": "Me",
       "command": "/me",
       "itemId": null,
@@ -237,7 +237,7 @@
     },
     {
       "id": 24,
-      "name": null,
+      "name": "搖頭",
       "nameEn": "No",
       "command": "/no",
       "itemId": null,
@@ -247,7 +247,7 @@
     },
     {
       "id": 25,
-      "name": null,
+      "name": "否定",
       "nameEn": "Deny",
       "command": "/deny",
       "itemId": null,
@@ -257,7 +257,7 @@
     },
     {
       "id": 26,
-      "name": null,
+      "name": "慌張",
       "nameEn": "Panic",
       "command": "/panic",
       "itemId": null,
@@ -267,7 +267,7 @@
     },
     {
       "id": 27,
-      "name": null,
+      "name": "指向",
       "nameEn": "Point",
       "command": "/point",
       "itemId": null,
@@ -277,7 +277,7 @@
     },
     {
       "id": 28,
-      "name": null,
+      "name": "戳指",
       "nameEn": "Poke",
       "command": "/poke",
       "itemId": null,
@@ -287,7 +287,7 @@
     },
     {
       "id": 29,
-      "name": null,
+      "name": "稱讚",
       "nameEn": "Congratulate",
       "command": "/congratulate",
       "itemId": null,
@@ -297,7 +297,7 @@
     },
     {
       "id": 30,
-      "name": null,
+      "name": "激勵",
       "nameEn": "Psych",
       "command": "/psych",
       "itemId": null,
@@ -307,7 +307,7 @@
     },
     {
       "id": 31,
-      "name": null,
+      "name": "敬禮",
       "nameEn": "Salute",
       "command": "/salute",
       "itemId": null,
@@ -317,7 +317,7 @@
     },
     {
       "id": 32,
-      "name": null,
+      "name": "震驚",
       "nameEn": "Shocked",
       "command": "/shocked",
       "itemId": null,
@@ -327,7 +327,7 @@
     },
     {
       "id": 33,
-      "name": null,
+      "name": "聳肩",
       "nameEn": "Shrug",
       "command": "/shrug",
       "itemId": null,
@@ -337,7 +337,7 @@
     },
     {
       "id": 34,
-      "name": null,
+      "name": "鼓勵",
       "nameEn": "Rally",
       "command": "/rally",
       "itemId": null,
@@ -347,7 +347,7 @@
     },
     {
       "id": 35,
-      "name": null,
+      "name": "安撫",
       "nameEn": "Soothe",
       "command": "/soothe",
       "itemId": null,
@@ -357,7 +357,7 @@
     },
     {
       "id": 36,
-      "name": null,
+      "name": "迷糊",
       "nameEn": "Stagger",
       "command": "/stagger",
       "itemId": null,
@@ -367,7 +367,7 @@
     },
     {
       "id": 37,
-      "name": null,
+      "name": "伸展",
       "nameEn": "Stretch",
       "command": "/stretch",
       "itemId": null,
@@ -377,7 +377,7 @@
     },
     {
       "id": 38,
-      "name": null,
+      "name": "慪怒",
       "nameEn": "Sulk",
       "command": "/sulk",
       "itemId": null,
@@ -387,7 +387,7 @@
     },
     {
       "id": 39,
-      "name": null,
+      "name": "思考",
       "nameEn": "Think",
       "command": "/think",
       "itemId": null,
@@ -397,7 +397,7 @@
     },
     {
       "id": 40,
-      "name": null,
+      "name": "失望",
       "nameEn": "Upset",
       "command": "/upset",
       "itemId": null,
@@ -407,7 +407,7 @@
     },
     {
       "id": 41,
-      "name": null,
+      "name": "歡迎",
       "nameEn": "Welcome",
       "command": "/welcome",
       "itemId": null,
@@ -417,7 +417,7 @@
     },
     {
       "id": 42,
-      "name": null,
+      "name": "點頭",
       "nameEn": "Yes",
       "command": "/yes",
       "itemId": null,
@@ -427,7 +427,7 @@
     },
     {
       "id": 43,
-      "name": null,
+      "name": "肯定",
       "nameEn": "Thumbs Up",
       "command": "/thumbsup",
       "itemId": null,
@@ -437,7 +437,7 @@
     },
     {
       "id": 44,
-      "name": null,
+      "name": "自視",
       "nameEn": "Examine Self",
       "command": "/examineself",
       "itemId": null,
@@ -447,7 +447,7 @@
     },
     {
       "id": 45,
-      "name": null,
+      "name": "擺造型",
       "nameEn": "Pose",
       "command": "/pose",
       "itemId": null,
@@ -457,7 +457,7 @@
     },
     {
       "id": 46,
-      "name": null,
+      "name": "飛吻",
       "nameEn": "Blow Kiss",
       "command": "/blowkiss",
       "itemId": null,
@@ -467,7 +467,7 @@
     },
     {
       "id": 47,
-      "name": null,
+      "name": "下跪認錯",
       "nameEn": "Grovel",
       "command": "/grovel",
       "itemId": null,
@@ -477,7 +477,7 @@
     },
     {
       "id": 48,
-      "name": null,
+      "name": "欣喜若狂",
       "nameEn": "Happy",
       "command": "/happy",
       "itemId": null,
@@ -487,7 +487,7 @@
     },
     {
       "id": 49,
-      "name": null,
+      "name": "大失所望",
       "nameEn": "Disappointed",
       "command": "/disappointed",
       "itemId": null,
@@ -497,7 +497,7 @@
     },
     {
       "id": 50,
-      "name": null,
+      "name": "坐下",
       "nameEn": "Sit",
       "command": "/lounge",
       "itemId": null,
@@ -507,7 +507,7 @@
     },
     {
       "id": 52,
-      "name": null,
+      "name": "坐下到地上",
       "nameEn": "Sit on Ground",
       "command": "/groundsit",
       "itemId": null,
@@ -517,7 +517,7 @@
     },
     {
       "id": 54,
-      "name": null,
+      "name": "引用",
       "nameEn": "Air Quotes",
       "command": "/airquotes",
       "itemId": null,
@@ -527,7 +527,7 @@
     },
     {
       "id": 55,
-      "name": null,
+      "name": "黑渦團軍禮",
       "nameEn": "Storm Salute",
       "command": "/gcsalute",
       "itemId": null,
@@ -537,7 +537,7 @@
     },
     {
       "id": 56,
-      "name": null,
+      "name": "雙蛇黨軍禮",
       "nameEn": "Serpent Salute",
       "command": "/gcsalute",
       "itemId": null,
@@ -547,7 +547,7 @@
     },
     {
       "id": 57,
-      "name": null,
+      "name": "恆輝隊軍禮",
       "nameEn": "Flame Salute",
       "command": "/gcsalute",
       "itemId": null,
@@ -557,7 +557,7 @@
     },
     {
       "id": 58,
-      "name": null,
+      "name": "祈願",
       "nameEn": "Pray",
       "command": "/pray",
       "itemId": null,
@@ -577,7 +577,7 @@
     },
     {
       "id": 60,
-      "name": null,
+      "name": "頭部裝備操作",
       "nameEn": "Visor",
       "command": "/visor",
       "itemId": null,
@@ -647,7 +647,7 @@
     },
     {
       "id": 68,
-      "name": null,
+      "name": "表情：平常",
       "nameEn": "Straight Face",
       "command": "/straightface",
       "itemId": null,
@@ -657,7 +657,7 @@
     },
     {
       "id": 69,
-      "name": null,
+      "name": "表情：微笑",
       "nameEn": "Smile",
       "command": "/smile",
       "itemId": null,
@@ -667,7 +667,7 @@
     },
     {
       "id": 70,
-      "name": null,
+      "name": "表情：笑顏",
       "nameEn": "Grin",
       "command": "/grin",
       "itemId": null,
@@ -677,7 +677,7 @@
     },
     {
       "id": 71,
-      "name": null,
+      "name": "表情：自信",
       "nameEn": "Smirk",
       "command": "/smirk",
       "itemId": null,
@@ -687,7 +687,7 @@
     },
     {
       "id": 72,
-      "name": null,
+      "name": "表情：無畏",
       "nameEn": "Taunt",
       "command": "/taunt",
       "itemId": null,
@@ -697,7 +697,7 @@
     },
     {
       "id": 73,
-      "name": null,
+      "name": "表情：閉目",
       "nameEn": "Shut Eyes",
       "command": "/shuteyes",
       "itemId": null,
@@ -707,7 +707,7 @@
     },
     {
       "id": 74,
-      "name": null,
+      "name": "表情：悲傷",
       "nameEn": "Sad",
       "command": "/sad",
       "itemId": null,
@@ -717,7 +717,7 @@
     },
     {
       "id": 75,
-      "name": null,
+      "name": "表情：恐懼",
       "nameEn": "Scared",
       "command": "/scared",
       "itemId": null,
@@ -727,7 +727,7 @@
     },
     {
       "id": 76,
-      "name": null,
+      "name": "表情：意外",
       "nameEn": "Amazed",
       "command": "/amazed",
       "itemId": null,
@@ -737,7 +737,7 @@
     },
     {
       "id": 77,
-      "name": null,
+      "name": "表情：痛苦",
       "nameEn": "Ouch",
       "command": "/ouch",
       "itemId": null,
@@ -747,7 +747,7 @@
     },
     {
       "id": 78,
-      "name": null,
+      "name": "表情：反感",
       "nameEn": "Annoyed",
       "command": "/annoyed",
       "itemId": null,
@@ -757,7 +757,7 @@
     },
     {
       "id": 79,
-      "name": null,
+      "name": "表情：吃驚",
       "nameEn": "Alert",
       "command": "/alert",
       "itemId": null,
@@ -767,7 +767,7 @@
     },
     {
       "id": 80,
-      "name": null,
+      "name": "表情：擔心",
       "nameEn": "Worried",
       "command": "/worried",
       "itemId": null,
@@ -797,7 +797,7 @@
     },
     {
       "id": 83,
-      "name": null,
+      "name": "表情：皺眉",
       "nameEn": "Furrow",
       "command": "/furrow",
       "itemId": null,
@@ -807,7 +807,7 @@
     },
     {
       "id": 84,
-      "name": null,
+      "name": "表情：苦笑",
       "nameEn": "Scoff",
       "command": "/scoff",
       "itemId": null,
@@ -827,7 +827,7 @@
     },
     {
       "id": 90,
-      "name": null,
+      "name": "改變姿勢",
       "nameEn": "Change Pose",
       "command": "/changepose",
       "itemId": null,
@@ -877,7 +877,7 @@
     },
     {
       "id": 105,
-      "name": null,
+      "name": "撫摸",
       "nameEn": "Pet",
       "command": "/stroke",
       "itemId": null,
@@ -887,7 +887,7 @@
     },
     {
       "id": 106,
-      "name": null,
+      "name": "遞交",
       "nameEn": "Hand Over",
       "command": "/handover",
       "itemId": null,
@@ -917,7 +917,7 @@
     },
     {
       "id": 111,
-      "name": null,
+      "name": "甩巴掌",
       "nameEn": "Slap",
       "command": "/slap",
       "itemId": null,
@@ -927,7 +927,7 @@
     },
     {
       "id": 112,
-      "name": null,
+      "name": "擁抱",
       "nameEn": "Hug",
       "command": "/hug",
       "itemId": null,
@@ -1117,7 +1117,7 @@
     },
     {
       "id": 133,
-      "name": null,
+      "name": "表情：右飛眼",
       "nameEn": "Wink (Right)",
       "command": "/wink",
       "itemId": null,
@@ -1157,7 +1157,7 @@
     },
     {
       "id": 137,
-      "name": null,
+      "name": "捂臉",
       "nameEn": "Facepalm",
       "command": "/facepalm",
       "itemId": null,
@@ -1177,7 +1177,7 @@
     },
     {
       "id": 139,
-      "name": null,
+      "name": "肉體之美",
       "nameEn": "Flex",
       "command": "/flex",
       "itemId": null,
@@ -1187,7 +1187,7 @@
     },
     {
       "id": 140,
-      "name": null,
+      "name": "默哀",
       "nameEn": "Pay Respects",
       "command": "/respect",
       "itemId": null,
@@ -1197,7 +1197,7 @@
     },
     {
       "id": 141,
-      "name": null,
+      "name": "表情：陰險",
       "nameEn": "Sneer",
       "command": "/sneer",
       "itemId": null,
@@ -1277,7 +1277,7 @@
     },
     {
       "id": 150,
-      "name": null,
+      "name": "浮水",
       "nameEn": "Water Float",
       "command": "/waterfloat",
       "itemId": null,
@@ -1297,7 +1297,7 @@
     },
     {
       "id": 152,
-      "name": null,
+      "name": "表情：嘟嘴",
       "nameEn": "Pucker Up",
       "command": "/puckerup",
       "itemId": null,
@@ -1367,7 +1367,7 @@
     },
     {
       "id": 159,
-      "name": null,
+      "name": "說話",
       "nameEn": "Converse",
       "command": "/converse",
       "itemId": null,
@@ -1377,7 +1377,7 @@
     },
     {
       "id": 160,
-      "name": null,
+      "name": "表情：認真",
       "nameEn": "Concentrate",
       "command": "/concentrate",
       "itemId": null,
@@ -1387,7 +1387,7 @@
     },
     {
       "id": 161,
-      "name": null,
+      "name": "表情：困惑",
       "nameEn": "Confused",
       "command": "/disturbed",
       "itemId": null,
@@ -1397,7 +1397,7 @@
     },
     {
       "id": 162,
-      "name": null,
+      "name": "表情：柔和",
       "nameEn": "Simper",
       "command": "/simper",
       "itemId": null,
@@ -1407,7 +1407,7 @@
     },
     {
       "id": 163,
-      "name": null,
+      "name": "表情：滿足",
       "nameEn": "Beam",
       "command": "/beam",
       "itemId": null,
@@ -1587,7 +1587,7 @@
     },
     {
       "id": 184,
-      "name": null,
+      "name": "表情：左飛眼",
       "nameEn": "Wink (Left)",
       "command": "/leftwink",
       "itemId": null,
@@ -2007,7 +2007,7 @@
     },
     {
       "id": 228,
-      "name": null,
+      "name": "表情：假笑",
       "nameEn": "Fake Smile",
       "command": "/fakesmile",
       "itemId": null,
@@ -2057,7 +2057,7 @@
     },
     {
       "id": 233,
-      "name": null,
+      "name": "抱頭",
       "nameEn": "Clutch Head",
       "command": "/clutchhead",
       "itemId": null,
@@ -2087,7 +2087,7 @@
     },
     {
       "id": 236,
-      "name": null,
+      "name": "表情：幸福",
       "nameEn": "Content",
       "command": "/content",
       "itemId": null,
@@ -2537,7 +2537,7 @@
     },
     {
       "id": 288,
-      "name": null,
+      "name": "拍照",
       "nameEn": "Photograph",
       "command": "/photograph",
       "itemId": null,

@@ -3,7 +3,7 @@
 > **給 Claude / 後續對話的指示**：開始任何工作前先讀本檔。完成任何功能或資料變更後，**必須更新本檔**（狀態表 + 更新紀錄），並同步 `data/_meta.json` 的 status。
 > 規格細節見 `docs/feature-specs.md`，資料格式見 `data/SCHEMA.md`。
 
-**最後更新**：2026-06-17（冒險者小隊計算機、園藝配種計算、釣魚紀錄追蹤、採集紀錄追蹤 完成；data/gardening.json 新增）
+**最後更新**：2026-06-22（exploration-log name 欄位全量修正：228 筆 HW/SB/ShB/EW/DT 景觀名改為台服官方譯名，來源 thewakingsands/ffxiv-datamining-tc Adventure.csv）
 **網站**：https://seagod99.github.io ｜ GitHub Pages 純靜態 ｜ 遊戲版本 7.2
 
 ---
@@ -31,10 +31,10 @@
 | 2.1 | 坐騎收藏追蹤 | `/collections/mounts/` | 完成（改接 data/mounts.json 385筆+圖片，篩選/追蹤重做，06-15重做） |
 | 2.2 | 寵物收藏追蹤 | `/minions/` | 完成（整頁重做，改接 data/minions.json+本機圖示，source 欄位修正，06-15重做） |
 | 2.3 | 樂譜收藏追蹤 | `/collections/orchestrion/` | 完成（接 data/orchestrion.json 724筆/618筆可顯示，版本篩選，06-16新增） |
-| 2.4 | 表情收藏追蹤 | `/collections/emotes/` | 開發中（接 data/emotes.json 292筆，頁面已建，繁中名待補：XIVAPI UnlockLink 對應錯誤，需從 tw-items 查表情動作書名稱，06-16新增） |
+| 2.4 | 表情收藏追蹤 | `/collections/emotes/` | 完成（接 data/emotes.json 292筆；繁中名 94/292 筆補齊：預設表情（itemId=null）94 筆用 Cafemaker 簡中+OpenCC s2twp 轉繁中；有 itemId 的 198 筆因 XIVAPI UnlockLink 錯誤（對應到神典石/過期裝備而非表情書），name=null 前端隱藏；前端顯示 94 筆；06-17 完成） |
 | 2.5 | 髮型收藏追蹤 | `/collections/hairstyles/` | 完成（39 筆台服已開放髮型，版本/來源篩選，06-16新增） |
 | 2.6 | 鳥鞍收藏追蹤 | `/collections/barding/` | 完成（接 data/barding.json 106筆，部位/來源篩選，15筆無sources標待補充，06-15新增） |
-| 2.9 | 探索筆記追蹤器 | `/collections/exploration-log/` | 開發中（接 data/exploration-log.json 340筆，頁面已建，繁中景觀名與座標待補：全英文名+無座標，需從 Teamcraft 或 XIVAPI 補充，06-16新增） |
+| 2.9 | 探索筆記追蹤器 | `/collections/exploration-log/` | 完成（340筆，繁中景觀名已補齊：cafemaker Name_chs→手動繁化，座標因 XIVAPI SightseeingLog 不回傳而保持 null，06-17景觀名補完） |
 | 2.10 | 青魔法術收藏 | `/collections/blue-magic/` | 完成（改接 data/blue-magic.json 124筆，副本來源用 contentId 對 dungeons.json 取繁中名，野外/怪物來源並列，14筆無資料標待補充，06-15新增） |
 | 2.11 | 幻卡追蹤 | `/collections/triple-triad/` | 完成（接 data/triple-triad.json 425筆，星級/類型/來源篩選，NPC對戰顯示地點，06-15新增） |
 
@@ -185,6 +185,14 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 6. 其他規劃：時尚品鑑、冒險者小隊計算機、藏寶圖、園藝配種、釣魚紀錄
 
 ## 五、更新紀錄
+
+- **2026-06-22（exploration-log name 全量修正）**：修正 data/exploration-log.json 全 340 筆中 228 筆 name 欄位，改為台服官方譯名。資料來源：thewakingsands/ffxiv-datamining-tc Adventure.csv（adventureId 2162688+序號-1 映射到繁中名稱）。方法：逐一比對 adventureId→TW 景觀名，涵蓋 ARR 部分筆、HW（081-142）、SB（143-204）、ShB（205-244）、EW（245-300）、DT（301-340）全數修正。修正後無殘差（0 differences），同時修正了 ARR 中 26 筆先前 tw-places 策略未能覆蓋的景觀名（如「航海女神」→「小麥酒港的利姆萊茵像」，「潮汐之門」→「南北防波堤」等）。
+
+- **2026-06-17（exploration-log tw-places 官方台服名修正）**：重新以 Teamcraft tw-places.json 官方台服譯名修正 data/exploration-log.json 的 name 欄位。作法：從 places.json（PlaceName sheet）建立 en 名→id 對照表，再對照 tw-places 字典更新每筆景觀點的 name。共更新 49 筆（其中代表性修正：Seasong Grotto 海之歌岩洞→海詞石窟、Red Rooster Stead 赤雞莊園→赤血雄雞農場、The Invisible City 隱形之城→消逝王都、Little Solace 小慰藉→風精靈暫留地）；3 筆已正確無需改；286 筆為 HW 以後版本地名（tw-places 子集未覆蓋）、2 筆無台服譯名（Haukke Manor id=59、The Sunken Temple of Qarn id=50 在子集內但無 tw 對應）。
+
+- **2026-06-17（探索筆記繁中景觀名補完）**：補齊 data/exploration-log.json 全 340 筆景觀名（name 欄位）。資料來源：cafemaker.wakingsands.com PlaceName pages 1-11（簡中 Name_chs）→ 人工繁化（簡→繁體字形）。tw-places.json 因 Teamcraft CDN 在沙箱環境無法取得，採 CN+OpenCC fallback 策略（符合記憶規則）。XIVAPI v2 SightseeingLog 確認回傳空陣列，座標維持 null。新增 data/scripts/patch-exploration-log.mjs（340 筆對映表，可日後升級為 tw-places 來源）。前端頁面無需修改（已接 b.name 欄位）。頁面狀態由「開發中」改為「完成」。
+
+- **2026-06-17（表情收藏繁中名補完）**：補齊 data/emotes.json 繁中名（name 欄位）。itemId=null 的 94 筆預設表情（/surprised、/bow 等）從 Cafemaker 簡中 API 取得 Name_chs，再用 OpenCC s2twp 轉繁中，全 94 筆補齊。有 itemId 的 198 筆：XIVAPI UnlockLink 已知錯誤（itemId 對到神典石/過期裝備而非表情書），故 name=null，前端隱藏（符合「台服未開放隱藏」原則，待未來找到正確表情書 itemId 時再補）。前端 emotes/index.html 加入 name=null 過濾邏輯，最終顯示 94/292 筆。搜尋含繁中名，卡片優先顯示繁中名。
 
 - **2026-06-17（小隊/配種/釣魚/採集 四頁新增）**：新增 `/tools/squadron/`（冒險者小隊任務派遣模擬器，squadron.json 34任務，9職業成長表，成功率計算，各配置自動找最高成功率 variant）；新增 `/tools/gardening/`（園藝配種計算，正查兩株→結果/反查目標→路徑，data/gardening.json 107種植物 50種有配方，來源 Teamcraft seeds.json+tw-items）；新增 `/tools/fishing/`（釣魚紀錄追蹤，fishes.json 1104筆，大魚/限時/天氣/傳承錄篩選，版本篩選，勾選追蹤）；新增 `/tools/gathering-log/`（採集紀錄追蹤，gathering.json 733節點，採礦工/園藝工，傳說/短暫/限時篩選，物品勾選追蹤）。四頁 index.html 入口卡片改為可用連結。
 - **2026-06-16（樂譜/表情/探索筆記三頁新增）**：新增 `/collections/orchestrion/`（data/orchestrion.json 724筆，618筆有繁中名，版本篩選，來源待手動補充）、`/collections/emotes/`（data/emotes.json 292筆，全暫無繁中名待補：XIVAPI UnlockLink 對應到非表情道具，需另查 tw-items；頁面以 nameEn + command 顯示）、`/collections/exploration-log/`（data/exploration-log.json 340筆，全英文景觀名+無座標待補：XIVAPI SightseeingLog 未回傳繁中名與座標，需另查 Teamcraft 資料；頁面以英文名+繁中地區顯示）。三頁入口卡片改為可用，_meta.json 同步 used。

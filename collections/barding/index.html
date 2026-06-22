@@ -756,4 +756,10 @@
       const grid = document.getElementById('bdGrid');
       const empty = document.getElementById('emptyState');
       grid.style.display = 'none';
-   
+      empty.style.display = '';
+      empty.textContent = '資料載入失敗：' + err.message;
+    });
+})();
+</script>
+</body>
+</html>

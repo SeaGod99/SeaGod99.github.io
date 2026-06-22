@@ -692,8 +692,8 @@
     })
     .then(json => {
       const raw = (json && json.data) ? json.data : [];
-      // 全部顯示（含無繁中名的表情）
-      EM_DATA = raw.slice();
+      // name=null 表示台服未開放，前端隱藏
+      EM_DATA = raw.filter(e => e.name !== null);
 
       // 排序：依 id
       EM_DATA.sort((a, b) => (a.id || 0) - (b.id || 0));
