@@ -477,7 +477,7 @@
 (function() {
   const STORAGE_KEY = 'ffxiv_emotes_owned';
   const DATA_URL = '../../data/emotes.json';
-  const ICON_BASE = 'https://xivapi.com';
+  const ICON_BASE = '../../assets/emotes'; // 地端圖示（download-emotes-icons.mjs 下載）
 
   // ── State ──
   let EM_DATA = [];
@@ -581,9 +581,10 @@
       const card = document.createElement('div');
       card.className = 'em-card' + (isOwned ? ' owned' : '');
 
-      // Icon
-      const iconHtml = e.icon
-        ? `<img class="em-icon" src="${ICON_BASE}${e.icon}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<span class=em-icon-placeholder>💃</span>'">`
+      // Icon（地端圖片：/i/246000/246201.png → 246201.webp）
+      const iconFile = e.icon ? e.icon.split('/').pop().replace(/\.png$/i, '.webp') : null;
+      const iconHtml = iconFile
+        ? `<img class="em-icon" src="${ICON_BASE}/${iconFile}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<span class=em-icon-placeholder>💃</span>'">`
         : `<span class="em-icon-placeholder">💃</span>`;
 
       // 名稱：有繁中名顯示繁中 + 英文，否則只顯示英文
