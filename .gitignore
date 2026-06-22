@@ -1,0 +1,19 @@
+# ───────── 大型二進位：圖片（約 1GB，git 不適合存） ─────────
+配裝圖片/
+
+# ───────── 外部來源資料庫（約 105MB，可另外備份） ─────────
+資料來源/
+
+# ───────── 大型衍生檔（可由 scripts 重建，不進版控） ─────────
+mirapri_outfits.js
+mirapri_data.js
+data/all_outfits_enriched.json
+data/mirapri_all.json
+data/ocr_check_result.json
+data/OCR檢查報告.md
+
+# ───────── Python / 系統雜物 ─────────
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db

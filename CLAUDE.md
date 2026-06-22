@@ -1,0 +1,424 @@
+# FF14 時尚配裝專案說明
+
+本文件說明新增套裝圖片後，如何更新 `data/curated_outfits.json` 並重建網頁資料的完整流程。
+
+---
+
+## 執行環境注意
+
+本機（Windows）的 `python` 指令是 Microsoft Store 假捷徑（執行會靜默結束），
+請一律改用 `py`，例如：`py scripts\update_all.py`、`py -m pip install pillow msgpack`。
+
+## 專案結構
+
+```
+FF14時尚配裝/
+├── index.html            # 主要展示頁面（卡片列表 + 彈出視窗）
+├── curated_outfits.js    # 精選套裝資料（由 build_site.py 從 MD 產生，頁面立即載入）
+├── mirapri_outfits.js    # 社群套裝資料（由 build_site.py 產生，頁面延遲載入）
+├── 配裝圖片/             # 套裝圖片，命名格式：{編號}-{套裝名}.jpe
+│   └── 縮圖/             # 卡片縮圖（make_thumbs.py 產生，寬 480px）
+├── scripts/
+│   ├── update_all.py     # ★ 一鍵更新總控（full / local 兩種模式）
+│   ├── build_site.py     # data/curated_outfits.json → curated/mirapri_outfits.js
+│   ├── health_check.py   # 資料健檢（缺圖、缺繁中、重複編號…）
+│   ├── make_thumbs.py    # 產生縮圖（可給秒數上限分批跑）
+│   ├── compress_mirapri.py # 壓縮 mirapri 原圖（長邊1100/q76，防重複壓縮）
+│   ├── verify_data.py    # curated 資料正確性檢查（名稱/等級/職業/取得方式 vs DB），輸出 data/驗證報告.md
+│   ├── pipeline.py       # Mirapri 抓取 + enrich 流程
+│   ├── ocr_check.py      # ★ 用 Ollama 視覺模型對圖做 OCR，比對現有資料（見「OCR 檢查流程」）
+│   └── apply_dyes.py     # 把 OCR 抓到的染色整理成每套繁中清單 → data/mirapri_dyes.json
+├── data/
+│   ├── curated_outfits.json       # ★ 精選套裝唯一資料來源（直接編輯這份）
+│   ├── all_outfits_enriched.json  # pipeline 產出，build_site.py 的社群資料來源
+│   ├── dye_names_ja.json          # 官方染色日文名白名單（ocr_check.py 降噪用）
+│   ├── dye_ja_to_zh.json          # 日文染色官方名 → 繁中名對照（apply_dyes.py 用）
+│   ├── mirapri_dyes.json          # apply_dyes.py 產出：{outfit_id: [繁中染色]}，build_site.py 併入
+│   └── mirapri_visible.json       # apply_dyes.py 產出：{outfit_id: [圖上可見裝備]}，build_site.py 用來濾掉替代裝備
+└── 資料來源/
+    ├── items.json       # 繁中道具資料庫（主要來源）
+    ├── en-items.msgpack # 英文道具名稱（msgpack 格式）
+    ├── ja-items.msgpack # 日文道具名稱（msgpack 格式）
+    ├── zh-items.msgpack # 繁中道具名稱（msgpack 格式，備用）
+    ├── sources.json     # 道具取得來源資料庫
+    └── recipes.json     # 製作配方資料庫
+```
+
+---
+
+## 套裝命名規則
+
+- 編號：兩位數字，補零（01, 02, … 34, 35…）
+- 圖片檔名：`{編號}-{套裝名}.jpe`，例如 `35-新套裝名稱.jpe`
+- 套裝名稱：中文名稱，反映外觀主題或色彩，例如「緋紅蒸汽」「白雪魔法少女」
+- 色彩描述：用 `×` 分隔主色與配色，例如 `深紅 × 黑`
+
+---
+
+## 裝備欄位（部位）
+
+| 欄位名 | 說明 |
+|--------|------|
+| 頭部 | 頭盔、帽子、髮飾等 |
+| 上身 | 上衣、外袍等 |
+| 手部 | 手套、護腕等 |
+| 腿部 | 長褲、裙子等 |
+| 腳部 | 靴子、鞋子等 |
+| 武器 | 武器（非戰鬥套裝通常省略） |
+
+特殊情況：套裝 33 有 6 個子套裝（33a–33f），每個子套裝各有獨立裝備欄位。
+
+---
+
+## 裝備名稱查詢
+
+### JSON 欄位格式（data/curated_outfits.json）
+
+每套是一個物件：
+
+```json
+{
+  "type": "curated",
+  "id": "42",
+  "name": "套裝名稱",
+  "color": "主色 × 配色",
+  "image": "配裝圖片/42-套裝名稱.jpe",
+  "note": "",
+  "gender": "female",
+  "race": "aura",
+  "pieces": [
+    {
+      "slot": "頭部", "zh": "繁中名稱", "en": "English Name", "ja": "日本語名",
+      "dye1": "—", "dye2": "—",
+      "source": "🗡️副本名稱（迷宮挑戰）", "patch": "7.0",
+      "lv": "1", "job": "全職業"
+    }
+  ]
+}
+```
+
+`st` 與 `tags` 不必填——build_site.py 會從 `source` 的 emoji 與 `job` 自動推導。
+
+### 查詢流程
+
+**步驟 1：從圖片辨識裝備**
+圖片超過 256KB 時，需先縮圖再讀取：
+```python
+from PIL import Image
+img = Image.open(path)
+img.thumbnail((800, 800))
+img.save('/tmp/thumb.jpg', 'JPEG', quality=70)
+```
+
+**步驟 2：查詢繁中名稱（ZH）**
+`資料來源/items.json` 結構：`{"items": {"道具ID": {"name": "繁中名稱", ...}}}`
+```python
+import json
+with open('資料來源/items.json', encoding='utf-8') as f:
+    items = json.load(f)['items']
+# 以名稱建立反查表
+name_map = {v['name']: v for v in items.values()}
+```
+
+**步驟 3：查詢英文名稱（EN）**
+`資料來源/en-items.msgpack` 結構：`{"道具ID": {"en": "English Name"}}`
+```python
+import msgpack
+with open('資料來源/en-items.msgpack', 'rb') as f:
+    en_data = msgpack.unpackb(f.read(), raw=False)
+# en_data: {str_id: {"en": "name"}}
+en_name_by_id = {k: v['en'] for k, v in en_data.items() if isinstance(v, dict)}
+```
+
+**步驟 4：查詢日文名稱（JA）**
+`資料來源/ja-items.msgpack` 結構同 EN，欄位為 `"ja"`。
+
+**注意事項：**
+- 繁中版資料庫（items.json）的 ID 上限約 45590，更新版本的道具可能找不到繁中名稱，留空即可
+- 以 `(outfit編號, 部位)` 的位置對應方式比名稱比對更可靠
+
+---
+
+## 取得方式查詢
+
+### 資料來源
+
+- `資料來源/sources.json`：道具取得來源，以道具 ID 為 key
+- `資料來源/recipes.json`：製作配方，包含 `classJobLevel` 欄位
+
+### 取得方式格式（Emoji 前綴）
+
+| Emoji | 類型 | st 標籤 |
+|-------|------|---------|
+| 🗡️ | 副本（迷宮挑戰、討伐歼滅戰、聯隊突擊等） | `raid` |
+| 🔶 | 巧手橙票（製作職業神典石） | `scrip` |
+| 🟣 | 製作紫票 | `scrip` |
+| 🛒 | NPC 商店 / 失物管理人 | `npc` |
+| 📋 | 任務獎勵（通常與 🛒 合併顯示） | `npc` |
+| 🔨 | 製作 | `craft` |
+| 🎲 | 金碟遊樂園 MGP | `gs` |
+| ⚔️ | PvP（狼印戰績 / 戰利水晶） | `pvp` |
+| 🪙 | 其他代幣（神典石、討伐戰利品等） | `other` |
+| 💎 | Mog Station（付費商城） | `store` |
+| 🗓️ | 季節活動 | `event` |
+
+### 副本類型對應
+
+```python
+INST_TYPE = {
+    1: '試煉', 2: '迷宮挑戰', 3: '高難度討伐',
+    4: '討伐歼滅戰', 5: '聯隊突擊', 6: '絕境戰',
+    22: '聯隊突擊', 28: '幻洋奇境'
+}
+```
+
+### 特殊情況
+
+- **幻洋奇境裝備升級**：`specialshop` 的 `currencyItemId` 指向裝備道具（categoryId 1–49），顯示為「🗡️幻洋奇境（裝備升級）」
+- **PvP 貨幣**：ID 25（狼印戰績）、36656、40479 顯示為「⚔️PvP …」
+- **MGP**：ID 29、41629 顯示為「🎲金碟遊樂園 MGP×…」
+
+---
+
+## 裝備限制查詢
+
+### 資料來源
+
+`資料來源/items.json` 中每個道具的 `equipStats` 欄位：
+```json
+{
+  "equipLevel": 80,
+  "equipStats": {
+    "classJobCategoryName": "CNJ WHM SCH AST SGE"
+  }
+}
+```
+
+### 職業分組邏輯
+
+個別職業縮寫合併為群組名稱：
+
+| 群組名稱 | 進階職業 | 排除基礎職業 |
+|---------|---------|------------|
+| 治療職業 | WHM SCH AST SGE | CNJ |
+| 盾衛職業 | PLD WAR DRK GNB | GLA MRD |
+| 法系職業 | BLM SMN RDM BLU PCT | THM ACN |
+| 遠程物理職業 | BRD MCH DNC | ARC |
+| 近戰職業 | MNK DRG NIN SAM RPR VPR | PGL LNC ROG |
+
+所有進階戰鬥職業都在 → 顯示「全職業」
+
+### 限制欄位格式
+
+- 有等級限制：`Lv.80 治療職業`
+- 無特定職業：`全職業`
+- 製作職業：`布衣師`、`製革師` 等（以 `classJobCategoryName` 直接換算）
+
+### 注意：繁中版跨職業投影限制
+
+**繁中版目前尚未開放跨職業幻化（Glamour Plate 跨職業功能）**。因此：
+- 某套裝若含有特定職業限制的裝備（如盾衛職業的靴子用在治療職業套裝），在繁中版無法實際幻化
+- 裝備限制欄位仍顯示 DB 的正確資料，供參考
+
+---
+
+## 新增套裝的完整流程
+
+### 1. 準備圖片
+
+將圖片放入 `配裝圖片/` 資料夾，命名為 `{新編號}-{套裝名稱}.jpe`。
+
+### 2. 在 JSON 新增套裝物件
+
+複製 `data/curated_outfits.json` 中現有套裝的格式，新增於陣列末尾，
+依「JSON 欄位格式」一節填寫（id 兩位數補零、image 對應實際檔名）。
+
+### 3. 查詢名稱
+
+1. 讀取圖片，從外觀辨識各部位裝備
+2. 在 `資料來源/items.json` 搜尋繁中名稱
+3. 透過道具 ID 在 `en-items.msgpack` 取得英文名稱
+4. 透過道具 ID 在 `ja-items.msgpack` 取得日文名稱
+
+### 4. 查詢取得方式與限制
+
+使用 `資料來源/sources.json` 和 `recipes.json` 查詢（格式參考「取得方式格式」一節），結果填入 JSON 的 `source` 欄位。
+
+### 5. 重建資料檔（不再手動改 HTML）
+
+```bash
+python scripts/update_all.py local   # 一鍵：重建資料檔 + 健檢（改完 JSON 後用，數秒完成）
+```
+
+完整更新（抓 Mirapri 新資料 → 壓縮新圖 → 縮圖 → 重建 → 健檢）：
+
+```bash
+python scripts/update_all.py
+```
+
+（也可單獨跑 build_site.py / health_check.py / make_thumbs.py / compress_mirapri.py）
+
+- 性別（gender）／種族（race）直接填在套裝物件上，未填會被歸入「未指定」
+- 卡片 tag（healer/tank/…/event/pvp/store/raid）由 build_site.py 從 `job`、`source` 自動推導
+- `update_all.py` 已涵蓋 pipeline → 壓縮 → 縮圖 → build → 健檢 的完整順序
+- 精選原圖可刪（縮圖留著即可）：彈窗載不到原圖會自動改用縮圖，健檢也只在「原圖與縮圖都不存在」時警告
+- 舊的 `配裝清單.md` 已歸檔於 `archive/`，僅供查閱，不再是資料來源
+
+### 前端功能備註
+
+- **延遲載入**：index.html 先載 157KB 的精選資料立即顯示，8MB 社群資料背景載入
+- **縮圖**：卡片優先載 `配裝圖片/縮圖/`，失敗自動回退原圖
+- **繁中版可幻化**：套裝全部裝備都有繁中名稱才算（zh 欄空白 = 繁中版未實裝）
+- **多選篩選**：取得方式／職業可複選，群組內 OR、群組間 AND，社群套裝也適用
+- **裝備反查**：彈窗中點裝備名 = 以該裝備名搜尋全部套裝
+- **複製清單**：彈窗右上「📋 複製清單」複製部位＋繁中名＋染色
+- **染色色票**：DYE_COLORS 表（index.html 內），新增染色名請順手補近似色碼
+
+---
+
+## OCR 檢查流程（Ollama）
+
+用 Ollama 視覺模型對配裝圖做 OCR，讀出圖上的「日文裝備名 + 染色名」，
+跟現有資料比對，找出可能抓錯／抓漏的部位，並補抓資料缺的染色資訊。
+mirapri 圖本身有裝備名標籤，所以 OCR 用來「驗證」既有抓取結果；
+上傳的遊戲截圖（含裝備名）也能用同一流程辨識。
+
+### 前置
+
+1. 本機跑著 Ollama，並下載視覺模型（CJK OCR 最佳）：
+
+   ```
+   ollama pull qwen2.5vl:7b      # VRAM 不足可改 qwen2.5vl:3b
+   ```
+
+   注意：`qwen2.5:7b-instruct` 是純文字版，**不能**讀圖，要 `qwen2.5vl`（vl）。
+2. 安裝套件：`py -m pip install requests pillow --break-system-packages`
+
+### 用法
+
+**不帶參數 = 互動選單**（推薦給手動操作）：
+
+```
+py scripts\ocr_check.py
+```
+
+會逐步問：要檢查哪些圖、範圍（all/missing/confirmed）、數量上限、是否重跑。
+全部直接 Enter＝`mirapri` + `all` + 不限（＝全部跑，吃快取續跑）。
+
+也可直接帶參數（給排程／批次用）：
+
+```
+py scripts\ocr_check.py --target mirapri  --mode missing  --limit 50
+py scripts\ocr_check.py --target curated  --mode confirmed
+py scripts\ocr_check.py --target uploads  --images "C:\路徑\新截圖"
+py scripts\ocr_check.py --target mirapri  --id <outfit_id>  --force
+```
+
+- `--target`：`mirapri`／`curated`／`uploads`（尚未進庫的圖）／`all`
+- `--mode`（決定要看「哪些套」，比對範圍一律是整套）：
+  - `missing`：只看「還有部位沒填取得方法」的套（待補的）
+  - `confirmed`：只看「取得方法都填好」的套（改版復查名稱用）
+  - `all`：全部
+- `--limit N`：最多處理 N 套（大量圖時分批跑）
+- `--force`：忽略快取重新 OCR
+- `--self-test`：不呼叫 Ollama，用假 OCR 驗證流程能跑
+
+### OCR 能做 / 不能做（重要）
+
+- 能：① 驗證圖上有畫的裝備名　② 抽染色　③ 找抓漏。
+- 種族（race）：曾試過讓 OCR 看角色外觀判種族，但配裝圖的頭飾會干擾（鹿角/角造型帽誤判成 aura、帽子蓋住真耳朵），準度不足已移除；種族維持手動填。
+- **不能讀「取得方法（source）」**——圖上沒這資訊，source 仍要靠 sources.json／手動。
+- 比對「整套有畫出來的裝備」，不是只比未填 source 的部位，命中率才反映真實 OCR 準度。
+  飾品／武器等圖上常沒畫的部位歸 `not_shown`，不列入命中率、不算需確認。
+
+### 已 OCR 過的會跳過
+
+- `data/ocr_cache.json` 記錄每張圖的原始 OCR 結果（以檔案修改時間+大小為憑），
+  同一張圖沒變就用快取、不重跑（要重跑加 `--force`）。改了降噪/比對邏輯後直接重跑，
+  會吃快取、瞬間重算，不必重新 OCR。
+
+### 自動降噪
+
+腳本對 OCR 結果做四項清理，讓報告更乾淨：
+
+- 比對前先去掉資料裡重複的同名部位（避免同一條報好幾遍）
+- 把黏在裝備名後面的染色切出來（例：「メイドブルマ スートブラック」→ 裝備名 + 染色）
+- 用 `data/dye_names_ja.json`（官方 146 色）過濾假染色，並把 OCR 錯字校回官方名
+  （例：スーツブラック→スートブラック、スノーホワイト→スノウホワイト）
+- 「資料有但 OCR 沒讀到」依相似度分兩類：`not_shown`（圖上多半沒擺，耳飾／武器常見，低優先）
+  與 `maybe_wrong`（名稱可能有出入，需確認）。純 not_shown 不算需確認
+
+> `data/dye_names_ja.json` 由 items.json（categoryId 55 染料）+ ja-items.msgpack 產生，
+> 缺檔時腳本照樣可跑，只是不過濾染色。
+
+### 輸出（給人看 + 給 Claude 確認）
+
+- `data/OCR檢查報告.md`：開頭有總命中率（圖上有畫的名稱驗證 hit/shown），
+  逐套分「需確認」與「全部吻合」。需確認再細分：名稱可能不符、抓漏、可補染色、
+  圖上沒畫（<sub> 低優先）。每套標 `驗證 hit/shown`。
+- `data/ocr_check_result.json`：結構化結果，含全域 `verify_hit/verify_shown`，
+  每套 `diff.verify`、每個 missing 帶 `likely`（not_shown／maybe_wrong），給 Claude 逐項確認用。
+
+### 種族代碼與官方名稱（重新確認過）
+
+| code | 繁中 | EN | code | 繁中 | EN |
+|------|------|----|------|------|----|
+| hyur | 人族 | Hyur | aura | 敖龍族 | Au Ra |
+| elezen | 精靈族 | Elezen | hrothgar | 硌獅族 | Hrothgar |
+| lalafell | 拉拉菲爾族 | Lalafell | viera | 維埃拉族 | Viera |
+| miqote | 貓魅族 | Miqo'te | roegadyn | 魯加族 | Roegadyn |
+
+> Hrothgar 舊資料誤寫成「赫羅斯加族」（音譯），已更正為官方「硌獅族」（index.html 的篩選按鈕與 RACE_ZH）。
+
+### 把 OCR 結果寫回網站（apply_dyes.py）
+
+`apply_dyes.py` 讀 `data/ocr_cache.json`（累積所有 OCR 過的圖）產出兩份，build_site.py 會用：
+
+1. `data/mirapri_dyes.json` — 每套繁中染色 → 彈窗顯示「使用染色」（OCR 是整套染色、未逐件對應，故顯示在套裝層級）。
+2. `data/mirapri_visible.json` — 每套「圖上實際畫出來」的裝備（= OCR 有讀到的）。
+   build_site.py 用它**濾掉替代裝備**：Mirapri 投稿常在同配方附替代款，原始清單會比圖片多；
+   過濾後彈窗清單只剩圖上實際穿的。
+
+```
+py scripts\ocr_check.py     # 1. 跑/吃快取，產生 OCR 結果（選單一路 Enter＝全部）
+py scripts\apply_dyes.py    # 2. 快取 → mirapri_dyes.json + mirapri_visible.json
+py scripts\build_site.py    # 3. 併入染色、濾掉替代裝備，重建 mirapri_outfits.js
+```
+
+注意：過濾只對「有 OCR 過且至少認出 1 件」的套生效，沒 OCR 的套原樣保留以免誤刪；
+另外若某件其實有穿但 OCR 沒讀到（例如耳飾太小），會被一起隱藏——這是「直接隱藏」策略的已知取捨。
+
+### 後續校正
+
+OCR 可能有錯字或幻覺，報告／JSON 出來後，可請 Claude 把 OCR 名稱比對
+`資料來源/items.json`、`ja-items.msgpack` 校正，再把確認好的 source／染色寫回
+`data/curated_outfits.json`，最後照「新增套裝的完整流程」跑 `update_all.py local` 重建。
+
+## 輔助腳本位置
+
+腳本儲存於 Claude 的工作資料夾（`/outputs/`），每次新對話後路徑可能改變，但可請 Claude 重新生成。
+
+| 腳本 | 功能 |
+|------|------|
+| `lookup_sources.py` | 查詢所有裝備的取得方式，輸出 `source_results.json` |
+
+（舊的 `update_md_sources.py`、`update_html_final2.py`、`add_job_tags.py` 已不需要：
+資料改由 `data/curated_outfits.json` 直接維護，tag 由 build_site.py 自動推導。）
+
+---
+
+## 常見問題
+
+**道具在 DB 裡找不到繁中名稱**  
+→ 繁中版尚未更新到該 patch，留空即可，英文名稱仍可正常查詢。
+
+**取得方式顯示「待確認」**  
+→ `sources.json` 中無此道具來源（通常是更新 patch 或付費商城道具）。
+
+**Mog Station 道具的 st 為何是 `store` 而非 `other`**  
+→ `源:💎Mog Station` 開頭的自動對應 `store`，付費內容獨立分類。
+
+**腳本中的 msgpack 套件**  
+```bash
+pip install msgpack --break-system-packages
+```

@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FF14 外觀配裝一覽</title>
+<script src="curated_outfits.js"></script>
+<style>
+:root {
+  --bg: #0d1117;
+  --card-bg: #161b22;
+  --panel-bg: #1c2230;
+  --border: #30363d;
+  --accent: #c9a227;
+  --accent2: #6e9fd4;
+  --text: #e6edf3;
+  --muted: #7d8590;
+  --tag-raid: #7c3aed;
+  --tag-pvp: #dc2626;
+  --tag-store: #d97706;
+  --tag-event: #16a34a;
+  --tag-craft: #2563eb;
+  --tag-scrip: #0891b2;
+  --tag-gs: #ca8a04;
+  --tag-ceremony: #db2777;
+  --tag-npc: #4b5563;
+  --tag-other: #374151;
+  --dye-swatch: 24px;
+  --female: #f472b6;
+  --male: #60a5fa;
+  --unknown: #6b7280;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'Microsoft JhengHei', 'Noto Sans TC', 'Segoe UI', sans-serif; min-height: 100vh; }
+
+/* ── Header ── */
+header {
+  background: linear-gradient(135deg, #0d1117 0%, #1a1f2e 50%, #0d1117 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 24px 32px 20px;
+  position: sticky; top: 0; z-index: 100;
+  backdrop-filter: blur(12px);
+}
+header h1 {
+  font-size: 1.6rem; font-weight: 700;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+header p { color: var(--muted); font-size: 0.85rem; margin-top: 4px; }
+
+/* ── Filter ── */
+.filter-bar {
+  padding: 16px 32px;
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  border-bottom: 1px solid var(--border);
+  background: var(--card-bg);
+}
+.filter-bar { display: flex; flex-direction: column; gap: 10px; }
+.filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.filter-group-label {
+  font-size: 0.7rem; color: var(--muted); white-space: nowrap;
+  padding: 2px 6px; border-radius: 4px;
+  background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+  margin: 0 2px;
+}
+.filter-sep { width: 1px; height: 20px; background: var(--border); margin: 0 4px; }
+.filter-btn {
+  padding: 5px 14px; border-radius: 20px; border: 1px solid var(--border);
+  background: transparent; color: var(--text); cursor: pointer;
+  font-size: 0.8rem; font-family: inherit; transition: all 0.2s;
+}
+.filter-btn:hover { border-color: var(--accent2); color: var(--accent2); }
+.filter-btn.active { background: var(--accent2); border-color: var(--accent2); color: #fff; }
+.filter-reset.active { background: var(--border); border-color: var(--border); color: var(--text); }
+.search-input {
+  padding: 5px 14px; border-radius: 20px;
+  border: 1px solid var(--border); background: var(--bg);
+  color: var(--text); font-size: 0.8rem; font-family: inherit;
+  width: 220px; outline: none;
+}
+.search-input:focus { border-color: var(--accent2); }
+
+/* ── Grid ── */
+.grid-container { padding: 24px 32px; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden; cursor: pointer;
+  transition: all 0.25s; position: relative;
+}
+.card:hover {
+  border-color: var(--accent2);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(110,159,212,0.2);
+}
+.card.hidden { display: none; }
+.card-img {
+  width: 100%; aspect-ratio: 3/4; object-fit: cover;
+  background: var(--panel-bg);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--muted); font-size: 0.7rem;
+}
+.card-img img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.card-body { padding: 14px 16px; }
+.card-id { font-size: 0.75rem; color: var(--muted); }
+.card-name { font-size: 1.05rem; font-weight: 600; margin: 3px 0 6px; }
+.card-color { font-size: 0.78rem; color: var(--muted); }
+.card-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+.card-tag {
+  font-size: 0.65rem; padding: 2px 8px; border-radius: 10px;
+  background: var(--tag-other); color: #e5e7eb;
+}
+.badge-viera   { background: #7c3aed; }
+.badge-event   { background: var(--tag-event); }
+.badge-pvp     { background: var(--tag-pvp); }
+.badge-store   { background: var(--tag-store); }
+.badge-healer  { background: #065f46; }
+.badge-tank    { background: #1e3a5f; }
+.badge-caster  { background: #4c1d95; }
+.badge-melee   { background: #7f1d1d; }
+.badge-pranged { background: #713f12; }
+.badge-crafter { background: #1f2937; border: 1px solid #4b5563; }
+
+/* ── Modal / Detail Panel ── */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,0.75); backdrop-filter: blur(4px);
+  display: flex; align-items: flex-start; justify-content: center;
+  padding: 24px 16px; overflow-y: auto;
+}
+.modal-overlay.hidden { display: none; }
+.modal-overlay:not(.hidden) { pointer-events: all; }
+.modal {
+  background: var(--card-bg); border: 1px solid var(--border);
+  border-radius: 14px; width: 100%; max-width: 1280px;
+  overflow: hidden;
+}
+.modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 28px; border-bottom: 1px solid var(--border);
+  background: var(--panel-bg);
+}
+.modal-title { font-size: 1.3rem; font-weight: 700; }
+.modal-subtitle { font-size: 0.82rem; color: var(--muted); margin-top: 2px; }
+.close-btn {
+  background: none; border: none; color: var(--muted);
+  cursor: pointer; font-size: 1.5rem; line-height: 1; padding: 4px;
+  transition: color 0.2s;
+}
+.close-btn:hover { color: var(--text); }
+.modal-body { display: flex; gap: 0; }
+.modal-img-col {
+  width: 520px; min-width: 520px; background: var(--panel-bg);
+  display: flex; align-items: flex-start; justify-content: center;
+  padding: 20px;
+}
+.modal-img-col img {
+  width: 100%; border-radius: 10px;
+  max-height: 800px; object-fit: contain; object-position: top;
+}
+.modal-img-col .no-img {
+  width: 100%; height: 600px; background: var(--bg);
+  border-radius: 10px; display: flex; align-items: center; justify-content: center;
+  color: var(--muted); font-size: 0.8rem;
+}
+.modal-info-col { flex: 1; padding: 24px 28px; overflow-x: auto; }
+.modal-note {
+  background: var(--panel-bg); border-left: 3px solid var(--accent);
+  padding: 8px 14px; border-radius: 0 6px 6px 0;
+  font-size: 0.82rem; color: var(--muted); margin-bottom: 16px;
+}
+
+/* ── Equipment Table ── */
+
+    .patch-tag {
+      display: inline-block;
+      background: #1e293b;
+      color: #94a3b8;
+      border: 1px solid #334155;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 1px 6px;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+    }
+    .patch-tag.patch-unknown { opacity: 0.4; }
+    .patch-cell { text-align: center; white-space: nowrap; }
+
+    .equip-table {
+  width: 100%; border-collapse: collapse; font-size: 0.82rem;
+}
+.equip-table th {
+  background: var(--panel-bg); padding: 8px 12px;
+  text-align: left; color: var(--muted); font-weight: 600;
+  border-bottom: 1px solid var(--border); white-space: nowrap;
+}
+.equip-table td {
+  padding: 9px 12px; border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.equip-table tr:last-child td { border-bottom: none; }
+.equip-table tr:hover td { background: rgba(255,255,255,0.03); }
+.slot-badge {
+  display: inline-block; padding: 2px 8px; border-radius: 4px;
+  font-size: 0.72rem; font-weight: 600;
+  background: var(--panel-bg); color: var(--accent);
+  white-space: nowrap;
+}
+.item-name { font-weight: 600; }
+.item-en { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+.unconfirmed { color: #f59e0b; font-size: 0.72rem; }
+.dye-cell { white-space: nowrap; }
+.dye-dash { color: var(--muted); }
+.mirapri-dye-line { margin-top: 10px; font-size: 13px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: center; }
+.mirapri-dye-line .dye-cell { color: var(--fg, inherit); }
+
+/* Source tags */
+.source-tag {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 9px; border-radius: 12px;
+  font-size: 0.72rem; font-weight: 500;
+  white-space: nowrap; margin: 1px 0;
+}
+.src-raid    { background: rgba(124,58,237,0.25); color: #a78bfa; border: 1px solid rgba(124,58,237,0.4); }
+.src-pvp     { background: rgba(220,38,38,0.2);   color: #f87171; border: 1px solid rgba(220,38,38,0.4); }
+.src-store   { background: rgba(217,119,6,0.2);   color: #fbbf24; border: 1px solid rgba(217,119,6,0.4); }
+.src-event   { background: rgba(22,163,74,0.2);   color: #4ade80; border: 1px solid rgba(22,163,74,0.4); }
+.src-craft   { background: rgba(37,99,235,0.2);   color: #60a5fa; border: 1px solid rgba(37,99,235,0.4); }
+.src-scrip   { background: rgba(8,145,178,0.2);   color: #22d3ee; border: 1px solid rgba(8,145,178,0.4); }
+.src-gs      { background: rgba(202,138,4,0.2);   color: #fde047; border: 1px solid rgba(202,138,4,0.4); }
+.src-npc     { background: rgba(75,85,99,0.3);    color: #9ca3af; border: 1px solid rgba(75,85,99,0.5); }
+.src-ceremony{ background: rgba(219,39,119,0.2);  color: #f472b6; border: 1px solid rgba(219,39,119,0.4); }
+.src-other   { background: rgba(55,65,81,0.3);    color: #9ca3af; border: 1px solid rgba(55,65,81,0.5); }
+
+/* Restriction tags */
+.restrict-cell { vertical-align: top; }
+.restrict-tag,
+.restrict-level, .restrict-job, .restrict-gender, .restrict-race {
+  display: inline-block; margin: 0 4px 4px 0; padding: 2px 8px; border-radius: 10px;
+  font-size: 0.7rem; background: var(--panel-bg);
+  border: 1px solid var(--border); color: var(--text);
+  white-space: nowrap; vertical-align: top;
+}
+.restrict-level { border-color: #4b5563; }
+.restrict-job   { border-color: #2563eb; color: var(--accent2); }
+.restrict-gender{ border-color: #db2777; color: #f472b6; }
+.restrict-race  { border-color: #7c3aed; color: #a78bfa; }
+
+/* nav arrows */
+.modal-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 24px; border-top: 1px solid var(--border);
+  background: var(--panel-bg);
+}
+.nav-btn {
+  background: var(--bg); border: 1px solid var(--border);
+  color: var(--text); padding: 6px 18px; border-radius: 6px;
+  cursor: pointer; font-size: 0.82rem; font-family: inherit;
+  transition: all 0.2s;
+}
+.nav-btn:hover { border-color: var(--accent2); color: var(--accent2); }
+.nav-btn:disabled { opacity: 0.3; cursor: default; }
+.nav-counter { color: var(--muted); font-size: 0.82rem; }
+
+
+/* ── Language toggle ── */
+.lang-toggle { display:flex; gap:4px; background:rgba(255,255,255,0.07); border-radius:20px; padding:3px; }
+.lang-btn { border:none; background:none; color:var(--muted); padding:5px 16px; border-radius:16px; cursor:pointer; font-size:0.82rem; font-weight:600; font-family:inherit; transition:all 0.2s; }
+.lang-btn.lang-active { background:var(--accent); color:#0d1117; }
+
+/* ── View tabs ── */
+.view-tabs { display:flex; gap:4px; }
+.view-tab {
+  padding:5px 16px; border-radius:20px; border:1px solid var(--border);
+  background:transparent; color:var(--muted); cursor:pointer;
+  font-size:0.8rem; font-family:inherit; transition:all 0.2s;
+}
+.view-tab:hover { border-color:var(--accent2); color:var(--accent2); }
+.view-tab.active { background:var(--accent2); border-color:var(--accent2); color:#fff; }
+
+/* ── Gender / race filter extras ── */
+.filter-btn.female-btn.active { background:var(--female); border-color:var(--female); color:#fff; }
+.filter-btn.male-btn.active   { background:var(--male);   border-color:var(--male);   color:#fff; }
+.filter-btn.unk-btn.active    { background:var(--unknown); border-color:var(--unknown); color:#fff; }
+.count-label { font-size:0.8rem; color:var(--muted); margin-left:8px; }
+
+/* ── Mirapri card gender/race tags ── */
+.tag-female { background:rgba(244,114,182,.15); color:var(--female); border:1px solid rgba(244,114,182,.4); font-size:.65rem; padding:2px 8px; border-radius:10px; white-space:nowrap; }
+.tag-male   { background:rgba(96,165,250,.15);  color:var(--male);   border:1px solid rgba(96,165,250,.4);  font-size:.65rem; padding:2px 8px; border-radius:10px; white-space:nowrap; }
+.tag-unk    { background:rgba(107,114,128,.15); color:var(--unknown);border:1px solid rgba(107,114,128,.4); font-size:.65rem; padding:2px 8px; border-radius:10px; white-space:nowrap; }
+.tag-race   { background:rgba(255,255,255,.05); color:var(--muted);  border:1px solid var(--border);        font-size:.65rem; padding:2px 8px; border-radius:10px; white-space:nowrap; }
+
+/* ── Pager ── */
+.pager {
+  display:flex; justify-content:center; align-items:center;
+  gap:6px; padding:20px 32px; flex-wrap:wrap;
+}
+.pager-btn {
+  padding:5px 13px; border-radius:8px; border:1px solid var(--border);
+  background:var(--card-bg); color:var(--muted); cursor:pointer;
+  font-size:0.8rem; font-family:inherit; transition:all 0.2s;
+}
+.pager-btn:hover { border-color:var(--accent2); color:var(--accent2); }
+.pager-btn.active { background:var(--accent2); border-color:var(--accent2); color:#fff; }
+.pager-info { color:var(--muted); font-size:0.8rem; }
+
+/* ── Mirapri modal ── */
+.mira-modal {
+  background:var(--card-bg); border:1px solid var(--border);
+  border-radius:14px; width:100%; max-width:600px; overflow:hidden;
+  animation:fadeIn .15s ease;
+}
+@keyframes fadeIn { from{opacity:0;transform:scale(.96)} to{opacity:1;transform:scale(1)} }
+.mira-modal-img { width:100%; display:block; border-radius:12px 12px 0 0; max-height:480px; object-fit:cover; object-position:top; }
+.mira-modal-body { padding:16px 20px; }
+.mira-modal-title { font-size:1.05rem; font-weight:700; margin-bottom:6px; }
+.mira-modal-meta { font-size:0.78rem; color:var(--muted); margin-bottom:12px; display:flex; flex-wrap:wrap; gap:8px; }
+.mira-equips h4 { color:var(--accent2); font-size:0.8rem; margin-bottom:6px; }
+.mira-equips ul { list-style:none; display:flex; flex-wrap:wrap; gap:5px; }
+.mira-equips li { background:var(--panel-bg); border:1px solid var(--border); border-radius:6px; padding:3px 8px; font-size:0.75rem; }
+.mira-modal-nav {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:10px 20px; border-top:1px solid var(--border); background:var(--panel-bg);
+}
+.empty-state { text-align:center; color:var(--muted); padding:60px 20px; font-size:0.9rem; }
+
+/* ── TW toggle / sort / dye swatch / copy / item link ── */
+.tw-btn.active { background:#16a34a; border-color:#16a34a; color:#fff; }
+.sort-select {
+  padding:5px 10px; border-radius:20px; border:1px solid var(--border);
+  background:var(--bg); color:var(--text); font-size:0.8rem; font-family:inherit;
+  outline:none; cursor:pointer;
+}
+.sort-select:focus { border-color:var(--accent2); }
+.dye-dot {
+  display:inline-block; width:11px; height:11px; border-radius:50%;
+  border:1px solid rgba(255,255,255,0.35); vertical-align:-1px; margin-right:4px;
+}
+.copy-btn {
+  background:var(--bg); border:1px solid var(--border); color:var(--muted);
+  padding:5px 14px; border-radius:6px; cursor:pointer; font-size:0.8rem;
+  font-family:inherit; transition:all 0.2s; margin-right:10px; white-space:nowrap;
+}
+.copy-btn:hover { border-color:var(--accent2); color:var(--accent2); }
+.item-link { cursor:pointer; border-bottom:1px dotted var(--muted); }
+.item-link:hover { color:var(--accent2); border-bottom-color:var(--accent2); }
+.tw-badge {
+  font-size:0.65rem; padding:2px 8px; border-radius:10px;
+  background:rgba(22,163,74,.15); color:#4ade80; border:1px solid rgba(22,163,74,.4);
+  white-space:nowrap;
+}
+
+/* ── Favorites / pager jump ── */
+.fav-btn {
+  position:absolute; top:6px; right:6px; z-index:2;
+  background:rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.15);
+  color:#9ca3af; width:28px; height:28px; border-radius:50%;
+  cursor:pointer; font-size:0.95rem; line-height:1; transition:all 0.2s;
+  display:flex; align-items:center; justify-content:center;
+}
+.fav-btn:hover { color:#fbbf24; border-color:#fbbf24; }
+.fav-btn.faved { color:#fbbf24; border-color:rgba(251,191,36,0.5); background:rgba(251,191,36,0.12); }
+.fav-filter.active { background:#b45309; border-color:#b45309; color:#fff; }
+.pager-jump {
+  width:64px; padding:5px 10px; border-radius:8px;
+  border:1px solid var(--border); background:var(--bg); color:var(--text);
+  font-size:0.8rem; font-family:inherit; outline:none; text-align:center;
+}
+.pager-jump:focus { border-color:var(--accent2); }
+
+/* scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+@media (max-width: 640px) {
+  .modal-body { flex-direction: column; }
+  .modal-img-col { width: 100%; min-width: unset; }
+  .grid-container { padding: 16px; }
+  .filter-bar { padding: 12px 16px; }
+  header { padding: 16px; }
+}
+.star-badge {
+  position:absolute; top:6px; left:6px;
+  background:var(--accent); color:#000;
+  border-radius:50%; width:22px; height:22px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:0.65rem; font-weight:700; z-index:2;
+}
+.curated-badge { position:relative; }
+</style>
+</head>
+<body>
+
+<header>
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+    <div>
+      <h1 id="site-title">⚔️ FF14 外觀配裝一覽</h1>
+      <p id="site-subtitle"></p>
+    </div>
+    <div class="lang-toggle">
+      <button class="lang-btn lang-active" onclick="setLang('zh')">繁中</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+    </div>
+  </div>
+</header>
+
+<!-- 統一篩選列 -->
+<div class="filter-bar" id="filter-bar">
+  <div class="filter-row">
+    <span class="filter-group-label">性別</span>
+    <button class="filter-btn filter-reset active" data-mf="gender" data-val="">全部</button>
+    <button class="filter-btn female-btn" data-mf="gender" data-val="female">👧 女性</button>
+    <button class="filter-btn male-btn"   data-mf="gender" data-val="male">👦 男性</button>
+    <button class="filter-btn unk-btn"    data-mf="gender" data-val="unknown">❓ 未指定</button>
+  </div>
+  <div class="filter-row">
+    <span class="filter-group-label">種族</span>
+    <button class="filter-btn filter-reset active" data-mf="race" data-val="">全部</button>
+    <button class="filter-btn" data-mf="race" data-val="hyur"     data-zh="人族"        data-en="Hyur">人族</button>
+    <button class="filter-btn" data-mf="race" data-val="elezen"   data-zh="精靈族"      data-en="Elezen">精靈族</button>
+    <button class="filter-btn" data-mf="race" data-val="lalafell" data-zh="拉拉菲爾族"  data-en="Lalafell">拉拉菲爾族</button>
+    <button class="filter-btn" data-mf="race" data-val="miqote"   data-zh="貓魅族"      data-en="Miqo'te">貓魅族</button>
+    <button class="filter-btn" data-mf="race" data-val="roegadyn" data-zh="魯加族"      data-en="Roegadyn">魯加族</button>
+    <button class="filter-btn" data-mf="race" data-val="aura"     data-zh="敖龍族"      data-en="Au Ra">敖龍族</button>
+    <button class="filter-btn" data-mf="race" data-val="hrothgar" data-zh="硌獅族"      data-en="Hrothgar">硌獅族</button>
+    <button class="filter-btn" data-mf="race" data-val="viera"    data-zh="維埃拉族"    data-en="Viera">維埃拉族</button>
+  </div>
+  <div class="filter-row">
+    <span class="filter-group-label" data-zh="取得方式" data-en="Source">取得方式</span>
+    <button class="filter-btn" data-filter="event"   data-group="src" data-zh="🗓️ 活動"  data-en="🗓️ Event">🗓️ 活動</button>
+    <button class="filter-btn" data-filter="pvp"     data-group="src" data-zh="⚔️ PvP"   data-en="⚔️ PvP">⚔️ PvP</button>
+    <button class="filter-btn" data-filter="store"   data-group="src" data-zh="💎 Mog"   data-en="💎 Mog">💎 Mog</button>
+    <button class="filter-btn" data-filter="raid"    data-group="src" data-zh="🗡️ 副本"  data-en="🗡️ Dungeon">🗡️ 副本</button>
+    <span class="filter-sep"></span>
+    <span class="filter-group-label" data-zh="職業" data-en="Job">職業</span>
+    <button class="filter-btn" data-filter="healer"  data-group="job" data-zh="💚 治療"  data-en="💚 Healer">💚 治療</button>
+    <button class="filter-btn" data-filter="tank"    data-group="job" data-zh="🛡️ 盾衛"  data-en="🛡️ Tank">🛡️ 盾衛</button>
+    <button class="filter-btn" data-filter="caster"  data-group="job" data-zh="🔮 法系"  data-en="🔮 Caster">🔮 法系</button>
+    <button class="filter-btn" data-filter="melee"   data-group="job" data-zh="⚔️ 近戰"  data-en="⚔️ Melee">⚔️ 近戰</button>
+    <button class="filter-btn" data-filter="pranged" data-group="job" data-zh="🏹 遠距"  data-en="🏹 Ranged">🏹 遠距</button>
+    <button class="filter-btn" data-filter="crafter" data-group="job" data-zh="🔨 製作"  data-en="🔨 Crafter">🔨 製作</button>
+  </div>
+  <div class="filter-row">
+    <input class="search-input" type="text" placeholder="🔍 搜尋名稱、裝備或使用者…" id="search-input"
+           data-zh-placeholder="🔍 搜尋名稱、裝備或使用者…" data-en-placeholder="🔍 Search name, item or user…">
+    <button class="filter-btn fav-filter" id="fav-filter-btn" title="只顯示已加星號的套裝"
+            data-zh="⭐ 我的收藏" data-en="⭐ Favorites">⭐ 我的收藏</button>
+    <button class="filter-btn tw-btn" id="tw-btn" title="只顯示每件裝備都有繁中名稱（已實裝於繁中版）的套裝"
+            data-zh="🇹🇼 繁中版可幻化" data-en="🇹🇼 On TW server">🇹🇼 繁中版可幻化</button>
+    <select class="sort-select" id="sort-select">
+      <option value="default">排序：預設（精選優先）</option>
+      <option value="patch-desc">排序：版本新 → 舊</option>
+      <option value="patch-asc">排序：版本舊 → 新</option>
+      <option value="name">排序：名稱</option>
+    </select>
+    <span class="count-label" id="result-count"></span>
+  </div>
+</div>
+
+<div class="grid-container">
+  <div class="grid" id="outfit-grid"></div>
+</div>
+<div class="pager" id="pager"></div>
+
+<!-- 精選配裝 Modal -->
+<div class="modal-overlay hidden" id="modal-overlay">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="modal-title"></div>
+        <div class="modal-subtitle" id="modal-subtitle"></div>
+      </div>
+      <div style="display:flex;align-items:center">
+        <button class="copy-btn" id="modal-fav-btn" onclick="toggleFav(filtered[currentIdx] && filtered[currentIdx].id)">☆ 收藏</button>
+        <button class="copy-btn" id="copy-btn" data-zh="📋 複製清單" data-en="📋 Copy list">📋 複製清單</button>
+        <button class="close-btn" id="close-btn">✕</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-img-col" id="modal-img-col"></div>
+      <div class="modal-info-col" id="modal-info-col"></div>
+    </div>
+    <div class="modal-nav">
+      <button class="nav-btn" id="prev-btn" data-zh="◀ 上一套" data-en="◀ Prev">◀ 上一套</button>
+      <span class="nav-counter" id="nav-counter"></span>
+      <button class="nav-btn" id="next-btn" data-zh="下一套 ▶" data-en="Next ▶">下一套 ▶</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+// ════════════════════════════════════════════════════════
+// CONSTANTS
+// ════════════════════════════════════════════════════════
+const SRC_CLASS  = {raid:"src-raid",pvp:"src-pvp",store:"src-store",event:"src-event",craft:"src-craft",scrip:"src-scrip",gs:"src-gs",npc:"src-npc",ceremony:"src-ceremony",other:"src-other"};
+const RACE_LABEL = {miqote:"Miqo'te",aura:"Au Ra",hyur:"Hyur",lalafell:"Lalafell",roegadyn:"Roegadyn",viera:"Viera",hrothgar:"Hrothgar",elezen:"Elezen"};
+const RACE_ZH    = {miqote:"貓魅族",aura:"敖龍族",hyur:"人族",lalafell:"拉拉菲爾族",roegadyn:"魯加族",viera:"維埃拉族",hrothgar:"硌獅族",elezen:"精靈族",all:"全種族通用"};
+const SLOT_EN    = {"頭部":"Head","上身":"Body","上身①":"Body ①","上身②":"Body ②","手部":"Hands","腿部":"Legs","腳部":"Feet","武器":"Weapon","主手":"Main Hand","副手":"Off Hand","耳飾":"Earring"};
+
+// 染色名稱 → 近似色票（視覺提示用）
+const DYE_COLORS = {
+  "無瑕白":"#ECECE8","素雪白":"#E0DED3","珍珠白":"#EAE6DC","骸骨白":"#E5DCC3",
+  "煤玉黑":"#2B2B2B","煤煙黑":"#3C3A35","砲銅黑":"#2A2E33",
+  "蒼白灰":"#ACABA3","石板灰":"#707880","閃耀銀":"#C0C3C8","閃耀金":"#C8A84B","金屬銅":"#9C6B45",
+  "玫瑰粉":"#E8A2AD","柔彩粉":"#EFC3CE","金屬粉紅":"#D89AB0",
+  "衛月紅":"#781E1E","鮮血紅":"#8E1B1B","寶石紅":"#A01E32","胭脂紅":"#9E2B25","金屬紅寶石":"#8B1F2F",
+  "羅蘭莓":"#6E4A6E","沃土棕":"#4F3A2C","鈷鐵棕":"#4A3B30","葉岩棕":"#5C4F42","哥布林":"#7A7256",
+  "寒冰藍":"#BFD8DE","天空藍":"#88B8D8","柔彩藍":"#ADC6E6","盜龍藍":"#5C7FB8",
+  "孔雀藍":"#2E6E8E","綠松藍":"#45A8A0","松石藍":"#4E8E86","蔚藍":"#2A5C8A",
+  "靛青藍":"#3A4A7A","風暴藍":"#36577C","油墨藍":"#1F2A38","午夜藍":"#20283E","黑暗藍":"#24304A",
+  "腐屍藍":"#91A1B2","羅海藍":"#2C4C9C","賽魯利安藍":"#1F4E79","魔花綠":"#5A7A3C"
+};
+function dyeHtml(name) {
+  if (!name || name === "—") return `<span class="dye-dash">—</span>`;
+  const c = DYE_COLORS[name];
+  const dot = c ? `<span class="dye-dot" style="background:${c}"></span>` : "";
+  return `<span class="dye-cell">${dot}${esc(name)}</span>`;
+}
+
+// 縮圖路徑（配裝圖片/x.jpe → 配裝圖片/縮圖/x.jpe.jpg）
+function thumbOf(img) {
+  if (!img || !img.startsWith("配裝圖片/")) return img;
+  const rest = img.slice("配裝圖片/".length);
+  return "配裝圖片/縮圖/" + (rest.toLowerCase().endsWith(".jpg") ? rest : rest + ".jpg");
+}
+
+// 彈窗圖片：原圖優先，404 時自動改用縮圖
+function modalImg(img, alt) {
+  if (!img) return '<div class="no-img">No Image</div>';
+  return `<img src="${esc(img)}" alt="${esc(alt)}" style="width:100%;border-radius:8px;display:block" onerror="if(this.src.indexOf('縮圖')===-1){this.src='${esc(thumbOf(img))}';}else{this.parentElement.innerHTML='<div class=\\'no-img\\'>No Image</div>';}">`;
+}
+
+// 裝備反查：以裝備名搜尋所有套裝
+function searchItem(name) {
+  closeModal();
+  const input = document.getElementById("search-input");
+  input.value = name;
+  q = name;
+  applyFilters();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+// ════════════════════════════════════════════════════════
+// OUTFITS DATA (精選配裝)
+// ════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════════════
+let ALL_OUTFITS = [];
+let filtered    = [];
+let currentPage = 1;
+let currentIdx  = 0;
+let srcTags     = new Set();   // 取得方式（可複選）
+let jobTags     = new Set();   // 職業（可複選）
+let twOnly      = false;       // 只顯示繁中版可幻化
+let sortMode    = "default";
+let currentLang = "zh";
+let q           = "";
+let miraFilters = { gender:"", race:"" };
+let miraLoaded  = false;
+let favOnly     = false;
+let favs = new Set();
+try { favs = new Set(JSON.parse(localStorage.getItem("ff14_favs") || "[]")); } catch (e) {}
+
+function saveFavs() {
+  try { localStorage.setItem("ff14_favs", JSON.stringify([...favs])); } catch (e) {}
+}
+function toggleFav(id, ev) {
+  if (ev) ev.stopPropagation();
+  if (favs.has(id)) favs.delete(id); else favs.add(id);
+  saveFavs();
+  if (favOnly) applyFilters(); else renderGrid();
+  syncModalFav();
+}
+function syncModalFav() {
+  const btn = document.getElementById("modal-fav-btn");
+  const e = filtered[currentIdx];
+  if (!btn || !e) return;
+  const on = favs.has(e.id);
+  btn.textContent = on ? "⭐ 已收藏" : "☆ 收藏";
+  btn.classList.toggle("faved", on);
+}
+
+const PAGE_SIZE = 60;
+
+// ════════════════════════════════════════════════════════
+// BUILD UNIFIED DATASET（精選立即、社群延遲載入）
+// ════════════════════════════════════════════════════════
+const JOB_TAG_MAP = {
+  healer:["治療職業","白魔法師","賢者","占星術士","學者"],
+  tank:["盾衛職業","騎士","戰士","暗黑騎士","絕槍戰士"],
+  caster:["法系職業","赤魔法師","黑魔法師","青魔法師","召喚師","繪靈法師"],
+  pranged:["遠程物理職業","舞者","吟遊詩人","機工士"],
+  melee:["近戰職業","偵察職業","武士","忍者","武僧","龍騎士","鐮刀師","劍蛇師"],
+  crafter:["布衣師","製革師","甲冑師","鍛鐵師","煉金術士","廚師","雕金師","木工師","製作職業","採礦工","採伐工","漁夫","捕魚人"]
+};
+const ST_TAG_SET = new Set(["event","pvp","store","raid"]);
+
+function piecesOf(e) {
+  const arr = e.type === "mirapri" ? (e.equipments || []) : (e.pieces || []);
+  return arr.filter(p => p && typeof p !== "string");
+}
+
+// 為每套計算：tags（職業＋取得方式）、tw（繁中版全件可得）、maxPatch（排序用）
+function annotate(e) {
+  const ps = piecesOf(e);
+  if (!e.tags || !e.tags.length) {
+    const tags = new Set();
+    ps.forEach(p => {
+      const job = p.job || "";
+      for (const [tag, jobs] of Object.entries(JOB_TAG_MAP))
+        if (jobs.some(j => job.includes(j))) tags.add(tag);
+      if (ST_TAG_SET.has(p.st)) tags.add(p.st);
+    });
+    e.tags = [...tags];
+  }
+  e.tw = ps.length > 0 && ps.every(p => (p.zh || "").trim() !== "");
+  e.maxPatch = ps.reduce((mx, p) => {
+    const v = parseFloat(p.patch); return isNaN(v) ? mx : Math.max(mx, v);
+  }, 0);
+  return e;
+}
+
+function loadMirapri() {
+  const s = document.createElement("script");
+  s.src = "mirapri_outfits.js";
+  s.onload = () => {
+    miraLoaded = true;
+    if (typeof _MIRAPRI_RAW !== "undefined")
+      ALL_OUTFITS = ALL_OUTFITS.concat(_MIRAPRI_RAW.map(annotate));
+    applyFilters();
+  };
+  s.onerror = () => { miraLoaded = true; updateSubtitle(); };
+  document.head.appendChild(s);
+}
+
+// ════════════════════════════════════════════════════════
+// FILTER
+// ════════════════════════════════════════════════════════
+function applyFilters() {
+  const qLow = q.toLowerCase();
+  filtered = ALL_OUTFITS.filter(e => {
+    // Gender filter（精選 + 社群都套用）
+    if (miraFilters.gender) {
+      if (miraFilters.gender === "unknown") {
+        if (e.gender) return false;
+      } else {
+        // "both" 套裝（e.gender==="both"）在任何性別篩選下都顯示
+        if (e.gender !== miraFilters.gender && e.gender !== "both") return false;
+      }
+    }
+    // Race filter（精選 + 社群都套用）
+    if (miraFilters.race) {
+      // "all" 套裝在任何種族篩選下都顯示
+      if (e.race !== miraFilters.race && e.race !== "all") return false;
+    }
+    // 我的收藏
+    if (favOnly && !favs.has(e.id)) return false;
+    // 繁中版可幻化
+    if (twOnly && !e.tw) return false;
+    // 取得方式／職業（可複選；群組內 OR、群組間 AND，精選＋社群都適用）
+    if (srcTags.size && ![...srcTags].some(t => e.tags.includes(t))) return false;
+    if (jobTags.size && ![...jobTags].some(t => e.tags.includes(t))) return false;
+    // Search (all)
+    if (qLow) {
+      const name = (e.name || "").toLowerCase();
+      const user = (e.color || "").toLowerCase();
+      const equips = e.type === "mirapri"
+        ? (e.equipments || []).map(eq => typeof eq === "string" ? eq : ((eq.zh || "") + " " + (eq.name || ""))).join(" ").toLowerCase()
+        : (e.pieces || []).map(p => (p.zh + " " + p.en).toLowerCase()).join(" ");
+      if (!name.includes(qLow) && !user.includes(qLow) && !equips.includes(qLow)) return false;
+    }
+    return true;
+  });
+  sortFiltered();
+  currentPage = 1;
+  renderGrid();
+  updateSubtitle();
+}
+
+function sortFiltered() {
+  if (sortMode === "patch-desc")      filtered.sort((a,b) => (b.maxPatch||0) - (a.maxPatch||0));
+  else if (sortMode === "patch-asc")  filtered.sort((a,b) => (a.maxPatch||0) - (b.maxPatch||0));
+  else if (sortMode === "name")       filtered.sort((a,b) => (a.name||"").localeCompare(b.name||"", "zh-Hant"));
+  // default：維持原順序（精選在前）
+}
+
+// ════════════════════════════════════════════════════════
+// GRID RENDER
+// ════════════════════════════════════════════════════════
+function renderGrid() {
+  const grid = document.getElementById("outfit-grid");
+  const start = (currentPage - 1) * PAGE_SIZE;
+  const pageItems = filtered.slice(start, start + PAGE_SIZE);
+
+  if (pageItems.length === 0) {
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted)">沒有符合條件的配裝</div>';
+    renderPager();
+    return;
+  }
+
+  grid.innerHTML = pageItems.map((e, i) => buildCard(e, start + i)).join("");
+
+  renderPager();
+}
+
+const TAG_LABEL = {
+  healer:"💚治療", tank:"🛡️盾衛", caster:"🔮法系",
+  melee:"⚔️近戰", pranged:"🏹遠距", crafter:"🔨製作",
+  event:"🗓️活動", pvp:"⚔️PvP", store:"💎Mog", raid:"🗡️副本",
+  scrip:"🔶神典", gs:"🎲金碟"
+};
+
+function buildCard(e, idx) {
+  const isCurated = e.type === "curated";
+
+  const imgHtml = e.image
+    ? `<img class="card-img" src="${thumbOf(e.image)}" alt="${e.name}" loading="lazy" onerror="if(this.src.indexOf('縮圖')>-1){this.src='${e.image}'}else{this.style.display='none'}">`
+    : `<div class="card-img no-img">No Image</div>`;
+
+  // 第一行 meta（精選顯示編號，社群顯示性別種族）
+  let metaHtml;
+  if (isCurated) {
+    const gSym = e.gender === "female" ? "♀" : e.gender === "male" ? "♂" : "";
+    const gCls = e.gender === "female" ? "tag-female" : e.gender === "male" ? "tag-male" : "tag-unk";
+    const rMap = currentLang === "en" ? RACE_LABEL : RACE_ZH;
+    const rName = (e.race && e.race !== "all") ? (rMap[e.race] || e.race) : "";
+    const raceTag = rName ? `<span class="tag-race">${rName}</span>` : "";
+    const genderTag = gSym ? `<span class="${gCls}">${gSym}</span>` : "";
+    metaHtml = `<div class="card-id">#${e.id}${genderTag ? " " + genderTag : ""}${raceTag ? " " + raceTag : ""}</div>`;
+  } else {
+    const gSym  = e.gender === "female" ? "♀" : e.gender === "male" ? "♂" : "?";
+    const gCls  = e.gender === "female" ? "tag-female" : e.gender === "male" ? "tag-male" : "tag-unk";
+    const rMap  = currentLang === "en" ? RACE_LABEL : RACE_ZH;
+    const race  = e.race ? ` ${rMap[e.race] || e.race}` : "";
+    metaHtml = `<div class="card-id"><span class="${gCls}">${gSym}${race}</span></div>`;
+  }
+
+  // 標籤列
+  const rMapTag = currentLang === "en" ? RACE_LABEL : RACE_ZH;
+  const tagBadges = isCurated
+    ? (e.tags || []).map(t => `<span class="card-tag badge-${t}">${TAG_LABEL[t] || t}</span>`).join("")
+    : (e.gender === "female" ? `<span class="tag-female">♀</span>`
+       : e.gender === "male" ? `<span class="tag-male">♂</span>`
+       : `<span class="tag-unk">?</span>`)
+      + (e.race && e.race !== "all" ? `<span class="tag-race">${rMapTag[e.race] || e.race}</span>` : "");
+
+  const favCls = favs.has(e.id) ? " faved" : "";
+  return `<div class="card${isCurated ? " curated-badge" : ""}" onclick="openModal(${idx})">
+  ${isCurated ? '<div class="star-badge">⭐</div>' : ""}
+  <button class="fav-btn${favCls}" title="加入／移除我的收藏" onclick="toggleFav('${String(e.id).replace(/'/g, "\\'")}', event)">★</button>
+  ${imgHtml}
+  <div class="card-body">
+    ${metaHtml}
+    <div class="card-name">${e.name}</div>
+    <div class="card-color">${e.color || ""}</div>
+    <div class="card-tags">${tagBadges}</div>
+  </div>
+</div>`;
+}
+
+// ════════════════════════════════════════════════════════
+// PAGER
+// ════════════════════════════════════════════════════════
+function renderPager() {
+  const pager = document.getElementById("pager");
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  if (totalPages <= 1) { pager.innerHTML = ""; return; }
+
+  let html = "";
+  // Prev
+  html += `<button class="pager-btn${currentPage===1?" disabled":""}" onclick="goPage(${currentPage-1})">‹</button>`;
+  // Page numbers (show up to 7 around current)
+  let lo = Math.max(1, currentPage - 3);
+  let hi = Math.min(totalPages, currentPage + 3);
+  if (lo > 1) html += `<button class="pager-btn" onclick="goPage(1)">1</button>${lo>2?'<span class="pager-info">…</span>':""}`;
+  for (let p = lo; p <= hi; p++) {
+    html += `<button class="pager-btn${p===currentPage?" active":""}" onclick="goPage(${p})">${p}</button>`;
+  }
+  if (hi < totalPages) html += `${hi<totalPages-1?'<span class="pager-info">…</span>':""}<button class="pager-btn" onclick="goPage(${totalPages})">${totalPages}</button>`;
+  // Next
+  html += `<button class="pager-btn${currentPage===totalPages?" disabled":""}" onclick="goPage(${currentPage+1})">›</button>`;
+  html += `<span class="pager-info">${filtered.length} 件 / 第 ${currentPage}/${totalPages} 頁</span>`;
+  html += `<input class="pager-jump" type="number" min="1" max="${totalPages}" placeholder="跳頁"
+            onkeydown="if(event.key==='Enter'){goPage(parseInt(this.value)||1);}">`;
+  pager.innerHTML = html;
+}
+
+function goPage(p) {
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  if (p < 1 || p > totalPages) return;
+  currentPage = p;
+  renderGrid();
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+// ════════════════════════════════════════════════════════
+// MODAL — OPEN / CLOSE / NAV
+// ════════════════════════════════════════════════════════
+function openModal(globalIdx) {
+  currentIdx = globalIdx;
+  const e = filtered[globalIdx];
+  if (!e) return;
+  if (e.type === "curated") {
+    renderCuratedModal(e, globalIdx);
+  } else {
+    renderMiraModal(e, globalIdx);
+  }
+  document.getElementById("modal-overlay").classList.remove("hidden");
+  document.body.style.overflow = "hidden";
+}
+
+function closeModal() {
+  document.getElementById("modal-overlay").classList.add("hidden");
+  document.body.style.overflow = "";
+}
+
+// 保留相容性（舊呼叫路徑）
+function closeMiraModal() { closeModal(); }
+
+function navModal(dir) {
+  const next = currentIdx + dir;
+  if (next >= 0 && next < filtered.length) openModal(next);
+}
+
+// ════════════════════════════════════════════════════════
+// CURATED MODAL RENDER
+// ════════════════════════════════════════════════════════
+function renderCuratedModal(e, idx) {
+  document.getElementById("modal-title").textContent = "#" + e.id + " " + e.name;
+  document.getElementById("modal-subtitle").textContent = e.color || "";
+
+  const imgCol = document.getElementById("modal-img-col");
+  imgCol.innerHTML = modalImg(e.image, e.name);
+
+  const infoCol = document.getElementById("modal-info-col");
+  let html = "";
+  if (e.note) html += `<div class="modal-note">${esc(e.note)}</div>`;
+  html += buildTable(e.pieces || [], currentLang);
+  infoCol.innerHTML = html;
+
+  const counter = document.getElementById("nav-counter");
+  counter.textContent = (idx + 1) + " / " + filtered.length;
+  document.getElementById("prev-btn").onclick = () => navModal(-1);
+  document.getElementById("next-btn").onclick = () => navModal(1);
+  document.getElementById("close-btn").onclick = closeModal;
+  document.getElementById("copy-btn").onclick = () => copyOutfit(e);
+  syncModalFav();
+  document.getElementById("modal-overlay").onclick = ev => {
+    if (ev.target === document.getElementById("modal-overlay")) closeModal();
+  };
+}
+
+// ════════════════════════════════════════════════════════
+// MIRAPRI MODAL RENDER
+// ════════════════════════════════════════════════════════
+function renderMiraModal(e, idx) {
+  // 標題：投稿名稱
+  document.getElementById("modal-title").textContent = e.name;
+
+  // 副標題：性別 · 種族 · 日期 · by 投稿者
+  const genderText = e.gender === "female" ? "♀ 女性" : e.gender === "male" ? "♂ 男性" : "? 未指定";
+  const gCls  = `tag-${e.gender || "unk"}`;
+  const rMap2    = currentLang === "en" ? RACE_LABEL : RACE_ZH;
+  const raceText = e.race ? (rMap2[e.race] || e.race) : (currentLang === "en" ? "Unknown" : "未知種族");
+  const ts = e.timestamp
+    ? (isNaN(e.timestamp) ? String(e.timestamp).split(" ")[0]
+                          : new Date(e.timestamp * 1000).toLocaleDateString("zh-TW"))
+    : "";
+  const byUser = e.color ? `by ${esc(e.color)}` : "";
+  const parts = [ts, byUser].filter(Boolean).join("  ·  ");
+  document.getElementById("modal-subtitle").innerHTML =
+    `<span class="${gCls}">${genderText}</span> · <span class="tag-race">${raceText}</span>` +
+    (parts ? `  <span style="margin-left:6px">${parts}</span>` : "");
+
+  // 圖片
+  const imgCol = document.getElementById("modal-img-col");
+  imgCol.innerHTML = modalImg(e.image, e.name);
+
+  // 裝備表格（6 欄，與精選相同）
+  const equips = e.equipments || [];
+  const lang   = currentLang;
+  const hSlot  = lang === "en" ? "Slot"     : "部位";
+  const hItem  = lang === "en" ? "Item"     : "裝備";
+  const hDye   = lang === "en" ? "Dye"      : "染色";
+  const hPatch = lang === "en" ? "Patch"    : "版本";
+  const hSrc   = lang === "en" ? "Source"   : "取得方式";
+  const hRestr = lang === "en" ? "Restrict" : "限制";
+  let rows = "";
+  if (equips.length) {
+    rows = equips.map(eq => {
+      if (typeof eq === "string") {
+        return `<tr><td colspan="6" class="item-name">${esc(eq)}</td></tr>`;
+      }
+      const slot     = eq.slot || "";
+      const slotLbl  = lang === "en" ? (SLOT_EN[slot] || slot) : slot;
+      const zhName   = eq.zh   || "";
+      const jaName   = eq.name || "";
+      const dispName = lang === "en" ? (jaName || zhName) : (zhName || jaName);
+      const subName  = dispName !== jaName && jaName ? `<div class="item-en">${esc(jaName)}</div>` : "";
+      const nameClass = "item-name";
+      const lookupName = (zhName || jaName).replace(/'/g, "\\'");
+      const dispHtml = dispName
+        ? `<span class="item-link" title="查看使用此裝備的其他套裝" onclick="searchItem('${esc(lookupName)}')">${esc(dispName)}</span>`
+        : "";
+      // 染色（社群套裝無染色資料）
+      const dye = `<span class="dye-dash">—</span><span class="dye-dash">—</span>`;
+      // 版本
+      const patchHtml = eq.patch ? `<span class="patch-tag">${esc(eq.patch)}</span>` : "";
+      // 取得方式
+      const st     = eq.st || "other";
+      const stCls  = SRC_CLASS[st] || "src-other";
+      const src    = eq.source || "";
+      const srcHtml = src ? `<span class="source-tag ${stCls}">${esc(src)}</span>` : "—";
+      // 限制
+      const lvHtml  = eq.lv && eq.lv !== "1" ? `<span class="restrict-level">Lv.${eq.lv}</span>` : "";
+      const jobHtml = eq.job && eq.job !== "全職業" ? `<span class="restrict-job">${esc(eq.job)}</span>` : "";
+      return `<tr>
+        <td>${slotLbl ? `<span class="slot-badge">${esc(slotLbl)}</span>` : ""}</td>
+        <td class="${nameClass}">${dispHtml}${subName}</td>
+        <td class="dye-cell">${dye}</td>
+        <td class="patch-cell">${patchHtml}</td>
+        <td>${srcHtml}</td>
+        <td class="restrict-cell">${lvHtml}${jobHtml}</td>
+      </tr>`;
+    }).join("");
+  } else {
+    rows = `<tr><td colspan="6" style="color:var(--muted)">無裝備資料</td></tr>`;
+  }
+  // 整套染色（OCR 抓取，未逐件對應，顯示在套裝層級）
+  const dyeLine = (Array.isArray(e.dyes) && e.dyes.length)
+    ? `<div class="mirapri-dye-line">${lang === "en" ? "Dyes used" : "使用染色"}：` +
+      e.dyes.map(d => dyeHtml(d)).join(" ") + `</div>`
+    : "";
+  document.getElementById("modal-info-col").innerHTML =
+    `<table class="equip-table">
+      <thead><tr>
+        <th>${hSlot}</th><th>${hItem}</th><th>${hDye}</th>
+        <th>${hPatch}</th><th>${hSrc}</th><th>${hRestr}</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>` + dyeLine;
+
+  // 導航
+  const counter = document.getElementById("nav-counter");
+  counter.textContent = (idx + 1) + " / " + filtered.length;
+  document.getElementById("prev-btn").onclick = () => navModal(-1);
+  document.getElementById("next-btn").onclick = () => navModal(1);
+  document.getElementById("close-btn").onclick = closeModal;
+  document.getElementById("copy-btn").onclick = () => copyOutfit(e);
+  syncModalFav();
+  document.getElementById("modal-overlay").onclick = ev => {
+    if (ev.target === document.getElementById("modal-overlay")) closeModal();
+  };
+}
+
+// ════════════════════════════════════════════════════════
+// BUILD EQUIPMENT TABLE (curated modal)
+// ════════════════════════════════════════════════════════
+function buildTable(pieces, lang) {
+  if (!pieces || pieces.length === 0) return '<p style="color:var(--muted);padding:12px">無裝備資料</p>';
+
+  const rows = pieces.map(p => {
+    const slotEn  = SLOT_EN[p.slot] || p.slot;
+    const slotLabel = lang === "en" ? slotEn : p.slot;
+    const itemName = lang === "en" ? p.en : (p.zh || p.en);
+    const nameClass = (!p.zh || p.zh.includes("待確認") || p.zh.includes("尚未")) ? "item-name unconfirmed" : "item-name";
+
+    // Dye cells（含色票）
+    const d1 = dyeHtml(p.dye1);
+    const d2 = dyeHtml(p.dye2);
+
+    // Source tag
+    const stClass = SRC_CLASS[p.st] || "src-other";
+    const srcHtml = p.source
+      ? `<span class="source-tag ${stClass}">${esc(p.source)}</span>` : "—";
+
+    // Restriction
+    const lvHtml  = p.lv && p.lv !== "1"  ? `<span class="restrict-level">Lv.${p.lv}</span>` : "";
+    const jobHtml = p.job && p.job !== "全職業" ? `<span class="restrict-job">${esc(p.job)}</span>` : "";
+    const gHtml   = p.gender ? `<span class="restrict-gender">${p.gender==="female"?"♀":"♂"}</span>` : "";
+    const rHtml   = p.race   ? `<span class="restrict-race">${(lang==="en"?RACE_LABEL:RACE_ZH)[p.race]||p.race}</span>` : "";
+    const patchHtml = p.patch ? `<span class="patch-tag">${esc(p.patch)}</span>` : "";
+
+    const lookupName = p.zh || p.en;
+    const nameHtml = itemName
+      ? `<span class="item-link" title="查看使用此裝備的其他套裝" onclick="searchItem('${esc(lookupName).replace(/'/g,"\\'")}')">${esc(itemName)}</span>`
+      : "";
+    return `<tr>
+      <td><span class="slot-badge">${esc(slotLabel)}</span></td>
+      <td class="${nameClass}">${nameHtml}</td>
+      <td class="dye-cell">${d1} ${d2}</td>
+      <td class="patch-cell">${patchHtml}</td>
+      <td>${srcHtml}</td>
+      <td class="restrict-cell">${lvHtml}${jobHtml}${gHtml}${rHtml}</td>
+    </tr>`;
+  }).join("");
+
+  const hSlot  = lang === "en" ? "Slot"   : "部位";
+  const hItem  = lang === "en" ? "Item"   : "裝備";
+  const hDye   = lang === "en" ? "Dye"    : "染色";
+  const hPatch = lang === "en" ? "Patch"  : "版本";
+  const hSrc   = lang === "en" ? "Source" : "取得方式";
+  const hRestr = lang === "en" ? "Restrict" : "限制";
+
+  return `<table class="equip-table">
+    <thead><tr>
+      <th>${hSlot}</th><th>${hItem}</th><th>${hDye}</th>
+      <th>${hPatch}</th><th>${hSrc}</th><th>${hRestr}</th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+}
+
+// ════════════════════════════════════════════════════════
+// 複製裝備清單
+// ════════════════════════════════════════════════════════
+function copyOutfit(e) {
+  const ps = e.type === "mirapri" ? (e.equipments || []) : (e.pieces || []);
+  const lines = [`#${e.id || ""} ${e.name}${e.color ? "（" + e.color + "）" : ""}`.trim()];
+  ps.forEach(p => {
+    if (typeof p === "string") { lines.push(p); return; }
+    const name = p.zh || p.en || p.name || "";
+    if (!name) return;
+    const dyes = [p.dye1, p.dye2].filter(d => d && d !== "—").join("／");
+    lines.push(`${p.slot || "－"}：${name}${dyes ? "（染：" + dyes + "）" : ""}`);
+  });
+  const text = lines.join("\n");
+  const done = () => {
+    const btn = document.getElementById("copy-btn");
+    const orig = btn.textContent;
+    btn.textContent = "✅ 已複製";
+    setTimeout(() => { btn.textContent = orig; }, 1500);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done));
+  } else fallbackCopy(text, done);
+}
+function fallbackCopy(text, done) {
+  const ta = document.createElement("textarea");
+  ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand("copy"); done(); } catch (e) {}
+  document.body.removeChild(ta);
+}
+
+// ════════════════════════════════════════════════════════
+// HELPERS
+// ════════════════════════════════════════════════════════
+function esc(s) {
+  return String(s || "")
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+function updateSubtitle() {
+  const el = document.getElementById("site-subtitle");
+  const curated = filtered.filter(e => e.type === "curated").length;
+  const mira    = filtered.filter(e => e.type === "mirapri").length;
+  const loading = miraLoaded ? "" : (currentLang === "en" ? " · loading community…" : " · 社群配裝載入中…");
+  if (currentLang === "en") {
+    el.textContent = `${filtered.length} outfits (⭐ ${curated} curated · ${mira} community)${loading}`;
+  } else {
+    el.textContent = `共 ${filtered.length} 套（⭐ 精選 ${curated} 套 · 社群 ${mira} 套）${loading}`;
+  }
+  document.getElementById("result-count").textContent =
+    currentLang === "en" ? filtered.length + " results" : filtered.length + " 件";
+}
+
+function setLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll(".lang-btn").forEach(b => b.classList.remove("lang-active"));
+  document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add("lang-active");
+  // Update static labels
+  document.querySelectorAll("[data-zh]").forEach(el => {
+    if (el.dataset.zh) el.textContent = lang === "en" ? (el.dataset.en || el.dataset.zh) : el.dataset.zh;
+  });
+  document.querySelectorAll("[data-zh-placeholder]").forEach(el => {
+    el.placeholder = lang === "en" ? el.dataset.enPlaceholder : el.dataset.zhPlaceholder;
+  });
+  renderGrid();
+  updateSubtitle();
+}
+
+// ════════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════════
+document.addEventListener("DOMContentLoaded", () => {
+  ALL_OUTFITS = (typeof _CURATED_RAW !== "undefined" ? _CURATED_RAW : []).map(annotate);
+  filtered = [...ALL_OUTFITS];
+  renderGrid();
+  updateSubtitle();
+  loadMirapri();   // 社群配裝（8MB）背景載入，完成後自動併入
+
+  // Filter buttons (source/job，可複選)
+  document.querySelectorAll(".filter-btn[data-filter]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const tag = btn.dataset.filter;
+      const set = btn.dataset.group === "src" ? srcTags : jobTags;
+      if (set.has(tag)) { set.delete(tag); btn.classList.remove("active"); }
+      else              { set.add(tag);    btn.classList.add("active"); }
+      applyFilters();
+    });
+  });
+
+  // 我的收藏
+  document.getElementById("fav-filter-btn").addEventListener("click", function () {
+    favOnly = !favOnly;
+    this.classList.toggle("active", favOnly);
+    applyFilters();
+  });
+
+  // 繁中版可幻化
+  document.getElementById("tw-btn").addEventListener("click", function () {
+    twOnly = !twOnly;
+    this.classList.toggle("active", twOnly);
+    applyFilters();
+  });
+
+  // 排序
+  document.getElementById("sort-select").addEventListener("change", function () {
+    sortMode = this.value;
+    applyFilters();
+  });
+
+  // Gender / Race filter buttons
+  document.querySelectorAll(".filter-btn[data-mf]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const field = btn.dataset.mf;
+      const val   = btn.dataset.val;
+      miraFilters[field] = (miraFilters[field] === val && val !== "") ? "" : val;
+      document.querySelectorAll(`.filter-btn[data-mf="${field}"]`).forEach(b => b.classList.remove("active"));
+      const activeBtn = document.querySelector(`.filter-btn[data-mf="${field}"][data-val="${miraFilters[field]}"]`);
+      if (activeBtn) activeBtn.classList.add("active");
+      applyFilters();
+    });
+  });
+
+  // Search
+  document.getElementById("search-input").addEventListener("input", ev => {
+    q = ev.target.value.trim();
+    applyFilters();
+  });
+
+  // Keyboard nav
+  document.addEventListener("keydown", ev => {
+    const modalOpen = !document.getElementById("modal-overlay").classList.contains("hidden");
+    if (modalOpen) {
+      if (ev.key === "ArrowLeft")  navModal(-1);
+      if (ev.key === "ArrowRight") navModal(1);
+      if (ev.key === "Escape") closeModal();
+    }
+  });
+
+  // Set initial active gender button (全部)
+  const allGenderBtn = document.querySelector('.filter-btn[data-mf="gender"][data-val=""]');
+  if (allGenderBtn) allGenderBtn.classList.add("active");
+  const allRaceBtn = document.querySelector('.filter-btn[data-mf="race"][data-val=""]');
+  if (allRaceBtn) allRaceBtn.classList.add("active");
+});
+</script>
+</body>
+</html>
