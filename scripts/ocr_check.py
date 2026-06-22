@@ -74,16 +74,19 @@ MODEL = os.environ.get("OCR_MODEL", "qwen2.5vl:7b")
 MATCH_THRESHOLD = 0.82  # 裝備名相似度門檻
 DYE_THRESHOLD = 0.80    # 染色名校正門檻
 NOT_SHOWN_BELOW = 0.70  # 低於此相似度視為「圖上沒畫」而非抓錯（同系列裝備易在 0.5~0.7 互相誤判）
+OCR_SCHEMA_VER = 2      # OCR 輸出格式版本；快取 ver < 此值視為過期需重跑（v2 = 逐件 item↔dye 配對）
 
 OCR_PROMPT = (
     "これはFF14のミラージュプリズム（装備の見た目）の画像です。"
-    "画像内に表示されている文字を読み取ってください。"
-    "アイコンの近くにある大きめの白い文字が『装備アイテム名』、"
-    "そのすぐ下にある小さい文字が『染色（カララント）名』です。"
-    "装備名と染色名は別々の項目として分けてください。"
+    "画像には装備アイテムが縦に並んでおり、各アイテムごとに"
+    "『装備アイテム名』（アイコンの右側の大きめの白い文字）と、"
+    "そのすぐ下に小さく表示される『染色（カララント）名』（0〜2個）があります。"
+    "各装備を1つのオブジェクトにまとめ、装備名とその直下の染色を必ず対応付けてください。"
+    "染色が表示されていない装備は \"dyes\": [] にしてください。"
     "推測や創作はせず、実際に見える文字だけを出力してください。"
     "次のJSON形式『だけ』を出力（説明文やコードブロックは不要）:\n"
-    '{"items": ["装備名1", "装備名2"], "dyes": ["染色名1"]}'
+    '{"pieces": [{"item": "装備名1", "dyes": ["染色名1", "染色名2"]}, '
+    '{"item": "装備名2", "dyes": []}]}'
 )
 
 
@@ -137,34 +140,45 @@ def snap_dye(token, dye_names):
     return None
 
 
+def _split_item_dye(item, dye_names):
+    """把裝備名尾端黏到的染色 token 切出來。回傳 (clean_item, [extracted_dyes])。"""
+    parts = item.split()
+    if len(parts) <= 1:
+        return item, []
+    head, tail = parts[:], []
+    while len(head) > 1:
+        s = snap_dye(head[-1], dye_names)
+        if s:
+            tail.insert(0, s)
+            head = head[:-1]
+        else:
+            break
+    return " ".join(head), tail
+
+
+def _snap_dye_str(d, dye_names):
+    """整串對不到官方名時再逐 token 試（例：「シューズ スートブラック」）。回傳官方名或 None。"""
+    cand = snap_dye(d, dye_names)
+    if cand is None:
+        for tok in d.split():
+            cand = snap_dye(tok, dye_names)
+            if cand:
+                break
+    return cand
+
+
 def clean_ocr(items, dyes, dye_names):
     """降噪：把裝備名尾端黏到的染色切出來，染色經白名單過濾+校正。
     回傳 (clean_items, clean_dyes)。"""
     clean_items, extracted = [], []
     for it in items:
-        parts = it.split()
-        if len(parts) > 1:
-            head, tail = parts[:], []
-            while len(head) > 1:
-                s = snap_dye(head[-1], dye_names)
-                if s:
-                    tail.insert(0, s)
-                    head = head[:-1]
-                else:
-                    break
-            clean_items.append(" ".join(head))
-            extracted.extend(tail)
-        else:
-            clean_items.append(it)
+        ci, ex = _split_item_dye(it, dye_names)
+        clean_items.append(ci)
+        extracted.extend(ex)
 
     clean_dyes = []
     for d in list(dyes) + extracted:
-        cand = snap_dye(d, dye_names)
-        if cand is None:  # 整串對不到，再試逐 token（例：「シューズ スートブラック」）
-            for tok in d.split():
-                cand = snap_dye(tok, dye_names)
-                if cand:
-                    break
+        cand = _snap_dye_str(d, dye_names)
         if cand:
             clean_dyes.append(cand)
         elif not dye_names:
@@ -173,6 +187,26 @@ def clean_ocr(items, dyes, dye_names):
     clean_items = list(dict.fromkeys([x for x in clean_items if x]))
     clean_dyes = list(dict.fromkeys(clean_dyes))
     return clean_items, clean_dyes
+
+
+def clean_pieces(pieces, dye_names):
+    """逐件清理：切掉黏在裝備名後的染色、染色經官方白名單過濾/校正、每件最多 2 色。
+    過濾掉 OCR 讀到的數字佔位（例 dye:"0"/"1"/"2"，對不到白名單即丟）。
+    回傳 [{"item": 乾淨裝備名, "dyes": [官方染色,...]}]。"""
+    out = []
+    for p in pieces:
+        item, extracted = _split_item_dye(p.get("item", ""), dye_names)
+        dyes = []
+        for d in list(p.get("dyes", [])) + extracted:
+            cand = _snap_dye_str(d, dye_names)
+            if cand:
+                dyes.append(cand)
+            elif not dye_names:
+                dyes.append(d)
+        dyes = list(dict.fromkeys(dyes))[:2]
+        if item:
+            out.append({"item": item, "dyes": dyes})
+    return out
 
 
 # ===================== OCR（Ollama） =====================
@@ -192,7 +226,8 @@ def _encode_image(path, max_edge=1280):
 
 
 def ocr_ollama(path):
-    """回傳原始 (items, dyes)；清理留到後面做。失敗丟例外。"""
+    """回傳原始 (items, dyes, pieces)；清理留到後面做。失敗丟例外。
+    pieces = [{"item": 装備名, "dyes": [染色,...]}]（逐件 item↔dye 配對，v2）。"""
     import requests
 
     payload = {
@@ -205,10 +240,55 @@ def ocr_ollama(path):
     }
     r = requests.post(f"{OLLAMA_URL}/api/generate", json=payload, timeout=300)
     r.raise_for_status()
-    return _parse_ocr_json(r.json().get("response", "").strip())
+    return parse_ocr(r.json().get("response", "").strip())
 
 
-def _parse_ocr_json(raw):
+def parse_ocr(raw):
+    """解析 OCR 回傳：優先 v2 逐件格式 {"pieces":[{item,dyes}]}，
+    對不到再回退舊扁平 {"items":[],"dyes":[]}。回傳 (items, dyes, pieces)。"""
+    pieces = _parse_pieces(raw)
+    if pieces:
+        items, dyes = _pieces_to_flat(pieces)
+        return items, dyes, pieces
+    items, dyes = _parse_flat(raw)              # 回退：舊扁平（染色無法逐件對應）
+    pieces = [{"item": it, "dyes": []} for it in items]
+    return items, dyes, pieces
+
+
+def _parse_pieces(raw):
+    """抽出逐件 [{item, dyes(<=2)}]，去掉同名重複件。"""
+    out = []
+    try:
+        m = re.search(r"\{.*\}", raw, re.S)
+        obj = json.loads(m.group(0) if m else raw)
+        for p in obj.get("pieces", []):
+            if not isinstance(p, dict):
+                continue
+            item = str(p.get("item", "")).strip()
+            dyes = [str(d).strip() for d in (p.get("dyes") or []) if str(d).strip()]
+            if item:
+                out.append({"item": item, "dyes": list(dict.fromkeys(dyes))[:2]})
+    except Exception:
+        pass
+    seen, dedup = set(), []
+    for p in out:
+        k = norm(p["item"])
+        if k and k not in seen:
+            seen.add(k)
+            dedup.append(p)
+    return dedup
+
+
+def _pieces_to_flat(pieces):
+    """從 pieces 推導扁平 (items, dyes)，餵給既有 clean_ocr / diff_one 不用改。"""
+    items = list(dict.fromkeys(p["item"] for p in pieces if p.get("item")))
+    dyes = []
+    for p in pieces:
+        dyes.extend(p.get("dyes", []))
+    return items, list(dict.fromkeys(dyes))
+
+
+def _parse_flat(raw):
     items, dyes = [], []
     try:
         m = re.search(r"\{.*\}", raw, re.S)
@@ -413,13 +493,18 @@ def run(args, ocr_func):
         sig = img_sig(e["image"])
         ck = e["rel_image"]
         cached = cache.get(ck)
-        if cached and cached.get("sig") == sig and not args.force:
+        # ver < OCR_SCHEMA_VER 視為過期：即使圖片 sig 相同也重跑，避免舊扁平資料污染配對
+        fresh = (cached and cached.get("sig") == sig
+                 and cached.get("ver", 1) >= OCR_SCHEMA_VER and not args.force)
+        if fresh:
             raw_items, raw_dyes = cached["items"], cached["dyes"]
+            raw_pieces = cached.get("pieces", [])
             tag = "cache"
         else:
             try:
-                raw_items, raw_dyes = ocr_func(e["image"])
-                cache[ck] = {"sig": sig, "items": raw_items, "dyes": raw_dyes,
+                raw_items, raw_dyes, raw_pieces = ocr_func(e["image"])
+                cache[ck] = {"sig": sig, "ver": OCR_SCHEMA_VER,
+                             "items": raw_items, "dyes": raw_dyes, "pieces": raw_pieces,
                              "at": datetime.now().isoformat(timespec="seconds")}
                 tag = "ocr"
             except Exception as ex:
@@ -536,12 +621,16 @@ def _mock_ocr_factory():
         bn = os.path.basename(path)
         names = list(dict.fromkeys(_MOCK_LOOKUP.get(bn, [])))
         if not names:
-            return (["テスト装備A", "テスト装備B"], ["スノウホワイト"])
+            items, dyes = ["テスト装備A", "テスト装備B"], ["スノウホワイト"]
+            return (items, dyes,
+                    [{"item": items[0], "dyes": dyes}, {"item": items[1], "dyes": []}])
         items = names[:]
         if len(items) > 1:
             items = items[:-1]                       # 漏掉最後一件 → 測 missing
         items.append("謎の追加アイテムEX スートブラック")  # 多一件+名後黏染色 → 測 extra/clean
-        return (items, ["スートブラック", "RE", "メイドパンプス"])  # 測白名單過濾
+        dyes = ["スートブラック", "RE", "メイドパンプス"]   # 測白名單過濾
+        pieces = [{"item": it, "dyes": []} for it in items]
+        return (items, dyes, pieces)
 
     return fake
 
