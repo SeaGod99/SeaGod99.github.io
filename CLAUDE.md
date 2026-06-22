@@ -26,14 +26,18 @@ FF14時尚配裝/
 │   ├── compress_mirapri.py # 壓縮 mirapri 原圖（長邊1100/q76，防重複壓縮）
 │   ├── verify_data.py    # curated 資料正確性檢查（名稱/等級/職業/取得方式 vs DB），輸出 data/驗證報告.md
 │   ├── pipeline.py       # Mirapri 抓取 + enrich 流程
-│   ├── ocr_check.py      # ★ 用 Ollama 視覺模型對圖做 OCR，比對現有資料（見「OCR 檢查流程」）
-│   └── apply_dyes.py     # 把 OCR 抓到的染色整理成每套繁中清單 → data/mirapri_dyes.json
+│   ├── ocr_check.py      # ★ 用 Ollama 視覺模型對圖做 OCR（v2 逐件 item↔dye），比對現有資料（見「OCR 檢查流程」）
+│   ├── apply_dyes.py     # OCR 結果 → 逐件染色 mirapri_piece_dyes.json + 整套 fallback + 可見裝備
+│   ├── itemdb.py         # FF14 道具資料庫索引（norm(日文)→id→繁中/英/日；resolve 解析 OCR 字串）
+│   ├── resolve_ocr.py    # OCR 字串對回資料庫正式值（抓漏候選/繁中校正）→ 報告，不改 curated
+│   └── ab_resolution.py  # Phase 4：在 OCR 失敗集上 A/B 解析度與模型（決定 max_edge）
 ├── data/
 │   ├── curated_outfits.json       # ★ 精選套裝唯一資料來源（直接編輯這份）
 │   ├── all_outfits_enriched.json  # pipeline 產出，build_site.py 的社群資料來源
 │   ├── dye_names_ja.json          # 官方染色日文名白名單（ocr_check.py 降噪用）
 │   ├── dye_ja_to_zh.json          # 日文染色官方名 → 繁中名對照（apply_dyes.py 用）
-│   ├── mirapri_dyes.json          # apply_dyes.py 產出：{outfit_id: [繁中染色]}，build_site.py 併入
+│   ├── mirapri_piece_dyes.json    # apply_dyes.py 產出：{outfit_id: {裝備日文名: [繁中染色]}}（v2 逐件，彈窗逐列顯示）
+│   ├── mirapri_dyes.json          # apply_dyes.py 產出：{outfit_id: [繁中染色]}（整套 fallback，未有逐件時用）
 │   └── mirapri_visible.json       # apply_dyes.py 產出：{outfit_id: [圖上可見裝備]}，build_site.py 用來濾掉替代裝備
 └── 資料來源/
     ├── items.json       # 繁中道具資料庫（主要來源）
@@ -372,17 +376,26 @@ py scripts\ocr_check.py --target mirapri  --id <outfit_id>  --force
 
 ### 把 OCR 結果寫回網站（apply_dyes.py）
 
-`apply_dyes.py` 讀 `data/ocr_cache.json`（累積所有 OCR 過的圖）產出兩份，build_site.py 會用：
+`apply_dyes.py` 讀 `data/ocr_cache.json`（累積所有 OCR 過的圖）產出三份，build_site.py 會用：
 
-1. `data/mirapri_dyes.json` — 每套繁中染色 → 彈窗顯示「使用染色」（OCR 是整套染色、未逐件對應，故顯示在套裝層級）。
-2. `data/mirapri_visible.json` — 每套「圖上實際畫出來」的裝備（= OCR 有讀到的）。
+1. `data/mirapri_piece_dyes.json` — **逐件染色** `{outfit_id: {裝備日文名: [繁中染色]}}`：
+   OCR v2 的 pieces 已把「裝備名↔它下面的染色」配對好，apply_dyes 再用 best_match 把每件
+   染色掛到該套記錄裝備上 → 彈窗**逐列顯示** dye1/dye2（比照精選套裝）。
+2. `data/mirapri_dyes.json` — 整套繁中染色 `{outfit_id: [繁中染色]}`，當 **fallback**：
+   尚未重跑成 v2（無逐件資料）的套，彈窗底部仍顯示「使用染色」整套清單。
+3. `data/mirapri_visible.json` — 每套「圖上實際畫出來」的裝備（= OCR 有讀到的）。
    build_site.py 用它**濾掉替代裝備**：Mirapri 投稿常在同配方附替代款，原始清單會比圖片多；
    過濾後彈窗清單只剩圖上實際穿的。
 
+> OCR 輸出格式版本 `OCR_SCHEMA_VER=2`：快取每筆帶 `ver` 與 `pieces`；`ver<2`（舊扁平）視為
+> 過期、即使圖片未變也會重跑。改 prompt 後用 `--mode all` 即可全量遷移（resumable）。
+> 縮圖長邊 `OCR_MAX_EDGE`（預設 1280；A/B 實測 1568/2048 零增益，故維持 1280）。
+
 ```
-py scripts\ocr_check.py     # 1. 跑/吃快取，產生 OCR 結果（選單一路 Enter＝全部）
-py scripts\apply_dyes.py    # 2. 快取 → mirapri_dyes.json + mirapri_visible.json
-py scripts\build_site.py    # 3. 併入染色、濾掉替代裝備，重建 mirapri_outfits.js
+py scripts\ocr_check.py     # 1. 跑/吃快取，產生 v2 OCR 結果（選單一路 Enter＝全部）
+py scripts\apply_dyes.py    # 2. 快取 → mirapri_piece_dyes.json + mirapri_dyes.json + mirapri_visible.json
+py scripts\build_site.py    # 3. 填逐件染色、濾掉替代裝備，重建 mirapri_outfits.js
+py scripts\resolve_ocr.py   # （選用）OCR 字串對回 DB 正式值 → data/OCR解析建議.md（人工審後再套）
 ```
 
 注意：過濾只對「有 OCR 過且至少認出 1 件」的套生效，沒 OCR 的套原樣保留以免誤刪；
