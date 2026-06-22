@@ -23,7 +23,8 @@ CURATED_JSON = ROOT / "data" / "curated_outfits.json"
 ENRICHED_PATH = ROOT / "data" / "all_outfits_enriched.json"
 CURATED_JS = ROOT / "curated_outfits.js"
 MIRAPRI_JS = ROOT / "mirapri_outfits.js"
-MIRAPRI_DYES = ROOT / "data" / "mirapri_dyes.json"     # apply_dyes.py 產生：{id: [繁中染色]}
+MIRAPRI_DYES = ROOT / "data" / "mirapri_dyes.json"     # apply_dyes.py 產生：{id: [繁中染色]}（整套 fallback）
+MIRAPRI_PIECE_DYES = ROOT / "data" / "mirapri_piece_dyes.json"  # {id: {裝備日文名: [繁中染色]}}（v2 逐件）
 MIRAPRI_VISIBLE = ROOT / "data" / "mirapri_visible.json"  # apply_dyes.py 產生：{id: [圖上可見裝備日文名]}
 
 # 取得方式 emoji → st 標籤（取 source 字串中第一個出現的 emoji）
@@ -104,7 +105,7 @@ def normalize_curated(curated):
     return curated
 
 
-def transform_mirapri(o, dyemap=None, vismap=None):
+def transform_mirapri(o, dyemap=None, vismap=None, piecemap=None):
     img = o.get("image") or o.get("img") or ""
     fname = img.split("/")[-1] if img else ""
     oid = o.get("id", "")
@@ -117,6 +118,16 @@ def transform_mirapri(o, dyemap=None, vismap=None):
         visset = set(vis)
         equips = [e for e in equips if e.get("name", "") in visset]
 
+    # 逐件染色（v2）：以裝備日文名對應 dye1/dye2；無資料則 — —，由 fallback 行顯示整套染色
+    pdye = (piecemap or {}).get(oid, {})
+    out_equips = []
+    for e in equips:
+        e = dict(e)
+        ds = pdye.get(e.get("name", ""), [])
+        e["dye1"] = ds[0] if len(ds) >= 1 else "—"
+        e["dye2"] = ds[1] if len(ds) >= 2 else "—"
+        out_equips.append(e)
+
     return {
         "type": "mirapri",
         "id": oid,
@@ -128,8 +139,9 @@ def transform_mirapri(o, dyemap=None, vismap=None):
         "tags": [],
         "note": "",
         "timestamp": o.get("timestamp", ""),
-        "equipments": equips,
-        "dyes": (dyemap or {}).get(oid, []),  # OCR 抓到的整套染色（繁中）
+        "equipments": out_equips,
+        "dyes": (dyemap or {}).get(oid, []),  # 整套染色 fallback（繁中）
+        "hasPieceDyes": bool(pdye),           # True：彈窗逐列已有染色，不再顯示整套 fallback 行
     }
 
 
@@ -139,13 +151,18 @@ def main():
     dyemap = {}
     if MIRAPRI_DYES.exists():
         dyemap = json.loads(MIRAPRI_DYES.read_text(encoding="utf-8"))
+    piecemap = {}
+    if MIRAPRI_PIECE_DYES.exists():
+        piecemap = json.loads(MIRAPRI_PIECE_DYES.read_text(encoding="utf-8"))
     vismap = {}
     if MIRAPRI_VISIBLE.exists():
         vismap = json.loads(MIRAPRI_VISIBLE.read_text(encoding="utf-8"))
 
     enriched = json.loads(ENRICHED_PATH.read_text(encoding="utf-8"))
     arr = enriched if isinstance(enriched, list) else enriched.get("outfits", [])
-    mirapri = [transform_mirapri(o, dyemap, vismap) for o in arr if o.get("type") == "mirapri"]
+    mirapri = [transform_mirapri(o, dyemap, vismap, piecemap) for o in arr if o.get("type") == "mirapri"]
+    n_piece = sum(1 for m in mirapri if m.get("hasPieceDyes"))
+    print(f"  逐件染色（v2）套數：{n_piece}")
 
     CURATED_JS.write_text(
         "const _CURATED_RAW = " + json.dumps(curated, ensure_ascii=False) + ";\n",

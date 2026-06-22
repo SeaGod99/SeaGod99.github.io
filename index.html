@@ -912,8 +912,8 @@ function renderMiraModal(e, idx) {
       const dispHtml = dispName
         ? `<span class="item-link" title="查看使用此裝備的其他套裝" onclick="searchItem('${esc(lookupName)}')">${esc(dispName)}</span>`
         : "";
-      // 染色（社群套裝無染色資料）
-      const dye = `<span class="dye-dash">—</span><span class="dye-dash">—</span>`;
+      // 染色（v2 逐件；無逐件資料時為 — —，改由套裝層級 dyeLine fallback 顯示）
+      const dye = `${dyeHtml(eq.dye1)} ${dyeHtml(eq.dye2)}`;
       // 版本
       const patchHtml = eq.patch ? `<span class="patch-tag">${esc(eq.patch)}</span>` : "";
       // 取得方式
@@ -936,8 +936,8 @@ function renderMiraModal(e, idx) {
   } else {
     rows = `<tr><td colspan="6" style="color:var(--muted)">無裝備資料</td></tr>`;
   }
-  // 整套染色（OCR 抓取，未逐件對應，顯示在套裝層級）
-  const dyeLine = (Array.isArray(e.dyes) && e.dyes.length)
+  // 整套染色 fallback：僅在「沒有逐件染色資料」時顯示（尚未重跑 v2 的社群套裝）
+  const dyeLine = (!e.hasPieceDyes && Array.isArray(e.dyes) && e.dyes.length)
     ? `<div class="mirapri-dye-line">${lang === "en" ? "Dyes used" : "使用染色"}：` +
       e.dyes.map(d => dyeHtml(d)).join(" ") + `</div>`
     : "";
