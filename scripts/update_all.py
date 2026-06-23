@@ -16,14 +16,22 @@ from pathlib import Path
 SCRIPTS = Path(__file__).parent
 ROOT = SCRIPTS.parent
 
+# (檔名, 標題, 說明, 參數)
 FULL_STEPS = [
-    ("pipeline.py",         "取圖＋裝備配置", "從 Mirapri 抓新投稿、下載圖片，補繁中名稱／部位／取得方式（視新資料量約 1～10 分鐘）"),
-    ("compress_mirapri.py", "圖片壓縮",       "壓縮新下載的圖片（之前壓過的會自動跳過）"),
-    ("make_thumbs.py",      "卡片縮圖",       "為新圖片產生縮圖（已有的會自動跳過）"),
-    ("build_site.py",       "重建網頁資料",   "data/curated_outfits.json → curated_outfits.js / mirapri_outfits.js"),
-    ("health_check.py",     "資料健檢",       "檢查缺圖、缺繁中、重複編號、JSON 是否同步"),
+    ("update_db.py",         "檢查物品DB",   "比對線上繁中道具庫版本（只檢查不覆蓋；要更新再手動跑 --apply）", ["--check"]),
+    ("pipeline.py",          "取圖＋配裝",   "從 Mirapri 抓新投稿、下載圖片，補繁中名稱／部位／取得方式（視新資料量約 1～10 分鐘）", ["all"]),
+    ("compress_mirapri.py",  "圖片壓縮",     "壓縮新下載的圖片（之前壓過的會自動跳過）", []),
+    ("make_thumbs.py",       "卡片縮圖",     "為新圖片產生縮圖（已有的會自動跳過）", []),
+    ("ocr_check.py",         "OCR 辨識",     "對新圖 OCR 讀裝備名＋染色（需 Ollama；已 OCR 過的吃快取跳過）", ["--target", "mirapri", "--mode", "all"]),
+    ("apply_dyes.py",        "逐件染色",     "OCR 結果 → 逐件染色 + 整套 fallback + 可見裝備", []),
+    ("reconstruct_empty.py", "重建空殼裝備", "空殼套裝用 OCR+DB 重建裝備（部位／繁中／染色／取得方式）", []),
+    ("build_site.py",        "重建網頁資料", "curated／mirapri／重建／染色 → curated_outfits.js / mirapri_outfits.js", []),
+    ("health_check.py",      "資料健檢",     "檢查缺圖、缺繁中、重複編號、JSON 是否同步", []),
 ]
-LOCAL_STEPS = FULL_STEPS[3:]
+# 本地重建：不抓網路、不 OCR，只用現有快取/enriched 重新整理＋重建
+LOCAL_STEPS = [s for s in FULL_STEPS if s[0] in
+               ("apply_dyes.py", "reconstruct_empty.py", "build_site.py", "health_check.py")]
+NONFATAL = {"health_check.py", "update_db.py"}  # 非 0 退出視為提示，不中止流程
 
 
 def fail(msg, hint=""):
@@ -54,7 +62,7 @@ def preflight(local_only):
             problems.append(f"找不到必要檔案：{f.relative_to(ROOT)}")
     # 腳本齊全
     steps = LOCAL_STEPS if local_only else FULL_STEPS
-    for name, _, _ in steps:
+    for name, *_ in steps:
         if not (SCRIPTS / name).exists():
             problems.append(f"找不到腳本：scripts/{name}")
     if problems:
@@ -88,17 +96,17 @@ def choose_mode():
         print("⚠️  看不懂這個輸入，請輸入 1、2 或 Q。")
 
 
-def run_step(i, total, name, title, desc):
+def run_step(i, total, name, title, desc, args):
     print(f"\n{'═'*58}")
-    print(f"▶ 步驟 {i}/{total}：{title}（{name}）")
+    print(f"▶ 步驟 {i}/{total}：{title}（{name}{' ' + ' '.join(args) if args else ''}）")
     print(f"  {desc}")
     print("═"*58, flush=True)
     t0 = time.time()
-    r = subprocess.run([sys.executable, str(SCRIPTS / name)])
+    r = subprocess.run([sys.executable, str(SCRIPTS / name), *args])
     dt = time.time() - t0
-    if r.returncode != 0 and name != "health_check.py":
+    if r.returncode != 0 and name not in NONFATAL:
         fail(f"步驟「{title}」失敗（exit {r.returncode}），流程已中止。",
-             f"可單獨重跑檢查問題：python scripts/{name}")
+             f"可單獨重跑檢查問題：python scripts/{name} {' '.join(args)}")
     print(f"✓ 步驟 {i}/{total} 完成（{dt:.0f} 秒）")
     return r.returncode
 
@@ -123,15 +131,15 @@ def main():
     steps = LOCAL_STEPS if local_only else FULL_STEPS
     mode = "本地重建" if local_only else "完整更新"
     print(f"\n📋 模式：{mode}，共 {len(steps)} 個步驟")
-    for i, (name, title, _) in enumerate(steps, 1):
+    for i, (name, title, *_rest) in enumerate(steps, 1):
         print(f"   {i}. {title}（{name}）")
 
     preflight(local_only)
 
     t0 = time.time()
     warn = 0
-    for i, (name, title, desc) in enumerate(steps, 1):
-        rc = run_step(i, len(steps), name, title, desc)
+    for i, (name, title, desc, args) in enumerate(steps, 1):
+        rc = run_step(i, len(steps), name, title, desc, args)
         if name == "health_check.py":
             warn = rc
 
