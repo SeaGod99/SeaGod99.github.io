@@ -24,6 +24,7 @@ from datetime import datetime
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import ocr_check as oc
+import pipeline as pl  # 取得方式／版本解析（與 mirapri enrich 同一套邏輯，DRY）
 from itemdb import ItemDB
 
 OUT = os.path.join(oc.DATA, "mirapri_reconstructed.json")
@@ -61,8 +62,26 @@ def cat_to_slot(cat):
     return "武器"  # 其餘可裝備（已 equipStats 過濾）= 武器／工具
 
 
+def enrich_meta(iid, pdb):
+    """item id → (patch, lv, job, source, st)，沿用 pipeline 的 enrich 邏輯。
+    取得方式先查 sources.json，補不到再查 obtainable-methods，最後啟發式（舊化的→幻洋奇境）。"""
+    items = pdb["items"]
+    item = items.get(iid, {})
+    patch = item.get("patch", "")
+    lvv = item.get("equipLevel", "")
+    lv = str(lvv) if lvv and lvv != 1 else ""          # 同 step_b2：Lv.1 視為無等級限制
+    job_str = item.get("equipStats", {}).get("classJobCategoryName", "")
+    job = pl._job_label(job_str) if job_str else "全職業"
+    src, st = pl._resolve_from_sources(iid, items, pdb["sources"], pdb["recipes_json"])
+    if not src:
+        src, st = pl._resolve_from_om(iid, items, pdb["om"], pdb["tw_npcs"],
+                                      pdb["tw_places"], pdb["tw_quests"], pdb["recipe_by_id"])
+    return patch, lv, job, src, (st or "other")
+
+
 def main():
     db = ItemDB()
+    pdb = pl.load_all_data()  # items/sources/om/recipes…（取得方式解析用）
     dye_names = oc.load_dye_whitelist()
     ja2zh = oc.load_json(JA2ZH, {})
     cache = oc.load_json(oc.CACHE_JSON, {})
@@ -82,7 +101,7 @@ def main():
         return memo[s]
 
     recon, rows = {}, []
-    n_pieces = n_lowconf = n_nonequip = n_noresolve = 0
+    n_pieces = n_lowconf = n_nonequip = n_noresolve = n_src = 0
     for rel, rec in cache.items():
         o = bn2o.get(os.path.basename(str(rel).replace("\\", "/")))
         if not o:
@@ -99,9 +118,12 @@ def main():
             if not db.id_to_equip.get(hit["id"], False):
                 skipped.append((cp["item"], "非裝備")); n_nonequip += 1; continue
             zhd = list(dict.fromkeys(ja2zh.get(d, d) for d in cp["dyes"]))
+            patch, lv, job, src, st = enrich_meta(hit["id"], pdb)
+            if src:
+                n_src += 1
             equips.append({
                 "name": hit["ja"], "zh": hit["zh"], "slot": cat_to_slot(db.id_to_cat.get(hit["id"], "")) or "",
-                "patch": "", "lv": "", "job": "", "source": "", "st": "other",
+                "patch": patch, "lv": lv, "job": job, "source": src, "st": st,
                 "dye1": zhd[0] if len(zhd) >= 1 else "—",
                 "dye2": zhd[1] if len(zhd) >= 2 else "—",
                 "recon": True,
@@ -112,19 +134,23 @@ def main():
             rows.append((o, equips, skipped))
 
     oc._save_json(OUT, recon)
-    _write_report(rows, len(recon), n_pieces, n_lowconf, n_nonequip, n_noresolve)
+    _write_report(rows, len(recon), n_pieces, n_lowconf, n_nonequip, n_noresolve, n_src)
+    pct = 100 * n_src // n_pieces if n_pieces else 0
     print(f"重建 {len(recon)} 套空殼｜共 {n_pieces} 件"
           f"（跳過 低信心{n_lowconf}／非裝備{n_nonequip}／無解{n_noresolve}）")
+    print(f"  取得方式：{n_src}/{n_pieces}（{pct}%）已標來源＋版本（patch）")
     print(f"  → {os.path.relpath(OUT, oc.ROOT)} / {os.path.relpath(REPORT, oc.ROOT)}")
     print("  build_site.py 會對空殼套合併這份；側邊檔刪掉即還原。")
 
 
-def _write_report(rows, n_outfit, n_pieces, lc, ne, nr):
+def _write_report(rows, n_outfit, n_pieces, lc, ne, nr, n_src=0):
+    pct = 100 * n_src // n_pieces if n_pieces else 0
     L = ["# 空殼套裝重建報告", ""]
     L.append(f"- 產生：{datetime.now().strftime('%Y-%m-%d %H:%M')}")
     L.append(f"- **重建 {n_outfit} 套、共 {n_pieces} 件**　跳過：低信心 {lc}／非裝備 {ne}／無解 {nr}")
     L.append("- 只收「精確或相似≥0.9 且確實可裝備」的件；部位由 categoryName 推導。")
-    L.append("- source／版本／職業留空（待補）；染色取自 OCR 逐件。")
+    L.append(f"- 取得方式／版本／職業／等級已由資料庫補上（與 mirapri enrich 同邏輯）；"
+             f"**有來源 {n_src}/{n_pieces}（{pct}%）**。染色取自 OCR 逐件。")
     L.append("")
     slots = Counter(e["slot"] for _, eqs, _ in rows for e in eqs)
     L.append("部位分布：" + "　".join(f"{s or '?'}×{n}" for s, n in slots.most_common()))
@@ -133,7 +159,12 @@ def _write_report(rows, n_outfit, n_pieces, lc, ne, nr):
         L.append(f"### {o.get('title','')}　`{o.get('id','')}`（{len(eqs)} 件）")
         for e in eqs:
             d = "／".join(x for x in [e["dye1"], e["dye2"]] if x and x != "—")
-            L.append(f"- [{e['slot'] or '?'}] {e['zh'] or '（無繁中）'}　{e['name']}" + (f"　染:{d}" if d else ""))
+            meta = "　".join(x for x in [
+                (f"v{e['patch']}" if e.get("patch") else ""),
+                (e["source"] if e.get("source") else "（無來源）"),
+            ] if x)
+            L.append(f"- [{e['slot'] or '?'}] {e['zh'] or '（無繁中）'}　{e['name']}"
+                     + (f"　染:{d}" if d else "") + (f"　<sub>{meta}</sub>" if meta else ""))
         if skipped:
             L.append("  <sub>跳過：" + "、".join(f"{n}({r})" for n, r in skipped) + "</sub>")
         L.append("")

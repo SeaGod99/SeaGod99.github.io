@@ -335,7 +335,7 @@ _PURPLE_SCRIP = {33913, 33914}
 _OLD_SCRIP    = {28,10309,24909,30272,31339,33329,33330,
                  35834,36658,38211,38942,39365,39919,41305,41306,41786}
 _INST_TYPE    = {1:"試煉",2:"迷宮挑戰",3:"高難度討伐",4:"討伐歼滅戰",
-                 5:"聯隊突擊",6:"絕境戰",22:"聯隊突擊",28:"幻洋奇境"}
+                 5:"聯隊突擊",6:"絕境戰",22:"聯隊突擊",28:"絕境戰"}  # 28=絕（絕巴哈姆特/絕龍詩…）
 _JOB_CRAFT    = {8:"木工",9:"鍛造",10:"甲冑",11:"金工",
                  12:"皮革",13:"裁縫",14:"鍊金",15:"烹調"}
 _NEEDS_RESOLVE = {"🪙代幣","🛒商店","🗡️副本（副本）","⚔️PvP",
@@ -344,7 +344,7 @@ _CLEAR_TYPES   = {"desynth","drop","venture","🪙雇員探險",
                   "gardening","alarm","reduction","islandcrop","islandpasture"}
 
 
-def _add_specialshop(cid, pstr, items, results):
+def _add_specialshop(cid, pstr, items, results, vendor=None):
     if cid in _PVP_IDS:
         cname = items.get(str(cid),{}).get("name","PvP")
         results.append((2, f"⚔️PvP {cname}{pstr}", "pvp"))
@@ -362,7 +362,12 @@ def _add_specialshop(cid, pstr, items, results):
     else:
         cat = items.get(str(cid),{}).get("categoryId",0) if cid else 0
         if 1 <= (cat or 0) <= 49:
-            results.append((2, "🗡️幻洋奇境（裝備升級）", "raid"))
+            # 兌換貨幣本身是「裝備」=拿前一階裝備向 NPC 兌換升級版（非副本，更非「幻洋奇境」）
+            npc, zone = vendor or ("", "")
+            if npc:
+                results.append((4, f"🛒{npc}（{zone}）" if zone else f"🛒{npc}", "npc"))
+            else:
+                results.append((5, "🛒裝備升級兌換", "npc"))
         else:
             cname = items.get(str(cid),{}).get("name","代幣") if cid else "代幣"
             results.append((2, f"🪙{cname}{pstr}", "other"))
@@ -379,7 +384,9 @@ def _resolve_from_sources(item_id, items, sources, recipes_json):
             results.append((1, f"🗡️{name}（{itype}）", "raid"))
         elif t == "specialshop":
             cid = s.get("currencyItemId"); price = s.get("price","")
-            _add_specialshop(cid, f"×{price}" if price else "", items, results)
+            v = (s.get("vendors") or [{}])[0]
+            _add_specialshop(cid, f"×{price}" if price else "", items, results,
+                             vendor=(v.get("npcName",""), v.get("zoneName","")))
         elif t == "vendor":
             v = (s.get("vendors") or [{}])[0]
             npc  = v.get("npcName","NPC商人"); zone = v.get("zoneName","")
@@ -488,17 +495,14 @@ def step_b3_enrich_sources(all_outfits, db):
             new_src, new_st = _resolve_from_om(item_id, items, om, tw_npcs, tw_places, tw_quests, recipe_by_id)
             if new_src:
                 eq["source"] = new_src; eq["st"] = new_st; stats["from_om"] += 1; continue
-            tw_name = items.get(item_id,{}).get("name","")
-            if tw_name.startswith("舊化的"):
-                eq["source"] = "🗡️幻洋奇境（裝備升級）"; eq["st"] = "raid"
-                stats["from_heuristic"] += 1; continue
+            # 查不到就留空（待確認）；不再用「舊化的→幻洋奇境」啟發式造假
             stats["unresolvable"] += 1
 
     total  = sum(len(o["equipments"]) for o in all_outfits if o.get("type")=="mirapri")
     filled = sum(1 for o in all_outfits if o.get("type")=="mirapri"
                    for eq in o["equipments"] if eq.get("source","").strip())
     print(f"  sources.json：{stats['from_sources']:,}  obtainable-methods：{stats['from_om']:,}  "
-          f"啟發式：{stats['from_heuristic']:,}  跳過：{stats['skipped']:,}  "
+          f"跳過：{stats['skipped']:,}  "
           f"查無ID：{stats['no_id']:,}  無來源：{stats['unresolvable']:,}")
     print(f"  有 source：{filled:,}/{total:,}（{100*filled//total if total else 0}%）")
 
