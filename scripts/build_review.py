@@ -56,7 +56,7 @@ def main():
     recon_ids = set(oc.load_json(os.path.join(oc.DATA, "mirapri_reconstructed.json"), {}).keys())
 
     items = []
-    cat_count = {"empty": 0, "few": 0, "underread": 0, "lowconf": 0, "missing": 0, "recon": 0}
+    cat_count = {"empty": 0, "few": 0, "toomany": 0, "underread": 0, "lowconf": 0, "missing": 0, "recon": 0}
     for o in built:
         oid = o["id"]
         pieces = o.get("equipments", [])
@@ -69,6 +69,8 @@ def main():
             cats.append("empty")
         elif shown < 4:
             cats.append("few")
+        if shown > 7:
+            cats.append("toomany")  # 裝備過多（>7 件，多半含替代款/飾品，待修剪）
         if viscount is not None and viscount < VIS_FLOOR and shown >= VIS_FLOOR:
             cats.append("underread")
 
@@ -124,7 +126,7 @@ def main():
         })
 
     # 嚴重度排序：empty → few → underread → lowconf → missing
-    order = {"empty": 0, "few": 1, "underread": 2, "lowconf": 3, "missing": 4, "recon": 5}
+    order = {"empty": 0, "few": 1, "toomany": 2, "underread": 3, "lowconf": 4, "missing": 5, "recon": 6}
     items.sort(key=lambda it: min(order[c] for c in it["cats"]))
 
     with open(OUT_JS, "w", encoding="utf-8") as f:
