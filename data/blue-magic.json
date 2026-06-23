@@ -1,7 +1,7 @@
 {
   "schema": "blue-magic",
   "patch": "7.2",
-  "updated": "2026-06-09",
+  "updated": "2026-06-23",
   "source": "xivapi",
   "count": 124,
   "data": [
@@ -14,7 +14,12 @@
       "rank": 1,
       "aspect": "水",
       "type": "魔法",
-      "learnFrom": [],
+      "learnFrom": [
+        {
+          "type": "預設",
+          "detail": "青魔法師初始法術（習得職業即會）"
+        }
+      ],
       "patch": "4.5",
       "learnFromMob": []
     },
@@ -259,7 +264,14 @@
       "rank": 3,
       "aspect": "無",
       "type": "魔法",
-      "learnFrom": [],
+      "learnFrom": [
+        {
+          "type": "圖騰",
+          "detail": "異男子嘎希加（烏爾達哈）兌換・習得 10 個青魔法",
+          "npc": "異男子嘎希加",
+          "npcLocation": "烏爾達哈"
+        }
+      ],
       "patch": "4.5",
       "learnFromMob": []
     },
@@ -403,7 +415,14 @@
       "rank": 2,
       "aspect": "無",
       "type": "魔法",
-      "learnFrom": [],
+      "learnFrom": [
+        {
+          "type": "圖騰",
+          "detail": "異男子嘎希加（烏爾達哈）兌換・習得 5 個青魔法",
+          "npc": "異男子嘎希加",
+          "npcLocation": "烏爾達哈"
+        }
+      ],
       "patch": "4.5",
       "learnFromMob": []
     },
@@ -439,7 +458,14 @@
       "rank": 2,
       "aspect": "無",
       "type": "魔法",
-      "learnFrom": [],
+      "learnFrom": [
+        {
+          "type": "圖騰",
+          "detail": "異男子嘎希加（烏爾達哈）兌換・習得 20 個青魔法",
+          "npc": "異男子嘎希加",
+          "npcLocation": "烏爾達哈"
+        }
+      ],
       "patch": "4.5",
       "learnFromMob": []
     },
@@ -604,7 +630,14 @@
       "rank": 4,
       "aspect": "無",
       "type": "魔法",
-      "learnFrom": [],
+      "learnFrom": [
+        {
+          "type": "圖騰",
+          "detail": "異男子嘎希加（烏爾達哈）兌換・習得 10 個青魔法",
+          "npc": "異男子嘎希加",
+          "npcLocation": "烏爾達哈"
+        }
+      ],
       "patch": "4.5",
       "learnFromMob": []
     },
@@ -788,7 +821,14 @@
       "rank": 1,
       "aspect": "無",
       "type": "魔法",
-      "learnFrom": [],
+      "learnFrom": [
+        {
+          "type": "圖騰",
+          "detail": "異男子嘎希加（烏爾達哈）兌換・通關狩魔競技場 10 關",
+          "npc": "異男子嘎希加",
+          "npcLocation": "烏爾達哈"
+        }
+      ],
       "patch": "4.5",
       "learnFromMob": []
     },
@@ -845,7 +885,14 @@
       "rank": 4,
       "aspect": "無",
       "type": "魔法",
-      "learnFrom": [],
+      "learnFrom": [
+        {
+          "type": "圖騰",
+          "detail": "異男子嘎希加（烏爾達哈）兌換・通關狩魔競技場 20 關",
+          "npc": "異男子嘎希加",
+          "npcLocation": "烏爾達哈"
+        }
+      ],
       "patch": "4.5",
       "learnFromMob": []
     },
@@ -1449,7 +1496,14 @@
       "rank": 2,
       "aspect": null,
       "type": "物理",
-      "learnFrom": [],
+      "learnFrom": [
+        {
+          "type": "圖騰",
+          "detail": "異男子嘎希加（烏爾達哈）兌換・習得 50 個青魔法",
+          "npc": "異男子嘎希加",
+          "npcLocation": "烏爾達哈"
+        }
+      ],
       "patch": "5.1",
       "learnFromMob": []
     },
@@ -1462,7 +1516,14 @@
       "rank": 4,
       "aspect": "無",
       "type": "魔法",
-      "learnFrom": [],
+      "learnFrom": [
+        {
+          "type": "圖騰",
+          "detail": "異男子嘎希加（烏爾達哈）兌換・通關狩魔競技場 30 關",
+          "npc": "異男子嘎希加",
+          "npcLocation": "烏爾達哈"
+        }
+      ],
       "patch": "5.15",
       "learnFromMob": []
     },
@@ -1780,7 +1841,14 @@
       "rank": 3,
       "aspect": "無",
       "type": "魔法",
-      "learnFrom": [],
+      "learnFrom": [
+        {
+          "type": "圖騰",
+          "detail": "異男子嘎希加（烏爾達哈）兌換・青魔法師等級達 70",
+          "npc": "異男子嘎希加",
+          "npcLocation": "烏爾達哈"
+        }
+      ],
       "patch": "5.25",
       "learnFromMob": []
     },
@@ -1913,7 +1981,14 @@
       "rank": 3,
       "aspect": "無",
       "type": "魔法",
-      "learnFrom": [],
+      "learnFrom": [
+        {
+          "type": "圖騰",
+          "detail": "異男子嘎希加（烏爾達哈）兌換・習得 100 個青魔法",
+          "npc": "異男子嘎希加",
+          "npcLocation": "烏爾達哈"
+        }
+      ],
       "patch": "5.25",
       "learnFromMob": []
     },
@@ -2008,7 +2083,14 @@
       "rank": 3,
       "aspect": "無",
       "type": "魔法",
-      "learnFrom": [],
+      "learnFrom": [
+        {
+          "type": "圖騰",
+          "detail": "異男子嘎希加（烏爾達哈）兌換・習得 100 個青魔法",
+          "npc": "異男子嘎希加",
+          "npcLocation": "烏爾達哈"
+        }
+      ],
       "patch": "5.25",
       "learnFromMob": []
     },
@@ -2186,7 +2268,14 @@
       "rank": 3,
       "aspect": "無",
       "type": "魔法",
-      "learnFrom": [],
+      "learnFrom": [
+        {
+          "type": "圖騰",
+          "detail": "異男子嘎希加（烏爾達哈）兌換・青魔法師等級達 80",
+          "npc": "異男子嘎希加",
+          "npcLocation": "烏爾達哈"
+        }
+      ],
       "patch": "6.1",
       "learnFromMob": []
     },
@@ -2334,7 +2423,19 @@
       "rank": 3,
       "aspect": "無",
       "type": "魔法",
-      "learnFrom": [],
+      "learnFrom": [
+        {
+          "type": "圖騰",
+          "detail": "異男子嘎希加（烏爾達哈）兌換・習得 120 個青魔法",
+          "npc": "異男子嘎希加",
+          "npcLocation": "烏爾達哈"
+        },
+        {
+          "type": "副本",
+          "contentId": 666,
+          "detail": "無瑕靈君殲滅戰"
+        }
+      ],
       "patch": "6.1",
       "learnFromMob": []
     },
