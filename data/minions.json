@@ -1,7 +1,7 @@
 {
   "schema": "minions",
   "patch": "7.2",
-  "updated": "2026-06-15",
+  "updated": "2026-06-23",
   "source": "xivapi+teamcraft+items+obtainable-methods",
   "count": 581,
   "data": [
@@ -39,7 +39,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": false,
-      "patch": "2.1",
+      "patch": "2.0",
       "sources": [
         {
           "type": "兌換",
@@ -58,7 +58,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": false,
-      "patch": "2.1",
+      "patch": "2.0",
       "sources": [
         {
           "type": "兌換",
@@ -77,7 +77,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": false,
-      "patch": "2.1",
+      "patch": "2.0",
       "sources": [
         {
           "type": "兌換",
@@ -96,7 +96,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": false,
-      "patch": "2.1",
+      "patch": "2.0",
       "sources": [
         {
           "type": "兌換",
@@ -167,7 +167,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": false,
-      "patch": null,
+      "patch": "4.0",
       "sources": [],
       "_noTwName": true
     },
@@ -303,7 +303,7 @@
       "behavior": "Independent",
       "race": "Monster",
       "marketable": false,
-      "patch": "2.1",
+      "patch": "2.0",
       "sources": []
     },
     {
@@ -336,7 +336,7 @@
       "behavior": "Independent",
       "race": "Monster",
       "marketable": true,
-      "patch": "2.1",
+      "patch": "2.0",
       "sources": [
         {
           "type": "副本",
@@ -355,7 +355,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": true,
-      "patch": "2.1",
+      "patch": "2.0",
       "sources": [
         {
           "type": "NPC商店",
@@ -378,7 +378,7 @@
       "behavior": "Independent",
       "race": "Monster",
       "marketable": true,
-      "patch": "2.1",
+      "patch": "2.0",
       "sources": [
         {
           "type": "寶箱/容器",
@@ -397,7 +397,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": false,
-      "patch": "2.1",
+      "patch": "2.0",
       "sources": [
         {
           "type": "任務獎勵",
@@ -416,7 +416,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": true,
-      "patch": "2.1",
+      "patch": "2.0",
       "sources": [
         {
           "type": "兌換",
@@ -439,7 +439,7 @@
       "behavior": "Independent",
       "race": "Monster",
       "marketable": true,
-      "patch": "2.1",
+      "patch": "2.0",
       "sources": [
         {
           "type": "危命任務",
@@ -496,7 +496,7 @@
       "behavior": "Obedient",
       "race": "Monster",
       "marketable": true,
-      "patch": "2.1",
+      "patch": "2.0",
       "sources": [
         {
           "type": "製作",
@@ -538,7 +538,7 @@
       "behavior": "Independent",
       "race": "Monster",
       "marketable": false,
-      "patch": null,
+      "patch": "2.0",
       "sources": [],
       "_noTwName": true
     },
@@ -553,7 +553,7 @@
       "behavior": "Independent",
       "race": "Monster",
       "marketable": true,
-      "patch": "2.1",
+      "patch": "2.0",
       "sources": [
         {
           "type": "NPC商店",
@@ -576,7 +576,7 @@
       "behavior": "Independent",
       "race": "Monster",
       "marketable": true,
-      "patch": "2.1",
+      "patch": "2.0",
       "sources": [
         {
           "type": "NPC商店",
@@ -622,7 +622,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": true,
-      "patch": "2.1",
+      "patch": "2.0",
       "sources": [
         {
           "type": "兌換",
@@ -649,7 +649,7 @@
       "behavior": "Obedient",
       "race": "Monster",
       "marketable": true,
-      "patch": "2.1",
+      "patch": "2.0",
       "sources": [
         {
           "type": "製作",
@@ -668,7 +668,7 @@
       "behavior": "Independent",
       "race": "Monster",
       "marketable": false,
-      "patch": null,
+      "patch": "2.0",
       "sources": [],
       "_noTwName": true
     },
@@ -683,7 +683,7 @@
       "behavior": "Independent",
       "race": "Monster",
       "marketable": true,
-      "patch": "2.1",
+      "patch": "2.0",
       "sources": [
         {
           "type": "寶箱/容器",
@@ -721,7 +721,7 @@
       "behavior": "Independent",
       "race": "Monster",
       "marketable": false,
-      "patch": "2.1",
+      "patch": "2.0",
       "sources": [
         {
           "type": "任務獎勵",
@@ -740,7 +740,7 @@
       "behavior": "Independent",
       "race": "Monster",
       "marketable": true,
-      "patch": "2.1",
+      "patch": "2.0",
       "sources": [
         {
           "type": "寶箱/容器",
@@ -782,7 +782,7 @@
       "behavior": "Independent",
       "race": "Monster",
       "marketable": false,
-      "patch": "2.1",
+      "patch": "2.0",
       "sources": [
         {
           "type": "兌換",
@@ -820,7 +820,7 @@
       "behavior": "Independent",
       "race": "Monster",
       "marketable": true,
-      "patch": "2.1",
+      "patch": "2.0",
       "sources": [
         {
           "type": "兌換",
@@ -843,7 +843,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": true,
-      "patch": "2.1",
+      "patch": "2.0",
       "sources": [
         {
           "type": "採集獲得",
@@ -1007,7 +1007,7 @@
       "behavior": "Independent",
       "race": "Monster",
       "marketable": true,
-      "patch": "2.1",
+      "patch": "2.0",
       "sources": [
         {
           "type": "採集獲得",
@@ -1034,7 +1034,7 @@
       "behavior": "Obedient",
       "race": "Critter",
       "marketable": true,
-      "patch": "2.1",
+      "patch": "2.0",
       "sources": [
         {
           "type": "製作",
@@ -1076,7 +1076,7 @@
       "behavior": "Independent",
       "race": "Monster",
       "marketable": false,
-      "patch": "2.1",
+      "patch": "2.0",
       "sources": [
         {
           "type": "任務獎勵",
@@ -1095,7 +1095,7 @@
       "behavior": "Independent",
       "race": "Monster",
       "marketable": true,
-      "patch": "2.1",
+      "patch": "2.0",
       "sources": [
         {
           "type": "副本",
@@ -1118,7 +1118,7 @@
       "behavior": "Independent",
       "race": "Monster",
       "marketable": true,
-      "patch": "2.1",
+      "patch": "2.0",
       "sources": [
         {
           "type": "副本",
@@ -1160,7 +1160,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": false,
-      "patch": "2.45",
+      "patch": "2.0",
       "sources": [
         {
           "type": "任務獎勵",
@@ -1290,7 +1290,7 @@
       "behavior": "Independent",
       "race": "Monster",
       "marketable": false,
-      "patch": "2.51",
+      "patch": "2.3",
       "sources": [
         {
           "type": "兌換",
@@ -1646,7 +1646,7 @@
       "behavior": "Obedient",
       "race": "Monster",
       "marketable": true,
-      "patch": "3.15",
+      "patch": "3.2",
       "sources": [
         {
           "type": "副本",
@@ -1669,7 +1669,7 @@
       "behavior": "Obedient",
       "race": "Monster",
       "marketable": false,
-      "patch": "3.15",
+      "patch": "3.2",
       "sources": [
         {
           "type": "副本",
@@ -1688,7 +1688,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": true,
-      "patch": "3.15",
+      "patch": "3.2",
       "sources": [
         {
           "type": "副本",
@@ -1711,7 +1711,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": false,
-      "patch": "3.15",
+      "patch": "3.2",
       "sources": [
         {
           "type": "任務獎勵",
@@ -1730,7 +1730,7 @@
       "behavior": "Independent",
       "race": "Monster",
       "marketable": true,
-      "patch": "3.15",
+      "patch": "3.2",
       "sources": [
         {
           "type": "寶箱/容器",
@@ -1898,7 +1898,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": false,
-      "patch": "3.5",
+      "patch": "3.55a",
       "sources": [
         {
           "type": "成就獎勵",
@@ -1917,7 +1917,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": false,
-      "patch": "3.5",
+      "patch": "3.55a",
       "sources": [
         {
           "type": "成就獎勵",
@@ -1936,7 +1936,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": false,
-      "patch": null,
+      "patch": "4.0",
       "sources": [],
       "_noTwName": true
     },
@@ -2077,7 +2077,7 @@
       "behavior": "Independent",
       "race": "Monster",
       "marketable": true,
-      "patch": "4.4",
+      "patch": "4.36",
       "sources": [
         {
           "type": "寶箱/容器",
@@ -2115,7 +2115,7 @@
       "behavior": "Independent",
       "race": "Monster",
       "marketable": true,
-      "patch": "4.55",
+      "patch": "4.5",
       "sources": [
         {
           "type": "寶箱/容器",
@@ -2180,7 +2180,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": false,
-      "patch": "4.5",
+      "patch": "4.45",
       "sources": []
     },
     {
@@ -2194,7 +2194,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": true,
-      "patch": "4.55",
+      "patch": "4.5",
       "sources": [
         {
           "type": "寶箱/容器",
@@ -2682,7 +2682,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": "6.28",
+      "patch": "6.25",
       "sources": [
         {
           "type": "兌換",
@@ -2701,7 +2701,7 @@
       "behavior": "Independent",
       "race": "Monster",
       "marketable": true,
-      "patch": "6.28",
+      "patch": "6.25",
       "sources": [
         {
           "type": "副本",
@@ -2910,7 +2910,7 @@
       "behavior": "Independent",
       "race": "Monster",
       "marketable": false,
-      "patch": null,
+      "patch": "7.25",
       "sources": [],
       "_noTwName": true
     },
@@ -2925,7 +2925,7 @@
       "behavior": "Independent",
       "race": "Monster",
       "marketable": false,
-      "patch": null,
+      "patch": "7.25",
       "sources": [],
       "_noTwName": true
     },
@@ -2940,7 +2940,7 @@
       "behavior": "Independent",
       "race": "Monster",
       "marketable": false,
-      "patch": null,
+      "patch": "7.25",
       "sources": [],
       "_noTwName": true
     },
@@ -2955,7 +2955,7 @@
       "behavior": "Independent",
       "race": "Monster",
       "marketable": false,
-      "patch": null,
+      "patch": "7.25",
       "sources": [],
       "_noTwName": true
     },
@@ -2970,7 +2970,7 @@
       "behavior": "Independent",
       "race": "Monster",
       "marketable": false,
-      "patch": null,
+      "patch": "7.25",
       "sources": [],
       "_noTwName": true
     },
@@ -2985,7 +2985,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": false,
-      "patch": null,
+      "patch": "7.3",
       "sources": [],
       "_noTwName": true
     },
@@ -3000,7 +3000,7 @@
       "behavior": "Independent",
       "race": "Monster",
       "marketable": false,
-      "patch": null,
+      "patch": "7.3",
       "sources": [],
       "_noTwName": true
     },
@@ -3015,7 +3015,7 @@
       "behavior": "Independent",
       "race": "Monster",
       "marketable": false,
-      "patch": null,
+      "patch": "7.3",
       "sources": [],
       "_noTwName": true
     },
@@ -3030,7 +3030,7 @@
       "behavior": "Independent",
       "race": "Monster",
       "marketable": false,
-      "patch": null,
+      "patch": "7.45",
       "sources": [],
       "_noTwName": true
     },
@@ -3078,7 +3078,7 @@
       "behavior": "Obedient",
       "race": "Monster",
       "marketable": false,
-      "patch": "3.15",
+      "patch": "3.2",
       "sources": [
         {
           "type": "大型任務",
@@ -3097,7 +3097,7 @@
       "behavior": "Independent",
       "race": "Gadget",
       "marketable": true,
-      "patch": "3.0",
+      "patch": "3.01",
       "sources": [
         {
           "type": "製作",
@@ -3120,7 +3120,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": "5.18",
+      "patch": "5.15",
       "sources": [
         {
           "type": "兌換",
@@ -3276,7 +3276,7 @@
       "behavior": "Independent",
       "race": "Monster",
       "marketable": false,
-      "patch": "6.05",
+      "patch": "6.01",
       "sources": [
         {
           "type": "大型任務",
@@ -3314,7 +3314,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": null,
+      "patch": "7.4",
       "sources": [],
       "_noTwName": true
     },
@@ -3348,7 +3348,7 @@
       "behavior": "Obedient",
       "race": "Monster",
       "marketable": false,
-      "patch": null,
+      "patch": "7.15",
       "sources": [],
       "_noTwName": true
     },
@@ -3561,7 +3561,7 @@
       "behavior": "Obedient",
       "race": "Monster",
       "marketable": false,
-      "patch": null,
+      "patch": "7.3",
       "sources": [],
       "_noTwName": true
     },
@@ -3710,7 +3710,7 @@
       "behavior": "Obedient",
       "race": "Critter",
       "marketable": false,
-      "patch": null,
+      "patch": "7.5",
       "sources": [],
       "_noTwName": true
     },
@@ -4046,7 +4046,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": true,
-      "patch": "4.5",
+      "patch": "4.45",
       "sources": [
         {
           "type": "副本",
@@ -4373,7 +4373,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": true,
-      "patch": "6.28",
+      "patch": "6.2",
       "sources": [
         {
           "type": "兌換",
@@ -4415,7 +4415,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": true,
-      "patch": "6.28",
+      "patch": "6.25",
       "sources": [
         {
           "type": "副本",
@@ -4529,7 +4529,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": false,
-      "patch": null,
+      "patch": "7.5",
       "sources": [],
       "_noTwName": true
     },
@@ -4653,7 +4653,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": false,
-      "patch": null,
+      "patch": "7.3",
       "sources": [],
       "_noTwName": true
     },
@@ -4668,7 +4668,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": false,
-      "patch": null,
+      "patch": "7.2",
       "sources": [],
       "_noTwName": true
     },
@@ -4683,7 +4683,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": false,
-      "patch": null,
+      "patch": "7.4",
       "sources": [],
       "_noTwName": true
     },
@@ -4698,7 +4698,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": false,
-      "patch": null,
+      "patch": "7.4",
       "sources": [],
       "_noTwName": true
     },
@@ -4713,7 +4713,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": false,
-      "patch": null,
+      "patch": "7.5",
       "sources": [],
       "_noTwName": true
     },
@@ -4774,7 +4774,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": true,
-      "patch": "4.5",
+      "patch": "4.45",
       "sources": [
         {
           "type": "遠航探索",
@@ -4816,7 +4816,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": false,
-      "patch": null,
+      "patch": "7.5",
       "sources": [],
       "_noTwName": true
     },
@@ -5098,7 +5098,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": false,
-      "patch": null,
+      "patch": "7.45",
       "sources": [],
       "_noTwName": true
     },
@@ -5113,7 +5113,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": false,
-      "patch": null,
+      "patch": "7.3",
       "sources": [],
       "_noTwName": true
     },
@@ -5128,7 +5128,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": false,
-      "patch": null,
+      "patch": "7.5",
       "sources": [],
       "_noTwName": true
     },
@@ -5410,7 +5410,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": false,
-      "patch": null,
+      "patch": "7.25",
       "sources": [],
       "_noTwName": true
     },
@@ -5467,7 +5467,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": false,
-      "patch": null,
+      "patch": "7.3",
       "sources": [],
       "_noTwName": true
     },
@@ -5482,7 +5482,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": false,
-      "patch": null,
+      "patch": "7.4",
       "sources": [],
       "_noTwName": true
     },
@@ -5497,7 +5497,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": true,
-      "patch": "2.1",
+      "patch": "2.0",
       "sources": [
         {
           "type": "製作",
@@ -5535,7 +5535,7 @@
       "behavior": "Independent",
       "race": "Poppet",
       "marketable": true,
-      "patch": "4.01",
+      "patch": "4.05",
       "sources": [
         {
           "type": "副本",
@@ -5653,7 +5653,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": false,
-      "patch": null,
+      "patch": "7.35",
       "sources": [],
       "_noTwName": true
     },
@@ -5725,7 +5725,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": null,
+      "patch": "7.35",
       "sources": [],
       "_noTwName": true
     },
@@ -6003,7 +6003,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": "3.15",
+      "patch": "3.2",
       "sources": [
         {
           "type": "NPC商店",
@@ -6022,7 +6022,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": "3.15",
+      "patch": "3.2",
       "sources": [
         {
           "type": "NPC商店",
@@ -6136,7 +6136,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": "4.56",
+      "patch": "4.5",
       "sources": [
         {
           "type": "兌換",
@@ -6174,7 +6174,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": "4.56",
+      "patch": "4.5",
       "sources": [
         {
           "type": "兌換",
@@ -6231,7 +6231,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": null,
+      "patch": "7.35",
       "sources": [],
       "_noTwName": true
     },
@@ -6246,7 +6246,7 @@
       "behavior": "Obedient",
       "race": "Monster",
       "marketable": false,
-      "patch": "6.28",
+      "patch": "6.15",
       "sources": [
         {
           "type": "兌換",
@@ -6292,7 +6292,7 @@
       "behavior": "Obedient",
       "race": "Monster",
       "marketable": true,
-      "patch": "3.15",
+      "patch": "3.2",
       "sources": [
         {
           "type": "製作",
@@ -6315,7 +6315,7 @@
       "behavior": "Obedient",
       "race": "Monster",
       "marketable": true,
-      "patch": "3.15",
+      "patch": "3.2",
       "sources": [
         {
           "type": "製作",
@@ -6342,7 +6342,7 @@
       "behavior": "Obedient",
       "race": "Monster",
       "marketable": true,
-      "patch": "3.15",
+      "patch": "3.2",
       "sources": [
         {
           "type": "製作",
@@ -6659,7 +6659,7 @@
       "behavior": "Independent",
       "race": "Monster",
       "marketable": true,
-      "patch": "4.5",
+      "patch": "4.45",
       "sources": [
         {
           "type": "製作",
@@ -6733,7 +6733,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": null,
+      "patch": "7.4",
       "sources": [],
       "_noTwName": true
     },
@@ -6748,7 +6748,7 @@
       "behavior": "Obedient",
       "race": "Monster",
       "marketable": true,
-      "patch": "6.28",
+      "patch": "6.2",
       "sources": [
         {
           "type": "副本",
@@ -6961,7 +6961,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": "4.01",
+      "patch": "4.05",
       "sources": [
         {
           "type": "任務獎勵",
@@ -7089,7 +7089,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": "3.0",
+      "patch": "3.01",
       "sources": [
         {
           "type": "商城購買",
@@ -7131,7 +7131,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": "3.0",
+      "patch": "3.01",
       "sources": [
         {
           "type": "商城購買",
@@ -7150,7 +7150,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": "4.56",
+      "patch": "4.5",
       "sources": []
     },
     {
@@ -7202,7 +7202,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": "7.0",
+      "patch": "7.05",
       "sources": [
         {
           "type": "任務獎勵",
@@ -7464,7 +7464,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": "3.15",
+      "patch": "3.2",
       "sources": [
         {
           "type": "兌換",
@@ -7563,7 +7563,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": "4.01",
+      "patch": "4.05",
       "sources": [
         {
           "type": "任務獎勵",
@@ -7969,7 +7969,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": "6.28",
+      "patch": "6.2",
       "sources": [
         {
           "type": "任務獎勵",
@@ -8026,7 +8026,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": "6.28",
+      "patch": "6.2",
       "sources": [
         {
           "type": "大型任務",
@@ -8097,7 +8097,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": null,
+      "patch": "7.3",
       "sources": [],
       "_noTwName": true
     },
@@ -8211,7 +8211,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": false,
-      "patch": null,
+      "patch": "2.5",
       "sources": [],
       "_noTwName": true
     },
@@ -8226,7 +8226,7 @@
       "behavior": "Obedient",
       "race": "Monster",
       "marketable": false,
-      "patch": "3.55b",
+      "patch": "3.55a",
       "sources": []
     },
     {
@@ -8306,7 +8306,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": false,
-      "patch": null,
+      "patch": "7.51",
       "sources": [],
       "_noTwName": true
     },
@@ -8344,7 +8344,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": "2.1",
+      "patch": "2.0",
       "sources": [
         {
           "type": "成就獎勵",
@@ -8363,7 +8363,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": "2.1",
+      "patch": "2.0",
       "sources": [
         {
           "type": "成就獎勵",
@@ -8382,7 +8382,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": "2.1",
+      "patch": "2.0",
       "sources": [
         {
           "type": "成就獎勵",
@@ -8420,7 +8420,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": "2.1",
+      "patch": "2.0",
       "sources": []
     },
     {
@@ -8626,7 +8626,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": true,
-      "patch": "4.4",
+      "patch": "4.36",
       "sources": [
         {
           "type": "寶箱/容器",
@@ -8767,7 +8767,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": "6.28",
+      "patch": "6.2",
       "sources": [
         {
           "type": "兌換",
@@ -8824,7 +8824,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": null,
+      "patch": "7.5",
       "sources": [],
       "_noTwName": true
     },
@@ -8839,7 +8839,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": null,
+      "patch": "7.5",
       "sources": [],
       "_noTwName": true
     },
@@ -8854,7 +8854,7 @@
       "behavior": "Obedient",
       "race": "Gadget",
       "marketable": true,
-      "patch": "2.1",
+      "patch": "2.0",
       "sources": [
         {
           "type": "任務獎勵",
@@ -8887,7 +8887,7 @@
       "behavior": "Obedient",
       "race": "Monster",
       "marketable": true,
-      "patch": "2.1",
+      "patch": "2.0",
       "sources": [
         {
           "type": "製作",
@@ -8906,7 +8906,7 @@
       "behavior": "Obedient",
       "race": "Gadget",
       "marketable": false,
-      "patch": "2.1",
+      "patch": "2.0",
       "sources": []
     },
     {
@@ -8981,7 +8981,7 @@
       "behavior": "Obedient",
       "race": "Monster",
       "marketable": true,
-      "patch": "4.5",
+      "patch": "4.45",
       "sources": [
         {
           "type": "副本",
@@ -9004,7 +9004,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": "4.5",
+      "patch": "4.45",
       "sources": [
         {
           "type": "兌換",
@@ -9198,7 +9198,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": "6.28",
+      "patch": "6.2",
       "sources": [
         {
           "type": "兌換",
@@ -9217,7 +9217,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": "6.28",
+      "patch": "6.2",
       "sources": [
         {
           "type": "兌換",
@@ -9387,7 +9387,7 @@
       "behavior": "Obedient",
       "race": "Gadget",
       "marketable": false,
-      "patch": null,
+      "patch": "7.2",
       "sources": [],
       "_noTwName": true
     },
@@ -9402,7 +9402,7 @@
       "behavior": "Obedient",
       "race": "Gadget",
       "marketable": false,
-      "patch": null,
+      "patch": "7.21",
       "sources": [],
       "_noTwName": true
     },
@@ -9417,7 +9417,7 @@
       "behavior": "Obedient",
       "race": "Gadget",
       "marketable": false,
-      "patch": null,
+      "patch": "7.31",
       "sources": [],
       "_noTwName": true
     },
@@ -9432,7 +9432,7 @@
       "behavior": "Obedient",
       "race": "Gadget",
       "marketable": false,
-      "patch": null,
+      "patch": "7.3",
       "sources": [],
       "_noTwName": true
     },
@@ -9447,7 +9447,7 @@
       "behavior": "Obedient",
       "race": "Gadget",
       "marketable": false,
-      "patch": null,
+      "patch": "7.3",
       "sources": [],
       "_noTwName": true
     },
@@ -9462,7 +9462,7 @@
       "behavior": "Obedient",
       "race": "Gadget",
       "marketable": false,
-      "patch": null,
+      "patch": "7.41",
       "sources": [],
       "_noTwName": true
     },
@@ -9477,7 +9477,7 @@
       "behavior": "Obedient",
       "race": "Gadget",
       "marketable": false,
-      "patch": null,
+      "patch": "7.51",
       "sources": [],
       "_noTwName": true
     },
@@ -9492,7 +9492,7 @@
       "behavior": "Obedient",
       "race": "Gadget",
       "marketable": false,
-      "patch": "2.1",
+      "patch": "2.0",
       "sources": [
         {
           "type": "兌換",
@@ -9568,7 +9568,7 @@
       "behavior": "Stationary",
       "race": "Gadget",
       "marketable": false,
-      "patch": "4.56",
+      "patch": "4.5",
       "sources": [
         {
           "type": "兌換",
@@ -9720,7 +9720,7 @@
       "behavior": "Obedient",
       "race": "Gadget",
       "marketable": false,
-      "patch": null,
+      "patch": "3.3",
       "sources": [],
       "_noTwName": true
     },
@@ -9937,7 +9937,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": false,
-      "patch": null,
+      "patch": "7.2",
       "sources": [],
       "_noTwName": true
     },
@@ -9952,7 +9952,7 @@
       "behavior": "Obedient",
       "race": "Gadget",
       "marketable": false,
-      "patch": null,
+      "patch": "7.45",
       "sources": [],
       "_noTwName": true
     },
@@ -9986,7 +9986,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": null,
+      "patch": "2.1",
       "sources": [],
       "_noTwName": true
     },
@@ -10001,7 +10001,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": null,
+      "patch": "2.1",
       "sources": [],
       "_noTwName": true
     },
@@ -10016,7 +10016,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": null,
+      "patch": "2.1",
       "sources": [],
       "_noTwName": true
     },
@@ -10116,7 +10116,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": "3.15",
+      "patch": "3.2",
       "sources": []
     },
     {
@@ -10257,7 +10257,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": "4.5",
+      "patch": "4.45",
       "sources": [
         {
           "type": "商城購買",
@@ -10276,7 +10276,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": "4.5",
+      "patch": "4.45",
       "sources": [
         {
           "type": "商城購買",
@@ -10314,7 +10314,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": null,
+      "patch": "7.51",
       "sources": [],
       "_noTwName": true
     },
@@ -10329,7 +10329,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": null,
+      "patch": "7.45",
       "sources": [],
       "_noTwName": true
     },
@@ -10467,7 +10467,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": null,
+      "patch": "7.5",
       "sources": [],
       "_noTwName": true
     },
@@ -10501,7 +10501,7 @@
       "behavior": "Obedient",
       "race": "Poppet",
       "marketable": false,
-      "patch": "4.5",
+      "patch": "4.45",
       "sources": [
         {
           "type": "兌換",
@@ -10838,7 +10838,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": false,
-      "patch": "4.4",
+      "patch": "4.36",
       "sources": [
         {
           "type": "任務獎勵",
@@ -10857,7 +10857,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": false,
-      "patch": "4.4",
+      "patch": "4.36",
       "sources": [
         {
           "type": "兌換",
@@ -10880,7 +10880,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": false,
-      "patch": null,
+      "patch": "7.35",
       "sources": [],
       "_noTwName": true
     },
@@ -10895,7 +10895,7 @@
       "behavior": "Independent",
       "race": "Critter",
       "marketable": false,
-      "patch": null,
+      "patch": "7.35",
       "sources": [],
       "_noTwName": true
     },

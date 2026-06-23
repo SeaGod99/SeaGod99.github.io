@@ -1,7 +1,7 @@
 {
   "schema": "gardening",
   "patch": "7.2",
-  "updated": "2026-06-17",
+  "updated": "2026-06-23",
   "source": "ffxiv-teamcraft/seeds.json; tw-items.msgpack",
   "count": 107,
   "data": [
@@ -13,7 +13,8 @@
       "seedName": "火晶草種子",
       "seedNameEn": "火晶草種子",
       "duration": 18,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "2.0"
     },
     {
       "productId": 3,
@@ -23,7 +24,8 @@
       "seedName": "冰晶草種子",
       "seedNameEn": "冰晶草種子",
       "duration": 18,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "2.0"
     },
     {
       "productId": 4,
@@ -33,7 +35,8 @@
       "seedName": "風晶草種子",
       "seedNameEn": "風晶草種子",
       "duration": 18,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "2.0"
     },
     {
       "productId": 5,
@@ -43,7 +46,8 @@
       "seedName": "土晶草種子",
       "seedNameEn": "土晶草種子",
       "duration": 18,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "2.0"
     },
     {
       "productId": 6,
@@ -53,7 +57,8 @@
       "seedName": "雷晶草種子",
       "seedNameEn": "雷晶草種子",
       "duration": 18,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "2.0"
     },
     {
       "productId": 7,
@@ -63,7 +68,8 @@
       "seedName": "水晶草種子",
       "seedNameEn": "水晶草種子",
       "duration": 18,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "2.0"
     },
     {
       "productId": 4777,
@@ -92,7 +98,8 @@
           "baseSeedId": 7715,
           "baseSeedName": "紅彩椒種子"
         }
-      ]
+      ],
+      "patch": "2.0"
     },
     {
       "productId": 4778,
@@ -121,7 +128,8 @@
           "baseSeedId": 7715,
           "baseSeedName": "紅彩椒種子"
         }
-      ]
+      ],
+      "patch": "2.0"
     },
     {
       "productId": 4782,
@@ -131,7 +139,8 @@
       "seedName": "拉諾西亞萵苣種子",
       "seedNameEn": "拉諾西亞萵苣種子",
       "duration": 120,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "2.0"
     },
     {
       "productId": 4785,
@@ -160,7 +169,8 @@
           "baseSeedId": 7720,
           "baseSeedName": "新薯芽塊"
         }
-      ]
+      ],
+      "patch": "2.0"
     },
     {
       "productId": 4787,
@@ -189,7 +199,8 @@
           "baseSeedId": 7721,
           "baseSeedName": "多實玉米種子"
         }
-      ]
+      ],
+      "patch": "2.0"
     },
     {
       "productId": 4788,
@@ -218,7 +229,8 @@
           "baseSeedId": 8182,
           "baseSeedName": "克拉卡蘿蔔種子"
         }
-      ]
+      ],
+      "patch": "2.0"
     },
     {
       "productId": 4789,
@@ -247,7 +259,8 @@
           "baseSeedId": 7723,
           "baseSeedName": "中原甘藍種子"
         }
-      ]
+      ],
+      "patch": "2.0"
     },
     {
       "productId": 4804,
@@ -257,7 +270,8 @@
       "seedName": "橄欖種子",
       "seedNameEn": "橄欖種子",
       "duration": 120,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "2.0"
     },
     {
       "productId": 4808,
@@ -267,7 +281,8 @@
       "seedName": "低地葡萄種子",
       "seedNameEn": "低地葡萄種子",
       "duration": 120,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "2.0"
     },
     {
       "productId": 4809,
@@ -277,7 +292,8 @@
       "seedName": "拉諾西亞香橙種子",
       "seedNameEn": "拉諾西亞香橙種子",
       "duration": 120,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "2.0"
     },
     {
       "productId": 4810,
@@ -287,7 +303,8 @@
       "seedName": "仙女蘋果種子",
       "seedNameEn": "仙女蘋果種子",
       "duration": 120,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "2.0"
     },
     {
       "productId": 4811,
@@ -316,7 +333,8 @@
           "baseSeedId": 17547,
           "baseSeedName": "雲海橡果種子"
         }
-      ]
+      ],
+      "patch": "2.0"
     },
     {
       "productId": 4812,
@@ -345,7 +363,8 @@
           "baseSeedId": 17547,
           "baseSeedName": "雲海橡果種子"
         }
-      ]
+      ],
+      "patch": "2.0"
     },
     {
       "productId": 4814,
@@ -374,7 +393,8 @@
           "baseSeedId": 17547,
           "baseSeedName": "雲海橡果種子"
         }
-      ]
+      ],
+      "patch": "2.0"
     },
     {
       "productId": 4815,
@@ -403,7 +423,8 @@
           "baseSeedId": 7734,
           "baseSeedName": "多刺鳳梨種子"
         }
-      ]
+      ],
+      "patch": "2.0"
     },
     {
       "productId": 4816,
@@ -432,7 +453,8 @@
           "baseSeedId": 7731,
           "baseSeedName": "晶亮蘋果種子"
         }
-      ]
+      ],
+      "patch": "2.0"
     },
     {
       "productId": 4821,
@@ -442,7 +464,8 @@
       "seedName": "多實玉米種子",
       "seedNameEn": "多實玉米種子",
       "duration": 120,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "2.0"
     },
     {
       "productId": 4829,
@@ -452,7 +475,8 @@
       "seedName": "大蒜球根",
       "seedNameEn": "大蒜球根",
       "duration": 120,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "2.0"
     },
     {
       "productId": 4830,
@@ -462,7 +486,8 @@
       "seedName": "黑胡椒種子",
       "seedNameEn": "黑胡椒種子",
       "duration": 120,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "2.0"
     },
     {
       "productId": 4835,
@@ -491,7 +516,8 @@
           "baseSeedId": 7738,
           "baseSeedName": "阿拉米格芥子種子"
         }
-      ]
+      ],
+      "patch": "2.0"
     },
     {
       "productId": 4836,
@@ -520,7 +546,8 @@
           "baseSeedId": 7740,
           "baseSeedName": "甘菊種子"
         }
-      ]
+      ],
+      "patch": "2.0"
     },
     {
       "productId": 4837,
@@ -549,7 +576,8 @@
           "baseSeedId": 7742,
           "baseSeedName": "中原羅勒草種子"
         }
-      ]
+      ],
+      "patch": "2.0"
     },
     {
       "productId": 4842,
@@ -578,7 +606,8 @@
           "baseSeedId": 7738,
           "baseSeedName": "阿拉米格芥子種子"
         }
-      ]
+      ],
+      "patch": "2.0"
     },
     {
       "productId": 4868,
@@ -607,7 +636,8 @@
           "baseSeedId": 8182,
           "baseSeedName": "克拉卡蘿蔔種子"
         }
-      ]
+      ],
+      "patch": "2.0"
     },
     {
       "productId": 5346,
@@ -636,7 +666,8 @@
           "baseSeedId": 7741,
           "baseSeedName": "亞麻種子"
         }
-      ]
+      ],
+      "patch": "2.0"
     },
     {
       "productId": 5539,
@@ -646,7 +677,8 @@
       "seedName": "薰衣草種子",
       "seedNameEn": "薰衣草種子",
       "duration": 120,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "2.0"
     },
     {
       "productId": 5542,
@@ -656,7 +688,8 @@
       "seedName": "甘菊種子",
       "seedNameEn": "甘菊種子",
       "duration": 120,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "2.0"
     },
     {
       "productId": 5543,
@@ -685,7 +718,8 @@
           "baseSeedId": 8179,
           "baseSeedName": "謝爾達萊鳳梨種子"
         }
-      ]
+      ],
+      "patch": "2.0"
     },
     {
       "productId": 6146,
@@ -714,7 +748,8 @@
           "baseSeedId": 7733,
           "baseSeedName": "蜜檸檬種子"
         }
-      ]
+      ],
+      "patch": "2.1"
     },
     {
       "productId": 6147,
@@ -743,7 +778,8 @@
           "baseSeedId": 7723,
           "baseSeedName": "中原甘藍種子"
         }
-      ]
+      ],
+      "patch": "2.1"
     },
     {
       "productId": 6148,
@@ -772,7 +808,8 @@
           "baseSeedId": 7723,
           "baseSeedName": "中原甘藍種子"
         }
-      ]
+      ],
+      "patch": "2.1"
     },
     {
       "productId": 7591,
@@ -801,7 +838,8 @@
           "baseSeedId": 7743,
           "baseSeedName": "風茄種子"
         }
-      ]
+      ],
+      "patch": "2.2"
     },
     {
       "productId": 7592,
@@ -830,7 +868,8 @@
           "baseSeedId": 8175,
           "baseSeedName": "多瑪青梅種子"
         }
-      ]
+      ],
+      "patch": "2.2"
     },
     {
       "productId": 7593,
@@ -859,7 +898,8 @@
           "baseSeedId": 7723,
           "baseSeedName": "中原甘藍種子"
         }
-      ]
+      ],
+      "patch": "2.2"
     },
     {
       "productId": 7602,
@@ -888,7 +928,8 @@
           "baseSeedId": 13768,
           "baseSeedName": "庫爾札斯茶樹種子"
         }
-      ]
+      ],
+      "patch": "2.2"
     },
     {
       "productId": 7603,
@@ -917,7 +958,8 @@
           "baseSeedId": 7724,
           "baseSeedName": "澤梅爾番茄種子"
         }
-      ]
+      ],
+      "patch": "2.2"
     },
     {
       "productId": 7604,
@@ -946,7 +988,8 @@
           "baseSeedId": 7741,
           "baseSeedName": "亞麻種子"
         }
-      ]
+      ],
+      "patch": "2.2"
     },
     {
       "productId": 7768,
@@ -963,7 +1006,8 @@
           "baseSeedId": 7746,
           "baseSeedName": "阿澤瑪玫瑰種子"
         }
-      ]
+      ],
+      "patch": "2.2"
     },
     {
       "productId": 7769,
@@ -992,7 +1036,8 @@
           "baseSeedId": 13768,
           "baseSeedName": "庫爾札斯茶樹種子"
         }
-      ]
+      ],
+      "patch": "2.2"
     },
     {
       "productId": 7770,
@@ -1021,7 +1066,8 @@
           "baseSeedId": 7743,
           "baseSeedName": "風茄種子"
         }
-      ]
+      ],
+      "patch": "2.2"
     },
     {
       "productId": 7773,
@@ -1050,7 +1096,8 @@
           "baseSeedId": 7734,
           "baseSeedName": "多刺鳳梨種子"
         }
-      ]
+      ],
+      "patch": "2.2"
     },
     {
       "productId": 7774,
@@ -1079,7 +1126,8 @@
           "baseSeedId": 13768,
           "baseSeedName": "庫爾札斯茶樹種子"
         }
-      ]
+      ],
+      "patch": "2.2"
     },
     {
       "productId": 7775,
@@ -1108,7 +1156,8 @@
           "baseSeedId": 7751,
           "baseSeedName": "黃杏種子"
         }
-      ]
+      ],
+      "patch": "2.2"
     },
     {
       "productId": 7776,
@@ -1137,7 +1186,8 @@
           "baseSeedId": 13768,
           "baseSeedName": "庫爾札斯茶樹種子"
         }
-      ]
+      ],
+      "patch": "2.2"
     },
     {
       "productId": 7894,
@@ -1166,7 +1216,8 @@
           "baseSeedId": 7740,
           "baseSeedName": "甘菊種子"
         }
-      ]
+      ],
+      "patch": "2.3"
     },
     {
       "productId": 7895,
@@ -1195,7 +1246,8 @@
           "baseSeedId": 13768,
           "baseSeedName": "庫爾札斯茶樹種子"
         }
-      ]
+      ],
+      "patch": "2.3"
     },
     {
       "productId": 7897,
@@ -1224,7 +1276,8 @@
           "baseSeedId": 7723,
           "baseSeedName": "中原甘藍種子"
         }
-      ]
+      ],
+      "patch": "2.3"
     },
     {
       "productId": 7898,
@@ -1253,7 +1306,8 @@
           "baseSeedId": 7742,
           "baseSeedName": "中原羅勒草種子"
         }
-      ]
+      ],
+      "patch": "2.3"
     },
     {
       "productId": 7900,
@@ -1282,7 +1336,8 @@
           "baseSeedId": 7721,
           "baseSeedName": "多實玉米種子"
         }
-      ]
+      ],
+      "patch": "2.3"
     },
     {
       "productId": 8023,
@@ -1311,7 +1366,8 @@
           "baseSeedId": 7742,
           "baseSeedName": "中原羅勒草種子"
         }
-      ]
+      ],
+      "patch": "2.3"
     },
     {
       "productId": 8157,
@@ -1321,7 +1377,8 @@
       "seedName": "塞爾法特爾沙果種子",
       "seedNameEn": "塞爾法特爾沙果種子",
       "duration": 48,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "2.35"
     },
     {
       "productId": 8158,
@@ -1331,7 +1388,8 @@
       "seedName": "多瑪青梅種子",
       "seedNameEn": "多瑪青梅種子",
       "duration": 48,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "2.35"
     },
     {
       "productId": 8159,
@@ -1341,7 +1399,8 @@
       "seedName": "輝鱗油梨種子",
       "seedNameEn": "輝鱗油梨種子",
       "duration": 48,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "2.35"
     },
     {
       "productId": 8160,
@@ -1351,7 +1410,8 @@
       "seedName": "瓦爾醋栗種子",
       "seedNameEn": "瓦爾醋栗種子",
       "duration": 48,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "2.35"
     },
     {
       "productId": 8161,
@@ -1361,7 +1421,8 @@
       "seedName": "歐·葛莫羅漿果種子",
       "seedNameEn": "歐·葛莫羅漿果種子",
       "duration": 48,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "2.35"
     },
     {
       "productId": 8162,
@@ -1371,7 +1432,8 @@
       "seedName": "謝爾達萊鳳梨種子",
       "seedNameEn": "謝爾達萊鳳梨種子",
       "duration": 48,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "2.35"
     },
     {
       "productId": 8163,
@@ -1381,7 +1443,8 @@
       "seedName": "拉札漢檸檬種子",
       "seedNameEn": "拉札漢檸檬種子",
       "duration": 48,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "2.35"
     },
     {
       "productId": 8165,
@@ -1391,7 +1454,8 @@
       "seedName": "克拉卡蘿蔔種子",
       "seedNameEn": "克拉卡蘿蔔種子",
       "duration": 72,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "2.3"
     },
     {
       "productId": 8166,
@@ -1420,7 +1484,8 @@
           "baseSeedId": 8169,
           "baseSeedName": "克里耶蘿蔔種子"
         }
-      ]
+      ],
+      "patch": "2.3"
     },
     {
       "productId": 8192,
@@ -1449,7 +1514,8 @@
           "baseSeedId": 7743,
           "baseSeedName": "風茄種子"
         }
-      ]
+      ],
+      "patch": "2.3"
     },
     {
       "productId": 8193,
@@ -1478,7 +1544,8 @@
           "baseSeedId": 7730,
           "baseSeedName": "血紅奇異果種子"
         }
-      ]
+      ],
+      "patch": "2.3"
     },
     {
       "productId": 8194,
@@ -1507,7 +1574,8 @@
           "baseSeedId": 7737,
           "baseSeedName": "黑胡椒種子"
         }
-      ]
+      ],
+      "patch": "2.3"
     },
     {
       "productId": 8195,
@@ -1536,7 +1604,8 @@
           "baseSeedId": 17547,
           "baseSeedName": "雲海橡果種子"
         }
-      ]
+      ],
+      "patch": "2.3"
     },
     {
       "productId": 8196,
@@ -1553,7 +1622,8 @@
           "baseSeedId": 7743,
           "baseSeedName": "風茄種子"
         }
-      ]
+      ],
+      "patch": "2.3"
     },
     {
       "productId": 12877,
@@ -1563,7 +1633,8 @@
       "seedName": "小包心菜種子",
       "seedNameEn": "小包心菜種子",
       "duration": 120,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "3.0"
     },
     {
       "productId": 12882,
@@ -1573,7 +1644,8 @@
       "seedName": "庫爾札斯茶樹種子",
       "seedNameEn": "庫爾札斯茶樹種子",
       "duration": 120,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "3.0"
     },
     {
       "productId": 12884,
@@ -1602,7 +1674,8 @@
           "baseSeedId": 7749,
           "baseSeedName": "衛月新薯芽塊"
         }
-      ]
+      ],
+      "patch": "3.0"
     },
     {
       "productId": 12896,
@@ -1612,7 +1685,8 @@
       "seedName": "舊世界無花果種子",
       "seedNameEn": "舊世界無花果種子",
       "duration": 120,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "3.0"
     },
     {
       "productId": 13754,
@@ -1629,7 +1703,8 @@
           "baseSeedId": 13766,
           "baseSeedName": "庫爾札斯青蔥種子"
         }
-      ]
+      ],
+      "patch": "3.1"
     },
     {
       "productId": 14071,
@@ -1639,7 +1714,8 @@
       "seedName": "古典玫瑰種子",
       "seedNameEn": "古典玫瑰種子",
       "duration": 24,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "3.3"
     },
     {
       "productId": 15857,
@@ -1649,7 +1725,8 @@
       "seedName": "阿爾基克薰衣草種子",
       "seedNameEn": "阿爾基克薰衣草種子",
       "duration": 22,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "3.3"
     },
     {
       "productId": 15858,
@@ -1659,7 +1736,8 @@
       "seedName": "虛無界風茄種子",
       "seedNameEn": "虛無界風茄種子",
       "duration": 12,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "3.3"
     },
     {
       "productId": 16022,
@@ -1669,7 +1747,8 @@
       "seedName": "三色堇種子",
       "seedNameEn": "三色堇種子",
       "duration": 24,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "3.4"
     },
     {
       "productId": 17048,
@@ -1679,7 +1758,8 @@
       "seedName": "櫻花樹幼苗",
       "seedNameEn": "櫻花樹幼苗",
       "duration": 24,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "3.5"
     },
     {
       "productId": 17548,
@@ -1689,7 +1769,8 @@
       "seedName": "雲海橡果種子",
       "seedNameEn": "雲海橡果種子",
       "duration": 24,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "3.5"
     },
     {
       "productId": 17999,
@@ -1699,7 +1780,8 @@
       "seedName": "雛菊種子",
       "seedNameEn": "雛菊種子",
       "duration": 24,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "4.01"
     },
     {
       "productId": 20791,
@@ -1716,7 +1798,8 @@
           "baseSeedId": 13768,
           "baseSeedName": "庫爾札斯茶樹種子"
         }
-      ]
+      ],
+      "patch": "4.1"
     },
     {
       "productId": 20793,
@@ -1733,7 +1816,8 @@
           "baseSeedId": 13755,
           "baseSeedName": "血椒種子"
         }
-      ]
+      ],
+      "patch": "4.1"
     },
     {
       "productId": 20796,
@@ -1743,7 +1827,8 @@
       "seedName": "光明百合種子",
       "seedNameEn": "光明百合種子",
       "duration": 24,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "4.1"
     },
     {
       "productId": 21876,
@@ -1753,7 +1838,8 @@
       "seedName": "鬱金香球根",
       "seedNameEn": "鬱金香球根",
       "duration": 24,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "4.2"
     },
     {
       "productId": 22590,
@@ -1763,7 +1849,8 @@
       "seedName": "大麗花的球根",
       "seedNameEn": "大麗花的球根",
       "duration": 24,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "4.3"
     },
     {
       "productId": 24166,
@@ -1773,7 +1860,8 @@
       "seedName": "馬蹄蓮球莖",
       "seedNameEn": "馬蹄蓮球莖",
       "duration": 24,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "4.4"
     },
     {
       "productId": 24542,
@@ -1783,7 +1871,8 @@
       "seedName": "鈴蘭的幼苗",
       "seedNameEn": "鈴蘭的幼苗",
       "duration": 24,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "4.5"
     },
     {
       "productId": 27321,
@@ -1793,7 +1882,8 @@
       "seedName": "繡球花的種子",
       "seedNameEn": "繡球花的種子",
       "duration": 24,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "5.0"
     },
     {
       "productId": 28176,
@@ -1803,7 +1893,8 @@
       "seedName": "風鈴草種子",
       "seedNameEn": "風鈴草種子",
       "duration": 24,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "5.1"
     },
     {
       "productId": 28948,
@@ -1813,7 +1904,8 @@
       "seedName": "風信子種子",
       "seedNameEn": "風信子種子",
       "duration": 24,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "5.2"
     },
     {
       "productId": 30371,
@@ -1823,7 +1915,8 @@
       "seedName": "大波斯菊種子",
       "seedNameEn": "大波斯菊種子",
       "duration": 24,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "5.3"
     },
     {
       "productId": 30873,
@@ -1833,7 +1926,8 @@
       "seedName": "亞拉戈西瓜種子",
       "seedNameEn": "亞拉戈西瓜種子",
       "duration": 168,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "5.3"
     },
     {
       "productId": 32813,
@@ -1843,7 +1937,8 @@
       "seedName": "康乃馨種子",
       "seedNameEn": "康乃馨種子",
       "duration": 24,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "5.4"
     },
     {
       "productId": 33307,
@@ -1853,7 +1948,8 @@
       "seedName": "蝴蝶蘭幼苗",
       "seedNameEn": "蝴蝶蘭幼苗",
       "duration": 24,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "5.5"
     },
     {
       "productId": 35745,
@@ -1863,7 +1959,8 @@
       "seedName": "紫燈花的種子",
       "seedNameEn": "紫燈花的種子",
       "duration": 24,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "6.0"
     },
     {
       "productId": 37303,
@@ -1873,7 +1970,8 @@
       "seedName": "比爾格紫羅蘭的種子",
       "seedNameEn": "比爾格紫羅蘭的種子",
       "duration": 24,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "6.1"
     },
     {
       "productId": 38660,
@@ -1883,7 +1981,8 @@
       "seedName": "香豌豆花的種子",
       "seedNameEn": "香豌豆花的種子",
       "duration": 24,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "6.28"
     },
     {
       "productId": 39461,
@@ -1893,7 +1992,8 @@
       "seedName": "牽牛花的種子",
       "seedNameEn": "牽牛花的種子",
       "duration": 24,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "6.3"
     },
     {
       "productId": 40687,
@@ -1903,7 +2003,8 @@
       "seedName": "菊花種子",
       "seedNameEn": "菊花種子",
       "duration": 24,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "6.4"
     },
     {
       "productId": 41161,
@@ -1913,7 +2014,8 @@
       "seedName": "魯冰花種子",
       "seedNameEn": "魯冰花種子",
       "duration": 24,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "6.5"
     },
     {
       "productId": 43963,
@@ -1923,7 +2025,8 @@
       "seedName": "葵花籽",
       "seedNameEn": "葵花籽",
       "duration": 24,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "7.0"
     },
     {
       "productId": 44833,
@@ -1933,7 +2036,8 @@
       "seedName": "卡特蘭種子",
       "seedNameEn": "卡特蘭種子",
       "duration": 24,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "7.1"
     },
     {
       "productId": 46804,
@@ -1943,7 +2047,8 @@
       "seedName": "#46803",
       "seedNameEn": "#46803",
       "duration": 24,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "7.3"
     },
     {
       "productId": 47951,
@@ -1953,7 +2058,8 @@
       "seedName": "#47950",
       "seedNameEn": "#47950",
       "duration": 24,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "7.2"
     },
     {
       "productId": 49774,
@@ -1963,7 +2069,8 @@
       "seedName": "#49773",
       "seedNameEn": "#49773",
       "duration": 24,
-      "crossBreeds": []
+      "crossBreeds": [],
+      "patch": "7.4"
     }
   ]
 }
