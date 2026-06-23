@@ -26,6 +26,7 @@ MIRAPRI_JS = ROOT / "mirapri_outfits.js"
 MIRAPRI_DYES = ROOT / "data" / "mirapri_dyes.json"     # apply_dyes.py 產生：{id: [繁中染色]}（整套 fallback）
 MIRAPRI_PIECE_DYES = ROOT / "data" / "mirapri_piece_dyes.json"  # {id: {裝備日文名: [繁中染色]}}（v2 逐件）
 MIRAPRI_VISIBLE = ROOT / "data" / "mirapri_visible.json"  # apply_dyes.py 產生：{id: [圖上可見裝備日文名]}
+REVIEW_DECISIONS = ROOT / "data" / "review_decisions.json"  # review.html 匯出：action=="remove" 的套不顯示
 VIS_FLOOR = 4  # vismap 過濾後若 <此件數，視為 OCR 漏讀 → 改保留完整清單（一般幻化至少 4~5 件）
 
 # 取得方式 emoji → st 標籤（取 source 字串中第一個出現的 emoji）
@@ -166,6 +167,16 @@ def main():
     enriched = json.loads(ENRICHED_PATH.read_text(encoding="utf-8"))
     arr = enriched if isinstance(enriched, list) else enriched.get("outfits", [])
     mirapri = [transform_mirapri(o, dyemap, vismap, piecemap) for o in arr if o.get("type") == "mirapri"]
+
+    # 套用 review.html 的人工決定：action=="remove" 的套不顯示（其餘決定不影響網站）
+    if REVIEW_DECISIONS.exists():
+        rj = json.loads(REVIEW_DECISIONS.read_text(encoding="utf-8"))
+        removed = {d["id"] for d in rj.get("decisions", []) if d.get("action") == "remove"}
+        if removed:
+            before = len(mirapri)
+            mirapri = [m for m in mirapri if m.get("id") not in removed]
+            print(f"  依人工決定移除（不顯示）：{before - len(mirapri)} 套")
+
     n_piece = sum(1 for m in mirapri if m.get("hasPieceDyes"))
     print(f"  逐件染色（v2）套數：{n_piece}")
 
