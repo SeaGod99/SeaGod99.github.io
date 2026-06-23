@@ -35,7 +35,17 @@
   .card.act-keep{border-left:4px solid var(--a-keep)}
   .card.act-review{border-left:4px solid var(--a-review)}
   .card.act-claude{border-left:4px solid var(--a-claude)}
-  .thumb{width:150px;height:150px;flex:0 0 150px;border-radius:8px;object-fit:cover;background:var(--panel2)}
+  .thumb{width:260px;height:300px;flex:0 0 260px;border-radius:8px;object-fit:contain;background:#0e1014;cursor:zoom-in;transition:outline .12s}
+  .thumb:hover{outline:2px solid var(--accent)}
+  .thumb-wrap{position:relative;flex:0 0 260px}
+  .thumb-wrap .zoom-hint{position:absolute;right:6px;bottom:6px;background:rgba(0,0,0,.6);color:#fff;font-size:11px;padding:2px 6px;border-radius:5px;pointer-events:none;opacity:0;transition:opacity .12s}
+  .thumb-wrap:hover .zoom-hint{opacity:1}
+  /* 點圖放大檢視 */
+  .lightbox{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.92);display:none;align-items:center;justify-content:center;cursor:zoom-out}
+  .lightbox.on{display:flex}
+  .lightbox img{max-width:96vw;max-height:92vh;object-fit:contain;border-radius:6px;box-shadow:0 0 40px rgba(0,0,0,.6)}
+  .lightbox .lb-close{position:absolute;top:14px;right:26px;font-size:34px;color:#fff;cursor:pointer;line-height:1}
+  .lightbox .lb-cap{position:absolute;bottom:16px;left:0;right:0;text-align:center;color:#d6d9e0;font-size:13px;pointer-events:none}
   .info{flex:1;min-width:0}
   .ti{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px}
   .name{font-weight:600;font-size:15px}
@@ -96,6 +106,12 @@
   <div class="empty-note" id="noneNote" style="display:none">這個篩選沒有套裝 🎉</div>
 </main>
 
+<div class="lightbox" id="lightbox">
+  <span class="lb-close">✕</span>
+  <img id="lb-img" src="" alt="">
+  <div class="lb-cap" id="lb-cap"></div>
+</div>
+
 <script src="review_data.js"></script>
 <script>
 const LS = "ff14_review_decisions";
@@ -145,7 +161,10 @@ function cardHtml(it){
     return `<button class="act ${sel}" data-act="${a}">${ACTLBL[a]}${hint}</button>`;
   }).join("");
   return `<div class="card ${act?"decided act-"+act:""}" data-id="${esc(it.id)}">
-    <img class="thumb" loading="lazy" src="${esc(it.thumb)}" onerror="this.onerror=null;this.src='${esc(it.img)}'">
+    <div class="thumb-wrap">
+      <img class="thumb" loading="lazy" src="${esc(it.thumb)}" data-full="${esc(it.img)}" data-thumb="${esc(it.thumb)}" data-name="${esc(it.name||'')}" onerror="this.onerror=null;this.src='${esc(it.img)}'">
+      <span class="zoom-hint">🔍 點擊放大</span>
+    </div>
     <div class="info">
       <div class="ti"><span class="name">${esc(it.name||"無題")}</span> ${badges} <span class="oid">${esc(it.id)}</span></div>
       <div class="meta">顯示 ${it.shown} 件｜原始 ${it.raw} 件${it.vis!=null?`｜OCR認出 ${it.vis} 件`:""}${it.verify?`｜驗證 ${it.verify}`:""}</div>
@@ -171,6 +190,8 @@ function rerender(){
 }
 // 事件委派：動作按鈕
 document.getElementById("list").addEventListener("click", e=>{
+  const t = e.target.closest(".thumb");
+  if(t){ openLightbox(t.dataset.full, t.dataset.thumb, t.dataset.name); return; }
   const b = e.target.closest(".act"); if(!b) return;
   const card = b.closest(".card"); const id = card.dataset.id; const a = b.dataset.act;
   if(decisions[id]===a){ delete decisions[id]; } else { decisions[id]=a; }
@@ -202,6 +223,17 @@ document.getElementById("export").addEventListener("click", ()=>{
 document.getElementById("reset").addEventListener("click", ()=>{
   if(confirm("確定清除所有已記錄的決定？")){ decisions={}; localStorage.removeItem(LS); rerender(); updateProgress(); }
 });
+// 點縮圖 → 全解析度放大檢視（原圖讀不到時回退縮圖）
+function openLightbox(full, thumb, name){
+  const lb=document.getElementById("lightbox"), img=document.getElementById("lb-img");
+  img.onerror=()=>{ img.onerror=null; if(thumb && img.src!==thumb) img.src=thumb; };
+  img.src=full||thumb||""; document.getElementById("lb-cap").textContent=name||"";
+  lb.classList.add("on");
+}
+function closeLightbox(){ document.getElementById("lightbox").classList.remove("on"); }
+document.getElementById("lightbox").addEventListener("click", closeLightbox);
+document.addEventListener("keydown", e=>{ if(e.key==="Escape") closeLightbox(); });
+
 counts(); updateProgress(); rerender();
 </script>
 </body>
