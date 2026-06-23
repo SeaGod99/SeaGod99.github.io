@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FF14 配裝待檢視清單</title>
+<style>
+  :root{
+    --bg:#14161b; --panel:#1b1e26; --panel2:#222632; --fg:#e7e9ee; --muted:#8b91a0;
+    --border:#2c313d; --accent:#6ea8fe;
+    --c-empty:#ef5350; --c-few:#ffb74d; --c-underread:#26c6da; --c-lowconf:#ab8cf0; --c-missing:#66bb6a;
+    --a-review:#ffb74d; --a-keep:#8b91a0; --a-claude:#6ea8fe; --a-remove:#ef5350;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Segoe UI","Noto Sans TC",system-ui,sans-serif;background:var(--bg);color:var(--fg);font-size:14px}
+  header{position:sticky;top:0;z-index:10;background:rgba(20,22,27,.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--border);padding:12px 18px}
+  h1{margin:0 0 8px;font-size:18px}
+  .sub{color:var(--muted);font-size:12px;margin-bottom:10px}
+  .bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .chip{padding:5px 11px;border:1px solid var(--border);border-radius:20px;background:var(--panel);cursor:pointer;font-size:12.5px;user-select:none;white-space:nowrap}
+  .chip:hover{border-color:var(--accent)}
+  .chip.on{background:var(--accent);color:#0b0d12;border-color:var(--accent);font-weight:600}
+  .chip .n{opacity:.7;margin-left:4px}
+  input[type=search]{background:var(--panel);border:1px solid var(--border);color:var(--fg);border-radius:8px;padding:6px 10px;min-width:180px}
+  .toggle{display:flex;align-items:center;gap:5px;color:var(--muted);cursor:pointer;font-size:12.5px}
+  .spacer{flex:1}
+  .btn{background:var(--panel2);border:1px solid var(--border);color:var(--fg);border-radius:8px;padding:6px 12px;cursor:pointer;font-size:12.5px}
+  .btn:hover{border-color:var(--accent)}
+  .progress-wrap{margin-top:9px;height:6px;background:var(--panel2);border-radius:4px;overflow:hidden}
+  .progress{height:100%;background:var(--accent);width:0;transition:width .2s}
+  main{padding:16px 18px;max-width:1180px;margin:0 auto}
+  .card{display:flex;gap:14px;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:12px}
+  .card.decided{opacity:.55}
+  .card.act-remove{border-left:4px solid var(--a-remove)}
+  .card.act-keep{border-left:4px solid var(--a-keep)}
+  .card.act-review{border-left:4px solid var(--a-review)}
+  .card.act-claude{border-left:4px solid var(--a-claude)}
+  .thumb{width:150px;height:150px;flex:0 0 150px;border-radius:8px;object-fit:cover;background:var(--panel2)}
+  .info{flex:1;min-width:0}
+  .ti{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px}
+  .name{font-weight:600;font-size:15px}
+  .oid{color:var(--muted);font-size:11px;font-family:monospace}
+  .badge{font-size:11px;padding:2px 7px;border-radius:10px;color:#0b0d12;font-weight:600}
+  .b-empty{background:var(--c-empty)} .b-few{background:var(--c-few)} .b-underread{background:var(--c-underread)}
+  .b-lowconf{background:var(--c-lowconf)} .b-missing{background:var(--c-missing)}
+  .meta{color:var(--muted);font-size:12px;margin:3px 0 7px}
+  .pieces{font-size:12.5px;line-height:1.6;margin:5px 0}
+  .pieces .slot{display:inline-block;min-width:34px;color:var(--muted)}
+  .pieces .dye{color:var(--accent);font-size:11.5px;margin-left:5px}
+  .issue{font-size:12px;background:var(--panel2);border-radius:8px;padding:7px 10px;margin-top:7px}
+  .issue b{color:var(--c-lowconf)}
+  .issue.miss b{color:var(--c-missing)}
+  .issue .row{margin:2px 0}
+  .acts{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap}
+  .act{border:1px solid var(--border);background:transparent;color:var(--fg);border-radius:8px;padding:6px 12px;cursor:pointer;font-size:12.5px}
+  .act:hover{border-color:var(--fg)}
+  .act .hint{font-size:10px;color:var(--muted);margin-left:4px}
+  .act.sel-review{background:var(--a-review);color:#0b0d12;border-color:var(--a-review);font-weight:600}
+  .act.sel-keep{background:var(--a-keep);color:#0b0d12;border-color:var(--a-keep);font-weight:600}
+  .act.sel-claude{background:var(--a-claude);color:#0b0d12;border-color:var(--a-claude);font-weight:600}
+  .act.sel-remove{background:var(--a-remove);color:#fff;border-color:var(--a-remove);font-weight:600}
+  #more{display:block;margin:18px auto;padding:10px 24px}
+  .empty-note{color:var(--muted);text-align:center;padding:40px}
+  .legend{font-size:11.5px;color:var(--muted);margin-top:7px}
+  .legend span{margin-right:12px}
+</style>
+</head>
+<body>
+<header>
+  <h1>FF14 配裝待檢視清單 <span id="count" class="sub" style="font-weight:400"></span></h1>
+  <div class="sub">逐套決定處理方式；選擇會自動存在瀏覽器，按「匯出決定」下載 JSON 交給後續處理。</div>
+  <div class="bar">
+    <span class="chip on" data-cat="all">全部 <span class="n" id="n-all"></span></span>
+    <span class="chip" data-cat="empty">空殼(0件) <span class="n" id="n-empty"></span></span>
+    <span class="chip" data-cat="few">過少(1-3件) <span class="n" id="n-few"></span></span>
+    <span class="chip" data-cat="underread">OCR漏讀 <span class="n" id="n-underread"></span></span>
+    <span class="chip" data-cat="lowconf">名稱可疑 <span class="n" id="n-lowconf"></span></span>
+    <span class="chip" data-cat="missing">可能漏抓 <span class="n" id="n-missing"></span></span>
+    <input type="search" id="q" placeholder="搜尋名稱/ID…">
+    <label class="toggle"><input type="checkbox" id="undecided"> 只看未決定</label>
+    <span class="spacer"></span>
+    <button class="btn" id="export">⬇ 匯出決定</button>
+    <button class="btn" id="reset">清除全部決定</button>
+  </div>
+  <div class="legend">
+    <span>動作：<b style="color:var(--a-review)">重新檢視</b>=之後人工再看</span>
+    <span><b style="color:var(--a-keep)">維持原狀</b>=沒問題</span>
+    <span><b style="color:var(--a-claude)">用Claude OCR</b>=交給 Claude 重讀/補</span>
+    <span><b style="color:var(--a-remove)">移除</b>=不顯示此套</span>
+  </div>
+  <div class="progress-wrap"><div class="progress" id="prog"></div></div>
+</header>
+<main>
+  <div id="list"></div>
+  <button class="btn" id="more">載入更多</button>
+  <div class="empty-note" id="noneNote" style="display:none">這個篩選沒有套裝 🎉</div>
+</main>
+
+<script src="review_data.js"></script>
+<script>
+const LS = "ff14_review_decisions";
+const SLOT_EN = {}; // 部位已是中文
+let decisions = JSON.parse(localStorage.getItem(LS) || "{}");
+let curCat = "all", curQ = "", onlyUndecided = false;
+let view = [], rendered = 0;
+const PAGE = 50;
+const ACTLBL = {review:"重新檢視", keep:"維持原狀", claude:"用Claude OCR", remove:"移除"};
+const esc = s => (s||"").replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function counts(){
+  document.getElementById("n-all").textContent = REVIEW_ITEMS.length;
+  for(const c of ["empty","few","underread","lowconf","missing"])
+    document.getElementById("n-"+c).textContent = REVIEW_CATS[c]||0;
+}
+function decidedCount(){ return Object.keys(decisions).length; }
+function updateProgress(){
+  const d = decidedCount(), t = REVIEW_ITEMS.length;
+  document.getElementById("prog").style.width = (t? 100*d/t : 0) + "%";
+  document.getElementById("count").textContent = `已決定 ${d} / ${t}`;
+}
+function computeView(){
+  view = REVIEW_ITEMS.filter(it=>{
+    if(curCat!=="all" && !it.cats.includes(curCat)) return false;
+    if(onlyUndecided && decisions[it.id]) return false;
+    if(curQ){ const q=curQ.toLowerCase(); if(!(it.name.toLowerCase().includes(q)||it.id.includes(q))) return false; }
+    return true;
+  });
+}
+function cardHtml(it){
+  const act = decisions[it.id];
+  const badges = it.cats.map(c=>`<span class="badge b-${c}">${({empty:"空殼",few:"過少",underread:"OCR漏讀",lowconf:"名稱可疑",missing:"可能漏抓"})[c]}</span>`).join("");
+  const pieces = it.pieces.length
+    ? it.pieces.map(p=>`<div><span class="slot">${esc(p.s||"—")}</span> ${esc(p.z||p.j)}${p.j&&p.z?` <span style="color:var(--muted);font-size:11px">${esc(p.j)}</span>`:""}${p.d?`<span class="dye">染:${esc(p.d)}</span>`:""}</div>`).join("")
+    : `<div style="color:var(--muted)">（圖上抓不到任何裝備）</div>`;
+  let issues = "";
+  if(it.maybe_wrong&&it.maybe_wrong.length)
+    issues += `<div class="issue"><b>名稱可疑（OCR 讀到但對不上）：</b>`+it.maybe_wrong.map(m=>`<div class="row">[${esc(m.s)}] ${esc(m.z||m.j)} — OCR「${esc(m.ocr)||"沒讀到"}」${m.sc?`(相似${m.sc})`:""}</div>`).join("")+`</div>`;
+  if(it.miss&&it.miss.length)
+    issues += `<div class="issue miss"><b>可能漏抓（OCR 讀到、解析到資料庫，但不在清單）：</b>`+it.miss.map(m=>`<div class="row">OCR「${esc(m.ocr)}」→ ${esc(m.z||"（繁中未實裝）")} / ${esc(m.j)} <code style="color:var(--muted)">id=${m.id}</code> ${m.ex?"精確":"相似"+m.sc}</div>`).join("")+`</div>`;
+  if(it.zhfix&&it.zhfix.length)
+    issues += `<div class="issue"><b style="color:var(--c-few)">繁中校正建議：</b>`+it.zhfix.map(f=>`<div class="row">${esc(f.ja)}：${esc(f.old_zh||"（空）")} → <b>${esc(f.db_zh)}</b></div>`).join("")+`</div>`;
+  const actsBtns = ["review","keep","claude","remove"].map(a=>{
+    const sel = act===a ? `sel-${a}`:"";
+    const hint = it.suggest===a ? `<span class="hint">建議</span>`:"";
+    return `<button class="act ${sel}" data-act="${a}">${ACTLBL[a]}${hint}</button>`;
+  }).join("");
+  return `<div class="card ${act?"decided act-"+act:""}" data-id="${esc(it.id)}">
+    <img class="thumb" loading="lazy" src="${esc(it.thumb)}" onerror="this.onerror=null;this.src='${esc(it.img)}'">
+    <div class="info">
+      <div class="ti"><span class="name">${esc(it.name||"無題")}</span> ${badges} <span class="oid">${esc(it.id)}</span></div>
+      <div class="meta">顯示 ${it.shown} 件｜原始 ${it.raw} 件${it.vis!=null?`｜OCR認出 ${it.vis} 件`:""}${it.verify?`｜驗證 ${it.verify}`:""}</div>
+      <div class="pieces">${pieces}</div>
+      ${issues}
+      <div class="acts">${actsBtns}</div>
+    </div>
+  </div>`;
+}
+function renderMore(){
+  const list = document.getElementById("list");
+  const slice = view.slice(rendered, rendered+PAGE);
+  list.insertAdjacentHTML("beforeend", slice.map(cardHtml).join(""));
+  rendered += slice.length;
+  document.getElementById("more").style.display = rendered<view.length ? "block":"none";
+  document.getElementById("noneNote").style.display = view.length===0 ? "block":"none";
+}
+function rerender(){
+  computeView();
+  document.getElementById("list").innerHTML = "";
+  rendered = 0;
+  renderMore();
+}
+// 事件委派：動作按鈕
+document.getElementById("list").addEventListener("click", e=>{
+  const b = e.target.closest(".act"); if(!b) return;
+  const card = b.closest(".card"); const id = card.dataset.id; const a = b.dataset.act;
+  if(decisions[id]===a){ delete decisions[id]; } else { decisions[id]=a; }
+  localStorage.setItem(LS, JSON.stringify(decisions));
+  // 更新該卡
+  card.querySelectorAll(".act").forEach(x=>x.className="act");
+  card.className = "card";
+  if(decisions[id]){
+    b.className = "act sel-"+a; card.className = "card decided act-"+a;
+    // 重新套用其他卡內 sel（避免清掉同卡其他按鈕狀態已在上面處理）
+  }
+  if(decisions[id]){ card.querySelector(`.act[data-act="${decisions[id]}"]`).className="act sel-"+decisions[id]; }
+  updateProgress();
+  if(onlyUndecided && decisions[id]) card.style.display="none";
+});
+// 篩選
+document.querySelectorAll(".chip").forEach(c=>c.addEventListener("click",()=>{
+  document.querySelectorAll(".chip").forEach(x=>x.classList.remove("on"));
+  c.classList.add("on"); curCat = c.dataset.cat; rerender();
+}));
+document.getElementById("q").addEventListener("input", e=>{ curQ=e.target.value.trim(); rerender(); });
+document.getElementById("undecided").addEventListener("change", e=>{ onlyUndecided=e.target.checked; rerender(); });
+document.getElementById("more").addEventListener("click", renderMore);
+document.getElementById("export").addEventListener("click", ()=>{
+  const out = REVIEW_ITEMS.filter(it=>decisions[it.id]).map(it=>({id:it.id,name:it.name,cats:it.cats,action:decisions[it.id]}));
+  const blob = new Blob([JSON.stringify({generated:new Date().toISOString(),count:out.length,decisions:out},null,2)],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="review_decisions.json"; a.click();
+});
+document.getElementById("reset").addEventListener("click", ()=>{
+  if(confirm("確定清除所有已記錄的決定？")){ decisions={}; localStorage.removeItem(LS); rerender(); updateProgress(); }
+});
+counts(); updateProgress(); rerender();
+</script>
+</body>
+</html>

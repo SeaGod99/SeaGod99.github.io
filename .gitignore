@@ -13,9 +13,12 @@ data/ocr_check_result.json
 data/OCR檢查報告.md
 data/ocr_resolve.json
 data/OCR解析建議.md
+review_data.js
+_review_*.png
 
 # ───────── Python / 系統雜物 ─────────
 __pycache__/
 *.pyc
 .DS_Store
 Thumbs.db
+.gstack/
