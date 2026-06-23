@@ -52,7 +52,7 @@
   .oid{color:var(--muted);font-size:11px;font-family:monospace}
   .badge{font-size:11px;padding:2px 7px;border-radius:10px;color:#0b0d12;font-weight:600}
   .b-empty{background:var(--c-empty)} .b-few{background:var(--c-few)} .b-underread{background:var(--c-underread)}
-  .b-lowconf{background:var(--c-lowconf)} .b-missing{background:var(--c-missing)}
+  .b-lowconf{background:var(--c-lowconf)} .b-missing{background:var(--c-missing)} .b-recon{background:#caa15a}
   .meta{color:var(--muted);font-size:12px;margin:3px 0 7px}
   .pieces{font-size:12.5px;line-height:1.6;margin:5px 0}
   .pieces .slot{display:inline-block;min-width:34px;color:var(--muted)}
@@ -86,6 +86,7 @@
     <span class="chip" data-cat="underread">OCR漏讀 <span class="n" id="n-underread"></span></span>
     <span class="chip" data-cat="lowconf">名稱可疑 <span class="n" id="n-lowconf"></span></span>
     <span class="chip" data-cat="missing">可能漏抓 <span class="n" id="n-missing"></span></span>
+    <span class="chip" data-cat="recon">重建待核 <span class="n" id="n-recon"></span></span>
     <input type="search" id="q" placeholder="搜尋名稱/ID…">
     <label class="toggle"><input type="checkbox" id="undecided"> 只看未決定</label>
     <span class="spacer"></span>
@@ -125,7 +126,7 @@ const esc = s => (s||"").replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt
 
 function counts(){
   document.getElementById("n-all").textContent = REVIEW_ITEMS.length;
-  for(const c of ["empty","few","underread","lowconf","missing"])
+  for(const c of ["empty","few","underread","lowconf","missing","recon"])
     document.getElementById("n-"+c).textContent = REVIEW_CATS[c]||0;
 }
 function decidedCount(){ return Object.keys(decisions).length; }
@@ -144,7 +145,7 @@ function computeView(){
 }
 function cardHtml(it){
   const act = decisions[it.id];
-  const badges = it.cats.map(c=>`<span class="badge b-${c}">${({empty:"空殼",few:"過少",underread:"OCR漏讀",lowconf:"名稱可疑",missing:"可能漏抓"})[c]}</span>`).join("");
+  const badges = it.cats.map(c=>`<span class="badge b-${c}">${({empty:"空殼",few:"過少",underread:"OCR漏讀",lowconf:"名稱可疑",missing:"可能漏抓",recon:"重建"})[c]}</span>`).join("");
   const pieces = it.pieces.length
     ? it.pieces.map(p=>`<div><span class="slot">${esc(p.s||"—")}</span> ${esc(p.z||p.j)}${p.j&&p.z?` <span style="color:var(--muted);font-size:11px">${esc(p.j)}</span>`:""}${p.d?`<span class="dye">染:${esc(p.d)}</span>`:""}</div>`).join("")
     : `<div style="color:var(--muted)">（圖上抓不到任何裝備）</div>`;

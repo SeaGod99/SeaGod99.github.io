@@ -52,9 +52,11 @@ def main():
     resolve_by_id = {}
     for r in oc.load_json(os.path.join(oc.DATA, "ocr_resolve.json"), {}).get("items", []):
         resolve_by_id[r["outfit_id"]] = r
+    # 由 OCR+DB 自動重建的空殼套（待人工核對）
+    recon_ids = set(oc.load_json(os.path.join(oc.DATA, "mirapri_reconstructed.json"), {}).keys())
 
     items = []
-    cat_count = {"empty": 0, "few": 0, "underread": 0, "lowconf": 0, "missing": 0}
+    cat_count = {"empty": 0, "few": 0, "underread": 0, "lowconf": 0, "missing": 0, "recon": 0}
     for o in built:
         oid = o["id"]
         pieces = o.get("equipments", [])
@@ -88,6 +90,8 @@ def main():
                              "id": h["id"], "sc": h["score"], "ex": h["exact"]})
         if miss:
             cats.append("missing")
+        if oid in recon_ids:
+            cats.append("recon")  # 自動重建的空殼套，待核對
 
         if not cats:
             continue
@@ -99,6 +103,8 @@ def main():
             suggest = "remove"
         elif "underread" in cats or "lowconf" in cats:
             suggest = "claude"
+        elif cats == ["recon"]:
+            suggest = "keep"   # 重建乾淨、看起來沒問題 → 預設維持
         else:
             suggest = "review"
 
@@ -118,7 +124,7 @@ def main():
         })
 
     # 嚴重度排序：empty → few → underread → lowconf → missing
-    order = {"empty": 0, "few": 1, "underread": 2, "lowconf": 3, "missing": 4}
+    order = {"empty": 0, "few": 1, "underread": 2, "lowconf": 3, "missing": 4, "recon": 5}
     items.sort(key=lambda it: min(order[c] for c in it["cats"]))
 
     with open(OUT_JS, "w", encoding="utf-8") as f:
