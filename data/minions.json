@@ -116,7 +116,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "3.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 75,
@@ -168,7 +173,24 @@
       "race": "Critter",
       "marketable": false,
       "patch": "4.0",
-      "sources": [],
+      "sources": [
+        {
+          "type": "採集",
+          "detail": null
+        },
+        {
+          "type": "深層迷宮",
+          "detail": null
+        },
+        {
+          "type": "無人島",
+          "detail": null
+        },
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -202,7 +224,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "2.2",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 114,
@@ -216,7 +243,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "2.38",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 155,
@@ -230,7 +262,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "3.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 199,
@@ -267,7 +304,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "4.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 1,
@@ -304,7 +346,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "2.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 148,
@@ -539,7 +586,16 @@
       "race": "Monster",
       "marketable": false,
       "patch": "2.0",
-      "sources": [],
+      "sources": [
+        {
+          "type": "採集",
+          "detail": null
+        },
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -669,7 +725,20 @@
       "race": "Monster",
       "marketable": false,
       "patch": "2.0",
-      "sources": [],
+      "sources": [
+        {
+          "type": "採集",
+          "detail": null
+        },
+        {
+          "type": "宇宙探索",
+          "detail": null
+        },
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -1463,7 +1532,12 @@
       "race": "Critter",
       "marketable": true,
       "patch": "5.31",
-      "sources": []
+      "sources": [
+        {
+          "type": "伊修加德重建",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 142,
@@ -1573,7 +1647,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "5.21",
-      "sources": []
+      "sources": [
+        {
+          "type": "伊修加德重建",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 373,
@@ -1587,7 +1666,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "5.21",
-      "sources": []
+      "sources": [
+        {
+          "type": "伊修加德重建",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 163,
@@ -1937,7 +2021,28 @@
       "race": "Critter",
       "marketable": false,
       "patch": "4.0",
-      "sources": [],
+      "sources": [
+        {
+          "type": "採集",
+          "detail": null
+        },
+        {
+          "type": "深層迷宮",
+          "detail": null
+        },
+        {
+          "type": "無人島",
+          "detail": null
+        },
+        {
+          "type": "宇宙探索",
+          "detail": null
+        },
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -2181,7 +2286,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "4.45",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 319,
@@ -2446,7 +2556,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "5.31",
-      "sources": []
+      "sources": [
+        {
+          "type": "伊修加德重建",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 405,
@@ -2479,7 +2594,12 @@
       "race": "Monster",
       "marketable": true,
       "patch": "5.41",
-      "sources": []
+      "sources": [
+        {
+          "type": "伊修加德重建",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 377,
@@ -2911,7 +3031,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "7.25",
-      "sources": [],
+      "sources": [
+        {
+          "type": "部族任務",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -2926,7 +3051,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "7.25",
-      "sources": [],
+      "sources": [
+        {
+          "type": "新月島",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -2941,7 +3071,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "7.25",
-      "sources": [],
+      "sources": [
+        {
+          "type": "新月島",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -2956,7 +3091,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "7.25",
-      "sources": [],
+      "sources": [
+        {
+          "type": "新月島",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -2971,7 +3111,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "7.25",
-      "sources": [],
+      "sources": [
+        {
+          "type": "新月島",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -2986,7 +3131,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "7.3",
-      "sources": [],
+      "sources": [
+        {
+          "type": "天書奇談",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -3001,7 +3151,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "7.3",
-      "sources": [],
+      "sources": [
+        {
+          "type": "藏寶圖",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -3016,7 +3171,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "7.3",
-      "sources": [],
+      "sources": [
+        {
+          "type": "藏寶圖",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -3031,7 +3191,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "7.45",
-      "sources": [],
+      "sources": [
+        {
+          "type": "異聞副本",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -3065,7 +3230,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "2.2",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 176,
@@ -3315,7 +3485,16 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "7.4",
-      "sources": [],
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "阿卡狄亞登天鬥技場 重量級4"
+        },
+        {
+          "type": "副本掉落",
+          "detail": "阿卡狄亞零式登天鬥技場 重量級4"
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -3349,7 +3528,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "7.15",
-      "sources": [],
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -3562,7 +3746,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "7.3",
-      "sources": [],
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "桑多利亞：第二巡行"
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -3711,7 +3900,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "7.5",
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -4583,7 +4777,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "7.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 518,
@@ -4654,7 +4853,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "7.3",
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -4669,7 +4873,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "7.2",
-      "sources": [],
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "王城古蹟永護塔底"
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -4684,7 +4893,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "7.4",
-      "sources": [],
+      "sources": [
+        {
+          "type": "新月島",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -4699,7 +4913,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "7.4",
-      "sources": [],
+      "sources": [
+        {
+          "type": "新月島",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -4714,7 +4933,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "7.5",
-      "sources": [],
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "軍工要地克呂提俄斯魔導工廠"
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -4817,7 +5041,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "7.5",
-      "sources": [],
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -5099,7 +5328,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "7.45",
-      "sources": [],
+      "sources": [
+        {
+          "type": "異聞副本",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -5114,7 +5348,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "7.3",
-      "sources": [],
+      "sources": [
+        {
+          "type": "採集",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -5129,7 +5368,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "7.5",
-      "sources": [],
+      "sources": [
+        {
+          "type": "採集",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -5411,7 +5655,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "7.25",
-      "sources": [],
+      "sources": [
+        {
+          "type": "新月島",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -5468,7 +5717,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "7.3",
-      "sources": [],
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "永久幽界中央終端"
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -5483,7 +5737,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "7.4",
-      "sources": [],
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "遺忘行路霧之跡"
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -5654,7 +5913,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "7.35",
-      "sources": [],
+      "sources": [
+        {
+          "type": "深層迷宮",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -5726,7 +5990,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "7.35",
-      "sources": [],
+      "sources": [
+        {
+          "type": "部族任務",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -6232,7 +6501,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "7.35",
-      "sources": [],
+      "sources": [
+        {
+          "type": "深層迷宮",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -6578,7 +6852,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "4.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 284,
@@ -6646,7 +6925,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "5.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 327,
@@ -6706,7 +6990,16 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "6.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        },
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 530,
@@ -6720,7 +7013,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "7.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 570,
@@ -6734,7 +7032,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "7.4",
-      "sources": [],
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -7057,7 +7360,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "6.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 130,
@@ -7151,7 +7459,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "4.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 133,
@@ -7583,7 +7896,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "4.2",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 264,
@@ -7762,7 +8080,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "5.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 306,
@@ -7814,7 +8137,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "5.2",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 381,
@@ -7904,7 +8232,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "5.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 417,
@@ -7918,7 +8251,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "5.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 418,
@@ -8084,7 +8422,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "7.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 546,
@@ -8098,7 +8441,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "7.3",
-      "sources": [],
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -8113,7 +8461,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "7.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 501,
@@ -8127,7 +8480,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "6.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 502,
@@ -8141,7 +8499,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "6.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 85,
@@ -8212,7 +8575,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "2.5",
-      "sources": [],
+      "sources": [
+        {
+          "type": "任務",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -8227,7 +8595,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "3.55a",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 233,
@@ -8241,7 +8614,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "3.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 430,
@@ -8255,7 +8633,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "6.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 304,
@@ -8307,7 +8690,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "7.51",
-      "sources": [],
+      "sources": [
+        {
+          "type": "任務",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -8421,7 +8809,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "2.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 64,
@@ -8454,7 +8847,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "3.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 152,
@@ -8468,7 +8866,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "3.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 191,
@@ -8825,7 +9228,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "7.5",
-      "sources": [],
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -8874,7 +9282,12 @@
       "race": "Gadget",
       "marketable": false,
       "patch": "2.38",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 43,
@@ -8907,7 +9320,12 @@
       "race": "Gadget",
       "marketable": false,
       "patch": "2.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 100,
@@ -9298,7 +9716,12 @@
       "race": "Gadget",
       "marketable": false,
       "patch": "6.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 508,
@@ -9388,7 +9811,12 @@
       "race": "Gadget",
       "marketable": false,
       "patch": "7.2",
-      "sources": [],
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -9403,7 +9831,12 @@
       "race": "Gadget",
       "marketable": false,
       "patch": "7.21",
-      "sources": [],
+      "sources": [
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -9418,7 +9851,12 @@
       "race": "Gadget",
       "marketable": false,
       "patch": "7.31",
-      "sources": [],
+      "sources": [
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -9433,7 +9871,12 @@
       "race": "Gadget",
       "marketable": false,
       "patch": "7.3",
-      "sources": [],
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -9448,7 +9891,12 @@
       "race": "Gadget",
       "marketable": false,
       "patch": "7.3",
-      "sources": [],
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -9463,7 +9911,12 @@
       "race": "Gadget",
       "marketable": false,
       "patch": "7.41",
-      "sources": [],
+      "sources": [
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -9478,7 +9931,12 @@
       "race": "Gadget",
       "marketable": false,
       "patch": "7.51",
-      "sources": [],
+      "sources": [
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -9707,7 +10165,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "2.45",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 188,
@@ -9721,7 +10184,16 @@
       "race": "Gadget",
       "marketable": false,
       "patch": "3.3",
-      "sources": [],
+      "sources": [
+        {
+          "type": "採集",
+          "detail": null
+        },
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -9938,7 +10410,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "7.2",
-      "sources": [],
+      "sources": [
+        {
+          "type": "任務",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -9953,7 +10430,12 @@
       "race": "Gadget",
       "marketable": false,
       "patch": "7.45",
-      "sources": [],
+      "sources": [
+        {
+          "type": "異聞副本",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -10032,7 +10514,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "4.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 77,
@@ -10103,7 +10590,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "3.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 182,
@@ -10117,7 +10609,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "3.2",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 214,
@@ -10131,7 +10628,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "3.4",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 399,
@@ -10145,7 +10647,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "5.5",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 400,
@@ -10159,7 +10666,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "6.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 401,
@@ -10230,7 +10742,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "4.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 161,
@@ -10244,7 +10761,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "3.1",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 309,
@@ -10330,7 +10852,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "7.45",
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -10364,7 +10891,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "6.58",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 505,
@@ -10378,7 +10910,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "7.0",
-      "sources": []
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ]
     },
     {
       "id": 220,
@@ -10468,7 +11005,12 @@
       "race": "Poppet",
       "marketable": false,
       "patch": "7.5",
-      "sources": [],
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "溫達斯：第三巡行"
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -10601,7 +11143,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "3.35",
-      "sources": []
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 201,
@@ -10615,7 +11162,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "3.35",
-      "sources": []
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 202,
@@ -10629,7 +11181,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "3.35",
-      "sources": []
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 203,
@@ -10643,7 +11200,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "3.35",
-      "sources": []
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 204,
@@ -10657,7 +11219,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "3.35",
-      "sources": []
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 205,
@@ -10671,7 +11238,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "3.35",
-      "sources": []
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 206,
@@ -10685,7 +11257,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "3.35",
-      "sources": []
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 207,
@@ -10699,7 +11276,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "3.35",
-      "sources": []
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 208,
@@ -10713,7 +11295,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "3.35",
-      "sources": []
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 209,
@@ -10727,7 +11314,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "3.35",
-      "sources": []
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 210,
@@ -10741,7 +11333,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "3.35",
-      "sources": []
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 211,
@@ -10755,7 +11352,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "3.35",
-      "sources": []
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 212,
@@ -10769,7 +11371,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "3.35",
-      "sources": []
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 390,
@@ -10783,7 +11390,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "5.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 391,
@@ -10797,7 +11409,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "5.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 392,
@@ -10811,7 +11428,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "5.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 393,
@@ -10825,7 +11447,12 @@
       "race": "Monster",
       "marketable": false,
       "patch": "5.3",
-      "sources": []
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        }
+      ]
     },
     {
       "id": 300,
@@ -10881,7 +11508,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "7.35",
-      "sources": [],
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {
@@ -10896,7 +11528,12 @@
       "race": "Critter",
       "marketable": false,
       "patch": "7.35",
-      "sources": [],
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": null
+        }
+      ],
       "_noTwName": true
     },
     {

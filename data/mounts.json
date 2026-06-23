@@ -1370,7 +1370,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004058_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004058_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
       "patch": "3.2",
       "itemId": 14089,
       "nameSource": "tw-items"
@@ -1384,7 +1389,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004059_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004059_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "3.5",
       "itemId": 14982,
       "nameSource": "cn-opencc"
@@ -1398,7 +1408,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004060_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004060_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "3.2",
       "itemId": 14090,
       "nameSource": "tw-items"
@@ -1412,7 +1427,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004061_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004061_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
       "patch": "3.3",
       "itemId": 15433,
       "nameSource": "cn-opencc"
@@ -1426,7 +1446,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004062_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004062_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "3.35",
       "itemId": 15430,
       "nameSource": "tw-items"
@@ -1440,7 +1465,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004063_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004063_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "部族任務",
+          "detail": null
+        }
+      ],
       "patch": "3.3",
       "itemId": 15429,
       "nameSource": "cn-opencc"
@@ -1454,7 +1484,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004064_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004064_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        }
+      ],
       "patch": "3.35",
       "itemId": 15431,
       "nameSource": "tw-items"
@@ -1468,7 +1503,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004065_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004065_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極 尼德霍格征龍戰"
+        }
+      ],
       "patch": "3.3",
       "itemId": 15432,
       "nameSource": "tw-items"
@@ -1482,7 +1522,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004066_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004066_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
       "patch": "3.3",
       "itemId": 15932,
       "nameSource": "tw-items"
@@ -1496,7 +1541,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004068_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004068_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "深層迷宮",
+          "detail": null
+        }
+      ],
       "patch": "3.35",
       "itemId": 15933,
       "nameSource": "cn-opencc"
@@ -1510,7 +1560,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004067_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004067_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "4.1",
       "itemId": 15934,
       "nameSource": "cn-opencc"
@@ -1524,7 +1579,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004069_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004069_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        }
+      ],
       "patch": "3.35",
       "itemId": 15946,
       "nameSource": "tw-items"
@@ -1538,7 +1598,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004074_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004074_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
       "patch": "3.5",
       "itemId": 16565,
       "nameSource": "tw-items"
@@ -1552,7 +1617,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004075_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004075_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
       "patch": "3.5",
       "itemId": 16566,
       "nameSource": "tw-items"
@@ -1566,7 +1636,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004070_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004070_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "4.1",
       "itemId": 16561,
       "nameSource": "tw-items"
@@ -1580,7 +1655,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004071_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004071_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極 女神索菲亞殲滅戰"
+        }
+      ],
       "patch": "3.4",
       "itemId": 16562,
       "nameSource": "tw-items"
@@ -1594,7 +1674,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004102_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004102_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        },
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "4.1",
       "itemId": 21050,
       "nameSource": "tw-items"
@@ -1741,7 +1830,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004080_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004080_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ],
       "patch": "3.55a",
       "itemId": 17010,
       "nameSource": "tw-items"
@@ -1755,7 +1849,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004081_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004081_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ],
       "patch": "3.55a",
       "itemId": 17011,
       "nameSource": "tw-items"
@@ -1858,7 +1957,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004083_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004083_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ],
       "patch": "4.0",
       "itemId": 17676,
       "nameSource": "tw-items"
@@ -1872,7 +1976,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004087_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004087_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極 吉祥天女殲滅戰"
+        }
+      ],
       "patch": "4.0",
       "itemId": 20549,
       "nameSource": "tw-items"
@@ -1886,7 +1995,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004088_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004088_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極 須佐之男殲滅戰"
+        }
+      ],
       "patch": "4.0",
       "itemId": 20550,
       "nameSource": "tw-items"
@@ -1938,7 +2052,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004091_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004091_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
       "patch": "4.0",
       "itemId": 20553,
       "nameSource": "tw-items"
@@ -1952,7 +2071,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004092_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004092_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
       "patch": "4.0",
       "itemId": 20554,
       "nameSource": "tw-items"
@@ -1966,7 +2090,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004093_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004093_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "任務",
+          "detail": null
+        }
+      ],
       "patch": "4.0",
       "itemId": 20555,
       "nameSource": "tw-items"
@@ -1980,7 +2109,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004094_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004094_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "歐米茄零式時空狹縫 德爾塔幻境4"
+        }
+      ],
       "patch": "4.05",
       "itemId": 20556,
       "nameSource": "cn-opencc"
@@ -1994,7 +2128,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004095_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004095_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
       "patch": "4.0",
       "itemId": 20557,
       "nameSource": "tw-items"
@@ -2054,7 +2193,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004101_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004101_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極 神龍殲滅戰"
+        }
+      ],
       "patch": "4.1",
       "itemId": 21047,
       "nameSource": "tw-items"
@@ -2068,7 +2212,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004097_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004097_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "4.2",
       "itemId": 21049,
       "nameSource": "tw-items"
@@ -2082,7 +2231,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004103_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004103_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "部族任務",
+          "detail": null
+        }
+      ],
       "patch": "4.1",
       "itemId": 21048,
       "nameSource": "cn-opencc"
@@ -2096,7 +2250,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004104_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004104_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "4.15",
       "itemId": 21051,
       "nameSource": "cn-opencc"
@@ -2110,7 +2269,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004105_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004105_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "4.15",
       "itemId": 21192,
       "nameSource": "cn-opencc"
@@ -2162,7 +2326,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004108_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004108_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "金碟",
+          "detail": null
+        }
+      ],
       "patch": "4.1",
       "itemId": 21054,
       "nameSource": "tw-items"
@@ -2176,7 +2345,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004109_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004109_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "4.3",
       "itemId": 21902,
       "nameSource": "tw-items"
@@ -2190,7 +2364,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004110_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004110_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極 白虎征魂戰"
+        }
+      ],
       "patch": "4.2",
       "itemId": 21903,
       "nameSource": "tw-items"
@@ -2204,7 +2383,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004111_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004111_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
       "patch": "4.2",
       "itemId": 21906,
       "nameSource": "tw-items"
@@ -2218,7 +2402,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004112_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004112_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "部族任務",
+          "detail": null
+        }
+      ],
       "patch": "4.2",
       "itemId": 21904,
       "nameSource": "tw-items"
@@ -2246,7 +2435,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004113_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004113_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "部族任務",
+          "detail": null
+        }
+      ],
       "patch": "4.2",
       "itemId": 22459,
       "nameSource": "tw-items"
@@ -2312,7 +2506,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004114_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004114_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        },
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "4.2",
       "itemId": 21908,
       "nameSource": "tw-items"
@@ -2326,7 +2529,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004115_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004115_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        },
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "4.2",
       "itemId": 21909,
       "nameSource": "tw-items"
@@ -2340,7 +2552,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004136_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004136_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "金碟",
+          "detail": null
+        }
+      ],
       "patch": "4.4",
       "itemId": 21910,
       "nameSource": "tw-items"
@@ -2354,7 +2571,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004117_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004117_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "歐米茄零式時空狹縫 西格瑪幻境4"
+        }
+      ],
       "patch": "4.2",
       "itemId": 21905,
       "nameSource": "tw-items"
@@ -2368,7 +2590,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004127_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004127_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極 月讀殲滅戰"
+        }
+      ],
       "patch": "4.3",
       "itemId": 23020,
       "nameSource": "tw-items"
@@ -2382,7 +2609,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004122_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004122_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "深層迷宮",
+          "detail": null
+        }
+      ],
       "patch": "4.35",
       "itemId": 23023,
       "nameSource": "tw-items"
@@ -2491,7 +2723,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004126_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004126_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
       "patch": "4.35",
       "itemId": 23024,
       "nameSource": "tw-items"
@@ -2505,7 +2742,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004121_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004121_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        },
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ],
       "patch": "6.3",
       "itemId": 23125,
       "nameSource": "tw-items"
@@ -2519,7 +2765,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004120_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004120_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
       "patch": "4.3",
       "itemId": 23124,
       "nameSource": "tw-items"
@@ -2533,7 +2784,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004128_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004128_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "5.0",
       "itemId": 23982,
       "nameSource": "tw-items"
@@ -2547,7 +2803,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004129_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004129_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "4.45",
       "itemId": 23983,
       "nameSource": "tw-items"
@@ -2561,7 +2822,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004130_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004130_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極 朱雀征魂戰"
+        }
+      ],
       "patch": "4.4",
       "itemId": 23984,
       "nameSource": "tw-items"
@@ -2575,7 +2841,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004131_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004131_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "歐米茄零式時空狹縫 阿爾法幻境4"
+        }
+      ],
       "patch": "4.4",
       "itemId": 23985,
       "nameSource": "tw-items"
@@ -2589,7 +2860,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004132_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004132_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ],
       "patch": "4.4",
       "itemId": 23986,
       "nameSource": "tw-items"
@@ -2603,7 +2879,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004147_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004147_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "4.45",
       "itemId": 24627,
       "nameSource": "tw-items"
@@ -2617,7 +2898,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004133_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004133_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ],
       "patch": "4.45",
       "itemId": 23987,
       "nameSource": "tw-items"
@@ -2631,7 +2917,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004134_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004134_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        },
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "4.45",
       "itemId": 23988,
       "nameSource": "tw-items"
@@ -2645,7 +2940,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004137_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004137_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "尤雷卡",
+          "detail": null
+        },
+        {
+          "type": "新月島",
+          "detail": null
+        }
+      ],
       "patch": "4.45",
       "itemId": 24219,
       "nameSource": "tw-items"
@@ -2659,7 +2963,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004139_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004139_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ],
       "patch": "4.45",
       "itemId": 24622,
       "nameSource": "tw-items"
@@ -2673,7 +2982,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004140_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004140_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "金碟",
+          "detail": null
+        }
+      ],
       "patch": "4.45",
       "itemId": 24628,
       "nameSource": "tw-items"
@@ -2687,7 +3001,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004141_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004141_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "任務",
+          "detail": null
+        }
+      ],
       "patch": "4.45",
       "itemId": 24625,
       "nameSource": "tw-items"
@@ -2701,7 +3020,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004142_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004142_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極 青龍征魂戰"
+        }
+      ],
       "patch": "4.45",
       "itemId": 24623,
       "nameSource": "tw-items"
@@ -2715,7 +3039,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004143_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004143_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
       "patch": "5.0",
       "itemId": 24629,
       "nameSource": "tw-items"
@@ -2729,7 +3058,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004144_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004144_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "尤雷卡",
+          "detail": null
+        },
+        {
+          "type": "新月島",
+          "detail": null
+        }
+      ],
       "patch": "4.5",
       "itemId": 24630,
       "nameSource": "tw-items"
@@ -2743,7 +3081,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004145_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004145_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
       "patch": "4.5",
       "itemId": 24631,
       "nameSource": "tw-items"
@@ -2757,7 +3100,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004146_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004146_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
       "patch": "4.5",
       "itemId": 24626,
       "nameSource": "tw-items"
@@ -2771,7 +3119,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004156_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004156_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
       "patch": "5.0",
       "itemId": 27967,
       "nameSource": "tw-items"
@@ -2785,7 +3138,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004149_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004149_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "伊甸零式希望樂園 覺醒之章4"
+        }
+      ],
       "patch": "5.05",
       "itemId": 26779,
       "nameSource": "tw-items"
@@ -2799,7 +3157,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004148_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004148_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極 緹坦妮雅殲滅戰"
+        }
+      ],
       "patch": "5.0",
       "itemId": 26778,
       "nameSource": "tw-items"
@@ -2813,7 +3176,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004150_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004150_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
       "patch": "5.0",
       "itemId": 26780,
       "nameSource": "tw-items"
@@ -2827,7 +3195,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004151_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004151_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "危命任務",
+          "detail": null
+        }
+      ],
       "patch": "5.0",
       "itemId": 26781,
       "nameSource": "tw-items"
@@ -2841,7 +3214,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004153_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004153_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極 無瑕靈君殲滅戰"
+        }
+      ],
       "patch": "5.0",
       "itemId": 26783,
       "nameSource": "tw-items"
@@ -2855,7 +3233,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004152_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004152_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        }
+      ],
       "patch": "5.05",
       "itemId": 26782,
       "nameSource": "tw-items"
@@ -2869,7 +3252,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004154_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004154_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        },
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "5.0",
       "itemId": 26784,
       "nameSource": "cn-opencc"
@@ -2883,7 +3275,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004155_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004155_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "5.0",
       "itemId": 25057,
       "nameSource": "cn-opencc"
@@ -2897,7 +3294,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004157_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004157_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
       "patch": "5.0",
       "itemId": 27971,
       "nameSource": "tw-items"
@@ -2911,7 +3313,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004158_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004158_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
       "patch": "5.15",
       "itemId": 28116,
       "nameSource": "tw-items"
@@ -2925,7 +3332,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004159_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004159_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "部族任務",
+          "detail": null
+        }
+      ],
       "patch": "5.1",
       "itemId": 28117,
       "nameSource": "tw-items"
@@ -2939,7 +3351,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004160_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004160_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ],
       "patch": "5.2",
       "itemId": 28118,
       "nameSource": "tw-items"
@@ -2953,7 +3370,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004161_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004161_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ],
       "patch": "5.2",
       "itemId": 28119,
       "nameSource": "tw-items"
@@ -2967,7 +3389,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004162_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004162_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
       "patch": "5.15",
       "itemId": 28120,
       "nameSource": "cn-opencc"
@@ -2981,7 +3408,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004163_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004163_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極 黑迪斯殲滅戰"
+        }
+      ],
       "patch": "5.1",
       "itemId": 28121,
       "nameSource": "tw-items"
@@ -2995,7 +3427,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004164_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004164_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "5.2",
       "itemId": 28122,
       "nameSource": "cn-opencc"
@@ -3009,7 +3446,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004165_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004165_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "狩獵",
+          "detail": null
+        }
+      ],
       "patch": "5.1",
       "itemId": 28123,
       "nameSource": "tw-items"
@@ -3023,7 +3465,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004166_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004166_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "伊修加德重建",
+          "detail": null
+        }
+      ],
       "patch": "5.21",
       "itemId": 28124,
       "nameSource": "tw-items"
@@ -3037,7 +3484,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004167_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004167_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "伊修加德重建",
+          "detail": null
+        },
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
       "patch": "5.21",
       "itemId": 28125,
       "nameSource": "tw-items"
@@ -3051,7 +3507,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004168_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004168_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "伊修加德重建",
+          "detail": null
+        },
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
       "patch": "5.11",
       "itemId": 28917,
       "nameSource": "tw-items"
@@ -3065,7 +3530,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004208_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004208_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "博茲雅",
+          "detail": null
+        },
+        {
+          "type": "新月島",
+          "detail": null
+        }
+      ],
       "patch": "5.55",
       "itemId": 33684,
       "nameSource": "tw-items"
@@ -3079,7 +3553,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004175_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004175_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "博茲雅",
+          "detail": null
+        },
+        {
+          "type": "新月島",
+          "detail": null
+        }
+      ],
       "patch": "5.35",
       "itemId": 30102,
       "nameSource": "tw-items"
@@ -3093,7 +3576,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004176_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004176_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "5.2",
       "itemId": 28508,
       "nameSource": "tw-items"
@@ -3107,7 +3595,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004174_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004174_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "部族任務",
+          "detail": null
+        }
+      ],
       "patch": "5.2",
       "itemId": 30103,
       "nameSource": "cn-opencc"
@@ -3121,7 +3614,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004169_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004169_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
       "patch": "5.21",
       "itemId": 30104,
       "nameSource": "tw-items"
@@ -3135,7 +3633,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004170_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004170_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極 紅寶石武器破壞作戰"
+        }
+      ],
       "patch": "5.2",
       "itemId": 30105,
       "nameSource": "tw-items"
@@ -3149,7 +3652,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004171_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004171_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
       "patch": "5.2",
       "itemId": 30106,
       "nameSource": "tw-items"
@@ -3163,7 +3671,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004172_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004172_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "伊甸零式希望樂園 共鳴之章4"
+        }
+      ],
       "patch": "5.2",
       "itemId": 30107,
       "nameSource": "cn-opencc"
@@ -3177,7 +3690,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004173_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004173_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "5.2",
       "itemId": 30108,
       "nameSource": "cn-opencc"
@@ -3191,7 +3709,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004177_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004177_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "5.3",
       "itemId": 30859,
       "nameSource": "tw-items"
@@ -3205,7 +3728,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004178_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004178_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "部族任務",
+          "detail": null
+        }
+      ],
       "patch": "5.3",
       "itemId": 30860,
       "nameSource": "tw-items"
@@ -3219,7 +3747,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004179_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004179_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "博茲雅",
+          "detail": null
+        }
+      ],
       "patch": "5.35",
       "itemId": 30861,
       "nameSource": "tw-items"
@@ -3233,7 +3766,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004180_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004180_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "伊修加德重建",
+          "detail": null
+        },
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
       "patch": "5.31",
       "itemId": 30862,
       "nameSource": "tw-items"
@@ -3247,7 +3789,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004181_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004181_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極 光之戰士殲滅戰"
+        }
+      ],
       "patch": "5.3",
       "itemId": 30863,
       "nameSource": "tw-items"
@@ -3261,7 +3808,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004182_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004182_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        }
+      ],
       "patch": "5.3",
       "itemId": 30864,
       "nameSource": "tw-items"
@@ -3275,7 +3827,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004183_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004183_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ],
       "patch": "5.3",
       "itemId": 31396,
       "nameSource": "tw-items"
@@ -3289,7 +3846,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004184_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004184_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "任務",
+          "detail": null
+        }
+      ],
       "patch": "5.3",
       "itemId": 30866,
       "nameSource": "tw-items"
@@ -3303,7 +3865,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004185_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004185_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "天書奇談",
+          "detail": null
+        },
+        {
+          "type": "天書奇談",
+          "detail": null
+        }
+      ],
       "patch": "5.3",
       "itemId": 30865,
       "nameSource": "tw-items"
@@ -3317,7 +3888,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004186_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004186_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        },
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "5.4",
       "itemId": 32837,
       "nameSource": "tw-items"
@@ -3331,7 +3911,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004187_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004187_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        },
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "5.5",
       "itemId": 32838,
       "nameSource": "tw-items"
@@ -3345,7 +3934,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004188_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004188_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "伊甸零式希望樂園 再生之章4"
+        }
+      ],
       "patch": "5.4",
       "itemId": 32839,
       "nameSource": "cn-opencc"
@@ -3359,7 +3953,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004189_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004189_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
       "patch": "5.45",
       "itemId": 32840,
       "nameSource": "tw-items"
@@ -3373,7 +3972,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004190_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004190_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "伊修加德重建",
+          "detail": null
+        },
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
       "patch": "5.41",
       "itemId": 32841,
       "nameSource": "tw-items"
@@ -3387,7 +3995,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004191_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004191_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "6.0",
       "itemId": 32842,
       "nameSource": "tw-items"
@@ -3401,7 +4014,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004192_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004192_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極 綠寶石武器破壞作戰"
+        }
+      ],
       "patch": "5.4",
       "itemId": 32843,
       "nameSource": "tw-items"
@@ -3415,7 +4033,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004193_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004193_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ],
       "patch": "5.4",
       "itemId": 32844,
       "nameSource": "tw-items"
@@ -3429,7 +4052,20 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004194_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004194_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        },
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        },
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "5.4",
       "itemId": 32845,
       "nameSource": "tw-items"
@@ -3443,7 +4079,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004195_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004195_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "博茲雅",
+          "detail": null
+        },
+        {
+          "type": "新月島",
+          "detail": null
+        }
+      ],
       "patch": "5.45",
       "itemId": 32846,
       "nameSource": "tw-items"
@@ -3457,7 +4102,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004197_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004197_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "伊修加德重建",
+          "detail": null
+        },
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
       "patch": "5.5",
       "itemId": 33674,
       "nameSource": "tw-items"
@@ -3471,7 +4125,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004198_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004198_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "伊修加德重建",
+          "detail": null
+        },
+        {
+          "type": "伊修加德重建",
+          "detail": null
+        }
+      ],
       "patch": "5.5",
       "itemId": 33675,
       "nameSource": "tw-items"
@@ -3485,7 +4148,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004199_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004199_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "任務",
+          "detail": null
+        }
+      ],
       "patch": "5.5",
       "itemId": 33218,
       "nameSource": "cn-opencc"
@@ -3499,7 +4167,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004200_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004200_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
       "patch": "5.55",
       "itemId": 33676,
       "nameSource": "tw-items"
@@ -3513,7 +4186,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004201_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004201_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "5.5",
       "itemId": 33677,
       "nameSource": "tw-items"
@@ -3527,7 +4205,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004196_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004196_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "天書奇談",
+          "detail": null
+        },
+        {
+          "type": "天書奇談",
+          "detail": null
+        }
+      ],
       "patch": "5.4",
       "itemId": 33145,
       "nameSource": "cn-opencc"
@@ -3541,7 +4228,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004209_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004209_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極 鑽石武器捕獲作戰"
+        }
+      ],
       "patch": "5.5",
       "itemId": 33685,
       "nameSource": "tw-items"
@@ -3555,7 +4247,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004210_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004210_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        },
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "5.5",
       "itemId": 33686,
       "nameSource": "tw-items"
@@ -3569,7 +4270,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004211_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004211_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商店",
+          "detail": null
+        }
+      ],
       "patch": "5.5",
       "itemId": 33687,
       "nameSource": "tw-items"
@@ -3583,7 +4289,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004212_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004212_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商店",
+          "detail": null
+        }
+      ],
       "patch": "5.5",
       "itemId": 33688,
       "nameSource": "cn-opencc"
@@ -3597,7 +4308,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004213_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004213_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "任務",
+          "detail": null
+        }
+      ],
       "patch": "5.55",
       "itemId": 33689,
       "nameSource": "tw-items"
@@ -3611,7 +4327,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004202_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004202_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "無人島",
+          "detail": null
+        }
+      ],
       "patch": "6.2",
       "itemId": 33678,
       "nameSource": "tw-items"
@@ -3625,7 +4346,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004203_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004203_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "無人島",
+          "detail": null
+        }
+      ],
       "patch": "6.2",
       "itemId": 33679,
       "nameSource": "tw-items"
@@ -3639,7 +4365,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004204_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004204_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "無人島",
+          "detail": null
+        }
+      ],
       "patch": "6.2",
       "itemId": 33680,
       "nameSource": "tw-items"
@@ -3653,7 +4384,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004205_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004205_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "無人島",
+          "detail": null
+        }
+      ],
       "patch": "6.4",
       "itemId": 33681,
       "nameSource": "tw-items"
@@ -3667,7 +4403,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004206_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004206_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "無人島",
+          "detail": null
+        }
+      ],
       "patch": "6.4",
       "itemId": 33682,
       "nameSource": "tw-items"
@@ -3681,7 +4422,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004207_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004207_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "無人島",
+          "detail": null
+        }
+      ],
       "patch": "6.4",
       "itemId": 33683,
       "nameSource": "tw-items"
@@ -3695,7 +4441,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004214_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004214_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極 佐狄亞克殲滅戰"
+        }
+      ],
       "patch": "6.0",
       "itemId": 36000,
       "nameSource": "tw-items"
@@ -3709,7 +4460,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004215_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004215_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極 海德林殲滅戰"
+        }
+      ],
       "patch": "6.0",
       "itemId": 36001,
       "nameSource": "tw-items"
@@ -3723,7 +4479,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004216_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004216_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "任務",
+          "detail": null
+        }
+      ],
       "patch": "6.0",
       "itemId": 36002,
       "nameSource": "tw-items"
@@ -3737,7 +4498,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004217_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004217_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ],
       "patch": "6.0",
       "itemId": 36006,
       "nameSource": "tw-items"
@@ -3751,7 +4517,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004218_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004218_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "零式萬魔殿 邊境之獄4"
+        }
+      ],
       "patch": "6.05",
       "itemId": 36008,
       "nameSource": "tw-items"
@@ -3765,7 +4536,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004219_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004219_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "天書奇談",
+          "detail": null
+        },
+        {
+          "type": "天書奇談",
+          "detail": null
+        }
+      ],
       "patch": "6.0",
       "itemId": 36003,
       "nameSource": "tw-items"
@@ -3779,7 +4559,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004220_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004220_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
       "patch": "6.0",
       "itemId": 36004,
       "nameSource": "tw-items"
@@ -3793,7 +4578,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004221_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004221_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "危命任務",
+          "detail": null
+        }
+      ],
       "patch": "6.0",
       "itemId": 36007,
       "nameSource": "tw-items"
@@ -3807,7 +4597,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004222_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004222_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "6.0",
       "itemId": 36009,
       "nameSource": "tw-items"
@@ -3821,7 +4616,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004223_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004223_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "危命任務",
+          "detail": null
+        }
+      ],
       "patch": "6.0",
       "itemId": 36005,
       "nameSource": "tw-items"
@@ -3835,7 +4635,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004224_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004224_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        },
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "6.0",
       "itemId": 36010,
       "nameSource": "tw-items"
@@ -3849,7 +4658,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004235_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004235_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "無人島",
+          "detail": null
+        }
+      ],
       "patch": "6.2",
       "itemId": 38455,
       "nameSource": "tw-items"
@@ -3863,7 +4677,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004098_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004098_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "6.2",
       "itemId": 36632,
       "nameSource": "tw-items"
@@ -3877,7 +4696,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004225_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004225_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        },
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ],
       "patch": "6.2",
       "itemId": 36905,
       "nameSource": "tw-items"
@@ -3891,7 +4719,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004226_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004226_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "藏寶圖",
+          "detail": null
+        }
+      ],
       "patch": "6.1",
       "itemId": 36906,
       "nameSource": "tw-items"
@@ -3905,7 +4738,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004265_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004265_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "無人島",
+          "detail": null
+        }
+      ],
       "patch": "6.4",
       "itemId": 40382,
       "nameSource": "tw-items"
@@ -3919,7 +4757,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004304_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004304_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "狩獵",
+          "detail": null
+        }
+      ],
       "patch": "7.1",
       "itemId": 45071,
       "nameSource": "tw-items"
@@ -3933,7 +4776,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004227_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004227_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "金碟",
+          "detail": null
+        }
+      ],
       "patch": "6.1",
       "itemId": 36910,
       "nameSource": "tw-items"
@@ -3947,7 +4795,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004245_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004245_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "部族任務",
+          "detail": null
+        }
+      ],
       "patch": "6.35",
       "itemId": 39485,
       "nameSource": "tw-items"
@@ -3961,7 +4814,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004255_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004255_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "無人島",
+          "detail": null
+        }
+      ],
       "patch": "6.3",
       "itemId": 39495,
       "nameSource": "tw-items"
@@ -3975,7 +4833,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004228_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004228_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "部族任務",
+          "detail": null
+        }
+      ],
       "patch": "6.15",
       "itemId": 36907,
       "nameSource": "tw-items"
@@ -3989,7 +4852,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004229_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004229_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "天書奇談",
+          "detail": null
+        },
+        {
+          "type": "天書奇談",
+          "detail": null
+        }
+      ],
       "patch": "6.1",
       "itemId": 36904,
       "nameSource": "tw-items"
@@ -4003,7 +4875,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004230_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004230_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "任務",
+          "detail": null
+        }
+      ],
       "patch": "6.55",
       "itemId": 36908,
       "nameSource": "tw-items"
@@ -4017,7 +4894,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004231_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004231_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "狩獵",
+          "detail": null
+        }
+      ],
       "patch": "6.1",
       "itemId": 36909,
       "nameSource": "tw-items"
@@ -4031,7 +4913,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004232_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004232_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "深層迷宮",
+          "detail": null
+        }
+      ],
       "patch": "6.35",
       "itemId": 36911,
       "nameSource": "tw-items"
@@ -4045,7 +4932,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004233_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004233_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "終極之戰"
+        }
+      ],
       "patch": "6.1",
       "itemId": 36912,
       "nameSource": "tw-items"
@@ -4059,7 +4951,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004234_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004234_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "6.1",
       "itemId": 36913,
       "nameSource": "tw-items"
@@ -4073,7 +4970,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004264_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004264_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        },
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ],
       "patch": "6.4",
       "itemId": 40383,
       "nameSource": "tw-items"
@@ -4087,7 +4993,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004236_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004236_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "部族任務",
+          "detail": null
+        }
+      ],
       "patch": "6.25",
       "itemId": 38456,
       "nameSource": "tw-items"
@@ -4101,7 +5012,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004237_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004237_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "天書奇談",
+          "detail": null
+        },
+        {
+          "type": "天書奇談",
+          "detail": null
+        }
+      ],
       "patch": "6.2",
       "itemId": 38457,
       "nameSource": "tw-items"
@@ -4115,7 +5035,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004238_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004238_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "6.3",
       "itemId": 38458,
       "nameSource": "tw-items"
@@ -4129,7 +5054,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004239_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004239_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "6.3",
       "itemId": 38459,
       "nameSource": "tw-items"
@@ -4143,7 +5073,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004240_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004240_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        },
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "6.2",
       "itemId": 38460,
       "nameSource": "tw-items"
@@ -4157,7 +5096,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004243_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004243_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "異聞副本",
+          "detail": null
+        },
+        {
+          "type": "異聞副本",
+          "detail": null
+        }
+      ],
       "patch": "6.25",
       "itemId": 38461,
       "nameSource": "tw-items"
@@ -4171,7 +5119,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004244_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004244_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
       "patch": "6.25",
       "itemId": 38462,
       "nameSource": "tw-items"
@@ -4185,7 +5138,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004241_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004241_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "零式萬魔殿 煉淨之獄4"
+        }
+      ],
       "patch": "6.2",
       "itemId": 38463,
       "nameSource": "cn-opencc"
@@ -4199,7 +5157,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004242_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004242_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極 巴爾巴莉希亞殲滅戰"
+        }
+      ],
       "patch": "6.2",
       "itemId": 38464,
       "nameSource": "tw-items"
@@ -4213,7 +5176,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004246_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004246_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
       "patch": "6.35",
       "itemId": 39486,
       "nameSource": "tw-items"
@@ -4227,7 +5195,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004247_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004247_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "6.3",
       "itemId": 39487,
       "nameSource": "tw-items"
@@ -4241,7 +5214,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004248_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004248_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "任務",
+          "detail": null
+        }
+      ],
       "patch": "6.3",
       "itemId": 39488,
       "nameSource": "tw-items"
@@ -4255,7 +5233,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004249_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004249_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "金碟",
+          "detail": null
+        }
+      ],
       "patch": "6.3",
       "itemId": 39489,
       "nameSource": "tw-items"
@@ -4269,7 +5252,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004250_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004250_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "藏寶圖",
+          "detail": null
+        }
+      ],
       "patch": "6.3",
       "itemId": 39490,
       "nameSource": "tw-items"
@@ -4283,7 +5271,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004251_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004251_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "藏寶圖",
+          "detail": null
+        }
+      ],
       "patch": "6.3",
       "itemId": 39491,
       "nameSource": "tw-items"
@@ -4297,7 +5290,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004252_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004252_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極 盧比坎特殲滅戰"
+        }
+      ],
       "patch": "6.3",
       "itemId": 39492,
       "nameSource": "tw-items"
@@ -4311,7 +5309,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004253_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004253_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商店",
+          "detail": null
+        }
+      ],
       "patch": "6.3",
       "itemId": 39493,
       "nameSource": "tw-items"
@@ -4325,7 +5328,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004254_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004254_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商店",
+          "detail": null
+        }
+      ],
       "patch": "6.3",
       "itemId": 39494,
       "nameSource": "tw-items"
@@ -4339,7 +5347,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004256_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004256_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "6.4",
       "itemId": 40384,
       "nameSource": "tw-items"
@@ -4353,7 +5366,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004257_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004257_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "零式萬魔殿 荒天之獄4"
+        }
+      ],
       "patch": "6.4",
       "itemId": 40385,
       "nameSource": "tw-items"
@@ -4367,7 +5385,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004258_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004258_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        },
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "6.48",
       "itemId": 40386,
       "nameSource": "tw-items"
@@ -4381,7 +5408,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004259_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004259_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
       "patch": "6.45",
       "itemId": 40387,
       "nameSource": "tw-items"
@@ -4395,7 +5427,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004260_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004260_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "異聞副本",
+          "detail": null
+        },
+        {
+          "type": "異聞副本",
+          "detail": null
+        }
+      ],
       "patch": "6.45",
       "itemId": 40388,
       "nameSource": "tw-items"
@@ -4409,7 +5450,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004261_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004261_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "6.4",
       "itemId": 40389,
       "nameSource": "cn-opencc"
@@ -4423,7 +5469,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004262_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004262_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "天書奇談",
+          "detail": null
+        },
+        {
+          "type": "天書奇談",
+          "detail": null
+        }
+      ],
       "patch": "6.4",
       "itemId": 40390,
       "nameSource": "tw-items"
@@ -4437,7 +5492,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004263_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004263_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極 高貝扎殲滅戰"
+        }
+      ],
       "patch": "6.4",
       "itemId": 40391,
       "nameSource": "tw-items"
@@ -4451,7 +5511,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004266_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004266_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        }
+      ],
       "patch": "6.58",
       "itemId": 41487,
       "nameSource": "tw-items"
@@ -4465,7 +5530,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004267_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004267_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "7.0",
       "itemId": 41488,
       "nameSource": "tw-items"
@@ -4479,7 +5549,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004268_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004268_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "任務",
+          "detail": null
+        }
+      ],
       "patch": "6.5",
       "itemId": 41489,
       "nameSource": "tw-items"
@@ -4493,7 +5568,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004269_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004269_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "6.5",
       "itemId": 41490,
       "nameSource": "tw-items"
@@ -4507,7 +5587,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004270_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004270_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        }
+      ],
       "patch": "6.51",
       "itemId": 41491,
       "nameSource": "tw-items"
@@ -4521,7 +5606,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004271_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004271_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ],
       "patch": "7.0",
       "itemId": 41492,
       "nameSource": "tw-items"
@@ -4535,7 +5625,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004272_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004272_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極 澤羅姆斯殲滅戰"
+        }
+      ],
       "patch": "6.5",
       "itemId": 41493,
       "nameSource": "tw-items"
@@ -4549,7 +5644,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004273_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004273_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "天書奇談",
+          "detail": null
+        },
+        {
+          "type": "天書奇談",
+          "detail": null
+        }
+      ],
       "patch": "6.5",
       "itemId": 41494,
       "nameSource": "tw-items"
@@ -4563,7 +5667,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004274_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004274_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
       "patch": "6.51",
       "itemId": 41495,
       "nameSource": "tw-items"
@@ -4577,7 +5686,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004275_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004275_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "無人島",
+          "detail": null
+        }
+      ],
       "patch": "6.5",
       "itemId": 41496,
       "nameSource": "tw-items"
@@ -4591,7 +5705,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004276_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004276_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        },
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "6.5",
       "itemId": 41497,
       "nameSource": "tw-items"
@@ -4619,7 +5742,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004278_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004278_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "異聞副本",
+          "detail": null
+        },
+        {
+          "type": "異聞副本",
+          "detail": null
+        }
+      ],
       "patch": "6.51",
       "itemId": 41499,
       "nameSource": "tw-items"
@@ -4633,7 +5765,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004279_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004279_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "無人島",
+          "detail": null
+        }
+      ],
       "patch": "6.5",
       "itemId": 41649,
       "nameSource": "tw-items"
@@ -4647,7 +5784,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004280_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004280_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "無人島",
+          "detail": null
+        },
+        {
+          "type": "無人島",
+          "detail": null
+        }
+      ],
       "patch": "6.5",
       "itemId": 41650,
       "nameSource": "tw-items"
@@ -4661,7 +5807,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004292_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004292_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "危命任務",
+          "detail": null
+        }
+      ],
       "patch": "7.0",
       "itemId": 43590,
       "nameSource": "tw-items"
@@ -4675,7 +5826,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004281_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004281_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商店",
+          "detail": null
+        }
+      ],
       "patch": "7.0",
       "itemId": 43591,
       "nameSource": "tw-items"
@@ -4689,7 +5845,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004282_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004282_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "任務",
+          "detail": null
+        }
+      ],
       "patch": "7.0",
       "itemId": 43592,
       "nameSource": "tw-items"
@@ -4703,7 +5864,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004283_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004283_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極 艷翼蛇鳥殲滅戰"
+        }
+      ],
       "patch": "7.0",
       "itemId": 43593,
       "nameSource": "tw-items"
@@ -4717,7 +5883,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004284_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004284_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極 佐拉加殲滅戰"
+        }
+      ],
       "patch": "7.0",
       "itemId": 43594,
       "nameSource": "tw-items"
@@ -4731,7 +5902,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004285_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004285_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
       "patch": "7.0",
       "itemId": 43595,
       "nameSource": "tw-items"
@@ -4745,7 +5921,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004286_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004286_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "危命任務",
+          "detail": null
+        }
+      ],
       "patch": "7.0",
       "itemId": 43596,
       "nameSource": "tw-items"
@@ -4759,7 +5940,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004287_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004287_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "阿卡狄亞零式登天鬥技場 輕量級4"
+        }
+      ],
       "patch": "7.05",
       "itemId": 43597,
       "nameSource": "tw-items"
@@ -4773,7 +5959,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004288_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004288_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "採集",
+          "detail": null
+        }
+      ],
       "patch": "7.0",
       "itemId": 43598,
       "nameSource": "tw-items"
@@ -4787,7 +5978,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004289_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004289_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
       "patch": "7.0",
       "itemId": 43599,
       "nameSource": "tw-items"
@@ -4801,7 +5997,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004290_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004290_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "藏寶圖",
+          "detail": null
+        }
+      ],
       "patch": "7.05",
       "itemId": 43600,
       "nameSource": "tw-items"
@@ -4815,7 +6016,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004291_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004291_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "狩獵",
+          "detail": null
+        }
+      ],
       "patch": "7.0",
       "itemId": 44245,
       "nameSource": "tw-items"
@@ -4829,7 +6035,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004293_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004293_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "7.0",
       "itemId": 41802,
       "nameSource": "tw-items"
@@ -4843,7 +6054,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004294_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004294_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "採集",
+          "detail": null
+        }
+      ],
       "patch": "7.1",
       "itemId": 44502,
       "nameSource": "tw-items"
@@ -4857,7 +6073,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004306_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004306_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "天書奇談",
+          "detail": null
+        }
+      ],
       "patch": "7.2",
       "itemId": 44503,
       "nameSource": "cn-opencc"
@@ -4871,7 +6092,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004296_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004296_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "部族任務",
+          "detail": null
+        }
+      ],
       "patch": "7.1",
       "itemId": 44497,
       "nameSource": "tw-items"
@@ -4885,7 +6111,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004297_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004297_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "天書奇談",
+          "detail": null
+        }
+      ],
       "patch": "7.5",
       "_noTwName": true,
       "itemId": 44504
@@ -4899,7 +6130,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004298_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004298_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": null
+        },
+        {
+          "type": "副本掉落",
+          "detail": null
+        }
+      ],
       "patch": "7.15",
       "itemId": 44501,
       "nameSource": "cn-opencc"
@@ -4913,7 +6153,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004299_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004299_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": null
+        },
+        {
+          "type": "副本掉落",
+          "detail": null
+        }
+      ],
       "patch": "7.15",
       "itemId": 44500,
       "nameSource": "cn-opencc"
@@ -4927,7 +6176,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004300_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004300_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "7.25",
       "itemId": 44498,
       "nameSource": "cn-opencc"
@@ -4941,7 +6195,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004301_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004301_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極 永恆女王殲滅戰"
+        }
+      ],
       "patch": "7.1",
       "itemId": 44499,
       "nameSource": "tw-items"
@@ -4955,7 +6214,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004302_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004302_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "宇宙探索",
+          "detail": null
+        },
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
       "patch": "7.21",
       "itemId": 44505,
       "nameSource": "cn-opencc"
@@ -4969,7 +6237,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004303_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004303_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "天書奇談",
+          "detail": null
+        },
+        {
+          "type": "天書奇談",
+          "detail": null
+        }
+      ],
       "patch": "7.1",
       "itemId": 44958,
       "nameSource": "tw-items"
@@ -4997,7 +6274,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004330_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004330_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
       "patch": "7.41",
       "_noTwName": true,
       "itemId": 50435
@@ -5011,7 +6293,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004307_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004307_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
       "patch": "7.25",
       "itemId": 47978,
       "nameSource": "cn-opencc"
@@ -5025,7 +6312,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004308_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004308_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "新月島",
+          "detail": null
+        },
+        {
+          "type": "新月島",
+          "detail": null
+        }
+      ],
       "patch": "7.25",
       "itemId": 47979,
       "nameSource": "cn-opencc"
@@ -5039,7 +6335,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004305_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004305_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "7.11",
       "itemId": 45577,
       "nameSource": "tw-items"
@@ -5067,7 +6368,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004317_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004317_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "深層迷宮",
+          "detail": null
+        },
+        {
+          "type": "深層迷宮",
+          "detail": null
+        }
+      ],
       "patch": "7.35",
       "_noTwName": true,
       "itemId": 47334
@@ -5081,7 +6391,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004310_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004310_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "部族任務",
+          "detail": null
+        }
+      ],
       "patch": "7.25",
       "itemId": 47977,
       "nameSource": "cn-opencc"
@@ -5095,7 +6410,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004311_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004311_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "阿卡狄亞零式登天鬥技場 中量級4"
+        }
+      ],
       "patch": "7.2",
       "itemId": 47974,
       "nameSource": "cn-opencc"
@@ -5109,7 +6429,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004312_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004312_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "新月島",
+          "detail": null
+        }
+      ],
       "patch": "7.25",
       "itemId": 47975,
       "nameSource": "cn-opencc"
@@ -5123,7 +6448,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004316_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004316_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
       "patch": "7.21",
       "itemId": 48232,
       "nameSource": "cn-opencc"
@@ -5137,7 +6467,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004309_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004309_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "宇宙探索",
+          "detail": null
+        },
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
       "patch": "7.31",
       "_noTwName": true,
       "itemId": 47973
@@ -5151,7 +6490,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004313_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004313_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "7.2",
       "itemId": 47980,
       "nameSource": "cn-opencc"
@@ -5165,7 +6509,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004314_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004314_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "澤蓮尼婭殲殛戰"
+        }
+      ],
       "patch": "7.2",
       "itemId": 47976,
       "nameSource": "cn-opencc"
@@ -5179,7 +6528,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004315_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004315_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ],
       "patch": "7.2",
       "itemId": 48231,
       "nameSource": "cn-opencc"
@@ -5193,7 +6547,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004318_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004318_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "部族任務",
+          "detail": null
+        }
+      ],
       "patch": "7.35",
       "_noTwName": true,
       "itemId": 46830
@@ -5207,7 +6566,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004331_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004331_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ],
       "patch": "7.4",
       "_noTwName": true,
       "itemId": 50436
@@ -5221,7 +6585,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004319_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004319_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "深層迷宮",
+          "detail": null
+        },
+        {
+          "type": "深層迷宮",
+          "detail": null
+        }
+      ],
       "patch": "7.35",
       "_noTwName": true,
       "itemId": 46831
@@ -5235,7 +6608,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004320_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004320_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        }
+      ],
       "patch": "7.35",
       "_noTwName": true,
       "itemId": 46827
@@ -5249,7 +6627,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004321_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004321_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "7.3",
       "_noTwName": true,
       "itemId": 46828
@@ -5263,7 +6646,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004322_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004322_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "任務",
+          "detail": null
+        }
+      ],
       "patch": "7.35",
       "_noTwName": true,
       "itemId": 46833
@@ -5277,7 +6665,20 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004323_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004323_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": null
+        },
+        {
+          "type": "高難度副本",
+          "detail": "護鎖刃龍狩獵戰"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "護鎖刃龍上位狩獵戰"
+        }
+      ],
       "patch": "7.35",
       "_noTwName": true,
       "itemId": 46834
@@ -5291,7 +6692,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004324_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004324_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "藏寶圖",
+          "detail": null
+        }
+      ],
       "patch": "7.3",
       "_noTwName": true,
       "itemId": 46829
@@ -5305,7 +6711,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004325_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004325_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
       "patch": "7.31",
       "_noTwName": true,
       "itemId": 46825
@@ -5319,7 +6730,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004326_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004326_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
       "patch": "7.31",
       "_noTwName": true,
       "itemId": 47336
@@ -5333,7 +6749,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004327_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004327_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
       "patch": "7.35",
       "_noTwName": true,
       "itemId": 46832
@@ -5375,7 +6796,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004328_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004328_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "永遠之暗悲惶殲滅戰"
+        }
+      ],
       "patch": "7.3",
       "_noTwName": true,
       "itemId": 46826
@@ -5389,7 +6815,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004329_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004329_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "深層迷宮",
+          "detail": null
+        }
+      ],
       "patch": "7.35",
       "_noTwName": true,
       "itemId": 47335
@@ -5403,7 +6834,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004344_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004344_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
       "patch": "7.51",
       "_noTwName": true,
       "itemId": 52257
@@ -5417,7 +6853,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004332_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004332_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "天書奇談",
+          "detail": null
+        }
+      ],
       "patch": "7.4",
       "_noTwName": true,
       "itemId": 50437
@@ -5431,7 +6872,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004333_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004333_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "異聞副本",
+          "detail": null
+        },
+        {
+          "type": "異聞副本",
+          "detail": null
+        }
+      ],
       "patch": "7.45",
       "_noTwName": true,
       "itemId": 50438
@@ -5445,7 +6895,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004334_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004334_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "阿卡狄亞零式登天鬥技場 重量級4"
+        }
+      ],
       "patch": "7.4",
       "_noTwName": true,
       "itemId": 50439
@@ -5459,7 +6914,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004335_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004335_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        }
+      ],
       "patch": "7.4",
       "_noTwName": true,
       "itemId": 50440
@@ -5473,7 +6933,16 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004336_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004336_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "宇宙探索",
+          "detail": null
+        },
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
       "patch": "7.41",
       "_noTwName": true,
       "itemId": 50441
@@ -5487,7 +6956,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004337_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004337_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
       "patch": "7.41",
       "_noTwName": true,
       "itemId": 50442
@@ -5501,7 +6975,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004345_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004345_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        }
+      ],
       "patch": "7.5",
       "_noTwName": true,
       "itemId": 52258
@@ -5515,7 +6994,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004359_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004359_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        }
+      ],
       "patch": "7.5",
       "_noTwName": true,
       "itemId": 52640
@@ -5529,7 +7013,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004346_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004346_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "任務",
+          "detail": null
+        }
+      ],
       "patch": "7.5",
       "_noTwName": true,
       "itemId": 52259
@@ -5543,7 +7032,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004338_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004338_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
       "patch": "7.45",
       "_noTwName": true,
       "itemId": 50443
@@ -5557,7 +7051,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004339_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004339_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "格萊楊拉波爾殲殛戰"
+        }
+      ],
       "patch": "7.4",
       "_noTwName": true,
       "itemId": 50444
@@ -5599,7 +7098,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004340_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004340_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
       "patch": "7.41",
       "_noTwName": true,
       "itemId": 50445
@@ -5613,7 +7117,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004341_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004341_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
       "patch": "7.41",
       "_noTwName": true,
       "itemId": 50446
@@ -5627,7 +7136,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004342_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004342_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "異聞副本",
+          "detail": null
+        }
+      ],
       "patch": "7.45",
       "_noTwName": true,
       "itemId": 50447
@@ -5641,7 +7155,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004343_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004343_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
       "patch": "7.4",
       "_noTwName": true,
       "itemId": 50448
@@ -5683,7 +7202,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004353_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004353_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
       "patch": "7.51",
       "_noTwName": true,
       "itemId": 52267
@@ -5711,7 +7235,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004354_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004354_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
       "patch": "7.51",
       "_noTwName": true,
       "itemId": 52268
@@ -5739,7 +7268,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004356_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004356_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "恩歐殲殛戰"
+        }
+      ],
       "patch": "7.5",
       "_noTwName": true,
       "itemId": 52270
@@ -5753,7 +7287,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004357_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004357_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
       "patch": "7.51",
       "_noTwName": true,
       "itemId": 52271
@@ -5767,7 +7306,12 @@
       "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004358_hr1.tex&format=png",
       "iconPath": "ui/icon/004000/004358_hr1.tex",
       "description": null,
-      "sources": [],
+      "sources": [
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
       "patch": "7.51",
       "_noTwName": true,
       "itemId": 52272
