@@ -27,6 +27,7 @@ MIRAPRI_DYES = ROOT / "data" / "mirapri_dyes.json"     # apply_dyes.py 產生：
 MIRAPRI_PIECE_DYES = ROOT / "data" / "mirapri_piece_dyes.json"  # {id: {裝備日文名: [繁中染色]}}（v2 逐件）
 MIRAPRI_VISIBLE = ROOT / "data" / "mirapri_visible.json"  # apply_dyes.py 產生：{id: [圖上可見裝備日文名]}
 REVIEW_DECISIONS = ROOT / "data" / "review_decisions.json"  # review.html 匯出：action=="remove" 的套不顯示
+MIRAPRI_RECON = ROOT / "data" / "mirapri_reconstructed.json"  # reconstruct_empty.py：空殼套用 OCR+DB 重建的裝備
 VIS_FLOOR = 4  # vismap 過濾後若 <此件數，視為 OCR 漏讀 → 改保留完整清單（一般幻化至少 4~5 件）
 
 # 取得方式 emoji → st 標籤（取 source 字串中第一個出現的 emoji）
@@ -107,17 +108,25 @@ def normalize_curated(curated):
     return curated
 
 
-def transform_mirapri(o, dyemap=None, vismap=None, piecemap=None):
+def transform_mirapri(o, dyemap=None, vismap=None, piecemap=None, reconmap=None):
     img = o.get("image") or o.get("img") or ""
     fname = img.split("/")[-1] if img else ""
     oid = o.get("id", "")
 
     equips = o.get("equipments", [])
+    # 空殼套（來源 0 件）若有 OCR+DB 重建清單，改用重建的（已含部位/繁中/逐件染色）
+    recon_used = False
+    if not any(e.get("name") for e in equips):
+        rc = (reconmap or {}).get(oid)
+        if rc:
+            equips = rc
+            recon_used = True
+
     # 用 OCR 判斷「圖上實際畫出來」的裝備，濾掉投稿者附的替代裝備（清單比圖片多的元兇）。
     # 只有該套在 vismap 裡（= 有 OCR 過且至少認出 1 件）才過濾。
     # 但只在「過濾後仍保有完整套裝（>=VIS_FLOOR 件）」時才採用結果——否則多半是 OCR 漏讀，
     # 寧可保留完整清單，也不要把正常套裝砍到剩 2~3 件（一般幻化至少 4~5 件）。
-    vis = (vismap or {}).get(oid)
+    vis = None if recon_used else (vismap or {}).get(oid)
     if vis:
         visset = set(vis)
         filtered = [e for e in equips if e.get("name", "") in visset]
@@ -125,14 +134,21 @@ def transform_mirapri(o, dyemap=None, vismap=None, piecemap=None):
             equips = filtered
 
     # 逐件染色（v2）：以裝備日文名對應 dye1/dye2；無資料則 — —，由 fallback 行顯示整套染色
+    # 重建套已自帶 dye1/dye2，原樣保留
     pdye = (piecemap or {}).get(oid, {})
     out_equips = []
     for e in equips:
         e = dict(e)
-        ds = pdye.get(e.get("name", ""), [])
-        e["dye1"] = ds[0] if len(ds) >= 1 else "—"
-        e["dye2"] = ds[1] if len(ds) >= 2 else "—"
+        if recon_used:
+            e.setdefault("dye1", "—")
+            e.setdefault("dye2", "—")
+        else:
+            ds = pdye.get(e.get("name", ""), [])
+            e["dye1"] = ds[0] if len(ds) >= 1 else "—"
+            e["dye2"] = ds[1] if len(ds) >= 2 else "—"
         out_equips.append(e)
+    has_piece = bool(pdye) or (recon_used and any(
+        e.get("dye1", "—") != "—" or e.get("dye2", "—") != "—" for e in out_equips))
 
     return {
         "type": "mirapri",
@@ -147,7 +163,7 @@ def transform_mirapri(o, dyemap=None, vismap=None, piecemap=None):
         "timestamp": o.get("timestamp", ""),
         "equipments": out_equips,
         "dyes": (dyemap or {}).get(oid, []),  # 整套染色 fallback（繁中）
-        "hasPieceDyes": bool(pdye),           # True：彈窗逐列已有染色，不再顯示整套 fallback 行
+        "hasPieceDyes": has_piece,            # True：彈窗逐列已有染色，不再顯示整套 fallback 行
     }
 
 
@@ -163,10 +179,15 @@ def main():
     vismap = {}
     if MIRAPRI_VISIBLE.exists():
         vismap = json.loads(MIRAPRI_VISIBLE.read_text(encoding="utf-8"))
+    reconmap = {}
+    if MIRAPRI_RECON.exists():
+        reconmap = json.loads(MIRAPRI_RECON.read_text(encoding="utf-8"))
 
     enriched = json.loads(ENRICHED_PATH.read_text(encoding="utf-8"))
     arr = enriched if isinstance(enriched, list) else enriched.get("outfits", [])
-    mirapri = [transform_mirapri(o, dyemap, vismap, piecemap) for o in arr if o.get("type") == "mirapri"]
+    mirapri = [transform_mirapri(o, dyemap, vismap, piecemap, reconmap) for o in arr if o.get("type") == "mirapri"]
+    if reconmap:
+        print(f"  空殼重建合併：{sum(1 for m in mirapri if m.get('id') in reconmap)} 套")
 
     # 套用 review.html 的人工決定：action=="remove" 的套不顯示（其餘決定不影響網站）
     if REVIEW_DECISIONS.exists():

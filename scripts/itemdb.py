@@ -51,6 +51,8 @@ class ItemDB:
         raw = json.load(open(ITEMS_JSON, encoding="utf-8"))
         items = raw.get("items", raw)
         self.id_to_zh = {str(k): v.get("name", "") for k, v in items.items()}
+        self.id_to_cat = {str(k): v.get("categoryName", "") for k, v in items.items()}
+        self.id_to_equip = {str(k): bool(v.get("equipStats")) for k, v in items.items()}
         self.id_to_ja = _load_msgpack(JA_MSGPACK, "ja")
         self.id_to_en = _load_msgpack(EN_MSGPACK, "en")
 
