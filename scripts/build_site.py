@@ -26,6 +26,7 @@ MIRAPRI_JS = ROOT / "mirapri_outfits.js"
 MIRAPRI_DYES = ROOT / "data" / "mirapri_dyes.json"     # apply_dyes.py 產生：{id: [繁中染色]}（整套 fallback）
 MIRAPRI_PIECE_DYES = ROOT / "data" / "mirapri_piece_dyes.json"  # {id: {裝備日文名: [繁中染色]}}（v2 逐件）
 MIRAPRI_VISIBLE = ROOT / "data" / "mirapri_visible.json"  # apply_dyes.py 產生：{id: [圖上可見裝備日文名]}
+VIS_FLOOR = 4  # vismap 過濾後若 <此件數，視為 OCR 漏讀 → 改保留完整清單（一般幻化至少 4~5 件）
 
 # 取得方式 emoji → st 標籤（取 source 字串中第一個出現的 emoji）
 EMOJI_ST = [
@@ -112,11 +113,15 @@ def transform_mirapri(o, dyemap=None, vismap=None, piecemap=None):
 
     equips = o.get("equipments", [])
     # 用 OCR 判斷「圖上實際畫出來」的裝備，濾掉投稿者附的替代裝備（清單比圖片多的元兇）。
-    # 只有該套在 vismap 裡（= 有 OCR 過且至少認出 1 件）才過濾，否則原樣保留以免誤刪。
+    # 只有該套在 vismap 裡（= 有 OCR 過且至少認出 1 件）才過濾。
+    # 但只在「過濾後仍保有完整套裝（>=VIS_FLOOR 件）」時才採用結果——否則多半是 OCR 漏讀，
+    # 寧可保留完整清單，也不要把正常套裝砍到剩 2~3 件（一般幻化至少 4~5 件）。
     vis = (vismap or {}).get(oid)
     if vis:
         visset = set(vis)
-        equips = [e for e in equips if e.get("name", "") in visset]
+        filtered = [e for e in equips if e.get("name", "") in visset]
+        if len(filtered) >= VIS_FLOOR:
+            equips = filtered
 
     # 逐件染色（v2）：以裝備日文名對應 dye1/dye2；無資料則 — —，由 fallback 行顯示整套染色
     pdye = (piecemap or {}).get(oid, {})
