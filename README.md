@@ -56,10 +56,14 @@
 |------|------|------|
 | [XIVAPI v2](https://v2.xivapi.com) | 物品、配方、職業、圖示 | 免費，無需 API Key |
 | [Universalis](https://universalis.app) | 即時市場價格、歷史成交 | 免費，繁中服完整支援；規劃中工具使用 |
-| [FFXIV Teamcraft](https://ffxivteamcraft.com) | 採集點座標、藏寶圖位置、配方等 | 公開 JSON |
+| [FFXIV Teamcraft](https://ffxivteamcraft.com) | 採集點座標、藏寶圖位置、配方、各內容 patch 對照（`patch-content` / `patch-names`） | 公開 JSON |
 | [thewakingsands/ffxiv-datamining-cn](https://github.com/thewakingsands/ffxiv-datamining-cn) | 中文物品名稱（簡中 + OpenCC 轉繁） | 社群 datamining |
+| [ffxivcollect](https://ffxivcollect.com) | 收藏品 patch、取得來源（坐騎/寵物/表情/鳥鞍/樂譜） | 公開 API；來源文字為英文，無簡中 locale |
+| [consolegameswiki](https://ffxiv.consolegameswiki.com) | 青魔法習得來源（圖騰兌換條件等） | 人工查證 |
 
 繁中物品名稱以 `tw-items.msgpack`（台服官方譯名）為準，找不到對應名稱視為台服未開放，前端直接隱藏，不使用簡中/英文名稱替代。
+
+各欄位的來源與重建腳本對照、更新流程，詳見 [`docs/DATA-SOURCES.md`](docs/DATA-SOURCES.md)。
 
 ### 繁中伺服器資訊
 
