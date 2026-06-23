@@ -30,7 +30,9 @@ FF14時尚配裝/
 │   ├── apply_dyes.py     # OCR 結果 → 逐件染色 mirapri_piece_dyes.json + 整套 fallback + 可見裝備
 │   ├── itemdb.py         # FF14 道具資料庫索引（norm(日文)→id→繁中/英/日；resolve 解析 OCR 字串）
 │   ├── resolve_ocr.py    # OCR 字串對回資料庫正式值（抓漏候選/繁中校正）→ 報告，不改 curated
-│   └── ab_resolution.py  # Phase 4：在 OCR 失敗集上 A/B 解析度與模型（決定 max_edge）
+│   ├── ab_resolution.py  # Phase 4：在 OCR 失敗集上 A/B 解析度與模型（決定 max_edge）
+│   ├── reconstruct_empty.py # 空殼套裝用 OCR+DB 重建裝備（部位/繁中/染色/取得方式）→ mirapri_reconstructed.json
+│   └── update_db.py      # ★ 從 cycleapple/ffxiv-item-search-tc 抓最新繁中道具 DB（先 --check 比版本，--apply 才覆蓋）
 ├── data/
 │   ├── curated_outfits.json       # ★ 精選套裝唯一資料來源（直接編輯這份）
 │   ├── all_outfits_enriched.json  # pipeline 產出，build_site.py 的社群資料來源
@@ -47,6 +49,12 @@ FF14時尚配裝/
     ├── sources.json     # 道具取得來源資料庫
     └── recipes.json     # 製作配方資料庫
 ```
+
+> **資料庫來源**：`資料來源/`（items.json / sources.json / recipes.json / items-index.json / 語言 msgpack）
+> 來自開源繁中工具站 **cycleapple/ffxiv-item-search-tc** 的 `public/data/`（繁中名上游為 ffxiv-datamining-tc；
+> 已驗證本專案 items.json 與其 byte 相同）。注意 item-names-multi.json 的 `cn` 欄是「簡中」，繁中名一律取 items.json 的 `name`。
+> 改版後更新繁中：`py scripts\update_db.py`（比對線上版本）→ `--apply`（下載覆蓋＋重產 ja/en/zh msgpack）。
+> ⚠ 上游需等社群 datamine + cycleapple 重建，**伺服器更新當天通常還抓不到新版**。
 
 ---
 
