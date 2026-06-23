@@ -412,6 +412,7 @@
       .oc-grid { grid-template-columns: 1fr; }
     }
   </style>
+  <script src="../../assets/js/patch-gate.js"></script>
 </head>
 <body>
 
@@ -745,11 +746,12 @@
       if (!res.ok) throw new Error('無法載入資料 (' + res.status + ')');
       return res.json();
     })
-    .then(json => {
+    .then(async json => {
       const raw = (json && json.data) ? json.data : [];
+      const gp = await PatchGate.loadGamePatch('../../data/_meta.json');
 
-      // 僅顯示有繁中漢字名稱的項目（台服未開放者隱藏）
-      OC_DATA = raw.filter(r => r.name && /[一-鿿]/.test(r.name));
+      // 僅顯示有繁中漢字名稱、且台服已開放（patch ≤ gamePatch）的項目
+      OC_DATA = raw.filter(r => r.name && /[一-鿿]/.test(r.name) && PatchGate.released(r.patch, gp));
 
       // 依編號排序
       OC_DATA.sort((a, b) => (a.number || 0) - (b.number || 0));

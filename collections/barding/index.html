@@ -401,6 +401,7 @@
       .bd-grid { grid-template-columns: 1fr; }
     }
   </style>
+  <script src="../../assets/js/patch-gate.js"></script>
 </head>
 <body>
 
@@ -729,10 +730,11 @@
       if (!res.ok) throw new Error('無法載入資料 (' + res.status + ')');
       return res.json();
     })
-    .then(json => {
+    .then(async json => {
       const raw = (json && json.data) ? json.data : [];
-      // 僅顯示有繁中名的項目（無繁中漢字＝台服未開放，不可用英文名顯示）
-      BD_DATA = raw.filter(b => b.name && /[一-鿿]/.test(b.name));
+      const gp = await PatchGate.loadGamePatch('../../data/_meta.json');
+      // 僅顯示有繁中名、且台服已開放（patch ≤ gamePatch）的項目
+      BD_DATA = raw.filter(b => b.name && /[一-鿿]/.test(b.name) && PatchGate.released(b.patch, gp));
 
       // 排序：依編號
       BD_DATA.sort((a, b) => (a.id || 0) - (b.id || 0));

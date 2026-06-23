@@ -429,6 +429,7 @@
       .em-grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
+  <script src="../../assets/js/patch-gate.js"></script>
 </head>
 <body>
 
@@ -762,10 +763,11 @@
       if (!res.ok) throw new Error('無法載入資料 (' + res.status + ')');
       return res.json();
     })
-    .then(json => {
+    .then(async json => {
       const raw = (json && json.data) ? json.data : [];
-      // name=null 表示台服未開放，前端隱藏
-      EM_DATA = raw.filter(e => e.name !== null);
+      const gp = await PatchGate.loadGamePatch('../../data/_meta.json');
+      // name=null 或 patch > gamePatch 表示台服未開放，前端隱藏
+      EM_DATA = raw.filter(e => e.name !== null && PatchGate.released(e.patch, gp));
 
       // 排序：依 id
       EM_DATA.sort((a, b) => (a.id || 0) - (b.id || 0));

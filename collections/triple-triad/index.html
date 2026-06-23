@@ -430,6 +430,7 @@
       .tt-grid { grid-template-columns: 1fr; }
     }
   </style>
+  <script src="../../assets/js/patch-gate.js"></script>
 </head>
 <body>
 
@@ -807,10 +808,11 @@
       if (!res.ok) throw new Error('無法載入資料 (' + res.status + ')');
       return res.json();
     })
-    .then(json => {
+    .then(async json => {
       const raw = (json && json.data) ? json.data : [];
-      // 僅顯示有繁中名的項目（無繁中漢字＝台服未開放，不可用英文名顯示）
-      TT_DATA = raw.filter(c => c.name && /[一-鿿]/.test(c.name));
+      const gp = await PatchGate.loadGamePatch('../../data/_meta.json');
+      // 僅顯示有繁中名、且台服已開放（patch ≤ gamePatch）的項目
+      TT_DATA = raw.filter(c => c.name && /[一-鿿]/.test(c.name) && PatchGate.released(c.patch, gp));
 
       // 排序：依編號
       TT_DATA.sort((a, b) => (a.id || 0) - (b.id || 0));

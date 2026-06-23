@@ -414,6 +414,7 @@
       .mount-grid { grid-template-columns: 1fr; }
     }
   </style>
+  <script src="../../assets/js/patch-gate.js"></script>
 </head>
 <body>
 
@@ -780,10 +781,11 @@
       if (!res.ok) throw new Error('無法載入資料 (' + res.status + ')');
       return res.json();
     })
-    .then(json => {
+    .then(async json => {
       const raw = (json && json.data) ? json.data : [];
-      // 過濾掉無繁中名稱的項目（台服未開放）
-      MOUNT_DATA = raw.filter(m => m.name);
+      const gp = await PatchGate.loadGamePatch('../../data/_meta.json');
+      // 過濾掉無繁中名稱、或台服未開放（patch > gamePatch）的項目
+      MOUNT_DATA = raw.filter(m => m.name && PatchGate.released(m.patch, gp));
 
       // 來源類型清單（依資料動態產生）
       const typeSet = new Set();

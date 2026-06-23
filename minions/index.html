@@ -408,6 +408,7 @@
       .progress-bar-wrap { flex-wrap: wrap; }
     }
   </style>
+  <script src="../assets/js/patch-gate.js"></script>
 </head>
 <body>
 
@@ -761,9 +762,10 @@
       const res = await fetch(DATA_URL);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const json = await res.json();
+      const gp = await PatchGate.loadGamePatch('../data/_meta.json');
 
-      // 過濾掉名稱為空（台服未開放）的項目
-      MINION_DATA = (json.data || []).filter(m => m.name && m.name.trim() !== '');
+      // 過濾掉名稱為空、或台服未開放（patch > gamePatch）的項目
+      MINION_DATA = (json.data || []).filter(m => m.name && m.name.trim() !== '' && PatchGate.released(m.patch, gp));
 
       // 收集來源類型
       const types = new Set();

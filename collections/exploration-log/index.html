@@ -347,6 +347,7 @@
       .bd-grid { grid-template-columns: 1fr; }
     }
   </style>
+  <script src="../../assets/js/patch-gate.js"></script>
 </head>
 <body>
 
@@ -603,9 +604,11 @@
       if (!res.ok) throw new Error('無法載入資料 (' + res.status + ')');
       return res.json();
     })
-    .then(function(json) {
+    .then(async function(json) {
       var raw = (json && json.data) ? json.data : [];
-      BD_DATA = raw;
+      var gp = await PatchGate.loadGamePatch('../../data/_meta.json');
+      // 台服未開放（patch > gamePatch）者隱藏
+      BD_DATA = raw.filter(function(e){ return PatchGate.released(e.patch, gp); });
       BD_DATA.sort(function(a, b){ return (a.id || 0) - (b.id || 0); });
 
       var patchSet = new Set(BD_DATA.map(function(b){ return b.patch; }).filter(Boolean));

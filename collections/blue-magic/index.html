@@ -411,6 +411,7 @@
       .bm-grid { grid-template-columns: 1fr; }
     }
   </style>
+  <script src="../../assets/js/patch-gate.js"></script>
 </head>
 <body>
 
@@ -800,9 +801,10 @@
     }),
     fetch(DUNGEONS_URL).then(res => res.ok ? res.json() : { data: [] }).catch(() => ({ data: [] }))
   ])
-    .then(([bmJson, dgJson]) => {
+    .then(async ([bmJson, dgJson]) => {
       const raw = (bmJson && bmJson.data) ? bmJson.data : [];
-      BM_DATA = raw.filter(m => m.name);
+      const gp = await PatchGate.loadGamePatch('../../data/_meta.json');
+      BM_DATA = raw.filter(m => m.name && PatchGate.released(m.patch, gp));
 
       // dungeons.id -> 繁中名 對照表（learnFrom.contentId 對應 dungeons.id）
       (dgJson.data || []).forEach(d => {

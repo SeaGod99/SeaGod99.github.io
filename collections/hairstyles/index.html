@@ -394,6 +394,7 @@
       .toolbar { gap: 8px; }
     }
   </style>
+  <script src="../../assets/js/patch-gate.js"></script>
 </head>
 <body>
 
@@ -679,7 +680,9 @@
       const res = await fetch(DATA_URL);
       if (!res.ok) throw new Error(res.status);
       const json = await res.json();
-      HS_DATA = json.data || [];
+      const gp = await PatchGate.loadGamePatch('../../data/_meta.json');
+      // 台服未開放（patch > gamePatch）者隱藏
+      HS_DATA = (json.data || []).filter(h => PatchGate.released(h.patch, gp));
 
       // Collect patches & sources
       const patchSet = new Set();
