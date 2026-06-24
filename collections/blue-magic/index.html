@@ -134,7 +134,7 @@
     .progress-track {
       flex: 1;
       height: 8px;
-      background: rgba(255,255,255,0.07);
+      background: var(--raise);
       border-radius: 99px;
       overflow: hidden;
     }
@@ -310,7 +310,7 @@
       width: 36px;
       height: 36px;
       border-radius: var(--radius-sm);
-      background: rgba(255,255,255,0.04);
+      background: var(--raise);
       object-fit: cover;
       flex-shrink: 0;
     }
@@ -347,7 +347,7 @@
       font-size: 10px;
       padding: 2px 7px;
       border-radius: 99px;
-      background: rgba(255,255,255,0.04);
+      background: var(--raise);
       color: var(--text-secondary);
       border: 1px solid var(--border);
       white-space: nowrap;
@@ -366,7 +366,7 @@
     .tag.aspect-土 { background: rgba(200,169,110,0.12); color: var(--gold); border-color: rgba(200,169,110,0.25); }
     .tag.aspect-雷 { background: rgba(167,139,250,0.1); color: var(--purple); border-color: rgba(167,139,250,0.2); }
     .tag.aspect-冰 { background: rgba(79,195,247,0.1); color: var(--blue); border-color: rgba(79,195,247,0.2); }
-    .tag.aspect-無 { background: rgba(255,255,255,0.04); color: var(--text-secondary); border-color: var(--border); }
+    .tag.aspect-無 { background: var(--raise); color: var(--text-secondary); border-color: var(--border); }
 
     .tag.src-副本 { background: rgba(79,195,247,0.1); color: var(--blue); border-color: rgba(79,195,247,0.2); }
     .tag.src-野外 { background: rgba(74,222,128,0.1); color: var(--green); border-color: rgba(74,222,128,0.2); }
@@ -412,6 +412,8 @@
     }
   </style>
   <script src="../../assets/js/patch-gate.js"></script>
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <script src="../../assets/js/theme.js"></script>
 </head>
 <body>
 

@@ -259,7 +259,7 @@
       color: var(--text-secondary);
     }
     .mgp-table tr:last-child td { border-bottom: none; }
-    .mgp-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .mgp-table tr:hover td { background: var(--raise); }
     .mgp-table .num-col { text-align: right; color: var(--text-primary); font-weight: 500; font-variant-numeric: tabular-nums; }
     .mgp-table .sum-col { text-align: right; font-weight: 600; color: var(--gold-light); }
     .rank-1 td { background: rgba(200,169,110,0.06); }
@@ -275,7 +275,7 @@
     }
     .picker-overlay.show { display: flex; }
     .picker-box {
-      background: #1a1f2b;
+      background: var(--bg-card-hover);
       border: 1px solid rgba(200,169,110,0.3);
       border-radius: var(--radius-md);
       padding: 20px;
@@ -347,6 +347,8 @@
     }
     .info-box strong { color: var(--gold); }
   </style>
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <script src="../../assets/js/theme.js"></script>
 </head>
 <body>
 

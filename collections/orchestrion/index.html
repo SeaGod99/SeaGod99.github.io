@@ -138,7 +138,7 @@
     .progress-track {
       flex: 1;
       height: 8px;
-      background: rgba(255,255,255,0.07);
+      background: var(--raise);
       border-radius: 99px;
       overflow: hidden;
     }
@@ -314,7 +314,7 @@
       width: 40px;
       height: 40px;
       border-radius: var(--radius-sm);
-      background: rgba(255,255,255,0.04);
+      background: var(--raise);
       object-fit: cover;
       flex-shrink: 0;
     }
@@ -322,7 +322,7 @@
       width: 40px;
       height: 40px;
       border-radius: var(--radius-sm);
-      background: rgba(255,255,255,0.04);
+      background: var(--raise);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -355,13 +355,13 @@
       font-size: 10px;
       padding: 2px 7px;
       border-radius: 99px;
-      background: rgba(255,255,255,0.04);
+      background: var(--raise);
       color: var(--text-secondary);
       border: 1px solid var(--border);
       white-space: nowrap;
     }
     .tag.placeholder { color: var(--text-muted); }
-    .tag.src-tag { background: rgba(255,255,255,0.04); color: var(--text-secondary); border-color: var(--border); }
+    .tag.src-tag { background: var(--raise); color: var(--text-secondary); border-color: var(--border); }
 
     /* Version category tag colours */
     .tag.cat-原初之地  { background: rgba(74,222,128,0.1);   color: var(--green);  border-color: rgba(74,222,128,0.25); }
@@ -370,7 +370,7 @@
     .tag.cat-暗影之逆焰 { background: rgba(167,139,250,0.12); color: var(--purple); border-color: rgba(167,139,250,0.25); }
     .tag.cat-曉月之終途 { background: rgba(34,211,238,0.1);   color: var(--cyan);   border-color: rgba(34,211,238,0.25); }
     .tag.cat-金曦之遺輝 { background: rgba(200,169,110,0.12); color: var(--gold);   border-color: rgba(200,169,110,0.25); }
-    .tag.cat-未分類    { background: rgba(255,255,255,0.04); color: var(--text-muted); border-color: var(--border); }
+    .tag.cat-未分類    { background: var(--raise); color: var(--text-muted); border-color: var(--border); }
 
     /* ── Hover detail ── */
     .oc-detail {
@@ -413,6 +413,8 @@
     }
   </style>
   <script src="../../assets/js/patch-gate.js"></script>
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <script src="../../assets/js/theme.js"></script>
 </head>
 <body>
 

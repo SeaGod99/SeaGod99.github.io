@@ -48,7 +48,7 @@
     .nav-title { color: var(--text); font-size: 0.9rem; font-weight: 600; }
 
     .hero {
-      background: linear-gradient(135deg, #0f1117 0%, #0d1318 100%);
+      background: linear-gradient(135deg, var(--bg-surface), var(--bg-base));
       border-bottom: 1px solid var(--border); padding: 1.5rem 1.5rem;
     }
     .hero-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
@@ -138,6 +138,8 @@
     .page-btn.active { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); font-weight: 600; }
     .page-btn:disabled { opacity: 0.3; cursor: default; }
   </style>
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <script src="../../assets/js/theme.js"></script>
 </head>
 <body>
 <nav class="nav">

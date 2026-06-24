@@ -133,7 +133,7 @@
     .progress-track {
       flex: 1;
       height: 8px;
-      background: rgba(255,255,255,0.07);
+      background: var(--raise);
       border-radius: 99px;
       overflow: hidden;
     }
@@ -309,7 +309,7 @@
       width: 36px;
       height: 36px;
       border-radius: var(--radius-sm);
-      background: rgba(255,255,255,0.04);
+      background: var(--raise);
       object-fit: cover;
       flex-shrink: 0;
     }
@@ -357,7 +357,7 @@
       white-space: nowrap;
     }
     .source-tag.placeholder {
-      background: rgba(255,255,255,0.04);
+      background: var(--raise);
       color: var(--text-muted);
       border-color: var(--border);
     }
@@ -374,7 +374,7 @@
     .source-tag.type-狩獵       { background: rgba(248,113,113,0.1); color: var(--red); border-color: rgba(248,113,113,0.2); }
     .source-tag.type-探索航行   { background: rgba(79,195,247,0.1);  color: var(--blue); border-color: rgba(79,195,247,0.2); }
     .source-tag.type-金碟       { background: rgba(255,200,80,0.1);  color: #ffc850; border-color: rgba(255,200,80,0.2); }
-    .source-tag.type-市場板     { background: rgba(255,255,255,0.06); color: var(--text-secondary); border-color: var(--border); }
+    .source-tag.type-市場板     { background: var(--raise); color: var(--text-secondary); border-color: var(--border); }
 
     /* ── Tooltip on hover ── */
     .mount-detail {
@@ -415,6 +415,8 @@
     }
   </style>
   <script src="../../assets/js/patch-gate.js"></script>
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <script src="../../assets/js/theme.js"></script>
 </head>
 <body>
 

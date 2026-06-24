@@ -134,7 +134,7 @@
     .progress-track {
       flex: 1;
       height: 8px;
-      background: rgba(255,255,255,0.07);
+      background: var(--raise);
       border-radius: 99px;
       overflow: hidden;
     }
@@ -310,7 +310,7 @@
       width: 40px;
       height: 40px;
       border-radius: var(--radius-sm);
-      background: rgba(255,255,255,0.04);
+      background: var(--raise);
       object-fit: cover;
       flex-shrink: 0;
     }
@@ -347,7 +347,7 @@
       font-size: 10px;
       padding: 2px 7px;
       border-radius: 99px;
-      background: rgba(255,255,255,0.04);
+      background: var(--raise);
       color: var(--text-secondary);
       border: 1px solid var(--border);
       white-space: nowrap;
@@ -359,7 +359,7 @@
     .tag.slot-半套 { background: rgba(167,139,250,0.1); color: var(--purple); border-color: rgba(167,139,250,0.2); }
     .tag.slot-全套 { background: rgba(200,169,110,0.12); color: var(--gold); border-color: rgba(200,169,110,0.25); }
 
-    .tag.src-tag { background: rgba(255,255,255,0.04); color: var(--text-secondary); border-color: var(--border); }
+    .tag.src-tag { background: var(--raise); color: var(--text-secondary); border-color: var(--border); }
 
     /* ── Tooltip on hover ── */
     .bd-detail {
@@ -402,6 +402,8 @@
     }
   </style>
   <script src="../../assets/js/patch-gate.js"></script>
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <script src="../../assets/js/theme.js"></script>
 </head>
 <body>
 
