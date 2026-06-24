@@ -23,6 +23,7 @@ data/reocr_originals.log
 data/_*.log
 data/_review_before.txt
 data/ocr_cache.bak_*.json
+data/_claude_ocr/
 
 # ───────── Python / 系統雜物 ─────────
 __pycache__/
