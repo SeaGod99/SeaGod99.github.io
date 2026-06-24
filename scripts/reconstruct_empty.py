@@ -30,7 +30,10 @@ from itemdb import ItemDB
 OUT = os.path.join(oc.DATA, "mirapri_reconstructed.json")
 REPORT = os.path.join(oc.DATA, "重建報告.md")
 JA2ZH = os.path.join(oc.DATA, "dye_ja_to_zh.json")
-MIN_SIM = 0.90
+# 與 itemdb/resolve_ocr/ocr_check 一致的 0.82（重建原本獨自用 0.90，是系統內門檻不一致的源頭）。
+# 抽 30 筆 0.82~0.90 band 人工驗證全對（FF14 名稱獨特、OCR 多為小字元滑誤），
+# 加上既有 equipStats 閘（必為可裝備）後，0.82 安全且多救回 ~231 件正確裝備。
+MIN_SIM = 0.82
 
 
 def cat_to_slot(cat):
@@ -148,7 +151,7 @@ def _write_report(rows, n_outfit, n_pieces, lc, ne, nr, n_src=0):
     L = ["# 空殼套裝重建報告", ""]
     L.append(f"- 產生：{datetime.now().strftime('%Y-%m-%d %H:%M')}")
     L.append(f"- **重建 {n_outfit} 套、共 {n_pieces} 件**　跳過：低信心 {lc}／非裝備 {ne}／無解 {nr}")
-    L.append("- 只收「精確或相似≥0.9 且確實可裝備」的件；部位由 categoryName 推導。")
+    L.append("- 只收「精確或相似≥0.82 且確實可裝備」的件；部位由 categoryName 推導。")
     L.append(f"- 取得方式／版本／職業／等級已由資料庫補上（與 mirapri enrich 同邏輯）；"
              f"**有來源 {n_src}/{n_pieces}（{pct}%）**。染色取自 OCR 逐件。")
     L.append("")
