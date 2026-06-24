@@ -4,11 +4,20 @@
 build_review.py —— 把「異常／需人工檢視」的社群套裝彙整成一份資料，給 review.html 用。
 
 分類（一套可同時多類）：
-  empty      圖上抓不到任何裝備（來源 enriched 就 0 件）        → 多半要「移除」或重抓
-  few        有資料但 <4 件（1~3 件，可能簡配或來源殘缺）        → 人工檢視
+  empty      圖上抓不到任何裝備、連重建都救不回                  → 多半要「移除」或我逐張讀
+  few        有資料但 <4 件（1~3 件，可能簡配或重建只救回部分）   → 人工檢視
+  toomany    >7 件（mirapri 投稿常附替代款，待修剪）             → 人工修剪
   underread  OCR 只認出 <4 件、靠保留完整清單才 >=4（OCR 不可靠）→ 適合「用 Claude OCR」
   lowconf    有 maybe_wrong（OCR 讀到但對不上記錄裝備）          → 人工檢視 / Claude OCR
   missing    OCR 讀到、解析到 DB、但不在現有清單（可能漏抓的件）   → 人工檢視
+  recon      OCR+DB 自動重建、但信心不足（<4 件或有件缺來源）     → 人工核對
+
+設計重點（為什麼佇列不該很大）：
+  1129 套(18%)的 mirapri API 本就回傳 equipments=[]（投稿者只上圖沒標裝備），
+  重抓也救不回 → OCR+DB 重建是這些套「唯一」的真相來源。因此：
+    · 高信心重建（>=4 件且全有來源）自動採信，不再列入待檢視（recon_confident）。
+    · missing 只在「該套有權威清單(raw>0)」時才算；重建/空殼套(raw=0)的 extra 是
+      門檻差(重建0.90 vs resolve0.82)造成的假性漏抓，不報。
 
 輸出：review_data.js（const REVIEW_ITEMS = [...]，review.html 以 <script> 載入）
 
@@ -24,6 +33,20 @@ import ocr_check as oc
 ROOT = oc.ROOT
 OUT_JS = os.path.join(ROOT, "review_data.js")
 VIS_FLOOR = 4
+RECON_MIN_PIECES = 4  # 重建套達此件數且全有來源 → 視為高信心、自動採信、不再丟人工佇列
+
+
+def _src_ok(s):
+    s = (s or "").strip()
+    return s != "" and "待確認" not in s
+
+
+def recon_confident(pieces):
+    """高信心重建：>=RECON_MIN_PIECES 件、且每件都有取得方式（繁中名在重建時已保證）。
+    這 1129 套空殼的來源 API 本就沒有裝備清單，OCR+DB 重建是唯一真相來源；
+    乾淨完整的重建直接採信，不再列入待檢視（人工佇列只留真正不確定的）。"""
+    return (bool(pieces) and len(pieces) >= RECON_MIN_PIECES
+            and all(_src_ok(p.get("source")) for p in pieces))
 
 
 def _load_js_array(path):
@@ -52,8 +75,9 @@ def main():
     resolve_by_id = {}
     for r in oc.load_json(os.path.join(oc.DATA, "ocr_resolve.json"), {}).get("items", []):
         resolve_by_id[r["outfit_id"]] = r
-    # 由 OCR+DB 自動重建的空殼套（待人工核對）
-    recon_ids = set(oc.load_json(os.path.join(oc.DATA, "mirapri_reconstructed.json"), {}).keys())
+    # 由 OCR+DB 自動重建的空殼套（高信心者自動採信，其餘待人工核對）
+    recon_data = oc.load_json(os.path.join(oc.DATA, "mirapri_reconstructed.json"), {})
+    recon_ids = set(recon_data.keys())
 
     items = []
     cat_count = {"empty": 0, "few": 0, "toomany": 0, "underread": 0, "lowconf": 0, "missing": 0, "recon": 0}
@@ -83,17 +107,21 @@ def main():
             cats.append("lowconf")
 
         # 可能漏抓：解析到 DB、且不在現有清單（以正規化日文名比對）
+        # 只在「有權威清單(raw>0)」時才算 missing：重建/空殼套(raw=0)的清單本身就來自 OCR，
+        # 拿同源 OCR 的 extra 去 diff 只是門檻差(重建0.90 vs resolve0.82)造成的假性漏抓，過濾掉。
         have = {oc.norm(e.get("name", "")) for e in pieces}
         miss = []
-        for x in resolve_by_id.get(oid, {}).get("extra", []):
-            h = x.get("resolved")
-            if h and oc.norm(h["ja"]) not in have:
-                miss.append({"ocr": x["ocr"], "z": h["zh"], "e": h["en"], "j": h["ja"],
-                             "id": h["id"], "sc": h["score"], "ex": h["exact"]})
+        if raw > 0:
+            for x in resolve_by_id.get(oid, {}).get("extra", []):
+                h = x.get("resolved")
+                if h and oc.norm(h["ja"]) not in have:
+                    miss.append({"ocr": x["ocr"], "z": h["zh"], "e": h["en"], "j": h["ja"],
+                                 "id": h["id"], "sc": h["score"], "ex": h["exact"]})
         if miss:
             cats.append("missing")
-        if oid in recon_ids:
-            cats.append("recon")  # 自動重建的空殼套，待核對
+        # 高信心重建(>=4件+全來源)直接採信，不列入待檢視；其餘重建才需人工核對
+        if oid in recon_ids and not recon_confident(recon_data.get(oid)):
+            cats.append("recon")
 
         if not cats:
             continue
