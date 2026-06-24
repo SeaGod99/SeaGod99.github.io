@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-itemdb.py —— FF14 道具資料庫索引（繁中／英／日 + 日文名反查）。
+itemdb.py —— FF14 道具資料庫索引（繁中／英／日 + 日文＆英文名反查）。
 
-給 OCR→DB 解析器（resolve_ocr.py）等腳本共用，避免各自重載 msgpack。
-沿用 ocr_check 的 norm／similar，比對邏輯與 OCR 比對一致（DRY）。
+給 OCR→DB 解析器（resolve_ocr.py）、空殼重建（reconstruct_empty.py）等腳本共用。
+resolve() 同時支援日文與英文名：英文客戶端的投稿截圖 OCR 讀到的是英文裝備名，
+也能對回正式道具（先日文、不到再英文）。沿用 ocr_check 的 norm／similar（DRY）。
 
 資料來源（資料來源/）：
   items.json         {"items": {id: {"name": 繁中名, ...}}}（繁中，id 上限約 45590）
@@ -56,20 +57,33 @@ class ItemDB:
         self.id_to_ja = _load_msgpack(JA_MSGPACK, "ja")
         self.id_to_en = _load_msgpack(EN_MSGPACK, "en")
 
-        # 日文名（正規化）→ id；同名取較小 id（多半是初出／正典款）
-        self.ja_norm_to_id = {}
-        for i, ja in self.id_to_ja.items():
-            n = oc.norm(ja)
+        # 名稱（正規化）→ id；同名取較小 id（多半是初出／正典款）。
+        # 日文、英文各建一份：英文客戶端截圖的 OCR 讀到的是英文名（resolve 會兩者都試）。
+        self.ja_norm_to_id = self._build_index(self.id_to_ja)
+        self.en_norm_to_id = self._build_index(self.id_to_en)
+
+        # 模糊回退候選：依正規化長度分桶，縮小搜尋空間（日／英各一）
+        self._by_len = self._build_buckets(self.ja_norm_to_id)
+        self._en_by_len = self._build_buckets(self.en_norm_to_id)
+
+    @staticmethod
+    def _build_index(id_to_name):
+        idx = {}
+        for i, name in id_to_name.items():
+            n = oc.norm(name)
             if not n:
                 continue
-            cur = self.ja_norm_to_id.get(n)
+            cur = idx.get(n)
             if cur is None or _safe_int(i) < _safe_int(cur):
-                self.ja_norm_to_id[n] = i
+                idx[n] = i
+        return idx
 
-        # 模糊回退候選：依正規化長度分桶，縮小搜尋空間
-        self._by_len = {}
-        for n, i in self.ja_norm_to_id.items():
-            self._by_len.setdefault(len(n), []).append((n, i))
+    @staticmethod
+    def _build_buckets(norm_to_id):
+        by_len = {}
+        for n, i in norm_to_id.items():
+            by_len.setdefault(len(n), []).append((n, i))
+        return by_len
 
     def _record(self, item_id, score, exact):
         return {
@@ -81,21 +95,12 @@ class ItemDB:
             "exact": exact,
         }
 
-    def resolve(self, ja_name, cutoff=0.82):
-        """OCR 日文字串 → 正式道具。先精確（正規化相等／子字串），再模糊（長度分桶）。
-        回傳 record 或 None。"""
-        n = oc.norm(ja_name)
-        if not n:
-            return None
-        # 1) 精確（正規化後相等）
-        hit = self.ja_norm_to_id.get(n)
-        if hit is not None:
-            return self._record(hit, 1.0, True)
-        # 2) 模糊：只比相近長度的候選（similar 內含子字串包含 → 0.95）
+    def _fuzzy(self, n, by_len, cutoff):
+        """在指定分桶表內找與 n 最相似者（只比相近長度），>=cutoff 才回傳 (id, score)。"""
         L = len(n)
         win = max(3, round(L * 0.3))
         best_id, best_s = None, 0.0
-        for cand_len, lst in self._by_len.items():
+        for cand_len, lst in by_len.items():
             if abs(cand_len - L) > win:
                 continue
             for cn, ci in lst:
@@ -103,7 +108,28 @@ class ItemDB:
                 if s > best_s:
                     best_id, best_s = ci, s
         if best_id is not None and best_s >= cutoff:
-            return self._record(best_id, best_s, False)
+            return best_id, best_s
+        return None, 0.0
+
+    def resolve(self, name, cutoff=0.82):
+        """OCR 字串 → 正式道具。日文與英文（英文客戶端截圖）都試：
+        先各自精確（正規化相等，兩者字符集互斥），日文模糊不到 cutoff 再試英文模糊。
+        回傳 record 或 None。"""
+        n = oc.norm(name)
+        if not n:
+            return None
+        # 1) 精確（正規化後相等）：日文 → 英文
+        hit = self.ja_norm_to_id.get(n)
+        if hit is None:
+            hit = self.en_norm_to_id.get(n)
+        if hit is not None:
+            return self._record(hit, 1.0, True)
+        # 2) 模糊（similar 內含子字串包含 → 0.95）：先日文，不到再英文
+        bid, bs = self._fuzzy(n, self._by_len, cutoff)
+        if bid is None:
+            bid, bs = self._fuzzy(n, self._en_by_len, cutoff)
+        if bid is not None:
+            return self._record(bid, bs, False)
         return None
 
 
@@ -112,6 +138,6 @@ if __name__ == "__main__":
     sys.stdout.reconfigure(encoding="utf-8")
     db = ItemDB()
     print(f"載入：zh {len(db.id_to_zh)}｜ja {len(db.id_to_ja)}｜en {len(db.id_to_en)}"
-          f"｜日文反查鍵 {len(db.ja_norm_to_id)}")
+          f"｜日文鍵 {len(db.ja_norm_to_id)}｜英文鍵 {len(db.en_norm_to_id)}")
     for q in sys.argv[1:]:
         print(f"\n{q!r} ->", db.resolve(q))
