@@ -18,6 +18,12 @@ data/db_update.log
 review_data.js
 _review_*.png
 
+# ───────── 暫存：執行 log / 快取備份（隨手產生，不進版控） ─────────
+data/reocr_originals.log
+data/_reocr_pipeline.log
+data/_review_before.txt
+data/ocr_cache.bak_*.json
+
 # ───────── Python / 系統雜物 ─────────
 __pycache__/
 *.pyc
