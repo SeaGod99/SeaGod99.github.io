@@ -82,8 +82,8 @@
   backdrop-filter: blur(4px);
 }
 #theme-toggle button {
-  width: 30px;
-  height: 30px;
+  width: 34px;
+  height: 34px;
   padding: 0;
   border: none;
   background: transparent;
@@ -110,5 +110,5 @@
 @media print { #theme-toggle { display: none; } }
 @media (max-width: 480px) {
   #theme-toggle { right: 10px; bottom: 10px; }
-  #theme-toggle button { width: 34px; height: 34px; font-size: 16px; }
+  #theme-toggle button { width: 44px; height: 44px; font-size: 17px; }
 }
