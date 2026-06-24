@@ -3,9 +3,13 @@
 // 為什麼要本機跑：Cowork 沙箱擋外部網站，無法在那邊下載；在你自己電腦跑沒這限制。
 //
 // 執行方式（在 repo 根目錄）：
-//   node scripts/download-maps.mjs          ← 預設只抓野外/主城（type: field/city/housing）
-//   node scripts/download-maps.mjs --all    ← 連副本/特殊區域（dungeon/instance）一起抓
+//   node scripts/download-maps.mjs            ← 預設只抓野外/主城（type: field/city/housing）
+//   node scripts/download-maps.mjs --all      ← 連副本/特殊區域（dungeon/instance）一起抓
+//   node scripts/download-maps.mjs --id 584   ← 只抓指定 mapId（可逗號分隔多個，無視 type）
 // 需求：Node 18+（內建 fetch）。會自動跳過已存在的檔案，可重複執行補檔。
+//
+// 例：雲冠群島/Diadem（584）是採集點會用到、但 type=instance 被預設排除的地圖，
+//     用 `--id 584` 即可單獨補它，不必 --all 多抓上百張副本圖。
 //
 // 2026-06-11 地圖ID統一修正計畫決議：底圖只下載野外/主城；
 // 副本/特殊區域保留 image.url 欄位，需要時再抓（前端可直接用 url 或之後 --all 補）。
@@ -25,12 +29,21 @@ async function main() {
   const db = JSON.parse(await readFile(MAPS_JSON, "utf8"));
   await mkdir(OUT_DIR, { recursive: true });
 
-  const all = process.argv.includes("--all");
+  const argv = process.argv.slice(2);
+  const all = argv.includes("--all");
+  // --id 584 / --id 584,585 / --id=584：只抓指定 mapId（無視 type）
+  let wantIds = null;
+  const idIdx = argv.findIndex((a) => a === "--id" || a === "--ids");
+  const idEq = argv.find((a) => a.startsWith("--id=") || a.startsWith("--ids="));
+  const idRaw = idIdx !== -1 ? argv[idIdx + 1] : idEq ? idEq.split("=")[1] : null;
+  if (idRaw) wantIds = new Set(idRaw.split(",").map((s) => Number(s.trim())).filter((n) => !Number.isNaN(n)));
+
   const WANT_TYPES = new Set(["field", "city", "housing"]);
   const entries = db.data.filter(
-    (m) => m.image?.url && (all || WANT_TYPES.has(m.type))
+    (m) => m.image?.url && (wantIds ? wantIds.has(m.id) : all || WANT_TYPES.has(m.type))
   );
-  console.log(`共 ${entries.length} 張地圖待處理（${all ? "全部類型" : "field/city/housing"}）→ ${OUT_DIR}`);
+  const scope = wantIds ? `指定 id：${[...wantIds].join(",")}` : all ? "全部類型" : "field/city/housing";
+  console.log(`共 ${entries.length} 張地圖待處理（${scope}）→ ${OUT_DIR}`);
 
   let ok = 0, skip = 0, fail = 0;
   for (const m of entries) {

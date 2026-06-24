@@ -78,11 +78,9 @@ async function run() {
     return { db, minified, filled };
   };
 
-  // gathering：物品最早 patch
-  {
-    const r = fill("gathering.json", (e) => minPatch([...(e.items || []), ...(e.hiddenItems || [])].map((id) => itemPatch.get(id)).filter(Boolean)));
-    if (r.filled) await apply(r.db, r.minified, "gathering.json");
-  }
+  // gathering：改由 scripts/patch-gathering-version.mjs 重算（等級下界＋排除基礎水晶＋未開放提 7.0）。
+  // 舊「物品最早 patch」法被每個節點必掉的水晶/碎晶/晶簇拉低，將各版本節點誤標 2.0，故此處不再處理。
+  // 若重建過 gathering.json（patch 全空），請改跑：node scripts/patch-gathering-version.mjs --apply
 
   // maps：dungeon/instance 對 dungeons.json，其餘 region 表（先補，供 monsters 用）
   let mapPatch;

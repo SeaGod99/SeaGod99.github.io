@@ -44,7 +44,7 @@
     .nav-title { color: var(--text); font-size: 0.9rem; font-weight: 600; }
 
     .hero {
-      background: linear-gradient(135deg, #0f1117 0%, #0e1210 100%);
+      background: linear-gradient(135deg, var(--bg-surface), var(--bg-base));
       border-bottom: 1px solid var(--border); padding: 1.5rem;
     }
     .hero-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
@@ -102,6 +102,7 @@
     .tag-lim  { color: var(--gold);   border-color: rgba(200,169,110,0.3); background: var(--gold-dim); }
     .tag-leg  { color: var(--purple); border-color: rgba(167,139,250,0.3); background: var(--purple-dim); }
     .tag-eph  { color: var(--blue);   border-color: rgba(79,195,247,0.3);  background: var(--blue-dim); }
+    .tag-ver  { color: var(--text-dim); border-color: var(--border); background: var(--raise); }
 
     .node-time { font-size: 0.75rem; color: var(--gold); }
 
@@ -127,7 +128,42 @@
     .page-btn:hover { border-color: var(--gold); color: var(--gold); }
     .page-btn.active { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); font-weight: 600; }
     .page-btn:disabled { opacity: 0.3; cursor: default; }
+
+    /* VIEW TOGGLE */
+    .view-toggle { display: flex; gap: 0; border: 1px solid var(--border); border-radius: 5px; overflow: hidden; }
+    .view-toggle button {
+      font-size: 0.75rem; padding: 0.3rem 0.7rem; cursor: pointer; border: none;
+      background: var(--bg-surface); color: var(--text-dim); transition: all 0.15s;
+    }
+    .view-toggle button.active { background: var(--gold-dim); color: var(--gold); }
+
+    /* MAP VIEW */
+    .map-view { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem 2rem; }
+    .map-bar { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; margin-bottom: 0.75rem; }
+    .map-canvas {
+      position: relative; width: 100%; max-width: 720px; margin: 0 auto;
+      aspect-ratio: 1 / 1; background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+    }
+    .map-canvas img { width: 100%; height: 100%; object-fit: cover; display: block; user-select: none; }
+    .map-empty { display: flex; align-items: center; justify-content: center; height: 100%; color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 1rem; }
+    .map-dot {
+      position: absolute; width: 16px; height: 16px; border-radius: 50%;
+      transform: translate(-50%, -50%); cursor: pointer; border: 2px solid rgba(0,0,0,0.55);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.25); transition: transform 0.1s;
+    }
+    .map-dot:hover, .map-dot.sel { transform: translate(-50%, -50%) scale(1.45); z-index: 5; }
+    .map-dot.job-min { background: var(--orange); }
+    .map-dot.job-btn { background: var(--green); }
+    .map-dot.done    { background: var(--gold); box-shadow: 0 0 0 2px rgba(200,169,110,0.6); }
+    .map-legend { font-size: 0.72rem; color: var(--text-muted); display: flex; gap: 0.9rem; flex-wrap: wrap; margin-top: 0.5rem; }
+    .map-legend span { display: inline-flex; align-items: center; gap: 0.3rem; }
+    .map-legend i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+    .map-node-info { max-width: 720px; margin: 0.75rem auto 0; }
+    .map-node-info:empty { display: none; }
   </style>
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <script src="../../assets/js/theme.js"></script>
 </head>
 <body>
 <nav class="nav">
@@ -171,7 +207,21 @@
       <option value="legendary">傳說節點</option>
       <option value="ephemeral">短暫節點</option>
     </select>
+    <select class="filter-select" id="patchFilter" onchange="onFilter()">
+      <option value="">全版本</option>
+      <option value="2">2.x 重生之境</option>
+      <option value="3">3.x 蒼天之伊修加德</option>
+      <option value="4">4.x 紅蓮之狂潮</option>
+      <option value="5">5.x 暗影之逆焰</option>
+      <option value="6">6.x 曉月之終途</option>
+      <option value="7">7.x 金曦之遺輝</option>
+    </select>
   </div>
+
+    <div class="view-toggle" id="viewToggle">
+      <button id="vList" class="active" onclick="setView('list')">☰ 清單</button>
+      <button id="vMap" onclick="setView('map')">🗺️ 地圖</button>
+    </div>
 
   <button class="filter-btn" onclick="resetAll()" style="margin-left:auto">重置篩選</button>
 </div>
@@ -180,6 +230,20 @@
 <div class="node-list" id="nodeList"></div>
 <div class="pagination" id="pagination"></div>
 
+<div class="map-view" id="mapView" style="display:none">
+  <div class="map-bar">
+    <select class="filter-select" id="mapSelect" onchange="onMapSelect()"></select>
+  </div>
+  <div class="map-canvas" id="mapCanvas"></div>
+  <div class="map-legend">
+    <span><i style="background:var(--orange)"></i>採礦工</span>
+    <span><i style="background:var(--green)"></i>園藝工</span>
+    <span><i style="background:var(--gold)"></i>已全採</span>
+    <span>點圈可勾選追蹤</span>
+  </div>
+  <div class="map-node-info" id="mapNodeInfo"></div>
+</div>
+
 <script>
 const GATHER_URL = '../../data/gathering.json';
 const ITEMS_URL  = '../../data/items.json';
@@ -187,13 +251,22 @@ const MAPS_URL   = '../../data/maps.json';
 const LS_KEY     = 'ffxiv_gathering_items_owned';
 const PAGE_SIZE  = 40;
 
+// 基礎元素素材（六元素 × 碎晶/水晶/晶簇 = id 2–19）：每個採集點都會掉，屬雜訊，
+// 不在採集點顯示、也不計入進度（與 scripts/patch-gathering-version.mjs 的 CRYSTAL 一致）。
+const CRYSTAL_IDS = new Set();
+for (let i = 2; i <= 19; i++) CRYSTAL_IDS.add(i);
+
 let nodes = [];
 let itemMap = {};
 let mapMap = {};
+let mapMeta = {};
 let filtered = [];
 let owned = new Set(JSON.parse(localStorage.getItem(LS_KEY) || '[]'));
 let page = 0;
 let statusFilter = 'all';
+let viewMode = 'list';
+let currentMapId = null;
+let selectedNodeId = null;
 
 // total unique items for progress
 let totalItems = 0;
@@ -203,15 +276,25 @@ Promise.all([
   fetch(ITEMS_URL).then(r => r.json()),
   fetch(MAPS_URL).then(r => r.json()),
 ]).then(([gd, id, md]) => {
-  nodes = gd.data;
   itemMap = {};
   id.data.forEach(x => { itemMap[x.id] = x.name; });
   mapMap = {};
-  md.data.forEach(x => { mapMap[x.id] = x.name; });
+  mapMeta = {};
+  md.data.forEach(x => { mapMap[x.id] = x.name; mapMeta[x.id] = x; });
 
-  // count unique items
+  // 物品繁中名以 items.json(tw-items) 為唯一真實來源：對不到名稱＝台服未開放，直接濾除該產物
+  // （見 data/SCHEMA.md 採集點顯示規則）；同時濾除基礎元素水晶/碎晶/晶簇（雜訊）。
+  // 節點濾完無可顯示產物則整筆不顯示。
+  const keep = (i) => (i in itemMap) && !CRYSTAL_IDS.has(i);
+  nodes = gd.data.map(n => ({
+    ...n,
+    items: (n.items || []).filter(keep),
+    hiddenItems: (n.hiddenItems || []).filter(keep),
+  })).filter(n => n.items.length + n.hiddenItems.length > 0);
+
+  // count unique items for progress
   const allItemIds = new Set();
-  nodes.forEach(n => (n.items || []).concat(n.hiddenItems || []).forEach(i => allItemIds.add(i)));
+  nodes.forEach(n => n.items.concat(n.hiddenItems).forEach(i => allItemIds.add(i)));
   totalItems = allItemIds.size;
 
   onFilter();
@@ -239,12 +322,14 @@ function onFilter() {
   const q   = document.getElementById('searchInput').value.trim().toLowerCase();
   const job  = document.getElementById('jobFilter').value;
   const type = document.getElementById('typeFilter').value;
+  const ver  = document.getElementById('patchFilter').value;
 
   filtered = nodes.filter(n => {
     if (job && n.job !== job) return false;
     if (type === 'limited'   && !n.limited)   return false;
     if (type === 'legendary' && !n.legendary) return false;
     if (type === 'ephemeral' && !n.ephemeral) return false;
+    if (ver && String(n.patch || '').split('.')[0] !== ver) return false;
 
     const st = nodeStatus(n);
     if (statusFilter === 'done'    && st !== 'done')   return false;
@@ -260,31 +345,29 @@ function onFilter() {
   });
 
   page = 0;
-  render();
+  renderCurrent();
 }
 
-function render() {
+function renderCurrent() {
   updateProgress();
-  const start = page * PAGE_SIZE;
-  const pageData = filtered.slice(start, start + PAGE_SIZE);
+  if (viewMode === 'map') renderMap();
+  else render();
+}
 
-  document.getElementById('resultInfo').textContent =
-    `顯示 ${filtered.length} 個節點（共 ${nodes.length} 個）`;
+function nodeCardHTML(n) {
+  const st = nodeStatus(n);
+  const mapName = mapMap[n.coords?.mapId] || '未知地區';
+  const x = n.coords?.x?.toFixed(1);
+  const y = n.coords?.y?.toFixed(1);
 
-  document.getElementById('nodeList').innerHTML = pageData.map(n => {
-    const st = nodeStatus(n);
-    const mapName = mapMap[n.coords?.mapId] || `地圖${n.coords?.mapId}`;
-    const x = n.coords?.x?.toFixed(1);
-    const y = n.coords?.y?.toFixed(1);
+  const allItems = (n.items || []).concat(n.hiddenItems || []);
+  const isHidden = (id) => !(n.items || []).includes(id);
 
-    const allItems = (n.items || []).concat(n.hiddenItems || []);
-    const isHidden = (id) => !(n.items || []).includes(id);
+  const spawnStr = n.spawns?.length
+    ? n.spawns.map(h => `${h}:00`).join('、') + ` ET（${n.duration/60}h）`
+    : '';
 
-    const spawnStr = n.spawns?.length
-      ? n.spawns.map(h => `${h}:00`).join('、') + ` ET（${n.duration/60}h）`
-      : '';
-
-    return `
+  return `
 <div class="node-card${st === 'done' ? ' all-done' : ''}">
   <div class="node-header">
     <span class="node-map">${mapName}</span>
@@ -294,21 +377,141 @@ function render() {
       ${n.legendary ? '<span class="tag tag-leg">傳說</span>' : ''}
       ${n.ephemeral ? '<span class="tag tag-eph">短暫</span>' : ''}
       ${n.limited && !n.legendary && !n.ephemeral ? '<span class="tag tag-lim">限時</span>' : ''}
+      ${n.patch ? `<span class="tag tag-ver">v${n.patch}</span>` : ''}
     </div>
     ${spawnStr ? `<span class="node-time">⏰ ${spawnStr}</span>` : ''}
   </div>
   <div class="items-row">
     ${allItems.map(id => {
-      const name = itemMap[id] || `#${id}`;
+      const name = itemMap[id];
       const isOwned = owned.has(id);
       const hidden = isHidden(id) ? ' 🔒' : '';
       return `<span class="item-chip${isOwned?' owned':''}" onclick="toggleItem(${id}, this)">${name}${hidden}</span>`;
     }).join('')}
   </div>
 </div>`;
-  }).join('');
+}
+
+function render() {
+  const start = page * PAGE_SIZE;
+  const pageData = filtered.slice(start, start + PAGE_SIZE);
+
+  document.getElementById('resultInfo').textContent =
+    `顯示 ${filtered.length} 個節點（共 ${nodes.length} 個）`;
+
+  document.getElementById('nodeList').innerHTML = pageData.map(nodeCardHTML).join('');
 
   renderPagination();
+}
+
+// ── 地圖檢視 ──
+function setView(mode) {
+  viewMode = mode;
+  document.getElementById('vList').classList.toggle('active', mode === 'list');
+  document.getElementById('vMap').classList.toggle('active', mode === 'map');
+  document.getElementById('nodeList').style.display   = mode === 'list' ? '' : 'none';
+  document.getElementById('pagination').style.display = mode === 'list' ? '' : 'none';
+  document.getElementById('mapView').style.display    = mode === 'map'  ? '' : 'none';
+  renderCurrent();
+}
+
+// 遊戲座標 → 底圖 0..1 比例（FFXIV 標準式，靠 Map sheet 的 sizeFactor）
+const clamp01 = (v) => Math.max(0, Math.min(1, v));
+const coordFrac = (c, sizeFactor) => ((c - 1) * (sizeFactor / 100)) / 41;
+
+function renderMap() {
+  // 依 mapId 分組（排除 mapId=0 / 無 maps.json 對應的特殊採集點）
+  const byMap = new Map();
+  filtered.forEach(n => {
+    const mid = n.coords?.mapId;
+    if (!mid || !mapMeta[mid]) return;
+    if (!byMap.has(mid)) byMap.set(mid, []);
+    byMap.get(mid).push(n);
+  });
+  const plotted = [...byMap.values()].reduce((a, v) => a + v.length, 0);
+  const noMapCount = filtered.length - plotted;
+
+  const opts = [...byMap.entries()].sort((a, b) => b[1].length - a[1].length);
+  const sel = document.getElementById('mapSelect');
+  const info = document.getElementById('resultInfo');
+
+  if (!opts.length) {
+    sel.innerHTML = '<option>（目前篩選無可定位採集點）</option>';
+    document.getElementById('mapCanvas').innerHTML =
+      '<div class="map-empty">目前篩選沒有可定位在地圖上的採集點。</div>';
+    document.getElementById('mapNodeInfo').innerHTML = '';
+    info.textContent = `地圖檢視：0 個可定位採集點${noMapCount ? `（${noMapCount} 個無座標未顯示）` : ''}`;
+    return;
+  }
+
+  if (currentMapId == null || !byMap.has(currentMapId)) currentMapId = opts[0][0];
+  sel.innerHTML = opts.map(([mid, arr]) =>
+    `<option value="${mid}"${mid === currentMapId ? ' selected' : ''}>${mapMap[mid]}（${arr.length}）</option>`
+  ).join('');
+
+  info.textContent =
+    `地圖檢視：${opts.length} 張地圖、${plotted} 個採集點${noMapCount ? `（另 ${noMapCount} 個無座標未顯示）` : ''}`;
+
+  plotMap(currentMapId, byMap.get(currentMapId));
+}
+
+function onMapSelect() {
+  currentMapId = +document.getElementById('mapSelect').value;
+  selectedNodeId = null;
+  renderMap();
+}
+
+function plotMap(mid, nodeArr) {
+  const m = mapMeta[mid];
+  const sf = m.sizeFactor || 100;
+  const dots = nodeArr.map(n => {
+    const fx = clamp01(coordFrac(n.coords.x, sf)) * 100;
+    const fy = clamp01(coordFrac(n.coords.y, sf)) * 100;
+    const st = nodeStatus(n);
+    const cls = st === 'done' ? 'done' : (n.job === '採礦工' ? 'job-min' : 'job-btn');
+    return `<div class="map-dot ${cls}${n.id === selectedNodeId ? ' sel' : ''}" data-nid="${n.id}" ` +
+      `style="left:${fx.toFixed(2)}%;top:${fy.toFixed(2)}%" onclick="selectMapNode(${n.id})" ` +
+      `title="${n.job} Lv${n.level} (${n.coords.x.toFixed(1)}, ${n.coords.y.toFixed(1)})"></div>`;
+  }).join('');
+
+  const imgSrc = `../..${m.image.local}`;
+  document.getElementById('mapCanvas').innerHTML =
+    `<img src="${imgSrc}" alt="${mapMap[mid]}" onerror="mapImgError(this, ${mid})">${dots}`;
+
+  if (!nodeArr.some(n => n.id === selectedNodeId)) selectedNodeId = null;
+  renderMapNodeInfo();
+}
+
+function mapImgError(img, mid) {
+  const canvas = img.parentElement;
+  img.remove();
+  if (!canvas.querySelector('.map-empty')) {
+    canvas.insertAdjacentHTML('afterbegin',
+      `<div class="map-empty">此地圖底圖尚未下載（${mapMap[mid]}）。<br>採集點座標仍可在「清單」檢視查看；於本機執行 <code>node scripts/download-maps.mjs</code> 可補齊底圖。</div>`);
+  }
+}
+
+function selectMapNode(nid) {
+  selectedNodeId = nid;
+  document.querySelectorAll('.map-dot').forEach(d => d.classList.toggle('sel', +d.dataset.nid === nid));
+  renderMapNodeInfo();
+}
+
+function renderMapNodeInfo() {
+  const info = document.getElementById('mapNodeInfo');
+  const n = selectedNodeId == null ? null : nodes.find(x => x.id === selectedNodeId);
+  info.innerHTML = n ? nodeCardHTML(n) : '';
+}
+
+function refreshMapDots() {
+  if (viewMode !== 'map') return;
+  document.querySelectorAll('.map-dot').forEach(d => {
+    const n = nodes.find(x => x.id === +d.dataset.nid);
+    if (!n) return;
+    const st = nodeStatus(n);
+    d.classList.remove('done', 'job-min', 'job-btn');
+    d.classList.add(st === 'done' ? 'done' : (n.job === '採礦工' ? 'job-min' : 'job-btn'));
+  });
 }
 
 function updateProgress() {
@@ -339,6 +542,7 @@ function toggleItem(id, el) {
   const allOwned = [...chips].every(c => c.classList.contains('owned'));
   card.classList.toggle('all-done', allOwned);
 
+  refreshMapDots();
   if (statusFilter !== 'all') onFilter();
 }
 
@@ -369,6 +573,7 @@ function resetAll() {
   document.getElementById('searchInput').value = '';
   document.getElementById('jobFilter').value = '';
   document.getElementById('typeFilter').value = '';
+  document.getElementById('patchFilter').value = '';
   setStatusFilter('all');
 }
 </script>
