@@ -27,32 +27,32 @@
   --border:         rgba(0,0,0,0.12);
   --border-hover:   rgba(154,123,63,0.55);
 
-  /* ── 金色主調（在亮底當文字需加深以保對比）── */
-  --gold:           #9a7b3f;
-  --gold-light:     #7a5f2c;
+  /* ── 金色主調（在亮底當文字需加深以保對比，逼近 AA 4.5）── */
+  --gold:           #8a6c2f;
+  --gold-light:     #6f5524;
   --gold-dim:       rgba(154,123,63,0.16);
 
-  /* ── 強調色：亮底需更深以保可讀；半透明 -dim 版維持淺色淡底 ── */
-  --blue:           #0d83c4;
+  /* ── 強調色：亮底需更深以保 WCAG AA(4.5) 可讀；半透明 -dim 版維持淺色淡底 ── */
+  --blue:           #0c6fa6;
   --blue-dim:       rgba(13,131,196,0.12);
-  --green:          #15a34a;
+  --green:          #157f3a;
   --green-dim:      rgba(21,163,74,0.12);
-  --purple:         #7c4dd6;
+  --purple:         #6f3fd0;
   --purple-dim:     rgba(124,77,214,0.12);
-  --red:            #d6483b;
+  --red:            #c63a2e;
   --red-dim:        rgba(214,72,59,0.12);
-  --orange:         #d9772b;
+  --orange:         #b0561a;
   --orange-dim:     rgba(217,119,43,0.14);
-  --cyan:           #0e8ba0;
+  --cyan:           #0c7a8d;
   --cyan-dim:       rgba(14,139,160,0.14);
-  --yellow:         #b6892a;
+  --yellow:         #8a6708;
 
   /* ── 文字（兩套命名都覆蓋）── */
   --text:           #1d1b16;
   --text-primary:   #16181d;
   --text-secondary: #545b67;
-  --text-dim:       #555049;
-  --text-muted:     #877f72;
+  --text-dim:       #545049;
+  --text-muted:     #6c675c;
 
   /* ── weather 專用強調 ── */
   --accent:         #2f6fb0;
