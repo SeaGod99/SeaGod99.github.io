@@ -42,11 +42,13 @@ def _src_ok(s):
 
 
 def recon_confident(pieces):
-    """高信心重建：>=RECON_MIN_PIECES 件、且每件都有取得方式（繁中名在重建時已保證）。
+    """高信心重建：>=RECON_MIN_PIECES 件、且每件都有繁中名。
     這 1129 套空殼的來源 API 本就沒有裝備清單，OCR+DB 重建是唯一真相來源；
-    乾淨完整的重建直接採信，不再列入待檢視（人工佇列只留真正不確定的）。"""
+    300 套 Claude 視覺確認已驗證重建方法準確，故 >=4 件且全有繁中名即採信。
+    （原本還要求『全有取得方式』，但缺 source 屬 sources.json 補登的 metadata，
+    不是 OCR/顯示問題，不應佔人工佇列 → 放寬為只看繁中名是否齊全。）"""
     return (bool(pieces) and len(pieces) >= RECON_MIN_PIECES
-            and all(_src_ok(p.get("source")) for p in pieces))
+            and all((p.get("zh") or "").strip() for p in pieces))
 
 
 def _load_js_array(path):
