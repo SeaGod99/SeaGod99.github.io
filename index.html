@@ -1,502 +1,299 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-Hant" data-bs-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FF14 外觀配裝一覽</title>
+<link rel="stylesheet" href="vendor/bootstrap/bootstrap.min.css">
 <script src="curated_outfits.js"></script>
 <style>
-:root {
-  --bg: #0d1117;
-  --card-bg: #161b22;
-  --panel-bg: #1c2230;
-  --border: #30363d;
-  --accent: #c9a227;
-  --accent2: #6e9fd4;
-  --text: #e6edf3;
-  --muted: #7d8590;
-  --tag-raid: #7c3aed;
-  --tag-pvp: #dc2626;
-  --tag-store: #d97706;
-  --tag-event: #16a34a;
-  --tag-craft: #2563eb;
-  --tag-scrip: #0891b2;
-  --tag-gs: #ca8a04;
-  --tag-ceremony: #db2777;
-  --tag-npc: #4b5563;
-  --tag-other: #374151;
-  --dye-swatch: 24px;
-  --female: #f472b6;
-  --male: #60a5fa;
-  --unknown: #6b7280;
+/* ===== FF14 深色主題：映射到 Bootstrap 5 變數 ===== */
+:root{
+  --bg:#0d1117; --card-bg:#161b22; --panel-bg:#1c2230; --border:#30363d;
+  --accent:#c9a227; --accent2:#6e9fd4; --text:#e6edf3; --muted:#7d8590;
+  --female:#f472b6; --male:#60a5fa; --unknown:#6b7280;
+  --tag-other:#374151;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: var(--bg); color: var(--text); font-family: 'Microsoft JhengHei', 'Noto Sans TC', 'Segoe UI', sans-serif; min-height: 100vh; }
+[data-bs-theme="dark"]{
+  --bs-body-bg:#0d1117; --bs-body-color:#e6edf3;
+  --bs-tertiary-bg:#161b22; --bs-secondary-bg:#1c2230;
+  --bs-border-color:#30363d; --bs-border-color-translucent:rgba(255,255,255,.1);
+  --bs-primary:#6e9fd4; --bs-primary-rgb:110,159,212;
+  --bs-emphasis-color:#fff; --bs-emphasis-color-rgb:255,255,255;
+  --bs-link-color:#8fb4e0; --bs-link-color-rgb:143,180,224;
+  --bs-link-hover-color:#aecbf0;
+}
+body{ font-family:'Microsoft JhengHei','Noto Sans TC','Segoe UI',sans-serif; }
 
-/* ── Header ── */
-header {
-  background: linear-gradient(135deg, #0d1117 0%, #1a1f2e 50%, #0d1117 100%);
-  border-bottom: 1px solid var(--border);
-  padding: 24px 32px 20px;
-  position: sticky; top: 0; z-index: 100;
-  backdrop-filter: blur(12px);
-}
-header h1 {
-  font-size: 1.6rem; font-weight: 700;
-  background: linear-gradient(90deg, var(--accent), var(--accent2));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-header p { color: var(--muted); font-size: 0.85rem; margin-top: 4px; }
+/* ── Navbar ── */
+.app-navbar{ background:linear-gradient(135deg,#0d1117 0%,#1a1f2e 50%,#0d1117 100%);
+  border-bottom:1px solid var(--border); backdrop-filter:blur(12px); z-index:1030; }
+.app-title{ font-size:1.5rem; font-weight:700; margin:0;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+.app-subtitle{ color:var(--muted); font-size:.85rem; }
+.lang-btn.lang-active{ background:var(--accent)!important; border-color:var(--accent)!important; color:#0d1117!important; }
 
-/* ── Filter ── */
-.filter-bar {
-  padding: 16px 32px;
-  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
-  border-bottom: 1px solid var(--border);
-  background: var(--card-bg);
-}
-.filter-bar { display: flex; flex-direction: column; gap: 10px; }
-.filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
-.filter-group-label {
-  font-size: 0.7rem; color: var(--muted); white-space: nowrap;
-  padding: 2px 6px; border-radius: 4px;
-  background: rgba(255,255,255,0.05); border: 1px solid var(--border);
-  margin: 0 2px;
-}
-.filter-sep { width: 1px; height: 20px; background: var(--border); margin: 0 4px; }
-.filter-btn {
-  padding: 5px 14px; border-radius: 20px; border: 1px solid var(--border);
-  background: transparent; color: var(--text); cursor: pointer;
-  font-size: 0.8rem; font-family: inherit; transition: all 0.2s;
-}
-.filter-btn:hover { border-color: var(--accent2); color: var(--accent2); }
-.filter-btn.active { background: var(--accent2); border-color: var(--accent2); color: #fff; }
-.filter-reset.active { background: var(--border); border-color: var(--border); color: var(--text); }
-.search-input {
-  padding: 5px 14px; border-radius: 20px;
-  border: 1px solid var(--border); background: var(--bg);
-  color: var(--text); font-size: 0.8rem; font-family: inherit;
-  width: 220px; outline: none;
-}
-.search-input:focus { border-color: var(--accent2); }
+/* ── Filter bar ── */
+.filter-bar{ background:var(--card-bg); border-bottom:1px solid var(--border); }
+.filter-group-label{ font-size:.72rem; color:var(--muted); white-space:nowrap;
+  background:rgba(255,255,255,.05); border:1px solid var(--border); border-radius:4px; padding:2px 8px; }
+.filter-sep{ width:1px; height:20px; background:var(--border); }
+.filter-btn{ --bs-btn-padding-y:.28rem; --bs-btn-padding-x:.85rem; --bs-btn-font-size:.8rem; border-radius:20px; }
+.filter-btn.active{ background:var(--accent2); border-color:var(--accent2); color:#fff; }
+.filter-btn.female-btn.active{ background:var(--female); border-color:var(--female); color:#fff; }
+.filter-btn.male-btn.active{ background:var(--male); border-color:var(--male); color:#fff; }
+.filter-btn.unk-btn.active,.filter-btn.filter-reset.active{ background:var(--unknown); border-color:var(--unknown); color:#fff; }
+.tw-btn.active{ background:#16a34a; border-color:#16a34a; color:#fff; }
+.fav-filter.active{ background:#b45309; border-color:#b45309; color:#fff; }
+.search-input{ width:240px; border-radius:20px; }
+.sort-select{ width:auto; border-radius:20px; }
 
-/* ── Grid ── */
-.grid-container { padding: 24px 32px; }
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 20px;
-}
-.card {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 12px; overflow: hidden; cursor: pointer;
-  transition: all 0.25s; position: relative;
-}
-.card:hover {
-  border-color: var(--accent2);
-  transform: translateY(-4px);
-  box-shadow: 0 10px 30px rgba(110,159,212,0.2);
-}
-.card.hidden { display: none; }
-.card-img {
-  width: 100%; aspect-ratio: 3/4; object-fit: cover;
-  background: var(--panel-bg);
-  display: flex; align-items: center; justify-content: center;
-  color: var(--muted); font-size: 0.7rem;
-}
-.card-img img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
-.card-body { padding: 14px 16px; }
-.card-id { font-size: 0.75rem; color: var(--muted); }
-.card-name { font-size: 1.05rem; font-weight: 600; margin: 3px 0 6px; }
-.card-color { font-size: 0.78rem; color: var(--muted); }
-.card-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
-.card-tag {
-  font-size: 0.65rem; padding: 2px 8px; border-radius: 10px;
-  background: var(--tag-other); color: #e5e7eb;
-}
-.badge-viera   { background: #7c3aed; }
-.badge-event   { background: var(--tag-event); }
-.badge-pvp     { background: var(--tag-pvp); }
-.badge-store   { background: var(--tag-store); }
-.badge-healer  { background: #065f46; }
-.badge-tank    { background: #1e3a5f; }
-.badge-caster  { background: #4c1d95; }
-.badge-melee   { background: #7f1d1d; }
-.badge-pranged { background: #713f12; }
-.badge-crafter { background: #1f2937; border: 1px solid #4b5563; }
+/* ── Cards ── */
+.outfit-card{ cursor:pointer; overflow:hidden; background:var(--card-bg);
+  transition:transform .2s, box-shadow .2s, border-color .2s; }
+.outfit-card:hover{ transform:translateY(-4px); border-color:var(--accent2)!important;
+  box-shadow:0 10px 30px rgba(110,159,212,.2); }
+.card-img-top{ aspect-ratio:3/4; object-fit:cover; object-position:top; background:var(--panel-bg); }
+.card-noimg{ aspect-ratio:3/4; display:flex; align-items:center; justify-content:center;
+  color:var(--muted); font-size:.7rem; background:var(--panel-bg); }
+.card-name{ font-size:1.05rem; line-height:1.3; }
+.star-badge{ position:absolute; top:8px; left:8px; background:var(--accent); color:#000;
+  border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center;
+  font-size:.7rem; font-weight:700; z-index:2; }
+.fav-btn{ position:absolute; top:8px; right:8px; z-index:2; width:30px; height:30px; border-radius:50%;
+  background:rgba(0,0,0,.5); border:1px solid rgba(255,255,255,.15); color:#9ca3af; line-height:1;
+  display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .2s; }
+.fav-btn:hover{ color:#fbbf24; border-color:#fbbf24; }
+.fav-btn.faved{ color:#fbbf24; border-color:rgba(251,191,36,.5); background:rgba(251,191,36,.12); }
 
-/* ── Modal / Detail Panel ── */
-.modal-overlay {
-  position: fixed; inset: 0; z-index: 200;
-  background: rgba(0,0,0,0.75); backdrop-filter: blur(4px);
-  display: flex; align-items: flex-start; justify-content: center;
-  padding: 24px 16px; overflow-y: auto;
-}
-.modal-overlay.hidden { display: none; }
-.modal-overlay:not(.hidden) { pointer-events: all; }
-.modal {
-  background: var(--card-bg); border: 1px solid var(--border);
-  border-radius: 14px; width: 100%; max-width: 1280px;
-  overflow: hidden;
-}
-.modal-header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 18px 28px; border-bottom: 1px solid var(--border);
-  background: var(--panel-bg);
-}
-.modal-title { font-size: 1.3rem; font-weight: 700; }
-.modal-subtitle { font-size: 0.82rem; color: var(--muted); margin-top: 2px; }
-.close-btn {
-  background: none; border: none; color: var(--muted);
-  cursor: pointer; font-size: 1.5rem; line-height: 1; padding: 4px;
-  transition: color 0.2s;
-}
-.close-btn:hover { color: var(--text); }
-.modal-body { display: flex; gap: 0; }
-.modal-img-col {
-  width: 520px; min-width: 520px; background: var(--panel-bg);
-  display: flex; align-items: flex-start; justify-content: center;
-  padding: 20px;
-}
-.modal-img-col img {
-  width: 100%; border-radius: 10px;
-  max-height: 800px; object-fit: contain; object-position: top;
-}
-.modal-img-col .no-img {
-  width: 100%; height: 600px; background: var(--bg);
-  border-radius: 10px; display: flex; align-items: center; justify-content: center;
-  color: var(--muted); font-size: 0.8rem;
-}
-.modal-info-col { flex: 1; padding: 24px 28px; overflow-x: auto; }
-.modal-note {
-  background: var(--panel-bg); border-left: 3px solid var(--accent);
-  padding: 8px 14px; border-radius: 0 6px 6px 0;
-  font-size: 0.82rem; color: var(--muted); margin-bottom: 16px;
+/* card meta / tags */
+.tag-female,.tag-male,.tag-unk,.tag-race{ font-size:.65rem; padding:2px 8px; border-radius:10px; white-space:nowrap; }
+.tag-female{ background:rgba(244,114,182,.15); color:var(--female); border:1px solid rgba(244,114,182,.4); }
+.tag-male{ background:rgba(96,165,250,.15); color:var(--male); border:1px solid rgba(96,165,250,.4); }
+.tag-unk{ background:rgba(107,114,128,.15); color:var(--unknown); border:1px solid rgba(107,114,128,.4); }
+.tag-race{ background:rgba(255,255,255,.05); color:var(--muted); border:1px solid var(--border); }
+.card-tag{ font-size:.65rem; padding:2px 8px; border-radius:10px; color:#e5e7eb; background:var(--tag-other); }
+.badge-healer{background:#065f46}.badge-tank{background:#1e3a5f}.badge-caster{background:#4c1d95}
+.badge-melee{background:#7f1d1d}.badge-pranged{background:#713f12}.badge-crafter{background:#1f2937;border:1px solid #4b5563}
+.badge-event{background:#16a34a}.badge-pvp{background:#dc2626}.badge-store{background:#d97706}.badge-raid{background:#7c3aed}
+.badge-viera{background:#7c3aed}.badge-scrip{background:#0891b2}.badge-gs{background:#ca8a04}
+
+/* ── Modal (Bootstrap base + FF14 skin) ── */
+.modal-content{ background:var(--card-bg); border:1px solid var(--border); }
+.modal-header,.modal-footer{ background:var(--panel-bg); border-color:var(--border); }
+.modal-title{ font-size:1.3rem; font-weight:700; }
+.modal-subtitle{ font-size:.82rem; color:var(--muted); margin-top:2px; }
+#modal-img-col{ background:var(--panel-bg); display:flex; align-items:flex-start; justify-content:center; padding:20px; }
+#modal-img-col img{ width:100%; border-radius:10px; max-height:78vh; object-fit:contain; object-position:top; box-shadow:0 6px 22px rgba(0,0,0,.4); }
+#modal-img-col .no-img{ width:100%; height:480px; background:var(--bg); border-radius:10px; display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:.8rem; }
+#modal-info-col{ padding:22px 28px; }
+@media (min-width:768px){ #modal-img-col{ position:sticky; top:0; align-self:flex-start; } }
+/* 詳情：放寬彈窗與欄寬，避免裝備名被擠成一字一行 */
+.modal-xl{ --bs-modal-width:1280px; }
+#modal-info-col{ overflow-x:auto; }
+.equip-table td.item-name{ min-width:7em; }
+.equip-table td.src-cell{ min-width:9em; max-width:20em; }
+/* 圖片可點擊放大 */
+.modal-zoom-img{ cursor:zoom-in; }
+.img-lightbox{ position:fixed; inset:0; z-index:2000; background:rgba(0,0,0,.92);
+  display:none; align-items:center; justify-content:center; padding:24px; overflow:hidden; touch-action:none; }
+.img-lightbox.show{ display:flex; }
+.img-lightbox img{ max-width:100%; max-height:100%; object-fit:contain; border-radius:6px;
+  box-shadow:0 10px 40px rgba(0,0,0,.6); user-select:none; -webkit-user-drag:none;
+  transform-origin:center center; transition:transform .06s ease-out; will-change:transform; cursor:zoom-in; }
+.lb-toolbar{ position:fixed; top:14px; right:16px; display:flex; gap:8px; z-index:2001; }
+.lb-toolbar button{ width:38px; height:38px; border-radius:8px; border:1px solid rgba(255,255,255,.25);
+  background:rgba(0,0,0,.55); color:#fff; font-size:1.05rem; line-height:1; cursor:pointer; transition:background .15s; }
+.lb-toolbar button:hover{ background:rgba(255,255,255,.18); }
+.lb-hint{ position:fixed; bottom:16px; left:0; right:0; text-align:center; color:#9ca3af; font-size:.8rem; pointer-events:none; }
+
+/* ── Equipment table (custom, themed) ── */
+.equip-table{ width:100%; border-collapse:collapse; font-size:.84rem; }
+.equip-table th{ background:var(--panel-bg); padding:9px 12px; text-align:left; color:var(--muted);
+  font-weight:600; border-bottom:1px solid var(--border); white-space:nowrap; position:sticky; top:0; z-index:2; }
+.equip-table td{ padding:11px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
+.equip-table tr:last-child td{ border-bottom:none; }
+.equip-table tr:hover td{ background:rgba(255,255,255,.035); }
+.slot-badge{ display:inline-block; min-width:3.2em; padding:2px 8px; border-radius:4px; font-size:.72rem;
+  font-weight:600; text-align:center; background:var(--panel-bg); color:var(--accent); white-space:nowrap; }
+.item-name{ font-weight:600; }
+.item-en{ font-size:.72rem; color:var(--muted); margin-top:2px; }
+.unconfirmed{ color:#f59e0b; }
+.item-link{ cursor:pointer; border-bottom:1px dotted var(--muted); }
+.item-link:hover{ color:var(--accent2); border-bottom-color:var(--accent2); }
+.dye-cell{ white-space:nowrap; }
+.dye-dash{ color:var(--muted); }
+.dye-dot{ display:inline-block; width:11px; height:11px; border-radius:50%; border:1px solid rgba(255,255,255,.35); vertical-align:-1px; margin-right:4px; }
+.mirapri-dye-line{ margin-top:10px; font-size:13px; color:var(--muted); display:flex; flex-wrap:wrap; gap:4px 10px; align-items:center; }
+.mirapri-dye-line .dye-cell{ color:var(--text); }
+.modal-note{ background:var(--panel-bg); border-left:3px solid var(--accent); padding:8px 14px;
+  border-radius:0 6px 6px 0; font-size:.82rem; color:var(--muted); margin-bottom:16px; }
+.patch-tag{ display:inline-block; background:#1e293b; color:#94a3b8; border:1px solid #334155;
+  border-radius:4px; font-size:.72rem; font-weight:600; padding:1px 6px; white-space:nowrap; }
+.patch-cell{ text-align:center; white-space:nowrap; }
+.source-tag{ display:inline-flex; align-items:center; gap:4px; padding:3px 9px; border-radius:12px;
+  font-size:.72rem; font-weight:500; white-space:normal; margin:1px 0; }
+.src-raid{ background:rgba(124,58,237,.25); color:#a78bfa; border:1px solid rgba(124,58,237,.4); }
+.src-pvp{ background:rgba(220,38,38,.2); color:#f87171; border:1px solid rgba(220,38,38,.4); }
+.src-store{ background:rgba(217,119,6,.2); color:#fbbf24; border:1px solid rgba(217,119,6,.4); }
+.src-event{ background:rgba(22,163,74,.2); color:#4ade80; border:1px solid rgba(22,163,74,.4); }
+.src-craft{ background:rgba(37,99,235,.2); color:#60a5fa; border:1px solid rgba(37,99,235,.4); }
+.src-scrip{ background:rgba(8,145,178,.2); color:#22d3ee; border:1px solid rgba(8,145,178,.4); }
+.src-gs{ background:rgba(202,138,4,.2); color:#fde047; border:1px solid rgba(202,138,4,.4); }
+.src-npc{ background:rgba(75,85,99,.3); color:#9ca3af; border:1px solid rgba(75,85,99,.5); }
+.src-ceremony{ background:rgba(219,39,119,.2); color:#f472b6; border:1px solid rgba(219,39,119,.4); }
+.src-other{ background:rgba(55,65,81,.3); color:#9ca3af; border:1px solid rgba(55,65,81,.5); }
+.restrict-level,.restrict-job,.restrict-gender,.restrict-race{ display:inline-block; margin:0 4px 4px 0;
+  padding:2px 8px; border-radius:10px; font-size:.7rem; background:var(--panel-bg);
+  border:1px solid var(--border); color:var(--text); white-space:nowrap; }
+.restrict-level{ border-color:#4b5563; }
+.restrict-job{ border-color:#2563eb; color:var(--accent2); }
+.restrict-gender{ border-color:#db2777; color:#f472b6; }
+.restrict-race{ border-color:#7c3aed; color:#a78bfa; }
+
+/* ── Mobile: equipment table → stacked cards ── */
+@media (max-width:640px){
+  #modal-img-col{ padding:14px; }
+  #modal-info-col{ padding:16px 14px; }
+  .equip-table thead{ display:none; }
+  .equip-table,.equip-table tbody{ display:block; width:100%; }
+  .equip-table tr{ display:block; border:1px solid var(--border); border-radius:10px;
+    margin-bottom:10px; padding:8px 12px 10px; background:rgba(255,255,255,.02); }
+  .equip-table tr:hover td{ background:none; }
+  .equip-table td{ display:flex; gap:12px; justify-content:space-between; align-items:baseline; border:none; padding:5px 0; }
+  .equip-table td::before{ content:attr(data-label); flex:0 0 auto; color:var(--muted); font-size:.7rem; font-weight:600; }
+  .equip-table td:empty{ display:none; }
+  .equip-table td.dye-cell{ white-space:normal; text-align:right; }
+  .equip-table td.slot-cell{ display:block; padding:0 0 4px; }
+  .equip-table td.slot-cell::before{ content:none; }
+  .equip-table td.item-name{ display:block; font-size:.96rem; padding:2px 0 6px; border-bottom:1px solid var(--border); margin-bottom:4px; }
+  .equip-table td.item-name::before{ content:none; }
 }
 
-/* ── Equipment Table ── */
-
-    .patch-tag {
-      display: inline-block;
-      background: #1e293b;
-      color: #94a3b8;
-      border: 1px solid #334155;
-      border-radius: 4px;
-      font-size: 0.72rem;
-      font-weight: 600;
-      padding: 1px 6px;
-      letter-spacing: 0.03em;
-      white-space: nowrap;
-    }
-    .patch-tag.patch-unknown { opacity: 0.4; }
-    .patch-cell { text-align: center; white-space: nowrap; }
-
-    .equip-table {
-  width: 100%; border-collapse: collapse; font-size: 0.82rem;
-}
-.equip-table th {
-  background: var(--panel-bg); padding: 8px 12px;
-  text-align: left; color: var(--muted); font-weight: 600;
-  border-bottom: 1px solid var(--border); white-space: nowrap;
-}
-.equip-table td {
-  padding: 9px 12px; border-bottom: 1px solid var(--border);
-  vertical-align: top;
-}
-.equip-table tr:last-child td { border-bottom: none; }
-.equip-table tr:hover td { background: rgba(255,255,255,0.03); }
-.slot-badge {
-  display: inline-block; padding: 2px 8px; border-radius: 4px;
-  font-size: 0.72rem; font-weight: 600;
-  background: var(--panel-bg); color: var(--accent);
-  white-space: nowrap;
-}
-.item-name { font-weight: 600; }
-.item-en { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
-.unconfirmed { color: #f59e0b; font-size: 0.72rem; }
-.dye-cell { white-space: nowrap; }
-.dye-dash { color: var(--muted); }
-.mirapri-dye-line { margin-top: 10px; font-size: 13px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: center; }
-.mirapri-dye-line .dye-cell { color: var(--fg, inherit); }
-
-/* Source tags */
-.source-tag {
-  display: inline-flex; align-items: center; gap: 4px;
-  padding: 3px 9px; border-radius: 12px;
-  font-size: 0.72rem; font-weight: 500;
-  white-space: nowrap; margin: 1px 0;
-}
-.src-raid    { background: rgba(124,58,237,0.25); color: #a78bfa; border: 1px solid rgba(124,58,237,0.4); }
-.src-pvp     { background: rgba(220,38,38,0.2);   color: #f87171; border: 1px solid rgba(220,38,38,0.4); }
-.src-store   { background: rgba(217,119,6,0.2);   color: #fbbf24; border: 1px solid rgba(217,119,6,0.4); }
-.src-event   { background: rgba(22,163,74,0.2);   color: #4ade80; border: 1px solid rgba(22,163,74,0.4); }
-.src-craft   { background: rgba(37,99,235,0.2);   color: #60a5fa; border: 1px solid rgba(37,99,235,0.4); }
-.src-scrip   { background: rgba(8,145,178,0.2);   color: #22d3ee; border: 1px solid rgba(8,145,178,0.4); }
-.src-gs      { background: rgba(202,138,4,0.2);   color: #fde047; border: 1px solid rgba(202,138,4,0.4); }
-.src-npc     { background: rgba(75,85,99,0.3);    color: #9ca3af; border: 1px solid rgba(75,85,99,0.5); }
-.src-ceremony{ background: rgba(219,39,119,0.2);  color: #f472b6; border: 1px solid rgba(219,39,119,0.4); }
-.src-other   { background: rgba(55,65,81,0.3);    color: #9ca3af; border: 1px solid rgba(55,65,81,0.5); }
-
-/* Restriction tags */
-.restrict-cell { vertical-align: top; }
-.restrict-tag,
-.restrict-level, .restrict-job, .restrict-gender, .restrict-race {
-  display: inline-block; margin: 0 4px 4px 0; padding: 2px 8px; border-radius: 10px;
-  font-size: 0.7rem; background: var(--panel-bg);
-  border: 1px solid var(--border); color: var(--text);
-  white-space: nowrap; vertical-align: top;
-}
-.restrict-level { border-color: #4b5563; }
-.restrict-job   { border-color: #2563eb; color: var(--accent2); }
-.restrict-gender{ border-color: #db2777; color: #f472b6; }
-.restrict-race  { border-color: #7c3aed; color: #a78bfa; }
-
-/* nav arrows */
-.modal-nav {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 12px 24px; border-top: 1px solid var(--border);
-  background: var(--panel-bg);
-}
-.nav-btn {
-  background: var(--bg); border: 1px solid var(--border);
-  color: var(--text); padding: 6px 18px; border-radius: 6px;
-  cursor: pointer; font-size: 0.82rem; font-family: inherit;
-  transition: all 0.2s;
-}
-.nav-btn:hover { border-color: var(--accent2); color: var(--accent2); }
-.nav-btn:disabled { opacity: 0.3; cursor: default; }
-.nav-counter { color: var(--muted); font-size: 0.82rem; }
-
-
-/* ── Language toggle ── */
-.lang-toggle { display:flex; gap:4px; background:rgba(255,255,255,0.07); border-radius:20px; padding:3px; }
-.lang-btn { border:none; background:none; color:var(--muted); padding:5px 16px; border-radius:16px; cursor:pointer; font-size:0.82rem; font-weight:600; font-family:inherit; transition:all 0.2s; }
-.lang-btn.lang-active { background:var(--accent); color:#0d1117; }
-
-/* ── View tabs ── */
-.view-tabs { display:flex; gap:4px; }
-.view-tab {
-  padding:5px 16px; border-radius:20px; border:1px solid var(--border);
-  background:transparent; color:var(--muted); cursor:pointer;
-  font-size:0.8rem; font-family:inherit; transition:all 0.2s;
-}
-.view-tab:hover { border-color:var(--accent2); color:var(--accent2); }
-.view-tab.active { background:var(--accent2); border-color:var(--accent2); color:#fff; }
-
-/* ── Gender / race filter extras ── */
-.filter-btn.female-btn.active { background:var(--female); border-color:var(--female); color:#fff; }
-.filter-btn.male-btn.active   { background:var(--male);   border-color:var(--male);   color:#fff; }
-.filter-btn.unk-btn.active    { background:var(--unknown); border-color:var(--unknown); color:#fff; }
-.count-label { font-size:0.8rem; color:var(--muted); margin-left:8px; }
-
-/* ── Mirapri card gender/race tags ── */
-.tag-female { background:rgba(244,114,182,.15); color:var(--female); border:1px solid rgba(244,114,182,.4); font-size:.65rem; padding:2px 8px; border-radius:10px; white-space:nowrap; }
-.tag-male   { background:rgba(96,165,250,.15);  color:var(--male);   border:1px solid rgba(96,165,250,.4);  font-size:.65rem; padding:2px 8px; border-radius:10px; white-space:nowrap; }
-.tag-unk    { background:rgba(107,114,128,.15); color:var(--unknown);border:1px solid rgba(107,114,128,.4); font-size:.65rem; padding:2px 8px; border-radius:10px; white-space:nowrap; }
-.tag-race   { background:rgba(255,255,255,.05); color:var(--muted);  border:1px solid var(--border);        font-size:.65rem; padding:2px 8px; border-radius:10px; white-space:nowrap; }
-
-/* ── Pager ── */
-.pager {
-  display:flex; justify-content:center; align-items:center;
-  gap:6px; padding:20px 32px; flex-wrap:wrap;
-}
-.pager-btn {
-  padding:5px 13px; border-radius:8px; border:1px solid var(--border);
-  background:var(--card-bg); color:var(--muted); cursor:pointer;
-  font-size:0.8rem; font-family:inherit; transition:all 0.2s;
-}
-.pager-btn:hover { border-color:var(--accent2); color:var(--accent2); }
-.pager-btn.active { background:var(--accent2); border-color:var(--accent2); color:#fff; }
-.pager-info { color:var(--muted); font-size:0.8rem; }
-
-/* ── Mirapri modal ── */
-.mira-modal {
-  background:var(--card-bg); border:1px solid var(--border);
-  border-radius:14px; width:100%; max-width:600px; overflow:hidden;
-  animation:fadeIn .15s ease;
-}
-@keyframes fadeIn { from{opacity:0;transform:scale(.96)} to{opacity:1;transform:scale(1)} }
-.mira-modal-img { width:100%; display:block; border-radius:12px 12px 0 0; max-height:480px; object-fit:cover; object-position:top; }
-.mira-modal-body { padding:16px 20px; }
-.mira-modal-title { font-size:1.05rem; font-weight:700; margin-bottom:6px; }
-.mira-modal-meta { font-size:0.78rem; color:var(--muted); margin-bottom:12px; display:flex; flex-wrap:wrap; gap:8px; }
-.mira-equips h4 { color:var(--accent2); font-size:0.8rem; margin-bottom:6px; }
-.mira-equips ul { list-style:none; display:flex; flex-wrap:wrap; gap:5px; }
-.mira-equips li { background:var(--panel-bg); border:1px solid var(--border); border-radius:6px; padding:3px 8px; font-size:0.75rem; }
-.mira-modal-nav {
-  display:flex; align-items:center; justify-content:space-between;
-  padding:10px 20px; border-top:1px solid var(--border); background:var(--panel-bg);
-}
-.empty-state { text-align:center; color:var(--muted); padding:60px 20px; font-size:0.9rem; }
-
-/* ── TW toggle / sort / dye swatch / copy / item link ── */
-.tw-btn.active { background:#16a34a; border-color:#16a34a; color:#fff; }
-.sort-select {
-  padding:5px 10px; border-radius:20px; border:1px solid var(--border);
-  background:var(--bg); color:var(--text); font-size:0.8rem; font-family:inherit;
-  outline:none; cursor:pointer;
-}
-.sort-select:focus { border-color:var(--accent2); }
-.dye-dot {
-  display:inline-block; width:11px; height:11px; border-radius:50%;
-  border:1px solid rgba(255,255,255,0.35); vertical-align:-1px; margin-right:4px;
-}
-.copy-btn {
-  background:var(--bg); border:1px solid var(--border); color:var(--muted);
-  padding:5px 14px; border-radius:6px; cursor:pointer; font-size:0.8rem;
-  font-family:inherit; transition:all 0.2s; margin-right:10px; white-space:nowrap;
-}
-.copy-btn:hover { border-color:var(--accent2); color:var(--accent2); }
-.item-link { cursor:pointer; border-bottom:1px dotted var(--muted); }
-.item-link:hover { color:var(--accent2); border-bottom-color:var(--accent2); }
-.tw-badge {
-  font-size:0.65rem; padding:2px 8px; border-radius:10px;
-  background:rgba(22,163,74,.15); color:#4ade80; border:1px solid rgba(22,163,74,.4);
-  white-space:nowrap;
-}
-
-/* ── Favorites / pager jump ── */
-.fav-btn {
-  position:absolute; top:6px; right:6px; z-index:2;
-  background:rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.15);
-  color:#9ca3af; width:28px; height:28px; border-radius:50%;
-  cursor:pointer; font-size:0.95rem; line-height:1; transition:all 0.2s;
-  display:flex; align-items:center; justify-content:center;
-}
-.fav-btn:hover { color:#fbbf24; border-color:#fbbf24; }
-.fav-btn.faved { color:#fbbf24; border-color:rgba(251,191,36,0.5); background:rgba(251,191,36,0.12); }
-.fav-filter.active { background:#b45309; border-color:#b45309; color:#fff; }
-.pager-jump {
-  width:64px; padding:5px 10px; border-radius:8px;
-  border:1px solid var(--border); background:var(--bg); color:var(--text);
-  font-size:0.8rem; font-family:inherit; outline:none; text-align:center;
-}
-.pager-jump:focus { border-color:var(--accent2); }
-
-/* scrollbar */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-
-@media (max-width: 640px) {
-  .modal-body { flex-direction: column; }
-  .modal-img-col { width: 100%; min-width: unset; }
-  .grid-container { padding: 16px; }
-  .filter-bar { padding: 12px 16px; }
-  header { padding: 16px; }
-}
-.star-badge {
-  position:absolute; top:6px; left:6px;
-  background:var(--accent); color:#000;
-  border-radius:50%; width:22px; height:22px;
-  display:flex; align-items:center; justify-content:center;
-  font-size:0.65rem; font-weight:700; z-index:2;
-}
-.curated-badge { position:relative; }
+.empty-state{ text-align:center; color:var(--muted); padding:60px 20px; font-size:.95rem; }
+::-webkit-scrollbar{ width:8px; height:8px; }
+::-webkit-scrollbar-track{ background:var(--bg); }
+::-webkit-scrollbar-thumb{ background:var(--border); border-radius:4px; }
 </style>
 </head>
 <body>
 
-<header>
-  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+<!-- ── Header / Navbar ── -->
+<nav class="app-navbar sticky-top px-3 px-md-4 py-3">
+  <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
     <div>
-      <h1 id="site-title">⚔️ FF14 外觀配裝一覽</h1>
-      <p id="site-subtitle"></p>
+      <h1 class="app-title" id="site-title">⚔️ FF14 外觀配裝一覽</h1>
+      <p class="app-subtitle mb-0" id="site-subtitle"></p>
     </div>
-    <div class="lang-toggle">
-      <button class="lang-btn lang-active" onclick="setLang('zh')">繁中</button>
-      <button class="lang-btn" onclick="setLang('en')">EN</button>
+    <div class="btn-group" role="group" aria-label="language">
+      <button class="btn btn-sm btn-outline-light lang-btn lang-active" onclick="setLang('zh')">繁中</button>
+      <button class="btn btn-sm btn-outline-light lang-btn" onclick="setLang('en')">EN</button>
     </div>
   </div>
-</header>
+</nav>
 
-<!-- 統一篩選列 -->
-<div class="filter-bar" id="filter-bar">
-  <div class="filter-row">
+<!-- ── 統一篩選列 ── -->
+<div class="filter-bar px-3 px-md-4 py-3" id="filter-bar">
+  <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
     <span class="filter-group-label">性別</span>
-    <button class="filter-btn filter-reset active" data-mf="gender" data-val="">全部</button>
-    <button class="filter-btn female-btn" data-mf="gender" data-val="female">👧 女性</button>
-    <button class="filter-btn male-btn"   data-mf="gender" data-val="male">👦 男性</button>
-    <button class="filter-btn unk-btn"    data-mf="gender" data-val="unknown">❓ 未指定</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn filter-reset active" data-mf="gender" data-val="">全部</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn female-btn" data-mf="gender" data-val="female">👧 女性</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn male-btn"   data-mf="gender" data-val="male">👦 男性</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn unk-btn"    data-mf="gender" data-val="unknown">❓ 未指定</button>
   </div>
-  <div class="filter-row">
+  <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
     <span class="filter-group-label">種族</span>
-    <button class="filter-btn filter-reset active" data-mf="race" data-val="">全部</button>
-    <button class="filter-btn" data-mf="race" data-val="hyur"     data-zh="人族"        data-en="Hyur">人族</button>
-    <button class="filter-btn" data-mf="race" data-val="elezen"   data-zh="精靈族"      data-en="Elezen">精靈族</button>
-    <button class="filter-btn" data-mf="race" data-val="lalafell" data-zh="拉拉菲爾族"  data-en="Lalafell">拉拉菲爾族</button>
-    <button class="filter-btn" data-mf="race" data-val="miqote"   data-zh="貓魅族"      data-en="Miqo'te">貓魅族</button>
-    <button class="filter-btn" data-mf="race" data-val="roegadyn" data-zh="魯加族"      data-en="Roegadyn">魯加族</button>
-    <button class="filter-btn" data-mf="race" data-val="aura"     data-zh="敖龍族"      data-en="Au Ra">敖龍族</button>
-    <button class="filter-btn" data-mf="race" data-val="hrothgar" data-zh="硌獅族"      data-en="Hrothgar">硌獅族</button>
-    <button class="filter-btn" data-mf="race" data-val="viera"    data-zh="維埃拉族"    data-en="Viera">維埃拉族</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn filter-reset active" data-mf="race" data-val="">全部</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-mf="race" data-val="hyur"     data-zh="人族"        data-en="Hyur">人族</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-mf="race" data-val="elezen"   data-zh="精靈族"      data-en="Elezen">精靈族</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-mf="race" data-val="lalafell" data-zh="拉拉菲爾族"  data-en="Lalafell">拉拉菲爾族</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-mf="race" data-val="miqote"   data-zh="貓魅族"      data-en="Miqo'te">貓魅族</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-mf="race" data-val="roegadyn" data-zh="魯加族"      data-en="Roegadyn">魯加族</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-mf="race" data-val="aura"     data-zh="敖龍族"      data-en="Au Ra">敖龍族</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-mf="race" data-val="hrothgar" data-zh="硌獅族"      data-en="Hrothgar">硌獅族</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-mf="race" data-val="viera"    data-zh="維埃拉族"    data-en="Viera">維埃拉族</button>
   </div>
-  <div class="filter-row">
+  <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
     <span class="filter-group-label" data-zh="取得方式" data-en="Source">取得方式</span>
-    <button class="filter-btn" data-filter="event"   data-group="src" data-zh="🗓️ 活動"  data-en="🗓️ Event">🗓️ 活動</button>
-    <button class="filter-btn" data-filter="pvp"     data-group="src" data-zh="⚔️ PvP"   data-en="⚔️ PvP">⚔️ PvP</button>
-    <button class="filter-btn" data-filter="store"   data-group="src" data-zh="💎 Mog"   data-en="💎 Mog">💎 Mog</button>
-    <button class="filter-btn" data-filter="raid"    data-group="src" data-zh="🗡️ 副本"  data-en="🗡️ Dungeon">🗡️ 副本</button>
-    <span class="filter-sep"></span>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="event"   data-group="src" data-zh="🗓️ 活動"  data-en="🗓️ Event">🗓️ 活動</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="pvp"     data-group="src" data-zh="⚔️ PvP"   data-en="⚔️ PvP">⚔️ PvP</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="store"   data-group="src" data-zh="💎 Mog"   data-en="💎 Mog">💎 Mog</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="raid"    data-group="src" data-zh="🗡️ 副本"  data-en="🗡️ Dungeon">🗡️ 副本</button>
+    <span class="filter-sep mx-1"></span>
     <span class="filter-group-label" data-zh="職業" data-en="Job">職業</span>
-    <button class="filter-btn" data-filter="healer"  data-group="job" data-zh="💚 治療"  data-en="💚 Healer">💚 治療</button>
-    <button class="filter-btn" data-filter="tank"    data-group="job" data-zh="🛡️ 盾衛"  data-en="🛡️ Tank">🛡️ 盾衛</button>
-    <button class="filter-btn" data-filter="caster"  data-group="job" data-zh="🔮 法系"  data-en="🔮 Caster">🔮 法系</button>
-    <button class="filter-btn" data-filter="melee"   data-group="job" data-zh="⚔️ 近戰"  data-en="⚔️ Melee">⚔️ 近戰</button>
-    <button class="filter-btn" data-filter="pranged" data-group="job" data-zh="🏹 遠距"  data-en="🏹 Ranged">🏹 遠距</button>
-    <button class="filter-btn" data-filter="crafter" data-group="job" data-zh="🔨 製作"  data-en="🔨 Crafter">🔨 製作</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="healer"  data-group="job" data-zh="💚 治療"  data-en="💚 Healer">💚 治療</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="tank"    data-group="job" data-zh="🛡️ 盾衛"  data-en="🛡️ Tank">🛡️ 盾衛</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="caster"  data-group="job" data-zh="🔮 法系"  data-en="🔮 Caster">🔮 法系</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="melee"   data-group="job" data-zh="⚔️ 近戰"  data-en="⚔️ Melee">⚔️ 近戰</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="pranged" data-group="job" data-zh="🏹 遠距"  data-en="🏹 Ranged">🏹 遠距</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="crafter" data-group="job" data-zh="🔨 製作"  data-en="🔨 Crafter">🔨 製作</button>
   </div>
-  <div class="filter-row">
-    <input class="search-input" type="text" placeholder="🔍 搜尋名稱、裝備或使用者…" id="search-input"
+  <div class="d-flex flex-wrap align-items-center gap-2">
+    <input class="form-control form-control-sm search-input" type="text" placeholder="🔍 搜尋名稱、裝備或使用者…" id="search-input"
            data-zh-placeholder="🔍 搜尋名稱、裝備或使用者…" data-en-placeholder="🔍 Search name, item or user…">
-    <button class="filter-btn fav-filter" id="fav-filter-btn" title="只顯示已加星號的套裝"
+    <button class="btn btn-sm btn-outline-secondary filter-btn fav-filter" id="fav-filter-btn" title="只顯示已加星號的套裝"
             data-zh="⭐ 我的收藏" data-en="⭐ Favorites">⭐ 我的收藏</button>
-    <button class="filter-btn tw-btn" id="tw-btn" title="只顯示每件裝備都有繁中名稱（已實裝於繁中版）的套裝"
+    <button class="btn btn-sm btn-outline-secondary filter-btn tw-btn" id="tw-btn" title="只顯示每件裝備都有繁中名稱（已實裝於繁中版）的套裝"
             data-zh="🇹🇼 繁中版可幻化" data-en="🇹🇼 On TW server">🇹🇼 繁中版可幻化</button>
-    <select class="sort-select" id="sort-select">
+    <select class="form-select form-select-sm sort-select" id="sort-select">
       <option value="default">排序：預設（精選優先）</option>
       <option value="patch-desc">排序：版本新 → 舊</option>
       <option value="patch-asc">排序：版本舊 → 新</option>
       <option value="name">排序：名稱</option>
     </select>
-    <span class="count-label" id="result-count"></span>
+    <span class="text-secondary small ms-auto" id="result-count"></span>
   </div>
 </div>
 
-<div class="grid-container">
-  <div class="grid" id="outfit-grid"></div>
-</div>
-<div class="pager" id="pager"></div>
+<main class="container-fluid px-3 px-md-4 py-4">
+  <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-xl-5 g-3" id="outfit-grid"></div>
+</main>
+<nav class="d-flex justify-content-center align-items-center flex-wrap gap-2 px-3 pb-4" id="pager" aria-label="pagination"></nav>
 
-<!-- 精選配裝 Modal -->
-<div class="modal-overlay hidden" id="modal-overlay">
-  <div class="modal" id="modal">
-    <div class="modal-header">
-      <div>
-        <div class="modal-title" id="modal-title"></div>
-        <div class="modal-subtitle" id="modal-subtitle"></div>
+<!-- ── 配裝詳情 Modal（Bootstrap） ── -->
+<div class="modal fade" id="modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <h5 class="modal-title" id="modal-title"></h5>
+          <div class="modal-subtitle" id="modal-subtitle"></div>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <button class="btn btn-sm btn-outline-warning" id="modal-fav-btn" onclick="toggleFav(filtered[currentIdx] && filtered[currentIdx].id)">☆ 收藏</button>
+          <button class="btn btn-sm btn-outline-info" id="copy-btn" data-zh="📋 複製清單" data-en="📋 Copy list">📋 複製清單</button>
+          <button type="button" class="btn-close btn-close-white" id="close-btn" aria-label="Close"></button>
+        </div>
       </div>
-      <div style="display:flex;align-items:center">
-        <button class="copy-btn" id="modal-fav-btn" onclick="toggleFav(filtered[currentIdx] && filtered[currentIdx].id)">☆ 收藏</button>
-        <button class="copy-btn" id="copy-btn" data-zh="📋 複製清單" data-en="📋 Copy list">📋 複製清單</button>
-        <button class="close-btn" id="close-btn">✕</button>
+      <div class="modal-body p-0">
+        <div class="row g-0">
+          <div class="col-12 col-md-5" id="modal-img-col"></div>
+          <div class="col-12 col-md-7" id="modal-info-col"></div>
+        </div>
       </div>
-    </div>
-    <div class="modal-body">
-      <div class="modal-img-col" id="modal-img-col"></div>
-      <div class="modal-info-col" id="modal-info-col"></div>
-    </div>
-    <div class="modal-nav">
-      <button class="nav-btn" id="prev-btn" data-zh="◀ 上一套" data-en="◀ Prev">◀ 上一套</button>
-      <span class="nav-counter" id="nav-counter"></span>
-      <button class="nav-btn" id="next-btn" data-zh="下一套 ▶" data-en="Next ▶">下一套 ▶</button>
+      <div class="modal-footer justify-content-between">
+        <button class="btn btn-sm btn-outline-secondary" id="prev-btn" data-zh="◀ 上一套" data-en="◀ Prev">◀ 上一套</button>
+        <span class="text-secondary small" id="nav-counter"></span>
+        <button class="btn btn-sm btn-outline-secondary" id="next-btn" data-zh="下一套 ▶" data-en="Next ▶">下一套 ▶</button>
+      </div>
     </div>
   </div>
 </div>
 
+<!-- 圖片放大 lightbox -->
+<div id="img-lightbox" class="img-lightbox" onclick="lbBackdrop(event)">
+  <div class="lb-toolbar">
+    <button type="button" title="縮小" onclick="lbZoom(-1)">−</button>
+    <button type="button" title="放大" onclick="lbZoom(1)">＋</button>
+    <button type="button" title="還原" onclick="lbReset()">⟲</button>
+    <button type="button" title="關閉" onclick="closeLightbox()">✕</button>
+  </div>
+  <img id="img-lightbox-img" alt="放大圖片" draggable="false">
+  <span class="lb-hint">滾輪縮放 · 拖曳平移 · 雙擊還原 · 點背景關閉</span>
+</div>
 
+<script src="vendor/bootstrap/bootstrap.bundle.min.js"></script>
 <script>
 // ════════════════════════════════════════════════════════
 // CONSTANTS
@@ -536,7 +333,34 @@ function thumbOf(img) {
 // 彈窗圖片：原圖優先，404 時自動改用縮圖
 function modalImg(img, alt) {
   if (!img) return '<div class="no-img">No Image</div>';
-  return `<img src="${esc(img)}" alt="${esc(alt)}" style="width:100%;border-radius:8px;display:block" onerror="if(this.src.indexOf('縮圖')===-1){this.src='${esc(thumbOf(img))}';}else{this.parentElement.innerHTML='<div class=\\'no-img\\'>No Image</div>';}">`;
+  return `<img class="modal-zoom-img" src="${esc(img)}" alt="${esc(alt)}" title="點擊放大" onclick="openLightbox(this.src)" style="width:100%;border-radius:8px;display:block" onerror="if(this.src.indexOf('縮圖')===-1){this.src='${esc(thumbOf(img))}';}else{this.parentElement.innerHTML='<div class=\\'no-img\\'>No Image</div>';}">`;
+}
+
+// 圖片放大（lightbox）＋ 縮放／平移
+let lbScale = 1, lbX = 0, lbY = 0, lbDrag = false, lbSX = 0, lbSY = 0;
+function lbApply() {
+  const im = document.getElementById("img-lightbox-img");
+  im.style.transform = `translate(${lbX}px, ${lbY}px) scale(${lbScale})`;
+  im.style.cursor = lbScale > 1 ? "grab" : "zoom-in";
+}
+function lbReset() { lbScale = 1; lbX = 0; lbY = 0; lbApply(); }
+function lbZoom(dir) {
+  const f = dir > 0 ? 1.25 : 0.8;
+  lbScale = Math.min(6, Math.max(1, lbScale * f));
+  if (lbScale === 1) { lbX = 0; lbY = 0; }
+  lbApply();
+}
+function openLightbox(src) {
+  if (!src) return;
+  document.getElementById("img-lightbox-img").src = src;
+  lbReset();
+  document.getElementById("img-lightbox").classList.add("show");
+}
+function closeLightbox() {
+  document.getElementById("img-lightbox").classList.remove("show");
+}
+function lbBackdrop(ev) {
+  if (ev.target === document.getElementById("img-lightbox")) closeLightbox();
 }
 
 // 裝備反查：以裝備名搜尋所有套裝
@@ -549,9 +373,6 @@ function searchItem(name) {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-// ════════════════════════════════════════════════════════
-// OUTFITS DATA (精選配裝)
-// ════════════════════════════════════════════════════════
 // ════════════════════════════════════════════════════════
 // STATE
 // ════════════════════════════════════════════════════════
@@ -587,7 +408,7 @@ function syncModalFav() {
   if (!btn || !e) return;
   const on = favs.has(e.id);
   btn.textContent = on ? "⭐ 已收藏" : "☆ 收藏";
-  btn.classList.toggle("faved", on);
+  btn.classList.toggle("active", on);
 }
 
 const PAGE_SIZE = 60;
@@ -703,7 +524,7 @@ function renderGrid() {
   const pageItems = filtered.slice(start, start + PAGE_SIZE);
 
   if (pageItems.length === 0) {
-    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted)">沒有符合條件的配裝</div>';
+    grid.innerHTML = '<div class="col-12"><div class="empty-state">沒有符合條件的配裝</div></div>';
     renderPager();
     return;
   }
@@ -724,8 +545,8 @@ function buildCard(e, idx) {
   const isCurated = e.type === "curated";
 
   const imgHtml = e.image
-    ? `<img class="card-img" src="${thumbOf(e.image)}" alt="${e.name}" loading="lazy" onerror="if(this.src.indexOf('縮圖')>-1){this.src='${e.image}'}else{this.style.display='none'}">`
-    : `<div class="card-img no-img">No Image</div>`;
+    ? `<img class="card-img-top" src="${thumbOf(e.image)}" alt="${esc(e.name)}" loading="lazy" onerror="if(this.src.indexOf('縮圖')>-1){this.src='${e.image}'}else{this.outerHTML='<div class=\\'card-noimg\\'>No Image</div>'}">`
+    : `<div class="card-noimg">No Image</div>`;
 
   // 第一行 meta（精選顯示編號，社群顯示性別種族）
   let metaHtml;
@@ -736,13 +557,13 @@ function buildCard(e, idx) {
     const rName = (e.race && e.race !== "all") ? (rMap[e.race] || e.race) : "";
     const raceTag = rName ? `<span class="tag-race">${rName}</span>` : "";
     const genderTag = gSym ? `<span class="${gCls}">${gSym}</span>` : "";
-    metaHtml = `<div class="card-id">#${e.id}${genderTag ? " " + genderTag : ""}${raceTag ? " " + raceTag : ""}</div>`;
+    metaHtml = `<div class="small text-secondary d-flex align-items-center gap-1 flex-wrap">#${e.id}${genderTag ? " " + genderTag : ""}${raceTag ? " " + raceTag : ""}</div>`;
   } else {
     const gSym  = e.gender === "female" ? "♀" : e.gender === "male" ? "♂" : "?";
     const gCls  = e.gender === "female" ? "tag-female" : e.gender === "male" ? "tag-male" : "tag-unk";
     const rMap  = currentLang === "en" ? RACE_LABEL : RACE_ZH;
     const race  = e.race ? ` ${rMap[e.race] || e.race}` : "";
-    metaHtml = `<div class="card-id"><span class="${gCls}">${gSym}${race}</span></div>`;
+    metaHtml = `<div class="small text-secondary d-flex align-items-center gap-1 flex-wrap"><span class="${gCls}">${gSym}${race}</span></div>`;
   }
 
   // 標籤列
@@ -755,42 +576,52 @@ function buildCard(e, idx) {
       + (e.race && e.race !== "all" ? `<span class="tag-race">${rMapTag[e.race] || e.race}</span>` : "");
 
   const favCls = favs.has(e.id) ? " faved" : "";
-  return `<div class="card${isCurated ? " curated-badge" : ""}" onclick="openModal(${idx})">
-  ${isCurated ? '<div class="star-badge">⭐</div>' : ""}
-  <button class="fav-btn${favCls}" title="加入／移除我的收藏" onclick="toggleFav('${String(e.id).replace(/'/g, "\\'")}', event)">★</button>
-  ${imgHtml}
-  <div class="card-body">
-    ${metaHtml}
-    <div class="card-name">${e.name}</div>
-    <div class="card-color">${e.color || ""}</div>
-    <div class="card-tags">${tagBadges}</div>
-  </div>
-</div>`;
+  return `<div class="col">
+    <div class="card outfit-card h-100 position-relative" onclick="openModal(${idx})">
+      ${isCurated ? '<div class="star-badge">⭐</div>' : ""}
+      <button class="fav-btn${favCls}" title="加入／移除我的收藏" onclick="toggleFav('${String(e.id).replace(/'/g, "\\'")}', event)">★</button>
+      ${imgHtml}
+      <div class="card-body p-3">
+        ${metaHtml}
+        <div class="card-name fw-semibold mt-1 mb-1">${esc(e.name)}</div>
+        <div class="text-secondary small">${esc(e.color || "")}</div>
+        <div class="d-flex flex-wrap gap-1 mt-2">${tagBadges}</div>
+      </div>
+    </div>
+  </div>`;
 }
 
 // ════════════════════════════════════════════════════════
-// PAGER
+// PAGER（Bootstrap pagination）
 // ════════════════════════════════════════════════════════
 function renderPager() {
   const pager = document.getElementById("pager");
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
   if (totalPages <= 1) { pager.innerHTML = ""; return; }
 
-  let html = "";
-  // Prev
-  html += `<button class="pager-btn${currentPage===1?" disabled":""}" onclick="goPage(${currentPage-1})">‹</button>`;
-  // Page numbers (show up to 7 around current)
+  const pg = (label, page, opts = {}) => {
+    const cls = "page-item" + (opts.active ? " active" : "") + (opts.disabled ? " disabled" : "");
+    return `<li class="${cls}"><button class="page-link" onclick="goPage(${page})">${label}</button></li>`;
+  };
+
+  let html = '<ul class="pagination pagination-sm mb-0">';
+  html += pg("‹", currentPage - 1, { disabled: currentPage === 1 });
   let lo = Math.max(1, currentPage - 3);
   let hi = Math.min(totalPages, currentPage + 3);
-  if (lo > 1) html += `<button class="pager-btn" onclick="goPage(1)">1</button>${lo>2?'<span class="pager-info">…</span>':""}`;
-  for (let p = lo; p <= hi; p++) {
-    html += `<button class="pager-btn${p===currentPage?" active":""}" onclick="goPage(${p})">${p}</button>`;
+  if (lo > 1) {
+    html += pg("1", 1);
+    if (lo > 2) html += '<li class="page-item disabled"><span class="page-link">…</span></li>';
   }
-  if (hi < totalPages) html += `${hi<totalPages-1?'<span class="pager-info">…</span>':""}<button class="pager-btn" onclick="goPage(${totalPages})">${totalPages}</button>`;
-  // Next
-  html += `<button class="pager-btn${currentPage===totalPages?" disabled":""}" onclick="goPage(${currentPage+1})">›</button>`;
-  html += `<span class="pager-info">${filtered.length} 件 / 第 ${currentPage}/${totalPages} 頁</span>`;
-  html += `<input class="pager-jump" type="number" min="1" max="${totalPages}" placeholder="跳頁"
+  for (let p = lo; p <= hi; p++) html += pg(p, p, { active: p === currentPage });
+  if (hi < totalPages) {
+    if (hi < totalPages - 1) html += '<li class="page-item disabled"><span class="page-link">…</span></li>';
+    html += pg(totalPages, totalPages);
+  }
+  html += pg("›", currentPage + 1, { disabled: currentPage === totalPages });
+  html += "</ul>";
+
+  html += `<span class="text-secondary small">${filtered.length} 件 / 第 ${currentPage}/${totalPages} 頁</span>`;
+  html += `<input class="form-control form-control-sm" style="width:80px" type="number" min="1" max="${totalPages}" placeholder="跳頁"
             onkeydown="if(event.key==='Enter'){goPage(parseInt(this.value)||1);}">`;
   pager.innerHTML = html;
 }
@@ -804,8 +635,13 @@ function goPage(p) {
 }
 
 // ════════════════════════════════════════════════════════
-// MODAL — OPEN / CLOSE / NAV
+// MODAL — OPEN / CLOSE / NAV（Bootstrap Modal API）
 // ════════════════════════════════════════════════════════
+let bsModal = null;
+function getModal() {
+  if (!bsModal) bsModal = new bootstrap.Modal(document.getElementById("modal"), { focus: true });
+  return bsModal;
+}
 function openModal(globalIdx) {
   currentIdx = globalIdx;
   const e = filtered[globalIdx];
@@ -815,15 +651,16 @@ function openModal(globalIdx) {
   } else {
     renderMiraModal(e, globalIdx);
   }
-  document.getElementById("modal-overlay").classList.remove("hidden");
-  document.body.style.overflow = "hidden";
+  getModal().show();
+  // 切換套裝時把內容捲回頂端
+  const body = document.querySelector("#modal .modal-body");
+  if (body) body.scrollTop = 0;
+  const ic = document.getElementById("modal-info-col"); if (ic) ic.scrollTop = 0;
 }
 
 function closeModal() {
-  document.getElementById("modal-overlay").classList.add("hidden");
-  document.body.style.overflow = "";
+  if (bsModal) bsModal.hide();
 }
-
 // 保留相容性（舊呼叫路徑）
 function closeMiraModal() { closeModal(); }
 
@@ -855,9 +692,6 @@ function renderCuratedModal(e, idx) {
   document.getElementById("close-btn").onclick = closeModal;
   document.getElementById("copy-btn").onclick = () => copyOutfit(e);
   syncModalFav();
-  document.getElementById("modal-overlay").onclick = ev => {
-    if (ev.target === document.getElementById("modal-overlay")) closeModal();
-  };
 }
 
 // ════════════════════════════════════════════════════════
@@ -925,12 +759,12 @@ function renderMiraModal(e, idx) {
       const lvHtml  = eq.lv && eq.lv !== "1" ? `<span class="restrict-level">Lv.${eq.lv}</span>` : "";
       const jobHtml = eq.job && eq.job !== "全職業" ? `<span class="restrict-job">${esc(eq.job)}</span>` : "";
       return `<tr>
-        <td>${slotLbl ? `<span class="slot-badge">${esc(slotLbl)}</span>` : ""}</td>
+        <td class="slot-cell">${slotLbl ? `<span class="slot-badge">${esc(slotLbl)}</span>` : ""}</td>
         <td class="${nameClass}">${dispHtml}${subName}</td>
-        <td class="dye-cell">${dye}</td>
-        <td class="patch-cell">${patchHtml}</td>
-        <td>${srcHtml}</td>
-        <td class="restrict-cell">${lvHtml}${jobHtml}</td>
+        <td class="dye-cell" data-label="${hDye}">${dye}</td>
+        <td class="patch-cell" data-label="${hPatch}">${patchHtml}</td>
+        <td class="src-cell" data-label="${hSrc}">${srcHtml}</td>
+        <td class="restrict-cell" data-label="${hRestr}">${lvHtml}${jobHtml}</td>
       </tr>`;
     }).join("");
   } else {
@@ -958,9 +792,6 @@ function renderMiraModal(e, idx) {
   document.getElementById("close-btn").onclick = closeModal;
   document.getElementById("copy-btn").onclick = () => copyOutfit(e);
   syncModalFav();
-  document.getElementById("modal-overlay").onclick = ev => {
-    if (ev.target === document.getElementById("modal-overlay")) closeModal();
-  };
 }
 
 // ════════════════════════════════════════════════════════
@@ -968,6 +799,11 @@ function renderMiraModal(e, idx) {
 // ════════════════════════════════════════════════════════
 function buildTable(pieces, lang) {
   if (!pieces || pieces.length === 0) return '<p style="color:var(--muted);padding:12px">無裝備資料</p>';
+
+  const dlDye   = lang === "en" ? "Dye"      : "染色";
+  const dlPatch = lang === "en" ? "Patch"    : "版本";
+  const dlSrc   = lang === "en" ? "Source"   : "取得方式";
+  const dlRestr = lang === "en" ? "Restrict" : "限制";
 
   const rows = pieces.map(p => {
     const slotEn  = SLOT_EN[p.slot] || p.slot;
@@ -996,12 +832,12 @@ function buildTable(pieces, lang) {
       ? `<span class="item-link" title="查看使用此裝備的其他套裝" onclick="searchItem('${esc(lookupName).replace(/'/g,"\\'")}')">${esc(itemName)}</span>`
       : "";
     return `<tr>
-      <td><span class="slot-badge">${esc(slotLabel)}</span></td>
+      <td class="slot-cell"><span class="slot-badge">${esc(slotLabel)}</span></td>
       <td class="${nameClass}">${nameHtml}</td>
-      <td class="dye-cell">${d1} ${d2}</td>
-      <td class="patch-cell">${patchHtml}</td>
-      <td>${srcHtml}</td>
-      <td class="restrict-cell">${lvHtml}${jobHtml}${gHtml}${rHtml}</td>
+      <td class="dye-cell" data-label="${dlDye}">${d1} ${d2}</td>
+      <td class="patch-cell" data-label="${dlPatch}">${patchHtml}</td>
+      <td class="src-cell" data-label="${dlSrc}">${srcHtml}</td>
+      <td class="restrict-cell" data-label="${dlRestr}">${lvHtml}${jobHtml}${gHtml}${rHtml}</td>
     </tr>`;
   }).join("");
 
@@ -1151,13 +987,39 @@ document.addEventListener("DOMContentLoaded", () => {
     applyFilters();
   });
 
-  // Keyboard nav
+  // Lightbox 開啟時，Esc 先關放大圖（攔截，避免一起把彈窗也關掉）
   document.addEventListener("keydown", ev => {
-    const modalOpen = !document.getElementById("modal-overlay").classList.contains("hidden");
+    if (ev.key === "Escape" && document.getElementById("img-lightbox").classList.contains("show")) {
+      ev.stopImmediatePropagation();
+      closeLightbox();
+    }
+  }, true);
+
+  // Lightbox 縮放／平移：滾輪縮放、拖曳平移、雙擊還原
+  const lb = document.getElementById("img-lightbox");
+  const lbImg = document.getElementById("img-lightbox-img");
+  lb.addEventListener("wheel", ev => { ev.preventDefault(); lbZoom(ev.deltaY < 0 ? 1 : -1); }, { passive: false });
+  lbImg.addEventListener("dblclick", ev => {
+    ev.preventDefault();
+    if (lbScale > 1) lbReset(); else { lbScale = 2.5; lbApply(); }
+  });
+  lbImg.addEventListener("pointerdown", ev => {
+    if (lbScale <= 1) return;
+    lbDrag = true; lbSX = ev.clientX - lbX; lbSY = ev.clientY - lbY;
+    lbImg.setPointerCapture(ev.pointerId); lbImg.style.cursor = "grabbing";
+  });
+  lbImg.addEventListener("pointermove", ev => {
+    if (!lbDrag) return;
+    lbX = ev.clientX - lbSX; lbY = ev.clientY - lbSY; lbApply();
+  });
+  lbImg.addEventListener("pointerup", () => { lbDrag = false; lbApply(); });
+
+  // Keyboard nav（Bootstrap 已處理 Esc，這裡補方向鍵）
+  document.addEventListener("keydown", ev => {
+    const modalOpen = document.getElementById("modal").classList.contains("show");
     if (modalOpen) {
       if (ev.key === "ArrowLeft")  navModal(-1);
       if (ev.key === "ArrowRight") navModal(1);
-      if (ev.key === "Escape") closeModal();
     }
   });
 
