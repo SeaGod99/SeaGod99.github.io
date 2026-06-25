@@ -389,6 +389,27 @@
       margin-top: 6px;
       font-style: italic;
     }
+    .tooltip.pinned { pointer-events: auto; }
+
+    /* 取得方式 ⓘ 鈕（觸控/點擊用，不靠 hover） */
+    .minion-info {
+      position: absolute;
+      top: 4px; left: 4px;
+      width: 20px; height: 20px;
+      display: flex; align-items: center; justify-content: center;
+      padding: 0;
+      font: 600 12px/1 'Segoe UI', system-ui, sans-serif;
+      color: var(--gold);
+      background: var(--bg-card);
+      border: 1px solid var(--border-hover);
+      border-radius: 50%;
+      cursor: pointer;
+      opacity: 0.85;
+      transition: opacity 0.15s, background 0.15s;
+      z-index: 2;
+    }
+    .minion-info:hover { opacity: 1; background: var(--gold-dim); }
+    .minion-info:focus-visible { outline: 2px solid var(--gold); outline-offset: 1px; }
 
     /* ── Footer ── */
     .page-footer {
@@ -647,11 +668,17 @@
           <img class="minion-icon" src="${m.icon}" alt="${m.name}" loading="lazy" decoding="async"
                onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2248%22 height=%2248%22><rect fill=%22%23ffffff08%22 width=%2248%22 height=%2248%22 rx=%226%22/></svg>'">
           <div class="check-badge">✓</div>
+          <button class="minion-info" type="button" aria-label="取得方式" title="取得方式">i</button>
         </div>
         <div class="minion-name">${m.name}</div>
       `;
 
       card.addEventListener('click', () => toggle(m.id));
+      card.querySelector('.minion-info').addEventListener('click', e => {
+        e.stopPropagation();                         // 不觸發整卡的「擁有」切換
+        if (pinnedCard === card) { unpinTooltip(); }
+        else { pinTooltip(m, card); }
+      });
       card.addEventListener('mouseenter', e => showTooltip(e, m));
       card.addEventListener('mouseleave', hideTooltip);
       card.addEventListener('mousemove', moveTooltip);
@@ -662,10 +689,12 @@
   }
 
   // ── Tooltip ──
-  function showTooltip(e, m) {
+  // pinnedCard：以 ⓘ 釘住的卡片（觸控/點擊用，不靠 hover）。釘住時 hover 不覆蓋。
+  let pinnedCard = null;
+
+  function fillTooltip(m) {
     $('ttName').textContent = m.name;
     $('ttMeta').textContent = `行為：${BEHAVIOR_LABELS[m.behavior] || m.behavior}　版本：${m.patch}`;
-
     const srcWrap = $('ttSources');
     if (m.sources && m.sources.length > 0) {
       srcWrap.innerHTML = m.sources.map(s =>
@@ -674,14 +703,19 @@
     } else {
       srcWrap.innerHTML = `<div class="tt-placeholder">取得方式：待補充</div>`;
     }
-
+  }
+  function showTooltip(e, m) {
+    if (pinnedCard) return;              // 已釘住時不被 hover 蓋過
+    fillTooltip(m);
     $('tooltip').classList.add('show');
     moveTooltip(e);
   }
   function hideTooltip() {
+    if (pinnedCard) return;
     $('tooltip').classList.remove('show');
   }
   function moveTooltip(e) {
+    if (pinnedCard) return;
     const tt = $('tooltip');
     const x = e.clientX + 14;
     const y = e.clientY + 14;
@@ -690,6 +724,29 @@
     tt.style.left = (x + w > window.innerWidth  ? x - w - 20 : x) + 'px';
     tt.style.top  = (y + h > window.innerHeight ? y - h - 20 : y) + 'px';
   }
+  function pinTooltip(m, card) {
+    fillTooltip(m);
+    const tt = $('tooltip');
+    pinnedCard = card;
+    tt.classList.add('show', 'pinned');
+    const r = card.getBoundingClientRect();
+    const w = tt.offsetWidth, h = tt.offsetHeight;
+    let x = r.left;
+    let y = r.bottom + 6;
+    if (x + w > window.innerWidth)  x = window.innerWidth - w - 8;
+    if (y + h > window.innerHeight) y = r.top - h - 6;       // 翻到上方
+    tt.style.left = Math.max(8, x) + 'px';
+    tt.style.top  = Math.max(8, y) + 'px';
+  }
+  function unpinTooltip() {
+    pinnedCard = null;
+    $('tooltip').classList.remove('show', 'pinned');
+  }
+  // 點擊釘住內容以外處 / 按 Esc → 取消釘住
+  document.addEventListener('click', e => {
+    if (pinnedCard && !e.target.closest('#tooltip') && !e.target.closest('.minion-info')) unpinTooltip();
+  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && pinnedCard) unpinTooltip(); });
 
   // ── Own-toggle buttons ──
   document.querySelectorAll('.own-btn').forEach(btn => {
