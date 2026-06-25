@@ -28,6 +28,7 @@ SRC = os.path.join(ROOT, "資料來源")
 ITEMS_JSON = os.path.join(SRC, "items.json")
 JA_MSGPACK = os.path.join(SRC, "ja-items.msgpack")
 EN_MSGPACK = os.path.join(SRC, "en-items.msgpack")
+ALIAS_JSON = os.path.join(ROOT, "data", "ocr_aliases.json")  # 學習修正表（Claude 教過的 Ollama 誤讀→道具id）
 
 ZH_MAX_ID = 45590  # items.json 繁中上限；超過此 id 多半繁中尚未實裝（zh 會留空）
 
@@ -65,6 +66,13 @@ class ItemDB:
         # 模糊回退候選：依正規化長度分桶，縮小搜尋空間（日／英各一）
         self._by_len = self._build_buckets(self.ja_norm_to_id)
         self._en_by_len = self._build_buckets(self.en_norm_to_id)
+
+        # 學習修正表：{norm(Ollama誤讀): 道具id}（由 build_ocr_aliases.py 從 Claude 確認學來）
+        self.alias = {}
+        if os.path.exists(ALIAS_JSON):
+            for k, v in json.load(open(ALIAS_JSON, encoding="utf-8")).items():
+                if isinstance(v, dict) and v.get("id"):
+                    self.alias[k] = str(v["id"])
 
     @staticmethod
     def _build_index(id_to_name):
@@ -124,6 +132,10 @@ class ItemDB:
             hit = self.en_norm_to_id.get(n)
         if hit is not None:
             return self._record(hit, 1.0, True)
+        # 1.5) 學習修正表：Claude 教過的 Ollama 誤讀，直接對回正解
+        aid = self.alias.get(n)
+        if aid is not None:
+            return self._record(aid, 1.0, True)
         # 2) 模糊（similar 內含子字串包含 → 0.95）：先日文，不到再英文
         bid, bs = self._fuzzy(n, self._by_len, cutoff)
         if bid is None:
