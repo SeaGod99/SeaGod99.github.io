@@ -371,6 +371,7 @@
     .tag.cat-曉月之終途 { background: rgba(34,211,238,0.1);   color: var(--cyan);   border-color: rgba(34,211,238,0.25); }
     .tag.cat-金曦之遺輝 { background: rgba(200,169,110,0.12); color: var(--gold);   border-color: rgba(200,169,110,0.25); }
     .tag.cat-未分類    { background: var(--raise); color: var(--text-muted); border-color: var(--border); }
+    .tag.gcat { background: rgba(79,195,247,0.1); color: var(--blue); border-color: rgba(79,195,247,0.25); }
 
     /* ── Hover detail ── */
     /* ── 取得方式（預設顯示，最優先資訊）── */
@@ -471,6 +472,12 @@
     <button class="icon-btn clear-btn" id="clearBtn">清除進度</button>
   </div>
 
+  <!-- Game category filter -->
+  <div class="filter-section">
+    <div class="filter-label">分類</div>
+    <div class="filter-tags" id="gameCategoryFilters"></div>
+  </div>
+
   <!-- Version filter -->
   <div class="filter-section">
     <div class="filter-label">版本</div>
@@ -516,13 +523,18 @@
   // Version order for filter display
   const CATEGORY_ORDER = ['原初之地', '蒼天之禁地', '紅蓮之狂潮', '暗影之逆焰', '曉月之終途', '金曦之遺輝', '未分類'];
 
+  // 遊戲內樂譜分類順序（依 TC CategoryOrder）
+  const GAME_CATEGORY_ORDER = ['區域場景1', '區域場景2', '迷宮挑戰', '迷宮挑戰2', '大型任務1', '大型任務2', '討伐殲滅戰', '任務相關', '季節活動', '環境音', '商城與特典', '其他'];
+
   // ── State ──
   let OC_DATA = [];
   let CATEGORIES = [];
+  let GAME_CATEGORIES = [];
   let SOURCE_TYPES = [];
   let owned = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
   let filterOwn = 'all';
   let filterCategory = null;
+  let filterGameCategory = null;
   let filterSource = null;
   let searchQ = '';
 
@@ -575,6 +587,12 @@
     );
   }
 
+  function renderGameCategoryFilters() {
+    renderTagFilters('gameCategoryFilters', GAME_CATEGORIES, filterGameCategory,
+      v => { filterGameCategory = filterGameCategory === v ? null : v; renderGameCategoryFilters(); renderGrid(); }
+    );
+  }
+
   function renderSourceFilters() {
     renderTagFilters('sourceFilters', [...SOURCE_TYPES, '__none__'], filterSource,
       v => { filterSource = filterSource === v ? null : v; renderSourceFilters(); renderGrid(); },
@@ -591,6 +609,8 @@
       if (filterOwn === 'missing' &&  owned.has(k)) return false;
 
       if (filterCategory && r.category !== filterCategory) return false;
+
+      if (filterGameCategory && r.gameCategory !== filterGameCategory) return false;
 
       if (filterSource) {
         const srcs = r.sources || [];
@@ -651,6 +671,7 @@
 
       const catClass = 'cat-' + (r.category || '未分類');
       const catTag = `<span class="tag ${catClass}">${r.category || '未分類'}</span>`;
+      const gcatTag = r.gameCategory ? `<span class="tag gcat">${r.gameCategory}</span>` : '';
 
       const iconHtml = `<div class="oc-icon-placeholder">🎵</div>`;
 
@@ -672,6 +693,7 @@
         <div class="oc-name">${r.name}</div>
         <div class="oc-meta">No.${r.number}${r.patch ? ' · ' + r.patch : ''}</div>
         <div class="oc-tags">
+          ${gcatTag}
           ${catTag}
           ${sourceTags}
         </div>
@@ -765,8 +787,8 @@
       const raw = (json && json.data) ? json.data : [];
       const gp = await PatchGate.loadGamePatch('../../data/_meta.json');
 
-      // 僅顯示有繁中漢字名稱、且台服已開放（patch ≤ gamePatch）的項目
-      OC_DATA = raw.filter(r => r.name && /[一-鿿]/.test(r.name) && PatchGate.released(r.patch, gp));
+      // 顯示有名稱（含台服官方英文曲名，如 Answers / Heavensward）、且台服已開放的項目
+      OC_DATA = raw.filter(r => r.name && PatchGate.released(r.patch, gp));
 
       // 依編號排序
       OC_DATA.sort((a, b) => (a.number || 0) - (b.number || 0));
@@ -775,11 +797,16 @@
       const catSet = new Set(OC_DATA.map(r => r.category).filter(Boolean));
       CATEGORIES = CATEGORY_ORDER.filter(c => catSet.has(c));
 
+      // 遊戲內分類清單（依固定順序）
+      const gcatSet = new Set(OC_DATA.map(r => r.gameCategory).filter(Boolean));
+      GAME_CATEGORIES = GAME_CATEGORY_ORDER.filter(c => gcatSet.has(c));
+
       // 取得方式清單
       const sourceSet = new Set();
       OC_DATA.forEach(r => (r.sources || []).forEach(s => { if (s.type) sourceSet.add(s.type); }));
       SOURCE_TYPES = [...sourceSet].sort();
 
+      renderGameCategoryFilters();
       renderCategoryFilters();
       renderSourceFilters();
       updateProgress();

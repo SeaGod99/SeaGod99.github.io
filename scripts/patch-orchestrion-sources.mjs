@@ -11,6 +11,10 @@
 //   3) 兩者皆無 → 保留原樣。
 //   名稱一律不動（台服官方含正規英文曲名，如 Answers / Heavensward）。
 //
+// 另補 gameCategory（遊戲內樂譜分類，繁中）：TC 直接給 Category（如 區域場景1／討伐殲滅戰／
+//   季節活動…）；英文曲名（TC 無）改用 ffxivcollect 分類英文→繁中對照 FXC_CAT。
+//   原 category 欄（資料片：原初之地…）保留不動，前端「版本」篩選續用；gameCategory 給新「分類」篩選。
+//
 // 完整覆寫＝冪等。執行：node scripts/patch-orchestrion-sources.mjs ／ 重建後需再跑。
 
 import { readFile, writeFile, copyFile } from "node:fs/promises";
@@ -49,6 +53,16 @@ function mapTcType(tcType, name) {
   }
 }
 
+// ffxivcollect 遊戲內分類（英文）→ TC 繁中遊戲內分類（官方對應，1:1）
+const FXC_CAT = {
+  "Locales I": "區域場景1", "Locales II": "區域場景2",
+  "Dungeons I": "迷宮挑戰", "Dungeons II": "迷宮挑戰2",
+  "Raids I": "大型任務1", "Raids II": "大型任務2",
+  "Trials": "討伐殲滅戰", "Quests": "任務相關",
+  "Seasonal": "季節活動", "Ambient": "環境音",
+  "Online Store & Bonuses": "商城與特典", "Others": "其他",
+};
+
 // ffxivcollect type → 本站繁中分類
 const FXC_TYPE = {
   Achievement: "成就", "Cosmic Exploration": "宇宙探索", Premium: "商城",
@@ -71,22 +85,27 @@ const fxc = JSON.parse(await readFile(join(DATA, "orchestrion-sources-fxc.json")
 const fxcByName = {};
 for (const e of fxc) fxcByName[normEn(e.nameEn)] = e;
 
-let fromTC = 0, fromFXC = 0, kept = 0;
+let fromTC = 0, fromFXC = 0, kept = 0, catTC = 0, catFXC = 0, catNone = 0;
 
 for (const r of json.data) {
   const t = tcByName[normZh(r.name)];
-  if (t) {
+  const f = r.nameEn ? fxcByName[normEn(r.nameEn)] : null;
+
+  // 遊戲內分類（繁中）：TC 直接給；否則 ffxivcollect 分類→繁中對應
+  if (t && t.category) { r.gameCategory = t.category; catTC++; }
+  else if (f && f.category && FXC_CAT[f.category]) { r.gameCategory = FXC_CAT[f.category]; catFXC++; }
+  else { r.gameCategory = "其他"; catNone++; }
+
+  // 取得方式
+  if (t && t.sources.length) {
     r.sources = t.sources.map((s) => ({ type: mapTcType(s.type, s.name), detail: s.name }));
     fromTC++;
-    continue;
-  }
-  const f = r.nameEn ? fxcByName[normEn(r.nameEn)] : null;
-  if (f && f.types.length) {
+  } else if (f && f.types.length) {
     r.sources = f.types.map((ty) => ({ type: FXC_TYPE[ty] || ty, detail: null }));
     fromFXC++;
-    continue;
+  } else {
+    kept++;
   }
-  kept++;
 }
 
 const TMP = join(tmpdir(), "orchestrion_sources.json");
@@ -95,3 +114,4 @@ JSON.parse(await readFile(TMP, "utf-8"));
 await copyFile(TMP, OUT);
 
 console.log("取得方式：TC 繁中細節 " + fromTC + "｜ffxivcollect 類別 " + fromFXC + "｜保留原樣 " + kept);
+console.log("遊戲內分類：TC " + catTC + "｜ffxivcollect對應 " + catFXC + "｜其他 " + catNone);
