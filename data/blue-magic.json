@@ -8,7 +8,7 @@
     {
       "id": 3,
       "no": 1,
-      "name": "水炮",
+      "name": "水槍",
       "nameEn": "Water Cannon",
       "icon": "/i/072000/072203.png",
       "rank": 1,
@@ -16,17 +16,16 @@
       "type": "魔法",
       "learnFrom": [
         {
-          "type": "預設",
-          "detail": "青魔法師初始法術（習得職業即會）"
+          "type": "預設"
         }
       ],
       "patch": "4.5",
-      "learnFromMob": []
+      "mechanic": "對目標發動水屬性魔法攻擊 威力：200"
     },
     {
       "id": 20,
       "no": 2,
-      "name": "火焰放射",
+      "name": "火炎放射",
       "nameEn": "Flame Thrower",
       "icon": "/i/072000/072220.png",
       "rank": 4,
@@ -35,17 +34,27 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 20,
-          "detail": "布雷弗洛克斯的露營地（困難）"
+          "detail": "紛爭要地布雷福洛克斯野營地",
+          "mobs": [
+            "6號哥布林坦克"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "幻龍殘骸密約之塔",
+          "mobs": [
+            "獨爪妖禽",
+            "魔導砲艇"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": []
+      "mechanic": "向自身前方發動火屬性扇形範圍魔法攻擊\n威力：220\n攻擊複數敵人時，對第一個之外的敵人威力降低50%"
     },
     {
       "id": 8,
       "no": 3,
-      "name": "水之吐息",
+      "name": "水紋吐息",
       "nameEn": "Aqua Breath",
       "icon": "/i/072000/072208.png",
       "rank": 4,
@@ -54,20 +63,33 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 81,
-          "detail": "龍頸"
+          "detail": "艾瑪姬娜杯鬥技大會決賽",
+          "mobs": [
+            "奧爾特羅斯"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "利維亞桑殲滅戰",
+          "mobs": [
+            "利維坦"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "利維亞桑殲殛戰",
+          "mobs": [
+            "利維坦"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": [
-        "利維亞桑（The Whorleater）",
-        "奧爾特羅斯"
-      ]
+      "mechanic": "向自身前方發動水屬性扇形範圍魔法攻擊 威力：140\n攻擊複數敵人時，對第一個之外的敵人威力降低50%\n追加效果：水屬性持續傷害\n威力：20 持續時間：12秒"
     },
     {
       "id": 7,
       "no": 4,
-      "name": "狂飛亂舞",
+      "name": "狂亂",
       "nameEn": "Flying Frenzy",
       "icon": "/i/072000/072207.png",
       "rank": 3,
@@ -76,17 +98,26 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 17,
-          "detail": "塞壬燈塔"
+          "detail": "領航明燈天狼星燈塔",
+          "mobs": [
+            "祖"
+          ]
+        },
+        {
+          "type": "野外",
+          "detail": "拉諾西亞外地",
+          "mobs": [
+            "角祖"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": []
+      "mechanic": "躍向目標並對目標及其周圍敵人發動範圍物理攻擊\n威力：150\n攻擊複數敵人時，對目標之外的敵人威力降低50%\n止步狀態下無法發動"
     },
     {
       "id": 16,
       "no": 5,
-      "name": "鑽頭炮",
+      "name": "鑽頭砲",
       "nameEn": "Drill Cannons",
       "icon": "/i/072000/072216.png",
       "rank": 2,
@@ -95,20 +126,42 @@
       "learnFrom": [
         {
           "type": "野外",
-          "mapId": 46,
-          "detail": "薩納蘭北部"
+          "detail": "北薩納蘭",
+          "mobs": [
+            "廢棄的魔導先鋒",
+            "魔導先鋒強化型"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "紛爭要地布雷福洛克斯野營地",
+          "mobs": [
+            "3號哥布林裝甲"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "帝國南方堡外圍激戰",
+          "mobs": [
+            "魔導先鋒",
+            "魔導先鋒強襲型"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "天幕魔導城最終決戰",
+          "mobs": [
+            "魔導先鋒重裝型"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": [
-        "廢棄的魔導先鋒（Raubahn's Push）",
-        "魔導先鋒強化型（Raubahn's Push）"
-      ]
+      "mechanic": "向目標所在方向發出無屬性直線範圍物理攻擊 威力：200\n攻擊複數敵人時，對第一個之外的敵人威力降低50%\n目標處於石化狀態時威力提高\n目標處於石化狀態時威力：600\n追加效果：解除敵對目標身上的石化狀態"
     },
     {
       "id": 5,
       "no": 6,
-      "name": "高壓電",
+      "name": "高壓電流",
       "nameEn": "High Voltage",
       "icon": "/i/072000/072205.png",
       "rank": 4,
@@ -117,20 +170,26 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 93,
-          "detail": "巴哈姆特大迷宮 邂逅篇1"
+          "detail": "巴哈姆特大迷宮 邂逅之章1",
+          "mobs": [
+            "自衛系統"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "巴哈姆特大迷宮 邂逅之章2",
+          "mobs": [
+            "監視/淨化/防衛/焚燒/迎擊/防疫/自衛系統"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": [
-        "自衛系統（Meteor Fissure）",
-        "鬥獸系統"
-      ]
+      "mechanic": "對自身周圍的敵人發動雷屬性範圍魔法攻擊 威力：180\n攻擊複數敵人時，對第一個之外的敵人威力降低50%\n追加效果：麻痺 持續時間：15秒\n追加效果：目標處於水毒狀態時威力提高，持續時間增加\n目標處於水毒狀態時威力：220\n目標處於水毒狀態時持續時間：30秒"
     },
     {
       "id": 19,
       "no": 7,
-      "name": "瞬間移動",
+      "name": "若隱若現",
       "nameEn": "Loom",
       "icon": "/i/072000/072219.png",
       "rank": 1,
@@ -139,21 +198,34 @@
       "learnFrom": [
         {
           "type": "野外",
-          "mapId": 46,
-          "detail": "薩納蘭北部"
+          "detail": "北薩納蘭",
+          "mobs": [
+            "不滅的菲蘭德鬥軍曹"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "腐壞遺跡無限城市街古跡",
+          "mobs": [
+            "巴爾澤芬"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "慘劇靈殿塔姆·塔拉墓園",
+          "mobs": [
+            "但他林",
+            "幻影騎士"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": [
-        "巴爾澤芬（The Lost City of Amdapor）",
-        "但他林（The Tam-Tara Deepcroft (Hard)）",
-        "永恆不滅的菲蘭德副耀士"
-      ]
+      "mechanic": "迅速移動到指定地點\n止步狀態下無法發動"
     },
     {
       "id": 25,
       "no": 8,
-      "name": "蜂刺",
+      "name": "最終刺針",
       "nameEn": "Final Sting",
       "icon": "/i/072000/072225.png",
       "rank": 2,
@@ -162,20 +234,27 @@
       "learnFrom": [
         {
           "type": "野外",
-          "mapId": 30,
-          "detail": "拉諾西亞中部"
+          "detail": "中拉諾西亞",
+          "mobs": [
+            "殺手胡蜂"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "古代遺跡喀恩埋沒聖堂",
+          "mobs": [
+            "聖堂蜂",
+            "糞便胡蜂"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": [
-        "殺手胡蜂（Three-malm Bend）",
-        "聖堂蜂（The Sunken Temple of Qarn）"
-      ]
+      "mechanic": "對目標發動無屬性物理攻擊 威力：2000\n發動後自身陷入無法戰鬥狀態\n追加效果：意志薄弱\n即使進入無法戰鬥狀態也不會解除意志薄弱\n持續時間：600秒\n發動條件：非意志薄弱狀態中"
     },
     {
       "id": 4,
       "no": 9,
-      "name": "痛苦之歌",
+      "name": "苦悶之歌",
       "nameEn": "Song of Torment",
       "icon": "/i/072000/072204.png",
       "rank": 2,
@@ -184,17 +263,19 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 17,
-          "detail": "塞壬燈塔"
+          "detail": "領航明燈天狼星燈塔",
+          "mobs": [
+            "賽蓮"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": []
+      "mechanic": "對目標發動無屬性魔法攻擊 威力：50\n追加效果：無屬性持續傷害\n威力：50 持續時間：30秒"
     },
     {
       "id": 22,
       "no": 10,
-      "name": "炫目射線",
+      "name": "怒視",
       "nameEn": "Glower",
       "icon": "/i/072000/072222.png",
       "rank": 4,
@@ -203,17 +284,26 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 5,
-          "detail": "黃金谷"
+          "detail": "毒霧洞窟黃金谷",
+          "mobs": [
+            "數幣巨人"
+          ]
+        },
+        {
+          "type": "野外",
+          "detail": "中薩納蘭",
+          "mobs": [
+            "布隆特斯"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": []
+      "mechanic": "向目標所在方向發出雷屬性直線範圍魔法攻擊 威力：220\n攻擊複數敵人時，對第一個之外的敵人威力降低50%\n追加效果：麻痺 持續時間：6秒"
     },
     {
       "id": 9,
       "no": 11,
-      "name": "地裂",
+      "name": "平原震裂",
       "nameEn": "Plaincracker",
       "icon": "/i/072000/072209.png",
       "rank": 2,
@@ -221,22 +311,48 @@
       "type": "魔法",
       "learnFrom": [
         {
+          "type": "野外",
+          "detail": "黑衣森林北部林區",
+          "mobs": [
+            "泥土魔像"
+          ]
+        },
+        {
+          "type": "野外",
+          "detail": "南薩納蘭",
+          "mobs": [
+            "砂石魔像"
+          ]
+        },
+        {
+          "type": "野外",
+          "detail": "拉諾西亞外地",
+          "mobs": [
+            "玄岩魔像"
+          ]
+        },
+        {
           "type": "副本",
-          "contentId": 18,
-          "detail": "銅鈴銅礦（困難）"
+          "detail": "騷亂坑道銅鈴銅山",
+          "mobs": [
+            "哥革魔像"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "甦醒遺跡喀恩埋沒聖堂",
+          "mobs": [
+            "喀恩守護者"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": [
-        "啟示者（Blue Sky）",
-        "玄巖巨像（The Floating City of Nym）",
-        "泥土巨像"
-      ]
+      "mechanic": "對自身周圍的敵人發動土屬性範圍魔法攻擊 威力：220\n攻擊複數敵人時，對第一個之外的敵人威力降低50%"
     },
     {
       "id": 11,
       "no": 12,
-      "name": "振毛",
+      "name": "怒髮衝冠",
       "nameEn": "Bristle",
       "icon": "/i/072000/072211.png",
       "rank": 2,
@@ -245,15 +361,14 @@
       "learnFrom": [
         {
           "type": "野外",
-          "mapId": 55,
-          "detail": "黑衣森林東部林區"
+          "detail": "黑衣森林東部林區",
+          "mobs": [
+            "狂野疣豬"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": [
-        "懸賞魔物：憤怒母豬（Lifemend Stump）",
-        "狂野疣豬（The Bramble Patch）"
-      ]
+      "mechanic": "效果時間內，自身發動的1次魔法威力提升50%\n持續時間：30秒\n無法與攻擊準備效果共存"
     },
     {
       "id": 24,
@@ -267,18 +382,26 @@
       "learnFrom": [
         {
           "type": "圖騰",
-          "detail": "異男子嘎希加（烏爾達哈）兌換・習得 10 個青魔法",
-          "npc": "異男子嘎希加",
-          "npcLocation": "烏爾達哈"
+          "detail": "天青圖騰",
+          "cond": "學習 10 個技能後",
+          "npc": "異男子嘎希迦",
+          "npcLocation": "烏爾達哈來生迴廊"
+        },
+        {
+          "type": "副本",
+          "detail": "無限城的死鬥",
+          "mobs": [
+            "恩奇都"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": []
+      "mechanic": "恢復自身及周圍隊員的體力，恢復量等同於自身當前的體力量"
     },
     {
       "id": 32,
       "no": 14,
-      "name": "五級石化",
+      "name": "5級石化",
       "nameEn": "Level 5 Petrify",
       "icon": "/i/072000/072232.png",
       "rank": 2,
@@ -287,19 +410,27 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 6,
-          "detail": "豪庫修别墅"
+          "detail": "名門府邸靜語莊園",
+          "mobs": [
+            "莊園的守衛"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "水晶塔 古代人迷宮",
+          "mobs": [
+            "詛咒之眼",
+            "腐朽之眼"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": [
-        "莊園的石像（Ground Floor (Haukke Manor)）"
-      ]
+      "mechanic": "令自身前方扇形範圍內等級為5的倍數的敵人陷入石化狀態\n持續時間：20秒\n命中率較低\n目標等級高於自身等級時無效"
     },
     {
       "id": 18,
       "no": 15,
-      "name": "尖銳之刃",
+      "name": "鋒利菜刀",
       "nameEn": "Sharpened Knife",
       "icon": "/i/072000/072218.png",
       "rank": 4,
@@ -308,19 +439,26 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 10,
-          "detail": "放浪神宮殿"
+          "detail": "神靈聖域放浪神古神殿",
+          "mobs": [
+            "提燈怪王"
+          ]
+        },
+        {
+          "type": "野外",
+          "detail": "拉諾西亞高地",
+          "mobs": [
+            "瑪貝利"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": [
-        "瑪貝利（Upper La Noscea）"
-      ]
+      "mechanic": "對目標發動無屬性物理攻擊 威力：220\n目標處於眩暈狀態時威力提高\n目標處於眩暈狀態時威力：450"
     },
     {
       "id": 36,
       "no": 16,
-      "name": "冰刺",
+      "name": "冰棘屏障",
       "nameEn": "Ice Spikes",
       "icon": "/i/072000/072236.png",
       "rank": 1,
@@ -329,15 +467,21 @@
       "learnFrom": [
         {
           "type": "野外",
-          "mapId": 54,
-          "detail": "黑衣森林中央林區"
+          "detail": "黑衣森林中央林區",
+          "mobs": [
+            "搗蛋鬼"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "名門府邸靜語莊園",
+          "mobs": [
+            "莊園小丑"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": [
-        "啟示者（Blue Sky）",
-        "竊賊小魔精（Chocobo Forest）"
-      ]
+      "mechanic": "一定時間內，自身受到物理攻擊時會對對方造成冰屬性魔法傷害\n威力：40 持續時間：15秒\n無法與水神的面紗、刺陣共存\n追加效果（發動機率50%）：減速20%\n持續時間：15秒"
     },
     {
       "id": 13,
@@ -351,16 +495,85 @@
       "learnFrom": [
         {
           "type": "野外",
-          "mapId": 31,
-          "detail": "拉諾西亞低地"
+          "detail": "拉諾西亞低地",
+          "mobs": [
+            "洞穴蝙蝠"
+          ]
+        },
+        {
+          "type": "野外",
+          "detail": "中薩納蘭",
+          "mobs": [
+            "烈陽蝙蝠"
+          ]
+        },
+        {
+          "type": "野外",
+          "detail": "西拉諾西亞",
+          "mobs": [
+            "黃昏蝙蝠"
+          ]
+        },
+        {
+          "type": "野外",
+          "detail": "黑衣森林東部林區",
+          "mobs": [
+            "黑蝙蝠",
+            "血蚤"
+          ]
+        },
+        {
+          "type": "野外",
+          "detail": "黑衣森林南部林區",
+          "mobs": [
+            "小狐蝠"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "名門府邸靜語莊園",
+          "mobs": [
+            "閣樓蝙蝠"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "古代遺跡喀恩埋沒聖堂",
+          "mobs": [
+            "聖堂蝙蝠"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "流沙迷宮樵明洞",
+          "mobs": [
+            "沙漠蝙蝠"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "毒霧洞窟黃金谷",
+          "mobs": [
+            "金谷蝙蝠"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "劍鬥領域日影地修練所",
+          "mobs": [
+            "日影地蝙蝠"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "甦醒遺跡喀恩埋沒聖堂",
+          "mobs": [
+            "聖堂蝙蝠"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": [
-        "漆黑蝙蝠（Sastasha）",
-        "洞穴蝙蝠（Blind Iron Mines）",
-        "沙蚤"
-      ]
+      "mechanic": "對目標發動無屬性魔法攻擊 威力：50\n追加效果：恢復自身魔力"
     },
     {
       "id": 10,
@@ -374,19 +587,41 @@
       "learnFrom": [
         {
           "type": "野外",
-          "mapId": 57,
-          "detail": "黑衣森林北部林區"
+          "detail": "黑衣森林北部林區",
+          "mobs": [
+            "幼體樹妖"
+          ]
+        },
+        {
+          "type": "野外",
+          "detail": "黑衣森林中央林區",
+          "mobs": [
+            "幼體樹妖",
+            "烏爾迦魯"
+          ]
+        },
+        {
+          "type": "野外",
+          "detail": "黑衣森林東部林區",
+          "mobs": [
+            "幼體樹妖"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "邪念妖地無限城古堡",
+          "mobs": [
+            "多節樹妖"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": [
-        "幼體樹精（Treespeak）"
-      ]
+      "mechanic": "令目標及其周圍的敵人陷入睡眠狀態 持續時間：30秒\n發動之後會停止自動攻擊"
     },
     {
       "id": 14,
       "no": 19,
-      "name": "投擲炸彈",
+      "name": "投彈",
       "nameEn": "Bomb Toss",
       "icon": "/i/072000/072214.png",
       "rank": 2,
@@ -395,21 +630,48 @@
       "learnFrom": [
         {
           "type": "野外",
-          "mapId": 30,
-          "detail": "拉諾西亞中部"
+          "detail": "中拉諾西亞",
+          "mobs": [
+            "哥布林魚師",
+            "哥布林賭徒"
+          ]
+        },
+        {
+          "type": "野外",
+          "detail": "西拉諾西亞",
+          "mobs": [
+            "哥布林獵手"
+          ]
+        },
+        {
+          "type": "野外",
+          "detail": "黑衣森林東部林區",
+          "mobs": [
+            "哥布林獵手"
+          ]
+        },
+        {
+          "type": "野外",
+          "detail": "黑衣森林南部林區",
+          "mobs": [
+            "哥布林暴徒"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "紛爭要地布雷福洛克斯野營地",
+          "mobs": [
+            "青藍之手滑翔兵"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": [
-        "哥布林漁師（Summerford）",
-        "哥布林賭徒（Summerford）",
-        "法外哥布林（Central Shroud）"
-      ]
+      "mechanic": "對指定地點發動火屬性範圍魔法攻擊 威力：200\n攻擊複數敵人時，對第一個之外的敵人威力降低50%\n追加效果：眩暈 持續時間：3秒"
     },
     {
       "id": 29,
       "no": 20,
-      "name": "弱點暴露",
+      "name": "破防",
       "nameEn": "Off-guard",
       "icon": "/i/072000/072229.png",
       "rank": 2,
@@ -418,13 +680,14 @@
       "learnFrom": [
         {
           "type": "圖騰",
-          "detail": "異男子嘎希加（烏爾達哈）兌換・習得 5 個青魔法",
-          "npc": "異男子嘎希加",
-          "npcLocation": "烏爾達哈"
+          "detail": "天青圖騰",
+          "cond": "學習 5 個技能後",
+          "npc": "異男子嘎希迦",
+          "npcLocation": "烏爾達哈來生迴廊"
         }
       ],
       "patch": "4.5",
-      "learnFromMob": []
+      "mechanic": "一定時間內，目標所受傷害提高5%\n持續時間：15秒\n該魔法有單獨計算的復唱時間，不受其他魔法復唱時間的影響\n與驚奇光共享復唱時間"
     },
     {
       "id": 26,
@@ -438,21 +701,55 @@
       "learnFrom": [
         {
           "type": "野外",
-          "mapId": 42,
-          "detail": "薩納蘭西部"
+          "detail": "西薩納蘭",
+          "mobs": [
+            "滑行炸彈"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "封鎖坑道銅鈴銅山",
+          "mobs": [
+            "爆破炸彈",
+            "烈火彈怪"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "魔獸領域日影地修練所",
+          "mobs": [
+            "瓦斯彈怪"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "名門府邸靜語莊園",
+          "mobs": [
+            "夫人手提燈"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "流沙迷宮樵明洞",
+          "mobs": [
+            "榴霰彈怪"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "巴哈姆特大迷宮 真源之章2",
+          "mobs": [
+            "護衛系統"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": [
-        "爆破爆彈怪（Shaft E1）",
-        "瓦斯彈怪（Halatali）",
-        "滑行爆彈怪"
-      ]
+      "mechanic": "對自身周圍的敵人發動火屬性範圍魔法攻擊 威力：1500\n自身處於油性分泌物狀態時威力提高至1800\n發動後自身陷入無法戰鬥狀態\n追加效果：意志薄弱\n即使進入無法戰鬥狀態也不會解除意志薄弱\n持續時間：600秒\n發動條件：非意志薄弱狀態中"
     },
     {
       "id": 27,
       "no": 22,
-      "name": "輸血",
+      "name": "融合",
       "nameEn": "Transfusion",
       "icon": "/i/072000/072227.png",
       "rank": 2,
@@ -461,18 +758,19 @@
       "learnFrom": [
         {
           "type": "圖騰",
-          "detail": "異男子嘎希加（烏爾達哈）兌換・習得 20 個青魔法",
-          "npc": "異男子嘎希加",
-          "npcLocation": "烏爾達哈"
+          "detail": "天青圖騰",
+          "cond": "學習 20 個技能後",
+          "npc": "異男子嘎希迦",
+          "npcLocation": "烏爾達哈來生迴廊"
         }
       ],
       "patch": "4.5",
-      "learnFromMob": []
+      "mechanic": "令一名隊員的體力與魔力完全恢復\n發動後自身陷入無法戰鬥狀態\n追加效果：意志薄弱\n即使進入無法戰鬥狀態也不會解除意志薄弱\n持續時間：600秒\n發動條件：非意志薄弱狀態中"
     },
     {
       "id": 21,
       "no": 23,
-      "name": "恐嚇",
+      "name": "拍掌",
       "nameEn": "Faze",
       "icon": "/i/072000/072221.png",
       "rank": 3,
@@ -481,20 +779,26 @@
       "learnFrom": [
         {
           "type": "野外",
-          "mapId": 32,
-          "detail": "拉諾西亞東部"
+          "detail": "中薩納蘭",
+          "mobs": [
+            "盧恩族護甲手"
+          ]
+        },
+        {
+          "type": "野外",
+          "detail": "東拉諾西亞",
+          "mobs": [
+            "盧恩族烘鷗手"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": [
-        "盧恩人烘鷗手（Gullperch Tower）",
-        "盧恩人搗亂者"
-      ]
+      "mechanic": "令自身前方扇形範圍內的敵人陷入眩暈狀態\n持續時間：6秒"
     },
     {
       "id": 41,
       "no": 24,
-      "name": "飛沙丁魚",
+      "name": "投擲沙丁魚",
       "nameEn": "Flying Sardine",
       "icon": "/i/072000/072241.png",
       "rank": 1,
@@ -503,19 +807,20 @@
       "learnFrom": [
         {
           "type": "野外",
-          "mapId": 32,
-          "detail": "拉諾西亞東部"
+          "detail": "東拉諾西亞",
+          "mobs": [
+            "碧企鵝",
+            "血腥瑪麗"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": [
-        "碧企鵝（Bloodshore）"
-      ]
+      "mechanic": "對目標發動無屬性物理攻擊 威力：10\n追加效果：中斷目標的技能詠唱"
     },
     {
       "id": 1,
       "no": 25,
-      "name": "噴嚏",
+      "name": "鼻息",
       "nameEn": "Snort",
       "icon": "/i/072000/072201.png",
       "rank": 4,
@@ -524,19 +829,19 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 81,
-          "detail": "龍頸"
+          "detail": "艾瑪姬娜杯鬥技大會決賽",
+          "mobs": [
+            "杜彭"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": [
-        "提豐（Halatali (Zone)）"
-      ]
+      "mechanic": "將自身前方扇形範圍內的敵人擊退20米"
     },
     {
       "id": 2,
       "no": 26,
-      "name": "四噸重物",
+      "name": "4星噸",
       "nameEn": "4-tonze Weight",
       "icon": "/i/072000/072202.png",
       "rank": 4,
@@ -545,19 +850,19 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 81,
-          "detail": "龍頸"
+          "detail": "艾瑪姬娜杯鬥技大會決賽",
+          "mobs": [
+            "奧爾特羅斯"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": [
-        "奧爾特羅斯（Halatali (Zone)）"
-      ]
+      "mechanic": "對指定地點發動無屬性範圍物理攻擊 威力：200\n攻擊複數敵人時，對第一個之外的敵人威力降低50%\n追加效果：40%加重 持續時間：30秒"
     },
     {
       "id": 17,
       "no": 27,
-      "name": "凝視",
+      "name": "詭異視線",
       "nameEn": "the Look",
       "icon": "/i/072000/072217.png",
       "rank": 2,
@@ -565,22 +870,34 @@
       "type": "魔法",
       "learnFrom": [
         {
+          "type": "野外",
+          "detail": "摩杜納",
+          "mobs": [
+            "理符任務：回收禁書《尖牙利齒的怪物》 暗黑札哈克"
+          ]
+        },
+        {
           "type": "副本",
-          "contentId": 14,
-          "detail": "阿姆達普爾古城"
+          "detail": "邪教駐地無限城古堡",
+          "mobs": [
+            "阿難塔波嘉"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "水晶塔 古代人迷宮",
+          "mobs": [
+            "瓦力弗"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": [
-        "阿難塔波嘉（The Presence Chamber (Amdapor Keep)）",
-        "拜書魔（The Great Gubal Library (Hard) (Zone)）",
-        "暗黑扎哈克"
-      ]
+      "mechanic": "向自身前方發動無屬性扇形範圍魔法攻擊\n威力：220\n攻擊複數敵人時，對第一個之外的敵人威力降低50%\n追加效果：提升仇恨"
     },
     {
       "id": 6,
       "no": 28,
-      "name": "口臭",
+      "name": "臭氣",
       "nameEn": "Bad Breath",
       "icon": "/i/072000/072206.png",
       "rank": 3,
@@ -589,21 +906,35 @@
       "learnFrom": [
         {
           "type": "野外",
-          "mapId": 54,
-          "detail": "黑衣森林中央林區"
+          "detail": "黑衣森林中央林區",
+          "mobs": [
+            "套索花",
+            "臭套索花"
+          ]
+        },
+        {
+          "type": "野外",
+          "detail": "摩杜納",
+          "mobs": [
+            "毛爾波爾"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "毒霧洞窟黃金谷",
+          "mobs": [
+            "毛爾波爾",
+            "守財夫人"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": [
-        "金藤魔界花（The Aurum Vale）",
-        "臭套索花（Sorrel Haven）",
-        "守財夫人"
-      ]
+      "mechanic": "向自身前方扇形範圍內噴吐臭氣\n令範圍內的敵人陷入中毒、傷害降低10%、加重40%、減速20%、失明、麻痺狀態\n中毒威力：20 持續時間：15秒\n同時中斷目標的技能詠唱"
     },
     {
       "id": 42,
       "no": 29,
-      "name": "金剛防禦",
+      "name": "超硬化",
       "nameEn": "Diamondback",
       "icon": "/i/072000/072242.png",
       "rank": 4,
@@ -612,19 +943,33 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 25,
-          "detail": "石衛城（困難）"
+          "detail": "激戰城塞石衛塔",
+          "mobs": [
+            "庫卡龍龜"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "皇都伊修加爾德保衛戰",
+          "mobs": [
+            "部落龍龜"
+          ]
+        },
+        {
+          "type": "野外",
+          "detail": "德拉瓦尼亞山麓地",
+          "mobs": [
+            "塔拉斯克"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": [
-        "庫卡龍龜（The Stone Vigil (Hard) (Zone)）"
-      ]
+      "mechanic": "一定時間內，將自身所受的傷害減輕90%，同時除特定攻擊之外其他所有擊退與吸引效果失效\n但是持續時間內無法移動或使用技能 持續時間：10秒\n追加效果：解除自身的狂戰士化狀態\n此技能發動後無法主動中斷"
     },
     {
       "id": 35,
       "no": 30,
-      "name": "鬥氣守護",
+      "name": "強力守護",
       "nameEn": "Mighty Guard",
       "icon": "/i/072000/072235.png",
       "rank": 4,
@@ -633,18 +978,19 @@
       "learnFrom": [
         {
           "type": "圖騰",
-          "detail": "異男子嘎希加（烏爾達哈）兌換・習得 10 個青魔法",
-          "npc": "異男子嘎希加",
-          "npcLocation": "烏爾達哈"
+          "detail": "天青圖騰",
+          "cond": "學習 10 個技能後",
+          "npc": "異男子嘎希迦",
+          "npcLocation": "烏爾達哈來生迴廊"
         }
       ],
       "patch": "4.5",
-      "learnFromMob": []
+      "mechanic": "令自身所受到的傷害減輕40%，同時以令攻擊造成的傷害降低40%為代價提升自身仇恨\n持續時間內詠唱不會因受到傷害而中斷\n再次發動時則取消該狀態 持續時間：永久"
     },
     {
       "id": 30,
       "no": 31,
-      "name": "黏舌頭",
+      "name": "滑舌",
       "nameEn": "Sticky Tongue",
       "icon": "/i/072000/072230.png",
       "rank": 4,
@@ -653,22 +999,33 @@
       "learnFrom": [
         {
           "type": "野外",
-          "mapId": 42,
-          "detail": "薩納蘭西部"
+          "detail": "中薩納蘭",
+          "mobs": [
+            "毒蟾蜍"
+          ]
+        },
+        {
+          "type": "野外",
+          "detail": "西薩納蘭",
+          "mobs": [
+            "癡笑巨蟾蜍"
+          ]
+        },
+        {
+          "type": "野外",
+          "detail": "東拉諾西亞",
+          "mobs": [
+            "巨蟾蜍"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": [
-        "杖蟾蜍（Moraby Bay）",
-        "跳崖豹（Western Thanalan）",
-        "地底夜蟾蜍（The Aurum Vale）",
-        "夜蟾蜍"
-      ]
+      "mechanic": "將目標拉向自身，同時令目標陷入眩暈狀態 持續時間：4秒\n追加效果：提升仇恨"
     },
     {
       "id": 28,
       "no": 32,
-      "name": "蟾蜍油",
+      "name": "油性分泌物",
       "nameEn": "Toad Oil",
       "icon": "/i/072000/072228.png",
       "rank": 3,
@@ -677,17 +1034,19 @@
       "learnFrom": [
         {
           "type": "野外",
-          "mapId": 42,
-          "detail": "薩納蘭西部"
+          "detail": "西薩納蘭",
+          "mobs": [
+            "癡笑巨蟾蜍"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": []
+      "mechanic": "一定時間內，自身的迴避率提高20%\n持續時間：180秒"
     },
     {
       "id": 37,
       "no": 33,
-      "name": "山羊之聲",
+      "name": "冰凍咆哮",
       "nameEn": "the Ram's Voice",
       "icon": "/i/072000/072237.png",
       "rank": 2,
@@ -696,21 +1055,33 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 12,
-          "detail": "刀鳴洞穴"
+          "detail": "流沙迷宮樵鳴洞",
+          "mobs": [
+            "奇美拉"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "死化奇美拉討伐戰",
+          "mobs": [
+            "死化奇美拉"
+          ]
+        },
+        {
+          "type": "野外",
+          "detail": "北薩納蘭",
+          "mobs": [
+            "強化奇美拉"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": [
-        "阿帕德馬克（Blue Sky）",
-        "啟示者（Blue Sky）",
-        "奇美拉"
-      ]
+      "mechanic": "對自身周圍的敵人發動冰屬性範圍魔法攻擊 威力：220\n攻擊複數敵人時，對第一個之外的敵人威力降低50%\n追加效果：凍結 持續時間：12秒"
     },
     {
       "id": 38,
       "no": 34,
-      "name": "龍之聲",
+      "name": "雷電咆哮",
       "nameEn": "the Dragon's Voice",
       "icon": "/i/072000/072238.png",
       "rank": 2,
@@ -719,16 +1090,28 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 12,
-          "detail": "刀鳴洞穴"
+          "detail": "流沙迷宮樵鳴洞",
+          "mobs": [
+            "奇美拉"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "死化奇美拉討伐戰",
+          "mobs": [
+            "奇美拉"
+          ]
+        },
+        {
+          "type": "野外",
+          "detail": "北薩納蘭",
+          "mobs": [
+            "強化奇美拉"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": [
-        "阿帕德馬克（Blue Sky）",
-        "啟示者（Blue Sky）",
-        "奇美拉"
-      ]
+      "mechanic": "對自身周圍的敵人發動雷屬性範圍魔法攻擊 威力：200\n無法攻擊到自身周圍8米以內的敵人\n攻擊複數敵人時，對第一個之外的敵人威力降低50%\n追加效果：麻痺 持續時間：9秒\n目標處於凍結狀態時威力提高，對特定敵人無效\n凍結狀態時威力：400\n追加效果：解除目標身上的凍結狀態，對特定敵人無效"
     },
     {
       "id": 23,
@@ -742,17 +1125,19 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 85,
-          "detail": "大城砦之戰"
+          "detail": "無限城的死鬥",
+          "mobs": [
+            "恩奇都"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": []
+      "mechanic": "給予目標等同其當前體力50%的傷害\n命中率較低\n目標等級高於自身等級時無效"
     },
     {
       "id": 15,
       "no": 36,
-      "name": "千針",
+      "name": "千根針",
       "nameEn": "1000 Needles",
       "icon": "/i/072000/072215.png",
       "rank": 4,
@@ -761,21 +1146,26 @@
       "learnFrom": [
         {
           "type": "野外",
-          "mapId": 45,
-          "detail": "薩納蘭南部"
+          "detail": "南薩納蘭",
+          "mobs": [
+            "仙人掌舞蹈家"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "流沙迷宮樵鳴洞",
+          "mobs": [
+            "仙人掌逃兵"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": [
-        "仙人花（Broken Water）",
-        "仙人刺舞蹈家（Broken Water）",
-        "仙人刺逃兵"
-      ]
+      "mechanic": "對自身周圍的敵人發動無屬性範圍物理攻擊\n固定傷害：1000\n傷害由範圍內的敵人分攤"
     },
     {
       "id": 40,
       "no": 37,
-      "name": "墨汁噴射",
+      "name": "噴墨",
       "nameEn": "Ink Jet",
       "icon": "/i/072000/072240.png",
       "rank": 3,
@@ -784,19 +1174,19 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 28,
-          "detail": "薩薩塔（困難）"
+          "detail": "逆轉要害沙斯塔夏溶洞",
+          "mobs": [
+            "克拉肯"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": [
-        "克拉肯（Sastasha (Hard)）"
-      ]
+      "mechanic": "向自身前方發動無屬性扇形範圍魔法攻擊 威力：200\n攻擊複數敵人時，對第一個之外的敵人威力降低50%\n追加效果：失明 持續時間：30秒"
     },
     {
       "id": 43,
       "no": 38,
-      "name": "火焰投槍",
+      "name": "火投槍",
       "nameEn": "Fire Angon",
       "icon": "/i/072000/072243.png",
       "rank": 3,
@@ -805,12 +1195,14 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 30,
-          "detail": "放浪神宮殿（困難）"
+          "detail": "武裝聖域放浪神古神殿",
+          "mobs": [
+            "折角騎士 寇黑加"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": []
+      "mechanic": "對目標及其周圍的敵人發動火屬性範圍物理攻擊 威力：200\n攻擊複數敵人時，對目標之外的敵人威力降低50%"
     },
     {
       "id": 33,
@@ -824,18 +1216,19 @@
       "learnFrom": [
         {
           "type": "圖騰",
-          "detail": "異男子嘎希加（烏爾達哈）兌換・通關狩魔競技場 10 關",
-          "npc": "異男子嘎希加",
-          "npcLocation": "烏爾達哈"
+          "detail": "天青圖騰",
+          "cond": "完成 10 種假面狂歡關卡後",
+          "npc": "異男子嘎希迦",
+          "npcLocation": "烏爾達哈來生迴廊"
         }
       ],
       "patch": "4.5",
-      "learnFromMob": []
+      "mechanic": "令自身發動攻擊造成的傷害提高50%，同時移動速度提高30%\n持續時間：15秒\n效果結束後對自身附加狂戰士化的副作用狀態\n持續時間：15秒\n狂戰士化的副作用效果：無法發動自動攻擊、魔法、戰技、能力"
     },
     {
       "id": 31,
       "no": 40,
-      "name": "尾刺",
+      "name": "甩尾",
       "nameEn": "Tail Screw",
       "icon": "/i/072000/072231.png",
       "rank": 4,
@@ -844,16 +1237,21 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 28,
-          "detail": "薩薩塔（困難）"
+          "detail": "逆轉要害沙斯塔夏溶洞",
+          "mobs": [
+            "棘刺殼蝦"
+          ]
+        },
+        {
+          "type": "野外",
+          "detail": "基拉巴尼亞山區",
+          "mobs": [
+            "峭壁巨鉗蝦"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": [
-        "粗暴理髮師（Rustrock）",
-        "巨鉗蝦（Strategeion - 4F）",
-        "峭壁巨鉗蝦"
-      ]
+      "mechanic": "令目標的體力降至個位數\n命中率較低\n目標等級高於自身等級時無效"
     },
     {
       "id": 12,
@@ -867,14 +1265,21 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 2,
-          "detail": "坦姆·塔拉神廟"
+          "detail": "地下靈殿塔姆·塔拉墓園",
+          "mobs": [
+            "主宰者 加爾梵斯"
+          ]
+        },
+        {
+          "type": "野外",
+          "detail": "黑衣森林南部林區",
+          "mobs": [
+            "精神吸取者"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": [
-        "爆破者（Machinery Bay 67）"
-      ]
+      "mechanic": "對自身周圍的敵人發動無屬性範圍魔法攻擊 威力：200\n攻擊複數敵人時，對第一個之外的敵人威力降低50%\n追加效果：麻痺 持續時間：30秒"
     },
     {
       "id": 34,
@@ -888,18 +1293,19 @@
       "learnFrom": [
         {
           "type": "圖騰",
-          "detail": "異男子嘎希加（烏爾達哈）兌換・通關狩魔競技場 20 關",
-          "npc": "異男子嘎希加",
-          "npcLocation": "烏爾達哈"
+          "detail": "天青圖騰",
+          "cond": "完成 20 種假面狂歡關卡後",
+          "npc": "異男子嘎希迦",
+          "npcLocation": "烏爾達哈來生迴廊"
         }
       ],
       "patch": "4.5",
-      "learnFromMob": []
+      "mechanic": "令目標陷入死亡宣告狀態 持續時間：15秒\n持續時間結束後，目標陷入無法戰鬥狀態\n命中率較低\n目標等級高於自身等級時無效"
     },
     {
       "id": 39,
       "no": 43,
-      "name": "奇異之光",
+      "name": "驚奇光",
       "nameEn": "Peculiar Light",
       "icon": "/i/072000/072239.png",
       "rank": 2,
@@ -908,20 +1314,26 @@
       "learnFrom": [
         {
           "type": "野外",
-          "mapId": 67,
-          "detail": "摩杜納"
+          "detail": "摩杜納",
+          "mobs": [
+            "靜水泥沼蠑螈"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "休養勝地布雷福洛克斯野營地",
+          "mobs": [
+            "水棲蠑螈"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": [
-        "靜水泥沼蠑螈（Fogfens）",
-        "衝浪水蜥（Mudstop Watergush）"
-      ]
+      "mechanic": "令自身周圍的敵人所受到的魔法傷害提高5%\n持續時間：15秒\n該魔法有單獨計算的復唱時間，不受其他魔法復唱時間的影響\n與破防共享復唱時間"
     },
     {
       "id": 44,
       "no": 44,
-      "name": "羽毛雨",
+      "name": "飛翎雨",
       "nameEn": "Feather Rain",
       "icon": "/i/072000/072244.png",
       "rank": 5,
@@ -930,17 +1342,19 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 65,
-          "detail": "嚎哭之眼（極難）"
+          "detail": "迦樓羅殲殛戰",
+          "mobs": [
+            "迦樓羅"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": []
+      "mechanic": "對指定地點發動風屬性範圍魔法攻擊 威力：220\n追加效果：風屬性持續傷害\n威力：40 持續時間：6秒\n與地火噴發共享復唱時間"
     },
     {
       "id": 45,
       "no": 45,
-      "name": "熔岩爆發",
+      "name": "噴發",
       "nameEn": "Eruption",
       "icon": "/i/072000/072245.png",
       "rank": 5,
@@ -949,12 +1363,28 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 63,
-          "detail": "灼熱炭盆（極難）"
+          "detail": "伊弗利特討伐戰",
+          "mobs": [
+            "伊弗利特"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "伊弗利特殲滅戰",
+          "mobs": [
+            "伊弗利特"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "伊弗利特殲殛戰",
+          "mobs": [
+            "伊弗利特"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": []
+      "mechanic": "對指定地點發動火屬性範圍魔法攻擊 威力：300\n與飛翎雨共享復唱時間"
     },
     {
       "id": 46,
@@ -968,17 +1398,26 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 64,
-          "detail": "大地之臍（極難）"
+          "detail": "泰坦殲滅戰",
+          "mobs": [
+            "泰坦"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "泰坦殲殛戰",
+          "mobs": [
+            "泰坦"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": []
+      "mechanic": "向自身前方發動土屬性扇形範圍物理攻擊 威力：400\n攻擊複數敵人時，對第一個之外的敵人威力降低50%\n與轟雷共享復唱時間"
     },
     {
       "id": 47,
       "no": 47,
-      "name": "雷擊",
+      "name": "轟雷",
       "nameEn": "Shock Strike",
       "icon": "/i/072000/072247.png",
       "rank": 5,
@@ -987,19 +1426,26 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 78,
-          "detail": "雷神木（極難）"
+          "detail": "拉姆殲滅戰",
+          "mobs": [
+            "拉姆"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "拉姆殲殛戰",
+          "mobs": [
+            "拉姆"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": [
-        "拉姆（The Striking Tree）"
-      ]
+      "mechanic": "對目標及其周圍的敵人發動雷屬性範圍魔法攻擊 威力：400\n攻擊複數敵人時，對目標之外的敵人威力降低50%\n與山崩共享復唱時間"
     },
     {
       "id": 48,
       "no": 48,
-      "name": "冰之舞",
+      "name": "冰雪亂舞",
       "nameEn": "Glass Dance",
       "icon": "/i/072000/072248.png",
       "rank": 5,
@@ -1008,19 +1454,19 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 80,
-          "detail": "阿法圓形競技場（極難）"
+          "detail": "希瓦殲殛戰",
+          "mobs": [
+            "濕婆"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": [
-        "希瓦（Akh Afah Amphitheatre）"
-      ]
+      "mechanic": "向自身前方與兩側發動冰屬性扇形範圍魔法攻擊\n威力：350\n攻擊複數敵人時，對第一個之外的敵人威力降低50%\n與水神的面紗共享復唱時間"
     },
     {
       "id": 49,
       "no": 49,
-      "name": "波濤之衣",
+      "name": "水神的面紗",
       "nameEn": "Veil of the Whorl",
       "icon": "/i/072000/072249.png",
       "rank": 5,
@@ -1029,19 +1475,26 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 73,
-          "detail": "海神之嗥（極難）"
+          "detail": "利維亞桑殲滅戰",
+          "mobs": [
+            "利維坦"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "利維亞桑殲殛戰",
+          "mobs": [
+            "利維坦"
+          ]
         }
       ],
       "patch": "4.5",
-      "learnFromMob": [
-        "利維亞桑（The Whorleater）"
-      ]
+      "mechanic": "一定時間內，自身受到攻擊時會對對方造成水屬性魔法傷害\n威力：50 持續時間：30秒\n無法與冰棘屏障、刺陣共存\n與冰雪亂舞共享復唱時間"
     },
     {
       "id": 50,
       "no": 50,
-      "name": "山風",
+      "name": "高山氣流",
       "nameEn": "Alpine Draft",
       "icon": "/i/072000/072251.png",
       "rank": 2,
@@ -1049,21 +1502,27 @@
       "type": "魔法",
       "learnFrom": [
         {
+          "type": "野外",
+          "detail": "阿巴拉提亞雲海",
+          "mobs": [
+            "獅鷲"
+          ]
+        },
+        {
           "type": "副本",
-          "contentId": 36,
-          "detail": "黃昏前哨站"
+          "detail": "冰雪廢堡暮衛塔",
+          "mobs": [
+            "獅身巨鷹"
+          ]
         }
       ],
       "patch": "5.1",
-      "learnFromMob": [
-        "獅鷲（The Sea of Clouds）",
-        "鷹頭獅"
-      ]
+      "mechanic": "向目標所在方向發出風屬性直線範圍魔法攻擊 威力：220\n攻擊複數敵人時，對第一個之外的敵人威力降低50%"
     },
     {
       "id": 51,
       "no": 51,
-      "name": "波動波",
+      "name": "萬變水波",
       "nameEn": "Protean Wave",
       "icon": "/i/072000/072252.png",
       "rank": 3,
@@ -1072,20 +1531,26 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 114,
-          "detail": "亞歷山大機神城 起動篇2"
+          "detail": "亞歷山大機神城 啟動之章3",
+          "mobs": [
+            "有生命活水"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "零式亞歷山大機神城 啟動之章3",
+          "mobs": [
+            "有生命活水"
+          ]
         }
       ],
       "patch": "5.1",
-      "learnFromMob": [
-        "有生命活水（Condensate Demineralizer 9）",
-        "水之式神"
-      ]
+      "mechanic": "向自身前方發動水屬性扇形範圍魔法攻擊 威力：220\n攻擊複數敵人時，對第一個之外的敵人威力降低50%\n追加效果：將範圍內的敵人擊退15米"
     },
     {
       "id": 52,
       "no": 52,
-      "name": "寒流",
+      "name": "狂風暴雪",
       "nameEn": "Northerlies",
       "icon": "/i/072000/072253.png",
       "rank": 4,
@@ -1094,21 +1559,19 @@
       "learnFrom": [
         {
           "type": "野外",
-          "mapId": 2200,
-          "detail": "庫爾札斯西部高地"
+          "detail": "庫爾扎斯西部高地",
+          "mobs": [
+            "板岩雪人"
+          ]
         }
       ],
       "patch": "5.1",
-      "learnFromMob": [
-        "孤獨大腳雪人（The Bed of Bones）",
-        "米勒卡（Coerthas Western Highlands）",
-        "板岩大腳雪人"
-      ]
+      "mechanic": "向自身前方發動冰屬性扇形範圍魔法攻擊 威力：220\n攻擊複數敵人時，對第一個之外的敵人威力降低50%\n追加效果：敵人處於水毒狀態時解除該狀態，同時附加凍結狀態\n持續時間：20秒"
     },
     {
       "id": 53,
       "no": 53,
-      "name": "靜電感應",
+      "name": "生物電",
       "nameEn": "Electrogenesis",
       "icon": "/i/072000/072254.png",
       "rank": 2,
@@ -1117,19 +1580,19 @@
       "learnFrom": [
         {
           "type": "野外",
-          "mapId": 2100,
-          "detail": "雲海"
+          "detail": "阿巴拉提亞雲海",
+          "mobs": [
+            "雷牙"
+          ]
         }
       ],
       "patch": "5.1",
-      "learnFromMob": [
-        "雷牙（Voor Sian Siran）"
-      ]
+      "mechanic": "對目標及其周圍的敵人發動雷屬性範圍魔法攻擊 威力：220\n攻擊複數敵人時，對目標之外的敵人威力降低50%"
     },
     {
       "id": 54,
       "no": 54,
-      "name": "冰刀斬",
+      "name": "寒光",
       "nameEn": "Kaltstrahl",
       "icon": "/i/072000/072255.png",
       "rank": 2,
@@ -1138,14 +1601,21 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 112,
-          "detail": "亞歷山大機神城 起動篇1"
+          "detail": "亞歷山大機神城 啟動之章1",
+          "mobs": [
+            "浮士德"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "亞歷山大機神城 啟動之章2",
+          "mobs": [
+            "浮士德"
+          ]
         }
       ],
       "patch": "5.1",
-      "learnFromMob": [
-        "浮士德（Machinery Bay 44）"
-      ]
+      "mechanic": "向自身前方發出無屬性扇形範圍物理攻擊 威力：220\n攻擊複數敵人時，對第一個之外的敵人威力降低50%"
     },
     {
       "id": 55,
@@ -1158,20 +1628,27 @@
       "type": "物理",
       "learnFrom": [
         {
+          "type": "野外",
+          "detail": "德拉瓦尼亞河谷地",
+          "mobs": [
+            "焚書任務：回收禁書《青眼怪物》 上級惡魔"
+          ]
+        },
+        {
           "type": "副本",
-          "contentId": 31,
-          "detail": "古巴拉大圖書館"
+          "detail": "學識寶庫迦巴勒幻想圖書館",
+          "mobs": [
+            "偷書者"
+          ]
         }
       ],
       "patch": "5.1",
-      "learnFromMob": [
-        "上級惡魔（The Paths of Creation）"
-      ]
+      "mechanic": "對目標發動無屬性物理攻擊 威力：220\n追加效果：麻痺 持續時間：30秒"
     },
     {
       "id": 56,
       "no": 56,
-      "name": "啾啾聲",
+      "name": "嘰嘰喳喳",
       "nameEn": "Chirp",
       "icon": "/i/072000/072257.png",
       "rank": 1,
@@ -1180,20 +1657,19 @@
       "learnFrom": [
         {
           "type": "野外",
-          "mapId": 2100,
-          "detail": "雲海"
+          "detail": "阿巴拉提亞雲海",
+          "mobs": [
+            "猴面雀"
+          ]
         }
       ],
       "patch": "5.1",
-      "learnFromMob": [
-        "猴面雀（Cloudtop）",
-        "斯奎克（The Sea of Clouds）"
-      ]
+      "mechanic": "令自身周圍的敵人陷入睡眠狀態 持續時間：40秒\n發動之後會停止自動攻擊"
     },
     {
       "id": 57,
       "no": 57,
-      "name": "恐怖音波",
+      "name": "怪音波",
       "nameEn": "Eerie Soundwave",
       "icon": "/i/072000/072258.png",
       "rank": 2,
@@ -1202,19 +1678,19 @@
       "learnFrom": [
         {
           "type": "野外",
-          "mapId": 2101,
-          "detail": "阿吉斯·拉"
+          "detail": "魔大陸阿濟茲拉",
+          "mobs": [
+            "疫蟲"
+          ]
         }
       ],
       "patch": "5.1",
-      "learnFromMob": [
-        "疫蟲（Beta Quadrant）"
-      ]
+      "mechanic": "解除自身周圍敵人身上強化效果中的一種"
     },
     {
       "id": 58,
       "no": 58,
-      "name": "呸姆治療",
+      "name": "澎澎療傷",
       "nameEn": "Pom Cure",
       "icon": "/i/072000/072259.png",
       "rank": 3,
@@ -1223,19 +1699,26 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 66,
-          "detail": "荊棘冠（困難）"
+          "detail": "莫古力賢王殲滅戰",
+          "mobs": [
+            "茸茸之癒 庫普洛·奇普"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "莫古力賢王殲殛戰",
+          "mobs": [
+            "茸茸之癒 庫普洛·奇普"
+          ]
         }
       ],
       "patch": "5.1",
-      "learnFromMob": [
-        "茸茸之愈 庫普洛·奇普（Thornmarch）"
-      ]
+      "mechanic": "恢復目標的體力 恢復力：100\n自身處於以太複製：治療狀態時 恢復力：500"
     },
     {
       "id": 59,
       "no": 59,
-      "name": "哥布林皮膚",
+      "name": "哥布防禦",
       "nameEn": "Gobskin",
       "icon": "/i/072000/072260.png",
       "rank": 4,
@@ -1244,19 +1727,27 @@
       "learnFrom": [
         {
           "type": "野外",
-          "mapId": 2001,
-          "detail": "龍族領地後地"
+          "detail": "德拉瓦尼亞河谷地",
+          "mobs": [
+            "機工兵 斯利普金克斯"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "亞歷山大機神城 天動之章2",
+          "mobs": [
+            "亞歷山大伏兵",
+            "亞歷山大揮刀兵"
+          ]
         }
       ],
       "patch": "5.1",
-      "learnFromMob": [
-        "機工兵 斯利普金克斯（The Dravanian Hinterlands）"
-      ]
+      "mechanic": "為自身及周圍隊員附加能夠抵禦一定傷害的防護罩\n該防護罩能夠抵消相當於恢復力100的傷害量\n持續時間：30秒\n自身處於以太複製：治療狀態時\n該防護罩能夠抵消相當於恢復力250的傷害量\n無法與學者的鼓舞和賢者的均衡診斷及均衡預後效果共存"
     },
     {
       "id": 60,
       "no": 60,
-      "name": "魔法之鎚",
+      "name": "魔法錘",
       "nameEn": "Magic Hammer",
       "icon": "/i/072000/072261.png",
       "rank": 2,
@@ -1265,19 +1756,19 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 196,
-          "detail": "古巴拉大圖書館（困難）"
+          "detail": "秘本寶庫迦巴勒幻想圖書館",
+          "mobs": [
+            "阿班達"
+          ]
         }
       ],
       "patch": "5.1",
-      "learnFromMob": [
-        "艾匹羅基（Blue Sky）"
-      ]
+      "mechanic": "對目標及其周圍的敵人發動無屬性魔法攻擊 威力：250\n攻擊複數敵人時，對目標之外的敵人威力降低50%\n追加效果：令目標的智力與精神降低10%\n持續時間：10秒\n追加效果：恢復自身最大魔力的10%\n該魔法有單獨計算的復唱時間，並與糖果手杖共享復唱時間"
     },
     {
       "id": 61,
       "no": 61,
-      "name": "迴避",
+      "name": "防禦指示",
       "nameEn": "Avail",
       "icon": "/i/072000/072262.png",
       "rank": 1,
@@ -1286,12 +1777,14 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 41,
-          "detail": "聖莫西安植物園"
+          "detail": "草木庭園聖茉夏娜植物園",
+          "mobs": [
+            "鷹鋒女王"
+          ]
         }
       ],
       "patch": "5.1",
-      "learnFromMob": []
+      "mechanic": "讓目標隊員替自己承受來自敵人的攻擊\n但對部分攻擊無效\n持續時間：12秒\n與目標的距離不能超過10米\n該魔法有單獨計算的復唱時間"
     },
     {
       "id": 62,
@@ -1305,15 +1798,14 @@
       "learnFrom": [
         {
           "type": "野外",
-          "mapId": 2001,
-          "detail": "龍族領地後地"
+          "detail": "德拉瓦尼亞河谷地",
+          "mobs": [
+            "智蛙"
+          ]
         }
       ],
       "patch": "5.1",
-      "learnFromMob": [
-        "孤獨的貝洛·羅格（The Ruling Quarter）",
-        "智蛙（The Ruling Quarter）"
-      ]
+      "mechanic": "向周圍的敵人進行挑釁，令自身的仇恨變為最高"
     },
     {
       "id": 63,
@@ -1326,21 +1818,28 @@
       "type": "魔法",
       "learnFrom": [
         {
+          "type": "野外",
+          "detail": "阿巴拉提亞雲海",
+          "mobs": [
+            "安祖主母",
+            "安祖"
+          ]
+        },
+        {
           "type": "副本",
-          "contentId": 17,
-          "detail": "塞壬燈塔"
+          "detail": "領航明燈天狼星燈塔",
+          "mobs": [
+            "祖"
+          ]
         }
       ],
       "patch": "5.1",
-      "learnFromMob": [
-        "安祖（The Gauntlet）",
-        "角祖（Outer La Noscea）"
-      ]
+      "mechanic": "對目標發動風屬性魔法攻擊 威力：210"
     },
     {
       "id": 64,
       "no": 64,
-      "name": "口哨",
+      "name": "口笛",
       "nameEn": "Whistle",
       "icon": "/i/072000/072265.png",
       "rank": 3,
@@ -1349,15 +1848,14 @@
       "learnFrom": [
         {
           "type": "野外",
-          "mapId": 2100,
-          "detail": "雲海"
+          "detail": "阿巴拉提亞雲海",
+          "mobs": [
+            "長頸駝"
+          ]
         }
       ],
       "patch": "5.1",
-      "learnFromMob": [
-        "長頸駝（Last Step）",
-        "長頸駱（Mount Yorn）"
-      ]
+      "mechanic": "效果時間內自身發動的1次魔法為物理攻擊時，威力提升80%\n持續時間：30秒\n無法與蓄力效果共存"
     },
     {
       "id": 65,
@@ -1371,14 +1869,14 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 34,
-          "detail": "聖教騎士團教堂"
+          "detail": "聖教中樞伊修加爾德教皇廳",
+          "mobs": [
+            "白騎士"
+          ]
         }
       ],
       "patch": "5.1",
-      "learnFromMob": [
-        "白騎士（The Vault (Zone)）"
-      ]
+      "mechanic": "向目標所在方向發出無屬性直線範圍魔法攻擊 威力：200\n敵人處於止步狀態時解除該狀態，同時提升威力\n敵人處於止步狀態時威力：400\n攻擊複數敵人時，對第一個之外的敵人威力降低50%\n追加效果：減速20% 持續時間：20秒"
     },
     {
       "id": 66,
@@ -1392,19 +1890,19 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 34,
-          "detail": "聖教騎士團教堂"
+          "detail": "聖教中樞伊修加爾德教皇廳",
+          "mobs": [
+            "黑騎士"
+          ]
         }
       ],
       "patch": "5.1",
-      "learnFromMob": [
-        "黑騎士（The Vault (Zone)）"
-      ]
+      "mechanic": "向目標所在方向發出無屬性直線範圍魔法攻擊 威力：200\n敵人處於減速狀態時解除該狀態，同時提升威力\n敵人處於減速狀態時威力：400\n攻擊複數敵人時，對第一個之外的敵人威力降低50%\n追加效果：止步 持續時間：20秒"
     },
     {
       "id": 67,
       "no": 67,
-      "name": "五級死亡",
+      "name": "5級致死一擊",
       "nameEn": "Level 5 Death",
       "icon": "/i/072000/072268.png",
       "rank": 4,
@@ -1413,19 +1911,19 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 31,
-          "detail": "古巴拉大圖書館"
+          "detail": "學識寶庫加巴勒幻想圖書館",
+          "mobs": [
+            "64頁"
+          ]
         }
       ],
       "patch": "5.1",
-      "learnFromMob": [
-        "64頁（Middle Floors）"
-      ]
+      "mechanic": "令自身周圍等級為5的倍數的敵人陷入無法戰鬥狀態\n命中率較低\n目標等級高於自身等級時無效\n該魔法有單獨計算的復唱時間，並與超振動共享復唱時間"
     },
     {
       "id": 68,
       "no": 68,
-      "name": "發射器",
+      "name": "火箭砲",
       "nameEn": "Launcher",
       "icon": "/i/072000/072269.png",
       "rank": 2,
@@ -1434,16 +1932,14 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 219,
-          "detail": "貝爾薩斯長城"
+          "detail": "監牢鐵臂巴埃薩長城",
+          "mobs": [
+            "武裝重甲"
+          ]
         }
       ],
       "patch": "5.1",
-      "learnFromMob": [
-        "武裝重甲（Magitek Installation）",
-        "多瑪武裝重甲（Hall of the Four Pillars）",
-        "伽馬"
-      ]
+      "mechanic": "給予自身周圍敵人等同其當前體力50%或30%或20%或10%的傷害\n目標等級高於自身等級時無效"
     },
     {
       "id": 69,
@@ -1457,19 +1953,26 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 115,
-          "detail": "亞歷山大機神城 起動篇4"
+          "detail": "亞歷山大機神城 啟動之章4",
+          "mobs": [
+            "操縱者"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "零式亞歷山大機神城 啟動之章4",
+          "mobs": [
+            "操縱者"
+          ]
         }
       ],
       "patch": "5.1",
-      "learnFromMob": [
-        "操縱者（The Burden of the Father）"
-      ]
+      "mechanic": "對目標發動無屬性魔法攻擊 威力：220\n追加效果：眩暈 持續時間：1秒\n該技能的眩暈效果不受其他眩暈影響"
     },
     {
       "id": 70,
       "no": 70,
-      "name": "仙人掌守護",
+      "name": "仙人盾",
       "nameEn": "Cactguard",
       "icon": "/i/072000/072271.png",
       "rank": 1,
@@ -1478,19 +1981,19 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 26,
-          "detail": "卡爾恩沉沒神殿（困難）"
+          "detail": "甦醒遺跡喀恩埋沒聖堂",
+          "mobs": [
+            "仙人掌守衛"
+          ]
         }
       ],
       "patch": "5.1",
-      "learnFromMob": [
-        "仙人刺守衛（The Sunken Temple of Qarn (Hard) (Zone)）"
-      ]
+      "mechanic": "指定一名隊員，令其受到的傷害減輕5%\n持續時間：6秒\n自身處於以太複製：防護狀態時\n隊員受到的傷害減輕15%"
     },
     {
       "id": 71,
       "no": 71,
-      "name": "復仇爆破",
+      "name": "復仇衝擊",
       "nameEn": "Revenge Blast",
       "icon": "/i/072000/072272.png",
       "rank": 2,
@@ -1499,18 +2002,19 @@
       "learnFrom": [
         {
           "type": "圖騰",
-          "detail": "異男子嘎希加（烏爾達哈）兌換・習得 50 個青魔法",
-          "npc": "異男子嘎希加",
-          "npcLocation": "烏爾達哈"
+          "detail": "天青圖騰",
+          "cond": "學習 50 個技能後",
+          "npc": "異男子嘎希迦",
+          "npcLocation": "烏爾達哈來生迴廊"
         }
       ],
       "patch": "5.1",
-      "learnFromMob": []
+      "mechanic": "對目標發動無屬性物理攻擊 威力：50\n自身剩餘體力在20%以下時威力提升\n體力在20%以下時：500"
     },
     {
       "id": 72,
       "no": 72,
-      "name": "天使耳語",
+      "name": "天使低語",
       "nameEn": "Angel Whisper",
       "icon": "/i/072000/072273.png",
       "rank": 4,
@@ -1519,13 +2023,14 @@
       "learnFrom": [
         {
           "type": "圖騰",
-          "detail": "異男子嘎希加（烏爾達哈）兌換・通關狩魔競技場 30 關",
-          "npc": "異男子嘎希加",
-          "npcLocation": "烏爾達哈"
+          "detail": "天青圖騰",
+          "cond": "完成 30 個假面狂歡關卡後",
+          "npc": "異男子嘎希迦",
+          "npcLocation": "烏爾達哈來生迴廊"
         }
       ],
       "patch": "5.15",
-      "learnFromMob": []
+      "mechanic": "令無法戰鬥的目標以衰弱狀態重新振作起來\n該魔法有單獨計算的復唱時間"
     },
     {
       "id": 73,
@@ -1538,20 +2043,27 @@
       "type": "魔法",
       "learnFrom": [
         {
+          "type": "副本",
+          "detail": "腐壞遺跡無限城市街古跡",
+          "mobs": [
+            "瓦魔蛾"
+          ]
+        },
+        {
           "type": "野外",
-          "mapId": 2100,
-          "detail": "雲海"
+          "detail": "阿巴拉提亞雲海",
+          "mobs": [
+            "阿巴拉提亞瓦魔蛾"
+          ]
         }
       ],
       "patch": "5.15",
-      "learnFromMob": [
-        "阿巴拉提亞瓦魔蛾（The Blue Window）"
-      ]
+      "mechanic": "恢復自身及周圍隊員的體力 恢復力：50\n追加效果：解除部分弱化效果中的一種\n自身處於以太複製：治療狀態時 恢復力：300"
     },
     {
       "id": 74,
       "no": 74,
-      "name": "反流",
+      "name": "逆流",
       "nameEn": "Reflux",
       "icon": "/i/072000/072275.png",
       "rank": 3,
@@ -1559,20 +2071,27 @@
       "type": "魔法",
       "learnFrom": [
         {
+          "type": "野外",
+          "detail": "德拉瓦尼亞雲海",
+          "mobs": [
+            "雲上雙足飛龍"
+          ]
+        },
+        {
           "type": "副本",
-          "contentId": 39,
-          "detail": "龍巢"
+          "detail": "邪龍王座龍巢神殿",
+          "mobs": [
+            "雷雅克魔龍"
+          ]
         }
       ],
       "patch": "5.15",
-      "learnFromMob": [
-        "雲上雙足飛龍（Four Arms）"
-      ]
+      "mechanic": "對目標發動雷屬性魔法攻擊 威力：220\n追加效果：40%加重 持續時間：10秒\n該技能的加重效果不受其他加重影響"
     },
     {
       "id": 75,
       "no": 75,
-      "name": "吞噬",
+      "name": "捕食",
       "nameEn": "Devour",
       "icon": "/i/072000/072276.png",
       "rank": 1,
@@ -1581,19 +2100,26 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 93,
-          "detail": "巴哈姆特大迷宮 邂逅篇1"
+          "detail": "腐壞遺跡無限城市街古跡",
+          "mobs": [
+            "腐壞貪吃鬼"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "巴哈姆特大迷宮 邂逅之章1",
+          "mobs": [
+            "神杖巨蛇"
+          ]
         }
       ],
       "patch": "5.15",
-      "learnFromMob": [
-        "神杖小蛇（Allagan Megastructure）"
-      ]
+      "mechanic": "對目標發動無屬性魔法攻擊 威力：250\n追加效果：一定時間內，自身的最大體力提高20%\n持續時間：15秒\n以太複製：防護狀態下的持續時間變為70秒\n追加效果：恢復傷害量100%的體力\n該魔法有單獨計算的復唱時間"
     },
     {
       "id": 76,
       "no": 76,
-      "name": "濃縮天秤",
+      "name": "小偵測",
       "nameEn": "Condensed Libra",
       "icon": "/i/072000/072277.png",
       "rank": 3,
@@ -1602,19 +2128,19 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 196,
-          "detail": "古巴拉大圖書館（困難）"
+          "detail": "秘本寶庫迦巴勒幻想圖書館",
+          "mobs": [
+            "自走人偶抄寫員"
+          ]
         }
       ],
       "patch": "5.15",
-      "learnFromMob": [
-        "鬥場抄寫員（Blue Sky）"
-      ]
+      "mechanic": "對目標隨機附加星極性耐性降低、靈極性耐性降低、物理受傷加重狀態 持續時間：30秒\n星極性耐性降低效果：所受火、風、雷屬性傷害提高5%\n靈極性耐性降低效果：所受水、土、冰屬性傷害提高5%\n物理受傷加重效果：所受物理傷害提高5%\n以上狀態無法疊加"
     },
     {
       "id": 77,
       "no": 77,
-      "name": "以太模仿",
+      "name": "乙太複製",
       "nameEn": "Aetheric Mimicry",
       "icon": "/i/072000/072278.png",
       "rank": 4,
@@ -1623,19 +2149,19 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 40,
-          "detail": "塞壬燈塔（困難）"
+          "detail": "地脈靈燈天狼星燈塔",
+          "mobs": [
+            "被腐化連線後產生的小怪"
+          ]
         }
       ],
       "patch": "5.15",
-      "learnFromMob": [
-        "腐化物（Fuel Chamber）"
-      ]
+      "mechanic": "指定一名除自身外的玩家，複製其以太特性\n對自身附加以太複製：防護、以太複製：進攻、以太複製：治療狀態中的一種\n指定玩家的職能將決定附加的狀態\n以太複製：防護狀態下，自身的防禦力上升，同時強化部分青魔法\n以太複製：進攻狀態下，自身的暴擊發動率和直擊發動率提高20%，同時強化部分青魔法\n以太複製：治療狀態下，自身發動的體力恢復效果提高20%，同時強化部分青魔法\n再次發動時則取消該狀態 持續時間：永久"
     },
     {
       "id": 78,
       "no": 78,
-      "name": "索帕那卡",
+      "name": "穿甲散彈",
       "nameEn": "Surpanakha",
       "icon": "/i/072000/072279.png",
       "rank": 5,
@@ -1644,12 +2170,21 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 86,
-          "detail": "托克阿斯托克（困難）"
+          "detail": "羅波那殲滅戰",
+          "mobs": [
+            "羅波那"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "羅波那殲殛戰",
+          "mobs": [
+            "羅波那"
+          ]
         }
       ],
       "patch": "5.15",
-      "learnFromMob": []
+      "mechanic": "向自身前方發出土屬性扇形範圍魔法攻擊 威力：200\n攻擊複數敵人時，對第一個之外的敵人威力降低50%\n積蓄次數：4\n追加效果：穿甲散彈的威力提高50%\n最大檔數：3檔 持續時間：3秒\n若在持續時間中發動穿甲散彈之外的技能，會立即解除該狀態"
     },
     {
       "id": 79,
@@ -1663,17 +2198,26 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 183,
-          "detail": "禁獄P1T6"
+          "detail": "索菲婭殲滅戰",
+          "mobs": [
+            "索菲亞"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "索菲婭殲殛戰",
+          "mobs": [
+            "索菲亞"
+          ]
         }
       ],
       "patch": "5.15",
-      "learnFromMob": []
+      "mechanic": "對自身周圍的敵人發動無屬性魔法攻擊 威力：300\n攻擊複數敵人時，對第一個之外的敵人威力降低50%\n與正義飛踢共享復唱時間"
     },
     {
       "id": 80,
       "no": 80,
-      "name": "J踢",
+      "name": "正義飛踢",
       "nameEn": "J Kick",
       "icon": "/i/072000/072281.png",
       "rank": 5,
@@ -1682,19 +2226,26 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 139,
-          "detail": "亞歷山大機神城 律動篇4"
+          "detail": "亞歷山大機神城 律動之章4",
+          "mobs": [
+            "殘暴正義號"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "零式亞歷山大機神城 律動之章4",
+          "mobs": [
+            "殘暴正義號"
+          ]
         }
       ],
       "patch": "5.15",
-      "learnFromMob": [
-        "殘暴正義號（The Burden of the Son）"
-      ]
+      "mechanic": "跳起接近目標並發動無屬性範圍物理攻擊 威力：300\n攻擊複數敵人時，對目標之外的敵人威力降低50%\n止步狀態下無法發動\n與類星體共享復唱時間"
     },
     {
       "id": 81,
       "no": 81,
-      "name": "三叉矛擊",
+      "name": "魚叉三段",
       "nameEn": "Triple Trident",
       "icon": "/i/072000/072282.png",
       "rank": 1,
@@ -1703,20 +2254,20 @@
       "learnFrom": [
         {
           "type": "野外",
-          "mapId": 2410,
-          "detail": "揚夏"
+          "detail": "延夏",
+          "mobs": [
+            "惠比壽鯰魚精",
+            "閃雷擊 魚雷"
+          ]
         }
       ],
       "patch": "5.25",
-      "learnFromMob": [
-        "惠比壽鯰魚精（Valley of the Fallen Rainbow）",
-        "鯰魚精小偷（The Glittering Basin）"
-      ]
+      "mechanic": "對目標發動連續3次物理攻擊 威力：150\n該魔法有單獨計算的復唱時間"
     },
     {
       "id": 82,
       "no": 82,
-      "name": "刺激",
+      "name": "霹靂霹靂",
       "nameEn": "Tingle",
       "icon": "/i/072000/072283.png",
       "rank": 2,
@@ -1725,19 +2276,20 @@
       "learnFrom": [
         {
           "type": "野外",
-          "mapId": 2410,
-          "detail": "揚夏"
+          "detail": "延夏",
+          "mobs": [
+            "惠比壽鯰魚精",
+            "閃雷擊 魚雷"
+          ]
         }
       ],
       "patch": "5.25",
-      "learnFromMob": [
-        "惠比壽鯰魚精（Valley of the Fallen Rainbow）"
-      ]
+      "mechanic": "對目標及其周圍敵人發動雷屬性範圍魔法攻擊 威力：100\n攻擊複數敵人時，對目標之外的敵人威力降低50%\n追加效果：效果時間內自身發動的1次魔法為物理攻擊時，威力提升100\n持續時間：15秒"
     },
     {
       "id": 83,
       "no": 83,
-      "name": "榻榻米翻轉",
+      "name": "掀地板之術",
       "nameEn": "Tatami-gaeshi",
       "icon": "/i/072000/072284.png",
       "rank": 3,
@@ -1746,17 +2298,19 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 262,
-          "detail": "黃金宮殿"
+          "detail": "惡黨孤城黃金閣",
+          "mobs": [
+            "道順丸"
+          ]
         }
       ],
       "patch": "5.25",
-      "learnFromMob": []
+      "mechanic": "向目標所在方向發出無屬性直線範圍魔法攻擊 威力：220\n追加效果：眩暈 持續時間：3秒\n攻擊複數敵人時，對目標之外的敵人威力降低50%"
     },
     {
       "id": 84,
       "no": 84,
-      "name": "寒霧",
+      "name": "冷霧",
       "nameEn": "Cold Fog",
       "icon": "/i/072000/072285.png",
       "rank": 4,
@@ -1765,17 +2319,19 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 585,
-          "detail": "灼熱地帶"
+          "detail": "死亡大地終末焦土",
+          "mobs": [
+            "霧龍"
+          ]
         }
       ],
       "patch": "5.25",
-      "learnFromMob": []
+      "mechanic": "對自身附加徹骨霧寒狀態 持續時間：5秒\n持續時間內如果受到敵人的攻擊，則效果會變化成冰霧\n冰霧效果：技能徹骨霧寒變化為冰霧\n持續時間：15秒\n該魔法有單獨計算的復唱時間\n冰霧\n對目標發動冰屬性魔法攻擊 威力：400\n追加效果：凍結 持續時間：10秒\n發動條件：冰霧狀態中"
     },
     {
       "id": 85,
       "no": 85,
-      "name": "讚美詩",
+      "name": "讚歌",
       "nameEn": "Stotram",
       "icon": "/i/072000/072286.png",
       "rank": 2,
@@ -1784,12 +2340,21 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 263,
-          "detail": "神體顯現"
+          "detail": "吉祥天女殲滅戰",
+          "mobs": [
+            "吉祥天女"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "吉祥天女殲殛戰",
+          "mobs": [
+            "吉祥天女"
+          ]
         }
       ],
       "patch": "5.25",
-      "learnFromMob": []
+      "mechanic": "對自身周圍的敵人發動無屬性範圍魔法攻擊 威力：140\n自身處於以太複製：治療狀態時效果變為\n恢復自身及周圍隊員的體力 恢復力：300"
     },
     {
       "id": 86,
@@ -1803,17 +2368,26 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 286,
-          "detail": "歐米茄機神城 小宇宙篇1"
+          "detail": "歐米茄時空狹縫 西格瑪幻境1",
+          "mobs": [
+            "魔列車"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "歐米茄零式時空狹縫 西格瑪幻境1",
+          "mobs": [
+            "魔列車"
+          ]
         }
       ],
       "patch": "5.25",
-      "learnFromMob": []
+      "mechanic": "對目標及其周圍的敵人發動無屬性範圍魔法攻擊 威力：100\n目標為不死系怪物時，威力提高\n對不死系怪物的威力：500"
     },
     {
       "id": 87,
       "no": 87,
-      "name": "汙穢洪水",
+      "name": "污泥潑灑",
       "nameEn": "Feculent Flood",
       "icon": "/i/072000/072288.png",
       "rank": 1,
@@ -1822,20 +2396,26 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 584,
-          "detail": "聖莫西安植物園（困難）"
+          "detail": "污染庭園聖茉夏娜植物園",
+          "mobs": [
+            "枯腐泥妖"
+          ]
+        },
+        {
+          "type": "野外",
+          "detail": "伊爾美格",
+          "mobs": [
+            "泥人"
+          ]
         }
       ],
       "patch": "5.25",
-      "learnFromMob": [
-        "泥人（Il Mheg）",
-        "枯腐泥妖（Kingsloam）"
-      ]
+      "mechanic": "向目標所在方向發出土屬性直線範圍魔法攻擊 威力：220\n攻擊複數敵人時，對目標之外的敵人威力降低50%"
     },
     {
       "id": 88,
       "no": 88,
-      "name": "天使點心",
+      "name": "天使的點心",
       "nameEn": "Angel's Snack",
       "icon": "/i/072000/072289.png",
       "rank": 3,
@@ -1844,18 +2424,19 @@
       "learnFrom": [
         {
           "type": "圖騰",
-          "detail": "異男子嘎希加（烏爾達哈）兌換・青魔法師等級達 70",
-          "npc": "異男子嘎希加",
-          "npcLocation": "烏爾達哈"
+          "detail": "天青圖騰",
+          "cond": "達到 70 級後",
+          "npc": "異男子嘎希迦",
+          "npcLocation": "烏爾達哈來生迴廊"
         }
       ],
       "patch": "5.25",
-      "learnFromMob": []
+      "mechanic": "恢復自身及周圍隊員的體力 恢復力：400\n自身處於以太複製：治療狀態時\n追加效果：令目標體力持續恢復\n恢復力：200 持續時間：15秒\n該魔法有單獨計算的復唱時間，並與龍之力、馬特拉魔術共享復唱時間"
     },
     {
       "id": 89,
       "no": 89,
-      "name": "龜甲之門",
+      "name": "玄結界",
       "nameEn": "Chelonian Gate",
       "icon": "/i/072000/072290.png",
       "rank": 4,
@@ -1864,17 +2445,19 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 284,
-          "detail": "魔界島蓋子"
+          "detail": "紅玉火山獄之蓋",
+          "mobs": [
+            "玄武"
+          ]
         }
       ],
       "patch": "5.25",
-      "learnFromMob": []
+      "mechanic": "展開玄結界，令自身所受的傷害減輕20%\n持續時間：10秒\n追加效果：持續時間內如果受到超過自身最大體力30%的傷害，則對自身附加玄天武水壁\n玄天武水壁效果：技能玄結界變化為玄天武水壁\n效果時間內發動技能或進行移動、轉身都會使玄結界立即消失\n此外當玄結界消失時，玄天武水壁也會同時消失\n發動之後會停止自動攻擊\n該魔法有單獨計算的復唱時間，並與紅寶石電圈、鬥靈彈共享復唱時間\n玄天武水壁\n對自身周圍的敵人發動水屬性範圍魔法攻擊 威力：500\n自身處於以太複製：防護狀態時 威力：1000\n攻擊複數敵人時，對第一個之外的敵人威力降低50%\n效果發動條件：玄天武水壁狀態中"
     },
     {
       "id": 90,
       "no": 90,
-      "name": "毀滅之薔薇",
+      "name": "鬥靈彈",
       "nameEn": "The Rose of Destruction",
       "icon": "/i/072000/072291.png",
       "rank": 2,
@@ -1883,17 +2466,19 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 236,
-          "detail": "拳神殿"
+          "detail": "修行古剎星導寺",
+          "mobs": [
+            "雙豹伊沃恩"
+          ]
         }
       ],
       "patch": "5.25",
-      "learnFromMob": []
+      "mechanic": "對目標發動無屬性魔法攻擊\n威力：400\n追加效果：擊退10米\n該魔法有單獨計算的復唱時間，並與玄結界、紅寶石電圈共享復唱時間"
     },
     {
       "id": 91,
       "no": 91,
-      "name": "本能直覺",
+      "name": "鬥爭本能",
       "nameEn": "Basic Instinct",
       "icon": "/i/072000/072292.png",
       "rank": 2,
@@ -1901,20 +2486,27 @@
       "type": "魔法",
       "learnFrom": [
         {
+          "type": "副本",
+          "detail": "修行古剎星導寺",
+          "mobs": [
+            "兇豹所聞，兇豹所憶"
+          ]
+        },
+        {
           "type": "野外",
-          "mapId": 34,
-          "detail": "拉諾西亞高地"
+          "detail": "拉諾西亞高地",
+          "mobs": [
+            "高階夸爾"
+          ]
         }
       ],
       "patch": "5.25",
-      "learnFromMob": [
-        "高階長鬚豹（Fool Falls）"
-      ]
+      "mechanic": "此技能僅限在非單人任務中，且由自己單獨進行攻略時或除自身外其他小隊成員均陷入無法戰鬥狀態時才會生效\n令自身的移動速度提升30%，自身攻擊造成的傷害及自身發動的體力恢復效果提高100%，並無視強力守護所造成的傷害降低效果\n持續時間：永久\n此效果在小隊成員迴歸戰鬥狀態後立即解除"
     },
     {
       "id": 92,
       "no": 92,
-      "name": "超高頻振動",
+      "name": "超振動",
       "nameEn": "Ultravibration",
       "icon": "/i/072000/072293.png",
       "rank": 1,
@@ -1923,19 +2515,20 @@
       "learnFrom": [
         {
           "type": "野外",
-          "mapId": 2407,
-          "detail": "基拉巴尼亞山岳地帯"
+          "detail": "基拉巴尼亞山區",
+          "mobs": [
+            "恐甲螞蜓",
+            "蛇僕螞蜓"
+          ]
         }
       ],
       "patch": "5.25",
-      "learnFromMob": [
-        "恐甲螞蜓（Wightrock）"
-      ]
+      "mechanic": "在自身周圍產生超聲波，令凍結或石化狀態中的敵人必定陷入無法戰鬥狀態\n對部分敵人無效\n目標等級高於自身等級時無效\n該魔法有單獨計算的復唱時間，並與5級即死共享復唱時間"
     },
     {
       "id": 93,
       "no": 93,
-      "name": "燃燒",
+      "name": "冰焰",
       "nameEn": "Blaze",
       "icon": "/i/072000/072294.png",
       "rank": 2,
@@ -1944,12 +2537,21 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 252,
-          "detail": "歐米茄機神城 次元篇1"
+          "detail": "歐米茄時空狹縫 德爾塔幻境1",
+          "mobs": [
+            "老者"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "歐米茄零式時空狹縫 德爾塔幻境1",
+          "mobs": [
+            "老者"
+          ]
         }
       ],
       "patch": "5.25",
-      "learnFromMob": []
+      "mechanic": "對目標及其周圍的敵人發動冰屬性範圍魔法攻擊 威力：220\n攻擊複數敵人時，對目標之外的敵人威力降低50%"
     },
     {
       "id": 94,
@@ -1963,19 +2565,26 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 589,
-          "detail": "歐米茄機神城 宇宙篇3"
+          "detail": "歐米茄時空狹縫 阿爾法幻境3",
+          "mobs": [
+            "歐米茄"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "歐米茄零式時空狹縫 阿爾法幻境3",
+          "mobs": [
+            "歐米茄"
+          ]
         }
       ],
       "patch": "5.25",
-      "learnFromMob": [
-        "歐米茄（Final Verification）"
-      ]
+      "mechanic": "對目標及其周圍的敵人發動火屬性範圍魔法攻擊 威力：220\n攻擊複數敵人時，對目標之外的敵人威力降低50%\n追加效果：如果目標處於頭暈狀態中，則附加火屬性持續傷害 威力：50\n持續時間：15秒"
     },
     {
       "id": 95,
       "no": 95,
-      "name": "龍之力量",
+      "name": "龍之力",
       "nameEn": "Dragon Force",
       "icon": "/i/072000/072296.png",
       "rank": 3,
@@ -1984,18 +2593,19 @@
       "learnFrom": [
         {
           "type": "圖騰",
-          "detail": "異男子嘎希加（烏爾達哈）兌換・習得 100 個青魔法",
-          "npc": "異男子嘎希加",
-          "npcLocation": "烏爾達哈"
+          "detail": "天青圖騰",
+          "cond": "學習 100 個技能後",
+          "npc": "異男子嘎希迦",
+          "npcLocation": "烏爾達哈來生迴廊"
         }
       ],
       "patch": "5.25",
-      "learnFromMob": []
+      "mechanic": "一定時間內，將自身所受的傷害減輕20%\n持續時間：15秒\n以太複製：防護狀態下的傷害減輕變為40%\n該魔法有單獨計算的復唱時間，並與天使的點心、馬特拉魔術共享復唱時間"
     },
     {
       "id": 96,
       "no": 96,
-      "name": "以太火花",
+      "name": "乙太火花",
       "nameEn": "Aetherial Spark",
       "icon": "/i/072000/072297.png",
       "rank": 1,
@@ -2004,19 +2614,20 @@
       "learnFrom": [
         {
           "type": "野外",
-          "mapId": 2408,
-          "detail": "阿拉戈海"
+          "detail": "基拉巴尼亞湖區",
+          "mobs": [
+            "陀魯婆",
+            "泛光晶體"
+          ]
         }
       ],
       "patch": "5.25",
-      "learnFromMob": [
-        "陀魯婆（The White Aisle）"
-      ]
+      "mechanic": "向目標所在方向發出無屬性直線範圍魔法攻擊 威力：50\n追加效果：無屬性持續傷害\n威力：50 持續時間：15秒"
     },
     {
       "id": 97,
       "no": 97,
-      "name": "水流牽引",
+      "name": "水力吸引",
       "nameEn": "Hydro Pull",
       "icon": "/i/072000/072298.png",
       "rank": 4,
@@ -2025,19 +2636,19 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 279,
-          "detail": "水都斯卡拉"
+          "detail": "沉沒神殿斯卡拉遺跡",
+          "mobs": [
+            "凱爾派"
+          ]
         }
       ],
       "patch": "5.25",
-      "learnFromMob": [
-        "凱爾派（The Green Screams）"
-      ]
+      "mechanic": "對自身周圍的敵人發動水屬性範圍魔法攻擊 威力：220\n攻擊複數敵人時，對第一個之外的敵人威力降低50%\n追加效果：把敵人吸引到身邊"
     },
     {
       "id": 98,
       "no": 98,
-      "name": "水之詛咒",
+      "name": "水脈詛咒",
       "nameEn": "Malediction of Water",
       "icon": "/i/072000/072299.png",
       "rank": 2,
@@ -2046,17 +2657,19 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 536,
-          "detail": "燕王盤"
+          "detail": "風水靈廟岩燕廟",
+          "mobs": [
+            "賽太歲"
+          ]
         }
       ],
       "patch": "5.25",
-      "learnFromMob": []
+      "mechanic": "向自身前方發出水屬性直線範圍魔法攻擊 威力：200\n攻擊複數敵人時，對第一個之外的敵人威力降低50%\n追加效果：將範圍內的敵人與小隊成員擊退10米\n目標身中部分弱化效果或處於非戰鬥狀態時無效"
     },
     {
       "id": 99,
       "no": 99,
-      "name": "喬科流星",
+      "name": "陸行鳥隕石",
       "nameEn": "Choco Meteor",
       "icon": "/i/072000/072300.png",
       "rank": 1,
@@ -2064,20 +2677,27 @@
       "type": "魔法",
       "learnFrom": [
         {
+          "type": "副本",
+          "detail": "失落之都拉巴納斯塔",
+          "mobs": [
+            "?"
+          ]
+        },
+        {
           "type": "野外",
-          "mapId": 2000,
-          "detail": "龍族領地前地"
+          "detail": "德拉瓦尼亞山麓地",
+          "mobs": [
+            "追獵種陸行鳥"
+          ]
         }
       ],
       "patch": "5.25",
-      "learnFromMob": [
-        "追獵種陸行鳥（Chocobo Forest）"
-      ]
+      "mechanic": "對目標及其周圍的敵人發動無屬性範圍魔法攻擊 威力：200\n如果小隊中存在自己的專屬陸行鳥，則技能威力上升\n專屬陸行鳥在小隊時威力：300\n攻擊複數敵人時，對目標之外的敵人威力降低50%"
     },
     {
       "id": 100,
       "no": 100,
-      "name": "魔導魔法",
+      "name": "馬特拉魔法飛彈",
       "nameEn": "Matra Magic",
       "icon": "/i/072000/072301.png",
       "rank": 3,
@@ -2086,18 +2706,19 @@
       "learnFrom": [
         {
           "type": "圖騰",
-          "detail": "異男子嘎希加（烏爾達哈）兌換・習得 100 個青魔法",
-          "npc": "異男子嘎希加",
-          "npcLocation": "烏爾達哈"
+          "detail": "天青圖騰",
+          "cond": "學習 100 個技能後",
+          "npc": "異男子嘎希迦",
+          "npcLocation": "烏爾達哈來生迴廊"
         }
       ],
       "patch": "5.25",
-      "learnFromMob": []
+      "mechanic": "對目標發動連續8次無屬性魔法攻擊 威力：50\n自身處於以太複製：進攻狀態時 威力：100\n該魔法有單獨計算的復唱時間，並與天使的點心、龍之力共享復唱時間"
     },
     {
       "id": 101,
       "no": 101,
-      "name": "外圍合成",
+      "name": "生成外設",
       "nameEn": "Peripheral Synthesis",
       "icon": "/i/072000/072302.png",
       "rank": 4,
@@ -2106,19 +2727,26 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 589,
-          "detail": "歐米茄機神城 宇宙篇3"
+          "detail": "歐米茄時空狹縫 阿爾法幻境3",
+          "mobs": [
+            "歐米茄"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "歐米茄零式時空狹縫 阿爾法幻境3",
+          "mobs": [
+            "歐米茄"
+          ]
         }
       ],
       "patch": "5.25",
-      "learnFromMob": [
-        "歐米茄（Final Verification）"
-      ]
+      "mechanic": "向目標所在方向發出無屬性直線範圍物理攻擊 威力：220\n追加效果：附加頭暈 持續時間：5秒\n短時間內對同一目標重複使用時，每次可令目標頭暈的時間都會減少，直至完全無效\n令目標陷入頭暈狀態時威力上升\n令目標陷入頭暈狀態時威力：400\n攻擊複數敵人時，對目標之外的敵人威力降低50%"
     },
     {
       "id": 102,
       "no": 102,
-      "name": "極終",
+      "name": "如意大旋風",
       "nameEn": "Both Ends",
       "icon": "/i/072000/072303.png",
       "rank": 5,
@@ -2127,17 +2755,19 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 536,
-          "detail": "燕王盤"
+          "detail": "風水靈廟岩燕廟",
+          "mobs": [
+            "齊天大聖"
+          ]
         }
       ],
       "patch": "5.25",
-      "learnFromMob": []
+      "mechanic": "對自身周圍的敵人發動無屬性範圍物理攻擊 威力：600\n與月下彼岸花共享復唱時間"
     },
     {
       "id": 103,
       "no": 103,
-      "name": "鬼魅連擊",
+      "name": "鬼宿腳",
       "nameEn": "Phantom Flurry",
       "icon": "/i/072000/072304.png",
       "rank": 5,
@@ -2146,19 +2776,26 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 596,
-          "detail": "魔界島歸處"
+          "detail": "朱雀鎮魂戰",
+          "mobs": [
+            "朱雀"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "朱雀詩魂戰",
+          "mobs": [
+            "朱雀"
+          ]
         }
       ],
       "patch": "5.25",
-      "learnFromMob": [
-        "朱雀（Hells' Kier (Zone)）"
-      ]
+      "mechanic": "持續向自身前方發出扇形範圍攻擊\n每秒對範圍內的敵人造成傷害 威力：200 持續時間：5秒\n持續時間內再次使用時，向自身前方發出無屬性扇形範圍攻擊\n威力：600\n攻擊複數敵人時，對第一個之外的敵人威力降低50%\n效果時間內發動鬼宿腳以外的技能或進行移動、轉身都會使鬼宿腳立即消失\n發動之後會停止自動攻擊"
     },
     {
       "id": 104,
       "no": 104,
-      "name": "夜之花",
+      "name": "月下彼岸花",
       "nameEn": "Nightbloom",
       "icon": "/i/072000/072305.png",
       "rank": 5,
@@ -2167,19 +2804,26 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 537,
-          "detail": "河川要塞"
+          "detail": "月讀殲滅戰",
+          "mobs": [
+            "月讀"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "月讀幽夜殲滅戰",
+          "mobs": [
+            "月讀"
+          ]
         }
       ],
       "patch": "6.1",
-      "learnFromMob": [
-        "月讀（Castrum Fluminis (Zone)）"
-      ]
+      "mechanic": "對自身周圍的敵人發動無屬性範圍魔法攻擊 威力：400\n攻擊複數敵人時，對第一個之外的敵人威力降低50%\n追加效果：對目標附加無屬性持續傷害狀態\n威力：75 持續時間：60秒\n與如意大旋風共享復唱時間"
     },
     {
       "id": 105,
       "no": 105,
-      "name": "哥布林重擊",
+      "name": "哥布林拳",
       "nameEn": "Goblin Punch",
       "icon": "/i/072000/072306.png",
       "rank": 1,
@@ -2188,19 +2832,21 @@
       "learnFrom": [
         {
           "type": "野外",
-          "mapId": 2954,
-          "detail": "庫洛西亞"
+          "detail": "珂露西亞島",
+          "mobs": [
+            "大哥布林",
+            "大哥布林守衛",
+            "小小殺手"
+          ]
         }
       ],
       "patch": "6.1",
-      "learnFromMob": [
-        "大哥布林（Cracked Shell Beach）"
-      ]
+      "mechanic": "對目標發動無屬性物理攻擊 威力：120\n正面攻擊力：220\n自身處於強力守護狀態時 威力：220\n強力守護狀態時正面攻擊威力：320"
     },
     {
       "id": 106,
       "no": 106,
-      "name": "旋轉",
+      "name": "大迴旋",
       "nameEn": "Right Round",
       "icon": "/i/072000/072307.png",
       "rank": 2,
@@ -2209,17 +2855,19 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 656,
-          "detail": "瑪利卡之井"
+          "detail": "避暑離宮馬利卡大井",
+          "mobs": [
+            "大犰狳"
+          ]
         }
       ],
       "patch": "6.1",
-      "learnFromMob": []
+      "mechanic": "對自身周圍的敵人發動無屬性範圍物理攻擊 威力：110\n追加效果：將範圍內的敵人和隊員擊退10米\n目標身中部分弱化效果或處於非戰鬥狀態時無效"
     },
     {
       "id": 107,
       "no": 107,
-      "name": "護盾陣",
+      "name": "刺陣",
       "nameEn": "Schiltron",
       "icon": "/i/072000/072308.png",
       "rank": 1,
@@ -2228,20 +2876,26 @@
       "learnFrom": [
         {
           "type": "野外",
-          "mapId": 2955,
-          "detail": "安·阿拉恩"
+          "detail": "安穆·艾蘭",
+          "mobs": [
+            "長尾犰狳"
+          ]
+        },
+        {
+          "type": "野外",
+          "detail": "薩維奈島",
+          "mobs": [
+            "金剛鳩摩羅"
+          ]
         }
       ],
       "patch": "6.1",
-      "learnFromMob": [
-        "長尾犰狳（Ladle）",
-        "金剛鳩摩羅（Thavnair）"
-      ]
+      "mechanic": "一定時間內，自身受到物理攻擊時會對對方造成無屬性魔法傷害\n威力：50 持續時間：15秒\n自身處於以太複製：防護狀態時 威力：100\n無法與冰棘屏障、水神的面紗共存"
     },
     {
       "id": 108,
       "no": 108,
-      "name": "再水化",
+      "name": "補水",
       "nameEn": "Rehydration",
       "icon": "/i/072000/072309.png",
       "rank": 1,
@@ -2250,19 +2904,19 @@
       "learnFrom": [
         {
           "type": "野外",
-          "mapId": 2955,
-          "detail": "安·阿拉恩"
+          "detail": "安穆·艾蘭",
+          "mobs": [
+            "滑溜犰狳"
+          ]
         }
       ],
       "patch": "6.1",
-      "learnFromMob": [
-        "滑溜犰狳（Qasr Sharl）"
-      ]
+      "mechanic": "恢復自身體力 恢復力：600"
     },
     {
       "id": 109,
       "no": 109,
-      "name": "魔法之息",
+      "name": "魔法吐息",
       "nameEn": "Breath of Magic",
       "icon": "/i/072000/072310.png",
       "rank": 3,
@@ -2271,18 +2925,19 @@
       "learnFrom": [
         {
           "type": "圖騰",
-          "detail": "異男子嘎希加（烏爾達哈）兌換・青魔法師等級達 80",
-          "npc": "異男子嘎希加",
-          "npcLocation": "烏爾達哈"
+          "detail": "天青圖騰",
+          "cond": "達到 80 級後",
+          "npc": "異男子嘎希迦",
+          "npcLocation": "烏爾達哈來生迴廊"
         }
       ],
       "patch": "6.1",
-      "learnFromMob": []
+      "mechanic": "向自身前方扇形範圍內噴吐魔法吐息\n對範圍內的敵人附加無屬性持續傷害\n威力：120 持續時間：60秒\n該技能的效果只能同時附加1個"
     },
     {
       "id": 110,
       "no": 110,
-      "name": "狂暴",
+      "name": "獸魂的憤怒",
       "nameEn": "Wild Rage",
       "icon": "/i/072000/072311.png",
       "rank": 4,
@@ -2291,17 +2946,19 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 737,
-          "detail": "英雄試煉"
+          "detail": "漆黑決戰諾弗蘭特",
+          "mobs": [
+            "幻光狂戰士"
+          ]
         }
       ],
       "patch": "6.1",
-      "learnFromMob": []
+      "mechanic": "對自身周圍的敵人發動無屬性範圍物理攻擊 威力：500\n攻擊複數敵人時，對第一個之外的敵人威力降低50%\n發動時消耗50%的最大體力"
     },
     {
       "id": 111,
       "no": 111,
-      "name": "泥炭皮",
+      "name": "玩泥球",
       "nameEn": "Peat Pelt",
       "icon": "/i/072000/072312.png",
       "rank": 2,
@@ -2310,19 +2967,19 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 746,
-          "detail": "瑪托雅的遺蹟"
+          "detail": "魔術工坊瑪托雅工作室",
+          "mobs": [
+            "土泥人"
+          ]
         }
       ],
       "patch": "6.1",
-      "learnFromMob": [
-        "土泥人（Clayclot Cauldron）"
-      ]
+      "mechanic": "對目標及其周圍的敵人發動土屬性範圍魔法攻擊 威力：100\n攻擊複數敵人時，對第一個之外的敵人威力降低50%\n追加效果：泥汙\n泥汙效果：土屬性持續傷害\n威力：10 持續時間：9秒"
     },
     {
       "id": 112,
       "no": 112,
-      "name": "深層清潔",
+      "name": "大掃除",
       "nameEn": "Deep Clean",
       "icon": "/i/072000/072313.png",
       "rank": 3,
@@ -2331,17 +2988,19 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 692,
-          "detail": "大宇宙"
+          "detail": "魔法宮殿宇宙宮",
+          "mobs": [
+            "宮殿的隱者"
+          ]
         }
       ],
       "patch": "6.1",
-      "learnFromMob": []
+      "mechanic": "對目標及其周圍的敵人發動無屬性範圍物理攻擊 威力：220\n攻擊複數敵人時，對第一個之外的敵人威力降低50%\n追加效果：敵人處於泥汙狀態時解除該狀態，同時為自身附加大掃除狀態\n最大檔數：6檔\n大掃除效果：令目標體力持續恢復\n該效果的恢復力隨自身大掃除的檔數而變化\n恢復力：50～300 持續時間：15秒\n大掃除的持續時間不會隨檔數的增加而變化"
     },
     {
       "id": 113,
       "no": 113,
-      "name": "紅寶石動力",
+      "name": "紅寶石電圈",
       "nameEn": "Ruby Dynamics",
       "icon": "/i/072000/072314.png",
       "rank": 4,
@@ -2350,17 +3009,26 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 717,
-          "detail": "煤渣漂移"
+          "detail": "紅寶石神兵破壞作戰",
+          "mobs": [
+            "紅寶石武器"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "紅寶石神兵狂想作戰",
+          "mobs": [
+            "紅寶石武器"
+          ]
         }
       ],
       "patch": "6.1",
-      "learnFromMob": []
+      "mechanic": "向自身前方發動無屬性範圍物理攻擊 威力：220\n該魔法有單獨計算的復唱時間，並與玄結界、鬥靈彈共享復唱時間"
     },
     {
       "id": 114,
       "no": 114,
-      "name": "占卜盧恩",
+      "name": "魔之符文",
       "nameEn": "Divination Rune",
       "icon": "/i/072000/072315.png",
       "rank": 4,
@@ -2369,17 +3037,26 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 657,
-          "detail": "妖精の宴（極難）"
+          "detail": "緹坦妮雅殲滅戰",
+          "mobs": [
+            "緹坦妮雅"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "緹坦妮雅殲殛戰",
+          "mobs": [
+            "緹坦妮雅"
+          ]
         }
       ],
       "patch": "6.1",
-      "learnFromMob": []
+      "mechanic": "向自身前方發出無屬性扇形範圍魔法攻擊 威力：100\n追加效果：恢復自身魔力"
     },
     {
       "id": 115,
       "no": 115,
-      "name": "次元移位",
+      "name": "空間轉換",
       "nameEn": "Dimensional Shift",
       "icon": "/i/072000/072316.png",
       "rank": 4,
@@ -2388,17 +3065,26 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 653,
-          "detail": "伊甸希望樂園 覺醒篇1"
+          "detail": "伊甸希望樂園 覺醒之章1",
+          "mobs": [
+            "至尊伊甸"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "伊甸零式希望樂園 覺醒之章1",
+          "mobs": [
+            "至尊伊甸"
+          ]
         }
       ],
       "patch": "6.1",
-      "learnFromMob": []
+      "mechanic": "給予自身周圍敵人等同其當前體力30%的傷害\n目標等級高於自身等級時無效"
     },
     {
       "id": 116,
       "no": 116,
-      "name": "信念詠嘆調",
+      "name": "加強信音",
       "nameEn": "Conviction Marcato",
       "icon": "/i/072000/072317.png",
       "rank": 3,
@@ -2407,12 +3093,14 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 659,
-          "detail": "古爾格山"
+          "detail": "偽造天界格魯格火山",
+          "mobs": [
+            "得到寬恕的猥褻"
+          ]
         }
       ],
       "patch": "6.1",
-      "learnFromMob": []
+      "mechanic": "向目標所在方向發出無屬性直線範圍魔法攻擊 威力：220\n攻擊複數敵人時，對第一個之外的敵人威力降低50%\n自身處於完美神的祝福狀態時 威力：440"
     },
     {
       "id": 117,
@@ -2426,23 +3114,26 @@
       "learnFrom": [
         {
           "type": "圖騰",
-          "detail": "異男子嘎希加（烏爾達哈）兌換・習得 120 個青魔法",
-          "npc": "異男子嘎希加",
-          "npcLocation": "烏爾達哈"
+          "detail": "天青圖騰",
+          "cond": "學習 120 個技能後",
+          "npc": "異男子嘎希迦",
+          "npcLocation": "烏爾達哈來生迴廊"
         },
         {
           "type": "副本",
-          "contentId": 666,
-          "detail": "無瑕靈君殲滅戰"
+          "detail": "薩菲洛特殲殛戰",
+          "mobs": [
+            "賽菲羅特"
+          ]
         }
       ],
       "patch": "6.1",
-      "learnFromMob": []
+      "mechanic": "對自身隨機附加物理受傷減輕或魔法受傷減輕狀態\n持續時間：10秒\n物理受傷減輕效果：受到的物理傷害減少50%\n魔法受傷減輕效果：受到的魔法傷害減少50%\n該魔法有單獨計算的復唱時間"
     },
     {
       "id": 118,
       "no": 118,
-      "name": "翼翅懲戒",
+      "name": "斷罪飛翔",
       "nameEn": "Winged Reprobation",
       "icon": "/i/072000/072319.png",
       "rank": 3,
@@ -2451,17 +3142,26 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 666,
-          "detail": "純白之冠"
+          "detail": "無瑕靈君殲滅戰",
+          "mobs": [
+            "無瑕靈君"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "無瑕靈君殲殛戰",
+          "mobs": [
+            "無瑕靈君"
+          ]
         }
       ],
       "patch": "6.1",
-      "learnFromMob": []
+      "mechanic": "向目標所在方向發出無屬性直線範圍物理攻擊 威力：300\n攻擊複數敵人時，對第一個之外的敵人威力降低50%\n追加效果：立刻重置該技能的復唱時間，同時為自身附加斷罪飛翔狀態\n最大檔數：4檔 持續時間：永久\n3檔後再次發動該技能不會重置復唱時間，同時威力提高到400\n最大檔數後該狀態變為完美神的祝福 持續時間：10秒\n完美神的祝福效果：加強信音的威力提高\n該魔法有單獨計算的復唱時間"
     },
     {
       "id": 119,
       "no": 119,
-      "name": "激光眼",
+      "name": "激射眼",
       "nameEn": "Laser Eye",
       "icon": "/i/072000/072320.png",
       "rank": 3,
@@ -2470,17 +3170,26 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 758,
-          "detail": "伊甸誓約樂園 共鳴篇4"
+          "detail": "伊甸希望樂園 再生之章4",
+          "mobs": [
+            "伊甸之約"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "伊甸零式希望樂園 再生之章4",
+          "mobs": [
+            "伊甸之約"
+          ]
         }
       ],
       "patch": "6.1",
-      "learnFromMob": []
+      "mechanic": "對目標及其周圍的敵人發動無屬性範圍魔法攻擊 威力：220\n攻擊複數敵人時，對第一個之外的敵人威力降低50%\n追加效果：將目標周圍8米以內的敵人擊退5米"
     },
     {
       "id": 120,
       "no": 120,
-      "name": "糖果杖",
+      "name": "糖果手杖",
       "nameEn": "Candy Cane",
       "icon": "/i/072000/072321.png",
       "rank": 2,
@@ -2489,17 +3198,19 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 649,
-          "detail": "多恩·梅格"
+          "detail": "水妖幻園多恩美格禁園",
+          "mobs": [
+            "美眼 因克·佐恩"
+          ]
         }
       ],
       "patch": "6.1",
-      "learnFromMob": []
+      "mechanic": "對目標及其周圍的敵人發動無屬性範圍魔法攻擊 威力：250\n攻擊複數敵人時，對第一個之外的敵人威力降低50%\n追加效果：令目標的力量及靈巧降低10%\n持續時間：10秒\n追加效果：恢復自身最大魔力的10%\n該魔法有單獨計算的復唱時間，並與魔法錘共享復唱時間"
     },
     {
       "id": 121,
       "no": 121,
-      "name": "不滅之炎",
+      "name": "必滅之炎",
       "nameEn": "Mortal Flame",
       "icon": "/i/072000/072322.png",
       "rank": 3,
@@ -2508,17 +3219,19 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 692,
-          "detail": "大宇宙"
+          "detail": "魔法宮殿宇宙宮",
+          "mobs": [
+            "盧格斯"
+          ]
         }
       ],
       "patch": "6.1",
-      "learnFromMob": []
+      "mechanic": "對目標附加火屬性持續傷害狀態\n威力：40 持續時間：永久\n該技能的效果只能同時附加1個\n目標處於非戰鬥狀態時無效\n目標脫離戰鬥狀態後解除必滅之炎狀態"
     },
     {
       "id": 122,
       "no": 122,
-      "name": "海洋之歌",
+      "name": "咕嚕咕嚕",
       "nameEn": "Sea Shanty",
       "icon": "/i/072000/072323.png",
       "rank": 5,
@@ -2527,17 +3240,19 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 746,
-          "detail": "瑪托雅的遺蹟"
+          "detail": "魔術工坊瑪托雅工作室",
+          "mobs": [
+            "水滴精"
+          ]
         }
       ],
       "patch": "6.1",
-      "learnFromMob": []
+      "mechanic": "對自身周圍的敵人發動水屬性範圍魔法攻擊 威力：500\n追加效果：天氣為小雨、暴雨、雷雨時威力上升\n雨天時威力：1000"
     },
     {
       "id": 123,
       "no": 123,
-      "name": "啟示錄",
+      "name": "默示錄",
       "nameEn": "Apokalypsis",
       "icon": "/i/072000/072324.png",
       "rank": 5,
@@ -2546,17 +3261,19 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 652,
-          "detail": "阿瑪烏洛特"
+          "detail": "末日暗影亞馬烏羅提",
+          "mobs": [
+            "至大災獸"
+          ]
         }
       ],
       "patch": "6.1",
-      "learnFromMob": []
+      "mechanic": "持續向自身前方發出直線範圍攻擊\n每秒對範圍內的敵人造成傷害 威力：140 持續時間：10秒\n效果時間內發動技能或進行移動、轉身都會立即解除啟示錄\n發動之後會停止自動攻擊\n與終有一死共享復唱時間"
     },
     {
       "id": 124,
       "no": 124,
-      "name": "凡人終途",
+      "name": "終有一死",
       "nameEn": "Being Mortal",
       "icon": "/i/072000/072325.png",
       "rank": 5,
@@ -2565,12 +3282,21 @@
       "learnFrom": [
         {
           "type": "副本",
-          "contentId": 657,
-          "detail": "妖精の宴（極難）"
+          "detail": "緹坦妮雅殲滅戰",
+          "mobs": [
+            "緹坦妮雅"
+          ]
+        },
+        {
+          "type": "副本",
+          "detail": "緹坦妮雅殲殛戰",
+          "mobs": [
+            "緹坦妮雅"
+          ]
         }
       ],
       "patch": "6.1",
-      "learnFromMob": []
+      "mechanic": "對自身周圍的敵人發動無屬性範圍魔法攻擊 威力：800\n攻擊複數敵人時，對第一個之外的敵人威力降低50%\n與啟示錄共享復唱時間"
     }
   ]
 }

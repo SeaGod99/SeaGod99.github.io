@@ -265,7 +265,7 @@
     /* ── Grid ── */
     .bm-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
       gap: 10px;
     }
 
@@ -274,7 +274,7 @@
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: var(--radius-md);
-      padding: 14px;
+      padding: 18px;
       cursor: pointer;
       transition: var(--transition);
       user-select: none;
@@ -307,8 +307,8 @@
     }
 
     .bm-icon {
-      width: 36px;
-      height: 36px;
+      width: 48px;
+      height: 48px;
       border-radius: var(--radius-sm);
       background: var(--raise);
       object-fit: cover;
@@ -323,7 +323,7 @@
     }
 
     .bm-name {
-      font-size: 13px;
+      font-size: 15px;
       font-weight: 600;
       color: var(--text-primary);
       line-height: 1.3;
@@ -368,17 +368,54 @@
     .tag.aspect-冰 { background: rgba(79,195,247,0.1); color: var(--blue); border-color: rgba(79,195,247,0.2); }
     .tag.aspect-無 { background: var(--raise); color: var(--text-secondary); border-color: var(--border); }
 
-    .tag.src-副本 { background: rgba(79,195,247,0.1); color: var(--blue); border-color: rgba(79,195,247,0.2); }
-    .tag.src-野外 { background: rgba(74,222,128,0.1); color: var(--green); border-color: rgba(74,222,128,0.2); }
+    .tag.src-副本     { background: rgba(79,195,247,0.1);  color: var(--blue);   border-color: rgba(79,195,247,0.2); }
+    .tag.src-野外     { background: rgba(74,222,128,0.1);  color: var(--green);  border-color: rgba(74,222,128,0.2); }
+    .tag.src-兌換習得 { background: rgba(200,169,110,0.12); color: var(--gold);   border-color: rgba(200,169,110,0.25); }
+    .tag.src-初始習得 { background: rgba(167,139,250,0.12); color: var(--purple); border-color: rgba(167,139,250,0.25); }
 
     /* ── Tooltip on hover ── */
-    .bm-detail {
-      font-size: 11px;
-      color: var(--text-muted);
-      line-height: 1.5;
-      display: none;
+    /* ── 機制效果（cafemaker 簡中 tooltip 轉繁體，預設顯示）── */
+    .bm-mech {
+      display: block;
+      margin-top: 2px;
+      padding-left: 9px;
+      border-left: 2px solid var(--blue);
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.55;
+      white-space: pre-line;
     }
-    .bm-card.sg-open .bm-detail { display: block; }
+    .bm-mech:empty { display: none; }
+    .bm-mech::before {
+      content: "機制";
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .03em;
+      color: var(--blue);
+      margin-bottom: 2px;
+    }
+
+    /* ── 取得方式（預設顯示，最優先資訊）── */
+    .bm-detail {
+      display: block;
+      margin-top: 2px;
+      padding-left: 9px;
+      border-left: 2px solid var(--gold);
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    .bm-detail:empty { display: none; }
+    .bm-detail::before {
+      content: "取得方式";
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .03em;
+      color: var(--gold);
+      margin-bottom: 2px;
+    }
     .bm-detail .detail-line { margin-top: 2px; }
     .bm-detail .detail-line b { color: var(--text-secondary); font-weight: 500; }
 
@@ -414,7 +451,6 @@
   <script src="../../assets/js/patch-gate.js"></script>
   <link rel="stylesheet" href="../../assets/css/theme.css">
   <script src="../../assets/js/theme.js"></script>
-  <script src="../../assets/js/collection-detail.js" defer></script>
 </head>
 <body>
 
@@ -571,9 +607,9 @@
   }
 
   function renderSourceFilters() {
-    renderTagFilters('sourceFilters', ['副本', '野外', '__none__'], filterSource,
-      v => { filterSource = filterSource === v ? null : v; renderSourceFilters(); renderGrid(); },
-      v => v === '__none__' ? '待補充' : v
+    // 擊敗怪物為父類（含副本∪野外），野外／副本為其子類
+    renderTagFilters('sourceFilters', ['擊敗怪物', '野外', '副本', '兌換習得', '初始習得'], filterSource,
+      v => { filterSource = filterSource === v ? null : v; renderSourceFilters(); renderGrid(); }
     );
   }
 
@@ -596,15 +632,27 @@
     );
   }
 
-  // ── Resolve 副本 detail via contentId -> dungeons 繁中名 ──
+  // ── 取得方式分類：擊敗怪物再分「副本／野外」（同一法術可同時含兩者）、
+  //    兌換習得（圖騰）、初始習得（預設）。地點寫進 detail。 ──
   function resolveLearnFrom(m) {
     return (m.learnFrom || []).map(l => {
+      const mobs = (l.mobs && l.mobs.length) ? `：${l.mobs.join('、')}` : '';
       if (l.type === '副本') {
-        const name = DUNGEON_NAMES[l.contentId] || l.detail;
-        return { type: l.type, detail: name };
+        const name = DUNGEON_NAMES[l.contentId] || l.detail || '';
+        return { type: '副本', detail: (name ? `副本「${name}」` : '副本') + mobs };
       }
-      // 野外：detail 已是繁中地名
-      return { type: l.type, detail: l.detail };
+      if (l.type === '野外') {
+        return { type: '野外', detail: (l.detail ? `野外「${l.detail}」` : '野外') + mobs };
+      }
+      if (l.type === '圖騰') {
+        const cond = l.cond ? `（${l.cond}）` : '';
+        const where = l.npc ? ` — ${l.npcLocation || ''}・${l.npc}` : '';
+        return { type: '兌換習得', detail: `${l.detail || '圖騰'}兌換${cond}${where}` };
+      }
+      if (l.type === '預設') {
+        return { type: '初始習得', detail: l.detail || '青魔法師初始即會' };
+      }
+      return { type: l.type, detail: l.detail || '' };
     });
   }
 
@@ -617,14 +665,13 @@
       if (filterOwn === 'owned'   && !owned.has(k)) return false;
       if (filterOwn === 'missing' &&  owned.has(k)) return false;
 
-      // source
+      // source（擊敗怪物＝副本∪野外的父類；其餘精確比對）
       if (filterSource) {
-        const learn = m.learnFrom || [];
-        if (filterSource === '__none__') {
-          if (learn.length > 0 || (m.learnFromMob || []).length > 0) return false;
-        } else {
-          if (!learn.some(l => l.type === filterSource)) return false;
-        }
+        const cats = resolveLearnFrom(m).map(l => l.type);
+        const match = filterSource === '擊敗怪物'
+          ? (cats.includes('副本') || cats.includes('野外'))
+          : cats.includes(filterSource);
+        if (!match) return false;
       }
 
       // aspect
@@ -677,7 +724,6 @@
       card.className = 'bm-card' + (isOwned ? ' owned' : '');
 
       const learn = resolveLearnFrom(m);
-      const mobs = m.learnFromMob || [];
 
       const sourceTags = learn.length
         ? [...new Set(learn.map(l => l.type))].map(t => `<span class="tag src-${t}">${t}</span>`).join('')
@@ -689,17 +735,13 @@
         ? `<img class="bm-icon" src="${ICON_BASE}${m.icon}" alt="" loading="lazy">`
         : `<div class="bm-icon placeholder">💙</div>`;
 
-      // detail lines for tooltip
+      // detail lines（取得方式內文：每筆來源一行，地點＋怪物；方法已由標籤表示）
       const detailLines = [];
-      if (learn.length) {
-        learn.forEach(l => {
-          detailLines.push(`<div class="detail-line"><b>${l.type}：</b>${l.detail || ''}</div>`);
-        });
-      } else {
-        detailLines.push(`<div class="detail-line">習得方式：待補充</div>`);
-      }
-      if (mobs.length) {
-        detailLines.push(`<div class="detail-line"><b>怪物：</b>${mobs.join('、')}</div>`);
+      [...new Set(learn.map(l => l.detail).filter(Boolean))].forEach(d => {
+        detailLines.push(`<div class="detail-line">${d}</div>`);
+      });
+      if (!detailLines.length) {
+        detailLines.push(`<div class="detail-line">待補充</div>`);
       }
 
       card.innerHTML = `
@@ -716,6 +758,7 @@
           <span class="tag">${m.type}</span>
           ${sourceTags}
         </div>
+        <div class="bm-mech">${m.mechanic || ''}</div>
         <div class="bm-detail">${detailLines.join('')}</div>
       `;
 
