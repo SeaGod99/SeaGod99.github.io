@@ -31,7 +31,10 @@ const TOTAL_CARDS = 425;
 const CONCURRENCY = 30;
 const DELAY_MS    = 50;
 
-const TYPE_TW = { 1: '蠻神', 2: '光之戰士', 3: '異族', 4: '神羅' };
+// 卡片類型（TripleTriadCardType）繁中名。來源：簡中官方（cafemaker）→ 繁中：
+//   1 蛮神→蠻神、2 拂晓→拂曉(Scion 拂曉血盟)、3 兽人→獸人(Beastman)、4 帝国→帝國(Garlean)。
+//   原值 {2:'光之戰士',3:'異族',4:'神羅'} 為誤填（神羅=FF7、光之戰士=玩家本人，皆非官方）。
+const TYPE_TW = { 1: '蠻神', 2: '拂曉', 3: '獸人', 4: '帝國' };
 
 // XIVAPI v1 nameEn → v2 正式名（Wiki 頁面使用 v2 名稱）
 const NAME_OVERRIDE = {
