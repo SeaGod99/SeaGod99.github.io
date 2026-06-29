@@ -799,8 +799,8 @@
     .then(async json => {
       const raw = (json && json.data) ? json.data : [];
       const gp = await PatchGate.loadGamePatch('../../data/_meta.json');
-      // 過濾掉無繁中名稱、或台服未開放（patch > gamePatch）的項目
-      MOUNT_DATA = raw.filter(m => m.name && PatchGate.released(m.patch, gp));
+      // 過濾掉無繁中名稱（name 仍＝英文 nameEn，多為內部/未上市資料）、或台服未開放（patch > gamePatch）的項目
+      MOUNT_DATA = raw.filter(m => m.name && m.name !== m.nameEn && PatchGate.released(m.patch, gp));
 
       // 來源類型清單（依資料動態產生）
       const typeSet = new Set();

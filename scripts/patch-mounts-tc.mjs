@@ -63,6 +63,14 @@ const byId = new Map();
 for (const it of tc) byId.set(it.id, it);
 
 const json = JSON.parse(await readFile(OUT, "utf-8"));
+
+// 清除無 id 的孤兒條目：早期手動 mounts.js 殘骸（無 id/icon/nameEn），名稱為舊手動
+// 猜譯、無圖且對不上正名。XIVAPI Mount sheet 已涵蓋所有真實坐騎（皆有 id），故這些
+// 必為重複殘骸（例「加魯達的羽翼」＝極風神坐騎＝已存在的 id29 風妖馬刻桑圖司）。
+const beforeLen = json.data.length;
+json.data = json.data.filter(m => m.id != null);
+const orphanRemoved = beforeLen - json.data.length;
+
 let nameSet = 0, srcSet = 0, keptManual = 0, skipped = 0;
 const typeTally = {};
 
@@ -83,11 +91,12 @@ for (const m of json.data) {
 
 json.source = "tc-collection+xivapi(icon)";
 json.updated = new Date().toISOString().slice(0, 10);
+json.count = json.data.length;
 
 const TMP = join(tmpdir(), "mounts_tc.json");
 await writeFile(TMP, JSON.stringify(json, null, 2) + "\n", "utf-8");
 JSON.parse(await readFile(TMP, "utf-8"));    // 完整性檢查
 await copyFile(TMP, OUT);
 
-console.log("更新名稱：" + nameSet + "｜覆寫取得方式：" + srcSet + "｜TC無故保留手動：" + keptManual + "｜台服未開放保留：" + skipped);
+console.log("移除無id孤兒：" + orphanRemoved + "｜更新名稱：" + nameSet + "｜覆寫取得方式：" + srcSet + "｜TC無故保留手動：" + keptManual + "｜台服未開放保留：" + skipped);
 console.log("type 分布：" + JSON.stringify(typeTally));

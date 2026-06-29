@@ -3,7 +3,7 @@
   "patch": "7.2",
   "updated": "2026-06-29",
   "source": "tc-collection+xivapi(icon)",
-  "count": 385,
+  "count": 362,
   "data": [
     {
       "id": 1,
@@ -31,32 +31,6 @@
       "patch": "2.0",
       "itemId": 6001,
       "nameSource": "tc"
-    },
-    {
-      "name": "黑陸行鳥",
-      "patch": "2.0",
-      "sources": [
-        {
-          "type": "任務",
-          "detail": "完成「向騎乘進發！」任務"
-        }
-      ],
-      "nameEn": null,
-      "icon": null,
-      "itemId": null
-    },
-    {
-      "name": "戰馬",
-      "patch": "2.0",
-      "sources": [
-        {
-          "type": "PvP",
-          "detail": "狼群評價達 A 階"
-        }
-      ],
-      "nameEn": null,
-      "icon": null,
-      "itemId": null
     },
     {
       "id": 4,
@@ -116,19 +90,6 @@
       "nameSource": "tc"
     },
     {
-      "name": "盧德西特天馬",
-      "patch": "2.0",
-      "sources": [
-        {
-          "type": "成就",
-          "detail": "成就「盧德西特之星」"
-        }
-      ],
-      "nameEn": null,
-      "icon": null,
-      "itemId": null
-    },
-    {
       "id": 8,
       "name": "夸爾",
       "nameEn": "coeurl",
@@ -167,71 +128,6 @@
       "nameSource": "tc"
     },
     {
-      "name": "大型甲蟲",
-      "patch": "2.0",
-      "sources": [
-        {
-          "type": "市場板",
-          "detail": "可於市場購買"
-        }
-      ],
-      "nameEn": null,
-      "icon": null,
-      "itemId": null
-    },
-    {
-      "name": "法爾法德",
-      "patch": "2.0",
-      "sources": [
-        {
-          "type": "高難度副本",
-          "detail": "極神「極地神」"
-        }
-      ],
-      "nameEn": null,
-      "icon": null,
-      "itemId": null
-    },
-    {
-      "name": "加魯達的羽翼",
-      "patch": "2.0",
-      "sources": [
-        {
-          "type": "高難度副本",
-          "detail": "極神「風神加魯達」"
-        }
-      ],
-      "nameEn": null,
-      "icon": null,
-      "itemId": null
-    },
-    {
-      "name": "伊夫利特的追焰",
-      "patch": "2.0",
-      "sources": [
-        {
-          "type": "高難度副本",
-          "detail": "極神「火神伊夫利特」"
-        }
-      ],
-      "nameEn": null,
-      "icon": null,
-      "itemId": null
-    },
-    {
-      "name": "泰坦的命石",
-      "patch": "2.0",
-      "sources": [
-        {
-          "type": "高難度副本",
-          "detail": "極神「土神泰坦」"
-        }
-      ],
-      "nameEn": null,
-      "icon": null,
-      "itemId": null
-    },
-    {
       "id": 15,
       "name": "獨角獸",
       "nameEn": "unicorn",
@@ -249,32 +145,6 @@
       "patch": "2.0",
       "itemId": 6269,
       "nameSource": "tc"
-    },
-    {
-      "name": "水晶蟲族飛空艇",
-      "patch": "2.3",
-      "sources": [
-        {
-          "type": "任務",
-          "detail": "我方飛空艇「解鎖飛空艇」"
-        }
-      ],
-      "nameEn": null,
-      "icon": null,
-      "itemId": null
-    },
-    {
-      "name": "白虎",
-      "patch": "2.3",
-      "sources": [
-        {
-          "type": "高難度副本",
-          "detail": "極神「白虎三巴」"
-        }
-      ],
-      "nameEn": null,
-      "icon": null,
-      "itemId": null
     },
     {
       "id": 18,
@@ -378,32 +248,6 @@
       "patch": "2.1",
       "itemId": 6994,
       "nameSource": "tc"
-    },
-    {
-      "name": "冰霜之龍",
-      "patch": "3.0",
-      "sources": [
-        {
-          "type": "高難度副本",
-          "detail": "極神「祈龍 Nidhogg」"
-        }
-      ],
-      "nameEn": null,
-      "icon": null,
-      "itemId": null
-    },
-    {
-      "name": "浮空機",
-      "patch": "3.0",
-      "sources": [
-        {
-          "type": "副本掉落",
-          "detail": "真代達羅斯"
-        }
-      ],
-      "nameEn": null,
-      "icon": null,
-      "itemId": null
     },
     {
       "id": 25,
@@ -676,19 +520,6 @@
       "nameSource": "tc"
     },
     {
-      "name": "魚人王",
-      "patch": "4.2",
-      "sources": [
-        {
-          "type": "高難度副本",
-          "detail": "極神「神武 Susano」"
-        }
-      ],
-      "nameEn": null,
-      "icon": null,
-      "itemId": null
-    },
-    {
       "id": 40,
       "name": "雷妖馬瑪卡布",
       "nameEn": "Markab",
@@ -898,19 +729,6 @@
       "nameSource": "tc"
     },
     {
-      "name": "馬車",
-      "patch": "5.2",
-      "sources": [
-        {
-          "type": "高難度副本",
-          "detail": "極神「英雄 Ruby Weapon」"
-        }
-      ],
-      "nameEn": null,
-      "icon": null,
-      "itemId": null
-    },
-    {
       "id": 52,
       "name": "紅大陸行鳥",
       "nameEn": "amber draught chocobo",
@@ -1010,19 +828,6 @@
       "nameSource": "tc"
     },
     {
-      "name": "萬物終焉陸行鳥",
-      "patch": "6.0",
-      "sources": [
-        {
-          "type": "主線任務",
-          "detail": "完成曉月之終途主線"
-        }
-      ],
-      "nameEn": null,
-      "icon": null,
-      "itemId": null
-    },
-    {
       "id": 58,
       "name": "哥布林戰車",
       "nameEn": "gobwalker",
@@ -1061,32 +866,6 @@
       "nameSource": "tc"
     },
     {
-      "name": "彩虹天馬",
-      "patch": "6.0",
-      "sources": [
-        {
-          "type": "副本掉落",
-          "detail": "萬魔殿煉獄之篇（零式）"
-        }
-      ],
-      "nameEn": null,
-      "icon": null,
-      "itemId": null
-    },
-    {
-      "name": "骷髏幻象",
-      "patch": "6.1",
-      "sources": [
-        {
-          "type": "高難度副本",
-          "detail": "極神「邪龍 Endsinger」"
-        }
-      ],
-      "nameEn": null,
-      "icon": null,
-      "itemId": null
-    },
-    {
       "id": 62,
       "name": "魔女掃帚",
       "nameEn": "witch's broom",
@@ -1104,58 +883,6 @@
       "patch": "3.07",
       "itemId": 13098,
       "nameSource": "tc"
-    },
-    {
-      "name": "白鷺",
-      "patch": "6.2",
-      "sources": [
-        {
-          "type": "高難度副本",
-          "detail": "極神「毀滅者 Barbariccia」"
-        }
-      ],
-      "nameEn": null,
-      "icon": null,
-      "itemId": null
-    },
-    {
-      "name": "金翅大鵬",
-      "patch": "6.2",
-      "sources": [
-        {
-          "type": "副本掉落",
-          "detail": "萬魔殿邊境之篇（零式）"
-        }
-      ],
-      "nameEn": null,
-      "icon": null,
-      "itemId": null
-    },
-    {
-      "name": "地底幻象",
-      "patch": "6.3",
-      "sources": [
-        {
-          "type": "高難度副本",
-          "detail": "極神「殺戮者 Rubicante」"
-        }
-      ],
-      "nameEn": null,
-      "icon": null,
-      "itemId": null
-    },
-    {
-      "name": "冰雪幻象",
-      "patch": "6.4",
-      "sources": [
-        {
-          "type": "高難度副本",
-          "detail": "極神「縊死者 Golbez」"
-        }
-      ],
-      "nameEn": null,
-      "icon": null,
-      "itemId": null
     },
     {
       "id": 67,
@@ -2032,19 +1759,6 @@
       "nameSource": "tc"
     },
     {
-      "name": "南瓜馬車",
-      "patch": "2.2",
-      "sources": [
-        {
-          "type": "節慶活動",
-          "detail": "全靈節限定活動"
-        }
-      ],
-      "nameEn": null,
-      "icon": null,
-      "itemId": null
-    },
-    {
       "id": 114,
       "name": "首領妖精犬",
       "nameEn": "pack faehound",
@@ -2306,19 +2020,6 @@
       "patch": "4.0",
       "itemId": 20637,
       "nameSource": "tc"
-    },
-    {
-      "name": "虛空漁夫",
-      "patch": "3.0",
-      "sources": [
-        {
-          "type": "探索航行",
-          "detail": "飛空艇探索 D-海域"
-        }
-      ],
-      "nameEn": null,
-      "icon": null,
-      "itemId": null
     },
     {
       "id": 133,
