@@ -293,6 +293,8 @@
       border-color: rgba(200,169,110,0.5);
       background: rgba(200,169,110,0.06);
     }
+    /* 預設表情：恆為已收藏、不可點掉 */
+    .em-card.locked { cursor: default; }
     .em-card.owned::before {
       content: '✓';
       position: absolute;
@@ -548,6 +550,14 @@
     return 'id:' + e.id;
   }
 
+  // 預設表情（角色初始即有）一律視為已收藏，且不可手動取消
+  function isDefault(e) {
+    return (e.sources || []).some(s => s.type === '預設');
+  }
+  function isOwned(e) {
+    return isDefault(e) || owned.has(keyOf(e));
+  }
+
   // ── Save ──
   function save() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify([...owned]));
@@ -565,7 +575,7 @@
   // ── Progress ──
   function updateProgress() {
     const total = EM_DATA.length;
-    const count = EM_DATA.filter(e => owned.has(keyOf(e))).length;
+    const count = EM_DATA.filter(e => isOwned(e)).length;
     const pct = total ? Math.round(count / total * 100) : 0;
     document.getElementById('ownedCount').textContent = count;
     document.getElementById('totalCount').textContent = total;
@@ -593,10 +603,8 @@
   // ── Filter ──
   function filtered() {
     return EM_DATA.filter(e => {
-      const k = keyOf(e);
-
-      if (filterOwn === 'owned'   && !owned.has(k)) return false;
-      if (filterOwn === 'missing' &&  owned.has(k)) return false;
+      if (filterOwn === 'owned'   && !isOwned(e)) return false;
+      if (filterOwn === 'missing' &&  isOwned(e)) return false;
 
       if (filterSource) {
         const types = (e.sources || []).map(s => s.type);
@@ -632,14 +640,15 @@
       empty.style.display = 'none';
     }
 
-    const ownedInView = list.filter(e => owned.has(keyOf(e))).length;
+    const ownedInView = list.filter(e => isOwned(e)).length;
     meta.innerHTML = `顯示 <em>${list.length}</em> / ${EM_DATA.length} 個 · 已解鎖 <em>${ownedInView}</em> / ${list.length}`;
 
     list.forEach(e => {
       const k = keyOf(e);
-      const isOwned = owned.has(k);
+      const ownedFlag = isOwned(e);
+      const lockedDefault = isDefault(e);
       const card = document.createElement('div');
-      card.className = 'em-card' + (isOwned ? ' owned' : '');
+      card.className = 'em-card' + (ownedFlag ? ' owned' : '') + (lockedDefault ? ' locked' : '');
 
       // Icon（地端圖片：/i/246000/246201.png → 246201.webp）
       const iconFile = e.icon ? e.icon.split('/').pop().replace(/\.png$/i, '.webp') : null;
@@ -680,7 +689,8 @@
         <div class="em-tags">${patchHtml}</div>
       `;
 
-      card.addEventListener('click', () => toggle(k));
+      // 預設表情恆為已收藏，不可點掉；其餘可切換
+      if (!lockedDefault) card.addEventListener('click', () => toggle(k));
       grid.appendChild(card);
     });
   }
