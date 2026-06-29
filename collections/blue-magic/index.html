@@ -547,7 +547,7 @@
   const STORAGE_KEY = 'ffxiv_bluemagic_learned';
   const DATA_URL = '../../data/blue-magic.json';
   const DUNGEONS_URL = '../../data/dungeons.json';
-  const ICON_BASE = 'https://xivapi.com';
+  const ICON_BASE = '../../assets/blue-magic/';
 
   // ── State ──
   let BM_DATA = [];
@@ -732,7 +732,7 @@
       const aspectLabel = m.aspect || '無';
 
       const iconHtml = m.icon
-        ? `<img class="bm-icon" src="${ICON_BASE}${m.icon}" alt="" loading="lazy">`
+        ? `<img class="bm-icon" src="${ICON_BASE}${m.icon.split('/').pop()}" alt="" loading="lazy">`
         : `<div class="bm-icon placeholder">💙</div>`;
 
       // detail lines（取得方式內文：每筆來源一行，地點＋怪物；方法已由標籤表示）
