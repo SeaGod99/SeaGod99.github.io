@@ -33,6 +33,11 @@
 // 為什麼本機跑：Cowork 沙箱擋外網（v2.xivapi.com 全回 403）。
 // 需 Node 18+（內建 fetch）＋ npm i @msgpack/msgpack opencc-js。
 //
+// ⚠ name 與 sources 的權威來源已改為 scripts/patch-mounts-tc.mjs（繁中站 TC，
+//   data/mounts-sources-tc.json）。本檔的 cn-opencc 名稱（簡轉繁，有誤）與手動 sources
+//   會被該 patch 在 TC 有資料時覆寫；TC 未提供 sources 者保留本檔/手動值。
+//   完整流程：build → 人工核對改名 data/mounts.json → download-mounts.mjs → patch-mounts-tc.mjs。
+//
 // 執行（repo 根目錄）：
 //   node scripts/build-mounts.mjs
 

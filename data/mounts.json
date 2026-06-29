@@ -1,8 +1,8 @@
 {
   "schema": "mounts",
   "patch": "7.2",
-  "updated": "2026-06-23",
-  "source": "xivapi+tw-items+cn-opencc+manual",
+  "updated": "2026-06-29",
+  "source": "tc-collection+xivapi(icon)",
   "count": 385,
   "data": [
     {
@@ -16,13 +16,21 @@
       "description": null,
       "sources": [
         {
-          "type": "主線任務",
-          "detail": "職業等級達 20 可購買"
+          "type": "任務",
+          "detail": "我的專屬陸行鳥（不滅隊）"
+        },
+        {
+          "type": "任務",
+          "detail": "我的專屬陸行鳥（黑渦團）"
+        },
+        {
+          "type": "任務",
+          "detail": "我的專屬陸行鳥（雙蛇黨）"
         }
       ],
       "patch": "2.0",
       "itemId": 6001,
-      "nameSource": "cn-opencc"
+      "nameSource": "tc"
     },
     {
       "name": "黑陸行鳥",
@@ -67,7 +75,7 @@
       ],
       "patch": "2.0",
       "itemId": 6002,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 5,
@@ -86,7 +94,7 @@
       ],
       "patch": "2.0",
       "itemId": 6006,
-      "nameSource": "cn-opencc"
+      "nameSource": "tc"
     },
     {
       "id": 6,
@@ -99,13 +107,13 @@
       "description": null,
       "sources": [
         {
-          "type": "金碟",
-          "detail": "金碟 MGP 兌換"
+          "type": "任務",
+          "detail": "超越幻想，究極武器"
         }
       ],
       "patch": "2.0",
       "itemId": 6008,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "name": "盧德西特天馬",
@@ -137,11 +145,11 @@
       ],
       "patch": "2.0",
       "itemId": 6007,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 9,
-      "name": "冥鬼之眼",
+      "name": "惡精靈",
       "nameEn": "ahriman",
       "seats": 1,
       "icon": "/i/004000/004004_hr1.png",
@@ -150,13 +158,13 @@
       "description": null,
       "sources": [
         {
-          "type": "副本掉落",
-          "detail": "巴哈姆特邊境（第五層）"
+          "type": "商店",
+          "detail": "喬納森: 成就幣 x6, at 格里達尼亞舊街"
         }
       ],
       "patch": "2.0",
       "itemId": 6009,
-      "nameSource": "cn-opencc"
+      "nameSource": "tc"
     },
     {
       "name": "大型甲蟲",
@@ -234,13 +242,13 @@
       "description": null,
       "sources": [
         {
-          "type": "副本掉落",
-          "detail": "哈卡茲宮（困難）"
+          "type": "任務",
+          "detail": "我唯一的希望"
         }
       ],
       "patch": "2.0",
       "itemId": 6269,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "name": "水晶蟲族飛空艇",
@@ -279,13 +287,13 @@
       "description": null,
       "sources": [
         {
-          "type": "副本掉落",
-          "detail": "萊姆利亞歡笑宮廷"
+          "type": "商店",
+          "detail": "喬納森: 成就幣 x6, at 格里達尼亞舊街"
         }
       ],
       "patch": "2.1",
       "itemId": 6990,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 19,
@@ -298,13 +306,13 @@
       "description": null,
       "sources": [
         {
-          "type": "高難度副本",
-          "detail": "極神「女神Shiva」"
+          "type": "商店",
+          "detail": "蜥蜴人族雜用商人: Gil x120000, at 南薩納蘭"
         }
       ],
       "patch": "2.1",
       "itemId": 6991,
-      "nameSource": "cn-opencc"
+      "nameSource": "tc"
     },
     {
       "id": 20,
@@ -317,13 +325,13 @@
       "description": null,
       "sources": [
         {
-          "type": "成就",
-          "detail": "成就「偉大的航海家」"
+          "type": "商店",
+          "detail": "風精靈族雜用商人: Gil x120000, at 黑衣森林東部林區"
         }
       ],
       "patch": "2.1",
       "itemId": 6992,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 21,
@@ -336,13 +344,13 @@
       "description": null,
       "sources": [
         {
-          "type": "主線任務",
-          "detail": "完成蒼天之理主線"
+          "type": "成就",
+          "detail": "銘記不忘的隊友"
         }
       ],
       "patch": "2.1",
       "itemId": 6993,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 22,
@@ -356,12 +364,20 @@
       "sources": [
         {
           "type": "高難度副本",
-          "detail": "極神「相克龍」"
+          "detail": "極 迦樓羅殲滅戰"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "極 泰坦殲滅戰"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "極 伊弗利特殲滅戰"
         }
       ],
       "patch": "2.1",
       "itemId": 6994,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "name": "冰霜之龍",
@@ -406,7 +422,7 @@
       ],
       "patch": "2.2",
       "itemId": 7553,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 26,
@@ -419,17 +435,17 @@
       "description": null,
       "sources": [
         {
-          "type": "高難度副本",
-          "detail": "極神「剛魂 Ravana」"
+          "type": "商店",
+          "detail": "魚人族雜用商人: Gil x120000, at 西拉諾西亞"
         }
       ],
       "patch": "2.2",
       "itemId": 7554,
-      "nameSource": "cn-opencc"
+      "nameSource": "tc"
     },
     {
       "id": 27,
-      "name": "爆彈吊椅",
+      "name": "炸彈吊椅",
       "nameEn": "bomb palanquin",
       "seats": 1,
       "icon": "/i/004000/004015_hr1.png",
@@ -439,16 +455,16 @@
       "sources": [
         {
           "type": "商店",
-          "detail": "Mog 工房商店"
+          "detail": "地靈族雜用商人: Gil x120000, at 拉諾西亞外地"
         }
       ],
       "patch": "2.2",
       "itemId": 7555,
-      "nameSource": "cn-opencc"
+      "nameSource": "tc"
     },
     {
       "id": 28,
-      "name": "火妖馬埃馱恩",
+      "name": "火妖馬艾馱恩",
       "nameEn": "Aithon",
       "seats": 1,
       "icon": "/i/004000/004016_hr1.png",
@@ -458,12 +474,12 @@
       "sources": [
         {
           "type": "高難度副本",
-          "detail": "極神「偉大的神明 Bismarck」"
+          "detail": "極 伊弗利特殲滅戰"
         }
       ],
       "patch": "2.2",
       "itemId": 7844,
-      "nameSource": "cn-opencc"
+      "nameSource": "tc"
     },
     {
       "id": 29,
@@ -476,13 +492,13 @@
       "description": null,
       "sources": [
         {
-          "type": "副本掉落",
-          "detail": "亞歷山大黃金之篇（零式）"
+          "type": "高難度副本",
+          "detail": "極 迦樓羅殲滅戰"
         }
       ],
       "patch": "2.2",
       "itemId": 7845,
-      "nameSource": "cn-opencc"
+      "nameSource": "tc"
     },
     {
       "id": 30,
@@ -496,12 +512,12 @@
       "sources": [
         {
           "type": "高難度副本",
-          "detail": "極神「海神 Leviathan」"
+          "detail": "極 泰坦殲滅戰"
         }
       ],
       "patch": "2.2",
       "itemId": 7846,
-      "nameSource": "cn-opencc"
+      "nameSource": "tc"
     },
     {
       "id": 31,
@@ -515,12 +531,12 @@
       "sources": [
         {
           "type": "高難度副本",
-          "detail": "絕境「絕巴哈姆特討滅戰」"
+          "detail": "極 利維坦殲滅戰"
         }
       ],
       "patch": "2.2",
       "itemId": 7847,
-      "nameSource": "cn-opencc"
+      "nameSource": "tc"
     },
     {
       "id": 32,
@@ -533,13 +549,17 @@
       "description": null,
       "sources": [
         {
-          "type": "高難度副本",
-          "detail": "極神「龍神 Nidhogg」"
+          "type": "成就",
+          "detail": "頑強騎士"
+        },
+        {
+          "type": "成就",
+          "detail": "騎士出征1"
         }
       ],
       "patch": "2.2",
       "itemId": 7848,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 33,
@@ -552,13 +572,13 @@
       "description": null,
       "sources": [
         {
-          "type": "狩獵",
-          "detail": "傳說狩獵貨幣兌換"
+          "type": "成就",
+          "detail": "勇猛戰士"
         }
       ],
       "patch": "2.2",
       "itemId": 7849,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 34,
@@ -577,7 +597,7 @@
       ],
       "patch": "2.3",
       "itemId": 8207,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 35,
@@ -590,13 +610,13 @@
       "description": null,
       "sources": [
         {
-          "type": "高難度副本",
-          "detail": "極神「悲哭者 Lakshmi」"
+          "type": "商店",
+          "detail": "鳥人族雜用商人: Gil x120000, at 黑衣森林北部林區"
         }
       ],
       "patch": "2.35",
       "itemId": 8208,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 36,
@@ -609,13 +629,13 @@
       "description": null,
       "sources": [
         {
-          "type": "高難度副本",
-          "detail": "絕境「絕神兵討滅戰」"
+          "type": "成就",
+          "detail": "海之都的凱旋4"
         }
       ],
       "patch": "2.3",
       "itemId": 8209,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 37,
@@ -628,13 +648,13 @@
       "description": null,
       "sources": [
         {
-          "type": "副本掉落",
-          "detail": "超越天堂"
+          "type": "成就",
+          "detail": "森之都的凱旋4"
         }
       ],
       "patch": "2.3",
       "itemId": 8210,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 38,
@@ -647,13 +667,13 @@
       "description": null,
       "sources": [
         {
-          "type": "市場板",
-          "detail": "副本掉落可於市場購買"
+          "type": "成就",
+          "detail": "沙之都的凱旋4"
         }
       ],
       "patch": "2.3",
       "itemId": 8211,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "name": "魚人王",
@@ -680,12 +700,12 @@
       "sources": [
         {
           "type": "高難度副本",
-          "detail": "極神「魔后 Shinryu」"
+          "detail": "極 拉姆殲滅戰"
         }
       ],
       "patch": "2.3",
       "itemId": 8212,
-      "nameSource": "cn-opencc"
+      "nameSource": "tc"
     },
     {
       "id": 41,
@@ -704,7 +724,7 @@
       ],
       "patch": "2.45",
       "itemId": 8702,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 42,
@@ -717,13 +737,13 @@
       "description": null,
       "sources": [
         {
-          "type": "副本掉落",
-          "detail": "奧米加白金之篇（零式）"
+          "type": "商城",
+          "detail": "斯雷普尼爾"
         }
       ],
       "patch": "2.38",
       "itemId": 8726,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 43,
@@ -737,12 +757,12 @@
       "sources": [
         {
           "type": "高難度副本",
-          "detail": "極神「刑神 Tsukuyomi」"
+          "detail": "極 濕婆殲滅戰"
         }
       ],
       "patch": "2.4",
       "itemId": 9354,
-      "nameSource": "cn-opencc"
+      "nameSource": "tc"
     },
     {
       "id": 44,
@@ -755,13 +775,13 @@
       "description": null,
       "sources": [
         {
-          "type": "絕境",
-          "detail": "絕境「絕龍詩討滅戰」"
+          "type": "成就",
+          "detail": "令人難忘2"
         }
       ],
       "patch": "2.4",
       "itemId": 9353,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 45,
@@ -774,13 +794,13 @@
       "description": null,
       "sources": [
         {
-          "type": "狩獵",
-          "detail": "傳說狩獵貨幣兌換"
+          "type": "任務",
+          "detail": "蒼天騎士"
         }
       ],
       "patch": "3.0",
       "itemId": 12075,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 46,
@@ -793,13 +813,13 @@
       "description": null,
       "sources": [
         {
-          "type": "主線任務",
-          "detail": "完成暗影之逆焰主線"
+          "type": "商店",
+          "detail": "紀念品兌換員: 金碟幣 x200000, at 金碟遊樂園"
         }
       ],
       "patch": "2.51",
       "itemId": 10078,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 47,
@@ -812,13 +832,13 @@
       "description": null,
       "sources": [
         {
-          "type": "高難度副本",
-          "detail": "極神「冥界女王 Titania」"
+          "type": "任務",
+          "detail": "天降祥瑞"
         }
       ],
       "patch": "2.5",
       "itemId": 10080,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 48,
@@ -831,13 +851,13 @@
       "description": null,
       "sources": [
         {
-          "type": "高難度副本",
-          "detail": "極神「邪龍 Innocence」"
+          "type": "成就",
+          "detail": "英雄凱旋"
         }
       ],
       "patch": "2.5",
       "itemId": 10081,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 49,
@@ -850,17 +870,17 @@
       "description": null,
       "sources": [
         {
-          "type": "高難度副本",
-          "detail": "極神「破滅 Hades」"
+          "type": "商店",
+          "detail": "紀念品兌換員: 金碟幣 x1000000, at 金碟遊樂園"
         }
       ],
       "patch": "2.51",
       "itemId": 10079,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 50,
-      "name": "塵世幻龍",
+      "name": "幻龍米德加爾特",
       "nameEn": "Midgardsormr",
       "seats": 1,
       "icon": "/i/004000/004037_hr1.png",
@@ -869,13 +889,13 @@
       "description": null,
       "sources": [
         {
-          "type": "副本掉落",
-          "detail": "伊甸墮落之篇（零式）"
+          "type": "任務",
+          "detail": "振翅高飛"
         }
       ],
       "patch": "3.0",
       "itemId": null,
-      "nameSource": "cn-opencc"
+      "nameSource": "tc"
     },
     {
       "name": "馬車",
@@ -901,13 +921,13 @@
       "description": null,
       "sources": [
         {
-          "type": "高難度副本",
-          "detail": "極神「縹緲 Emerald Weapon」"
+          "type": "商店",
+          "detail": "失物管理人: 黃金陸行鳥的羽毛 x8, at 烏爾達哈來生回廊"
         }
       ],
       "patch": "3.0",
       "itemId": 12993,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 53,
@@ -920,13 +940,13 @@
       "description": null,
       "sources": [
         {
-          "type": "副本掉落",
-          "detail": "伊甸誓約之篇（零式）"
+          "type": "商店",
+          "detail": "商人魯納瓦努: Gil x200000, at 阿巴拉提亞雲海"
         }
       ],
       "patch": "3.1",
       "itemId": 12071,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 54,
@@ -945,7 +965,7 @@
       ],
       "patch": "3.0",
       "itemId": 12072,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 55,
@@ -958,13 +978,13 @@
       "description": null,
       "sources": [
         {
-          "type": "高難度副本",
-          "detail": "極神「無盡 Diamond Weapon」"
+          "type": "任務",
+          "detail": "狩獵邪龍"
         }
       ],
       "patch": "3.0",
       "itemId": 12073,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 56,
@@ -977,13 +997,17 @@
       "description": null,
       "sources": [
         {
-          "type": "狩獵",
-          "detail": "傳說狩獵貨幣兌換"
+          "type": "成就",
+          "detail": "毅然暗黑騎士"
+        },
+        {
+          "type": "成就",
+          "detail": "暗黑騎士出征1"
         }
       ],
       "patch": "3.0",
       "itemId": 12074,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "name": "萬物終焉陸行鳥",
@@ -1010,12 +1034,12 @@
       "sources": [
         {
           "type": "高難度副本",
-          "detail": "極神「諸天神 Zodiark」"
+          "detail": "亞歷山大零式機神城 啟動之章4"
         }
       ],
       "patch": "3.05",
       "itemId": 12076,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 59,
@@ -1028,13 +1052,13 @@
       "description": null,
       "sources": [
         {
-          "type": "高難度副本",
-          "detail": "極神「星占師 Hydaelyn」"
+          "type": "商店",
+          "detail": "失物管理人: 黃金陸行鳥的羽毛 x15, at 烏爾達哈來生回廊"
         }
       ],
       "patch": "3.0",
       "itemId": 12992,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "name": "彩虹天馬",
@@ -1073,13 +1097,13 @@
       "description": null,
       "sources": [
         {
-          "type": "高難度副本",
-          "detail": "絕境「絕欧米茄討滅戰」"
+          "type": "商城",
+          "detail": "魔女掃帚"
         }
       ],
       "patch": "3.07",
       "itemId": 13098,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "name": "白鷺",
@@ -1144,13 +1168,13 @@
       "description": null,
       "sources": [
         {
-          "type": "副本掉落",
-          "detail": "萬魔殿天獄之篇（零式）"
+          "type": "商店",
+          "detail": "艾妮: 蒼天街振興票 x4200, at 蒼天街"
         }
       ],
       "patch": "3.1",
       "itemId": 13287,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 68,
@@ -1163,13 +1187,13 @@
       "description": null,
       "sources": [
         {
-          "type": "高難度副本",
-          "detail": "絕境「絕龍詩 再演」"
+          "type": "商城",
+          "detail": "莉維亞專用魔導裝甲"
         }
       ],
       "patch": "3.1",
       "itemId": 13689,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 69,
@@ -1182,13 +1206,13 @@
       "description": null,
       "sources": [
         {
-          "type": "高難度副本",
-          "detail": "極神「悟道者 Zeromus」"
+          "type": "商城",
+          "detail": "尼祿專用魔導裝甲"
         }
       ],
       "patch": "3.1",
       "itemId": 13690,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 70,
@@ -1201,13 +1225,13 @@
       "description": null,
       "sources": [
         {
-          "type": "狩獵",
-          "detail": "傳說狩獵貨幣兌換"
+          "type": "商店",
+          "detail": "貝爾塔娜: 兵團成員的手冊 x6, at 田園郡"
         }
       ],
       "patch": "3.1",
       "itemId": 13288,
-      "nameSource": "cn-opencc"
+      "nameSource": "tc"
     },
     {
       "id": 71,
@@ -1220,13 +1244,13 @@
       "description": null,
       "sources": [
         {
-          "type": "主線任務",
-          "detail": "完成金曦之遺輝主線"
+          "type": "商城",
+          "detail": "SDS芬里爾"
         }
       ],
       "patch": "4.4",
       "itemId": 23981,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 72,
@@ -1239,13 +1263,13 @@
       "description": null,
       "sources": [
         {
-          "type": "高難度副本",
-          "detail": "極神「轟鳴者 Valigarmanda」"
+          "type": "商店",
+          "detail": "做買賣: Gil x200000, at 德拉瓦尼亞山麓地"
         }
       ],
       "patch": "3.2",
       "itemId": 14082,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 73,
@@ -1258,13 +1282,21 @@
       "description": null,
       "sources": [
         {
-          "type": "副本掉落",
-          "detail": "阿卡迪亞樂園序篇（零式）"
+          "type": "商店",
+          "detail": "住宅區管理人: 遠航白鋼通貨 x1, at 穹頂皓天"
+        },
+        {
+          "type": "商店",
+          "detail": "通貨交易員: 遠航白鋼通貨 x1, at 白銀鄉"
+        },
+        {
+          "type": "寶箱",
+          "detail": "特殊配給貨箱（新生/蒼天）"
         }
       ],
       "patch": "3.2",
       "itemId": 14083,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 74,
@@ -1277,13 +1309,13 @@
       "description": null,
       "sources": [
         {
-          "type": "高難度副本",
-          "detail": "絕境「絕伊甸討滅戰」"
+          "type": "商城",
+          "detail": "貝努鳥"
         }
       ],
       "patch": "3.25",
       "itemId": 14084,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 75,
@@ -1296,13 +1328,21 @@
       "description": null,
       "sources": [
         {
+          "type": "商店",
+          "detail": "貝爾塔娜: 雲神圖騰 x99, at 田園郡"
+        },
+        {
+          "type": "商店",
+          "detail": "羅薇娜商會的商人: 雲神圖騰 x99, at 伊修加爾德下層"
+        },
+        {
           "type": "高難度副本",
-          "detail": "極神「石化者 Sphene」"
+          "detail": "極 俾斯麥殲滅戰"
         }
       ],
       "patch": "3.2",
       "itemId": 14085,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 76,
@@ -1315,13 +1355,21 @@
       "description": null,
       "sources": [
         {
-          "type": "副本掉落",
-          "detail": "阿卡迪亞樂園正篇（零式）"
+          "type": "商店",
+          "detail": "貝爾塔娜: 武神圖騰 x99, at 田園郡"
+        },
+        {
+          "type": "商店",
+          "detail": "羅薇娜商會的商人: 武神圖騰 x99, at 伊修加爾德下層"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "極 羅波那殲滅戰"
         }
       ],
       "patch": "3.2",
       "itemId": 14086,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 77,
@@ -1334,13 +1382,21 @@
       "description": null,
       "sources": [
         {
-          "type": "高難度副本",
-          "detail": "極神「天道者 Zoraal Ja」"
+          "type": "商店",
+          "detail": "貝爾塔娜: 蒼天甲胄碎片 x99, at 田園郡"
+        },
+        {
+          "type": "商店",
+          "detail": "羅薇娜商會的商人: 蒼天甲胄碎片 x99, at 伊修加爾德下層"
+        },
+        {
+          "type": "副本掉落",
+          "detail": "蒼天幻想 圓桌騎士殲滅戰"
         }
       ],
       "patch": "3.2",
       "itemId": 14087,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 78,
@@ -1353,13 +1409,21 @@
       "description": null,
       "sources": [
         {
-          "type": "副本掉落",
-          "detail": "阿卡迪亞樂園秘境（零式）"
+          "type": "商店",
+          "detail": "貝爾塔娜: 魔神圖騰 x99, at 田園郡"
+        },
+        {
+          "type": "商店",
+          "detail": "羅薇娜商會的商人: 魔神圖騰 x99, at 伊修加爾德下層"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "極 魔神賽菲羅特殲滅戰"
         }
       ],
       "patch": "3.2",
       "itemId": 14088,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 80,
@@ -1373,16 +1437,16 @@
       "sources": [
         {
           "type": "成就",
-          "detail": null
+          "detail": "磨礪利爪4"
         }
       ],
       "patch": "3.2",
       "itemId": 14089,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 81,
-      "name": "筋斗雲",
+      "name": "筋鬥雲",
       "nameEn": "flying cumulus",
       "seats": 1,
       "icon": "/i/004000/004059_hr1.png",
@@ -1397,7 +1461,7 @@
       ],
       "patch": "3.5",
       "itemId": 14982,
-      "nameSource": "cn-opencc"
+      "nameSource": "tc"
     },
     {
       "id": 82,
@@ -1416,7 +1480,7 @@
       ],
       "patch": "3.2",
       "itemId": 14090,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 83,
@@ -1430,12 +1494,12 @@
       "sources": [
         {
           "type": "成就",
-          "detail": null
+          "detail": "可靠的前輩6"
         }
       ],
       "patch": "3.3",
       "itemId": 15433,
-      "nameSource": "cn-opencc"
+      "nameSource": "tc"
     },
     {
       "id": 84,
@@ -1454,7 +1518,7 @@
       ],
       "patch": "3.35",
       "itemId": 15430,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 86,
@@ -1467,13 +1531,13 @@
       "description": null,
       "sources": [
         {
-          "type": "部族任務",
-          "detail": null
+          "type": "商店",
+          "detail": "貪吃的莫古姆利: Gil x200000, at 德拉瓦尼亞雲海"
         }
       ],
       "patch": "3.3",
       "itemId": 15429,
-      "nameSource": "cn-opencc"
+      "nameSource": "tc"
     },
     {
       "id": 87,
@@ -1492,7 +1556,7 @@
       ],
       "patch": "3.35",
       "itemId": 15431,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 90,
@@ -1505,13 +1569,21 @@
       "description": null,
       "sources": [
         {
+          "type": "商店",
+          "detail": "貝爾塔娜: 邪龍圖騰 x99, at 田園郡"
+        },
+        {
+          "type": "商店",
+          "detail": "羅薇娜商會的商人: 邪龍圖騰 x99, at 伊修加爾德下層"
+        },
+        {
           "type": "高難度副本",
           "detail": "極 尼德霍格征龍戰"
         }
       ],
       "patch": "3.3",
       "itemId": 15432,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 91,
@@ -1525,16 +1597,16 @@
       "sources": [
         {
           "type": "成就",
-          "detail": null
+          "detail": "榮譽之戰5"
         }
       ],
       "patch": "3.3",
       "itemId": 15932,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 92,
-      "name": "顱浮巨像",
+      "name": "顱浮魔像",
       "nameEn": "disembodied head",
       "seats": 1,
       "icon": "/i/004000/004068_hr1.png",
@@ -1543,13 +1615,13 @@
       "description": null,
       "sources": [
         {
-          "type": "深層迷宮",
-          "detail": null
+          "type": "商店",
+          "detail": "艾·烏納·科特羅: 格爾莫拉陶器碎片 x10, at 黑衣森林南部林區"
         }
       ],
       "patch": "3.35",
       "itemId": 15933,
-      "nameSource": "cn-opencc"
+      "nameSource": "tc"
     },
     {
       "id": 93,
@@ -1568,7 +1640,7 @@
       ],
       "patch": "4.1",
       "itemId": 15934,
-      "nameSource": "cn-opencc"
+      "nameSource": "tc"
     },
     {
       "id": 94,
@@ -1587,7 +1659,7 @@
       ],
       "patch": "3.35",
       "itemId": 15946,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 95,
@@ -1601,12 +1673,12 @@
       "sources": [
         {
           "type": "成就",
-          "detail": null
+          "detail": "轟天"
         }
       ],
       "patch": "3.5",
       "itemId": 16565,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 96,
@@ -1620,12 +1692,12 @@
       "sources": [
         {
           "type": "成就",
-          "detail": null
+          "detail": "銀牙"
         }
       ],
       "patch": "3.5",
       "itemId": 16566,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 97,
@@ -1644,7 +1716,7 @@
       ],
       "patch": "4.1",
       "itemId": 16561,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 98,
@@ -1657,13 +1729,21 @@
       "description": null,
       "sources": [
         {
+          "type": "商店",
+          "detail": "貝爾塔娜: 女神圖騰 x99, at 田園郡"
+        },
+        {
+          "type": "商店",
+          "detail": "羅薇娜商會的商人: 女神圖騰 x99, at 伊修加爾德下層"
+        },
+        {
           "type": "高難度副本",
           "detail": "極 女神索菲亞殲滅戰"
         }
       ],
       "patch": "3.4",
       "itemId": 16562,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 99,
@@ -1676,17 +1756,21 @@
       "description": null,
       "sources": [
         {
-          "type": "節慶活動",
-          "detail": null
+          "type": "商城",
+          "detail": "星芒熊"
         },
         {
-          "type": "商城",
-          "detail": "商城購買"
+          "type": "節慶活動",
+          "detail": "小偷與熊的星芒祭"
+        },
+        {
+          "type": "節慶活動",
+          "detail": "2025星芒祭"
         }
       ],
       "patch": "4.1",
       "itemId": 21050,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 100,
@@ -1699,13 +1783,17 @@
       "description": null,
       "sources": [
         {
-          "type": "商店",
-          "detail": "Mog 工房商店"
+          "type": "藏寶圖",
+          "detail": "金飾寶藏"
+        },
+        {
+          "type": "寶箱",
+          "detail": "特殊配給貨箱（新生/蒼天）"
         }
       ],
       "patch": "3.4",
       "itemId": 16564,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 101,
@@ -1718,13 +1806,13 @@
       "description": null,
       "sources": [
         {
-          "type": "商店",
-          "detail": "Mog 工房商店"
+          "type": "高難度副本",
+          "detail": "亞歷山大零式機神城 天動之章4"
         }
       ],
       "patch": "3.4",
       "itemId": 16563,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 102,
@@ -1737,13 +1825,13 @@
       "description": null,
       "sources": [
         {
-          "type": "商店",
-          "detail": "Mog 工房商店"
+          "type": "成就",
+          "detail": "雷剛"
         }
       ],
       "patch": "3.5",
       "itemId": 16567,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 103,
@@ -1776,12 +1864,20 @@
       "sources": [
         {
           "type": "商店",
-          "detail": "Mog 工房商店"
+          "detail": "貝爾塔娜: 鬼神圖騰 x99, at 田園郡"
+        },
+        {
+          "type": "商店",
+          "detail": "羅薇娜商會的商人: 鬼神圖騰 x99, at 伊修加爾德下層"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "極 鬼神祖爾宛殲滅戰"
         }
       ],
       "patch": "3.5",
       "itemId": 17007,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 105,
@@ -1794,13 +1890,13 @@
       "description": null,
       "sources": [
         {
-          "type": "商店",
-          "detail": "Mog 工房商店"
+          "type": "任務",
+          "detail": "鳳鳴朝陽"
         }
       ],
       "patch": "3.5",
       "itemId": 17008,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 106,
@@ -1813,13 +1909,13 @@
       "description": null,
       "sources": [
         {
-          "type": "商店",
-          "detail": "Mog 工房商店"
+          "type": "任務",
+          "detail": "彩蛋狩獵和亮閃閃的寶石"
         }
       ],
       "patch": "3.5",
       "itemId": 17009,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 108,
@@ -1838,7 +1934,7 @@
       ],
       "patch": "3.55a",
       "itemId": 17010,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 109,
@@ -1857,7 +1953,7 @@
       ],
       "patch": "3.55a",
       "itemId": 17011,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 110,
@@ -1870,13 +1966,13 @@
       "description": null,
       "sources": [
         {
-          "type": "聯名活動",
-          "detail": "妖怪手錶聯名活動（2016）"
+          "type": "商店",
+          "detail": "紀念品兌換員: 金碟幣 x750000, at 金碟遊樂園"
         }
       ],
       "patch": "3.5",
       "itemId": 17012,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 111,
@@ -1895,7 +1991,7 @@
       ],
       "patch": "4.0",
       "itemId": 16037,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 112,
@@ -1914,7 +2010,7 @@
       ],
       "patch": "4.05",
       "itemId": 20548,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 113,
@@ -1933,7 +2029,7 @@
       ],
       "patch": "4.0",
       "itemId": 17675,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "name": "南瓜馬車",
@@ -1965,7 +2061,7 @@
       ],
       "patch": "4.0",
       "itemId": 17676,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 115,
@@ -1978,13 +2074,21 @@
       "description": null,
       "sources": [
         {
+          "type": "商店",
+          "detail": "艾西娜: 美神圖騰 x99, at 神拳痕"
+        },
+        {
+          "type": "商店",
+          "detail": "羅薇娜商會的商人: 美神圖騰 x99, at 黃金港"
+        },
+        {
           "type": "高難度副本",
           "detail": "極 吉祥天女殲滅戰"
         }
       ],
       "patch": "4.0",
       "itemId": 20549,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 116,
@@ -1997,13 +2101,21 @@
       "description": null,
       "sources": [
         {
+          "type": "商店",
+          "detail": "艾西娜: 豪神圖騰 x99, at 神拳痕"
+        },
+        {
+          "type": "商店",
+          "detail": "羅薇娜商會的商人: 豪神圖騰 x99, at 黃金港"
+        },
+        {
           "type": "高難度副本",
           "detail": "極 須佐之男殲滅戰"
         }
       ],
       "patch": "4.0",
       "itemId": 20550,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 121,
@@ -2016,13 +2128,13 @@
       "description": null,
       "sources": [
         {
-          "type": "節慶活動",
-          "detail": "星靈節限定活動"
+          "type": "副本掉落",
+          "detail": "紅蓮決戰阿拉米格"
         }
       ],
       "patch": "4.0",
       "itemId": 20551,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 122,
@@ -2035,13 +2147,17 @@
       "description": null,
       "sources": [
         {
-          "type": "節慶活動",
-          "detail": "卵祭節限定活動"
+          "type": "成就",
+          "detail": "為人民服務的騎士3"
+        },
+        {
+          "type": "成就",
+          "detail": "騎士出征1"
         }
       ],
       "patch": "4.0",
       "itemId": 20552,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 123,
@@ -2055,12 +2171,12 @@
       "sources": [
         {
           "type": "成就",
-          "detail": null
+          "detail": "為人民服務的戰士3"
         }
       ],
       "patch": "4.0",
       "itemId": 20553,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 124,
@@ -2074,12 +2190,16 @@
       "sources": [
         {
           "type": "成就",
-          "detail": null
+          "detail": "為人民服務的暗黑騎士3"
+        },
+        {
+          "type": "成就",
+          "detail": "暗黑騎士出征1"
         }
       ],
       "patch": "4.0",
       "itemId": 20554,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 125,
@@ -2093,12 +2213,12 @@
       "sources": [
         {
           "type": "任務",
-          "detail": null
+          "detail": "巴兒達木霸道的試煉"
         }
       ],
       "patch": "4.0",
       "itemId": 20555,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 126,
@@ -2111,13 +2231,13 @@
       "description": null,
       "sources": [
         {
-          "type": "副本掉落",
+          "type": "高難度副本",
           "detail": "歐米茄零式時空狹縫 德爾塔幻境4"
         }
       ],
       "patch": "4.05",
       "itemId": 20556,
-      "nameSource": "cn-opencc"
+      "nameSource": "tc"
     },
     {
       "id": 127,
@@ -2131,12 +2251,20 @@
       "sources": [
         {
           "type": "成就",
-          "detail": null
+          "detail": "怪物獵人傳奇"
+        },
+        {
+          "type": "成就",
+          "detail": "A級精英殺手5"
+        },
+        {
+          "type": "成就",
+          "detail": "S級精英殺手5"
         }
       ],
       "patch": "4.0",
       "itemId": 20557,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 128,
@@ -2163,13 +2291,21 @@
       "description": null,
       "sources": [
         {
-          "type": "探索航行",
-          "detail": "潛水艇探索 Sub-海域 Z"
+          "type": "商店",
+          "detail": "艾西娜: 伊克西翁的雷角 x12, at 神拳痕"
+        },
+        {
+          "type": "商店",
+          "detail": "庫洛·阿里亞珀: 庫洛獎狀：銀獎 x1, at 田園郡"
+        },
+        {
+          "type": "商店",
+          "detail": "宗長: 幻巧葉 x300, at 田園郡"
         }
       ],
       "patch": "4.0",
       "itemId": 20637,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "name": "虛空漁夫",
@@ -2195,13 +2331,21 @@
       "description": null,
       "sources": [
         {
+          "type": "商店",
+          "detail": "艾西娜: 神龍圖騰 x99, at 神拳痕"
+        },
+        {
+          "type": "商店",
+          "detail": "羅薇娜商會的商人: 神龍圖騰 x99, at 黃金港"
+        },
+        {
           "type": "高難度副本",
           "detail": "極 神龍殲滅戰"
         }
       ],
       "patch": "4.1",
       "itemId": 21047,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 135,
@@ -2215,16 +2359,16 @@
       "sources": [
         {
           "type": "商城",
-          "detail": "商城購買"
+          "detail": "風火輪"
         }
       ],
       "patch": "4.2",
       "itemId": 21049,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 136,
-      "name": "斑鰩",
+      "name": "鬼蝠魟",
       "nameEn": "striped ray",
       "seats": 1,
       "icon": "/i/004000/004103_hr1.png",
@@ -2233,17 +2377,17 @@
       "description": null,
       "sources": [
         {
-          "type": "部族任務",
-          "detail": null
+          "type": "商店",
+          "detail": "床單: 珊瑚幣 x12, at 紅玉海"
         }
       ],
       "patch": "4.1",
       "itemId": 21048,
-      "nameSource": "cn-opencc"
+      "nameSource": "tc"
     },
     {
       "id": 138,
-      "name": "海藍寶石獸",
+      "name": "卡邦庫爾 海藍石",
       "nameEn": "Aquamarine Carbuncle",
       "seats": 1,
       "icon": "/i/004000/004104_hr1.png",
@@ -2253,16 +2397,16 @@
       "sources": [
         {
           "type": "商城",
-          "detail": "商城購買"
+          "detail": "卡邦庫爾 海藍石"
         }
       ],
       "patch": "4.15",
       "itemId": 21051,
-      "nameSource": "cn-opencc"
+      "nameSource": "tc"
     },
     {
       "id": 139,
-      "name": "黃水晶寶石獸",
+      "name": "卡邦庫爾 黃寶石",
       "nameEn": "Citrine Carbuncle",
       "seats": 1,
       "icon": "/i/004000/004105_hr1.png",
@@ -2272,12 +2416,12 @@
       "sources": [
         {
           "type": "商城",
-          "detail": "商城購買"
+          "detail": "卡邦庫爾 黃寶石"
         }
       ],
       "patch": "4.15",
       "itemId": 21192,
-      "nameSource": "cn-opencc"
+      "nameSource": "tc"
     },
     {
       "id": 140,
@@ -2290,13 +2434,17 @@
       "description": null,
       "sources": [
         {
-          "type": "金碟",
-          "detail": "金碟 MGP 兌換 200,000"
+          "type": "寶箱",
+          "detail": "特殊配給貨箱（紅蓮）"
+        },
+        {
+          "type": "製作",
+          "detail": "Craftable"
         }
       ],
       "patch": "4.1",
       "itemId": 21052,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 141,
@@ -2309,13 +2457,13 @@
       "description": null,
       "sources": [
         {
-          "type": "金碟",
-          "detail": "金碟 MGP 兌換"
+          "type": "成就",
+          "detail": "凱旋之翼3"
         }
       ],
       "patch": "4.1",
       "itemId": 21053,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 142,
@@ -2328,13 +2476,13 @@
       "description": null,
       "sources": [
         {
-          "type": "金碟",
-          "detail": null
+          "type": "商店",
+          "detail": "紀念品兌換員: 金碟幣 x750000, at 金碟遊樂園"
         }
       ],
       "patch": "4.1",
       "itemId": 21054,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 143,
@@ -2353,7 +2501,7 @@
       ],
       "patch": "4.3",
       "itemId": 21902,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 144,
@@ -2366,13 +2514,21 @@
       "description": null,
       "sources": [
         {
+          "type": "商店",
+          "detail": "艾西娜: 白虎圖騰 x99, at 神拳痕"
+        },
+        {
+          "type": "商店",
+          "detail": "羅薇娜商會的商人: 白虎圖騰 x99, at 黃金港"
+        },
+        {
           "type": "高難度副本",
           "detail": "極 白虎征魂戰"
         }
       ],
       "patch": "4.2",
       "itemId": 21903,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 145,
@@ -2385,13 +2541,13 @@
       "description": null,
       "sources": [
         {
-          "type": "成就",
-          "detail": null
+          "type": "商店",
+          "detail": "喬納森: 成就幣 x6, at 格里達尼亞舊街"
         }
       ],
       "patch": "4.2",
       "itemId": 21906,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 146,
@@ -2404,13 +2560,13 @@
       "description": null,
       "sources": [
         {
-          "type": "部族任務",
-          "detail": null
+          "type": "商店",
+          "detail": "摩偷羅: 魔金錫幣 x18, at 基拉巴尼亞邊區"
         }
       ],
       "patch": "4.2",
       "itemId": 21904,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 147,
@@ -2437,13 +2593,13 @@
       "description": null,
       "sources": [
         {
-          "type": "部族任務",
-          "detail": null
+          "type": "商店",
+          "detail": "摩偷羅: 魔金錫幣 x18, at 基拉巴尼亞邊區"
         }
       ],
       "patch": "4.2",
       "itemId": 22459,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 149,
@@ -2470,13 +2626,13 @@
       "description": null,
       "sources": [
         {
-          "type": "PvP",
-          "detail": "Crystal Conflict 系列 25"
+          "type": "博茲雅",
+          "detail": "常風地帶上鎖的寶箱"
         }
       ],
       "patch": "4.25",
       "itemId": 21907,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 151,
@@ -2489,13 +2645,13 @@
       "description": null,
       "sources": [
         {
-          "type": "PvP",
-          "detail": "Crystalline Conflict 積分"
+          "type": "商店",
+          "detail": "加隆德煉鐵廠銷售員: 金碟幣 x200000, at 金碟遊樂園"
         }
       ],
       "patch": "4.5",
       "itemId": 24624,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 152,
@@ -2508,17 +2664,17 @@
       "description": null,
       "sources": [
         {
-          "type": "節慶活動",
-          "detail": null
+          "type": "商店",
+          "detail": "瓦倫提昂家的女僕: 戀人巧克力2019 x6, at 格里達尼亞舊街"
         },
         {
-          "type": "商城",
-          "detail": "商城購買"
+          "type": "任務",
+          "detail": "戀人節與見習愛情傳道士"
         }
       ],
       "patch": "4.2",
       "itemId": 21908,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 153,
@@ -2531,17 +2687,17 @@
       "description": null,
       "sources": [
         {
-          "type": "節慶活動",
-          "detail": null
+          "type": "商店",
+          "detail": "瓦倫提昂家的女僕: 戀人巧克力2019 x6, at 格里達尼亞舊街"
         },
         {
-          "type": "商城",
-          "detail": "商城購買"
+          "type": "任務",
+          "detail": "戀人節與見習愛情傳道士"
         }
       ],
       "patch": "4.2",
       "itemId": 21909,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 154,
@@ -2554,13 +2710,13 @@
       "description": null,
       "sources": [
         {
-          "type": "金碟",
-          "detail": null
+          "type": "商店",
+          "detail": "紀念品兌換員: 金碟幣 x750000, at 金碟遊樂園"
         }
       ],
       "patch": "4.4",
       "itemId": 21910,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 156,
@@ -2573,13 +2729,13 @@
       "description": null,
       "sources": [
         {
-          "type": "副本掉落",
+          "type": "高難度副本",
           "detail": "歐米茄零式時空狹縫 西格瑪幻境4"
         }
       ],
       "patch": "4.2",
       "itemId": 21905,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 158,
@@ -2592,13 +2748,21 @@
       "description": null,
       "sources": [
         {
+          "type": "商店",
+          "detail": "艾西娜: 夜神圖騰 x99, at 神拳痕"
+        },
+        {
+          "type": "商店",
+          "detail": "羅薇娜商會的商人: 夜神圖騰 x99, at 黃金港"
+        },
+        {
           "type": "高難度副本",
           "detail": "極 月讀殲滅戰"
         }
       ],
       "patch": "4.3",
       "itemId": 23020,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 159,
@@ -2611,13 +2775,17 @@
       "description": null,
       "sources": [
         {
-          "type": "深層迷宮",
-          "detail": null
+          "type": "藏寶圖",
+          "detail": "白金寶藏"
+        },
+        {
+          "type": "寶箱",
+          "detail": "特殊配給貨箱（紅蓮）"
         }
       ],
       "patch": "4.35",
       "itemId": 23023,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 160,
@@ -2636,7 +2804,7 @@
       ],
       "patch": "4.4",
       "itemId": 23021,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 161,
@@ -2649,13 +2817,17 @@
       "description": null,
       "sources": [
         {
-          "type": "成就",
-          "detail": "成就「萬能的陸行鳥」"
+          "type": "商店",
+          "detail": "猛漢工匠: 火龍的上鱗 x50, at 黃金港"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "極 火龍狩獵戰"
         }
       ],
       "patch": "4.36",
       "itemId": 22600,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 162,
@@ -2674,7 +2846,7 @@
       ],
       "patch": "4.3",
       "itemId": 23025,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 163,
@@ -2693,7 +2865,7 @@
       ],
       "patch": "4.31",
       "itemId": 23123,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 164,
@@ -2706,13 +2878,13 @@
       "description": null,
       "sources": [
         {
-          "type": "成就",
-          "detail": "成就「終焉傳說」"
+          "type": "商店",
+          "detail": "魚商: 鯰魚小判 x20, at 太陽神草原"
         }
       ],
       "patch": "4.3",
       "itemId": 23022,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 166,
@@ -2731,7 +2903,7 @@
       ],
       "patch": "4.35",
       "itemId": 23024,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 167,
@@ -2754,7 +2926,7 @@
       ],
       "patch": "6.3",
       "itemId": 23125,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 168,
@@ -2768,12 +2940,12 @@
       "sources": [
         {
           "type": "成就",
-          "detail": null
+          "detail": "常在戰場5"
         }
       ],
       "patch": "4.3",
       "itemId": 23124,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 170,
@@ -2792,7 +2964,7 @@
       ],
       "patch": "5.0",
       "itemId": 23982,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 171,
@@ -2811,7 +2983,7 @@
       ],
       "patch": "4.45",
       "itemId": 23983,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 172,
@@ -2824,13 +2996,21 @@
       "description": null,
       "sources": [
         {
+          "type": "商店",
+          "detail": "艾西娜: 朱雀圖騰 x99, at 神拳痕"
+        },
+        {
+          "type": "商店",
+          "detail": "羅薇娜商會的商人: 朱雀圖騰 x99, at 黃金港"
+        },
+        {
           "type": "高難度副本",
           "detail": "極 朱雀征魂戰"
         }
       ],
       "patch": "4.4",
       "itemId": 23984,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 173,
@@ -2843,13 +3023,13 @@
       "description": null,
       "sources": [
         {
-          "type": "副本掉落",
+          "type": "高難度副本",
           "detail": "歐米茄零式時空狹縫 阿爾法幻境4"
         }
       ],
       "patch": "4.4",
       "itemId": 23985,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 174,
@@ -2862,13 +3042,13 @@
       "description": null,
       "sources": [
         {
-          "type": "PvP",
-          "detail": null
+          "type": "商店",
+          "detail": "狼印戰績交易員: 狼印戰績 x20000, at 狼獄停船場"
         }
       ],
       "patch": "4.4",
       "itemId": 23986,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 175,
@@ -2887,7 +3067,7 @@
       ],
       "patch": "4.45",
       "itemId": 24627,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 176,
@@ -2906,7 +3086,7 @@
       ],
       "patch": "4.45",
       "itemId": 23987,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 177,
@@ -2929,7 +3109,7 @@
       ],
       "patch": "4.45",
       "itemId": 23988,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 178,
@@ -2942,17 +3122,17 @@
       "description": null,
       "sources": [
         {
-          "type": "尤雷卡",
-          "detail": null
+          "type": "副本掉落",
+          "detail": "禁地優雷卡 湧火之地"
         },
         {
-          "type": "新月島",
-          "detail": null
+          "type": "寶箱",
+          "detail": "特殊配給貨箱（紅蓮）"
         }
       ],
       "patch": "4.45",
       "itemId": 24219,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 179,
@@ -2971,11 +3151,11 @@
       ],
       "patch": "4.45",
       "itemId": 24622,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 180,
-      "name": "帝王仙人掌怪",
+      "name": "帝王仙人掌",
       "nameEn": "Sabotender Emperador",
       "seats": 1,
       "icon": "/i/004000/004140_hr1.png",
@@ -2984,13 +3164,13 @@
       "description": null,
       "sources": [
         {
-          "type": "金碟",
-          "detail": null
+          "type": "商店",
+          "detail": "紀念品兌換員: 金碟幣 x2000000, at 金碟遊樂園"
         }
       ],
       "patch": "4.45",
       "itemId": 24628,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 181,
@@ -3004,12 +3184,12 @@
       "sources": [
         {
           "type": "任務",
-          "detail": null
+          "detail": "九尾降臨於世"
         }
       ],
       "patch": "4.45",
       "itemId": 24625,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 182,
@@ -3022,13 +3202,21 @@
       "description": null,
       "sources": [
         {
+          "type": "商店",
+          "detail": "艾西娜: 青龍圖騰 x99, at 神拳痕"
+        },
+        {
+          "type": "商店",
+          "detail": "羅薇娜商會的商人: 青龍圖騰 x99, at 黃金港"
+        },
+        {
           "type": "高難度副本",
           "detail": "極 青龍征魂戰"
         }
       ],
       "patch": "4.45",
       "itemId": 24623,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 183,
@@ -3042,12 +3230,16 @@
       "sources": [
         {
           "type": "成就",
-          "detail": null
+          "detail": "為人民服務的絕槍戰士2"
+        },
+        {
+          "type": "成就",
+          "detail": "為人民服務的絕槍戰士1"
         }
       ],
       "patch": "5.0",
       "itemId": 24629,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 184,
@@ -3060,17 +3252,17 @@
       "description": null,
       "sources": [
         {
-          "type": "尤雷卡",
-          "detail": null
+          "type": "副本掉落",
+          "detail": "禁地優雷卡 豐水之地"
         },
         {
-          "type": "新月島",
-          "detail": null
+          "type": "寶箱",
+          "detail": "特殊配給貨箱（紅蓮）"
         }
       ],
       "patch": "4.5",
       "itemId": 24630,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 185,
@@ -3084,12 +3276,12 @@
       "sources": [
         {
           "type": "成就",
-          "detail": null
+          "detail": "隱塞之翼"
         }
       ],
       "patch": "4.5",
       "itemId": 24631,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 186,
@@ -3103,12 +3295,12 @@
       "sources": [
         {
           "type": "成就",
-          "detail": null
+          "detail": "稱霸兵武塔1"
         }
       ],
       "patch": "4.5",
       "itemId": 24626,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 187,
@@ -3122,12 +3314,20 @@
       "sources": [
         {
           "type": "成就",
-          "detail": null
+          "detail": "十六重之道的探究者"
+        },
+        {
+          "type": "成就",
+          "detail": "精武之勇者"
+        },
+        {
+          "type": "成就",
+          "detail": "導魔之智者"
         }
       ],
       "patch": "5.0",
       "itemId": 27967,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 188,
@@ -3140,13 +3340,13 @@
       "description": null,
       "sources": [
         {
-          "type": "副本掉落",
+          "type": "高難度副本",
           "detail": "伊甸零式希望樂園 覺醒之章4"
         }
       ],
       "patch": "5.05",
       "itemId": 26779,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 189,
@@ -3159,13 +3359,21 @@
       "description": null,
       "sources": [
         {
+          "type": "商店",
+          "detail": "法薩德: 妖精王圖騰 x99, at 遊末邦"
+        },
+        {
+          "type": "商店",
+          "detail": "莫雯商會的商人: 妖精王圖騰 x99, at 水晶都"
+        },
+        {
           "type": "高難度副本",
           "detail": "極 緹坦妮雅殲滅戰"
         }
       ],
       "patch": "5.0",
       "itemId": 26778,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 190,
@@ -3179,12 +3387,20 @@
       "sources": [
         {
           "type": "成就",
-          "detail": null
+          "detail": "狂熱怪物獵人"
+        },
+        {
+          "type": "成就",
+          "detail": "漆黑A級精英殺手3"
+        },
+        {
+          "type": "成就",
+          "detail": "漆黑S級精英殺手3"
         }
       ],
       "patch": "5.0",
       "itemId": 26780,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 191,
@@ -3197,13 +3413,13 @@
       "description": null,
       "sources": [
         {
-          "type": "危命任務",
-          "detail": null
+          "type": "商店",
+          "detail": "法薩德: 畏懼裝甲的齒輪 x12, at 遊末邦"
         }
       ],
       "patch": "5.0",
       "itemId": 26781,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 192,
@@ -3216,13 +3432,21 @@
       "description": null,
       "sources": [
         {
+          "type": "商店",
+          "detail": "法薩德: 完美神圖騰 x99, at 遊末邦"
+        },
+        {
+          "type": "商店",
+          "detail": "莫雯商會的商人: 完美神圖騰 x99, at 水晶都"
+        },
+        {
           "type": "高難度副本",
           "detail": "極 無瑕靈君殲滅戰"
         }
       ],
       "patch": "5.0",
       "itemId": 26783,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 193,
@@ -3236,16 +3460,16 @@
       "sources": [
         {
           "type": "製作",
-          "detail": null
+          "detail": "Craftable"
         }
       ],
       "patch": "5.05",
       "itemId": 26782,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 194,
-      "name": "大陸之眼",
+      "name": "小惡精靈·阿里曼",
       "nameEn": "Circus ahriman",
       "seats": 1,
       "icon": "/i/004000/004154_hr1.png",
@@ -3254,17 +3478,13 @@
       "description": null,
       "sources": [
         {
-          "type": "節慶活動",
-          "detail": null
-        },
-        {
           "type": "商城",
-          "detail": "商城購買"
+          "detail": "小惡精靈·阿里曼音叉"
         }
       ],
       "patch": "5.0",
       "itemId": 26784,
-      "nameSource": "cn-opencc"
+      "nameSource": "tc"
     },
     {
       "id": 195,
@@ -3278,12 +3498,16 @@
       "sources": [
         {
           "type": "商城",
-          "detail": "商城購買"
+          "detail": "早鳥預購白金版"
+        },
+        {
+          "type": "商城",
+          "detail": "金斗雲"
         }
       ],
       "patch": "5.0",
       "itemId": 25057,
-      "nameSource": "cn-opencc"
+      "nameSource": "tc"
     },
     {
       "id": 197,
@@ -3297,12 +3521,16 @@
       "sources": [
         {
           "type": "成就",
-          "detail": null
+          "detail": "為人民服務的絕槍戰士3"
+        },
+        {
+          "type": "成就",
+          "detail": "為人民服務的絕槍戰士1"
         }
       ],
       "patch": "5.0",
       "itemId": 27971,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 200,
@@ -3316,12 +3544,20 @@
       "sources": [
         {
           "type": "成就",
-          "detail": null
+          "detail": "傑出的青魔道士"
+        },
+        {
+          "type": "成就",
+          "detail": "通曉大迷宮的青魔道士"
+        },
+        {
+          "type": "成就",
+          "detail": "通曉機神城的青魔道士"
         }
       ],
       "patch": "5.15",
       "itemId": 28116,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 201,
@@ -3334,13 +3570,13 @@
       "description": null,
       "sources": [
         {
-          "type": "部族任務",
-          "detail": null
+          "type": "商店",
+          "detail": "由兒·歐兒: 幻晶幣 x18, at 伊爾美格"
         }
       ],
       "patch": "5.1",
       "itemId": 28117,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 202,
@@ -3359,7 +3595,7 @@
       ],
       "patch": "5.2",
       "itemId": 28118,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 203,
@@ -3378,7 +3614,7 @@
       ],
       "patch": "5.2",
       "itemId": 28119,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 204,
@@ -3392,12 +3628,12 @@
       "sources": [
         {
           "type": "成就",
-          "detail": null
+          "detail": "那達慕勇士5"
         }
       ],
       "patch": "5.15",
       "itemId": 28120,
-      "nameSource": "cn-opencc"
+      "nameSource": "tc"
     },
     {
       "id": 205,
@@ -3410,13 +3646,21 @@
       "description": null,
       "sources": [
         {
+          "type": "商店",
+          "detail": "法薩德: 冥王圖騰 x99, at 遊末邦"
+        },
+        {
+          "type": "商店",
+          "detail": "莫雯商會的商人: 冥王圖騰 x99, at 水晶都"
+        },
+        {
           "type": "高難度副本",
           "detail": "極 黑迪斯殲滅戰"
         }
       ],
       "patch": "5.1",
       "itemId": 28121,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 206,
@@ -3435,7 +3679,7 @@
       ],
       "patch": "5.2",
       "itemId": 28122,
-      "nameSource": "cn-opencc"
+      "nameSource": "tc"
     },
     {
       "id": 207,
@@ -3448,13 +3692,13 @@
       "description": null,
       "sources": [
         {
-          "type": "狩獵",
-          "detail": null
+          "type": "商店",
+          "detail": "伊爾弗洛伊: 狩獵任務的戰利品 x3200, at 遊末邦"
         }
       ],
       "patch": "5.1",
       "itemId": 28123,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 208,
@@ -3473,7 +3717,7 @@
       ],
       "patch": "5.21",
       "itemId": 28124,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 209,
@@ -3486,17 +3730,13 @@
       "description": null,
       "sources": [
         {
-          "type": "伊修加德重建",
-          "detail": null
-        },
-        {
-          "type": "宇宙探索",
-          "detail": null
+          "type": "商店",
+          "detail": "艾妮: 蒼天街振興票 x8400, at 蒼天街"
         }
       ],
       "patch": "5.21",
       "itemId": 28125,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 211,
@@ -3509,17 +3749,13 @@
       "description": null,
       "sources": [
         {
-          "type": "伊修加德重建",
-          "detail": null
-        },
-        {
-          "type": "宇宙探索",
-          "detail": null
+          "type": "商店",
+          "detail": "艾妮: 蒼天街振興票 x8400, at 蒼天街"
         }
       ],
       "patch": "5.11",
       "itemId": 28917,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 212,
@@ -3542,7 +3778,7 @@
       ],
       "patch": "5.55",
       "itemId": 33684,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 213,
@@ -3555,17 +3791,13 @@
       "description": null,
       "sources": [
         {
-          "type": "博茲雅",
-          "detail": null
-        },
-        {
-          "type": "新月島",
-          "detail": null
+          "type": "商店",
+          "detail": "義軍補給兵: 博茲雅晶簇 x180, at 扎杜諾爾高原"
         }
       ],
       "patch": "5.35",
       "itemId": 30102,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 214,
@@ -3584,7 +3816,7 @@
       ],
       "patch": "5.2",
       "itemId": 28508,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 215,
@@ -3597,13 +3829,13 @@
       "description": null,
       "sources": [
         {
-          "type": "部族任務",
-          "detail": null
+          "type": "商店",
+          "detail": "于咕盧利·瑪喏櫨: 橡果幣 x18, at 拉凱提卡大森林"
         }
       ],
       "patch": "5.2",
       "itemId": 30103,
-      "nameSource": "cn-opencc"
+      "nameSource": "tc"
     },
     {
       "id": 216,
@@ -3617,12 +3849,12 @@
       "sources": [
         {
           "type": "成就",
-          "detail": null
+          "detail": "蒼天街的復興之王"
         }
       ],
       "patch": "5.21",
       "itemId": 30104,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 217,
@@ -3635,13 +3867,21 @@
       "description": null,
       "sources": [
         {
+          "type": "商店",
+          "detail": "卡·因塔娜: 紅色未知蠻神圖騰 x99, at 摩杜納"
+        },
+        {
+          "type": "商店",
+          "detail": "莫雯商會的商人: 紅色未知蠻神圖騰 x99, at 水晶都"
+        },
+        {
           "type": "高難度副本",
           "detail": "極 紅寶石武器破壞作戰"
         }
       ],
       "patch": "5.2",
       "itemId": 30105,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 218,
@@ -3655,12 +3895,12 @@
       "sources": [
         {
           "type": "成就",
-          "detail": null
+          "detail": "游釣大洋2"
         }
       ],
       "patch": "5.2",
       "itemId": 30106,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 219,
@@ -3673,17 +3913,17 @@
       "description": null,
       "sources": [
         {
-          "type": "副本掉落",
+          "type": "高難度副本",
           "detail": "伊甸零式希望樂園 共鳴之章4"
         }
       ],
       "patch": "5.2",
       "itemId": 30107,
-      "nameSource": "cn-opencc"
+      "nameSource": "tc"
     },
     {
       "id": 220,
-      "name": "紅電氣寶石獸",
+      "name": "卡邦庫爾 紅電氣石",
       "nameEn": "Rubellite Carbuncle",
       "seats": 1,
       "icon": "/i/004000/004173_hr1.png",
@@ -3693,12 +3933,12 @@
       "sources": [
         {
           "type": "商城",
-          "detail": "商城購買"
+          "detail": "卡邦庫爾 紅電氣石"
         }
       ],
       "patch": "5.2",
       "itemId": 30108,
-      "nameSource": "cn-opencc"
+      "nameSource": "tc"
     },
     {
       "id": 222,
@@ -3712,12 +3952,12 @@
       "sources": [
         {
           "type": "商城",
-          "detail": "商城購買"
+          "detail": "陸行鳥篷車"
         }
       ],
       "patch": "5.3",
       "itemId": 30859,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 223,
@@ -3730,13 +3970,13 @@
       "description": null,
       "sources": [
         {
-          "type": "部族任務",
-          "detail": null
+          "type": "商店",
+          "detail": "蜜茲圖: 綠蛙幣 x18, at 雷克蘭德"
         }
       ],
       "patch": "5.3",
       "itemId": 30860,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 224,
@@ -3750,12 +3990,12 @@
       "sources": [
         {
           "type": "博茲雅",
-          "detail": null
+          "detail": "南方戰線上鎖的寶箱"
         }
       ],
       "patch": "5.35",
       "itemId": 30861,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 225,
@@ -3768,17 +4008,13 @@
       "description": null,
       "sources": [
         {
-          "type": "伊修加德重建",
-          "detail": null
-        },
-        {
-          "type": "宇宙探索",
-          "detail": null
+          "type": "商店",
+          "detail": "艾妮: 蒼天街振興票 x8400, at 蒼天街"
         }
       ],
       "patch": "5.31",
       "itemId": 30862,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 226,
@@ -3791,13 +4027,21 @@
       "description": null,
       "sources": [
         {
+          "type": "商店",
+          "detail": "法薩德: 光之圖騰 x99, at 遊末邦"
+        },
+        {
+          "type": "商店",
+          "detail": "莫雯商會的商人: 光之圖騰 x99, at 水晶都"
+        },
+        {
           "type": "高難度副本",
           "detail": "極 光之戰士殲滅戰"
         }
       ],
       "patch": "5.3",
       "itemId": 30863,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 228,
@@ -3810,13 +4054,13 @@
       "description": null,
       "sources": [
         {
-          "type": "節慶活動",
-          "detail": null
+          "type": "成就",
+          "detail": ""
         }
       ],
       "patch": "5.3",
       "itemId": 30864,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 229,
@@ -3835,7 +4079,7 @@
       ],
       "patch": "5.3",
       "itemId": 31396,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 230,
@@ -3849,12 +4093,12 @@
       "sources": [
         {
           "type": "任務",
-          "detail": null
+          "detail": "在你的雙翼上"
         }
       ],
       "patch": "5.3",
       "itemId": 30866,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 231,
@@ -3867,17 +4111,17 @@
       "description": null,
       "sources": [
         {
-          "type": "天書奇談",
-          "detail": null
+          "type": "商店",
+          "detail": "庫洛·阿里亞珀: 庫洛獎狀：金獎 x1, at 田園郡"
         },
         {
-          "type": "天書奇談",
-          "detail": null
+          "type": "商店",
+          "detail": "宗長: 幻巧葉 x600, at 田園郡"
         }
       ],
       "patch": "5.3",
       "itemId": 30865,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 232,
@@ -3890,17 +4134,17 @@
       "description": null,
       "sources": [
         {
-          "type": "節慶活動",
-          "detail": null
+          "type": "商城",
+          "detail": "雪人鈴鐺"
         },
         {
-          "type": "商城",
-          "detail": "商城購買"
+          "type": "節慶活動",
+          "detail": "星芒祭帶給大家笑容！"
         }
       ],
       "patch": "5.4",
       "itemId": 32837,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 233,
@@ -3923,7 +4167,7 @@
       ],
       "patch": "5.5",
       "itemId": 32838,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 234,
@@ -3936,13 +4180,13 @@
       "description": null,
       "sources": [
         {
-          "type": "副本掉落",
+          "type": "高難度副本",
           "detail": "伊甸零式希望樂園 再生之章4"
         }
       ],
       "patch": "5.4",
       "itemId": 32839,
-      "nameSource": "cn-opencc"
+      "nameSource": "tc"
     },
     {
       "id": 235,
@@ -3956,12 +4200,12 @@
       "sources": [
         {
           "type": "成就",
-          "detail": null
+          "detail": "完全稱霸女王古殿1"
         }
       ],
       "patch": "5.45",
       "itemId": 32840,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 236,
@@ -3974,17 +4218,13 @@
       "description": null,
       "sources": [
         {
-          "type": "伊修加德重建",
-          "detail": null
-        },
-        {
-          "type": "宇宙探索",
-          "detail": null
+          "type": "商店",
+          "detail": "艾妮: 蒼天街振興票 x8400, at 蒼天街"
         }
       ],
       "patch": "5.41",
       "itemId": 32841,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 237,
@@ -4003,7 +4243,7 @@
       ],
       "patch": "6.0",
       "itemId": 32842,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 238,
@@ -4016,13 +4256,21 @@
       "description": null,
       "sources": [
         {
+          "type": "商店",
+          "detail": "卡·因塔娜: 綠色未知蠻神圖騰 x99, at 摩杜納"
+        },
+        {
+          "type": "商店",
+          "detail": "莫雯商會的商人: 綠色未知蠻神圖騰 x99, at 水晶都"
+        },
+        {
           "type": "高難度副本",
           "detail": "極 綠寶石武器破壞作戰"
         }
       ],
       "patch": "5.4",
       "itemId": 32843,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 239,
@@ -4041,7 +4289,7 @@
       ],
       "patch": "5.4",
       "itemId": 32844,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 240,
@@ -4068,7 +4316,7 @@
       ],
       "patch": "5.4",
       "itemId": 32845,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 241,
@@ -4081,17 +4329,13 @@
       "description": null,
       "sources": [
         {
-          "type": "博茲雅",
-          "detail": null
-        },
-        {
-          "type": "新月島",
-          "detail": null
+          "type": "副本掉落",
+          "detail": "女王古殿"
         }
       ],
       "patch": "5.45",
       "itemId": 32846,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 242,
@@ -4104,17 +4348,13 @@
       "description": null,
       "sources": [
         {
-          "type": "伊修加德重建",
-          "detail": null
-        },
-        {
-          "type": "宇宙探索",
-          "detail": null
+          "type": "商店",
+          "detail": "艾妮: 蒼天街振興票 x8400, at 蒼天街"
         }
       ],
       "patch": "5.5",
       "itemId": 33674,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 243,
@@ -4127,17 +4367,17 @@
       "description": null,
       "sources": [
         {
-          "type": "伊修加德重建",
-          "detail": null
+          "type": "商店",
+          "detail": "艾妮: 慶典參加證書 x30, at 蒼天街"
         },
         {
-          "type": "伊修加德重建",
-          "detail": null
+          "type": "節慶活動",
+          "detail": "慶典禮物箱"
         }
       ],
       "patch": "5.5",
       "itemId": 33675,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 245,
@@ -4151,12 +4391,12 @@
       "sources": [
         {
           "type": "任務",
-          "detail": null
+          "detail": "機龍怒號"
         }
       ],
       "patch": "5.5",
       "itemId": 33218,
-      "nameSource": "cn-opencc"
+      "nameSource": "tc"
     },
     {
       "id": 246,
@@ -4170,12 +4410,12 @@
       "sources": [
         {
           "type": "成就",
-          "detail": null
+          "detail": "博茲雅的記錄員"
         }
       ],
       "patch": "5.55",
       "itemId": 33676,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 247,
@@ -4189,12 +4429,12 @@
       "sources": [
         {
           "type": "商城",
-          "detail": "商城購買"
+          "detail": "早鳥預購終極版"
         }
       ],
       "patch": "5.5",
       "itemId": 33677,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 248,
@@ -4207,17 +4447,13 @@
       "description": null,
       "sources": [
         {
-          "type": "天書奇談",
-          "detail": null
-        },
-        {
-          "type": "天書奇談",
-          "detail": null
+          "type": "商店",
+          "detail": "宗長: 幻巧葉 x600, at 田園郡"
         }
       ],
       "patch": "5.4",
       "itemId": 33145,
-      "nameSource": "cn-opencc"
+      "nameSource": "tc"
     },
     {
       "id": 249,
@@ -4230,13 +4466,21 @@
       "description": null,
       "sources": [
         {
+          "type": "商店",
+          "detail": "卡·因塔娜: 白色未知蠻神圖騰 x99, at 摩杜納"
+        },
+        {
+          "type": "商店",
+          "detail": "莫雯商會的商人: 白色未知蠻神圖騰 x99, at 水晶都"
+        },
+        {
           "type": "高難度副本",
           "detail": "極 鑽石武器捕獲作戰"
         }
       ],
       "patch": "5.5",
       "itemId": 33685,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 250,
@@ -4250,16 +4494,12 @@
       "sources": [
         {
           "type": "節慶活動",
-          "detail": null
-        },
-        {
-          "type": "商城",
-          "detail": "商城購買"
+          "detail": "紅蓮祭與特製冰品"
         }
       ],
       "patch": "5.5",
       "itemId": 33686,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 252,
@@ -4273,12 +4513,12 @@
       "sources": [
         {
           "type": "商店",
-          "detail": null
+          "detail": "愛迪麗娜: Gil x50000000, at 摩杜納"
         }
       ],
       "patch": "5.5",
       "itemId": 33687,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 253,
@@ -4292,12 +4532,12 @@
       "sources": [
         {
           "type": "商店",
-          "detail": null
+          "detail": "塔貝絲: Gil x25000000, at 遊末邦"
         }
       ],
       "patch": "5.5",
       "itemId": 33688,
-      "nameSource": "cn-opencc"
+      "nameSource": "tc"
     },
     {
       "id": 254,
@@ -4311,12 +4551,12 @@
       "sources": [
         {
           "type": "任務",
-          "detail": null
+          "detail": "贈予幻卡收藏家的禮物"
         }
       ],
       "patch": "5.55",
       "itemId": 33689,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 255,
@@ -4329,13 +4569,13 @@
       "description": null,
       "sources": [
         {
-          "type": "無人島",
-          "detail": null
+          "type": "商店",
+          "detail": "Unknown Shop: 謝爾達萊青船幣 x12000, "
         }
       ],
       "patch": "6.2",
       "itemId": 33678,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 256,
@@ -4348,13 +4588,13 @@
       "description": null,
       "sources": [
         {
-          "type": "無人島",
-          "detail": null
+          "type": "商店",
+          "detail": "Unknown Shop: 謝爾達萊青船幣 x12000, "
         }
       ],
       "patch": "6.2",
       "itemId": 33679,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 257,
@@ -4367,13 +4607,13 @@
       "description": null,
       "sources": [
         {
-          "type": "無人島",
-          "detail": null
+          "type": "商店",
+          "detail": "Unknown Shop: 謝爾達萊青船幣 x12000, "
         }
       ],
       "patch": "6.2",
       "itemId": 33680,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 258,
@@ -4386,13 +4626,13 @@
       "description": null,
       "sources": [
         {
-          "type": "無人島",
-          "detail": null
+          "type": "商店",
+          "detail": "Unknown Shop: 謝爾達萊青船幣 x18000, "
         }
       ],
       "patch": "6.4",
       "itemId": 33681,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 259,
@@ -4405,13 +4645,13 @@
       "description": null,
       "sources": [
         {
-          "type": "無人島",
-          "detail": null
+          "type": "商店",
+          "detail": "Unknown Shop: 謝爾達萊青船幣 x18000, "
         }
       ],
       "patch": "6.4",
       "itemId": 33682,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 260,
@@ -4424,13 +4664,13 @@
       "description": null,
       "sources": [
         {
-          "type": "無人島",
-          "detail": null
+          "type": "商店",
+          "detail": "Unknown Shop: 謝爾達萊青船幣 x18000, "
         }
       ],
       "patch": "6.4",
       "itemId": 33683,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 261,
@@ -4443,13 +4683,21 @@
       "description": null,
       "sources": [
         {
+          "type": "商店",
+          "detail": "涅斯瓦孜: 星極圖騰 x99, at 拉札漢"
+        },
+        {
+          "type": "商店",
+          "detail": "露天市集商人協會的商人: 星極圖騰 x99, at 舊薩雷安"
+        },
+        {
           "type": "高難度副本",
           "detail": "極 佐狄亞克殲滅戰"
         }
       ],
       "patch": "6.0",
       "itemId": 36000,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 262,
@@ -4462,13 +4710,21 @@
       "description": null,
       "sources": [
         {
+          "type": "商店",
+          "detail": "涅斯瓦孜: 靈極圖騰 x99, at 拉札漢"
+        },
+        {
+          "type": "商店",
+          "detail": "露天市集商人協會的商人: 靈極圖騰 x99, at 舊薩雷安"
+        },
+        {
           "type": "高難度副本",
           "detail": "極 海德林殲滅戰"
         }
       ],
       "patch": "6.0",
       "itemId": 36001,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 263,
@@ -4481,13 +4737,13 @@
       "description": null,
       "sources": [
         {
-          "type": "任務",
-          "detail": null
+          "type": "主線任務",
+          "detail": "曉月之終途"
         }
       ],
       "patch": "6.0",
       "itemId": 36002,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 264,
@@ -4506,7 +4762,7 @@
       ],
       "patch": "6.0",
       "itemId": 36006,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 265,
@@ -4519,13 +4775,13 @@
       "description": null,
       "sources": [
         {
-          "type": "副本掉落",
+          "type": "高難度副本",
           "detail": "零式萬魔殿 邊境之獄4"
         }
       ],
       "patch": "6.05",
       "itemId": 36008,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 266,
@@ -4538,17 +4794,17 @@
       "description": null,
       "sources": [
         {
-          "type": "天書奇談",
-          "detail": null
+          "type": "商店",
+          "detail": "庫洛·阿里亞珀: 庫洛獎狀：金獎 x1, at 田園郡"
         },
         {
-          "type": "天書奇談",
-          "detail": null
+          "type": "商店",
+          "detail": "宗長: 幻巧葉 x600, at 田園郡"
         }
       ],
       "patch": "6.0",
       "itemId": 36003,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 267,
@@ -4562,12 +4818,20 @@
       "sources": [
         {
           "type": "成就",
-          "detail": null
+          "detail": "傳說怪物獵人"
+        },
+        {
+          "type": "成就",
+          "detail": "曉月A級精英殺手3"
+        },
+        {
+          "type": "成就",
+          "detail": "曉月S級精英殺手3"
         }
       ],
       "patch": "6.0",
       "itemId": 36004,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 268,
@@ -4580,17 +4844,17 @@
       "description": null,
       "sources": [
         {
-          "type": "危命任務",
-          "detail": null
+          "type": "商店",
+          "detail": "涅斯瓦孜: 希的螺栓 x12, at 拉札漢"
         }
       ],
       "patch": "6.0",
       "itemId": 36007,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 269,
-      "name": "猴面雀爸爸",
+      "name": "猴面爸爸",
       "nameEn": "Papa Paissa",
       "seats": 1,
       "icon": "/i/004000/004222_hr1.png",
@@ -4600,12 +4864,12 @@
       "sources": [
         {
           "type": "商城",
-          "detail": "商城購買"
+          "detail": "猴面雀爸爸"
         }
       ],
       "patch": "6.0",
       "itemId": 36009,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 273,
@@ -4618,13 +4882,13 @@
       "description": null,
       "sources": [
         {
-          "type": "危命任務",
-          "detail": null
+          "type": "商店",
+          "detail": "愛迪麗娜: 雙色寶石的收據 x500, at 摩杜納"
         }
       ],
       "patch": "6.0",
       "itemId": 36005,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 274,
@@ -4647,7 +4911,7 @@
       ],
       "patch": "6.0",
       "itemId": 36010,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 277,
@@ -4660,13 +4924,13 @@
       "description": null,
       "sources": [
         {
-          "type": "無人島",
-          "detail": null
+          "type": "商店",
+          "detail": "Unknown Shop: 謝爾達萊青船幣 x24000, "
         }
       ],
       "patch": "6.2",
       "itemId": 38455,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 279,
@@ -4685,7 +4949,7 @@
       ],
       "patch": "6.2",
       "itemId": 36632,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 280,
@@ -4708,7 +4972,7 @@
       ],
       "patch": "6.2",
       "itemId": 36905,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 281,
@@ -4721,13 +4985,13 @@
       "description": null,
       "sources": [
         {
-          "type": "藏寶圖",
-          "detail": null
+          "type": "商店",
+          "detail": "涅斯瓦孜: 絢爛華麗的羽毛 x3, at 拉札漢"
         }
       ],
       "patch": "6.1",
       "itemId": 36906,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 282,
@@ -4740,13 +5004,13 @@
       "description": null,
       "sources": [
         {
-          "type": "無人島",
-          "detail": null
+          "type": "商店",
+          "detail": "Unknown Shop: 謝爾達萊青船幣 x50000, "
         }
       ],
       "patch": "6.4",
       "itemId": 40382,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 283,
@@ -4778,13 +5042,13 @@
       "description": null,
       "sources": [
         {
-          "type": "金碟",
-          "detail": null
+          "type": "商店",
+          "detail": "紀念品兌換員: 金碟幣 x300000, at 金碟遊樂園"
         }
       ],
       "patch": "6.1",
       "itemId": 36910,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 285,
@@ -4797,13 +5061,13 @@
       "description": null,
       "sources": [
         {
-          "type": "部族任務",
-          "detail": null
+          "type": "商店",
+          "detail": "發財威: 胡蘿蔔幣 x18, at 嘆息海"
         }
       ],
       "patch": "6.35",
       "itemId": 39485,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 286,
@@ -4816,13 +5080,13 @@
       "description": null,
       "sources": [
         {
-          "type": "無人島",
-          "detail": null
+          "type": "商店",
+          "detail": "Unknown Shop: 謝爾達萊青船幣 x35000, "
         }
       ],
       "patch": "6.3",
       "itemId": 39495,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 287,
@@ -4835,13 +5099,13 @@
       "description": null,
       "sources": [
         {
-          "type": "部族任務",
-          "detail": null
+          "type": "商店",
+          "detail": "甘妲: 星鈷幣 x18, at 薩維奈島"
         }
       ],
       "patch": "6.15",
       "itemId": 36907,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 288,
@@ -4854,17 +5118,17 @@
       "description": null,
       "sources": [
         {
-          "type": "天書奇談",
-          "detail": null
+          "type": "商店",
+          "detail": "庫洛·阿里亞珀: 庫洛獎狀：金獎 x1, at 田園郡"
         },
         {
-          "type": "天書奇談",
-          "detail": null
+          "type": "商店",
+          "detail": "宗長: 幻巧葉 x600, at 田園郡"
         }
       ],
       "patch": "6.1",
       "itemId": 36904,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 290,
@@ -4878,12 +5142,12 @@
       "sources": [
         {
           "type": "任務",
-          "detail": null
+          "detail": "紳士的長夢"
         }
       ],
       "patch": "6.55",
       "itemId": 36908,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 291,
@@ -4896,13 +5160,13 @@
       "description": null,
       "sources": [
         {
-          "type": "狩獵",
-          "detail": null
+          "type": "商店",
+          "detail": "維爾梅塔: 狩獵任務的戰利品 x3200, at 拉札漢"
         }
       ],
       "patch": "6.1",
       "itemId": 36909,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 292,
@@ -4915,13 +5179,13 @@
       "description": null,
       "sources": [
         {
-          "type": "深層迷宮",
-          "detail": null
+          "type": "藏寶圖",
+          "detail": "鉑輝寶藏"
         }
       ],
       "patch": "6.35",
       "itemId": 36911,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 293,
@@ -4934,13 +5198,21 @@
       "description": null,
       "sources": [
         {
+          "type": "商店",
+          "detail": "涅斯瓦孜: 終極圖騰 x99, at 拉札漢"
+        },
+        {
+          "type": "商店",
+          "detail": "露天市集商人協會的商人: 終極圖騰 x99, at 舊薩雷安"
+        },
+        {
           "type": "高難度副本",
           "detail": "終極之戰"
         }
       ],
       "patch": "6.1",
       "itemId": 36912,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 294,
@@ -4959,7 +5231,7 @@
       ],
       "patch": "6.1",
       "itemId": 36913,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 297,
@@ -4982,7 +5254,7 @@
       ],
       "patch": "6.4",
       "itemId": 40383,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 298,
@@ -4995,13 +5267,13 @@
       "description": null,
       "sources": [
         {
-          "type": "部族任務",
-          "detail": null
+          "type": "商店",
+          "detail": "N-0598: 密文幣 x18, at 天外天垓"
         }
       ],
       "patch": "6.25",
       "itemId": 38456,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 299,
@@ -5014,17 +5286,17 @@
       "description": null,
       "sources": [
         {
-          "type": "天書奇談",
-          "detail": null
+          "type": "商店",
+          "detail": "庫洛·阿里亞珀: 庫洛獎狀：金獎 x1, at 田園郡"
         },
         {
-          "type": "天書奇談",
-          "detail": null
+          "type": "商店",
+          "detail": "宗長: 幻巧葉 x600, at 田園郡"
         }
       ],
       "patch": "6.2",
       "itemId": 38457,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 300,
@@ -5043,7 +5315,7 @@
       ],
       "patch": "6.3",
       "itemId": 38458,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 301,
@@ -5062,7 +5334,7 @@
       ],
       "patch": "6.3",
       "itemId": 38459,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 302,
@@ -5075,17 +5347,21 @@
       "description": null,
       "sources": [
         {
-          "type": "節慶活動",
-          "detail": null
+          "type": "商城",
+          "detail": "幻象閃電"
         },
         {
-          "type": "商城",
-          "detail": "商城購買"
+          "type": "節慶活動",
+          "detail": "星芒祭與孩子們的幻影"
+        },
+        {
+          "type": "節慶活動",
+          "detail": "2025星芒祭"
         }
       ],
       "patch": "6.2",
       "itemId": 38460,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 303,
@@ -5098,17 +5374,13 @@
       "description": null,
       "sources": [
         {
-          "type": "異聞副本",
-          "detail": null
-        },
-        {
-          "type": "異聞副本",
-          "detail": null
+          "type": "商店",
+          "detail": "德蕾莎桑: 希拉狄哈銀貨 x100, at 舊薩雷安"
         }
       ],
       "patch": "6.25",
       "itemId": 38461,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 304,
@@ -5122,12 +5394,12 @@
       "sources": [
         {
           "type": "成就",
-          "detail": null
+          "detail": "希拉狄哈水道探索記"
         }
       ],
       "patch": "6.25",
       "itemId": 38462,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 305,
@@ -5140,13 +5412,13 @@
       "description": null,
       "sources": [
         {
-          "type": "副本掉落",
+          "type": "高難度副本",
           "detail": "零式萬魔殿 煉淨之獄4"
         }
       ],
       "patch": "6.2",
       "itemId": 38463,
-      "nameSource": "cn-opencc"
+      "nameSource": "tc"
     },
     {
       "id": 306,
@@ -5159,13 +5431,21 @@
       "description": null,
       "sources": [
         {
+          "type": "商店",
+          "detail": "涅斯瓦孜: 煞風大妖異圖騰 x99, at 拉札漢"
+        },
+        {
+          "type": "商店",
+          "detail": "露天市集商人協會的商人: 煞風大妖異圖騰 x99, at 舊薩雷安"
+        },
+        {
           "type": "高難度副本",
           "detail": "極 巴爾巴莉希亞殲滅戰"
         }
       ],
       "patch": "6.2",
       "itemId": 38464,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 308,
@@ -5184,7 +5464,7 @@
       ],
       "patch": "6.35",
       "itemId": 39486,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 310,
@@ -5203,7 +5483,7 @@
       ],
       "patch": "6.3",
       "itemId": 39487,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 311,
@@ -5217,12 +5497,12 @@
       "sources": [
         {
           "type": "任務",
-          "detail": null
+          "detail": "照料中意之人的枝葉"
         }
       ],
       "patch": "6.3",
       "itemId": 39488,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 312,
@@ -5235,13 +5515,13 @@
       "description": null,
       "sources": [
         {
-          "type": "金碟",
-          "detail": null
+          "type": "商店",
+          "detail": "紀念品兌換員: 金碟幣 x4000000, at 金碟遊樂園"
         }
       ],
       "patch": "6.3",
       "itemId": 39489,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 313,
@@ -5254,13 +5534,13 @@
       "description": null,
       "sources": [
         {
-          "type": "藏寶圖",
-          "detail": null
+          "type": "商店",
+          "detail": "涅斯瓦孜: 灼熱的火角 x3, at 拉札漢"
         }
       ],
       "patch": "6.3",
       "itemId": 39490,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 314,
@@ -5273,13 +5553,13 @@
       "description": null,
       "sources": [
         {
-          "type": "藏寶圖",
-          "detail": null
+          "type": "商店",
+          "detail": "涅斯瓦孜: 驚奇補劑 x3, at 拉札漢"
         }
       ],
       "patch": "6.3",
       "itemId": 39491,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 315,
@@ -5292,13 +5572,21 @@
       "description": null,
       "sources": [
         {
+          "type": "商店",
+          "detail": "涅斯瓦孜: 煬火大妖異圖騰 x99, at 拉札漢"
+        },
+        {
+          "type": "商店",
+          "detail": "露天市集商人協會的商人: 煬火大妖異圖騰 x99, at 舊薩雷安"
+        },
+        {
           "type": "高難度副本",
           "detail": "極 盧比坎特殲滅戰"
         }
       ],
       "patch": "6.3",
       "itemId": 39492,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 316,
@@ -5312,12 +5600,12 @@
       "sources": [
         {
           "type": "商店",
-          "detail": null
+          "detail": "愛迪麗娜: Gil x50000000, at 摩杜納"
         }
       ],
       "patch": "6.3",
       "itemId": 39493,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 317,
@@ -5331,12 +5619,12 @@
       "sources": [
         {
           "type": "商店",
-          "detail": null
+          "detail": "愛迪麗娜: Gil x50000000, at 摩杜納"
         }
       ],
       "patch": "6.3",
       "itemId": 39494,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 318,
@@ -5350,12 +5638,12 @@
       "sources": [
         {
           "type": "商城",
-          "detail": "商城購買"
+          "detail": "加隆德GL-IS"
         }
       ],
       "patch": "6.4",
       "itemId": 40384,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 319,
@@ -5368,13 +5656,13 @@
       "description": null,
       "sources": [
         {
-          "type": "副本掉落",
+          "type": "高難度副本",
           "detail": "零式萬魔殿 荒天之獄4"
         }
       ],
       "patch": "6.4",
       "itemId": 40385,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 320,
@@ -5388,16 +5676,12 @@
       "sources": [
         {
           "type": "節慶活動",
-          "detail": null
-        },
-        {
-          "type": "商城",
-          "detail": "商城購買"
+          "detail": "新生祭與旅途"
         }
       ],
       "patch": "6.48",
       "itemId": 40386,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 321,
@@ -5411,12 +5695,12 @@
       "sources": [
         {
           "type": "成就",
-          "detail": null
+          "detail": "六根山探索記"
         }
       ],
       "patch": "6.45",
       "itemId": 40387,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 322,
@@ -5429,17 +5713,13 @@
       "description": null,
       "sources": [
         {
-          "type": "異聞副本",
-          "detail": null
-        },
-        {
-          "type": "異聞副本",
-          "detail": null
+          "type": "商店",
+          "detail": "德蕾莎桑: 紫州通寶 x100, at 舊薩雷安"
         }
       ],
       "patch": "6.45",
       "itemId": 40388,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 323,
@@ -5453,12 +5733,12 @@
       "sources": [
         {
           "type": "商城",
-          "detail": "商城購買"
+          "detail": "影狼"
         }
       ],
       "patch": "6.4",
       "itemId": 40389,
-      "nameSource": "cn-opencc"
+      "nameSource": "tc"
     },
     {
       "id": 324,
@@ -5471,17 +5751,17 @@
       "description": null,
       "sources": [
         {
-          "type": "天書奇談",
-          "detail": null
+          "type": "商店",
+          "detail": "庫洛·阿里亞珀: 庫洛獎狀：金獎 x1, at 田園郡"
         },
         {
-          "type": "天書奇談",
-          "detail": null
+          "type": "商店",
+          "detail": "宗長: 幻巧葉 x600, at 田園郡"
         }
       ],
       "patch": "6.4",
       "itemId": 40390,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 325,
@@ -5494,13 +5774,21 @@
       "description": null,
       "sources": [
         {
+          "type": "商店",
+          "detail": "涅斯瓦孜: 虛無大妖異圖騰 x99, at 拉札漢"
+        },
+        {
+          "type": "商店",
+          "detail": "露天市集商人協會的商人: 虛無大妖異圖騰 x99, at 舊薩雷安"
+        },
+        {
           "type": "高難度副本",
           "detail": "極 高貝扎殲滅戰"
         }
       ],
       "patch": "6.4",
       "itemId": 40391,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 326,
@@ -5519,7 +5807,7 @@
       ],
       "patch": "6.58",
       "itemId": 41487,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 327,
@@ -5538,11 +5826,11 @@
       ],
       "patch": "7.0",
       "itemId": 41488,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 328,
-      "name": "幽願巴哈姆特",
+      "name": "巴哈姆特·幽願",
       "nameEn": "apocryphal Bahamut",
       "seats": 1,
       "icon": "/i/004000/004268_hr1.png",
@@ -5552,12 +5840,12 @@
       "sources": [
         {
           "type": "任務",
-          "detail": null
+          "detail": "幽願得償"
         }
       ],
       "patch": "6.5",
       "itemId": 41489,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 329,
@@ -5576,7 +5864,7 @@
       ],
       "patch": "6.5",
       "itemId": 41490,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 330,
@@ -5589,13 +5877,13 @@
       "description": null,
       "sources": [
         {
-          "type": "節慶活動",
-          "detail": null
+          "type": "商店",
+          "detail": "金碟聲譽兌換員: 金碟聲譽 x410, at 金碟巨豆中心廣場"
         }
       ],
       "patch": "6.51",
       "itemId": 41491,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 331,
@@ -5609,12 +5897,12 @@
       "sources": [
         {
           "type": "PvP",
-          "detail": null
+          "detail": "PvP 第6輪 - 等級25"
         }
       ],
       "patch": "7.0",
       "itemId": 41492,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 332,
@@ -5627,17 +5915,25 @@
       "description": null,
       "sources": [
         {
+          "type": "商店",
+          "detail": "涅斯瓦孜: 暗黑圖騰 x99, at 拉札漢"
+        },
+        {
+          "type": "商店",
+          "detail": "露天市集商人協會的商人: 暗黑圖騰 x99, at 舊薩雷安"
+        },
+        {
           "type": "高難度副本",
           "detail": "極 澤羅姆斯殲滅戰"
         }
       ],
       "patch": "6.5",
       "itemId": 41493,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 333,
-      "name": "月光仙人掌怪",
+      "name": "月光仙人掌",
       "nameEn": "sabotender de la luna",
       "seats": 1,
       "icon": "/i/004000/004273_hr1.png",
@@ -5646,17 +5942,17 @@
       "description": null,
       "sources": [
         {
-          "type": "天書奇談",
-          "detail": null
+          "type": "商店",
+          "detail": "庫洛·阿里亞珀: 庫洛獎狀：金獎 x1, at 田園郡"
         },
         {
-          "type": "天書奇談",
-          "detail": null
+          "type": "商店",
+          "detail": "宗長: 幻巧葉 x600, at 田園郡"
         }
       ],
       "patch": "6.5",
       "itemId": 41494,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 334,
@@ -5670,12 +5966,12 @@
       "sources": [
         {
           "type": "成就",
-          "detail": null
+          "detail": "阿羅阿羅島探索記"
         }
       ],
       "patch": "6.51",
       "itemId": 41495,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 335,
@@ -5688,13 +5984,13 @@
       "description": null,
       "sources": [
         {
-          "type": "無人島",
-          "detail": null
+          "type": "商店",
+          "detail": "Unknown Shop: 謝爾達萊青船幣 x100000, "
         }
       ],
       "patch": "6.5",
       "itemId": 41496,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 336,
@@ -5708,16 +6004,12 @@
       "sources": [
         {
           "type": "節慶活動",
-          "detail": null
-        },
-        {
-          "type": "商城",
-          "detail": "商城購買"
+          "detail": "公主節盛開的笑容之花"
         }
       ],
       "patch": "6.5",
       "itemId": 41497,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 337,
@@ -5744,17 +6036,21 @@
       "description": null,
       "sources": [
         {
-          "type": "異聞副本",
-          "detail": null
+          "type": "商店",
+          "detail": "德蕾莎桑: 阿羅阿羅金貨 x100, at 舊薩雷安"
         },
         {
           "type": "異聞副本",
-          "detail": null
+          "detail": "異聞迷宮 異聞阿羅阿羅島"
+        },
+        {
+          "type": "異聞副本",
+          "detail": "異聞迷宮 零式異聞阿羅阿羅島"
         }
       ],
       "patch": "6.51",
       "itemId": 41499,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 339,
@@ -5768,12 +6064,12 @@
       "sources": [
         {
           "type": "無人島",
-          "detail": null
+          "detail": "無人島特殊配給貨箱"
         }
       ],
       "patch": "6.5",
       "itemId": 41649,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 340,
@@ -5786,17 +6082,17 @@
       "description": null,
       "sources": [
         {
-          "type": "無人島",
-          "detail": null
+          "type": "商店",
+          "detail": "Unknown Shop: 蔬菜券 x200, "
         },
         {
           "type": "無人島",
-          "detail": null
+          "detail": "無人島特殊配給貨箱"
         }
       ],
       "patch": "6.5",
       "itemId": 41650,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 342,
@@ -5809,13 +6105,13 @@
       "description": null,
       "sources": [
         {
-          "type": "危命任務",
-          "detail": null
+          "type": "商店",
+          "detail": "愛迪麗娜: 圖拉爾雙色寶石的收據 x500, at 摩杜納"
         }
       ],
       "patch": "7.0",
       "itemId": 43590,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 343,
@@ -5829,12 +6125,12 @@
       "sources": [
         {
           "type": "商店",
-          "detail": null
+          "detail": "尼昂: Gil x7500000, at 九號解決方案"
         }
       ],
       "patch": "7.0",
       "itemId": 43591,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 344,
@@ -5847,13 +6143,13 @@
       "description": null,
       "sources": [
         {
-          "type": "任務",
-          "detail": null
+          "type": "主線任務",
+          "detail": "黃金遺產"
         }
       ],
       "patch": "7.0",
       "itemId": 43592,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 345,
@@ -5872,7 +6168,7 @@
       ],
       "patch": "7.0",
       "itemId": 43593,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 346,
@@ -5891,7 +6187,7 @@
       ],
       "patch": "7.0",
       "itemId": 43594,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 347,
@@ -5905,12 +6201,12 @@
       "sources": [
         {
           "type": "成就",
-          "detail": null
+          "detail": "二十重之道的探究者"
         }
       ],
       "patch": "7.0",
       "itemId": 43595,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 348,
@@ -5923,13 +6219,13 @@
       "description": null,
       "sources": [
         {
-          "type": "危命任務",
-          "detail": null
+          "type": "商店",
+          "detail": "瓦赫賽帕: 德庫洛涅的鱗片 x12, at 九號解決方案"
         }
       ],
       "patch": "7.0",
       "itemId": 43596,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 349,
@@ -5961,13 +6257,13 @@
       "description": null,
       "sources": [
         {
-          "type": "採集",
-          "detail": null
+          "type": "商店",
+          "detail": "特殊商品兌換員: 犎牛角笛的交換票據 x100, at 九號解決方案"
         }
       ],
       "patch": "7.0",
       "itemId": 43598,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 351,
@@ -5981,12 +6277,12 @@
       "sources": [
         {
           "type": "成就",
-          "detail": null
+          "detail": "黃金怪物獵人"
         }
       ],
       "patch": "7.0",
       "itemId": 43599,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 352,
@@ -6018,13 +6314,13 @@
       "description": null,
       "sources": [
         {
-          "type": "狩獵",
-          "detail": null
+          "type": "商店",
+          "detail": "流布加: 狩獵任務的戰利品 x3200, at 圖萊尤拉"
         }
       ],
       "patch": "7.0",
       "itemId": 44245,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 354,
@@ -6043,7 +6339,7 @@
       ],
       "patch": "7.0",
       "itemId": 41802,
-      "nameSource": "tw-items"
+      "nameSource": "tc"
     },
     {
       "id": 356,
