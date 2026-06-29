@@ -265,7 +265,7 @@
     /* ── Grid ── */
     .em-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 10px;
     }
 
@@ -274,7 +274,7 @@
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: var(--radius-md);
-      padding: 12px;
+      padding: 16px;
       cursor: pointer;
       transition: var(--transition);
       user-select: none;
@@ -303,8 +303,8 @@
     }
 
     .em-icon-wrap {
-      width: 48px;
-      height: 48px;
+      width: 56px;
+      height: 56px;
       border-radius: var(--radius-sm);
       background: var(--raise);
       display: flex;
@@ -314,17 +314,17 @@
       overflow: hidden;
     }
     .em-icon {
-      width: 48px;
-      height: 48px;
+      width: 56px;
+      height: 56px;
       object-fit: cover;
     }
     .em-icon-placeholder {
-      font-size: 22px;
+      font-size: 26px;
       color: var(--text-muted);
     }
 
     .em-name {
-      font-size: 12px;
+      font-size: 14px;
       font-weight: 600;
       color: var(--text-primary);
       line-height: 1.3;
@@ -393,11 +393,24 @@
     .source-tag.type-成就     { background: rgba(255,200,80,0.1);  color: #ffc850; border-color: rgba(255,200,80,0.2); }
     .source-tag.type-App      { background: rgba(167,139,250,0.12); color: var(--purple); border-color: rgba(167,139,250,0.25); }
 
+    /* ── 取得方式（預設顯示，最優先資訊）── */
     .em-detail {
-      font-size: 10px;
-      color: var(--text-muted);
-      line-height: 1.3;
+      display: block;
+      margin-top: 2px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.5;
       word-break: break-word;
+    }
+    .em-detail:empty { display: none; }
+    .em-detail::before {
+      content: "取得方式";
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .03em;
+      color: var(--gold);
+      margin-bottom: 2px;
     }
 
     /* ── Empty state ── */
@@ -475,11 +488,6 @@
     <button class="icon-btn clear-btn" id="clearBtn">清除進度</button>
   </div>
 
-  <!-- Patch filter -->
-  <div class="filter-section" id="patchFilterSection" style="display:none">
-    <div class="filter-label">版本</div>
-    <div class="filter-tags" id="patchFilters"></div>
-  </div>
 
   <!-- Source filter -->
   <div class="filter-section" id="sourceFilterSection" style="display:none">
@@ -519,11 +527,9 @@
 
   // ── State ──
   let EM_DATA = [];
-  let PATCHES = [];
   let SOURCE_TYPES = [];
   let owned = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
   let filterOwn = 'all';     // all | owned | missing
-  let filterPatch = null;    // string | null
   let filterSource = null;   // string | null
   let searchQ = '';
 
@@ -557,23 +563,6 @@
     document.getElementById('progressPct').textContent = pct + '%';
   }
 
-  // ── Patch filter renderer ──
-  function renderPatchFilters() {
-    const wrap = document.getElementById('patchFilters');
-    wrap.innerHTML = '';
-    PATCHES.forEach(v => {
-      const btn = document.createElement('button');
-      btn.className = 'filter-tag' + (filterPatch === v ? ' active' : '');
-      btn.textContent = v;
-      btn.addEventListener('click', () => {
-        filterPatch = filterPatch === v ? null : v;
-        renderPatchFilters();
-        renderGrid();
-      });
-      wrap.appendChild(btn);
-    });
-  }
-
   // ── Source filter renderer ──
   function renderSourceFilters() {
     const wrap = document.getElementById('sourceFilters');
@@ -598,8 +587,6 @@
 
       if (filterOwn === 'owned'   && !owned.has(k)) return false;
       if (filterOwn === 'missing' &&  owned.has(k)) return false;
-
-      if (filterPatch && e.patch !== filterPatch) return false;
 
       if (filterSource) {
         const types = (e.sources || []).map(s => s.type);
@@ -774,18 +761,6 @@
       // 排序：依 id
       EM_DATA.sort((a, b) => (a.id || 0) - (b.id || 0));
 
-      // Patch 版本清單（排序）
-      const patchSet = new Set(EM_DATA.map(e => e.patch).filter(Boolean));
-      PATCHES = [...patchSet].sort((a, b) => {
-        const [ma, pa] = a.split('.').map(Number);
-        const [mb, pb] = b.split('.').map(Number);
-        return ma !== mb ? ma - mb : pa - pb;
-      });
-
-      if (PATCHES.length > 0) {
-        document.getElementById('patchFilterSection').style.display = '';
-        renderPatchFilters();
-      }
 
       // 來源類型清單（固定排序，未補的歸「待補充」）
       const ORDER = ['預設', '動作指南書', '任務', '成就', 'App', '待補充'];

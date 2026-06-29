@@ -269,7 +269,7 @@
     /* ── Grid ── */
     .oc-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
       gap: 10px;
     }
 
@@ -278,7 +278,7 @@
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: var(--radius-md);
-      padding: 14px;
+      padding: 18px;
       cursor: pointer;
       transition: var(--transition);
       user-select: none;
@@ -311,16 +311,16 @@
     }
 
     .oc-icon {
-      width: 40px;
-      height: 40px;
+      width: 48px;
+      height: 48px;
       border-radius: var(--radius-sm);
       background: var(--raise);
       object-fit: cover;
       flex-shrink: 0;
     }
     .oc-icon-placeholder {
-      width: 40px;
-      height: 40px;
+      width: 48px;
+      height: 48px;
       border-radius: var(--radius-sm);
       background: var(--raise);
       display: flex;
@@ -331,7 +331,7 @@
     }
 
     .oc-name {
-      font-size: 13px;
+      font-size: 15px;
       font-weight: 600;
       color: var(--text-primary);
       line-height: 1.3;
@@ -373,13 +373,26 @@
     .tag.cat-未分類    { background: var(--raise); color: var(--text-muted); border-color: var(--border); }
 
     /* ── Hover detail ── */
+    /* ── 取得方式（預設顯示，最優先資訊）── */
     .oc-detail {
-      font-size: 11px;
-      color: var(--text-muted);
+      display: block;
+      margin-top: 2px;
+      padding-left: 9px;
+      border-left: 2px solid var(--gold);
+      font-size: 12px;
+      color: var(--text-secondary);
       line-height: 1.5;
-      display: none;
     }
-    .oc-card.sg-open .oc-detail { display: block; }
+    .oc-detail:empty { display: none; }
+    .oc-detail::before {
+      content: "取得方式";
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .03em;
+      color: var(--gold);
+      margin-bottom: 2px;
+    }
     .oc-detail .detail-line { margin-top: 2px; }
     .oc-detail .detail-line b { color: var(--text-secondary); font-weight: 500; }
 
@@ -415,7 +428,6 @@
   <script src="../../assets/js/patch-gate.js"></script>
   <link rel="stylesheet" href="../../assets/css/theme.css">
   <script src="../../assets/js/theme.js"></script>
-  <script src="../../assets/js/collection-detail.js" defer></script>
 </head>
 <body>
 

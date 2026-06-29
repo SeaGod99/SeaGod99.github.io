@@ -267,8 +267,8 @@
     /* ── Minion grid ── */
     .minion-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
-      gap: 8px;
+      grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+      gap: 10px;
     }
 
     /* ── Minion card ── */
@@ -276,7 +276,7 @@
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: var(--radius-md);
-      padding: 10px 6px 8px;
+      padding: 12px 8px 10px;
       cursor: pointer;
       transition: var(--transition);
       display: flex;
@@ -299,12 +299,12 @@
 
     .minion-icon-wrap {
       position: relative;
-      width: 48px;
-      height: 48px;
+      width: 60px;
+      height: 60px;
     }
     .minion-icon {
-      width: 48px;
-      height: 48px;
+      width: 60px;
+      height: 60px;
       border-radius: var(--radius-sm);
       object-fit: cover;
       background: var(--raise);
@@ -329,13 +329,25 @@
     .minion-card.owned .check-badge { display: flex; }
 
     .minion-name {
-      font-size: 11px;
+      font-size: 12px;
       color: var(--text-secondary);
       text-align: center;
       line-height: 1.3;
       word-break: break-all;
       max-width: 100%;
     }
+    /* 取得方式：預設顯示的最優先資訊（類別；完整細節點 ⓘ） */
+    .minion-src {
+      font-size: 10px;
+      color: var(--gold);
+      text-align: center;
+      line-height: 1.3;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .minion-src.none { color: var(--text-muted); }
 
     /* ── Empty state ── */
     .empty-state {
@@ -425,7 +437,7 @@
     /* ── Responsive ── */
     @media (max-width: 600px) {
       .page-header { flex-wrap: wrap; padding: 24px 0 20px; }
-      .minion-grid { grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: 6px; }
+      .minion-grid { grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 8px; }
       .progress-bar-wrap { flex-wrap: wrap; }
     }
   </style>
@@ -663,6 +675,11 @@
       card.className = 'minion-card' + (isOwned ? ' owned' : '');
       card.dataset.id = m.id;
 
+      const srcTypes = [...new Set((m.sources || []).map(s => s.type))];
+      const srcInline = srcTypes.length
+        ? `<div class="minion-src" title="${srcTypes.join(' · ')}">${srcTypes.join(' · ')}</div>`
+        : `<div class="minion-src none">取得方式待補充</div>`;
+
       card.innerHTML = `
         <div class="minion-icon-wrap">
           <img class="minion-icon" src="${m.icon}" alt="${m.name}" loading="lazy" decoding="async"
@@ -671,6 +688,7 @@
           <button class="minion-info" type="button" aria-label="取得方式" title="取得方式">i</button>
         </div>
         <div class="minion-name">${m.name}</div>
+        ${srcInline}
       `;
 
       card.addEventListener('click', () => toggle(m.id));

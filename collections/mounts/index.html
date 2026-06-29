@@ -264,7 +264,7 @@
     /* ── Mount grid ── */
     .mount-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
       gap: 10px;
     }
 
@@ -273,7 +273,7 @@
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: var(--radius-md);
-      padding: 14px;
+      padding: 18px;
       cursor: pointer;
       transition: var(--transition);
       user-select: none;
@@ -306,8 +306,8 @@
     }
 
     .mount-icon {
-      width: 36px;
-      height: 36px;
+      width: 48px;
+      height: 48px;
       border-radius: var(--radius-sm);
       background: var(--raise);
       object-fit: cover;
@@ -322,7 +322,7 @@
     }
 
     .mount-name {
-      font-size: 13px;
+      font-size: 15px;
       font-weight: 600;
       color: var(--text-primary);
       line-height: 1.3;
@@ -377,13 +377,26 @@
     .source-tag.type-市場板     { background: var(--raise); color: var(--text-secondary); border-color: var(--border); }
 
     /* ── Tooltip on hover ── */
+    /* ── 取得方式（預設顯示，最優先資訊）── */
     .mount-detail {
-      font-size: 11px;
-      color: var(--text-muted);
-      line-height: 1.4;
-      display: none;
+      display: block;
+      margin-top: 2px;
+      padding-left: 9px;
+      border-left: 2px solid var(--gold);
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.5;
     }
-    .mount-card.sg-open .mount-detail { display: block; }
+    .mount-detail:empty { display: none; }
+    .mount-detail::before {
+      content: "取得方式";
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .03em;
+      color: var(--gold);
+      margin-bottom: 2px;
+    }
 
     /* ── Empty state ── */
     .empty-state {
@@ -417,7 +430,6 @@
   <script src="../../assets/js/patch-gate.js"></script>
   <link rel="stylesheet" href="../../assets/css/theme.css">
   <script src="../../assets/js/theme.js"></script>
-  <script src="../../assets/js/collection-detail.js" defer></script>
 </head>
 <body>
 
@@ -475,7 +487,7 @@
 
   <!-- Patch filter -->
   <div class="filter-section">
-    <div class="filter-label">版本篩選</div>
+    <div class="filter-label">版本</div>
     <div class="filter-tags" id="patchFilters"></div>
   </div>
 
@@ -522,12 +534,12 @@
 
   // ── Patch bands (derived from data) ──
   const PATCH_BANDS = [
-    { label: 'ARR 2.x', min: '2.0', max: '2.9' },
-    { label: 'HW 3.x',  min: '3.0', max: '3.9' },
-    { label: 'SB 4.x',  min: '4.0', max: '4.9' },
-    { label: 'ShB 5.x', min: '5.0', max: '5.9' },
-    { label: 'EW 6.x',  min: '6.0', max: '6.9' },
-    { label: 'DT 7.x',  min: '7.0', max: '7.9' },
+    { label: '原初之地',   min: '2.0', max: '2.9' },
+    { label: '蒼天之禁地', min: '3.0', max: '3.9' },
+    { label: '紅蓮之狂潮', min: '4.0', max: '4.9' },
+    { label: '暗影之逆焰', min: '5.0', max: '5.9' },
+    { label: '曉月之終途', min: '6.0', max: '6.9' },
+    { label: '金曦之遺輝', min: '7.0', max: '7.9' },
   ];
 
   // ── Unique key for an item (use id when present, otherwise name) ──

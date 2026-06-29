@@ -107,32 +107,6 @@
   outline-offset: 1px;
 }
 
-/* ===================================================================
-   收藏卡片「取得方式」展開鈕（assets/js/collection-detail.js 注入，
-   取代原本只在 hover 顯示詳情的做法；觸控可用、可固定檢視）
-   =================================================================== */
-.sg-src-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  align-self: flex-start;
-  margin-top: 4px;
-  padding: 4px 9px;
-  font: inherit;
-  font-size: 11px;
-  line-height: 1;
-  color: var(--gold, #c8a96e);
-  background: var(--gold-dim, rgba(200,169,110,0.12));
-  border: 1px solid var(--border, rgba(255,255,255,0.1));
-  border-radius: 99px;
-  cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
-}
-.sg-src-toggle:hover { border-color: var(--gold, #c8a96e); }
-.sg-src-toggle:focus-visible { outline: 2px solid var(--gold, #c8a96e); outline-offset: 1px; }
-.sg-src-toggle .sg-chev { font-size: 9px; transition: transform 0.15s; }
-.sg-src-toggle[aria-expanded="true"] .sg-chev { transform: rotate(180deg); }
-
 @media print { #theme-toggle { display: none; } }
 @media (max-width: 480px) {
   #theme-toggle { right: 10px; bottom: 10px; }
