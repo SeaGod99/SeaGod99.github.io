@@ -5,245 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="FF14 髮型收藏追蹤 — 版本篩選、來源查詢、記錄已解鎖進度">
   <title>髮型收藏追蹤 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/common.css">
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+    /* 髮型頁專屬樣式；通用版面（header/toolbar/filter/progress/footer）見 assets/css/common.css。
+       本頁卡片為「橫向版型」（圖左資訊右），與通用 .col-* 直式卡片不同，故保留專屬 hs-* 類。 */
     :root {
-      --bg-base:    #0a0c10;
-      --bg-surface: #0f1117;
-      --bg-card:    #14181f;
-      --bg-card-hover: #1a1f2b;
-      --border:     rgba(255,255,255,0.07);
-      --border-hover: rgba(200,169,110,0.4);
-
-      --gold:       #c8a96e;
-      --gold-light: #e2c98a;
-      --gold-dim:   rgba(200,169,110,0.15);
-      --purple:     #a78bfa;
-      --purple-dim: rgba(167,139,250,0.12);
-      --green:      #4ade80;
-      --green-dim:  rgba(74,222,128,0.12);
-      --blue:       #4fc3f7;
-      --blue-dim:   rgba(79,195,247,0.12);
-      --red:        #f87171;
-
-      --text-primary:   #e8eaf0;
-      --text-secondary: #8892a4;
-      --text-muted:     #717c91;
-
-      --radius-sm: 6px;
-      --radius-md: 10px;
-      --radius-lg: 16px;
-      --transition: 0.18s cubic-bezier(0.4,0,0.2,1);
+      --accent:   #c8a96e;                 /* 金（外框強調）*/
+      --accent-2: #e2c98a;                 /* 進度條尾色：淺金 */
+      --glow-1:   rgba(200,169,110,0.06);
+      --glow-2:   rgba(167,139,250,0.04);
     }
-
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
-      background: var(--bg-base);
-      color: var(--text-primary);
-      min-height: 100vh;
-      line-height: 1.5;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    body::before {
-      content: '';
-      position: fixed; inset: 0;
-      background:
-        radial-gradient(ellipse 80% 50% at 20% 0%, rgba(200,169,110,0.06) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(167,139,250,0.04) 0%, transparent 60%);
-      pointer-events: none; z-index: 0;
-    }
-
-    a { color: inherit; text-decoration: none; }
-
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px;
-      position: relative;
-      z-index: 1;
-    }
-
-    /* ── Header ── */
-    .page-header {
-      padding: 36px 0 28px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 28px;
-    }
-
-    .back-btn {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 14px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      color: var(--text-secondary);
-      font-size: 13px;
-      white-space: nowrap;
-      transition: color var(--transition), border-color var(--transition);
-    }
-    .back-btn:hover { color: var(--gold); border-color: var(--gold); }
-
-    .page-title-wrap { flex: 1; min-width: 0; }
-    .page-title {
-      font-size: clamp(20px, 4vw, 28px);
-      font-weight: 700;
-      color: var(--gold-light);
-      letter-spacing: 0.02em;
-    }
-    .page-subtitle {
-      font-size: 13px;
-      color: var(--text-secondary);
-      margin-top: 4px;
-    }
-
-    /* ── Progress ── */
-    .progress-bar-wrap {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 20px;
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 14px 18px;
-    }
-    .progress-info { font-size: 14px; color: var(--text-secondary); white-space: nowrap; }
-    .progress-info em { font-style: normal; color: var(--gold); font-weight: 600; }
-    .progress-track {
-      flex: 1;
-      height: 6px;
-      background: var(--raise);
-      border-radius: 3px;
-      overflow: hidden;
-    }
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--gold), var(--gold-light));
-      border-radius: 3px;
-      transition: width 0.4s ease;
-    }
-    .progress-pct { font-size: 13px; color: var(--gold); font-weight: 600; white-space: nowrap; min-width: 36px; text-align: right; }
-
-    /* ── Toolbar ── */
-    .toolbar {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
-    }
-
-    .search-wrap {
-      flex: 1;
-      min-width: 200px;
-      position: relative;
-    }
-    .search-icon {
-      position: absolute;
-      left: 12px; top: 50%;
-      transform: translateY(-50%);
-      font-size: 14px;
-      pointer-events: none;
-    }
-    .search-input {
-      width: 100%;
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      color: var(--text-primary);
-      font-size: 14px;
-      padding: 9px 14px 9px 36px;
-      outline: none;
-      transition: border-color var(--transition);
-    }
-    .search-input::placeholder { color: var(--text-muted); }
-    .search-input:focus { border-color: var(--gold); }
-
-    .own-toggle {
-      display: flex;
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      overflow: hidden;
-    }
-    .own-btn {
-      background: none;
-      border: none;
-      color: var(--text-secondary);
-      font-size: 13px;
-      padding: 8px 14px;
-      cursor: pointer;
-      transition: background var(--transition), color var(--transition);
-    }
-    .own-btn:hover { background: var(--gold-dim); color: var(--gold); }
-    .own-btn.active { background: var(--gold-dim); color: var(--gold); font-weight: 600; }
-
-    .icon-btn {
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      color: var(--text-secondary);
-      font-size: 13px;
-      padding: 8px 14px;
-      cursor: pointer;
-      transition: border-color var(--transition), color var(--transition);
-      white-space: nowrap;
-    }
-    .icon-btn:hover { border-color: var(--gold); color: var(--gold); }
-    .icon-btn.clear-btn:hover { border-color: var(--red); color: var(--red); }
-
-    /* ── Filter section ── */
-    .filter-section {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
-      padding: 12px 16px;
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-    }
-    .filter-label {
-      font-size: 12px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      white-space: nowrap;
-    }
-    .filter-tags { display: flex; gap: 6px; flex-wrap: wrap; }
-    .filter-tag {
-      background: none;
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      color: var(--text-secondary);
-      font-size: 12px;
-      padding: 3px 10px;
-      cursor: pointer;
-      transition: all var(--transition);
-    }
-    .filter-tag:hover { border-color: var(--gold); color: var(--gold); }
-    .filter-tag.active { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); font-weight: 600; }
-
-    /* ── Source filters ── */
+    /* 外框微調（與 common 預設不同處）*/
+    .result-meta { font-size: 13px; }
+    .empty-state { font-size: 15px; }
+    .page-footer { padding: 24px 0; margin-top: 16px; }
     .source-filters { display: flex; gap: 6px; flex-wrap: wrap; }
 
-    /* ── Result meta ── */
-    .result-meta {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-bottom: 14px;
-    }
-    .result-meta em { font-style: normal; color: var(--text-secondary); }
-
-    /* ── Grid ── */
+    /* ── Grid（橫向卡片，較寬欄）── */
     .hs-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -251,7 +29,7 @@
       margin-bottom: 40px;
     }
 
-    /* ── Card ── */
+    /* ── Card（橫向）── */
     .hs-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
@@ -285,8 +63,7 @@
     }
 
     .hs-icon-wrap {
-      width: 52px;
-      height: 52px;
+      width: 52px; height: 52px;
       flex-shrink: 0;
       border-radius: var(--radius-sm);
       overflow: hidden;
@@ -296,14 +73,11 @@
       justify-content: center;
     }
     .hs-icon {
-      width: 52px;
-      height: 52px;
+      width: 52px; height: 52px;
       object-fit: contain;
       image-rendering: pixelated;
     }
-    .hs-icon-placeholder {
-      font-size: 22px;
-    }
+    .hs-icon-placeholder { font-size: 22px; }
 
     .hs-info { flex: 1; min-width: 0; }
     .hs-name {
@@ -323,65 +97,20 @@
       text-overflow: ellipsis;
       margin-bottom: 6px;
     }
-    .hs-tags {
-      display: flex;
-      gap: 5px;
-      flex-wrap: wrap;
-    }
+    .hs-tags { display: flex; gap: 5px; flex-wrap: wrap; }
     .hs-tag {
       font-size: 11px;
       padding: 2px 7px;
       border-radius: 3px;
       font-weight: 500;
     }
-    .tag-patch {
-      background: var(--purple-dim);
-      color: var(--purple);
-      border: 1px solid rgba(167,139,250,0.2);
-    }
-    .tag-source {
-      background: var(--blue-dim);
-      color: var(--blue);
-      border: 1px solid rgba(79,195,247,0.2);
-    }
-    .tag-source-event {
-      background: rgba(251,191,36,0.1);
-      color: #fbbf24;
-      border: 1px solid rgba(251,191,36,0.2);
-    }
-    .tag-source-mgp {
-      background: rgba(234,179,8,0.1);
-      color: #eab308;
-      border: 1px solid rgba(234,179,8,0.2);
-    }
-    .tag-source-quest {
-      background: var(--green-dim);
-      color: var(--green);
-      border: 1px solid rgba(74,222,128,0.2);
-    }
+    .tag-patch        { background: var(--purple-dim); color: var(--purple); border: 1px solid rgba(167,139,250,0.2); }
+    .tag-source       { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(79,195,247,0.2); }
+    .tag-source-event { background: rgba(251,191,36,0.1); color: #fbbf24; border: 1px solid rgba(251,191,36,0.2); }
+    .tag-source-mgp   { background: rgba(234,179,8,0.1); color: #eab308; border: 1px solid rgba(234,179,8,0.2); }
+    .tag-source-quest { background: var(--green-dim); color: var(--green); border: 1px solid rgba(74,222,128,0.2); }
 
-    /* ── Empty ── */
-    .empty-state {
-      text-align: center;
-      padding: 60px 20px;
-      color: var(--text-muted);
-      font-size: 15px;
-    }
-
-    /* ── Footer ── */
-    .page-footer {
-      border-top: 1px solid var(--border);
-      padding: 24px 0;
-      margin-top: 16px;
-    }
-    .footer-text {
-      font-size: 12px;
-      color: var(--text-muted);
-      text-align: center;
-    }
-    .footer-text a:hover { color: var(--gold); }
-
-    /* ── Patch classes ── */
+    /* 資料片色 */
     .patch-arr  { color: #60a5fa; }
     .patch-hw   { color: #a78bfa; }
     .patch-sb   { color: #fb923c; }

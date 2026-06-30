@@ -5,339 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="FF14 幻卡追蹤 — 查詢取得來源、星級篩選、記錄收藏進度">
   <title>幻卡追蹤 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/common.css">
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+    /* 幻卡頁專屬樣式；通用版面與 .col-* 卡片系統見 assets/css/common.css */
     :root {
-      --bg-base:    #0a0c10;
-      --bg-surface: #0f1117;
-      --bg-card:    #14181f;
-      --bg-card-hover: #1a1f2b;
-      --border:     rgba(255,255,255,0.07);
-      --border-hover: rgba(200,169,110,0.4);
+      --accent:   #f87171;                 /* 紅 */
+      --accent-2: #c8a96e;                 /* 進度條尾色：金 */
+      --glow-1:   rgba(248,113,113,0.06);
+      --glow-2:   rgba(200,169,110,0.04);
+    }
+    .col-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+    .col-card { padding: 18px; gap: 8px; }
+    .col-name { padding-right: 16px; }
+    .tt-meta { font-size: 10px; color: var(--text-muted); }
 
-      --gold:       #c8a96e;
-      --gold-light: #e2c98a;
-      --gold-dim:   rgba(200,169,110,0.15);
-      --purple:     #a78bfa;
-      --purple-dim: rgba(167,139,250,0.12);
-      --green:      #4ade80;
-      --green-dim:  rgba(74,222,128,0.12);
-      --blue:       #4fc3f7;
-      --blue-dim:   rgba(79,195,247,0.12);
-      --red:        #f87171;
-      --red-dim:    rgba(248,113,113,0.12);
-
-      --text-primary:   #e8eaf0;
-      --text-secondary: #8892a4;
-      --text-muted:     #717c91;
-
-      --radius-sm: 6px;
-      --radius-md: 10px;
-      --radius-lg: 16px;
-      --transition: 0.18s cubic-bezier(0.4,0,0.2,1);
-    }
-
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
-      background: var(--bg-base);
-      color: var(--text-primary);
-      min-height: 100vh;
-      line-height: 1.5;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    body::before {
-      content: '';
-      position: fixed; inset: 0;
-      background:
-        radial-gradient(ellipse 80% 50% at 20% 0%, rgba(248,113,113,0.06) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(200,169,110,0.04) 0%, transparent 60%);
-      pointer-events: none; z-index: 0;
-    }
-
-    a { color: inherit; text-decoration: none; }
-
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px;
-      position: relative;
-      z-index: 1;
-    }
-
-    /* ── Header ── */
-    .page-header {
-      padding: 36px 0 28px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 28px;
-    }
-
-    .back-btn {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 13px;
-      color: var(--text-secondary);
-      padding: 6px 12px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      transition: var(--transition);
-    }
-    .back-btn:hover { color: var(--gold); border-color: var(--border-hover); }
-
-    .page-title-wrap { flex: 1; }
-
-    .page-title {
-      font-size: 22px;
-      font-weight: 700;
-      color: var(--gold-light);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .page-subtitle {
-      font-size: 13px;
-      color: var(--text-secondary);
-      margin-top: 4px;
-    }
-
-    /* ── Progress bar ── */
-    .progress-bar-wrap {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 16px 20px;
-      margin-bottom: 24px;
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .progress-info {
-      font-size: 22px;
-      font-weight: 700;
-      color: var(--gold-light);
-      white-space: nowrap;
-    }
-    .progress-info span {
-      font-size: 13px;
-      font-weight: 400;
-      color: var(--text-secondary);
-      margin-left: 6px;
-    }
-
-    .progress-track {
-      flex: 1;
-      height: 8px;
-      background: var(--raise);
-      border-radius: 99px;
-      overflow: hidden;
-    }
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--red), var(--gold));
-      border-radius: 99px;
-      transition: width 0.4s ease;
-    }
-
-    .progress-pct {
-      font-size: 14px;
-      color: var(--text-secondary);
-      white-space: nowrap;
-    }
-
-    /* ── Toolbar ── */
-    .toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 18px;
-      align-items: center;
-    }
-
-    .search-wrap {
-      position: relative;
-      flex: 1;
-      min-width: 180px;
-    }
-    .search-icon {
-      position: absolute;
-      left: 11px; top: 50%;
-      transform: translateY(-50%);
-      font-size: 14px;
-      color: var(--text-muted);
-      pointer-events: none;
-    }
-    .search-input {
-      width: 100%;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      color: var(--text-primary);
-      font-size: 13px;
-      padding: 8px 12px 8px 34px;
-      outline: none;
-      transition: var(--transition);
-    }
-    .search-input:focus { border-color: rgba(248,113,113,0.5); }
-    .search-input::placeholder { color: var(--text-muted); }
-
-    .own-toggle {
-      display: flex;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      overflow: hidden;
-    }
-    .own-btn {
-      padding: 8px 14px;
-      font-size: 12px;
-      cursor: pointer;
-      border: none;
-      background: transparent;
-      color: var(--text-secondary);
-      transition: var(--transition);
-      white-space: nowrap;
-    }
-    .own-btn.active { background: var(--red-dim); color: var(--red); }
-    .own-btn:hover:not(.active) { color: var(--text-primary); }
-
-    .icon-btn {
-      padding: 8px 14px;
-      font-size: 12px;
-      cursor: pointer;
-      background: transparent;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      color: var(--text-muted);
-      transition: var(--transition);
-      white-space: nowrap;
-    }
-    .icon-btn:hover { color: var(--text-primary); border-color: rgba(255,255,255,0.2); }
-    .clear-btn:hover { color: var(--red); border-color: rgba(248,113,113,0.4); }
-
-    /* ── Filter tags ── */
-    .filter-section {
-      margin-bottom: 18px;
-    }
-    .filter-label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-    }
-    .filter-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-    .filter-tag {
-      padding: 4px 12px;
-      font-size: 12px;
-      border: 1px solid var(--border);
-      border-radius: 99px;
-      cursor: pointer;
-      background: transparent;
-      color: var(--text-secondary);
-      transition: var(--transition);
-    }
-    .filter-tag:hover { color: var(--text-primary); border-color: rgba(255,255,255,0.2); }
-    .filter-tag.active {
-      background: var(--red-dim);
-      border-color: rgba(248,113,113,0.4);
-      color: var(--red);
-    }
-
-    /* ── Result count ── */
-    .result-meta {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-bottom: 14px;
-    }
-    .result-meta em { color: var(--text-secondary); font-style: normal; }
-
-    /* ── Grid ── */
-    .tt-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 10px;
-    }
-
-    /* ── Card ── */
-    .tt-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 18px;
-      cursor: pointer;
-      transition: var(--transition);
-      user-select: none;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .tt-card:hover {
-      background: var(--bg-card-hover);
-      border-color: rgba(248,113,113,0.3);
-    }
-    .tt-card.owned {
-      border-color: rgba(248,113,113,0.5);
-      background: rgba(248,113,113,0.06);
-    }
-    .tt-card.owned::before {
-      content: '✓';
-      position: absolute;
-      top: 8px; right: 10px;
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--red);
-    }
-
-    .tt-head {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .tt-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: var(--radius-sm);
-      background: var(--raise);
-      object-fit: cover;
-      flex-shrink: 0;
-    }
-    .tt-icon.placeholder {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      color: var(--text-muted);
-    }
-
-    .tt-name {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text-primary);
-      line-height: 1.3;
-      padding-right: 16px;
-    }
-    .tt-card.owned .tt-name { color: var(--red); }
-
-    .tt-meta {
-      font-size: 10px;
-      color: var(--text-muted);
-    }
-
-    /* ── Number cross ── */
+    /* 幻卡四向數值十字 */
     .tt-numbers {
       display: grid;
       grid-template-columns: 24px 24px 24px;
@@ -347,11 +29,8 @@
       margin: 2px 0;
     }
     .tt-num {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700;
       color: var(--text-secondary);
       background: var(--raise);
       border-radius: 3px;
@@ -363,84 +42,20 @@
     .tt-num.n-bottom { grid-area: 3 / 2; }
     .tt-num.n-A      { color: var(--gold-light); }
 
-    .tt-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px;
-      margin-top: 2px;
-    }
-
-    .tag {
-      font-size: 10px;
-      padding: 2px 7px;
-      border-radius: 99px;
-      background: var(--raise);
-      color: var(--text-secondary);
-      border: 1px solid var(--border);
-      white-space: nowrap;
-    }
-    .tag.placeholder { color: var(--text-muted); }
-
+    /* 星級與類型標籤 */
     .tag.star-1 { background: rgba(74,222,128,0.1);  color: var(--green); border-color: rgba(74,222,128,0.2); }
     .tag.star-2 { background: rgba(79,195,247,0.1);  color: var(--blue);  border-color: rgba(79,195,247,0.2); }
     .tag.star-3 { background: rgba(167,139,250,0.1); color: var(--purple); border-color: rgba(167,139,250,0.2); }
     .tag.star-4 { background: rgba(255,200,80,0.1);  color: #ffc850; border-color: rgba(255,200,80,0.2); }
     .tag.star-5 { background: rgba(248,113,113,0.1); color: var(--red); border-color: rgba(248,113,113,0.2); }
-
     .tag.type-tag { background: rgba(200,169,110,0.12); color: var(--gold); border-color: rgba(200,169,110,0.25); }
-    .tag.src-tag { background: var(--raise); color: var(--text-secondary); border-color: var(--border); }
+    .tag.src-tag  { background: var(--raise); color: var(--text-secondary); border-color: var(--border); }
 
-    /* ── 取得方式（預設顯示，最優先資訊）── */
-    .tt-detail {
-      display: block;
-      margin-top: 2px;
-      padding-left: 9px;
-      border-left: 2px solid var(--gold);
-      font-size: 12px;
-      color: var(--text-secondary);
-      line-height: 1.5;
-    }
-    .tt-detail:empty { display: none; }
-    .tt-detail::before {
-      content: "取得方式";
-      display: block;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: .03em;
-      color: var(--gold);
-      margin-bottom: 2px;
-    }
-    .tt-detail .detail-line { margin-top: 2px; }
-    .tt-detail .detail-line b { color: var(--text-secondary); font-weight: 500; }
+    .col-detail .detail-line { margin-top: 2px; }
+    .col-detail .detail-line b { color: var(--text-secondary); font-weight: 500; }
 
-    /* ── Empty state ── */
-    .empty-state {
-      text-align: center;
-      padding: 60px 20px;
-      color: var(--text-muted);
-      font-size: 14px;
-    }
-
-    /* ── Footer ── */
-    .page-footer {
-      border-top: 1px solid var(--border);
-      padding: 24px 0 32px;
-      text-align: center;
-      margin-top: 48px;
-    }
-    .footer-text { font-size: 12px; color: var(--text-muted); }
-    .footer-text a { color: var(--text-secondary); transition: var(--transition); }
-    .footer-text a:hover { color: var(--gold); }
-
-    /* ── Responsive ── */
-    @media (max-width: 600px) {
-      .page-header { flex-wrap: wrap; padding: 24px 0 20px; }
-      .tt-grid { grid-template-columns: 1fr 1fr; }
-      .progress-bar-wrap { flex-wrap: wrap; }
-    }
-    @media (max-width: 380px) {
-      .tt-grid { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 600px) { .col-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 380px) { .col-grid { grid-template-columns: 1fr; } }
   </style>
   <script src="../../assets/js/patch-gate.js"></script>
   <link rel="stylesheet" href="../../assets/css/theme.css">
@@ -510,7 +125,7 @@
   <div class="result-meta" id="resultMeta"></div>
 
   <!-- Grid -->
-  <div class="tt-grid" id="ttGrid"></div>
+  <div class="col-grid" id="ttGrid"></div>
 
   <div class="empty-state" id="emptyState" style="display:none">
     找不到符合條件的幻卡
@@ -673,7 +288,7 @@
       const k = keyOf(c);
       const isOwned = owned.has(k);
       const card = document.createElement('div');
-      card.className = 'tt-card' + (isOwned ? ' owned' : '');
+      card.className = 'col-card' + (isOwned ? ' owned' : '');
 
       const srcs = c.sources || [];
 
@@ -683,7 +298,7 @@
 
       const typeTag = c.type ? `<span class="tag type-tag">${c.type}</span>` : '';
 
-      const iconHtml = `<img class="tt-icon" src="${ICON_BASE}${c.id}.webp" alt="" loading="lazy" onerror="this.onerror=null;this.outerHTML='<div class=&quot;tt-icon placeholder&quot;>🃏</div>'">`;
+      const iconHtml = `<img class="col-icon" src="${ICON_BASE}${c.id}.webp" alt="" loading="lazy" onerror="this.onerror=null;this.outerHTML='<div class=&quot;col-icon placeholder&quot;>🃏</div>'">`;
 
       const num = c.numbers || {};
       const fmtNum = n => (n === 10 ? 'A' : n);
@@ -723,20 +338,20 @@
       }
 
       card.innerHTML = `
-        <div class="tt-head">
+        <div class="col-head">
           ${iconHtml}
           <div style="flex:1; min-width:0;">
-            <div class="tt-name">${c.name}</div>
+            <div class="col-name">${c.name}</div>
             <div class="tt-meta">No.${c.id}${c.patch ? ' · ver ' + c.patch : ''}</div>
           </div>
         </div>
         ${numbersHtml}
-        <div class="tt-tags">
+        <div class="col-tags">
           <span class="tag star-${c.stars}">★${c.stars}</span>
           ${typeTag}
           ${sourceTags}
         </div>
-        <div class="tt-detail">${detailLines.join('')}</div>
+        <div class="col-detail">${detailLines.join('')}</div>
       `;
 
       card.addEventListener('click', () => toggle(k));
