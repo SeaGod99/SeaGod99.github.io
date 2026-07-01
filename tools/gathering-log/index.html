@@ -32,6 +32,7 @@
       --radius:     8px;
     }
 
+    html { font-size: 17.5px; }
     body { background: var(--bg-base); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
 
     .nav {
@@ -47,14 +48,14 @@
       background: linear-gradient(135deg, var(--bg-surface), var(--bg-base));
       border-bottom: 1px solid var(--border); padding: 1.5rem;
     }
-    .hero-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .hero-inner { max-width: 1500px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
     .hero h1 { font-size: 1.4rem; font-weight: 700; }
     .progress-wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 0.3rem; }
     .progress-text { font-size: 0.8rem; color: var(--text-dim); }
     .progress-bar { width: 200px; height: 8px; background: var(--bg-card); border-radius: 4px; overflow: hidden; }
     .progress-fill { height: 100%; background: linear-gradient(90deg, var(--orange), var(--gold)); border-radius: 4px; transition: width 0.4s; }
 
-    .controls { max-width: 1200px; margin: 0 auto; padding: 1rem 1.5rem; display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; }
+    .controls { max-width: 1500px; margin: 0 auto; padding: 1rem 1.5rem; display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; }
     .search-wrap { position: relative; flex: 1; min-width: 200px; max-width: 360px; }
     .search-wrap input {
       width: 100%; background: var(--bg-card); border: 1px solid var(--border);
@@ -76,10 +77,10 @@
     }
     select.filter-select:focus { border-color: var(--gold); }
 
-    .result-info { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem 0.5rem; font-size: 0.78rem; color: var(--text-muted); }
+    .result-info { max-width: 1500px; margin: 0 auto; padding: 0 1.5rem 0.5rem; font-size: 0.78rem; color: var(--text-muted); }
 
     /* NODE LIST */
-    .node-list { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem 2rem; display: flex; flex-direction: column; gap: 0.5rem; }
+    .node-list { max-width: 1500px; margin: 0 auto; padding: 0 1.5rem 2rem; display: flex; flex-direction: column; gap: 0.5rem; }
 
     .node-card {
       background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
@@ -120,7 +121,7 @@
     .item-chip.owned::before { content: '✓ '; font-size: 0.7rem; }
 
     /* PAGINATION */
-    .pagination { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem 3rem; display: flex; gap: 0.4rem; justify-content: center; flex-wrap: wrap; }
+    .pagination { max-width: 1500px; margin: 0 auto; padding: 0 1.5rem 3rem; display: flex; gap: 0.4rem; justify-content: center; flex-wrap: wrap; }
     .page-btn {
       font-size: 0.8rem; padding: 0.35rem 0.7rem; border-radius: 5px; cursor: pointer;
       border: 1px solid var(--border); background: var(--bg-card); color: var(--text-dim); transition: all 0.15s;
@@ -138,7 +139,7 @@
     .view-toggle button.active { background: var(--gold-dim); color: var(--gold); }
 
     /* MAP VIEW */
-    .map-view { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem 2rem; }
+    .map-view { max-width: 1500px; margin: 0 auto; padding: 0 1.5rem 2rem; }
     .map-bar { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; margin-bottom: 0.75rem; }
     .map-canvas {
       position: relative; width: 100%; max-width: 720px; margin: 0 auto;
