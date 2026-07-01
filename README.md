@@ -28,6 +28,7 @@
 | 🌱 園藝配種計算 | `/tools/gardening/` | 正查兩株配種結果，反查目標植物的配種路徑 |
 | 🎣 釣魚紀錄追蹤 | `/tools/fishing/` | 1104 種魚查詢（釣場/餌/時間/天氣），追蹤已釣進度 |
 | ⛏️ 採集紀錄追蹤 | `/tools/gathering-log/` | 733 個採集節點，追蹤已採物品進度 |
+| 📊 市場查價 + 比價 | `/tools/market/` | 陸行鳥 DC 即時價格、跨服比價、製作清單原料樹狀圖與買／做成本試算 |
 | 🛡️ 配裝規劃器 | [gearing.ffsusu.com](https://gearing.ffsusu.com/) | 外部連結，全職業配裝規劃 |
 
 ---
@@ -40,8 +41,6 @@
 ### 🏆 收藏 / 成就
 
 ### 🌿 生活職（採集 / 製作 / 市場）
-- 📊 市場查價 + 比價
-- 🔍 物品 / 製作搜尋
 - 🗺️ 藏寶圖採集點查詢（G8～G18）
 
 ---
@@ -55,7 +54,7 @@
 | 來源 | 用途 | 備註 |
 |------|------|------|
 | [XIVAPI v2](https://v2.xivapi.com) | 物品、配方、職業、圖示 | 免費，無需 API Key |
-| [Universalis](https://universalis.app) | 即時市場價格、歷史成交 | 免費，繁中服完整支援；規劃中工具使用 |
+| [Universalis](https://universalis.app) | 即時市場價格、歷史成交 | 免費，繁中服完整支援；市場查價工具使用 |
 | [FFXIV Teamcraft](https://ffxivteamcraft.com) | 採集點座標、藏寶圖位置、配方、各內容 patch 對照（`patch-content` / `patch-names`） | 公開 JSON |
 | [thewakingsands/ffxiv-datamining-cn](https://github.com/thewakingsands/ffxiv-datamining-cn) | 中文物品名稱（簡中 + OpenCC 轉繁） | 社群 datamining |
 | [ffxivcollect](https://ffxivcollect.com) | 收藏品 patch、取得來源（坐騎/寵物/表情/鳥鞍/樂譜） | 公開 API；來源文字為英文，無簡中 locale |
@@ -67,7 +66,7 @@
 
 ### 繁中伺服器資訊
 
-Universalis 繁中伺服器清單（Elemental DC 下）：
+Universalis 繁中伺服器清單（資料中心：**陸行鳥**，region 繁中服）：
 
 | 伺服器名 | ID |
 |---------|-----|

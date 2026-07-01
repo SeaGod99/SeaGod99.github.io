@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FF14 市場查價 + 比價 — 繁中服陸行鳥 DC 即時價格、跨服比價、製作清單原料樹狀圖與買/做成本試算">
+  <title>市場查價 + 比價 | 水神的工具箱</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-base:    #0a0c10;
+      --bg-surface: #0f1117;
+      --bg-card:    #14181f;
+      --bg-card-hover: #1a1f2b;
+      --border:     rgba(255,255,255,0.07);
+      --border-hover: rgba(200,169,110,0.4);
+      --gold:       #c8a96e;
+      --gold-light: #e2c98a;
+      --gold-dim:   rgba(200,169,110,0.15);
+      --blue:       #4fc3f7;
+      --blue-dim:   rgba(79,195,247,0.12);
+      --green:      #4ade80;
+      --green-dim:  rgba(74,222,128,0.12);
+      --purple:     #a78bfa;
+      --purple-dim: rgba(167,139,250,0.12);
+      --red:        #f87171;
+      --red-dim:    rgba(248,113,113,0.12);
+      --amber:      #fbbf24;
+      --text:           #e8eaf0;
+      --text-dim:       #8892a4;
+      --text-muted:     #717c91;
+      --radius:     10px;
+      --radius-sm:  6px;
+      --transition: 0.18s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
+      background: var(--bg-base); color: var(--text); min-height: 100vh; line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { max-width: 1000px; margin: 0 auto; padding: 0 18px; }
+
+    /* nav */
+    .nav-back {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      color: var(--text-dim); font-size: 0.85rem; padding: 14px 18px; transition: color var(--transition);
+    }
+    .nav-back:hover { color: var(--gold); }
+
+    /* header */
+    .page-head { padding: 8px 0 20px; }
+    .page-head h1 { font-size: 1.5rem; color: var(--gold-light); font-weight: 700; }
+    .page-head .subtitle { font-size: 0.85rem; color: var(--text-dim); margin-top: 4px; }
+
+    /* toolbar */
+    .toolbar {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 12px;
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 12px 16px; margin-bottom: 16px;
+    }
+    .toolbar label { font-size: 0.8rem; color: var(--text-dim); display: flex; align-items: center; gap: 8px; }
+    select, input[type="text"], input[type="search"], input[type="number"] {
+      background: var(--bg-surface); border: 1px solid var(--border); color: var(--text);
+      border-radius: var(--radius-sm); padding: 7px 10px; font-size: 0.9rem; font-family: inherit;
+    }
+    select:focus, input:focus { outline: none; border-color: var(--gold); }
+    .btn {
+      background: var(--bg-surface); border: 1px solid var(--border); color: var(--text-dim);
+      border-radius: var(--radius-sm); padding: 7px 12px; font-size: 0.82rem; cursor: pointer;
+      transition: all var(--transition); font-family: inherit;
+    }
+    .btn:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+    .btn.primary { color: var(--gold); border-color: rgba(200,169,110,0.35); background: var(--gold-dim); }
+    .btn.primary:hover { background: rgba(200,169,110,0.25); }
+    .btn.danger:hover { color: var(--red); border-color: rgba(248,113,113,0.4); }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .update-time { font-size: 0.74rem; color: var(--text-muted); margin-left: auto; }
+
+    /* tabs */
+    .tabs { display: flex; gap: 6px; margin-bottom: 18px; border-bottom: 1px solid var(--border); }
+    .tab {
+      background: none; border: none; border-bottom: 2px solid transparent; color: var(--text-dim);
+      padding: 10px 14px; font-size: 0.9rem; cursor: pointer; font-family: inherit; transition: all var(--transition);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .tab:hover { color: var(--text); }
+    .tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+    .pill { font-size: 0.68rem; background: var(--gold-dim); color: var(--gold); border-radius: 20px; padding: 1px 7px; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* search */
+    .search-wrap { position: relative; margin-bottom: 16px; }
+    .search-input-row { position: relative; }
+    .search-input-row .icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+    #searchInput { width: 100%; padding-left: 36px; }
+    .search-results {
+      margin-top: 8px; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;
+      background: var(--bg-card); max-height: 360px; overflow-y: auto;
+    }
+    .search-results:empty { display: none; }
+    .result-row {
+      display: flex; align-items: center; gap: 10px; padding: 8px 12px; cursor: pointer;
+      border-bottom: 1px solid var(--border); transition: background var(--transition);
+    }
+    .result-row:last-child { border-bottom: none; }
+    .result-row:hover, .result-row.kbd { background: var(--bg-card-hover); }
+    .item-icon { width: 32px; height: 32px; border-radius: 5px; background: var(--bg-surface); flex-shrink: 0; object-fit: contain; }
+    .result-name { font-size: 0.9rem; flex: 1; }
+    .result-cat { font-size: 0.72rem; color: var(--text-muted); }
+    .tag {
+      font-size: 0.68rem; padding: 1px 7px; border-radius: 4px; border: 1px solid transparent; white-space: nowrap;
+    }
+    .tag.untradable { color: var(--red); background: var(--red-dim); border-color: rgba(248,113,113,0.25); }
+    .tag.craftable  { color: var(--purple); background: var(--purple-dim); border-color: rgba(167,139,250,0.25); }
+    .tag.hq { color: var(--amber); background: rgba(251,191,36,0.12); border-color: rgba(251,191,36,0.25); }
+    .tag.nq { color: var(--text-dim); background: var(--bg-surface); border-color: var(--border); }
+    .tag.world { color: var(--blue); background: var(--blue-dim); border-color: rgba(79,195,247,0.25); }
+
+    /* item detail */
+    .item-detail:empty { display: none; }
+    .detail-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+    .detail-head .item-icon { width: 44px; height: 44px; }
+    .detail-title { font-size: 1.15rem; font-weight: 600; }
+    .detail-sub { font-size: 0.76rem; color: var(--text-muted); }
+    .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 10px; margin-bottom: 16px; }
+    .stat {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px;
+    }
+    .stat .label { font-size: 0.72rem; color: var(--text-muted); }
+    .stat .value { font-size: 1.05rem; font-weight: 600; color: var(--gold-light); margin-top: 2px; }
+    .stat .value small { font-size: 0.72rem; color: var(--text-dim); font-weight: 400; }
+
+    table.listings { width: 100%; border-collapse: collapse; font-size: 0.84rem; margin-top: 6px; }
+    table.listings th, table.listings td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--border); }
+    table.listings th { color: var(--text-muted); font-weight: 600; font-size: 0.74rem; }
+    table.listings td.num, table.listings th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    table.listings tr:hover td { background: var(--bg-card-hover); }
+
+    .section-title { font-size: 0.8rem; color: var(--text-dim); font-weight: 600; margin: 16px 0 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .toggle-row { display: flex; gap: 6px; align-items: center; }
+    .seg { display: inline-flex; border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+    .seg button { background: var(--bg-surface); border: none; color: var(--text-dim); padding: 5px 12px; font-size: 0.78rem; cursor: pointer; font-family: inherit; }
+    .seg button.active { background: var(--gold-dim); color: var(--gold); }
+
+    .qty-add { display: flex; align-items: center; gap: 8px; margin-top: 16px; }
+    .qty-add input { width: 72px; }
+
+    /* craft list */
+    .empty-state { text-align: center; color: var(--text-muted); padding: 48px 16px; font-size: 0.9rem; }
+
+    /* craft 子工具列（水晶 / HQ 選項）*/
+    .craft-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 16px; margin-bottom: 14px; }
+    .switch { display: inline-flex; align-items: center; gap: 8px; font-size: 0.82rem; color: var(--text-dim); cursor: pointer; user-select: none; }
+    .switch input { display: none; }
+    .switch .track { width: 38px; height: 20px; border-radius: 20px; background: var(--bg-surface); border: 1px solid var(--border); position: relative; transition: all var(--transition); flex-shrink: 0; }
+    .switch .track::after { content: ''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: var(--text-muted); transition: all var(--transition); }
+    .switch input:checked + .track { background: var(--gold-dim); border-color: rgba(200,169,110,0.5); }
+    .switch input:checked + .track::after { left: 20px; background: var(--gold); }
+
+    /* per-item panel */
+    .craft-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 14px; }
+    .stepper { display: inline-flex; align-items: center; border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+    .stepper button { background: var(--bg-surface); border: none; color: var(--text-dim); width: 24px; height: 26px; cursor: pointer; font-size: 0.95rem; }
+    .stepper button:hover { color: var(--text); background: var(--bg-card-hover); }
+    .stepper input { width: 42px; text-align: center; border: none; border-left: 1px solid var(--border); border-right: 1px solid var(--border); border-radius: 0; padding: 4px 0; font-size: 0.85rem; }
+
+    /* ── 製作價格樹（節點圖 / org-chart）── */
+    .tree-scroll { overflow-x: auto; padding: 16px 10px 18px; }
+    .tree { display: inline-block; min-width: 100%; }
+    .tree ul { display: flex; justify-content: center; padding-top: 18px; position: relative; margin: 0; }
+    .tree li { list-style: none; position: relative; padding: 18px 6px 0; display: flex; flex-direction: column; align-items: center; }
+    .tree li::before, .tree li::after { content: ''; position: absolute; top: 0; right: 50%; border-top: 2px solid var(--line, var(--border)); width: 50%; height: 18px; }
+    .tree li::after { right: auto; left: 50%; border-left: 2px solid var(--line, var(--border)); }
+    .tree li:only-child::before, .tree li:only-child::after { display: none; }
+    .tree > ul > li { padding-top: 0; }
+    .tree > ul > li::before, .tree > ul > li::after { display: none; }
+    .tree li:first-child::before, .tree li:last-child::after { border: 0 none; }
+    .tree li:last-child::before { border-right: 2px solid var(--line, var(--border)); border-radius: 0 6px 0 0; }
+    .tree li:first-child::after { border-radius: 6px 0 0 0; }
+    .tree ul.children::before { content: ''; position: absolute; top: 0; left: 50%; border-left: 2px solid var(--line, var(--border)); width: 0; height: 18px; }
+    .tree ul.children.green, .tree ul.children.green > li { --line: var(--green); }
+
+    /* node card */
+    .node-card { position: relative; width: 132px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 8px 8px; text-align: center; cursor: pointer; transition: all var(--transition); }
+    .node-card:hover { border-color: var(--gold); background: var(--bg-card-hover); transform: translateY(-1px); box-shadow: var(--shadow-card); }
+    .node-card.root { width: 156px; border-color: rgba(200,169,110,0.6); background: var(--gold-dim); }
+    .node-card.prod { border-color: rgba(74,222,128,0.45); }
+    .node-card.mat  { border-color: var(--border); }
+    .node-qty { position: absolute; top: -9px; left: -9px; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 20px; background: var(--purple); color: #fff; font-size: 0.72rem; font-weight: 700; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 4px rgba(0,0,0,.4); }
+    .node-copy, .node-del { position: absolute; top: 4px; background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.78rem; padding: 2px; line-height: 1; }
+    .node-copy { right: 4px; }
+    .node-copy:hover { color: var(--gold); }
+    .node-del { right: 22px; font-size: 0.8rem; }
+    .node-del:hover { color: var(--red); }
+    .node-card .ic { width: 40px; height: 40px; border-radius: 5px; background: var(--bg-card); object-fit: contain; margin: 4px auto 4px; display: block; }
+    .node-card .nm { font-size: 0.78rem; line-height: 1.25; max-height: 2.5em; overflow: hidden; }
+    .node-card .pr { font-size: 0.88rem; font-weight: 600; color: var(--gold-light); font-variant-numeric: tabular-nums; margin-top: 3px; }
+    .node-card .pr.none { color: var(--text-muted); font-weight: 400; font-size: 0.76rem; }
+    .node-card .hqb { display: inline-block; font-size: 0.6rem; font-weight: 700; color: var(--amber); background: rgba(251,191,36,0.15); border: 1px solid rgba(251,191,36,0.3); border-radius: 3px; padding: 0 3px; margin-right: 3px; vertical-align: 1px; }
+    .node-card .wd { font-size: 0.66rem; color: var(--blue); margin-top: 1px; }
+    .node-root-controls { display: flex; align-items: center; justify-content: center; margin-top: 6px; }
+
+    /* comparison badge */
+    .cmp-badge { margin: 14px auto 0; font-size: 0.72rem; line-height: 1.4; border-radius: 6px; padding: 5px 9px; text-align: center; max-width: 210px; }
+    .cmp-badge .l2 { font-weight: 700; margin-top: 1px; }
+    .cmp-craft { background: var(--green-dim); border: 1px solid rgba(74,222,128,0.3); }
+    .cmp-craft .l2 { color: var(--green); }
+    .cmp-buy { background: var(--red-dim); border: 1px solid rgba(248,113,113,0.3); }
+    .cmp-buy .l2 { color: var(--red); }
+    .cmp-na { background: var(--bg-surface); border: 1px solid var(--border); }
+    .cmp-na .l2 { color: var(--amber); }
+    .root-badge { margin: 0 auto; font-size: 0.76rem; background: var(--green-dim); border: 1px solid rgba(74,222,128,0.3); border-radius: 6px; padding: 6px 12px; text-align: center; max-width: 300px; }
+    .root-badge.cmp-na { background: var(--bg-surface); border-color: var(--border); }
+    .root-badge .big { font-weight: 700; color: var(--green); margin-top: 1px; }
+    .root-badge.cmp-na .big { color: var(--amber); }
+
+    /* legend */
+    .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 0.72rem; color: var(--text-muted); padding: 12px 16px; border-top: 1px solid var(--border); align-items: center; }
+    .legend .sw { display: inline-block; width: 11px; height: 11px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; border: 1px solid; }
+    .sw-root { border-color: rgba(200,169,110,0.6); background: var(--gold-dim); }
+    .sw-prod { border-color: rgba(74,222,128,0.6); background: var(--green-dim); }
+    .sw-mat  { border-color: var(--border); background: var(--bg-surface); }
+    .sw-line { width: 16px; height: 0; border: 0; border-top: 2px solid var(--green); border-radius: 0; margin-right: 5px; vertical-align: 3px; }
+
+    /* node detail modal */
+    .modal-mask { position: fixed; inset: 0; background: rgba(0,0,0,0.62); display: none; align-items: flex-start; justify-content: center; z-index: 50; padding: 40px 16px; overflow-y: auto; }
+    .modal-mask.open { display: flex; }
+    .modal { background: var(--bg-card); border: 1px solid var(--border-hover); border-radius: var(--radius); max-width: 560px; width: 100%; padding: 18px; box-shadow: 0 12px 48px rgba(0,0,0,.5); }
+    .modal-head { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+    .modal-head .ic { width: 40px; height: 40px; border-radius: 5px; background: var(--bg-surface); }
+    .modal-head .t { font-size: 1.05rem; font-weight: 600; flex: 1; }
+    .modal-close { background: none; border: none; color: var(--text-dim); font-size: 1.3rem; cursor: pointer; line-height: 1; }
+    .modal-close:hover { color: var(--red); }
+    .nav-list { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 6px; }
+    .nav-chip { display: inline-flex; align-items: center; gap: 5px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 20px; padding: 4px 10px 4px 4px; font-size: 0.78rem; cursor: pointer; transition: all var(--transition); }
+    .nav-chip:hover { border-color: var(--gold); color: var(--gold-light); }
+    .nav-chip img { width: 20px; height: 20px; border-radius: 50%; background: var(--bg-card); }
+
+    /* summary */
+    .summary-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin: 18px 0; }
+    .summary-totals { display: grid; grid-template-columns: repeat(auto-fit,minmax(170px,1fr)); gap: 12px; margin-bottom: 14px; }
+    .summary-totals .stat .value.save { color: var(--green); }
+    .summary-totals .stat .value.bad  { color: var(--red); }
+
+    /* 最適採買路線（依伺服器） */
+    .route-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin-top: 8px; }
+    .route-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; }
+    .route-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+    .route-head .route-sub { font-size: 0.82rem; font-weight: 600; color: var(--gold-light); font-variant-numeric: tabular-nums; }
+    .route-line { display: flex; justify-content: space-between; gap: 10px; font-size: 0.78rem; color: var(--text-dim); padding: 2px 0; }
+    .route-line span:last-child { font-variant-numeric: tabular-nums; color: var(--text); }
+
+    .craft-actions, .list-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+
+    /* saved lists */
+    .saved-row {
+      display: flex; align-items: center; gap: 12px; background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 12px 14px; margin-bottom: 10px;
+    }
+    .saved-row .meta { flex: 1; }
+    .saved-row .nm { font-weight: 600; }
+    .saved-row .sub { font-size: 0.74rem; color: var(--text-muted); }
+
+    .note { font-size: 0.78rem; color: var(--text-muted); }
+    .loading { color: var(--text-dim); font-size: 0.85rem; padding: 10px 0; }
+    .error { color: var(--red); font-size: 0.85rem; padding: 10px 0; }
+
+    footer { border-top: 1px solid var(--border); margin-top: 40px; padding: 24px 0; text-align: center; }
+    footer .ft { font-size: 0.75rem; color: var(--text-muted); }
+    footer .ft a:hover { color: var(--gold); }
+
+    @media (max-width: 600px) {
+      .page-head h1 { font-size: 1.25rem; }
+      .update-time { margin-left: 0; width: 100%; }
+      .tab { padding: 9px 9px; font-size: 0.82rem; }
+    }
+  </style>
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <script src="../../assets/js/theme.js"></script>
+</head>
+<body>
+
+  <a href="../../" class="nav-back">⚓ 水神的工具箱</a>
+
+  <div class="container">
+    <header class="page-head">
+      <h1>📊 市場查價 + 比價</h1>
+      <p class="subtitle">繁中服「陸行鳥」DC 即時市場價格、跨服比價、製作清單原料樹狀圖與買／做成本試算</p>
+    </header>
+
+    <div class="toolbar">
+      <label>查價範圍
+        <select id="scopeSel"></select>
+      </label>
+      <button class="btn" id="refreshBtn" title="清除快取並重新查詢">↻ 重新整理</button>
+      <span class="update-time" id="updateTime"></span>
+    </div>
+
+    <nav class="tabs">
+      <button class="tab active" data-tab="search">🔍 單品查價</button>
+      <button class="tab" data-tab="craft">🧱 製作清單 <span class="pill" id="craftCount">0</span></button>
+      <button class="tab" data-tab="lists">📁 我的清單</button>
+    </nav>
+
+    <!-- 單品查價 -->
+    <section class="tab-panel active" id="tab-search">
+      <div class="search-wrap">
+        <div class="search-input-row">
+          <span class="icon">🔍</span>
+          <input type="search" id="searchInput" placeholder="輸入物品名稱（繁中）…" autocomplete="off">
+        </div>
+        <div class="search-results" id="searchResults"></div>
+      </div>
+      <div class="item-detail" id="itemDetail"></div>
+    </section>
+
+    <!-- 製作清單 -->
+    <section class="tab-panel" id="tab-craft">
+      <div id="craftBody"></div>
+    </section>
+
+    <!-- 我的清單 -->
+    <section class="tab-panel" id="tab-lists">
+      <div id="listsBody"></div>
+      <div class="list-actions">
+        <button class="btn" id="exportBtn">⬇ 匯出全部清單</button>
+        <button class="btn" id="importBtn">⬆ 匯入清單</button>
+        <input type="file" id="importFile" accept="application/json" hidden>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p class="ft">
+        <a href="../../">水神的工具箱</a> · 即時價格：<a href="https://universalis.app" target="_blank" rel="noopener">Universalis</a>
+        · 物品/配方：<a href="https://xivapi.com" target="_blank" rel="noopener">XIVAPI</a>、<a href="https://ffxivteamcraft.com" target="_blank" rel="noopener">Teamcraft</a>
+      </p>
+      <p class="ft" style="margin-top:4px">FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具</p>
+    </div>
+  </footer>
+
+  <div class="modal-mask" id="nodeModal"><div class="modal" id="nodeModalBody"></div></div>
+
+  <script src="../../assets/js/patch-gate.js"></script>
+  <script src="../../assets/js/universalis.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    var ICON_CDN = 'https://xivapi.com';
+    var LS_LISTS = 'sgt-market-lists';
+    var LS_SCOPE = 'sgt-market-scope';
+    var LS_DRAFT = 'sgt-market-draft';
+    var LS_OPTS = 'sgt-market-opts';
+    var MAX_RESULTS = 40;
+    var MAX_DEPTH = 12;
+
+    // ---- 狀態 ----
+    var items = [];
+    var itemById = new Map();
+    var recipesByItem = null;          // itemId -> 配方（延後載入）
+    var usedInByItem = null;           // ingredientId -> Set<成品 itemId>（反查「向上」用途）
+    var gamePatch = '7.15';
+    var scope = 'dc';
+    var craft = [];                    // [{itemId, qty}]
+    var lists = [];                    // 具名清單
+    var priceMap = new Map();          // itemId -> { nq, nqWorld, hq, hqWorld } 依目前 scope
+    var lastUpload = 0;
+    var excludeCrystals = true;        // 省略水晶（不列入樹與成本），預設開
+    var hqProduct = true;              // 可製作成品以 HQ 市價比較，預設開
+
+    // ---- 工具 ----
+    var $ = function (s, r) { return (r || document).querySelector(s); };
+    var fmt = function (n) { return Universalis.fmtGil(n); };
+    function iconUrl(it) { return it && it.icon ? ICON_CDN + it.icon : ''; }
+    function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]; }); }
+    function debounce(fn, ms) { var t; return function () { var a = arguments, c = this; clearTimeout(t); t = setTimeout(function () { fn.apply(c, a); }, ms); }; }
+    function relTime(ms) {
+      if (!ms) return '';
+      var d = Date.now() - ms, m = Math.round(d / 60000);
+      if (m < 1) return '剛剛';
+      if (m < 60) return m + ' 分鐘前';
+      var h = Math.round(m / 60); if (h < 24) return h + ' 小時前';
+      return Math.round(h / 24) + ' 天前';
+    }
+    function scopeLabel() { return scope === 'dc' ? '全DC（陸行鳥）' : Universalis.worldName(Number(scope)); }
+    function isDcMode() { return scope === 'dc'; }
+
+    // ---- localStorage ----
+    function loadState() {
+      try { scope = localStorage.getItem(LS_SCOPE) || 'dc'; } catch (e) {}
+      try { lists = JSON.parse(localStorage.getItem(LS_LISTS) || '[]'); } catch (e) { lists = []; }
+      try { craft = JSON.parse(localStorage.getItem(LS_DRAFT) || '[]'); } catch (e) { craft = []; }
+      try { var o = JSON.parse(localStorage.getItem(LS_OPTS) || '{}'); if (o && typeof o === 'object') { if (o.excludeCrystals != null) excludeCrystals = !!o.excludeCrystals; if (o.hqProduct != null) hqProduct = !!o.hqProduct; } } catch (e) {}
+      if (!Array.isArray(lists)) lists = [];
+      if (!Array.isArray(craft)) craft = [];
+    }
+    function saveLists() { try { localStorage.setItem(LS_LISTS, JSON.stringify(lists)); } catch (e) {} }
+    function saveDraft() { try { localStorage.setItem(LS_DRAFT, JSON.stringify(craft)); } catch (e) {} }
+    function saveScope() { try { localStorage.setItem(LS_SCOPE, scope); } catch (e) {} }
+    function saveOpts() { try { localStorage.setItem(LS_OPTS, JSON.stringify({ excludeCrystals: excludeCrystals, hqProduct: hqProduct })); } catch (e) {} }
+
+    function isCrystal(id) { var it = itemById.get(id); return !!(it && it.category === '水晶'); }
+    function getQty(id) { var c = craft.find(function (x) { return x.itemId === id; }); return c ? c.qty : 1; }
+    function copyName(name) { try { navigator.clipboard.writeText(name); } catch (e) {} }
+
+    // ---- 配方索引（延後載入）----
+    async function ensureRecipes() {
+      if (recipesByItem) return recipesByItem;
+      var res = await fetch('../../data/recipes.json');
+      var db = await res.json();
+      recipesByItem = new Map();
+      usedInByItem = new Map();
+      var score = function (r) { return (r.expert ? 1e6 : 0) + (r.rlvl || 0); };
+      for (var i = 0; i < db.data.length; i++) {
+        var r = db.data[i];
+        var cur = recipesByItem.get(r.itemId);
+        if (!cur || score(r) < score(cur)) recipesByItem.set(r.itemId, r);
+        for (var j = 0; j < r.ingredients.length; j++) {
+          var gid = r.ingredients[j].itemId;
+          var s = usedInByItem.get(gid);
+          if (!s) { s = new Set(); usedInByItem.set(gid, s); }
+          s.add(r.itemId);
+        }
+      }
+      return recipesByItem;
+    }
+
+    // ===================== 搜尋 =====================
+    function renderResults(q) {
+      var box = $('#searchResults');
+      q = (q || '').trim();
+      if (!q) { box.innerHTML = ''; return; }
+      var out = [], starts = [], contains = [];
+      for (var i = 0; i < items.length; i++) {
+        var it = items[i];
+        if (!it.name || !PatchGate.released(it.patch, gamePatch)) continue;
+        var idx = it.name.indexOf(q);
+        if (idx === 0) starts.push(it);
+        else if (idx > 0) contains.push(it);
+        if (starts.length >= MAX_RESULTS) break;
+      }
+      out = starts.concat(contains).slice(0, MAX_RESULTS);
+      if (!out.length) { box.innerHTML = '<div class="result-row note">查無符合「' + esc(q) + '」的物品</div>'; return; }
+      box.innerHTML = out.map(function (it) {
+        var tags = '';
+        if (!it.marketable) tags += '<span class="tag untradable">不可交易</span>';
+        return '<div class="result-row" data-id="' + it.id + '">' +
+          '<img class="item-icon" src="' + iconUrl(it) + '" alt="" loading="lazy" onerror="this.style.visibility=\'hidden\'">' +
+          '<span class="result-name">' + esc(it.name) + '</span>' +
+          '<span class="result-cat">' + esc(it.category || '') + '</span>' + tags +
+          '</div>';
+      }).join('');
+    }
+
+    // ===================== 單品明細 =====================
+    var detailHq = false; // 明細表 HQ/NQ 篩選
+    var currentDetailId = null;
+
+    async function showDetail(id) {
+      currentDetailId = id;
+      var it = itemById.get(id);
+      if (!it) return;
+      var box = $('#itemDetail');
+      box.innerHTML =
+        '<div class="detail-head">' +
+        '<img class="item-icon" src="' + iconUrl(it) + '" alt="" onerror="this.style.visibility=\'hidden\'">' +
+        '<div><div class="detail-title">' + esc(it.name) + '</div>' +
+        '<div class="detail-sub">' + esc(it.category || '') + ' · 物品 #' + it.id + ' · 查價範圍：' + esc(scopeLabel()) + '</div></div></div>';
+
+      if (!it.marketable) {
+        box.innerHTML += '<div class="error">此物品無法在市場交易（不可上架）。</div>' + qtyAddHtml(id);
+        bindQtyAdd(box, id);
+        return;
+      }
+      box.innerHTML += '<div class="loading" id="detailLoading">查詢市場資料中…</div>';
+
+      var agg = await Universalis.fetchAggregated(scope, [id]);
+      var lst = await Universalis.fetchListings(scope, [id], { listings: 20 });
+      if (currentDetailId !== id) return; // 期間切換了物品
+      if (!agg && !lst) {
+        box.innerHTML = box.innerHTML.replace(/<div class="loading"[^>]*>[^<]*<\/div>/, '') +
+          '<div class="error">暫時無法連線 Universalis，請稍後再試或按重新整理。</div>' + qtyAddHtml(id);
+        bindQtyAdd(box, id);
+        return;
+      }
+
+      var aggItem = agg && agg.items ? agg.items[id] : null;
+      var lstItem = lst && lst.items ? lst.items[id] : null;
+      lastUpload = (lst && lst.lastUploadTime) || lastUpload;
+      renderUpdateTime();
+
+      var html = '';
+      // 摘要
+      html += '<div class="stat-grid">';
+      html += statCheapest(aggItem, false);
+      html += statCheapest(aggItem, true);
+      html += statAvg(aggItem);
+      html += statVelocity(aggItem);
+      html += '</div>';
+
+      // 明細表
+      html += '<div class="section-title toggle-row">在架明細' +
+        '<span class="seg" id="hqSeg" style="margin-left:auto">' +
+        '<button data-hq="0" class="' + (detailHq ? '' : 'active') + '">NQ</button>' +
+        '<button data-hq="1" class="' + (detailHq ? 'active' : '') + '">HQ</button></span></div>';
+      html += listingsTable(lstItem);
+
+      box.innerHTML = box.innerHTML.replace(/<div class="loading"[^>]*>[^<]*<\/div>/, '') + html + qtyAddHtml(id);
+
+      var seg = $('#hqSeg', box);
+      if (seg) seg.querySelectorAll('button').forEach(function (b) {
+        b.addEventListener('click', function () { detailHq = b.getAttribute('data-hq') === '1'; showDetail(id); });
+      });
+      bindQtyAdd(box, id);
+    }
+
+    function statCheapest(aggItem, hq) {
+      var q = aggItem && aggItem[hq ? 'hq' : 'nq'];
+      var ml = q && q.minListing && (q.minListing.dc || q.minListing.world);
+      var label = (hq ? 'HQ' : 'NQ') + ' 最低價';
+      if (!ml) return stat(label, '—', '無在架');
+      var where = ml.worldId ? Universalis.worldName(ml.worldId) : scopeLabel();
+      return stat(label, fmt(ml.price) + ' <small>G</small>', isDcMode() ? '@ ' + esc(where) : esc(scopeLabel()));
+    }
+    function statAvg(aggItem) {
+      var q = aggItem && aggItem.nq && aggItem.nq.averageSalePrice;
+      var p = q && (q.dc || q.world);
+      return stat('近期成交均價', p ? fmt(p.price) + ' <small>G</small>' : '—', 'NQ');
+    }
+    function statVelocity(aggItem) {
+      var q = aggItem && aggItem.nq && aggItem.nq.dailySaleVelocity;
+      var p = q && (q.dc || q.world);
+      return stat('每日銷量', p ? (Math.round(p.quantity * 10) / 10) + ' <small>件/日</small>' : '—', 'NQ');
+    }
+    function stat(label, value, sub) {
+      return '<div class="stat"><div class="label">' + label + '</div><div class="value">' + value + '</div>' +
+        (sub ? '<div class="label" style="margin-top:2px">' + sub + '</div>' : '') + '</div>';
+    }
+
+    function listingsTable(lstItem) {
+      var rows = (lstItem && lstItem.listings) ? lstItem.listings.filter(function (l) { return detailHq ? l.hq : !l.hq; }) : [];
+      if (!rows.length) return '<div class="note">目前沒有 ' + (detailHq ? 'HQ' : 'NQ') + ' 在架商品。</div>';
+      rows.sort(function (a, b) { return a.pricePerUnit - b.pricePerUnit; });
+      var head = '<table class="listings"><thead><tr>' +
+        (isDcMode() ? '<th>伺服器</th>' : '') +
+        '<th class="num">單價</th><th class="num">數量</th><th class="num">總價</th><th>雇員</th></tr></thead><tbody>';
+      var body = rows.slice(0, 15).map(function (l) {
+        return '<tr>' +
+          (isDcMode() ? '<td><span class="tag world">' + esc(l.worldName || '') + '</span></td>' : '') +
+          '<td class="num">' + fmt(l.pricePerUnit) + '</td>' +
+          '<td class="num">' + l.quantity + '</td>' +
+          '<td class="num">' + fmt(l.total) + '</td>' +
+          '<td>' + esc(l.retainerName || '') + '</td></tr>';
+      }).join('');
+      return head + body + '</tbody></table>';
+    }
+
+    function qtyAddHtml(id) {
+      return '<div class="qty-add"><span class="note">加入製作清單：</span>' +
+        '<input type="number" id="addQty" min="1" value="1">' +
+        '<button class="btn primary" id="addBtn">＋ 加入</button></div>';
+    }
+    function bindQtyAdd(box, id) {
+      var btn = $('#addBtn', box);
+      if (!btn) return;
+      btn.addEventListener('click', function () {
+        var q = Math.max(1, parseInt($('#addQty', box).value, 10) || 1);
+        addToCraft(id, q);
+        btn.textContent = '✓ 已加入';
+        setTimeout(function () { btn.textContent = '＋ 加入'; }, 1200);
+      });
+    }
+
+    // ===================== 製作清單 =====================
+    function addToCraft(id, qty) {
+      var ex = craft.find(function (c) { return c.itemId === id; });
+      if (ex) ex.qty += qty; else craft.push({ itemId: id, qty: qty });
+      saveDraft(); updateCraftCount(); renderCraft();
+    }
+    function removeFromCraft(id) {
+      craft = craft.filter(function (c) { return c.itemId !== id; });
+      saveDraft(); updateCraftCount(); renderCraft();
+    }
+    function setQty(id, qty) {
+      var ex = craft.find(function (c) { return c.itemId === id; });
+      if (ex) { ex.qty = Math.max(1, qty); saveDraft(); renderCraft(); }
+    }
+    function updateCraftCount() { $('#craftCount').textContent = craft.length; }
+
+    // 收集樹中所有會用到的物品 id（含全展開的可製作中間物；省略水晶時跳過）
+    function collectIds(id, set, depth) {
+      if (excludeCrystals && isCrystal(id)) return;
+      set.add(id);
+      if (depth >= MAX_DEPTH) return;
+      var r = recipesByItem.get(id);
+      if (!r) return;
+      for (var i = 0; i < r.ingredients.length; i++) collectIds(r.ingredients[i].itemId, set, depth + 1);
+    }
+
+    // 該節點「購買」單價：可製作成品優先用 HQ（hqProduct 開時），原料用 NQ。無資料回 null。
+    function unitBuy(id) {
+      var p = priceMap.get(id);
+      if (!p) return null;
+      if (recipesByItem.has(id) && hqProduct && p.hq != null) return p.hq;
+      return p.nq;
+    }
+    function usedHq(id) {
+      var p = priceMap.get(id);
+      return !!(p && recipesByItem.has(id) && hqProduct && p.hq != null);
+    }
+    function buyWorld(id) {
+      var p = priceMap.get(id); if (!p) return null;
+      return usedHq(id) ? p.hqWorld : p.nqWorld;
+    }
+
+    // 買 vs 做最佳化（省略水晶時材料不計入樹與成本）
+    function optimal(id, qty, seen, depth) {
+      var it = itemById.get(id);
+      var unit = unitBuy(id);
+      var buy = (it && it.marketable && unit != null) ? unit * qty : Infinity;
+      var r = recipesByItem.get(id);
+      if (!r || (seen && seen.has(id)) || depth >= MAX_DEPTH) {
+        return { id: id, qty: qty, leaf: true, mode: buy === Infinity ? 'na' : 'buy', buy: buy, craft: Infinity, cost: buy, children: [], marketable: !!(it && it.marketable) };
+      }
+      var s2 = new Set(seen); s2.add(id);
+      var batches = Math.ceil(qty / (r.yield || 1));
+      var ings = r.ingredients.filter(function (g) { return !(excludeCrystals && isCrystal(g.itemId)); });
+      var children = ings.map(function (ing) { return optimal(ing.itemId, batches * ing.qty, s2, depth + 1); });
+      var canCraft = children.every(function (c) { return c.cost !== Infinity; });
+      var craftCost = canCraft ? children.reduce(function (a, c) { return a + c.cost; }, 0) : Infinity;
+      var mode, cost;
+      if (buy === Infinity && craftCost === Infinity) { mode = 'na'; cost = Infinity; }
+      else if (buy <= craftCost) { mode = 'buy'; cost = buy; }
+      else { mode = 'craft'; cost = craftCost; }
+      return { id: id, qty: qty, leaf: false, mode: mode, buy: buy, craft: craftCost, cost: cost, yield: r.yield, children: children, marketable: !!(it && it.marketable) };
+    }
+
+    // ── 節點圖渲染 ──
+    function nodeCardHtml(n, isRoot) {
+      var it = itemById.get(n.id);
+      var nm = it ? it.name : ('#' + n.id);
+      var craftable = recipesByItem.has(n.id);
+      var cls = isRoot ? 'root' : (craftable ? 'prod' : 'mat');
+      var unit = unitBuy(n.id), hq = usedHq(n.id), world = buyWorld(n.id);
+      var pr = unit == null
+        ? '<div class="pr none">無販售</div>'
+        : ('<div class="pr">' + (hq ? '<span class="hqb">HQ</span>' : '') + fmt(unit) + '</div>' + (isDcMode() && world ? '<div class="wd">' + esc(world) + '</div>' : ''));
+      var qtyBadge = isRoot ? '' : '<span class="node-qty">' + n.qty + '</span>';
+      var del = isRoot ? '<button class="node-del" data-act="del" data-id="' + n.id + '" title="從清單移除">✕</button>' : '';
+      var ctrl = isRoot
+        ? ('<div class="node-root-controls"><span class="stepper"><button data-act="dec" data-id="' + n.id + '">−</button>' +
+           '<input type="number" min="1" value="' + n.qty + '" data-act="qty" data-id="' + n.id + '"><button data-act="inc" data-id="' + n.id + '">＋</button></span></div>')
+        : '';
+      return '<div class="node-card ' + cls + '" data-node="' + n.id + '" title="點擊查看詳情與上下游配方">' +
+        qtyBadge + del +
+        '<button class="node-copy" data-copy="' + esc(nm) + '" title="複製名稱">⧉</button>' +
+        '<img class="ic" src="' + iconUrl(it) + '" alt="" loading="lazy" onerror="this.style.visibility=\'hidden\'">' +
+        '<div class="nm" title="' + esc(nm) + '">' + esc(nm) + '</div>' + pr + ctrl +
+        '</div>';
+    }
+
+    function cmpBadgeHtml(n) {
+      var prodLabel = (n.qty > 1 ? n.qty + '個成品' : '成品');
+      if (n.buy === Infinity && n.craft === Infinity) return '<div class="cmp-badge cmp-na"><div class="l2">無法取得</div></div>';
+      if (n.buy === Infinity) return '<div class="cmp-badge cmp-na"><div class="l1">成品無販售</div><div class="l2">採自製 ' + fmt(n.craft) + '</div></div>';
+      if (n.craft === Infinity) return '<div class="cmp-badge cmp-buy"><div class="l1">材料缺市價</div><div class="l2">🛒 直購 ' + fmt(n.buy) + '</div></div>';
+      if (n.mode === 'craft') return '<div class="cmp-badge cmp-craft"><div class="l1">材料 ' + fmt(n.craft) + '　vs　' + prodLabel + ' ' + fmt(n.buy) + '</div><div class="l2">✓ 自製省 ' + fmt(n.buy - n.craft) + '</div></div>';
+      return '<div class="cmp-badge cmp-buy"><div class="l1">材料 ' + fmt(n.craft) + '　vs　' + prodLabel + ' ' + fmt(n.buy) + '</div><div class="l2">🛒 直購省 ' + fmt(n.craft - n.buy) + '</div></div>';
+    }
+
+    function rootBadgeHtml(n) {
+      if (n.cost === Infinity) return '<div class="root-badge cmp-na"><div class="l1">以最優路線計算</div><div class="big">部分材料無市價</div></div>';
+      var label = n.mode === 'craft' ? '自製最佳' : '直接購買最便宜';
+      return '<div class="root-badge"><div class="l1">以最優路線計算（每項材料取買／製的較低價）</div><div class="big">✓ ' + label + '：' + fmt(n.cost) + ' G</div></div>';
+    }
+
+    function treeLi(n, isRoot) {
+      var html = nodeCardHtml(n, isRoot);
+      if (n.children && n.children.length) {
+        var badge = isRoot ? rootBadgeHtml(n) : cmpBadgeHtml(n);
+        var green = (n.mode === 'craft') ? ' green' : '';
+        html += badge + '<ul class="children' + green + '">' + n.children.map(function (c) { return treeLi(c, false); }).join('') + '</ul>';
+      }
+      return '<li>' + html + '</li>';
+    }
+
+    function craftToolsHtml() {
+      return '<div class="craft-tools">' +
+        '<label class="switch"><input type="checkbox" id="optCrystal"' + (excludeCrystals ? ' checked' : '') + '><span class="track"></span>省略水晶</label>' +
+        '<label class="switch"><input type="checkbox" id="optHq"' + (hqProduct ? ' checked' : '') + '><span class="track"></span>成品用 HQ 價</label>' +
+        '<span class="note">查價範圍：' + esc(scopeLabel()) + '（於頁首切換）</span>' +
+        '</div>';
+    }
+
+    function legendHtml() {
+      return '<div class="legend">' +
+        '<span><span class="sw sw-root"></span>最終成品</span>' +
+        '<span><span class="sw sw-prod"></span>可製作中間物</span>' +
+        '<span><span class="sw sw-mat"></span>基礎素材</span>' +
+        '<span><span class="sw-line"></span>綠線＝該層自製較省</span>' +
+        '<span>價格＝NQ最低　HQ＝HQ最低　⧉＝複製名稱　·　點節點看詳情/配方</span>' +
+        '</div>';
+    }
+
+    // 彙總採買清單（mode=buy 的節點）
+    function collectShopping(n, acc) {
+      if (n.mode === 'buy') { acc.set(n.id, (acc.get(n.id) || 0) + n.qty); return; }
+      if (n.mode === 'na') return;
+      (n.children || []).forEach(function (c) { collectShopping(c, acc); });
+    }
+
+    async function renderCraft() {
+      var body = $('#craftBody');
+      var tools = craftToolsHtml();
+      if (!craft.length) {
+        body.innerHTML = tools + '<div class="empty-state">製作清單是空的。<br>到「單品查價」搜尋物品，按「＋ 加入」即可開始試算製作成本。</div>';
+        return;
+      }
+      body.innerHTML = tools + '<div class="loading">展開配方並查詢材料價格中…</div>';
+      await ensureRecipes();
+
+      // 收集所有材料 id → 一次批次查價
+      var idset = new Set();
+      craft.forEach(function (c) { collectIds(c.itemId, idset, 0); });
+      var ids = Array.from(idset);
+      var lst = await Universalis.fetchListings(scope, ids, { listings: 8 });
+      priceMap = new Map();
+      if (lst && lst.items) {
+        lastUpload = lst.lastUploadTime || lastUpload;
+        ids.forEach(function (id) {
+          var d = lst.items[id];
+          var nq = Universalis.minPrice(d, false), hq = Universalis.minPrice(d, true);
+          priceMap.set(id, { nq: nq ? nq.pricePerUnit : null, nqWorld: nq ? nq.worldName : null, hq: hq ? hq.pricePerUnit : null, hqWorld: hq ? hq.worldName : null });
+        });
+      }
+      renderUpdateTime();
+
+      // 計算每個頂層項目的樹 + 總計
+      var trees = craft.map(function (c) { return optimal(c.itemId, c.qty, new Set(), 0); });
+      var grandOptimal = trees.reduce(function (a, t) { return a + (t.cost === Infinity ? 0 : t.cost); }, 0);
+      var anyNa = trees.some(function (t) { return t.cost === Infinity; });
+      var allNa = trees.every(function (t) { return t.cost === Infinity; });
+
+      // 全買成品的成本（供比較）
+      var buyAll = 0, buyAllOk = true;
+      craft.forEach(function (c) {
+        var it = itemById.get(c.itemId), u = unitBuy(c.itemId);
+        if (it && it.marketable && u != null) buyAll += u * c.qty; else buyAllOk = false;
+      });
+
+      var html = '';
+      for (var i = 0; i < craft.length; i++) {
+        html += '<div class="craft-item"><div class="tree-scroll"><div class="tree"><ul>' +
+          treeLi(trees[i], true) + '</ul></div></div>' + legendHtml() + '</div>';
+      }
+
+      // 採買彙總
+      var acc = new Map();
+      trees.forEach(function (t) { collectShopping(t, acc); });
+      var shopRows = Array.from(acc.entries()).map(function (e) {
+        var it = itemById.get(e[0]), u = unitBuy(e[0]);
+        var sub = (u != null) ? u * e[1] : null;
+        return { name: it ? it.name : '#' + e[0], icon: iconUrl(it), qty: e[1], unit: u, sub: sub, id: e[0], world: buyWorld(e[0]), hq: usedHq(e[0]) };
+      }).sort(function (a, b) { return (b.sub || 0) - (a.sub || 0); });
+
+      var dc = isDcMode();
+      var shopHtml = shopRows.length ? ('<table class="listings"><thead><tr><th>原料</th><th class="num">數量</th>' + (dc ? '<th>最便宜伺服器</th>' : '') + '<th class="num">單價</th><th class="num">小計</th></tr></thead><tbody>' +
+        shopRows.map(function (r) {
+          return '<tr><td><img class="item-icon" style="width:20px;height:20px;vertical-align:middle;margin-right:6px" src="' + r.icon + '" onerror="this.style.visibility=\'hidden\'">' + esc(r.name) + '</td>' +
+            '<td class="num">' + r.qty + '</td>' +
+            (dc ? '<td>' + (r.world ? '<span class="tag world">' + esc(r.world) + '</span>' : '—') + (r.hq ? ' <span class="hqb">HQ</span>' : '') + '</td>' : '') +
+            '<td class="num">' + (r.unit != null ? fmt(r.unit) : '—') + '</td>' +
+            '<td class="num">' + (r.sub != null ? fmt(r.sub) : '—') + '</td></tr>';
+        }).join('') + '</tbody></table>') : '<div class="note">沒有需要採買的原料。</div>';
+
+      // 最適採買路線：把每項材料依「最便宜的伺服器」分組（僅全DC 模式有意義，
+      // 因為每個材料／子材料可能在不同伺服器最便宜）
+      var routeHtml = '';
+      if (dc && shopRows.length) {
+        var byWorld = new Map();
+        shopRows.forEach(function (r) {
+          var w = r.world || '（查無市價）';
+          if (!byWorld.has(w)) byWorld.set(w, { items: [], sub: 0 });
+          var g = byWorld.get(w); g.items.push(r); if (r.sub != null) g.sub += r.sub;
+        });
+        var worlds = Array.from(byWorld.entries()).sort(function (a, b) { return b[1].sub - a[1].sub; });
+        routeHtml = '<div class="section-title">最適採買路線（依伺服器 · 共 ' + worlds.length + ' 個伺服器）</div>' +
+          '<div class="route-grid">' + worlds.map(function (e) {
+            return '<div class="route-card"><div class="route-head"><span class="tag world">' + esc(e[0]) + '</span><span class="route-sub">' + fmt(e[1].sub) + ' G</span></div>' +
+              e[1].items.map(function (r) {
+                return '<div class="route-line"><span>' + esc(r.name) + ' ×' + r.qty + (r.hq ? ' <span class="hqb">HQ</span>' : '') + '</span><span>' + (r.sub != null ? fmt(r.sub) : '—') + '</span></div>';
+              }).join('') + '</div>';
+          }).join('') + '</div>';
+      }
+
+      var saving = (buyAllOk && grandOptimal > 0) ? buyAll - grandOptimal : null;
+
+      var summary = '<div class="summary-card">' +
+        '<div class="summary-totals">' +
+        stat('智慧製作總成本', allNa ? '—' : ((anyNa ? '<span style="color:var(--amber)">' : '') + fmt(grandOptimal) + ' <small>G</small>' + (anyNa ? '</span>' : '')), allNa ? '此範圍查無市場資料' : (anyNa ? '部分材料無市場資料' : '買／做自動取最省')) +
+        stat('全部直接買成品', buyAllOk ? fmt(buyAll) + ' <small>G</small>' : '—', buyAllOk ? '不自製' : '部分成品查無市價') +
+        '<div class="stat"><div class="label">自製可省</div><div class="value ' + (saving != null && saving > 0 ? 'save' : (saving != null && saving < 0 ? 'bad' : '')) + '">' +
+        (saving == null ? '—' : (saving > 0 ? fmt(saving) + ' G' : (saving < 0 ? '反而貴 ' + fmt(-saving) + ' G' : '持平'))) + '</div></div>' +
+        '</div>' +
+        '<div class="section-title">總採買清單</div>' + shopHtml + routeHtml +
+        '</div>';
+
+      var actions = '<div class="craft-actions">' +
+        '<button class="btn primary" data-act="saveAs">💾 另存為清單</button>' +
+        '<button class="btn danger" data-act="clear">清空清單</button>' +
+        '</div>';
+
+      body.innerHTML = tools + html + summary + actions;
+    }
+
+    // ===================== 節點詳情 / 上下游配方 =====================
+    var nmCurrentId = null;
+    async function openNodeDetail(id) {
+      await ensureRecipes();
+      var it = itemById.get(id);
+      if (!it) return;
+      nmCurrentId = id;
+      var mask = $('#nodeModal'), body = $('#nodeModalBody');
+      mask.classList.add('open');
+      body.innerHTML =
+        '<div class="modal-head">' +
+        '<img class="ic" src="' + iconUrl(it) + '" alt="" onerror="this.style.visibility=\'hidden\'">' +
+        '<div class="t">' + esc(it.name) + '</div>' +
+        '<button class="modal-close" data-nm="close" title="關閉">✕</button></div>' +
+        '<div class="detail-sub" style="margin-bottom:10px">' + esc(it.category || '') + ' · 物品 #' + it.id + ' · 查價範圍：' + esc(scopeLabel()) + (isCrystal(id) ? ' · 水晶' : '') + '</div>' +
+        '<div id="nmMarket">' + (it.marketable ? '<div class="loading">查詢市場資料中…</div>' : '<div class="note">此物品無法在市場交易。</div>') + '</div>' +
+        nmRecipeSection(id) +
+        '<div class="qty-add"><span class="note">加入製作清單：</span><input type="number" id="nmQty" min="1" value="1"><button class="btn primary" data-nm="add" data-id="' + id + '">＋ 加入</button></div>';
+
+      if (it.marketable) {
+        var agg = await Universalis.fetchAggregated(scope, [id]);
+        var lst = await Universalis.fetchListings(scope, [id], { listings: 12 });
+        if (nmCurrentId !== id) return;
+        var aggItem = agg && agg.items ? agg.items[id] : null;
+        var lstItem = lst && lst.items ? lst.items[id] : null;
+        if (lst && lst.lastUploadTime) { lastUpload = lst.lastUploadTime; renderUpdateTime(); }
+        var mk = $('#nmMarket');
+        if (mk) {
+          if (!agg && !lst) mk.innerHTML = '<div class="error">暫時無法連線 Universalis。</div>';
+          else mk.innerHTML = '<div class="stat-grid">' + statCheapest(aggItem, false) + statCheapest(aggItem, true) + statAvg(aggItem) + statVelocity(aggItem) + '</div>' + listingsTable(lstItem);
+        }
+      }
+    }
+
+    // 是否顯示某物品（有繁中名且台服已開放；無名者＝台服未開放，依站規隱藏）
+    function visibleItem(id) {
+      var it = itemById.get(id);
+      return !!(it && it.name && PatchGate.released(it.patch, gamePatch));
+    }
+    function nmRecipeSection(id) {
+      // 水晶為基礎素材、又被上千配方使用，列出上下游無意義
+      if (isCrystal(id)) return '<div class="note" style="margin-top:8px">水晶為基礎素材，不列出上下游配方。</div>';
+
+      var html = '';
+      var r = recipesByItem.get(id);
+      html += '<div class="section-title">製作材料（向下）</div>';
+      var ings = r ? r.ingredients.filter(function (g) { return visibleItem(g.itemId); }) : [];
+      if (ings.length) html += '<div class="nav-list">' + ings.map(function (g) {
+        return navChipHtml(g.itemId, itemById.get(g.itemId).name + ' ×' + g.qty);
+      }).join('') + '</div>';
+      else html += '<div class="note">基礎素材，無製作配方。</div>';
+
+      html += '<div class="section-title">用於製作（向上）</div>';
+      var ups = usedInByItem.get(id);
+      var arr = ups ? Array.from(ups).filter(visibleItem) : [];
+      if (arr.length) {
+        html += '<div class="nav-list">' + arr.slice(0, 50).map(function (pid) {
+          return navChipHtml(pid, itemById.get(pid).name);
+        }).join('') + '</div>' + (arr.length > 50 ? '<div class="note">… 另有 ' + (arr.length - 50) + ' 項</div>' : '');
+      } else html += '<div class="note">無已知用途。</div>';
+      return html;
+    }
+    function navChipHtml(id, label) {
+      var it = itemById.get(id);
+      return '<span class="nav-chip" data-nm="nav" data-id="' + id + '"><img src="' + iconUrl(it) + '" alt="" onerror="this.style.display=\'none\'">' + esc(label) + '</span>';
+    }
+    function closeNodeModal() { nmCurrentId = null; $('#nodeModal').classList.remove('open'); }
+    // 關閉節點視窗＝退回上一筆歷史，讓瀏覽器上/下頁與工具內導覽一致
+    function backOrClose() { if (applied.node != null) history.back(); else closeNodeModal(); }
+
+    // ===================== 我的清單 =====================
+    function saveAsList() {
+      if (!craft.length) return;
+      var name = prompt('清單名稱：', '製作清單 ' + (lists.length + 1));
+      if (name == null) return;
+      name = name.trim() || ('製作清單 ' + (lists.length + 1));
+      var now = Date.now();
+      lists.push({ id: 'L' + now + Math.floor(Math.random() * 1000), name: name, createdAt: now, updatedAt: now, items: craft.map(function (c) { return { itemId: c.itemId, qty: c.qty }; }) });
+      saveLists(); renderLists();
+      alert('已儲存清單「' + name + '」');
+    }
+    function loadList(id) {
+      var l = lists.find(function (x) { return x.id === id; });
+      if (!l) return;
+      craft = l.items.map(function (c) { return { itemId: c.itemId, qty: c.qty }; });
+      saveDraft(); updateCraftCount(); switchTab('craft'); renderCraft();
+    }
+    function renameList(id) {
+      var l = lists.find(function (x) { return x.id === id; });
+      if (!l) return;
+      var n = prompt('新名稱：', l.name);
+      if (n == null) return;
+      l.name = n.trim() || l.name; l.updatedAt = Date.now(); saveLists(); renderLists();
+    }
+    function deleteList(id) {
+      var l = lists.find(function (x) { return x.id === id; });
+      if (!l) return;
+      if (!confirm('刪除清單「' + l.name + '」？')) return;
+      lists = lists.filter(function (x) { return x.id !== id; }); saveLists(); renderLists();
+    }
+    function renderLists() {
+      var body = $('#listsBody');
+      if (!lists.length) { body.innerHTML = '<div class="empty-state">還沒有儲存任何清單。<br>在「製作清單」分頁按「💾 另存為清單」即可建立。</div>'; return; }
+      body.innerHTML = lists.slice().sort(function (a, b) { return b.updatedAt - a.updatedAt; }).map(function (l) {
+        var names = l.items.map(function (c) { var it = itemById.get(c.itemId); return (it ? it.name : '#' + c.itemId) + '×' + c.qty; }).slice(0, 4).join('、');
+        if (l.items.length > 4) names += ' …';
+        return '<div class="saved-row">' +
+          '<div class="meta"><div class="nm">' + esc(l.name) + '</div>' +
+          '<div class="sub">' + l.items.length + ' 項 · 更新於 ' + new Date(l.updatedAt).toLocaleDateString('zh-TW') + '<br>' + esc(names) + '</div></div>' +
+          '<button class="btn primary" data-act="load" data-id="' + l.id + '">載入</button>' +
+          '<button class="btn" data-act="rename" data-id="' + l.id + '">改名</button>' +
+          '<button class="btn danger" data-act="del" data-id="' + l.id + '">刪除</button>' +
+          '</div>';
+      }).join('');
+      body.querySelectorAll('[data-act]').forEach(function (el) {
+        var act = el.getAttribute('data-act'), id = el.getAttribute('data-id');
+        el.addEventListener('click', function () {
+          if (act === 'load') loadList(id); else if (act === 'rename') renameList(id); else if (act === 'del') deleteList(id);
+        });
+      });
+    }
+
+    function exportLists() {
+      var blob = new Blob([JSON.stringify({ schema: 'sgt-market-lists', exported: new Date().toISOString(), lists: lists }, null, 2)], { type: 'application/json' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob); a.download = 'market-lists.json'; a.click();
+      setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+    }
+    function importLists(file) {
+      var fr = new FileReader();
+      fr.onload = function () {
+        try {
+          var obj = JSON.parse(fr.result);
+          var incoming = Array.isArray(obj) ? obj : (obj.lists || []);
+          if (!Array.isArray(incoming) || !incoming.length) { alert('檔案內沒有清單資料。'); return; }
+          var ok = 0;
+          incoming.forEach(function (l) {
+            if (l && Array.isArray(l.items)) {
+              lists.push({ id: 'L' + Date.now() + Math.floor(Math.random() * 100000), name: (l.name || '匯入清單'), createdAt: l.createdAt || Date.now(), updatedAt: Date.now(), items: l.items.filter(function (c) { return c && c.itemId; }).map(function (c) { return { itemId: Number(c.itemId), qty: Math.max(1, Number(c.qty) || 1) }; }) });
+              ok++;
+            }
+          });
+          saveLists(); renderLists();
+          alert('已匯入 ' + ok + ' 份清單。');
+        } catch (e) { alert('匯入失敗：檔案格式錯誤。'); }
+      };
+      fr.readAsText(file);
+    }
+
+    // ===================== 分頁 / 瀏覽歷史（上一頁/下一頁）=====================
+    // 用 History API 讓瀏覽器上一頁/下一頁可在「分頁 → 物品詳情 → 節點視窗」之間
+    // 逐步前進後退，而不是一按上一頁就離開整個工具回首頁。
+    // 狀態 nav = { tab, detail(單品查價選中的物品), node(節點視窗開啟的物品) }。
+    var applied = { tab: 'search', detail: null, node: null };
+
+    function setTab(name) {
+      document.querySelectorAll('.tab').forEach(function (t) { t.classList.toggle('active', t.getAttribute('data-tab') === name); });
+      document.querySelectorAll('.tab-panel').forEach(function (p) { p.classList.toggle('active', p.id === 'tab-' + name); });
+      if (name === 'craft') renderCraft();
+      if (name === 'lists') renderLists();
+    }
+
+    // 套用某個歷史狀態到畫面（不再寫入歷史）
+    function applyNav(s) {
+      s = s || { tab: 'search', detail: null, node: null };
+      if (s.tab !== applied.tab) setTab(s.tab);
+      if (s.tab === 'search' && s.detail !== applied.detail) {
+        if (s.detail != null) showDetail(s.detail);
+        else { $('#itemDetail').innerHTML = ''; currentDetailId = null; }
+      }
+      if (s.node !== applied.node) {
+        if (s.node != null) openNodeDetail(s.node);
+        else { nmCurrentId = null; $('#nodeModal').classList.remove('open'); }
+      }
+      applied = { tab: s.tab, detail: s.detail != null ? s.detail : null, node: s.node != null ? s.node : null };
+    }
+
+    function urlFor(s) {
+      if (s.node != null) return '#node=' + s.node;
+      if (s.tab === 'search' && s.detail != null) return '#item=' + s.detail;
+      return '#' + s.tab;
+    }
+
+    // 使用者操作 → 寫入一筆歷史並套用（上一頁即可回到先前狀態）
+    function navTo(partial) {
+      var s = {
+        tab: 'tab' in partial ? partial.tab : applied.tab,
+        detail: 'detail' in partial ? partial.detail : applied.detail,
+        node: 'node' in partial ? partial.node : applied.node
+      };
+      try { history.pushState(s, '', urlFor(s)); } catch (e) {}
+      applyNav(s);
+    }
+    function switchTab(name) { navTo({ tab: name, node: null }); }
+    function renderUpdateTime() {
+      $('#updateTime').textContent = lastUpload ? ('資料更新：' + relTime(lastUpload)) : '';
+    }
+    function buildScopeSelect() {
+      var sel = $('#scopeSel');
+      var opts = '<option value="dc">全DC（陸行鳥 8 服比價）</option><optgroup label="單一伺服器">';
+      Object.keys(Universalis.WORLDS).forEach(function (id) { opts += '<option value="' + id + '">' + Universalis.WORLDS[id] + '</option>'; });
+      opts += '</optgroup>';
+      sel.innerHTML = opts;
+      sel.value = scope;
+      sel.addEventListener('change', function () {
+        scope = sel.value; saveScope();
+        priceMap = new Map(); lastUpload = 0; renderUpdateTime();
+        if (currentDetailId && $('#tab-search').classList.contains('active')) showDetail(currentDetailId);
+        if ($('#tab-craft').classList.contains('active')) renderCraft();
+        if ($('#nodeModal').classList.contains('open') && nmCurrentId) openNodeDetail(nmCurrentId);
+      });
+    }
+
+    // ===================== 初始化 =====================
+    async function init() {
+      loadState();
+      buildScopeSelect();
+      updateCraftCount();
+
+      // 分頁切換
+      document.querySelectorAll('.tab').forEach(function (t) {
+        t.addEventListener('click', function () { switchTab(t.getAttribute('data-tab')); });
+      });
+
+      // 瀏覽歷史：初始狀態 + 上一頁/下一頁
+      try { history.replaceState({ tab: 'search', detail: null, node: null }, '', location.pathname + location.search); } catch (e) {}
+      window.addEventListener('popstate', function (e) { applyNav(e.state || { tab: 'search', detail: null, node: null }); });
+
+      // 搜尋
+      var input = $('#searchInput');
+      input.addEventListener('input', debounce(function () { renderResults(input.value); }, 180));
+      $('#searchResults').addEventListener('click', function (e) {
+        var row = e.target.closest('.result-row[data-id]');
+        if (!row) return;
+        var id = Number(row.getAttribute('data-id'));
+        $('#searchResults').innerHTML = ''; input.value = itemById.get(id).name;
+        navTo({ tab: 'search', detail: id, node: null });
+      });
+
+      // 重新整理
+      $('#refreshBtn').addEventListener('click', function () {
+        Universalis.clearCache(); priceMap = new Map();
+        if (currentDetailId && $('#tab-search').classList.contains('active')) showDetail(currentDetailId);
+        if ($('#tab-craft').classList.contains('active')) renderCraft();
+        if ($('#nodeModal').classList.contains('open') && nmCurrentId) openNodeDetail(nmCurrentId);
+      });
+
+      // 匯出 / 匯入
+      $('#exportBtn').addEventListener('click', exportLists);
+      $('#importBtn').addEventListener('click', function () { $('#importFile').click(); });
+      $('#importFile').addEventListener('change', function (e) { if (e.target.files[0]) importLists(e.target.files[0]); e.target.value = ''; });
+
+      // 製作清單：事件委派（點節點 / 數量 / 複製 / 動作 / 選項切換）
+      var cb = $('#craftBody');
+      cb.addEventListener('click', function (e) {
+        var copy = e.target.closest('.node-copy');
+        if (copy) { copyName(copy.getAttribute('data-copy')); var o = copy.textContent; copy.textContent = '✓'; setTimeout(function () { copy.textContent = o; }, 900); return; }
+        var act = e.target.closest('[data-act]');
+        if (act) {
+          var a = act.getAttribute('data-act'), id = Number(act.getAttribute('data-id'));
+          if (a === 'inc') setQty(id, getQty(id) + 1);
+          else if (a === 'dec') setQty(id, getQty(id) - 1);
+          else if (a === 'del') removeFromCraft(id);
+          else if (a === 'saveAs') saveAsList();
+          else if (a === 'clear') { if (confirm('確定清空目前的製作清單？（已儲存的清單不受影響）')) { craft = []; saveDraft(); updateCraftCount(); renderCraft(); } }
+          return;
+        }
+        var card = e.target.closest('.node-card');
+        if (card) navTo({ node: Number(card.getAttribute('data-node')) });
+      });
+      cb.addEventListener('change', function (e) {
+        if (e.target.matches('input[data-act="qty"]')) { setQty(Number(e.target.getAttribute('data-id')), parseInt(e.target.value, 10) || 1); }
+        else if (e.target.id === 'optCrystal') { excludeCrystals = e.target.checked; saveOpts(); renderCraft(); }
+        else if (e.target.id === 'optHq') { hqProduct = e.target.checked; saveOpts(); renderCraft(); }
+      });
+
+      // 節點詳情 modal：委派（關閉 / 上下游導覽 / 加入清單）
+      $('#nodeModalBody').addEventListener('click', function (e) {
+        var t = e.target.closest('[data-nm]');
+        if (!t) return;
+        var k = t.getAttribute('data-nm');
+        if (k === 'close') backOrClose();
+        else if (k === 'nav') navTo({ node: Number(t.getAttribute('data-id')) });
+        else if (k === 'add') {
+          var q = Math.max(1, parseInt($('#nmQty').value, 10) || 1);
+          addToCraft(Number(t.getAttribute('data-id')), q);
+          t.textContent = '✓ 已加入'; setTimeout(function () { t.textContent = '＋ 加入'; }, 1200);
+        }
+      });
+      $('#nodeModal').addEventListener('click', function (e) { if (e.target === this) backOrClose(); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && $('#nodeModal').classList.contains('open')) backOrClose(); });
+
+      // 載入資料
+      try {
+        gamePatch = await PatchGate.loadGamePatch('../../data/_meta.json');
+        var res = await fetch('../../data/items.json');
+        var db = await res.json();
+        items = db.data;
+        itemById = new Map(items.map(function (it) { return [it.id, it]; }));
+      } catch (e) {
+        $('#itemDetail').innerHTML = '<div class="error">物品資料載入失敗，請重新整理頁面。</div>';
+      }
+    }
+
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+    else init();
+  })();
+  </script>
+</body>
+</html>
