@@ -199,6 +199,10 @@
     .node-card { position: relative; width: 132px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 8px 8px; text-align: center; cursor: pointer; transition: all var(--transition); }
     .node-card:hover { border-color: var(--gold); background: var(--bg-card-hover); transform: translateY(-1px); box-shadow: var(--shadow-card); }
     .node-card.root { width: 156px; border-color: rgba(200,169,110,0.6); background: var(--gold-dim); }
+    .node-card.grand-root { width: 200px; cursor: default; border-color: rgba(200,169,110,0.7); background: var(--gold-dim); padding: 12px 10px; }
+    .node-card.grand-root .nm { font-size: 0.86rem; font-weight: 600; color: var(--gold-light); max-height: none; }
+    .node-card.grand-root .pr { font-size: 1.05rem; color: var(--gold-light); }
+    .node-card.grand-root .wd { color: var(--text-dim); }
     .node-card.prod { border-color: rgba(74,222,128,0.45); }
     .node-card.mat  { border-color: var(--border); }
     .node-qty { position: absolute; top: -9px; left: -9px; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 20px; background: var(--purple); color: #fff; font-size: 0.72rem; font-weight: 700; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 4px rgba(0,0,0,.4); }
@@ -371,6 +375,7 @@
     var LS_CVIEW = 'sgt-market-craftview';
     var MAX_RESULTS = 40;
     var MAX_DEPTH = 12;
+    var MAX_CRAFT_ITEMS = 10;          // 製作清單至多 10 件，避免合併樹狀圖過大
 
     // ---- 狀態 ----
     var items = [];
@@ -595,7 +600,14 @@
     // ===================== 製作清單 =====================
     function addToCraft(id, qty) {
       var ex = craft.find(function (c) { return c.itemId === id; });
-      if (ex) ex.qty += qty; else craft.push({ itemId: id, qty: qty });
+      if (ex) { ex.qty += qty; }
+      else {
+        if (craft.length >= MAX_CRAFT_ITEMS) {
+          alert('製作清單最多 ' + MAX_CRAFT_ITEMS + ' 件物品（避免樹狀圖過大）。\n請先移除部分項目，或另存後清空再加入。');
+          return;
+        }
+        craft.push({ itemId: id, qty: qty });
+      }
       saveDraft(); updateCraftCount(); renderCraft();
     }
     function removeFromCraft(id) {
@@ -713,13 +725,42 @@
         '</span></div>';
     }
     // mode='tree' 才顯示「省略水晶」（簡易模式只看成品、不展開材料）
-    function craftToolsHtml(mode) {
-      var crystal = (mode === 'tree')
-        ? '<label class="switch"><input type="checkbox" id="optCrystal"' + (excludeCrystals ? ' checked' : '') + '><span class="track"></span>省略水晶</label>'
-        : '';
-      return '<div class="craft-tools">' + crystal +
+    function craftToolsHtml() {
+      return '<div class="craft-tools">' +
+        '<label class="switch"><input type="checkbox" id="optCrystal"' + (excludeCrystals ? ' checked' : '') + '><span class="track"></span>省略水晶</label>' +
         '<label class="switch"><input type="checkbox" id="optHq"' + (hqProduct ? ' checked' : '') + '><span class="track"></span>成品用 HQ 價</label>' +
-        '<span class="note">查價範圍：' + esc(scopeLabel()) + '（於頁首切換）</span>' +
+        '<span class="note">查價範圍：' + esc(scopeLabel()) + '（於頁首切換）· 清單上限 ' + MAX_CRAFT_ITEMS + ' 件</span>' +
+        '</div>';
+    }
+
+    // 共用：載入配方 + 批次查所有材料價 + 建 priceMap，回傳各需求物品的最省樹（simple/tree 共用）
+    async function prepareCraftData() {
+      await ensureRecipes();
+      var idset = new Set();
+      craft.forEach(function (c) { collectIds(c.itemId, idset, 0); });
+      var ids = Array.from(idset);
+      var lst = await Universalis.fetchListings(scope, ids, { listings: 8 });
+      priceMap = new Map();
+      if (lst && lst.items) {
+        lastUpload = lst.lastUploadTime || lastUpload;
+        ids.forEach(function (id) {
+          var d = lst.items[id];
+          var nq = Universalis.minPrice(d, false), hq = Universalis.minPrice(d, true);
+          priceMap.set(id, { nq: nq ? nq.pricePerUnit : null, nqWorld: nq ? nq.worldName : null, hq: hq ? hq.pricePerUnit : null, hqWorld: hq ? hq.worldName : null });
+        });
+      }
+      renderUpdateTime();
+      return craft.map(function (c) { return optimal(c.itemId, c.qty, new Set(), 0); });
+    }
+
+    // 合併樹的虛擬總根卡（顯示整份清單的智慧最省總成本）
+    function grandRootCardHtml(grandOptimal, buyAll, anyNa, allNa, buyAllOk) {
+      var saving = (buyAllOk && !allNa) ? buyAll - grandOptimal : null;
+      var savingTxt = saving == null ? '' : (saving > 0 ? '　自製省 ' + fmt(saving) + ' G' : (saving < 0 ? '　直購省 ' + fmt(-saving) + ' G' : '　買做持平'));
+      return '<div class="node-card grand-root">' +
+        '<div class="nm">📋 製作清單（' + craft.length + ' 項）</div>' +
+        '<div class="pr">' + (allNa ? '—' : fmt(grandOptimal)) + '</div>' +
+        '<div class="wd">智慧最省總成本' + (anyNa ? '（部分無市價）' : '') + esc(savingTxt) + '</div>' +
         '</div>';
     }
 
@@ -753,28 +794,10 @@
 
     // 樹狀分析：統整所有需求物品 → 買/做最省樹狀圖 + 總採買清單 + 最適採買路線
     async function renderCraftTree(body, sub) {
-      var tools = sub + craftToolsHtml('tree');
+      var tools = sub + craftToolsHtml();
       body.innerHTML = tools + '<div class="loading">展開配方並查詢材料價格中…</div>';
-      await ensureRecipes();
 
-      // 收集所有材料 id → 一次批次查價
-      var idset = new Set();
-      craft.forEach(function (c) { collectIds(c.itemId, idset, 0); });
-      var ids = Array.from(idset);
-      var lst = await Universalis.fetchListings(scope, ids, { listings: 8 });
-      priceMap = new Map();
-      if (lst && lst.items) {
-        lastUpload = lst.lastUploadTime || lastUpload;
-        ids.forEach(function (id) {
-          var d = lst.items[id];
-          var nq = Universalis.minPrice(d, false), hq = Universalis.minPrice(d, true);
-          priceMap.set(id, { nq: nq ? nq.pricePerUnit : null, nqWorld: nq ? nq.worldName : null, hq: hq ? hq.pricePerUnit : null, hqWorld: hq ? hq.worldName : null });
-        });
-      }
-      renderUpdateTime();
-
-      // 計算每個頂層項目的樹 + 總計
-      var trees = craft.map(function (c) { return optimal(c.itemId, c.qty, new Set(), 0); });
+      var trees = await prepareCraftData();
       var grandOptimal = trees.reduce(function (a, t) { return a + (t.cost === Infinity ? 0 : t.cost); }, 0);
       var anyNa = trees.some(function (t) { return t.cost === Infinity; });
       var allNa = trees.every(function (t) { return t.cost === Infinity; });
@@ -786,11 +809,11 @@
         if (it && it.marketable && u != null) buyAll += u * c.qty; else buyAllOk = false;
       });
 
-      var html = '';
-      for (var i = 0; i < craft.length; i++) {
-        html += '<div class="craft-item"><div class="tree-scroll"><div class="tree"><ul>' +
-          treeLi(trees[i], true) + '</ul></div></div>' + legendHtml() + '</div>';
-      }
+      // 合併成單一樹：虛擬總根「製作清單」→ 各需求物品（可調數量）→ 材料
+      var childrenLis = trees.map(function (t) { return treeLi(t, true); }).join('');
+      var html = '<div class="craft-item"><div class="tree-scroll"><div class="tree"><ul><li>' +
+        grandRootCardHtml(grandOptimal, buyAll, anyNa, allNa, buyAllOk) +
+        '<ul class="children">' + childrenLis + '</ul></li></ul></div></div>' + legendHtml() + '</div>';
 
       // 採買彙總
       var acc = new Map();
@@ -851,59 +874,56 @@
       body.innerHTML = tools + html + summary + actions;
     }
 
-    // 簡易清單：逐項成品直接顯示市價 + 最便宜伺服器（不展開配方樹）
+    // 簡易清單：逐項自動判斷「直購 vs 自製」較省（智慧購買），扁平顯示最省價 + 去哪買
     async function renderCraftSimple(body, sub) {
-      var tools = sub + craftToolsHtml('simple');
-      body.innerHTML = tools + '<div class="loading">查詢成品市價中…</div>';
+      var tools = sub + craftToolsHtml();
+      body.innerHTML = tools + '<div class="loading">計算最省買法中…</div>';
 
-      var ids = craft.map(function (c) { return c.itemId; });
-      var lst = await Universalis.fetchListings(scope, ids, { listings: 8 });
-      var pmap = new Map();
-      if (lst && lst.items) {
-        lastUpload = lst.lastUploadTime || lastUpload;
-        ids.forEach(function (id) {
-          var d = lst.items[id];
-          var nq = Universalis.minPrice(d, false), hq = Universalis.minPrice(d, true);
-          pmap.set(id, { nq: nq ? nq.pricePerUnit : null, nqWorld: nq ? nq.worldName : null, hq: hq ? hq.pricePerUnit : null, hqWorld: hq ? hq.worldName : null });
-        });
-      }
-      renderUpdateTime();
-
+      var trees = await prepareCraftData();
       var dc = isDcMode();
-      var rows = craft.map(function (c) {
-        var it = itemById.get(c.itemId), p = pmap.get(c.itemId) || {};
-        // 依「成品用 HQ 價」開關取價；若該選項下無 HQ 資料則退回 NQ，反之亦然
-        var useHq = hqProduct && p.hq != null;
-        var unit = useHq ? p.hq : (p.nq != null ? p.nq : p.hq);
-        var world = useHq ? p.hqWorld : (p.nq != null ? p.nqWorld : p.hqWorld);
-        var hqShown = useHq || (p.nq == null && p.hq != null);
-        return { id: c.itemId, name: it ? it.name : '#' + c.itemId, icon: iconUrl(it), qty: c.qty,
-                 unit: unit == null ? null : unit, world: world, hq: hqShown,
-                 sub: unit == null ? null : unit * c.qty, marketable: !!(it && it.marketable) };
+      var rows = trees.map(function (t, i) {
+        var c = craft[i], it = itemById.get(c.itemId);
+        return {
+          id: c.itemId, name: it ? it.name : '#' + c.itemId, icon: iconUrl(it), qty: c.qty,
+          mode: t.mode,
+          best: t.cost === Infinity ? null : t.cost,
+          buyCost: t.buy === Infinity ? null : t.buy,
+          world: buyWorld(c.itemId), hq: usedHq(c.itemId),
+          marketable: !!(it && it.marketable)
+        };
       });
-      var total = rows.reduce(function (a, r) { return a + (r.sub || 0); }, 0);
-      var allOk = rows.every(function (r) { return r.sub != null; });
+      var grandBest = rows.reduce(function (a, r) { return a + (r.best || 0); }, 0);
+      var buyAll = 0, buyAllOk = true;
+      rows.forEach(function (r) { if (r.buyCost != null) buyAll += r.buyCost; else buyAllOk = false; });
+      var anyNa = rows.some(function (r) { return r.best == null; });
+      var allNa = rows.every(function (r) { return r.best == null; });
+      var saving = (buyAllOk && !allNa) ? buyAll - grandBest : null;
 
-      var head = '<table class="listings"><thead><tr><th>物品</th><th class="num">數量</th>' +
-        (dc ? '<th>去哪買（最便宜）</th>' : '') +
-        '<th class="num">單價</th><th class="num">小計</th></tr></thead><tbody>';
+      var head = '<table class="listings"><thead><tr><th>物品</th><th class="num">數量</th><th>建議</th>' +
+        (dc ? '<th>去哪買</th>' : '') +
+        '<th class="num">最省成本</th></tr></thead><tbody>';
       var trs = rows.map(function (r) {
-        var where = !r.marketable
-          ? '<span class="tag untradable">不可交易</span>'
-          : (r.world ? '<span class="tag world">' + esc(r.world) + '</span>' + (r.hq ? ' <span class="hqb">HQ</span>' : '') : '—');
+        var advice = r.mode === 'buy' ? '<span class="tag world">🛒 直購</span>'
+          : r.mode === 'craft' ? '<span class="tag craftable">🔨 自製</span>'
+          : '<span class="tag nq">無市價</span>';
+        var where = r.mode === 'buy'
+          ? (r.world ? '<span class="tag world">' + esc(r.world) + '</span>' + (r.hq ? ' <span class="hqb">HQ</span>' : '') : (r.marketable ? '—' : '<span class="tag untradable">不可交易</span>'))
+          : r.mode === 'craft' ? '<span class="note">材料見樹狀</span>' : '—';
         return '<tr data-simple="' + r.id + '" title="點擊查看即時價格與在架明細">' +
           '<td><img class="item-icon" style="width:26px;height:26px;border-radius:5px;vertical-align:middle;margin-right:8px" src="' + r.icon + '" onerror="this.style.visibility=\'hidden\'">' + esc(r.name) + '</td>' +
           '<td class="num">' + r.qty + '</td>' +
+          '<td>' + advice + '</td>' +
           (dc ? '<td>' + where + '</td>' : '') +
-          '<td class="num">' + (r.unit != null ? fmt(r.unit) : '—') + '</td>' +
-          '<td class="num">' + (r.sub != null ? fmt(r.sub) : '—') + '</td></tr>';
+          '<td class="num">' + (r.best != null ? fmt(r.best) : '—') + '</td></tr>';
       }).join('');
       var table = head + trs + '</tbody></table>';
 
       var summary = '<div class="summary-card"><div class="summary-totals">' +
-        stat('直購總價', (allOk || total > 0) ? fmt(total) + ' <small>G</small>' : '—',
-             allOk ? '全部直接購買 · ' + esc(scopeLabel()) : '部分項目查無市價') +
-        '</div><div class="note">想知道哪些自製更省、以及跨服採買路線？切到「🌲 樹狀分析」。</div></div>';
+        stat('智慧最省總成本', allNa ? '—' : ((anyNa ? '<span style="color:var(--amber)">' : '') + fmt(grandBest) + ' <small>G</small>' + (anyNa ? '</span>' : '')), allNa ? '此範圍查無市場資料' : (anyNa ? '部分項目無市價' : '每項自動取買／做較省')) +
+        stat('全部直接買成品', buyAllOk ? fmt(buyAll) + ' <small>G</small>' : '—', buyAllOk ? '不自製' : '部分成品查無市價') +
+        '<div class="stat"><div class="label">自製可省</div><div class="value ' + (saving != null && saving > 0 ? 'save' : (saving != null && saving < 0 ? 'bad' : '')) + '">' +
+        (saving == null ? '—' : (saving > 0 ? fmt(saving) + ' G' : (saving < 0 ? '反而貴 ' + fmt(-saving) + ' G' : '持平'))) + '</div></div>' +
+        '</div><div class="note">想看完整配方展開、每項材料去哪買與跨服路線？切到「🌲 樹狀分析」。</div></div>';
 
       var actions = '<div class="craft-actions">' +
         '<button class="btn primary" data-act="saveAs">💾 另存為清單</button>' +
@@ -997,7 +1017,8 @@
     function loadList(id) {
       var l = lists.find(function (x) { return x.id === id; });
       if (!l) return;
-      craft = l.items.map(function (c) { return { itemId: c.itemId, qty: c.qty }; });
+      craft = l.items.slice(0, MAX_CRAFT_ITEMS).map(function (c) { return { itemId: c.itemId, qty: c.qty }; });
+      if (l.items.length > MAX_CRAFT_ITEMS) alert('此清單有 ' + l.items.length + ' 件，超過上限，已載入前 ' + MAX_CRAFT_ITEMS + ' 件。');
       saveDraft(); updateCraftCount(); switchTab('craft'); renderCraft();
     }
     function renameList(id) {
@@ -1051,7 +1072,7 @@
           var ok = 0;
           incoming.forEach(function (l) {
             if (l && Array.isArray(l.items)) {
-              lists.push({ id: 'L' + Date.now() + Math.floor(Math.random() * 100000), name: (l.name || '匯入清單'), createdAt: l.createdAt || Date.now(), updatedAt: Date.now(), items: l.items.filter(function (c) { return c && c.itemId; }).map(function (c) { return { itemId: Number(c.itemId), qty: Math.max(1, Number(c.qty) || 1) }; }) });
+              lists.push({ id: 'L' + Date.now() + Math.floor(Math.random() * 100000), name: (l.name || '匯入清單'), createdAt: l.createdAt || Date.now(), updatedAt: Date.now(), items: l.items.filter(function (c) { return c && c.itemId; }).slice(0, MAX_CRAFT_ITEMS).map(function (c) { return { itemId: Number(c.itemId), qty: Math.max(1, Number(c.qty) || 1) }; }) });
               ok++;
             }
           });
