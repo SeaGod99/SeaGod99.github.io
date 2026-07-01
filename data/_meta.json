@@ -222,6 +222,14 @@
       "source": "fish-tracker+items",
       "status": "populated",
       "updated": "2026-06-11"
+    },
+    {
+      "schema": "treasure-maps",
+      "file": "treasure-maps.json",
+      "name": "藏寶圖採集點",
+      "source": "teamcraft/treasures.json+items+maps",
+      "status": "populated",
+      "updated": "2026-07-01"
     }
   ]
 }

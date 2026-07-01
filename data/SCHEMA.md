@@ -632,6 +632,42 @@ ARR 2.x / HW 3.x / SB 4.x / ShB 5.x / EW 6.x / DT 7.x
 
 `tug`：咬鉤力道（輕/中/重）。`timeWindow`/`weather` 為限定魚條件（連動天氣演算法），無限定則設 `null`。
 
+### 2.17 treasure-maps（藏寶圖採集點）
+
+**以「藏寶圖等級」為單位**（一個等級對應多個挖寶座標），供藏寶圖工具查詢挖掘地點。
+`id` = 藏寶圖道具的物品 id（外連 items 主表）。
+
+```json
+{
+  "id": 17836,
+  "grade": "G10",
+  "series": "G",
+  "gradeNum": 10,
+  "name": "陳舊的地圖G10",
+  "icon": "/i/025000/025930.png",
+  "expansion": "紅蓮之狂潮",
+  "major": 4,
+  "locations": [
+    { "mapId": 354, "x": 12.1, "y": 18.8, "partySize": 8 }
+  ],
+  "aliases": [{ "grade": "S1", "id": 24794, "name": "陳舊的地圖S1" }]
+}
+```
+
+| 欄位 | 說明 |
+|------|------|
+| `id` | 藏寶圖道具 itemId（連 items 主表；名稱即台服「陳舊的地圖G#／S#」） |
+| `grade` / `series` / `gradeNum` | 等級碼（`G8`）／系列（`G` 常規、`S` 特殊）／等級數字（排序用） |
+| `name` | 台服官方道具名（已內嵌，工具無需另載 10MB 的 items.json） |
+| `icon` | 道具圖示路徑（XIVAPI，前端組網域） |
+| `expansion` / `major` | 資料片繁中名（由挖寶區域的 `maps.json` patch 推導）／主版本號 |
+| `locations` | 挖寶座標陣列：`mapId` 連 maps（= Map row id）、`x`/`y` 為遊戲地圖座標、`partySize`（1 單人／8 組隊寶物庫） |
+| `aliases` | 座標集完全相同的同內容別名圖（台服 S 系列多與某 G 系列等價，合併為 alias 避免介面重複；選填） |
+
+**資料來源**：Teamcraft `treasures.json`（挖寶座標／partySize）＋ items.json（台服名稱、圖示）＋ maps.json（地區名、資料片）。
+**建置**：`node scripts/build-treasure-maps.mjs`（沙箱擋外網時 `--local <treasures.json路徑>`）。
+**台服未開放規則**：名稱對不到 items.json（如國際服較新的圖）→ 整個等級不列出（見 2.5 同規則）。座標所在地圖若無 maps.json 對應則跳過該座標。
+
 ---
 
 ## 3. 前端載入慣例

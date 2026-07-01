@@ -14,6 +14,7 @@
 | **ffxivcollect** | `https://ffxivcollect.com/api/{mounts,minions,emotes,bardings,orchestrions}` | 收藏品的 `patch`（跨區版本號）、`item_id`、`sources`（type+text，**英文**） | **無 cards（幻卡）端點**；**無簡中 locale**（`?language=` 僅 en/de/fr/ja）。id 對齊：mounts/minions/emotes = 遊戲 row id；orchestrion 用 `item_id` 對 |
 | **Teamcraft patch 資料** | `raw.githubusercontent.com/ffxiv-teamcraft/ffxiv-teamcraft/staging/libs/data/src/lib/json/patch-content.json` 與 `patch-names.json` | `patch-content` = `{patchId:{contentType:[ids]}}`；`patch-names` = `{patchId:{version:"7.15",...}}` | contentType 含 `item / recipe(無，用 item) / enpcresident / bnpcname / instancecontent / fate / placename …`。反查 id→patchId→version |
 | **ffxiv.consolegameswiki.com** | `/wiki/Blue_Magic_Spellbook` | 青魔法習得來源（圖騰兌換條件、副本） | 人工查證，非 API |
+| **Teamcraft treasures** | `raw.githubusercontent.com/…/libs/data/src/lib/json/treasures.json` | 藏寶圖（陳舊的地圖）挖寶座標：`{ item, map(Map row id), coords{x,y}, partySize }` | 建 `treasure-maps.json`；名稱/圖示反查 items.json、地區/資料片反查 maps.json。腳本 [`scripts/build-treasure-maps.mjs`](../scripts/build-treasure-maps.mjs) |
 | **XIVAPI v2** | `https://v2.xivapi.com` | 物品/NPC/副本等 sheet（**row 不含 patch 欄**） | patch 一律走 Teamcraft，不靠 XIVAPI |
 | out_data/cfc-content.json | 本機 | ContentFinderCondition id → InstanceContent id | dungeons patch 橋接（dungeons.id 是 CFC，Teamcraft instancecontent 是 InstanceContent） |
 

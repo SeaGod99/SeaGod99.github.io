@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FFXIV 藏寶圖採集點查詢 — 陳舊的地圖 G1～G17 各等級的挖寶位置，地圖標點＋座標一覽，對照解讀後的藏寶圖找出挖掘地點">
+  <meta name="keywords" content="FFXIV, FF14, 藏寶圖, 陳舊的地圖, 挖寶, 尋寶, 採集點, 座標, G8, G17, 繁體中文">
+  <title>藏寶圖採集點查詢 | 水神的工具箱</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg-base:    #0a0c10;
+      --bg-surface: #0f1117;
+      --bg-card:    #14181f;
+      --bg-card-hover: #1a1f2b;
+      --border:     rgba(255,255,255,0.07);
+      --border-hover: rgba(200,169,110,0.4);
+      --gold:       #c8a96e;
+      --gold-light: #e2c98a;
+      --gold-dim:   rgba(200,169,110,0.15);
+      --blue:       #4fc3f7;
+      --blue-dim:   rgba(79,195,247,0.12);
+      --green:      #4ade80;
+      --green-dim:  rgba(74,222,128,0.12);
+      --purple:     #a78bfa;
+      --purple-dim: rgba(167,139,250,0.12);
+      --orange:     #fb923c;
+      --orange-dim: rgba(251,146,60,0.12);
+      --red:        #f87171;
+      --text-primary:   #e8eaf0;
+      --text-secondary: #8892a4;
+      --text-muted:     #717c91;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 0%, rgba(200,169,110,0.05) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(79,195,247,0.04) 0%, transparent 60%);
+      pointer-events: none; z-index: 0;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { max-width: 1180px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 1; }
+
+    .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-secondary); font-size:13px; margin:24px 0; transition:var(--transition);}
+    .back-link:hover { color: var(--gold); }
+
+    .tool-header { text-align:center; padding: 12px 0 20px; }
+    .tool-title { font-size: 26px; font-weight:700; color: var(--gold-light); }
+    .tool-subtitle { font-size: 14px; color: var(--text-secondary); margin-top:6px; }
+    .header-divider { width:60px; height:1px; background:linear-gradient(90deg,transparent,var(--gold),transparent); margin:16px auto 0;}
+
+    /* ── grade selector ── */
+    .grade-panel { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md); padding:16px 18px; margin-bottom:18px; }
+    .grade-panel-title { font-size:12px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
+    .exp-row { display:flex; align-items:flex-start; gap:12px; padding:7px 0; border-top:1px solid var(--border); flex-wrap:wrap; }
+    .exp-row:first-of-type { border-top:none; }
+    .exp-name { font-size:12.5px; color:var(--text-secondary); min-width:96px; padding-top:5px; }
+    .grade-chips { display:flex; gap:7px; flex-wrap:wrap; flex:1; }
+    .grade-chip {
+      background:var(--bg-surface); border:1px solid var(--border); border-radius:var(--radius-sm);
+      padding:6px 13px; font-size:13px; font-weight:600; color:var(--text-secondary);
+      cursor:pointer; transition:var(--transition); user-select:none; display:inline-flex; align-items:center; gap:5px;
+    }
+    .grade-chip:hover { border-color:var(--border-hover); color:var(--text-primary); }
+    .grade-chip.active { background:var(--gold-dim); border-color:rgba(200,169,110,0.5); color:var(--gold-light); }
+    .grade-chip .alias { font-size:11px; font-weight:500; opacity:0.7; }
+    .grade-chip .party { font-size:11px; }
+
+    /* ── summary bar ── */
+    .summary { display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:14px; }
+    .summary .g-icon { width:40px; height:40px; border-radius:var(--radius-sm); background:var(--bg-card); border:1px solid var(--border); }
+    .summary .g-main { font-size:18px; font-weight:700; color:var(--gold-light); }
+    .summary .g-sub { font-size:12.5px; color:var(--text-secondary); }
+    .badge { font-size:11px; padding:2px 9px; border-radius:20px; border:1px solid var(--border); color:var(--text-secondary); white-space:nowrap; }
+    .badge-exp { background:var(--purple-dim); color:var(--purple); border-color:rgba(167,139,250,0.25); }
+    .badge-party { background:var(--orange-dim); color:var(--orange); border-color:rgba(251,146,60,0.3); }
+    .badge-solo { background:var(--green-dim); color:var(--green); border-color:rgba(74,222,128,0.3); }
+
+    .search-box { flex:1; min-width:180px; position:relative; max-width:280px; margin-left:auto; }
+    .search-box input {
+      width:100%; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md);
+      padding:9px 12px 9px 34px; color:var(--text-primary); font-size:13px; outline:none; transition:var(--transition);
+    }
+    .search-box input:focus { border-color:var(--border-hover); }
+    .search-box .icon { position:absolute; left:11px; top:50%; transform:translateY(-50%); color:var(--text-muted); font-size:13px; }
+
+    /* ── zone cards ── */
+    .zone-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:16px; }
+    .zone-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md); overflow:hidden; }
+    .zone-head { display:flex; align-items:baseline; gap:8px; padding:12px 14px 10px; }
+    .zone-name { font-size:15px; font-weight:600; color:var(--text-primary); }
+    .zone-region { font-size:11.5px; color:var(--text-muted); }
+    .zone-count { margin-left:auto; font-size:11px; color:var(--text-secondary); }
+
+    .map-canvas {
+      position:relative; width:100%; aspect-ratio:1/1; background:var(--bg-surface);
+      border-top:1px solid var(--border); border-bottom:1px solid var(--border); overflow:hidden;
+    }
+    .map-canvas img { width:100%; height:100%; object-fit:cover; display:block; user-select:none; }
+    .map-empty { display:flex; align-items:center; justify-content:center; height:100%; color:var(--text-muted); font-size:12px; text-align:center; padding:16px; }
+    .map-dot {
+      position:absolute; min-width:20px; height:20px; padding:0 3px; border-radius:11px;
+      transform:translate(-50%,-50%); cursor:pointer;
+      background:var(--gold); color:#0a0c10; border:2px solid rgba(0,0,0,0.55);
+      box-shadow:0 0 0 1px rgba(255,255,255,0.3); transition:transform 0.1s, box-shadow 0.1s;
+      font-size:11px; font-weight:700; line-height:16px; text-align:center; font-variant-numeric:tabular-nums;
+    }
+    .map-dot:hover, .map-dot.sel { transform:translate(-50%,-50%) scale(1.35); z-index:5; box-shadow:0 0 0 2px var(--gold-light); }
+
+    .site-list { padding:8px 10px 12px; display:flex; flex-direction:column; gap:4px; }
+    .site-row {
+      display:flex; align-items:center; gap:9px; padding:5px 8px; border-radius:var(--radius-sm);
+      cursor:pointer; transition:var(--transition);
+    }
+    .site-row:hover, .site-row.sel { background:var(--bg-card-hover); }
+    .site-num {
+      width:20px; height:20px; flex:none; border-radius:50%; background:var(--gold-dim); color:var(--gold-light);
+      font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center;
+    }
+    .site-coord { font-size:13px; font-variant-numeric:tabular-nums; color:var(--blue); }
+    .copy-btn {
+      margin-left:auto; font-size:11px; padding:3px 9px; border-radius:var(--radius-sm);
+      border:1px solid var(--border); background:var(--bg-surface); color:var(--text-secondary);
+      cursor:pointer; transition:var(--transition);
+    }
+    .copy-btn:hover { border-color:var(--border-hover); color:var(--text-primary); }
+    .copy-btn.copied { color:var(--green); border-color:rgba(74,222,128,0.4); background:var(--green-dim); }
+
+    .info-note { font-size:11.5px; color:var(--text-muted); margin:28px 0 0; line-height:1.9; text-align:center; }
+    .info-note b { color:var(--text-secondary); }
+    .info-note code { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:11px; padding:1px 6px; border-radius:var(--radius-sm); background:var(--bg-card); border:1px solid var(--border); color:var(--blue); }
+
+    .site-footer { border-top:1px solid var(--border); padding:28px 0 36px; text-align:center; margin-top:40px; }
+    .footer-text { font-size:12px; color:var(--text-muted); line-height:2; }
+    .footer-text a { color:var(--text-secondary); }
+    .footer-text a:hover { color:var(--gold); }
+
+    @media (max-width:600px){
+      .zone-grid { grid-template-columns:1fr; }
+      .exp-name { min-width:auto; width:100%; padding-top:0; }
+      .search-box { margin-left:0; max-width:none; }
+    }
+  </style>
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <script src="../../assets/js/theme.js"></script>
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← 水神的工具箱</a>
+
+  <div class="tool-header">
+    <div class="tool-title">🗺️ 藏寶圖採集點查詢</div>
+    <p class="tool-subtitle">陳舊的地圖 G1～G17 各等級的挖寶位置，對照解讀後的藏寶圖找出挖掘地點</p>
+    <div class="header-divider"></div>
+  </div>
+
+  <!-- grade selector -->
+  <div class="grade-panel">
+    <div class="grade-panel-title">選擇藏寶圖等級</div>
+    <div id="gradeSelector"></div>
+  </div>
+
+  <!-- summary + search -->
+  <div class="summary" id="summary"></div>
+
+  <div class="zone-grid" id="zoneGrid"></div>
+
+  <p class="info-note">
+    在地圖上解讀（<b>使用</b>）藏寶圖後，會顯示一張挖寶地點的圖片；對照下方各地圖的標點與座標，前往挖掘。<br>
+    標示 <span class="badge badge-party">組隊寶物庫</span> 的等級，開啟寶箱後有機率出現傳送門（宇宙／樂園之門），建議 8 人同行。<br>
+    <b>🚩 標旗</b> 複製的是 <code>/coord X Y 地區</code> 指令：搭配 ChatCoordinates 類插件貼入聊天即自動於地圖標旗；一般環境（主機／未裝插件）貼上仍是可讀座標，遊戲原生無法由文字直接產生地圖旗標。<br>
+    座標與地點資料來源 Teamcraft；名稱為台服官方譯名，實際位置以遊戲內為準。
+  </p>
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <p class="footer-text">
+      水神的工具箱 &nbsp;·&nbsp;
+      <a href="../../">回首頁</a> &nbsp;·&nbsp;
+      資料來源：<a href="https://ffxivteamcraft.com" target="_blank" rel="noopener">Teamcraft</a>、社群整理
+    </p>
+    <p class="footer-text" style="margin-top:4px">
+      FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具
+    </p>
+  </div>
+</footer>
+
+<script type="module">
+/* 遊戲座標 → 底圖 0..1 比例（FFXIV 標準式，靠 Map sheet 的 sizeFactor） */
+const clamp01 = (v) => Math.max(0, Math.min(1, v));
+const coordFrac = (c, sizeFactor) => ((c - 1) * (sizeFactor / 100)) / 41;
+
+const EXP_ORDER = ['原初之地', '蒼天之禁地', '紅蓮之狂潮', '暗影之逆焰', '曉月之終途', '金曦之遺輝'];
+
+let GRADES = [];              // treasure-maps.json data
+let MAPS = new Map();         // mapId -> map meta
+let selectedGrade = null;     // grade string
+let searchTerm = '';
+let selectedSite = null;      // "mapId:idx"
+
+const $ = (id) => document.getElementById(id);
+
+async function loadData() {
+  const [tm, maps] = await Promise.all([
+    fetch('../../data/treasure-maps.json').then(r => r.json()),
+    fetch('../../data/maps.json').then(r => r.json()),
+  ]);
+  GRADES = tm.data;
+  MAPS = new Map(maps.data.map(m => [m.id, m]));
+}
+
+function gradeById(g) { return GRADES.find(x => x.grade === g); }
+function isParty(grade) { return grade.locations.some(l => l.partySize >= 8); }
+
+/* ── 等級選擇器（依資料片分列）── */
+function renderGradeSelector() {
+  const byExp = new Map();
+  for (const g of GRADES) {
+    const e = g.expansion || '其他';
+    if (!byExp.has(e)) byExp.set(e, []);
+    byExp.get(e).push(g);
+  }
+  const order = [...EXP_ORDER.filter(e => byExp.has(e)), ...[...byExp.keys()].filter(e => !EXP_ORDER.includes(e))];
+  $('gradeSelector').innerHTML = order.map(exp => {
+    const chips = byExp.get(exp)
+      .sort((a, b) => a.gradeNum - b.gradeNum)
+      .map(g => {
+        const alias = g.aliases ? `<span class="alias">＝${g.aliases.map(a => a.grade).join('＝')}</span>` : '';
+        const party = isParty(g) ? '<span class="party" title="組隊寶物庫">👥</span>' : '';
+        return `<span class="grade-chip${g.grade === selectedGrade ? ' active' : ''}" data-grade="${g.grade}">${g.grade}${alias}${party}</span>`;
+      }).join('');
+    return `<div class="exp-row"><span class="exp-name">${exp}</span><div class="grade-chips">${chips}</div></div>`;
+  }).join('');
+}
+
+/* ── 摘要列 ── */
+function renderSummary() {
+  const g = gradeById(selectedGrade);
+  if (!g) { $('summary').innerHTML = ''; return; }
+  const zones = new Set(g.locations.map(l => l.mapId)).size;
+  const party = isParty(g);
+  const aliasNote = g.aliases ? `（別名 ${g.aliases.map(a => a.grade).join('、')}）` : '';
+  $('summary').innerHTML = `
+    <img class="g-icon" src="${g.icon ? 'https://v2.xivapi.com' + g.icon : ''}" alt="" onerror="this.style.visibility='hidden'">
+    <div>
+      <div class="g-main">${g.name.replace('陳舊的地圖', '陳舊的地圖 ')}${aliasNote}</div>
+      <div class="g-sub">${zones} 個地區 · ${g.locations.length} 個挖寶點</div>
+    </div>
+    <span class="badge badge-exp">${g.expansion || '—'}</span>
+    <span class="badge ${party ? 'badge-party' : 'badge-solo'}">${party ? '👥 組隊寶物庫' : '🧍 單人挖掘'}</span>
+    <div class="search-box">
+      <span class="icon">🔍</span>
+      <input type="text" id="zoneSearch" placeholder="篩選地區名稱…" autocomplete="off" value="${searchTerm}">
+    </div>`;
+  $('zoneSearch').addEventListener('input', e => { searchTerm = e.target.value.trim(); renderZones(); });
+}
+
+/* ── 地區卡片（每地區一張圖＋標點＋座標清單）── */
+function renderZones() {
+  const g = gradeById(selectedGrade);
+  if (!g) { $('zoneGrid').innerHTML = ''; return; }
+
+  // 依地區分組
+  const byZone = new Map();
+  for (const l of g.locations) {
+    if (!byZone.has(l.mapId)) byZone.set(l.mapId, []);
+    byZone.get(l.mapId).push(l);
+  }
+  let zones = [...byZone.entries()].map(([mapId, locs]) => ({ mapId, meta: MAPS.get(mapId), locs }));
+  // 依地區名排序
+  zones.sort((a, b) => (a.meta?.name || '').localeCompare(b.meta?.name || '', 'zh-Hant'));
+
+  const term = searchTerm.toLowerCase();
+  if (term) zones = zones.filter(z => (z.meta?.name || '').toLowerCase().includes(term) || (z.meta?.region || '').toLowerCase().includes(term));
+
+  if (!zones.length) {
+    $('zoneGrid').innerHTML = `<div class="map-empty" style="grid-column:1/-1;padding:40px">找不到符合「${searchTerm}」的地區。</div>`;
+    return;
+  }
+
+  $('zoneGrid').innerHTML = zones.map(z => {
+    const m = z.meta;
+    const sf = m?.sizeFactor || 100;
+    const dots = z.locs.map((l, i) => {
+      const fx = (clamp01(coordFrac(l.x, sf)) * 100).toFixed(2);
+      const fy = (clamp01(coordFrac(l.y, sf)) * 100).toFixed(2);
+      const key = `${z.mapId}:${i}`;
+      return `<div class="map-dot${selectedSite === key ? ' sel' : ''}" data-site="${key}" style="left:${fx}%;top:${fy}%" title="#${i + 1} X:${l.x} Y:${l.y}">${i + 1}</div>`;
+    }).join('');
+    const canvas = (m && m.image && m.image.local)
+      ? `<img src="../..${m.image.local}" alt="${m.name}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=&quot;map-empty&quot;>底圖尚未下載</div>'">${dots}`
+      : `<div class="map-empty">此地區無底圖</div>`;
+    const rows = z.locs.map((l, i) => {
+      const key = `${z.mapId}:${i}`;
+      const coord = `X: ${l.x}　Y: ${l.y}`;
+      // 地圖標記指令：搭配 ChatCoordinates 類插件貼入遊戲聊天即自動標旗（與限時採集節點查詢同格式）
+      const flag = `/coord ${l.x.toFixed(1)} ${l.y.toFixed(1)} ${m?.name || ''}`.trim();
+      return `<div class="site-row${selectedSite === key ? ' sel' : ''}" data-site="${key}">
+          <span class="site-num">${i + 1}</span>
+          <span class="site-coord">${coord}</span>
+          <button class="copy-btn" data-copy="${flag}" title="複製地圖標記指令，貼入遊戲聊天（需 ChatCoordinates 類插件自動標旗）">🚩 標旗</button>
+        </div>`;
+    }).join('');
+    return `<div class="zone-card">
+        <div class="zone-head">
+          <span class="zone-name">${m?.name || '未知地區'}</span>
+          <span class="zone-region">${m?.region || ''}</span>
+          <span class="zone-count">${z.locs.length} 點</span>
+        </div>
+        <div class="map-canvas">${canvas}</div>
+        <div class="site-list">${rows}</div>
+      </div>`;
+  }).join('');
+}
+
+/* ── 事件 ── */
+$('gradeSelector').addEventListener('click', e => {
+  const chip = e.target.closest('.grade-chip');
+  if (!chip) return;
+  selectedGrade = chip.dataset.grade;
+  selectedSite = null;
+  searchTerm = '';
+  renderGradeSelector();
+  renderSummary();
+  renderZones();
+});
+
+$('zoneGrid').addEventListener('click', e => {
+  const copyBtn = e.target.closest('[data-copy]');
+  if (copyBtn) {
+    const text = copyBtn.dataset.copy;
+    navigator.clipboard?.writeText(text).then(() => {
+      copyBtn.classList.add('copied');
+      const orig = copyBtn.textContent;
+      copyBtn.textContent = '✅ 已複製';
+      setTimeout(() => { copyBtn.classList.remove('copied'); copyBtn.textContent = orig; }, 1400);
+    });
+    return;
+  }
+  const el = e.target.closest('[data-site]');
+  if (el) {
+    selectedSite = (selectedSite === el.dataset.site) ? null : el.dataset.site;
+    document.querySelectorAll('[data-site]').forEach(d =>
+      d.classList.toggle('sel', d.dataset.site === selectedSite));
+  }
+});
+
+/* ── 啟動 ── */
+(async function init() {
+  await loadData();
+  // 預設選最新等級（清單最後一個 G 系列）
+  selectedGrade = GRADES.length ? GRADES[GRADES.length - 1].grade : null;
+  renderGradeSelector();
+  renderSummary();
+  renderZones();
+})();
+</script>
+</body>
+</html>
