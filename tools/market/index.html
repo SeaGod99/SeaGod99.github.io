@@ -98,19 +98,24 @@
     .search-input-row { position: relative; }
     .search-input-row .icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
     #searchInput { width: 100%; padding-left: 36px; }
+    /* 搜尋結果：卡片格線（點卡看詳情） */
     .search-results {
-      margin-top: 8px; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;
-      background: var(--bg-card); max-height: 360px; overflow-y: auto;
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(212px, 1fr));
+      gap: 10px;
     }
     .search-results:empty { display: none; }
-    .result-row {
-      display: flex; align-items: center; gap: 10px; padding: 8px 12px; cursor: pointer;
-      border-bottom: 1px solid var(--border); transition: background var(--transition);
+    .search-note { grid-column: 1 / -1; padding: 14px 4px; color: var(--text-muted); font-size: 0.85rem; }
+    .result-card {
+      display: flex; align-items: center; gap: 10px; padding: 12px; cursor: pointer;
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+      transition: all var(--transition); position: relative;
     }
-    .result-row:last-child { border-bottom: none; }
-    .result-row:hover, .result-row.kbd { background: var(--bg-card-hover); }
-    .item-icon { width: 32px; height: 32px; border-radius: 5px; background: var(--bg-surface); flex-shrink: 0; object-fit: contain; }
-    .result-name { font-size: 0.9rem; flex: 1; }
+    .result-card:hover, .result-card.kbd { border-color: var(--border-hover); background: var(--bg-card-hover); transform: translateY(-1px); }
+    .item-icon { width: 44px; height: 44px; border-radius: 6px; background: var(--bg-surface); flex-shrink: 0; object-fit: contain; }
+    .result-meta { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+    .result-name { font-size: 0.9rem; font-weight: 500; line-height: 1.3; word-break: break-word; }
     .result-cat { font-size: 0.72rem; color: var(--text-muted); }
     .tag {
       font-size: 0.68rem; padding: 1px 7px; border-radius: 4px; border: 1px solid transparent; white-space: nowrap;
@@ -123,6 +128,7 @@
 
     /* item detail */
     .item-detail:empty { display: none; }
+    .item-detail:not(:empty) { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--border); }
     .detail-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
     .detail-head .item-icon { width: 44px; height: 44px; }
     .detail-title { font-size: 1.15rem; font-weight: 600; }
@@ -152,6 +158,10 @@
 
     /* craft list */
     .empty-state { text-align: center; color: var(--text-muted); padding: 48px 16px; font-size: 0.9rem; }
+
+    /* craft 子分頁（簡易 / 樹狀）*/
+    .craft-subtabs { margin-bottom: 12px; }
+    tr[data-simple] { cursor: pointer; }
 
     /* craft 子工具列（水晶 / HQ 選項）*/
     .craft-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 16px; margin-bottom: 14px; }
@@ -358,6 +368,7 @@
     var LS_SCOPE = 'sgt-market-scope';
     var LS_DRAFT = 'sgt-market-draft';
     var LS_OPTS = 'sgt-market-opts';
+    var LS_CVIEW = 'sgt-market-craftview';
     var MAX_RESULTS = 40;
     var MAX_DEPTH = 12;
 
@@ -374,6 +385,7 @@
     var lastUpload = 0;
     var excludeCrystals = true;        // 省略水晶（不列入樹與成本），預設開
     var hqProduct = true;              // 可製作成品以 HQ 市價比較，預設開
+    var craftView = 'simple';          // 製作清單子分頁：simple（簡易清單）/ tree（樹狀分析）
 
     // ---- 工具 ----
     var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -398,6 +410,7 @@
       try { lists = JSON.parse(localStorage.getItem(LS_LISTS) || '[]'); } catch (e) { lists = []; }
       try { craft = JSON.parse(localStorage.getItem(LS_DRAFT) || '[]'); } catch (e) { craft = []; }
       try { var o = JSON.parse(localStorage.getItem(LS_OPTS) || '{}'); if (o && typeof o === 'object') { if (o.excludeCrystals != null) excludeCrystals = !!o.excludeCrystals; if (o.hqProduct != null) hqProduct = !!o.hqProduct; } } catch (e) {}
+      try { var cv = localStorage.getItem(LS_CVIEW); if (cv === 'simple' || cv === 'tree') craftView = cv; } catch (e) {}
       if (!Array.isArray(lists)) lists = [];
       if (!Array.isArray(craft)) craft = [];
     }
@@ -405,6 +418,7 @@
     function saveDraft() { try { localStorage.setItem(LS_DRAFT, JSON.stringify(craft)); } catch (e) {} }
     function saveScope() { try { localStorage.setItem(LS_SCOPE, scope); } catch (e) {} }
     function saveOpts() { try { localStorage.setItem(LS_OPTS, JSON.stringify({ excludeCrystals: excludeCrystals, hqProduct: hqProduct })); } catch (e) {} }
+    function saveCview() { try { localStorage.setItem(LS_CVIEW, craftView); } catch (e) {} }
 
     function isCrystal(id) { var it = itemById.get(id); return !!(it && it.category === '水晶'); }
     function getQty(id) { var c = craft.find(function (x) { return x.itemId === id; }); return c ? c.qty : 1; }
@@ -447,14 +461,14 @@
         if (starts.length >= MAX_RESULTS) break;
       }
       out = starts.concat(contains).slice(0, MAX_RESULTS);
-      if (!out.length) { box.innerHTML = '<div class="result-row note">查無符合「' + esc(q) + '」的物品</div>'; return; }
+      if (!out.length) { box.innerHTML = '<div class="search-note">查無符合「' + esc(q) + '」的物品</div>'; return; }
       box.innerHTML = out.map(function (it) {
         var tags = '';
         if (!it.marketable) tags += '<span class="tag untradable">不可交易</span>';
-        return '<div class="result-row" data-id="' + it.id + '">' +
+        return '<div class="result-card" data-id="' + it.id + '" title="點擊查看即時價格與在架明細">' +
           '<img class="item-icon" src="' + iconUrl(it) + '" alt="" loading="lazy" onerror="this.style.visibility=\'hidden\'">' +
-          '<span class="result-name">' + esc(it.name) + '</span>' +
-          '<span class="result-cat">' + esc(it.category || '') + '</span>' + tags +
+          '<div class="result-meta"><span class="result-name">' + esc(it.name) + '</span>' +
+          '<span class="result-cat">' + esc(it.category || '') + '</span></div>' + tags +
           '</div>';
       }).join('');
     }
@@ -691,9 +705,19 @@
       return '<li>' + html + '</li>';
     }
 
-    function craftToolsHtml() {
-      return '<div class="craft-tools">' +
-        '<label class="switch"><input type="checkbox" id="optCrystal"' + (excludeCrystals ? ' checked' : '') + '><span class="track"></span>省略水晶</label>' +
+    // 製作清單子分頁切換（簡易清單 / 樹狀分析）
+    function craftSubtabsHtml() {
+      return '<div class="craft-subtabs"><span class="seg">' +
+        '<button data-cview="simple" class="' + (craftView === 'simple' ? 'active' : '') + '">📋 簡易清單</button>' +
+        '<button data-cview="tree" class="' + (craftView === 'tree' ? 'active' : '') + '">🌲 樹狀分析</button>' +
+        '</span></div>';
+    }
+    // mode='tree' 才顯示「省略水晶」（簡易模式只看成品、不展開材料）
+    function craftToolsHtml(mode) {
+      var crystal = (mode === 'tree')
+        ? '<label class="switch"><input type="checkbox" id="optCrystal"' + (excludeCrystals ? ' checked' : '') + '><span class="track"></span>省略水晶</label>'
+        : '';
+      return '<div class="craft-tools">' + crystal +
         '<label class="switch"><input type="checkbox" id="optHq"' + (hqProduct ? ' checked' : '') + '><span class="track"></span>成品用 HQ 價</label>' +
         '<span class="note">查價範圍：' + esc(scopeLabel()) + '（於頁首切換）</span>' +
         '</div>';
@@ -716,13 +740,20 @@
       (n.children || []).forEach(function (c) { collectShopping(c, acc); });
     }
 
-    async function renderCraft() {
+    function renderCraft() {
       var body = $('#craftBody');
-      var tools = craftToolsHtml();
+      var sub = craftSubtabsHtml();
       if (!craft.length) {
-        body.innerHTML = tools + '<div class="empty-state">製作清單是空的。<br>到「單品查價」搜尋物品，按「＋ 加入」即可開始試算製作成本。</div>';
+        body.innerHTML = sub + '<div class="empty-state">製作清單是空的。<br>到「單品查價」搜尋物品，開視窗按「＋ 加入」即可開始試算。</div>';
         return;
       }
+      if (craftView === 'simple') renderCraftSimple(body, sub);
+      else renderCraftTree(body, sub);
+    }
+
+    // 樹狀分析：統整所有需求物品 → 買/做最省樹狀圖 + 總採買清單 + 最適採買路線
+    async function renderCraftTree(body, sub) {
+      var tools = sub + craftToolsHtml('tree');
       body.innerHTML = tools + '<div class="loading">展開配方並查詢材料價格中…</div>';
       await ensureRecipes();
 
@@ -818,6 +849,68 @@
         '</div>';
 
       body.innerHTML = tools + html + summary + actions;
+    }
+
+    // 簡易清單：逐項成品直接顯示市價 + 最便宜伺服器（不展開配方樹）
+    async function renderCraftSimple(body, sub) {
+      var tools = sub + craftToolsHtml('simple');
+      body.innerHTML = tools + '<div class="loading">查詢成品市價中…</div>';
+
+      var ids = craft.map(function (c) { return c.itemId; });
+      var lst = await Universalis.fetchListings(scope, ids, { listings: 8 });
+      var pmap = new Map();
+      if (lst && lst.items) {
+        lastUpload = lst.lastUploadTime || lastUpload;
+        ids.forEach(function (id) {
+          var d = lst.items[id];
+          var nq = Universalis.minPrice(d, false), hq = Universalis.minPrice(d, true);
+          pmap.set(id, { nq: nq ? nq.pricePerUnit : null, nqWorld: nq ? nq.worldName : null, hq: hq ? hq.pricePerUnit : null, hqWorld: hq ? hq.worldName : null });
+        });
+      }
+      renderUpdateTime();
+
+      var dc = isDcMode();
+      var rows = craft.map(function (c) {
+        var it = itemById.get(c.itemId), p = pmap.get(c.itemId) || {};
+        // 依「成品用 HQ 價」開關取價；若該選項下無 HQ 資料則退回 NQ，反之亦然
+        var useHq = hqProduct && p.hq != null;
+        var unit = useHq ? p.hq : (p.nq != null ? p.nq : p.hq);
+        var world = useHq ? p.hqWorld : (p.nq != null ? p.nqWorld : p.hqWorld);
+        var hqShown = useHq || (p.nq == null && p.hq != null);
+        return { id: c.itemId, name: it ? it.name : '#' + c.itemId, icon: iconUrl(it), qty: c.qty,
+                 unit: unit == null ? null : unit, world: world, hq: hqShown,
+                 sub: unit == null ? null : unit * c.qty, marketable: !!(it && it.marketable) };
+      });
+      var total = rows.reduce(function (a, r) { return a + (r.sub || 0); }, 0);
+      var allOk = rows.every(function (r) { return r.sub != null; });
+
+      var head = '<table class="listings"><thead><tr><th>物品</th><th class="num">數量</th>' +
+        (dc ? '<th>去哪買（最便宜）</th>' : '') +
+        '<th class="num">單價</th><th class="num">小計</th></tr></thead><tbody>';
+      var trs = rows.map(function (r) {
+        var where = !r.marketable
+          ? '<span class="tag untradable">不可交易</span>'
+          : (r.world ? '<span class="tag world">' + esc(r.world) + '</span>' + (r.hq ? ' <span class="hqb">HQ</span>' : '') : '—');
+        return '<tr data-simple="' + r.id + '" title="點擊查看即時價格與在架明細">' +
+          '<td><img class="item-icon" style="width:26px;height:26px;border-radius:5px;vertical-align:middle;margin-right:8px" src="' + r.icon + '" onerror="this.style.visibility=\'hidden\'">' + esc(r.name) + '</td>' +
+          '<td class="num">' + r.qty + '</td>' +
+          (dc ? '<td>' + where + '</td>' : '') +
+          '<td class="num">' + (r.unit != null ? fmt(r.unit) : '—') + '</td>' +
+          '<td class="num">' + (r.sub != null ? fmt(r.sub) : '—') + '</td></tr>';
+      }).join('');
+      var table = head + trs + '</tbody></table>';
+
+      var summary = '<div class="summary-card"><div class="summary-totals">' +
+        stat('直購總價', (allOk || total > 0) ? fmt(total) + ' <small>G</small>' : '—',
+             allOk ? '全部直接購買 · ' + esc(scopeLabel()) : '部分項目查無市價') +
+        '</div><div class="note">想知道哪些自製更省、以及跨服採買路線？切到「🌲 樹狀分析」。</div></div>';
+
+      var actions = '<div class="craft-actions">' +
+        '<button class="btn primary" data-act="saveAs">💾 另存為清單</button>' +
+        '<button class="btn danger" data-act="clear">清空清單</button>' +
+        '</div>';
+
+      body.innerHTML = tools + table + summary + actions;
     }
 
     // ===================== 節點詳情 / 上下游配方 =====================
@@ -1010,7 +1103,14 @@
         detail: 'detail' in partial ? partial.detail : applied.detail,
         node: 'node' in partial ? partial.node : applied.node
       };
-      try { history.pushState(s, '', urlFor(s)); } catch (e) {}
+      // 節點視窗內的上下游導覽（node→node、同分頁）以 replaceState 取代，
+      // 讓整個視窗瀏覽只佔一筆歷史；如此關閉／點空白處／上一頁一次即可回到原頁面，
+      // 不必依瀏覽層數重複點擊。
+      var inModalNav = (applied.node != null && s.node != null && s.tab === applied.tab);
+      try {
+        if (inModalNav) history.replaceState(s, '', urlFor(s));
+        else history.pushState(s, '', urlFor(s));
+      } catch (e) {}
       applyNav(s);
     }
     function switchTab(name) { navTo({ tab: name, node: null }); }
@@ -1052,11 +1152,10 @@
       var input = $('#searchInput');
       input.addEventListener('input', debounce(function () { renderResults(input.value); }, 180));
       $('#searchResults').addEventListener('click', function (e) {
-        var row = e.target.closest('.result-row[data-id]');
-        if (!row) return;
-        var id = Number(row.getAttribute('data-id'));
-        $('#searchResults').innerHTML = ''; input.value = itemById.get(id).name;
-        navTo({ tab: 'search', detail: id, node: null });
+        var card = e.target.closest('.result-card[data-id]');
+        if (!card) return;
+        // 與「製作清單」的節點卡片同效果：開啟節點詳情視窗（市價 + 上下游配方 + 加入清單）
+        navTo({ node: Number(card.getAttribute('data-id')) });
       });
 
       // 重新整理
@@ -1075,6 +1174,8 @@
       // 製作清單：事件委派（點節點 / 數量 / 複製 / 動作 / 選項切換）
       var cb = $('#craftBody');
       cb.addEventListener('click', function (e) {
+        var cview = e.target.closest('[data-cview]');
+        if (cview) { craftView = cview.getAttribute('data-cview'); saveCview(); renderCraft(); return; }
         var copy = e.target.closest('.node-copy');
         if (copy) { copyName(copy.getAttribute('data-copy')); var o = copy.textContent; copy.textContent = '✓'; setTimeout(function () { copy.textContent = o; }, 900); return; }
         var act = e.target.closest('[data-act]');
@@ -1087,6 +1188,8 @@
           else if (a === 'clear') { if (confirm('確定清空目前的製作清單？（已儲存的清單不受影響）')) { craft = []; saveDraft(); updateCraftCount(); renderCraft(); } }
           return;
         }
+        var srow = e.target.closest('[data-simple]');
+        if (srow) { navTo({ node: Number(srow.getAttribute('data-simple')) }); return; }
         var card = e.target.closest('.node-card');
         if (card) navTo({ node: Number(card.getAttribute('data-node')) });
       });
