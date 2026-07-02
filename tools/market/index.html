@@ -85,7 +85,7 @@
     .tab {
       background: none; border: none; border-bottom: 2px solid transparent; color: var(--text-dim);
       padding: 10px 14px; font-size: 0.9rem; cursor: pointer; font-family: inherit; transition: all var(--transition);
-      display: flex; align-items: center; gap: 6px;
+      display: flex; align-items: center; gap: 6px; white-space: nowrap;
     }
     .tab:hover { color: var(--text); }
     .tab.active { color: var(--gold); border-bottom-color: var(--gold); }
@@ -299,7 +299,7 @@
 </head>
 <body>
 
-  <a href="../../" class="nav-back">⚓ 水神的工具箱</a>
+  <a href="../../" class="nav-back">&larr; 水神的工具箱</a>
 
   <div class="container">
     <header class="page-head">
@@ -427,7 +427,23 @@
 
     function isCrystal(id) { var it = itemById.get(id); return !!(it && it.category === '水晶'); }
     function getQty(id) { var c = craft.find(function (x) { return x.itemId === id; }); return c ? c.qty : 1; }
-    function copyName(name) { try { navigator.clipboard.writeText(name); } catch (e) {} }
+    function copyName(name) {
+      // clipboard API 失敗時退回 execCommand（非安全環境／遊戲內瀏覽器）
+      function fallback() {
+        var ta = document.createElement('textarea');
+        ta.value = name;
+        ta.style.cssText = 'position:fixed;opacity:0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (e) {}
+        ta.remove();
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(name).catch(fallback);
+      } else {
+        fallback();
+      }
+    }
 
     // ---- 配方索引（延後載入）----
     async function ensureRecipes() {
@@ -465,6 +481,10 @@
         else if (idx > 0) contains.push(it);
         if (starts.length >= MAX_RESULTS) break;
       }
+      // 可交易物品優先（查價工具主要對象），組內維持原順序
+      var byMarketable = function (a, b) { return (b.marketable ? 1 : 0) - (a.marketable ? 1 : 0); };
+      starts.sort(byMarketable);
+      contains.sort(byMarketable);
       out = starts.concat(contains).slice(0, MAX_RESULTS);
       if (!out.length) { box.innerHTML = '<div class="search-note">查無符合「' + esc(q) + '」的物品</div>'; return; }
       box.innerHTML = out.map(function (it) {

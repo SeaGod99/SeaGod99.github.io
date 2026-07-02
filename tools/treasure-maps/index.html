@@ -327,6 +327,25 @@ function renderZones() {
   }).join('');
 }
 
+/* 剪貼簿：clipboard API 失敗時退回 execCommand（非安全環境／遊戲內瀏覽器） */
+function copyText(text) {
+  if (navigator.clipboard?.writeText) {
+    return navigator.clipboard.writeText(text).then(() => true).catch(() => copyTextFallback(text));
+  }
+  return Promise.resolve(copyTextFallback(text));
+}
+function copyTextFallback(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.cssText = 'position:fixed;opacity:0';
+  document.body.appendChild(ta);
+  ta.select();
+  let ok = false;
+  try { ok = document.execCommand('copy'); } catch (e) {}
+  ta.remove();
+  return ok;
+}
+
 /* ── 事件 ── */
 $('gradeSelector').addEventListener('click', e => {
   const chip = e.target.closest('.grade-chip');
@@ -343,10 +362,10 @@ $('zoneGrid').addEventListener('click', e => {
   const copyBtn = e.target.closest('[data-copy]');
   if (copyBtn) {
     const text = copyBtn.dataset.copy;
-    navigator.clipboard?.writeText(text).then(() => {
+    copyText(text).then(ok => {
       copyBtn.classList.add('copied');
       const orig = copyBtn.textContent;
-      copyBtn.textContent = '✅ 已複製';
+      copyBtn.textContent = ok ? '✅ 已複製' : '❌ 複製失敗';
       setTimeout(() => { copyBtn.classList.remove('copied'); copyBtn.textContent = orig; }, 1400);
     });
     return;
