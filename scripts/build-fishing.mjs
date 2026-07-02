@@ -12,7 +12,8 @@
 //
 //   data/fishes.json
 //     itemId, name(繁中), nameEn
-//     spotId, spotName(繁中)
+//     spotId, spotName(繁中)          （主釣場；代表性釣點）
+//     spots[]                      （所有可釣釣場 id，主釣場排最前；由 patch-fishing-multispot.mjs 補）
 //     startHour, endHour          （0-24，startHour===0 && endHour===24 表示全時段）
 //     weatherSet[]                （天氣繁中名陣列，空=無限制）
 //     previousWeatherSet[]        （前置天氣）
@@ -28,6 +29,8 @@
 //
 // 注意：Cowork 沙箱擋外網，需在本機執行。
 // 執行（repo 根目錄）：node scripts/build-fishing.mjs
+// ⚠️ 重建後務必接著跑：node scripts/patch-fishing-multispot.mjs
+//    （補多釣場 spots[] 與回填無主釣場的魚，否則一魚只剩單一釣點）
 // 需求：Node 18+（內建 fetch）
 
 import { readFile, writeFile } from "node:fs/promises";

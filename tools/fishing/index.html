@@ -254,6 +254,16 @@
     .fd-win.now .when { color: var(--green); font-weight: 600; }
     .fd-win .cd { margin-left: auto; color: var(--text-muted); }
 
+    /* 詳情彈窗：釣場切換 chips */
+    .fd-spots { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+    .fd-spot-chip {
+      font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 5px; cursor: pointer;
+      border: 1px solid var(--border); background: var(--bg-surface); color: var(--text-dim);
+      transition: all 0.15s; user-select: none;
+    }
+    .fd-spot-chip:hover { border-color: var(--gold); }
+    .fd-spot-chip.active { background: var(--gold-dim); border-color: rgba(200,169,110,0.5); color: var(--gold); font-weight: 600; }
+
     /* 目標魚面板 */
     .targets-panel {
       max-width: 1500px; margin: 0 auto 0.5rem; padding: 0 1.5rem;
@@ -442,7 +452,7 @@ function weatherOf(mapId, pi) {
 }
 function etHourOf(ms) { return Math.floor(ms * EORZEA_MULT / 3600000) % 24; }
 
-function fishStatus(f, now) {
+function fishStatus(f, now, spotIdOv) {
   const timed = f.startHour > 0 || f.endHour < 24;
   const wk = wxKeys(f.weatherSet), pk = wxKeys(f.previousWeatherSet);
   const needWx = wk.length > 0 || pk.length > 0;
@@ -462,7 +472,7 @@ function fishStatus(f, now) {
   }
 
   // 限天氣（可能同時限時）：需要釣場所在地圖的天氣表
-  const spot = f.spotId != null ? SPOTS.get(f.spotId) : null;
+  const spot = (spotIdOv ?? f.spotId) != null ? SPOTS.get(spotIdOv ?? f.spotId) : null;
   const mapId = spot?.coords?.mapId;
   if (mapId == null || !getWeatherTable(mapId)) return { state: 'unknown' };
 
@@ -561,8 +571,8 @@ function onFilter() {
 }
 
 /* ── 渲染 ── */
-function spotZone(f) {
-  const spot = f.spotId != null ? SPOTS.get(f.spotId) : null;
+function spotZone(f, spotIdOv) {
+  const spot = (spotIdOv ?? f.spotId) != null ? SPOTS.get(spotIdOv ?? f.spotId) : null;
   if (!spot) return null;
   const m = MAPS.get(spot.coords.mapId);
   return { spot, mapName: m ? m.name : null };
@@ -708,8 +718,9 @@ function render() {
     const sz = spotZone(f);
     const locBtn = sz
       ? `<button class="loc-btn" data-map="${f.itemId}" title="開地圖看釣場位置">📍</button>` : '';
+    const extraSpots = (f.spots?.length || 0) > 1 ? `<span style="color:var(--text-muted)">等 ${f.spots.length} 處</span>` : '';
     const spotLine = f.spotName
-      ? `<span><span class="detail-label">釣場</span>${f.spotName}${sz?.mapName ? `（${sz.mapName}）` : ''}${locBtn}</span>`
+      ? `<span><span class="detail-label">釣場</span>${f.spotName}${sz?.mapName ? `（${sz.mapName}）` : ''}${extraSpots}${locBtn}</span>`
       : `<span><span class="detail-label">釣場</span>—（此魚無固定釣場資料，無法標地圖）</span>`;
 
     return `
@@ -763,16 +774,17 @@ function renderPagination() {
 const TUG_TC = { light: '!（輕杆）', medium: '!!（中杆）', heavy: '!!!（重杆）' };
 const HOOKSET_TC = { Precision: '精準提鉤', Powerful: '強力提鉤' };
 let fdCurrentId = null;
+let fdSpotId = null;   // 詳情彈窗目前選中的釣場（多釣場魚可切換）
 
 // 未來可釣窗口（合併跨天氣期的相鄰段），回傳 [{ws, we, active}]
-function nextWindows(f, now, maxN = 3) {
+function nextWindows(f, now, maxN = 3, spotIdOv) {
   const timed = f.startHour > 0 || f.endHour < 24;
   const wk = wxKeys(f.weatherSet), pk = wxKeys(f.previousWeatherSet);
   const needWx = wk.length > 0 || pk.length > 0;
   if (!timed && !needWx) return [];
   let mapId = null;
   if (needWx) {
-    const spot = f.spotId != null ? SPOTS.get(f.spotId) : null;
+    const spot = (spotIdOv ?? f.spotId) != null ? SPOTS.get(spotIdOv ?? f.spotId) : null;
     mapId = spot?.coords?.mapId;
     if (mapId == null || !getWeatherTable(mapId)) return [];
   }
@@ -814,13 +826,14 @@ function fmtET(ms) {
   return `${String(Math.floor(etMin/60)%24).padStart(2,'0')}:${String(etMin%60).padStart(2,'0')}`;
 }
 
-function openFishDetail(id) {
+function openFishDetail(id, keepSpot) {
   const f = allFish.find(x => x.itemId === id);
   if (!f) return;
+  if (!keepSpot || fdCurrentId !== id) fdSpotId = f.spotId;
   fdCurrentId = id;
   const now = Date.now();
   const timed = f.startHour > 0 || f.endHour < 24;
-  const sz = spotZone(f);
+  const sz = spotZone(f, fdSpotId);
 
   document.getElementById('fdName').textContent = f.name || f.nameEn;
   document.getElementById('fdNameEn').textContent = `${f.nameEn || ''} · v${f.patch}`;
@@ -849,8 +862,22 @@ function openFishDetail(id) {
     return `${pf ? (pf.name || pf.nameEn) : `#${pid}`}${cnt ? ` ×${cnt}` : ''}`;
   });
 
+  // 釣場列：多釣場 → 可切換 chips（切換後窗口/天氣依該釣場地圖重算）
+  const spotList = (f.spots?.length ? f.spots : (f.spotId != null ? [f.spotId] : []));
+  let spotCell;
+  if (!spotList.length) spotCell = '—（此魚無固定釣場資料）';
+  else if (spotList.length === 1) {
+    spotCell = f.spotName ? `${f.spotName}${sz?.mapName ? `（${sz.mapName}）` : ''}` : '—';
+  } else {
+    spotCell = `<div class="fd-spots">${spotList.map(sid => {
+      const sp = SPOTS.get(sid);
+      if (!sp) return '';
+      const mn = sp.coords ? MAPS.get(sp.coords.mapId)?.name : null;
+      return `<span class="fd-spot-chip${sid === fdSpotId ? ' active' : ''}" data-fdspot="${sid}" title="切換釣場（窗口依該地圖天氣重算）">${sp.name}${mn ? `（${mn}）` : ''}</span>`;
+    }).join('')}</div>`;
+  }
   const rows = [
-    ['釣場', f.spotName ? `${f.spotName}${sz?.mapName ? `（${sz.mapName}）` : ''}` : '—（此魚無固定釣場資料）'],
+    ['釣場' + (spotList.length > 1 ? `（${spotList.length} 處）` : ''), spotCell],
     ['竿型', TUG_TC[f.tug] || '—'],
     ['提鉤', HOOKSET_TC[f.hookset] || '—'],
     ['釣餌鏈', `<b>${baitChain}</b>${f.bait?.length > 1 ? '（以小釣大）' : ''}`],
@@ -865,13 +892,13 @@ function openFishDetail(id) {
 
   // 未來窗口
   const winBox = document.getElementById('fdWindows');
-  const st = (timed || f.weatherSet?.length || f.previousWeatherSet?.length) ? fishStatus(f, now) : { state: 'anytime' };
+  const st = (timed || f.weatherSet?.length || f.previousWeatherSet?.length) ? fishStatus(f, now, fdSpotId) : { state: 'anytime' };
   if (st.state === 'anytime') {
     winBox.innerHTML = '<div class="fd-wt">開窗時間</div><div class="fd-win now"><span class="when">🎣 隨時可釣（無時間/天氣限制）</span></div>';
   } else if (st.state === 'unknown') {
     winBox.innerHTML = '<div class="fd-wt">開窗時間</div><div class="fd-win"><span class="when">無釣場天氣資料，無法計算</span></div>';
   } else {
-    const wins = nextWindows(f, now, 3);
+    const wins = nextWindows(f, now, 3, fdSpotId);
     winBox.innerHTML = '<div class="fd-wt">接下來的可釣窗口</div>' + (wins.length ? wins.map(w => `
       <div class="fd-win${w.active ? ' now' : ''}">
         <span class="when">${w.active ? '● 可釣中' : fmtRT(w.ws)}　ET ${fmtET(w.ws)}–${fmtET(w.we)}</span>
@@ -896,6 +923,12 @@ function closeFishDetail() {
   fdCurrentId = null;
 }
 
+document.getElementById('fdTable').addEventListener('click', e => {
+  const chip = e.target.closest('[data-fdspot]');
+  if (!chip || fdCurrentId == null) return;
+  fdSpotId = Number(chip.dataset.fdspot);
+  openFishDetail(fdCurrentId, true);
+});
 document.getElementById('fdClose').addEventListener('click', closeFishDetail);
 document.getElementById('fdOverlay').addEventListener('click', e => { if (e.target === e.currentTarget) closeFishDetail(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeFishDetail(); });
@@ -910,7 +943,7 @@ document.getElementById('fdActions').addEventListener('click', e => {
   } else if (btn.dataset.fd === 'target') {
     toggleTarget(f.itemId); renderFdActions(f);
   } else if (btn.dataset.fd === 'map') {
-    openFishMap(f.itemId);
+    openFishMap(f.itemId, fdSpotId);
   }
 });
 
@@ -973,9 +1006,9 @@ function toggleTarget(id) {
   if (statusFilter === 'targets') onFilter(); else renderCurrent();
 }
 
-function openFishMap(id) {
+function openFishMap(id, spotIdOv) {
   const f = allFish.find(x => x.itemId === id);
-  const sz = f && spotZone(f);
+  const sz = f && spotZone(f, spotIdOv);
   if (!sz) return;
   const { spot, mapName } = sz;
   const x = spot.coords.x, y = spot.coords.y;
