@@ -36,20 +36,22 @@ export const WEATHER_INFO = {
   fairSkies:    { name: '晴朗', icon: '☀️' },
   clouds:       { name: '陰天', icon: '⛅' },
   fog:          { name: '薄霧', icon: '🌫️' },
-  wind:         { name: '強風', icon: '💨' },
-  gales:        { name: '疾風', icon: '🌬️' },
+  wind:         { name: '微風', icon: '💨' },
+  gales:        { name: '強風', icon: '🌬️' },
   rain:         { name: '小雨', icon: '🌧️' },
-  showers:      { name: '驟雨', icon: '🌦️' },
-  thunderstorms:{ name: '暴雨', icon: '⛈️' },
+  showers:      { name: '暴雨', icon: '🌦️' },
   thunder:      { name: '打雷', icon: '🌩️' },
+  thunderstorms:{ name: '雷雨', icon: '⛈️' },
   snow:         { name: '降雪', icon: '❄️' },
   blizzards:    { name: '暴雪', icon: '🌨️' },
   heatWaves:    { name: '熱浪', icon: '🔥' },
   dustStorms:   { name: '揚沙', icon: '🌪️' },
+  sandstorms:   { name: '沙塵暴', icon: '🏜️' },
   gloom:        { name: '妖霧', icon: '🌑' },
   umbralWind:   { name: '靈風', icon: '🌀' },
   umbralStatic: { name: '放電現象', icon: '⚡' },
-  astromagneticStorms: { name: 'Astromagnetic Storms', icon: '🌌' }, // 遺塵之地，台服譯名待確認
+  moonDust:     { name: '月塵', icon: '🌘' },
+  astromagneticStorms: { name: '星磁暴', icon: '🌌' },
 };
 
 // 中文名稱 → key 的反查表（用於把 maps.json weatherRates.weather 轉成內部 key）

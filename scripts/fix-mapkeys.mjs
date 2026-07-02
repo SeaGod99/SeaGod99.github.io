@@ -35,27 +35,26 @@ const WEATHER_TC = {
   "Thunder": "打雷", "Thunderstorms": "雷雨", "Dust Storms": "揚沙", "Sandstorms": "沙塵暴",
   "Hot Spells": "熱浪", "Heat Waves": "熱浪", "Snow": "降雪", "Blizzards": "暴雪",
   "Gloom": "妖霧", "Umbral Wind": "靈風", "Umbral Static": "放電現象",
-  "Moon Dust": "月塵", "Astromagnetic Storm": "星磁暴", "Tension": "緊張",
+  "Moon Dust": "月塵", "Astromagnetic Storm": "星磁暴", "Astromagnetic Storms": "星磁暴",
+  "Tension": "緊張",
 };
 const tcWeather = (en) => WEATHER_TC[en] || en;
 
-// 把 XIVAPI WeatherRate（Rate[] 累進門檻 + Weather[] 名稱）轉成 [{weather, rate}]
-// 注意：遊戲的 Rate 其實是「累進上界」，相鄰相減才是該天氣機率。
+// 把 XIVAPI WeatherRate 轉成 [{weather, rate}]
+// 注意：v2 API 的 Rate[] 已是「各段機率」（非原始 sheet 的累進上界），直接使用。
+// 必須保留原始槽位順序、不可合併同名天氣——天氣種子演算法靠順序累加出區間，
+// 合併會位移區間邊界，導致特定 seed 算出錯誤天氣。
 function parseWeather(wr) {
   if (!wr?.fields) return [];
   const rates = wr.fields.Rate || [];
   const weathers = wr.fields.Weather || [];
-  // 合併同名天氣的機率
-  const acc = new Map();
-  let prev = 0;
+  const out = [];
   for (let i = 0; i < rates.length; i++) {
-    const upper = rates[i];
+    const pct = rates[i];
     const en = weathers[i]?.fields?.Name;
-    const pct = upper - prev;
-    prev = upper;
-    if (en && pct > 0) acc.set(en, (acc.get(en) || 0) + pct);
+    if (en && pct > 0) out.push({ weather: tcWeather(en), rate: pct });
   }
-  return [...acc].map(([en, rate]) => ({ weather: tcWeather(en), rate }));
+  return out;
 }
 
 async function fetchAllMaps() {
