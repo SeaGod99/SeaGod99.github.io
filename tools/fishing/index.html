@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="FF14 釣魚紀錄追蹤 — 1104 種魚，查詢釣場/餌/時間/天氣，可釣倒數、目標魚釘選與地圖標點，追蹤已釣紀錄">
+  <meta name="description" content="FF14 釣魚紀錄追蹤 — 1449 種魚，查詢釣場/餌/時間/天氣，可釣倒數、目標魚釘選與地圖標點，追蹤已釣紀錄">
   <title>釣魚紀錄追蹤 | 水神的工具箱</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -720,7 +720,7 @@ function render() {
       ? `<button class="loc-btn" data-map="${f.itemId}" title="開地圖看釣場位置">📍</button>` : '';
     const extraSpots = (f.spots?.length || 0) > 1 ? `<span style="color:var(--text-muted)">等 ${f.spots.length} 處</span>` : '';
     const spotLine = f.spotName
-      ? `<span><span class="detail-label">釣場</span>${f.spotName}${sz?.mapName ? `（${sz.mapName}）` : ''}${extraSpots}${locBtn}</span>`
+      ? `<span><span class="detail-label">釣場</span>${f.spotName}${sz?.mapName && sz.mapName !== f.spotName ? `（${sz.mapName}）` : ''}${extraSpots}${locBtn}</span>`
       : `<span><span class="detail-label">釣場</span>—（此魚無固定釣場資料，無法標地圖）</span>`;
 
     return `
@@ -745,7 +745,7 @@ function render() {
       ${wxStr       ? `<span><span class="detail-label">天氣</span>${wxStr}${prevStr ? `（前一時段：${prevStr}）` : ''}</span>` : ''}
     </div>
   </div>
-  <div class="fish-patch">${f.patch}</div>
+  <div class="fish-patch">${f.patch ?? ''}</div>
   <button class="tgt-btn${isTarget?' on':''}" data-target="${f.itemId}" title="${isTarget?'移出目標魚':'設為目標魚（頂部顯示開窗倒數）'}">🎯</button>
 </div>`;
   }).join('');
@@ -836,7 +836,7 @@ function openFishDetail(id, keepSpot) {
   const sz = spotZone(f, fdSpotId);
 
   document.getElementById('fdName').textContent = f.name || f.nameEn;
-  document.getElementById('fdNameEn').textContent = `${f.nameEn || ''} · v${f.patch}`;
+  document.getElementById('fdNameEn').textContent = `${f.nameEn || ''}${f.patch ? ` · v${f.patch}` : ''}`;
 
   renderFdActions(f);
 
@@ -867,13 +867,13 @@ function openFishDetail(id, keepSpot) {
   let spotCell;
   if (!spotList.length) spotCell = '—（此魚無固定釣場資料）';
   else if (spotList.length === 1) {
-    spotCell = f.spotName ? `${f.spotName}${sz?.mapName ? `（${sz.mapName}）` : ''}` : '—';
+    spotCell = f.spotName ? `${f.spotName}${sz?.mapName && sz.mapName !== f.spotName ? `（${sz.mapName}）` : ''}` : '—';
   } else {
     spotCell = `<div class="fd-spots">${spotList.map(sid => {
       const sp = SPOTS.get(sid);
       if (!sp) return '';
       const mn = sp.coords ? MAPS.get(sp.coords.mapId)?.name : null;
-      return `<span class="fd-spot-chip${sid === fdSpotId ? ' active' : ''}" data-fdspot="${sid}" title="切換釣場（窗口依該地圖天氣重算）">${sp.name}${mn ? `（${mn}）` : ''}</span>`;
+      return `<span class="fd-spot-chip${sid === fdSpotId ? ' active' : ''}" data-fdspot="${sid}" title="切換釣場（窗口依該地圖天氣重算）">${sp.name}${mn && mn !== sp.name ? `（${mn}）` : ''}</span>`;
     }).join('')}</div>`;
   }
   const rows = [
@@ -964,7 +964,7 @@ function renderTargets() {
 
   document.getElementById('targetsList').innerHTML = rows.map(({ f, st }) => {
     const sz = spotZone(f);
-    const loc = f.spotName ? `${f.spotName}${sz?.mapName ? ' · ' + sz.mapName : ''}` : '無固定釣場資料';
+    const loc = f.spotName ? `${f.spotName}${sz?.mapName && sz.mapName !== f.spotName ? ' · ' + sz.mapName : ''}` : '無固定釣場資料';
     const locBtn = sz ? `<button class="loc-btn" data-map="${f.itemId}" title="開地圖">📍</button>` : '';
     const pill = st.state === 'anytime' ? '<span class="st-pill st-open">隨時可釣</span>' : (statusPill(st) || '<span class="st-pill st-far">條件不明</span>');
     const bait = f.bait?.length ? `餌：${f.bait.map(b => b.name || b.nameEn).join(' → ')}` : '';
