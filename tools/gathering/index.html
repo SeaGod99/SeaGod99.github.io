@@ -422,7 +422,7 @@ function jobEmoji(job){ return job === '採礦工' ? '⛏️' : '🌿'; }
 
 function passesFilter(node){
   if (filterJob !== 'all' && node.job !== filterJob) return false;
-  if (filterVer !== 'all' && node.patch !== filterVer) return false;
+  if (filterVer !== 'all' && String(node.patch||'').split('.')[0] !== filterVer) return false;
   if (filterMap !== 'all' && String(node.mapId) !== filterMap) return false;
   if (filterType === 'legendary' && !node.legendary) return false;
   if (filterType === 'ephemeral' && !node.ephemeral) return false;
@@ -552,9 +552,12 @@ function render(){
 /* ── 篩選器初始化 ── */
 function populateSelectors(){
   const verSel = document.getElementById('verSel');
-  const patches = [...new Set(NODES.map(n=>n.patch).filter(Boolean))].sort();
-  patches.forEach(p=>{
-    const o = document.createElement('option'); o.value=p; o.textContent=p; verSel.appendChild(o);
+  const EXP_NAME = { 2:'原初之地', 3:'蒼天之禁地', 4:'紅蓮之狂潮', 5:'暗影之逆焰', 6:'曉月之終途', 7:'金曦之遺輝' };
+  const majors = [...new Set(NODES.map(n=>String(n.patch||'').split('.')[0]).filter(Boolean))].sort();
+  majors.forEach(m=>{
+    const o = document.createElement('option'); o.value=m;
+    o.textContent = EXP_NAME[m] ? `${m}.x ${EXP_NAME[m]}` : `${m}.x`;
+    verSel.appendChild(o);
   });
 
   const mapSel = document.getElementById('mapSel');
