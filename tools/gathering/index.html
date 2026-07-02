@@ -139,6 +139,28 @@
 
     .empty { text-align:center; color:var(--text-muted); padding:48px 0; font-size:14px; }
 
+    /* ── 追蹤目標固定區 ── */
+    .track-strip {
+      background:var(--bg-card); border:1px solid rgba(200,169,110,0.35); border-radius:var(--radius-md);
+      padding:12px 16px; margin-bottom:16px;
+    }
+    .ts-head { font-size:13.5px; font-weight:700; color:var(--gold-light); display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
+    .ts-hint { font-size:11px; font-weight:400; color:var(--text-muted); }
+    .ts-row {
+      display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+      padding:7px 0; border-top:1px solid var(--border); margin-top:7px; font-size:13px;
+    }
+    .ts-row:first-of-type { border-top:none; }
+    .ts-name { font-weight:600; color:var(--text-primary); }
+    .ts-loc { color:var(--text-secondary); font-size:12px; }
+    .ts-cd { margin-left:auto; display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text-secondary); }
+
+    .map-btn {
+      font-size:11px; padding:2px 10px; border-radius:var(--radius-sm); border:1px solid var(--border);
+      background:var(--raise); color:var(--gold-light); cursor:pointer; transition:var(--transition);
+    }
+    .map-btn:hover { border-color:rgba(200,169,110,0.45); background:var(--gold-dim); }
+
     .items-list { font-size:13px; color:var(--text-secondary); margin-top:6px; line-height:1.7; }
     .items-list b { color:var(--text-primary); font-weight:500; }
 
@@ -231,6 +253,8 @@
     <span class="chip mine" id="trackOnly" data-on="0">⭐ 只看追蹤</span>
   </div>
 
+  <div class="track-strip" id="trackStrip" style="display:none"></div>
+
   <div class="result-meta" id="resultMeta"></div>
 
   <div class="node-grid" id="nodeGrid"></div>
@@ -256,6 +280,7 @@
 </footer>
 
 <script type="module">
+import { initMapModal, openMapModal } from '../../assets/js/map-modal.js';
 /* ─────────────────────────────────────────────
    艾歐澤亞時間 (Eorzea Time)
    ET 流速 = 現實時間 × 3600/175 (1 ET 天 = 70 真實分鐘)
@@ -414,8 +439,43 @@ function teamcraftFlag(node){
   return `/coord ${node.x.toFixed(1)} ${node.y.toFixed(1)} ${node.mapName||''}`.trim();
 }
 
+/* ── 追蹤目標固定區：釘選的節點永遠置頂顯示，開了頁面一眼就知道現在／接下來要跑哪 ── */
+function renderTrackStrip(now){
+  const strip = document.getElementById('trackStrip');
+  if (!trackedIds.size){ strip.style.display='none'; return; }
+  const rows = NODES.filter(n=>trackedIds.has(n.id))
+    .map(n=>({ n, st: nodeStatus(n, now) }))
+    .sort((a,b)=>{
+      const rank = { open:0, soon:1, closed:2 };
+      if (rank[a.st.state] !== rank[b.st.state]) return rank[a.st.state]-rank[b.st.state];
+      return a.st.secsLeft - b.st.secsLeft;
+    });
+  if (!rows.length){ strip.style.display='none'; return; }
+  strip.style.display='';
+  strip.innerHTML = `<div class="ts-head">⭐ 追蹤目標 <span class="ts-hint">依開放時間排序 · 點卡片右上 ☆ 新增</span></div>` +
+    rows.map(({n, st})=>{
+      const pill = st.state==='open'
+        ? '<span class="status-pill pill-open">● 開放中</span>'
+        : st.state==='soon'
+          ? '<span class="status-pill pill-soon">即將開放</span>'
+          : '<span class="status-pill pill-closed">未開放</span>';
+      const cdLabel = st.state==='open' ? '剩餘' : '距開放';
+      const cdCls = st.state==='open'?'open':st.state==='soon'?'soon':'closed';
+      const mapBtn = n.mapMissing ? '' : `<button class="map-btn" data-mapopen="${n.id}">🗺</button>`;
+      const flag = teamcraftFlag(n);
+      const flagBtn = flag ? `<button class="flag-btn" data-flag="${flag.replace(/"/g,'&quot;')}">📋</button>` : '';
+      return `<div class="ts-row">
+        ${pill}
+        <span class="ts-name">${jobEmoji(n.job)} ${n.itemNames.join('、')}</span>
+        <span class="ts-loc">${n.mapMissing ? '地圖未知' : `${n.mapName} X:${n.x.toFixed(1)} Y:${n.y.toFixed(1)}`}</span>
+        <span class="ts-cd">${cdLabel} <b class="countdown ${cdCls}">${fmtCountdown(st.secsLeft)}</b> ${flagBtn} ${mapBtn}</span>
+      </div>`;
+    }).join('');
+}
+
 function render(){
   const now = Date.now();
+  renderTrackStrip(now);
   let list = NODES.filter(passesFilter).map(n => ({ n, st: nodeStatus(n, now) }));
 
   if (openOnly) list = list.filter(x => x.st.state === 'open');
@@ -460,6 +520,7 @@ function render(){
     const flagBtn = flag
       ? `<button class="flag-btn" data-flag="${flag.replace(/"/g,'&quot;')}">📋 ${flag}</button>`
       : '';
+    const mapBtn = n.mapMissing ? '' : `<button class="map-btn" data-mapopen="${n.id}">🗺 地圖</button>`;
     const tracked = trackedIds.has(n.id);
     return `
       <div class="node-card ${cls}">
@@ -481,6 +542,7 @@ function render(){
         <div class="node-meta" style="margin-top:6px">
           <span>${cdLabel}：<b class="countdown ${cdCls}">${fmtCountdown(st.secsLeft)}</b></span>
           ${flagBtn}
+          ${mapBtn}
         </div>
         <div class="windows">${wins}</div>
       </div>`;
@@ -551,7 +613,26 @@ document.getElementById('trackOnly').addEventListener('click', e=>{
   chip.classList.toggle('active', trackOnly);
   render();
 });
-grid.addEventListener('click', e=>{
+/* 剪貼簿：clipboard API 失敗時退回 execCommand（非安全環境／遊戲內瀏覽器） */
+function copyText(text) {
+  if (navigator.clipboard?.writeText) {
+    return navigator.clipboard.writeText(text).then(()=>true).catch(()=>copyTextFallback(text));
+  }
+  return Promise.resolve(copyTextFallback(text));
+}
+function copyTextFallback(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.cssText = 'position:fixed;opacity:0';
+  document.body.appendChild(ta);
+  ta.select();
+  let ok = false;
+  try { ok = document.execCommand('copy'); } catch (e) {}
+  ta.remove();
+  return ok;
+}
+let NODE_BY_ID = new Map();
+function handleActionClick(e){
   const trackBtn = e.target.closest('[data-track]');
   if (trackBtn) {
     const id = Number(trackBtn.dataset.track);
@@ -560,20 +641,37 @@ grid.addEventListener('click', e=>{
     render();
     return;
   }
+  const mapBtn = e.target.closest('[data-mapopen]');
+  if (mapBtn) {
+    const n = NODE_BY_ID.get(Number(mapBtn.dataset.mapopen));
+    if (!n || n.mapMissing) return;
+    openMapModal({
+      mapId: n.mapId, x: n.x, y: n.y,
+      title: n.itemNames.join('、'),
+      sub: `${n.mapName} · ${n.job} · ${n.typeName}（採集 Lv.${n.level}）`,
+      flagText: teamcraftFlag(n) || '',
+    });
+    return;
+  }
   const flagBtn = e.target.closest('[data-flag]');
   if (flagBtn) {
     const text = flagBtn.dataset.flag;
-    navigator.clipboard?.writeText(text).then(()=>{
+    const orig = flagBtn.textContent;
+    copyText(text).then(ok=>{
       flagBtn.classList.add('copied');
-      flagBtn.textContent = '✅ 已複製';
-      setTimeout(()=>{ flagBtn.classList.remove('copied'); flagBtn.textContent = `📋 ${text}`; }, 1500);
+      flagBtn.textContent = ok ? '✅ 已複製' : '❌ 複製失敗';
+      setTimeout(()=>{ flagBtn.classList.remove('copied'); flagBtn.textContent = orig; }, 1500);
     });
   }
-});
+}
+grid.addEventListener('click', handleActionClick);
+document.getElementById('trackStrip').addEventListener('click', handleActionClick);
 
 /* ── 啟動 ── */
 (async function init(){
   await loadData();
+  NODE_BY_ID = new Map(NODES.map(n=>[n.id, n]));
+  initMapModal({ mapsData: [...MAPS.values()], base: '../..' });
   populateSelectors();
   tickClock();
   render();

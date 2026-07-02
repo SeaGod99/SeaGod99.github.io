@@ -85,6 +85,7 @@
     .node-card {
       background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
       padding: 0.75rem 1rem; transition: border-color 0.2s, background 0.2s;
+      content-visibility: auto; contain-intrinsic-size: auto 140px; /* 一次渲染全部，離屏卡片跳過排版（與收藏頁一致） */
     }
     .node-card:hover { border-color: var(--border-hover); background: var(--bg-card-hover); }
     .node-card.all-done { border-color: rgba(74,222,128,0.3); background: rgba(74,222,128,0.03); }
@@ -119,16 +120,6 @@
     .item-chip:hover { border-color: var(--gold-light); }
     .item-chip.owned { background: var(--green-dim); border-color: rgba(74,222,128,0.3); color: var(--green); }
     .item-chip.owned::before { content: '✓ '; font-size: 0.7rem; }
-
-    /* PAGINATION */
-    .pagination { max-width: 1500px; margin: 0 auto; padding: 0 1.5rem 3rem; display: flex; gap: 0.4rem; justify-content: center; flex-wrap: wrap; }
-    .page-btn {
-      font-size: 0.8rem; padding: 0.35rem 0.7rem; border-radius: 5px; cursor: pointer;
-      border: 1px solid var(--border); background: var(--bg-card); color: var(--text-dim); transition: all 0.15s;
-    }
-    .page-btn:hover { border-color: var(--gold); color: var(--gold); }
-    .page-btn.active { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); font-weight: 600; }
-    .page-btn:disabled { opacity: 0.3; cursor: default; }
 
     /* VIEW TOGGLE */
     .view-toggle { display: flex; gap: 0; border: 1px solid var(--border); border-radius: 5px; overflow: hidden; }
@@ -168,7 +159,7 @@
 </head>
 <body>
 <nav class="nav">
-  <a href="../../" class="nav-back">⚓ 水神的工具箱</a>
+  <a href="../../" class="nav-back">&larr; 水神的工具箱</a>
   <span class="nav-sep">›</span>
   <span class="nav-title">⛏️ 採集紀錄追蹤</span>
 </nav>
@@ -229,7 +220,6 @@
 
 <div class="result-info" id="resultInfo"></div>
 <div class="node-list" id="nodeList"></div>
-<div class="pagination" id="pagination"></div>
 
 <div class="map-view" id="mapView" style="display:none">
   <div class="map-bar">
@@ -250,7 +240,6 @@ const GATHER_URL = '../../data/gathering.json';
 const ITEMS_URL  = '../../data/items.json';
 const MAPS_URL   = '../../data/maps.json';
 const LS_KEY     = 'ffxiv_gathering_items_owned';
-const PAGE_SIZE  = 40;
 
 // 基礎元素素材（六元素 × 碎晶/水晶/晶簇 = id 2–19）：每個採集點都會掉，屬雜訊，
 // 不在採集點顯示、也不計入進度（與 scripts/patch-gathering-version.mjs 的 CRYSTAL 一致）。
@@ -263,7 +252,6 @@ let mapMap = {};
 let mapMeta = {};
 let filtered = [];
 let owned = new Set(JSON.parse(localStorage.getItem(LS_KEY) || '[]'));
-let page = 0;
 let statusFilter = 'all';
 let viewMode = 'list';
 let currentMapId = null;
@@ -345,7 +333,6 @@ function onFilter() {
     return true;
   });
 
-  page = 0;
   renderCurrent();
 }
 
@@ -394,15 +381,10 @@ function nodeCardHTML(n) {
 }
 
 function render() {
-  const start = page * PAGE_SIZE;
-  const pageData = filtered.slice(start, start + PAGE_SIZE);
-
   document.getElementById('resultInfo').textContent =
     `顯示 ${filtered.length} 個節點（共 ${nodes.length} 個）`;
 
-  document.getElementById('nodeList').innerHTML = pageData.map(nodeCardHTML).join('');
-
-  renderPagination();
+  document.getElementById('nodeList').innerHTML = filtered.map(nodeCardHTML).join('');
 }
 
 // ── 地圖檢視 ──
@@ -411,7 +393,6 @@ function setView(mode) {
   document.getElementById('vList').classList.toggle('active', mode === 'list');
   document.getElementById('vMap').classList.toggle('active', mode === 'map');
   document.getElementById('nodeList').style.display   = mode === 'list' ? '' : 'none';
-  document.getElementById('pagination').style.display = mode === 'list' ? '' : 'none';
   document.getElementById('mapView').style.display    = mode === 'map'  ? '' : 'none';
   renderCurrent();
 }
@@ -547,28 +528,6 @@ function toggleItem(id, el) {
   if (statusFilter !== 'all') onFilter();
 }
 
-function renderPagination() {
-  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
-  if (totalPages <= 1) { document.getElementById('pagination').innerHTML = ''; return; }
-
-  let html = '';
-  html += `<button class="page-btn" ${page===0?'disabled':''} onclick="goPage(${page-1})">‹</button>`;
-  for (let i = 0; i < totalPages; i++) {
-    if (totalPages > 10 && Math.abs(i - page) > 3 && i !== 0 && i !== totalPages-1) {
-      if (i === 1 || i === totalPages-2) html += `<span style="color:var(--text-muted);padding:0 0.3rem">…</span>`;
-      continue;
-    }
-    html += `<button class="page-btn${i===page?' active':''}" onclick="goPage(${i})">${i+1}</button>`;
-  }
-  html += `<button class="page-btn" ${page===totalPages-1?'disabled':''} onclick="goPage(${page+1})">›</button>`;
-  document.getElementById('pagination').innerHTML = html;
-}
-
-function goPage(p) {
-  page = p;
-  render();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
 
 function resetAll() {
   document.getElementById('searchInput').value = '';
