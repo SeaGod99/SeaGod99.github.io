@@ -205,6 +205,9 @@ const clamp01 = (v) => Math.max(0, Math.min(1, v));
 const coordFrac = (c, sizeFactor) => ((c - 1) * (sizeFactor / 100)) / 41;
 
 const EXP_ORDER = ['原初之地', '蒼天之禁地', '紅蓮之狂潮', '暗影之逆焰', '曉月之終途', '金曦之遺輝'];
+// 版本顯示統一「N.x 資料片名」（全站慣例）；資料值仍為資料片名
+const EXP_PREFIX = { '原初之地':'2.x', '蒼天之禁地':'3.x', '紅蓮之狂潮':'4.x', '暗影之逆焰':'5.x', '曉月之終途':'6.x', '金曦之遺輝':'7.x' };
+const expLabel = e => EXP_PREFIX[e] ? `${EXP_PREFIX[e]} ${e}` : e;
 
 let GRADES = [];              // treasure-maps.json data
 let MAPS = new Map();         // mapId -> map meta
@@ -243,7 +246,7 @@ function renderGradeSelector() {
         const party = isParty(g) ? '<span class="party" title="組隊寶物庫">👥</span>' : '';
         return `<span class="grade-chip${g.grade === selectedGrade ? ' active' : ''}" data-grade="${g.grade}">${g.grade}${alias}${party}</span>`;
       }).join('');
-    return `<div class="exp-row"><span class="exp-name">${exp}</span><div class="grade-chips">${chips}</div></div>`;
+    return `<div class="exp-row"><span class="exp-name">${expLabel(exp)}</span><div class="grade-chips">${chips}</div></div>`;
   }).join('');
 }
 
@@ -260,7 +263,7 @@ function renderSummary() {
       <div class="g-main">${g.name.replace('陳舊的地圖', '陳舊的地圖 ')}${aliasNote}</div>
       <div class="g-sub">${zones} 個地區 · ${g.locations.length} 個挖寶點</div>
     </div>
-    <span class="badge badge-exp">${g.expansion || '—'}</span>
+    <span class="badge badge-exp">${g.expansion ? expLabel(g.expansion) : '—'}</span>
     <span class="badge ${party ? 'badge-party' : 'badge-solo'}">${party ? '👥 組隊寶物庫' : '🧍 單人挖掘'}</span>
     <div class="search-box">
       <span class="icon">🔍</span>

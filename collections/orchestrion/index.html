@@ -200,9 +200,12 @@
     });
   }
 
+  // 版本篩選顯示統一「N.x 資料片名」（全站慣例）；資料值仍為資料片名
+  const EXP_PREFIX = { '原初之地':'2.x', '蒼天之禁地':'3.x', '紅蓮之狂潮':'4.x', '暗影之逆焰':'5.x', '曉月之終途':'6.x', '金曦之遺輝':'7.x' };
   function renderCategoryFilters() {
     renderTagFilters('categoryFilters', CATEGORIES, filterCategory,
-      v => { filterCategory = filterCategory === v ? null : v; renderCategoryFilters(); renderGrid(); }
+      v => { filterCategory = filterCategory === v ? null : v; renderCategoryFilters(); renderGrid(); },
+      v => EXP_PREFIX[v] ? `${EXP_PREFIX[v]} ${v}` : v
     );
   }
 
