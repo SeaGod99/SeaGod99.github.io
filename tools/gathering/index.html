@@ -198,6 +198,27 @@
       .et-value { font-size:22px; }
       .toggle-open { margin-left:0; }
     }
+
+    /* ── 地圖一覽檢視 ── */
+    .gmap-toolbar { display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:12px; }
+    .gmap-legend { font-size:13px; opacity:.75; display:flex; align-items:center; }
+    .gdot-demo { display:inline-block; width:11px; height:11px; border-radius:50%; margin-right:4px; border:1.5px solid rgba(0,0,0,.5); }
+    .gdot-demo.open { background:#4ade80; } .gdot-demo.soon { background:#fbbf24; } .gdot-demo.closed { background:#6b7280; }
+    .gmap-canvas { position:relative; max-width:780px; border:1px solid rgba(255,255,255,.12); border-radius:10px; overflow:hidden; background:rgba(128,128,128,.05); }
+    .gmap-canvas img { display:block; width:100%; height:auto; }
+    #gDots { position:absolute; inset:0; }
+    .gdot { position:absolute; width:14px; height:14px; border-radius:50%; transform:translate(-50%,-50%); cursor:pointer; border:2px solid rgba(0,0,0,.55); box-shadow:0 0 6px rgba(0,0,0,.5); }
+    .gdot.open { background:#4ade80; animation:gdot-pulse 1.6s ease-out infinite; }
+    .gdot.soon { background:#fbbf24; }
+    .gdot.closed { background:#6b7280; opacity:.75; }
+    .gdot.sel { outline:3px solid #4fc3f7; outline-offset:1px; }
+    @keyframes gdot-pulse { 0% { box-shadow:0 0 0 0 rgba(74,222,128,.55); } 100% { box-shadow:0 0 0 12px rgba(74,222,128,0); } }
+    .gmap-empty, .gmap-hint { padding:20px; opacity:.7; font-size:14px; }
+    .gmap-panel { margin-top:12px; max-width:780px; }
+    .gnp { display:flex; align-items:center; gap:12px; flex-wrap:wrap; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.09); border-radius:10px; padding:12px 16px; font-size:14px; }
+    .gnp-name { font-weight:700; }
+    .gnp-meta { opacity:.75; }
+    .gnp .windows { width:100%; margin-top:4px; }
   </style>
   <link rel="stylesheet" href="../../assets/css/theme.css">
   <script src="../../assets/js/theme.js"></script>
@@ -251,6 +272,10 @@
     </div>
     <span class="chip mine toggle-open" id="openOnly" data-on="0">僅顯示開放中</span>
     <span class="chip mine" id="trackOnly" data-on="0">⭐ 只看追蹤</span>
+    <div class="filter-group" id="gViewToggle">
+      <span class="chip btn active" data-view="list">📋 清單</span>
+      <span class="chip btn" data-view="map">🗺 地圖一覽</span>
+    </div>
   </div>
 
   <div class="track-strip" id="trackStrip" style="display:none"></div>
@@ -258,6 +283,17 @@
   <div class="result-meta" id="resultMeta"></div>
 
   <div class="node-grid" id="nodeGrid"></div>
+
+  <!-- 地圖一覽檢視：整張地圖上標出所有節點位置與開放狀態 -->
+  <div id="gMapView" style="display:none">
+    <div class="gmap-toolbar">
+      <div class="select-box"><select id="gMapSelect"></select></div>
+      <span class="gmap-legend"><i class="gdot-demo open"></i> 開放中　<i class="gdot-demo soon"></i> 即將開放　<i class="gdot-demo closed"></i> 未開放</span>
+    </div>
+    <div class="gmap-canvas" id="gMapCanvas"></div>
+    <div class="gmap-panel" id="gNodePanel"></div>
+  </div>
+
   <div class="empty" id="emptyState" style="display:none">找不到符合條件的採集節點，試試其他關鍵字。</div>
 
   <p class="info-note">
@@ -488,12 +524,16 @@ function render(){
   });
 
   if (list.length === 0){
-    grid.innerHTML = ''; emptyState.style.display='block'; resultMeta.textContent='';
+    grid.innerHTML = ''; resultMeta.textContent='';
+    if (gView === 'map'){ emptyState.style.display='none'; renderNodeMap([], now); return; }
+    emptyState.style.display='block';
     return;
   }
   emptyState.style.display='none';
   const openCount = list.filter(x=>x.st.state==='open').length;
   resultMeta.textContent = `共 ${list.length} 個節點，其中 ${openCount} 個目前開放中`;
+
+  if (gView === 'map'){ renderNodeMap(list, now); return; }
 
   grid.innerHTML = list.map(({n, st}) => {
     const cls = st.state==='open'?'is-open':st.state==='soon'?'is-soon':'is-closed';
@@ -548,6 +588,109 @@ function render(){
       </div>`;
   }).join('');
 }
+
+/* ── 地圖一覽檢視：整張地圖標出節點位置，綠=開放中／黃=即將／灰=未開放 ── */
+const gCoordFrac = (c, sf) => Math.max(0, Math.min(1, ((c - 1) * (sf / 100)) / 41));
+let gView = 'list', gMapId = null, gSelNode = null, gLastImgMap = null;
+
+function setGView(mode){
+  gView = mode;
+  document.querySelectorAll('#gViewToggle .chip').forEach(c=>c.classList.toggle('active', c.dataset.view===mode));
+  document.getElementById('nodeGrid').style.display = mode==='list' ? '' : 'none';
+  document.getElementById('gMapView').style.display = mode==='map' ? '' : 'none';
+  render();
+}
+
+function renderNodeMap(list, now){
+  const byMap = new Map();
+  for (const x of list){
+    if (x.n.mapMissing) continue;
+    if (!byMap.has(x.n.mapId)) byMap.set(x.n.mapId, []);
+    byMap.get(x.n.mapId).push(x);
+  }
+  const sel = document.getElementById('gMapSelect');
+  const canvas = document.getElementById('gMapCanvas');
+  const opts = [...byMap.entries()].sort((a,b)=>b[1].length-a[1].length);
+  if (!opts.length){
+    canvas.innerHTML = '<div class="gmap-empty">目前篩選沒有可定位在地圖上的節點。</div>';
+    document.getElementById('gNodePanel').innerHTML = '';
+    sel.innerHTML = '<option>（無）</option>'; sel.dataset.sig = ''; gLastImgMap = null;
+    return;
+  }
+  if (gMapId == null || !byMap.has(gMapId)) gMapId = opts[0][0];
+
+  // 下拉選單只在集合變動時重建（render 每秒跑，避免打斷選單操作）
+  const sig = opts.map(([id,a])=>id+':'+a.length).join(',');
+  if (sel.dataset.sig !== sig){
+    sel.dataset.sig = sig;
+    sel.innerHTML = opts.map(([mid,arr])=>
+      `<option value="${mid}"${mid===gMapId?' selected':''}>${MAPS.get(mid)?.name ?? mid}（${arr.length} 節點）</option>`).join('');
+  } else if (sel.value !== String(gMapId)) sel.value = String(gMapId);
+
+  const m = MAPS.get(gMapId);
+  if (gLastImgMap !== gMapId){
+    gLastImgMap = gMapId;
+    canvas.innerHTML = `<img src="../..${m.image.local}" alt="${m.name}"
+      onerror="if(this.dataset.retry){this.parentElement.innerHTML='<div class=&quot;gmap-empty&quot;>此地圖底圖載入失敗</div>'}else{this.dataset.retry=1;this.src='${m.image.url}';}"><div id="gDots"></div>`;
+  }
+  const sf = m.sizeFactor || 100;
+  const rows = byMap.get(gMapId);
+  if (gSelNode != null && !rows.some(x=>x.n.id===gSelNode)) gSelNode = null;
+  const dots = document.getElementById('gDots');
+  if (dots) dots.innerHTML = rows.map(({n, st})=>{
+    const fx = gCoordFrac(n.x, sf)*100, fy = gCoordFrac(n.y, sf)*100;
+    return `<div class="gdot ${st.state}${n.id===gSelNode?' sel':''}" data-gdot="${n.id}"
+      style="left:${fx.toFixed(2)}%;top:${fy.toFixed(2)}%"
+      title="${n.itemNames.join('、')}（X:${n.x.toFixed(1)} Y:${n.y.toFixed(1)}）"></div>`;
+  }).join('');
+  renderGNodePanel(rows, now);
+}
+
+function renderGNodePanel(rows){
+  const panel = document.getElementById('gNodePanel');
+  const entry = rows.find(x=>x.n.id===gSelNode);
+  if (!entry){
+    const openN = rows.filter(x=>x.st.state==='open').length;
+    panel.innerHTML = `<div class="gmap-hint">點地圖上的圓點查看節點詳情（此地圖 ${rows.length} 個節點、${openN} 個開放中）。</div>`;
+    return;
+  }
+  const { n, st } = entry;
+  const pill = st.state==='open'
+    ? '<span class="status-pill pill-open">● 開放中</span>'
+    : st.state==='soon'
+      ? '<span class="status-pill pill-soon">即將開放</span>'
+      : '<span class="status-pill pill-closed">未開放</span>';
+  const cdLabel = st.state==='open' ? '剩餘' : '距開放';
+  const cdCls = st.state==='open'?'open':st.state==='soon'?'soon':'closed';
+  const wins = n.spawns.map(h=>{
+    const isNow = st.state==='open' && ((h%24)+24)%24===st.startH;
+    return `<span class="win ${isNow?'now':''}">${fmtEtWindow(h, n.duration)}</span>`;
+  }).join('');
+  const flag = teamcraftFlag(n);
+  const tracked = trackedIds.has(n.id);
+  panel.innerHTML = `<div class="gnp">
+    ${pill}
+    <span class="gnp-name">${jobEmoji(n.job)} ${n.itemNames.join('、')}</span>
+    <span class="gnp-meta">${n.typeName}・Lv.${n.level}・X:${n.x.toFixed(1)} Y:${n.y.toFixed(1)}</span>
+    <span>${cdLabel} <b class="countdown ${cdCls}">${fmtCountdown(st.secsLeft)}</b></span>
+    <button class="track-btn ${tracked?'on':''}" data-track="${n.id}" style="position:static" title="加入追蹤">${tracked?'★':'☆'}</button>
+    ${flag ? `<button class="flag-btn" data-flag="${flag.replace(/"/g,'&quot;')}">📋 ${flag}</button>` : ''}
+    <div class="windows">${wins}</div>
+  </div>`;
+}
+
+document.getElementById('gViewToggle').addEventListener('click', e=>{
+  const chip = e.target.closest('[data-view]');
+  if (chip) setGView(chip.dataset.view);
+});
+document.getElementById('gMapSelect').addEventListener('change', e=>{
+  gMapId = Number(e.target.value); gSelNode = null; gLastImgMap = null; render();
+});
+document.getElementById('gMapView').addEventListener('click', e=>{
+  const dot = e.target.closest('[data-gdot]');
+  if (dot){ gSelNode = Number(dot.dataset.gdot); render(); return; }
+  handleActionClick(e);
+});
 
 /* ── 篩選器初始化 ── */
 function populateSelectors(){
