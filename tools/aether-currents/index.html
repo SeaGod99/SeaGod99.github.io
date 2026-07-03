@@ -41,9 +41,17 @@
 
     .zone-note { font-size: 13.5px; color: var(--text-secondary); background: var(--green-dim); border: 1px solid rgba(74,222,128,0.2); border-radius: var(--radius-sm); padding: 10px 14px; margin: 12px 0 6px; line-height: 1.6; }
 
-    /* 一區一地圖 */
-    .zone-map-block { margin: 14px 0 18px; }
-    .zone-map { position: relative; max-width: 520px; border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; background: rgba(128,128,128,0.06); }
+    /* 一區一地圖：地圖與清單並排，地圖 sticky 跟著捲動 */
+    .zone-content { display: grid; grid-template-columns: minmax(280px, 420px) minmax(0, 1fr); gap: 4px 28px; align-items: start; }
+    .zone-content.no-map { grid-template-columns: 1fr; }
+    .zc-map { position: sticky; top: 12px; }
+    .zc-list { min-width: 0; }
+    @media (max-width: 920px) {
+      .zone-content { grid-template-columns: 1fr; }
+      .zc-map { position: static; }
+    }
+    .zone-map-block { margin: 14px 0 12px; }
+    .zone-map { position: relative; max-width: 100%; border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; background: rgba(128,128,128,0.06); }
     .zone-map img { display: block; width: 100%; height: auto; }
     .zm-pin { position: absolute; width: 13px; height: 13px; border-radius: 50%; transform: translate(-50%,-50%); cursor: pointer; border: 2px solid rgba(0,0,0,0.55); box-shadow: 0 0 5px rgba(0,0,0,0.5); }
     .zm-pin.field { background: var(--cyan); }
@@ -732,6 +740,7 @@
     }
 
     // 一區一地圖：整張區域地圖標出全部風脈位置（青=野外、紫=任務接取、綠=已解鎖）
+    var zoneMapEl = null;
     var zm = MAPS_BY_ID[z.mapId];
     if (zm && zm.image) {
       var pins = '';
@@ -760,9 +769,23 @@
           '</div>' +
           '<div class="zm-legend"><i class="zm-demo field"></i> 野外風脈泉　<i class="zm-demo quest"></i> 任務接取點　<i class="zm-demo done"></i> 已解鎖　<span class="zm-tip">點圖釘可跳至對應列</span>' +
           (offMap ? '<span class="zm-off">另有 ' + offMap + ' 個任務於其他地圖接取（見列表 🗺）</span>' : '') + '</div>';
-        body.appendChild(zmDiv);
+        zoneMapEl = zmDiv;
       }
     }
+
+    // 地圖（左，sticky）與風脈清單（右）並排；無地圖時清單佔滿整寬
+    var cols = document.createElement('div');
+    cols.className = 'zone-content' + (zoneMapEl ? '' : ' no-map');
+    var listCol = document.createElement('div');
+    listCol.className = 'zc-list';
+    if (zoneMapEl) {
+      var mapCol = document.createElement('div');
+      mapCol.className = 'zc-map';
+      mapCol.appendChild(zoneMapEl);
+      cols.appendChild(mapCol);
+    }
+    cols.appendChild(listCol);
+    body.appendChild(cols);
 
     // Split currents by type
     var questCurrents = z.currents.filter(function(c){ return c.type === 'quest'; });
@@ -773,7 +796,7 @@
       var lbl = document.createElement('div');
       lbl.className = 'type-group-label';
       lbl.textContent = labelText;
-      body.appendChild(lbl);
+      listCol.appendChild(lbl);
 
       var ul = document.createElement('div');
       ul.className = 'current-list';
@@ -816,7 +839,7 @@
         ul.appendChild(item);
       });
 
-      body.appendChild(ul);
+      listCol.appendChild(ul);
     }
 
     buildGroup(questCurrents, '任務解鎖型', 'type-tag-quest', '任務');
