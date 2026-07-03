@@ -39,6 +39,43 @@
       --transition: 0.18s cubic-bezier(0.4,0,0.2,1);
     }
 
+    .zone-note { font-size: 13.5px; color: var(--text-secondary); background: var(--green-dim); border: 1px solid rgba(74,222,128,0.2); border-radius: var(--radius-sm); padding: 10px 14px; margin: 12px 0 6px; line-height: 1.6; }
+
+    /* 一區一地圖 */
+    .zone-map-block { margin: 14px 0 18px; }
+    .zone-map { position: relative; max-width: 520px; border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; background: rgba(128,128,128,0.06); }
+    .zone-map img { display: block; width: 100%; height: auto; }
+    .zm-pin { position: absolute; width: 13px; height: 13px; border-radius: 50%; transform: translate(-50%,-50%); cursor: pointer; border: 2px solid rgba(0,0,0,0.55); box-shadow: 0 0 5px rgba(0,0,0,0.5); }
+    .zm-pin.field { background: var(--cyan); }
+    .zm-pin.quest { background: var(--purple); }
+    .zm-pin.done { background: var(--green); opacity: 0.85; }
+    .zm-pin:hover { outline: 2px solid var(--gold); }
+    .zm-legend { font-size: 12.5px; color: var(--text-secondary); margin-top: 8px; display: flex; align-items: center; flex-wrap: wrap; gap: 2px 0; }
+    .zm-demo { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; border: 1.5px solid rgba(0,0,0,0.5); }
+    .zm-demo.field { background: var(--cyan); }
+    .zm-demo.quest { background: var(--purple); }
+    .zm-demo.done { background: var(--green); }
+    .zm-tip { opacity: 0.7; margin-left: 8px; }
+    .zm-off { opacity: 0.8; margin-left: 8px; }
+    .zm-fail { padding: 30px; text-align: center; font-size: 13px; color: var(--text-secondary); }
+    .current-item.flash { animation: acflash 1.6s ease-out; }
+    @keyframes acflash { 0%, 40% { background: rgba(200,169,110,0.28); } 100% { background: transparent; } }
+
+    /* 地圖指引按鈕 */
+    .ac-map-btn {
+      flex-shrink: 0;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--cyan);
+      font-size: 12.5px;
+      padding: 5px 10px;
+      cursor: pointer;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+    .ac-map-btn:hover { border-color: var(--cyan); background: rgba(79,195,247,0.1); }
+
     html { scroll-behavior: smooth; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
@@ -257,6 +294,7 @@
       border-radius: 99px;
       white-space: nowrap;
     }
+    .tag.patch-arr { background: rgba(74,222,128,0.1);   color: #4ade80; border: 1px solid rgba(74,222,128,0.25); }
     .tag.patch-hw  { background: rgba(79,195,247,0.1);   color: #4fc3f7; border: 1px solid rgba(79,195,247,0.25); }
     .tag.patch-sb  { background: rgba(167,139,250,0.1);  color: #a78bfa; border: 1px solid rgba(167,139,250,0.25); }
     .tag.patch-shb { background: rgba(200,169,110,0.12); color: #c8a96e; border: 1px solid rgba(200,169,110,0.3); }
@@ -509,11 +547,12 @@
   var STORAGE_KEY = 'ffxiv_aether_currents_unlocked';
   var DATA_URL = '../../data/aether-currents.json';
 
-  var PATCH_LABELS = { '3.x':'3.x 蒼天之禁地', '4.x':'4.x 紅蓮之狂潮', '5.x':'5.x 暗影之逆焰', '6.x':'6.x 曉月之終途', '7.x':'7.x 金曦之遺輝' };
-  var PATCH_ORDER  = ['3.x','4.x','5.x','6.x','7.x'];
-  var PATCH_CSS    = { '3.x':'patch-hw', '4.x':'patch-sb', '5.x':'patch-shb', '6.x':'patch-ew', '7.x':'patch-dt' };
+  var PATCH_LABELS = { '2.x':'2.x 原初之地', '3.x':'3.x 蒼天之禁地', '4.x':'4.x 紅蓮之狂潮', '5.x':'5.x 暗影之逆焰', '6.x':'6.x 曉月之終途', '7.x':'7.x 金曦之遺輝' };
+  var PATCH_ORDER  = ['2.x','3.x','4.x','5.x','6.x','7.x'];
+  var PATCH_CSS    = { '2.x':'patch-arr', '3.x':'patch-hw', '4.x':'patch-sb', '5.x':'patch-shb', '6.x':'patch-ew', '7.x':'patch-dt' };
 
   var ZONES_DATA = [];   // raw zones from JSON
+  var MAPS_BY_ID = {};   // mapId -> maps.json 條目（區域地圖底圖與 sizeFactor）
   var unlocked = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
   var filterOwn   = 'all';
   var filterPatch = null;
@@ -632,9 +671,11 @@
     ZONES_DATA.forEach(function(z) {
       z.currents.forEach(function(c) {
         var key = acKey(c);
+        var isUnlocked = unlocked.has(key);
+        var pin = document.querySelector('[data-zmpin="' + c.id + '"]');
+        if (pin) pin.classList.toggle('done', isUnlocked);
         var item = document.getElementById('item-' + c.id);
         if (!item) return;
-        var isUnlocked = unlocked.has(key);
         item.classList.toggle('unlocked', isUnlocked);
         var cb = item.querySelector('.current-checkbox');
         if (cb) cb.textContent = isUnlocked ? '✓' : '';
@@ -682,6 +723,47 @@
     hr.className = 'zone-divider';
     body.appendChild(hr);
 
+    // 區域備註（如 2.0 全區域共通解鎖說明）
+    if (z.note) {
+      var noteDiv = document.createElement('div');
+      noteDiv.className = 'zone-note';
+      noteDiv.textContent = '💡 ' + z.note;
+      body.appendChild(noteDiv);
+    }
+
+    // 一區一地圖：整張區域地圖標出全部風脈位置（青=野外、紫=任務接取、綠=已解鎖）
+    var zm = MAPS_BY_ID[z.mapId];
+    if (zm && zm.image) {
+      var pins = '';
+      var offMap = 0;
+      z.currents.forEach(function(c) {
+        if (!c.coords) return;
+        var cm = MAPS_BY_ID[c.coords.mapId];
+        var sameMap = c.coords.mapId === z.mapId || (cm && cm.name === zm.name);
+        if (!sameMap) { offMap++; return; } // 任務於主城／子區域接取，仍可用列上的 🗺 查看
+        var sf = (cm || zm).sizeFactor || 100;
+        var fx = Math.max(0, Math.min(100, (c.coords.x - 1) * (sf / 100) / 41 * 100));
+        var fy = Math.max(0, Math.min(100, (c.coords.y - 1) * (sf / 100) / 41 * 100));
+        var lbl = (c.type === 'quest' ? (c.questName || '任務') : '野外風脈泉') +
+          '（X:' + c.coords.x.toFixed(1) + ' Y:' + c.coords.y.toFixed(1) + '）';
+        pins += '<div class="zm-pin ' + c.type + (unlocked.has(acKey(c)) ? ' done' : '') + '" data-zmpin="' + c.id +
+          '" style="left:' + fx.toFixed(2) + '%;top:' + fy.toFixed(2) + '%" title="' + lbl.replace(/"/g, '&quot;') + '"></div>';
+      });
+      if (pins) {
+        var zmDiv = document.createElement('div');
+        zmDiv.className = 'zone-map-block';
+        zmDiv.innerHTML =
+          '<div class="zone-map">' +
+            '<img loading="lazy" src="../..' + zm.image.local + '" alt="' + zm.name + '" ' +
+            'onerror="if(this.dataset.retry){this.closest(\'.zone-map\').innerHTML=\'<div class=&quot;zm-fail&quot;>地圖底圖載入失敗</div>\'}else{this.dataset.retry=1;this.src=\'' + zm.image.url + '\';}">' +
+            pins +
+          '</div>' +
+          '<div class="zm-legend"><i class="zm-demo field"></i> 野外風脈泉　<i class="zm-demo quest"></i> 任務接取點　<i class="zm-demo done"></i> 已解鎖　<span class="zm-tip">點圖釘可跳至對應列</span>' +
+          (offMap ? '<span class="zm-off">另有 ' + offMap + ' 個任務於其他地圖接取（見列表 🗺）</span>' : '') + '</div>';
+        body.appendChild(zmDiv);
+      }
+    }
+
     // Split currents by type
     var questCurrents = z.currents.filter(function(c){ return c.type === 'quest'; });
     var fieldCurrents = z.currents.filter(function(c){ return c.type === 'field'; });
@@ -707,9 +789,16 @@
         var mainLabel = c.type === 'quest'
           ? (c.questName || ('任務 #' + c.questId))
           : '野外採集';
+        var co = c.coords;
+        var coordTxt = co ? 'X:' + co.x.toFixed(1) + ' Y:' + co.y.toFixed(1) : null;
         var subLabel = c.type === 'quest'
-          ? '解鎖任務'
-          : '前往野外採集';
+          ? (coordTxt ? '解鎖任務・接取 ' + coordTxt : '解鎖任務')
+          : (coordTxt ? '野外風脈泉 ' + coordTxt : '前往野外採集');
+        var mapBtn = co
+          ? '<button class="ac-map-btn" data-mapid="' + co.mapId + '" data-x="' + co.x + '" data-y="' + co.y +
+            '" data-title="' + (c.type === 'quest' ? '任務接取位置' : '野外風脈泉') +
+            '" data-sub="' + z.zone + '・' + mainLabel + '">🗺 地圖</button>'
+          : '';
 
         item.innerHTML =
           '<div class="current-checkbox">' + cbText + '</div>' +
@@ -717,9 +806,13 @@
             '<div class="current-label">' + mainLabel + '</div>' +
             '<div class="current-sublabel">' + subLabel + '</div>' +
           '</div>' +
+          mapBtn +
           '<span class="current-type tag ' + typeCss + '">' + typeLabel + '</span>';
 
-        item.addEventListener('click', (function(k){ return function(){ toggle(k); }; })(key));
+        item.addEventListener('click', (function(k){ return function(ev){
+          if (ev.target.closest && ev.target.closest('.ac-map-btn')) return;
+          toggle(k);
+        }; })(key));
         ul.appendChild(item);
       });
 
@@ -791,12 +884,16 @@
     unlocked.clear(); save(); updateProgress(); updateZoneProgress(); renderItems();
   });
 
-  fetch(DATA_URL)
-    .then(function(res) {
+  Promise.all([
+    fetch(DATA_URL).then(function(res) {
       if (!res.ok) throw new Error('無法載入資料 (' + res.status + ')');
       return res.json();
-    })
-    .then(function(json) {
+    }),
+    fetch('../../data/maps.json').then(function(r){ return r.json(); }).catch(function(){ return null; })
+  ])
+    .then(function(results) {
+      var json = results[0];
+      if (results[1]) results[1].data.forEach(function(m){ MAPS_BY_ID[m.id] = m; });
       ZONES_DATA = json.zones || [];
 
       // Build zone DOM
@@ -819,6 +916,36 @@
       empty.textContent = '資料載入失敗：' + err.message;
     });
 })();
+</script>
+<script type="module">
+  // 地圖指引：共用迷你地圖彈窗（與釣魚／採集頁同套件）
+  import { initMapModal, openMapModal } from '../../assets/js/map-modal.js';
+  const maps = await fetch('../../data/maps.json').then(r => r.json());
+  initMapModal({ mapsData: maps.data, base: '../..' });
+  const mapById = new Map(maps.data.map(m => [m.id, m]));
+  document.addEventListener('click', e => {
+    const pin = e.target.closest('[data-zmpin]');
+    if (pin) {
+      const row = document.getElementById('item-' + pin.dataset.zmpin);
+      if (row) {
+        row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        row.classList.remove('flash'); void row.offsetWidth;
+        row.classList.add('flash');
+        setTimeout(() => row.classList.remove('flash'), 1700);
+      }
+      return;
+    }
+    const b = e.target.closest('.ac-map-btn');
+    if (!b) return;
+    const mapId = +b.dataset.mapid, x = +b.dataset.x, y = +b.dataset.y;
+    const m = mapById.get(mapId);
+    openMapModal({
+      mapId, x, y,
+      title: b.dataset.title,
+      sub: b.dataset.sub,
+      flagText: `/coord ${x.toFixed(1)} ${y.toFixed(1)} ${m ? m.name : ''}`.trim(),
+    });
+  });
 </script>
 </body>
 </html>
