@@ -319,7 +319,7 @@
       border: 1px solid var(--border);
       border-radius: var(--radius-md);
       margin-bottom: 12px;
-      overflow: hidden;
+      overflow: clip; /* 裁圓角但不建立捲動容器，讓 .zc-map 的 sticky 生效 */
       transition: var(--transition);
     }
     .zone-section.hidden { display: none; }
