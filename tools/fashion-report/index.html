@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>時尚品鑑推薦 — 水神的工具箱</title>
+<style>
+  :root {
+    --gold: #c8a96e;
+    --bg-base: #0a0c10;
+    --bg-card: #12161e;
+    --bg-hover: #1a2030;
+    --border: #2a3040;
+    --text: #d4cfc7;
+    --text-dim: #7a8090;
+    --accent: #d97ab0;
+    --accent-dim: rgba(217,122,176,0.14);
+    --ok: #6fbf73;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg-base); color: var(--text); font-family: 'Segoe UI','Noto Sans TC',sans-serif; min-height: 100vh; font-size: 18px; }
+
+  .site-header { border-bottom: 1px solid var(--border); padding: 14px 28px; display: flex; align-items: center; gap: 14px; }
+  .back-link { color: var(--gold); text-decoration: none; font-size: 16px; opacity: .8; transition: opacity .2s; }
+  .back-link:hover { opacity: 1; }
+  .sep { color: var(--border); }
+  .page-title { font-size: 22px; color: var(--gold); font-weight: 600; letter-spacing: .04em; }
+
+  .main { max-width: 1180px; margin: 0 auto; padding: 28px; }
+
+  /* 週狀態列 */
+  .week-bar { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 18px 26px; margin-bottom: 26px; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+  .week-no { font-size: 14px; color: var(--text-dim); }
+  .week-theme { font-size: 28px; font-weight: 700; color: var(--gold); }
+  .week-theme small { font-size: 15px; color: var(--text-dim); font-weight: 400; margin-left: 8px; }
+  .phase { margin-left: auto; text-align: right; }
+  .phase-badge { display: inline-block; border-radius: 20px; padding: 4px 14px; font-size: 14px; font-weight: 600; }
+  .phase-badge.prep { background: rgba(200,169,110,.15); color: var(--gold); border: 1px solid var(--gold); }
+  .phase-badge.judge { background: rgba(111,191,115,.13); color: var(--ok); border: 1px solid var(--ok); }
+  .phase-count { font-size: 15px; color: var(--text-dim); margin-top: 5px; font-variant-numeric: tabular-nums; }
+  .data-status { font-size: 13px; color: var(--text-dim); }
+  .data-status .dot { color: var(--accent); }
+
+  /* 建議卡 */
+  .rec-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 22px 26px; margin-bottom: 22px; }
+  .rec-title { font-size: 19px; font-weight: 700; color: var(--gold); display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .rec-score { background: var(--accent-dim); color: var(--accent); border-radius: 8px; padding: 2px 12px; font-size: 16px; }
+  .rec-sub { font-size: 15px; color: var(--text-dim); margin-bottom: 16px; }
+  .slot-rows { display: flex; flex-direction: column; gap: 10px; }
+  .slot-row { background: var(--bg-hover); border-radius: 8px; padding: 13px 18px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .slot-tag { min-width: 118px; font-size: 15px; color: var(--text-dim); }
+  .slot-tag b { color: var(--text); font-size: 16px; }
+  .item-name { font-size: 18px; font-weight: 600; color: var(--text); cursor: pointer; border-bottom: 1px dashed var(--border); transition: color .15s; }
+  .item-name:hover { color: var(--gold); }
+  .how-tag { font-size: 13px; border-radius: 12px; padding: 2px 10px; background: rgba(255,255,255,.06); color: var(--text-dim); }
+  .how-tag.mk { background: rgba(111,191,115,.12); color: var(--ok); }
+  .how-tag.npc { background: rgba(200,169,110,.14); color: var(--gold); }
+  .alt { font-size: 14px; color: var(--text-dim); margin-left: auto; }
+  .rec-note { font-size: 15px; color: var(--text-dim); margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); }
+  .rec-note b { color: var(--gold); }
+
+  details { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 22px; margin-bottom: 16px; }
+  summary { cursor: pointer; font-size: 16px; color: var(--text-dim); }
+  summary:hover { color: var(--gold); }
+  .dye-rows { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-top: 14px; }
+  .dye-cell { background: var(--bg-hover); border-radius: 8px; padding: 10px 14px; font-size: 15px; }
+  .dye-cell .d-slot { color: var(--text-dim); font-size: 13px; }
+
+  /* 頁尾完整清單 */
+  .full-slot { margin-top: 18px; }
+  .full-slot-title { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+  .full-slot-title span { font-size: 13px; color: var(--text-dim); font-weight: 400; margin-left: 6px; }
+  .fl-legend { font-size: 13px; color: var(--text-dim); margin-top: 10px; }
+  .fl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(470px, 1fr)); gap: 8px; margin-top: 10px; }
+  .fl-row { background: var(--bg-hover); border-radius: 8px; padding: 8px 14px; display: flex; align-items: center; gap: 10px; font-size: 15px; }
+  .fl-name { cursor: pointer; border-bottom: 1px dashed var(--border); transition: color .15s; }
+  .fl-name:hover { color: var(--gold); }
+  .fl-mk { font-size: 12px; color: var(--ok); white-space: nowrap; }
+  .fl-how { margin-left: auto; font-size: 13px; color: var(--text-dim); white-space: nowrap; }
+  .fl-how.npc { color: var(--gold); }
+  .fl-how.craft { color: var(--ok); }
+  @media (max-width: 560px) { .fl-grid { grid-template-columns: 1fr; } .fl-how { white-space: normal; text-align: right; } }
+
+  /* 未更新 fallback */
+  .stale { background: var(--bg-card); border: 1px solid var(--gold); border-radius: 10px; padding: 26px; margin-bottom: 22px; }
+  .stale h2 { font-size: 20px; color: var(--gold); margin-bottom: 10px; }
+  .stale p { font-size: 16px; color: var(--text-dim); margin-bottom: 14px; }
+  .ext-links { display: flex; gap: 10px; flex-wrap: wrap; }
+  .ext-links a { color: var(--accent); text-decoration: none; border: 1px solid var(--border); border-radius: 8px; padding: 8px 16px; font-size: 15px; transition: border-color .15s; }
+  .ext-links a:hover { border-color: var(--accent); }
+
+  .src-line { font-size: 13px; color: var(--text-dim); margin-top: 20px; line-height: 1.7; }
+  .src-line a { color: var(--text-dim); }
+
+  #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--gold); color: #14161c; border-radius: 8px; padding: 9px 22px; font-size: 15px; font-weight: 600; opacity: 0; pointer-events: none; transition: opacity .25s; z-index: 50; }
+  #toast.show { opacity: 1; }
+
+  @media (max-width: 640px) {
+    .main { padding: 18px 14px; }
+    .phase { margin-left: 0; text-align: left; }
+    .alt { margin-left: 0; width: 100%; }
+  }
+</style>
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <script src="../../assets/js/theme.js"></script>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="../../" class="back-link">&larr; 水神的工具箱</a>
+  <span class="sep">›</span>
+  <span class="page-title">👗 時尚品鑑推薦</span>
+</header>
+
+<main class="main">
+  <div id="app"><p style="color:var(--text-dim)">載入中…</p></div>
+  <div class="src-line">
+    每週二 16:00 更新主題、週五 16:00 開放評分（皆為台北時間），每週可評 4 次；參加即得 10,000 MGP，80 分以上再得 50,000 MGP（每週一次）。<br>
+    資料來源：<a href="https://fashionreportxiv.com/" target="_blank" rel="noopener">Fashion Report XIV</a>（社群實測）・台服譯名由本站資料庫映射。
+  </div>
+</main>
+
+<div id="toast">已複製</div>
+
+<script type="module">
+const $app = document.getElementById('app');
+const SLOT_TC = { weapon:'武器', head:'頭部', body:'身體', hands:'手部', legs:'腿部', feet:'腳部' };
+
+/* 週次與時段：week 440 起點 = 2026-06-30（二）16:00 UTC+8 */
+const ANCHOR = Date.UTC(2026, 5, 30, 8, 0, 0);
+const WEEK = 6048e5, DAY = 864e5;
+const curWeek = now => 440 + Math.floor((now - ANCHOR) / WEEK);
+function phaseInfo(now) {
+  const wkStart = ANCHOR + (curWeek(now) - 440) * WEEK;
+  const judgeOpen = wkStart + 3 * DAY;
+  return now < judgeOpen
+    ? { cls:'prep', label:'準備期', tip:'評分開放倒數', until: judgeOpen }
+    : { cls:'judge', label:'評分期', tip:'本週收榜倒數', until: wkStart + WEEK };
+}
+const fmtDur = ms => {
+  const s = Math.max(0, Math.floor(ms / 1000));
+  const d = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600), m = Math.floor(s % 3600 / 60);
+  return (d ? d + ' 天 ' : '') + String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(s % 60).padStart(2,'0');
+};
+
+function copyText(t) {
+  const done = () => { const el = document.getElementById('toast'); el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 1200); };
+  if (navigator.clipboard?.writeText) { navigator.clipboard.writeText(t).then(done).catch(() => fallbackCopy(t, done)); }
+  else fallbackCopy(t, done);
+}
+function fallbackCopy(t, done) {
+  const ta = document.createElement('textarea');
+  ta.value = t; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); done(); } catch {}
+  ta.remove();
+}
+
+const item = (e, alt) => `
+  <span class="item-name" data-copy="${e.name}" title="點擊複製名稱">${e.name}</span>
+  <span class="how-tag${e.npc ? ' npc' : e.market ? ' mk' : ''}">${e.how}</span>
+  ${alt ? `<span class="alt">替代：${alt}</span>` : ''}`;
+
+function render(d) {
+  const now = Date.now();
+  const week = curWeek(now);
+  if (d.week !== week) { renderStale(d, week); return; }
+
+  const ph = phaseInfo(now);
+  const hintOf = Object.fromEntries(d.slots.map(s => [s.slot, s.hint]));
+  const statusTxt = d.status === 'verified' ? '✅ 已驗證（社群實測）' : '🔮 預測版・週五評分開放後更新為驗證版';
+
+  const rows100 = d.easy100.map(e => `
+    <div class="slot-row">
+      <span class="slot-tag"><b>${SLOT_TC[e.slot]}</b>・${hintOf[e.slot] ?? ''}</span>
+      ${item(e, e.alt)}
+    </div>`).join('');
+
+  const rows80 = d.easy80.items.map(e => `
+    <div class="slot-row">
+      <span class="slot-tag"><b>${SLOT_TC[e.slot]}</b>・${hintOf[e.slot] ?? ''}</span>
+      ${item(e)}
+    </div>`).join('');
+
+  const dyeCells = ['weapon','head','body','hands','legs','feet'].map(k => {
+    const v = d.dyes[k]; if (!v) return '';
+    return `<div class="dye-cell"><div class="d-slot">${v.slotName}</div>${v.name}<span style="color:var(--text-dim)">（同${v.family} +1）</span></div>`;
+  }).join('');
+
+  $app.innerHTML = `
+    <div class="week-bar">
+      <div>
+        <div class="week-no">第 ${d.week} 週</div>
+        <div class="week-theme">${d.theme.name}<small>${d.theme.nameEn}</small></div>
+        <div class="data-status"><span class="dot">●</span> ${statusTxt}</div>
+      </div>
+      <div class="phase">
+        <span class="phase-badge ${ph.cls}">${ph.label}</span>
+        <div class="phase-count">${ph.tip} <span id="cnt"></span></div>
+      </div>
+    </div>
+
+    <div class="rec-card">
+      <div class="rec-title">💯 滿分配裝 <span class="rec-score">100 分</span></div>
+      <div class="rec-sub">4 個提示部位各穿 1 件，其餘部位穿滿任意裝備${d.scoring.needDyeFor100 ? '，並依指定色染色補分' : '，本週<b style="color:var(--gold)">不需染色</b>'}。</div>
+      <div class="slot-rows">${rows100}</div>
+    </div>
+
+    <div class="rec-card">
+      <div class="rec-title">🎯 省事 80 分 <span class="rec-score">${d.easy80.score} 分</span></div>
+      <div class="rec-sub">只想拿滿 MGP 的最短路徑——${d.easy80.desc ?? `備齊下列 ${d.easy80.items.length} 件提示裝即可`}</div>
+      <div class="slot-rows">${rows80}</div>
+      <div class="rec-note">${d.easy80.note}</div>
+    </div>
+
+    <details>
+      <summary>🎨 本週指定染色（缺提示裝備時可用染色補分：精確色 +2／同色系 +1）</summary>
+      <div class="dye-rows">${dyeCells}</div>
+    </details>
+
+    <details>
+      <summary>📚 完整接受裝備清單（推薦裝備沒有或穿不上時的替代參考，點擊名稱可複製）</summary>
+      <div class="fl-legend">金字＝NPC 固定成本（含價格）・綠「可交易」＝市場板可購・「—」＝無固定取得途徑（活動／商城／已移除的兌換等）</div>
+      ${d.slots.map(s => `
+        <div class="full-slot">
+          <div class="full-slot-title">${s.slotName}・${s.hint}<span>共 ${s.items.length} 件</span></div>
+          <div class="fl-grid">${s.items.map(i => `
+            <div class="fl-row">
+              <span class="fl-name" data-copy="${i.name}" title="點擊複製名稱">${i.name}</span>
+              ${i.marketable ? '<span class="fl-mk">可交易</span>' : ''}
+              <span class="fl-how${i.srcType?.startsWith('npc') ? ' npc' : i.srcType === 'craft' ? ' craft' : ''}">${i.how ?? '—'}</span>
+            </div>`).join('')}</div>
+        </div>`).join('')}
+    </details>
+    ${d.links?.theorycraft ? `<div class="src-line">本週社群討論：<a href="${d.links.theorycraft}" target="_blank" rel="noopener">Reddit 討論串</a></div>` : ''}
+  `;
+
+  const tick = () => { const el = document.getElementById('cnt'); if (el) el.textContent = fmtDur(ph.until - Date.now()); };
+  tick(); setInterval(tick, 1000);
+}
+
+function renderStale(d, week) {
+  $app.innerHTML = `
+    <div class="stale">
+      <h2>⏳ 本週（第 ${week} 週）資料尚未更新</h2>
+      <p>目前站內資料為第 ${d.week} 週「${d.theme.name}」。新一週提示於每週二 16:00 揭曉後更新，可先參考外部來源：</p>
+      <div class="ext-links">
+        <a href="https://fashionreportxiv.com/" target="_blank" rel="noopener">Fashion Report XIV</a>
+        <a href="https://www.reddit.com/r/ffxiv/search/?q=fashion%20report&sort=new" target="_blank" rel="noopener">Reddit 週帖</a>
+        <a href="https://search.bilibili.com/all?keyword=%E6%97%B6%E5%B0%9A%E5%93%81%E9%89%B4" target="_blank" rel="noopener">B 站攻略搜尋</a>
+      </div>
+    </div>`;
+}
+
+document.addEventListener('click', e => {
+  const c = e.target.closest('[data-copy]');
+  if (c) copyText(c.dataset.copy);
+});
+
+fetch('../../data/fashion-report.json')
+  .then(r => r.json())
+  .then(render)
+  .catch(() => { $app.innerHTML = '<p style="color:var(--text-dim)">資料載入失敗。</p>'; });
+</script>
+
+</body>
+</html>

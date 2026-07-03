@@ -1,0 +1,581 @@
+{
+  "schema": 1,
+  "week": 440,
+  "status": "predicted",
+  "source": "fashionreportxiv.com",
+  "updated": "2026-07-03",
+  "theme": {
+    "name": "新大陸騎手",
+    "nameEn": "Western Rider"
+  },
+  "slots": [
+    {
+      "slot": "body",
+      "slotName": "身體",
+      "hint": "西格瑪",
+      "hintEn": "The Great Sigmascape",
+      "categoryId": 241,
+      "items": [
+        {
+          "id": 21510,
+          "name": "鑽石禦敵戰甲",
+          "nameEn": "Diamond Armor of Fending",
+          "marketable": false,
+          "srcType": "raid",
+          "how": "零式素材兌換 西格瑪戰鬥記錄之四 ×8"
+        },
+        {
+          "id": 21516,
+          "name": "鑽石制敵戰甲",
+          "nameEn": "Diamond Armor of Maiming",
+          "marketable": false,
+          "srcType": "raid",
+          "how": "零式素材兌換 西格瑪戰鬥記錄之四 ×8"
+        },
+        {
+          "id": 21522,
+          "name": "鑽石強襲戰甲",
+          "nameEn": "Diamond Armor of Striking",
+          "marketable": false,
+          "srcType": "raid",
+          "how": "零式素材兌換 西格瑪戰鬥記錄之四 ×8"
+        },
+        {
+          "id": 21534,
+          "name": "鑽石游擊戰甲",
+          "nameEn": "Diamond Armor of Scouting",
+          "marketable": false,
+          "srcType": "raid",
+          "how": "零式素材兌換 西格瑪戰鬥記錄之四 ×8"
+        },
+        {
+          "id": 21528,
+          "name": "鑽石精準長衣",
+          "nameEn": "Diamond Coat of Aiming",
+          "marketable": false,
+          "srcType": "raid",
+          "how": "零式素材兌換 西格瑪戰鬥記錄之四 ×8"
+        },
+        {
+          "id": 21546,
+          "name": "鑽石詠咒長袍",
+          "nameEn": "Diamond Robe of Casting",
+          "marketable": false,
+          "srcType": "raid",
+          "how": "零式素材兌換 西格瑪戰鬥記錄之四 ×8"
+        },
+        {
+          "id": 21540,
+          "name": "鑽石治癒長袍",
+          "nameEn": "Diamond Robe of Healing",
+          "marketable": false,
+          "srcType": "raid",
+          "how": "零式素材兌換 西格瑪戰鬥記錄之四 ×8"
+        },
+        {
+          "id": 21572,
+          "name": "碳矽晶禦敵戰甲",
+          "nameEn": "Carborundum Armor of Fending",
+          "marketable": false,
+          "srcType": "raid",
+          "how": "零式素材兌換 西格瑪長杆 ×4"
+        },
+        {
+          "id": 21578,
+          "name": "碳矽晶制敵戰甲",
+          "nameEn": "Carborundum Armor of Maiming",
+          "marketable": false,
+          "srcType": "raid",
+          "how": "零式素材兌換 西格瑪長杆 ×4"
+        },
+        {
+          "id": 21584,
+          "name": "碳矽晶強襲戰甲",
+          "nameEn": "Carborundum Armor of Striking",
+          "marketable": false,
+          "srcType": "raid",
+          "how": "零式素材兌換 西格瑪長杆 ×4"
+        },
+        {
+          "id": 21596,
+          "name": "碳矽晶游擊戰甲",
+          "nameEn": "Carborundum Armor of Scouting",
+          "marketable": false,
+          "srcType": "raid",
+          "how": "零式素材兌換 西格瑪長杆 ×4"
+        },
+        {
+          "id": 21590,
+          "name": "碳矽晶精準長衣",
+          "nameEn": "Carborundum Coat of Aiming",
+          "marketable": false,
+          "srcType": "raid",
+          "how": "零式素材兌換 西格瑪長杆 ×4"
+        },
+        {
+          "id": 21608,
+          "name": "碳矽晶詠咒長袍",
+          "nameEn": "Carborundum Robe of Casting",
+          "marketable": false,
+          "srcType": "raid",
+          "how": "零式素材兌換 西格瑪長杆 ×4"
+        },
+        {
+          "id": 21602,
+          "name": "碳矽晶治癒長袍",
+          "nameEn": "Carborundum Robe of Healing",
+          "marketable": false,
+          "srcType": "raid",
+          "how": "零式素材兌換 西格瑪長杆 ×4"
+        }
+      ]
+    },
+    {
+      "slot": "hands",
+      "slotName": "手部",
+      "hint": "騎手",
+      "hintEn": "Riding High",
+      "categoryId": 25,
+      "items": [
+        {
+          "id": 14941,
+          "name": "恐龍革手套",
+          "nameEn": "Dinosaur Leather Gloves",
+          "marketable": true,
+          "srcType": "craft",
+          "how": "製作"
+        },
+        {
+          "id": 10043,
+          "name": "孤雲手套",
+          "nameEn": "Strife Gloves",
+          "marketable": false,
+          "srcType": "other",
+          "how": "—"
+        },
+        {
+          "id": 18165,
+          "name": "鬼船詠咒手套",
+          "nameEn": "Ghost Barque Gloves of Casting",
+          "marketable": false,
+          "srcType": "drop",
+          "how": "副本／掉落"
+        },
+        {
+          "id": 19624,
+          "name": "牛鬼革巧匠手套",
+          "nameEn": "Gyuki Leather Gloves of Crafting",
+          "marketable": true,
+          "srcType": "npc-gil",
+          "how": "NPC 金幣商店 15,681 金幣"
+        },
+        {
+          "id": 17497,
+          "name": "獅心手套",
+          "nameEn": "Leonhart Gloves",
+          "marketable": false,
+          "srcType": "other",
+          "how": "—"
+        }
+      ]
+    },
+    {
+      "slot": "legs",
+      "slotName": "腿部",
+      "hint": "新大陸風格",
+      "hintEn": "Go West",
+      "categoryId": 41,
+      "items": [
+        {
+          "id": 15465,
+          "name": "新世界喇叭褲",
+          "nameEn": "New World Hose",
+          "marketable": true,
+          "srcType": "craft",
+          "how": "製作"
+        },
+        {
+          "id": 44247,
+          "name": "圖拉爾商人及膝褲",
+          "nameEn": "Turali Trader's Culottes",
+          "marketable": true,
+          "srcType": "craft",
+          "how": "製作"
+        },
+        {
+          "id": 43317,
+          "name": "落雷絹巧匠寬鬆七分褲",
+          "nameEn": "Thunderyards Silk Culottes of Crafting",
+          "marketable": true,
+          "srcType": "npc-gil",
+          "how": "NPC 金幣商店 47,765 金幣"
+        },
+        {
+          "id": 43322,
+          "name": "落雷絹大地寬鬆七分褲",
+          "nameEn": "Thunderyards Silk Culottes of Gathering",
+          "marketable": true,
+          "srcType": "npc-gil",
+          "how": "NPC 金幣商店 47,765 金幣"
+        },
+        {
+          "id": 42972,
+          "name": "綠咬鵑禦敵襯褲",
+          "nameEn": "Quetzalli Brais of Fending",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 神典石兌換 ×825"
+        },
+        {
+          "id": 42977,
+          "name": "綠咬鵑制敵襯褲",
+          "nameEn": "Quetzalli Brais of Maiming",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 神典石兌換 ×825"
+        },
+        {
+          "id": 42982,
+          "name": "綠咬鵑強襲馬褲",
+          "nameEn": "Quetzalli Breeches of Striking",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 神典石兌換 ×825"
+        },
+        {
+          "id": 42992,
+          "name": "綠咬鵑游擊馬褲",
+          "nameEn": "Quetzalli Breeches of Scouting",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 神典石兌換 ×825"
+        },
+        {
+          "id": 42987,
+          "name": "綠咬鵑精準馬褲",
+          "nameEn": "Quetzalli Breeches of Aiming",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 神典石兌換 ×825"
+        },
+        {
+          "id": 43002,
+          "name": "綠咬鵑詠咒騎兵褲",
+          "nameEn": "Quetzalli Hose of Casting",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 神典石兌換 ×825"
+        },
+        {
+          "id": 42997,
+          "name": "綠咬鵑治癒騎兵褲",
+          "nameEn": "Quetzalli Hose of Healing",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 神典石兌換 ×825"
+        },
+        {
+          "id": 43049,
+          "name": "改良型綠咬鵑禦敵襯褲",
+          "nameEn": "Augmented Quetzalli Brais of Fending",
+          "marketable": false,
+          "srcType": "upgrade",
+          "how": "基礎件升級兌換"
+        },
+        {
+          "id": 43054,
+          "name": "改良型綠咬鵑制敵襯褲",
+          "nameEn": "Augmented Quetzalli Brais of Maiming",
+          "marketable": false,
+          "srcType": "upgrade",
+          "how": "基礎件升級兌換"
+        },
+        {
+          "id": 43059,
+          "name": "改良型綠咬鵑強襲馬褲",
+          "nameEn": "Augmented Quetzalli Breeches of Striking",
+          "marketable": false,
+          "srcType": "upgrade",
+          "how": "基礎件升級兌換"
+        },
+        {
+          "id": 43069,
+          "name": "改良型綠咬鵑游擊馬褲",
+          "nameEn": "Augmented Quetzalli Breeches of Scouting",
+          "marketable": false,
+          "srcType": "upgrade",
+          "how": "基礎件升級兌換"
+        },
+        {
+          "id": 43064,
+          "name": "改良型綠咬鵑精準馬褲",
+          "nameEn": "Augmented Quetzalli Breeches of Aiming",
+          "marketable": false,
+          "srcType": "upgrade",
+          "how": "基礎件升級兌換"
+        },
+        {
+          "id": 43079,
+          "name": "改良型綠咬鵑詠咒騎兵褲",
+          "nameEn": "Augmented Quetzalli Hose of Casting",
+          "marketable": false,
+          "srcType": "upgrade",
+          "how": "基礎件升級兌換"
+        },
+        {
+          "id": 43074,
+          "name": "改良型綠咬鵑治癒騎兵褲",
+          "nameEn": "Augmented Quetzalli Hose of Healing",
+          "marketable": false,
+          "srcType": "upgrade",
+          "how": "基礎件升級兌換"
+        }
+      ]
+    },
+    {
+      "slot": "feet",
+      "slotName": "腳部",
+      "hint": "水晶都",
+      "hintEn": "Crystarium Couture",
+      "categoryId": 251,
+      "items": [
+        {
+          "id": 26743,
+          "name": "水晶都脛甲",
+          "nameEn": "Crystarium Greaves",
+          "marketable": false,
+          "srcType": "npc-gil",
+          "how": "NPC 金幣商店 100 金幣"
+        },
+        {
+          "id": 29281,
+          "name": "改良型水晶都禦敵高筒靴",
+          "nameEn": "Augmented Crystarium Thighboots of Fending",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 詩學兌換 345 詩學"
+        },
+        {
+          "id": 29287,
+          "name": "改良型水晶都制敵高筒靴",
+          "nameEn": "Augmented Crystarium Thighboots of Maiming",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 詩學兌換 345 詩學"
+        },
+        {
+          "id": 29293,
+          "name": "改良型水晶都強襲短靴",
+          "nameEn": "Augmented Crystarium Shoes of Striking",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 詩學兌換 345 詩學"
+        },
+        {
+          "id": 29305,
+          "name": "改良型水晶都游擊長靴",
+          "nameEn": "Augmented Crystarium Boots of Scouting",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 詩學兌換 345 詩學"
+        },
+        {
+          "id": 29299,
+          "name": "改良型水晶都精準長靴",
+          "nameEn": "Augmented Crystarium Boots of Aiming",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 詩學兌換 345 詩學"
+        },
+        {
+          "id": 29317,
+          "name": "改良型水晶都詠咒筒靴",
+          "nameEn": "Augmented Crystarium Boots of Casting",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 詩學兌換 345 詩學"
+        },
+        {
+          "id": 29311,
+          "name": "改良型水晶都治癒短靴",
+          "nameEn": "Augmented Crystarium Shoes of Healing",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 詩學兌換 345 詩學"
+        },
+        {
+          "id": 29201,
+          "name": "水晶都禦敵高筒靴",
+          "nameEn": "Crystarium Thighboots of Fending",
+          "marketable": false,
+          "srcType": "other",
+          "how": "—"
+        },
+        {
+          "id": 29207,
+          "name": "水晶都制敵高筒靴",
+          "nameEn": "Crystarium Thighboots of Maiming",
+          "marketable": false,
+          "srcType": "other",
+          "how": "—"
+        },
+        {
+          "id": 29213,
+          "name": "水晶都強襲短靴",
+          "nameEn": "Crystarium Shoes of Striking",
+          "marketable": false,
+          "srcType": "other",
+          "how": "—"
+        },
+        {
+          "id": 29225,
+          "name": "水晶都游擊長靴",
+          "nameEn": "Crystarium Boots of Scouting",
+          "marketable": false,
+          "srcType": "other",
+          "how": "—"
+        },
+        {
+          "id": 29219,
+          "name": "水晶都精準長靴",
+          "nameEn": "Crystarium Boots of Aiming",
+          "marketable": false,
+          "srcType": "other",
+          "how": "—"
+        },
+        {
+          "id": 29237,
+          "name": "水晶都詠咒筒靴",
+          "nameEn": "Crystarium Boots of Casting",
+          "marketable": false,
+          "srcType": "other",
+          "how": "—"
+        },
+        {
+          "id": 29231,
+          "name": "水晶都治癒短靴",
+          "nameEn": "Crystarium Shoes of Healing",
+          "marketable": false,
+          "srcType": "other",
+          "how": "—"
+        }
+      ]
+    }
+  ],
+  "dyes": {
+    "weapon": {
+      "slotName": "武器",
+      "name": "珍珠白",
+      "nameEn": "Pearl White",
+      "dyeItemId": 30123,
+      "family": "白色系",
+      "familyEn": "white"
+    },
+    "head": {
+      "slotName": "頭部",
+      "name": "珍珠白",
+      "nameEn": "Pearl White",
+      "dyeItemId": 30123,
+      "family": "白色系",
+      "familyEn": "white"
+    },
+    "body": {
+      "slotName": "身體",
+      "name": "石板灰",
+      "nameEn": "Slate Grey",
+      "dyeItemId": 5732,
+      "family": "灰色系",
+      "familyEn": "grey"
+    },
+    "hands": {
+      "slotName": "手部",
+      "name": "羅蘭莓",
+      "nameEn": "Rolanberry Red",
+      "dyeItemId": 5737,
+      "family": "紅色系",
+      "familyEn": "red"
+    },
+    "legs": {
+      "slotName": "腿部",
+      "name": "玉米黃",
+      "nameEn": "Millioncorn Yellow",
+      "dyeItemId": 5766,
+      "family": "黃色系",
+      "familyEn": "yellow"
+    },
+    "feet": {
+      "slotName": "腳部",
+      "name": "珍珠白",
+      "nameEn": "Pearl White",
+      "dyeItemId": 30123,
+      "family": "白色系",
+      "familyEn": "white"
+    }
+  },
+  "scoring": {
+    "base": 68,
+    "armorHints": 4,
+    "accHints": 0,
+    "maxWithoutDye": 100,
+    "needDyeFor100": false,
+    "easy80": "任兩個提示部位各穿 1 件清單內裝備即可（84 分）"
+  },
+  "links": {
+    "theorycraft": "https://www.reddit.com/r/ffxiv/comments/1ulf6yq/fashion_report_for_week_of_20260630/"
+  },
+  "easy100": [
+    {
+      "slot": "body",
+      "id": 21572,
+      "name": "碳矽晶禦敵戰甲",
+      "how": "零式素材兌換 西格瑪長杆 ×4",
+      "srcType": "raid",
+      "alt": "鑽石系列（零式素材兌換）——身體本週無休閒取得選項"
+    },
+    {
+      "slot": "hands",
+      "id": 19624,
+      "name": "牛鬼革巧匠手套",
+      "how": "NPC 金幣商店 15,681 金幣",
+      "npc": true,
+      "alt": "恐龍革手套（製作・市場板）"
+    },
+    {
+      "slot": "legs",
+      "id": 43317,
+      "name": "落雷絹巧匠寬鬆七分褲",
+      "how": "NPC 金幣商店 47,765 金幣",
+      "npc": true,
+      "alt": "新世界喇叭褲（製作・市場板）"
+    },
+    {
+      "slot": "feet",
+      "id": 26743,
+      "name": "水晶都脛甲",
+      "how": "NPC 金幣商店 100 金幣",
+      "npc": true,
+      "alt": "改良型水晶都系列（345 詩學）"
+    }
+  ],
+  "easy80": {
+    "desc": "兩件都是 NPC 金幣商店直購，合計不到 1.6 萬金幣。",
+    "items": [
+      {
+        "slot": "feet",
+        "id": 26743,
+        "name": "水晶都脛甲",
+        "how": "NPC 金幣商店 100 金幣",
+        "npc": true
+      },
+      {
+        "slot": "hands",
+        "id": 19624,
+        "name": "牛鬼革巧匠手套",
+        "how": "NPC 金幣商店 15,681 金幣",
+        "npc": true
+      }
+    ],
+    "score": 84,
+    "note": "替代：改良型水晶都靴（345 詩學）、恐龍革手套／新世界喇叭褲（市場板）。其餘部位穿滿任意裝備即可（基礎 68 ＋ 2×8 ＝ 84 分）。"
+  }
+}
