@@ -186,7 +186,28 @@
 
     /* craft 子分頁（簡易 / 樹狀）*/
     .craft-subtabs { margin-bottom: 12px; }
-    tr[data-simple] { cursor: pointer; }
+
+    /* 簡易清單：橫向一層式（成品 ▶ 直接原料） */
+    .simple-row {
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 12px 14px; margin-bottom: 10px;
+    }
+    .sr-prod, .sr-mat {
+      display: flex; align-items: center; gap: 8px; cursor: pointer;
+      border-radius: var(--radius-sm); padding: 7px 11px; transition: all var(--transition);
+    }
+    .sr-prod { background: var(--gold-dim); border: 1px solid rgba(200,169,110,0.5); flex: 0 0 auto; }
+    .sr-prod:hover { border-color: var(--gold); }
+    .sr-mat { background: var(--bg-surface); border: 1px solid var(--border); }
+    .sr-mat:hover { border-color: var(--border-hover); background: var(--bg-card-hover); }
+    .sr-arrow { color: var(--text-muted); font-size: 0.9rem; flex: 0 0 auto; }
+    .sr-mats { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; flex: 1; min-width: 0; }
+    .sr-ic { width: 32px; height: 32px; border-radius: 5px; background: var(--bg-card); object-fit: contain; flex-shrink: 0; }
+    .sr-nm { font-size: 0.84rem; line-height: 1.3; }
+    .sr-sub { font-size: 0.72rem; color: var(--text-dim); font-variant-numeric: tabular-nums; }
+    .sr-price { color: var(--gold-light); font-weight: 600; }
+    .sr-total { font-size: 0.78rem; color: var(--text-dim); padding: 4px 8px; white-space: nowrap; }
 
     /* craft 子工具列（水晶 / HQ 選項）*/
     .craft-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 16px; margin-bottom: 14px; }
@@ -902,12 +923,8 @@
         '</div>';
     }
 
-    // 共用：載入配方 + 批次查所有材料價 + 建 priceMap，回傳各需求物品的最省樹（simple/tree 共用）
-    async function prepareCraftData() {
-      await ensureRecipes();
-      var idset = new Set();
-      craft.forEach(function (c) { collectIds(c.itemId, idset, 0); });
-      var ids = Array.from(idset);
+    // 共用：批次查價建 priceMap
+    async function fetchPriceMap(ids) {
       var lst = await Universalis.fetchListings(scope, ids, { listings: 8 });
       priceMap = new Map();
       if (lst && lst.items) {
@@ -919,7 +936,29 @@
         });
       }
       renderUpdateTime();
+    }
+
+    // 樹狀分析用：載入配方 + 查整棵樹所有材料價，回傳各需求物品的最省樹
+    async function prepareCraftData() {
+      await ensureRecipes();
+      var idset = new Set();
+      craft.forEach(function (c) { collectIds(c.itemId, idset, 0); });
+      await fetchPriceMap(Array.from(idset));
       return craft.map(function (c) { return optimal(c.itemId, c.qty, new Set(), 0); });
+    }
+
+    // 簡易清單用：只查成品＋第一層直接原料的價格（不遞迴）
+    async function prepareSimpleData() {
+      await ensureRecipes();
+      var idset = new Set();
+      craft.forEach(function (c) {
+        idset.add(c.itemId);
+        var r = recipesByItem.get(c.itemId);
+        if (r) r.ingredients.forEach(function (g) {
+          if (!(excludeCrystals && isCrystal(g.itemId))) idset.add(g.itemId);
+        });
+      });
+      await fetchPriceMap(Array.from(idset));
     }
 
     // 合併樹的虛擬總根卡（顯示整份清單的智慧最省總成本）
@@ -1043,63 +1082,63 @@
       body.innerHTML = tools + html + summary + actions;
     }
 
-    // 簡易清單：逐項自動判斷「直購 vs 自製」較省（智慧購買），扁平顯示最省價 + 去哪買
+    // 簡易清單：橫向一層式——每列「成品 ▶ 直接原料」，只列成品與第一層原料的價格，不遞迴展開
     async function renderCraftSimple(body, sub) {
       var tools = sub + craftToolsHtml();
-      body.innerHTML = tools + '<div class="loading">計算最省買法中…</div>';
+      body.innerHTML = tools + '<div class="loading">查詢成品與原料價格中…</div>';
 
-      var trees = await prepareCraftData();
+      await prepareSimpleData();
       var dc = isDcMode();
-      var rows = trees.map(function (t, i) {
-        var c = craft[i], it = itemById.get(c.itemId);
-        return {
-          id: c.itemId, name: it ? it.name : '#' + c.itemId, icon: iconUrl(it), qty: c.qty,
-          mode: t.mode,
-          best: t.cost === Infinity ? null : t.cost,
-          buyCost: t.buy === Infinity ? null : t.buy,
-          world: buyWorld(c.itemId), hq: usedHq(c.itemId),
-          marketable: !!(it && it.marketable)
-        };
-      });
-      var grandBest = rows.reduce(function (a, r) { return a + (r.best || 0); }, 0);
-      var buyAll = 0, buyAllOk = true;
-      rows.forEach(function (r) { if (r.buyCost != null) buyAll += r.buyCost; else buyAllOk = false; });
-      var anyNa = rows.some(function (r) { return r.best == null; });
-      var allNa = rows.every(function (r) { return r.best == null; });
-      var saving = (buyAllOk && !allNa) ? buyAll - grandBest : null;
 
-      var head = '<table class="listings"><thead><tr><th>物品</th><th class="num">數量</th><th>建議</th>' +
-        (dc ? '<th>去哪買</th>' : '') +
-        '<th class="num">最省成本</th></tr></thead><tbody>';
-      var trs = rows.map(function (r) {
-        var advice = r.mode === 'buy' ? '<span class="tag world">🛒 直購</span>'
-          : r.mode === 'craft' ? '<span class="tag craftable">🔨 自製</span>'
-          : '<span class="tag nq">無市價</span>';
-        var where = r.mode === 'buy'
-          ? (r.world ? '<span class="tag world">' + esc(r.world) + '</span>' + (r.hq ? ' <span class="hqb">HQ</span>' : '') : (r.marketable ? '—' : '<span class="tag untradable">不可交易</span>'))
-          : r.mode === 'craft' ? '<span class="note">材料見樹狀</span>' : '—';
-        return '<tr data-simple="' + r.id + '" title="點擊查看即時價格與在架明細">' +
-          '<td><img class="item-icon" style="width:26px;height:26px;border-radius:5px;vertical-align:middle;margin-right:8px" src="' + r.icon + '" onerror="this.style.visibility=\'hidden\'">' + esc(r.name) + '</td>' +
-          '<td class="num">' + r.qty + '</td>' +
-          '<td>' + advice + '</td>' +
-          (dc ? '<td>' + where + '</td>' : '') +
-          '<td class="num">' + (r.best != null ? fmt(r.best) : '—') + '</td></tr>';
+      function priceSub(id, mult) {
+        var it = itemById.get(id);
+        if (!it || !it.marketable) return '<span class="tag untradable">不可交易</span>';
+        var unit = unitBuy(id);
+        if (unit == null) return '無市價';
+        var w = buyWorld(id);
+        return '<span class="sr-price">' + (usedHq(id) ? '<span class="hqb">HQ</span> ' : '') + fmt(unit * mult) + ' G</span>' +
+          (dc && w ? ' @ ' + esc(w) : '');
+      }
+      function chip(cls, id, name, qty, sub2) {
+        var it = itemById.get(id);
+        return '<div class="' + cls + '" data-simple="' + id + '" title="點擊查看即時價格與配方">' +
+          '<img class="sr-ic" src="' + iconUrl(it) + '" alt="" loading="lazy" onerror="this.style.visibility=\'hidden\'">' +
+          '<div><div class="sr-nm">' + esc(name) + ' <span class="sr-sub">×' + qty + '</span></div>' +
+          '<div class="sr-sub">' + sub2 + '</div></div></div>';
+      }
+
+      var rows = craft.map(function (c) {
+        var it = itemById.get(c.itemId);
+        var nm = it ? it.name : '#' + c.itemId;
+        var prod = chip('sr-prod', c.itemId, nm, c.qty, priceSub(c.itemId, c.qty));
+        var r = recipesByItem.get(c.itemId);
+        var mats;
+        if (r) {
+          var batches = Math.ceil(c.qty / (r.yield || 1));
+          var ings = r.ingredients.filter(function (g) { return !(excludeCrystals && isCrystal(g.itemId)); });
+          var matSum = 0, matNa = false;
+          mats = ings.map(function (g) {
+            var git = itemById.get(g.itemId);
+            var need = batches * g.qty;
+            var unit = unitBuy(g.itemId);
+            if (unit != null) matSum += unit * need; else matNa = true;
+            return chip('sr-mat', g.itemId, git ? git.name : '#' + g.itemId, need, priceSub(g.itemId, need));
+          }).join('');
+          mats += '<span class="sr-total">原料合計 ' + fmt(matSum) + ' G' + (matNa ? '（部分無市價）' : '') + '</span>';
+        } else {
+          mats = '<span class="sr-total">無製作配方（採集／商店／掉落取得）</span>';
+        }
+        return '<div class="simple-row">' + prod + '<span class="sr-arrow">▶</span><div class="sr-mats">' + mats + '</div></div>';
       }).join('');
-      var table = head + trs + '</tbody></table>';
-
-      var summary = '<div class="summary-card"><div class="summary-totals">' +
-        stat('智慧最省總成本', allNa ? '—' : ((anyNa ? '<span style="color:var(--amber)">' : '') + fmt(grandBest) + ' <small>G</small>' + (anyNa ? '</span>' : '')), allNa ? '此範圍查無市場資料' : (anyNa ? '部分項目無市價' : '每項自動取買／做較省')) +
-        stat('全部直接買成品', buyAllOk ? fmt(buyAll) + ' <small>G</small>' : '—', buyAllOk ? '不自製' : '部分成品查無市價') +
-        '<div class="stat"><div class="label">自製可省</div><div class="value ' + (saving != null && saving > 0 ? 'save' : (saving != null && saving < 0 ? 'bad' : '')) + '">' +
-        (saving == null ? '—' : (saving > 0 ? fmt(saving) + ' G' : (saving < 0 ? '反而貴 ' + fmt(-saving) + ' G' : '持平'))) + '</div></div>' +
-        '</div><div class="note">想看完整配方展開、每項材料去哪買與跨服路線？切到「🌲 樹狀分析」。</div></div>';
 
       var actions = '<div class="craft-actions">' +
         '<button class="btn primary" data-act="saveAs">💾 另存為清單</button>' +
         '<button class="btn danger" data-act="clear">清空清單</button>' +
         '</div>';
 
-      body.innerHTML = tools + table + summary + actions;
+      body.innerHTML = tools + rows +
+        '<div class="note">原料只列第一層；想看完整配方展開、買／做比較與跨服採買路線，切到「🌲 樹狀分析」。</div>' +
+        actions;
     }
 
     // ===================== 節點詳情 / 上下游配方 =====================
