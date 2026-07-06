@@ -123,6 +123,7 @@
     .page-btn:hover:not(:disabled) { color: var(--text); border-color: rgba(255,255,255,0.2); }
     .page-btn.active { color: var(--gold); background: var(--gold-dim); border-color: rgba(200,169,110,0.5); }
     .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .page-gap { color: var(--text-muted); padding: 0 2px; }
     .search-note { grid-column: 1 / -1; padding: 14px 4px; color: var(--text-muted); font-size: 0.85rem; }
     .result-card {
       display: flex; align-items: center; gap: 10px; padding: 12px; cursor: pointer;
@@ -457,8 +458,7 @@
     var LS_DRAFT = 'sgt-market-draft';
     var LS_OPTS = 'sgt-market-opts';
     var LS_CVIEW = 'sgt-market-craftview';
-    var MAX_RESULTS = 200;             // 搜尋結果總上限
-    var PAGE_SIZE = 60;                // 每頁筆數
+    var PAGE_SIZE = 60;                // 每頁筆數（結果總數不設上限）
     var MAX_DEPTH = 12;
     var MAX_CRAFT_ITEMS = 10;          // 製作清單至多 10 件，避免合併樹狀圖過大
 
@@ -774,13 +774,12 @@
           if (idx === 0) starts.push(it);
           else if (idx > 0) contains.push(it);
         }
-        if (starts.length >= MAX_RESULTS) break;
       }
       // 可交易物品優先（查價工具主要對象），組內維持原順序
       var byMarketable = function (a, b) { return (b.marketable ? 1 : 0) - (a.marketable ? 1 : 0); };
       starts.sort(byMarketable);
       contains.sort(byMarketable);
-      searchOut = starts.concat(contains).slice(0, MAX_RESULTS);
+      searchOut = starts.concat(contains);
       // 等級排序（穩定排序，等級相同時保留原相關性順序；無對應資料一律排最後）
       var keyFn = sort.indexOf('equip') === 0 ? equipLevelKey : craftLevelKey;
       var dir = /Asc$/.test(sort) ? 1 : -1;
@@ -807,15 +806,24 @@
       if (searchPage < 1) searchPage = 1;
       if (searchPage > pages) searchPage = pages;
       var slice = searchOut.slice((searchPage - 1) * PAGE_SIZE, searchPage * PAGE_SIZE);
-      var pager = '<div class="search-pager"><span>共 ' + total + (total >= MAX_RESULTS ? '+' : '') + ' 筆' +
-        (total >= MAX_RESULTS ? '（僅取前 ' + MAX_RESULTS + ' 筆，輸入關鍵字縮小範圍）' : '') +
+      var pager = '<div class="search-pager"><span>共 ' + fmt(total) + ' 筆' +
         (pages > 1 ? ' · 第 ' + searchPage + '/' + pages + ' 頁' : '') + '</span>';
       if (pages > 1) {
         pager += '<span style="margin-left:auto"></span>' +
           '<button class="page-btn" data-page="' + (searchPage - 1) + '"' + (searchPage <= 1 ? ' disabled' : '') + '>‹ 上一頁</button>';
-        for (var p = 1; p <= pages; p++) {
-          pager += '<button class="page-btn' + (p === searchPage ? ' active' : '') + '" data-page="' + p + '">' + p + '</button>';
-        }
+        // 頁碼視窗：1、2 … 當前±2 … 末兩頁（頁數多時不整排展開）
+        var win = [];
+        var push = function (p) { if (p >= 1 && p <= pages && win.indexOf(p) < 0) win.push(p); };
+        push(1); push(2);
+        for (var p = searchPage - 2; p <= searchPage + 2; p++) push(p);
+        push(pages - 1); push(pages);
+        win.sort(function (a, b) { return a - b; });
+        var last = 0;
+        win.forEach(function (p2) {
+          if (p2 - last > 1) pager += '<span class="page-gap">…</span>';
+          pager += '<button class="page-btn' + (p2 === searchPage ? ' active' : '') + '" data-page="' + p2 + '">' + p2 + '</button>';
+          last = p2;
+        });
         pager += '<button class="page-btn" data-page="' + (searchPage + 1) + '"' + (searchPage >= pages ? ' disabled' : '') + '>下一頁 ›</button>';
       }
       pager += '</div>';
