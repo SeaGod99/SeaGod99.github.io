@@ -319,6 +319,24 @@
     .route-head .route-sub { font-size: 0.82rem; font-weight: 600; color: var(--gold-light); font-variant-numeric: tabular-nums; }
     .route-line { display: flex; justify-content: space-between; gap: 10px; font-size: 0.78rem; color: var(--text-dim); padding: 2px 0; }
     .route-line span:last-child { font-variant-numeric: tabular-nums; color: var(--text); }
+    .route-line.got-done { opacity: .45; }
+    .route-line.got-done span:first-child { text-decoration: line-through; }
+
+    /* 總採買清單：已收集進度 */
+    .got-progress { margin: 2px 0 10px; }
+    .got-line { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 6px; font-size: 0.8rem; color: var(--text-dim); margin-bottom: 5px; }
+    .got-line b { color: var(--green); }
+    .got-line span:last-child { font-variant-numeric: tabular-nums; }
+    .got-bar { height: 6px; border-radius: 4px; background: var(--bg-surface); border: 1px solid var(--border); overflow: hidden; }
+    .got-bar-fill { height: 100%; background: var(--gold); transition: width .25s; }
+    .got-bar-fill.full { background: var(--green); }
+    .got-cell { white-space: nowrap; }
+    .got-input { width: 60px; padding: 3px 6px; font-size: 0.8rem; text-align: right; }
+    .got-all { background: none; border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text-muted); cursor: pointer; font-size: 0.72rem; padding: 4px 7px; margin-left: 4px; vertical-align: middle; }
+    .got-all:hover { color: var(--green); border-color: var(--green); }
+    table.listings tr.got-done td { opacity: .5; }
+    table.listings tr.got-done td:first-child { text-decoration: line-through; }
+    table.listings tr.got-done td.got-cell { opacity: 1; }
 
     .craft-actions, .list-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
 
@@ -458,6 +476,7 @@
     var LS_DRAFT = 'sgt-market-draft';
     var LS_OPTS = 'sgt-market-opts';
     var LS_CVIEW = 'sgt-market-craftview';
+    var LS_GOT = 'sgt-market-got';
     var PAGE_SIZE = 60;                // 每頁筆數（結果總數不設上限）
     var MAX_DEPTH = 12;
     var MAX_CRAFT_ITEMS = 10;          // 製作清單至多 10 件，避免合併樹狀圖過大
@@ -477,6 +496,9 @@
     var excludeCrystals = true;        // 省略水晶（不列入樹與成本），預設開
     var hqProduct = true;              // 可製作成品以 HQ 市價比較，預設開
     var craftView = 'simple';          // 製作清單子分頁：simple（簡易清單）/ tree（樹狀分析）
+    var gotMap = {};                   // 總採買清單已收集數量：itemId -> 已收集數（清空清單時一併重設）
+    var shopState = [];                // 最近一次彙總的採買列 [{id, qty, unit}]，供收集進度即時重算
+    var craftToken = 0;                // 製作清單渲染競態守門（切換檢視時放棄舊的非同步渲染）
 
     // ---- 工具 ----
     var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -501,6 +523,8 @@
       try { craft = JSON.parse(localStorage.getItem(LS_DRAFT) || '[]'); } catch (e) { craft = []; }
       try { var o = JSON.parse(localStorage.getItem(LS_OPTS) || '{}'); if (o && typeof o === 'object') { if (o.excludeCrystals != null) excludeCrystals = !!o.excludeCrystals; if (o.hqProduct != null) hqProduct = !!o.hqProduct; } } catch (e) {}
       try { var cv = localStorage.getItem(LS_CVIEW); if (cv === 'simple' || cv === 'tree') craftView = cv; } catch (e) {}
+      try { gotMap = JSON.parse(localStorage.getItem(LS_GOT) || '{}'); } catch (e) { gotMap = {}; }
+      if (!gotMap || typeof gotMap !== 'object' || Array.isArray(gotMap)) gotMap = {};
       if (!Array.isArray(lists)) lists = [];
       if (!Array.isArray(craft)) craft = [];
     }
@@ -509,6 +533,8 @@
     function saveScope() { try { localStorage.setItem(LS_SCOPE, scope); } catch (e) {} }
     function saveOpts() { try { localStorage.setItem(LS_OPTS, JSON.stringify({ excludeCrystals: excludeCrystals, hqProduct: hqProduct })); } catch (e) {} }
     function saveCview() { try { localStorage.setItem(LS_CVIEW, craftView); } catch (e) {} }
+    function saveGot() { try { localStorage.setItem(LS_GOT, JSON.stringify(gotMap)); } catch (e) {} }
+    function gotOf(id) { var v = Number(gotMap[id]); return isFinite(v) && v > 0 ? Math.floor(v) : 0; }
 
     function isCrystal(id) { var it = itemById.get(id); return !!(it && it.category === '水晶'); }
     function getQty(id) { var c = craft.find(function (x) { return x.itemId === id; }); return c ? c.qty : 1; }
@@ -1152,6 +1178,41 @@
       (n.children || []).forEach(function (c) { collectShopping(c, acc); });
     }
 
+    // ---- 已收集統計（總採買清單） ----
+    function gotStats() {
+      var s = { total: shopState.length, done: 0, needSum: 0, gotSum: 0, remainCost: 0, anyNa: false };
+      shopState.forEach(function (r) {
+        var g = Math.min(gotOf(r.id), r.qty);
+        if (g >= r.qty) s.done++;
+        s.needSum += r.qty; s.gotSum += g;
+        if (r.unit != null) s.remainCost += r.unit * (r.qty - g);
+        else if (r.qty - g > 0) s.anyNa = true;
+      });
+      return s;
+    }
+    function gotProgressInnerHtml(s) {
+      var pct = s.needSum ? Math.round(100 * s.gotSum / s.needSum) : 0;
+      var allDone = s.total > 0 && s.done === s.total;
+      var right = allDone ? '✅ 全部收齊' :
+        ('剩餘採買 ' + fmt(s.remainCost) + ' G' + (s.anyNa ? '（部分無市價）' : ''));
+      return '<div class="got-line"><span>📦 已收集 <b>' + s.done + '</b> / ' + s.total + ' 項 · 數量 ' + fmt(s.gotSum) + ' / ' + fmt(s.needSum) + '</span>' +
+        '<span>' + right + '</span></div>' +
+        '<div class="got-bar"><div class="got-bar-fill' + (allDone ? ' full' : '') + '" style="width:' + pct + '%"></div></div>';
+    }
+    // 收集數量變更時就地更新（進度列＋表格列＋採買路線），不重新渲染整棵樹
+    function updateGotUI() {
+      var p = $('#gotProgress');
+      if (p) p.innerHTML = gotProgressInnerHtml(gotStats());
+      shopState.forEach(function (r) {
+        var done = Math.min(gotOf(r.id), r.qty) >= r.qty;
+        var tr = $('[data-gotrow="' + r.id + '"]');
+        if (tr) tr.classList.toggle('got-done', done);
+        Array.prototype.forEach.call(document.querySelectorAll('[data-gotline="' + r.id + '"]'), function (el) {
+          el.classList.toggle('got-done', done);
+        });
+      });
+    }
+
     function renderCraft() {
       var body = $('#craftBody');
       var sub = craftSubtabsHtml();
@@ -1163,43 +1224,46 @@
       else renderCraftTree(body, sub);
     }
 
-    // 樹狀分析：統整所有需求物品 → 買/做最省樹狀圖 + 總採買清單 + 最適採買路線
-    async function renderCraftTree(body, sub) {
-      var tools = sub + craftToolsHtml();
-      body.innerHTML = tools + '<div class="loading">展開配方並查詢材料價格中…</div>';
-
-      var trees = await prepareCraftData();
+    // 兩個檢視共用：成本統計（智慧最省／全買成品／可省）
+    function craftTotals(trees) {
       var grandOptimal = trees.reduce(function (a, t) { return a + (t.cost === Infinity ? 0 : t.cost); }, 0);
       var anyNa = trees.some(function (t) { return t.cost === Infinity; });
       var allNa = trees.every(function (t) { return t.cost === Infinity; });
-
       // 全買成品的成本（供比較）
       var buyAll = 0, buyAllOk = true;
       craft.forEach(function (c) {
         var it = itemById.get(c.itemId), u = unitBuy(c.itemId);
         if (it && it.marketable && u != null) buyAll += u * c.qty; else buyAllOk = false;
       });
+      return { grandOptimal: grandOptimal, anyNa: anyNa, allNa: allNa, buyAll: buyAll, buyAllOk: buyAllOk };
+    }
 
-      // 合併成單一樹：虛擬總根「製作清單」→ 各需求物品（可調數量）→ 材料
-      var childrenLis = trees.map(function (t) { return treeLi(t, true); }).join('');
-      var html = '<div class="craft-item"><div class="tree-scroll"><div class="tree"><ul><li>' +
-        grandRootCardHtml(grandOptimal, buyAll, anyNa, allNa, buyAllOk) +
-        '<ul class="children">' + childrenLis + '</ul></li></ul></div></div>' + legendHtml() + '</div>';
+    function craftActionsHtml() {
+      return '<div class="craft-actions">' +
+        '<button class="btn primary" data-act="saveAs">💾 另存為清單</button>' +
+        '<button class="btn danger" data-act="clear">清空清單</button>' +
+        '</div>';
+    }
 
+    // 兩個檢視共用：成本統計卡＋總採買清單（含已收集進度）＋最適採買路線
+    function craftSummaryHtml(trees, T) {
       // 採買彙總
       var acc = new Map();
       trees.forEach(function (t) { collectShopping(t, acc); });
       var shopRows = Array.from(acc.entries()).map(function (e) {
         var it = itemById.get(e[0]), u = unitBuy(e[0]);
         var sub = (u != null) ? u * e[1] : null;
-        return { name: it ? it.name : '#' + e[0], icon: iconUrl(it), qty: e[1], unit: u, sub: sub, id: e[0], world: buyWorld(e[0]), hq: usedHq(e[0]) };
+        return { name: it ? it.name : '#' + e[0], icon: iconUrl(it), qty: e[1], unit: u, sub: sub, id: e[0], world: buyWorld(e[0]), hq: usedHq(e[0]), got: Math.min(gotOf(e[0]), e[1]) };
       }).sort(function (a, b) { return (b.sub || 0) - (a.sub || 0); });
+      shopState = shopRows.map(function (r) { return { id: r.id, qty: r.qty, unit: r.unit }; });
 
       var dc = isDcMode();
-      var shopHtml = shopRows.length ? ('<table class="listings"><thead><tr><th>原料</th><th class="num">數量</th>' + (dc ? '<th>最便宜伺服器</th>' : '') + '<th class="num">單價</th><th class="num">小計</th></tr></thead><tbody>' +
+      var shopHtml = shopRows.length ? ('<div class="got-progress" id="gotProgress">' + gotProgressInnerHtml(gotStats()) + '</div>' +
+        '<table class="listings"><thead><tr><th>原料</th><th class="num">數量</th><th class="num">已收集</th>' + (dc ? '<th>最便宜伺服器</th>' : '') + '<th class="num">單價</th><th class="num">小計</th></tr></thead><tbody>' +
         shopRows.map(function (r) {
-          return '<tr><td><img class="item-icon" style="width:20px;height:20px;vertical-align:middle;margin-right:6px" src="' + r.icon + '" onerror="this.style.visibility=\'hidden\'">' + esc(r.name) + '</td>' +
+          return '<tr data-gotrow="' + r.id + '"' + (r.got >= r.qty ? ' class="got-done"' : '') + '><td><img class="item-icon" style="width:20px;height:20px;vertical-align:middle;margin-right:6px" src="' + r.icon + '" onerror="this.style.visibility=\'hidden\'">' + esc(r.name) + '</td>' +
             '<td class="num">' + r.qty + '</td>' +
+            '<td class="num got-cell"><input type="number" class="got-input" data-got="' + r.id + '" min="0" max="' + r.qty + '" value="' + r.got + '" aria-label="' + esc(r.name) + ' 已收集數量"><button class="got-all" data-gotall="' + r.id + '" title="一鍵收齊／再按一次重設為 0">✓</button></td>' +
             (dc ? '<td>' + (r.world ? '<span class="tag world">' + esc(r.world) + '</span>' : '—') + (r.hq ? ' <span class="hqb">HQ</span>' : '') + '</td>' : '') +
             '<td class="num">' + (r.unit != null ? fmt(r.unit) : '—') + '</td>' +
             '<td class="num">' + (r.sub != null ? fmt(r.sub) : '—') + '</td></tr>';
@@ -1220,37 +1284,51 @@
           '<div class="route-grid">' + worlds.map(function (e) {
             return '<div class="route-card"><div class="route-head"><span class="tag world">' + esc(e[0]) + '</span><span class="route-sub">' + fmt(e[1].sub) + ' G</span></div>' +
               e[1].items.map(function (r) {
-                return '<div class="route-line"><span>' + esc(r.name) + ' ×' + r.qty + (r.hq ? ' <span class="hqb">HQ</span>' : '') + '</span><span>' + (r.sub != null ? fmt(r.sub) : '—') + '</span></div>';
+                return '<div class="route-line' + (r.got >= r.qty ? ' got-done' : '') + '" data-gotline="' + r.id + '"><span>' + esc(r.name) + ' ×' + r.qty + (r.hq ? ' <span class="hqb">HQ</span>' : '') + '</span><span>' + (r.sub != null ? fmt(r.sub) : '—') + '</span></div>';
               }).join('') + '</div>';
           }).join('') + '</div>';
       }
 
-      var saving = (buyAllOk && grandOptimal > 0) ? buyAll - grandOptimal : null;
+      var saving = (T.buyAllOk && T.grandOptimal > 0) ? T.buyAll - T.grandOptimal : null;
 
-      var summary = '<div class="summary-card">' +
+      return '<div class="summary-card">' +
         '<div class="summary-totals">' +
-        stat('智慧製作總成本', allNa ? '—' : ((anyNa ? '<span style="color:var(--amber)">' : '') + fmt(grandOptimal) + ' <small>G</small>' + (anyNa ? '</span>' : '')), allNa ? '此範圍查無市場資料' : (anyNa ? '部分材料無市場資料' : '買／做自動取最省')) +
-        stat('全部直接買成品', buyAllOk ? fmt(buyAll) + ' <small>G</small>' : '—', buyAllOk ? '不自製' : '部分成品查無市價') +
+        stat('智慧製作總成本', T.allNa ? '—' : ((T.anyNa ? '<span style="color:var(--amber)">' : '') + fmt(T.grandOptimal) + ' <small>G</small>' + (T.anyNa ? '</span>' : '')), T.allNa ? '此範圍查無市場資料' : (T.anyNa ? '部分材料無市場資料' : '買／做自動取最省')) +
+        stat('全部直接買成品', T.buyAllOk ? fmt(T.buyAll) + ' <small>G</small>' : '—', T.buyAllOk ? '不自製' : '部分成品查無市價') +
         '<div class="stat"><div class="label">自製可省</div><div class="value ' + (saving != null && saving > 0 ? 'save' : (saving != null && saving < 0 ? 'bad' : '')) + '">' +
         (saving == null ? '—' : (saving > 0 ? fmt(saving) + ' G' : (saving < 0 ? '反而貴 ' + fmt(-saving) + ' G' : '持平'))) + '</div></div>' +
         '</div>' +
         '<div class="section-title">總採買清單</div>' + shopHtml + routeHtml +
         '</div>';
-
-      var actions = '<div class="craft-actions">' +
-        '<button class="btn primary" data-act="saveAs">💾 另存為清單</button>' +
-        '<button class="btn danger" data-act="clear">清空清單</button>' +
-        '</div>';
-
-      body.innerHTML = tools + html + summary + actions;
     }
 
-    // 簡易清單：橫向一層式——每列「成品 ▶ 直接原料」，只列成品與第一層原料的價格，不遞迴展開
+    // 樹狀分析：統整所有需求物品 → 買/做最省樹狀圖 + 共用彙總區（總採買清單）
+    async function renderCraftTree(body, sub) {
+      var token = ++craftToken;
+      var tools = sub + craftToolsHtml();
+      body.innerHTML = tools + '<div class="loading">展開配方並查詢材料價格中…</div>';
+
+      var trees = await prepareCraftData();
+      if (token !== craftToken) return;          // 期間已切換檢視／重新渲染，放棄本次
+      var T = craftTotals(trees);
+
+      // 合併成單一樹：虛擬總根「製作清單」→ 各需求物品（可調數量）→ 材料
+      var childrenLis = trees.map(function (t) { return treeLi(t, true); }).join('');
+      var html = '<div class="craft-item"><div class="tree-scroll"><div class="tree"><ul><li>' +
+        grandRootCardHtml(T.grandOptimal, T.buyAll, T.anyNa, T.allNa, T.buyAllOk) +
+        '<ul class="children">' + childrenLis + '</ul></li></ul></div></div>' + legendHtml() + '</div>';
+
+      body.innerHTML = tools + html + craftSummaryHtml(trees, T) + craftActionsHtml();
+    }
+
+    // 簡易清單：橫向一層式——每列「成品 ▶ 直接原料」；下方接與樹狀分析共用的彙總區（總採買清單）
     async function renderCraftSimple(body, sub) {
+      var token = ++craftToken;
       var tools = sub + craftToolsHtml();
       body.innerHTML = tools + '<div class="loading">查詢成品與原料價格中…</div>';
 
       await prepareSimpleData();
+      if (token !== craftToken) return;
       var dc = isDcMode();
 
       function priceSub(id, mult) {
@@ -1294,14 +1372,16 @@
         return '<div class="simple-row">' + prod + '<span class="sr-arrow">▶</span><div class="sr-mats">' + mats + '</div></div>';
       }).join('');
 
-      var actions = '<div class="craft-actions">' +
-        '<button class="btn primary" data-act="saveAs">💾 另存為清單</button>' +
-        '<button class="btn danger" data-act="clear">清空清單</button>' +
-        '</div>';
-
       body.innerHTML = tools + rows +
-        '<div class="note">原料只列第一層；想看完整配方展開、買／做比較與跨服採買路線，切到「🌲 樹狀分析」。</div>' +
-        actions;
+        '<div class="note">原料只列第一層；想看完整配方逐層展開與買／做比較，切到「🌲 樹狀分析」。</div>' +
+        '<div id="simpleSummary"><div class="loading">完整展開配方、統整總採買清單中…</div></div>' +
+        craftActionsHtml();
+
+      // 第二段：完整展開配方，接上與樹狀分析同一份總採買清單（含已收集進度）
+      var trees = await prepareCraftData();
+      if (token !== craftToken) return;
+      var elSum = $('#simpleSummary');
+      if (elSum) elSum.innerHTML = craftSummaryHtml(trees, craftTotals(trees));
     }
 
     // ===================== 節點詳情 / 上下游配方 =====================
@@ -1592,6 +1672,19 @@
         if (cview) { craftView = cview.getAttribute('data-cview'); saveCview(); renderCraft(); return; }
         var copy = e.target.closest('.node-copy');
         if (copy) { copyName(copy.getAttribute('data-copy')); var o = copy.textContent; copy.textContent = '✓'; setTimeout(function () { copy.textContent = o; }, 900); return; }
+        var gall = e.target.closest('[data-gotall]');
+        if (gall) {
+          var gid = Number(gall.getAttribute('data-gotall'));
+          var grow = shopState.find(function (r) { return r.id === gid; });
+          if (grow) {
+            gotMap[gid] = (Math.min(gotOf(gid), grow.qty) >= grow.qty) ? 0 : grow.qty;   // 收齊 ↔ 重設切換
+            saveGot();
+            var ginp = $('input[data-got="' + gid + '"]');
+            if (ginp) ginp.value = gotMap[gid];
+            updateGotUI();
+          }
+          return;
+        }
         var act = e.target.closest('[data-act]');
         if (act) {
           var a = act.getAttribute('data-act'), id = Number(act.getAttribute('data-id'));
@@ -1599,7 +1692,7 @@
           else if (a === 'dec') setQty(id, getQty(id) - 1);
           else if (a === 'del') removeFromCraft(id);
           else if (a === 'saveAs') saveAsList();
-          else if (a === 'clear') { if (confirm('確定清空目前的製作清單？（已儲存的清單不受影響）')) { craft = []; saveDraft(); updateCraftCount(); renderCraft(); } }
+          else if (a === 'clear') { if (confirm('確定清空目前的製作清單？（已儲存的清單不受影響，已收集進度將一併重設）')) { craft = []; gotMap = {}; saveGot(); saveDraft(); updateCraftCount(); renderCraft(); } }
           return;
         }
         var srow = e.target.closest('[data-simple]');
@@ -1609,8 +1702,20 @@
       });
       cb.addEventListener('change', function (e) {
         if (e.target.matches('input[data-act="qty"]')) { setQty(Number(e.target.getAttribute('data-id')), parseInt(e.target.value, 10) || 1); }
+        else if (e.target.matches('input[data-got]')) { e.target.value = Math.min(gotOf(Number(e.target.getAttribute('data-got'))), Number(e.target.getAttribute('max')) || 0); }
         else if (e.target.id === 'optCrystal') { excludeCrystals = e.target.checked; saveOpts(); renderCraft(); }
         else if (e.target.id === 'optHq') { hqProduct = e.target.checked; saveOpts(); renderCraft(); }
+      });
+      // 已收集數量：邊打邊更新進度（不重繪整區，僅就地更新進度列與列樣式）
+      cb.addEventListener('input', function (e) {
+        if (!e.target.matches('input[data-got]')) return;
+        var gid = Number(e.target.getAttribute('data-got'));
+        var gmax = Number(e.target.getAttribute('max')) || 0;
+        var v = parseInt(e.target.value, 10);
+        if (!isFinite(v) || v < 0) v = 0;
+        if (v > gmax) { v = gmax; e.target.value = v; }
+        gotMap[gid] = v;
+        saveGot(); updateGotUI();
       });
 
       // 節點詳情 modal：委派（關閉 / 上下游導覽 / 加入清單）
