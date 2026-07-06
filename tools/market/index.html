@@ -549,6 +549,43 @@
       return loadEquipRaw().then(function (d) { equipData = d; return d; });
     }
 
+    // 職能分類（名稱依繁中版官方網站：防護職業/治療職業；進攻依官方敘述拆近戰/遠程物理/遠程魔法）。
+    // 集合含基礎職——低等裝備的職業清單常只標基礎職；「全職業可裝」＝含 ADV 標記的無職業限制裝備。
+    var EQUIP_ROLES = [
+      { key: 'all',      name: '全職業可裝',   abbrs: ['ADV'] },
+      { key: 'tank',     name: '防護職業',     abbrs: ['GLA', 'PLD', 'MRD', 'WAR', 'DRK', 'GNB'] },
+      { key: 'healer',   name: '治療職業',     abbrs: ['CNJ', 'WHM', 'SCH', 'AST', 'SGE'] },
+      { key: 'melee',    name: '近戰職業',     abbrs: ['PGL', 'MNK', 'LNC', 'DRG', 'ROG', 'NIN', 'SAM', 'RPR', 'VPR'] },
+      { key: 'pranged',  name: '遠程物理職業', abbrs: ['ARC', 'BRD', 'MCH', 'DNC'] },
+      { key: 'caster',   name: '遠程魔法職業', abbrs: ['THM', 'BLM', 'ACN', 'SMN', 'RDM', 'BLU', 'PCT'] },
+      { key: 'crafter',  name: '製作職業',     abbrs: ['CRP', 'BSM', 'ARM', 'GSM', 'LTW', 'WVR', 'ALC', 'CUL'] },
+      { key: 'gatherer', name: '採集職業',     abbrs: ['MIN', 'BTN', 'FSH'] }
+    ];
+    // 個別職業選單不列出基礎職與冒險者（僅在職能集合內參與比對）
+    var HIDDEN_JOBS = { ADV: 1, GLA: 1, PGL: 1, MRD: 1, LNC: 1, ARC: 1, CNJ: 1, THM: 1, ACN: 1, ROG: 1 };
+
+    // 選單值 → 職業索引集合：'g:tank'＝職能、'j:PLD'＝單一職業；需 equipData 已載入
+    function equipJobIdxSet(ej) {
+      var abbrs;
+      if (ej.indexOf('g:') === 0) {
+        var role = null;
+        for (var i = 0; i < EQUIP_ROLES.length; i++) if (EQUIP_ROLES[i].key === ej.slice(2)) role = EQUIP_ROLES[i];
+        abbrs = role ? role.abbrs : [];
+      } else {
+        abbrs = [ej.slice(2)];
+      }
+      var s = new Set();
+      abbrs.forEach(function (a) { var idx = equipData.jobs.indexOf(a); if (idx >= 0) s.add(idx); });
+      return s;
+    }
+    function equipJobLabel(ej) {
+      if (ej.indexOf('g:') === 0) {
+        for (var i = 0; i < EQUIP_ROLES.length; i++) if (EQUIP_ROLES[i].key === ej.slice(2)) return EQUIP_ROLES[i].name;
+        return ej;
+      }
+      return equipData ? equipData.names[ej.slice(2)] : ej.slice(2);
+    }
+
     // ---- 配方索引（延後載入）----
     var loadRecipesRaw = lazyJson('../../data/recipes.json');
     var recipesPromise = null;
@@ -641,14 +678,18 @@
       return ok;
     }
 
-    // 裝備限制：非裝備物品在任一裝備條件下一律排除
-    function matchesEquip(it, er, ej) {
-      if (!er.active && ej === '') return true;
+    // 裝備限制：非裝備物品在任一裝備條件下一律排除；ejSet＝允許職業索引集合（null＝不篩）
+    function matchesEquip(it, er, ejSet) {
+      if (!er.active && !ejSet) return true;
       var e = equipData && equipData.items[it.id];
       if (!e) return false;
       if (er.min != null && e[0] < er.min) return false;
       if (er.max != null && e[0] > er.max) return false;
-      if (ej !== '' && e[1].indexOf(Number(ej)) < 0) return false;
+      if (ejSet) {
+        var hit = false;
+        for (var i = 0; i < e[1].length; i++) if (ejSet.has(e[1][i])) { hit = true; break; }
+        if (!hit) return false;
+      }
       return true;
     }
 
@@ -684,7 +725,7 @@
       if (jobFilter.size) parts.push('製作職業：' + Array.from(jobFilter).join('、'));
       if (cr.active) parts.push('製作等級 ' + (cr.min == null ? '1' : cr.min) + '–' + (cr.max == null ? '不限' : cr.max));
       if (er.active) parts.push('裝備等級 ' + (er.min == null ? '1' : er.min) + '–' + (er.max == null ? '不限' : er.max));
-      if (ej !== '' && equipData) parts.push('裝備職業：' + equipData.names[equipData.jobs[Number(ej)]]);
+      if (ej !== '') parts.push('裝備職業：' + equipJobLabel(ej));
       return parts.length ? '（' + parts.join('；') + '）' : '';
     }
 
@@ -719,13 +760,14 @@
       }
       if (t !== searchToken) return;   // 期間又按了一次搜尋
 
+      var ejSet = ej !== '' ? equipJobIdxSet(ej) : null;
       var starts = [], contains = [];
       for (var i = 0; i < items.length; i++) {
         var it = items[i];
         if (!it.name || !PatchGate.released(it.patch, gamePatch)) continue;
         if (!matchesJobFilter(it)) continue;
         if (!matchesCraftLv(it, cr)) continue;
-        if (!matchesEquip(it, er, ej)) continue;
+        if (!matchesEquip(it, er, ejSet)) continue;
         if (!q) starts.push(it);       // 純條件查詢（按鈕制下意圖明確，允許）
         else {
           var idx = it.name.indexOf(q);
@@ -1591,10 +1633,21 @@
           if (searchOut.length) renderResultsPage(false);   // 補上卡片的製作職業列
         }).catch(function () {});
         ensureEquip().then(function () {
-          var sel = $('#equipJob');
-          sel.innerHTML = '<option value="">全部</option>' + equipData.jobs.map(function (a, i) {
-            return '<option value="' + i + '">' + esc(equipData.names[a]) + '</option>';
-          }).join('');
+          var html = '<option value="">全部</option>' +
+            '<option value="g:all">全職業可裝</option>' +
+            '<optgroup label="職能分類">' +
+            EQUIP_ROLES.filter(function (r) { return r.key !== 'all'; }).map(function (r) {
+              return '<option value="g:' + r.key + '">' + esc(r.name) + '</option>';
+            }).join('') + '</optgroup>';
+          EQUIP_ROLES.forEach(function (r) {
+            if (r.key === 'all') return;
+            var jobs = r.abbrs.filter(function (a) { return !HIDDEN_JOBS[a] && equipData.names[a]; });
+            if (!jobs.length) return;
+            html += '<optgroup label="' + esc(r.name) + '">' + jobs.map(function (a) {
+              return '<option value="j:' + a + '">' + esc(equipData.names[a]) + '</option>';
+            }).join('') + '</optgroup>';
+          });
+          $('#equipJob').innerHTML = html;
         }).catch(function () {});
       } catch (e) {
         $('#itemDetail').innerHTML = '<div class="error">物品資料載入失敗，請重新整理頁面。</div>';
