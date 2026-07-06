@@ -518,22 +518,23 @@
       return recipesByItem;
     }
 
-    // 可製作物品的職業標示（需先 ensureRecipes），如「🔨 製作：鍛鐵匠 Lv.62★★」
-    function craftJobsHtml(id) {
+    // 可製作物品的職業＋等級需求文字（需先 ensureRecipes），如「鍛鐵匠 Lv.62★★／鑄甲匠 Lv.61」
+    function craftJobsText(id) {
       var jm = recipeJobsByItem && recipeJobsByItem.get(id);
       if (!jm || !jm.size) return '';
-      var txt = Array.from(jm.values()).map(function (j) {
+      return Array.from(jm.values()).map(function (j) {
         return j.job + ' Lv.' + j.level + (j.stars ? Array(j.stars + 1).join('★') : '');
       }).join('／');
-      return ' · 🔨 製作：' + esc(txt);
     }
-
-    // 搜尋卡上的製作職業列（配方載入完成前回空字串，載入後由 init 補渲染）
+    // 詳情視窗副標用
+    function craftJobsHtml(id) {
+      var txt = craftJobsText(id);
+      return txt ? ' · 🔨 製作：' + esc(txt) : '';
+    }
+    // 搜尋卡用（配方載入完成前回空字串，載入後由 init 補渲染）
     function craftJobsLine(id) {
-      var jm = recipeJobsByItem && recipeJobsByItem.get(id);
-      if (!jm || !jm.size) return '';
-      var names = Array.from(jm.values()).map(function (j) { return j.job; }).join('／');
-      return '<span class="result-craft">🔨 ' + esc(names) + '</span>';
+      var txt = craftJobsText(id);
+      return txt ? '<span class="result-craft">🔨 ' + esc(txt) + '</span>' : '';
     }
 
     // ===================== 搜尋 =====================
