@@ -95,9 +95,13 @@
 
     /* search */
     .search-wrap { position: relative; margin-bottom: 16px; }
-    .search-input-row { position: relative; }
+    .search-input-row { position: relative; display: flex; gap: 8px; }
     .search-input-row .icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
-    #searchInput { width: 100%; padding-left: 36px; }
+    #searchInput { flex: 1; min-width: 0; padding-left: 36px; }
+    #searchBtn { white-space: nowrap; }
+    /* 條件已變更、尚未執行搜尋的提示 */
+    #searchBtn.dirty { border-color: var(--gold); background: rgba(200,169,110,0.35); color: var(--gold-light); }
+    .lv-input { width: 68px; }
     /* 搜尋結果：卡片格線（每行 4 筆，點卡看詳情） */
     .search-results {
       margin-top: 12px;
@@ -372,10 +376,11 @@
       <div class="search-wrap">
         <div class="search-input-row">
           <span class="icon">🔍</span>
-          <input type="search" id="searchInput" placeholder="輸入物品名稱（繁中）…" autocomplete="off">
+          <input type="search" id="searchInput" placeholder="輸入物品名稱（繁中），或只設條件直接搜尋…" autocomplete="off" aria-label="物品名稱關鍵字">
+          <button class="btn primary" id="searchBtn" type="button">🔍 搜尋</button>
         </div>
-        <div class="job-filter" id="jobFilter">
-          <span class="jf-label">🔨 製作職業篩選（可複選）</span>
+        <div class="job-filter" id="craftRow">
+          <span class="jf-label">🔨 製作</span>
           <button class="job-chip" data-job="刻木匠">刻木匠</button>
           <button class="job-chip" data-job="鍛鐵匠">鍛鐵匠</button>
           <button class="job-chip" data-job="鑄甲匠">鑄甲匠</button>
@@ -386,11 +391,26 @@
           <button class="job-chip" data-job="烹調師">烹調師</button>
           <button class="job-chip" data-job="工會工坊">工會工坊</button>
           <button class="job-chip" data-job="無人島">無人島</button>
-          <span class="jf-label" style="margin-left:auto">製作等級排序</span>
-          <span class="seg" id="sortSeg">
-            <button data-sort="lvDesc" class="active">高→低</button>
-            <button data-sort="lvAsc">低→高</button>
-          </span>
+          <span class="jf-label">等級</span>
+          <input type="number" class="lv-input" id="craftMin" min="1" max="100" placeholder="不限" aria-label="製作等級下限">
+          <span class="jf-label">–</span>
+          <input type="number" class="lv-input" id="craftMax" min="1" max="100" placeholder="不限" aria-label="製作等級上限">
+        </div>
+        <div class="job-filter" id="equipRow">
+          <span class="jf-label">⚔ 裝備</span>
+          <span class="jf-label">等級</span>
+          <input type="number" class="lv-input" id="equipMin" min="1" max="100" placeholder="不限" aria-label="裝備等級下限">
+          <span class="jf-label">–</span>
+          <input type="number" class="lv-input" id="equipMax" min="1" max="100" placeholder="不限" aria-label="裝備等級上限">
+          <span class="jf-label">職業</span>
+          <select id="equipJob" aria-label="可裝備職業"><option value="">全部</option></select>
+          <span class="jf-label" style="margin-left:auto">排序</span>
+          <select id="sortSel" aria-label="結果排序">
+            <option value="craftDesc" selected>製作等級 高→低</option>
+            <option value="craftAsc">製作等級 低→高</option>
+            <option value="equipDesc">裝備等級 高→低</option>
+            <option value="equipAsc">裝備等級 低→高</option>
+          </select>
         </div>
         <div class="search-results" id="searchResults"></div>
       </div>
@@ -463,7 +483,6 @@
     var fmt = function (n) { return Universalis.fmtGil(n); };
     function iconUrl(it) { return it && it.icon ? ICON_CDN + it.icon : ''; }
     function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]; }); }
-    function debounce(fn, ms) { var t; return function () { var a = arguments, c = this; clearTimeout(t); t = setTimeout(function () { fn.apply(c, a); }, ms); }; }
     function relTime(ms) {
       if (!ms) return '';
       var d = Date.now() - ms, m = Math.round(d / 60000);
@@ -511,15 +530,34 @@
       }
     }
 
-    // ---- 配方索引（延後載入；promise 記憶化避免背景預載與開視窗同時觸發重複抓取）----
+    // ---- 延遲載入工具：promise 記憶化（背景預載與使用時同呼叫不重複抓取；失敗清空可重試）----
+    function lazyJson(url) {
+      var p = null;
+      return function () {
+        if (!p) p = fetch(url).then(function (r) {
+          if (!r.ok) throw new Error(url + ' HTTP ' + r.status);
+          return r.json();
+        }).catch(function (e) { p = null; throw e; });
+        return p;
+      };
+    }
+
+    // ---- 裝備限制資料（equip.json：{ jobs, names, items: {id:[裝等,[職業索引]]} }）----
+    var equipData = null;
+    var loadEquipRaw = lazyJson('../../data/equip.json');
+    function ensureEquip() {
+      return loadEquipRaw().then(function (d) { equipData = d; return d; });
+    }
+
+    // ---- 配方索引（延後載入）----
+    var loadRecipesRaw = lazyJson('../../data/recipes.json');
     var recipesPromise = null;
     function ensureRecipes() {
-      if (!recipesPromise) recipesPromise = loadRecipes();
+      if (!recipesPromise) recipesPromise = loadRecipes().catch(function (e) { recipesPromise = null; throw e; });
       return recipesPromise;
     }
     async function loadRecipes() {
-      var res = await fetch('../../data/recipes.json');
-      var db = await res.json();
+      var db = await loadRecipesRaw();
       recipesByItem = new Map();
       usedInByItem = new Map();
       recipeJobsByItem = new Map();
@@ -563,8 +601,11 @@
       return txt ? '<span class="result-craft">🔨 ' + esc(txt) + '</span>' : '';
     }
 
-    // ===================== 搜尋 =====================
+    // ===================== 搜尋（全延遲觸發：條件皆 staged，按搜尋鈕／Enter 才執行）=====================
     var jobFilter = new Set();         // 製作職業篩選（複選；空＝不篩）
+    var searchOut = [];                // 目前搜尋結果（換頁重繪用）
+    var searchPage = 1;                // 目前頁碼
+    var searchToken = 0;               // 連續搜尋競態守門
 
     function matchesJobFilter(it) {
       if (!jobFilter.size) return true;
@@ -575,17 +616,53 @@
       return false;
     }
 
-    var searchOut = [];                // 目前搜尋結果（換頁重繪用）
-    var searchPage = 1;                // 目前頁碼
-    var searchSort = 'lvDesc';         // 製作等級排序：lvDesc 高→低（預設）/ lvAsc 低→高
+    // 範圍輸入解析：留空＝不限；min>max 靜默交換（同時回寫輸入框讓交換可見）
+    function parseRange(minEl, maxEl) {
+      var min = minEl.value === '' ? null : Math.max(1, parseInt(minEl.value, 10) || 1);
+      var max = maxEl.value === '' ? null : Math.max(1, parseInt(maxEl.value, 10) || 1);
+      if (min != null && max != null && min > max) {
+        var t = min; min = max; max = t;
+        minEl.value = min; maxEl.value = max;
+      }
+      return { min: min, max: max, active: min != null || max != null };
+    }
 
-    // 排序鍵：取各職業配方的最高等級需求，★ 當小數細分；無配方回 -1（固定排最後）
+    // 製作等級：任一配方職業等級落在範圍內（若有選職業 chips，只看被選職業的配方）
+    function matchesCraftLv(it, cr) {
+      if (!cr.active) return true;
+      var jm = recipeJobsByItem && recipeJobsByItem.get(it.id);
+      if (!jm) return false;
+      var ok = false;
+      jm.forEach(function (j) {
+        if (ok) return;
+        if (jobFilter.size && !jobFilter.has(j.job)) return;
+        if ((cr.min == null || j.level >= cr.min) && (cr.max == null || j.level <= cr.max)) ok = true;
+      });
+      return ok;
+    }
+
+    // 裝備限制：非裝備物品在任一裝備條件下一律排除
+    function matchesEquip(it, er, ej) {
+      if (!er.active && ej === '') return true;
+      var e = equipData && equipData.items[it.id];
+      if (!e) return false;
+      if (er.min != null && e[0] < er.min) return false;
+      if (er.max != null && e[0] > er.max) return false;
+      if (ej !== '' && e[1].indexOf(Number(ej)) < 0) return false;
+      return true;
+    }
+
+    // 排序鍵：製作＝各職業配方最高等級需求（★ 當小數細分）；裝備＝裝備等級。無資料回 -1（固定排最後）
     function craftLevelKey(id) {
       var jm = recipeJobsByItem && recipeJobsByItem.get(id);
       if (!jm || !jm.size) return -1;
       var mx = 0;
       jm.forEach(function (j) { var k = j.level + (j.stars || 0) / 10; if (k > mx) mx = k; });
       return mx;
+    }
+    function equipLevelKey(id) {
+      var e = equipData && equipData.items[id];
+      return e ? e[0] : -1;
     }
 
     function resultCardHtml(it) {
@@ -598,28 +675,63 @@
         '</div>';
     }
 
-    function renderResults(q) {
+    // 條件變更（尚未執行）→ 搜尋鈕高亮提示
+    function markDirty() { $('#searchBtn').classList.add('dirty'); }
+
+    // 目前生效條件的人話描述（查無訊息點名兇手用）
+    function condsText(cr, er, ej) {
+      var parts = [];
+      if (jobFilter.size) parts.push('製作職業：' + Array.from(jobFilter).join('、'));
+      if (cr.active) parts.push('製作等級 ' + (cr.min == null ? '1' : cr.min) + '–' + (cr.max == null ? '不限' : cr.max));
+      if (er.active) parts.push('裝備等級 ' + (er.min == null ? '1' : er.min) + '–' + (er.max == null ? '不限' : er.max));
+      if (ej !== '' && equipData) parts.push('裝備職業：' + equipData.names[equipData.jobs[Number(ej)]]);
+      return parts.length ? '（' + parts.join('；') + '）' : '';
+    }
+
+    // 執行搜尋：讀取目前所有條件 → 平行載入所需資料 → 過濾＋排序＋分頁
+    async function executeSearch() {
       var box = $('#searchResults');
-      q = (q || '').trim();
+      var q = $('#searchInput').value.trim();
+      var cr = parseRange($('#craftMin'), $('#craftMax'));
+      var er = parseRange($('#equipMin'), $('#equipMax'));
+      var ej = $('#equipJob').value;
+      var sort = $('#sortSel').value;
       searchOut = []; searchPage = 1;
-      // 職業篩選只套用在文字搜尋結果上，不單獨觸發查詢
-      if (!q) {
-        box.innerHTML = jobFilter.size ? '<div class="search-note">輸入物品名稱後，才會套用職業篩選查詢。</div>' : '';
+
+      var hasCond = jobFilter.size || cr.active || er.active || ej !== '';
+      if (!q && !hasCond) {
+        box.innerHTML = '<div class="search-note">請輸入關鍵字或設定篩選條件。</div>';
+        $('#searchBtn').classList.remove('dirty');
         return;
       }
-      // 有職業篩選但配方還沒載完：先提示，載完後 init 的預載 then 會補渲染
-      if (jobFilter.size && !recipeJobsByItem) {
-        box.innerHTML = '<div class="search-note">配方資料載入中，稍候自動套用職業篩選…</div>';
+      $('#searchBtn').classList.remove('dirty');
+
+      // 需要的資料平行載入；失敗明確報錯，絕不靜默顯示查無（ENG-1）
+      var needs = [ensureRecipes()];   // 卡片職業列與製作排序皆用（init 已背景預載，多半即時）
+      if (er.active || ej !== '' || sort.indexOf('equip') === 0) needs.push(ensureEquip());
+      var t = ++searchToken;
+      box.innerHTML = '<div class="search-note">查詢中…</div>';
+      try { await Promise.all(needs); }
+      catch (e) {
+        if (t !== searchToken) return;
+        box.innerHTML = '<div class="search-note" style="color:var(--red)">資料載入失敗，請按上方「↻ 重新整理」或稍後再按搜尋重試。</div>';
         return;
       }
+      if (t !== searchToken) return;   // 期間又按了一次搜尋
+
       var starts = [], contains = [];
       for (var i = 0; i < items.length; i++) {
         var it = items[i];
         if (!it.name || !PatchGate.released(it.patch, gamePatch)) continue;
         if (!matchesJobFilter(it)) continue;
-        var idx = it.name.indexOf(q);
-        if (idx === 0) starts.push(it);
-        else if (idx > 0) contains.push(it);
+        if (!matchesCraftLv(it, cr)) continue;
+        if (!matchesEquip(it, er, ej)) continue;
+        if (!q) starts.push(it);       // 純條件查詢（按鈕制下意圖明確，允許）
+        else {
+          var idx = it.name.indexOf(q);
+          if (idx === 0) starts.push(it);
+          else if (idx > 0) contains.push(it);
+        }
         if (starts.length >= MAX_RESULTS) break;
       }
       // 可交易物品優先（查價工具主要對象），組內維持原順序
@@ -627,18 +739,19 @@
       starts.sort(byMarketable);
       contains.sort(byMarketable);
       searchOut = starts.concat(contains).slice(0, MAX_RESULTS);
-      // 製作等級排序（穩定排序，等級相同時保留原相關性順序；無配方一律排最後）
-      var dir = searchSort === 'lvAsc' ? 1 : -1;
+      // 等級排序（穩定排序，等級相同時保留原相關性順序；無對應資料一律排最後）
+      var keyFn = sort.indexOf('equip') === 0 ? equipLevelKey : craftLevelKey;
+      var dir = /Asc$/.test(sort) ? 1 : -1;
       searchOut.sort(function (a, b) {
-        var la = craftLevelKey(a.id), lb = craftLevelKey(b.id);
+        var la = keyFn(a.id), lb = keyFn(b.id);
         if (la < 0 && lb < 0) return 0;
         if (la < 0) return 1;
         if (lb < 0) return -1;
         return (la - lb) * dir;
       });
       if (!searchOut.length) {
-        box.innerHTML = '<div class="search-note">查無符合「' + esc(q) + '」' +
-          (jobFilter.size ? '（已套用職業篩選：' + esc(Array.from(jobFilter).join('、')) + '）' : '') + '的物品</div>';
+        box.innerHTML = '<div class="search-note">查無符合' + (q ? '「' + esc(q) + '」' : '') +
+          esc(condsText(cr, er, ej)) + '的物品</div>';
         return;
       }
       renderResultsPage(false);
@@ -1377,26 +1490,29 @@
       try { history.replaceState({ tab: 'search', detail: null, node: null }, '', location.pathname + location.search); } catch (e) {}
       window.addEventListener('popstate', function (e) { applyNav(e.state || { tab: 'search', detail: null, node: null }); });
 
-      // 搜尋
+      // 搜尋：全延遲觸發——輸入/條件變更只標記 dirty，按搜尋鈕或 Enter 才執行
       var input = $('#searchInput');
-      input.addEventListener('input', debounce(function () { renderResults(input.value); }, 180));
+      $('#searchBtn').addEventListener('click', executeSearch);
+      input.addEventListener('keydown', function (e) {
+        // 中文輸入法組字中的 Enter（isComposing / keyCode 229）不觸發搜尋
+        if (e.key === 'Enter' && !e.isComposing && e.keyCode !== 229) executeSearch();
+      });
+      input.addEventListener('input', markDirty);
 
-      // 製作職業篩選（複選 chip）＋ 排序切換
-      $('#jobFilter').addEventListener('click', function (e) {
-        var sb = e.target.closest('#sortSeg button[data-sort]');
-        if (sb) {
-          searchSort = sb.getAttribute('data-sort');
-          $('#sortSeg').querySelectorAll('button').forEach(function (x) { x.classList.toggle('active', x === sb); });
-          renderResults(input.value);
-          return;
-        }
+      // 條件群（chips／等級範圍／裝備職業／排序）：變更僅 staged，不即時查詢
+      $('#craftRow').addEventListener('click', function (e) {
         var chip = e.target.closest('.job-chip');
         if (!chip) return;
         var j = chip.getAttribute('data-job');
         if (jobFilter.has(j)) jobFilter.delete(j); else jobFilter.add(j);
         chip.classList.toggle('active', jobFilter.has(j));
-        renderResults(input.value);
+        markDirty();
       });
+      ['craftMin', 'craftMax', 'equipMin', 'equipMax'].forEach(function (id) {
+        $('#' + id).addEventListener('input', markDirty);
+      });
+      $('#equipJob').addEventListener('change', markDirty);
+      $('#sortSel').addEventListener('change', markDirty);
       $('#searchResults').addEventListener('click', function (e) {
         var pb = e.target.closest('.page-btn[data-page]');
         if (pb) { if (!pb.disabled) { searchPage = Number(pb.getAttribute('data-page')); renderResultsPage(true); } return; }
@@ -1470,10 +1586,15 @@
         var db = await res.json();
         items = db.data;
         itemById = new Map(items.map(function (it) { return [it.id, it]; }));
-        // 背景預載配方：搜尋卡即可顯示製作職業，之後開視窗／製作清單也零等待
+        // 背景預載：配方（卡片職業列／製作清單零等待）＋裝備限制（填職業下拉）
         ensureRecipes().then(function () {
-          var q = $('#searchInput').value;
-          if (q && q.trim() && $('#tab-search').classList.contains('active')) renderResults(q);
+          if (searchOut.length) renderResultsPage(false);   // 補上卡片的製作職業列
+        }).catch(function () {});
+        ensureEquip().then(function () {
+          var sel = $('#equipJob');
+          sel.innerHTML = '<option value="">全部</option>' + equipData.jobs.map(function (a, i) {
+            return '<option value="' + i + '">' + esc(equipData.names[a]) + '</option>';
+          }).join('');
         }).catch(function () {});
       } catch (e) {
         $('#itemDetail').innerHTML = '<div class="error">物品資料載入失敗，請重新整理頁面。</div>';
