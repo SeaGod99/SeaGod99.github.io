@@ -316,12 +316,12 @@
     </div>
 
     <nav class="tabs">
-      <button class="tab active" data-tab="search">🔍 單品查價</button>
+      <button class="tab active" data-tab="search">🔍 物品查詢</button>
       <button class="tab" data-tab="craft">🧱 製作清單 <span class="pill" id="craftCount">0</span></button>
       <button class="tab" data-tab="lists">📁 我的清單</button>
     </nav>
 
-    <!-- 單品查價 -->
+    <!-- 物品查詢 -->
     <section class="tab-panel active" id="tab-search">
       <div class="search-wrap">
         <div class="search-input-row">
@@ -382,6 +382,7 @@
     var itemById = new Map();
     var recipesByItem = null;          // itemId -> 配方（延後載入）
     var usedInByItem = null;           // ingredientId -> Set<成品 itemId>（反查「向上」用途）
+    var recipeJobsByItem = null;       // itemId -> Map<職業名, {job, level, stars}>（同職業取最低等級配方）
     var gamePatch = '7.15';
     var scope = 'dc';
     var craft = [];                    // [{itemId, qty}]
@@ -452,11 +453,18 @@
       var db = await res.json();
       recipesByItem = new Map();
       usedInByItem = new Map();
+      recipeJobsByItem = new Map();
       var score = function (r) { return (r.expert ? 1e6 : 0) + (r.rlvl || 0); };
       for (var i = 0; i < db.data.length; i++) {
         var r = db.data[i];
         var cur = recipesByItem.get(r.itemId);
         if (!cur || score(r) < score(cur)) recipesByItem.set(r.itemId, r);
+        if (r.job) {
+          var jm = recipeJobsByItem.get(r.itemId);
+          if (!jm) { jm = new Map(); recipeJobsByItem.set(r.itemId, jm); }
+          var ej = jm.get(r.job);
+          if (!ej || r.level < ej.level) jm.set(r.job, { job: r.job, level: r.level, stars: r.stars || 0 });
+        }
         for (var j = 0; j < r.ingredients.length; j++) {
           var gid = r.ingredients[j].itemId;
           var s = usedInByItem.get(gid);
@@ -465,6 +473,16 @@
         }
       }
       return recipesByItem;
+    }
+
+    // 可製作物品的職業標示（需先 ensureRecipes），如「🔨 製作：鍛鐵匠 Lv.62★★」
+    function craftJobsHtml(id) {
+      var jm = recipeJobsByItem && recipeJobsByItem.get(id);
+      if (!jm || !jm.size) return '';
+      var txt = Array.from(jm.values()).map(function (j) {
+        return j.job + ' Lv.' + j.level + (j.stars ? Array(j.stars + 1).join('★') : '');
+      }).join('／');
+      return ' · 🔨 製作：' + esc(txt);
     }
 
     // ===================== 搜尋 =====================
@@ -805,7 +823,7 @@
       var body = $('#craftBody');
       var sub = craftSubtabsHtml();
       if (!craft.length) {
-        body.innerHTML = sub + '<div class="empty-state">製作清單是空的。<br>到「單品查價」搜尋物品，開視窗按「＋ 加入」即可開始試算。</div>';
+        body.innerHTML = sub + '<div class="empty-state">製作清單是空的。<br>到「物品查詢」搜尋物品，開視窗按「＋ 加入」即可開始試算。</div>';
         return;
       }
       if (craftView === 'simple') renderCraftSimple(body, sub);
@@ -967,7 +985,7 @@
         '<img class="ic" src="' + iconUrl(it) + '" alt="" onerror="this.style.visibility=\'hidden\'">' +
         '<div class="t">' + esc(it.name) + '</div>' +
         '<button class="modal-close" data-nm="close" title="關閉">✕</button></div>' +
-        '<div class="detail-sub" style="margin-bottom:10px">' + esc(it.category || '') + ' · 物品 #' + it.id + ' · 查價範圍：' + esc(scopeLabel()) + (isCrystal(id) ? ' · 水晶' : '') + '</div>' +
+        '<div class="detail-sub" style="margin-bottom:10px">' + esc(it.category || '') + ' · 物品 #' + it.id + ' · 查價範圍：' + esc(scopeLabel()) + (isCrystal(id) ? ' · 水晶' : '') + craftJobsHtml(id) + '</div>' +
         '<div id="nmMarket">' + (it.marketable ? '<div class="loading">查詢市場資料中…</div>' : '<div class="note">此物品無法在市場交易。</div>') + '</div>' +
         nmRecipeSection(id) +
         '<div class="qty-add"><span class="note">加入製作清單：</span><input type="number" id="nmQty" min="1" value="1"><button class="btn primary" data-nm="add" data-id="' + id + '">＋ 加入</button></div>';
@@ -1106,7 +1124,7 @@
     // ===================== 分頁 / 瀏覽歷史（上一頁/下一頁）=====================
     // 用 History API 讓瀏覽器上一頁/下一頁可在「分頁 → 物品詳情 → 節點視窗」之間
     // 逐步前進後退，而不是一按上一頁就離開整個工具回首頁。
-    // 狀態 nav = { tab, detail(單品查價選中的物品), node(節點視窗開啟的物品) }。
+    // 狀態 nav = { tab, detail(物品查詢選中的物品), node(節點視窗開啟的物品) }。
     var applied = { tab: 'search', detail: null, node: null };
 
     function setTab(name) {
