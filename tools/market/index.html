@@ -118,6 +118,17 @@
     .result-name { font-size: 0.9rem; font-weight: 500; line-height: 1.3; word-break: break-word; }
     .result-cat { font-size: 0.72rem; color: var(--text-muted); }
     .result-craft { font-size: 0.7rem; color: var(--purple); }
+
+    /* 製作職業篩選（複選 chip）*/
+    .job-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 10px; }
+    .job-filter .jf-label { font-size: 0.76rem; color: var(--text-muted); margin-right: 2px; }
+    .job-chip {
+      background: var(--bg-surface); border: 1px solid var(--border); color: var(--text-dim);
+      border-radius: 20px; padding: 3px 12px; font-size: 0.8rem; cursor: pointer;
+      transition: all var(--transition); font-family: inherit;
+    }
+    .job-chip:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+    .job-chip.active { color: var(--purple); background: var(--purple-dim); border-color: rgba(167,139,250,0.5); }
     .tag {
       font-size: 0.68rem; padding: 1px 7px; border-radius: 4px; border: 1px solid transparent; white-space: nowrap;
     }
@@ -329,6 +340,19 @@
           <span class="icon">🔍</span>
           <input type="search" id="searchInput" placeholder="輸入物品名稱（繁中）…" autocomplete="off">
         </div>
+        <div class="job-filter" id="jobFilter">
+          <span class="jf-label">🔨 製作職業篩選（可複選）</span>
+          <button class="job-chip" data-job="刻木匠">刻木匠</button>
+          <button class="job-chip" data-job="鍛鐵匠">鍛鐵匠</button>
+          <button class="job-chip" data-job="鑄甲匠">鑄甲匠</button>
+          <button class="job-chip" data-job="雕金匠">雕金匠</button>
+          <button class="job-chip" data-job="製革匠">製革匠</button>
+          <button class="job-chip" data-job="裁衣匠">裁衣匠</button>
+          <button class="job-chip" data-job="煉金術士">煉金術士</button>
+          <button class="job-chip" data-job="烹調師">烹調師</button>
+          <button class="job-chip" data-job="工會工坊">工會工坊</button>
+          <button class="job-chip" data-job="無人島">無人島</button>
+        </div>
         <div class="search-results" id="searchResults"></div>
       </div>
       <div class="item-detail" id="itemDetail"></div>
@@ -499,17 +523,37 @@
     }
 
     // ===================== 搜尋 =====================
+    var jobFilter = new Set();         // 製作職業篩選（複選；空＝不篩）
+
+    function matchesJobFilter(it) {
+      if (!jobFilter.size) return true;
+      var jm = recipeJobsByItem && recipeJobsByItem.get(it.id);
+      if (!jm) return false;
+      var ks = Array.from(jm.keys());
+      for (var i = 0; i < ks.length; i++) if (jobFilter.has(ks[i])) return true;
+      return false;
+    }
+
     function renderResults(q) {
       var box = $('#searchResults');
       q = (q || '').trim();
-      if (!q) { box.innerHTML = ''; return; }
+      if (!q && !jobFilter.size) { box.innerHTML = ''; return; }
+      // 有職業篩選但配方還沒載完：先提示，載完後 init 的預載 then 會補渲染
+      if (jobFilter.size && !recipeJobsByItem) {
+        box.innerHTML = '<div class="search-note">配方資料載入中，稍候自動套用職業篩選…</div>';
+        return;
+      }
       var out = [], starts = [], contains = [];
       for (var i = 0; i < items.length; i++) {
         var it = items[i];
         if (!it.name || !PatchGate.released(it.patch, gamePatch)) continue;
-        var idx = it.name.indexOf(q);
-        if (idx === 0) starts.push(it);
-        else if (idx > 0) contains.push(it);
+        if (!matchesJobFilter(it)) continue;
+        if (!q) starts.push(it);           // 只選職業不打字＝瀏覽該職業可製作物品
+        else {
+          var idx = it.name.indexOf(q);
+          if (idx === 0) starts.push(it);
+          else if (idx > 0) contains.push(it);
+        }
         if (starts.length >= MAX_RESULTS) break;
       }
       // 可交易物品優先（查價工具主要對象），組內維持原順序
@@ -517,7 +561,11 @@
       starts.sort(byMarketable);
       contains.sort(byMarketable);
       out = starts.concat(contains).slice(0, MAX_RESULTS);
-      if (!out.length) { box.innerHTML = '<div class="search-note">查無符合「' + esc(q) + '」的物品</div>'; return; }
+      if (!out.length) {
+        box.innerHTML = '<div class="search-note">查無符合' + (q ? '「' + esc(q) + '」' : '') +
+          (jobFilter.size ? '（已套用職業篩選：' + esc(Array.from(jobFilter).join('、')) + '）' : '') + '的物品</div>';
+        return;
+      }
       box.innerHTML = out.map(function (it) {
         var tags = '';
         if (!it.marketable) tags += '<span class="tag untradable">不可交易</span>';
@@ -527,6 +575,9 @@
           '<span class="result-cat">' + esc(it.category || '') + '</span>' + craftJobsLine(it.id) + '</div>' + tags +
           '</div>';
       }).join('');
+      if (out.length >= MAX_RESULTS) {
+        box.innerHTML += '<div class="search-note">僅顯示前 ' + MAX_RESULTS + ' 筆，輸入關鍵字縮小範圍。</div>';
+      }
     }
 
     // ===================== 單品明細 =====================
@@ -1223,6 +1274,16 @@
       // 搜尋
       var input = $('#searchInput');
       input.addEventListener('input', debounce(function () { renderResults(input.value); }, 180));
+
+      // 製作職業篩選（複選 chip）
+      $('#jobFilter').addEventListener('click', function (e) {
+        var chip = e.target.closest('.job-chip');
+        if (!chip) return;
+        var j = chip.getAttribute('data-job');
+        if (jobFilter.has(j)) jobFilter.delete(j); else jobFilter.add(j);
+        chip.classList.toggle('active', jobFilter.has(j));
+        renderResults(input.value);
+      });
       $('#searchResults').addEventListener('click', function (e) {
         var card = e.target.closest('.result-card[data-id]');
         if (!card) return;
@@ -1297,7 +1358,7 @@
         // 背景預載配方：搜尋卡即可顯示製作職業，之後開視窗／製作清單也零等待
         ensureRecipes().then(function () {
           var q = $('#searchInput').value;
-          if (q && q.trim() && $('#tab-search').classList.contains('active')) renderResults(q);
+          if (((q && q.trim()) || jobFilter.size) && $('#tab-search').classList.contains('active')) renderResults(q);
         }).catch(function () {});
       } catch (e) {
         $('#itemDetail').innerHTML = '<div class="error">物品資料載入失敗，請重新整理頁面。</div>';
