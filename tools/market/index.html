@@ -365,10 +365,10 @@
           <button class="job-chip" data-job="烹調師">烹調師</button>
           <button class="job-chip" data-job="工會工坊">工會工坊</button>
           <button class="job-chip" data-job="無人島">無人島</button>
-          <span class="seg" id="sortSeg" style="margin-left:auto">
-            <button data-sort="lvDesc" class="active">製作等級 高→低</button>
+          <span class="jf-label" style="margin-left:auto">製作等級排序</span>
+          <span class="seg" id="sortSeg">
+            <button data-sort="lvDesc" class="active">高→低</button>
             <button data-sort="lvAsc">低→高</button>
-            <button data-sort="rel">相關性</button>
           </span>
         </div>
         <div class="search-results" id="searchResults"></div>
@@ -556,7 +556,7 @@
 
     var searchOut = [];                // 目前搜尋結果（換頁重繪用）
     var searchPage = 1;                // 目前頁碼
-    var searchSort = 'lvDesc';         // 排序：lvDesc 製作等級高→低（預設）/ lvAsc 低→高 / rel 相關性
+    var searchSort = 'lvDesc';         // 製作等級排序：lvDesc 高→低（預設）/ lvAsc 低→高
 
     // 排序鍵：取各職業配方的最高等級需求，★ 當小數細分；無配方回 -1（固定排最後）
     function craftLevelKey(id) {
@@ -606,17 +606,15 @@
       starts.sort(byMarketable);
       contains.sort(byMarketable);
       searchOut = starts.concat(contains).slice(0, MAX_RESULTS);
-      // 製作等級排序（穩定排序，等級相同時保留相關性順序；無配方一律排最後）
-      if (searchSort !== 'rel') {
-        var dir = searchSort === 'lvAsc' ? 1 : -1;
-        searchOut.sort(function (a, b) {
-          var la = craftLevelKey(a.id), lb = craftLevelKey(b.id);
-          if (la < 0 && lb < 0) return 0;
-          if (la < 0) return 1;
-          if (lb < 0) return -1;
-          return (la - lb) * dir;
-        });
-      }
+      // 製作等級排序（穩定排序，等級相同時保留原相關性順序；無配方一律排最後）
+      var dir = searchSort === 'lvAsc' ? 1 : -1;
+      searchOut.sort(function (a, b) {
+        var la = craftLevelKey(a.id), lb = craftLevelKey(b.id);
+        if (la < 0 && lb < 0) return 0;
+        if (la < 0) return 1;
+        if (lb < 0) return -1;
+        return (la - lb) * dir;
+      });
       if (!searchOut.length) {
         box.innerHTML = '<div class="search-note">查無符合「' + esc(q) + '」' +
           (jobFilter.size ? '（已套用職業篩選：' + esc(Array.from(jobFilter).join('、')) + '）' : '') + '的物品</div>';
