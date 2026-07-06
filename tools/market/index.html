@@ -98,14 +98,27 @@
     .search-input-row { position: relative; }
     .search-input-row .icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
     #searchInput { width: 100%; padding-left: 36px; }
-    /* 搜尋結果：卡片格線（點卡看詳情） */
+    /* 搜尋結果：卡片格線（每行 4 筆，點卡看詳情） */
     .search-results {
       margin-top: 12px;
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(212px, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 10px;
     }
+    @media (max-width: 1100px) { .search-results { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    @media (max-width: 800px)  { .search-results { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 520px)  { .search-results { grid-template-columns: 1fr; } }
     .search-results:empty { display: none; }
+    /* 分頁列 */
+    .search-pager { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 12px 4px 2px; color: var(--text-dim); font-size: 0.82rem; }
+    .page-btn {
+      background: var(--bg-surface); border: 1px solid var(--border); color: var(--text-dim);
+      border-radius: var(--radius-sm); padding: 5px 11px; font-size: 0.8rem; cursor: pointer;
+      font-family: inherit; transition: all var(--transition);
+    }
+    .page-btn:hover:not(:disabled) { color: var(--text); border-color: rgba(255,255,255,0.2); }
+    .page-btn.active { color: var(--gold); background: var(--gold-dim); border-color: rgba(200,169,110,0.5); }
+    .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
     .search-note { grid-column: 1 / -1; padding: 14px 4px; color: var(--text-muted); font-size: 0.85rem; }
     .result-card {
       display: flex; align-items: center; gap: 10px; padding: 12px; cursor: pointer;
@@ -398,7 +411,8 @@
     var LS_DRAFT = 'sgt-market-draft';
     var LS_OPTS = 'sgt-market-opts';
     var LS_CVIEW = 'sgt-market-craftview';
-    var MAX_RESULTS = 40;
+    var MAX_RESULTS = 200;             // 搜尋結果總上限
+    var PAGE_SIZE = 60;                // 每頁筆數
     var MAX_DEPTH = 12;
     var MAX_CRAFT_ITEMS = 10;          // 製作清單至多 10 件，避免合併樹狀圖過大
 
@@ -534,50 +548,78 @@
       return false;
     }
 
+    var searchOut = [];                // 目前搜尋結果（換頁重繪用）
+    var searchPage = 1;                // 目前頁碼
+
+    function resultCardHtml(it) {
+      var tags = '';
+      if (!it.marketable) tags += '<span class="tag untradable">不可交易</span>';
+      return '<div class="result-card" data-id="' + it.id + '" title="點擊查看即時價格與在架明細">' +
+        '<img class="item-icon" src="' + iconUrl(it) + '" alt="" loading="lazy" onerror="this.style.visibility=\'hidden\'">' +
+        '<div class="result-meta"><span class="result-name">' + esc(it.name) + '</span>' +
+        '<span class="result-cat">' + esc(it.category || '') + '</span>' + craftJobsLine(it.id) + '</div>' + tags +
+        '</div>';
+    }
+
     function renderResults(q) {
       var box = $('#searchResults');
       q = (q || '').trim();
-      if (!q && !jobFilter.size) { box.innerHTML = ''; return; }
+      searchOut = []; searchPage = 1;
+      // 職業篩選只套用在文字搜尋結果上，不單獨觸發查詢
+      if (!q) {
+        box.innerHTML = jobFilter.size ? '<div class="search-note">輸入物品名稱後，才會套用職業篩選查詢。</div>' : '';
+        return;
+      }
       // 有職業篩選但配方還沒載完：先提示，載完後 init 的預載 then 會補渲染
       if (jobFilter.size && !recipeJobsByItem) {
         box.innerHTML = '<div class="search-note">配方資料載入中，稍候自動套用職業篩選…</div>';
         return;
       }
-      var out = [], starts = [], contains = [];
+      var starts = [], contains = [];
       for (var i = 0; i < items.length; i++) {
         var it = items[i];
         if (!it.name || !PatchGate.released(it.patch, gamePatch)) continue;
         if (!matchesJobFilter(it)) continue;
-        if (!q) starts.push(it);           // 只選職業不打字＝瀏覽該職業可製作物品
-        else {
-          var idx = it.name.indexOf(q);
-          if (idx === 0) starts.push(it);
-          else if (idx > 0) contains.push(it);
-        }
+        var idx = it.name.indexOf(q);
+        if (idx === 0) starts.push(it);
+        else if (idx > 0) contains.push(it);
         if (starts.length >= MAX_RESULTS) break;
       }
       // 可交易物品優先（查價工具主要對象），組內維持原順序
       var byMarketable = function (a, b) { return (b.marketable ? 1 : 0) - (a.marketable ? 1 : 0); };
       starts.sort(byMarketable);
       contains.sort(byMarketable);
-      out = starts.concat(contains).slice(0, MAX_RESULTS);
-      if (!out.length) {
-        box.innerHTML = '<div class="search-note">查無符合' + (q ? '「' + esc(q) + '」' : '') +
+      searchOut = starts.concat(contains).slice(0, MAX_RESULTS);
+      if (!searchOut.length) {
+        box.innerHTML = '<div class="search-note">查無符合「' + esc(q) + '」' +
           (jobFilter.size ? '（已套用職業篩選：' + esc(Array.from(jobFilter).join('、')) + '）' : '') + '的物品</div>';
         return;
       }
-      box.innerHTML = out.map(function (it) {
-        var tags = '';
-        if (!it.marketable) tags += '<span class="tag untradable">不可交易</span>';
-        return '<div class="result-card" data-id="' + it.id + '" title="點擊查看即時價格與在架明細">' +
-          '<img class="item-icon" src="' + iconUrl(it) + '" alt="" loading="lazy" onerror="this.style.visibility=\'hidden\'">' +
-          '<div class="result-meta"><span class="result-name">' + esc(it.name) + '</span>' +
-          '<span class="result-cat">' + esc(it.category || '') + '</span>' + craftJobsLine(it.id) + '</div>' + tags +
-          '</div>';
-      }).join('');
-      if (out.length >= MAX_RESULTS) {
-        box.innerHTML += '<div class="search-note">僅顯示前 ' + MAX_RESULTS + ' 筆，輸入關鍵字縮小範圍。</div>';
+      renderResultsPage(false);
+    }
+
+    // 分頁渲染：每頁 PAGE_SIZE 筆，換頁時捲回結果頂端
+    function renderResultsPage(scrollTop) {
+      var box = $('#searchResults');
+      var total = searchOut.length;
+      var pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+      if (searchPage < 1) searchPage = 1;
+      if (searchPage > pages) searchPage = pages;
+      var slice = searchOut.slice((searchPage - 1) * PAGE_SIZE, searchPage * PAGE_SIZE);
+      var pager = '<div class="search-pager"><span>共 ' + total + (total >= MAX_RESULTS ? '+' : '') + ' 筆' +
+        (total >= MAX_RESULTS ? '（僅取前 ' + MAX_RESULTS + ' 筆，輸入關鍵字縮小範圍）' : '') +
+        (pages > 1 ? ' · 第 ' + searchPage + '/' + pages + ' 頁' : '') + '</span>';
+      if (pages > 1) {
+        pager += '<span style="margin-left:auto"></span>' +
+          '<button class="page-btn" data-page="' + (searchPage - 1) + '"' + (searchPage <= 1 ? ' disabled' : '') + '>‹ 上一頁</button>';
+        for (var p = 1; p <= pages; p++) {
+          pager += '<button class="page-btn' + (p === searchPage ? ' active' : '') + '" data-page="' + p + '">' + p + '</button>';
+        }
+        pager += '<button class="page-btn" data-page="' + (searchPage + 1) + '"' + (searchPage >= pages ? ' disabled' : '') + '>下一頁 ›</button>';
       }
+      pager += '</div>';
+      box.innerHTML = slice.map(resultCardHtml).join('') + pager;
+      if (scrollTop) box.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     // ===================== 單品明細 =====================
@@ -1285,6 +1327,8 @@
         renderResults(input.value);
       });
       $('#searchResults').addEventListener('click', function (e) {
+        var pb = e.target.closest('.page-btn[data-page]');
+        if (pb) { if (!pb.disabled) { searchPage = Number(pb.getAttribute('data-page')); renderResultsPage(true); } return; }
         var card = e.target.closest('.result-card[data-id]');
         if (!card) return;
         // 與「製作清單」的節點卡片同效果：開啟節點詳情視窗（市價 + 上下游配方 + 加入清單）
@@ -1358,7 +1402,7 @@
         // 背景預載配方：搜尋卡即可顯示製作職業，之後開視窗／製作清單也零等待
         ensureRecipes().then(function () {
           var q = $('#searchInput').value;
-          if (((q && q.trim()) || jobFilter.size) && $('#tab-search').classList.contains('active')) renderResults(q);
+          if (q && q.trim() && $('#tab-search').classList.contains('active')) renderResults(q);
         }).catch(function () {});
       } catch (e) {
         $('#itemDetail').innerHTML = '<div class="error">物品資料載入失敗，請重新整理頁面。</div>';
