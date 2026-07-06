@@ -117,6 +117,7 @@
     .result-meta { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
     .result-name { font-size: 0.9rem; font-weight: 500; line-height: 1.3; word-break: break-word; }
     .result-cat { font-size: 0.72rem; color: var(--text-muted); }
+    .result-craft { font-size: 0.7rem; color: var(--purple); }
     .tag {
       font-size: 0.68rem; padding: 1px 7px; border-radius: 4px; border: 1px solid transparent; white-space: nowrap;
     }
@@ -446,9 +447,13 @@
       }
     }
 
-    // ---- 配方索引（延後載入）----
-    async function ensureRecipes() {
-      if (recipesByItem) return recipesByItem;
+    // ---- 配方索引（延後載入；promise 記憶化避免背景預載與開視窗同時觸發重複抓取）----
+    var recipesPromise = null;
+    function ensureRecipes() {
+      if (!recipesPromise) recipesPromise = loadRecipes();
+      return recipesPromise;
+    }
+    async function loadRecipes() {
       var res = await fetch('../../data/recipes.json');
       var db = await res.json();
       recipesByItem = new Map();
@@ -485,6 +490,14 @@
       return ' · 🔨 製作：' + esc(txt);
     }
 
+    // 搜尋卡上的製作職業列（配方載入完成前回空字串，載入後由 init 補渲染）
+    function craftJobsLine(id) {
+      var jm = recipeJobsByItem && recipeJobsByItem.get(id);
+      if (!jm || !jm.size) return '';
+      var names = Array.from(jm.values()).map(function (j) { return j.job; }).join('／');
+      return '<span class="result-craft">🔨 ' + esc(names) + '</span>';
+    }
+
     // ===================== 搜尋 =====================
     function renderResults(q) {
       var box = $('#searchResults');
@@ -511,7 +524,7 @@
         return '<div class="result-card" data-id="' + it.id + '" title="點擊查看即時價格與在架明細">' +
           '<img class="item-icon" src="' + iconUrl(it) + '" alt="" loading="lazy" onerror="this.style.visibility=\'hidden\'">' +
           '<div class="result-meta"><span class="result-name">' + esc(it.name) + '</span>' +
-          '<span class="result-cat">' + esc(it.category || '') + '</span></div>' + tags +
+          '<span class="result-cat">' + esc(it.category || '') + '</span>' + craftJobsLine(it.id) + '</div>' + tags +
           '</div>';
       }).join('');
     }
@@ -1281,6 +1294,11 @@
         var db = await res.json();
         items = db.data;
         itemById = new Map(items.map(function (it) { return [it.id, it]; }));
+        // 背景預載配方：搜尋卡即可顯示製作職業，之後開視窗／製作清單也零等待
+        ensureRecipes().then(function () {
+          var q = $('#searchInput').value;
+          if (q && q.trim() && $('#tab-search').classList.contains('active')) renderResults(q);
+        }).catch(function () {});
       } catch (e) {
         $('#itemDetail').innerHTML = '<div class="error">物品資料載入失敗，請重新整理頁面。</div>';
       }
