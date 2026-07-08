@@ -179,6 +179,21 @@
     .ts-alarm { margin-left:auto; display:inline-flex; align-items:center; gap:6px; }
     .ts-alarm .chip { padding:4px 10px; font-size:12px; }
     .ts-alarm select { padding:4px 8px; font-size:12px; }
+    /* 追蹤列：迷你地圖縮圖與移除鈕 */
+    .ts-row { align-items:center; }
+    .ts-map {
+      position:relative; width:84px; height:46px; border-radius:var(--radius-sm); flex:none;
+      overflow:hidden; border:1px solid var(--border); background:var(--bg-surface); cursor:pointer;
+    }
+    .ts-map img { position:absolute; left:50%; top:50%; width:340%; height:auto; max-width:none; }
+    .ts-map .nm-pin { width:9px; height:9px; border-width:1.5px; }
+    .ts-map:hover { border-color:var(--border-hover); }
+    .ts-del {
+      background:none; border:1px solid var(--border); border-radius:var(--radius-sm);
+      width:24px; height:24px; font-size:11px; line-height:1; color:var(--text-muted);
+      cursor:pointer; transition:var(--transition);
+    }
+    .ts-del:hover { color:var(--red); border-color:rgba(248,113,113,0.4); background:var(--red-dim); }
 
     .map-btn {
       font-size:11px; padding:2px 10px; border-radius:var(--radius-sm); border:1px solid var(--border);
@@ -526,10 +541,25 @@ function teamcraftFlag(node){
   return `/coord ${node.x.toFixed(1)} ${node.y.toFixed(1)} ${node.mapName||''}`.trim();
 }
 
+/* ── 迷你地圖（卡片與追蹤列共用）：底圖以節點座標置中，圖釘顏色同開放狀態，點擊開大地圖 ── */
+function miniMapHtml(n, st, cls){
+  const m = MAPS.get(n.mapId);
+  if (n.mapMissing || !m || !m.image) return '';
+  const fx = (gCoordFrac(n.x, m.sizeFactor || 100) * 100).toFixed(2);
+  const fy = (gCoordFrac(n.y, m.sizeFactor || 100) * 100).toFixed(2);
+  return `<div class="${cls}" data-mapopen="${n.id}" title="點擊放大地圖">
+    <img src="../..${m.image.local}" alt="${m.name}" loading="lazy"
+      style="transform:translate(-${fx}%,-${fy}%)"
+      onerror="if(this.dataset.retry){this.closest('.${cls}').style.display='none'}else{this.dataset.retry=1;this.src='${m.image.url}';}">
+    <span class="nm-pin ${st.state}"></span>
+  </div>`;
+}
+
 /* ── 追蹤目標固定區：釘選的節點永遠置頂顯示，開了頁面一眼就知道現在／接下來要跑哪 ── */
+let tsSig = '';   // 追蹤列簽章：同網格，成員/狀態不變時只就地更新倒數，避免縮圖每秒重建
 function renderTrackStrip(now){
   const strip = document.getElementById('trackStrip');
-  if (!trackedIds.size){ strip.style.display='none'; return; }
+  if (!trackedIds.size){ strip.style.display='none'; tsSig=''; return; }
   const rows = NODES.filter(n=>trackedIds.has(n.id))
     .map(n=>({ n, st: nodeStatus(n, now) }))
     .sort((a,b)=>{
@@ -537,8 +567,19 @@ function renderTrackStrip(now){
       if (rank[a.st.state] !== rank[b.st.state]) return rank[a.st.state]-rank[b.st.state];
       return a.st.secsLeft - b.st.secsLeft;
     });
-  if (!rows.length){ strip.style.display='none'; return; }
+  if (!rows.length){ strip.style.display='none'; tsSig=''; return; }
   strip.style.display='';
+
+  const sig = rows.map(({n, st})=>`${n.id}:${st.state}:${st.startH ?? ''}`).join(',');
+  if (sig === tsSig){
+    rows.forEach(({n, st})=>{
+      const el = document.querySelector(`[data-tscd="${n.id}"]`);
+      if (el) el.textContent = fmtCountdown(st.secsLeft);
+    });
+    return;
+  }
+  tsSig = sig;
+
   document.getElementById('tsRows').innerHTML =
     rows.map(({n, st})=>{
       const pill = st.state==='open'
@@ -553,9 +594,11 @@ function renderTrackStrip(now){
       const flagBtn = flag ? `<button class="flag-btn" data-flag="${flag.replace(/"/g,'&quot;')}">📋</button>` : '';
       return `<div class="ts-row">
         ${pill}
+        ${miniMapHtml(n, st, 'ts-map')}
         <span class="ts-name">${jobEmoji(n.job)} ${n.itemNames.join('、')}</span>
         <span class="ts-loc">${n.mapMissing ? '地圖未知' : `${n.mapName} X:${n.x.toFixed(1)} Y:${n.y.toFixed(1)}`}</span>
-        <span class="ts-cd">${cdLabel} <b class="countdown ${cdCls}">${fmtCountdown(st.secsLeft)}</b> ${flagBtn} ${mapBtn}</span>
+        <span class="ts-cd">${cdLabel} <b class="countdown ${cdCls}" data-tscd="${n.id}">${fmtCountdown(st.secsLeft)}</b> ${flagBtn} ${mapBtn}
+          <button class="ts-del" data-track="${n.id}" title="移除追蹤">✕</button></span>
       </div>`;
     }).join('');
 }
@@ -708,19 +751,7 @@ function render(){
       : '';
     const mapBtn = n.mapMissing ? '' : `<button class="map-btn" data-mapopen="${n.id}">🗺 地圖</button>`;
     const tracked = trackedIds.has(n.id);
-    // 卡片迷你地圖：底圖以節點座標置中放大 3 倍，圖釘顏色同開放狀態，點擊開大地圖
-    const m = MAPS.get(n.mapId);
-    let miniMap = '';
-    if (!n.mapMissing && m && m.image){
-      const fx = (gCoordFrac(n.x, m.sizeFactor || 100) * 100).toFixed(2);
-      const fy = (gCoordFrac(n.y, m.sizeFactor || 100) * 100).toFixed(2);
-      miniMap = `<div class="node-map" data-mapopen="${n.id}" title="點擊放大地圖">
-        <img src="../..${m.image.local}" alt="${m.name}" loading="lazy"
-          style="transform:translate(-${fx}%,-${fy}%)"
-          onerror="if(this.dataset.retry){this.closest('.node-map').style.display='none'}else{this.dataset.retry=1;this.src='${m.image.url}';}">
-        <span class="nm-pin ${st.state}"></span>
-      </div>`;
-    }
+    const miniMap = miniMapHtml(n, st, 'node-map');
     return `
       <div class="node-card ${cls}">
         <button class="track-btn ${tracked?'on':''}" data-track="${n.id}" title="加入追蹤">${tracked?'★':'☆'}</button>
