@@ -175,6 +175,10 @@
     .ts-name { font-weight:600; color:var(--text-primary); }
     .ts-loc { color:var(--text-secondary); font-size:12px; }
     .ts-cd { margin-left:auto; display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text-secondary); }
+    /* 追蹤區鬧鐘提醒控制（靜態表頭，不隨每秒重繪） */
+    .ts-alarm { margin-left:auto; display:inline-flex; align-items:center; gap:6px; }
+    .ts-alarm .chip { padding:4px 10px; font-size:12px; }
+    .ts-alarm select { padding:4px 8px; font-size:12px; }
 
     .map-btn {
       font-size:11px; padding:2px 10px; border-radius:var(--radius-sm); border:1px solid var(--border);
@@ -299,7 +303,24 @@
     </div>
   </div>
 
-  <div class="track-strip" id="trackStrip" style="display:none"></div>
+  <div class="track-strip" id="trackStrip" style="display:none">
+    <div class="ts-head">⭐ 追蹤目標 <span class="ts-hint">依開放時間排序 · 點卡片右上 ☆ 新增</span>
+      <span class="ts-alarm">
+        <span class="chip mine" id="alarmToggle" title="追蹤目標開放前提醒">🔔 開放提醒</span>
+        <span class="select-box"><select id="alarmLead" title="提前多久提醒（現實時間）">
+          <option value="0">開放時提醒</option>
+          <option value="60">提前 1 分鐘</option>
+          <option value="180">提前 3 分鐘</option>
+          <option value="300">提前 5 分鐘</option>
+          <option value="600">提前 10 分鐘</option>
+        </select></span>
+        <span class="chip mine" id="alarmSound" title="提醒音效">🔊 音效</span>
+        <button class="map-btn" id="alarmTest" title="試聽提醒效果">試響</button>
+      </span>
+    </div>
+    <div class="ts-hint" id="alarmHint" style="display:none;margin-top:4px"></div>
+    <div id="tsRows"></div>
+  </div>
 
   <div class="result-meta" id="resultMeta"></div>
 
@@ -319,7 +340,8 @@
 
   <p class="info-note">
     開放時段以艾歐澤亞時間 (ET) 計算，無需網路、即時更新。<br>
-    物品名稱對應台服資料；若節點產物在台服尚未開放則不列出。實際座標以遊戲內為準。
+    物品名稱對應台服資料；若節點產物在台服尚未開放則不列出。實際座標以遊戲內為準。<br>
+    🔔 開放提醒僅在本分頁開啟時運作；分頁置於背景時提醒可能延遲數十秒，建議搭配系統通知使用。
   </p>
 </div>
 
@@ -510,7 +532,7 @@ function renderTrackStrip(now){
     });
   if (!rows.length){ strip.style.display='none'; return; }
   strip.style.display='';
-  strip.innerHTML = `<div class="ts-head">⭐ 追蹤目標 <span class="ts-hint">依開放時間排序 · 點卡片右上 ☆ 新增</span></div>` +
+  document.getElementById('tsRows').innerHTML =
     rows.map(({n, st})=>{
       const pill = st.state==='open'
         ? '<span class="status-pill pill-open">● 開放中</span>'
@@ -531,9 +553,83 @@ function renderTrackStrip(now){
     }).join('');
 }
 
+/* ─────────────────────────────────────────────
+   鬧鐘提醒：追蹤節點於開放前（可設提前量）以
+   系統通知＋音效＋分頁標題提醒。需保持分頁開啟。
+   ───────────────────────────────────────────── */
+const ALARM_KEY = 'ffxiv_gathering_alarm';
+const BASE_TITLE = document.title;
+let alarmCfg = { on:false, lead:60, sound:true };
+try { Object.assign(alarmCfg, JSON.parse(localStorage.getItem(ALARM_KEY) || '{}')); } catch(e) {}
+function saveAlarm(){ localStorage.setItem(ALARM_KEY, JSON.stringify(alarmCfg)); }
+
+const alarmFired = new Map(); // nodeId -> 該次開窗實際時間戳（同一窗只響一次）
+
+function alarmChime(){
+  if (!alarmCfg.sound) return;
+  try {
+    const ctx = alarmChime.ctx || (alarmChime.ctx = new (window.AudioContext || window.webkitAudioContext)());
+    if (ctx.state === 'suspended') ctx.resume();
+    const t0 = ctx.currentTime;
+    [880, 1174.66].forEach((f, i)=>{   // 上行兩音，柔和不刺耳
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = 'sine'; o.frequency.value = f;
+      g.gain.setValueAtTime(0.0001, t0 + i*0.18);
+      g.gain.exponentialRampToValueAtTime(0.22, t0 + i*0.18 + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + i*0.18 + 0.5);
+      o.connect(g).connect(ctx.destination);
+      o.start(t0 + i*0.18); o.stop(t0 + i*0.18 + 0.55);
+    });
+  } catch(e) {}
+}
+
+function fireAlarm(n, st, untilOpen){
+  alarmChime();
+  const when = untilOpen <= 5 ? '已開放！' : `約 ${Math.ceil(untilOpen/60)} 分鐘後開放`;
+  const title = `${jobEmoji(n.job)} ${n.itemNames.join('、')} ${when}`;
+  const body = n.mapMissing ? '' :
+    `${n.mapName} X:${n.x.toFixed(1)} Y:${n.y.toFixed(1)}・開放 ${fmtEtWindow(st.startH ?? n.spawns[0], n.duration)} ET`;
+  if ('Notification' in window && Notification.permission === 'granted'){
+    try { new Notification(title, { body, tag: 'gather-' + n.id }); } catch(e) {}
+  }
+  document.title = '🔔 ' + title;
+  setTimeout(()=>{ document.title = BASE_TITLE; }, 30000);
+}
+
+/* primeOnly=true：只登記當前已在門檻內的窗（不響），
+   用於剛開啟提醒／剛加追蹤／改提前量時，避免對眼前已看得到的狀態突然響鈴 */
+function checkAlarms(now, primeOnly){
+  if (!alarmCfg.on || !trackedIds.size) return;
+  for (const id of trackedIds){
+    const n = NODE_BY_ID.get(id);
+    if (!n) continue;
+    const st = nodeStatus(n, now);
+    const untilOpen = st.state === 'open' ? 0 : st.secsLeft;
+    if (untilOpen > alarmCfg.lead) continue;
+    const openTs = now + untilOpen * 1000;
+    const prev = alarmFired.get(id);
+    if (prev && Math.abs(openTs - prev) < 120000) continue;
+    alarmFired.set(id, openTs);
+    if (!primeOnly) fireAlarm(n, st, untilOpen);
+  }
+}
+
+function syncAlarmUI(){
+  document.getElementById('alarmToggle').classList.toggle('active', alarmCfg.on);
+  document.getElementById('alarmSound').classList.toggle('active', alarmCfg.sound);
+  document.getElementById('alarmLead').value = String(alarmCfg.lead);
+  const hint = document.getElementById('alarmHint');
+  if (!alarmCfg.on){ hint.style.display = 'none'; return; }
+  const noNotif = !('Notification' in window) || Notification.permission !== 'granted';
+  hint.style.display = '';
+  hint.textContent = '🔔 提醒運作中——需保持此分頁開啟' +
+    (noNotif ? '；瀏覽器通知未允許，僅以音效與分頁標題提醒' : '，將以系統通知＋音效提醒');
+}
+
 function render(){
   const now = Date.now();
   renderTrackStrip(now);
+  checkAlarms(now);
   let list = NODES.filter(passesFilter).map(n => ({ n, st: nodeStatus(n, now) }));
 
   if (openOnly) list = list.filter(x => x.st.state === 'open');
@@ -829,7 +925,8 @@ function handleActionClick(e){
   const trackBtn = e.target.closest('[data-track]');
   if (trackBtn) {
     const id = Number(trackBtn.dataset.track);
-    if (trackedIds.has(id)) trackedIds.delete(id); else trackedIds.add(id);
+    if (trackedIds.has(id)) trackedIds.delete(id);
+    else { trackedIds.add(id); checkAlarms(Date.now(), true); } // 新追蹤先登記當前窗，不立即響
     saveTracked();
     render();
     return;
@@ -858,7 +955,32 @@ function handleActionClick(e){
   }
 }
 grid.addEventListener('click', handleActionClick);
-document.getElementById('trackStrip').addEventListener('click', handleActionClick);
+document.getElementById('tsRows').addEventListener('click', handleActionClick);
+
+/* ── 鬧鐘提醒控制 ── */
+document.getElementById('alarmToggle').addEventListener('click', ()=>{
+  alarmCfg.on = !alarmCfg.on; saveAlarm();
+  if (alarmCfg.on){
+    if ('Notification' in window && Notification.permission === 'default'){
+      Notification.requestPermission().finally(syncAlarmUI);
+    }
+    checkAlarms(Date.now(), true); // 先登記已在門檻內的窗，避免一開啟就響
+  }
+  syncAlarmUI();
+});
+document.getElementById('alarmSound').addEventListener('click', ()=>{
+  alarmCfg.sound = !alarmCfg.sound; saveAlarm(); syncAlarmUI();
+});
+document.getElementById('alarmLead').addEventListener('change', e=>{
+  alarmCfg.lead = Number(e.target.value) || 0; saveAlarm();
+  checkAlarms(Date.now(), true);
+});
+document.getElementById('alarmTest').addEventListener('click', ()=>{
+  const sav = alarmCfg.sound; alarmCfg.sound = true; alarmChime(); alarmCfg.sound = sav;
+  if ('Notification' in window && Notification.permission === 'granted'){
+    try { new Notification('🔔 測試提醒', { body: '提醒功能運作正常。', tag: 'gather-test' }); } catch(e) {}
+  }
+});
 
 /* ── 啟動 ── */
 (async function init(){
@@ -866,6 +988,8 @@ document.getElementById('trackStrip').addEventListener('click', handleActionClic
   NODE_BY_ID = new Map(NODES.map(n=>[n.id, n]));
   initMapModal({ mapsData: [...MAPS.values()], base: '../..' });
   populateSelectors();
+  syncAlarmUI();
+  if (alarmCfg.on) checkAlarms(Date.now(), true); // 開頁先登記當前窗，只對之後的新窗響鈴
   tickClock();
   render();
   setInterval(tickClock, 1000);
