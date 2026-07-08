@@ -137,6 +137,27 @@
     .badge-legendary { background:rgba(200,169,110,0.12); color:var(--gold-light); border-color:rgba(200,169,110,0.3); }
     .badge-ephemeral { background:var(--blue-dim); color:var(--blue); border-color:rgba(79,195,247,0.25); }
 
+    /* ── 卡片迷你地圖：以節點座標為中心的局部放大圖，點擊開大地圖 ── */
+    .node-map {
+      position:relative; height:110px; margin-top:10px; border-radius:var(--radius-sm);
+      overflow:hidden; border:1px solid var(--border); background:var(--bg-surface); cursor:pointer;
+    }
+    .node-map img { position:absolute; left:50%; top:50%; width:300%; height:auto; max-width:none; }
+    .node-map::after {
+      content:'🔍'; position:absolute; right:6px; bottom:4px; font-size:11px; opacity:0;
+      transition:var(--transition); text-shadow:0 1px 3px rgba(0,0,0,.8);
+    }
+    .node-map:hover::after { opacity:.9; }
+    .node-map:hover { border-color:var(--border-hover); }
+    .nm-pin {
+      position:absolute; left:50%; top:50%; width:13px; height:13px; border-radius:50%;
+      transform:translate(-50%,-50%); border:2px solid rgba(0,0,0,.55);
+      box-shadow:0 0 6px rgba(0,0,0,.5); pointer-events:none;
+    }
+    .nm-pin.open { background:var(--green); animation:gdot-pulse 1.6s ease-out infinite; }
+    .nm-pin.soon { background:#fbbf24; }
+    .nm-pin.closed { background:#6b7280; }
+
     .empty { text-align:center; color:var(--text-muted); padding:48px 0; font-size:14px; }
 
     /* ── 追蹤目標固定區 ── */
@@ -453,6 +474,7 @@ let filterMap = 'all';
 let openOnly = false;
 let trackOnly = false;
 let searchTerm = '';
+let gridSig = '';   // 網格簽章：成員/狀態/追蹤不變時不重建 DOM（避免迷你地圖 img 每秒重建閃爍）
 
 function jobEmoji(job){ return job === '採礦工' ? '⛏️' : '🌿'; }
 
@@ -524,7 +546,7 @@ function render(){
   });
 
   if (list.length === 0){
-    grid.innerHTML = ''; resultMeta.textContent='';
+    grid.innerHTML = ''; gridSig = ''; resultMeta.textContent='';
     if (gView === 'map'){ emptyState.style.display='none'; renderNodeMap([], now); return; }
     emptyState.style.display='block';
     return;
@@ -534,6 +556,17 @@ function render(){
   resultMeta.textContent = `共 ${list.length} 個節點，其中 ${openCount} 個目前開放中`;
 
   if (gView === 'map'){ renderNodeMap(list, now); return; }
+
+  // 成員、順序、狀態與追蹤皆未變 → 只就地更新倒數文字，不重建卡片
+  const sig = list.map(x=>`${x.n.id}:${x.st.state}:${x.st.startH ?? ''}`).join(',') + '|' + [...trackedIds].join('.');
+  if (sig === gridSig){
+    for (const {n, st} of list){
+      const el = grid.querySelector(`[data-cd="${n.id}"]`);
+      if (el) el.textContent = fmtCountdown(st.secsLeft);
+    }
+    return;
+  }
+  gridSig = sig;
 
   grid.innerHTML = list.map(({n, st}) => {
     const cls = st.state==='open'?'is-open':st.state==='soon'?'is-soon':'is-closed';
@@ -562,6 +595,19 @@ function render(){
       : '';
     const mapBtn = n.mapMissing ? '' : `<button class="map-btn" data-mapopen="${n.id}">🗺 地圖</button>`;
     const tracked = trackedIds.has(n.id);
+    // 卡片迷你地圖：底圖以節點座標置中放大 3 倍，圖釘顏色同開放狀態，點擊開大地圖
+    const m = MAPS.get(n.mapId);
+    let miniMap = '';
+    if (!n.mapMissing && m && m.image){
+      const fx = (gCoordFrac(n.x, m.sizeFactor || 100) * 100).toFixed(2);
+      const fy = (gCoordFrac(n.y, m.sizeFactor || 100) * 100).toFixed(2);
+      miniMap = `<div class="node-map" data-mapopen="${n.id}" title="點擊放大地圖">
+        <img src="../..${m.image.local}" alt="${m.name}" loading="lazy"
+          style="transform:translate(-${fx}%,-${fy}%)"
+          onerror="if(this.dataset.retry){this.closest('.node-map').style.display='none'}else{this.dataset.retry=1;this.src='${m.image.url}';}">
+        <span class="nm-pin ${st.state}"></span>
+      </div>`;
+    }
     return `
       <div class="node-card ${cls}">
         <button class="track-btn ${tracked?'on':''}" data-track="${n.id}" title="加入追蹤">${tracked?'★':'☆'}</button>
@@ -580,11 +626,12 @@ function render(){
           ${tagBadges}
         </div>
         <div class="node-meta" style="margin-top:6px">
-          <span>${cdLabel}：<b class="countdown ${cdCls}">${fmtCountdown(st.secsLeft)}</b></span>
+          <span>${cdLabel}：<b class="countdown ${cdCls}" data-cd="${n.id}">${fmtCountdown(st.secsLeft)}</b></span>
           ${flagBtn}
           ${mapBtn}
         </div>
         <div class="windows">${wins}</div>
+        ${miniMap}
       </div>`;
   }).join('');
 }
