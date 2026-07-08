@@ -295,6 +295,12 @@
       <span class="chip btn" data-type="legendary">傳說</span>
       <span class="chip btn" data-type="ephemeral">靈砂</span>
     </div>
+    <div class="select-box">
+      <select id="sortSel" title="清單排序方式">
+        <option value="ver">排序：版本＞等級</option>
+        <option value="time">排序：開放狀態＞倒數</option>
+      </select>
+    </div>
     <span class="chip mine toggle-open" id="openOnly" data-on="0">僅顯示開放中</span>
     <span class="chip mine" id="trackOnly" data-on="0">⭐ 只看追蹤</span>
     <div class="filter-group" id="gViewToggle">
@@ -496,6 +502,7 @@ let filterMap = 'all';
 let openOnly = false;
 let trackOnly = false;
 let searchTerm = '';
+let sortMode = 'ver';   // ver＝版本高→等級高（預設）；time＝開放狀態→倒數
 let gridSig = '';   // 網格簽章：成員/狀態/追蹤不變時不重建 DOM（避免迷你地圖 img 每秒重建閃爍）
 
 function jobEmoji(job){ return job === '採礦工' ? '⛏️' : '🌿'; }
@@ -634,12 +641,22 @@ function render(){
 
   if (openOnly) list = list.filter(x => x.st.state === 'open');
 
-  // 排序：開放中 → 即將 → 其他，各組依倒數時間升序
+  // 排序：預設 版本高→等級高（同版本等級再看開放狀態）；time 模式為 開放中→即將→其他、各組依倒數升序
   const rank = { open:0, soon:1, closed:2 };
-  list.sort((a,b)=>{
-    if (rank[a.st.state] !== rank[b.st.state]) return rank[a.st.state]-rank[b.st.state];
-    return a.st.secsLeft - b.st.secsLeft;
-  });
+  if (sortMode === 'ver'){
+    list.sort((a,b)=>{
+      const pa = parseFloat(a.n.patch) || 0, pb = parseFloat(b.n.patch) || 0;
+      if (pb !== pa) return pb - pa;
+      if (b.n.level !== a.n.level) return b.n.level - a.n.level;
+      if (rank[a.st.state] !== rank[b.st.state]) return rank[a.st.state]-rank[b.st.state];
+      return a.st.secsLeft - b.st.secsLeft;
+    });
+  } else {
+    list.sort((a,b)=>{
+      if (rank[a.st.state] !== rank[b.st.state]) return rank[a.st.state]-rank[b.st.state];
+      return a.st.secsLeft - b.st.secsLeft;
+    });
+  }
 
   if (list.length === 0){
     grid.innerHTML = ''; gridSig = ''; resultMeta.textContent='';
@@ -889,6 +906,9 @@ document.getElementById('verSel').addEventListener('change', e=>{
 });
 document.getElementById('mapSel').addEventListener('change', e=>{
   filterMap = e.target.value; render();
+});
+document.getElementById('sortSel').addEventListener('change', e=>{
+  sortMode = e.target.value; render();
 });
 document.getElementById('openOnly').addEventListener('click', e=>{
   const chip = e.target;
