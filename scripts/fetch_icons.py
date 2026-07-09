@@ -48,7 +48,8 @@ def main():
     icons = sorted({p["icon"] for s in sets for p in s["pieces"] if p.get("icon")})
     os.makedirs(OUT_DIR, exist_ok=True)
 
-    todo = [i for i in icons
+    # 新 icon（ID 大）先下載：套裝頁面排「版本新→舊」，使用者最先看到的是最新套裝
+    todo = [i for i in reversed(icons)
             if not (os.path.exists(p := os.path.join(OUT_DIR, f"{i}.png"))
                     and os.path.getsize(p) > 0)]
     print(f"套裝所需 icon {len(icons)} 張｜已有 {len(icons)-len(todo)}｜待下載 {len(todo)}")

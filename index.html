@@ -177,6 +177,11 @@ body{ font-family:'Microsoft JhengHei','Noto Sans TC','Segoe UI',sans-serif; }
 .view-btn.view-active{ background:var(--accent2)!important; border-color:var(--accent2)!important; color:#fff!important; }
 .set-icons{ min-height:120px; background:var(--panel-bg); display:flex; flex-wrap:wrap; gap:6px;
   align-items:center; justify-content:center; padding:14px 10px; }
+.set-photo-note{ position:absolute; left:8px; bottom:8px; z-index:2; font-size:.68rem;
+  background:rgba(0,0,0,.62); color:#d1d5db; border:1px solid rgba(255,255,255,.18);
+  border-radius:10px; padding:2px 8px; pointer-events:none; max-width:85%; white-space:nowrap;
+  overflow:hidden; text-overflow:ellipsis; }
+.set-card-imgwrap{ position:relative; }
 .set-icons img{ width:44px; height:44px; border-radius:6px; border:1px solid var(--border); background:#0a0d12; }
 .set-icons img.owned-icon{ outline:2px solid #16a34a; outline-offset:-1px; }
 .set-modal-icons img{ width:40px; height:40px; border-radius:6px; border:1px solid var(--border); background:#0a0d12; vertical-align:middle; }
@@ -802,12 +807,21 @@ const TAG_LABEL = {
 
 function buildSetCard(e, idx) {
   const icons = setVisibleIcons(e).slice(0, 6);
-  const iconsHtml = icons.length
+  let iconsHtml = icons.length
     ? `<div class="set-icons">` + icons.map(p =>
         `<img src="配裝圖片/icons/${p.icon}.png" alt="" loading="lazy"
           class="${owned.has(Number(p.id)) ? "owned-icon" : ""}"
           onerror="this.style.display='none'">`).join("") + `</div>`
     : `<div class="set-icons"><span class="text-secondary small">No Icons</span></div>`;
+  // 有站內示意照（穿了該套 ≥2 件的配裝照）→ 用照片呈現整體外觀
+  if (e.img) {
+    const note = currentLang === "en" ? "community look" : (e.imgLabel || "示意");
+    iconsHtml = `<div class="set-card-imgwrap">
+      <img class="card-img-top" src="${thumbOf(e.img)}" alt="${esc(setDisplayName(e))}" loading="lazy"
+        onerror="if(this.src.indexOf('縮圖')>-1){this.src='${esc(e.img)}'}else{this.closest('.set-card-imgwrap').innerHTML='<div class=\\'card-noimg\\'>No Image</div>'}">
+      <div class="set-photo-note">👤 ${esc(note)}</div>
+    </div>`;
+  }
   const name = setDisplayName(e);
   const zhMiss = !e.name_zh && !e.tw
     ? `<span class="zh-missing">${currentLang === "en" ? "not on TW" : "繁中未實裝"}</span>` : "";
@@ -1004,13 +1018,21 @@ function renderSetModal(e, idx) {
     (e.job && e.job !== "全職業" ? ` <span class="restrict-job">${esc(e.job)}</span>` : "") +
     `<span class="ms-1" id="set-owned-txt">${ownedTxt}</span>`;
 
-  // 左欄：大 icon 陣列（官方套裝無實景圖，用 icon 網格）
+  // 左欄：站內示意照（有人穿過整套）優先，icon 陣列殿後
   const imgCol = document.getElementById("modal-img-col");
-  imgCol.innerHTML = `<div class="d-flex flex-wrap gap-2 justify-content-center align-content-start pt-2">` +
+  const iconRow = `<div class="d-flex flex-wrap gap-2 justify-content-center align-content-start pt-2">` +
     e.pieces.map(p => p.icon
       ? `<img src="配裝圖片/icons/${p.icon}.png" alt="${esc(p.zh || p.ja)}" title="${esc(p.zh || p.ja)}"
            style="width:64px;height:64px;border-radius:8px;border:1px solid var(--border);background:#0a0d12"
            onerror="this.style.display='none'">` : "").join("") + `</div>`;
+  if (e.img) {
+    const cap = `${esc(e.imgLabel || "")}（${e.imgN} 件吻合）`;
+    imgCol.innerHTML = `<div style="width:100%">` + modalImg(e.img, setDisplayName(e)) +
+      `<div class="text-secondary small text-center mt-1 mb-2">👤 ${lang === "en" ? "community look: " : "示意照："}${cap}</div>` +
+      iconRow + `</div>`;
+  } else {
+    imgCol.innerHTML = iconRow;
+  }
 
   // 右欄：逐件表
   const hSlot = lang === "en" ? "Slot" : "部位";

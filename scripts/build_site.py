@@ -272,6 +272,52 @@ def transform_sets():
     return out
 
 
+def attach_set_photos(sets, curated, mirapri):
+    """官方套裝掛「示意照」：站內精選/社群照片中，穿了該套 ≥2 件者取吻合最多的一張。
+    冷門套沒人穿過 → 不掛，前端退回 icon 網格。"""
+    name2sets = {}
+    for i, s in enumerate(sets):
+        for p in s["pieces"]:
+            for nm in (p.get("zh"), p.get("ja")):
+                if nm:
+                    name2sets.setdefault(nm, set()).add(i)
+
+    best = {}   # set idx -> ((吻合件數, 精選加權), img, label)
+
+    def consider(pieces, img, label, curated_bonus):
+        if not img:
+            return
+        cnt = {}
+        for p in pieces:
+            if not isinstance(p, dict):
+                continue
+            for nm in (p.get("zh"), p.get("ja"), p.get("name")):
+                if nm and nm in name2sets:
+                    for si in name2sets[nm]:
+                        cnt[si] = cnt.get(si, 0) + 1
+                    break   # 一件裝備只計一次
+        for si, c in cnt.items():
+            if c < 2:
+                continue
+            score = (c, curated_bonus)
+            if si not in best or score > best[si][0]:
+                best[si] = (score, img, label)
+
+    for o in curated:
+        consider(o.get("pieces", []), o.get("image"),
+                 f"精選 #{o.get('id','')}「{o.get('name','')}」", 1)
+    for m in mirapri:
+        by = f" by {m['color']}" if m.get("color") else ""
+        consider(m.get("equipments", []), m.get("image"),
+                 f"社群配裝{by}", 0)
+
+    for si, (score, img, label) in best.items():
+        sets[si]["img"] = img
+        sets[si]["imgN"] = score[0]
+        sets[si]["imgLabel"] = label
+    return len(best)
+
+
 def main():
     curated = normalize_curated(json.loads(CURATED_JSON.read_text(encoding="utf-8")))
 
@@ -371,6 +417,8 @@ def main():
 
     sets = transform_sets()
     if sets is not None:
+        n_photo = attach_set_photos(sets, curated, mirapri)
+        print(f"  官方套裝示意照（站內配裝照 ≥2 件吻合）：{n_photo}/{len(sets)} 套")
         OFFICIAL_SETS_JS.write_text(
             "const _SETS_RAW = " + json.dumps(sets, ensure_ascii=False) + ";\n",
             encoding="utf-8")
