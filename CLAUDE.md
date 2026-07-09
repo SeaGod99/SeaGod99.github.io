@@ -13,15 +13,20 @@
 
 ```
 FF14時尚配裝/
-├── index.html            # 主要展示頁面（卡片列表 + 彈出視窗）
+├── index.html            # 主要展示頁面（「配裝｜官方套裝」雙檢視 + 卡片列表 + 彈出視窗）
 ├── curated_outfits.js    # 精選套裝資料（由 build_site.py 從 MD 產生，頁面立即載入）
 ├── mirapri_outfits.js    # 社群套裝資料（由 build_site.py 產生，頁面延遲載入）
+├── official_sets.js      # 官方套裝資料（由 build_site.py 產生，社群載完後延遲載入）
 ├── 配裝圖片/             # 套裝圖片，命名格式：{編號}-{套裝名}.jpe
-│   └── 縮圖/             # 卡片縮圖（make_thumbs.py 產生，寬 640px／q78）
+│   ├── 縮圖/             # 卡片縮圖（make_thumbs.py 產生，寬 640px／q78）
+│   └── icons/            # 官方套裝裝備 icon（fetch_icons.py 下載，40px PNG）
 ├── scripts/
 │   ├── update_all.py     # ★ 一鍵更新總控（full / local 兩種模式）
-│   ├── build_site.py     # data/curated_outfits.json → curated/mirapri_outfits.js
-│   ├── health_check.py   # 資料健檢（缺圖、缺繁中、重複編號…）
+│   ├── build_site.py     # data/curated_outfits.json → curated/mirapri_outfits.js + official_sets.js
+│   │                     #   並用 item_fallback 名稱精確比對把 iid/dye/mb（徽章）蓋進每件裝備
+│   ├── build_sets.py     # ★ 官方套裝資料（見「官方套裝圖鑑」一節）→ data/official_sets.json
+│   ├── fetch_icons.py    # 官方套裝所需裝備 icon 批次下載（可續傳、已有跳過、失敗清單重試）
+│   ├── health_check.py   # 資料健檢（缺圖、缺繁中、重複編號、官方套裝 ID/icon/收錄準則…）
 │   ├── make_thumbs.py    # 產生縮圖（可給秒數上限分批跑）
 │   ├── compress_mirapri.py # 壓縮 mirapri 原圖（長邊1100/q76，防重複壓縮）
 │   ├── verify_data.py    # curated 資料正確性檢查（名稱/等級/職業/取得方式 vs DB），輸出 data/驗證報告.md
@@ -44,7 +49,12 @@ FF14時尚配裝/
 │   ├── mirapri_piece_dyes.json    # apply_dyes.py 產出：{outfit_id: {裝備日文名: [繁中染色]}}（v2 逐件，彈窗逐列顯示）
 │   ├── mirapri_dyes.json          # apply_dyes.py 產出：{outfit_id: [繁中染色]}（整套 fallback，未有逐件時用）
 │   ├── mirapri_visible.json       # apply_dyes.py 產出：{outfit_id: [圖上可見裝備]}，build_site.py 用來濾掉替代裝備
-│   ├── item_fallback_multilang.json # build_item_fallback.py 產出：全裝備多語名+部位+patch（7.x 救回用）
+│   ├── official_sets.json         # build_sets.py 產出：官方套裝（兩層混合，v1 準則收錄約 2000 套）
+│   ├── xivapi_sets_cache.json     # build_sets.py 的 XIVAPI 快取（離線重建靠它；--fetch 刷新）
+│   ├── 套裝報告.md                 # build_sets.py 產出：分組統計＋同鍵衝突組＋收錄抽樣（調校用）
+│   ├── item_fallback_multilang.json # build_item_fallback.py 產出：全裝備多語名+部位+patch
+│   │                              #   ＋dye(染色欄數)/mb(可交易)/icon/ilvl/cjc；本地 DB 無 DyeCount，
+│   │                              #   XIVAPI 是全件唯一來源，徽章與官方套裝分組都靠這份
 │   └── OCR無解清單.md              # 重建時「無解」的件（附套裝 id/圖）→ 待 Claude 視覺複查補 aliases
 └── 資料來源/
     ├── items.json       # 繁中道具資料庫（主要來源）
@@ -294,6 +304,54 @@ python scripts/update_all.py
 - **染色色票**：DYE_COLORS 表（index.html 內），新增染色名請順手補近似色碼
 
 ---
+
+## 官方套裝圖鑑（official sets）
+
+「📖 官方套裝」檢視回答「遊戲裡有哪些整套裝備」，資料全部自建（不爬任何第三方網站）。
+
+### 資料層（build_sets.py，兩層混合）
+
+- **第一層（權威）**：XIVAPI v2 `MirageStoreSetItem`——row_id＝幻化套裝箱道具 ID，
+  Head/Body/… 欄＝各部位道具 ID。涵蓋商城/活動/特典套裝箱（約 1,080 套）。
+  套裝 ID `mirage:{row_id}`（遊戲原生，永久穩定）。空列（~89）與 row 0 排除。
+  ⚠ XIVAPI v2 sheet 必須「指名 fields 參數」才回資料，預設回空物件；
+  `after` 參數只吃無號整數（首頁請求不帶 after）。
+- **第二層（啟發式）**：sources.json 分組副本/兌換/任務/商店裝。
+  分組鍵＝(來源簽名, ClassJobCategory ID, ilvl)——必含職業分類，否則同副本多職能套會黏住。
+  來源簽名：inst:{副本名排序}／shop:cur{貨幣ID}／quest:{ID}／gc／npc:{NPC名排序}。
+  同鍵撞出重複可見部位（如三大軍團色違）→ 整組進衝突桶不硬拆，記錄於 data/套裝報告.md。
+- **v1 收錄準則**：套內含上身＋可見件（頭/上身/手/腿/腳）≥2；跨層去重（啟發式 ⊆ 官方 → 砍啟發式）。
+- 收藏追蹤是「逐件」勾選、鍵＝道具 ID（永久穩定），套裝 ID 漂移只影響顯示不毀使用者資料。
+
+### 屬性徽章（可染/可交易）
+
+- `DyeCount`（染色欄數 0-2）**本地 items.json 沒有**，唯一來源是 XIVAPI——由
+  build_item_fallback.py 全件掃描帶回（同時帶 ItemSearchCategory→mb、Icon、LevelItem、cjc）。
+- build_site.py 用「名稱精確且唯一」比對把 iid/dye/mb 蓋進 curated/mirapri 每件裝備
+  （同名不同屬性＝放棄蓋章，寧缺勿錯）；前端 chips 顯示 🎨×n／可交易／擁有／📖所屬套裝。
+- ⚠ EquipRestriction 不能當「Viera/Hrothgar 頭部顯示」訊號（那在 EST 模型表，XIVAPI 沒有），
+  此徽章已否決，勿再嘗試。
+
+### 更新流程
+
+```
+py scripts\update_all.py           # full 模式已含：多語裝備庫 → 官方套裝(--fetch) → icon → 重建 → 健檢
+py scripts\update_all.py local     # 離線重建（build_sets 吃 xivapi_sets_cache.json，不打網路）
+py scripts\build_sets.py --fetch   # 單獨刷新官方套裝（改版後）
+py scripts\fetch_icons.py          # 單獨補 icon（可續傳；--limit N 分批）
+```
+
+改版後順序：`update_db.py --apply`（繁中 DB）→ `build_item_fallback.py`（新裝備＋徽章）→
+`build_sets.py --fetch` → `fetch_icons.py` → `build_site.py`。
+
+### 前端（index.html）
+
+- navbar「👗 配裝｜📖 官方套裝」切換；官方套裝檢視隱藏性別/種族篩選列、顯示收藏工具列。
+- 收藏（我的裝備）：localStorage `ff14_owned_items`（道具 ID 陣列）；匯出/匯入 JSON
+  （`{ver, exported, owned[], favs[]}`）；私密模式偵測（storage 不可用→隱藏勾選 UI）；
+  匯入時做孤兒 ID 偵測（不在資料中的保留並提示）。
+- 配裝彈窗每件裝備的「📖所屬套裝」chip 可跳到官方套裝彈窗（等 Bootstrap hide 動畫完再開，
+  否則 show 會被吃掉）；官方套裝彈窗的裝備名反向跳回配裝搜尋。
 
 ## OCR 檢查流程（Ollama）
 

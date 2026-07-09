@@ -13,6 +13,13 @@ import sys
 import time
 from pathlib import Path
 
+# Windows 主控台/管線預設 cp950，印 emoji 會炸——統一改 UTF-8
+for _s in (sys.stdout, sys.stderr):
+    try:
+        _s.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 SCRIPTS = Path(__file__).parent
 ROOT = SCRIPTS.parent
 
@@ -25,12 +32,20 @@ FULL_STEPS = [
     ("ocr_check.py",         "OCR 辨識",     "對新圖 OCR 讀裝備名＋染色（需 Ollama；已 OCR 過的吃快取跳過）", ["--target", "mirapri", "--mode", "all"]),
     ("apply_dyes.py",        "逐件染色",     "OCR 結果 → 逐件染色 + 整套 fallback + 可見裝備", []),
     ("reconstruct_empty.py", "重建空殼裝備", "空殼套裝用 OCR+DB 重建裝備（部位／繁中／染色／取得方式）", []),
-    ("build_site.py",        "重建網頁資料", "curated／mirapri／重建／染色 → curated_outfits.js / mirapri_outfits.js", []),
-    ("health_check.py",      "資料健檢",     "檢查缺圖、缺繁中、重複編號、JSON 是否同步", []),
+    ("build_item_fallback.py", "多語裝備庫", "XIVAPI 全件掃描（名稱/部位/可染/可交易/icon；約 3 分鐘）", []),
+    ("build_sets.py",        "官方套裝",     "MirageStoreSetItem＋sources.json → 官方套裝資料（--fetch 刷新 XIVAPI 快取）", ["--fetch"]),
+    ("fetch_icons.py",       "套裝 icon",    "下載官方套裝所需 icon（已有的自動跳過，可續傳）", []),
+    ("build_site.py",        "重建網頁資料", "curated／mirapri／重建／染色／官方套裝 → *.js 資料檔", []),
+    ("health_check.py",      "資料健檢",     "檢查缺圖、缺繁中、重複編號、官方套裝、JSON 是否同步", []),
 ]
 # 本地重建：不抓網路、不 OCR，只用現有快取/enriched 重新整理＋重建
-LOCAL_STEPS = [s for s in FULL_STEPS if s[0] in
-               ("apply_dyes.py", "reconstruct_empty.py", "build_site.py", "health_check.py")]
+# （build_sets 不帶 --fetch＝吃 XIVAPI 快取，離線可跑）
+LOCAL_STEPS = [
+    (n, t, d, ([] if n == "build_sets.py" else a))
+    for (n, t, d, a) in FULL_STEPS
+    if n in ("apply_dyes.py", "reconstruct_empty.py", "build_sets.py",
+             "build_site.py", "health_check.py")
+]
 NONFATAL = {"health_check.py", "update_db.py"}  # 非 0 退出視為提示，不中止流程
 
 

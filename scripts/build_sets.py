@@ -306,6 +306,7 @@ def common_prefix_name(pieces, lang):
 
 
 def fill_heuristic_names(sets):
+    lead_sym = re.compile(r"^[^\w一-鿿]+")
     for s in sets:
         if s["layer"] != "src":
             continue
@@ -315,6 +316,11 @@ def fill_heuristic_names(sets):
         s["name_zh"] = zh
         s["name_ja"] = common_prefix_name(s["pieces"], "ja")
         s["name_en"] = common_prefix_name(s["pieces"], "en")
+        if not (s["name_zh"] or s["name_ja"] or s["name_en"]):
+            # 共同前綴抓不到（雜牌組合）→ 用「來源＋ilvl」合成，避免 UI 顯示裸 ID
+            label = lead_sym.sub("", s["source"] or "").strip() or "官方套裝"
+            ilvl = s["id"].rsplit(":", 1)[-1]
+            s["name_zh"] = f"{label} i{ilvl} 套裝"
 
 
 # ───────────────────────── 準則 / 去重 ─────────────────────────

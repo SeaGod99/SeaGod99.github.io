@@ -16,6 +16,13 @@ import re
 import sys
 from pathlib import Path
 
+# Windows 主控台/管線預設 cp950，印 emoji/罕見字會炸——統一改 UTF-8
+for _s in (sys.stdout, sys.stderr):
+    try:
+        _s.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 ROOT = Path(__file__).parent.parent
 EMOJI_RE = re.compile(r"[🗡🔶🟣🛒📋🔨🎲⚔🪙💎🗓💒]")
 
@@ -92,6 +99,44 @@ def main():
         w("data/curated_outfits.json 比 curated_outfits.js 新，請執行 python scripts/build_site.py")
     else:
         print("  已同步 ✓")
+
+    print("── 6. 官方套裝 ──")
+    sets_path = ROOT / "data" / "official_sets.json"
+    if not sets_path.exists():
+        print("  ℹ️  data/official_sets.json 不存在（跑 scripts/build_sets.py 產生）")
+    else:
+        sets = json.loads(sets_path.read_text(encoding="utf-8"))["sets"]
+        vis_slots = {"頭部", "上身", "手部", "腿部", "腳部"}
+        seen_sid = set()
+        n_thin = n_noname = 0
+        icon_dir = ROOT / "配裝圖片" / "icons"
+        missing_icons = 0
+        need_icons = set()
+        for s in sets:
+            if s["id"] in seen_sid:
+                w(f"套裝 ID 重複：{s['id']}")
+            seen_sid.add(s["id"])
+            vis = {p["slot"] for p in s["pieces"] if p["slot"] in vis_slots}
+            if "上身" not in vis or len(vis) < 2:
+                n_thin += 1
+            if not (s["name_zh"] or s["name_ja"] or s["name_en"]):
+                n_noname += 1
+            for p in s["pieces"]:
+                if p.get("icon"):
+                    need_icons.add(p["icon"])
+        for ic in need_icons:
+            fp = icon_dir / f"{ic}.png"
+            if not fp.exists() or fp.stat().st_size == 0:
+                missing_icons += 1
+        if n_thin:
+            w(f"{n_thin} 套不符 v1 收錄準則（含上身＋可見件≥2）——build_sets.py 準則可能失效")
+        if n_noname:
+            w(f"{n_noname} 套三語名稱皆空")
+        print(f"  共 {len(sets)} 套｜icon 覆蓋 {len(need_icons)-missing_icons}/{len(need_icons)}"
+              + ("（請跑 scripts/fetch_icons.py）" if missing_icons else " ✓"))
+        js_sets = ROOT / "official_sets.js"
+        if not js_sets.exists() or sets_path.stat().st_mtime > js_sets.stat().st_mtime:
+            w("official_sets.json 比 official_sets.js 新，請執行 python scripts/build_site.py")
 
     print(f"\n{'❗ 共 ' + str(warn) + ' 個警告' if warn else '✅ 全部通過'}")
     return 1 if warn else 0

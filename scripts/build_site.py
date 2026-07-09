@@ -18,6 +18,13 @@ import json
 import sys
 from pathlib import Path
 
+# Windows 主控台/管線預設 cp950，印 emoji/罕見字會炸——統一改 UTF-8
+for _s in (sys.stdout, sys.stderr):
+    try:
+        _s.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 ROOT = Path(__file__).parent.parent
 CURATED_JSON = ROOT / "data" / "curated_outfits.json"
 ENRICHED_PATH = ROOT / "data" / "all_outfits_enriched.json"
