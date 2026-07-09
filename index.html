@@ -23,6 +23,8 @@
   --bs-link-color:#8fb4e0; --bs-link-color-rgb:143,180,224;
   --bs-link-hover-color:#aecbf0;
 }
+/* 根字級：Bootstrap 全 rem 制，調這裡＝整站等比例放大 */
+html{ font-size:17px; }
 body{ font-family:'Microsoft JhengHei','Noto Sans TC','Segoe UI',sans-serif; }
 
 /* ── Navbar ── */
@@ -31,15 +33,15 @@ body{ font-family:'Microsoft JhengHei','Noto Sans TC','Segoe UI',sans-serif; }
 .app-title{ font-size:1.5rem; font-weight:700; margin:0;
   background:linear-gradient(90deg,var(--accent),var(--accent2));
   -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
-.app-subtitle{ color:var(--muted); font-size:.85rem; }
+.app-subtitle{ color:var(--muted); font-size:.9rem; }
 .lang-btn.lang-active{ background:var(--accent)!important; border-color:var(--accent)!important; color:#0d1117!important; }
 
 /* ── Filter bar ── */
 .filter-bar{ background:var(--card-bg); border-bottom:1px solid var(--border); }
-.filter-group-label{ font-size:.72rem; color:var(--muted); white-space:nowrap;
+.filter-group-label{ font-size:.8rem; color:var(--muted); white-space:nowrap;
   background:rgba(255,255,255,.05); border:1px solid var(--border); border-radius:4px; padding:2px 8px; }
 .filter-sep{ width:1px; height:20px; background:var(--border); }
-.filter-btn{ --bs-btn-padding-y:.28rem; --bs-btn-padding-x:.85rem; --bs-btn-font-size:.8rem; border-radius:20px; }
+.filter-btn{ --bs-btn-padding-y:.28rem; --bs-btn-padding-x:.85rem; --bs-btn-font-size:.875rem; border-radius:20px; }
 .filter-btn.active{ background:var(--accent2); border-color:var(--accent2); color:#fff; }
 .filter-btn.female-btn.active{ background:var(--female); border-color:var(--female); color:#fff; }
 .filter-btn.male-btn.active{ background:var(--male); border-color:var(--male); color:#fff; }
@@ -57,7 +59,7 @@ body{ font-family:'Microsoft JhengHei','Noto Sans TC','Segoe UI',sans-serif; }
 .card-img-top{ aspect-ratio:3/4; object-fit:cover; object-position:top; background:var(--panel-bg); }
 .card-noimg{ aspect-ratio:3/4; display:flex; align-items:center; justify-content:center;
   color:var(--muted); font-size:.7rem; background:var(--panel-bg); }
-.card-name{ font-size:1.05rem; line-height:1.3; }
+.card-name{ font-size:1.1rem; line-height:1.3; }
 .star-badge{ position:absolute; top:8px; left:8px; background:var(--accent); color:#000;
   border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center;
   font-size:.7rem; font-weight:700; z-index:2; }
@@ -68,12 +70,12 @@ body{ font-family:'Microsoft JhengHei','Noto Sans TC','Segoe UI',sans-serif; }
 .fav-btn.faved{ color:#fbbf24; border-color:rgba(251,191,36,.5); background:rgba(251,191,36,.12); }
 
 /* card meta / tags */
-.tag-female,.tag-male,.tag-unk,.tag-race{ font-size:.65rem; padding:2px 8px; border-radius:10px; white-space:nowrap; }
+.tag-female,.tag-male,.tag-unk,.tag-race{ font-size:.72rem; padding:2px 8px; border-radius:10px; white-space:nowrap; }
 .tag-female{ background:rgba(244,114,182,.15); color:var(--female); border:1px solid rgba(244,114,182,.4); }
 .tag-male{ background:rgba(96,165,250,.15); color:var(--male); border:1px solid rgba(96,165,250,.4); }
 .tag-unk{ background:rgba(107,114,128,.15); color:var(--unknown); border:1px solid rgba(107,114,128,.4); }
 .tag-race{ background:rgba(255,255,255,.05); color:var(--muted); border:1px solid var(--border); }
-.card-tag{ font-size:.65rem; padding:2px 8px; border-radius:10px; color:#e5e7eb; background:var(--tag-other); }
+.card-tag{ font-size:.72rem; padding:2px 8px; border-radius:10px; color:#e5e7eb; background:var(--tag-other); }
 .badge-healer{background:#065f46}.badge-tank{background:#1e3a5f}.badge-caster{background:#4c1d95}
 .badge-melee{background:#7f1d1d}.badge-pranged{background:#713f12}.badge-crafter{background:#1f2937;border:1px solid #4b5563}
 .badge-event{background:#16a34a}.badge-pvp{background:#dc2626}.badge-store{background:#d97706}.badge-raid{background:#7c3aed}
@@ -83,7 +85,7 @@ body{ font-family:'Microsoft JhengHei','Noto Sans TC','Segoe UI',sans-serif; }
 .modal-content{ background:var(--card-bg); border:1px solid var(--border); }
 .modal-header,.modal-footer{ background:var(--panel-bg); border-color:var(--border); }
 .modal-title{ font-size:1.3rem; font-weight:700; }
-.modal-subtitle{ font-size:.82rem; color:var(--muted); margin-top:2px; }
+.modal-subtitle{ font-size:.88rem; color:var(--muted); margin-top:2px; }
 #modal-img-col{ background:var(--panel-bg); display:flex; align-items:flex-start; justify-content:center; padding:20px; }
 #modal-img-col img{ width:100%; border-radius:10px; max-height:78vh; object-fit:contain; object-position:top; box-shadow:0 6px 22px rgba(0,0,0,.4); }
 #modal-img-col .no-img{ width:100%; height:480px; background:var(--bg); border-radius:10px; display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:.8rem; }
@@ -109,31 +111,31 @@ body{ font-family:'Microsoft JhengHei','Noto Sans TC','Segoe UI',sans-serif; }
 .lb-hint{ position:fixed; bottom:16px; left:0; right:0; text-align:center; color:#9ca3af; font-size:.8rem; pointer-events:none; }
 
 /* ── Equipment table (custom, themed) ── */
-.equip-table{ width:100%; border-collapse:collapse; font-size:.84rem; }
+.equip-table{ width:100%; border-collapse:collapse; font-size:.92rem; }
 .equip-table th{ background:var(--panel-bg); padding:9px 12px; text-align:left; color:var(--muted);
   font-weight:600; border-bottom:1px solid var(--border); white-space:nowrap; position:sticky; top:0; z-index:2; }
 .equip-table td{ padding:11px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
 .equip-table tr:last-child td{ border-bottom:none; }
 .equip-table tr:hover td{ background:rgba(255,255,255,.035); }
-.slot-badge{ display:inline-block; min-width:3.2em; padding:2px 8px; border-radius:4px; font-size:.72rem;
+.slot-badge{ display:inline-block; min-width:3.2em; padding:2px 8px; border-radius:4px; font-size:.78rem;
   font-weight:600; text-align:center; background:var(--panel-bg); color:var(--accent); white-space:nowrap; }
 .item-name{ font-weight:600; }
-.item-en{ font-size:.72rem; color:var(--muted); margin-top:2px; }
+.item-en{ font-size:.78rem; color:var(--muted); margin-top:2px; }
 .unconfirmed{ color:#f59e0b; }
 .item-link{ cursor:pointer; border-bottom:1px dotted var(--muted); }
 .item-link:hover{ color:var(--accent2); border-bottom-color:var(--accent2); }
 .dye-cell{ white-space:nowrap; }
 .dye-dash{ color:var(--muted); }
 .dye-dot{ display:inline-block; width:11px; height:11px; border-radius:50%; border:1px solid rgba(255,255,255,.35); vertical-align:-1px; margin-right:4px; }
-.mirapri-dye-line{ margin-top:10px; font-size:13px; color:var(--muted); display:flex; flex-wrap:wrap; gap:4px 10px; align-items:center; }
+.mirapri-dye-line{ margin-top:10px; font-size:.85rem; color:var(--muted); display:flex; flex-wrap:wrap; gap:4px 10px; align-items:center; }
 .mirapri-dye-line .dye-cell{ color:var(--text); }
 .modal-note{ background:var(--panel-bg); border-left:3px solid var(--accent); padding:8px 14px;
-  border-radius:0 6px 6px 0; font-size:.82rem; color:var(--muted); margin-bottom:16px; }
+  border-radius:0 6px 6px 0; font-size:.88rem; color:var(--muted); margin-bottom:16px; }
 .patch-tag{ display:inline-block; background:#1e293b; color:#94a3b8; border:1px solid #334155;
-  border-radius:4px; font-size:.72rem; font-weight:600; padding:1px 6px; white-space:nowrap; }
+  border-radius:4px; font-size:.78rem; font-weight:600; padding:1px 6px; white-space:nowrap; }
 .patch-cell{ text-align:center; white-space:nowrap; }
 .source-tag{ display:inline-flex; align-items:center; gap:4px; padding:3px 9px; border-radius:12px;
-  font-size:.72rem; font-weight:500; white-space:normal; margin:1px 0; }
+  font-size:.78rem; font-weight:500; white-space:normal; margin:1px 0; }
 .src-raid{ background:rgba(124,58,237,.25); color:#a78bfa; border:1px solid rgba(124,58,237,.4); }
 .src-pvp{ background:rgba(220,38,38,.2); color:#f87171; border:1px solid rgba(220,38,38,.4); }
 .src-store{ background:rgba(217,119,6,.2); color:#fbbf24; border:1px solid rgba(217,119,6,.4); }
@@ -220,21 +222,27 @@ body{ font-family:'Microsoft JhengHei','Noto Sans TC','Segoe UI',sans-serif; }
     <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="pvp"     data-group="src" data-zh="⚔️ PvP"   data-en="⚔️ PvP">⚔️ PvP</button>
     <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="store"   data-group="src" data-zh="💎 Mog"   data-en="💎 Mog">💎 Mog</button>
     <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="raid"    data-group="src" data-zh="🗡️ 副本"  data-en="🗡️ Dungeon">🗡️ 副本</button>
-    <span class="filter-sep mx-1"></span>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="craft"   data-group="src" data-zh="🔨 可製作" data-en="🔨 Craftable">🔨 可製作</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="npc"     data-group="src" data-zh="🛒 商店"   data-en="🛒 Shop">🛒 商店</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="scrip"   data-group="src" data-zh="🔶 票據"   data-en="🔶 Scrips">🔶 票據</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="gs"      data-group="src" data-zh="🎲 金碟"   data-en="🎲 Gold Saucer">🎲 金碟</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="other"   data-group="src" data-zh="🪙 代幣"   data-en="🪙 Tokens">🪙 代幣</button>
+  </div>
+  <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
     <span class="filter-group-label" data-zh="職業" data-en="Job">職業</span>
     <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="healer"  data-group="job" data-zh="💚 治療"  data-en="💚 Healer">💚 治療</button>
     <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="tank"    data-group="job" data-zh="🛡️ 盾衛"  data-en="🛡️ Tank">🛡️ 盾衛</button>
     <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="caster"  data-group="job" data-zh="🔮 法系"  data-en="🔮 Caster">🔮 法系</button>
     <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="melee"   data-group="job" data-zh="⚔️ 近戰"  data-en="⚔️ Melee">⚔️ 近戰</button>
     <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="pranged" data-group="job" data-zh="🏹 遠距"  data-en="🏹 Ranged">🏹 遠距</button>
-    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="crafter" data-group="job" data-zh="🔨 製作"  data-en="🔨 Crafter">🔨 製作</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="crafter" data-group="job" data-zh="🔨 製作職業" data-en="🔨 Crafter">🔨 製作職業</button>
   </div>
   <div class="d-flex flex-wrap align-items-center gap-2">
     <input class="form-control form-control-sm search-input" type="text" placeholder="🔍 搜尋名稱、裝備或使用者…" id="search-input"
            data-zh-placeholder="🔍 搜尋名稱、裝備或使用者…" data-en-placeholder="🔍 Search name, item or user…">
     <button class="btn btn-sm btn-outline-secondary filter-btn fav-filter" id="fav-filter-btn" title="只顯示已加星號的套裝"
             data-zh="⭐ 我的收藏" data-en="⭐ Favorites">⭐ 我的收藏</button>
-    <button class="btn btn-sm btn-outline-secondary filter-btn tw-btn" id="tw-btn" title="只顯示每件裝備都有繁中名稱（已實裝於繁中版）的套裝"
+    <button class="btn btn-sm btn-outline-secondary filter-btn tw-btn" id="tw-btn" title="只顯示每件裝備都有繁中名稱、且可由單一職業同時穿戴的套裝（繁中版尚無跨職業幻化，混職裝備無法實際套用）"
             data-zh="🇹🇼 繁中版可幻化" data-en="🇹🇼 On TW server">🇹🇼 繁中版可幻化</button>
     <select class="form-select form-select-sm sort-select" id="sort-select">
       <option value="default">排序：預設（精選優先）</option>
@@ -242,6 +250,8 @@ body{ font-family:'Microsoft JhengHei','Noto Sans TC','Segoe UI',sans-serif; }
       <option value="patch-asc">排序：版本舊 → 新</option>
       <option value="name">排序：名稱</option>
     </select>
+    <button class="btn btn-sm btn-outline-secondary filter-btn d-none" id="clear-filters-btn"
+            data-zh="✕ 清除篩選" data-en="✕ Clear filters">✕ 清除篩選</button>
     <span class="text-secondary small ms-auto" id="result-count"></span>
   </div>
 </div>
@@ -424,7 +434,55 @@ const JOB_TAG_MAP = {
   melee:["近戰職業","偵察職業","武士","忍者","武僧","龍騎士","鐮刀師","劍蛇師"],
   crafter:["布衣師","製革師","甲冑師","鍛鐵師","煉金術士","廚師","雕金師","木工師","製作職業","採礦工","採伐工","漁夫","捕魚人"]
 };
-const ST_TAG_SET = new Set(["event","pvp","store","raid"]);
+const ST_TAG_SET = new Set(["event","pvp","store","raid","craft","npc","scrip","gs","other"]);
+// 卡片上實際顯示的 tag（其餘僅供篩選）
+const CARD_TAGS = new Set(["healer","tank","caster","melee","pranged","crafter","event","pvp","store","raid"]);
+
+// 職業 → 具體職業代碼集合（繁中版無跨職業幻化：整套需有「單一職業」能同時穿上所有件）
+const _COMBAT_ALL = "PLD WAR DRK GNB WHM SCH AST SGE MNK DRG NIN SAM RPR VPR BRD MCH DNC BLM SMN RDM BLU PCT";
+const _CRAFT_ALL  = "CRP BSM ARM GSM LTW WVR ALC CUL";
+const _GATHER_ALL = "MIN BTN FSH";
+const JOB_CODES = {
+  // 「全職業」＝所有職業都能穿（含工匠／採集）；只放戰鬥職業會把工匠套裝誤判為不可幻化
+  "全職業":_COMBAT_ALL + " " + _CRAFT_ALL + " " + _GATHER_ALL,
+  "製作職業":_CRAFT_ALL, "採集職業":_GATHER_ALL,
+  "治療職業":"WHM SCH AST SGE","盾衛職業":"PLD WAR DRK GNB",
+  "法系職業":"BLM SMN RDM BLU PCT","遠程物理職業":"BRD MCH DNC",
+  "近戰職業":"MNK DRG NIN SAM RPR VPR","偵察職業":"NIN VPR",
+  "騎士":"PLD","戰士":"WAR","暗黑騎士":"DRK","絕槍戰士":"GNB",
+  "白魔法師":"WHM","學者":"SCH","占星術士":"AST","賢者":"SGE",
+  "武僧":"MNK","龍騎士":"DRG","忍者":"NIN","武士":"SAM","鐮刀師":"RPR","劍蛇師":"VPR",
+  "吟遊詩人":"BRD","機工士":"MCH","舞者":"DNC",
+  "黑魔法師":"BLM","召喚師":"SMN","赤魔法師":"RDM","青魔法師":"BLU","繪靈法師":"PCT",
+  "木工師":"CRP","鍛鐵師":"BSM","甲冑師":"ARM","雕金師":"GSM","製革師":"LTW",
+  "裁縫師":"WVR","布衣師":"WVR","煉金術士":"ALC","廚師":"CUL",
+  "採礦工":"MIN","採礦師":"MIN","採伐工":"BTN","園藝師":"BTN","漁夫":"FSH","捕魚人":"FSH"
+};
+// 單件 job 欄位（繁中群組／單一職業／工匠，或 mirapri 的英文代碼）→ 職業代碼集合。
+// 無法判定（空／未知）回傳 null＝不設限，避免資料缺漏造成誤判。
+function jobCodes(raw){
+  const s = (raw||"").replace(/[Ll][Vv]\.?\s*[\d?]+/g,"").trim();
+  if(!s || s==="(none)") return null;
+  const out = new Set();
+  s.split(/[、,，\/\s]+/).forEach(tok=>{
+    tok = tok.trim(); if(!tok) return;
+    if(tok==="待確認" || tok==="—") return;            // 佔位字＝資料未填，不當成職業限制
+    if(JOB_CODES[tok]) JOB_CODES[tok].split(" ").forEach(c=>out.add(c));
+    else if(/^[A-Z]{2,3}$/.test(tok)) out.add(tok);   // mirapri 英文職業代碼
+    else out.add("?"+tok);                             // 未知工匠等 → 不透明 token（同名才相容）
+  });
+  return out.size ? out : null;
+}
+// 需存在單一職業可同時穿戴整套（所有件的職業代碼交集非空）＝繁中版可實際幻化
+function jobCompatOK(ps){
+  let compat = null;
+  for(const p of ps){
+    const s = jobCodes(p.job);
+    if(!s) continue;
+    compat = compat===null ? s : new Set([...compat].filter(x=>s.has(x)));
+  }
+  return compat===null || compat.size>0;
+}
 
 function piecesOf(e) {
   const arr = e.type === "mirapri" ? (e.equipments || []) : (e.pieces || []);
@@ -444,7 +502,7 @@ function annotate(e) {
     });
     e.tags = [...tags];
   }
-  e.tw = ps.length > 0 && ps.every(p => (p.zh || "").trim() !== "");
+  e.tw = ps.length > 0 && ps.every(p => (p.zh || "").trim() !== "") && jobCompatOK(ps);
   e.maxPatch = ps.reduce((mx, p) => {
     const v = parseFloat(p.patch); return isNaN(v) ? mx : Math.max(mx, v);
   }, 0);
@@ -566,10 +624,10 @@ function buildCard(e, idx) {
     metaHtml = `<div class="small text-secondary d-flex align-items-center gap-1 flex-wrap"><span class="${gCls}">${gSym}${race}</span></div>`;
   }
 
-  // 標籤列
+  // 標籤列（craft/npc/other 等太常見的 st 只用於篩選，不上卡片，避免每張卡都一排小標）
   const rMapTag = currentLang === "en" ? RACE_LABEL : RACE_ZH;
   const tagBadges = isCurated
-    ? (e.tags || []).map(t => `<span class="card-tag badge-${t}">${TAG_LABEL[t] || t}</span>`).join("")
+    ? (e.tags || []).filter(t => CARD_TAGS.has(t)).map(t => `<span class="card-tag badge-${t}">${TAG_LABEL[t] || t}</span>`).join("")
     : (e.gender === "female" ? `<span class="tag-female">♀</span>`
        : e.gender === "male" ? `<span class="tag-male">♂</span>`
        : `<span class="tag-unk">?</span>`)
@@ -910,6 +968,21 @@ function updateSubtitle() {
   }
   document.getElementById("result-count").textContent =
     currentLang === "en" ? filtered.length + " results" : filtered.length + " 件";
+  // 有任何篩選啟用時才顯示「清除篩選」
+  const anyFilter = srcTags.size || jobTags.size || favOnly || twOnly || q ||
+                    miraFilters.gender || miraFilters.race;
+  document.getElementById("clear-filters-btn").classList.toggle("d-none", !anyFilter);
+}
+
+function resetFilters() {
+  srcTags.clear(); jobTags.clear();
+  favOnly = twOnly = false;
+  q = "";
+  miraFilters = { gender: "", race: "" };
+  document.getElementById("search-input").value = "";
+  document.querySelectorAll(".filter-btn.active").forEach(b => b.classList.remove("active"));
+  document.querySelectorAll(".filter-btn.filter-reset").forEach(b => b.classList.add("active"));
+  applyFilters();
 }
 
 function setLang(lang) {
@@ -967,6 +1040,9 @@ document.addEventListener("DOMContentLoaded", () => {
     sortMode = this.value;
     applyFilters();
   });
+
+  // 清除篩選
+  document.getElementById("clear-filters-btn").addEventListener("click", resetFilters);
 
   // Gender / Race filter buttons
   document.querySelectorAll(".filter-btn[data-mf]").forEach(btn => {

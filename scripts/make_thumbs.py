@@ -2,8 +2,9 @@
 """
 make_thumbs.py — 產生卡片縮圖
 ================================
-將 配裝圖片/ 下所有圖片（含 mirapri/ 子資料夾）縮成寬 480px 的 JPEG，
-輸出到 配裝圖片/縮圖/，保留相對路徑。已存在且較新的縮圖會跳過。
+將 配裝圖片/ 下所有圖片（含 mirapri/ 子資料夾）縮成寬 640px 的 JPEG，
+輸出到 配裝圖片/縮圖/，保留相對路徑。已存在、較新且寬度達標的縮圖會跳過
+（調大 THUMB_W 後重跑會自動重產舊尺寸縮圖；來源本身比 THUMB_W 窄的不重產）。
 
 執行：python scripts/make_thumbs.py [秒數上限]
 （給秒數上限時跑滿即停，重跑會接續未完成的部分）
@@ -16,8 +17,8 @@ from PIL import Image
 ROOT = Path(__file__).parent.parent
 SRC = ROOT / "配裝圖片"
 DST = SRC / "縮圖"
-THUMB_W = 480
-QUALITY = 72
+THUMB_W = 640   # 卡片 CSS 寬約 250~300px，高 DPI（125%~200%）需 500~600 實體像素
+QUALITY = 78    # 72 在漸層/細節有明顯壓縮痕跡；78 檔案約 +40%，畫質明顯改善
 EXTS = {".jpe", ".jpg", ".jpeg", ".png", ".webp"}
 
 
@@ -32,6 +33,25 @@ def thumb_path(src: Path) -> Path:
     return (DST / rel).with_suffix(rel.suffix + ".jpg") if rel.suffix.lower() != ".jpg" else DST / rel
 
 
+def needs_update(src: Path, dst: Path) -> bool:
+    """新檔／來源較新／寬度低於目標（且來源夠寬）→ 要重產。只讀標頭，成本低。"""
+    if not dst.exists() or dst.stat().st_mtime < src.stat().st_mtime:
+        return True
+    try:
+        with Image.open(dst) as dim:
+            dw = dim.width
+    except Exception:
+        return True
+    if dw >= THUMB_W:
+        return False
+    try:
+        with Image.open(src) as sim:
+            sw = sim.width
+    except Exception:
+        return False
+    return dw < min(THUMB_W, sw)
+
+
 def main():
     budget = float(sys.argv[1]) if len(sys.argv) > 1 else 0
     t0 = time.time()
@@ -41,7 +61,7 @@ def main():
             print(f"時間到，先停：完成 {done}、跳過 {skip}、失敗 {err}（重跑可續）")
             return
         dst = thumb_path(src)
-        if dst.exists() and dst.stat().st_mtime >= src.stat().st_mtime:
+        if not needs_update(src, dst):
             skip += 1
             continue
         dst.parent.mkdir(parents=True, exist_ok=True)

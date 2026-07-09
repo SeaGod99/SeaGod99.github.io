@@ -8,6 +8,7 @@
 # ───────── 大型衍生檔（可由 scripts 重建，不進版控） ─────────
 mirapri_outfits.js
 mirapri_data.js
+data/item_fallback_multilang.json
 data/all_outfits_enriched.json
 data/mirapri_all.json
 data/ocr_check_result.json
@@ -18,6 +19,7 @@ data/重建報告.md
 data/db_update.log
 review_data.js
 _review_*.png
+/review_decisions.json
 
 # ───────── 暫存：執行 log / 快取備份（隨手產生，不進版控） ─────────
 data/reocr_originals.log

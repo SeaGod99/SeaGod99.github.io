@@ -1,1066 +1,5299 @@
 {
-  "generated": "2026-06-24T11:10:16.298Z",
-  "count": 120,
-  "decisions": [
-    {
-      "id": "bc8c7237-745f-48df-aba6-7172c1d3a9ad",
-      "name": "無題の投稿",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "dd52ed62-64a8-40fb-bc0b-57daf0c35414",
-      "name": "カジュアルピクトマンサー",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "7cfc4e53-7215-43b6-ba81-efea09dbd41c",
-      "name": "アイロン台",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "8fbd4f5f-c7f0-4fdc-9b64-d5de676c8a60",
-      "name": "冬のコーディネート",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "2329177c-7e5c-4d15-9c6b-badc309d86ae",
-      "name": "魔女っ子ララフェル",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "aa74f3c3-9ce3-405c-a65e-1db951bbd7b7",
-      "name": "サイバーパンク",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "d492c112-71d8-49c4-a7ba-05b059f7a6a0",
-      "name": "無題の投稿",
-      "cats": [
-        "empty"
-      ],
-      "action": "remove"
-    },
-    {
-      "id": "a3eec442-5721-44b2-88d8-b5de866bf9bf",
-      "name": "かっこかわいい竜騎士",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "bf36ade2-14e9-4809-b672-54159dd87826",
-      "name": "無題の投稿",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "4b05373b-f036-4c02-8333-312c6a1982e2",
-      "name": "アークエンジェル・東洋の詩人",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "a2a62204-e714-40c5-8808-2d90cae28cad",
-      "name": "冬の普段着",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "eaf72751-add0-4ab9-bfc2-063046d66fd6",
-      "name": "サイバーSAMURAI",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "67134df6-d38b-4cfe-a6f3-80e7a4537065",
-      "name": "普段使いディアンドル",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "a3412c08-314d-4949-8fdc-6798a5d76cb4",
-      "name": "和風ヴァイパー",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "3c96b6f5-01db-4050-808a-4d10c2faaf40",
-      "name": "未知への探検家",
-      "cats": [
-        "empty"
-      ],
-      "action": "remove"
-    },
-    {
-      "id": "2f4db096-7c11-4d0c-852e-bbd6a8e49701",
-      "name": "蛮族",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "remove"
-    },
-    {
-      "id": "37056440-e0f2-4d4b-85cb-72e28e2051d6",
-      "name": "無題の投稿",
-      "cats": [
-        "few",
-        "recon"
-      ],
-      "action": "remove"
-    },
-    {
-      "id": "15787489-cc02-40c5-a91c-4b2217c375c0",
-      "name": "オーガスタイル",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "23c0d430-8592-4c8e-ab92-e34cb1921812",
-      "name": "エアルーム",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "2bb30300-77d1-4a3c-ab82-cf987a0a4b38",
-      "name": "中華風マーシャルアーティスト",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "068ee9e7-c1cc-4511-8d5b-1a764d046f57",
-      "name": "機工士を始めたくなる格好",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "4ba096c6-233e-4d31-aaa9-90af89b5038f",
-      "name": "ナマズオ(大)",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "4cf41704-1882-4de5-9fdd-ec016f6d725d",
-      "name": "お気に入りミラプリ",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "2702348f-ba6f-4fed-bb76-71b68530ec81",
-      "name": "婦警さん？",
-      "cats": [
-        "few",
-        "recon"
-      ],
-      "action": "remove"
-    },
-    {
-      "id": "56acbf01-422b-450a-a803-235e0f8c0b8a",
-      "name": "トラル日和",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "ff9c3ec9-45a6-480a-920f-fdb5f7604ac9",
-      "name": "紅の癒し手",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "b56192b0-8d8b-47d3-89fa-17077f8bc197",
-      "name": "暗黒騎士",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "b05c336c-0b84-4325-8642-2aec25bdc5ff",
-      "name": "無題の投稿",
-      "cats": [
-        "empty"
-      ],
-      "action": "remove"
-    },
-    {
-      "id": "f02690c9-7992-4849-95fd-6d33e9db7cbf",
-      "name": "アルトリア・キャスター",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "de039771-cf8b-4c83-81b1-2f79edfbd1cf",
-      "name": "狐(おつかい中)",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "fcaceacb-d97a-4804-b167-da7dbc31d7a1",
-      "name": "控えめゴスロリ風コーデ",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "87a469dc-41b4-44df-86a6-e816e725446b",
-      "name": "美人さん",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "remove"
-    },
-    {
-      "id": "88f79d73-46cd-4ed5-8e23-ce5ad6039a07",
-      "name": "ユウェヤーワータ装備が好きすぎる",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "73aaeb1a-f2b0-4968-bf01-520579480237",
-      "name": "桃色ピクトマンサー☆",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "98034366-8735-4c7b-9c69-0f53777d326a",
-      "name": "目立ちたい調理師",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "275533d8-6cb3-4a07-8866-bd2516b693aa",
-      "name": "トラルリラックスコーデ",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "5a42798a-72ed-4f48-8d52-6941d65fee86",
-      "name": "お気に入りのピ装備ミラプリ",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "2de4c4cb-f506-4aaf-a934-869993534f3b",
-      "name": "不思議の国の…",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "e16f65f1-cf42-41be-a7ed-439ee0a28564",
-      "name": "アサシン風",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "7fb29633-6330-4cbe-be70-ad52f7c7597c",
-      "name": "チャイニーズ風",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "839b7a4a-911f-471e-a38f-8ccf7d0da188",
-      "name": "ロミンサンルテナン赤魔",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "efe1b010-7483-4638-89bb-db09ee476784",
-      "name": "占星100",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "73e5de57-4f18-4418-ba59-3cf4b1733782",
-      "name": "踊り子100",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "3b91b192-e79c-4fdf-ae58-2fdbb77c201f",
-      "name": "ナイトデビル",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "f963b366-e6ba-4724-938c-362038206c88",
-      "name": "戦士100",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "29e87e6e-a1fa-4a3e-b64f-a309018a328b",
-      "name": "白魔90",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "b10ec1a5-6c43-4bbd-aff3-987a5bcdefeb",
-      "name": "戦士50",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "8c5f2649-88ec-42ef-9072-2644f8953fd0",
-      "name": "✨Let's Pink party✨🎉",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "20ebf394-d4f8-4d69-addd-7db2a198f3f4",
-      "name": "うわ！うざっ、墜ちないとかなくない？",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "9a5642b7-9744-4dff-9b63-1632e804378d",
-      "name": "自律型惑星探査機",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "6a2ec497-d814-46cb-b001-dfee09874dc7",
-      "name": "虎パン愛好家",
-      "cats": [
-        "few",
-        "recon"
-      ],
-      "action": "remove"
-    },
-    {
-      "id": "e68d9b7d-af32-4a24-9274-01dcbc7c3c21",
-      "name": "いまだけダブ○🍔",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "447fba78-f449-481a-863e-c92caa9d1e8a",
-      "name": "クルルさんフードミラプリ",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "9a72e7e1-9ef7-4544-b1e0-16a73ad8b12a",
-      "name": "エクスアラガンヒラ胴",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "243c0b6a-aaf6-4842-ba4b-47f30e9a0c9c",
-      "name": "西洋の剣闘士風ミラプリ",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "82225ec7-6b28-450d-a11d-2b802411dae9",
-      "name": "遊牧民",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "72376494-e9a5-42c2-9b92-7cfeab4f352e",
-      "name": "無題の投稿",
-      "cats": [
-        "empty"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "ffb16c95-c42f-4c49-80d5-3b3770ed192e",
-      "name": "猫型 ver.2.0",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "f65c5ed0-1ab1-455f-83fc-9fef9c406f3e",
-      "name": "2色染色沼",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "d41b11f8-4a79-4a6c-80d2-0ec7a3b56189",
-      "name": "シックな赤魔",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "c842a90c-4eec-4a95-9efc-8be8b9c99bd1",
-      "name": "無題の投稿",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "c056a85f-a94a-49df-bb26-1092f579497a",
-      "name": "ボーイッシュ女子",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "ccc232ba-4896-4ec2-b1e2-e790facf410f",
-      "name": "赤騎士",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "1a928c3a-039f-4353-93d1-ada5f53a9907",
-      "name": "Pink Wedding",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "a64a4da6-7aaa-4ae0-8cee-e49c2d4709b8",
-      "name": "黒く大人な感じ",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "remove"
-    },
-    {
-      "id": "406e1a25-149e-43c9-95c4-36415147fa76",
-      "name": "園芸師はこれ",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "72688be9-3007-4f46-987b-5f8f4dacfeb9",
-      "name": "染色無し",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "9b019bcb-ced2-4d9a-a4d6-ac29cb830515",
-      "name": "革細工師の胴と組み合わせしてみました",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "6b2a7000-93e9-44e8-a374-cdb081a1042c",
-      "name": "青い瞳に恋をして",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "2250a01e-c519-453a-90de-d698690cc969",
-      "name": "ご賞味あれ",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "244edf6b-7df6-43f0-aea4-c8a1100b3283",
-      "name": "ハイランドスモックはいいぞ",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "7b79889c-15e4-455d-96c9-aaaea46f8b40",
-      "name": "アタイ…不器用だからサ",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "92fdd104-4afc-4440-8be2-48cd002b75b0",
-      "name": "クリスマスのおめかし",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "9586e3c9-5d35-4cb0-9e74-a8f9c16d44cb",
-      "name": "雪あそびしよっ！",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "e27eb565-a368-4336-939e-0eafefb81bee",
-      "name": "ロックにあこがれてます",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "684d81e9-1c6c-424e-ad75-e75ffaef2150",
-      "name": "ヘッドフォンて結構あったかいよね",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "44c7694c-f94a-4825-b9d5-428cf7735bde",
-      "name": "靴がポイント★角っ子和風装備",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "1dc46e6e-97dd-4e88-9c0a-b4d3fff08694",
-      "name": "生足魅惑のマーメイド",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "6294b1d9-57f2-4615-8f4e-75e3c31e338a",
-      "name": "夏私服2023",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "a2c63fee-335e-418c-a1d2-ff82830a3de5",
-      "name": "クレデンダム装備大好きな忍者",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "3491d40e-ab0c-42e8-86b8-edd889914541",
-      "name": "赤鬼さん",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "9938795b-be6a-40af-8151-c2c5e453f153",
-      "name": "ドクターストレンジ",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "92eca2d3-3b23-4f6f-b95d-6510b8e77dd3",
-      "name": "カジュアル和装💜‪",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "f3202508-0e3f-4189-bc6a-7efbd87afc4c",
-      "name": "スチパン系",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "290b349d-4868-458e-87df-6b9fa1ddbe03",
-      "name": "ウサギ✕燕尾服",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "f4aaa478-6c0c-4e34-89a3-90f851c211d9",
-      "name": "戦士",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "183ac79f-d256-40ae-a221-08784d793217",
-      "name": "サメちゃん",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "797df55a-b59f-46c3-b274-16a921267f2f",
-      "name": "寒くない程度に冬服",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "4130ddec-ba9a-4260-a545-69d8494b4a46",
-      "name": "フィジカルレンジ",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "7edc0f77-0f9e-4c97-af73-c62ebddf0e21",
-      "name": "西部開拓忍者",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "944c9169-ae25-4691-9c48-7fade6cad466",
-      "name": "うさにんじんモンク",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "8e0a799f-63de-4566-aaf8-1ee62ade39f9",
-      "name": "悪そうなフードのヴァイパー",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "1ce950b9-4829-496c-9214-923abf94331b",
-      "name": "マッドサイエンティスト？",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "5dc788be-2878-426f-8cad-e4978d070a92",
-      "name": "夏と秋の間コーデ",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "c6a345ac-27d0-4761-a6bd-da411fcb225a",
-      "name": "賢者コーデ",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "25b4645d-bef1-4589-9559-9aa530f9bc92",
-      "name": "Alice of white",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "52a5ff02-ab9a-4642-9a21-834e39ddfe4e",
-      "name": "定番GothicGirl",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "2b6eac10-89db-4845-aaf6-f7dbc6cc3e97",
-      "name": "ロスガルの家具屋さん",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "95afa583-106e-4b01-91c7-0bb1d52740f1",
-      "name": "部族風ミラプリ",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "add555ad-ddde-4ff1-a7cb-2552e4d86fa1",
-      "name": "無題の投稿",
-      "cats": [
-        "empty",
-        "missing"
-      ],
-      "action": "review"
-    },
-    {
-      "id": "84611d16-b312-44f0-93e9-6917698ed856",
-      "name": "無題の投稿",
-      "cats": [
-        "empty"
-      ],
-      "action": "remove"
-    },
-    {
-      "id": "2b040c02-65fd-422d-9eca-2bfbbb0941d0",
-      "name": "無題の投稿",
-      "cats": [
-        "empty"
-      ],
-      "action": "remove"
-    },
-    {
-      "id": "87cc4baf-bd81-4c15-a6dc-3daad6130f23",
-      "name": "もうこれで終わってもいい だからありったけの",
-      "cats": [
-        "few"
-      ],
-      "action": "remove"
-    },
-    {
-      "id": "42571060-cb47-4447-87ab-9880c83c487a",
-      "name": "カーバンクル",
-      "cats": [
-        "few"
-      ],
-      "action": "remove"
-    },
-    {
-      "id": "5c911869-106c-4510-8570-b1b40f67ceb8",
-      "name": "サンバ",
-      "cats": [
-        "few"
-      ],
-      "action": "remove"
-    },
-    {
-      "id": "91eacad5-a60a-42a7-aa2a-92c312813bde",
-      "name": "うっ血カエル",
-      "cats": [
-        "few"
-      ],
-      "action": "remove"
-    },
-    {
-      "id": "794eb3c1-2e46-4c6b-8b63-6722b8c82b9a",
-      "name": "ゆきだるま",
-      "cats": [
-        "few"
-      ],
-      "action": "remove"
-    },
-    {
-      "id": "5ef19114-2381-4c4f-9f05-a6ff375fa537",
-      "name": "クリスマスカラー",
-      "cats": [
-        "few",
-        "recon"
-      ],
-      "action": "remove"
-    },
-    {
-      "id": "4b05fdfe-3d98-4110-99cb-2661d97a8732",
-      "name": "ショ○ニ風",
-      "cats": [
-        "few"
-      ],
-      "action": "remove"
-    },
-    {
-      "id": "815f2035-659d-4531-bbe2-a4e789d0be2b",
-      "name": "焼きプリン",
-      "cats": [
-        "few"
-      ],
-      "action": "remove"
-    },
-    {
-      "id": "d4574407-c455-48a2-a256-9a164b5168c2",
-      "name": "無題の投稿",
-      "cats": [
-        "few",
-        "recon"
-      ],
-      "action": "remove"
-    },
-    {
-      "id": "ad577c23-5f30-4cef-9379-c75017673e73",
-      "name": "萌え袖",
-      "cats": [
-        "few",
-        "recon"
-      ],
-      "action": "remove"
-    },
-    {
-      "id": "3b34229a-5ef9-4b1f-8907-b741a16eb903",
-      "name": "汎用？",
-      "cats": [
-        "few"
-      ],
-      "action": "remove"
-    },
-    {
-      "id": "5e2ce043-7e90-4d88-9f0d-30d7b14a890a",
-      "name": "🔠English version🦊👘☂️⛩️",
-      "cats": [
-        "few"
-      ],
-      "action": "remove"
-    },
-    {
-      "id": "da05e19e-418a-455e-8143-280a790d64c8",
-      "name": "毒きのこ",
-      "cats": [
-        "few"
-      ],
-      "action": "remove"
-    },
-    {
-      "id": "21e4f55d-8151-4294-8415-a17669a6d48d",
-      "name": "😈💧📖Devil May Cry3 - Vergil-🔪🌀🦺",
-      "cats": [
-        "few",
-        "recon"
-      ],
-      "action": "remove"
-    },
-    {
-      "id": "219b99ea-66fb-40f1-ab4b-be4b40d7422b",
-      "name": "足を紹介したいだけのミラプリ",
-      "cats": [
-        "few"
-      ],
-      "action": "remove"
-    },
-    {
-      "id": "0b728704-e08c-46fb-b7ea-24f15855e5d9",
-      "name": "ナイト",
-      "cats": [
-        "few"
-      ],
-      "action": "remove"
-    },
-    {
-      "id": "accc7553-bd3e-4022-b2fd-9c157b6702c8",
-      "name": "No,21",
-      "cats": [
-        "empty"
-      ],
-      "action": "remove"
-    },
-    {
-      "id": "b16c7fa0-e16c-41a5-a351-92c1b9f853b6",
-      "name": "No,24",
-      "cats": [
-        "empty"
-      ],
-      "action": "remove"
-    }
-  ]
+ "_note": "決定帳本：累積所有 review.html 決定（同 id 取最新）。root 檔每次匯出只含當前佇列，移除/確認須落地此處才不復活。",
+ "decisions": [
+  {
+   "id": "01e6b727-a226-49b2-8a84-b1e3a0c58293",
+   "name": "ゴシックピクトマンサー🌹",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 8,
+   "eyeCount": 9
+  },
+  {
+   "id": "0227d423-3db4-4dca-9835-36252d3933e8",
+   "name": "無題の投稿",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "0285f3ae-8a11-4804-b0de-1b190891cf22",
+   "name": "カシミヤポンチョ",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 4
+  },
+  {
+   "id": "03319377-f7eb-4a9f-b26d-84e5b6bc6efd",
+   "name": "🐉🏮🍽️👗🖤🤍",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 5
+  },
+  {
+   "id": "066a90c1-98d2-4f92-9ba0-791a3a3c81cb",
+   "name": "無題の投稿",
+   "cats": [
+    "toomany",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 6
+  },
+  {
+   "id": "066df8c4-5c3c-4bbc-bdec-e00013af15b7",
+   "name": "アウラ１１",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "068ee9e7-c1cc-4511-8d5b-1a764d046f57",
+   "name": "機工士を始めたくなる格好",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "0802ee7e-32d1-4a00-87a0-996a552b1be7",
+   "name": "冒険者",
+   "cats": [
+    "underread"
+   ],
+   "action": "review",
+   "shown": 5,
+   "eyeCount": 3
+  },
+  {
+   "id": "0841ee77-8ee9-496d-9f91-0e2976eba5e0",
+   "name": "コーヒカップピアスと喫茶店コーデ",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 6,
+   "eyeCount": 6
+  },
+  {
+   "id": "0908f2eb-7f37-495b-9540-0f3dc8fbc703",
+   "name": "主役はアクセ",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 8,
+   "eyeCount": 9
+  },
+  {
+   "id": "098bf5d5-cf66-49f9-a336-7492f27e6e50",
+   "name": "中華ヤンキー",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 5,
+   "eyeCount": 7
+  },
+  {
+   "id": "0a5140ec-8ed0-48d6-a485-f82f41989566",
+   "name": "カードゲーマー",
+   "cats": [
+    "toomany",
+    "underread"
+   ],
+   "action": "review",
+   "shown": 8,
+   "eyeCount": 3
+  },
+  {
+   "id": "0a719f5d-878a-42af-ae53-372029ffbc15",
+   "name": "タンク装備Ver2",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "0a71c8ea-2d7b-444b-9fe5-06a4d5468300",
+   "name": "話題のおててと一緒に　2026/01/09",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 6,
+   "eyeCount": 4
+  },
+  {
+   "id": "0ac1bd05-0dfb-4337-b40f-a8136e2da59a",
+   "name": "無題の投稿",
+   "cats": [
+    "toomany",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 6
+  },
+  {
+   "id": "0acae36b-48cc-48d7-88b8-52758239135c",
+   "name": "エタバン白青",
+   "action": "remove"
+  },
+  {
+   "id": "0b2b79a3-68c7-401f-b17e-cd84b4a04595",
+   "name": "♡",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 6,
+   "eyeCount": 7
+  },
+  {
+   "id": "0b728704-e08c-46fb-b7ea-24f15855e5d9",
+   "name": "ナイト",
+   "cats": [
+    "few"
+   ],
+   "action": "remove"
+  },
+  {
+   "id": "0b94afe2-dd4b-49ca-bf1d-fae068a36df6",
+   "name": "ハイランドスモック×紺",
+   "cats": [
+    "toomany",
+    "lowconf",
+    "missing"
+   ],
+   "action": "claude",
+   "shown": 12,
+   "eyeCount": 6
+  },
+  {
+   "id": "0e6e9348-695c-4638-8764-05fa1a3193a6",
+   "name": "✟",
+   "cats": [
+    "lowconf",
+    "missing"
+   ],
+   "action": "claude",
+   "shown": 7,
+   "eyeCount": 8
+  },
+  {
+   "id": "0ec118de-6234-4ea5-8d09-be442d69bc37",
+   "name": "ブルーとグリーンの白魔道士",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 10,
+   "eyeCount": 9
+  },
+  {
+   "id": "0f1023c6-0de5-4d3f-8253-6ffb2ca2cf5f",
+   "name": "ヴァイパー",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "0fd9fa82-fcf2-443b-bab4-63f201e2fd22",
+   "name": "ナイト",
+   "action": "remove"
+  },
+  {
+   "id": "0ffb5364-8ae7-423a-9713-1b962abbdcbe",
+   "name": "無題の投稿",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "10ed008f-6843-46ea-9801-f17227dc978b",
+   "name": "ビブラプリンセス",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "1115da44-d098-42e0-ab0d-897b01406c11",
+   "name": "001",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 8,
+   "eyeCount": 8
+  },
+  {
+   "id": "11e1aab4-9416-47b3-920a-565b1082565a",
+   "name": "無題の投稿",
+   "cats": [
+    "lowconf",
+    "missing"
+   ],
+   "action": "claude",
+   "shown": 4,
+   "eyeCount": 6
+  },
+  {
+   "id": "12494976-1e61-4a54-9a4a-b9e77214b6c6",
+   "name": "ヴァレンティオンベスト",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 5
+  },
+  {
+   "id": "13d88dc6-4499-4b6a-8c2b-8680e653fd3e",
+   "name": "無題の投稿",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "1427ccfe-1de4-4a66-a533-0250a0b9e30c",
+   "name": "無題の投稿",
+   "cats": [
+    "underread"
+   ],
+   "action": "review",
+   "shown": 5,
+   "eyeCount": 3
+  },
+  {
+   "id": "14f8eb75-7b60-419d-907f-0b6f4e6bb8e0",
+   "name": "無題の投稿",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "14fcc773-870d-496e-9bcb-45c98f3f06d1",
+   "name": "クラフター装備×黄金腕",
+   "action": "remove"
+  },
+  {
+   "id": "15787489-cc02-40c5-a91c-4b2217c375c0",
+   "name": "オーガスタイル",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "161ee606-4c22-46a4-9531-47ceca43bca5",
+   "name": "無題の投稿",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 5
+  },
+  {
+   "id": "16b34c13-2eb0-4a30-b538-0284a194b7c6",
+   "name": "無題の投稿",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 5
+  },
+  {
+   "id": "17b8956c-b42f-46af-b22d-7e0c49638c0c",
+   "name": "276",
+   "cats": [
+    "toomany",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "18072999-495d-4b03-afa9-4f6f57fabd07",
+   "name": "無題の投稿",
+   "cats": [
+    "few"
+   ],
+   "action": "review",
+   "shown": 3,
+   "eyeCount": 3
+  },
+  {
+   "id": "18083eb5-1f0b-44b6-9a83-260740775c05",
+   "name": "No.11",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 9,
+   "eyeCount": 10
+  },
+  {
+   "id": "18366d5b-653b-4db9-b660-6ac47b8fc5a5",
+   "name": "Fat Chocobo is God",
+   "action": "remove"
+  },
+  {
+   "id": "183ac79f-d256-40ae-a221-08784d793217",
+   "name": "サメちゃん",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "18934193-1448-475b-901e-4fbd6086c92f",
+   "name": "ナイト",
+   "cats": [
+    "toomany",
+    "underread"
+   ],
+   "action": "review",
+   "shown": 8,
+   "eyeCount": 3
+  },
+  {
+   "id": "18e349b5-62da-488a-a2b6-afaff303cefa",
+   "name": "無題の投稿",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 6,
+   "eyeCount": 6
+  },
+  {
+   "id": "1935b935-238c-4ccc-b3a6-53676196fe02",
+   "name": "白コーデ",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "19710f55-a6c9-4f27-9c72-3aefd1a03557",
+   "name": "AST",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 6
+  },
+  {
+   "id": "199acb0b-e5e2-41ae-b9c4-83b64e94760c",
+   "name": "263",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 5
+  },
+  {
+   "id": "19b0b27c-1903-42b9-9d5d-7bdab986da1a",
+   "name": "無題の投稿",
+   "cats": [
+    "few"
+   ],
+   "action": "review",
+   "shown": 3,
+   "eyeCount": 3
+  },
+  {
+   "id": "1a1534f9-db2e-4a0d-a7e9-b70afd9bb6ca",
+   "name": "MNK",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 5
+  },
+  {
+   "id": "1a42c74d-8f5a-47e0-8dbb-84f4c54bba5c",
+   "name": "No,8＿2",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 1,
+   "eyeCount": 7
+  },
+  {
+   "id": "1a928c3a-039f-4353-93d1-ada5f53a9907",
+   "name": "Pink Wedding",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "1acce0c9-ea27-43e3-b78c-0cd9d46a784e",
+   "name": "頭はビブラプリンセスティアラ(ダラガブレッド/シャインゴールド)",
+   "cats": [
+    "toomany",
+    "underread"
+   ],
+   "action": "review",
+   "shown": 8,
+   "eyeCount": 3
+  },
+  {
+   "id": "1bb08043-5c7a-43cd-8b40-55305de9d36b",
+   "name": "炎のアルカディア闘士",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 6
+  },
+  {
+   "id": "1c8c6c64-d96c-4238-89a4-7e3dc22b753b",
+   "name": "68",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 5,
+   "eyeCount": 6
+  },
+  {
+   "id": "1ce950b9-4829-496c-9214-923abf94331b",
+   "name": "マッドサイエンティスト？",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "1db350bf-2bed-455e-8bc7-5e4b4192831f",
+   "name": "041",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 5,
+   "eyeCount": 6
+  },
+  {
+   "id": "1dc1d0d9-d926-4bb6-8b1b-924cc123b679",
+   "name": "モンク60AFアレンジ",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 5
+  },
+  {
+   "id": "1dc46e6e-97dd-4e88-9c0a-b4d3fff08694",
+   "name": "生足魅惑のマーメイド",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "1eb8eee4-b2fc-4cb5-8c3e-e527d91daf2f",
+   "name": "🔠Glamours English version⛩️😈👘❤️🖤🔪",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 8,
+   "eyeCount": 8
+  },
+  {
+   "id": "1f1fa489-6691-4670-b156-033fe679cd96",
+   "name": "❤️‍🔥",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 5
+  },
+  {
+   "id": "1f2e51f8-981f-4dfa-a952-dbdd7e4c7fb0",
+   "name": "無題の投稿",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "20ebf394-d4f8-4d69-addd-7db2a198f3f4",
+   "name": "うわ！うざっ、墜ちないとかなくない？",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "216a19a4-9ca8-4140-9396-8c749bcd23ad",
+   "name": "＃６２",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "219b99ea-66fb-40f1-ab4b-be4b40d7422b",
+   "name": "足を紹介したいだけのミラプリ",
+   "cats": [
+    "few"
+   ],
+   "action": "remove"
+  },
+  {
+   "id": "21c53ccd-776c-420c-a9ee-7ed54e8403a9",
+   "name": "無題の投稿",
+   "action": "remove"
+  },
+  {
+   "id": "21e4f55d-8151-4294-8415-a17669a6d48d",
+   "name": "😈💧📖Devil May Cry3 - Vergil-🔪🌀🦺",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "remove"
+  },
+  {
+   "id": "22290fdb-2993-4a3b-ac4d-d58d71d6b7de",
+   "name": "ベルトレザー・クロップドパンツでマリンスタイル",
+   "cats": [
+    "underread"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 3
+  },
+  {
+   "id": "224e2d0a-90a5-4b72-afc9-9c959405a247",
+   "name": "すばやいリューサンに憧れて　2026/01/05",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 6,
+   "eyeCount": 5
+  },
+  {
+   "id": "2250a01e-c519-453a-90de-d698690cc969",
+   "name": "ご賞味あれ",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "226ddb81-10e1-4be8-9585-1a6da1d5faa1",
+   "name": "016",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "22ab655c-7ef0-4694-bbf5-4ca5add0ba5b",
+   "name": "＃４２",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 6,
+   "eyeCount": 6
+  },
+  {
+   "id": "2329177c-7e5c-4d15-9c6b-badc309d86ae",
+   "name": "魔女っ子ララフェル",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "23c0d430-8592-4c8e-ab92-e34cb1921812",
+   "name": "エアルーム",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "23c93691-fdc8-48df-91ba-812b3d6f0f76",
+   "name": "無題の投稿",
+   "action": "remove"
+  },
+  {
+   "id": "243c0b6a-aaf6-4842-ba4b-47f30e9a0c9c",
+   "name": "西洋の剣闘士風ミラプリ",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 7
+  },
+  {
+   "id": "244edf6b-7df6-43f0-aea4-c8a1100b3283",
+   "name": "ハイランドスモックはいいぞ",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "24c2e565-07f8-47ed-96ae-d9b509f0c7e7",
+   "name": "ヒーラーといえば白！",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 5
+  },
+  {
+   "id": "25b4645d-bef1-4589-9559-9aa530f9bc92",
+   "name": "Alice of white",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "26f59162-cdac-47b5-aefe-ef8f5760f7f6",
+   "name": "🤍🖤🥼👞",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 5
+  },
+  {
+   "id": "2702348f-ba6f-4fed-bb76-71b68530ec81",
+   "name": "婦警さん？",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "remove"
+  },
+  {
+   "id": "275533d8-6cb3-4a07-8866-bd2516b693aa",
+   "name": "トラルリラックスコーデ",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "2769b909-c4c6-490f-b5d2-be78190b416b",
+   "name": "鉄扇を使いたいやつ",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 8
+  },
+  {
+   "id": "278651ea-3ab0-4b0c-bd62-e21ff016593f",
+   "name": "闇の守り人",
+   "cats": [
+    "toomany",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 7
+  },
+  {
+   "id": "28401e0a-9b7c-41d4-bc6f-d8f79df71e00",
+   "name": "普段着街ブラコーデ",
+   "cats": [
+    "underread"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 3
+  },
+  {
+   "id": "285c39f3-9022-4177-8eb2-e8eefa64de0a",
+   "name": "黒カジュアル",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 8,
+   "eyeCount": 8
+  },
+  {
+   "id": "290b349d-4868-458e-87df-6b9fa1ddbe03",
+   "name": "ウサギ✕燕尾服",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "292ad436-3e2e-4ded-a2b8-5c8e2c0826cc",
+   "name": "和風SMN",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 5,
+   "eyeCount": 7
+  },
+  {
+   "id": "29e87e6e-a1fa-4a3e-b64f-a309018a328b",
+   "name": "白魔90",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "2a15fa70-4b6f-41d5-b18a-92cc167c9f21",
+   "name": "🦊🌺💜🤍",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 7
+  },
+  {
+   "id": "2a1757d7-3122-4df1-a331-651c712a65c4",
+   "name": "無題の投稿",
+   "cats": [
+    "lowconf",
+    "missing"
+   ],
+   "action": "claude",
+   "shown": 6,
+   "eyeCount": 7
+  },
+  {
+   "id": "2a65514a-c6fc-48cc-8b0d-15d9c82c244b",
+   "name": "ガンブレ70",
+   "cats": [
+    "toomany",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 6
+  },
+  {
+   "id": "2a70237e-eb6c-44de-9892-2cfedf0d4cb1",
+   "name": "アンドロイド旧式軍装・射",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "2a798df2-622d-403d-9fe5-7792c5af9987",
+   "name": "123",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 5
+  },
+  {
+   "id": "2b040c02-65fd-422d-9eca-2bfbbb0941d0",
+   "name": "無題の投稿",
+   "cats": [
+    "empty"
+   ],
+   "action": "remove"
+  },
+  {
+   "id": "2b6eac10-89db-4845-aaf6-f7dbc6cc3e97",
+   "name": "ロスガルの家具屋さん",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "2bb30300-77d1-4a3c-ab82-cf987a0a4b38",
+   "name": "中華風マーシャルアーティスト",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "2bfc9508-b873-4a6e-bccf-aca8b3dde944",
+   "name": "058",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 6
+  },
+  {
+   "id": "2d35ec56-afa1-4379-a053-edf2fd4b6bd8",
+   "name": "園芸師",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 8,
+   "eyeCount": 6
+  },
+  {
+   "id": "2d39b9d5-e589-4fd9-afc9-d91830eb9bf9",
+   "name": "2026 Valentine",
+   "cats": [
+    "few",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 1,
+   "eyeCount": 5
+  },
+  {
+   "id": "2de4c4cb-f506-4aaf-a934-869993534f3b",
+   "name": "不思議の国の…",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "2e06dc91-3af1-40e4-aec1-3b582847637e",
+   "name": "Gunbreaker",
+   "cats": [
+    "toomany",
+    "underread",
+    "lowconf",
+    "missing"
+   ],
+   "action": "claude",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "2ec7ff39-9736-4599-93a6-bd065d811fe6",
+   "name": "133",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "2ed4c8ef-9342-4b5f-ba0a-3d9439110dfd",
+   "name": "252",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "2f4db096-7c11-4d0c-852e-bbd6a8e49701",
+   "name": "蛮族",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "remove"
+  },
+  {
+   "id": "2f56d9c4-823f-4c67-89ca-f95e8ac9f841",
+   "name": "獣の戦士",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 6
+  },
+  {
+   "id": "3006da32-f458-4ed6-9657-d5af108a77e6",
+   "name": "戦士",
+   "cats": [
+    "toomany",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 6
+  },
+  {
+   "id": "30588e4e-edeb-4c80-a2fd-0c2d0444d962",
+   "name": "和装",
+   "cats": [
+    "toomany",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 6
+  },
+  {
+   "id": "305b6cdb-af86-4d17-9aae-a7b71192bd39",
+   "name": "＃３７",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 6
+  },
+  {
+   "id": "307782b9-2c70-4213-beea-3891a62658a8",
+   "name": "020",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "30a962c1-3c08-4e7c-a858-15b3c0294f70",
+   "name": "無題の投稿",
+   "cats": [
+    "toomany",
+    "underread"
+   ],
+   "action": "review",
+   "shown": 10,
+   "eyeCount": 3
+  },
+  {
+   "id": "30b647cb-c2a8-4700-935d-6a0c18540c94",
+   "name": "071",
+   "cats": [
+    "toomany",
+    "underread",
+    "lowconf",
+    "missing"
+   ],
+   "action": "claude",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "30e2aad4-065d-4632-a52c-6600ab98691a",
+   "name": "和装暗黒騎士",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 5,
+   "eyeCount": 6
+  },
+  {
+   "id": "31112e01-32d5-4376-8876-1cb5adbe9c0f",
+   "name": "🩷Sweet Valentine🩷",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 8,
+   "eyeCount": 7
+  },
+  {
+   "id": "31df4fc5-fd24-4c37-ad51-7ca5e22a4636",
+   "name": "無題の投稿",
+   "cats": [
+    "underread"
+   ],
+   "action": "review",
+   "shown": 7,
+   "eyeCount": 3
+  },
+  {
+   "id": "321cf33f-3291-4f32-a493-c1de056f10a8",
+   "name": "ダークレッド・アーティスト",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 6,
+   "eyeCount": 6
+  },
+  {
+   "id": "32b84fa6-557c-4e37-b9b3-eb0f6bfb0e56",
+   "name": "中目黒系ギャザラー",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 8,
+   "eyeCount": 7
+  },
+  {
+   "id": "33e1bca2-535f-41d2-99c8-1bcaea4ac73c",
+   "name": "詩人70～90",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 47
+  },
+  {
+   "id": "340cef81-93b2-4d0f-b766-0b9617c87b07",
+   "name": "赤黒の竜",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "34137aed-18c7-4f58-8384-bb07bf4de7e0",
+   "name": "２Pカラー",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 8,
+   "eyeCount": 6
+  },
+  {
+   "id": "34451d9c-7598-4a08-b8a2-9f596caac6b0",
+   "name": "青魔道士",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "3491d40e-ab0c-42e8-86b8-edd889914541",
+   "name": "赤鬼さん",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 4
+  },
+  {
+   "id": "34e02a9b-b978-41d6-8637-f00c9ad4d41d",
+   "name": "130",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 6
+  },
+  {
+   "id": "356d1800-5ce0-4135-8109-81e9b9538c9e",
+   "name": "無題の投稿",
+   "cats": [
+    "toomany",
+    "underread"
+   ],
+   "action": "review",
+   "shown": 10,
+   "eyeCount": 3
+  },
+  {
+   "id": "35868aaf-2960-4586-a52e-3dd6ce683e06",
+   "name": "無題の投稿",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 8,
+   "eyeCount": 7
+  },
+  {
+   "id": "35975cfa-873c-4133-9cd9-b7f5138f8254",
+   "name": "ALL JOB",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 4
+  },
+  {
+   "id": "35e52ad8-cfb7-4ad0-8d5d-fad77150f4d9",
+   "name": "261",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "36a4c15a-07bc-40fa-a435-fb0baf66e6ed",
+   "name": "152",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "37056440-e0f2-4d4b-85cb-72e28e2051d6",
+   "name": "無題の投稿",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "remove"
+  },
+  {
+   "id": "3718edec-2584-4220-ac14-8a8442226aa3",
+   "name": "忍者装備　備忘録",
+   "cats": [
+    "underread"
+   ],
+   "action": "review",
+   "shown": 5,
+   "eyeCount": 3
+  },
+  {
+   "id": "38d9dae5-423d-4e2a-b631-190f9718c7c8",
+   "name": "クリスマスミラプリ",
+   "cats": [
+    "lowconf"
+   ],
+   "action": null,
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "39081736-bc2c-45b2-ac6a-7e2501523072",
+   "name": "ガンブレ100",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 6,
+   "eyeCount": 6
+  },
+  {
+   "id": "3a6346ab-f196-44e7-b257-98825b8a1c6a",
+   "name": "放浪の学者",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 4,
+   "eyeCount": 4
+  },
+  {
+   "id": "3aa29021-56b0-46bb-ae24-110a0cf13a0f",
+   "name": "AST",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 5
+  },
+  {
+   "id": "3b1bca78-9283-4ff0-8cc0-065f28838d04",
+   "name": "クリスマス",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "3b34229a-5ef9-4b1f-8907-b741a16eb903",
+   "name": "汎用？",
+   "cats": [
+    "few"
+   ],
+   "action": "remove"
+  },
+  {
+   "id": "3b91b192-e79c-4fdf-ae58-2fdbb77c201f",
+   "name": "ナイトデビル",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "3bd9585b-7e63-40cb-98a1-834c8357ecb8",
+   "name": "占星術師",
+   "cats": [
+    "toomany",
+    "underread",
+    "lowconf",
+    "missing"
+   ],
+   "action": "claude",
+   "shown": 12,
+   "eyeCount": 6
+  },
+  {
+   "id": "3c505029-8c8f-4289-8fc2-353c00ce4179",
+   "name": "赤魔スタービロード",
+   "cats": [
+    "underread"
+   ],
+   "action": "review",
+   "shown": 6,
+   "eyeCount": 3
+  },
+  {
+   "id": "3c96b6f5-01db-4050-808a-4d10c2faaf40",
+   "name": "未知への探検家",
+   "cats": [
+    "empty"
+   ],
+   "action": "remove"
+  },
+  {
+   "id": "3dac448d-e72b-4633-84f3-1f04e5a0a94c",
+   "name": "SMN",
+   "cats": [
+    "lowconf",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 4
+  },
+  {
+   "id": "3e8234f7-ea90-455c-98c1-eb724b4ad37d",
+   "name": "赤が綺麗なヴァイパー武器がお気に入り",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 8,
+   "eyeCount": 7
+  },
+  {
+   "id": "3ebb0db2-2b61-43f0-b9a0-d17049346cf8",
+   "name": "No,13",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "review",
+   "shown": 3,
+   "eyeCount": 3
+  },
+  {
+   "id": "3fa2f730-122f-407c-9735-4475badab602",
+   "name": "ゴシックメイド",
+   "cats": [
+    "few",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 1,
+   "eyeCount": 8
+  },
+  {
+   "id": "406e1a25-149e-43c9-95c4-36415147fa76",
+   "name": "園芸師はこれ",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "40d86796-66c6-4bf8-890d-c1c7a0a911ab",
+   "name": "無題の投稿",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 5
+  },
+  {
+   "id": "4130ddec-ba9a-4260-a545-69d8494b4a46",
+   "name": "フィジカルレンジ",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "42571060-cb47-4447-87ab-9880c83c487a",
+   "name": "カーバンクル",
+   "cats": [
+    "few"
+   ],
+   "action": "remove"
+  },
+  {
+   "id": "42592a3d-8c07-431d-aa57-519ab6aa2a6f",
+   "name": "セットでアシメで靴底着色かわいいからみんな履こう",
+   "cats": [
+    "few",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 2,
+   "eyeCount": 12
+  },
+  {
+   "id": "42b8a9ef-87ba-4650-8899-a3f69debc7ac",
+   "name": "WAR",
+   "cats": [
+    "toomany",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 9,
+   "eyeCount": 7
+  },
+  {
+   "id": "447fba78-f449-481a-863e-c92caa9d1e8a",
+   "name": "クルルさんフードミラプリ",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "44830e52-dbdd-4af2-a24b-bd794395b640",
+   "name": "かミーズ",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "44c7694c-f94a-4825-b9d5-428cf7735bde",
+   "name": "靴がポイント★角っ子和風装備",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "44d9795c-ebb9-4f4d-8a58-dc2db32b5c7f",
+   "name": "ダンサー風？",
+   "cats": [
+    "lowconf",
+    "missing"
+   ],
+   "action": "claude",
+   "shown": 6,
+   "eyeCount": 9
+  },
+  {
+   "id": "45165a72-1b9f-4603-ba7d-6275a9abb6b9",
+   "name": "桃園昇竜",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 6
+  },
+  {
+   "id": "46dfa717-3c49-40cc-a265-a8b00ae0045c",
+   "name": "コスモ装備",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 5
+  },
+  {
+   "id": "47764a94-95b9-42c8-badf-f5fd5922c46b",
+   "name": "きのこ・しいたけ",
+   "cats": [
+    "few"
+   ],
+   "action": "remove",
+   "shown": 2,
+   "eyeCount": null
+  },
+  {
+   "id": "47906691-e6f8-4aed-bfa1-6ca4b8519441",
+   "name": "甘すぎないデートコーデ",
+   "cats": [
+    "underread"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 3
+  },
+  {
+   "id": "48c8b2bf-b92c-4470-af80-180e5be78640",
+   "name": "🔠Glamours English version",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 2,
+   "eyeCount": 6
+  },
+  {
+   "id": "48ecb67e-5bca-46f6-b4e1-eb41b5ad2101",
+   "name": "無題の投稿",
+   "cats": [
+    "lowconf",
+    "missing"
+   ],
+   "action": "claude",
+   "shown": 4,
+   "eyeCount": 5
+  },
+  {
+   "id": "49d4f2e0-87eb-4e45-af3d-22787bcd0b9e",
+   "name": "戦士",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 8,
+   "eyeCount": 7
+  },
+  {
+   "id": "49eec1aa-9cd5-4363-a645-d538011d526b",
+   "name": "無題の投稿",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 8,
+   "eyeCount": 8
+  },
+  {
+   "id": "4a415359-134c-4793-9842-b575848e345a",
+   "name": "裁縫AF",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 2,
+   "eyeCount": 5
+  },
+  {
+   "id": "4b05373b-f036-4c02-8333-312c6a1982e2",
+   "name": "アークエンジェル・東洋の詩人",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "4b05fdfe-3d98-4110-99cb-2661d97a8732",
+   "name": "ショ○ニ風",
+   "cats": [
+    "few"
+   ],
+   "action": "remove"
+  },
+  {
+   "id": "4ba096c6-233e-4d31-aaa9-90af89b5038f",
+   "name": "ナマズオ(大)",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "4c195abd-3502-4332-9a33-8df400bad9cb",
+   "name": "＃２１",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 6
+  },
+  {
+   "id": "4c1d0e88-b23f-4e89-be80-74ce8c427c7c",
+   "name": "パーカー×スカート",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 4
+  },
+  {
+   "id": "4c3115e3-2b26-445b-a850-cab4c73817aa",
+   "name": "ストーリースピナー",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "4cf41704-1882-4de5-9fdd-ec016f6d725d",
+   "name": "お気に入りミラプリ",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "4d3bfe49-dca5-40fa-81b8-e8c10c30e9ff",
+   "name": "カーバンクル絵師",
+   "cats": [
+    "underread"
+   ],
+   "action": "review",
+   "shown": 6,
+   "eyeCount": 3
+  },
+  {
+   "id": "4eaa7207-6847-47f9-be99-3e0378e346f4",
+   "name": "無題の投稿",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "4ecfd2aa-c399-4068-ae3a-f23145461274",
+   "name": "164",
+   "cats": [
+    "toomany",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "4f6f3622-caa9-437a-a6d3-b2b9f05a7422",
+   "name": "MNK",
+   "cats": [
+    "few",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 3,
+   "eyeCount": 5
+  },
+  {
+   "id": "4fa3d825-d66a-47a3-91ce-753335453e76",
+   "name": "無題の投稿",
+   "cats": [
+    "underread"
+   ],
+   "action": "review",
+   "shown": 6,
+   "eyeCount": 6
+  },
+  {
+   "id": "503b7624-77a3-4a56-98d5-67fce5577701",
+   "name": "No.09",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 2,
+   "eyeCount": 5
+  },
+  {
+   "id": "5093efce-24f1-4a7c-9ed0-d002a6513b8b",
+   "name": "無題の投稿",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 6,
+   "eyeCount": 6
+  },
+  {
+   "id": "50eb0add-1b1d-462d-be5f-a2db8cc5fdf1",
+   "name": "無題の投稿",
+   "cats": [
+    "few"
+   ],
+   "action": "review",
+   "shown": 3,
+   "eyeCount": 3
+  },
+  {
+   "id": "513a3f4b-aa9e-42cc-ad93-183ca9cedcca",
+   "name": "体育の時間だ！",
+   "cats": [
+    "toomany",
+    "underread"
+   ],
+   "action": "review",
+   "shown": 8,
+   "eyeCount": 3
+  },
+  {
+   "id": "515479e8-f7dd-40c0-874b-a53f0c607886",
+   "name": "VD × 鍛冶AF",
+   "cats": [
+    "few"
+   ],
+   "action": "review",
+   "shown": 3,
+   "eyeCount": 3
+  },
+  {
+   "id": "523ba348-e8be-4223-9def-98db4f301fe8",
+   "name": "Future Sol V2🦺",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 5
+  },
+  {
+   "id": "523bcf99-743d-4758-8ada-65e406712e8f",
+   "name": "無題の投稿",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 8,
+   "eyeCount": 10
+  },
+  {
+   "id": "52a5ff02-ab9a-4642-9a21-834e39ddfe4e",
+   "name": "定番GothicGirl",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "532173a7-f775-4263-9d1c-31e4b94d3b9d",
+   "name": "黄金モンクららちゃん",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 2,
+   "eyeCount": 5
+  },
+  {
+   "id": "5391b364-9e87-421e-99e8-7ab92d1e0e40",
+   "name": "冒険スタイル：ネイビー",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 10,
+   "eyeCount": 8
+  },
+  {
+   "id": "5465f0c8-c872-4d94-9bea-0811296def03",
+   "name": "アオザイ×アーゼマ",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "review",
+   "shown": 3,
+   "eyeCount": 3
+  },
+  {
+   "id": "550a89e5-03e6-4c45-a63f-6774058c4d40",
+   "name": "ディアンドル・コスチュームセット＠機工士",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "551da429-1cd5-42ac-8ee2-8ad0cd25dda0",
+   "name": "キャス記憶胴を使ったミラプリ",
+   "cats": [
+    "underread"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 3
+  },
+  {
+   "id": "55832a4f-420b-4d36-b248-9b6384851924",
+   "name": "ミソスヘラルド・キトン　2026/01/03",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 6,
+   "eyeCount": 5
+  },
+  {
+   "id": "55dc6e58-c382-47c1-89cb-699ad057ada7",
+   "name": "RPR Artifact ver.ZERO",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 7,
+   "eyeCount": 7
+  },
+  {
+   "id": "566b06e9-6ee2-4b8a-89e8-84d6d2a2540e",
+   "name": "№  189",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "56acbf01-422b-450a-a803-235e0f8c0b8a",
+   "name": "トラル日和",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "56af73a9-412d-4f4a-9829-3abc44ffb4da",
+   "name": "GATHERER (ギャザラー)",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 6,
+   "eyeCount": 6
+  },
+  {
+   "id": "56bc7127-d180-4af1-8bd8-df6c2a9d34a3",
+   "name": "スカラーガウン",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 11
+  },
+  {
+   "id": "5874a38a-fb21-481a-85bb-9c0cd7faec26",
+   "name": "BLACK",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "5a42798a-72ed-4f48-8d52-6941d65fee86",
+   "name": "お気に入りのピ装備ミラプリ",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "5a9a420b-8ee6-42ee-aa25-a78ee32ba8e1",
+   "name": "WAR",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 5,
+   "eyeCount": 6
+  },
+  {
+   "id": "5adbf87b-dbaa-4d05-bf17-77137709de44",
+   "name": "無題の投稿",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "5b687ea9-8a5a-41ce-acc6-b331a2c6ba44",
+   "name": "無題の投稿",
+   "cats": [
+    "few",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 3,
+   "eyeCount": 7
+  },
+  {
+   "id": "5b8cbddf-f22f-4e2d-847e-bf4851509fe4",
+   "name": "№  219",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 5
+  },
+  {
+   "id": "5bc8f6de-625a-4a05-a49a-2eb593a980e7",
+   "name": "鬼モンクららちゃん",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 5
+  },
+  {
+   "id": "5bd5eb9d-9e99-4355-b826-639b15f7109f",
+   "name": "新式コーデ",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 4
+  },
+  {
+   "id": "5c911869-106c-4510-8570-b1b40f67ceb8",
+   "name": "サンバ",
+   "cats": [
+    "few"
+   ],
+   "action": "remove"
+  },
+  {
+   "id": "5cbc4d38-cc8a-410d-9cc7-88bcbc623139",
+   "name": "CASTER / (RANGED)",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 4,
+   "eyeCount": 4
+  },
+  {
+   "id": "5d27b62c-7a6e-4f64-8d7b-f97f374ff91a",
+   "name": "ファンタズマル胴　赤魔",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 4,
+   "eyeCount": 5
+  },
+  {
+   "id": "5dc788be-2878-426f-8cad-e4978d070a92",
+   "name": "夏と秋の間コーデ",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "5e2ce043-7e90-4d88-9f0d-30d7b14a890a",
+   "name": "🔠English version🦊👘☂️⛩️",
+   "cats": [
+    "few"
+   ],
+   "action": "remove"
+  },
+  {
+   "id": "5e66c3cc-d2d4-45ed-855d-248f163a282b",
+   "name": "召喚＆学者100",
+   "action": "remove"
+  },
+  {
+   "id": "5ef19114-2381-4c4f-9f05-a6ff375fa537",
+   "name": "クリスマスカラー",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "remove"
+  },
+  {
+   "id": "5f2cf96d-82d0-4403-b859-7783f27a980f",
+   "name": "かじゅある",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "review",
+   "shown": 3,
+   "eyeCount": 3
+  },
+  {
+   "id": "5f992e75-994e-45cb-b0b3-e83967780ff2",
+   "name": "無題の投稿",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "5fcf6a22-444c-47b6-9f77-c047d5d065d3",
+   "name": "№  218",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 5
+  },
+  {
+   "id": "60ee2001-d164-43f6-87fd-14edb6ea72ef",
+   "name": "青コートタンク",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 6,
+   "eyeCount": 6
+  },
+  {
+   "id": "60efbda3-41cc-4349-9f6c-654790b9180d",
+   "name": "忍者",
+   "cats": [
+    "toomany",
+    "underread",
+    "lowconf",
+    "missing"
+   ],
+   "action": "claude",
+   "shown": 12,
+   "eyeCount": 6
+  },
+  {
+   "id": "60f6200e-a3a5-4dd8-ba94-2ab0e955ab4f",
+   "name": "荒野の旅人",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "61129203-5674-4112-a4a6-ab7a8b4df604",
+   "name": "070",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "61b680d5-0a3e-4ce4-8f49-5bdcc551b5bd",
+   "name": "秋の装い",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "61b922bd-5d16-42d1-82b9-4ab112e83273",
+   "name": "純白の赤魔道士",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 6,
+   "eyeCount": 6
+  },
+  {
+   "id": "628cb8e9-94e6-4fc5-8fef-93cf1c217aa0",
+   "name": "無題の投稿",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 5,
+   "eyeCount": 6
+  },
+  {
+   "id": "6294b1d9-57f2-4615-8f4e-75e3c31e338a",
+   "name": "夏私服2023",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "630443e0-6f48-4c40-a2fc-e0d268e57726",
+   "name": "無題の投稿",
+   "cats": [
+    "few"
+   ],
+   "action": "review",
+   "shown": 3,
+   "eyeCount": 3
+  },
+  {
+   "id": "6346de80-6315-4b92-8db2-e8818937cf73",
+   "name": "076",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "63d68647-3324-42d9-b25b-78a97aab7f6a",
+   "name": "🔠English version",
+   "action": "remove"
+  },
+  {
+   "id": "650e0931-5900-4172-ae33-731c1dc6b296",
+   "name": "ゴシック",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 4
+  },
+  {
+   "id": "65cadd53-c0e3-4a74-94a2-969532356d5d",
+   "name": "グリダニア愛国者",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 11
+  },
+  {
+   "id": "65f7e70e-c5fa-4083-8ffe-5466815a823c",
+   "name": "見習い魔導士",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "660e07bf-6ecc-47e4-a8bd-575b39caeb30",
+   "name": "218",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 6,
+   "eyeCount": 6
+  },
+  {
+   "id": "66259257-e936-4da3-be16-b386f6f49715",
+   "name": "東方美姫＋夜鶴",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 6,
+   "eyeCount": 6
+  },
+  {
+   "id": "67134df6-d38b-4cfe-a6f3-80e7a4537065",
+   "name": "普段使いディアンドル",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "67986703-a45f-422c-85a7-65d11f9cca1a",
+   "name": "147",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "67e64bff-0290-4707-b86e-7dea35ab23cb",
+   "name": "No.10",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 9,
+   "eyeCount": 10
+  },
+  {
+   "id": "684d81e9-1c6c-424e-ad75-e75ffaef2150",
+   "name": "ヘッドフォンて結構あったかいよね",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "69e62278-9e5d-4a75-b498-bc70050d0909",
+   "name": "緑メイド",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 6,
+   "eyeCount": 9
+  },
+  {
+   "id": "69fa3a62-8b4d-4329-9382-e3fbb72b9c3c",
+   "name": "ヨルハ五一式軍装：格",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "6a2ec497-d814-46cb-b001-dfee09874dc7",
+   "name": "虎パン愛好家",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "remove"
+  },
+  {
+   "id": "6a395064-ac3f-4798-971e-319ca6a16df8",
+   "name": "赤鎧銃士",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 7,
+   "eyeCount": 6
+  },
+  {
+   "id": "6aae602d-4a75-47ab-b765-eb58c2c650f7",
+   "name": "９％赤魔だっぺええ",
+   "cats": [
+    "lowconf",
+    "missing"
+   ],
+   "action": "claude",
+   "shown": 6,
+   "eyeCount": 7
+  },
+  {
+   "id": "6b2a7000-93e9-44e8-a374-cdb081a1042c",
+   "name": "青い瞳に恋をして",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "6b86785d-6f5e-4286-9fd3-b3f2c1f9c111",
+   "name": "⚡Cyber Demon⚡",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 10,
+   "eyeCount": 9
+  },
+  {
+   "id": "6c189a64-f457-4451-ae21-cec81587bdc3",
+   "name": "無題の投稿",
+   "cats": [
+    "toomany",
+    "lowconf",
+    "missing"
+   ],
+   "action": "claude",
+   "shown": 11,
+   "eyeCount": 5
+  },
+  {
+   "id": "6cdb247c-1af9-4776-bc94-7176ae8c9f12",
+   "name": "036",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 6
+  },
+  {
+   "id": "6d0f9355-7300-459e-867b-1d9cd0af1e4e",
+   "name": "無題の投稿",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 6,
+   "eyeCount": 6
+  },
+  {
+   "id": "6d88c3c5-cbfe-42af-9879-43820d589e22",
+   "name": "13",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "6d93bc3c-22cd-4370-bb86-2303c57ad1e6",
+   "name": "例の御方風コーデ",
+   "cats": [
+    "underread"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 3
+  },
+  {
+   "id": "6e5039b6-6101-4a8f-9881-4dd22c9a1c8d",
+   "name": "レンジ新式ミラプリ",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "6f71e73a-e3f7-4b60-903a-0c8e6ca8fc27",
+   "name": "♡",
+   "cats": [
+    "toomany",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "706fffe6-5842-4b23-a432-fb75dcaa8e9c",
+   "name": "レンジ用ドレスコーデ",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 5,
+   "eyeCount": 6
+  },
+  {
+   "id": "707d8dd1-d131-4705-8398-6ab5b563d949",
+   "name": "無題の投稿",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 6
+  },
+  {
+   "id": "70a2404d-71ea-4c2a-a27d-1f32f3de488e",
+   "name": "276",
+   "cats": [
+    "toomany",
+    "missing"
+   ],
+   "action": "remove",
+   "shown": 12,
+   "eyeCount": null
+  },
+  {
+   "id": "70bac258-6a68-4f1b-ab1f-fe1cffebce70",
+   "name": "えりにゃんこ　その2",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 10,
+   "eyeCount": 9
+  },
+  {
+   "id": "71184210-8235-43e6-a515-6e4efc367254",
+   "name": "HEALER",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "7198573d-f1b2-4202-b46e-4ce3842cc10e",
+   "name": "無題の投稿",
+   "cats": [
+    "toomany",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 6
+  },
+  {
+   "id": "71ee256c-9a56-4406-828d-57f2e425d02b",
+   "name": "193",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 6
+  },
+  {
+   "id": "72376494-e9a5-42c2-9b92-7cfeab4f352e",
+   "name": "無題の投稿",
+   "cats": [
+    "empty"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "725d3700-6927-4c1f-a589-b9fbdc4bcdd9",
+   "name": "Clergy",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 8,
+   "eyeCount": 8
+  },
+  {
+   "id": "72688be9-3007-4f46-987b-5f8f4dacfeb9",
+   "name": "染色無し",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "72f37ab1-5152-4414-9663-eee59fafa29b",
+   "name": "踊り子",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 10,
+   "eyeCount": 8
+  },
+  {
+   "id": "73598477-693f-4851-83a0-9f2195a17e61",
+   "name": "🤍🤍ᴡʜɪᴛᴇ ʀᴇᴀᴘᴇʀ🤍🤍",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 9,
+   "eyeCount": 8
+  },
+  {
+   "id": "7397fa8f-9088-4f02-ad7c-92085f86c755",
+   "name": "ミルクチョコレート姫",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "73aaeb1a-f2b0-4968-bf01-520579480237",
+   "name": "桃色ピクトマンサー☆",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "73b48c52-bdc3-4f2a-b80a-fd5842b95ac2",
+   "name": "スキュラヒーラー合わせ",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 5,
+   "eyeCount": 6
+  },
+  {
+   "id": "73e5de57-4f18-4418-ba59-3cf4b1733782",
+   "name": "踊り子100",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "741a0953-bd78-4543-837e-a9e8f33396f0",
+   "name": "お呼ばれスタイル",
+   "cats": [
+    "few"
+   ],
+   "action": "review",
+   "shown": 3,
+   "eyeCount": 3
+  },
+  {
+   "id": "74240705-d1e8-464d-ae70-05d236b6fa81",
+   "name": "フルアーマー召喚士　白金の竜王",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 6
+  },
+  {
+   "id": "74ecb75b-32fa-4577-8733-8ca4bd224f94",
+   "name": "ブレイクストリート・パープル",
+   "cats": [
+    "recon"
+   ],
+   "action": "review",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "75359cce-85d0-4685-83e7-f4f13028c857",
+   "name": "028",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "75bda227-2961-4609-8a6a-5825b399c07e",
+   "name": "スター◯レック",
+   "cats": [
+    "underread"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 0
+  },
+  {
+   "id": "75ea2de9-be80-4695-b4c5-aa533f4bbf2a",
+   "name": "無題の投稿",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 8,
+   "eyeCount": 7
+  },
+  {
+   "id": "7664d0ce-56e8-4f99-b9b5-996783df1f12",
+   "name": "「カッコイイ」を目指して",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 4,
+   "eyeCount": 4
+  },
+  {
+   "id": "76dd1430-3e4d-466f-9327-e0edf741c741",
+   "name": "無題の投稿",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 9,
+   "eyeCount": 10
+  },
+  {
+   "id": "78c49197-1f24-41af-ad77-fa8ead526537",
+   "name": "コートリーラヴァーストライカークローク②",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 4,
+   "eyeCount": 4
+  },
+  {
+   "id": "794eb3c1-2e46-4c6b-8b63-6722b8c82b9a",
+   "name": "ゆきだるま",
+   "cats": [
+    "few"
+   ],
+   "action": "remove"
+  },
+  {
+   "id": "795fab0a-554d-4e00-851e-8ce6ccc96504",
+   "name": "無題の投稿",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 4
+  },
+  {
+   "id": "797df55a-b59f-46c3-b274-16a921267f2f",
+   "name": "寒くない程度に冬服",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "7a4a9bc1-7b7e-4135-8eb8-9bb0743c85e5",
+   "name": "忍者",
+   "action": "remove"
+  },
+  {
+   "id": "7aefca40-f07e-4116-8b8c-5a68a7793410",
+   "name": "採掘師",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "7b2b8d0a-a4f7-4988-b795-891eba6babcd",
+   "name": "鍛冶師",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "7b70ebf7-185b-401c-af2c-a515eadff075",
+   "name": "リーパー",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 8,
+   "eyeCount": 7
+  },
+  {
+   "id": "7b74b6c3-6880-489f-97dc-89dc55c2461a",
+   "name": "＃５４",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "7b79889c-15e4-455d-96c9-aaaea46f8b40",
+   "name": "アタイ…不器用だからサ",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "7c783c8b-b7bc-4772-ac20-732e48cfcc9a",
+   "name": "無題の投稿",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 10
+  },
+  {
+   "id": "7cfc4e53-7215-43b6-ba81-efea09dbd41c",
+   "name": "アイロン台",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "7d1e52a7-d39c-42ae-82f5-b1c29c44ff04",
+   "name": "踊り子",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 9,
+   "eyeCount": 8
+  },
+  {
+   "id": "7ded1964-fe2b-4816-9324-f14134771739",
+   "name": "無題の投稿",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 6,
+   "eyeCount": 6
+  },
+  {
+   "id": "7e5c9e75-6fef-4c57-a5ce-5a540d7bb3b5",
+   "name": "black crafter",
+   "cats": [
+    "few"
+   ],
+   "action": "review",
+   "shown": 3,
+   "eyeCount": 2
+  },
+  {
+   "id": "7edc0f77-0f9e-4c97-af73-c62ebddf0e21",
+   "name": "西部開拓忍者",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "7f31236b-c009-435b-8404-070ae851c04c",
+   "name": "ヴァイパー100",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 7
+  },
+  {
+   "id": "7f39db97-caa9-4213-9026-1a2e05f57718",
+   "name": "モンク",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 8,
+   "eyeCount": 6
+  },
+  {
+   "id": "7f7dd076-3c05-464a-b863-13ca1cd34e0f",
+   "name": "😈💧Devil May Cry - Dante -🍕🍓",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 2,
+   "eyeCount": 5
+  },
+  {
+   "id": "7fb29633-6330-4cbe-be70-ad52f7c7597c",
+   "name": "チャイニーズ風",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "8024aeaa-4b3d-47ee-9465-b4e4ba17443d",
+   "name": "マーシュグリーン♥",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 8,
+   "eyeCount": 7
+  },
+  {
+   "id": "815f2035-659d-4531-bbe2-a4e789d0be2b",
+   "name": "焼きプリン",
+   "cats": [
+    "few"
+   ],
+   "action": "remove"
+  },
+  {
+   "id": "81cd2ad0-1621-47dc-b29f-3f1fdd5e995c",
+   "name": "軽装",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 11,
+   "eyeCount": 9
+  },
+  {
+   "id": "82225ec7-6b28-450d-a11d-2b802411dae9",
+   "name": "遊牧民",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "834a933d-08c0-4abb-b838-8058399b2a7a",
+   "name": "No,9",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 2,
+   "eyeCount": 5
+  },
+  {
+   "id": "839b7a4a-911f-471e-a38f-8ccf7d0da188",
+   "name": "ロミンサンルテナン赤魔",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "84069646-75f4-47fb-a691-449f28822100",
+   "name": "No.13",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 10,
+   "eyeCount": 10
+  },
+  {
+   "id": "843dbc0a-0694-49dd-b33f-ca6da4fb2a6e",
+   "name": "133",
+   "cats": [
+    "toomany",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "84611d16-b312-44f0-93e9-6917698ed856",
+   "name": "無題の投稿",
+   "cats": [
+    "empty"
+   ],
+   "action": "remove"
+  },
+  {
+   "id": "84b6ec02-406d-4fe7-bd68-18bfcc19d4a8",
+   "name": "MNK",
+   "cats": [
+    "lowconf",
+    "missing"
+   ],
+   "action": "claude",
+   "shown": 4,
+   "eyeCount": 5
+  },
+  {
+   "id": "8525823c-b7e0-404a-aab9-488dee0d5b7a",
+   "name": "おでかけ甘辛コーデ",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 4
+  },
+  {
+   "id": "860803ac-e1a5-4c6f-b249-0d5ae1d8bab6",
+   "name": "無題の投稿",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "86b11793-9107-4e2b-989f-0443cb003811",
+   "name": "079",
+   "cats": [
+    "toomany",
+    "lowconf",
+    "missing"
+   ],
+   "action": "claude",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "86bbabbd-b9d7-4f5c-a094-d78158ff18a6",
+   "name": "魔法使いピクトマンサー",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 8,
+   "eyeCount": 7
+  },
+  {
+   "id": "87a469dc-41b4-44df-86a6-e816e725446b",
+   "name": "美人さん",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "remove"
+  },
+  {
+   "id": "87cc4baf-bd81-4c15-a6dc-3daad6130f23",
+   "name": "もうこれで終わってもいい だからありったけの",
+   "cats": [
+    "few"
+   ],
+   "action": "remove"
+  },
+  {
+   "id": "880f944c-cef3-4c15-9fd2-703b4a0f9f84",
+   "name": "お出かけスタイル",
+   "cats": [
+    "few"
+   ],
+   "action": "review",
+   "shown": 3,
+   "eyeCount": 3
+  },
+  {
+   "id": "884c7380-8649-436b-93df-69a0b6eac574",
+   "name": "無題の投稿",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 5
+  },
+  {
+   "id": "88f79d73-46cd-4ed5-8e23-ce5ad6039a07",
+   "name": "ユウェヤーワータ装備が好きすぎる",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "88fcab02-5005-4be5-82b7-b7bd95dddad3",
+   "name": "シック1",
+   "cats": [
+    "toomany",
+    "underread"
+   ],
+   "action": "review",
+   "shown": 8,
+   "eyeCount": 3
+  },
+  {
+   "id": "8bbc351f-915b-4c33-8305-a90a5e45b39d",
+   "name": "ﾆﾝﾆﾝ🥷🏻",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 5
+  },
+  {
+   "id": "8bff24dc-2bbb-4a88-9e6e-671c2b526030",
+   "name": "セネシャルアイドル🎀",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 5
+  },
+  {
+   "id": "8c011093-19d5-40e4-a114-1e8f5c07927b",
+   "name": "無題の投稿",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "8c08a2e7-4b52-404f-828c-ffd2b86cda92",
+   "name": "ホワイトミリタリー",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 4,
+   "eyeCount": 4
+  },
+  {
+   "id": "8c33752a-fbcf-4f00-8d5d-cad66e817926",
+   "name": "賢者AF6",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 9,
+   "eyeCount": 8
+  },
+  {
+   "id": "8c5f2649-88ec-42ef-9072-2644f8953fd0",
+   "name": "✨Let's Pink party✨🎉",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "8c84a648-2d24-4128-876b-419dccfa3168",
+   "name": "アンドロイド旧式軍装：医",
+   "cats": [
+    "toomany",
+    "underread",
+    "lowconf",
+    "missing"
+   ],
+   "action": "claude",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "8d2c7722-9d42-4c82-9ccf-a73a28b2e738",
+   "name": "黒薔薇魔道士",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 9,
+   "eyeCount": 8
+  },
+  {
+   "id": "8e0a799f-63de-4566-aaf8-1ee62ade39f9",
+   "name": "悪そうなフードのヴァイパー",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "8e203e19-1be1-4f3f-896b-c77994419fee",
+   "name": "白魔",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 6
+  },
+  {
+   "id": "8e2ef7aa-7fce-4de8-a2a9-545bde6ad9f0",
+   "name": "ね♡もう一軒いこ？",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "8e8dc9a1-60d1-44fb-9bb4-6ede25d13da6",
+   "name": "秋服②",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "8e96ea59-94de-4653-8567-d941f4171b53",
+   "name": "🤎",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 5
+  },
+  {
+   "id": "8f6e065f-ab4b-44f0-98b0-20280a33386a",
+   "name": "無題の投稿",
+   "cats": [
+    "underread"
+   ],
+   "action": "review",
+   "shown": 6,
+   "eyeCount": 6
+  },
+  {
+   "id": "8f917865-5b02-4ac4-9aa6-ab25fc24ab80",
+   "name": "春のおてんばお嬢",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 5
+  },
+  {
+   "id": "8fa3568e-b6e4-43c2-bd1d-9d42a77c288d",
+   "name": "カーバンクル召喚士",
+   "action": "remove"
+  },
+  {
+   "id": "8fbd4f5f-c7f0-4fdc-9b64-d5de676c8a60",
+   "name": "冬のコーディネート",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 5
+  },
+  {
+   "id": "90058881-88f6-42a2-888a-f778f4983fd5",
+   "name": "ホルンクイーンブーツ",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 6
+  },
+  {
+   "id": "906119b5-1249-494a-a6b9-4f661933c8bc",
+   "name": "メテム　コスプレ",
+   "cats": [
+    "underread"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 3
+  },
+  {
+   "id": "90a95423-fd20-44f0-86f8-046f34d11f45",
+   "name": "⛩️🌸❤️🤍🔪",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 9
+  },
+  {
+   "id": "91515fc9-1838-4ea8-8ed4-bd7e0d958c74",
+   "name": "高貴な淑女様",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "9154afb8-0194-452b-9ffe-685bc1f979af",
+   "name": "インクブルー×ブラッドレッド",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 10,
+   "eyeCount": 9
+  },
+  {
+   "id": "91eacad5-a60a-42a7-aa2a-92c312813bde",
+   "name": "うっ血カエル",
+   "cats": [
+    "few"
+   ],
+   "action": "remove"
+  },
+  {
+   "id": "925256e2-9a32-484a-ba79-def4ba05909a",
+   "name": "赤魔導士",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 5,
+   "eyeCount": 6
+  },
+  {
+   "id": "92eca2d3-3b23-4f6f-b95d-6510b8e77dd3",
+   "name": "カジュアル和装💜‪",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "92fdd104-4afc-4440-8be2-48cd002b75b0",
+   "name": "クリスマスのおめかし",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "931f9bca-daa8-4d0e-917e-a994376d930d",
+   "name": "今年の水着③",
+   "cats": [
+    "toomany",
+    "underread",
+    "lowconf",
+    "missing"
+   ],
+   "action": "claude",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "944c9169-ae25-4691-9c48-7fade6cad466",
+   "name": "うさにんじんモンク",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "9548cd03-f8b0-4fb7-ac8f-4413772796e6",
+   "name": "モード系騎士",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 6,
+   "eyeCount": 6
+  },
+  {
+   "id": "9586e3c9-5d35-4cb0-9e74-a8f9c16d44cb",
+   "name": "雪あそびしよっ！",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "95afa583-106e-4b01-91c7-0bb1d52740f1",
+   "name": "部族風ミラプリ",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "95bb3040-e3c9-4a2a-a61c-8212656660d7",
+   "name": "機工士",
+   "cats": [
+    "lowconf",
+    "missing"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 6
+  },
+  {
+   "id": "95c2f8c1-4474-4621-beb2-b2d6430bd606",
+   "name": "battlemaid",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "96339efe-b952-4add-94a5-a7d780b9f067",
+   "name": "ユウェヤーワータ・ニンジャ　2024/12/01",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 5
+  },
+  {
+   "id": "9701fdb8-9e1b-4c55-8eb7-03969a1ceceb",
+   "name": "クラフター装備！",
+   "cats": [
+    "underread"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 3
+  },
+  {
+   "id": "974ce027-c764-4564-9aeb-8599190361b3",
+   "name": "💛",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 2,
+   "eyeCount": 5
+  },
+  {
+   "id": "976e2081-e321-498e-83db-06827240409d",
+   "name": "No.19",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 9,
+   "eyeCount": 10
+  },
+  {
+   "id": "976f7c53-41b3-43ba-8cd4-9ad43c0c3d2f",
+   "name": "機工士",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 6
+  },
+  {
+   "id": "98034366-8735-4c7b-9c69-0f53777d326a",
+   "name": "目立ちたい調理師",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "99151a1e-085a-4d9d-bef5-368971daf666",
+   "name": "MNK",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "9938795b-be6a-40af-8151-c2c5e453f153",
+   "name": "ドクターストレンジ",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "997d485d-4dbb-43eb-b6b1-74b9a066ee87",
+   "name": "無題の投稿",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 9,
+   "eyeCount": 9
+  },
+  {
+   "id": "9a5642b7-9744-4dff-9b63-1632e804378d",
+   "name": "自律型惑星探査機",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "9a72e7e1-9ef7-4544-b1e0-16a73ad8b12a",
+   "name": "エクスアラガンヒラ胴",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "9b019bcb-ced2-4d9a-a4d6-ac29cb830515",
+   "name": "革細工師の胴と組み合わせしてみました",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "9b061b1f-2945-4f6e-86a1-07efd683d084",
+   "name": "サイバーパンク風",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 10,
+   "eyeCount": 10
+  },
+  {
+   "id": "9bda5ee9-642a-4489-b850-314b8eb53c37",
+   "name": "262",
+   "cats": [
+    "toomany",
+    "underread",
+    "lowconf",
+    "missing"
+   ],
+   "action": "claude",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "9bda7178-98a1-4b6f-a513-0fe5820e758f",
+   "name": "0008",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 9,
+   "eyeCount": 8
+  },
+  {
+   "id": "9bf750b0-ff0a-45b2-9e28-68cb16923440",
+   "name": "機",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "9c71bec5-8c45-47e1-b4be-9488a6122606",
+   "name": "無題の投稿",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "9d601677-8c7c-4f31-a95d-9253048ab141",
+   "name": "白コーデ",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 8,
+   "eyeCount": 7
+  },
+  {
+   "id": "9f701ba8-cce3-442c-9dd2-d49d4ed14254",
+   "name": "🔠English version😈💧Devil May Cry - Dante -🍕🍓",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "remove",
+   "shown": 2,
+   "eyeCount": null
+  },
+  {
+   "id": "a01cd35a-453b-4320-9b0c-56f7e41d8749",
+   "name": "無題の投稿",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 6
+  },
+  {
+   "id": "a039cf3e-e0d8-448b-84cd-0995111fbb90",
+   "name": "アリゼー",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "review",
+   "shown": 3,
+   "eyeCount": 3
+  },
+  {
+   "id": "a0610ec6-d7de-4726-b862-41015e108701",
+   "name": "機工士100",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 6,
+   "eyeCount": 7
+  },
+  {
+   "id": "a0d6ee91-44c9-49b2-af04-e85b92df4cd0",
+   "name": "夜鶴風魔",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 6,
+   "eyeCount": 6
+  },
+  {
+   "id": "a203f6f8-8239-4a5d-b512-6bd4e3b60dc5",
+   "name": "冬服③",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 5
+  },
+  {
+   "id": "a27193c3-5ff3-4de2-9abd-4b115794e15d",
+   "name": "ストーリースピナー装備とムーンワード・ストライカーヴェール",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 2,
+   "eyeCount": 5
+  },
+  {
+   "id": "a2a62204-e714-40c5-8808-2d90cae28cad",
+   "name": "冬の普段着",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "a2c63fee-335e-418c-a1d2-ff82830a3de5",
+   "name": "クレデンダム装備大好きな忍者",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "a3412c08-314d-4949-8fdc-6798a5d76cb4",
+   "name": "和風ヴァイパー",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "a34db030-dbca-44d4-aaba-8bdd7e2150a9",
+   "name": "Healer",
+   "cats": [
+    "toomany",
+    "lowconf",
+    "missing"
+   ],
+   "action": "claude",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "a3b87340-3561-453c-8197-17d4040a02be",
+   "name": "黒法衣のロスガル",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 5
+  },
+  {
+   "id": "a3eec442-5721-44b2-88d8-b5de866bf9bf",
+   "name": "かっこかわいい竜騎士",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "a52282d8-6fb5-4ae2-80cb-2d230372e8ce",
+   "name": "無題の投稿",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 4
+  },
+  {
+   "id": "a64a4da6-7aaa-4ae0-8cee-e49c2d4709b8",
+   "name": "黒く大人な感じ",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "remove"
+  },
+  {
+   "id": "a7603f97-e91f-4ac4-93f3-02df8da85461",
+   "name": "シンプルバトルスタイル",
+   "cats": [
+    "underread"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 3
+  },
+  {
+   "id": "a836e4e4-71d6-459a-95bf-8064c97ee59f",
+   "name": "普段使う占星ミラプリ",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 7,
+   "eyeCount": 7
+  },
+  {
+   "id": "a8373809-a232-4860-a049-22930f2a44e3",
+   "name": "＃５６",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 7
+  },
+  {
+   "id": "aa096e36-9660-49c1-a61e-4737563ea808",
+   "name": "188",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "aa74f3c3-9ce3-405c-a65e-1db951bbd7b7",
+   "name": "サイバーパンク",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "accc7553-bd3e-4022-b2fd-9c157b6702c8",
+   "name": "No,21",
+   "cats": [
+    "empty"
+   ],
+   "action": "remove"
+  },
+  {
+   "id": "ad2d41ef-49d5-44ac-ab55-6b6817f5a90e",
+   "name": "SAM / MNK",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 5
+  },
+  {
+   "id": "ad577c23-5f30-4cef-9379-c75017673e73",
+   "name": "萌え袖",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "remove"
+  },
+  {
+   "id": "add555ad-ddde-4ff1-a7cb-2552e4d86fa1",
+   "name": "無題の投稿",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "aeda3d14-5090-4b85-9676-4960243320c0",
+   "name": "気合十分ヴァレンティオンコーデ",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "af0fb5bf-63f3-43bf-828d-2219930832b0",
+   "name": "漁師ミラプリ",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 7,
+   "eyeCount": 6
+  },
+  {
+   "id": "b05c336c-0b84-4325-8642-2aec25bdc5ff",
+   "name": "無題の投稿",
+   "cats": [
+    "empty"
+   ],
+   "action": "remove"
+  },
+  {
+   "id": "b0f26bb6-8324-41bb-b246-eb056f9dad18",
+   "name": "ギャザラー冬の装い",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 5
+  },
+  {
+   "id": "b10ec1a5-6c43-4bbd-aff3-987a5bcdefeb",
+   "name": "戦士50",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "b14a9f9e-7d0d-4801-b1c1-8d768bb8df5a",
+   "name": "踊り子",
+   "cats": [
+    "underread"
+   ],
+   "action": "review",
+   "shown": 7,
+   "eyeCount": 3
+  },
+  {
+   "id": "b16c7fa0-e16c-41a5-a351-92c1b9f853b6",
+   "name": "No,24",
+   "cats": [
+    "empty"
+   ],
+   "action": "remove"
+  },
+  {
+   "id": "b2be803e-d6e6-4b23-801f-73b770c99812",
+   "name": "忍者装備",
+   "cats": [
+    "toomany",
+    "underread",
+    "lowconf",
+    "missing"
+   ],
+   "action": "claude",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "b2f5d64f-e30f-4cb3-a2e9-4a354d1f768d",
+   "name": "妖精モチーフ②",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 6,
+   "eyeCount": 6
+  },
+  {
+   "id": "b56192b0-8d8b-47d3-89fa-17077f8bc197",
+   "name": "暗黒騎士",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "b57a6c14-58cc-4ec8-8b70-46fa6fc87e73",
+   "name": "竜騎士80",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 6
+  },
+  {
+   "id": "b6264f59-0d79-4f4d-be32-37f4d27302f7",
+   "name": "092",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "b64da350-d683-40a5-b854-68fb547d3cd3",
+   "name": "秋冬の甘すぎず辛すぎず",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 5
+  },
+  {
+   "id": "b7a5d409-85c0-401e-9b02-d832629ebbfd",
+   "name": "夏ミラプリ〜ルビーレッド〜",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 6
+  },
+  {
+   "id": "b8444280-881c-4453-9cb5-e019f31d723d",
+   "name": "No,3",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 5
+  },
+  {
+   "id": "b9ecb05c-324e-4b5d-9c8c-c03fbef109e3",
+   "name": "144",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 5
+  },
+  {
+   "id": "ba735235-ceda-45d1-846b-7010f2aaa402",
+   "name": "クラフター",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 2,
+   "eyeCount": 5
+  },
+  {
+   "id": "bc06ec00-dc39-47a3-857a-31aa7974d9b0",
+   "name": "中華マ〇ィア系",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 6,
+   "eyeCount": 7
+  },
+  {
+   "id": "bc73ae6d-3439-479a-a531-a5196ffb8c86",
+   "name": "無題の投稿",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "bc8c7237-745f-48df-aba6-7172c1d3a9ad",
+   "name": "無題の投稿",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "bc8d9dd8-db06-48a7-88f7-7a03e46c21bd",
+   "name": "＃２９",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 6,
+   "eyeCount": 7
+  },
+  {
+   "id": "bcb42d79-2208-49e8-8bdc-a8e8531ee13f",
+   "name": "無題の投稿",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "bcf26199-b43b-4e61-81cc-2f3a458bb13b",
+   "name": "普段着（My正装）コーデ",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 10,
+   "eyeCount": 8
+  },
+  {
+   "id": "bd81af29-8e8c-4759-8aeb-191c581947fc",
+   "name": "JEDI",
+   "cats": [
+    "few"
+   ],
+   "action": "remove",
+   "shown": 2,
+   "eyeCount": null
+  },
+  {
+   "id": "be1073e6-d5a1-4f04-885a-2850dc3ff451",
+   "name": "ピルグリムの王女様　2025/10/26",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "review",
+   "shown": 3,
+   "eyeCount": 3
+  },
+  {
+   "id": "be10f9f5-d6fd-4771-bada-0706b15d32d6",
+   "name": "無題の投稿",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "be26e977-2df7-4dbd-bacf-d667dbfd41b8",
+   "name": "１Pカラー",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 8,
+   "eyeCount": 6
+  },
+  {
+   "id": "be96a398-4034-4211-b046-7097508ed01e",
+   "name": "リーパー",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 2,
+   "eyeCount": 6
+  },
+  {
+   "id": "bec11b5e-6d28-4d33-a7df-6fb2216dbbc3",
+   "name": "リーパー夏仕様",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 5,
+   "eyeCount": 8
+  },
+  {
+   "id": "bed4c5e5-4155-4b9b-849b-ee50c7050364",
+   "name": "キック！パンチ！オーレザマインッ",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 4
+  },
+  {
+   "id": "bf36ade2-14e9-4809-b672-54159dd87826",
+   "name": "無題の投稿",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "c01ca204-093f-4a25-ae50-de2773ecb969",
+   "name": "All job",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "review",
+   "shown": 3,
+   "eyeCount": 3
+  },
+  {
+   "id": "c056a85f-a94a-49df-bb26-1092f579497a",
+   "name": "ボーイッシュ女子",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "c183c701-0f8b-4b82-bff3-25d3151aad83",
+   "name": "ゴシック・スカラー",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 5,
+   "eyeCount": 6
+  },
+  {
+   "id": "c18629c0-cf70-46b3-990a-51d5fa355c00",
+   "name": "№  220",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 5
+  },
+  {
+   "id": "c2102688-c1b9-4a8a-85e3-6236a8cb588f",
+   "name": "アクティブスカウト",
+   "cats": [
+    "underread"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 3
+  },
+  {
+   "id": "c32d2a85-0930-45e4-a6b0-3fc1c522b7c3",
+   "name": "占星術師",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "c3fd7b19-87bb-45bc-a1f4-7128d6ef31e6",
+   "name": "classical",
+   "cats": [
+    "few"
+   ],
+   "action": "review",
+   "shown": 3,
+   "eyeCount": 3
+  },
+  {
+   "id": "c45d2952-a989-416c-9cf5-44e52d630494",
+   "name": "257",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 5
+  },
+  {
+   "id": "c6130e8c-31d3-4039-9706-b3ff9f619e30",
+   "name": "バンギャ風",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "c6a345ac-27d0-4761-a6bd-da411fcb225a",
+   "name": "賢者コーデ",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "c6fbaf13-b954-4e3d-8f08-b39e709a4fd4",
+   "name": "無題の投稿",
+   "cats": [
+    "lowconf",
+    "missing"
+   ],
+   "action": "claude",
+   "shown": 6,
+   "eyeCount": 9
+  },
+  {
+   "id": "c768279a-16ef-4d91-814d-d6d34591afcc",
+   "name": "王道詩人",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 6,
+   "eyeCount": 7
+  },
+  {
+   "id": "c842a90c-4eec-4a95-9efc-8be8b9c99bd1",
+   "name": "無題の投稿",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "c9a344d3-5be0-4745-8b0e-f29e661b3e6a",
+   "name": "レンジ装備",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "ca73b921-3d32-494a-92e6-c721a803bf7d",
+   "name": "暗黒AF詰め合わせ",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 5,
+   "eyeCount": 6
+  },
+  {
+   "id": "ca86c7ac-7a68-4227-ae7b-7eb91f05364d",
+   "name": "東方project　西行寺幽々子　コスプレ",
+   "cats": [
+    "toomany",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 4
+  },
+  {
+   "id": "cb423a8a-f7b0-473a-b7c3-c03811ab2440",
+   "name": "きれいめキャスター",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "cb90f395-d3e5-4fb5-a0be-9d5a5e10ccc6",
+   "name": "無題の投稿",
+   "cats": [
+    "toomany",
+    "underread",
+    "lowconf",
+    "missing"
+   ],
+   "action": "claude",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "ccc232ba-4896-4ec2-b1e2-e790facf410f",
+   "name": "赤騎士",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "ce089382-79e1-413b-ad3c-fe16bf1443dc",
+   "name": "無題の投稿",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 1,
+   "eyeCount": 7
+  },
+  {
+   "id": "ceab40d0-1a6b-47e3-8ac8-0f3c2a8ab6b3",
+   "name": "アイディアル装備",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "d0551a39-f9e1-4c2f-a602-85c96836eef7",
+   "name": "ナイト100",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 7
+  },
+  {
+   "id": "d19a59c1-9181-493d-9e09-e837218c9ee9",
+   "name": "戦闘型女性アンドロイド風",
+   "cats": [
+    "underread"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 3
+  },
+  {
+   "id": "d41b11f8-4a79-4a6c-80d2-0ec7a3b56189",
+   "name": "シックな赤魔",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "d4574407-c455-48a2-a256-9a164b5168c2",
+   "name": "無題の投稿",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "remove"
+  },
+  {
+   "id": "d4770966-7d25-4a57-b3ce-6c7a5acf32e3",
+   "name": "和装獣人",
+   "cats": [
+    "underread"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 3
+  },
+  {
+   "id": "d492c112-71d8-49c4-a7ba-05b059f7a6a0",
+   "name": "無題の投稿",
+   "cats": [
+    "empty"
+   ],
+   "action": "remove"
+  },
+  {
+   "id": "d5a29a03-387b-404c-9156-fcaf2fe76839",
+   "name": "剣鬼",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 5
+  },
+  {
+   "id": "d69f544d-b057-44d0-a59e-919aa597d1ad",
+   "name": "無題の投稿",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 4,
+   "eyeCount": 4
+  },
+  {
+   "id": "d72788b7-b48d-4acd-9ef8-a3efbe366891",
+   "name": "163",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "d776d2b2-f8ed-4b90-92bf-0c92b13fdd86",
+   "name": "Orangetto",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "d831a90a-8aba-4436-8fb7-6cf3dd6315ef",
+   "name": "053",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 6
+  },
+  {
+   "id": "d92e7660-490d-4c1a-9ea2-b9ea06ad4605",
+   "name": "＃８５",
+   "cats": [
+    "few"
+   ],
+   "action": "remove",
+   "shown": 3,
+   "eyeCount": 3
+  },
+  {
+   "id": "d93f693e-b74f-4eaf-9200-b4014eeebf1d",
+   "name": "エデンコーラス・レンジャーガンスピン",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "d9ccb51a-d1ed-47de-b1cf-941d7f605afe",
+   "name": "冬こそ脚見せ",
+   "cats": [
+    "underread"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 3
+  },
+  {
+   "id": "da05e19e-418a-455e-8143-280a790d64c8",
+   "name": "毒きのこ",
+   "cats": [
+    "few"
+   ],
+   "action": "remove"
+  },
+  {
+   "id": "da13d18c-60a7-4cf0-9316-3165e7ebe979",
+   "name": "ホルンクイーンコーデ",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 11
+  },
+  {
+   "id": "da5b8be2-c6d9-40a1-badd-1bd0d32c5e0c",
+   "name": "無題の投稿",
+   "cats": [
+    "few"
+   ],
+   "action": "review",
+   "shown": 3,
+   "eyeCount": 3
+  },
+  {
+   "id": "da7bdf8b-e09f-436f-9a8d-f562788a85e8",
+   "name": "🩷🤍🖤Sporty Kawaii🩷🤍🖤",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 8,
+   "eyeCount": 7
+  },
+  {
+   "id": "dac82a9e-c0f1-4c76-b940-0c1d5968cab2",
+   "name": "ダークヘンプコートコーデ②",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "dafe49bd-87b5-40c5-84ba-03bdc3d00eb9",
+   "name": "№  211",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 5
+  },
+  {
+   "id": "db73a0d9-def1-4af8-ba3f-4ff3c133ed3a",
+   "name": "🔠English version💃🖤🌟",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 6
+  },
+  {
+   "id": "dd52ed62-64a8-40fb-bc0b-57daf0c35414",
+   "name": "カジュアルピクトマンサー",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "ddabf709-c16e-4575-aa34-2050f15c249e",
+   "name": "ミストウェイク・レンジャージャケット",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 2,
+   "eyeCount": 5
+  },
+  {
+   "id": "de039771-cf8b-4c83-81b1-2f79edfbd1cf",
+   "name": "狐(おつかい中)",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "ded5130d-1e18-4d47-af3a-315921fb60f1",
+   "name": "ブレイクストリート",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 6,
+   "eyeCount": 7
+  },
+  {
+   "id": "dfe945d6-d431-475b-924c-a53af632955b",
+   "name": "吟遊詩人",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "e16f65f1-cf42-41be-a7ed-439ee0a28564",
+   "name": "アサシン風",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "e27eb565-a368-4336-939e-0eafefb81bee",
+   "name": "ロックにあこがれてます",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "e28f8631-3330-4633-95f3-5ec3251ec2f4",
+   "name": "＃８４",
+   "cats": [
+    "few"
+   ],
+   "action": "remove",
+   "shown": 2,
+   "eyeCount": null
+  },
+  {
+   "id": "e3119b04-9abb-4ac0-be54-8f949ff7d6ee",
+   "name": "◼️エクソシスター◼️",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "e40c5a78-3429-4821-87ce-c06d9e0c471e",
+   "name": "無題の投稿",
+   "action": "remove"
+  },
+  {
+   "id": "e4bf0d4b-5ad0-430c-b869-da112e4dcba1",
+   "name": "アイスブルー×ピュアホワイト！",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 8,
+   "eyeCount": 7
+  },
+  {
+   "id": "e58c36d3-3875-4815-8c50-87a13a16f0f8",
+   "name": "守護天節2023",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "e5f18572-3711-4de7-9114-3fa844fad0f6",
+   "name": "東方旅芸人",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 4
+  },
+  {
+   "id": "e68b3284-560c-40e6-b338-fd7343e4ec9e",
+   "name": "メカクレ黒侍",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 6,
+   "eyeCount": 6
+  },
+  {
+   "id": "e68d9b7d-af32-4a24-9274-01dcbc7c3c21",
+   "name": "いまだけダブ○🍔",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "e6aa6b67-43e9-40c9-81a6-08fe964dea7a",
+   "name": "🖤🖤🖤",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 5
+  },
+  {
+   "id": "e6e58ed5-3342-49f2-b1be-d8108a65b8ad",
+   "name": "ロック✖︎コケティッシュ",
+   "cats": [
+    "underread"
+   ],
+   "action": "review",
+   "shown": 5,
+   "eyeCount": 3
+  },
+  {
+   "id": "e73af85e-e121-49be-9708-c2a26f93bd82",
+   "name": "召喚90",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 5,
+   "eyeCount": 6
+  },
+  {
+   "id": "e780a875-1558-44f4-b863-309a2ced3d27",
+   "name": "クッキー＆クリーム",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "e903903b-65f3-4d73-b698-847925d92b6d",
+   "name": "＃01",
+   "cats": [
+    "few",
+    "recon"
+   ],
+   "action": "claude",
+   "shown": 3,
+   "eyeCount": 5
+  },
+  {
+   "id": "e9152c03-d4dd-412f-b6d2-1d0c774ae4ea",
+   "name": "＃７３",
+   "action": "remove"
+  },
+  {
+   "id": "ea1e5838-c365-4e1c-9c90-8883d6993c9b",
+   "name": "デビルララフェル",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 4,
+   "eyeCount": 4
+  },
+  {
+   "id": "ea8b3e8a-2866-46a1-9575-69e009287bd3",
+   "name": "024",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 7
+  },
+  {
+   "id": "eaf72751-add0-4ab9-bfc2-063046d66fd6",
+   "name": "サイバーSAMURAI",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "eb4b62b2-39e3-40f0-bb7d-f767b9b5de47",
+   "name": "踊り子風！",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 6
+  },
+  {
+   "id": "eb4e9e44-11d8-40f7-b958-7b708ce9ecfa",
+   "name": "MNK/SAM/ Healer/Caster",
+   "cats": [
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 6,
+   "eyeCount": 5
+  },
+  {
+   "id": "ebc73b68-912f-4da7-9d8a-236bb5c4f489",
+   "name": "アラビアンナイトの占星術師",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "ebf80318-fb59-4eb4-a884-d9f29f1adb3f",
+   "name": "066",
+   "cats": [
+    "toomany",
+    "underread",
+    "lowconf",
+    "missing"
+   ],
+   "action": "claude",
+   "shown": 12,
+   "eyeCount": 6
+  },
+  {
+   "id": "ec71af8a-47cf-4849-a599-fbcae789da70",
+   "name": "🔠Glamours English version",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 8,
+   "eyeCount": 8
+  },
+  {
+   "id": "ed706faf-8643-4270-a400-e6b93bd03b63",
+   "name": "真夜中の王子",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 8,
+   "eyeCount": 7
+  },
+  {
+   "id": "ed882868-6689-4216-8195-825dfd26193a",
+   "name": "🌸🌷園芸師みるきぃ🌼🌺",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 8,
+   "eyeCount": 7
+  },
+  {
+   "id": "eda1fb5d-7398-4fc5-aaea-4ad99f151a97",
+   "name": "モンク70",
+   "cats": [
+    "toomany",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "eea189ea-9f66-4b4c-95c0-be0d2c446ed2",
+   "name": "快適な空の旅を(旧バージョン）",
+   "cats": [
+    "underread"
+   ],
+   "action": "review",
+   "shown": 5,
+   "eyeCount": 2
+  },
+  {
+   "id": "eeb39f36-4429-48ff-b4c4-8e297a226d0d",
+   "name": "無題の投稿",
+   "cats": [
+    "few"
+   ],
+   "action": "review",
+   "shown": 3,
+   "eyeCount": 3
+  },
+  {
+   "id": "efe1b010-7483-4638-89bb-db09ee476784",
+   "name": "占星100",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "f02690c9-7992-4849-95fd-6d33e9db7cbf",
+   "name": "アルトリア・キャスター",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "f0d78fc7-c363-404a-8a31-89fc7dbf612d",
+   "name": "Winter Healer",
+   "cats": [
+    "underread"
+   ],
+   "action": "review",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "f16cb48c-a0e7-43d7-8d6e-4da9ff62de18",
+   "name": "エタバンリングでライバル撃退！himechanコーデ",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 10,
+   "eyeCount": 9
+  },
+  {
+   "id": "f1db256a-cf3a-496a-81b2-48ad9776f7ba",
+   "name": "無題の投稿",
+   "cats": [
+    "few",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 2,
+   "eyeCount": 7
+  },
+  {
+   "id": "f1eb6440-5d5c-4373-8c88-14e6d68472a1",
+   "name": "遊園地なのでね",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 4
+  },
+  {
+   "id": "f3202508-0e3f-4189-bc6a-7efbd87afc4c",
+   "name": "スチパン系",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "f39e1aea-d8f1-4ac7-826b-c3e0d617c67c",
+   "name": "№  182",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 9,
+   "eyeCount": 7
+  },
+  {
+   "id": "f3bd7404-460f-4094-8d78-c90643137f41",
+   "name": "MCN",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 5
+  },
+  {
+   "id": "f3d8ec80-3767-4f39-94ca-150ddd8cdb47",
+   "name": "フッブート・キャスターチュニック",
+   "cats": [
+    "underread"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 3
+  },
+  {
+   "id": "f49e91fd-9e8c-4a47-b0a4-a567286e26f2",
+   "name": "DNC",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 8,
+   "eyeCount": 7
+  },
+  {
+   "id": "f4aaa478-6c0c-4e34-89a3-90f851c211d9",
+   "name": "戦士",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "f58919c6-0784-47a3-b0de-cdfa820bb416",
+   "name": "016",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 5,
+   "eyeCount": 6
+  },
+  {
+   "id": "f58d0a5a-bbc3-4205-9dcd-1a9f4b99ac0e",
+   "name": "冬コーデ",
+   "cats": [
+    "underread"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 3
+  },
+  {
+   "id": "f64971e1-51c6-461b-9125-d2c575ec3b17",
+   "name": "アラビアンナイト",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 8,
+   "eyeCount": 8
+  },
+  {
+   "id": "f65c5ed0-1ab1-455f-83fc-9fef9c406f3e",
+   "name": "2色染色沼",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "f6c8072f-d9da-48a8-aefa-39cf5e4807a1",
+   "name": "無題の投稿",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 6,
+   "eyeCount": 6
+  },
+  {
+   "id": "f6ee3651-2ea8-4ebd-bdd0-ba05a2e11d80",
+   "name": "無題の投稿",
+   "cats": [
+    "toomany",
+    "underread",
+    "lowconf",
+    "missing"
+   ],
+   "action": "claude",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "f735385e-75c3-4bf8-bf43-53ae22e68a65",
+   "name": "バードシャツ",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 6
+  },
+  {
+   "id": "f80accc5-0ba6-4918-9f37-dbcec7597805",
+   "name": "リーパーミラプリ",
+   "cats": [
+    "underread"
+   ],
+   "action": "review",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "f80b80ae-6d78-4602-b409-a00513f1222a",
+   "name": "洋風白侍",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "f963b366-e6ba-4724-938c-362038206c88",
+   "name": "戦士100",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "f996b941-cb87-413a-a867-d31bb6586328",
+   "name": "冬のメスラ",
+   "cats": [
+    "underread"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 3
+  },
+  {
+   "id": "fa59be3f-3eac-49d3-add4-7c07d5a146c9",
+   "name": "219",
+   "cats": [
+    "toomany",
+    "lowconf",
+    "missing"
+   ],
+   "action": "claude",
+   "shown": 12,
+   "eyeCount": 5
+  },
+  {
+   "id": "fa65e192-7c16-4c2f-bc53-2939261edd0d",
+   "name": "ボズヤン・ヒーラー",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 6
+  },
+  {
+   "id": "fb785e40-8a70-4463-b388-ebf2930d9b24",
+   "name": "アラガンアーマー",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "fcaceacb-d97a-4804-b167-da7dbc31d7a1",
+   "name": "控えめゴスロリ風コーデ",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "fd8f7fa8-3d41-40b3-a30e-8cd12c37d80d",
+   "name": "SMN",
+   "cats": [
+    "missing"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 5
+  },
+  {
+   "id": "fda3d563-6831-4a56-b98c-43c5de233586",
+   "name": "2026011201",
+   "cats": [
+    "underread"
+   ],
+   "action": "review",
+   "shown": 4,
+   "eyeCount": 3
+  },
+  {
+   "id": "fef841c4-1e25-4e3c-9db7-607e9095d067",
+   "name": "和装暗黒騎士",
+   "cats": [
+    "toomany"
+   ],
+   "action": "review",
+   "shown": 8,
+   "eyeCount": 8
+  },
+  {
+   "id": "ff024871-2000-43f1-98a2-c35dbd38f66d",
+   "name": "魔女っ子衣装",
+   "cats": [
+    "toomany",
+    "underread",
+    "missing"
+   ],
+   "action": "review",
+   "shown": 12,
+   "eyeCount": 4
+  },
+  {
+   "id": "ff3462ff-d0c6-4fbe-8799-753974072cba",
+   "name": "ぬユウェヤーワータ・キャスター",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 5,
+   "eyeCount": 5
+  },
+  {
+   "id": "ff981396-011e-43b0-82a3-d20f817b4a4a",
+   "name": "無題の投稿",
+   "cats": [
+    "lowconf"
+   ],
+   "action": "claude",
+   "shown": 6,
+   "eyeCount": 7
+  },
+  {
+   "id": "ff9c3ec9-45a6-480a-920f-fdb5f7604ac9",
+   "name": "紅の癒し手",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  },
+  {
+   "id": "ffb16c95-c42f-4c49-80d5-3b3770ed192e",
+   "name": "猫型 ver.2.0",
+   "cats": [
+    "empty",
+    "missing"
+   ],
+   "action": "review"
+  }
+ ]
 }

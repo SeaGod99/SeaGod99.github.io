@@ -17,7 +17,7 @@ FF14時尚配裝/
 ├── curated_outfits.js    # 精選套裝資料（由 build_site.py 從 MD 產生，頁面立即載入）
 ├── mirapri_outfits.js    # 社群套裝資料（由 build_site.py 產生，頁面延遲載入）
 ├── 配裝圖片/             # 套裝圖片，命名格式：{編號}-{套裝名}.jpe
-│   └── 縮圖/             # 卡片縮圖（make_thumbs.py 產生，寬 480px）
+│   └── 縮圖/             # 卡片縮圖（make_thumbs.py 產生，寬 640px／q78）
 ├── scripts/
 │   ├── update_all.py     # ★ 一鍵更新總控（full / local 兩種模式）
 │   ├── build_site.py     # data/curated_outfits.json → curated/mirapri_outfits.js
@@ -28,7 +28,10 @@ FF14時尚配裝/
 │   ├── pipeline.py       # Mirapri 抓取 + enrich 流程
 │   ├── ocr_check.py      # ★ 用 Ollama 視覺模型對圖做 OCR（v2 逐件 item↔dye），比對現有資料（見「OCR 檢查流程」）
 │   ├── apply_dyes.py     # OCR 結果 → 逐件染色 mirapri_piece_dyes.json + 整套 fallback + 可見裝備
-│   ├── itemdb.py         # FF14 道具資料庫索引（norm(日文)→id→繁中/英/日；resolve 解析 OCR 字串）
+│   ├── itemdb.py         # FF14 道具資料庫索引（norm(日文)→id→繁中/英/日；resolve 解析 OCR 字串，
+│   │                     #   本機 DB 對不到時自動查 item_fallback_multilang.json 救回 7.x 新裝備）
+│   ├── build_item_fallback.py # 多語系裝備備選庫（XIVAPI＋本機 DB → item_fallback_multilang.json；
+│   │                     #   含 7.x 日英名/部位/patch，繁中 DB 未收錄時 resolve 與重建靠它）
 │   ├── resolve_ocr.py    # OCR 字串對回資料庫正式值（抓漏候選/繁中校正）→ 報告，不改 curated
 │   ├── ab_resolution.py  # Phase 4：在 OCR 失敗集上 A/B 解析度與模型（決定 max_edge）
 │   ├── reconstruct_empty.py # 空殼套裝用 OCR+DB 重建裝備（部位/繁中/染色/取得方式）→ mirapri_reconstructed.json
@@ -40,7 +43,9 @@ FF14時尚配裝/
 │   ├── dye_ja_to_zh.json          # 日文染色官方名 → 繁中名對照（apply_dyes.py 用）
 │   ├── mirapri_piece_dyes.json    # apply_dyes.py 產出：{outfit_id: {裝備日文名: [繁中染色]}}（v2 逐件，彈窗逐列顯示）
 │   ├── mirapri_dyes.json          # apply_dyes.py 產出：{outfit_id: [繁中染色]}（整套 fallback，未有逐件時用）
-│   └── mirapri_visible.json       # apply_dyes.py 產出：{outfit_id: [圖上可見裝備]}，build_site.py 用來濾掉替代裝備
+│   ├── mirapri_visible.json       # apply_dyes.py 產出：{outfit_id: [圖上可見裝備]}，build_site.py 用來濾掉替代裝備
+│   ├── item_fallback_multilang.json # build_item_fallback.py 產出：全裝備多語名+部位+patch（7.x 救回用）
+│   └── OCR無解清單.md              # 重建時「無解」的件（附套裝 id/圖）→ 待 Claude 視覺複查補 aliases
 └── 資料來源/
     ├── items.json       # 繁中道具資料庫（主要來源）
     ├── en-items.msgpack # 英文道具名稱（msgpack 格式）
@@ -271,7 +276,9 @@ python scripts/update_all.py
 （也可單獨跑 build_site.py / health_check.py / make_thumbs.py / compress_mirapri.py）
 
 - 性別（gender）／種族（race）直接填在套裝物件上，未填會被歸入「未指定」
-- 卡片 tag（healer/tank/…/event/pvp/store/raid）由 build_site.py 從 `job`、`source` 自動推導
+- 篩選 tag（healer/tank/…＋event/pvp/store/raid/craft/npc/scrip/gs/other）由 build_site.py 從 `job`、`source`
+  自動推導（社群套由前端 annotate() 依同一邏輯推導）；卡片上只顯示 CARD_TAGS（職業＋event/pvp/store/raid），
+  其餘 st 僅供「取得方式」按鈕篩選。改 ST_TAGS 記得同步 index.html 的 ST_TAG_SET
 - `update_all.py` 已涵蓋 pipeline → 壓縮 → 縮圖 → build → 健檢 的完整順序
 - 精選原圖可刪（縮圖留著即可）：彈窗載不到原圖會自動改用縮圖，健檢也只在「原圖與縮圖都不存在」時警告
 - 舊的 `配裝清單.md` 已歸檔於 `archive/`，僅供查閱，不再是資料來源

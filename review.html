@@ -28,16 +28,16 @@
   .btn:hover{border-color:var(--accent)}
   .progress-wrap{margin-top:9px;height:6px;background:var(--panel2);border-radius:4px;overflow:hidden}
   .progress{height:100%;background:var(--accent);width:0;transition:width .2s}
-  main{padding:16px 18px;max-width:1180px;margin:0 auto}
+  main{padding:16px 18px;max-width:1320px;margin:0 auto}
   .card{display:flex;gap:14px;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:12px}
   .card.decided{opacity:.55}
   .card.act-remove{border-left:4px solid var(--a-remove)}
   .card.act-keep{border-left:4px solid var(--a-keep)}
   .card.act-review{border-left:4px solid var(--a-review)}
   .card.act-claude{border-left:4px solid var(--a-claude)}
-  .thumb{width:260px;height:300px;flex:0 0 260px;border-radius:8px;object-fit:contain;background:#0e1014;cursor:zoom-in;transition:outline .12s}
+  .thumb{width:380px;height:460px;flex:0 0 380px;border-radius:8px;object-fit:contain;background:#0e1014;cursor:zoom-in;transition:outline .12s}
   .thumb:hover{outline:2px solid var(--accent)}
-  .thumb-wrap{position:relative;flex:0 0 260px}
+  .thumb-wrap{position:relative;flex:0 0 380px}
   .thumb-wrap .zoom-hint{position:absolute;right:6px;bottom:6px;background:rgba(0,0,0,.6);color:#fff;font-size:11px;padding:2px 6px;border-radius:5px;pointer-events:none;opacity:0;transition:opacity .12s}
   .thumb-wrap:hover .zoom-hint{opacity:1}
   /* 點圖放大檢視 */
@@ -53,6 +53,7 @@
   .badge{font-size:11px;padding:2px 7px;border-radius:10px;color:#0b0d12;font-weight:600}
   .b-empty{background:var(--c-empty)} .b-few{background:var(--c-few)} .b-underread{background:var(--c-underread)}
   .b-lowconf{background:var(--c-lowconf)} .b-missing{background:var(--c-missing)} .b-recon{background:#caa15a} .b-toomany{background:#e0823a}
+  .src-badge{font-size:10.5px;padding:2px 7px;border-radius:10px;color:#fff;font-weight:600}
   .meta{color:var(--muted);font-size:12px;margin:3px 0 7px}
   .pieces{font-size:12.5px;line-height:1.6;margin:5px 0}
   .pieces .slot{display:inline-block;min-width:34px;color:var(--muted)}
@@ -61,6 +62,12 @@
   .issue b{color:var(--c-lowconf)}
   .issue.miss b{color:var(--c-missing)}
   .issue .row{margin:2px 0}
+  .eyerow{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px;background:var(--panel2);border-radius:8px;padding:8px 11px}
+  .eyerow .eye-input{width:64px;background:var(--bg);border:1px solid var(--border);color:var(--fg);border-radius:7px;padding:5px 8px;font-size:14px;text-align:center}
+  .eyerow .eye-input:focus{outline:none;border-color:var(--accent)}
+  .eyerow.filled{border:1px solid #3fa45b}
+  .eyerow .eye-hint{color:var(--muted);font-size:12px}
+  .eyerow .eye-diff{font-size:12px;font-weight:600}
   .acts{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap}
   .act{border:1px solid var(--border);background:transparent;color:var(--fg);border-radius:8px;padding:6px 12px;cursor:pointer;font-size:12.5px}
   .act:hover{border-color:var(--fg)}
@@ -79,8 +86,11 @@
 <header>
   <h1>FF14 配裝待檢視清單 <span id="count" class="sub" style="font-weight:400"></span></h1>
   <div class="sub">逐套決定處理方式；選擇會自動存在瀏覽器，按「匯出決定」下載 JSON 交給後續處理。</div>
+  <div class="sub" id="summary"></div>
   <div class="bar">
     <span class="chip on" data-cat="all">全部 <span class="n" id="n-all"></span></span>
+    <span class="chip" data-cat="actionable" style="border-color:var(--accent)">★待裁決 <span class="n" id="n-actionable"></span></span>
+    <span class="chip" data-cat="confirmed">已Claude確認 <span class="n" id="n-confirmed"></span></span>
     <span class="chip" data-cat="empty">空殼(0件) <span class="n" id="n-empty"></span></span>
     <span class="chip" data-cat="few">過少(1-3件) <span class="n" id="n-few"></span></span>
     <span class="chip" data-cat="toomany">過多(&gt;7件) <span class="n" id="n-toomany"></span></span>
@@ -117,28 +127,63 @@
 <script src="review_data.js"></script>
 <script>
 const LS = "ff14_review_decisions";
+const EYE = "ff14_review_eyecounts";
 const SLOT_EN = {}; // 部位已是中文
 let decisions = JSON.parse(localStorage.getItem(LS) || "{}");
+let eyecounts = JSON.parse(localStorage.getItem(EYE) || "{}");
 let curCat = "all", curQ = "", onlyUndecided = false;
 let view = [], rendered = 0;
 const PAGE = 50;
 const ACTLBL = {review:"重新檢視", keep:"維持原狀", claude:"用Claude OCR", remove:"移除"};
 const esc = s => (s||"").replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function srcBadge(it){
+  const M = {
+    claude:["✓ Claude確認","#3fa45b"], orig:["高清重讀","#5a78a0"],
+    ollama:["僅ollama","#7a6da8"], none:["無OCR","#8b91a0"]
+  };
+  const m = M[it.src]||M.none;
+  const star = it.actionable ? `<span class="src-badge" style="background:var(--accent);color:#0b0d12">★待裁決</span> ` : "";
+  return star + `<span class="src-badge" style="background:${m[1]}">${m[0]}</span>`;
+}
+function eyeRowHtml(it){
+  const v = (it.id in eyecounts) ? eyecounts[it.id] : "";
+  let diff = "";
+  if(v!==""){
+    const d = Number(v) - it.shown;
+    diff = d===0 ? `<span class="eye-diff" style="color:#3fa45b">＝ 與目前清單一致</span>`
+         : `<span class="eye-diff" style="color:${d>0?'#ffb74d':'#ef5350'}">${d>0?'＋'+d+' 件比清單多':d+' 件比清單少'}</span>`;
+  }
+  return `<div class="eyerow ${v!==""?"filled":""}">👁 人眼實際看到
+    <input type="number" class="eye-input" min="0" max="30" step="1" placeholder="?" value="${v}">件
+    <span class="eye-hint">（目前清單顯示 ${it.shown} 件）</span> ${diff}</div>`;
+}
 
 function counts(){
   document.getElementById("n-all").textContent = REVIEW_ITEMS.length;
   for(const c of ["empty","few","toomany","underread","lowconf","missing","recon"])
     document.getElementById("n-"+c).textContent = REVIEW_CATS[c]||0;
+  const s = (typeof REVIEW_SUMMARY!=="undefined") ? REVIEW_SUMMARY : null;
+  document.getElementById("n-actionable").textContent = s ? s.actionable : "";
+  document.getElementById("n-confirmed").textContent = s ? (s.src.claude||0) : "";
+  if(s){
+    document.getElementById("summary").innerHTML =
+      `進度：<b style="color:var(--accent)">真正待裁決 ${s.actionable}</b> 套　｜　`+
+      `已 Claude 確認 ${s.src.claude}　｜　高清重讀 ${s.src.orig}　｜　純 ollama ${s.src.ollama}　`+
+      `<span style="opacity:.7">（其餘多為投稿本身 &lt;4 件或 7.x 裝備繁中未實裝的結構性下限，再 OCR 也不會變）</span>`;
+  }
 }
 function decidedCount(){ return Object.keys(decisions).length; }
 function updateProgress(){
   const d = decidedCount(), t = REVIEW_ITEMS.length;
+  const eye = Object.keys(eyecounts).length;
   document.getElementById("prog").style.width = (t? 100*d/t : 0) + "%";
-  document.getElementById("count").textContent = `已決定 ${d} / ${t}`;
+  document.getElementById("count").textContent = `已決定 ${d} / ${t}　｜　已填人眼件數 ${eye}`;
 }
 function computeView(){
   view = REVIEW_ITEMS.filter(it=>{
-    if(curCat!=="all" && !it.cats.includes(curCat)) return false;
+    if(curCat==="actionable"){ if(!it.actionable) return false; }
+    else if(curCat==="confirmed"){ if(it.src!=="claude") return false; }
+    else if(curCat!=="all" && !it.cats.includes(curCat)) return false;
     if(onlyUndecided && decisions[it.id]) return false;
     if(curQ){ const q=curQ.toLowerCase(); if(!(it.name.toLowerCase().includes(q)||it.id.includes(q))) return false; }
     return true;
@@ -168,10 +213,11 @@ function cardHtml(it){
       <span class="zoom-hint">🔍 點擊放大</span>
     </div>
     <div class="info">
-      <div class="ti"><span class="name">${esc(it.name||"無題")}</span> ${badges} <span class="oid">${esc(it.id)}</span></div>
+      <div class="ti"><span class="name">${esc(it.name||"無題")}</span> ${badges} ${srcBadge(it)} <span class="oid">${esc(it.id)}</span></div>
       <div class="meta">顯示 ${it.shown} 件｜原始 ${it.raw} 件${it.vis!=null?`｜OCR認出 ${it.vis} 件`:""}${it.verify?`｜驗證 ${it.verify}`:""}</div>
       <div class="pieces">${pieces}</div>
       ${issues}
+      ${eyeRowHtml(it)}
       <div class="acts">${actsBtns}</div>
     </div>
   </div>`;
@@ -209,6 +255,28 @@ document.getElementById("list").addEventListener("click", e=>{
   updateProgress();
   if(onlyUndecided && decisions[id]) card.style.display="none";
 });
+// 人眼件數輸入：即時存檔 + 更新差異標示
+document.getElementById("list").addEventListener("input", e=>{
+  const inp = e.target.closest(".eye-input"); if(!inp) return;
+  const card = inp.closest(".card"); const id = card.dataset.id;
+  const row = inp.closest(".eyerow");
+  const it = REVIEW_ITEMS.find(x=>x.id===id);
+  const raw = inp.value.trim();
+  if(raw===""){ delete eyecounts[id]; }
+  else { eyecounts[id] = Math.max(0, parseInt(raw,10)||0); }
+  localStorage.setItem(EYE, JSON.stringify(eyecounts));
+  // 更新該列差異與 filled 樣式（不重繪整卡，保留焦點）
+  const old = row.querySelector(".eye-diff"); if(old) old.remove();
+  if(id in eyecounts && it){
+    row.classList.add("filled");
+    const d = eyecounts[id] - it.shown;
+    const span = document.createElement("span"); span.className="eye-diff";
+    if(d===0){ span.style.color="#3fa45b"; span.textContent="＝ 與目前清單一致"; }
+    else { span.style.color = d>0?"#ffb74d":"#ef5350"; span.textContent = d>0?("＋"+d+" 件比清單多"):(d+" 件比清單少"); }
+    row.appendChild(span);
+  } else { row.classList.remove("filled"); }
+  updateProgress();
+});
 // 篩選
 document.querySelectorAll(".chip").forEach(c=>c.addEventListener("click",()=>{
   document.querySelectorAll(".chip").forEach(x=>x.classList.remove("on"));
@@ -218,12 +286,21 @@ document.getElementById("q").addEventListener("input", e=>{ curQ=e.target.value.
 document.getElementById("undecided").addEventListener("change", e=>{ onlyUndecided=e.target.checked; rerender(); });
 document.getElementById("more").addEventListener("click", renderMore);
 document.getElementById("export").addEventListener("click", ()=>{
-  const out = REVIEW_ITEMS.filter(it=>decisions[it.id]).map(it=>({id:it.id,name:it.name,cats:it.cats,action:decisions[it.id]}));
+  const out = REVIEW_ITEMS.filter(it=>decisions[it.id] || (it.id in eyecounts)).map(it=>({
+    id:it.id, name:it.name, cats:it.cats,
+    action: decisions[it.id] || null,
+    shown: it.shown,
+    eyeCount: (it.id in eyecounts) ? eyecounts[it.id] : null
+  }));
   const blob = new Blob([JSON.stringify({generated:new Date().toISOString(),count:out.length,decisions:out},null,2)],{type:"application/json"});
   const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="review_decisions.json"; a.click();
 });
 document.getElementById("reset").addEventListener("click", ()=>{
-  if(confirm("確定清除所有已記錄的決定？")){ decisions={}; localStorage.removeItem(LS); rerender(); updateProgress(); }
+  if(confirm("確定清除所有已記錄的決定與人眼件數？")){
+    decisions={}; eyecounts={};
+    localStorage.removeItem(LS); localStorage.removeItem(EYE);
+    rerender(); updateProgress();
+  }
 });
 // 點縮圖 → 全解析度放大檢視（原圖讀不到時回退縮圖）
 function openLightbox(full, thumb, name){

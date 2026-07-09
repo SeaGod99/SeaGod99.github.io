@@ -57,7 +57,8 @@ JOB_TAGS = {
     "crafter": ["布衣師", "製革師", "甲冑師", "鍛鐵師", "煉金術士", "廚師", "雕金師",
                 "木工師", "製作職業", "採礦工", "採伐工", "漁夫", "捕魚人"],
 }
-ST_TAGS = {"event", "pvp", "store", "raid"}  # 會放上卡片的取得方式 tag
+ST_TAGS = {"event", "pvp", "store", "raid", "craft", "npc", "scrip", "gs", "other"}
+# 會成為篩選 tag 的取得方式（與 index.html 的 ST_TAG_SET 同步；改這裡記得同步前端）
 
 PIECE_DEFAULTS = {
     "slot": "", "zh": "", "en": "", "ja": "", "dye1": "—", "dye2": "—",
@@ -111,19 +112,19 @@ def normalize_curated(curated):
     return curated
 
 
-def transform_mirapri(o, dyemap=None, vismap=None, piecemap=None, reconmap=None):
+def transform_mirapri(o, dyemap=None, vismap=None, piecemap=None, reconmap=None, force_recon=None):
     img = o.get("image") or o.get("img") or ""
     fname = img.split("/")[-1] if img else ""
     oid = o.get("id", "")
 
     equips = o.get("equipments", [])
-    # 空殼套（來源 0 件）若有 OCR+DB 重建清單，改用重建的（已含部位/繁中/逐件染色）
+    # 空殼套（來源 0 件）若有 OCR+DB 重建清單，改用重建的（已含部位/繁中/逐件染色）。
+    # force_recon：review.html 人工標記「人眼件數 > 清單」的套（投稿者漏標），即使非空殼也改用重建。
     recon_used = False
-    if not any(e.get("name") for e in equips):
-        rc = (reconmap or {}).get(oid)
-        if rc:
-            equips = rc
-            recon_used = True
+    rc = (reconmap or {}).get(oid)
+    if rc and (not any(e.get("name") for e in equips) or oid in (force_recon or set())):
+        equips = rc
+        recon_used = True
 
     # 用 OCR 判斷「圖上實際畫出來」的裝備，濾掉投稿者附的替代裝備（清單比圖片多的元兇）。
     # 只有該套在 vismap 裡（= 有 OCR 過且至少認出 1 件）才過濾。
@@ -186,19 +187,54 @@ def main():
     if MIRAPRI_RECON.exists():
         reconmap = json.loads(MIRAPRI_RECON.read_text(encoding="utf-8"))
 
+    # review.html 人工決定：先讀一次，分出 remove（不顯示）與 force_recon（人眼件數>清單→依圖重建）。
+    removed, force_recon, rem_name = set(), set(), {}
+    for p in REVIEW_DECISIONS_PATHS:
+        if p.exists():
+            for d in json.loads(p.read_text(encoding="utf-8")).get("decisions", []):
+                if d.get("action") == "remove":
+                    removed.add(d["id"]); rem_name[d["id"]] = d.get("name", "")
+                if d.get("action") == "claude":
+                    force_recon.add(d["id"])  # Claude 親讀＝權威，依圖重建取代原始清單
+                ec, sh = d.get("eyeCount"), d.get("shown")
+                if ec is not None and sh is not None and ec > sh and sh < 4:
+                    force_recon.add(d["id"])
+
+    # 落地「決定帳本」：root review_decisions.json 每次匯出只含「當前佇列內」的套，被移出佇列者
+    # （action==remove 或 eyeCount==shown 已確認）下次匯出就不含 → 不落地會「復活」。
+    # 故把 root 全部決定 merge 進 data/ 帳本（同 id 以最新為準），移除與確認才能跨匯出持久。
+    data_led = ROOT / "data" / "review_decisions.json"
+    led = json.loads(data_led.read_text(encoding="utf-8")) if data_led.exists() else {"decisions": []}
+    by_id = {d["id"]: d for d in led.get("decisions", []) if d.get("id")}
+    root_led = ROOT / "review_decisions.json"
+    if root_led.exists():
+        for d in json.loads(root_led.read_text(encoding="utf-8")).get("decisions", []):
+            if d.get("id"):
+                by_id[d["id"]] = d
+    merged = sorted(by_id.values(), key=lambda d: d["id"])
+    new_txt = json.dumps({"_note": "決定帳本：累積所有 review.html 決定（同 id 取最新）。"
+                          "root 檔每次匯出只含當前佇列，移除/確認須落地此處才不復活。",
+                          "decisions": merged}, ensure_ascii=False, indent=1)
+    if (not data_led.exists()) or data_led.read_text(encoding="utf-8") != new_txt:
+        data_led.write_text(new_txt, encoding="utf-8")
+        print(f"  決定帳本累積：{len(merged)} 筆 → data/review_decisions.json")
+
     enriched = json.loads(ENRICHED_PATH.read_text(encoding="utf-8"))
     arr = enriched if isinstance(enriched, list) else enriched.get("outfits", [])
-    mirapri = [transform_mirapri(o, dyemap, vismap, piecemap, reconmap) for o in arr if o.get("type") == "mirapri"]
+
+    # src==claude 的圖 → 該套以 Claude 視覺讀取為權威，一律 force_recon（修剪過多/補漏）。
+    cache = json.loads((ROOT / "data" / "ocr_cache.json").read_text(encoding="utf-8"))
+    claude_bn = {k.replace("\\", "/").split("/")[-1] for k, v in cache.items()
+                 if isinstance(v, dict) and v.get("src") == "claude"}
+    for o in arr:
+        if o.get("type") == "mirapri" and (o.get("image") or "").replace("\\", "/").split("/")[-1] in claude_bn:
+            force_recon.add(o["id"])
+
+    mirapri = [transform_mirapri(o, dyemap, vismap, piecemap, reconmap, force_recon) for o in arr if o.get("type") == "mirapri"]
     if reconmap:
         print(f"  空殼重建合併：{sum(1 for m in mirapri if m.get('id') in reconmap)} 套")
 
-    # 套用 review.html 的人工決定：action=="remove" 的套不顯示（其餘決定不影響網站）。
-    # 根目錄與 data/ 兩處都讀，remove 取聯集。
-    removed = set()
-    for p in REVIEW_DECISIONS_PATHS:
-        if p.exists():
-            rj = json.loads(p.read_text(encoding="utf-8"))
-            removed |= {d["id"] for d in rj.get("decisions", []) if d.get("action") == "remove"}
+    # 套用 action=="remove"：不顯示（其餘決定不影響網站）。
     if removed:
         before = len(mirapri)
         mirapri = [m for m in mirapri if m.get("id") not in removed]
