@@ -23,6 +23,9 @@ CURATED_JSON = ROOT / "data" / "curated_outfits.json"
 ENRICHED_PATH = ROOT / "data" / "all_outfits_enriched.json"
 CURATED_JS = ROOT / "curated_outfits.js"
 MIRAPRI_JS = ROOT / "mirapri_outfits.js"
+OFFICIAL_SETS_JSON = ROOT / "data" / "official_sets.json"   # build_sets.py 產出
+OFFICIAL_SETS_JS = ROOT / "official_sets.js"                # 官方套裝分頁（延遲載入）
+ITEM_FALLBACK = ROOT / "data" / "item_fallback_multilang.json"  # 徽章資料（dye/mb/iid）來源
 MIRAPRI_DYES = ROOT / "data" / "mirapri_dyes.json"     # apply_dyes.py 產生：{id: [繁中染色]}（整套 fallback）
 MIRAPRI_PIECE_DYES = ROOT / "data" / "mirapri_piece_dyes.json"  # {id: {裝備日文名: [繁中染色]}}（v2 逐件）
 MIRAPRI_VISIBLE = ROOT / "data" / "mirapri_visible.json"  # apply_dyes.py 產生：{id: [圖上可見裝備日文名]}
@@ -65,6 +68,45 @@ PIECE_DEFAULTS = {
     "source": "—", "st": "other", "lv": "1", "job": "全職業",
     "gender": "", "race": "", "patch": "",
 }
+
+
+# ── 徽章標記（可染欄數 / 可上拍賣板）────────────────────────────
+# 名稱→道具的「精確」索引：只在名稱唯一對應時蓋章（低信心不標，寧缺勿錯）。
+def build_badge_index():
+    """回 (by_zh, by_ja, by_en)；值 = {"iid","dye","mb"}；名稱撞多件且屬性不同 → 剔除。"""
+    if not ITEM_FALLBACK.exists():
+        return {}, {}, {}
+    items = json.loads(ITEM_FALLBACK.read_text(encoding="utf-8"))["items"]
+    by_zh, by_ja, by_en = {}, {}, {}
+    _AMB = object()
+    for iid, v in items.items():
+        rec = {"iid": int(iid), "dye": v.get("dye", 0), "mb": bool(v.get("mb", False))}
+        for key, idx in ((v.get("zh"), by_zh), (v.get("ja"), by_ja),
+                         ((v.get("en") or "").lower(), by_en)):
+            if not key:
+                continue
+            old = idx.get(key)
+            if old is None:
+                idx[key] = rec
+            elif old is not _AMB and (old["dye"], old["mb"]) != (rec["dye"], rec["mb"]):
+                idx[key] = _AMB   # 同名不同屬性 → 放棄蓋章
+    for idx in (by_zh, by_ja, by_en):
+        for k in [k for k, v in idx.items() if v is _AMB]:
+            del idx[k]
+    return by_zh, by_ja, by_en
+
+
+def stamp_badges(piece, by_zh, by_ja, by_en):
+    """把 iid/dye/mb 蓋進一件裝備 dict（curated 的 piece 或 mirapri 的 equipment）。"""
+    rec = (by_zh.get(piece.get("zh") or "")
+           or by_ja.get(piece.get("ja") or piece.get("name") or "")
+           or by_en.get((piece.get("en") or "").lower()))
+    if rec:
+        piece["iid"] = rec["iid"]
+        piece["dye"] = rec["dye"]
+        piece["mb"] = rec["mb"]
+        return True
+    return False
 
 
 def st_from_source(source: str) -> str:
@@ -171,8 +213,68 @@ def transform_mirapri(o, dyemap=None, vismap=None, piecemap=None, reconmap=None,
     }
 
 
+# ── 官方套裝 → official_sets.js ────────────────────────────────
+_JOB_GROUPS_EN = {
+    "tank": {"PLD", "WAR", "DRK", "GNB"},
+    "healer": {"WHM", "SCH", "AST", "SGE"},
+    "caster": {"BLM", "SMN", "RDM", "BLU", "PCT"},
+    "pranged": {"BRD", "MCH", "DNC"},
+    "melee": {"MNK", "DRG", "NIN", "SAM", "RPR", "VPR"},
+    "crafter": {"CRP", "BSM", "ARM", "GSM", "LTW", "WVR", "ALC", "CUL",
+                "MIN", "BTN", "FSH"},
+}
+_JOB_GROUP_ZH = {"tank": "盾衛職業", "healer": "治療職業", "caster": "法系職業",
+                 "pranged": "遠程物理職業", "melee": "近戰職業", "crafter": "製作採集職業"}
+
+
+def transform_sets():
+    """official_sets.json → 前端精簡結構（st/職業 tag 建置期算好）。"""
+    if not OFFICIAL_SETS_JSON.exists():
+        return None
+    data = json.loads(OFFICIAL_SETS_JSON.read_text(encoding="utf-8"))
+    out = []
+    for s in data.get("sets", []):
+        codes = set((s.get("cjc_name") or "").split())
+        tags = sorted(g for g, grp in _JOB_GROUPS_EN.items() if codes & grp)
+        combat = {c for g in ("tank", "healer", "caster", "pranged", "melee")
+                  for c in _JOB_GROUPS_EN[g]}
+        cjc_raw = (s.get("cjc_name") or "").strip()
+        if codes >= combat or cjc_raw.lower().startswith("all"):
+            job_label = "全職業"   # 含 XIVAPI 的 "All Classes"
+            tags = []          # 全職業套不掛職業 tag（避免每張卡六個標）
+        elif len(tags) == 1:
+            job_label = _JOB_GROUP_ZH[tags[0]]
+        else:
+            job_label = s.get("cjc_name") or ""
+        out.append({
+            "type": "set",
+            "id": s["id"],
+            "layer": s["layer"],
+            "name_zh": s["name_zh"], "name_ja": s["name_ja"], "name_en": s["name_en"],
+            "source": s["source"],
+            "st": st_from_source(s["source"] or ""),
+            "patch": s["patch"],
+            "job": job_label,
+            "tags": tags,
+            "tw": bool(s.get("zh_ok")),
+            "pieces": [{k: p[k] for k in
+                        ("id", "slot", "zh", "ja", "en", "dye", "mb", "icon", "patch", "lv")
+                        if k in p}
+                       for p in s["pieces"]],
+        })
+    return out
+
+
 def main():
     curated = normalize_curated(json.loads(CURATED_JSON.read_text(encoding="utf-8")))
+
+    # 徽章（可染/拍賣板）：名稱精確對回道具 ID，蓋進每件裝備
+    by_zh, by_ja, by_en = build_badge_index()
+    if by_zh or by_ja:
+        n_cur = sum(stamp_badges(p, by_zh, by_ja, by_en)
+                    for o in curated for p in o.get("pieces", []))
+        n_tot = sum(len(o.get("pieces", [])) for o in curated)
+        print(f"  徽章蓋章（精選）：{n_cur}/{n_tot} 件")
 
     dyemap = {}
     if MIRAPRI_DYES.exists():
@@ -231,6 +333,14 @@ def main():
             force_recon.add(o["id"])
 
     mirapri = [transform_mirapri(o, dyemap, vismap, piecemap, reconmap, force_recon) for o in arr if o.get("type") == "mirapri"]
+    if by_zh or by_ja:
+        n_hit = n_all = 0
+        for m in mirapri:
+            for eq in m.get("equipments", []):
+                if isinstance(eq, dict):
+                    n_all += 1
+                    n_hit += stamp_badges(eq, by_zh, by_ja, by_en)
+        print(f"  徽章蓋章（社群）：{n_hit}/{n_all} 件")
     if reconmap:
         print(f"  空殼重建合併：{sum(1 for m in mirapri if m.get('id') in reconmap)} 套")
 
@@ -251,6 +361,15 @@ def main():
         encoding="utf-8")
     print(f"curated_outfits.js: {len(curated)} outfits ({CURATED_JS.stat().st_size//1024} KB)")
     print(f"mirapri_outfits.js: {len(mirapri)} outfits ({MIRAPRI_JS.stat().st_size//1024//1024} MB)")
+
+    sets = transform_sets()
+    if sets is not None:
+        OFFICIAL_SETS_JS.write_text(
+            "const _SETS_RAW = " + json.dumps(sets, ensure_ascii=False) + ";\n",
+            encoding="utf-8")
+        print(f"official_sets.js: {len(sets)} sets ({OFFICIAL_SETS_JS.stat().st_size//1024} KB)")
+    else:
+        print("official_sets.js: 略過（data/official_sets.json 不存在，先跑 build_sets.py）")
     return 0
 
 
