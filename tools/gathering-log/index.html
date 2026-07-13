@@ -548,6 +548,7 @@ function updateProgress() {
   const pct = totalItems ? Math.round(cnt / totalItems * 100) : 0;
   document.getElementById('progressText').textContent = `已採 ${cnt} / ${totalItems}（${pct}%）`;
   document.getElementById('progressFill').style.width = pct + '%';
+  try { localStorage.setItem('ffxiv_snap_gatherlog', JSON.stringify({ c: cnt, t: totalItems })); } catch (e) {} // 首頁進度儀表板快照
 }
 
 function toggleItem(id, el) {

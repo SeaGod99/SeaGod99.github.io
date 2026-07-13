@@ -185,6 +185,7 @@
     document.getElementById('totalCount').textContent = total;
     document.getElementById('progressFill').style.width = pct + '%';
     document.getElementById('progressPct').textContent = pct + '%';
+    try { localStorage.setItem('ffxiv_snap_orchestrion', JSON.stringify({ c: count, t: total })); } catch (e) {} // 首頁進度儀表板快照
   }
 
   // ── Generic filter tag renderer ──

@@ -286,6 +286,7 @@
     $('totalCount').textContent = total;
     $('progressFill').style.width = pct + '%';
     $('progressPct').textContent = pct + '%';
+    try { localStorage.setItem('ffxiv_snap_minions', JSON.stringify({ c: count, t: total })); } catch (e) {} // 首頁進度儀表板快照
   }
 
   // ── Render behavior filters ──
