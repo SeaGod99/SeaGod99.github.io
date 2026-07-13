@@ -54,6 +54,13 @@
     .col-detail .detail-line { margin-top: 2px; }
     .col-detail .detail-line b { color: var(--text-secondary); font-weight: 500; }
 
+    /* NPC 位置地圖按鈕（點卡片其他區域＝勾已取得，點 📍＝開地圖） */
+    .tt-loc {
+      background: none; border: none; cursor: pointer; font-size: 12px;
+      padding: 0 2px; line-height: 1; vertical-align: baseline;
+    }
+    .tt-loc:hover { transform: scale(1.25); }
+
     @media (max-width: 600px) { .col-grid { grid-template-columns: 1fr 1fr; } }
     @media (max-width: 380px) { .col-grid { grid-template-columns: 1fr; } }
   </style>
@@ -191,6 +198,7 @@
     document.getElementById('totalCount').textContent = total;
     document.getElementById('progressFill').style.width = pct + '%';
     document.getElementById('progressPct').textContent = pct + '%';
+    try { localStorage.setItem('ffxiv_snap_triad', JSON.stringify({ c: count, t: total })); } catch (e) {} // 首頁進度儀表板快照
   }
 
   // ── Generic filter tag renderer ──
@@ -321,6 +329,11 @@
             line += `：${s.npcName}`;
             if (s.location && s.location.mapName) {
               line += ` @ ${s.location.mapName} (${s.location.x}, ${s.location.y})`;
+              if (s.location.mapId != null) {
+                line += ` <button class="tt-loc" title="開地圖看 NPC 位置"` +
+                  ` data-mapid="${s.location.mapId}" data-x="${s.location.x}" data-y="${s.location.y}"` +
+                  ` data-npc="${s.npcName}" data-mapname="${s.location.mapName}">📍</button>`;
+              }
             }
             if (s.dropType) line += ` [${s.dropType}]`;
           } else if (s.detail) {
@@ -354,7 +367,21 @@
         <div class="col-detail">${detailLines.join('')}</div>
       `;
 
-      card.addEventListener('click', () => toggle(k));
+      card.addEventListener('click', (e) => {
+        const loc = e.target.closest('.tt-loc');
+        if (loc) { // 點 📍：開 NPC 位置地圖，不切換取得狀態
+          e.stopPropagation();
+          const x = Number(loc.dataset.x), y = Number(loc.dataset.y);
+          window.ttOpenMap && window.ttOpenMap({
+            mapId: Number(loc.dataset.mapid), x, y,
+            title: `🃏 ${c.name}`,
+            sub: `NPC 對戰：${loc.dataset.npc} · ${loc.dataset.mapname}`,
+            flagText: `/coord ${x.toFixed(1)} ${y.toFixed(1)} ${loc.dataset.mapname}`,
+          });
+          return;
+        }
+        toggle(k);
+      });
       grid.appendChild(card);
     });
   }
@@ -474,6 +501,20 @@
       empty.textContent = '資料載入失敗：' + err.message;
     });
 })();
+</script>
+<script type="module">
+/* NPC 位置地圖：共用迷你地圖彈窗，maps.json 首次點擊才載入 */
+import { initMapModal, openMapModal } from '../../assets/js/map-modal.js';
+let ready = null;
+window.ttOpenMap = async function (opts) {
+  if (!ready) {
+    ready = fetch('../../data/maps.json')
+      .then(r => r.json())
+      .then(j => initMapModal({ mapsData: j.data, base: '../..' }));
+  }
+  try { await ready; } catch (e) { ready = null; return; }
+  openMapModal(opts);
+};
 </script>
 </body>
 </html>
