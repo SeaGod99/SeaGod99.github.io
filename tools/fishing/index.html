@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="FF14 釣魚紀錄追蹤 — 1449 種魚，查詢釣場/餌/時間/天氣，可釣倒數、目標魚釘選與地圖標點，追蹤已釣紀錄">
+  <meta name="description" content="FF14 釣魚紀錄追蹤 — 1449 種魚，查詢釣場/餌/時間/天氣，可釣倒數、目標魚開窗鬧鐘提醒與地圖標點，追蹤已釣紀錄">
   <title>釣魚紀錄追蹤 | 水神的工具箱</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -287,6 +287,21 @@
     .tp-del { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.8rem; padding: 0 0.2rem; }
     .tp-del:hover { color: var(--red); }
 
+    /* 目標魚鬧鐘提醒控制（靜態表頭，不隨倒數重繪） */
+    .tp-alarm { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; font-weight: 400; }
+    .tp-alarm .achip {
+      font-size: 0.72rem; padding: 0.2rem 0.6rem; border-radius: 5px; cursor: pointer;
+      border: 1px solid var(--border); background: var(--bg-surface); color: var(--text-dim);
+      transition: all 0.15s; user-select: none;
+    }
+    .tp-alarm .achip:hover { border-color: var(--gold); }
+    .tp-alarm .achip.active { background: var(--gold-dim); border-color: rgba(200,169,110,0.5); color: var(--gold); }
+    .tp-alarm select {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 5px;
+      color: var(--text-dim); padding: 0.2rem 0.4rem; font-size: 0.72rem; outline: none; cursor: pointer;
+    }
+    .tp-alarm-hint { font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; }
+
   </style>
   <link rel="stylesheet" href="../../assets/css/theme.css">
   <script src="../../assets/js/theme.js"></script>
@@ -354,7 +369,21 @@
 
 <div class="targets-panel" id="targetsPanel" style="display:none">
   <div class="targets-inner">
-    <div class="tp-head">🎯 目標魚 <span class="tp-hint">依開窗時間排序 · 點魚卡右下 🎯 新增／移除</span></div>
+    <div class="tp-head">🎯 目標魚 <span class="tp-hint">依開窗時間排序 · 點魚卡右下 🎯 新增／移除</span>
+      <span class="tp-alarm">
+        <span class="achip" id="alarmToggle" title="目標魚開窗前提醒">🔔 開窗提醒</span>
+        <select id="alarmLead" title="提前多久提醒（現實時間）">
+          <option value="0">開窗時提醒</option>
+          <option value="60">提前 1 分鐘</option>
+          <option value="180">提前 3 分鐘</option>
+          <option value="300">提前 5 分鐘</option>
+          <option value="600">提前 10 分鐘</option>
+        </select>
+        <span class="achip" id="alarmSound" title="提醒音效">🔊 音效</span>
+        <button class="achip" id="alarmTest" title="試聽提醒效果">試響</button>
+      </span>
+    </div>
+    <div class="tp-alarm-hint" id="alarmHint" style="display:none"></div>
     <div id="targetsList"></div>
   </div>
 </div>
@@ -977,12 +1006,114 @@ function renderTargets() {
   }).join('');
 }
 
+/* ─────────────────────────────────────────────
+   鬧鐘提醒：目標魚於開窗前（可設提前量）以
+   系統通知＋音效＋分頁標題提醒（同限時採集頁）。
+   ───────────────────────────────────────────── */
+const ALARM_KEY = 'ffxiv_fishing_alarm';
+const BASE_TITLE = document.title;
+let alarmCfg = { on: false, lead: 60, sound: true };
+try { Object.assign(alarmCfg, JSON.parse(localStorage.getItem(ALARM_KEY) || '{}')); } catch (e) {}
+function saveAlarm() { localStorage.setItem(ALARM_KEY, JSON.stringify(alarmCfg)); }
+
+const alarmFired = new Map(); // itemId -> 該次開窗時間戳（同一窗只響一次）
+
+function alarmChime() {
+  if (!alarmCfg.sound) return;
+  try {
+    const ctx = alarmChime.ctx || (alarmChime.ctx = new (window.AudioContext || window.webkitAudioContext)());
+    if (ctx.state === 'suspended') ctx.resume();
+    const t0 = ctx.currentTime;
+    [880, 1174.66].forEach((f, i) => {   // 上行兩音，柔和不刺耳
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = 'sine'; o.frequency.value = f;
+      g.gain.setValueAtTime(0.0001, t0 + i * 0.18);
+      g.gain.exponentialRampToValueAtTime(0.22, t0 + i * 0.18 + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + i * 0.18 + 0.5);
+      o.connect(g).connect(ctx.destination);
+      o.start(t0 + i * 0.18); o.stop(t0 + i * 0.18 + 0.55);
+    });
+  } catch (e) {}
+}
+
+function fireAlarm(f, st, untilOpen) {
+  alarmChime();
+  const when = untilOpen <= 5 ? '開窗了！' : `約 ${Math.ceil(untilOpen / 60)} 分鐘後開窗`;
+  const title = `🎣 ${f.name || f.nameEn} ${when}`;
+  const sz = spotZone(f);
+  const body = [
+    f.spotName ? `釣場：${f.spotName}${sz?.mapName && sz.mapName !== f.spotName ? `（${sz.mapName}）` : ''}` : '',
+    f.bait?.length ? `餌：${f.bait.map(b => b.name || b.nameEn).join(' → ')}` : '',
+  ].filter(Boolean).join('・');
+  if ('Notification' in window && Notification.permission === 'granted') {
+    try { new Notification(title, { body, tag: 'fish-' + f.itemId }); } catch (e) {}
+  }
+  document.title = '🔔 ' + title;
+  setTimeout(() => { document.title = BASE_TITLE; }, 30000);
+}
+
+/* primeOnly=true：只登記當前已在門檻內的窗（不響），
+   用於剛開啟提醒／剛加目標／改提前量時，避免對眼前已看得到的狀態突然響鈴 */
+function checkAlarms(now, primeOnly) {
+  if (!alarmCfg.on || !targets.size) return;
+  for (const id of targets) {
+    const f = allFish.find(x => x.itemId === id);
+    if (!f) continue;
+    const st = fishStatus(f, now);
+    if (st.state !== 'open' && st.state !== 'wait') continue; // 隨時可釣／近期無窗不提醒
+    const untilOpen = st.state === 'open' ? 0 : st.secsLeft;
+    if (untilOpen > alarmCfg.lead) continue;
+    const openTs = now + untilOpen * 1000;
+    const prev = alarmFired.get(id);
+    if (prev && Math.abs(openTs - prev) < 120000) continue;
+    alarmFired.set(id, openTs);
+    if (!primeOnly) fireAlarm(f, st, untilOpen);
+  }
+}
+
+function syncAlarmUI() {
+  document.getElementById('alarmToggle').classList.toggle('active', alarmCfg.on);
+  document.getElementById('alarmSound').classList.toggle('active', alarmCfg.sound);
+  document.getElementById('alarmLead').value = String(alarmCfg.lead);
+  const hint = document.getElementById('alarmHint');
+  if (!alarmCfg.on) { hint.style.display = 'none'; return; }
+  const noNotif = !('Notification' in window) || Notification.permission !== 'granted';
+  hint.style.display = '';
+  hint.textContent = '🔔 提醒運作中——需保持此分頁開啟' +
+    (noNotif ? '；瀏覽器通知未允許，僅以音效與分頁標題提醒' : '，將以系統通知＋音效提醒');
+}
+
+document.getElementById('alarmToggle').addEventListener('click', () => {
+  alarmCfg.on = !alarmCfg.on; saveAlarm();
+  if (alarmCfg.on) {
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission().finally(syncAlarmUI);
+    }
+    checkAlarms(Date.now(), true); // 只登記當前窗，不對眼前狀態響鈴
+  }
+  syncAlarmUI();
+});
+document.getElementById('alarmSound').addEventListener('click', () => {
+  alarmCfg.sound = !alarmCfg.sound; saveAlarm(); syncAlarmUI();
+});
+document.getElementById('alarmLead').addEventListener('change', e => {
+  alarmCfg.lead = Number(e.target.value) || 0; saveAlarm();
+  checkAlarms(Date.now(), true);
+});
+document.getElementById('alarmTest').addEventListener('click', () => {
+  const sav = alarmCfg.sound; alarmCfg.sound = true; alarmChime(); alarmCfg.sound = sav;
+  if ('Notification' in window && Notification.permission === 'granted') {
+    try { new Notification('🔔 測試提醒', { body: '提醒功能運作正常。', tag: 'fish-test' }); } catch (e) {}
+  }
+});
+
 function updateProgress() {
   const total = allFish.length;
   const cnt   = allFish.filter(f => owned.has(f.itemId)).length;
   const pct   = total ? Math.round(cnt / total * 100) : 0;
   document.getElementById('progressText').textContent = `已釣 ${cnt} / ${total}（${pct}%）`;
   document.getElementById('progressFill').style.width = pct + '%';
+  try { localStorage.setItem('ffxiv_snap_fishing', JSON.stringify({ c: cnt, t: total })); } catch (e) {} // 首頁進度儀表板快照
 }
 
 function toggleFish(id, el) {
@@ -1001,7 +1132,7 @@ function toggleFish(id, el) {
 }
 
 function toggleTarget(id) {
-  if (targets.has(id)) targets.delete(id); else targets.add(id);
+  if (targets.has(id)) targets.delete(id); else { targets.add(id); checkAlarms(Date.now(), true); } // 新加目標先登記當前窗，不立即響鈴
   localStorage.setItem(TARGET_KEY, JSON.stringify([...targets]));
   if (statusFilter === 'targets') onFilter(); else renderCurrent();
 }
@@ -1111,8 +1242,11 @@ document.getElementById('spotPanel').addEventListener('click', e => {
   initMapModal({ mapsData: getMapsData(), base: '../..' });
   tickClock();
   onFilter();
+  syncAlarmUI();
+  if (alarmCfg.on) checkAlarms(Date.now(), true); // 開頁先登記當前窗，只對之後的新窗響鈴
   setInterval(tickClock, 1000);
   setInterval(() => { if (viewMode === 'list') render(); else renderTargets(); }, 10000); // 每 10 秒更新可釣狀態與倒數
+  setInterval(() => checkAlarms(Date.now()), 5000); // 鬧鐘每 5 秒檢查（天氣快取使重算成本極低）
 })();
 </script>
 </body>
