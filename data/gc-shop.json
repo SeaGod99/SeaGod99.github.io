@@ -1,0 +1,1795 @@
+{
+ "schema": "gc-shop@1",
+ "updated": "2026-07-13",
+ "source": "XIVAPI v2 GCScripShopItem / SpecialShop；名稱與可上市旗標取自 data/items.json",
+ "data": {
+  "seals": [
+   {
+    "id": 5594,
+    "name": "1級黑暗物質",
+    "category": "觸媒",
+    "patch": "2.0",
+    "seals": 12,
+    "rank": 1
+   },
+   {
+    "id": 6151,
+    "name": "高級料酒",
+    "category": "食材",
+    "patch": "2.1",
+    "seals": 20,
+    "rank": 9
+   },
+   {
+    "id": 6153,
+    "name": "純淨水",
+    "category": "鍊金原料",
+    "patch": "2.1",
+    "seals": 20,
+    "rank": 9
+   },
+   {
+    "id": 6154,
+    "name": "妖異之血",
+    "category": "鍊金原料",
+    "patch": "2.1",
+    "seals": 20,
+    "rank": 9
+   },
+   {
+    "id": 7602,
+    "name": "星八角",
+    "category": "食材",
+    "patch": "2.2",
+    "seals": 30,
+    "rank": 9
+   },
+   {
+    "id": 7603,
+    "name": "衛月新薯",
+    "category": "食材",
+    "patch": "2.2",
+    "seals": 30,
+    "rank": 9
+   },
+   {
+    "id": 7604,
+    "name": "皇家可可豆",
+    "category": "食材",
+    "patch": "2.2",
+    "seals": 30,
+    "rank": 9
+   },
+   {
+    "id": 7605,
+    "name": "填鴨胸肉",
+    "category": "食材",
+    "patch": "2.2",
+    "seals": 30,
+    "rank": 9
+   },
+   {
+    "id": 5595,
+    "name": "2級黑暗物質",
+    "category": "觸媒",
+    "patch": "2.0",
+    "seals": 34,
+    "rank": 1
+   },
+   {
+    "id": 5596,
+    "name": "3級黑暗物質",
+    "category": "觸媒",
+    "patch": "2.0",
+    "seals": 70,
+    "rank": 1
+   },
+   {
+    "id": 4564,
+    "name": "解毒藥",
+    "category": "藥品",
+    "patch": "2.0",
+    "seals": 120,
+    "rank": 1
+   },
+   {
+    "id": 5597,
+    "name": "4級黑暗物質",
+    "category": "觸媒",
+    "patch": "2.0",
+    "seals": 138,
+    "rank": 4
+   },
+   {
+    "id": 21072,
+    "name": "探險幣",
+    "category": "貨幣",
+    "patch": "4.1",
+    "seals": 200,
+    "rank": 1
+   },
+   {
+    "id": 7621,
+    "name": "驅幻晶",
+    "category": "觸媒",
+    "patch": "2.2",
+    "seals": 200,
+    "rank": 8
+   },
+   {
+    "id": 21800,
+    "name": "幻象棱晶",
+    "category": "觸媒",
+    "patch": "4.2",
+    "seals": 200,
+    "rank": 8
+   },
+   {
+    "id": 5357,
+    "name": "天鵝之羽",
+    "category": "布料",
+    "patch": "2.0",
+    "seals": 200,
+    "rank": 4
+   },
+   {
+    "id": 5358,
+    "name": "雄鷹之羽",
+    "category": "布料",
+    "patch": "2.0",
+    "seals": 200,
+    "rank": 4
+   },
+   {
+    "id": 5558,
+    "name": "布丁的肉",
+    "category": "鍊金原料",
+    "patch": "2.0",
+    "seals": 200,
+    "rank": 4
+   },
+   {
+    "id": 5530,
+    "name": "焦炭",
+    "category": "鍊金原料",
+    "patch": "2.0",
+    "seals": 200,
+    "rank": 9
+   },
+   {
+    "id": 5531,
+    "name": "獸脂",
+    "category": "鍊金原料",
+    "patch": "2.0",
+    "seals": 200,
+    "rank": 9
+   },
+   {
+    "id": 5502,
+    "name": "石灰硫磺合劑",
+    "category": "鍊金原料",
+    "patch": "2.0",
+    "seals": 200,
+    "rank": 9
+   },
+   {
+    "id": 5501,
+    "name": "灰汁",
+    "category": "鍊金原料",
+    "patch": "2.0",
+    "seals": 200,
+    "rank": 9
+   },
+   {
+    "id": 5261,
+    "name": "沉積岩磨刀石",
+    "category": "石材",
+    "patch": "2.0",
+    "seals": 200,
+    "rank": 9
+   },
+   {
+    "id": 5119,
+    "name": "斑銅礦",
+    "category": "石材",
+    "patch": "2.0",
+    "seals": 200,
+    "rank": 9
+   },
+   {
+    "id": 5274,
+    "name": "鉛丹",
+    "category": "石材",
+    "patch": "2.0",
+    "seals": 200,
+    "rank": 9
+   },
+   {
+    "id": 5532,
+    "name": "樹汁塊",
+    "category": "鍊金原料",
+    "patch": "2.0",
+    "seals": 200,
+    "rank": 9
+   },
+   {
+    "id": 5598,
+    "name": "5級黑暗物質",
+    "category": "觸媒",
+    "patch": "2.0",
+    "seals": 230,
+    "rank": 4
+   },
+   {
+    "id": 9366,
+    "name": "硼砂",
+    "category": "鍊金原料",
+    "patch": "2.4",
+    "seals": 250,
+    "rank": 9
+   },
+   {
+    "id": 9369,
+    "name": "拉吉克靈藥",
+    "category": "鍊金原料",
+    "patch": "2.4",
+    "seals": 250,
+    "rank": 9
+   },
+   {
+    "id": 9371,
+    "name": "煙燻肉",
+    "category": "食材",
+    "patch": "2.4",
+    "seals": 250,
+    "rank": 9
+   },
+   {
+    "id": 9372,
+    "name": "烘焙咖啡豆",
+    "category": "食材",
+    "patch": "2.4",
+    "seals": 250,
+    "rank": 9
+   },
+   {
+    "id": 4566,
+    "name": "山彥草藥",
+    "category": "藥品",
+    "patch": "2.0",
+    "seals": 290,
+    "rank": 1
+   },
+   {
+    "id": 10386,
+    "name": "6級黑暗物質",
+    "category": "觸媒",
+    "patch": "3.0",
+    "seals": 345,
+    "rank": 9
+   },
+   {
+    "id": 7806,
+    "name": "黃褐乳膠",
+    "category": "鍊金原料",
+    "patch": "2.2",
+    "seals": 450,
+    "rank": 9
+   },
+   {
+    "id": 15855,
+    "name": "阿爾基克薰衣草種子",
+    "category": "栽培用品",
+    "patch": "3.3",
+    "seals": 500,
+    "rank": 1
+   },
+   {
+    "id": 15856,
+    "name": "虛無界風茄種子",
+    "category": "栽培用品",
+    "patch": "3.3",
+    "seals": 500,
+    "rank": 1
+   },
+   {
+    "id": 6141,
+    "name": "強心劑",
+    "category": "藥品",
+    "patch": "2.1",
+    "seals": 500,
+    "rank": 8
+   },
+   {
+    "id": 4720,
+    "name": "白魚湯",
+    "category": "食品",
+    "patch": "2.0",
+    "seals": 500,
+    "rank": 9
+   },
+   {
+    "id": 4715,
+    "name": "獵人風味水蜥餅",
+    "category": "食品",
+    "patch": "2.0",
+    "seals": 500,
+    "rank": 9
+   },
+   {
+    "id": 13743,
+    "name": "芝麻餅乾",
+    "category": "食品",
+    "patch": "3.1",
+    "seals": 550,
+    "rank": 9
+   },
+   {
+    "id": 12849,
+    "name": "凱撒麵包",
+    "category": "食品",
+    "patch": "3.0",
+    "seals": 550,
+    "rank": 9
+   },
+   {
+    "id": 17837,
+    "name": "7級黑暗物質",
+    "category": "觸媒",
+    "patch": "4.0",
+    "seals": 575,
+    "rank": 9
+   },
+   {
+    "id": 12858,
+    "name": "石化雞蛇肉丸",
+    "category": "食品",
+    "patch": "3.0",
+    "seals": 600,
+    "rank": 9
+   },
+   {
+    "id": 33916,
+    "name": "8級黑暗物質",
+    "category": "觸媒",
+    "patch": "6.0",
+    "seals": 600,
+    "rank": 9
+   },
+   {
+    "id": 12847,
+    "name": "栗子冰糕",
+    "category": "食品",
+    "patch": "3.0",
+    "seals": 700,
+    "rank": 9
+   },
+   {
+    "id": 12854,
+    "name": "傘蘑沙拉",
+    "category": "食品",
+    "patch": "3.0",
+    "seals": 800,
+    "rank": 9
+   },
+   {
+    "id": 12844,
+    "name": "熱巧克力",
+    "category": "食品",
+    "patch": "3.0",
+    "seals": 900,
+    "rank": 9
+   },
+   {
+    "id": 4568,
+    "name": "律動藥",
+    "category": "藥品",
+    "patch": "2.0",
+    "seals": 1010,
+    "rank": 2
+   },
+   {
+    "id": 6662,
+    "name": "艾奧傑亞全景圖",
+    "category": "壁掛",
+    "patch": "2.1",
+    "seals": 1100,
+    "rank": 8
+   },
+   {
+    "id": 7059,
+    "name": "精煉藥",
+    "category": "藥品",
+    "patch": "2.2",
+    "seals": 1500,
+    "rank": 8
+   },
+   {
+    "id": 7596,
+    "name": "矽化木",
+    "category": "木材",
+    "patch": "2.2",
+    "seals": 1500,
+    "rank": 9
+   },
+   {
+    "id": 7597,
+    "name": "白鎢礦",
+    "category": "石材",
+    "patch": "2.2",
+    "seals": 1500,
+    "rank": 9
+   },
+   {
+    "id": 7598,
+    "name": "拉吉克靈砂",
+    "category": "鍊金原料",
+    "patch": "2.2",
+    "seals": 1500,
+    "rank": 9
+   },
+   {
+    "id": 7599,
+    "name": "蛟蜥的粗皮",
+    "category": "皮革",
+    "patch": "2.2",
+    "seals": 1500,
+    "rank": 9
+   },
+   {
+    "id": 7600,
+    "name": "山羊絨",
+    "category": "布料",
+    "patch": "2.2",
+    "seals": 1500,
+    "rank": 9
+   },
+   {
+    "id": 7601,
+    "name": "金剛砂",
+    "category": "石材",
+    "patch": "2.2",
+    "seals": 1500,
+    "rank": 9
+   },
+   {
+    "id": 4567,
+    "name": "甦醒藥",
+    "category": "藥品",
+    "patch": "2.0",
+    "seals": 1710,
+    "rank": 2
+   },
+   {
+    "id": 9367,
+    "name": "織蛛網",
+    "category": "布料",
+    "patch": "2.4",
+    "seals": 2250,
+    "rank": 9
+   },
+   {
+    "id": 9368,
+    "name": "烏茲礦",
+    "category": "石材",
+    "patch": "2.4",
+    "seals": 2250,
+    "rank": 9
+   },
+   {
+    "id": 9370,
+    "name": "皮革蠟油",
+    "category": "鍊金原料",
+    "patch": "2.4",
+    "seals": 2250,
+    "rank": 9
+   },
+   {
+    "id": 9356,
+    "name": "速乾密封劑",
+    "category": "鍊金原料",
+    "patch": "2.4",
+    "seals": 2300,
+    "rank": 9
+   },
+   {
+    "id": 9357,
+    "name": "塞爾法特爾天然水",
+    "category": "鍊金原料",
+    "patch": "2.4",
+    "seals": 2500,
+    "rank": 11
+   },
+   {
+    "id": 6656,
+    "name": "黑渦團團旗",
+    "category": "壁掛",
+    "patch": "2.1",
+    "seals": 4900,
+    "rank": 8
+   },
+   {
+    "id": 6657,
+    "name": "雙蛇黨黨旗",
+    "category": "壁掛",
+    "patch": "2.1",
+    "seals": 4900,
+    "rank": 8
+   },
+   {
+    "id": 6658,
+    "name": "不滅隊隊旗",
+    "category": "壁掛",
+    "patch": "2.1",
+    "seals": 4900,
+    "rank": 8
+   },
+   {
+    "id": 13589,
+    "name": "堅鋼投斧",
+    "category": "雜貨",
+    "patch": "3.15",
+    "seals": 5000,
+    "rank": 9
+   },
+   {
+    "id": 13591,
+    "name": "鈦合金鏡",
+    "category": "金屬",
+    "patch": "3.15",
+    "seals": 5000,
+    "rank": 9
+   },
+   {
+    "id": 13593,
+    "name": "破魔箭",
+    "category": "雜貨",
+    "patch": "3.15",
+    "seals": 5000,
+    "rank": 9
+   },
+   {
+    "id": 13595,
+    "name": "國王餅",
+    "category": "食品",
+    "patch": "3.15",
+    "seals": 5000,
+    "rank": 9
+   },
+   {
+    "id": 6526,
+    "name": "碧海儲物椅",
+    "category": "傢俱",
+    "patch": "2.1",
+    "seals": 5050,
+    "rank": 8
+   },
+   {
+    "id": 6528,
+    "name": "密林儲物椅",
+    "category": "傢俱",
+    "patch": "2.1",
+    "seals": 5050,
+    "rank": 8
+   },
+   {
+    "id": 6527,
+    "name": "黃沙儲物椅",
+    "category": "傢俱",
+    "patch": "2.1",
+    "seals": 5050,
+    "rank": 8
+   },
+   {
+    "id": 6556,
+    "name": "碧海收納櫃",
+    "category": "桌台",
+    "patch": "2.1",
+    "seals": 6700,
+    "rank": 8
+   },
+   {
+    "id": 6557,
+    "name": "密林收納櫃",
+    "category": "桌台",
+    "patch": "2.1",
+    "seals": 6700,
+    "rank": 8
+   },
+   {
+    "id": 6558,
+    "name": "黃沙收納櫃",
+    "category": "桌台",
+    "patch": "2.1",
+    "seals": 6700,
+    "rank": 8
+   },
+   {
+    "id": 6470,
+    "name": "碧海吊扇燈",
+    "category": "屋頂照明",
+    "patch": "2.1",
+    "seals": 6800,
+    "rank": 8
+   },
+   {
+    "id": 6472,
+    "name": "密林吊扇燈",
+    "category": "屋頂照明",
+    "patch": "2.1",
+    "seals": 6800,
+    "rank": 8
+   },
+   {
+    "id": 6471,
+    "name": "黃沙吊扇燈",
+    "category": "屋頂照明",
+    "patch": "2.1",
+    "seals": 6800,
+    "rank": 8
+   },
+   {
+    "id": 6553,
+    "name": "碧海衣櫥",
+    "category": "傢俱",
+    "patch": "2.1",
+    "seals": 6900,
+    "rank": 8
+   },
+   {
+    "id": 6554,
+    "name": "密林衣櫥",
+    "category": "傢俱",
+    "patch": "2.1",
+    "seals": 6900,
+    "rank": 8
+   },
+   {
+    "id": 6555,
+    "name": "黃沙衣櫥",
+    "category": "傢俱",
+    "patch": "2.1",
+    "seals": 6900,
+    "rank": 8
+   },
+   {
+    "id": 15649,
+    "name": "玻璃纖維",
+    "category": "布料",
+    "patch": "3.3",
+    "seals": 7000,
+    "rank": 9
+   },
+   {
+    "id": 6538,
+    "name": "碧海寫字桌",
+    "category": "桌台",
+    "patch": "2.1",
+    "seals": 8300,
+    "rank": 8
+   },
+   {
+    "id": 6539,
+    "name": "密林寫字桌",
+    "category": "桌台",
+    "patch": "2.1",
+    "seals": 8300,
+    "rank": 8
+   },
+   {
+    "id": 6540,
+    "name": "黃沙寫字桌",
+    "category": "桌台",
+    "patch": "2.1",
+    "seals": 8300,
+    "rank": 8
+   },
+   {
+    "id": 6545,
+    "name": "碧海軍床",
+    "category": "傢俱",
+    "patch": "2.1",
+    "seals": 9070,
+    "rank": 8
+   },
+   {
+    "id": 6546,
+    "name": "密林軍床",
+    "category": "傢俱",
+    "patch": "2.1",
+    "seals": 9070,
+    "rank": 8
+   },
+   {
+    "id": 6547,
+    "name": "黃沙軍床",
+    "category": "傢俱",
+    "patch": "2.1",
+    "seals": 9070,
+    "rank": 8
+   },
+   {
+    "id": 7133,
+    "name": "碧海內牆",
+    "category": "內牆",
+    "patch": "2.2",
+    "seals": 10950,
+    "rank": 9
+   },
+   {
+    "id": 7143,
+    "name": "碧海地板",
+    "category": "地板",
+    "patch": "2.2",
+    "seals": 10950,
+    "rank": 9
+   },
+   {
+    "id": 7134,
+    "name": "密林內牆",
+    "category": "內牆",
+    "patch": "2.2",
+    "seals": 10950,
+    "rank": 9
+   },
+   {
+    "id": 7144,
+    "name": "密林地板",
+    "category": "地板",
+    "patch": "2.2",
+    "seals": 10950,
+    "rank": 9
+   },
+   {
+    "id": 7135,
+    "name": "黃沙內牆",
+    "category": "內牆",
+    "patch": "2.2",
+    "seals": 10950,
+    "rank": 9
+   },
+   {
+    "id": 7145,
+    "name": "黃沙地板",
+    "category": "地板",
+    "patch": "2.2",
+    "seals": 10950,
+    "rank": 9
+   },
+   {
+    "id": 6600,
+    "name": "私用乙太之光",
+    "category": "庭具",
+    "patch": "2.1",
+    "seals": 14470,
+    "rank": 9
+   },
+   {
+    "id": 7095,
+    "name": "提督的肖像畫",
+    "category": "壁掛",
+    "patch": "2.2",
+    "seals": 19150,
+    "rank": 9
+   },
+   {
+    "id": 7097,
+    "name": "幻術皇的肖像畫",
+    "category": "壁掛",
+    "patch": "2.2",
+    "seals": 19150,
+    "rank": 9
+   },
+   {
+    "id": 7152,
+    "name": "女王的肖像畫",
+    "category": "壁掛",
+    "patch": "2.2",
+    "seals": 19150,
+    "rank": 9
+   },
+   {
+    "id": 7096,
+    "name": "女王與總帥的肖像畫",
+    "category": "壁掛",
+    "patch": "2.2",
+    "seals": 19150,
+    "rank": 9
+   },
+   {
+    "id": 38642,
+    "name": "管弦樂琴樂譜：黑渦司令部",
+    "category": "管弦樂琴樂譜",
+    "patch": "6.28",
+    "seals": 40000,
+    "rank": 11
+   },
+   {
+    "id": 38645,
+    "name": "管弦樂琴樂譜：海上漣漪",
+    "category": "管弦樂琴樂譜",
+    "patch": "6.28",
+    "seals": 40000,
+    "rank": 11
+   },
+   {
+    "id": 38641,
+    "name": "管弦樂琴樂譜：雙蛇黨統合司令部",
+    "category": "管弦樂琴樂譜",
+    "patch": "6.28",
+    "seals": 40000,
+    "rank": 11
+   },
+   {
+    "id": 38644,
+    "name": "管弦樂琴樂譜：露水之玉，明月之光",
+    "category": "管弦樂琴樂譜",
+    "patch": "6.28",
+    "seals": 40000,
+    "rank": 11
+   },
+   {
+    "id": 38643,
+    "name": "管弦樂琴樂譜：不滅隊作戰總部",
+    "category": "管弦樂琴樂譜",
+    "patch": "6.28",
+    "seals": 40000,
+    "rank": 11
+   },
+   {
+    "id": 38646,
+    "name": "管弦樂琴樂譜：沙中秘密",
+    "category": "管弦樂琴樂譜",
+    "patch": "6.28",
+    "seals": 40000,
+    "rank": 11
+   }
+  ],
+  "bicolor": [
+   {
+    "id": 27763,
+    "name": "阱蛇麻的葉子",
+    "category": "鍊金原料",
+    "patch": "5.0",
+    "gems": 1,
+    "count": 1
+   },
+   {
+    "id": 27764,
+    "name": "絲蛾的鱗粉",
+    "category": "鍊金原料",
+    "patch": "5.0",
+    "gems": 1,
+    "count": 1
+   },
+   {
+    "id": 27798,
+    "name": "島狼的牙",
+    "category": "骨材",
+    "patch": "5.0",
+    "gems": 1,
+    "count": 1
+   },
+   {
+    "id": 27850,
+    "name": "秧雞胸脯肉",
+    "category": "食材",
+    "patch": "5.0",
+    "gems": 1,
+    "count": 1
+   },
+   {
+    "id": 27852,
+    "name": "力山羊肉",
+    "category": "食材",
+    "patch": "5.0",
+    "gems": 1,
+    "count": 1
+   },
+   {
+    "id": 27851,
+    "name": "鸚鵡蛋",
+    "category": "食材",
+    "patch": "5.0",
+    "gems": 1,
+    "count": 1
+   },
+   {
+    "id": 27773,
+    "name": "吸血草杯的卷鬚",
+    "category": "鍊金原料",
+    "patch": "5.0",
+    "gems": 1,
+    "count": 1
+   },
+   {
+    "id": 27774,
+    "name": "吸血藤的樹汁",
+    "category": "鍊金原料",
+    "patch": "5.0",
+    "gems": 1,
+    "count": 1
+   },
+   {
+    "id": 27732,
+    "name": "斯劍虎的粗皮",
+    "category": "皮革",
+    "patch": "5.0",
+    "gems": 2,
+    "count": 1
+   },
+   {
+    "id": 27735,
+    "name": "纏尾蛟的粗皮",
+    "category": "皮革",
+    "patch": "5.0",
+    "gems": 2,
+    "count": 1
+   },
+   {
+    "id": 27756,
+    "name": "力山羊的獸毛",
+    "category": "布料",
+    "patch": "5.0",
+    "gems": 2,
+    "count": 1
+   },
+   {
+    "id": 27733,
+    "name": "綠飄龍的粗皮",
+    "category": "皮革",
+    "patch": "5.0",
+    "gems": 2,
+    "count": 1
+   },
+   {
+    "id": 27797,
+    "name": "鸚鵡的羽毛",
+    "category": "布料",
+    "patch": "5.0",
+    "gems": 2,
+    "count": 1
+   },
+   {
+    "id": 27734,
+    "name": "野蠻盜龍的粗皮",
+    "category": "皮革",
+    "patch": "5.0",
+    "gems": 2,
+    "count": 1
+   },
+   {
+    "id": 27736,
+    "name": "海燕的粗皮",
+    "category": "皮革",
+    "patch": "5.0",
+    "gems": 2,
+    "count": 1
+   },
+   {
+    "id": 27799,
+    "name": "卡部斯的肉",
+    "category": "鍊金原料",
+    "patch": "5.0",
+    "gems": 2,
+    "count": 1
+   },
+   {
+    "id": 27800,
+    "name": "水螅蟲的傘蓋",
+    "category": "鍊金原料",
+    "patch": "5.0",
+    "gems": 2,
+    "count": 1
+   },
+   {
+    "id": 36243,
+    "name": "山雞蟾蜍的粗皮",
+    "category": "皮革",
+    "patch": "6.0",
+    "gems": 2,
+    "count": 1
+   },
+   {
+    "id": 36254,
+    "name": "亞考牛肩肉",
+    "category": "食材",
+    "patch": "6.0",
+    "gems": 2,
+    "count": 1
+   },
+   {
+    "id": 36261,
+    "name": "貝爾卡楠的樹液",
+    "category": "鍊金原料",
+    "patch": "6.0",
+    "gems": 2,
+    "count": 1
+   },
+   {
+    "id": 36242,
+    "name": "伽迦象的粗皮",
+    "category": "皮革",
+    "patch": "6.0",
+    "gems": 2,
+    "count": 1
+   },
+   {
+    "id": 36245,
+    "name": "金毗羅鱷的粗皮",
+    "category": "皮革",
+    "patch": "6.0",
+    "gems": 2,
+    "count": 1
+   },
+   {
+    "id": 36253,
+    "name": "恆娑鳥胸肉",
+    "category": "食材",
+    "patch": "6.0",
+    "gems": 2,
+    "count": 1
+   },
+   {
+    "id": 36264,
+    "name": "庵摩羅果",
+    "category": "食材",
+    "patch": "6.0",
+    "gems": 2,
+    "count": 1
+   },
+   {
+    "id": 36203,
+    "name": "阿爾馬斯提毛髮",
+    "category": "布料",
+    "patch": "6.0",
+    "gems": 2,
+    "count": 1
+   },
+   {
+    "id": 36244,
+    "name": "賽加羚羊的粗皮",
+    "category": "皮革",
+    "patch": "6.0",
+    "gems": 2,
+    "count": 1
+   },
+   {
+    "id": 36255,
+    "name": "麝牛奶",
+    "category": "食材",
+    "patch": "6.0",
+    "gems": 2,
+    "count": 1
+   },
+   {
+    "id": 36257,
+    "name": "慕斯怪的肉",
+    "category": "鍊金原料",
+    "patch": "6.0",
+    "gems": 2,
+    "count": 1
+   },
+   {
+    "id": 36258,
+    "name": "月面仙人掌怪的花",
+    "category": "鍊金原料",
+    "patch": "6.0",
+    "gems": 2,
+    "count": 1
+   },
+   {
+    "id": 36259,
+    "name": "炸藥怪的灰",
+    "category": "鍊金原料",
+    "patch": "6.0",
+    "gems": 2,
+    "count": 1
+   },
+   {
+    "id": 36246,
+    "name": "蛇牛的粗皮",
+    "category": "皮革",
+    "patch": "6.0",
+    "gems": 2,
+    "count": 1
+   },
+   {
+    "id": 36256,
+    "name": "厄爾庇斯之鳥蛋",
+    "category": "食材",
+    "patch": "6.0",
+    "gems": 2,
+    "count": 1
+   },
+   {
+    "id": 36630,
+    "name": "厄爾庇斯之鳥胸肉",
+    "category": "食材",
+    "patch": "6.0",
+    "gems": 2,
+    "count": 1
+   },
+   {
+    "id": 36260,
+    "name": "彩蝶鱗粉",
+    "category": "鍊金原料",
+    "patch": "6.0",
+    "gems": 2,
+    "count": 1
+   },
+   {
+    "id": 36262,
+    "name": "潛能量碎晶",
+    "category": "石材",
+    "patch": "6.0",
+    "gems": 2,
+    "count": 1
+   },
+   {
+    "id": 44053,
+    "name": "奧闊銀狼的粗皮",
+    "category": "皮革",
+    "patch": "7.0",
+    "gems": 3,
+    "count": 1
+   },
+   {
+    "id": 44063,
+    "name": "羊駝的里肌肉",
+    "category": "食材",
+    "patch": "7.0",
+    "gems": 3,
+    "count": 1
+   },
+   {
+    "id": 44067,
+    "name": "巨龍舌蘭的球莖",
+    "category": "食材",
+    "patch": "7.0",
+    "gems": 3,
+    "count": 1
+   },
+   {
+    "id": 44054,
+    "name": "錘頭鱷的粗皮",
+    "category": "皮革",
+    "patch": "7.0",
+    "gems": 3,
+    "count": 1
+   },
+   {
+    "id": 44064,
+    "name": "沼澤鬼魚的腿肉",
+    "category": "食材",
+    "patch": "7.0",
+    "gems": 3,
+    "count": 1
+   },
+   {
+    "id": 44068,
+    "name": "毒蛙的黏液",
+    "category": "鍊金原料",
+    "patch": "7.0",
+    "gems": 3,
+    "count": 1
+   },
+   {
+    "id": 44069,
+    "name": "小亞巴頓的甲殼",
+    "category": "鍊金原料",
+    "patch": "7.0",
+    "gems": 3,
+    "count": 1
+   },
+   {
+    "id": 44055,
+    "name": "獰豹的粗皮",
+    "category": "皮革",
+    "patch": "7.0",
+    "gems": 3,
+    "count": 1
+   },
+   {
+    "id": 44065,
+    "name": "擬鳥枝的果實",
+    "category": "食材",
+    "patch": "7.0",
+    "gems": 3,
+    "count": 1
+   },
+   {
+    "id": 44070,
+    "name": "小鳴鼠的刃爪",
+    "category": "鍊金原料",
+    "patch": "7.0",
+    "gems": 3,
+    "count": 1
+   },
+   {
+    "id": 44027,
+    "name": "犎牛獸毛",
+    "category": "布料",
+    "patch": "7.0",
+    "gems": 3,
+    "count": 1
+   },
+   {
+    "id": 44106,
+    "name": "犎牛肩肉",
+    "category": "食材",
+    "patch": "7.0",
+    "gems": 3,
+    "count": 1
+   },
+   {
+    "id": 44066,
+    "name": "圓扇刺刺梨",
+    "category": "食材",
+    "patch": "7.0",
+    "gems": 3,
+    "count": 1
+   },
+   {
+    "id": 44071,
+    "name": "風滾蟹的枯草",
+    "category": "鍊金原料",
+    "patch": "7.0",
+    "gems": 3,
+    "count": 1
+   },
+   {
+    "id": 44072,
+    "name": "斧喙魔鳥的翼膜",
+    "category": "鍊金原料",
+    "patch": "7.0",
+    "gems": 3,
+    "count": 1
+   },
+   {
+    "id": 44056,
+    "name": "嵌齒象的粗皮",
+    "category": "皮革",
+    "patch": "7.0",
+    "gems": 3,
+    "count": 1
+   },
+   {
+    "id": 44057,
+    "name": "卡岡圖亞的粗皮",
+    "category": "皮革",
+    "patch": "7.0",
+    "gems": 3,
+    "count": 1
+   },
+   {
+    "id": 6141,
+    "name": "強心劑",
+    "category": "藥品",
+    "patch": "2.1",
+    "gems": 4,
+    "count": 1
+   },
+   {
+    "id": 21800,
+    "name": "幻象棱晶",
+    "category": "觸媒",
+    "patch": "4.2",
+    "gems": 6,
+    "count": 1
+   },
+   {
+    "id": 7621,
+    "name": "驅幻晶",
+    "category": "觸媒",
+    "patch": "2.2",
+    "gems": 6,
+    "count": 1
+   },
+   {
+    "id": 17837,
+    "name": "7級黑暗物質",
+    "category": "觸媒",
+    "patch": "4.0",
+    "gems": 6,
+    "count": 1
+   },
+   {
+    "id": 28969,
+    "name": "硬紙箱",
+    "category": "桌上",
+    "patch": "5.2",
+    "gems": 10,
+    "count": 1
+   },
+   {
+    "id": 28988,
+    "name": "牛奶盒",
+    "category": "桌上",
+    "patch": "5.2",
+    "gems": 10,
+    "count": 1
+   },
+   {
+    "id": 29000,
+    "name": "雷克蘭德花叢",
+    "category": "庭具",
+    "patch": "5.2",
+    "gems": 10,
+    "count": 1
+   },
+   {
+    "id": 28967,
+    "name": "紅酒架",
+    "category": "桌上",
+    "patch": "5.2",
+    "gems": 25,
+    "count": 1
+   },
+   {
+    "id": 28968,
+    "name": "繩索護欄",
+    "category": "桌上",
+    "patch": "5.25",
+    "gems": 25,
+    "count": 1
+   },
+   {
+    "id": 28999,
+    "name": "雷克蘭德妖精樹",
+    "category": "庭具",
+    "patch": "5.2",
+    "gems": 30,
+    "count": 1
+   },
+   {
+    "id": 28972,
+    "name": "亞馬烏羅提壁燈",
+    "category": "壁掛",
+    "patch": "5.2",
+    "gems": 50,
+    "count": 1
+   },
+   {
+    "id": 33274,
+    "name": "學院引導手冊",
+    "category": "桌上",
+    "patch": "5.5",
+    "gems": 50,
+    "count": 1
+   },
+   {
+    "id": 27288,
+    "name": "水晶都掛鐘",
+    "category": "壁掛",
+    "patch": "5.0",
+    "gems": 100,
+    "count": 1
+   },
+   {
+    "id": 28146,
+    "name": "亞拉戈臺式神典石",
+    "category": "桌上",
+    "patch": "5.1",
+    "gems": 100,
+    "count": 1
+   },
+   {
+    "id": 27294,
+    "name": "享樂水果大拼盤",
+    "category": "桌上",
+    "patch": "5.0",
+    "gems": 100,
+    "count": 1
+   },
+   {
+    "id": 27276,
+    "name": "蝴蝶標本",
+    "category": "壁掛",
+    "patch": "5.0",
+    "gems": 100,
+    "count": 1
+   },
+   {
+    "id": 32232,
+    "name": "六屬性關係圖",
+    "category": "壁掛",
+    "patch": "5.4",
+    "gems": 100,
+    "count": 1
+   },
+   {
+    "id": 33269,
+    "name": "光流蘑菇燈",
+    "category": "桌上",
+    "patch": "5.5",
+    "gems": 100,
+    "count": 1
+   },
+   {
+    "id": 28635,
+    "name": "拉凱提卡盆栽",
+    "category": "傢俱",
+    "patch": "5.18",
+    "gems": 100,
+    "count": 1
+   },
+   {
+    "id": 27313,
+    "name": "冰海天使玩偶",
+    "category": "桌上",
+    "patch": "5.0",
+    "gems": 100,
+    "count": 1
+   },
+   {
+    "id": 35833,
+    "name": "雙色寶石的收據",
+    "category": "雜貨",
+    "patch": "6.0",
+    "gems": 100,
+    "count": 1
+   },
+   {
+    "id": 44881,
+    "name": "拾穗人的背包",
+    "category": "桌上",
+    "patch": "7.1",
+    "gems": 100,
+    "count": 1
+   },
+   {
+    "id": 43961,
+    "name": "圖拉爾雙色寶石的收據",
+    "category": "雜貨",
+    "patch": "7.0",
+    "gems": 100,
+    "count": 1
+   },
+   {
+    "id": 25186,
+    "name": "信力魔晶石柒型",
+    "category": "魔晶石",
+    "patch": "5.0",
+    "gems": 120,
+    "count": 1
+   },
+   {
+    "id": 25187,
+    "name": "神眼魔晶石柒型",
+    "category": "魔晶石",
+    "patch": "5.0",
+    "gems": 120,
+    "count": 1
+   },
+   {
+    "id": 25188,
+    "name": "武略魔晶石柒型",
+    "category": "魔晶石",
+    "patch": "5.0",
+    "gems": 120,
+    "count": 1
+   },
+   {
+    "id": 25189,
+    "name": "雄略魔晶石柒型",
+    "category": "魔晶石",
+    "patch": "5.0",
+    "gems": 120,
+    "count": 1
+   },
+   {
+    "id": 25190,
+    "name": "剛柔魔晶石柒型",
+    "category": "魔晶石",
+    "patch": "5.0",
+    "gems": 120,
+    "count": 1
+   },
+   {
+    "id": 25197,
+    "name": "戰技魔晶石柒型",
+    "category": "魔晶石",
+    "patch": "5.0",
+    "gems": 120,
+    "count": 1
+   },
+   {
+    "id": 25198,
+    "name": "詠唱魔晶石柒型",
+    "category": "魔晶石",
+    "patch": "5.0",
+    "gems": 120,
+    "count": 1
+   },
+   {
+    "id": 44113,
+    "name": "圖萊尤拉桌面檯燈",
+    "category": "桌上",
+    "patch": "7.0",
+    "gems": 150,
+    "count": 1
+   },
+   {
+    "id": 44114,
+    "name": "佩魯佩魯隔離牆",
+    "category": "傢俱",
+    "patch": "7.0",
+    "gems": 150,
+    "count": 1
+   },
+   {
+    "id": 44115,
+    "name": "生息單人床",
+    "category": "傢俱",
+    "patch": "7.0",
+    "gems": 150,
+    "count": 1
+   },
+   {
+    "id": 41819,
+    "name": "小旗玩偶",
+    "category": "桌上",
+    "patch": "7.0",
+    "gems": 150,
+    "count": 1
+   },
+   {
+    "id": 44121,
+    "name": "亞克特爾景觀樹",
+    "category": "庭具",
+    "patch": "7.0",
+    "gems": 150,
+    "count": 1
+   },
+   {
+    "id": 44116,
+    "name": "九號自動售貨機",
+    "category": "傢俱",
+    "patch": "7.0",
+    "gems": 150,
+    "count": 1
+   },
+   {
+    "id": 44117,
+    "name": "雜亂的瓶子",
+    "category": "桌上",
+    "patch": "7.0",
+    "gems": 150,
+    "count": 1
+   },
+   {
+    "id": 44118,
+    "name": "遺產之地收納箱",
+    "category": "傢俱",
+    "patch": "7.0",
+    "gems": 150,
+    "count": 1
+   },
+   {
+    "id": 44122,
+    "name": "新生王國燈柱",
+    "category": "庭具",
+    "patch": "7.0",
+    "gems": 150,
+    "count": 1
+   },
+   {
+    "id": 44874,
+    "name": "全息顯示器",
+    "category": "壁掛",
+    "patch": "7.1",
+    "gems": 200,
+    "count": 1
+   },
+   {
+    "id": 26727,
+    "name": "信力魔晶石捌型",
+    "category": "魔晶石",
+    "patch": "5.0",
+    "gems": 240,
+    "count": 1
+   },
+   {
+    "id": 26728,
+    "name": "神眼魔晶石捌型",
+    "category": "魔晶石",
+    "patch": "5.0",
+    "gems": 240,
+    "count": 1
+   },
+   {
+    "id": 26729,
+    "name": "武略魔晶石捌型",
+    "category": "魔晶石",
+    "patch": "5.0",
+    "gems": 240,
+    "count": 1
+   },
+   {
+    "id": 26730,
+    "name": "雄略魔晶石捌型",
+    "category": "魔晶石",
+    "patch": "5.0",
+    "gems": 240,
+    "count": 1
+   },
+   {
+    "id": 26731,
+    "name": "剛柔魔晶石捌型",
+    "category": "魔晶石",
+    "patch": "5.0",
+    "gems": 240,
+    "count": 1
+   },
+   {
+    "id": 26738,
+    "name": "戰技魔晶石捌型",
+    "category": "魔晶石",
+    "patch": "5.0",
+    "gems": 240,
+    "count": 1
+   },
+   {
+    "id": 26739,
+    "name": "詠唱魔晶石捌型",
+    "category": "魔晶石",
+    "patch": "5.0",
+    "gems": 240,
+    "count": 1
+   },
+   {
+    "id": 27893,
+    "name": "管弦樂琴樂譜：照耀世界之暗",
+    "category": "管弦樂琴樂譜",
+    "patch": "5.0",
+    "gems": 350,
+    "count": 1
+   },
+   {
+    "id": 28878,
+    "name": "管弦樂琴樂譜：智慧不眠",
+    "category": "管弦樂琴樂譜",
+    "patch": "5.1",
+    "gems": 350,
+    "count": 1
+   },
+   {
+    "id": 27894,
+    "name": "管弦樂琴樂譜：耽溺",
+    "category": "管弦樂琴樂譜",
+    "patch": "5.0",
+    "gems": 350,
+    "count": 1
+   },
+   {
+    "id": 28879,
+    "name": "管弦樂琴樂譜：假面舞會",
+    "category": "管弦樂琴樂譜",
+    "patch": "5.1",
+    "gems": 350,
+    "count": 1
+   },
+   {
+    "id": 30265,
+    "name": "管弦樂琴樂譜：一言難盡的悲哀",
+    "category": "管弦樂琴樂譜",
+    "patch": "5.2",
+    "gems": 350,
+    "count": 1
+   },
+   {
+    "id": 27895,
+    "name": "管弦樂琴樂譜：始源湖",
+    "category": "管弦樂琴樂譜",
+    "patch": "5.0",
+    "gems": 350,
+    "count": 1
+   },
+   {
+    "id": 28880,
+    "name": "管弦樂琴樂譜：不變與變化",
+    "category": "管弦樂琴樂譜",
+    "patch": "5.1",
+    "gems": 350,
+    "count": 1
+   },
+   {
+    "id": 27896,
+    "name": "管弦樂琴樂譜：分隔的世界",
+    "category": "管弦樂琴樂譜",
+    "patch": "5.0",
+    "gems": 350,
+    "count": 1
+   },
+   {
+    "id": 28881,
+    "name": "管弦樂琴樂譜：疾徑",
+    "category": "管弦樂琴樂譜",
+    "patch": "5.1",
+    "gems": 350,
+    "count": 1
+   },
+   {
+    "id": 27897,
+    "name": "管弦樂琴樂譜：琥珀沙漠",
+    "category": "管弦樂琴樂譜",
+    "patch": "5.0",
+    "gems": 350,
+    "count": 1
+   },
+   {
+    "id": 28882,
+    "name": "管弦樂琴樂譜：鮮血沙漠",
+    "category": "管弦樂琴樂譜",
+    "patch": "5.1",
+    "gems": 350,
+    "count": 1
+   },
+   {
+    "id": 27898,
+    "name": "管弦樂琴樂譜：殘忍與自由",
+    "category": "管弦樂琴樂譜",
+    "patch": "5.0",
+    "gems": 350,
+    "count": 1
+   },
+   {
+    "id": 28883,
+    "name": "管弦樂琴樂譜：妖精之環",
+    "category": "管弦樂琴樂譜",
+    "patch": "5.1",
+    "gems": 350,
+    "count": 1
+   },
+   {
+    "id": 30264,
+    "name": "管弦樂琴樂譜：活著的理由",
+    "category": "管弦樂琴樂譜",
+    "patch": "5.2",
+    "gems": 350,
+    "count": 1
+   },
+   {
+    "id": 27899,
+    "name": "管弦樂琴樂譜：文明",
+    "category": "管弦樂琴樂譜",
+    "patch": "5.0",
+    "gems": 350,
+    "count": 1
+   },
+   {
+    "id": 28884,
+    "name": "管弦樂琴樂譜：無望的競爭",
+    "category": "管弦樂琴樂譜",
+    "patch": "5.1",
+    "gems": 350,
+    "count": 1
+   },
+   {
+    "id": 27900,
+    "name": "管弦樂琴樂譜：水深五尋",
+    "category": "管弦樂琴樂譜",
+    "patch": "5.0",
+    "gems": 350,
+    "count": 1
+   },
+   {
+    "id": 28885,
+    "name": "管弦樂琴樂譜：幽冥水底",
+    "category": "管弦樂琴樂譜",
+    "patch": "5.1",
+    "gems": 350,
+    "count": 1
+   },
+   {
+    "id": 30263,
+    "name": "管弦樂琴樂譜：不穩深淵",
+    "category": "管弦樂琴樂譜",
+    "patch": "5.2",
+    "gems": 350,
+    "count": 1
+   }
+  ]
+ }
+}
