@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FF14 幻巧戰（Faux Hollows）助手 — 點格標封鎖格自動辨識盤形，內建 16 盤形×252 擺法資料庫，單擊記錄翻格結果、計算劍／箱／狐機率與建議翻格">
+  <title>幻巧戰助手 | 水神的工具箱</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-base:    #0a0c10;
+      --bg-surface: #0f1117;
+      --bg-card:    #14181f;
+      --bg-card-hover: #1a1f2b;
+      --border:     rgba(255,255,255,0.07);
+      --border-hover: rgba(200,169,110,0.4);
+      --gold:       #c8a96e;
+      --gold-light: #e2c98a;
+      --gold-dim:   rgba(200,169,110,0.15);
+      --purple:     #a78bfa;
+      --purple-dim: rgba(167,139,250,0.12);
+      --green:      #4ade80;
+      --green-dim:  rgba(74,222,128,0.12);
+      --blue:       #4fc3f7;
+      --blue-dim:   rgba(79,195,247,0.12);
+      --red:        #f87171;
+      --red-dim:    rgba(248,113,113,0.12);
+      --text:       #e8e3d8;
+      --text-dim:   #9a9590;
+      --text-muted: #6b6560;
+      --radius:     8px;
+    }
+
+    html { font-size: 17.5px; }
+    body { background: var(--bg-base); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+
+    .nav {
+      background: var(--bg-surface); border-bottom: 1px solid var(--border);
+      padding: 0 1.5rem; height: 52px; display: flex; align-items: center; gap: 0.75rem;
+    }
+    .nav-back { color: var(--text-dim); text-decoration: none; font-size: 0.85rem; display: flex; align-items: center; gap: 0.4rem; transition: color 0.2s; }
+    .nav-back:hover { color: var(--gold); }
+    .nav-sep { color: var(--text-muted); font-size: 0.85rem; }
+    .nav-title { color: var(--text); font-size: 0.9rem; font-weight: 600; }
+
+    .hero {
+      background: linear-gradient(135deg, var(--bg-surface), var(--bg-base));
+      border-bottom: 1px solid var(--border); padding: 1.25rem 1.5rem;
+    }
+    .hero-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .hero h1 { font-size: 1.4rem; font-weight: 700; }
+    .hero-sub { font-size: 0.8rem; color: var(--text-dim); margin-top: 0.2rem; }
+    .moves { text-align: right; }
+    .moves .n { font-size: 1.5rem; font-weight: 700; color: var(--gold); font-variant-numeric: tabular-nums; }
+    .moves .lbl { font-size: 0.72rem; color: var(--text-muted); }
+
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 1.25rem 1.5rem 0; display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: flex-start; transition: opacity 0.15s; }
+    .wrap.centered { justify-content: center; }
+
+    /* 階段指示（被動顯示，由盤形是否鎖定推導） */
+    .steps { display: flex; gap: 0.5rem; align-items: center; font-size: 0.8rem; margin-bottom: 0.8rem; flex-wrap: wrap; }
+    .step { display: flex; align-items: center; gap: 0.4rem; padding: 0.32rem 0.8rem; border-radius: 20px; border: 1px solid var(--border); color: var(--text-muted); background: var(--bg-surface); }
+    .step.on { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); font-weight: 700; }
+    .step .num { width: 18px; height: 18px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; }
+    .step.on .num { background: var(--gold); color: #000; }
+    .steps .arr { color: var(--text-muted); }
+    .reset-btn {
+      margin-left: auto; font-size: 0.75rem; padding: 0.32rem 0.8rem; border-radius: 6px; cursor: pointer;
+      border: 1px solid var(--border); background: var(--bg-surface); color: var(--text-dim); transition: all 0.15s;
+    }
+    .reset-btn:hover { border-color: var(--red); color: var(--red); }
+
+    /* 盤面 */
+    .board-col { flex: 0 0 auto; }
+    .board {
+      position: relative;
+      display: grid; grid-template-columns: repeat(6, 64px); grid-template-rows: repeat(6, 64px);
+      gap: 4px; background: var(--bg-surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 8px;
+    }
+    .cell {
+      position: relative; border-radius: 6px; border: 1px solid var(--border);
+      background: var(--bg-card); cursor: pointer; display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; transition: border-color 0.12s, background 0.12s; user-select: none;
+    }
+    .cell:hover { border-color: var(--border-hover); background: var(--bg-card-hover); }
+    .cell .pct { position: absolute; bottom: 2px; right: 4px; font-size: 0.58rem; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+    .cell .pct.hi { color: var(--gold); font-weight: 700; }
+    .cell .fpct { position: absolute; top: 2px; right: 4px; font-size: 0.55rem; color: var(--purple); font-variant-numeric: tabular-nums; }
+    .cell.blocked { background: #05070a; border-color: rgba(255,255,255,0.03); color: var(--text-muted); }
+    .cell.autoblk { background: #05070a; border-color: rgba(255,255,255,0.03); opacity: 0.55; cursor: default; }
+    .cell.empty   { background: var(--bg-surface); color: var(--text-muted); }
+    .cell.sword   { background: var(--blue-dim);   border-color: rgba(79,195,247,0.45); }
+    .cell.chest   { background: var(--gold-dim);   border-color: rgba(200,169,110,0.5); }
+    .cell.fox     { background: var(--purple-dim); border-color: rgba(167,139,250,0.45); }
+    .cell.rec { outline: 2px solid var(--green); outline-offset: -2px; }
+    .cell.rec::after {
+      content: '建議'; position: absolute; top: 2px; left: 4px;
+      font-size: 0.55rem; color: var(--green); font-weight: 700;
+    }
+    /* 劍箱全鎖定後的整組位置提示（半透明圖示） */
+    .cell.ghost-sword::before, .cell.ghost-chest::before {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; opacity: 0.35; pointer-events: none;
+    }
+    .cell.ghost-sword::before { content: '⚔️'; }
+    .cell.ghost-chest::before { content: '🎁'; }
+    /* 機率熱度底色（未翻開格） */
+    .cell.heat1 { box-shadow: inset 0 0 0 100px rgba(79,195,247,0.05); }
+    .cell.heat2 { box-shadow: inset 0 0 0 100px rgba(79,195,247,0.10); }
+    .cell.heat3 { box-shadow: inset 0 0 0 100px rgba(200,169,110,0.14); }
+    .cell.heat4 { box-shadow: inset 0 0 0 100px rgba(200,169,110,0.22); }
+
+    .board-hint { font-size: 0.75rem; color: var(--text-dim); margin-top: 0.6rem; max-width: 420px; line-height: 1.6; }
+    .conflict { color: var(--red); font-size: 0.8rem; margin-top: 0.5rem; display: none; }
+
+    /* 就地選單（桌面：格子旁 popover；手機：底部固定列） */
+    .pop {
+      position: absolute; background: var(--bg-card); border: 1px solid var(--border-hover);
+      border-radius: 10px; box-shadow: 0 10px 32px rgba(0,0,0,0.6); padding: 6px;
+      display: none; flex-direction: column; gap: 4px; z-index: 30; width: 132px;
+    }
+    .pop.open { display: flex; }
+    .pop button {
+      display: flex; align-items: center; gap: 8px; border: 1px solid var(--border);
+      background: var(--bg-surface); color: var(--text-dim); border-radius: 6px;
+      padding: 7px 10px; font-size: 0.8rem; cursor: pointer; text-align: left; font-family: inherit;
+    }
+    .pop button:hover { border-color: var(--gold); color: var(--gold); }
+    .pop button.def { background: var(--gold-dim); border-color: rgba(200,169,110,0.5); color: var(--gold); font-weight: 700; }
+    .pop button .p { margin-left: auto; font-size: 0.65rem; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+    .pop .x { border: none; background: none; color: var(--text-muted); font-size: 0.7rem; padding: 3px; justify-content: center; }
+    .pop .x:hover { border: none; color: var(--text-dim); }
+
+    /* 側欄（盤形鎖定後顯示） */
+    .side { flex: 1 1 320px; min-width: 300px; display: none; flex-direction: column; gap: 1rem; }
+    .side.show { display: flex; }
+    .panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.1rem; }
+    .panel h2 { font-size: 0.9rem; font-weight: 700; color: var(--gold); margin-bottom: 0.6rem; }
+
+    .stat-row { display: flex; gap: 12px; font-size: 0.82rem; padding: 4px 0; align-items: baseline; }
+    .stat-k { color: var(--text-muted); width: 7.5em; flex-shrink: 0; }
+    .stat-v { font-weight: 600; font-variant-numeric: tabular-nums; }
+
+    .hint { font-size: 0.75rem; color: var(--text-dim); line-height: 1.7; }
+    .hint b { color: var(--text); }
+    .hint .sw { color: var(--blue); } .hint .ch { color: var(--gold); } .hint .fx { color: var(--purple); }
+
+    /* 盤形候選（未鎖定時顯示於盤面下方，純資訊卡） */
+    .cands-wrap { max-width: 1100px; margin: 1rem auto 0; padding: 0 1.5rem; display: none; }
+    .cands-wrap.show { display: block; }
+    .cand-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0.6rem; }
+    .cand {
+      display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.4rem;
+      background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; padding: 0.7rem;
+    }
+    .cand .cid { font-size: 1rem; font-weight: 700; }
+    .cand .meta { font-size: 0.72rem; color: var(--text-dim); }
+    .cand .meta b { color: var(--text); }
+    .mini { display: grid; grid-template-columns: repeat(6, 10px); grid-template-rows: repeat(6, 10px); gap: 1px; }
+    .mini i { background: var(--bg-card); border-radius: 1px; }
+    .mini i.b { background: #000; outline: 1px solid rgba(255,255,255,0.15); }
+    .mini i.m { background: var(--gold); }
+    /* 鎖定卡的橫向排列 */
+    .cand.row { flex-direction: row; text-align: left; }
+    .cand.row .meta { flex: 1; }
+
+    .info-note { max-width: 1100px; margin: 0 auto; padding: 1.5rem 1.5rem 2rem; font-size: 0.72rem; color: var(--text-muted); line-height: 1.8; }
+
+    @media (max-width: 560px) {
+      .board { grid-template-columns: repeat(6, 48px); grid-template-rows: repeat(6, 48px); }
+      .cell { font-size: 1rem; }
+      .cell .pct, .cell .fpct { display: none; }
+      /* 就地選單改底部固定列：四鍵並排、44px 以上可拇指觸及 */
+      .pop { position: fixed; left: 0 !important; right: 0; top: auto !important; bottom: 0; width: 100%;
+             flex-direction: row; flex-wrap: wrap; border-radius: 12px 12px 0 0; padding: 8px; gap: 6px;
+             border-left: none; border-right: none; border-bottom: none; }
+      .pop button { flex: 1 1 21%; min-height: 44px; justify-content: center; text-align: center; }
+      .pop .x { flex-basis: 100%; min-height: 34px; }
+    }
+  </style>
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <script src="../../assets/js/theme.js"></script>
+</head>
+<body>
+<nav class="nav">
+  <a href="../../" class="nav-back">&larr; 水神的工具箱</a>
+  <span class="nav-sep">›</span>
+  <span class="nav-title">🦊 幻巧戰助手</span>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div>
+      <h1>🦊 幻巧戰助手</h1>
+      <div class="hero-sub">點格標封鎖格自動辨識盤形，即時計算<span style="color:var(--blue)">雙劍</span>、<span style="color:var(--gold)">禮物盒</span>與<span style="color:var(--purple)">狐狸</span>的位置機率</div>
+    </div>
+    <div class="moves">
+      <div class="n" id="movesLeft">11</div>
+      <div class="lbl">剩餘翻開次數</div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap centered" id="wrap">
+  <div class="board-col">
+    <div class="steps">
+      <span class="step on" id="step1"><span class="num">1</span>標封鎖格</span>
+      <span class="arr">→</span>
+      <span class="step" id="step2"><span class="num">2</span>翻格</span>
+      <button class="reset-btn" id="resetBtn">🔄 重開一局</button>
+    </div>
+    <div class="board" id="board"></div>
+    <p class="board-hint" id="boardHint"></p>
+    <div class="conflict" id="conflictMsg">⚠️ 不存在符合的盤形——請檢查封鎖格與翻格標記。</div>
+  </div>
+
+  <div class="side" id="sidePanel">
+    <div class="panel">
+      <h2>🧩 盤形（已鎖定）</h2>
+      <div id="lockedCard"></div>
+    </div>
+    <div class="panel">
+      <h2>📊 盤面分析</h2>
+      <div class="stat-row"><span class="stat-k">可能盤面組合</span><span class="stat-v" id="stCombos">—</span></div>
+      <div class="stat-row"><span class="stat-k">⚔️ 劍可能位置</span><span class="stat-v" id="stSword">—</span></div>
+      <div class="stat-row"><span class="stat-k">🎁 箱可能位置</span><span class="stat-v" id="stChest">—</span></div>
+      <div class="stat-row"><span class="stat-k">🦊 狐狸候選格</span><span class="stat-v" id="stFox">—</span></div>
+      <div class="stat-row"><span class="stat-k">💡 建議下一格</span><span class="stat-v" id="stRec">—</span></div>
+      <div class="hint" style="margin-top:0.5rem" id="stAdvice"></div>
+    </div>
+    <div class="panel">
+      <h2>📖 玩法速記</h2>
+      <div class="hint">
+        ・共 <b>11 次</b>翻開機會，封鎖格不消耗次數。<br>
+        ・<span class="sw">⚔️ 雙劍</span>（6 格）與 <span class="ch">🎁 禮物盒</span>（4 格）必定存在；<span class="fx">🦊 狐狸</span>只出現在該盤形的 4 個候選位之一，也可能不出現。<br>
+        ・點格子記錄翻開結果：結果已確定的格<b>單擊直接落定</b>，不確定的格才會彈出選單。<br>
+        ・點已標記的格可修改或清除；清除封鎖格會自動退回盤形候選。<br>
+        ・格子右下角百分比＝劍或箱機率、右上角 🦊＝狐狸機率；<b style="color:var(--green)">綠框</b>為建議翻開格。
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="cands-wrap" id="candsWrap">
+  <div class="panel">
+    <h2 id="candsTitle">🧩 盤形候選</h2>
+    <div class="cand-grid" id="candGrid"></div>
+    <p class="hint" style="margin-top:0.6rem">金格＝你已標的封鎖格；黑格＝該盤形的封鎖格位置。再多標一格封鎖格即可鎖定盤形（通常 1～3 格就夠）。</p>
+  </div>
+</div>
+
+<p class="info-note">
+  操作：照遊戲畫面點格子標封鎖格 → 盤形鎖定後其餘封鎖格自動補滿 → 每翻一格點一下記錄結果（確定格單擊落定、不確定格彈選單）。<br>
+  盤面資料庫：社群 datamined 的 16 種盤形 × 252 種劍／箱／狐擺法組合（來源：<a href="https://github.com/JoshuaEN/ffxiv-faux-hollows" target="_blank" rel="noopener" style="color:var(--text-muted)">JoshuaEN/ffxiv-faux-hollows</a>），機率以與目前標記相容的擺法等權重計算。狐狸機率以「出現時」為前提。<br>
+  幻巧戰於完成幻巧異聞挑戰（Unreal）後在無名島遊玩。本工具離線可用，不需網路。
+</p>
+
+<footer class="site-footer" style="border-top:1px solid var(--border);padding:24px 0;text-align:center">
+  <p style="font-size:12px;color:var(--text-muted)">
+    水神的工具箱 · <a href="../../" style="color:var(--text-dim)">回首頁</a> · FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具
+  </p>
+</footer>
+
+<script>
+(function () {
+  const N = 6, TOTAL = 11;
+  const CELL_ICON = { blocked: '⬛', empty: '', sword: '⚔️', chest: '🎁', fox: '🦊' };
+  const MARK_LABEL = { empty: '◻ 空白', sword: '⚔️ 劍', chest: '🎁 箱', fox: '🦊 狐' };
+
+  /* ── 官方盤形資料庫 ──
+     封鎖格為 16 種固定盤形（4 基本型 × 4 旋轉），劍/箱/狐只會出現在
+     各盤形的固定擺法組合（共 252 種）。資料來源：社群 datamined，
+     取自 JoshuaEN/ffxiv-faux-hollows。
+     p 陣列元素：[箱左上, 劍左上, 劍3寬2高?1:0, [狐候選×4]] */
+  const FAUX_DB = [{"id":"A←","b":[5,7,19,22,26],"p":[[24,2,1,[6,12,32,35]],[14,2,1,[6,12,32,35]],[24,8,1,[2,11,13,17]],[27,8,1,[2,11,13,17]],[24,9,1,[0,8,14,21]],[27,9,1,[0,8,14,21]],[27,2,0,[6,12,32,35]],[10,2,0,[6,12,32,35]],[24,3,0,[0,8,14,21]],[28,3,0,[0,8,14,21]],[24,8,0,[1,4,18,23]],[28,8,0,[1,4,18,23]],[10,27,1,[1,4,18,23]],[2,27,1,[1,4,18,23]],[3,27,1,[2,11,13,17]],[14,27,1,[2,11,13,17]]]},{"id":"A","b":[8,10,13,26,35],"p":[[0,16,0,[3,4,12,30]],[14,16,0,[3,4,12,30]],[0,15,0,[9,17,33,34]],[18,15,0,[9,17,33,34]],[0,21,0,[5,15,16,20]],[18,21,0,[5,15,16,20]],[18,15,1,[3,4,12,30]],[27,15,1,[3,4,12,30]],[0,21,1,[5,15,16,20]],[24,21,1,[5,15,16,20]],[0,14,1,[2,11,29,32]],[24,14,1,[2,11,29,32]],[27,18,0,[2,11,29,32]],[16,18,0,[2,11,29,32]],[22,18,0,[9,17,33,34]],[14,18,0,[9,17,33,34]]]},{"id":"A→","b":[9,13,16,28,30],"p":[[4,25,1,[0,3,23,29]],[14,25,1,[0,3,23,29]],[4,19,1,[18,22,24,33]],[1,19,1,[18,22,24,33]],[4,18,1,[14,21,27,35]],[1,18,1,[14,21,27,35]],[1,20,0,[0,3,23,29]],[18,20,0,[0,3,23,29]],[4,19,0,[14,21,27,35]],[0,19,0,[14,21,27,35]],[4,14,0,[12,17,31,34]],[0,14,0,[12,17,31,34]],[18,0,1,[12,17,31,34]],[26,0,1,[12,17,31,34]],[25,0,1,[18,22,24,33]],[14,0,1,[18,22,24,33]]]},{"id":"A↓","b":[0,9,22,25,27],"p":[[28,6,0,[5,23,31,32]],[14,6,0,[5,23,31,32]],[28,7,0,[1,2,18,26]],[10,7,0,[1,2,18,26]],[28,1,0,[15,19,20,30]],[10,1,0,[15,19,20,30]],[10,12,1,[5,23,31,32]],[1,12,1,[5,23,31,32]],[28,6,1,[15,19,20,30]],[4,6,1,[15,19,20,30]],[28,13,1,[3,6,24,33]],[4,13,1,[3,6,24,33]],[1,4,0,[3,6,24,33]],[12,4,0,[3,6,24,33]],[6,4,0,[1,2,18,26]],[14,4,0,[1,2,18,26]]]},{"id":"B←","b":[8,12,15,23,26],"p":[[0,18,0,[14,17,22,33]],[4,18,0,[14,17,22,33]],[28,18,0,[7,9,20,21]],[10,18,0,[7,9,20,21]],[28,3,1,[14,17,22,33]],[18,3,1,[14,17,22,33]],[21,3,1,[2,19,24,31]],[0,3,1,[2,19,24,31]],[0,4,0,[2,19,24,31]],[28,4,0,[2,19,24,31]],[24,27,1,[7,9,20,21]],[4,27,1,[7,9,20,21]],[13,27,1,[0,5,18,32]],[3,27,1,[0,5,18,32]],[24,21,0,[0,5,18,32]],[10,21,0,[0,5,18,32]]]},{"id":"B","b":[3,13,16,21,32],"p":[[4,0,1,[15,18,26,33]],[28,0,1,[15,18,26,33]],[24,0,1,[10,14,20,22]],[27,0,1,[10,14,20,22]],[24,22,0,[15,18,26,33]],[1,22,0,[15,18,26,33]],[19,22,0,[1,6,8,17]],[4,22,0,[1,6,8,17]],[4,27,1,[1,6,8,17]],[24,27,1,[1,6,8,17]],[0,18,0,[10,14,20,22]],[28,18,0,[10,14,20,22]],[8,18,0,[2,5,12,35]],[22,18,0,[2,5,12,35]],[0,18,1,[2,5,12,35]],[27,18,1,[2,5,12,35]]]},{"id":"B→","b":[9,12,20,23,27],"p":[[28,4,0,[2,13,18,21]],[24,4,0,[2,13,18,21]],[0,4,0,[14,15,26,28]],[18,4,0,[14,15,26,28]],[0,24,1,[2,13,18,21]],[10,24,1,[2,13,18,21]],[7,24,1,[4,11,16,33]],[28,24,1,[4,11,16,33]],[28,18,0,[4,11,16,33]],[0,18,0,[4,11,16,33]],[4,0,1,[14,15,26,28]],[24,0,1,[14,15,26,28]],[15,0,1,[3,17,30,35]],[25,0,1,[3,17,30,35]],[4,1,0,[3,17,30,35]],[18,1,0,[3,17,30,35]]]},{"id":"B↓","b":[3,14,19,22,32],"p":[[24,27,1,[2,9,17,20]],[0,27,1,[2,9,17,20]],[4,27,1,[13,15,21,25]],[1,27,1,[13,15,21,25]],[4,0,0,[2,9,17,20]],[27,0,0,[2,9,17,20]],[9,0,0,[18,27,29,34]],[24,0,0,[18,27,29,34]],[24,0,1,[18,27,29,34]],[4,0,1,[18,27,29,34]],[28,4,0,[13,15,21,25]],[0,4,0,[13,15,21,25]],[20,4,0,[0,23,30,33]],[6,4,0,[0,23,30,33]],[28,9,1,[0,23,30,33]],[1,9,1,[0,23,30,33]]]},{"id":"C←","b":[6,14,17,25,28],"p":[[26,1,1,[15,16,29,30]],[4,1,1,[15,16,29,30]],[26,2,1,[5,11,19,34]],[15,2,1,[5,11,19,34]],[12,3,1,[2,7,22,31]],[20,3,1,[2,7,22,31]],[15,3,1,[0,20,24,35]],[26,3,1,[0,20,24,35]],[12,3,0,[2,7,22,31]],[26,3,0,[2,7,22,31]],[20,3,0,[5,11,19,34]],[1,3,0,[5,11,19,34]],[12,9,0,[0,20,24,35]],[1,9,0,[0,20,24,35]],[12,20,0,[15,16,29,30]]]},{"id":"C","b":[4,7,15,25,33],"p":[[12,10,0,[0,21,27,31]],[28,10,0,[0,21,27,31]],[12,16,0,[8,24,34,35]],[20,16,0,[8,24,34,35]],[2,22,0,[6,10,17,26]],[13,22,0,[6,10,17,26]],[20,22,0,[1,5,14,30]],[12,22,0,[1,5,14,30]],[2,21,1,[6,10,17,26]],[12,21,1,[6,10,17,26]],[13,21,1,[8,24,34,35]],[10,21,1,[8,24,34,35]],[2,20,1,[1,5,14,30]],[10,20,1,[1,5,14,30]],[2,12,1,[0,21,27,31]]]},{"id":"C→","b":[7,10,18,21,29],"p":[[2,26,1,[5,6,19,20]],[24,26,1,[5,6,19,20]],[2,25,1,[1,16,24,30]],[13,25,1,[1,16,24,30]],[16,24,1,[4,13,28,33]],[8,24,1,[4,13,28,33]],[13,24,1,[0,11,15,35]],[2,24,1,[0,11,15,35]],[16,19,0,[4,13,28,33]],[2,19,0,[4,13,28,33]],[8,19,0,[1,16,24,30]],[27,19,0,[1,16,24,30]],[16,13,0,[0,11,15,35]],[27,13,0,[0,11,15,35]],[16,2,0,[5,6,19,20]]]},{"id":"C↓","b":[2,10,20,28,31],"p":[[16,12,0,[4,8,14,35]],[0,12,0,[4,8,14,35]],[16,6,0,[0,1,11,27]],[8,6,0,[0,1,11,27]],[26,0,0,[9,18,25,29]],[15,0,0,[9,18,25,29]],[8,0,0,[5,21,30,34]],[16,0,0,[5,21,30,34]],[26,6,1,[9,18,25,29]],[16,6,1,[9,18,25,29]],[15,6,1,[0,1,11,27]],[18,6,1,[0,1,11,27]],[26,7,1,[5,21,30,34]],[18,7,1,[5,21,30,34]],[26,15,1,[4,8,14,35]]]},{"id":"D←","b":[8,16,23,25,33],"p":[[14,6,0,[1,11,29,34]],[21,6,0,[1,11,29,34]],[3,0,0,[5,14,15,30]],[28,0,0,[5,14,15,30]],[0,12,1,[2,22,24,26]],[28,12,1,[2,22,24,26]],[4,13,1,[3,12,17,18]],[28,13,1,[3,12,17,18]],[12,3,1,[2,22,24,26]],[0,3,1,[2,22,24,26]],[12,20,1,[5,14,15,30]],[3,20,1,[5,14,15,30]],[12,14,0,[1,11,29,34]],[3,14,0,[1,11,29,34]],[0,14,0,[3,12,17,18]],[4,14,0,[3,12,17,18]]]},{"id":"D","b":[7,16,18,27,32],"p":[[14,2,1,[11,24,31,34]],[19,2,1,[11,24,31,34]],[22,3,1,[0,15,21,35]],[24,3,1,[0,15,21,35]],[4,2,0,[1,13,17,26]],[24,2,0,[1,13,17,26]],[28,8,0,[2,3,23,33]],[24,8,0,[2,3,23,33]],[2,22,0,[1,13,17,26]],[4,22,0,[1,13,17,26]],[2,13,0,[0,15,21,35]],[22,13,0,[0,15,21,35]],[2,13,1,[11,24,31,34]],[22,13,1,[11,24,31,34]],[4,13,1,[2,3,23,33]],[28,13,1,[2,3,23,33]]]},{"id":"D→","b":[2,10,12,19,27],"p":[[14,16,0,[1,6,24,34]],[7,16,0,[1,6,24,34]],[25,22,0,[5,20,21,30]],[0,22,0,[5,20,21,30]],[28,15,1,[9,11,13,33]],[0,15,1,[9,11,13,33]],[24,14,1,[17,18,23,32]],[0,14,1,[17,18,23,32]],[16,24,1,[9,11,13,33]],[28,24,1,[9,11,13,33]],[16,7,1,[5,20,21,30]],[25,7,1,[5,20,21,30]],[16,8,0,[1,6,24,34]],[25,8,0,[1,6,24,34]],[28,8,0,[17,18,23,32]],[24,8,0,[17,18,23,32]]]},{"id":"D↓","b":[3,8,17,19,28],"p":[[14,25,1,[1,4,11,24]],[9,25,1,[1,4,11,24]],[6,24,1,[0,14,20,35]],[4,24,1,[0,14,20,35]],[24,20,0,[9,18,22,34]],[4,20,0,[9,18,22,34]],[0,14,0,[2,12,32,33]],[4,14,0,[2,12,32,33]],[26,0,0,[9,18,22,34]],[24,0,0,[9,18,22,34]],[26,9,0,[0,14,20,35]],[6,9,0,[0,14,20,35]],[26,14,1,[1,4,11,24]],[6,14,1,[1,4,11,24]],[24,14,1,[2,12,32,33]],[0,14,1,[2,12,32,33]]]}];
+
+  function rectOf(tl, w, h) {
+    const out = [], y0 = Math.floor(tl / N), x0 = tl % N;
+    for (let dy = 0; dy < h; dy++) for (let dx = 0; dx < w; dx++) out.push((y0 + dy) * N + x0 + dx);
+    return out;
+  }
+  const BOARDS = FAUX_DB.map(bd => ({
+    id: bd.id,
+    blocked: new Set(bd.b),
+    pats: bd.p.map(([ch, sw, s32, foxes]) => ({
+      chest: rectOf(ch, 2, 2),
+      sword: rectOf(sw, s32 ? 3 : 2, s32 ? 2 : 3),
+      foxes,
+    })),
+  }));
+
+  // 盤面狀態：null=未知、'blocked'（手標）、'empty'、'sword'、'chest'、'fox'
+  let cells = new Array(N * N).fill(null);
+  let last = null;       // 最近一次 analyze 結果（點擊判斷用）
+  let menuAt = null;     // 就地選單目前開在哪一格
+
+  /* ── 核心分析：cells → 相容盤形/擺法 → 機率 ──
+     無顯式狀態機：isLocked = 相容盤形恰為 1（D10-A）。 */
+  function analyze() {
+    const obsBlocked = [], obsSword = [], obsChest = [], obsFox = [], obsEmpty = [];
+    cells.forEach((c, i) => {
+      if (c === 'blocked') obsBlocked.push(i);
+      else if (c === 'sword') obsSword.push(i);
+      else if (c === 'chest') obsChest.push(i);
+      else if (c === 'fox') obsFox.push(i);
+      else if (c === 'empty') obsEmpty.push(i);
+    });
+    const revealedAll = [...obsSword, ...obsChest, ...obsFox, ...obsEmpty];
+
+    const swordHit = new Float64Array(N * N);
+    const chestHit = new Float64Array(N * N);
+    const foxHit   = new Float64Array(N * N);
+    let combos = 0;
+    const swordSet = new Set(), chestSet = new Set(), foxTiles = new Set();
+    const matchBoards = []; // [{id, blocked:Set, count}] 相容盤形與各自匹配擺法數
+    let lockedSword = null, lockedChest = null;
+
+    for (const bd of BOARDS) {
+      if (!obsBlocked.every(i => bd.blocked.has(i))) continue;
+      if (revealedAll.some(i => bd.blocked.has(i))) continue;
+      let count = 0;
+      for (const p of bd.pats) {
+        const sw = p.sword, ch = p.chest;
+        if (!obsSword.every(i => sw.includes(i))) continue;
+        if (!obsChest.every(i => ch.includes(i))) continue;
+        if (obsEmpty.some(i => sw.includes(i) || ch.includes(i))) continue;
+        if (obsFox.length && !obsFox.every(i => p.foxes.includes(i))) continue;
+        count++;
+        swordSet.add(sw.join(','));  lockedSword = sw;
+        chestSet.add(ch.join(','));  lockedChest = ch;
+        for (const i of sw) swordHit[i]++;
+        for (const i of ch) chestHit[i]++;
+        if (!obsFox.length) {
+          for (const f of p.foxes) if (!obsEmpty.includes(f)) { foxHit[f] += 0.25; foxTiles.add(f); }
+        }
+      }
+      if (count > 0) matchBoards.push({ id: bd.id, blocked: bd.blocked, count });
+      combos += count;
+    }
+    matchBoards.sort((a, b) => b.count - a.count);
+
+    const locked = matchBoards.length === 1 && combos > 0;
+    // 鎖定時自動補滿其餘封鎖格（顯示用，不寫入 cells）
+    const autoBlocked = locked ? [...matchBoards[0].blocked].filter(i => cells[i] === null) : [];
+    return {
+      combos, swordHit, chestHit, foxHit,
+      swordCount: swordSet.size, chestCount: chestSet.size,
+      lockedSword: swordSet.size === 1 ? lockedSword : null,
+      lockedChest: chestSet.size === 1 ? lockedChest : null,
+      matchBoards, foxTiles, locked, autoBlocked,
+      blockedCount: obsBlocked.length, revealed: revealedAll.length,
+      foxFound: obsFox.length > 0,
+      obsBlockedSet: new Set(obsBlocked),
+    };
+  }
+
+  /* 該格內容是否 100% 確定（單擊直接落定，不開選單） */
+  function determine(i, a) {
+    if (!a.combos) return null;
+    if (a.swordHit[i] === a.combos) return 'sword';
+    if (a.chestHit[i] === a.combos) return 'chest';
+    if (a.swordHit[i] + a.chestHit[i] === 0 && !a.foxTiles.has(i)) return 'empty';
+    return null; // 含狐候選格：狐可能不出現，永不 100%
+  }
+
+  /* ── 迷你預覽（候選卡與鎖定卡共用）── */
+  function renderMini(blockedSet, markedSet) {
+    let s = '<span class="mini">';
+    for (let i = 0; i < N * N; i++) {
+      s += '<i class="' + (markedSet.has(i) ? 'm' : blockedSet.has(i) ? 'b' : '') + '"></i>';
+    }
+    return s + '</span>';
+  }
+
+  /* ── 就地選單 ── */
+  function closeMenu() {
+    menuAt = null;
+    const pop = document.getElementById('popMenu');
+    if (pop) pop.classList.remove('open'); // 首次 render 前選單尚未建立
+  }
+  function openMenu(i, a) {
+    menuAt = i;
+    const pop = document.getElementById('popMenu');
+    const marked = cells[i] !== null;
+    let items = [];
+    if (cells[i] === 'blocked') {
+      items.push('<button data-act="clear">🧹 清除封鎖格</button>');
+    } else {
+      // 機率提示與智慧預設高亮
+      const swP = a.combos ? a.swordHit[i] / a.combos : 0;
+      const chP = a.combos ? a.chestHit[i] / a.combos : 0;
+      const fxP = a.combos ? a.foxHit[i] / a.combos : 0;
+      const emP = Math.max(0, 1 - swP - chP);
+      const opts = [
+        ['empty', emP], ['sword', swP], ['chest', chP], ['fox', fxP],
+      ];
+      const best = opts.reduce((m, o) => (o[1] > m[1] ? o : m), opts[0]);
+      for (const [k, p] of opts) {
+        if (marked && cells[i] === k) continue; // 已是此標記者不重列
+        const def = !marked && k === best[0] && p > 0;
+        items.push('<button data-act="' + k + '"' + (def ? ' class="def"' : '') + '>' +
+          MARK_LABEL[k] + (p > 0 && p < 1 ? '<span class="p">' + Math.round(p * 100) + '%</span>' : '') + '</button>');
+      }
+      if (marked) items.push('<button data-act="clear">🧹 清除標記</button>');
+    }
+    items.push('<button class="x" data-act="cancel">取消 (Esc)</button>');
+    pop.innerHTML = items.join('');
+
+    // 定位：格子右側；右緣放不下彈左側；下緣超出往上收（≤560px 由 CSS 固定底部列接手）
+    const boardEl = document.getElementById('board');
+    const cellEl = boardEl.querySelector('[data-i="' + i + '"]');
+    pop.classList.add('open');
+    const cw = cellEl.offsetWidth, popW = 132;
+    let left = cellEl.offsetLeft + cw + 6;
+    if (left + popW > boardEl.clientWidth) left = cellEl.offsetLeft - popW - 6;
+    if (left < 0) left = 4;
+    let top = cellEl.offsetTop;
+    const popH = pop.offsetHeight || 190;
+    if (top + popH > boardEl.clientHeight) top = Math.max(4, boardEl.clientHeight - popH - 4);
+    pop.style.left = left + 'px';
+    pop.style.top = top + 'px';
+  }
+
+  /* ── 渲染 ── */
+  function render() {
+    const a = analyze();
+    last = a;
+    closeMenu();
+    document.getElementById('movesLeft').textContent = Math.max(0, TOTAL - a.revealed);
+
+    // 版面：未鎖定＝置中盤面＋下方候選卡；鎖定＝盤面左＋側欄右（皆為 isLocked 推導，非狀態機）
+    document.getElementById('wrap').classList.toggle('centered', !a.locked);
+    document.getElementById('sidePanel').classList.toggle('show', a.locked);
+    // 有任何標記（封鎖或翻格）在約束候選時就顯示候選卡
+    const hasMarks = a.blockedCount > 0 || a.revealed > 0;
+    document.getElementById('candsWrap').classList.toggle('show', !a.locked && hasMarks && a.combos > 0);
+    document.getElementById('step1').classList.toggle('on', !a.locked);
+    document.getElementById('step2').classList.toggle('on', a.locked);
+
+    // 建議格：未標記且非自動封鎖格中 P(劍∪箱) 最高者
+    const autoSet = new Set(a.autoBlocked);
+    let best = -1, bestP = -1;
+    const probs = new Float64Array(N * N);
+    if (a.combos > 0 && a.locked) {
+      for (let i = 0; i < N * N; i++) {
+        if (cells[i] !== null || autoSet.has(i)) continue;
+        const p = (a.swordHit[i] + a.chestHit[i]) / a.combos;
+        probs[i] = p;
+        if (p > bestP) { bestP = p; best = i; }
+      }
+    }
+
+    // 劍箱皆鎖定 → 半透明畫出整組位置
+    const ghostSword = new Set(a.lockedSword && a.chestCount >= 1 ? a.lockedSword : []);
+    const ghostChest = new Set(a.lockedChest || []);
+    const showGhost = a.lockedSword && a.lockedChest;
+
+    document.getElementById('board').innerHTML = cells.map((c, i) => {
+      const cls = ['cell'];
+      if (c) cls.push(c);
+      else if (autoSet.has(i)) cls.push('autoblk');
+      let inner = CELL_ICON[c] || (autoSet.has(i) ? '⬛' : '');
+      if (c === null && !autoSet.has(i) && a.combos > 0 && a.locked) {
+        const p = probs[i];
+        let parts = '';
+        if (p > 0) {
+          const hi = p >= 0.5;
+          if (p >= 0.75) cls.push('heat4'); else if (p >= 0.5) cls.push('heat3');
+          else if (p >= 0.25) cls.push('heat2'); else cls.push('heat1');
+          parts += '<span class="pct' + (hi ? ' hi' : '') + '">' + Math.round(p * 100) + '%</span>';
+        }
+        const fp = a.foxHit[i] / a.combos;
+        if (fp > 0) parts += '<span class="fpct">🦊' + Math.round(fp * 100) + '%</span>';
+        inner = parts;
+        if (i === best) cls.push('rec');
+        if (showGhost) {
+          if (ghostSword.has(i)) cls.push('ghost-sword');
+          else if (ghostChest.has(i)) cls.push('ghost-chest');
+        }
+      }
+      return '<div class="' + cls.join(' ') + '" data-i="' + i + '">' + inner + '</div>';
+    }).join('') + '<div class="pop" id="popMenu"></div>';
+
+    // 盤面下方提示與衝突
+    const hint = document.getElementById('boardHint');
+    if (a.combos === 0 && (a.blockedCount || a.revealed)) {
+      hint.textContent = '';
+      document.getElementById('conflictMsg').style.display = 'block';
+    } else {
+      document.getElementById('conflictMsg').style.display = 'none';
+      if (!a.blockedCount) hint.textContent = '點格子標封鎖格——標好一格就會列出可能的盤形。';
+      else if (!a.locked) hint.textContent = '再多標一格封鎖格即可鎖定盤形，或先對照下方候選卡。';
+      else hint.textContent = '點格子記錄翻開結果；已確定的格會直接落定，其他格會彈出選單。';
+    }
+
+    // 未鎖定：候選卡（純資訊，依匹配擺法數降冪）
+    if (!a.locked && hasMarks && a.combos > 0) {
+      document.getElementById('candsTitle').textContent = '🧩 盤形候選（' + a.matchBoards.length + ' 種）';
+      document.getElementById('candGrid').innerHTML = a.matchBoards.map(b =>
+        '<div class="cand"><span class="cid">' + b.id + '</span>' +
+        renderMini(b.blocked, a.obsBlockedSet) +
+        '<span class="meta"><b>' + b.count + '</b> 種擺法</span></div>').join('');
+    }
+
+    // 鎖定：側欄
+    if (a.locked) {
+      const b = a.matchBoards[0];
+      document.getElementById('lockedCard').innerHTML =
+        '<div class="cand row"><span class="cid">' + b.id + '</span>' +
+        renderMini(b.blocked, a.obsBlockedSet) +
+        '<span class="meta"><b>' + b.count + '</b> 種擺法 · 封鎖格已自動補滿</span></div>';
+      document.getElementById('stCombos').textContent = a.combos.toLocaleString() + ' 種';
+      document.getElementById('stSword').textContent = a.swordCount + ' 種擺法' + (a.swordCount === 1 ? '（已鎖定！）' : '');
+      document.getElementById('stChest').textContent = a.chestCount + ' 種擺法' + (a.chestCount === 1 ? '（已鎖定！）' : '');
+      document.getElementById('stFox').textContent =
+        a.foxFound ? '已找到 🦊！' : (a.foxTiles.size ? a.foxTiles.size + ' 格（出現時的位置機率）' : '—');
+      document.getElementById('stRec').textContent = best >= 0
+        ? '第 ' + (Math.floor(best / N) + 1) + ' 列第 ' + (best % N + 1) + ' 行（' + Math.round(bestP * 100) + '%）' : '—';
+      const advice = document.getElementById('stAdvice');
+      if (a.swordCount === 1 && a.chestCount === 1) {
+        advice.innerHTML = '<b style="color:var(--green)">劍與箱的位置都已確定！</b>依半透明圖示直接翻開即可' +
+          (a.foxFound ? '。' : '；行有餘力再賭 🦊 候選格。');
+      } else {
+        advice.textContent = '建議翻開綠框格——它是目前藏有劍或箱機率最高的格子。';
+      }
+    }
+  }
+
+  /* ── 事件 ── */
+  document.getElementById('board').addEventListener('click', e => {
+    const menuBtn = e.target.closest('.pop button');
+    if (menuBtn) {
+      const act = menuBtn.dataset.act;
+      if (act === 'cancel') { closeMenu(); return; }
+      if (menuAt == null) { closeMenu(); return; }
+      cells[menuAt] = act === 'clear' ? null : act;
+      render();
+      return;
+    }
+    const el = e.target.closest('.cell');
+    if (!el || el.classList.contains('autoblk')) { closeMenu(); return; }
+    const i = Number(el.dataset.i);
+    if (menuAt === i) { closeMenu(); return; } // 同格再點＝關閉選單
+    const a = last;
+
+    if (cells[i] !== null && cells[i] !== 'blocked') { openMenu(i, a); return; } // 已標翻格記號 → 修改/清除
+    if (!a.locked) {
+      // 未鎖定：點格＝切換封鎖格
+      cells[i] = cells[i] === 'blocked' ? null : 'blocked';
+      render();
+      return;
+    }
+    // 已鎖定
+    if (cells[i] === 'blocked') { openMenu(i, a); return; } // 手標封鎖格 → 清除選單
+    const d = determine(i, a);
+    if (d) { cells[i] = d; render(); } // 100% 確定：單擊落定
+    else openMenu(i, a);               // 不確定（含狐候選）：就地選單
+  });
+
+  document.addEventListener('click', e => {
+    if (!e.target.closest('#board')) closeMenu();
+  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    cells = new Array(N * N).fill(null);
+    render();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
