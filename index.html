@@ -279,6 +279,32 @@
     .section-life    .tool-card:hover { border-color: rgba(74,222,128,0.4); }
     .section-life    .tool-card:hover::before { background: linear-gradient(90deg, var(--green), transparent); }
 
+    /* ── 收藏進度儀表板 ── */
+    .pd-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 10px;
+    }
+    .pd-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: var(--transition);
+    }
+    .pd-item:hover { border-color: var(--border-hover); background: var(--bg-card-hover); }
+    .pd-top { display: flex; align-items: baseline; gap: 8px; }
+    .pd-name { font-size: 13.5px; font-weight: 600; color: var(--text-primary); }
+    .pd-num { margin-left: auto; font-size: 12px; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+    .pd-bar { height: 6px; background: var(--bg-surface); border-radius: 3px; overflow: hidden; }
+    .pd-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--purple), var(--blue)); transition: width 0.4s; }
+    .pd-item.done .pd-fill { background: linear-gradient(90deg, var(--gold), var(--gold-light)); }
+    .pd-item.done .pd-num { color: var(--gold); }
+    .pd-hint { font-size: 11.5px; color: var(--text-muted); margin-top: 10px; }
+
     /* ── WIP Banner ── */
     .wip-banner {
       background: var(--bg-card);
@@ -345,12 +371,23 @@
     <span>工具站持續建設中，標示「可用」的功能已可使用，其餘即將推出。</span>
   </div>
 
+  <!-- ── 我的收藏進度（取自各追蹤頁寫入的本機快照）── -->
+  <section class="section section-collect" id="progressDash" style="display:none">
+    <div class="section-header">
+      <span class="section-icon">📈</span>
+      <h2 class="section-title">我的收藏進度</h2>
+      <span class="section-count" id="pdTotal"></span>
+    </div>
+    <div class="pd-grid" id="pdGrid"></div>
+    <p class="pd-hint">進度為此瀏覽器的本機紀錄——各追蹤頁開啟過一次後就會出現在這裡並自動同步。</p>
+  </section>
+
   <!-- ── 日常工具 ── -->
   <section class="section section-daily">
     <div class="section-header">
       <span class="section-icon">📅</span>
       <h2 class="section-title">日常工具</h2>
-      <span class="section-count">6 項</span>
+      <span class="section-count">7 項</span>
     </div>
     <div class="card-grid">
 
@@ -400,6 +437,17 @@
         <div class="card-emoji">🌬️</div>
         <div class="card-title">風脈泉追蹤器</div>
         <div class="card-desc">各版本野外風脈泉任務與野外採集，追蹤解鎖進度</div>
+        <div class="card-footer">
+          <span class="card-badge badge-ready">可用</span>
+          <span class="card-badge badge-new">新</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a class="tool-card" href="tools/faux-hollows/">
+        <div class="card-emoji">🦊</div>
+        <div class="card-title">幻巧戰助手</div>
+        <div class="card-desc">點格標封鎖格自動辨識盤形，單擊記錄翻格，計算劍／箱／狐機率與建議</div>
         <div class="card-footer">
           <span class="card-badge badge-ready">可用</span>
           <span class="card-badge badge-new">新</span>
@@ -565,7 +613,7 @@
     <div class="section-header">
       <span class="section-icon">🌿</span>
       <h2 class="section-title">生活職（採集 / 製作 / 市場）</h2>
-      <span class="section-count">6 項</span>
+      <span class="section-count">7 項</span>
 
     </div>
     <div class="card-grid">
@@ -574,6 +622,18 @@
         <div class="card-emoji">📊</div>
         <div class="card-title">市場查價 + 比價</div>
         <div class="card-desc">陸行鳥 DC 即時價格、跨服比價、製作清單原料樹與買／做成本試算</div>
+        <div class="card-footer">
+          <span class="card-badge badge-ready">可用</span>
+          <span class="card-badge badge-new">新</span>
+          <span class="card-badge badge-api">API</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="tools/gc-exchange/" class="tool-card available">
+        <div class="card-emoji">🎖️</div>
+        <div class="card-title">軍票變現排行</div>
+        <div class="card-desc">軍票與雙色寶石兌換品即時市價，換算每 1 軍票值多少 gil</div>
         <div class="card-footer">
           <span class="card-badge badge-ready">可用</span>
           <span class="card-badge badge-new">新</span>
@@ -657,6 +717,47 @@
     </p>
   </div>
 </footer>
+
+<script>
+/* 收藏進度儀表板：讀各追蹤頁寫入的 ffxiv_snap_* 快照（無需載入資料檔） */
+(function () {
+  var REG = [
+    { key: 'mounts',      emoji: '🐎',  name: '坐騎',     href: 'collections/mounts/' },
+    { key: 'minions',     emoji: '🐣',  name: '寵物',     href: 'minions/' },
+    { key: 'orchestrion', emoji: '🎵',  name: '樂譜',     href: 'collections/orchestrion/' },
+    { key: 'emotes',      emoji: '💃',  name: '表情',     href: 'collections/emotes/' },
+    { key: 'hairstyles',  emoji: '💇',  name: '髮型',     href: 'collections/hairstyles/' },
+    { key: 'barding',     emoji: '🦜',  name: '鳥鞍',     href: 'collections/barding/' },
+    { key: 'triad',       emoji: '🃏',  name: '幻卡',     href: 'collections/triple-triad/' },
+    { key: 'bluemagic',   emoji: '💙',  name: '青魔法術', href: 'collections/blue-magic/' },
+    { key: 'explog',      emoji: '👁️', name: '探索筆記', href: 'collections/exploration-log/' },
+    { key: 'aether',      emoji: '🌬️', name: '風脈泉',   href: 'tools/aether-currents/' },
+    { key: 'fishing',     emoji: '🎣',  name: '釣魚紀錄', href: 'tools/fishing/' },
+    { key: 'gatherlog',   emoji: '⛏️', name: '採集紀錄', href: 'tools/gathering-log/' },
+  ];
+  var rows = [];
+  REG.forEach(function (r) {
+    try {
+      var s = JSON.parse(localStorage.getItem('ffxiv_snap_' + r.key) || 'null');
+      if (s && typeof s.c === 'number' && typeof s.t === 'number' && s.t > 0) rows.push({ r: r, c: s.c, t: s.t });
+    } catch (e) {}
+  });
+  if (!rows.length) return; // 沒逛過任何追蹤頁：整區隱藏
+
+  var sumC = 0, sumT = 0;
+  document.getElementById('pdGrid').innerHTML = rows.map(function (x) {
+    sumC += x.c; sumT += x.t;
+    var pct = Math.round(x.c / x.t * 100);
+    return '<a class="pd-item' + (x.c >= x.t ? ' done' : '') + '" href="' + x.r.href + '">' +
+      '<div class="pd-top"><span>' + x.r.emoji + '</span><span class="pd-name">' + x.r.name + '</span>' +
+      '<span class="pd-num">' + x.c + ' / ' + x.t + '（' + pct + '%）</span></div>' +
+      '<div class="pd-bar"><div class="pd-fill" style="width:' + pct + '%"></div></div></a>';
+  }).join('');
+  document.getElementById('pdTotal').textContent =
+    '合計 ' + sumC + ' / ' + sumT + '（' + Math.round(sumC / sumT * 100) + '%）';
+  document.getElementById('progressDash').style.display = '';
+})();
+</script>
 
 </body>
 </html>
