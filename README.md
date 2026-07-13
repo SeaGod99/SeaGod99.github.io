@@ -14,6 +14,8 @@
 | 📖 天書奇談計算器 | `/tools/wondrous-tails/` | Monte Carlo 模擬連線機率，建議保留或重貼 |
 | 🎰 仙人微彩計算機 | `/tools/cactpot/` | 期望值分析，建議最佳翻牌與選線策略 |
 | ⛏️ 限時採集節點查詢 | `/tools/gathering/` | 傳說／稀有採集點開放時間、座標與職業，依 ET 即時更新 |
+| 🦊 幻巧戰助手 | `/tools/faux-hollows/` | 內建 16 盤形×252 擺法資料庫，自動辨識盤形、計算劍／箱／狐機率與建議翻格 |
+| 👗 時尚品鑑推薦 | `/tools/fashion-report/` | 本週 80／100 分配裝建議，週更主題 |
 | 🐎 坐騎收藏追蹤 | `/collections/mounts/` | 取得來源查詢、版本篩選、追蹤擁有進度 |
 | 🐣 寵物收藏追蹤 | `/minions/` | 取得來源查詢、篩選搜尋、追蹤擁有進度 |
 | 🦜 鳥鞍收藏追蹤 | `/collections/barding/` | 陸行鳥鞍具來源查詢，追蹤擁有進度 |
@@ -29,6 +31,7 @@
 | 🎣 釣魚紀錄追蹤 | `/tools/fishing/` | 1104 種魚查詢（釣場/餌/時間/天氣），追蹤已釣進度 |
 | ⛏️ 採集紀錄追蹤 | `/tools/gathering-log/` | 733 個採集節點，追蹤已採物品進度 |
 | 📊 市場查價 + 比價 | `/tools/market/` | 陸行鳥 DC 即時價格、跨服比價、製作清單原料樹狀圖與買／做成本試算 |
+| 🎖️ 軍票變現排行 | `/tools/gc-exchange/` | 軍票／雙色寶石兌換品即時市價，換算每單位變現 gil |
 | 🗺️ 藏寶圖採集點查詢 | `/tools/treasure-maps/` | 陳舊的地圖 G1～G17 各等級挖寶位置，地圖標點＋座標、組隊寶物庫標示 |
 | 🛡️ 配裝規劃器 | [gearing.ffsusu.com](https://gearing.ffsusu.com/) | 外部連結，全職業配裝規劃 |
 
@@ -37,11 +40,11 @@
 ## 規劃中的工具
 
 ### 📅 日常工具
-- 👗 時尚品鑑推薦
+- 📋 每日／每週待辦清單（重置倒數＋勾選）
 
 ### 🏆 收藏 / 成就
-
-### 🌿 生活職（採集 / 製作 / 市場）
+- 🏅 稱號／成就追蹤（**擱置**：無台服官方繁中名來源，Title/Achievement 非物品、tw-items 不涵蓋，等台服 datamining 出現）
+- 👤 角色自動匯入（**擱置**：繁中服為獨立伺服器、不在全球 Lodestone，ffxivcollect 查不到陸行鳥角色）
 
 ---
 
@@ -59,6 +62,7 @@
 | [thewakingsands/ffxiv-datamining-cn](https://github.com/thewakingsands/ffxiv-datamining-cn) | 中文物品名稱（簡中 + OpenCC 轉繁） | 社群 datamining |
 | [ffxivcollect](https://ffxivcollect.com) | 收藏品 patch、取得來源（坐騎/寵物/表情/鳥鞍/樂譜） | 公開 API；來源文字為英文，無簡中 locale |
 | [consolegameswiki](https://ffxiv.consolegameswiki.com) | 青魔法習得來源（圖騰兌換條件等） | 人工查證 |
+| [JoshuaEN/ffxiv-faux-hollows](https://github.com/JoshuaEN/ffxiv-faux-hollows) | 幻巧戰 16 盤形×252 擺法社群資料 | 內嵌於 `/tools/faux-hollows/`，非執行期依賴 |
 
 繁中物品名稱以 `tw-items.msgpack`（台服官方譯名）為準，找不到對應名稱視為台服未開放，前端直接隱藏，不使用簡中/英文名稱替代。
 
