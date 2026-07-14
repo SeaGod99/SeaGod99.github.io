@@ -85,6 +85,14 @@
       <button class="own-btn" data-own="owned">已取得</button>
       <button class="own-btn" data-own="missing">未取得</button>
     </div>
+    <select class="sort-select" id="sortSelect" title="排序方式">
+      <option value="default">預設排序</option>
+      <option value="patch-desc">版本新→舊</option>
+      <option value="patch-asc">版本舊→新</option>
+      <option value="name">依名稱</option>
+    </select>
+    <button class="icon-btn" id="markAllBtn" title="將目前篩選結果全部標記為已取得">✓ 標記全部</button>
+    <button class="icon-btn" id="unmarkAllBtn" title="取消目前篩選結果的已取得標記">✗ 取消全部</button>
     <button class="icon-btn" id="exportBtn">匯出進度</button>
     <button class="icon-btn" id="importBtn">匯入進度</button>
     <input type="file" id="importFile" accept="application/json" style="display:none">
@@ -156,6 +164,7 @@
   let filterGameCategory = null;
   let filterSource = null;
   let searchQ = '';
+  let sortBy = 'default';    // default | patch-desc | patch-asc | name
 
   // ── Unique key ──
   function keyOf(r) {
@@ -260,9 +269,20 @@
     return null;
   }
 
+  // ── Sort ──
+  function sortList(list) {
+    if (sortBy === 'default') return list;
+    const arr = [...list];
+    const pv = p => parseFloat(p) || 0;
+    if (sortBy === 'name') arr.sort((a, b) => a.name.localeCompare(b.name, 'zh-Hant'));
+    else if (sortBy === 'patch-asc') arr.sort((a, b) => pv(a.patch) - pv(b.patch));
+    else if (sortBy === 'patch-desc') arr.sort((a, b) => pv(b.patch) - pv(a.patch));
+    return arr;
+  }
+
   // ── Render grid ──
   function renderGrid() {
-    const list = filtered();
+    const list = sortList(filtered());
     const grid = document.getElementById('ocGrid');
     const empty = document.getElementById('emptyState');
     const meta = document.getElementById('resultMeta');
@@ -323,7 +343,13 @@
         <div class="col-detail">${detailLines.join('')}</div>
       `;
 
+      card.tabIndex = 0;
+      card.setAttribute('role', 'button');
+      card.setAttribute('aria-pressed', isOwned);
       card.addEventListener('click', () => toggle(k));
+      card.addEventListener('keydown', ev => {
+        if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); toggle(k); }
+      });
       grid.appendChild(card);
     });
   }
@@ -351,8 +377,13 @@
     reader.onload = e => {
       try {
         const data = JSON.parse(e.target.result);
+        // 舊版備份為純陣列；新版物件需驗 schema，避免誤將其他頁的進度檔匯入
+        if (!Array.isArray(data) && data.schema !== 'orchestrion-progress') {
+          alert('匯入失敗：這不是「樂譜收藏」的進度檔'); return;
+        }
         const list = Array.isArray(data) ? data : data.owned;
         if (!Array.isArray(list)) throw new Error('格式錯誤');
+        if (owned.size && !confirm(`匯入將以檔案內容（${list.length} 筆）取代目前的 ${owned.size} 筆記錄，確定嗎？`)) return;
         owned = new Set(list);
         save();
         updateProgress();
@@ -393,11 +424,33 @@
   });
 
   document.getElementById('clearBtn').addEventListener('click', () => {
-    if (!confirm('確定要清除所有取得記錄嗎？')) return;
+    if (!owned.size) { alert('目前沒有已取得記錄'); return; }
+    if (!confirm('確定要清除全部 ' + owned.size + ' 筆取得記錄嗎？\n將先自動下載一份備份檔以防誤刪。')) return;
+    exportProgress();
     owned.clear();
     save();
     updateProgress();
     renderGrid();
+  });
+
+  // ── Sort / Batch mark ──
+  document.getElementById('sortSelect').addEventListener('change', e => {
+    sortBy = e.target.value;
+    renderGrid();
+  });
+  document.getElementById('markAllBtn').addEventListener('click', () => {
+    const toAdd = filtered().filter(r => !owned.has(keyOf(r)));
+    if (!toAdd.length) { alert('目前篩選結果都已標記'); return; }
+    if (!confirm('將目前篩選結果中未標記的 ' + toAdd.length + ' 筆標記為已取得？')) return;
+    toAdd.forEach(r => owned.add(keyOf(r)));
+    save(); updateProgress(); renderGrid();
+  });
+  document.getElementById('unmarkAllBtn').addEventListener('click', () => {
+    const toDel = filtered().filter(r => owned.has(keyOf(r)));
+    if (!toDel.length) { alert('目前篩選結果沒有已標記項目'); return; }
+    if (!confirm('取消目前篩選結果中 ' + toDel.length + ' 筆的已取得標記？')) return;
+    toDel.forEach(r => owned.delete(keyOf(r)));
+    save(); updateProgress(); renderGrid();
   });
 
   // ── Init: load data ──

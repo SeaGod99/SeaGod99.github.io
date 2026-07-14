@@ -239,6 +239,18 @@ a { color: inherit; text-decoration: none; }
 .icon-btn:hover { color: var(--text-primary); border-color: rgba(255,255,255,0.2); }
 .clear-btn:hover { color: var(--red); border-color: rgba(248,113,113,0.4); }
 
+.sort-select {
+  padding: 9px 10px;
+  font-size: 13px;
+  cursor: pointer;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  transition: var(--transition);
+}
+.sort-select:hover, .sort-select:focus { color: var(--text-primary); border-color: rgba(255,255,255,0.2); outline: none; }
+
 /* ── Filter tags ────────────────────────────────────────────────── */
 .filter-section { margin-bottom: 18px; }
 .filter-label {
@@ -310,6 +322,10 @@ a { color: inherit; text-decoration: none; }
   contain-intrinsic-size: auto 160px;
 }
 .col-card.center { align-items: center; text-align: center; }
+.col-card:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--accent) 60%, transparent);
+  outline-offset: 2px;
+}
 .col-card:hover {
   background: var(--bg-card-hover);
   border-color: color-mix(in srgb, var(--accent) 30%, transparent);

@@ -226,6 +226,10 @@
     </div>
 
   <button class="filter-btn" onclick="resetAll()" style="margin-left:auto">重置篩選</button>
+  <button class="filter-btn" id="exportBtn" onclick="exportProgress()">匯出進度</button>
+  <button class="filter-btn" id="importBtn">匯入進度</button>
+  <input type="file" id="importFile" accept="application/json" style="display:none">
+  <button class="filter-btn" id="clearBtn">清除進度</button>
 </div>
 
 <div class="result-info" id="resultInfo"></div>
@@ -580,6 +584,59 @@ function resetAll() {
   document.getElementById('patchFilter').value = '';
   setStatusFilter('all');
 }
+
+/* ── 進度匯出／匯入／清除 ── */
+function exportProgress() {
+  const payload = {
+    schema: 'gathering-log-progress',
+    exported: new Date().toISOString(),
+    owned: [...owned],
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'gathering-log-progress.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function importProgress(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data || data.schema !== 'gathering-log-progress' || !Array.isArray(data.owned)) {
+        alert('匯入失敗：這不是「採集紀錄」的進度檔'); return;
+      }
+      if (owned.size && !confirm(`匯入將以檔案內容（已採 ${data.owned.length} 筆）取代目前的 ${owned.size} 筆記錄，確定嗎？`)) return;
+      owned = new Set(data.owned);
+      localStorage.setItem(LS_KEY, JSON.stringify([...owned]));
+      updateProgress(); onFilter();
+      alert('匯入成功，共 ' + owned.size + ' 筆已採記錄');
+    } catch (err) {
+      alert('匯入失敗：檔案格式不正確');
+    }
+  };
+  reader.readAsText(file);
+}
+
+document.getElementById('importBtn').addEventListener('click', () => document.getElementById('importFile').click());
+document.getElementById('importFile').addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (file) importProgress(file);
+  e.target.value = '';
+});
+document.getElementById('clearBtn').addEventListener('click', () => {
+  if (!owned.size) { alert('目前沒有已採記錄'); return; }
+  if (!confirm('確定要清除全部 ' + owned.size + ' 筆已採記錄嗎？\n將先自動下載一份備份檔以防誤刪。')) return;
+  exportProgress();
+  owned.clear();
+  localStorage.setItem(LS_KEY, JSON.stringify([]));
+  updateProgress(); onFilter();
+});
 </script>
 </body>
 </html>

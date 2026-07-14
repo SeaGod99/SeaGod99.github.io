@@ -183,13 +183,21 @@
   <div class="toolbar">
     <div class="search-wrap">
       <span class="search-icon">🔍</span>
-      <input class="search-input" type="text" id="searchInput" placeholder="搜尋寵物名稱…" autocomplete="off">
+      <input class="search-input" type="text" id="searchInput" placeholder="搜尋寵物名稱（中／英文）…" autocomplete="off">
     </div>
     <div class="own-toggle">
       <button class="own-btn active" data-own="all">全部</button>
       <button class="own-btn" data-own="owned">已擁有</button>
       <button class="own-btn" data-own="missing">未擁有</button>
     </div>
+    <select class="sort-select" id="sortSelect" title="排序方式">
+      <option value="default">預設排序</option>
+      <option value="patch-desc">版本新→舊</option>
+      <option value="patch-asc">版本舊→新</option>
+      <option value="name">依名稱</option>
+    </select>
+    <button class="icon-btn" id="markAllBtn" title="將目前篩選結果全部標記為已擁有">✓ 標記全部</button>
+    <button class="icon-btn" id="unmarkAllBtn" title="取消目前篩選結果的已擁有標記">✗ 取消全部</button>
     <button class="icon-btn" id="exportBtn">匯出進度</button>
     <button class="icon-btn" id="importBtn">匯入進度</button>
     <input type="file" id="importFile" accept="application/json" style="display:none">
@@ -206,6 +214,12 @@
   <div class="filter-section">
     <div class="filter-label">來源篩選</div>
     <div class="filter-tags" id="sourceFilters"></div>
+  </div>
+
+  <!-- Patch filter -->
+  <div class="filter-section">
+    <div class="filter-label">版本</div>
+    <div class="filter-tags" id="patchFilters"></div>
   </div>
 
   <!-- Result meta -->
@@ -255,11 +269,24 @@
   // ── State ──
   let MINION_DATA = [];
   let SOURCE_TYPES = [];
+  let PATCHES = [];
   let owned = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
   let filterOwn = 'all';       // all | owned | missing
   let filterBehavior = null;   // string | null
   let filterSource = null;     // string | null  ('__none__' = 待補充)
+  let filterPatch = null;      // string | null
   let searchQ = '';
+  let sortBy = 'default';      // default | patch-desc | patch-asc | name
+
+  // ── Patch bands ──
+  const PATCH_BANDS = [
+    { label: '2.x 原初之地',   min: '2.0', max: '2.9' },
+    { label: '3.x 蒼天之禁地', min: '3.0', max: '3.9' },
+    { label: '4.x 紅蓮之狂潮', min: '4.0', max: '4.9' },
+    { label: '5.x 暗影之逆焰', min: '5.0', max: '5.9' },
+    { label: '6.x 曉月之終途', min: '6.0', max: '6.9' },
+    { label: '7.x 金曦之遺輝', min: '7.0', max: '7.9' },
+  ];
 
   const $ = id => document.getElementById(id);
 
@@ -335,6 +362,23 @@
     wrap.appendChild(noneBtn);
   }
 
+  // ── Render patch filters ──
+  function renderPatchFilters() {
+    const wrap = $('patchFilters');
+    wrap.innerHTML = '';
+    PATCHES.forEach(p => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-tag' + (filterPatch === p.label ? ' active' : '');
+      btn.textContent = p.label;
+      btn.addEventListener('click', () => {
+        filterPatch = filterPatch === p.label ? null : p.label;
+        renderPatchFilters();
+        renderGrid();
+      });
+      wrap.appendChild(btn);
+    });
+  }
+
   // ── Filter minions ──
   function filtered() {
     return MINION_DATA.filter(m => {
@@ -352,16 +396,40 @@
         if (!m.sources.some(s => s.type === filterSource)) return false;
       }
 
-      // search
-      if (searchQ && !m.name.includes(searchQ)) return false;
+      // patch
+      if (filterPatch) {
+        const band = PATCH_BANDS.find(p => p.label === filterPatch);
+        if (band) {
+          if (!m.patch || m.patch < band.min || m.patch > band.max) return false;
+        }
+      }
+
+      // search（中英文、不分大小寫）
+      if (searchQ) {
+        const q = searchQ.toLowerCase();
+        const nameMatch = m.name && m.name.toLowerCase().includes(q);
+        const enMatch = m.nameEn && m.nameEn.toLowerCase().includes(q);
+        if (!nameMatch && !enMatch) return false;
+      }
 
       return true;
     });
   }
 
+  // ── Sort ──
+  function sortList(list) {
+    if (sortBy === 'default') return list;
+    const arr = [...list];
+    const pv = p => parseFloat(p) || 0;
+    if (sortBy === 'name') arr.sort((a, b) => a.name.localeCompare(b.name, 'zh-Hant'));
+    else if (sortBy === 'patch-asc') arr.sort((a, b) => pv(a.patch) - pv(b.patch));
+    else if (sortBy === 'patch-desc') arr.sort((a, b) => pv(b.patch) - pv(a.patch));
+    return arr;
+  }
+
   // ── Render grid ──
   function renderGrid() {
-    const list = filtered();
+    const list = sortList(filtered());
     const grid = $('minionGrid');
     const empty = $('emptyState');
     const meta = $('resultMeta');
@@ -401,7 +469,13 @@
         ${srcInline}
       `;
 
+      card.tabIndex = 0;
+      card.setAttribute('role', 'button');
+      card.setAttribute('aria-pressed', isOwned);
       card.addEventListener('click', () => toggle(m.id));
+      card.addEventListener('keydown', ev => {
+        if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); toggle(m.id); }
+      });
       card.querySelector('.minion-info').addEventListener('click', e => {
         e.stopPropagation();                         // 不觸發整卡的「擁有」切換
         if (pinnedCard === card) { unpinTooltip(); }
@@ -492,17 +566,8 @@
     renderGrid();
   });
 
-  // ── Clear ──
-  $('clearBtn').addEventListener('click', () => {
-    if (!confirm('確定要清除所有擁有記錄嗎？')) return;
-    owned.clear();
-    save();
-    updateProgress();
-    renderGrid();
-  });
-
   // ── Export ──
-  $('exportBtn').addEventListener('click', () => {
+  function exportProgress() {
     const payload = {
       schema: 'minions_owned',
       exported: new Date().toISOString(),
@@ -517,6 +582,38 @@
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+  }
+  $('exportBtn').addEventListener('click', exportProgress);
+
+  // ── Clear ──
+  $('clearBtn').addEventListener('click', () => {
+    if (!owned.size) { alert('目前沒有已擁有記錄'); return; }
+    if (!confirm('確定要清除全部 ' + owned.size + ' 筆擁有記錄嗎？\n將先自動下載一份備份檔以防誤刪。')) return;
+    exportProgress();
+    owned.clear();
+    save();
+    updateProgress();
+    renderGrid();
+  });
+
+  // ── Sort / Batch mark ──
+  $('sortSelect').addEventListener('change', e => {
+    sortBy = e.target.value;
+    renderGrid();
+  });
+  $('markAllBtn').addEventListener('click', () => {
+    const toAdd = filtered().filter(m => !owned.has(m.id));
+    if (!toAdd.length) { alert('目前篩選結果都已標記'); return; }
+    if (!confirm('將目前篩選結果中未標記的 ' + toAdd.length + ' 筆標記為已擁有？')) return;
+    toAdd.forEach(m => owned.add(m.id));
+    save(); updateProgress(); renderGrid();
+  });
+  $('unmarkAllBtn').addEventListener('click', () => {
+    const toDel = filtered().filter(m => owned.has(m.id));
+    if (!toDel.length) { alert('目前篩選結果沒有已標記項目'); return; }
+    if (!confirm('取消目前篩選結果中 ' + toDel.length + ' 筆的已擁有標記？')) return;
+    toDel.forEach(m => owned.delete(m.id));
+    save(); updateProgress(); renderGrid();
   });
 
   // ── Import ──
@@ -528,8 +625,18 @@
     reader.onload = ev => {
       try {
         const data = JSON.parse(ev.target.result);
+        // 舊版備份為純陣列；新版物件需驗 schema，避免誤將其他頁的進度檔匯入
+        if (!Array.isArray(data) && data.schema !== 'minions_owned') {
+          alert('匯入失敗：這不是「寵物收藏」的進度檔');
+          $('importFile').value = '';
+          return;
+        }
         const list = Array.isArray(data) ? data : data.owned;
         if (!Array.isArray(list)) throw new Error('格式錯誤');
+        if (owned.size && !confirm(`匯入將以檔案內容（${list.length} 筆）取代目前的 ${owned.size} 筆記錄，確定嗎？`)) {
+          $('importFile').value = '';
+          return;
+        }
         owned = new Set(list.map(Number));
         save();
         updateProgress();
@@ -559,8 +666,15 @@
       MINION_DATA.forEach(m => (m.sources || []).forEach(s => types.add(s.type)));
       SOURCE_TYPES = [...types].sort();
 
+      // 版本清單（只顯示資料中實際出現的版本區間）
+      const patchSet = new Set(MINION_DATA.map(m => m.patch).filter(Boolean));
+      PATCHES = PATCH_BANDS.filter(band =>
+        [...patchSet].some(p => p >= band.min && p <= band.max)
+      );
+
       renderBehaviorFilters();
       renderSourceFilters();
+      renderPatchFilters();
       updateProgress();
       renderGrid();
     } catch (err) {
