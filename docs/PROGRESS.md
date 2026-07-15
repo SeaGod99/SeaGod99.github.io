@@ -3,7 +3,7 @@
 > **給 Claude / 後續對話的指示**：開始任何工作前先讀本檔。完成任何功能或資料變更後，**必須更新本檔**（狀態表 + 更新紀錄），並同步 `data/_meta.json` 的 status。
 > 規格細節見 `docs/feature-specs.md`，資料格式見 `data/SCHEMA.md`。
 
-**最後更新**：2026-07-15（幻化配裝圖鑑併入 `/tools/glamour/`：原「FF14時尚配裝」repo 以 unrelated-histories merge 整合，首頁/README/本檔登記；線上版資料未完整，見更新紀錄）
+**最後更新**：2026-07-16（幻化配裝圖鑑上線資產進版控：縮圖/示意照/icons/資料 js 約 850MB push 上線，僅 mirapri 原圖留本機；repo 約 860MB、距 Pages 1GB 上限剩 140MB，見更新紀錄）
 **網站**：https://seagod99.github.io ｜ GitHub Pages 純靜態 ｜ 遊戲版本 7.2
 
 ---
@@ -23,7 +23,7 @@
 | — | 天氣預報 | `/tools/weather/` | 完成（改用共用模組 assets/js/eorzea-weather.js，天氣表接 maps.json weatherRates，mapId 統一，06-15重做） |
 | 1.5 | 風脈泉追蹤器 | `/tools/aether-currents/` | 完成（31 地區 303 個風脈泉，任務型151筆/野外型152筆，座標暫無，06-16新增） |
 | 1.6 | 時尚品鑑推薦 | `/tools/fashion-report/` | 規劃中（每週更新，需半自動） |
-| 1.7 | 幻化配裝圖鑑 | `/tools/glamour/` | 開發中（07-15 由獨立 repo 併入：精選配裝＋Mirapri 社群＋官方套裝 1971 套三檢視，收藏星號、染色/交易徽章、wiki 示意照；**線上版資料未完整**——配裝圖片 1.5GB、mirapri_outfits.js／official_sets.js 等衍生檔在 tools/glamour/.gitignore 內未進版控，GitHub Pages 上只有精選資料可看，部署方案待定；資料管線為 Python（py scripts\update_all.py），細節見 tools/glamour/CLAUDE.md） |
+| 1.7 | 幻化配裝圖鑑 | `/tools/glamour/` | 完成（07-15 由獨立 repo 併入：精選配裝＋Mirapri 社群＋官方套裝 1971 套三檢視，收藏星號、染色/交易徽章、wiki 示意照；07-16 上線資產進版控——縮圖/官方示意照/icons/精選原圖＋mirapri_outfits.js/official_sets.js 共約 850MB 已 push，線上完整可用；**僅 mirapri 原圖 669MB 留本機**（加入會破 Pages 發佈 1GB 上限，彈窗自動退回縮圖），重建後衍生 js 記得 commit；資料管線為 Python（py scripts\update_all.py），細節見 tools/glamour/CLAUDE.md） |
 
 ### 收藏／成就追蹤（共通規格見 feature-specs 第二章）
 
@@ -186,6 +186,8 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 6. 其他規劃：時尚品鑑、冒險者小隊計算機、藏寶圖、園藝配種、釣魚紀錄
 
 ## 五、更新紀錄
+
+- **2026-07-16（幻化配裝圖鑑上線資產進版控）**：`tools/glamour/.gitignore` 改為只排除 mirapri 原圖（669MB）與東方時尚切割圖；縮圖（697MB，含 mirapri/官方套裝/icons 子目錄）、官方示意照（63MB）、icons（37MB）、精選原圖（37MB）與前端動態載入的 `mirapri_outfits.js`／`official_sets.js` 共約 850MB、1.75 萬檔分四個 commit push 上 main，線上版三檢視（精選/社群/官方套裝）完整可用。mirapri 原圖不上的原因：加入後整站約 1.5GB，超過 **GitHub Pages 發佈 1GB 上限**；前端彈窗載不到原圖會自動退回縮圖（index.html onerror fallback），僅犧牲點圖放大的解析度。**維運注意**：(1) repo 已約 860MB，距 Pages 上限僅剩約 140MB 餘裕，日後新增 mirapri 批次前先估縮圖增量；(2) 跑完 `update_all` 重建後，衍生 js 與新縮圖**記得 commit**（.gitignore 已不擋）；(3) mirapri 原圖／資料來源 DB 仍只在本機，需自行備份。
 
 - **2026-07-15（幻化配裝圖鑑併入 tools/glamour/）**：原獨立 repo「FF14時尚配裝」以 `--allow-unrelated-histories` 併入本站，完整 git 歷史保留，專案整棵移至 `tools/glamour/`（腳本以 `__file__` 定位專案根、bat 用 `%~dp0`，搬移後照常運作）。功能：精選配裝／Mirapri 社群投稿／官方套裝圖鑑（1971 套）三檢視、裝備來源與染色查詢、可染/可交易徽章、收藏星號、consolegameswiki 官方示意照。首頁「日常工具」區已掛卡片、README 已登記。**注意**：該工具有自己的 `tools/glamour/.gitignore`——配裝圖片（1.5GB）、資料來源 DB（105MB）、mirapri_outfits.js／official_sets.js 等衍生檔皆不進版控，因此 **GitHub Pages 線上版目前只有精選配裝資料可看（且無圖）**，完整體驗僅限本機；部署方案（衍生檔進版控？圖床外掛？）待定。資料管線為 Python（Windows 用 `py scripts\update_all.py`），文件見 `tools/glamour/CLAUDE.md`。
 
