@@ -33,6 +33,7 @@
 | 📊 市場查價 + 比價 | `/tools/market/` | 陸行鳥 DC 即時價格、跨服比價、製作清單原料樹狀圖與買／做成本試算 |
 | 🎖️ 軍票變現排行 | `/tools/gc-exchange/` | 軍票／雙色寶石兌換品即時市價，換算每單位變現 gil |
 | 🗺️ 藏寶圖採集點查詢 | `/tools/treasure-maps/` | 陳舊的地圖 G1～G17 各等級挖寶位置，地圖標點＋座標、組隊寶物庫標示 |
+| 👘 幻化配裝圖鑑 | `/tools/glamour/` | 精選配裝＋Mirapri 社群投稿＋官方套裝圖鑑，裝備來源、染色與收藏追蹤 |
 | 🛡️ 配裝規劃器 | [gearing.ffsusu.com](https://gearing.ffsusu.com/) | 外部連結，全職業配裝規劃 |
 
 ---
