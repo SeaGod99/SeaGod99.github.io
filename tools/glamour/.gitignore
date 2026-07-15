@@ -1,12 +1,16 @@
-# ───────── 大型二進位：圖片（約 1GB，git 不適合存） ─────────
-配裝圖片/
+# ───────── 大型二進位圖片：只排除 mirapri 原圖與切割工作檔 ─────────
+# 縮圖/官方套裝/icons/精選原圖 進版控（GitHub Pages 線上版需要）。
+# mirapri 原圖 669MB 若加入會讓站台突破 Pages 發佈 1GB 上限；
+# 前端彈窗缺原圖時會自動退回縮圖（index.html onerror fallback），不影響功能。
+配裝圖片/mirapri/
 東方時尚切割圖/
 
 # ───────── 外部來源資料庫（約 105MB，可另外備份） ─────────
 資料來源/
 
 # ───────── 大型衍生檔（可由 scripts 重建，不進版控） ─────────
-mirapri_outfits.js
+# 註：mirapri_outfits.js 與 official_sets.js 為前端動態載入的資料檔，
+#     線上版需要 → 已進版控（每次重建後記得 commit）。
 mirapri_data.js
 data/item_fallback_multilang.json
 data/all_outfits_enriched.json
@@ -35,4 +39,4 @@ __pycache__/
 .DS_Store
 Thumbs.db
 .gstack/
-/official_sets.js
+
