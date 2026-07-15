@@ -41,20 +41,45 @@ MIRAPRI_VISIBLE = ROOT / "data" / "mirapri_visible.json"  # apply_dyes.py 產生
 # 也可能放進 data/；兩邊的 remove 一律累積（移除過的不會因換檔復活）。
 REVIEW_DECISIONS_PATHS = [ROOT / "review_decisions.json", ROOT / "data" / "review_decisions.json"]
 MIRAPRI_RECON = ROOT / "data" / "mirapri_reconstructed.json"  # reconstruct_empty.py：空殼套用 OCR+DB 重建的裝備
+SET_PHOTOS = ROOT / "data" / "set_photos.json"  # fetch_set_photos.py：官方套裝 wiki 模特照對應表
 VIS_FLOOR = 4  # vismap 過濾後若 <此件數，視為 OCR 漏讀 → 改保留完整清單（一般幻化至少 4~5 件）
+
+# 取得方式分類：先比對關鍵字（同一個 emoji 底下要再分家的），對不到再退回 emoji。
+# 關鍵字依序比對，第一個命中就算數。
+ST_KEYWORDS = [
+    # 寶圖擺第一：箱子名會帶各種玩法字眼（「🗺️寶圖（無人島特殊配給貨箱）」），
+    # 讓後面的 special 規則先咬到就會誤判——來源是寶圖，不是無人島玩法。
+    ("寶圖", "other"),
+    # 🛒 底下的「特殊玩法」——不是站著不動的商人，而是各自成一套的長期玩法
+    ("伊修加德重建", "special"), ("無人島", "special"),
+    ("宇宙探索", "special"), ("友好部族", "special"), ("友好部落", "special"),
+    # 🪙 底下不是「代幣兌換」的幾種
+    ("成就", "other"),          # 🪙成就獎勵
+    ("Gil×", "npc"),           # 🪙Gil×N ＝ 拿金幣買，歸商店
+    # 票據：官方套裝寫「🪙兌換：巧手橙票」、精選寫「🔶巧手橙票」，靠票名歸同一桶。
+    # 只認「{顏色}票」——「拉札漢的三類票據」等友好部族貨幣不是票據，留在 token。
+    ("橙票", "scrip"), ("紫票", "scrip"), ("白票", "scrip"),
+    ("黃票", "scrip"), ("綠票", "scrip"),
+    ("幻化套裝箱", "other"),    # wiki 對不出來源的殘餘
+]
+# 註：探索型內容（優雷卡／博茲雅）不需要關鍵字——🗺️／🗡️ emoji 就已經歸 raid。
+# 曾加過「南方博茲雅→raid」，結果把「🛒義軍整備兵（南方博茲雅戰線）」這種
+# 正牌 NPC 商人也拖進 raid，弊大於利，已移除。
 
 # 取得方式 emoji → st 標籤（取 source 字串中第一個出現的 emoji）
 EMOJI_ST = [
     ("🗡️", "raid"), ("🗡", "raid"),
+    ("🗺️", "raid"), ("🗺", "raid"),
+    ("📋", "quest"),
+    ("🛒", "npc"),
+    ("🪙", "token"),
     ("🔶", "scrip"), ("🟣", "scrip"),
-    ("🛒", "npc"), ("📋", "npc"),
     ("🔨", "craft"),
     ("🎲", "gs"),
     ("⚔️", "pvp"), ("⚔", "pvp"),
     ("💎", "store"),
-    ("🗓️", "event"), ("🗓", "event"),
-    ("💒", "ceremony"),
-    ("🪙", "other"),
+    ("🗓️", "event"), ("🗓", "event"), ("💒", "event"),
+    ("🎁", "other"),
 ]
 
 # 職業 → 卡片 tag
@@ -67,8 +92,10 @@ JOB_TAGS = {
     "crafter": ["布衣師", "製革師", "甲冑師", "鍛鐵師", "煉金術士", "廚師", "雕金師",
                 "木工師", "製作職業", "採礦工", "採伐工", "漁夫", "捕魚人"],
 }
-ST_TAGS = {"event", "pvp", "store", "raid", "craft", "npc", "scrip", "gs", "other"}
+ST_TAGS = {"raid", "quest", "npc", "token", "scrip", "craft",
+           "pvp", "store", "event", "gs", "special", "other"}
 # 會成為篩選 tag 的取得方式（與 index.html 的 ST_TAG_SET 同步；改這裡記得同步前端）
+ALL_JOB = "全職業"   # 無職業限制的 job 標籤（curated／mirapri／official 三邊都用這個字）
 
 PIECE_DEFAULTS = {
     "slot": "", "zh": "", "en": "", "ja": "", "dye1": "—", "dye2": "—",
@@ -117,12 +144,21 @@ def stamp_badges(piece, by_zh, by_ja, by_en):
 
 
 def st_from_source(source: str) -> str:
+    for kw, st in ST_KEYWORDS:
+        if kw in source:
+            return st
     best = None
     for emoji, st in EMOJI_ST:
         idx = source.find(emoji)
         if idx >= 0 and (best is None or idx < best[0]):
             best = (idx, st)
     return best[1] if best else "other"
+
+
+def is_all_job(pieces) -> bool:
+    """整套沒有任何職業限制＝每件都是「全職業」（job 空白＝資料未填，不當限制但也不能單獨成立）"""
+    jobs = [(p.get("job") or "").strip() for p in pieces]
+    return any(j == ALL_JOB for j in jobs) and all(j in ("", ALL_JOB) for j in jobs)
 
 
 def tags_from_pieces(pieces):
@@ -134,6 +170,8 @@ def tags_from_pieces(pieces):
                 tags.add(tag)
         if p.get("st") in ST_TAGS:
             tags.add(p["st"])
+    if is_all_job(pieces):
+        tags.add("alljob")
     return sorted(tags)
 
 
@@ -192,6 +230,10 @@ def transform_mirapri(o, dyemap=None, vismap=None, piecemap=None, reconmap=None,
     out_equips = []
     for e in equips:
         e = dict(e)
+        # st 一律由 source 重算，不吃 all_outfits_enriched.json 帶來的舊值——
+        # 那是 pipeline.py 當年用舊分類算的，改 ST_TAGS 時不會跟著更新（曾害
+        # 社群套的 🪙 停在 other、精選的 🪙 卻是 token，同一顆按鈕兩種行為）。
+        e["st"] = st_from_source(e.get("source") or "")
         if recon_used:
             e.setdefault("dye1", "—")
             e.setdefault("dye2", "—")
@@ -221,6 +263,61 @@ def transform_mirapri(o, dyemap=None, vismap=None, piecemap=None, reconmap=None,
 
 
 # ── 官方套裝 → official_sets.js ────────────────────────────────
+# wiki Outfit infobox 的 source-type → 站內取得方式標籤（fetch_set_photos.py 抓回）
+# 幻化套裝箱本體不存在於 sources.json（0/1078），wiki 是取得方式唯一來源
+WIKI_STYPE_LABEL = {
+    "Premium":        "💎Mog Station",
+    "Seasonal Event": "🗓️季節活動",          # 實際 label 會帶活動名，見 wiki_source_label
+    "Dungeons":       "🗡️副本掉落",
+    "Trials":         "🗡️討伐戰",
+    "Raids":          "🗡️團隊戰",
+    "V&C Dungeons":   "🗡️多變／異聞迷宮",
+    "Deep Dungeons":  "🗡️深層迷宮",
+    "Eureka":         "🗡️禁地優雷卡",
+    "Occult Crescent": "🗡️Occult Crescent",   # 繁中版未實裝，暫留英文
+    "Crafting":       "🔨製作",
+    "Gathering":      "🔨採集／分解",
+    "Main Scenario":  "📋主線任務",
+    "Quests":         "📋任務獎勵",
+    "Hall of the Novice": "📋新手訓練所",
+    "PvP":            "⚔️PvP",
+    "PvP (Ranked)":   "⚔️PvP 排位",
+    "Gold Saucer":    "🎲金碟遊樂園",
+    "Ishgardian Restoration": "🛒伊修加德重建",
+    "Island Sanctuary": "🛒無人島開拓",
+    "Cosmic Exploration": "🛒宇宙探索",
+    "Allied Societies": "🛒友好部族",
+    "Achievements":   "🪙成就獎勵",
+    "FATE":           "🪙危命任務兌換",
+    "Gil":            "🛒NPC 商店",
+}
+
+
+def _obtain_name(x):
+    """obtain 條目是否像「名稱」（過濾說明文句碎片，如 'Use  obtained as…'）"""
+    return (x and len(x) <= 40 and x[0].isupper()
+            and not x.startswith(("Use ", "Is ", "Random ")))
+
+
+def wiki_source_label(info):
+    """set_photos.json 一筆的 stype/obtain → 取得方式標籤（對不出來回空字串）"""
+    stype = (info or {}).get("stype") or ""
+    obtain = (info or {}).get("obtain") or []
+    if stype == "Seasonal Event":
+        ev = next((x for x in obtain if x != "Online Store"), "")
+        label = f"🗓️{ev}" if ev else "🗓️季節活動"
+        if "Online Store" in obtain:
+            label += "／💎商城"
+        return label
+    if stype == "Dungeons":   # obtain 常是 {{i|副本名}} → 帶上副本名
+        ev = next((x for x in obtain if _obtain_name(x)), "")
+        return f"🗡️副本掉落：{ev}" if ev else "🗡️副本掉落"
+    label = WIKI_STYPE_LABEL.get(stype, "")
+    if not label and "Veteran Rewards" in obtain:
+        label = "💎老玩家獎勵（Veteran Rewards）"
+    return label
+
+
 _JOB_GROUPS_EN = {
     "tank": {"PLD", "WAR", "DRK", "GNB"},
     "healer": {"WHM", "SCH", "AST", "SGE"},
@@ -239,16 +336,25 @@ def transform_sets():
     if not OFFICIAL_SETS_JSON.exists():
         return None
     data = json.loads(OFFICIAL_SETS_JSON.read_text(encoding="utf-8"))
+    wiki_info = {}
+    if SET_PHOTOS.exists():
+        wiki_info = json.loads(SET_PHOTOS.read_text(encoding="utf-8"))
     out = []
     for s in data.get("sets", []):
+        # 幻化套裝箱的取得方式：wiki source-type 對得出來就取代籠統的「🎁幻化套裝箱」
+        source = s["source"]
+        if s["layer"] == "mirage":
+            lbl = wiki_source_label(wiki_info.get(s["id"]))
+            if lbl:
+                source = lbl
         codes = set((s.get("cjc_name") or "").split())
         tags = sorted(g for g, grp in _JOB_GROUPS_EN.items() if codes & grp)
         combat = {c for g in ("tank", "healer", "caster", "pranged", "melee")
                   for c in _JOB_GROUPS_EN[g]}
         cjc_raw = (s.get("cjc_name") or "").strip()
         if codes >= combat or cjc_raw.lower().startswith("all"):
-            job_label = "全職業"   # 含 XIVAPI 的 "All Classes"
-            tags = []          # 全職業套不掛職業 tag（避免每張卡六個標）
+            job_label = ALL_JOB   # 含 XIVAPI 的 "All Classes"
+            tags = ["alljob"]  # 不掛六個職能 tag（每張卡會爆），改掛單一「全職業」
         elif len(tags) == 1:
             job_label = _JOB_GROUP_ZH[tags[0]]
         else:
@@ -258,23 +364,46 @@ def transform_sets():
             "id": s["id"],
             "layer": s["layer"],
             "name_zh": s["name_zh"], "name_ja": s["name_ja"], "name_en": s["name_en"],
-            "source": s["source"],
-            "st": st_from_source(s["source"] or ""),
+            "source": source,
+            "st": st_from_source(source or ""),
             "patch": s["patch"],
             "job": job_label,
             "tags": tags,
             "tw": bool(s.get("zh_ok")),
             "pieces": [{k: p[k] for k in
-                        ("id", "slot", "zh", "ja", "en", "dye", "mb", "icon", "patch", "lv")
-                        if k in p}
+                        ("id", "slot", "zh", "ja", "en", "dye", "mb", "icon",
+                         "patch", "lv", "src")
+                        if k in p and p[k] != ""}
                        for p in s["pieces"]],
         })
     return out
 
 
+def attach_wiki_photos(sets):
+    """官方套裝掛 consolegameswiki 模特照（fetch_set_photos.py 下載）——
+    官方素體全身照，最能回答「整套長什麼樣」，優先於站內配裝照。
+    圖檔不存在（例如換機器沒抓圖）就不掛，退回站內照/icon 網格。"""
+    if not SET_PHOTOS.exists():
+        return 0
+    photos = json.loads(SET_PHOTOS.read_text(encoding="utf-8"))
+    n = 0
+    for s in sets:
+        c = photos.get(s["id"])
+        if not c or "img" not in c:
+            continue
+        if not (ROOT / c["img"]).exists():
+            continue
+        s["img"] = c["img"]
+        s["imgSrc"] = "wiki"     # 前端據此顯示「官方外觀圖」而非「N 件吻合」
+        if c.get("src") == "ge":
+            s["imgFrom"] = "ge"  # Gamer Escape 逐件模型圖（上身單件示意）
+        n += 1
+    return n
+
+
 def attach_set_photos(sets, curated, mirapri):
     """官方套裝掛「示意照」：站內精選/社群照片中，穿了該套 ≥2 件者取吻合最多的一張。
-    冷門套沒人穿過 → 不掛，前端退回 icon 網格。"""
+    只補 wiki 官方照沒涵蓋的套；冷門套沒人穿過 → 不掛，前端退回 icon 網格。"""
     name2sets = {}
     for i, s in enumerate(sets):
         for p in s["pieces"]:
@@ -311,11 +440,15 @@ def attach_set_photos(sets, curated, mirapri):
         consider(m.get("equipments", []), m.get("image"),
                  f"社群配裝{by}", 0)
 
+    n = 0
     for si, (score, img, label) in best.items():
+        if sets[si].get("img"):   # wiki 官方照已掛 → 不覆蓋
+            continue
         sets[si]["img"] = img
         sets[si]["imgN"] = score[0]
         sets[si]["imgLabel"] = label
-    return len(best)
+        n += 1
+    return n
 
 
 def main():
@@ -417,8 +550,10 @@ def main():
 
     sets = transform_sets()
     if sets is not None:
+        n_wiki = attach_wiki_photos(sets)
         n_photo = attach_set_photos(sets, curated, mirapri)
-        print(f"  官方套裝示意照（站內配裝照 ≥2 件吻合）：{n_photo}/{len(sets)} 套")
+        print(f"  官方套裝示意照：wiki 官方照 {n_wiki} 套＋站內配裝照 {n_photo} 套"
+              f" / 共 {len(sets)} 套")
         OFFICIAL_SETS_JS.write_text(
             "const _SETS_RAW = " + json.dumps(sets, ensure_ascii=False) + ";\n",
             encoding="utf-8")

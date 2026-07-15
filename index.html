@@ -121,6 +121,7 @@ body{ font-family:'Microsoft JhengHei','Noto Sans TC','Segoe UI',sans-serif; }
   font-weight:600; text-align:center; background:var(--panel-bg); color:var(--accent); white-space:nowrap; }
 .item-name{ font-weight:600; }
 .item-en{ font-size:.78rem; color:var(--muted); margin-top:2px; }
+.item-src{ font-size:.74rem; color:var(--accent2); margin-top:2px; }
 .unconfirmed{ color:#f59e0b; }
 .item-link{ cursor:pointer; border-bottom:1px dotted var(--muted); }
 .item-link:hover{ color:var(--accent2); border-bottom-color:var(--accent2); }
@@ -183,10 +184,7 @@ body{ font-family:'Microsoft JhengHei','Noto Sans TC','Segoe UI',sans-serif; }
   overflow:hidden; text-overflow:ellipsis; }
 .set-card-imgwrap{ position:relative; }
 .set-icons img{ width:44px; height:44px; border-radius:6px; border:1px solid var(--border); background:#0a0d12; }
-.set-icons img.owned-icon{ outline:2px solid #16a34a; outline-offset:-1px; }
 .set-modal-icons img{ width:40px; height:40px; border-radius:6px; border:1px solid var(--border); background:#0a0d12; vertical-align:middle; }
-.set-progress{ height:6px; background:var(--panel-bg); border-radius:3px; overflow:hidden; margin-top:8px; }
-.set-progress>div{ height:100%; background:#16a34a; }
 .mini-chips{ display:flex; flex-wrap:wrap; gap:4px; margin-top:4px; }
 .mini-chip{ display:inline-block; font-size:.68rem; padding:1px 7px; border-radius:9px;
   background:var(--panel-bg); border:1px solid var(--border); color:var(--muted); white-space:nowrap; }
@@ -195,9 +193,6 @@ body{ font-family:'Microsoft JhengHei','Noto Sans TC','Segoe UI',sans-serif; }
 .chip-mb{ color:#4ade80; border-color:rgba(74,222,128,.35); }
 .chip-set{ color:var(--accent2); border-color:rgba(110,159,212,.4); cursor:pointer; }
 .chip-set:hover{ background:rgba(110,159,212,.15); }
-.chip-owned{ cursor:pointer; user-select:none; }
-.chip-owned.on{ color:#4ade80; border-color:rgba(74,222,128,.5); background:rgba(22,163,74,.12); }
-.chip-owned:hover{ border-color:#4ade80; }
 .zh-missing{ color:#f59e0b; font-size:.68rem; border:1px solid rgba(245,158,11,.4); border-radius:9px; padding:1px 7px; white-space:nowrap; }
 .empty-state{ text-align:center; color:var(--muted); padding:60px 20px; font-size:.95rem; }
 ::-webkit-scrollbar{ width:8px; height:8px; }
@@ -252,15 +247,20 @@ body{ font-family:'Microsoft JhengHei','Noto Sans TC','Segoe UI',sans-serif; }
   </div>
   <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
     <span class="filter-group-label" data-zh="取得方式" data-en="Source">取得方式</span>
-    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="event"   data-group="src" data-zh="🗓️ 活動"  data-en="🗓️ Event">🗓️ 活動</button>
-    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="pvp"     data-group="src" data-zh="⚔️ PvP"   data-en="⚔️ PvP">⚔️ PvP</button>
-    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="store"   data-group="src" data-zh="💎 Mog"   data-en="💎 Mog">💎 Mog</button>
-    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="raid"    data-group="src" data-zh="🗡️ 副本"  data-en="🗡️ Dungeon">🗡️ 副本</button>
-    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="craft"   data-group="src" data-zh="🔨 可製作" data-en="🔨 Craftable">🔨 可製作</button>
-    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="npc"     data-group="src" data-zh="🛒 商店"   data-en="🛒 Shop">🛒 商店</button>
-    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="scrip"   data-group="src" data-zh="🔶 票據"   data-en="🔶 Scrips">🔶 票據</button>
-    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="gs"      data-group="src" data-zh="🎲 金碟"   data-en="🎲 Gold Saucer">🎲 金碟</button>
-    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="other"   data-group="src" data-zh="🪙 代幣"   data-en="🪙 Tokens">🪙 代幣</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="raid"    data-group="src" data-zh="🗡️ 副本"     data-en="🗡️ Duties">🗡️ 副本</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="quest"   data-group="src" data-zh="📋 任務"     data-en="📋 Quests">📋 任務</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="npc"     data-group="src" data-zh="🛒 商店"     data-en="🛒 Shops">🛒 商店</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="token"   data-group="src" data-zh="🪙 代幣兌換" data-en="🪙 Tokens">🪙 代幣兌換</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="scrip"   data-group="src" data-zh="🔶 票據"     data-en="🔶 Scrips">🔶 票據</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="craft"   data-group="src" data-zh="🔨 製作採集" data-en="🔨 Crafting">🔨 製作採集</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="pvp"     data-group="src" data-zh="⚔️ PvP"      data-en="⚔️ PvP">⚔️ PvP</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="store"   data-group="src" data-zh="💎 商城"     data-en="💎 Store">💎 商城</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="event"   data-group="src" data-zh="🗓️ 活動"     data-en="🗓️ Events">🗓️ 活動</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="gs"      data-group="src" data-zh="🎲 金碟"     data-en="🎲 Gold Saucer">🎲 金碟</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="special" data-group="src" data-zh="🏝️ 特殊玩法" data-en="🏝️ Side Content"
+            title="伊修加德重建、無人島開拓、宇宙探索、友好部族">🏝️ 特殊玩法</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="other"   data-group="src" data-zh="🎁 其他"     data-en="🎁 Other"
+            title="成就獎勵、寶圖，以及來源尚未確認的套裝">🎁 其他</button>
   </div>
   <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
     <span class="filter-group-label" data-zh="職業" data-en="Job">職業</span>
@@ -270,16 +270,8 @@ body{ font-family:'Microsoft JhengHei','Noto Sans TC','Segoe UI',sans-serif; }
     <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="melee"   data-group="job" data-zh="⚔️ 近戰"  data-en="⚔️ Melee">⚔️ 近戰</button>
     <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="pranged" data-group="job" data-zh="🏹 遠距"  data-en="🏹 Ranged">🏹 遠距</button>
     <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="crafter" data-group="job" data-zh="🔨 製作職業" data-en="🔨 Crafter">🔨 製作職業</button>
-  </div>
-  <div class="d-none flex-wrap align-items-center gap-2 mb-2" id="sets-toolbar">
-    <span class="filter-group-label" data-zh="我的裝備" data-en="My items">我的裝備</span>
-    <span class="small text-secondary" id="owned-count"></span>
-    <button class="btn btn-sm btn-outline-success filter-btn" id="export-owned-btn"
-            title="下載收藏備份 JSON（本機瀏覽器清資料時收藏會消失，請定期備份）"
-            data-zh="⬇ 備份收藏" data-en="⬇ Export">⬇ 備份收藏</button>
-    <label class="btn btn-sm btn-outline-secondary filter-btn mb-0" title="匯入先前備份的收藏 JSON"
-           data-zh-x data-en-x>⬆ 匯入<input type="file" accept=".json,application/json" hidden id="import-owned-input"></label>
-    <span class="small text-secondary" id="backup-hint"></span>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="alljob"  data-group="job" data-zh="👥 全職業" data-en="👥 All Jobs"
+            title="整套沒有職業限制，任何職業都能穿">👥 全職業</button>
   </div>
   <div class="d-flex flex-wrap align-items-center gap-2">
     <input class="form-control form-control-sm search-input" type="text" placeholder="🔍 搜尋名稱、裝備或使用者…" id="search-input"
@@ -378,8 +370,10 @@ function dyeHtml(name) {
 }
 
 // 縮圖路徑（配裝圖片/x.jpe → 配裝圖片/縮圖/x.jpe.jpg）
+// 官方套裝 wiki 照本身就是 640px 縮圖，直接用原檔
 function thumbOf(img) {
   if (!img || !img.startsWith("配裝圖片/")) return img;
+  if (img.startsWith("配裝圖片/官方套裝/")) return img;
   const rest = img.slice("配裝圖片/".length);
   return "配裝圖片/縮圖/" + (rest.toLowerCase().endsWith(".jpg") ? rest : rest + ".jpg");
 }
@@ -457,59 +451,8 @@ let setsLoaded = false;
 let ITEM_SETS_BY_NAME = new Map();  // 裝備 zh/ja 名 → set 物件（所屬套裝反查）
 let ITEM_SETS_BY_ID   = new Map();  // 道具 ID → set 物件
 
-// localStorage 可用性（私密模式/停用時收藏功能整組隱藏）
-let storageOK = true;
-try { localStorage.setItem("__t", "1"); localStorage.removeItem("__t"); } catch (e) { storageOK = false; }
 
-// 已擁有道具（鍵=道具 ID，永久穩定；套裝進度即時重算）
-let owned = new Set();
-try { owned = new Set((JSON.parse(localStorage.getItem("ff14_owned_items") || "[]")).map(Number)); } catch (e) {}
-function saveOwned() {
-  try { localStorage.setItem("ff14_owned_items", JSON.stringify([...owned])); } catch (e) {}
-  updateOwnedUI();
-}
-function toggleOwned(iid, ev) {
-  if (ev) ev.stopPropagation();
-  iid = Number(iid);
-  if (owned.has(iid)) owned.delete(iid); else owned.add(iid);
-  saveOwned();
-  // 同步所有畫面上此道具的擁有標記
-  document.querySelectorAll(`[data-own="${iid}"]`).forEach(el => {
-    el.classList.toggle("on", owned.has(iid));
-    if (el.tagName === "INPUT") el.checked = owned.has(iid);
-    else el.textContent = owned.has(iid) ? "✓ 已擁有" : "＋擁有";
-  });
-  // 套裝彈窗開著時同步「已擁有 x/y」
-  const curSet = filtered[currentIdx];
-  const ownTxt = document.getElementById("set-owned-txt");
-  if (ownTxt && curSet && curSet.type === "set") {
-    ownTxt.textContent = currentLang === "en"
-      ? ` · owned ${setOwnedCount(curSet)}/${curSet.pieces.length}`
-      : ` · 已擁有 ${setOwnedCount(curSet)}/${curSet.pieces.length} 件`;
-  }
-  if (viewMode === "sets") renderGrid();
-}
-function ownedChip(iid) {
-  if (!storageOK || iid === undefined) return "";
-  const on = owned.has(Number(iid));
-  return `<span class="mini-chip chip-owned${on ? " on" : ""}" data-own="${iid}"
-    title="標記我已擁有此裝備" onclick="toggleOwned(${iid}, event)">${on ? "✓ 已擁有" : "＋擁有"}</span>`;
-}
-function updateOwnedUI() {
-  const el = document.getElementById("owned-count");
-  if (el) el.textContent = currentLang === "en" ? `${owned.size} owned` : `已擁有 ${owned.size} 件`;
-  const hint = document.getElementById("backup-hint");
-  if (hint) {
-    let last = "";
-    try { last = localStorage.getItem("ff14_owned_backup_at") || ""; } catch (e) {}
-    const never = currentLang === "en" ? "never backed up" : "從未備份";
-    hint.textContent = owned.size ? (currentLang === "en" ? `last backup: ${last || never}` : `上次備份：${last || never}`) : "";
-    const btn = document.getElementById("export-owned-btn");
-    if (btn) btn.classList.toggle("btn-warning", owned.size >= 20 && !last);
-  }
-}
-
-// 徽章 chips（可染/可交易/擁有/所屬套裝）——建置期已把 iid/dye/mb 蓋進裝備
+// 徽章 chips（可染/可交易/所屬套裝）——建置期已把 iid/dye/mb 蓋進裝備
 function badgeChips(p, withSet) {
   if (p.iid === undefined && p.id === undefined) return "";
   const iid = p.iid !== undefined ? p.iid : p.id;
@@ -519,8 +462,6 @@ function badgeChips(p, withSet) {
       ? `<span class="mini-chip chip-dye">🎨×${p.dye}</span>`
       : `<span class="mini-chip chip-nodye">${currentLang === "en" ? "no dye" : "不可染"}</span>`);
   if (p.mb) chips.push(`<span class="mini-chip chip-mb">${currentLang === "en" ? "tradable" : "可交易"}</span>`);
-  const oc = ownedChip(iid);
-  if (oc) chips.push(oc);
   if (withSet) {
     const s = ITEM_SETS_BY_ID.get(Number(iid)) ||
               ITEM_SETS_BY_NAME.get(p.zh || "") || ITEM_SETS_BY_NAME.get(p.ja || p.name || "");
@@ -536,9 +477,6 @@ function setDisplayName(s) {
 function setVisibleIcons(s) {
   const VIS = ["頭部", "上身", "手部", "腿部", "腳部"];
   return s.pieces.filter(p => VIS.includes(p.slot) && p.icon);
-}
-function setOwnedCount(s) {
-  return s.pieces.filter(p => owned.has(Number(p.id))).length;
 }
 function toggleFav(id, ev) {
   if (ev) ev.stopPropagation();
@@ -569,9 +507,13 @@ const JOB_TAG_MAP = {
   melee:["近戰職業","偵察職業","武士","忍者","武僧","龍騎士","鐮刀師","劍蛇師"],
   crafter:["布衣師","製革師","甲冑師","鍛鐵師","煉金術士","廚師","雕金師","木工師","製作職業","採礦工","採伐工","漁夫","捕魚人"]
 };
-const ST_TAG_SET = new Set(["event","pvp","store","raid","craft","npc","scrip","gs","other"]);
-// 卡片上實際顯示的 tag（其餘僅供篩選）
-const CARD_TAGS = new Set(["healer","tank","caster","melee","pranged","crafter","event","pvp","store","raid"]);
+// 取得方式篩選 tag（與 build_site.py 的 ST_TAGS 同步；改這裡記得同步後端）
+const ST_TAG_SET = new Set(["raid","quest","npc","token","scrip","craft",
+                            "pvp","store","event","gs","special","other"]);
+const ALL_JOB = "全職業";   // 無職業限制的 job 標籤（三邊資料共用這個字）
+// 卡片上實際顯示的 tag（其餘僅供篩選）——alljob 不上卡，否則大半張卡都掛同一個標
+const CARD_TAGS = new Set(["healer","tank","caster","melee","pranged","crafter",
+                           "event","pvp","store","raid"]);
 
 // 職業 → 具體職業代碼集合（繁中版無跨職業幻化：整套需有「單一職業」能同時穿上所有件）
 const _COMBAT_ALL = "PLD WAR DRK GNB WHM SCH AST SGE MNK DRG NIN SAM RPR VPR BRD MCH DNC BLM SMN RDM BLU PCT";
@@ -619,6 +561,12 @@ function jobCompatOK(ps){
   return compat===null || compat.size>0;
 }
 
+// 整套沒有任何職業限制＝每件都是「全職業」（job 空白＝資料未填，不當限制但也不能單獨成立）
+function isAllJob(ps) {
+  const jobs = ps.map(p => (p.job || "").trim());
+  return jobs.some(j => j === ALL_JOB) && jobs.every(j => j === "" || j === ALL_JOB);
+}
+
 function piecesOf(e) {
   const arr = e.type === "mirapri" ? (e.equipments || []) : (e.pieces || []);
   return arr.filter(p => p && typeof p !== "string");
@@ -635,6 +583,7 @@ function annotate(e) {
         if (jobs.some(j => job.includes(j))) tags.add(tag);
       if (ST_TAG_SET.has(p.st)) tags.add(p.st);
     });
+    if (isAllJob(ps)) tags.add("alljob");
     e.tags = [...tags];
   }
   e.tw = ps.length > 0 && ps.every(p => (p.zh || "").trim() !== "") && jobCompatOK(ps);
@@ -810,16 +759,18 @@ function buildSetCard(e, idx) {
   let iconsHtml = icons.length
     ? `<div class="set-icons">` + icons.map(p =>
         `<img src="配裝圖片/icons/${p.icon}.png" alt="" loading="lazy"
-          class="${owned.has(Number(p.id)) ? "owned-icon" : ""}"
           onerror="this.style.display='none'">`).join("") + `</div>`
     : `<div class="set-icons"><span class="text-secondary small">No Icons</span></div>`;
-  // 有站內示意照（穿了該套 ≥2 件的配裝照）→ 用照片呈現整體外觀
+  // 有示意照 → 用照片呈現整體外觀（wiki 官方模特照優先，其次站內配裝照）
   if (e.img) {
-    const note = currentLang === "en" ? "community look" : (e.imgLabel || "示意");
+    const isWiki = e.imgSrc === "wiki";
+    const note = isWiki
+      ? (currentLang === "en" ? "official look" : "官方外觀")
+      : (currentLang === "en" ? "community look" : (e.imgLabel || "示意"));
     iconsHtml = `<div class="set-card-imgwrap">
       <img class="card-img-top" src="${thumbOf(e.img)}" alt="${esc(setDisplayName(e))}" loading="lazy"
         onerror="if(this.src.indexOf('縮圖')>-1){this.src='${esc(e.img)}'}else{this.closest('.set-card-imgwrap').innerHTML='<div class=\\'card-noimg\\'>No Image</div>'}">
-      <div class="set-photo-note">👤 ${esc(note)}</div>
+      <div class="set-photo-note">${isWiki ? "📖" : "👤"} ${esc(note)}</div>
     </div>`;
   }
   const name = setDisplayName(e);
@@ -827,10 +778,7 @@ function buildSetCard(e, idx) {
     ? `<span class="zh-missing">${currentLang === "en" ? "not on TW" : "繁中未實裝"}</span>` : "";
   const patchTag = e.patch ? `<span class="patch-tag">${esc(e.patch)}</span>` : "";
   const jobTag = e.job && e.job !== "全職業" ? `<span class="restrict-job">${esc(e.job)}</span>` : "";
-  const oc = setOwnedCount(e), tot = e.pieces.length;
-  const prog = storageOK && oc > 0
-    ? `<div class="set-progress" title="已擁有 ${oc}/${tot} 件"><div style="width:${Math.round(oc / tot * 100)}%"></div></div>`
-    : "";
+  const tot = e.pieces.length;
   const favCls = favs.has(e.id) ? " faved" : "";
   const tagBadges = (e.tags || []).map(t => `<span class="card-tag badge-${t}">${TAG_LABEL[t] || t}</span>`).join("");
   return `<div class="col">
@@ -840,8 +788,7 @@ function buildSetCard(e, idx) {
       <div class="card-body p-3">
         <div class="small text-secondary d-flex align-items-center gap-1 flex-wrap">${patchTag}${jobTag}${zhMiss}</div>
         <div class="card-name fw-semibold mt-1 mb-1">${esc(name)}</div>
-        <div class="text-secondary small">${esc(e.source || "")}<span class="ms-2">${tot} 件${storageOK && oc ? `・已擁有 ${oc}` : ""}</span></div>
-        ${prog}
+        <div class="text-secondary small">${esc(e.source || "")}<span class="ms-2">${tot} 件</span></div>
         <div class="d-flex flex-wrap gap-1 mt-2">${tagBadges}</div>
       </div>
     </div>
@@ -1010,15 +957,12 @@ function renderCuratedModal(e, idx) {
 function renderSetModal(e, idx) {
   const lang = currentLang;
   document.getElementById("modal-title").textContent = setDisplayName(e);
-  const oc = setOwnedCount(e), tot = e.pieces.length;
-  const ownedTxt = storageOK ? (lang === "en" ? ` · owned ${oc}/${tot}` : ` · 已擁有 ${oc}/${tot} 件`) : "";
   document.getElementById("modal-subtitle").innerHTML =
     `<span class="source-tag ${SRC_CLASS[e.st] || "src-other"}">${esc(e.source || "")}</span>` +
     (e.patch ? ` <span class="patch-tag">${esc(e.patch)}</span>` : "") +
-    (e.job && e.job !== "全職業" ? ` <span class="restrict-job">${esc(e.job)}</span>` : "") +
-    `<span class="ms-1" id="set-owned-txt">${ownedTxt}</span>`;
+    (e.job && e.job !== "全職業" ? ` <span class="restrict-job">${esc(e.job)}</span>` : "");
 
-  // 左欄：站內示意照（有人穿過整套）優先，icon 陣列殿後
+  // 左欄：示意照（wiki 官方模特照優先，其次站內配裝照），icon 陣列殿後
   const imgCol = document.getElementById("modal-img-col");
   const iconRow = `<div class="d-flex flex-wrap gap-2 justify-content-center align-content-start pt-2">` +
     e.pieces.map(p => p.icon
@@ -1026,9 +970,13 @@ function renderSetModal(e, idx) {
            style="width:64px;height:64px;border-radius:8px;border:1px solid var(--border);background:#0a0d12"
            onerror="this.style.display='none'">` : "").join("") + `</div>`;
   if (e.img) {
-    const cap = `${esc(e.imgLabel || "")}（${e.imgN} 件吻合）`;
+    const capHtml = e.imgSrc !== "wiki"
+      ? `👤 ${lang === "en" ? "community look: " : "示意照："}${esc(e.imgLabel || "")}（${e.imgN} 件吻合）`
+      : e.imgFrom === "ge"
+        ? `📖 ${lang === "en" ? "body piece model (gamerescape)" : "上身單件模型圖（gamerescape）"}`
+        : `📖 ${lang === "en" ? "official look (consolegameswiki)" : "官方外觀圖（consolegameswiki）"}`;
     imgCol.innerHTML = `<div style="width:100%">` + modalImg(e.img, setDisplayName(e)) +
-      `<div class="text-secondary small text-center mt-1 mb-2">👤 ${lang === "en" ? "community look: " : "示意照："}${cap}</div>` +
+      `<div class="text-secondary small text-center mt-1 mb-2">${capHtml}</div>` +
       iconRow + `</div>`;
   } else {
     imgCol.innerHTML = iconRow;
@@ -1037,9 +985,8 @@ function renderSetModal(e, idx) {
   // 右欄：逐件表
   const hSlot = lang === "en" ? "Slot" : "部位";
   const hItem = lang === "en" ? "Item" : "裝備";
-  const hInfo = lang === "en" ? "Info" : "染色／交易";
+  const hInfo = lang === "en" ? "Dye / Trade" : "染色／交易";
   const hPatch = lang === "en" ? "Patch" : "版本";
-  const hOwn = lang === "en" ? "Owned" : "擁有";
   const rows = e.pieces.map(p => {
     const nm = lang === "en" ? (p.en || p.ja) : (p.zh || p.ja || p.en);
     const sub = p.zh && p.ja && lang !== "en" ? `<div class="item-en">${esc(p.ja)}</div>`
@@ -1048,28 +995,28 @@ function renderSetModal(e, idx) {
     const iconHtml = p.icon ? `<img class="set-modal-icons-img" src="配裝圖片/icons/${p.icon}.png"
         style="width:36px;height:36px;border-radius:6px;border:1px solid var(--border);background:#0a0d12;margin-right:8px;vertical-align:middle"
         onerror="this.style.display='none'">` : "";
-    const dyeChip = p.dye > 0 ? `<span class="mini-chip chip-dye">🎨×${p.dye}</span>`
-                              : `<span class="mini-chip chip-nodye">${lang === "en" ? "no dye" : "不可染"}</span>`;
-    const mbChip = p.mb ? `<span class="mini-chip chip-mb">${lang === "en" ? "tradable" : "可交易"}</span>` : "";
-    const ownBox = storageOK
-      ? `<input type="checkbox" class="form-check-input" data-own="${p.id}" ${owned.has(Number(p.id)) ? "checked" : ""}
-           onclick="event.stopPropagation()" onchange="toggleOwned(${p.id})">`
-      : "";
+    // dye 未知（無徽章資料）時留空，不誤標「不可染」；交易欄兩態都明示
+    const dyeChip = p.dye === undefined ? ""
+      : p.dye > 0 ? `<span class="mini-chip chip-dye">🎨×${p.dye}</span>`
+                  : `<span class="mini-chip chip-nodye">${lang === "en" ? "no dye" : "不可染"}</span>`;
+    const mbChip = p.mb ? `<span class="mini-chip chip-mb">${lang === "en" ? "tradable" : "可交易"}</span>`
+                        : `<span class="mini-chip chip-nodye">${lang === "en" ? "untradable" : "不可交易"}</span>`;
     const lookup = (p.zh || p.ja || "").replace(/'/g, "\\'");
     const nameHtml = nm
       ? `<span class="item-link" title="查看使用此裝備的配裝" onclick="searchInOutfits('${esc(lookup)}')">${esc(nm)}</span>`
       : "";
+    // 逐件取得細項（build_sets.py 從 sources.json 算好：貨幣×價格＋NPC＋地點…）
+    const srcLine = p.src ? `<div class="item-src">${esc(p.src)}</div>` : "";
     return `<tr>
       <td class="slot-cell">${p.slot ? `<span class="slot-badge">${esc(lang === "en" ? (SLOT_EN[p.slot] || p.slot) : p.slot)}</span>` : ""}</td>
-      <td class="item-name">${iconHtml}${nameHtml}${zhMiss}${sub}</td>
+      <td class="item-name">${iconHtml}${nameHtml}${zhMiss}${sub}${srcLine}</td>
       <td data-label="${hInfo}">${dyeChip} ${mbChip}</td>
       <td class="patch-cell" data-label="${hPatch}">${p.patch ? `<span class="patch-tag">${esc(p.patch)}</span>` : ""}</td>
-      <td data-label="${hOwn}">${ownBox}</td>
     </tr>`;
   }).join("");
   document.getElementById("modal-info-col").innerHTML =
     `<table class="equip-table">
-      <thead><tr><th>${hSlot}</th><th>${hItem}</th><th>${hInfo}</th><th>${hPatch}</th><th>${hOwn}</th></tr></thead>
+      <thead><tr><th>${hSlot}</th><th>${hItem}</th><th>${hInfo}</th><th>${hPatch}</th></tr></thead>
       <tbody>${rows}</tbody>
     </table>`;
 
@@ -1301,11 +1248,9 @@ function updateSubtitle() {
   const el = document.getElementById("site-subtitle");
   if (viewMode === "sets") {
     const loading = setsLoaded ? "" : (currentLang === "en" ? " · loading…" : " · 官方套裝載入中…");
-    const ownedTxt = storageOK && owned.size
-      ? (currentLang === "en" ? ` · ${owned.size} items owned` : ` · 已擁有 ${owned.size} 件`) : "";
     el.textContent = currentLang === "en"
-      ? `${filtered.length} gear sets${ownedTxt}${loading}`
-      : `官方套裝 ${filtered.length} 套${ownedTxt}${loading}`;
+      ? `${filtered.length} gear sets${loading}`
+      : `官方套裝 ${filtered.length} 套${loading}`;
   } else {
     const curated = filtered.filter(e => e.type === "curated").length;
     const mira    = filtered.filter(e => e.type === "mirapri").length;
@@ -1322,7 +1267,6 @@ function updateSubtitle() {
   const anyFilter = srcTags.size || jobTags.size || favOnly || twOnly || q ||
                     miraFilters.gender || miraFilters.race;
   document.getElementById("clear-filters-btn").classList.toggle("d-none", !anyFilter);
-  updateOwnedUI();
 }
 
 // ── 檢視切換（配裝 / 官方套裝）──
@@ -1332,49 +1276,11 @@ function setView(mode) {
   document.getElementById("view-outfits-btn").classList.toggle("view-active", mode === "outfits");
   document.getElementById("view-sets-btn").classList.toggle("view-active", mode === "sets");
   const isSets = mode === "sets";
-  // 官方套裝沒有性別/種族欄位 → 隱藏該兩列；顯示收藏工具列
+  // 官方套裝沒有性別/種族欄位 → 隱藏該兩列
   document.getElementById("row-gender").classList.toggle("d-none", isSets);
   document.getElementById("row-race").classList.toggle("d-none", isSets);
-  const tb = document.getElementById("sets-toolbar");
-  tb.classList.toggle("d-none", !isSets || !storageOK);
-  tb.classList.toggle("d-flex", isSets && storageOK);
   applyFilters();
   window.scrollTo({ top: 0 });
-}
-
-// ── 收藏備份 / 匯入 ──
-function exportOwned() {
-  const data = { ver: 1, exported: new Date().toISOString().slice(0, 10),
-                 owned: [...owned], favs: [...favs] };
-  const blob = new Blob([JSON.stringify(data, null, 1)], { type: "application/json" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = `ff14_collection_${data.exported}.json`;
-  a.click();
-  URL.revokeObjectURL(a.href);
-  try { localStorage.setItem("ff14_owned_backup_at", data.exported); } catch (e) {}
-  updateOwnedUI();
-}
-function importOwned(file) {
-  const reader = new FileReader();
-  reader.onload = () => {
-    let d;
-    try { d = JSON.parse(reader.result); } catch (e) { alert("匯入失敗：不是有效的 JSON 檔"); return; }
-    if (!d || typeof d !== "object" || !Array.isArray(d.owned)) {
-      alert("匯入失敗：格式不符（缺少 owned 清單）"); return;
-    }
-    const ids = d.owned.map(Number).filter(n => Number.isInteger(n) && n > 0);
-    // 孤兒偵測：不在目前官方套裝資料中的 ID 只提示、照樣保留（可能是未收錄裝備）
-    let orphan = 0;
-    if (ITEM_SETS_BY_ID.size) orphan = ids.filter(i => !ITEM_SETS_BY_ID.has(i)).length;
-    ids.forEach(i => owned.add(i));
-    if (Array.isArray(d.favs)) d.favs.forEach(f => favs.add(String(f)));
-    saveOwned(); saveFavs();
-    renderGrid();
-    alert(`已匯入 ${ids.length} 件擁有紀錄` +
-          (orphan ? `（其中 ${orphan} 件不在官方套裝資料中，已保留）` : ""));
-  };
-  reader.readAsText(file);
 }
 
 function resetFilters() {
@@ -1446,13 +1352,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 清除篩選
   document.getElementById("clear-filters-btn").addEventListener("click", resetFilters);
-
-  // 收藏備份 / 匯入
-  document.getElementById("export-owned-btn").addEventListener("click", exportOwned);
-  document.getElementById("import-owned-input").addEventListener("change", function () {
-    if (this.files && this.files[0]) { importOwned(this.files[0]); this.value = ""; }
-  });
-  updateOwnedUI();
 
   // Gender / Race filter buttons
   document.querySelectorAll(".filter-btn[data-mf]").forEach(btn => {

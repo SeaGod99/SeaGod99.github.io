@@ -20,6 +20,13 @@ from collections import Counter
 from urllib.request import urlopen, Request
 from urllib.error import URLError, HTTPError
 
+# Windows 主控台/管線預設 cp950，印 emoji/罕見字會炸——統一改 UTF-8
+for _s in (sys.stdout, sys.stderr):
+    try:
+        _s.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 # ══════════════════════════════════════════════════════════
 # 路徑設定
 # ══════════════════════════════════════════════════════════

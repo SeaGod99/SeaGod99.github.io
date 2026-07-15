@@ -213,8 +213,78 @@ def build_mirage_sets(cache, info):
 
 # ───────────────────────── 第二層：sources.json 啟發式 ─────────────────────────
 
-def source_signatures(entries):
-    """一件裝備的 sources 條目 → [(簽名, 顯示label)]，只取「套裝式」來源。"""
+PVP_CURRENCIES = {25, 36656, 40479}   # 狼印戰績／戰利水晶（CLAUDE.md 慣例）
+MGP_CURRENCIES = {29, 41629}          # 金碟幣
+EQUIP_CATEGORY_MAX = 49               # categoryId 1–49 = 裝備 → 拿前一階裝備升級兌換
+INST_TYPE = {1: "試煉", 2: "迷宮挑戰", 3: "高難度討伐", 4: "討伐殲滅戰",
+             5: "聯隊突擊", 6: "絕境戰", 22: "聯隊突擊", 28: "絕境戰"}
+
+
+def fmt_piece_source(entries, cur_info):
+    """一件裝備的 sources 條目 → 給彈窗看的取得細項（貨幣×價格＋NPC＋地點…）。
+    去重後最多兩條，以「；」相接；查無來源回空字串。"""
+    out = []
+    for e in entries:
+        t = e.get("type")
+        if t == "specialshop":
+            cur = e.get("currencyItemId") or 0
+            price = e.get("price") or 0
+            nm, cat = cur_info(cur) if cur else ("", 0)
+            v = (e.get("vendors") or [{}])[0]
+            npc, zone = v.get("npcName", ""), v.get("zoneName", "")
+            where = f"（{npc}{'｜' + zone if zone else ''}）" if npc else ""
+            if cat and 1 <= cat <= EQUIP_CATEGORY_MAX:
+                out.append(f"🛒裝備升級兌換{where}")
+                continue
+            if cur in PVP_CURRENCIES:
+                head = f"⚔️{nm or 'PvP戰利品'}"
+            elif cur in MGP_CURRENCIES:
+                head = "🎲金碟幣"
+            elif cur == 1:
+                head = "🛒金幣"
+            else:
+                head = f"🪙{nm}" if nm else "🪙兌換"
+            out.append(f"{head}×{price}{where}" if price else f"{head}{where}")
+        elif t == "instance":
+            names = e.get("instanceNames") or []
+            if not names:
+                continue
+            kind = INST_TYPE.get((e.get("instanceContentTypes") or [None])[0], "")
+            more = f" 等{len(names)}處" if len(names) > 1 else ""
+            out.append(f"🗡️{names[0]}{'（' + kind + '）' if kind else ''}{more}")
+        elif t == "vendor":
+            v = (e.get("vendors") or [{}])[0]
+            if v.get("npcName"):
+                out.append(f"🛒{v['npcName']}"
+                           + (f"（{v['zoneName']}）" if v.get("zoneName") else "")
+                           + (f" {v['price']} Gil" if v.get("price") else ""))
+        elif t == "gilshop":
+            p = e.get("price")
+            out.append(f"🛒NPC商店{f' {p} Gil' if p else ''}")
+        elif t == "gcshop":
+            p = e.get("price")
+            out.append(f"🛒軍票商店{f'（{p} 軍票）' if p else ''}")
+        elif t == "quest":
+            qn = (e.get("questName") or "").strip()
+            if qn:
+                out.append(f"📋{qn}")
+        elif t == "treasure":
+            maps = e.get("mapNames") or []
+            out.append("🗺️藏寶圖" + (f"（{maps[-1]} 等）" if maps else ""))
+        elif t == "drop":
+            mobs = e.get("mobNames") or []
+            if mobs:
+                out.append(f"🎯{mobs[0]} 掉落")
+        elif t == "desynth":
+            out.append("🔨分解取得")
+    seen = set()
+    uniq = [x for x in out if not (x in seen or seen.add(x))]
+    return "；".join(uniq[:2])
+
+
+def source_signatures(entries, cur_info=None):
+    """一件裝備的 sources 條目 → [(簽名, 顯示label)]，只取「套裝式」來源。
+    cur_info(id) → (名稱, categoryId)，用來把「🪙兌換」補成具體貨幣。"""
     sigs = []
     for e in entries:
         t = e.get("type")
@@ -225,7 +295,21 @@ def source_signatures(entries):
         elif t == "specialshop":
             cur = e.get("currencyItemId")
             if cur:
-                sigs.append((f"shop:cur{cur}", "🪙兌換"))
+                if cur in PVP_CURRENCIES:
+                    label = "⚔️PvP兌換"
+                elif cur in MGP_CURRENCIES:
+                    label = "🎲金碟遊樂園 MGP"
+                elif cur == 1:            # Gil
+                    label = "🛒金幣購買"
+                else:
+                    nm, cat = cur_info(cur) if cur_info else ("", 0)
+                    if cat and 1 <= cat <= EQUIP_CATEGORY_MAX:
+                        label = "🛒裝備升級兌換"   # 貨幣是裝備＝拿前一階換
+                    elif nm:
+                        label = f"🪙兌換：{nm}"
+                    else:
+                        label = "🪙兌換"
+                sigs.append((f"shop:cur{cur}", label))
         elif t == "quest":
             qid = e.get("questId")
             if qid:
@@ -239,7 +323,7 @@ def source_signatures(entries):
     return sigs
 
 
-def build_heuristic_sets(sources, info, equip_ids):
+def build_heuristic_sets(sources, info, equip_ids, cur_info=None):
     groups = {}   # (sig, cjc, ilvl) -> {"label":…, "items":[info]}
     no_source = []
     for iid in equip_ids:
@@ -247,7 +331,7 @@ def build_heuristic_sets(sources, info, equip_ids):
         if not p or not p["slot"]:
             continue
         entries = sources.get(str(iid)) or []
-        sigs = source_signatures(entries)
+        sigs = source_signatures(entries, cur_info)
         if not sigs:
             no_source.append(iid)
             continue
@@ -369,7 +453,12 @@ def main():
 
     print("第二層：sources.json 啟發式分組…")
     equip_ids = [int(k) for k in fb.keys()]
-    src_sets, no_source, conflicted = build_heuristic_sets(sources, info, equip_ids)
+
+    def cur_info(iid):
+        e = tc.get(str(iid)) or {}
+        return (e.get("name") or "", e.get("categoryId") or 0)
+
+    src_sets, no_source, conflicted = build_heuristic_sets(sources, info, equip_ids, cur_info)
     fill_heuristic_names(src_sets)
     print(f"  分組 {len(src_sets)}｜無來源件 {len(no_source)}｜同鍵衝突組 {len(conflicted)}")
 
@@ -378,6 +467,14 @@ def main():
     included = [s for s in all_sets if visible_ok(s)]
     excluded = len(all_sets) - len(included)
     print(f"  跨層去重砍 {n_dedup}｜v1 準則收錄 {len(included)}｜未達準則 {excluded}")
+
+    # 逐件取得細項（彈窗顯示用；同一件在不同套會重算，值相同無妨）
+    n_src = 0
+    for s in included:
+        for p in s["pieces"]:
+            p["src"] = fmt_piece_source(sources.get(str(p["id"])) or [], cur_info)
+            n_src += bool(p["src"])
+    print(f"  逐件取得細項：{n_src} 件有資料")
 
     cjc_names = cache.get("cjc_names", {})
     for s in included:

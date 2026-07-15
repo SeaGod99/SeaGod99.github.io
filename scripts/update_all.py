@@ -35,6 +35,7 @@ FULL_STEPS = [
     ("build_item_fallback.py", "多語裝備庫", "XIVAPI 全件掃描（名稱/部位/可染/可交易/icon；約 3 分鐘）", []),
     ("build_sets.py",        "官方套裝",     "MirageStoreSetItem＋sources.json → 官方套裝資料（--fetch 刷新 XIVAPI 快取）", ["--fetch"]),
     ("fetch_icons.py",       "套裝 icon",    "下載官方套裝所需 icon（已有的自動跳過，可續傳）", []),
+    ("fetch_set_photos.py",  "套裝示意照",   "從 consolegameswiki 抓官方套裝模特照（已有的自動跳過，可續傳）", []),
     ("build_site.py",        "重建網頁資料", "curated／mirapri／重建／染色／官方套裝 → *.js 資料檔", []),
     ("health_check.py",      "資料健檢",     "檢查缺圖、缺繁中、重複編號、官方套裝、JSON 是否同步", []),
 ]

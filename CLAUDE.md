@@ -19,13 +19,15 @@ FF14時尚配裝/
 ├── official_sets.js      # 官方套裝資料（由 build_site.py 產生，社群載完後延遲載入）
 ├── 配裝圖片/             # 套裝圖片，命名格式：{編號}-{套裝名}.jpe
 │   ├── 縮圖/             # 卡片縮圖（make_thumbs.py 產生，寬 640px／q78）
-│   └── icons/            # 官方套裝裝備 icon（fetch_icons.py 下載，40px PNG）
+│   ├── icons/            # 官方套裝裝備 icon（fetch_icons.py 下載，40px PNG）
+│   └── 官方套裝/         # 官方套裝示意照（fetch_set_photos.py 從 consolegameswiki 抓，640px JPG）
 ├── scripts/
 │   ├── update_all.py     # ★ 一鍵更新總控（full / local 兩種模式）
 │   ├── build_site.py     # data/curated_outfits.json → curated/mirapri_outfits.js + official_sets.js
 │   │                     #   並用 item_fallback 名稱精確比對把 iid/dye/mb（徽章）蓋進每件裝備
 │   ├── build_sets.py     # ★ 官方套裝資料（見「官方套裝圖鑑」一節）→ data/official_sets.json
 │   ├── fetch_icons.py    # 官方套裝所需裝備 icon 批次下載（可續傳、已有跳過、失敗清單重試）
+│   ├── fetch_set_photos.py # ★ 官方套裝示意照：consolegameswiki 模特照下載（見「官方示意照」）
 │   ├── health_check.py   # 資料健檢（缺圖、缺繁中、重複編號、官方套裝 ID/icon/收錄準則…）
 │   ├── make_thumbs.py    # 產生縮圖（可給秒數上限分批跑）
 │   ├── compress_mirapri.py # 壓縮 mirapri 原圖（長邊1100/q76，防重複壓縮）
@@ -50,6 +52,7 @@ FF14時尚配裝/
 │   ├── mirapri_dyes.json          # apply_dyes.py 產出：{outfit_id: [繁中染色]}（整套 fallback，未有逐件時用）
 │   ├── mirapri_visible.json       # apply_dyes.py 產出：{outfit_id: [圖上可見裝備]}，build_site.py 用來濾掉替代裝備
 │   ├── official_sets.json         # build_sets.py 產出：官方套裝（兩層混合，v1 準則收錄約 2000 套）
+│   ├── set_photos.json            # fetch_set_photos.py 產出：官方套裝 wiki 示意照對應表（含 miss 記錄）
 │   ├── xivapi_sets_cache.json     # build_sets.py 的 XIVAPI 快取（離線重建靠它；--fetch 刷新）
 │   ├── 套裝報告.md                 # build_sets.py 產出：分組統計＋同鍵衝突組＋收錄抽樣（調校用）
 │   ├── item_fallback_multilang.json # build_item_fallback.py 產出：全裝備多語名+部位+patch
@@ -175,19 +178,56 @@ en_name_by_id = {k: v['en'] for k, v in en_data.items() if isinstance(v, dict)}
 
 ### 取得方式格式（Emoji 前綴）
 
+`source` 字串的 emoji 前綴決定 st 分類（12 桶，build_site.py 的 `ST_TAGS`／
+index.html 的 `ST_TAG_SET` 兩邊要同步）。**同一套資料 curated／mirapri／official
+共用這張表**，所以官方套裝的「🪙兌換：巧手橙票」與精選的「🔶巧手橙票」會落在同一桶。
+
 | Emoji | 類型 | st 標籤 |
 |-------|------|---------|
-| 🗡️ | 副本（迷宮挑戰、討伐歼滅戰、聯隊突擊等） | `raid` |
+| 🗡️ | 副本（迷宮挑戰、討伐殲滅戰、聯隊突擊、深層迷宮等） | `raid` |
+| 🗺️ | 探索型內容（優雷卡／博茲雅）——寶圖除外，見下方關鍵字 | `raid` |
+| 📋 | 任務獎勵（單獨出現才算；與 🛒 合併顯示時 🛒 在前 → `npc`） | `quest` |
+| 🛒 | NPC 商店 / 失物管理人 / 金幣購買 | `npc` |
+| 🪙 | 代幣兌換（神典石、狩獵戰利品、軍票、部族貨幣等） | `token` |
 | 🔶 | 巧手橙票（製作職業神典石） | `scrip` |
 | 🟣 | 製作紫票 | `scrip` |
-| 🛒 | NPC 商店 / 失物管理人 | `npc` |
-| 📋 | 任務獎勵（通常與 🛒 合併顯示） | `npc` |
-| 🔨 | 製作 | `craft` |
+| 🔨 | 製作／採集／分解 | `craft` |
 | 🎲 | 金碟遊樂園 MGP | `gs` |
-| ⚔️ | PvP（狼印戰績 / 戰利水晶） | `pvp` |
-| 🪙 | 其他代幣（神典石、討伐戰利品等） | `other` |
-| 💎 | Mog Station（付費商城） | `store` |
-| 🗓️ | 季節活動 | `event` |
+| ⚔️ | PvP（狼印戰績 / 戰利水晶 / 排位） | `pvp` |
+| 💎 | Mog Station（付費商城）／老玩家獎勵 | `store` |
+| 🗓️ 💒 | 季節活動 | `event` |
+| 🎁 | 來源對不出來的幻化套裝箱 | `other` |
+
+**關鍵字覆寫（`ST_KEYWORDS`，比 emoji 優先，由上而下第一個命中就算數）**——
+同一個 emoji 底下要再分家的：
+
+| 順位 | 關鍵字 | st | 為什麼 |
+|------|--------|-----|--------|
+| 1 | 寶圖 | `other` | 🗺️ 但不是副本。**必須排第一**：箱子名會帶別的玩法字眼<br>（「🗺️寶圖（無人島特殊配給貨箱）」），排在 special 後面就會被誤判 |
+| 2 | 伊修加德重建／無人島／宇宙探索／友好部族 | `special` | 🛒 但不是一般商人，是各自成套的長期玩法 |
+| 3 | 成就 | `other` | 🪙成就獎勵不是兌換 |
+| 4 | `Gil×` | `npc` | 🪙Gil×N ＝ 拿金幣買，等同商店 |
+| 5 | 橙票／紫票／白票／黃票／綠票 | `scrip` | 官方套裝寫成「🪙兌換：巧手橙票」，靠票名歸回 scrip。<br>只認「{顏色}票」——「拉札漢的三類票據」是部族貨幣，留 `token` |
+| 6 | 幻化套裝箱 | `other` | wiki 對不出 source-type 的殘餘（約 35 套） |
+
+無 emoji 也無關鍵字（例：「待確認」）→ `other`。
+
+⚠ 別加「優雷卡／南方博茲雅」之類的地名關鍵字：🗺️／🗡️ emoji 本來就歸 raid，
+加了反而會把「🛒義軍整備兵（南方博茲雅戰線）」這種正牌 NPC 商人拖進 raid。
+改 `ST_KEYWORDS` 後請跑一次全 source 字串的稽核（1102 條），確認沒有規則互相搶單。
+
+⚠ **社群套（mirapri）的 st 一律在 build_site.py 重算**，不吃
+`all_outfits_enriched.json` 帶來的舊值——那是 pipeline.py 用當年的分類算的，
+改 `ST_TAGS` 時不會跟著更新。曾因此讓社群的 🪙 停在 `other`、精選的 🪙 卻是 `token`，
+同一顆按鈕在兩個檢視行為不一致。
+
+### 職業篩選
+
+職業 tag（healer/tank/caster/melee/pranged/crafter）之外另有 **`alljob`（👥 全職業）**：
+整套每一件的 `job` 都是「全職業」＝沒有職業限制，誰都能穿。判定三邊一致
+（build_site.py `is_all_job()`／index.html `isAllJob()`／官方套裝在 `transform_sets()`
+以 cjc 涵蓋全戰鬥職業或 XIVAPI `All Classes` 認定）。`alljob` 不列入 `CARD_TAGS`——
+官方 454/1971、社群 1320/6533 都是全職業，上卡等於每張卡都掛同一個標。
 
 ### 副本類型對應
 
@@ -307,7 +347,8 @@ python scripts/update_all.py
 
 ## 官方套裝圖鑑（official sets）
 
-「📖 官方套裝」檢視回答「遊戲裡有哪些整套裝備」，資料全部自建（不爬任何第三方網站）。
+「📖 官方套裝」檢視回答「遊戲裡有哪些整套裝備」，套裝資料全部自建；
+示意照另從 consolegameswiki 抓官方模特照（見「官方示意照」小節，這是唯一的第三方來源）。
 
 ### 資料層（build_sets.py，兩層混合）
 
@@ -321,7 +362,14 @@ python scripts/update_all.py
   來源簽名：inst:{副本名排序}／shop:cur{貨幣ID}／quest:{ID}／gc／npc:{NPC名排序}。
   同鍵撞出重複可見部位（如三大軍團色違）→ 整組進衝突桶不硬拆，記錄於 data/套裝報告.md。
 - **v1 收錄準則**：套內含上身＋可見件（頭/上身/手/腿/腳）≥2；跨層去重（啟發式 ⊆ 官方 → 砍啟發式）。
-- 收藏追蹤是「逐件」勾選、鍵＝道具 ID（永久穩定），套裝 ID 漂移只影響顯示不毀使用者資料。
+- 「擁有」逐件勾選追蹤已整組移除（使用者不用；星號收藏 favs 保留）。
+- **取得方式**：啟發式套用 sources.json（兌換會帶貨幣名；PvP 貨幣→⚔️、MGP→🎲、
+  Gil→🛒金幣購買、貨幣是裝備→🛒裝備升級兌換）；幻化套裝箱在 sources.json 完全查不到
+  （0/1078），改用 wiki `source-type`/`obtain-by`（見「官方示意照」，WIKI_STYPE_LABEL
+  對照表在 build_site.py），對不出來的 35 套維持「🎁幻化套裝箱」。
+- **逐件取得細項**：build_sets.py `fmt_piece_source()` 把每件的 sources.json 條目
+  格式化成「🪙貨幣×價格（NPC｜地點）」「🗡️副本名（類型）」等（去重取前兩條，
+  存 piece 的 `src` 欄），彈窗裝備名下方以 `.item-src` 樣式顯示；約 10,068/11,082 件有資料。
 
 ### 屬性徽章（可染/可交易）
 
@@ -332,24 +380,59 @@ python scripts/update_all.py
 - ⚠ EquipRestriction 不能當「Viera/Hrothgar 頭部顯示」訊號（那在 EST 模型表，XIVAPI 沒有），
   此徽章已否決，勿再嘗試。
 
+### 官方示意照（fetch_set_photos.py，consolegameswiki）
+
+- 來源：ffxiv.consolegameswiki.com（MediaWiki API），每套抓一張全身模特照的
+  640px 縮圖 → `配裝圖片/官方套裝/{套裝ID安全化}.jpg`，對應表 `data/set_photos.json`
+  （`{set_id: {img, page, file, who}}`；對不到記 `{miss: 原因}`，重試加 `--retry-miss`）。
+- 對應方式：mirage 套「英文名＝wiki 頁名」直查（命中 ~97%）；啟發式套拿一件可見裝備
+  查單品頁 wikitext 的 `set-name` → 家族頁，檔名須同時含套裝名頭字＋職能字才採用（寧缺勿錯）。
+- 挑圖順位：`{頁名} Female.*` → `{頁名} Male.*` → `{頁名}N.*`（gallery）→ 職能圖
+  （頁名任一實義字＋職能字；Augmented 頁的圖常不帶 Augmented 前綴）；
+  都對不上再用裝備英文名交叉比對：共同**字尾**（Attire of the Behemoth King ↔
+  Helm of the Behemoth King；圖檔名可能省略 of/the）→ 共同**字首**＋attire/set 泛字
+  （Templar's attire ↔ Templar's Haubergeon）→ **詞庫比對**（檔名實義詞 ⊆ 裝備名＋頁名，
+  且帶本套職能/群組字 heavy/war/magic/tank/healer/caster…，由 cjc 推得）→
+  **職業名**（AF 頁 Dancer af1/Black Mage5，數字取頁面眾數防 navbox 混世代；含匠職）→
+  上身裝備全名。⚠ 共同字首/字尾只用可見防具算——武器名（Rainmaker）會破壞字首。
+  `…icon1.png` 等一律視為雜訊排除（曾誤抓過裝備 icon）；
+  職能字比對一律整字（'aiming' 是 'maiming' 子字串，用 in 會誤判）。
+- **第二來源 Gamer Escape**（[D] 段，consolegameswiki 沒圖才用）：逐件模型圖
+  `Model-{裝備英文名}-Female-Hyur.png`（男性限定裝改 Male；GE 標題 `[F]`→`(F)`、`#` 拿掉），
+  拿「上身」單件全身照當示意，快取 `src:"ge"`、前端標「上身單件模型圖（gamerescape）」。
+  ⚠ GE 的 images 清單含紅鏈（引用了但沒上傳），要用 imageinfo 驗證檔案真的存在。
+  覆蓋率：1970/1971（僅 7.5 新套 Zero's Luminary 兩站都還沒圖，改版後 --retry-miss 補）。
+- build_site.py `attach_wiki_photos()`：wiki 照優先當 `img`（`imgSrc:"wiki"`），
+  站內配裝照（attach_set_photos）只補沒 wiki 照的套；前端據 imgSrc 顯示
+  「📖 官方外觀」或「👤 示意（N 件吻合）」。wiki 照已是 640px，thumbOf() 直接用原檔。
+- 可續傳：已解析的吃 `set_photos.json` 快取、圖檔已在就跳過；`--force` 重新解析、
+  `--limit N` 分批。⚠ 單品頁 wikitext 順帶有 `display-on-viera/hrothgar` 欄位
+  （XIVAPI 沒有的 EST 資訊），日後想做該徽章可從這裡取。
+- 同腳本第 [C] 段另抓 mirage 套裝頁 Outfit infobox 的 `source-type`＋`obtain-by`
+  （活動名/Online Store/`{{i|副本名}}`）存進 set_photos.json → build_site.py
+  `wiki_source_label()` 換掉籠統的「🎁幻化套裝箱」。改解析邏輯後把快取裡的
+  stype/obtain/noinfo 欄清掉重跑即可（頁面 wikitext 會重抓，約 30 個請求）。
+
 ### 更新流程
 
 ```
-py scripts\update_all.py           # full 模式已含：多語裝備庫 → 官方套裝(--fetch) → icon → 重建 → 健檢
+py scripts\update_all.py           # full 模式已含：多語裝備庫 → 官方套裝(--fetch) → icon → 示意照 → 重建 → 健檢
 py scripts\update_all.py local     # 離線重建（build_sets 吃 xivapi_sets_cache.json，不打網路）
 py scripts\build_sets.py --fetch   # 單獨刷新官方套裝（改版後）
 py scripts\fetch_icons.py          # 單獨補 icon（可續傳；--limit N 分批）
+py scripts\fetch_set_photos.py     # 單獨補官方示意照（可續傳；--retry-miss 重試對不到的）
 ```
 
 改版後順序：`update_db.py --apply`（繁中 DB）→ `build_item_fallback.py`（新裝備＋徽章）→
-`build_sets.py --fetch` → `fetch_icons.py` → `build_site.py`。
+`build_sets.py --fetch` → `fetch_icons.py` → `fetch_set_photos.py` → `build_site.py`。
 
 ### 前端（index.html）
 
-- navbar「👗 配裝｜📖 官方套裝」切換；官方套裝檢視隱藏性別/種族篩選列、顯示收藏工具列。
-- 收藏（我的裝備）：localStorage `ff14_owned_items`（道具 ID 陣列）；匯出/匯入 JSON
-  （`{ver, exported, owned[], favs[]}`）；私密模式偵測（storage 不可用→隱藏勾選 UI）；
-  匯入時做孤兒 ID 偵測（不在資料中的保留並提示）。
+- navbar「👗 配裝｜📖 官方套裝」切換；官方套裝檢視隱藏性別/種族篩選列。
+- 「擁有」勾選追蹤（含備份/匯入工具列）已整組移除；星號收藏 favs（localStorage
+  `ff14_favs`）保留。舊的 `ff14_owned_items` localStorage 資料留著不動、無 UI 讀取。
+- 彈窗「染色／交易」欄：dye 無資料留空（不誤標「不可染」）、可染 🎨×n／不可染、
+  可交易／不可交易兩態都明示。
 - 配裝彈窗每件裝備的「📖所屬套裝」chip 可跳到官方套裝彈窗（等 Bootstrap hide 動畫完再開，
   否則 show 會被吃掉）；官方套裝彈窗的裝備名反向跳回配裝搜尋。
 

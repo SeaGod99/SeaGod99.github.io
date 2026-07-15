@@ -66,8 +66,10 @@ def main():
     if only_thumb:
         print(f"  ℹ️  {only_thumb} 套僅有縮圖（原圖已刪除，彈窗會自動改用縮圖）")
     thumb_dir = ROOT / "配裝圖片" / "縮圖"
+    # icons（40px）與官方套裝示意照（640px）本身就是小圖，不需縮圖
+    no_thumb_dirs = [thumb_dir, ROOT / "配裝圖片" / "icons", ROOT / "配裝圖片" / "官方套裝"]
     n_src = sum(1 for p in (ROOT / "配裝圖片").rglob("*")
-                if p.is_file() and thumb_dir not in p.parents
+                if p.is_file() and not any(d in p.parents for d in no_thumb_dirs)
                 and p.suffix.lower() in (".jpe", ".jpg", ".jpeg", ".png", ".webp"))
     n_thumb = sum(1 for p in thumb_dir.rglob("*") if p.is_file()) if thumb_dir.exists() else 0
     print(f"  縮圖覆蓋：{n_thumb}/{n_src}" + ("（請跑 scripts/make_thumbs.py）" if n_thumb < n_src else " ✓"))
@@ -134,6 +136,22 @@ def main():
             w(f"{n_noname} 套三語名稱皆空")
         print(f"  共 {len(sets)} 套｜icon 覆蓋 {len(need_icons)-missing_icons}/{len(need_icons)}"
               + ("（請跑 scripts/fetch_icons.py）" if missing_icons else " ✓"))
+        # 官方示意照（consolegameswiki）：對應表指到的圖檔要存在
+        photos_path = ROOT / "data" / "set_photos.json"
+        if photos_path.exists():
+            photos = json.loads(photos_path.read_text(encoding="utf-8"))
+            n_have = sum(1 for sid, c in photos.items()
+                         if sid in seen_sid and "img" in c)
+            n_lost = sum(1 for sid, c in photos.items()
+                         if sid in seen_sid and "img" in c
+                         and not (ROOT / c["img"]).exists())
+            if n_lost:
+                w(f"set_photos.json 有 {n_lost} 筆圖檔不存在（重跑 scripts/fetch_set_photos.py 可補）")
+            n_orphan = sum(1 for sid in photos if sid not in seen_sid)
+            print(f"  官方示意照 {n_have}/{len(sets)} 套"
+                  + (f"｜{n_orphan} 筆對應的套裝 ID 已漂移（無害，不影響顯示）" if n_orphan else ""))
+        else:
+            print("  ℹ️  尚無官方示意照（跑 scripts/fetch_set_photos.py 抓取）")
         js_sets = ROOT / "official_sets.js"
         if not js_sets.exists() or sets_path.stat().st_mtime > js_sets.stat().st_mtime:
             w("official_sets.json 比 official_sets.js 新，請執行 python scripts/build_site.py")
