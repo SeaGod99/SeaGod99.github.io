@@ -36,6 +36,12 @@ const EXPANSION_BY_MAJOR = {
 // 名稱 → 等級：陳舊的地圖G8 / 陳舊的地圖S1
 const GRADE_RE = /^陳舊的地圖([GS])(\d+)$/;
 
+// 等級體系外、但社群常用的特殊圖（以 item id 白名單納入）
+// 19770 深層傳送魔紋的地圖（俗稱「綠圖」）：4.05 Lv.70 組隊圖，挖出後開啟烏茲奈爾深層傳送魔紋
+const SPECIAL_MAPS = new Map([
+  [19770, { grade: "綠圖", series: "X", gradeNum: 99 }],
+]);
+
 async function fetchJson(url) {
   const res = await fetch(url);
   if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
@@ -79,11 +85,12 @@ async function main() {
   for (const [itemId, locs] of byItem) {
     const item = itemById.get(itemId);
     const m = item && GRADE_RE.exec(item.name || "");
-    if (!m) { skipped.push(itemId); continue; } // 非等級圖（或台服無譯名）
+    const special = item && SPECIAL_MAPS.get(itemId);
+    if (!m && !special) { skipped.push(itemId); continue; } // 非等級圖（或台服無譯名）
 
-    const series = m[1];            // G / S
-    const gradeNum = Number(m[2]);  // 1..17
-    const grade = series + gradeNum;
+    const series = m ? m[1] : special.series;             // G / S / X（特殊圖）
+    const gradeNum = m ? Number(m[2]) : special.gradeNum; // 1..17；特殊圖排最後
+    const grade = m ? series + gradeNum : special.grade;
 
     // 去重（同地圖同座標）＋反查地圖名
     const seen = new Set();
@@ -137,9 +144,10 @@ async function main() {
     }
   }
 
-  // 排序：G 系列在前、未合併的 S 系列在後，各依等級升序
-  const merged = [...gEntries, ...leftoverS];
-  const seriesRank = { G: 0, S: 1 };
+  // 排序：G 系列在前、未合併的 S 系列次之、特殊圖（X）最後，各依等級升序
+  const xEntries = data.filter((g) => g.series === "X");
+  const merged = [...gEntries, ...leftoverS, ...xEntries];
+  const seriesRank = { G: 0, S: 1, X: 2 };
   merged.sort((a, b) =>
     (seriesRank[a.series] ?? 9) - (seriesRank[b.series] ?? 9) || a.gradeNum - b.gradeNum
   );
