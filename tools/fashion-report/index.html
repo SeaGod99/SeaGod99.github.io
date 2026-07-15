@@ -55,6 +55,7 @@
   .how-tag { font-size: 13px; border-radius: 12px; padding: 2px 10px; background: rgba(255,255,255,.06); color: var(--text-dim); }
   .how-tag.mk { background: rgba(111,191,115,.12); color: var(--ok); }
   .how-tag.npc { background: rgba(200,169,110,.14); color: var(--gold); }
+  .dye-chip { font-size: 13px; border-radius: 12px; padding: 2px 10px; background: rgba(120,140,200,.14); color: #aeb8e0; white-space: nowrap; }
   .alt { font-size: 14px; color: var(--text-dim); margin-left: auto; }
   .rec-note { font-size: 15px; color: var(--text-dim); margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); }
   .rec-note b { color: var(--gold); }
@@ -165,6 +166,7 @@ function fallbackCopy(t, done) {
 const item = (e, alt) => `
   <span class="item-name" data-copy="${e.name}" title="點擊複製名稱">${e.name}</span>
   <span class="how-tag${e.npc ? ' npc' : e.market ? ' mk' : ''}">${e.how}</span>
+  ${e.dye ? `<span class="dye-chip">🎨 染${e.dye}</span>` : ''}
   ${alt ? `<span class="alt">替代：${alt}</span>` : ''}`;
 
 function render(d) {
@@ -211,7 +213,7 @@ function render(d) {
 
     <div class="rec-card">
       <div class="rec-title">💯 滿分配裝 <span class="rec-score">100 分</span></div>
-      <div class="rec-sub">4 個提示部位各穿 1 件，其餘部位穿滿任意裝備${d.scoring.needDyeFor100 ? '，並依指定色染色補分' : '，本週<b style="color:var(--gold)">不需染色</b>'}。</div>
+      <div class="rec-sub">${d.scoring.note100 ?? `4 個提示部位各穿 1 件，其餘部位穿滿任意裝備${d.scoring.needDyeFor100 ? '，並依指定色染色補分' : '，本週<b style="color:var(--gold)">不需染色</b>'}。`}</div>
       <div class="slot-rows">${rows100}</div>
     </div>
 
