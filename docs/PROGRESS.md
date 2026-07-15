@@ -3,7 +3,7 @@
 > **給 Claude / 後續對話的指示**：開始任何工作前先讀本檔。完成任何功能或資料變更後，**必須更新本檔**（狀態表 + 更新紀錄），並同步 `data/_meta.json` 的 status。
 > 規格細節見 `docs/feature-specs.md`，資料格式見 `data/SCHEMA.md`。
 
-**最後更新**：2026-07-16（幻化配裝圖鑑上線資產進版控：縮圖/示意照/icons/資料 js 約 850MB push 上線，僅 mirapri 原圖留本機；repo 約 860MB、距 Pages 1GB 上限剩 140MB，見更新紀錄）
+**最後更新**：2026-07-16（幻化配裝圖鑑介面統整＋表情頁遊戲內分頁＋釣魚頁魚糕式卡片重做，見更新紀錄）
 **網站**：https://seagod99.github.io ｜ GitHub Pages 純靜態 ｜ 遊戲版本 7.2
 
 ---
@@ -23,7 +23,7 @@
 | — | 天氣預報 | `/tools/weather/` | 完成（改用共用模組 assets/js/eorzea-weather.js，天氣表接 maps.json weatherRates，mapId 統一，06-15重做） |
 | 1.5 | 風脈泉追蹤器 | `/tools/aether-currents/` | 完成（31 地區 303 個風脈泉，任務型151筆/野外型152筆，座標暫無，06-16新增） |
 | 1.6 | 時尚品鑑推薦 | `/tools/fashion-report/` | 規劃中（每週更新，需半自動） |
-| 1.7 | 幻化配裝圖鑑 | `/tools/glamour/` | 完成（07-15 由獨立 repo 併入：精選配裝＋Mirapri 社群＋官方套裝 1971 套三檢視，收藏星號、染色/交易徽章、wiki 示意照；07-16 上線資產進版控——縮圖/官方示意照/icons/精選原圖＋mirapri_outfits.js/official_sets.js 共約 850MB 已 push，線上完整可用；**僅 mirapri 原圖 669MB 留本機**（加入會破 Pages 發佈 1GB 上限，彈窗自動退回縮圖），重建後衍生 js 記得 commit；資料管線為 Python（py scripts\update_all.py），細節見 tools/glamour/CLAUDE.md） |
+| 1.7 | 幻化配裝圖鑑 | `/tools/glamour/` | 完成（07-15 由獨立 repo 併入：精選配裝＋Mirapri 社群＋官方套裝 1971 套三檢視，收藏星號、染色/交易徽章、wiki 示意照；07-16 上線資產進版控——縮圖/官方示意照/icons/精選原圖＋mirapri_outfits.js/official_sets.js 共約 850MB 已 push，線上完整可用；**僅 mirapri 原圖 669MB 留本機**（加入會破 Pages 發佈 1GB 上限，彈窗自動退回縮圖），重建後衍生 js 記得 commit；資料管線為 Python（py scripts\update_all.py），細節見 tools/glamour/CLAUDE.md；07-16 介面統整——改用站內共用色票/字體、加「← 水神的工具箱」導覽與頁尾，官方套裝卡不再顯示 alljob 原始 tag） |
 
 ### 收藏／成就追蹤（共通規格見 feature-specs 第二章）
 
@@ -32,7 +32,7 @@
 | 2.1 | 坐騎收藏追蹤 | `/collections/mounts/` | 完成（改接 data/mounts.json 385筆+圖片，篩選/追蹤重做，06-15重做） |
 | 2.2 | 寵物收藏追蹤 | `/minions/` | 完成（整頁重做，改接 data/minions.json+本機圖示，source 欄位修正，06-15重做） |
 | 2.3 | 樂譜收藏追蹤 | `/collections/orchestrion/` | 完成（接 data/orchestrion.json 724筆/618筆可顯示，版本篩選，06-16新增） |
-| 2.4 | 表情收藏追蹤 | `/collections/emotes/` | 完成（接 data/emotes.json 292筆；scripts/build-emotes.mjs 重建：繁中名 260/292（Cafemaker 簡中→OpenCC，餘 32 筆為簡中服未開放之最新表情，前端隱藏）；**來源 292/292 全補齊**：預設94+動作指南書163+任務29+成就4+App2；前端加來源顯示+來源篩選（預設/動作指南書/任務/成就/App）；06-22 重建） |
+| 2.4 | 表情收藏追蹤 | `/collections/emotes/` | 完成（接 data/emotes.json 292筆；scripts/build-emotes.mjs 重建：繁中名 260/292（Cafemaker 簡中→OpenCC，餘 32 筆為簡中服未開放之最新表情，前端隱藏）；**來源 292/292 全補齊**：預設94+動作指南書163+任務29+成就4+App2；前端加來源顯示+來源篩選（預設/動作指南書/任務/成就/App）；06-22 重建；07-16 加遊戲內分頁篩選（一般/特殊/情感表現，接 category 欄）與卡片分頁標籤） |
 | 2.5 | 髮型收藏追蹤 | `/collections/hairstyles/` | 完成（39 筆台服已開放髮型，版本/來源篩選，06-16新增） |
 | 2.6 | 鳥鞍收藏追蹤 | `/collections/barding/` | 完成（接 data/barding.json 106筆，部位/來源篩選，15筆無sources標待補充，06-15新增） |
 | 2.9 | 探索筆記追蹤器 | `/collections/exploration-log/` | 完成（340筆，繁中景觀名已補齊：cafemaker Name_chs→手動繁化，座標因 XIVAPI SightseeingLog 不回傳而保持 null，06-17景觀名補完） |
@@ -54,7 +54,7 @@
 | 4.3 | 物品／製作搜尋 | `/tools/item-search/` | 規劃中（items/recipes 已備） |
 | 4.4 | 藏寶圖採集點查詢 | `/tools/treasure-maps/` | 規劃中（G8–G18） |
 | 4.5 | 園藝配種計算 | `/tools/gardening/` | 完成（107種植物，正查×反查，data/gardening.json，06-17新增） |
-| 4.7 | 釣魚紀錄追蹤 | `/tools/fishing/` | 完成（fishes.json 1104筆，大魚/限時/天氣篩選，追蹤進度，06-17新增） |
+| 4.7 | 釣魚紀錄追蹤 | `/tools/fishing/` | 完成（fishes.json 1104筆，大魚/限時/天氣篩選，追蹤進度，06-17新增；07-16 參考魚糕重做卡片——固定欄位釣場/釣餌/時間/天氣、ET 24h 時間窗 bar、竿型 !/!!/!!! 與提鉤章、天氣鏈前→今、直感標籤，加「地區」篩選對應遊戲內釣魚手帳分頁） |
 | 4.8 | 採集紀錄追蹤 | `/tools/gathering-log/` | 完成（gathering.json 733節點，採礦工/園藝工，物品勾選追蹤，06-17新增） |
 
 「開發中」頁面驗收後請改為「完成」並註記日期。
@@ -186,6 +186,8 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 6. 其他規劃：時尚品鑑、冒險者小隊計算機、藏寶圖、園藝配種、釣魚紀錄
 
 ## 五、更新紀錄
+
+- **2026-07-16（介面統整＋遊戲內分頁對齊＋釣魚頁魚糕式重做）**：(1) **幻化配裝圖鑑介面統整**——`tools/glamour/index.html` 由舊獨立站 GitHub 深色系（#0d1117）改為站內共用色票（--bg-base #0a0c10、金 #c8a96e、藍 #4fc3f7）、共用字體堆疊與背景光暈，navbar 加「← 水神的工具箱」返回鍵、標題改實色金並更名「幻化配裝圖鑑」、`<title>` 對齊站內格式、補共用頁尾；官方套裝卡片 tag 改套 CARD_TAGS 過濾（不再露出未翻譯的 `alljob`）。(2) **收藏頁 vs 遊戲內圖鑑分頁稽核**——樂譜（gameCategory 分類＋No. 排序）、青魔（No.）、幻卡（編號＋星級）原本已符合；**表情頁補上遊戲內分頁**（一般/特殊/情感表現，data/emotes.json 的 category 欄 General/Special/Expressions），卡片加分頁標籤；坐騎/寵物在遊戲內為無分類平鋪圖鑑，維持現狀。(3) **釣魚頁參考魚糕重做**——卡片改固定四欄資訊列（釣場/釣餌/時間/天氣，無限制時明示「全天/不限」）、ET 24 小時時間窗 bar（金色＝可釣時段、綠線＝現在 ET，跨午夜自動切兩段）、釣餌鏈以金色箭頭串接＋竿型（! 輕杆/!! 中杆/!!! 重杆）與提鉤（精準/強力）小章、天氣鏈「前一時段 → 當前」、直感標籤；新增「地區」下拉篩選（釣場→地圖→region，對應遊戲內釣魚手帳的地區分頁，選項依 maps.json 資料片順序）。瀏覽器實測（桌機 1440/手機 375）：三頁皆無 console error，地區篩選（庫爾札斯 78 筆）、表情分頁（情感表現 29 筆）、時間窗 bar 與倒數皆正常。
 
 - **2026-07-16（幻化配裝圖鑑上線資產進版控）**：`tools/glamour/.gitignore` 改為只排除 mirapri 原圖（669MB）與東方時尚切割圖；縮圖（697MB，含 mirapri/官方套裝/icons 子目錄）、官方示意照（63MB）、icons（37MB）、精選原圖（37MB）與前端動態載入的 `mirapri_outfits.js`／`official_sets.js` 共約 850MB、1.75 萬檔分四個 commit push 上 main，線上版三檢視（精選/社群/官方套裝）完整可用。mirapri 原圖不上的原因：加入後整站約 1.5GB，超過 **GitHub Pages 發佈 1GB 上限**；前端彈窗載不到原圖會自動退回縮圖（index.html onerror fallback），僅犧牲點圖放大的解析度。**維運注意**：(1) repo 已約 860MB，距 Pages 上限僅剩約 140MB 餘裕，日後新增 mirapri 批次前先估縮圖增量；(2) 跑完 `update_all` 重建後，衍生 js 與新縮圖**記得 commit**（.gitignore 已不擋）；(3) mirapri 原圖／資料來源 DB 仍只在本機，需自行備份。
 

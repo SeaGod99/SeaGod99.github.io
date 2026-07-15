@@ -92,6 +92,12 @@
   </div>
 
 
+  <!-- 遊戲內分頁（表情視窗：一般／特殊／情感表現） -->
+  <div class="filter-section">
+    <div class="filter-label">遊戲內分頁</div>
+    <div class="filter-tags" id="categoryFilters"></div>
+  </div>
+
   <!-- Source filter -->
   <div class="filter-section" id="sourceFilterSection" style="display:none">
     <div class="filter-label">取得來源</div>
@@ -134,6 +140,14 @@
   let owned = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
   let filterOwn = 'all';     // all | owned | missing
   let filterSource = null;   // string | null
+  let filterCategory = null; // 'General' | 'Special' | 'Expressions' | null
+
+  // 遊戲內表情視窗的三個分頁（category 欄位 → 台服介面標籤）
+  const CATEGORY_TABS = [
+    { key: 'General',     label: '一般' },
+    { key: 'Special',     label: '特殊' },
+    { key: 'Expressions', label: '情感表現' },
+  ];
   let searchQ = '';
   let sortBy = 'default';    // default | patch-desc | patch-asc | name
 
@@ -176,6 +190,24 @@
     try { localStorage.setItem('ffxiv_snap_emotes', JSON.stringify({ c: count, t: total })); } catch (e) {} // 首頁進度儀表板快照
   }
 
+  // ── 遊戲內分頁 renderer ──
+  function renderCategoryFilters() {
+    const wrap = document.getElementById('categoryFilters');
+    wrap.innerHTML = '';
+    CATEGORY_TABS.forEach(t => {
+      if (!EM_DATA.some(e => e.category === t.key)) return;
+      const btn = document.createElement('button');
+      btn.className = 'filter-tag' + (filterCategory === t.key ? ' active' : '');
+      btn.textContent = t.label;
+      btn.addEventListener('click', () => {
+        filterCategory = filterCategory === t.key ? null : t.key;
+        renderCategoryFilters();
+        renderGrid();
+      });
+      wrap.appendChild(btn);
+    });
+  }
+
   // ── Source filter renderer ──
   function renderSourceFilters() {
     const wrap = document.getElementById('sourceFilters');
@@ -198,6 +230,8 @@
     return EM_DATA.filter(e => {
       if (filterOwn === 'owned'   && !isOwned(e)) return false;
       if (filterOwn === 'missing' &&  isOwned(e)) return false;
+
+      if (filterCategory && e.category !== filterCategory) return false;
 
       if (filterSource) {
         const types = (e.sources || []).map(s => s.type);
@@ -270,10 +304,12 @@
         ? `<span class="em-command">${e.command}</span>`
         : '';
 
-      // Patch tag
+      // Patch tag ＋ 遊戲內分頁標籤
       const patchHtml = e.patch
         ? `<span class="tag patch-tag">ver ${e.patch}</span>`
         : '';
+      const catTab = CATEGORY_TABS.find(t => t.key === e.category);
+      const catHtml = catTab ? `<span class="tag">${catTab.label}</span>` : '';
 
       // 來源標籤 + 取得方式
       const sources = e.sources || [];
@@ -290,7 +326,7 @@
         ${cmdHtml}
         <div class="col-tags">${sourceTags}</div>
         <div class="col-detail">${detailText}</div>
-        <div class="col-tags">${patchHtml}</div>
+        <div class="col-tags">${catHtml}${patchHtml}</div>
       `;
 
       // 預設表情恆為已收藏，不可點掉；其餘可切換
@@ -436,6 +472,7 @@
         renderSourceFilters();
       }
 
+      renderCategoryFilters();
       updateProgress();
       renderGrid();
     })

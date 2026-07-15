@@ -3,38 +3,44 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FF14 外觀配裝一覽</title>
+<title>幻化配裝圖鑑 | 水神的工具箱</title>
 <link rel="stylesheet" href="vendor/bootstrap/bootstrap.min.css">
 <script src="curated_outfits.js"></script>
 <style>
-/* ===== FF14 深色主題：映射到 Bootstrap 5 變數 ===== */
+/* ===== 站內共用設計語彙（同 assets/css/common.css 色票）：映射到 Bootstrap 5 變數 ===== */
 :root{
-  --bg:#0d1117; --card-bg:#161b22; --panel-bg:#1c2230; --border:#30363d;
-  --accent:#c9a227; --accent2:#6e9fd4; --text:#e6edf3; --muted:#7d8590;
+  --bg:#0a0c10; --card-bg:#14181f; --panel-bg:#0f1117; --border:rgba(255,255,255,.07);
+  --accent:#c8a96e; --accent-light:#e2c98a; --accent2:#4fc3f7; --text:#e8eaf0; --muted:#8892a4;
   --female:#f472b6; --male:#60a5fa; --unknown:#6b7280;
   --tag-other:#374151;
 }
 [data-bs-theme="dark"]{
-  --bs-body-bg:#0d1117; --bs-body-color:#e6edf3;
-  --bs-tertiary-bg:#161b22; --bs-secondary-bg:#1c2230;
-  --bs-border-color:#30363d; --bs-border-color-translucent:rgba(255,255,255,.1);
-  --bs-primary:#6e9fd4; --bs-primary-rgb:110,159,212;
+  --bs-body-bg:#0a0c10; --bs-body-color:#e8eaf0;
+  --bs-tertiary-bg:#14181f; --bs-secondary-bg:#0f1117;
+  --bs-border-color:rgba(255,255,255,.12); --bs-border-color-translucent:rgba(255,255,255,.1);
+  --bs-primary:#4fc3f7; --bs-primary-rgb:79,195,247;
   --bs-emphasis-color:#fff; --bs-emphasis-color-rgb:255,255,255;
-  --bs-link-color:#8fb4e0; --bs-link-color-rgb:143,180,224;
-  --bs-link-hover-color:#aecbf0;
+  --bs-link-color:#4fc3f7; --bs-link-color-rgb:79,195,247;
+  --bs-link-hover-color:#8ad8fa;
 }
 /* 根字級：Bootstrap 全 rem 制，調這裡＝整站等比例放大 */
 html{ font-size:17px; }
-body{ font-family:'Microsoft JhengHei','Noto Sans TC','Segoe UI',sans-serif; }
+body{ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans TC',sans-serif; }
+/* 站內共通背景光暈 */
+body::before{ content:''; position:fixed; inset:0; pointer-events:none; z-index:-1;
+  background:radial-gradient(ellipse 80% 50% at 20% 0%, rgba(200,169,110,.05) 0%, transparent 60%),
+             radial-gradient(ellipse 60% 40% at 80% 100%, rgba(79,195,247,.04) 0%, transparent 60%); }
 
 /* ── Navbar ── */
-.app-navbar{ background:linear-gradient(135deg,#0d1117 0%,#1a1f2e 50%,#0d1117 100%);
+.app-navbar{ background:rgba(15,17,23,.92);
   border-bottom:1px solid var(--border); backdrop-filter:blur(12px); z-index:1030; }
-.app-title{ font-size:1.5rem; font-weight:700; margin:0;
-  background:linear-gradient(90deg,var(--accent),var(--accent2));
-  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
-.app-subtitle{ color:var(--muted); font-size:.9rem; }
-.lang-btn.lang-active{ background:var(--accent)!important; border-color:var(--accent)!important; color:#0d1117!important; }
+.back-link{ display:inline-flex; align-items:center; gap:6px; font-size:.82rem; white-space:nowrap;
+  color:var(--muted); padding:6px 12px; border:1px solid var(--border); border-radius:6px;
+  text-decoration:none; transition:all .18s; }
+.back-link:hover{ color:var(--accent); border-color:rgba(200,169,110,.4); }
+.app-title{ font-size:1.35rem; font-weight:700; margin:0; color:var(--accent-light); }
+.app-subtitle{ color:var(--muted); font-size:.85rem; }
+.lang-btn.lang-active{ background:var(--accent)!important; border-color:var(--accent)!important; color:#0a0c10!important; }
 
 /* ── Filter bar ── */
 .filter-bar{ background:var(--card-bg); border-bottom:1px solid var(--border); }
@@ -54,8 +60,8 @@ body{ font-family:'Microsoft JhengHei','Noto Sans TC','Segoe UI',sans-serif; }
 /* ── Cards ── */
 .outfit-card{ cursor:pointer; overflow:hidden; background:var(--card-bg);
   transition:transform .2s, box-shadow .2s, border-color .2s; }
-.outfit-card:hover{ transform:translateY(-4px); border-color:var(--accent2)!important;
-  box-shadow:0 10px 30px rgba(110,159,212,.2); }
+.outfit-card:hover{ transform:translateY(-4px); border-color:rgba(200,169,110,.4)!important;
+  box-shadow:0 2px 16px rgba(0,0,0,.4); }
 .card-img-top{ aspect-ratio:3/4; object-fit:cover; object-position:top; background:var(--panel-bg); }
 .card-noimg{ aspect-ratio:3/4; display:flex; align-items:center; justify-content:center;
   color:var(--muted); font-size:.7rem; background:var(--panel-bg); }
@@ -195,6 +201,13 @@ body{ font-family:'Microsoft JhengHei','Noto Sans TC','Segoe UI',sans-serif; }
 .chip-set:hover{ background:rgba(110,159,212,.15); }
 .zh-missing{ color:#f59e0b; font-size:.68rem; border:1px solid rgba(245,158,11,.4); border-radius:9px; padding:1px 7px; white-space:nowrap; }
 .empty-state{ text-align:center; color:var(--muted); padding:60px 20px; font-size:.95rem; }
+
+/* ── 站內共用頁尾 ── */
+.page-footer{ border-top:1px solid var(--border); padding:24px 16px 32px; text-align:center; margin-top:48px; }
+.page-footer p{ font-size:.78rem; color:var(--muted); margin:0; }
+.page-footer p + p{ margin-top:4px; }
+.page-footer a{ color:var(--muted); text-decoration:none; transition:color .18s; }
+.page-footer a:hover{ color:var(--accent); }
 ::-webkit-scrollbar{ width:8px; height:8px; }
 ::-webkit-scrollbar-track{ background:var(--bg); }
 ::-webkit-scrollbar-thumb{ background:var(--border); border-radius:4px; }
@@ -205,9 +218,12 @@ body{ font-family:'Microsoft JhengHei','Noto Sans TC','Segoe UI',sans-serif; }
 <!-- ── Header / Navbar ── -->
 <nav class="app-navbar sticky-top px-3 px-md-4 py-3">
   <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-    <div>
-      <h1 class="app-title" id="site-title">⚔️ FF14 外觀配裝一覽</h1>
-      <p class="app-subtitle mb-0" id="site-subtitle"></p>
+    <div class="d-flex align-items-center gap-3 flex-wrap">
+      <a href="../../" class="back-link">← 水神的工具箱</a>
+      <div>
+        <h1 class="app-title" id="site-title">👘 幻化配裝圖鑑</h1>
+        <p class="app-subtitle mb-0" id="site-subtitle"></p>
+      </div>
     </div>
     <div class="d-flex align-items-center gap-2 flex-wrap">
       <div class="btn-group" role="group" aria-label="view">
@@ -296,6 +312,12 @@ body{ font-family:'Microsoft JhengHei','Noto Sans TC','Segoe UI',sans-serif; }
   <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-xl-5 g-3" id="outfit-grid"></div>
 </main>
 <nav class="d-flex justify-content-center align-items-center flex-wrap gap-2 px-3 pb-4" id="pager" aria-label="pagination"></nav>
+
+<!-- Footer -->
+<footer class="page-footer">
+  <p><a href="../../">水神的工具箱</a> · 資料來源：Mirapri、XIVAPI、consolegameswiki、ffxiv-item-search-tc</p>
+  <p>FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具</p>
+</footer>
 
 <!-- ── 配裝詳情 Modal（Bootstrap） ── -->
 <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
@@ -780,7 +802,8 @@ function buildSetCard(e, idx) {
   const jobTag = e.job && e.job !== "全職業" ? `<span class="restrict-job">${esc(e.job)}</span>` : "";
   const tot = e.pieces.length;
   const favCls = favs.has(e.id) ? " faved" : "";
-  const tagBadges = (e.tags || []).map(t => `<span class="card-tag badge-${t}">${TAG_LABEL[t] || t}</span>`).join("");
+  // alljob 等僅供篩選的 tag 不上卡（與配裝卡 CARD_TAGS 規則一致）
+  const tagBadges = (e.tags || []).filter(t => CARD_TAGS.has(t)).map(t => `<span class="card-tag badge-${t}">${TAG_LABEL[t] || t}</span>`).join("");
   return `<div class="col">
     <div class="card outfit-card h-100 position-relative" onclick="openModal(${idx})">
       <button class="fav-btn${favCls}" title="加入／移除我的收藏" onclick="toggleFav('${String(e.id).replace(/'/g, "\\'")}', event)">★</button>
