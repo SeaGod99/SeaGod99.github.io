@@ -23,6 +23,7 @@
 | — | 天氣預報 | `/tools/weather/` | 完成（改用共用模組 assets/js/eorzea-weather.js，天氣表接 maps.json weatherRates，mapId 統一，06-15重做） |
 | 1.5 | 風脈泉追蹤器 | `/tools/aether-currents/` | 完成（31 地區 303 個風脈泉，任務型151筆/野外型152筆，座標暫無，06-16新增） |
 | 1.6 | 時尚品鑑推薦 | `/tools/fashion-report/` | 規劃中（每週更新，需半自動） |
+| 1.7 | 幻化配裝圖鑑 | `/tools/glamour/` | 開發中（07-15 由獨立 repo 併入：精選配裝＋Mirapri 社群＋官方套裝 1971 套三檢視，收藏星號、染色/交易徽章、wiki 示意照；**線上版資料未完整**——配裝圖片 1.5GB、mirapri_outfits.js／official_sets.js 等衍生檔在 tools/glamour/.gitignore 內未進版控，GitHub Pages 上只有精選資料可看，部署方案待定；資料管線為 Python（py scripts\update_all.py），細節見 tools/glamour/CLAUDE.md） |
 
 ### 收藏／成就追蹤（共通規格見 feature-specs 第二章）
 
@@ -37,7 +38,6 @@
 | 2.9 | 探索筆記追蹤器 | `/collections/exploration-log/` | 完成（340筆，繁中景觀名已補齊：cafemaker Name_chs→手動繁化，座標因 XIVAPI SightseeingLog 不回傳而保持 null，06-17景觀名補完） |
 | 2.10 | 青魔法術收藏 | `/collections/blue-magic/` | 完成（改接 data/blue-magic.json 124筆，副本來源用 contentId 對 dungeons.json 取繁中名，野外/怪物來源並列，14筆無資料標待補充，06-15新增） |
 | 2.11 | 幻卡追蹤 | `/collections/triple-triad/` | 完成（接 data/triple-triad.json 425筆，星級/類型/來源篩選，NPC對戰顯示地點，06-15新增） |
-| 2.12 | 幻化配裝圖鑑 | `/tools/glamour/` | 開發中（07-15 由獨立 repo 併入：精選配裝＋Mirapri 社群＋官方套裝 1971 套三檢視，收藏星號、染色/交易徽章、wiki 示意照；**線上版資料未完整**——配裝圖片 1.5GB、mirapri_outfits.js／official_sets.js 等衍生檔在 tools/glamour/.gitignore 內未進版控，GitHub Pages 上只有精選資料可看，部署方案待定；資料管線為 Python（py scripts\update_all.py），細節見 tools/glamour/CLAUDE.md） |
 
 ### 戰鬥／副本
 
@@ -187,7 +187,7 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 
 ## 五、更新紀錄
 
-- **2026-07-15（幻化配裝圖鑑併入 tools/glamour/）**：原獨立 repo「FF14時尚配裝」以 `--allow-unrelated-histories` 併入本站，完整 git 歷史保留，專案整棵移至 `tools/glamour/`（腳本以 `__file__` 定位專案根、bat 用 `%~dp0`，搬移後照常運作）。功能：精選配裝／Mirapri 社群投稿／官方套裝圖鑑（1971 套）三檢視、裝備來源與染色查詢、可染/可交易徽章、收藏星號、consolegameswiki 官方示意照。首頁「收藏 / 成就」區已掛卡片、README 已登記。**注意**：該工具有自己的 `tools/glamour/.gitignore`——配裝圖片（1.5GB）、資料來源 DB（105MB）、mirapri_outfits.js／official_sets.js 等衍生檔皆不進版控，因此 **GitHub Pages 線上版目前只有精選配裝資料可看（且無圖）**，完整體驗僅限本機；部署方案（衍生檔進版控？圖床外掛？）待定。資料管線為 Python（Windows 用 `py scripts\update_all.py`），文件見 `tools/glamour/CLAUDE.md`。
+- **2026-07-15（幻化配裝圖鑑併入 tools/glamour/）**：原獨立 repo「FF14時尚配裝」以 `--allow-unrelated-histories` 併入本站，完整 git 歷史保留，專案整棵移至 `tools/glamour/`（腳本以 `__file__` 定位專案根、bat 用 `%~dp0`，搬移後照常運作）。功能：精選配裝／Mirapri 社群投稿／官方套裝圖鑑（1971 套）三檢視、裝備來源與染色查詢、可染/可交易徽章、收藏星號、consolegameswiki 官方示意照。首頁「日常工具」區已掛卡片、README 已登記。**注意**：該工具有自己的 `tools/glamour/.gitignore`——配裝圖片（1.5GB）、資料來源 DB（105MB）、mirapri_outfits.js／official_sets.js 等衍生檔皆不進版控，因此 **GitHub Pages 線上版目前只有精選配裝資料可看（且無圖）**，完整體驗僅限本機；部署方案（衍生檔進版控？圖床外掛？）待定。資料管線為 Python（Windows 用 `py scripts\update_all.py`），文件見 `tools/glamour/CLAUDE.md`。
 
 - **2026-06-24（採集紀錄頁新增地圖檢視）**：tools/gathering-log/index.html 加「清單／地圖」檢視切換。地圖檢視用 maps.json 的 `sizeFactor` 以 FFXIV 標準式 `frac=(coord-1)*(sizeFactor/100)/41` 把遊戲座標換成底圖 0..1 比例定位採集點（底圖走 image.local，相對路徑 `../..`）。採集點以圓點標示（採礦工橘／園藝工綠／已全採金），點圈顯示該點物品卡並可勾選追蹤（dot 狀態即時同步）；地圖下拉依當前篩選（職業/版本/種類/狀態/搜尋）動態列出有節點的地圖、依節點數排序。47 張地圖、580 點可定位（另 113 個 mapId=0 特殊採集點無座標，不在地圖顯示）。底圖缺 1 張（mapId 584 雲冠群島／Diadem，屬待補 8 張之一）→ onerror 顯示「底圖尚未下載、可跑 download-maps.mjs」提示，不影響其餘 46 張。瀏覽器實測：座標分佈正確、點選/勾選/清單回切皆正常、無新增 console error。
 
