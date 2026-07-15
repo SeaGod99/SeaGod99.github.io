@@ -192,10 +192,14 @@ export function fmtRT(ms) {
   return `${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
 }
 
-/** 毫秒差 → "N分 SS秒後" */
+/** 毫秒差 → 60 分內 "N分 SS秒後"，超過 "H時MM分後" */
 export function fmtCountdown(ms) {
   const s = Math.max(0, Math.round(ms / 1000));
   const m = Math.floor(s / 60), ss = s % 60;
+  if (m >= 60) {
+    const h = Math.floor(m / 60), mm = m % 60;
+    return `${h}時${String(mm).padStart(2, '0')}分後`;
+  }
   return `${m}分 ${String(ss).padStart(2, '0')}秒後`;
 }
 

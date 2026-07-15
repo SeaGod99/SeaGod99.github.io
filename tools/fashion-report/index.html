@@ -142,6 +142,12 @@ const fmtDur = ms => {
   const d = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600), m = Math.floor(s % 3600 / 60);
   return (d ? d + ' 天 ' : '') + String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(s % 60).padStart(2,'0');
 };
+/* 週次 → 日期區間字串（台北時間，週二 16:00 換週） */
+const fmtMD = ms => { const d = new Date(ms); return `${d.getMonth() + 1}/${d.getDate()}`; };
+const weekRange = w => {
+  const st = ANCHOR + (w - 440) * WEEK;
+  return `${fmtMD(st)} 16:00 ～ ${fmtMD(st + WEEK)} 16:00`;
+};
 
 function copyText(t) {
   const done = () => { const el = document.getElementById('toast'); el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 1200); };
@@ -164,9 +170,8 @@ const item = (e, alt) => `
 function render(d) {
   const now = Date.now();
   const week = curWeek(now);
-  if (d.week !== week) { renderStale(d, week); return; }
-
-  const ph = phaseInfo(now);
+  const isStale = d.week !== week;
+  const ph = isStale ? null : phaseInfo(now);
   const hintOf = Object.fromEntries(d.slots.map(s => [s.slot, s.hint]));
   const statusTxt = d.status === 'verified' ? '✅ 已驗證（社群實測）' : '🔮 預測版・週五評分開放後更新為驗證版';
 
@@ -188,15 +193,19 @@ function render(d) {
   }).join('');
 
   $app.innerHTML = `
+    ${isStale ? staleBanner(d, week) : ''}
     <div class="week-bar">
       <div>
-        <div class="week-no">第 ${d.week} 週</div>
+        <div class="week-no">第 ${d.week} 週${isStale ? '（存檔）' : ''}・${weekRange(d.week)}</div>
         <div class="week-theme">${d.theme.name}<small>${d.theme.nameEn}</small></div>
         <div class="data-status"><span class="dot">●</span> ${statusTxt}</div>
       </div>
       <div class="phase">
-        <span class="phase-badge ${ph.cls}">${ph.label}</span>
-        <div class="phase-count">${ph.tip} <span id="cnt"></span></div>
+        ${ph
+          ? `<span class="phase-badge ${ph.cls}">${ph.label}</span>
+             <div class="phase-count">${ph.tip} <span id="cnt"></span></div>`
+          : `<span class="phase-badge prep">已收榜</span>
+             <div class="phase-count">新一週資料更新前，暫顯示上次存檔</div>`}
       </div>
     </div>
 
@@ -235,15 +244,17 @@ function render(d) {
     ${d.links?.theorycraft ? `<div class="src-line">本週社群討論：<a href="${d.links.theorycraft}" target="_blank" rel="noopener">Reddit 討論串</a></div>` : ''}
   `;
 
-  const tick = () => { const el = document.getElementById('cnt'); if (el) el.textContent = fmtDur(ph.until - Date.now()); };
-  tick(); setInterval(tick, 1000);
+  if (ph) {
+    const tick = () => { const el = document.getElementById('cnt'); if (el) el.textContent = fmtDur(ph.until - Date.now()); };
+    tick(); setInterval(tick, 1000);
+  }
 }
 
-function renderStale(d, week) {
-  $app.innerHTML = `
+function staleBanner(d, week) {
+  return `
     <div class="stale">
-      <h2>⏳ 本週（第 ${week} 週）資料尚未更新</h2>
-      <p>目前站內資料為第 ${d.week} 週「${d.theme.name}」。新一週提示於每週二 16:00 揭曉後更新，可先參考外部來源：</p>
+      <h2>⏳ 本週（第 ${week} 週・${weekRange(week)}）資料尚未更新</h2>
+      <p>下方保留第 ${d.week} 週（${weekRange(d.week)}）「${d.theme.name}」的完整存檔供參考。新一週提示於每週二 16:00 揭曉後更新，也可先參考外部來源：</p>
       <div class="ext-links">
         <a href="https://fashionreportxiv.com/" target="_blank" rel="noopener">Fashion Report XIV</a>
         <a href="https://www.reddit.com/r/ffxiv/search/?q=fashion%20report&sort=new" target="_blank" rel="noopener">Reddit 週帖</a>

@@ -91,6 +91,8 @@
     .wname { font-size: 0.72rem; color: var(--blue); }
     .vel { color: var(--text-dim); }
     .noprice td { opacity: 0.45; }
+    .lowvel td { opacity: 0.55; }
+    .divider-row td { text-align: left; color: var(--text-muted); font-size: 0.75rem; padding: 0.7rem 0.6rem 0.4rem; background: var(--bg-card); }
 
     .loading { text-align: center; padding: 3rem 0; color: var(--text-dim); font-size: 0.9rem; }
     .err { color: var(--red); }
@@ -115,7 +117,7 @@
 <div class="hero">
   <div class="hero-inner">
     <h1>🎖️ 軍票變現排行</h1>
-    <div class="hero-sub">軍票交易所與雙色寶石兌換品的即時市價，換算「每 1 軍票／寶石可變現多少 gil」——軍票滿了不知道換什麼就看這裡</div>
+    <div class="hero-sub">軍票交易所與雙色寶石兌換品的即時市價，換算「每 100 軍票／每 1 寶石可變現多少 gil」——軍票滿了不知道換什麼就看這裡</div>
   </div>
 </div>
 
@@ -133,9 +135,9 @@
 <div class="table-wrap" id="tableWrap"><div class="loading">載入資料中…</div></div>
 
 <p class="info-note">
-  變現值 ＝ 參考價 ×（兌換數量 ÷ 成本）。參考價優先採「近期成交均價」，無成交紀錄時退回「最低在架價」；實際入手金額另受 5% 市場稅與價格波動影響。<br>
-  日銷量低的物品可能久掛不出，建議優先挑「變現值高且日銷量 ≥ 1」的品項；大量拋售同一物品會壓低行情。<br>
-  品項清單來源：XIVAPI（GCScripShopItem／SpecialShop），僅列出台服已開放且可上市集板的物品；市價由 <a href="https://universalis.app" target="_blank" rel="noopener" style="color:var(--text-dim)">Universalis</a> 提供，10 分鐘快取。
+  變現值 ＝ 參考價 ×（兌換數量 ÷ 成本）；軍票頁以「每 100 軍票」計，寶石頁以「每 1 寶石」計。參考價優先採「近期成交均價」，無成交紀錄時退回「最低在架價」；實際入手金額另受 5% 市場稅與價格波動影響。<br>
+  日銷量低的物品可能久掛不出，建議優先挑「變現值高且日銷量 ≥ 1」的品項；日銷量不足 1 件／日的品項已自動沉到清單底部。大量拋售同一物品會壓低行情。<br>
+  品項清單來源：XIVAPI（GCScripShopItem／SpecialShop），僅列出台服已開放且可上市集板的物品；部分品項需較高軍階才可兌換。市價由 <a href="https://universalis.app" target="_blank" rel="noopener" style="color:var(--text-dim)">Universalis</a> 提供，10 分鐘快取。
 </p>
 
 <footer class="site-footer">
@@ -216,40 +218,52 @@
       };
     }).filter(function (r) { return !hideNP || r.p; });
 
-    rows.sort(function (a, b) { return b.per - a.per; });
+    // 日銷量 <1 的品項久掛難出、行情參考價值低——沉到清單底部，各組內再依變現值排序
+    var liquid = function (r) { return r.p && r.p.vel >= 1 ? 1 : 0; };
+    rows.sort(function (a, b) {
+      var d = liquid(b) - liquid(a);
+      return d !== 0 ? d : b.per - a.per;
+    });
 
-    var unit = isSeals ? '軍票' : '寶石';
     var costHead = isSeals ? '軍票' : '寶石';
+    var perHead = isSeals ? '每100軍票變現' : '每寶石變現';
+    var nCols = isSeals ? 7 : 8;
     var html = '<table><thead><tr>' +
       '<th class="rank-num">#</th><th>物品</th><th>' + costHead + '</th>' +
-      (isSeals ? '<th>軍階</th>' : '<th>數量</th>') +
-      '<th>參考價</th><th>最低在架</th><th>每' + unit + '變現</th><th>日銷量</th>' +
+      (isSeals ? '' : '<th>數量</th>') +
+      '<th>參考價</th><th>最低在架</th><th>' + perHead + '</th><th>日銷量</th>' +
       '</tr></thead><tbody>';
 
+    var dividerShown = false;
     rows.forEach(function (r, i) {
       var x = r.x, p = r.p;
       var cls = [];
       if (!p) cls.push('noprice');
-      if (p && i < 3) cls.push('top3');
+      if (!liquid(r)) {
+        cls.push('lowvel');
+        if (!dividerShown) {
+          html += '<tr class="divider-row"><td colspan="' + nCols + '">▼ 以下品項日銷量不足 1 件／日（或查無市價），久掛難出、行情參考價值低</td></tr>';
+          dividerShown = true;
+        }
+      }
+      if (p && i < 3 && liquid(r)) cls.push('top3');
       html += '<tr class="' + cls.join(' ') + '">' +
         '<td class="rank-num">' + (i + 1) + '</td>' +
         '<td><span class="iname">' + x.name + '</span> <span class="icat">' + (x.category || '') + '</span></td>' +
         '<td>' + fmt(isSeals ? x.seals : x.gems) + '</td>' +
-        (isSeals
-          ? '<td class="dimtxt">' + (x.rank > 1 ? '≥' + x.rank : '—') + '</td>'
-          : '<td class="dimtxt">×' + (x.count || 1) + '</td>') +
+        (isSeals ? '' : '<td class="dimtxt">×' + (x.count || 1) + '</td>') +
         '<td>' + (p ? fmt(p.ref) : '<span class="dimtxt">查無</span>') + '</td>' +
         '<td>' + (p && p.minL != null
             ? fmt(p.minL) + (p.minW ? ' <span class="wname">' + Universalis.worldName(p.minW) + '</span>' : '')
             : '<span class="dimtxt">—</span>') + '</td>' +
-        '<td class="per">' + (p ? fmt(r.per) : '—') + '</td>' +
+        '<td class="per">' + (p ? fmt(isSeals ? r.per * 100 : r.per) : '—') + '</td>' +
         '<td class="vel">' + (p ? (Math.round(p.vel * 10) / 10) : '—') + '</td>' +
         '</tr>';
     });
     html += '</tbody></table>';
     wrap.innerHTML = html;
     setStatus('共 ' + rows.length + ' 項' + (hideNP ? '（已隱藏查無市價品項）' : '') +
-      ' · 排序：每' + unit + '變現由高到低 · 範圍：' +
+      ' · 排序：' + perHead + '由高到低 · 範圍：' +
       (scope === 'dc' ? '全 DC（陸行鳥）' : Universalis.worldName(Number(scope))));
   }
 

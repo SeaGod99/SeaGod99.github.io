@@ -517,7 +517,9 @@ let filterMap = 'all';
 let openOnly = false;
 let trackOnly = false;
 let searchTerm = '';
-let sortMode = 'ver';   // ver＝版本高→等級高（預設）；time＝開放狀態→倒數
+const SORT_KEY = 'gathering-sort-mode';
+let sortMode = 'time';  // time＝開放狀態→倒數（預設，日常「現在能採什麼」）；ver＝版本高→等級高
+try { const s = localStorage.getItem(SORT_KEY); if (s === 'ver' || s === 'time') sortMode = s; } catch(e) {}
 let gridSig = '';   // 網格簽章：成員/狀態/追蹤不變時不重建 DOM（避免迷你地圖 img 每秒重建閃爍）
 
 function jobEmoji(job){ return job === '採礦工' ? '⛏️' : '🌿'; }
@@ -939,8 +941,11 @@ document.getElementById('mapSel').addEventListener('change', e=>{
   filterMap = e.target.value; render();
 });
 document.getElementById('sortSel').addEventListener('change', e=>{
-  sortMode = e.target.value; render();
+  sortMode = e.target.value;
+  try { localStorage.setItem(SORT_KEY, sortMode); } catch(e2) {}
+  render();
 });
+document.getElementById('sortSel').value = sortMode;
 document.getElementById('openOnly').addEventListener('click', e=>{
   const chip = e.target;
   openOnly = !openOnly;

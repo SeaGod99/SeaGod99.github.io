@@ -569,9 +569,9 @@ function renderSuggestion(dist, completedLines, almostLines, remaining) {
       el.innerHTML = buildSug('keep', '✅', '建議保留', `已有 2 條（1 次洗牌），達成 3 條機率僅 ${p3plus}%。保住既有洗牌機會比較穩。`, 'green');
     }
   } else if (completedLines <= 1 && almostLines === 0 && remaining <= 3) {
-    el.innerHTML = buildSug('retry', '🔄', '局面不佳，可考慮重貼', `剩 ${remaining} 個蓋印，目前無完成線，達 2 條機率 ${p2plus}%，期望值 ${exp.toFixed(2)} 條。`, 'red');
+    el.innerHTML = buildSug('retry', '🔄', '局面不佳，可考慮重貼', `剩 ${remaining} 個蓋印，${completedLines ? `目前完成 ${completedLines} 條` : '目前無完成線'}，達 2 條以上機率 ${p2plus}%，期望值 ${exp.toFixed(2)} 條。`, 'red');
   } else {
-    el.innerHTML = buildSug('ok', '📊', `期望 ${exp.toFixed(2)} 條連線`, `達成 2 條（洗牌）機率 ${p2plus}%，3 條 ${p3plus}%。尚有 ${remaining} 個蓋印待分配。`, 'gold');
+    el.innerHTML = buildSug('ok', '📊', `期望 ${exp.toFixed(2)} 條連線`, `達成 2 條以上（洗牌）機率 ${p2plus}%，3 條 ${p3plus}%。尚有 ${remaining} 個蓋印待分配。`, 'gold');
   }
 }
 
