@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FFXIV 藏寶圖採集點查詢 — 陳舊的地圖 G1～G17 各等級的挖寶位置，地圖標點＋座標一覽，對照解讀後的藏寶圖找出挖掘地點">
+  <meta name="keywords" content="FFXIV, FF14, 藏寶圖, 陳舊的地圖, 挖寶, 尋寶, 採集點, 座標, G8, G17, 繁體中文">
+  <title>藏寶圖採集點查詢 | 水神的工具箱</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg-base:    #0a0c10;
+      --bg-surface: #0f1117;
+      --bg-card:    #14181f;
+      --bg-card-hover: #1a1f2b;
+      --border:     rgba(255,255,255,0.07);
+      --border-hover: rgba(200,169,110,0.4);
+      --gold:       #c8a96e;
+      --gold-light: #e2c98a;
+      --gold-dim:   rgba(200,169,110,0.15);
+      --blue:       #4fc3f7;
+      --blue-dim:   rgba(79,195,247,0.12);
+      --green:      #4ade80;
+      --green-dim:  rgba(74,222,128,0.12);
+      --purple:     #a78bfa;
+      --purple-dim: rgba(167,139,250,0.12);
+      --orange:     #fb923c;
+      --orange-dim: rgba(251,146,60,0.12);
+      --red:        #f87171;
+      --text-primary:   #e8eaf0;
+      --text-secondary: #8892a4;
+      --text-muted:     #717c91;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 0%, rgba(200,169,110,0.05) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(79,195,247,0.04) 0%, transparent 60%);
+      pointer-events: none; z-index: 0;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { max-width: 1500px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+    .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-secondary); font-size:14px; margin:24px 0; transition:var(--transition);}
+    .back-link:hover { color: var(--gold); }
+
+    .tool-header { text-align:center; padding: 12px 0 20px; }
+    .tool-title { font-size: 26px; font-weight:700; color: var(--gold-light); }
+    .tool-subtitle { font-size: 14px; color: var(--text-secondary); margin-top:6px; }
+    .header-divider { width:60px; height:1px; background:linear-gradient(90deg,transparent,var(--gold),transparent); margin:16px auto 0;}
+
+    /* ── grade selector ── */
+    .grade-panel { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md); padding:16px 18px; margin-bottom:18px; }
+    .grade-panel-title { font-size:12px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
+    .exp-row { display:flex; align-items:flex-start; gap:12px; padding:7px 0; border-top:1px solid var(--border); flex-wrap:wrap; }
+    .exp-row:first-of-type { border-top:none; }
+    .exp-name { font-size:12.5px; color:var(--text-secondary); min-width:96px; padding-top:5px; }
+    .grade-chips { display:flex; gap:7px; flex-wrap:wrap; flex:1; }
+    .grade-chip {
+      background:var(--bg-surface); border:1px solid var(--border); border-radius:var(--radius-sm);
+      padding:6px 13px; font-size:14px; font-weight:600; color:var(--text-secondary);
+      cursor:pointer; transition:var(--transition); user-select:none; display:inline-flex; align-items:center; gap:5px;
+    }
+    .grade-chip:hover { border-color:var(--border-hover); color:var(--text-primary); }
+    .grade-chip.active { background:var(--gold-dim); border-color:rgba(200,169,110,0.5); color:var(--gold-light); }
+    .grade-chip .alias { font-size:11px; font-weight:500; opacity:0.7; }
+    .grade-chip .party { font-size:11px; }
+
+    /* ── summary bar ── */
+    .summary { display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:14px; }
+    .summary .g-icon { width:40px; height:40px; border-radius:var(--radius-sm); background:var(--bg-card); border:1px solid var(--border); }
+    .summary .g-main { font-size:18px; font-weight:700; color:var(--gold-light); }
+    .summary .g-sub { font-size:12.5px; color:var(--text-secondary); }
+    .badge { font-size:11px; padding:2px 9px; border-radius:20px; border:1px solid var(--border); color:var(--text-secondary); white-space:nowrap; }
+    .badge-exp { background:var(--purple-dim); color:var(--purple); border-color:rgba(167,139,250,0.25); }
+    .badge-party { background:var(--orange-dim); color:var(--orange); border-color:rgba(251,146,60,0.3); }
+    .badge-solo { background:var(--green-dim); color:var(--green); border-color:rgba(74,222,128,0.3); }
+
+    /* ── zone cards ── */
+    .zone-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:16px; }
+    /* 三段式第二段：地區大圖選擇 */
+    .zone-pick-grid { grid-column:1/-1; display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:14px; }
+    .zone-pick { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md); overflow:hidden; cursor:pointer; transition:var(--transition); }
+    .zone-pick:hover { border-color:var(--gold-light); transform:translateY(-2px); }
+    .zone-pick img { width:100%; aspect-ratio:1; object-fit:cover; display:block; }
+    .zone-pick .zp-meta { display:flex; align-items:center; gap:8px; padding:9px 12px; }
+    .zone-pick .zp-name { font-weight:600; font-size:14px; }
+    .zone-pick .zp-count { margin-left:auto; font-size:12px; color:var(--text-muted); }
+    .stage-hint { grid-column:1/-1; font-size:13px; color:var(--text-muted); margin-bottom:2px; }
+    /* 三段式第三段：單一地區＋碎圖對照 */
+    .back-btn {
+      grid-column:1/-1; justify-self:start; display:inline-flex; align-items:center; gap:6px;
+      padding:6px 14px; border-radius:var(--radius-sm); border:1px solid var(--border);
+      background:var(--bg-surface); color:var(--text-secondary); cursor:pointer; font-size:13px; transition:var(--transition);
+    }
+    .back-btn:hover { border-color:var(--border-hover); color:var(--text-primary); }
+    .zone-detail { grid-column:1/-1; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:16px; align-items:start; }
+    @media (max-width:900px) { .zone-detail { grid-template-columns:1fr; } }
+    .zone-detail .map-side { position:sticky; top:12px; }
+    .zone-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md); overflow:hidden; }
+    .zone-head { display:flex; align-items:baseline; gap:8px; padding:12px 14px 10px; }
+    .zone-name { font-size:16px; font-weight:600; color:var(--text-primary); }
+    .zone-region { font-size:12px; color:var(--text-muted); }
+    .zone-count { margin-left:auto; font-size:11px; color:var(--text-secondary); }
+
+    .map-canvas {
+      position:relative; width:100%; aspect-ratio:1/1; background:var(--bg-surface);
+      border-top:1px solid var(--border); border-bottom:1px solid var(--border); overflow:hidden;
+    }
+    .map-canvas img { width:100%; height:100%; object-fit:cover; display:block; user-select:none; }
+    .map-empty { display:flex; align-items:center; justify-content:center; height:100%; color:var(--text-muted); font-size:12px; text-align:center; padding:16px; }
+    /* 圖釘用深藍——與羊皮紙地圖（黃棕）互補色，才看得見 */
+    .map-dot {
+      position:absolute; min-width:20px; height:20px; padding:0 3px; border-radius:11px;
+      transform:translate(-50%,-50%); cursor:pointer;
+      background:#1d4ed8; color:#fff; border:2px solid #fff;
+      box-shadow:0 1px 4px rgba(0,0,0,0.45); transition:transform 0.1s, box-shadow 0.1s, background 0.1s;
+      font-size:11px; font-weight:700; line-height:16px; text-align:center; font-variant-numeric:tabular-nums;
+    }
+    .map-dot:hover { transform:translate(-50%,-50%) scale(1.35); z-index:5; }
+    /* 選取（點了右側碎圖）＝紅色放大＋光暈，呼應碎圖上的紅 X */
+    .map-dot.sel {
+      transform:translate(-50%,-50%) scale(1.7); z-index:6;
+      background:#dc2626; box-shadow:0 0 0 3px rgba(220,38,38,0.35), 0 1px 6px rgba(0,0,0,0.5);
+      animation:dot-pulse 1.2s ease-in-out infinite;
+    }
+    @keyframes dot-pulse {
+      0%,100% { box-shadow:0 0 0 3px rgba(220,38,38,0.35), 0 1px 6px rgba(0,0,0,0.5); }
+      50%     { box-shadow:0 0 0 8px rgba(220,38,38,0.12), 0 1px 6px rgba(0,0,0,0.5); }
+    }
+
+    .site-list { padding:8px 10px 12px; display:flex; flex-direction:column; gap:4px; }
+    .site-row {
+      display:flex; align-items:center; gap:9px; padding:5px 8px; border-radius:var(--radius-sm);
+      cursor:pointer; transition:var(--transition);
+    }
+    .site-row:hover, .site-row.sel { background:var(--bg-card-hover); }
+    .site-num {
+      width:20px; height:20px; flex:none; border-radius:50%; background:var(--gold-dim); color:var(--gold-light);
+      font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center;
+    }
+    .site-coord { font-size:14px; font-variant-numeric:tabular-nums; color:var(--blue); }
+    /* 碎圖網格：一格一張解讀圖（約原始解析度 207×174 顯示），拿遊戲內碎圖直接圖對圖 */
+    .site-grid { padding:10px; display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+    @media (max-width:480px) { .site-grid { grid-template-columns:1fr; } }
+    .site-cell {
+      border:1px solid var(--border); border-radius:var(--radius-sm); overflow:hidden;
+      cursor:pointer; transition:var(--transition); background:var(--bg-card);
+    }
+    .site-cell:hover, .site-cell.sel { border-color:var(--gold-light); background:var(--bg-card-hover); }
+    .site-frag { width:100%; height:auto; display:block; }
+    /* 無遊戲內碎圖時的替代：以挖掘點為中心裁切區域大圖，中央加紅 X 當參考 */
+    .map-crop { position:relative; aspect-ratio:207/174; background-repeat:no-repeat; background-color:#d9cfae; }
+    .map-crop .crop-x {
+      position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+      color:#c31f1f; font-weight:900; font-size:30px; line-height:1;
+      text-shadow:0 0 4px #fff, 0 0 10px rgba(255,255,255,0.8); pointer-events:none;
+    }
+    .cell-meta { display:flex; align-items:center; gap:8px; padding:6px 8px; }
+    .cell-meta .site-coord { font-size:13px; }
+    .copy-btn {
+      margin-left:auto; font-size:11px; padding:3px 9px; border-radius:var(--radius-sm);
+      border:1px solid var(--border); background:var(--bg-surface); color:var(--text-secondary);
+      cursor:pointer; transition:var(--transition);
+    }
+    .copy-btn:hover { border-color:var(--border-hover); color:var(--text-primary); }
+    .copy-btn.copied { color:var(--green); border-color:rgba(74,222,128,0.4); background:var(--green-dim); }
+
+    .info-note { font-size:11.5px; color:var(--text-muted); margin:28px 0 0; line-height:1.9; text-align:center; }
+    .info-note b { color:var(--text-secondary); }
+    .info-note code { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:11px; padding:1px 6px; border-radius:var(--radius-sm); background:var(--bg-card); border:1px solid var(--border); color:var(--blue); }
+
+    .site-footer { border-top:1px solid var(--border); padding:28px 0 36px; text-align:center; margin-top:40px; }
+    .footer-text { font-size:12px; color:var(--text-muted); line-height:2; }
+    .footer-text a { color:var(--text-secondary); }
+    .footer-text a:hover { color:var(--gold); }
+
+    @media (max-width:600px){
+      .zone-grid { grid-template-columns:1fr; }
+      .exp-name { min-width:auto; width:100%; padding-top:0; }
+    }
+  </style>
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <script src="../../assets/js/theme.js"></script>
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← 水神的工具箱</a>
+
+  <div class="tool-header">
+    <div class="tool-title">🗺️ 藏寶圖採集點查詢</div>
+    <p class="tool-subtitle">陳舊的地圖 G1～G17 各等級的挖寶位置，對照解讀後的藏寶圖找出挖掘地點</p>
+    <div class="header-divider"></div>
+  </div>
+
+  <!-- grade selector -->
+  <div class="grade-panel">
+    <div class="grade-panel-title">選擇藏寶圖等級</div>
+    <div id="gradeSelector"></div>
+  </div>
+
+  <!-- summary + search -->
+  <div class="summary" id="summary"></div>
+
+  <div class="zone-grid" id="zoneGrid"></div>
+
+  <p class="info-note">
+    在地圖上解讀（<b>使用</b>）藏寶圖後，會顯示一張挖寶地點的碎圖；選等級→選地區後，<b>和右側碎圖比對</b>，點相同的那張，左側地圖的紅釘就是挖掘點。<br>
+    標示 <span class="badge badge-party">組隊寶物庫</span> 的等級，開啟寶箱後有機率出現傳送門（宇宙／樂園之門），建議 8 人同行。<br>
+    <b>🚩 標旗</b> 複製的是 <code>/coord X Y 地區</code> 指令：搭配 ChatCoordinates 類插件貼入聊天即自動於地圖標旗；一般環境（主機／未裝插件）貼上仍是可讀座標，遊戲原生無法由文字直接產生地圖旗標。<br>
+    座標與地點資料來源 Teamcraft；解讀碎圖為遊戲內圖片（© SQUARE ENIX），整理自 <a href="https://ff14.tw/tools/treasure-map-finder/index.html" target="_blank" rel="noopener" style="color:var(--text-muted)">ff14.tw 寶圖搜尋器</a>；名稱為台服官方譯名，實際位置以遊戲內為準。
+  </p>
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <p class="footer-text">
+      水神的工具箱 &nbsp;·&nbsp;
+      <a href="../../">回首頁</a> &nbsp;·&nbsp;
+      資料來源：<a href="https://ffxivteamcraft.com" target="_blank" rel="noopener">Teamcraft</a>、社群整理
+    </p>
+    <p class="footer-text" style="margin-top:4px">
+      FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具
+    </p>
+  </div>
+</footer>
+
+<script type="module">
+/* 遊戲座標 → 底圖 0..1 比例（FFXIV 標準式，靠 Map sheet 的 sizeFactor） */
+const clamp01 = (v) => Math.max(0, Math.min(1, v));
+const coordFrac = (c, sizeFactor) => ((c - 1) * (sizeFactor / 100)) / 41;
+
+const EXP_ORDER = ['原初之地', '蒼天之禁地', '紅蓮之狂潮', '暗影之逆焰', '曉月之終途', '金曦之遺輝'];
+// 版本顯示統一「N.x 資料片名」（全站慣例）；資料值仍為資料片名
+const EXP_PREFIX = { '原初之地':'2.x', '蒼天之禁地':'3.x', '紅蓮之狂潮':'4.x', '暗影之逆焰':'5.x', '曉月之終途':'6.x', '金曦之遺輝':'7.x' };
+const expLabel = e => EXP_PREFIX[e] ? `${EXP_PREFIX[e]} ${e}` : e;
+
+let GRADES = [];              // treasure-maps.json data
+let MAPS = new Map();         // mapId -> map meta
+let FRAGS = {};               // itemId -> { 全域挖寶點索引: 碎圖檔名 }
+let selectedGrade = null;     // grade string（第一段）
+let selectedZone = null;      // mapId（第二段選定的地區）
+let selectedSite = null;      // "mapId:idx"（第三段選定的挖寶點）
+
+const $ = (id) => document.getElementById(id);
+
+async function loadData() {
+  const [tm, maps, frag] = await Promise.all([
+    fetch('../../data/treasure-maps.json').then(r => r.json()),
+    fetch('../../data/maps.json').then(r => r.json()),
+    fetch('../../data/treasure-fragments.json').then(r => r.json()).catch(() => null),
+  ]);
+  GRADES = tm.data;
+  MAPS = new Map(maps.data.map(m => [m.id, m]));
+  FRAGS = frag?.data || {};
+}
+
+function gradeById(g) { return GRADES.find(x => x.grade === g); }
+function isParty(grade) { return grade.locations.some(l => l.partySize >= 8); }
+
+/* ── 等級選擇器（依資料片分列）── */
+function renderGradeSelector() {
+  const byExp = new Map();
+  for (const g of GRADES) {
+    const e = g.expansion || '其他';
+    if (!byExp.has(e)) byExp.set(e, []);
+    byExp.get(e).push(g);
+  }
+  const order = [...EXP_ORDER.filter(e => byExp.has(e)), ...[...byExp.keys()].filter(e => !EXP_ORDER.includes(e))];
+  $('gradeSelector').innerHTML = order.map(exp => {
+    const chips = byExp.get(exp)
+      .sort((a, b) => a.gradeNum - b.gradeNum)
+      .map(g => {
+        const alias = g.aliases ? `<span class="alias">＝${g.aliases.map(a => a.grade).join('＝')}</span>` : '';
+        const party = isParty(g) ? '<span class="party" title="組隊寶物庫">👥</span>' : '';
+        return `<span class="grade-chip${g.grade === selectedGrade ? ' active' : ''}" data-grade="${g.grade}">${g.grade}${alias}${party}</span>`;
+      }).join('');
+    return `<div class="exp-row"><span class="exp-name">${expLabel(exp)}</span><div class="grade-chips">${chips}</div></div>`;
+  }).join('');
+}
+
+/* ── 摘要列 ── */
+function renderSummary() {
+  const g = gradeById(selectedGrade);
+  if (!g) { $('summary').innerHTML = ''; return; }
+  const zones = new Set(g.locations.map(l => l.mapId)).size;
+  const party = isParty(g);
+  const aliasNote = g.aliases ? `（別名 ${g.aliases.map(a => a.grade).join('、')}）` : '';
+  $('summary').innerHTML = `
+    <img class="g-icon" src="${g.icon ? 'https://v2.xivapi.com' + g.icon : ''}" alt="" onerror="this.style.visibility='hidden'">
+    <div>
+      <div class="g-main">${g.name.replace('陳舊的地圖', '陳舊的地圖 ')}${aliasNote}</div>
+      <div class="g-sub">${zones} 個地區 · ${g.locations.length} 個挖寶點</div>
+    </div>
+    <span class="badge badge-exp">${g.expansion ? expLabel(g.expansion) : '—'}</span>
+    <span class="badge ${party ? 'badge-party' : 'badge-solo'}">${party ? '👥 組隊寶物庫' : '🧍 單人挖掘'}</span>`;
+}
+
+/* ── 三段式：①等級（gradeSelector）→ ②地區大圖 → ③碎圖對照 ── */
+function zonesOfGrade(g) {
+  // 依地區分組（gi＝在 g.locations 的全域索引，對應碎圖資料鍵）
+  const byZone = new Map();
+  g.locations.forEach((l, gi) => {
+    if (!byZone.has(l.mapId)) byZone.set(l.mapId, []);
+    byZone.get(l.mapId).push({ ...l, gi });
+  });
+  const zones = [...byZone.entries()].map(([mapId, locs]) => ({ mapId, meta: MAPS.get(mapId), locs }));
+  zones.sort((a, b) => (a.meta?.name || '').localeCompare(b.meta?.name || '', 'zh-Hant'));
+  return zones;
+}
+
+function renderZones() {
+  const g = gradeById(selectedGrade);
+  if (!g) { $('zoneGrid').innerHTML = ''; return; }
+
+  const zones = zonesOfGrade(g);
+
+  // 只有一個地區的等級直接進第三段
+  if (zones.length === 1) selectedZone = zones[0].mapId;
+
+  if (selectedZone != null) {
+    const z = zones.find(x => x.mapId === selectedZone);
+    if (z) { $('zoneGrid').innerHTML = renderZoneDetail(g, z, zones.length > 1); return; }
+    selectedZone = null;
+  }
+
+  // ── 第二段：選擇地區大圖 ──
+  $('zoneGrid').innerHTML = `<div class="stage-hint">② 選擇你的藏寶圖所在<b>地區</b>（點大圖進入碎圖對照）：</div>
+    <div class="zone-pick-grid">${zones.map(z => {
+      const m = z.meta;
+      const img = (m && m.image && m.image.local)
+        ? `<img src="../..${m.image.local}" alt="${m?.name || ''}" loading="lazy">`
+        : `<div class="map-empty" style="aspect-ratio:1">此地區無底圖</div>`;
+      return `<div class="zone-pick" data-zonepick="${z.mapId}">
+          ${img}
+          <div class="zp-meta"><span class="zp-name">${m?.name || '未知地區'}</span><span class="zp-count">${z.locs.length} 點</span></div>
+        </div>`;
+    }).join('')}</div>`;
+}
+
+/* ── 第三段：單一地區——左地圖標點、右碎圖對照 ── */
+function renderZoneDetail(g, z, showBack) {
+  const m = z.meta;
+  const sf = m?.sizeFactor || 100;
+  const dots = z.locs.map((l, i) => {
+    const fx = (clamp01(coordFrac(l.x, sf)) * 100).toFixed(2);
+    const fy = (clamp01(coordFrac(l.y, sf)) * 100).toFixed(2);
+    const key = `${z.mapId}:${i}`;
+    return `<div class="map-dot${selectedSite === key ? ' sel' : ''}" data-site="${key}" style="left:${fx}%;top:${fy}%" title="#${i + 1} X:${l.x} Y:${l.y}">${i + 1}</div>`;
+  }).join('');
+  const canvas = (m && m.image && m.image.local)
+    ? `<img src="../..${m.image.local}" alt="${m.name}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=&quot;map-empty&quot;>底圖尚未下載</div>'">${dots}`
+    : `<div class="map-empty">此地區無底圖</div>`;
+  const gradeFrags = FRAGS[g.id] || {};
+  const hasFrags = Object.keys(gradeFrags).length > 0;
+  // 地圖標記指令：搭配 ChatCoordinates 類插件貼入遊戲聊天即自動標旗（與限時採集節點查詢同格式）
+  const flagOf = l => `/coord ${l.x.toFixed(1)} ${l.y.toFixed(1)} ${m?.name || ''}`.trim();
+  // 無遊戲內碎圖時：以挖掘點為中心裁切區域大圖當參考（CSS 背景定位，不需額外圖檔）
+  const CROP_U = 10;                                  // 裁切窗橫向涵蓋的遊戲座標單位
+  const unitsW = 41 / ((m?.sizeFactor || 100) / 100); // 全圖座標寬
+  const mapCropOf = l => {
+    if (!(m && m.image && m.image.local)) return `<div class="map-crop"><span class="crop-x">✕</span></div>`;
+    const fx = clamp01(coordFrac(l.x, sf)), fy = clamp01(coordFrac(l.y, sf));
+    const Sx = unitsW / CROP_U;
+    const Sy = unitsW / (CROP_U * 174 / 207);
+    const px = ((fx * Sx - 0.5) / (Sx - 1) * 100).toFixed(2);
+    const py = ((fy * Sy - 0.5) / (Sy - 1) * 100).toFixed(2);
+    return `<div class="map-crop" style="background-image:url('../..${m.image.local}');background-size:${(Sx * 100).toFixed(1)}% ${(Sy * 100).toFixed(1)}%;background-position:${px}% ${py}%">
+        <span class="crop-x">✕</span>
+      </div>`;
+  };
+  const rows = `<div class="site-grid">${z.locs.map((l, i) => {
+      const key = `${z.mapId}:${i}`;
+      const fimg = gradeFrags[l.gi];
+      const pic = fimg
+        ? `<img class="site-frag" src="../../assets/img/treasure-fragments/${fimg}" loading="lazy" alt="解讀碎圖"
+             title="點擊在左側地圖上定位">`
+        : mapCropOf(l);
+      return `<div class="site-cell${selectedSite === key ? ' sel' : ''}" data-site="${key}">
+          ${pic}
+          <div class="cell-meta">
+            <span class="site-num">${i + 1}</span>
+            <span class="site-coord">X: ${l.x}　Y: ${l.y}</span>
+            <button class="copy-btn" data-copy="${flagOf(l)}" title="複製地圖標記指令，貼入遊戲聊天（需 ChatCoordinates 類插件自動標旗）" style="margin-left:auto">🚩 標旗</button>
+          </div>
+        </div>`;
+    }).join('')}</div>`;
+  return `${showBack ? '<button class="back-btn" id="backToZones">← 返回地區選擇</button>' : ''}
+    <div class="zone-detail">
+      <div class="zone-card map-side">
+        <div class="zone-head">
+          <span class="zone-name">${m?.name || '未知地區'}</span>
+          <span class="zone-region">${m?.region || ''}</span>
+          <span class="zone-count">${z.locs.length} 點</span>
+        </div>
+        <div class="map-canvas">${canvas}</div>
+      </div>
+      <div class="zone-card">
+        <div class="zone-head">
+          <span class="zone-name">③ 對照碎圖找挖掘點</span>
+          <span class="zone-count">${z.locs.length} 點</span>
+        </div>
+        ${rows}
+      </div>
+    </div>`;
+}
+
+/* 剪貼簿：clipboard API 失敗時退回 execCommand（非安全環境／遊戲內瀏覽器） */
+function copyText(text) {
+  if (navigator.clipboard?.writeText) {
+    return navigator.clipboard.writeText(text).then(() => true).catch(() => copyTextFallback(text));
+  }
+  return Promise.resolve(copyTextFallback(text));
+}
+function copyTextFallback(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.cssText = 'position:fixed;opacity:0';
+  document.body.appendChild(ta);
+  ta.select();
+  let ok = false;
+  try { ok = document.execCommand('copy'); } catch (e) {}
+  ta.remove();
+  return ok;
+}
+
+/* ── 事件 ── */
+$('gradeSelector').addEventListener('click', e => {
+  const chip = e.target.closest('.grade-chip');
+  if (!chip) return;
+  selectedGrade = chip.dataset.grade;
+  selectedZone = null;
+  selectedSite = null;
+  renderGradeSelector();
+  renderSummary();
+  renderZones();
+});
+
+$('zoneGrid').addEventListener('click', e => {
+  const copyBtn = e.target.closest('[data-copy]');
+  if (copyBtn) {
+    const text = copyBtn.dataset.copy;
+    copyText(text).then(ok => {
+      copyBtn.classList.add('copied');
+      const orig = copyBtn.textContent;
+      copyBtn.textContent = ok ? '✅ 已複製' : '❌ 複製失敗';
+      setTimeout(() => { copyBtn.classList.remove('copied'); copyBtn.textContent = orig; }, 1400);
+    });
+    return;
+  }
+  const zp = e.target.closest('[data-zonepick]');
+  if (zp) {
+    selectedZone = Number(zp.dataset.zonepick);
+    selectedSite = null;
+    renderZones();
+    return;
+  }
+  if (e.target.closest('#backToZones')) {
+    selectedZone = null;
+    selectedSite = null;
+    renderZones();
+    return;
+  }
+  // 點碎圖＝選取該點，讓左側地圖的圖釘高亮（交給下方 data-site 邏輯處理）
+  const el = e.target.closest('[data-site]');
+  if (el) {
+    selectedSite = (selectedSite === el.dataset.site) ? null : el.dataset.site;
+    document.querySelectorAll('[data-site]').forEach(d =>
+      d.classList.toggle('sel', d.dataset.site === selectedSite));
+  }
+});
+
+
+/* ── 啟動 ── */
+(async function init() {
+  await loadData();
+  // 預設選最新等級（最後一個 G 系列；特殊圖如綠圖不當預設）
+  const lastG = [...GRADES].reverse().find(g => g.series === 'G') || GRADES[GRADES.length - 1];
+  selectedGrade = lastG ? lastG.grade : null;
+  renderGradeSelector();
+  renderSummary();
+  renderZones();
+})();
+</script>
+</body>
+</html>

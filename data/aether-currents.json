@@ -1,0 +1,3591 @@
+{
+  "schema": 1,
+  "patch": "7.2",
+  "updated": "2026-07-03",
+  "source": "AetherCurrentCompFlgSet.csv + AetherCurrent.csv (thewakingsands/ffxiv-datamining-cn); tw-quests.json (ffxiv-teamcraft)",
+  "count": 303,
+  "zones": [
+    {
+      "territory": 156,
+      "mapId": 25,
+      "zone": "原初之地全區域",
+      "patch": "2.x",
+      "currents": [
+        {
+          "id": 2818308,
+          "type": "quest",
+          "questId": 70058,
+          "questName": "超越幻想，究極武器",
+          "coords": {
+            "mapId": 24,
+            "x": 15.6,
+            "y": 17
+          }
+        }
+      ],
+      "note": "2.0 區域不需收集風脈泉——完成此主線任務後，拉諾西亞、薩納蘭、黑衣森林、庫爾札斯中央高地、摩杜納等全部 17 個 2.0 區域自動解鎖飛行。"
+    },
+    {
+      "territory": 397,
+      "mapId": 211,
+      "zone": "庫爾札斯西部高地",
+      "patch": "3.x",
+      "currents": [
+        {
+          "id": 2818048,
+          "type": "quest",
+          "questId": 67144,
+          "questName": "千年的背叛",
+          "coords": {
+            "mapId": 211,
+            "x": 16.4,
+            "y": 22.5
+          }
+        },
+        {
+          "id": 2818049,
+          "type": "quest",
+          "questId": 67280,
+          "questName": "石匠的煩惱",
+          "coords": {
+            "mapId": 211,
+            "x": 32.5,
+            "y": 35.9
+          }
+        },
+        {
+          "id": 2818050,
+          "type": "quest",
+          "questId": 67295,
+          "questName": "露營地食材守衛戰",
+          "coords": {
+            "mapId": 211,
+            "x": 16.6,
+            "y": 22.6
+          }
+        },
+        {
+          "id": 2818051,
+          "type": "quest",
+          "questId": 67296,
+          "questName": "小試牛刀的眷屬狩獵",
+          "coords": {
+            "mapId": 211,
+            "x": 16.8,
+            "y": 22.8
+          }
+        },
+        {
+          "id": 2818052,
+          "type": "quest",
+          "questId": 67647,
+          "questName": "冰雪廢堡暮衛塔",
+          "coords": {
+            "mapId": 211,
+            "x": 17,
+            "y": 22.9
+          }
+        },
+        {
+          "id": 2818053,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 211,
+            "x": 30.6,
+            "y": 33.8
+          }
+        },
+        {
+          "id": 2818055,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 211,
+            "x": 31.1,
+            "y": 11.8
+          }
+        },
+        {
+          "id": 2818057,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 211,
+            "x": 15.9,
+            "y": 22
+          }
+        },
+        {
+          "id": 2818058,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 211,
+            "x": 9.4,
+            "y": 15
+          }
+        }
+      ]
+    },
+    {
+      "territory": 398,
+      "mapId": 212,
+      "zone": "德拉瓦尼亞山麓地",
+      "patch": "3.x",
+      "currents": [
+        {
+          "id": 2818063,
+          "type": "quest",
+          "questId": 67153,
+          "questName": "翻越靈峰",
+          "coords": {
+            "mapId": 212,
+            "x": 23.8,
+            "y": 19.6
+          }
+        },
+        {
+          "id": 2818064,
+          "type": "quest",
+          "questId": 67307,
+          "questName": "巡迴調查",
+          "coords": {
+            "mapId": 212,
+            "x": 32,
+            "y": 23
+          }
+        },
+        {
+          "id": 2818065,
+          "type": "quest",
+          "questId": 67328,
+          "questName": "天然驅龍香",
+          "coords": {
+            "mapId": 212,
+            "x": 24,
+            "y": 19.8
+          }
+        },
+        {
+          "id": 2818066,
+          "type": "quest",
+          "questId": 67334,
+          "questName": "驅逐巨鳥",
+          "coords": {
+            "mapId": 212,
+            "x": 32,
+            "y": 23
+          }
+        },
+        {
+          "id": 2818067,
+          "type": "quest",
+          "questId": 67338,
+          "questName": "龍眼看人低",
+          "coords": {
+            "mapId": 212,
+            "x": 16.5,
+            "y": 23
+          }
+        },
+        {
+          "id": 2818068,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 212,
+            "x": 37.9,
+            "y": 28.4
+          }
+        },
+        {
+          "id": 2818070,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 212,
+            "x": 31.3,
+            "y": 16.8
+          }
+        },
+        {
+          "id": 2818074,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 212,
+            "x": 13,
+            "y": 14.1
+          }
+        },
+        {
+          "id": 2818077,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 212,
+            "x": 30.7,
+            "y": 36.3
+          }
+        }
+      ]
+    },
+    {
+      "territory": 399,
+      "mapId": 213,
+      "zone": "德拉瓦尼亞河谷地",
+      "patch": "3.x",
+      "currents": [
+        {
+          "id": 2818078,
+          "type": "quest",
+          "questId": 67196,
+          "questName": "沉睡在禁書庫的論文",
+          "coords": {
+            "mapId": 253,
+            "x": 6.5,
+            "y": 6.4
+          }
+        },
+        {
+          "id": 2818079,
+          "type": "quest",
+          "questId": 67472,
+          "questName": "冒險者是同伴哥布！",
+          "coords": {
+            "mapId": 213,
+            "x": 22,
+            "y": 18.8
+          }
+        },
+        {
+          "id": 2818080,
+          "type": "quest",
+          "questId": 67481,
+          "questName": "維護乙太之光",
+          "coords": {
+            "mapId": 257,
+            "x": 7.6,
+            "y": 6.8
+          }
+        },
+        {
+          "id": 2818081,
+          "type": "quest",
+          "questId": 67499,
+          "questName": "人類的罪孽",
+          "coords": {
+            "mapId": 257,
+            "x": 5.6,
+            "y": 6.7
+          }
+        },
+        {
+          "id": 2818082,
+          "type": "quest",
+          "questId": 67502,
+          "questName": "使魔智蛙",
+          "coords": {
+            "mapId": 253,
+            "x": 6.8,
+            "y": 6.4
+          }
+        },
+        {
+          "id": 2818083,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 213,
+            "x": 37.2,
+            "y": 25.6
+          }
+        },
+        {
+          "id": 2818086,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 213,
+            "x": 24.6,
+            "y": 19.1
+          }
+        },
+        {
+          "id": 2818088,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 213,
+            "x": 12.8,
+            "y": 16.9
+          }
+        },
+        {
+          "id": 2818092,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 213,
+            "x": 13.5,
+            "y": 36.2
+          }
+        }
+      ]
+    },
+    {
+      "territory": 400,
+      "mapId": 214,
+      "zone": "德拉瓦尼亞雲海",
+      "patch": "3.x",
+      "currents": [
+        {
+          "id": 2818093,
+          "type": "quest",
+          "questId": 67170,
+          "questName": "狩獵邪龍",
+          "coords": {
+            "mapId": 218,
+            "x": 13.4,
+            "y": 11.1
+          }
+        },
+        {
+          "id": 2818094,
+          "type": "quest",
+          "questId": 67355,
+          "questName": "莫古噗的弱點",
+          "coords": {
+            "mapId": 214,
+            "x": 29.9,
+            "y": 36.2
+          }
+        },
+        {
+          "id": 2818095,
+          "type": "quest",
+          "questId": 67359,
+          "questName": "路霸",
+          "coords": {
+            "mapId": 214,
+            "x": 27.5,
+            "y": 33.9
+          }
+        },
+        {
+          "id": 2818096,
+          "type": "quest",
+          "questId": 67365,
+          "questName": "忙碌的園藝家們",
+          "coords": {
+            "mapId": 214,
+            "x": 12.2,
+            "y": 32.3
+          }
+        },
+        {
+          "id": 2818097,
+          "type": "quest",
+          "questId": 67371,
+          "questName": "餓到不行",
+          "coords": {
+            "mapId": 214,
+            "x": 32.9,
+            "y": 15.5
+          }
+        },
+        {
+          "id": 2818099,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 214,
+            "x": 31,
+            "y": 35.8
+          }
+        },
+        {
+          "id": 2818100,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 214,
+            "x": 20.7,
+            "y": 27.1
+          }
+        },
+        {
+          "id": 2818101,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 214,
+            "x": 7.1,
+            "y": 27.5
+          }
+        },
+        {
+          "id": 2818107,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 214,
+            "x": 29.4,
+            "y": 20
+          }
+        }
+      ]
+    },
+    {
+      "territory": 401,
+      "mapId": 215,
+      "zone": "阿巴拉提亞雲海",
+      "patch": "3.x",
+      "currents": [
+        {
+          "id": 2818108,
+          "type": "quest",
+          "questId": 67183,
+          "questName": "魔大陸的鑰匙",
+          "coords": {
+            "mapId": 215,
+            "x": 10.9,
+            "y": 13.6
+          }
+        },
+        {
+          "id": 2818109,
+          "type": "quest",
+          "questId": 67284,
+          "questName": "保存完好的飛膜",
+          "coords": {
+            "mapId": 215,
+            "x": 17,
+            "y": 37.4
+          }
+        },
+        {
+          "id": 2818110,
+          "type": "quest",
+          "questId": 67437,
+          "questName": "在廢村等待的人",
+          "coords": {
+            "mapId": 215,
+            "x": 17,
+            "y": 37.4
+          }
+        },
+        {
+          "id": 2818111,
+          "type": "quest",
+          "questId": 67445,
+          "questName": "驅蟲植物",
+          "coords": {
+            "mapId": 215,
+            "x": 9.6,
+            "y": 14.2
+          }
+        },
+        {
+          "id": 2818112,
+          "type": "quest",
+          "questId": 67446,
+          "questName": "不思進取的古努瓦努",
+          "coords": {
+            "mapId": 215,
+            "x": 10.6,
+            "y": 14.8
+          }
+        },
+        {
+          "id": 2818116,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 215,
+            "x": 7.6,
+            "y": 25.9
+          }
+        },
+        {
+          "id": 2818117,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 215,
+            "x": 7.4,
+            "y": 20.4
+          }
+        },
+        {
+          "id": 2818119,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 215,
+            "x": 19,
+            "y": 11.7
+          }
+        },
+        {
+          "id": 2818122,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 215,
+            "x": 11.3,
+            "y": 15.6
+          }
+        }
+      ]
+    },
+    {
+      "territory": 402,
+      "mapId": 216,
+      "zone": "魔大陸阿濟茲拉",
+      "patch": "3.x",
+      "currents": [
+        {
+          "id": 2818123,
+          "type": "quest",
+          "questId": 67204,
+          "questName": "振翅高飛",
+          "coords": {
+            "mapId": 216,
+            "x": 18.6,
+            "y": 31.7
+          }
+        },
+        {
+          "id": 2818124,
+          "type": "quest",
+          "questId": 67200,
+          "questName": "亞拉戈的遺產",
+          "coords": {
+            "mapId": 216,
+            "x": 9.6,
+            "y": 11.3
+          }
+        },
+        {
+          "id": 2818125,
+          "type": "quest",
+          "questId": 67201,
+          "questName": "信賴導航",
+          "coords": {
+            "mapId": 216,
+            "x": 9.8,
+            "y": 11
+          }
+        },
+        {
+          "id": 2818126,
+          "type": "quest",
+          "questId": 67202,
+          "questName": "合成獸之島",
+          "coords": {
+            "mapId": 216,
+            "x": 27.3,
+            "y": 10.2
+          }
+        },
+        {
+          "id": 2818127,
+          "type": "quest",
+          "questId": 67203,
+          "questName": "藍色鎧甲的猛將",
+          "coords": {
+            "mapId": 216,
+            "x": 35.3,
+            "y": 24.1
+          }
+        }
+      ]
+    },
+    {
+      "territory": 612,
+      "mapId": 367,
+      "zone": "基拉巴尼亞邊區",
+      "patch": "4.x",
+      "currents": [
+        {
+          "id": 2818128,
+          "type": "quest",
+          "questId": 68069,
+          "questName": "溫暖的款待",
+          "coords": {
+            "mapId": 367,
+            "x": 31.7,
+            "y": 16.7
+          }
+        },
+        {
+          "id": 2818129,
+          "type": "quest",
+          "questId": 68175,
+          "questName": "暴走的魔導兵器",
+          "coords": {
+            "mapId": 367,
+            "x": 8.4,
+            "y": 11.3
+          }
+        },
+        {
+          "id": 2818130,
+          "type": "quest",
+          "questId": 68197,
+          "questName": "隱蔽的真相",
+          "coords": {
+            "mapId": 367,
+            "x": 9.2,
+            "y": 10.9
+          }
+        },
+        {
+          "id": 2818131,
+          "type": "quest",
+          "questId": 68352,
+          "questName": "領地交涉人",
+          "coords": {
+            "mapId": 367,
+            "x": 27,
+            "y": 21
+          }
+        },
+        {
+          "id": 2818132,
+          "type": "quest",
+          "questId": 68357,
+          "questName": "謝謝你，帝國軍",
+          "coords": {
+            "mapId": 367,
+            "x": 30.2,
+            "y": 26.2
+          }
+        },
+        {
+          "id": 2818133,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 367,
+            "x": 11.7,
+            "y": 16.5
+          }
+        },
+        {
+          "id": 2818135,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 367,
+            "x": 24.6,
+            "y": 11.5
+          }
+        },
+        {
+          "id": 2818139,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 367,
+            "x": 28,
+            "y": 21.7
+          }
+        },
+        {
+          "id": 2818140,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 367,
+            "x": 36.4,
+            "y": 17.2
+          }
+        }
+      ]
+    },
+    {
+      "territory": 613,
+      "mapId": 371,
+      "zone": "紅玉海",
+      "patch": "4.x",
+      "currents": [
+        {
+          "id": 2818173,
+          "type": "quest",
+          "questId": 68026,
+          "questName": "片刻的風平浪靜",
+          "coords": {
+            "mapId": 371,
+            "x": 6.2,
+            "y": 12.4
+          }
+        },
+        {
+          "id": 2818174,
+          "type": "quest",
+          "questId": 68209,
+          "questName": "暗中聯絡",
+          "coords": {
+            "mapId": 371,
+            "x": 31.5,
+            "y": 37.1
+          }
+        },
+        {
+          "id": 2818175,
+          "type": "quest",
+          "questId": 68223,
+          "questName": "走出絕境",
+          "coords": {
+            "mapId": 371,
+            "x": 23.5,
+            "y": 9.1
+          }
+        },
+        {
+          "id": 2818176,
+          "type": "quest",
+          "questId": 68229,
+          "questName": "飛身向劍！",
+          "coords": {
+            "mapId": 371,
+            "x": 32.8,
+            "y": 18.5
+          }
+        },
+        {
+          "id": 2818177,
+          "type": "quest",
+          "questId": 68168,
+          "questName": "紫水宮的異變",
+          "coords": {
+            "mapId": 371,
+            "x": 20.2,
+            "y": 20.2
+          }
+        },
+        {
+          "id": 2818178,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 371,
+            "x": 30,
+            "y": 37.5
+          }
+        },
+        {
+          "id": 2818182,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 371,
+            "x": 21.9,
+            "y": 9
+          }
+        },
+        {
+          "id": 2818185,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 371,
+            "x": 35.4,
+            "y": 20.4
+          }
+        },
+        {
+          "id": 2818187,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 371,
+            "x": 5.4,
+            "y": 26.2
+          }
+        }
+      ]
+    },
+    {
+      "territory": 614,
+      "mapId": 354,
+      "zone": "延夏",
+      "patch": "4.x",
+      "currents": [
+        {
+          "id": 2818188,
+          "type": "quest",
+          "questId": 68035,
+          "questName": "邁出的一步",
+          "coords": {
+            "mapId": 354,
+            "x": 31.3,
+            "y": 29
+          }
+        },
+        {
+          "id": 2818189,
+          "type": "quest",
+          "questId": 68260,
+          "questName": "臭有所用",
+          "coords": {
+            "mapId": 354,
+            "x": 29.9,
+            "y": 15.6
+          }
+        },
+        {
+          "id": 2818190,
+          "type": "quest",
+          "questId": 68264,
+          "questName": "飛吧，家麻雀",
+          "coords": {
+            "mapId": 354,
+            "x": 30.5,
+            "y": 17.7
+          }
+        },
+        {
+          "id": 2818191,
+          "type": "quest",
+          "questId": 68266,
+          "questName": "棲息地遷徙",
+          "coords": {
+            "mapId": 354,
+            "x": 30.8,
+            "y": 18.1
+          }
+        },
+        {
+          "id": 2818192,
+          "type": "quest",
+          "questId": 68269,
+          "questName": "尊嚴不再",
+          "coords": {
+            "mapId": 354,
+            "x": 30.2,
+            "y": 19
+          }
+        },
+        {
+          "id": 2818195,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 354,
+            "x": 31.5,
+            "y": 29.6
+          }
+        },
+        {
+          "id": 2818196,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 354,
+            "x": 24.8,
+            "y": 21.3
+          }
+        },
+        {
+          "id": 2818199,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 354,
+            "x": 30.7,
+            "y": 38
+          }
+        },
+        {
+          "id": 2818201,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 354,
+            "x": 19.5,
+            "y": 32.8
+          }
+        }
+      ]
+    },
+    {
+      "territory": 620,
+      "mapId": 368,
+      "zone": "基拉巴尼亞山區",
+      "patch": "4.x",
+      "currents": [
+        {
+          "id": 2818143,
+          "type": "quest",
+          "questId": 68082,
+          "questName": "自由或是死亡",
+          "coords": {
+            "mapId": 368,
+            "x": 26.7,
+            "y": 36.4
+          }
+        },
+        {
+          "id": 2818144,
+          "type": "quest",
+          "questId": 68191,
+          "questName": "奪回採石場",
+          "coords": {
+            "mapId": 368,
+            "x": 24.4,
+            "y": 6.9
+          }
+        },
+        {
+          "id": 2818145,
+          "type": "quest",
+          "questId": 68378,
+          "questName": "阿拉基利的恩人",
+          "coords": {
+            "mapId": 368,
+            "x": 14.9,
+            "y": 36.7
+          }
+        },
+        {
+          "id": 2818146,
+          "type": "quest",
+          "questId": 68387,
+          "questName": "為了填飽肚子",
+          "coords": {
+            "mapId": 368,
+            "x": 27.8,
+            "y": 28.8
+          }
+        },
+        {
+          "id": 2818147,
+          "type": "quest",
+          "questId": 68396,
+          "questName": "寒爐村的年輕人",
+          "coords": {
+            "mapId": 368,
+            "x": 27.2,
+            "y": 36.6
+          }
+        },
+        {
+          "id": 2818149,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 368,
+            "x": 25.6,
+            "y": 6.4
+          }
+        },
+        {
+          "id": 2818151,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 368,
+            "x": 16.1,
+            "y": 15.9
+          }
+        },
+        {
+          "id": 2818154,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 368,
+            "x": 11.8,
+            "y": 26.5
+          }
+        },
+        {
+          "id": 2818157,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 368,
+            "x": 24.4,
+            "y": 30.7
+          }
+        }
+      ]
+    },
+    {
+      "territory": 621,
+      "mapId": 369,
+      "zone": "基拉巴尼亞湖區",
+      "patch": "4.x",
+      "currents": [
+        {
+          "id": 2818158,
+          "type": "quest",
+          "questId": 68089,
+          "questName": "紅蓮解放者",
+          "coords": {
+            "mapId": 369,
+            "x": 32.7,
+            "y": 22.9
+          }
+        },
+        {
+          "id": 2818159,
+          "type": "quest",
+          "questId": 68413,
+          "questName": "預想之外的敵人",
+          "coords": {
+            "mapId": 369,
+            "x": 11.4,
+            "y": 20.7
+          }
+        },
+        {
+          "id": 2818160,
+          "type": "quest",
+          "questId": 68416,
+          "questName": "悼念彷徨的死靈",
+          "coords": {
+            "mapId": 369,
+            "x": 11,
+            "y": 21.1
+          }
+        },
+        {
+          "id": 2818161,
+          "type": "quest",
+          "questId": 68417,
+          "questName": "帝國兵與秘密的地圖",
+          "coords": {
+            "mapId": 369,
+            "x": 8.2,
+            "y": 20.5
+          }
+        },
+        {
+          "id": 2818162,
+          "type": "quest",
+          "questId": 68419,
+          "questName": "魔物的使用方法",
+          "coords": {
+            "mapId": 369,
+            "x": 10.7,
+            "y": 22.5
+          }
+        },
+        {
+          "id": 2818165,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 369,
+            "x": 13.9,
+            "y": 21.8
+          }
+        },
+        {
+          "id": 2818170,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 369,
+            "x": 23.7,
+            "y": 37.3
+          }
+        },
+        {
+          "id": 2818171,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 369,
+            "x": 26.7,
+            "y": 22.9
+          }
+        },
+        {
+          "id": 2818172,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 369,
+            "x": 35.2,
+            "y": 31.9
+          }
+        }
+      ]
+    },
+    {
+      "territory": 622,
+      "mapId": 372,
+      "zone": "太陽神草原",
+      "patch": "4.x",
+      "currents": [
+        {
+          "id": 2818203,
+          "type": "quest",
+          "questId": 68052,
+          "questName": "響徹草原的歡呼聲",
+          "coords": {
+            "mapId": 372,
+            "x": 31.2,
+            "y": 12.2
+          }
+        },
+        {
+          "id": 2818204,
+          "type": "quest",
+          "questId": 68296,
+          "questName": "緘默之民",
+          "coords": {
+            "mapId": 372,
+            "x": 33,
+            "y": 28.4
+          }
+        },
+        {
+          "id": 2818205,
+          "type": "quest",
+          "questId": 68307,
+          "questName": "捕獲膽小的羊",
+          "coords": {
+            "mapId": 372,
+            "x": 28.4,
+            "y": 15
+          }
+        },
+        {
+          "id": 2818206,
+          "type": "quest",
+          "questId": 68318,
+          "questName": "默默無聞四十載",
+          "coords": {
+            "mapId": 372,
+            "x": 23.1,
+            "y": 23.4
+          }
+        },
+        {
+          "id": 2818207,
+          "type": "quest",
+          "questId": 68327,
+          "questName": "馬兀赤的煩惱",
+          "coords": {
+            "mapId": 372,
+            "x": 12.8,
+            "y": 34.5
+          }
+        },
+        {
+          "id": 2818208,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 372,
+            "x": 32.9,
+            "y": 30.3
+          }
+        },
+        {
+          "id": 2818210,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 372,
+            "x": 26.1,
+            "y": 11.2
+          }
+        },
+        {
+          "id": 2818212,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 372,
+            "x": 23.6,
+            "y": 20.5
+          }
+        },
+        {
+          "id": 2818215,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 372,
+            "x": 7.6,
+            "y": 34.7
+          }
+        }
+      ]
+    },
+    {
+      "territory": 813,
+      "mapId": 491,
+      "zone": "雷克蘭德",
+      "patch": "5.x",
+      "currents": [
+        {
+          "id": 2818218,
+          "type": "quest",
+          "questId": 68840,
+          "questName": "通過束帶路！",
+          "coords": {
+            "mapId": 497,
+            "x": 8.5,
+            "y": 9.8
+          }
+        },
+        {
+          "id": 2818219,
+          "type": "quest",
+          "questId": 68916,
+          "questName": " 慰勞喬布要塞",
+          "coords": {
+            "mapId": 497,
+            "x": 12.1,
+            "y": 16.5
+          }
+        },
+        {
+          "id": 2818220,
+          "type": "quest",
+          "questId": 68920,
+          "questName": " 粉刷嚴命城",
+          "coords": {
+            "mapId": 491,
+            "x": 6.2,
+            "y": 15.4
+          }
+        },
+        {
+          "id": 2818221,
+          "type": "quest",
+          "questId": 68921,
+          "questName": " 阿馬羅與失蹤的衛兵",
+          "coords": {
+            "mapId": 491,
+            "x": 8,
+            "y": 17.1
+          }
+        },
+        {
+          "id": 2818222,
+          "type": "quest",
+          "questId": 68922,
+          "questName": " 給瞭望塔的命令",
+          "coords": {
+            "mapId": 491,
+            "x": 7.5,
+            "y": 14.4
+          }
+        },
+        {
+          "id": 2818223,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 491,
+            "x": 32.6,
+            "y": 28.5
+          }
+        },
+        {
+          "id": 2818227,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 491,
+            "x": 33.8,
+            "y": 16.9
+          }
+        },
+        {
+          "id": 2818230,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 491,
+            "x": 18.5,
+            "y": 19.4
+          }
+        },
+        {
+          "id": 2818231,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 491,
+            "x": 9.1,
+            "y": 17.5
+          }
+        }
+      ]
+    },
+    {
+      "territory": 814,
+      "mapId": 492,
+      "zone": "珂露西亞島",
+      "patch": "5.x",
+      "currents": [
+        {
+          "id": 2818233,
+          "type": "quest",
+          "questId": 69179,
+          "questName": "熄滅最後的光",
+          "coords": {
+            "mapId": 492,
+            "x": 18.7,
+            "y": 17.7
+          }
+        },
+        {
+          "id": 2818234,
+          "type": "quest",
+          "questId": 68896,
+          "questName": " 拆船的造船工",
+          "coords": {
+            "mapId": 492,
+            "x": 15.3,
+            "y": 29.6
+          }
+        },
+        {
+          "id": 2818235,
+          "type": "quest",
+          "questId": 68907,
+          "questName": " 慘劇之村",
+          "coords": {
+            "mapId": 492,
+            "x": 15.4,
+            "y": 28.7
+          }
+        },
+        {
+          "id": 2818236,
+          "type": "quest",
+          "questId": 69073,
+          "questName": " 享樂城市的追兵",
+          "coords": {
+            "mapId": 492,
+            "x": 18.9,
+            "y": 17.9
+          }
+        },
+        {
+          "id": 2818237,
+          "type": "quest",
+          "questId": 69092,
+          "questName": " 矮人族的不良青年",
+          "coords": {
+            "mapId": 492,
+            "x": 12.5,
+            "y": 9.3
+          }
+        },
+        {
+          "id": 2818238,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 492,
+            "x": 34.5,
+            "y": 32.6
+          }
+        },
+        {
+          "id": 2818242,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 492,
+            "x": 8.5,
+            "y": 33.3
+          }
+        },
+        {
+          "id": 2818245,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 492,
+            "x": 34,
+            "y": 10.4
+          }
+        },
+        {
+          "id": 2818246,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 492,
+            "x": 20.2,
+            "y": 21.2
+          }
+        }
+      ]
+    },
+    {
+      "territory": 815,
+      "mapId": 493,
+      "zone": "安穆·艾蘭",
+      "patch": "5.x",
+      "currents": [
+        {
+          "id": 2818248,
+          "type": "quest",
+          "questId": 69157,
+          "questName": "我在這裡沉睡",
+          "coords": {
+            "mapId": 493,
+            "x": 15.9,
+            "y": 29.2
+          }
+        },
+        {
+          "id": 2818249,
+          "type": "quest",
+          "questId": 68911,
+          "questName": " 過於勤勞的鼴靈族",
+          "coords": {
+            "mapId": 493,
+            "x": 26.9,
+            "y": 18.6
+          }
+        },
+        {
+          "id": 2818250,
+          "type": "quest",
+          "questId": 69039,
+          "questName": " 救命！拾荒者",
+          "coords": {
+            "mapId": 493,
+            "x": 13,
+            "y": 17
+          }
+        },
+        {
+          "id": 2818251,
+          "type": "quest",
+          "questId": 69047,
+          "questName": " 礦工的珍貴護身符",
+          "coords": {
+            "mapId": 493,
+            "x": 12,
+            "y": 17.5
+          }
+        },
+        {
+          "id": 2818252,
+          "type": "quest",
+          "questId": 69061,
+          "questName": " 貓秘族的礦工",
+          "coords": {
+            "mapId": 493,
+            "x": 11.4,
+            "y": 17.6
+          }
+        },
+        {
+          "id": 2818253,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 493,
+            "x": 30.4,
+            "y": 11
+          }
+        },
+        {
+          "id": 2818256,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 493,
+            "x": 28.4,
+            "y": 32.3
+          }
+        },
+        {
+          "id": 2818259,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 493,
+            "x": 14.6,
+            "y": 16.8
+          }
+        },
+        {
+          "id": 2818261,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 493,
+            "x": 24.7,
+            "y": 35
+          }
+        }
+      ]
+    },
+    {
+      "territory": 816,
+      "mapId": 494,
+      "zone": "伊爾美格",
+      "patch": "5.x",
+      "currents": [
+        {
+          "id": 2818263,
+          "type": "quest",
+          "questId": 68856,
+          "questName": "美餐一頓",
+          "coords": {
+            "mapId": 494,
+            "x": 30.6,
+            "y": 7.6
+          }
+        },
+        {
+          "id": 2818264,
+          "type": "quest",
+          "questId": 68931,
+          "questName": " 尋尋覓覓",
+          "coords": {
+            "mapId": 494,
+            "x": 14.1,
+            "y": 32.7
+          }
+        },
+        {
+          "id": 2818265,
+          "type": "quest",
+          "questId": 68934,
+          "questName": " 點綴家居",
+          "coords": {
+            "mapId": 494,
+            "x": 9.2,
+            "y": 17.2
+          }
+        },
+        {
+          "id": 2818266,
+          "type": "quest",
+          "questId": 68940,
+          "questName": " 成為名人的第一步",
+          "coords": {
+            "mapId": 494,
+            "x": 15.8,
+            "y": 30.4
+          }
+        },
+        {
+          "id": 2818267,
+          "type": "quest",
+          "questId": 68963,
+          "questName": " 新來的阿馬羅",
+          "coords": {
+            "mapId": 494,
+            "x": 30.3,
+            "y": 8.4
+          }
+        },
+        {
+          "id": 2818270,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 494,
+            "x": 16.9,
+            "y": 24.7
+          }
+        },
+        {
+          "id": 2818273,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 494,
+            "x": 21.8,
+            "y": 4.5
+          }
+        },
+        {
+          "id": 2818276,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 494,
+            "x": 30.2,
+            "y": 6.1
+          }
+        },
+        {
+          "id": 2818277,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 494,
+            "x": 21.3,
+            "y": 16.5
+          }
+        }
+      ]
+    },
+    {
+      "territory": 817,
+      "mapId": 495,
+      "zone": "拉凱提卡大森林",
+      "patch": "5.x",
+      "currents": [
+        {
+          "id": 2818278,
+          "type": "quest",
+          "questId": 68876,
+          "questName": "奇坦那神影洞",
+          "coords": {
+            "mapId": 495,
+            "x": 30.6,
+            "y": 17.5
+          }
+        },
+        {
+          "id": 2818279,
+          "type": "quest",
+          "questId": 68980,
+          "questName": " 殘存回憶的要塞",
+          "coords": {
+            "mapId": 495,
+            "x": 18.9,
+            "y": 27.8
+          }
+        },
+        {
+          "id": 2818280,
+          "type": "quest",
+          "questId": 69192,
+          "questName": " 昏暗森林的守護者",
+          "coords": {
+            "mapId": 495,
+            "x": 19.9,
+            "y": 27.7
+          }
+        },
+        {
+          "id": 2818281,
+          "type": "quest",
+          "questId": 69003,
+          "questName": " 與露宿地的交流",
+          "coords": {
+            "mapId": 495,
+            "x": 29.4,
+            "y": 17.9
+          }
+        },
+        {
+          "id": 2818282,
+          "type": "quest",
+          "questId": 69014,
+          "questName": " 雙胞胎與雙聖靈",
+          "coords": {
+            "mapId": 495,
+            "x": 31.4,
+            "y": 17
+          }
+        },
+        {
+          "id": 2818283,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 495,
+            "x": 13.4,
+            "y": 31.6
+          }
+        },
+        {
+          "id": 2818285,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 495,
+            "x": 18.7,
+            "y": 22.5
+          }
+        },
+        {
+          "id": 2818288,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 495,
+            "x": 28.3,
+            "y": 25.6
+          }
+        },
+        {
+          "id": 2818292,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 495,
+            "x": 35.1,
+            "y": 16.2
+          }
+        }
+      ]
+    },
+    {
+      "territory": 818,
+      "mapId": 496,
+      "zone": "黑風海",
+      "patch": "5.x",
+      "currents": [
+        {
+          "id": 2818293,
+          "type": "quest",
+          "questId": 69189,
+          "questName": "那個人的結局",
+          "coords": {
+            "mapId": 496,
+            "x": 8.8,
+            "y": 26.5
+          }
+        },
+        {
+          "id": 2818294,
+          "type": "quest",
+          "questId": 69124,
+          "questName": " 潮池的怪人",
+          "coords": {
+            "mapId": 496,
+            "x": 32.1,
+            "y": 16.6
+          }
+        },
+        {
+          "id": 2818295,
+          "type": "quest",
+          "questId": 69128,
+          "questName": " 優等市民的義務",
+          "coords": {
+            "mapId": 496,
+            "x": 13.7,
+            "y": 27.7
+          }
+        },
+        {
+          "id": 2818296,
+          "type": "quest",
+          "questId": 69129,
+          "questName": " 言論自由",
+          "coords": {
+            "mapId": 496,
+            "x": 7.2,
+            "y": 31.5
+          }
+        },
+        {
+          "id": 2818297,
+          "type": "quest",
+          "questId": 69130,
+          "questName": " 優良市民需注意形象",
+          "coords": {
+            "mapId": 496,
+            "x": 9.6,
+            "y": 28.3
+          }
+        },
+        {
+          "id": 2818298,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 496,
+            "x": 28.7,
+            "y": 7.2
+          }
+        },
+        {
+          "id": 2818300,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 496,
+            "x": 22.5,
+            "y": 11.2
+          }
+        },
+        {
+          "id": 2818303,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 496,
+            "x": 28.3,
+            "y": 15.9
+          }
+        },
+        {
+          "id": 2818307,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 496,
+            "x": 6,
+            "y": 19.5
+          }
+        }
+      ]
+    },
+    {
+      "territory": 956,
+      "mapId": 695,
+      "zone": "迷津",
+      "patch": "6.x",
+      "currents": [
+        {
+          "id": 2818309,
+          "type": "quest",
+          "questId": 69984,
+          "questName": "刻印的足跡",
+          "coords": {
+            "mapId": 695,
+            "x": 21.7,
+            "y": 33.9
+          }
+        },
+        {
+          "id": 2818310,
+          "type": "quest",
+          "questId": 70016,
+          "questName": " 迷路的小毛球",
+          "coords": {
+            "mapId": 695,
+            "x": 30.4,
+            "y": 19.4
+          }
+        },
+        {
+          "id": 2818311,
+          "type": "quest",
+          "questId": 70020,
+          "questName": " 小薩雷安的少年",
+          "coords": {
+            "mapId": 695,
+            "x": 20.9,
+            "y": 21
+          }
+        },
+        {
+          "id": 2818312,
+          "type": "quest",
+          "questId": 69856,
+          "questName": " 拾穗人的願望",
+          "coords": {
+            "mapId": 695,
+            "x": 23.3,
+            "y": 20
+          }
+        },
+        {
+          "id": 2818313,
+          "type": "quest",
+          "questId": 69865,
+          "questName": " 森林賢者",
+          "coords": {
+            "mapId": 695,
+            "x": 21,
+            "y": 21.5
+          }
+        },
+        {
+          "id": 2818314,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 695,
+            "x": 28.4,
+            "y": 6.1
+          }
+        },
+        {
+          "id": 2818315,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 695,
+            "x": 36.5,
+            "y": 22.8
+          }
+        },
+        {
+          "id": 2818316,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 695,
+            "x": 10.5,
+            "y": 34.8
+          }
+        },
+        {
+          "id": 2818317,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 695,
+            "x": 18.9,
+            "y": 35
+          }
+        }
+      ]
+    },
+    {
+      "territory": 957,
+      "mapId": 696,
+      "zone": "薩維奈島",
+      "patch": "6.x",
+      "currents": [
+        {
+          "id": 2818324,
+          "type": "quest",
+          "questId": 69952,
+          "questName": "微小的日常",
+          "coords": {
+            "mapId": 696,
+            "x": 20.7,
+            "y": 15.1
+          }
+        },
+        {
+          "id": 2818325,
+          "type": "quest",
+          "questId": 69739,
+          "questName": " 鍊金術師與舞者",
+          "coords": {
+            "mapId": 696,
+            "x": 11.3,
+            "y": 21.1
+          }
+        },
+        {
+          "id": 2818326,
+          "type": "quest",
+          "questId": 70025,
+          "questName": " 來自草原的年輕冒險者",
+          "coords": {
+            "mapId": 696,
+            "x": 25.6,
+            "y": 36.1
+          }
+        },
+        {
+          "id": 2818327,
+          "type": "quest",
+          "questId": 69795,
+          "questName": " 星戰士團的巡邏",
+          "coords": {
+            "mapId": 696,
+            "x": 29.1,
+            "y": 17.4
+          }
+        },
+        {
+          "id": 2818328,
+          "type": "quest",
+          "questId": 70030,
+          "questName": " 採集蘇摩草之人",
+          "coords": {
+            "mapId": 696,
+            "x": 29.6,
+            "y": 17.2
+          }
+        },
+        {
+          "id": 2818329,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 696,
+            "x": 18,
+            "y": 32.3
+          }
+        },
+        {
+          "id": 2818330,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 696,
+            "x": 20.5,
+            "y": 7.3
+          }
+        },
+        {
+          "id": 2818331,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 696,
+            "x": 23.9,
+            "y": 14.6
+          }
+        },
+        {
+          "id": 2818332,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 696,
+            "x": 32.5,
+            "y": 18.3
+          }
+        }
+      ]
+    },
+    {
+      "territory": 958,
+      "mapId": 697,
+      "zone": "加雷馬",
+      "patch": "6.x",
+      "currents": [
+        {
+          "id": 2818339,
+          "type": "quest",
+          "questId": 69931,
+          "questName": "神之門",
+          "coords": {
+            "mapId": 697,
+            "x": 14.1,
+            "y": 29.5
+          }
+        },
+        {
+          "id": 2818340,
+          "type": "quest",
+          "questId": 69752,
+          "questName": " 補給隊員與護衛之旅",
+          "coords": {
+            "mapId": 697,
+            "x": 12.8,
+            "y": 30.7
+          }
+        },
+        {
+          "id": 2818341,
+          "type": "quest",
+          "questId": 70034,
+          "questName": " 不請自來的青磷技師",
+          "coords": {
+            "mapId": 697,
+            "x": 15.1,
+            "y": 30
+          }
+        },
+        {
+          "id": 2818342,
+          "type": "quest",
+          "questId": 69768,
+          "questName": " 向孩子傳達的希望",
+          "coords": {
+            "mapId": 697,
+            "x": 31.4,
+            "y": 13.1
+          }
+        },
+        {
+          "id": 2818343,
+          "type": "quest",
+          "questId": 70038,
+          "questName": " 不肯離開車站的少年",
+          "coords": {
+            "mapId": 697,
+            "x": 15,
+            "y": 31.3
+          }
+        },
+        {
+          "id": 2818344,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 697,
+            "x": 17.8,
+            "y": 30
+          }
+        },
+        {
+          "id": 2818345,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 697,
+            "x": 25.4,
+            "y": 34.4
+          }
+        },
+        {
+          "id": 2818349,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 697,
+            "x": 29.2,
+            "y": 11.8
+          }
+        },
+        {
+          "id": 2818350,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 697,
+            "x": 9.4,
+            "y": 15
+          }
+        }
+      ]
+    },
+    {
+      "territory": 959,
+      "mapId": 698,
+      "zone": "嘆息海",
+      "patch": "6.x",
+      "currents": [
+        {
+          "id": 2818354,
+          "type": "quest",
+          "questId": 69943,
+          "questName": "尤里安傑的決心",
+          "coords": {
+            "mapId": 698,
+            "x": 28.8,
+            "y": 9
+          }
+        },
+        {
+          "id": 2818355,
+          "type": "quest",
+          "questId": 69776,
+          "questName": " 有罪！處以咔嚓咔嚓山之刑！",
+          "coords": {
+            "mapId": 698,
+            "x": 15.5,
+            "y": 11.7
+          }
+        },
+        {
+          "id": 2818356,
+          "type": "quest",
+          "questId": 69777,
+          "questName": " 兔兔族的嘆息海食堂",
+          "coords": {
+            "mapId": 698,
+            "x": 15.7,
+            "y": 11.1
+          }
+        },
+        {
+          "id": 2818357,
+          "type": "quest",
+          "questId": 69789,
+          "questName": " 亞拉戈的致命吸引力",
+          "coords": {
+            "mapId": 698,
+            "x": 19.9,
+            "y": 11.1
+          }
+        },
+        {
+          "id": 2818358,
+          "type": "quest",
+          "questId": 70052,
+          "questName": " 我的名字與我心中的煩惱",
+          "coords": {
+            "mapId": 698,
+            "x": 22,
+            "y": 10.8
+          }
+        },
+        {
+          "id": 2818359,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 698,
+            "x": 22.4,
+            "y": 18.2
+          }
+        },
+        {
+          "id": 2818360,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 698,
+            "x": 11.8,
+            "y": 9.6
+          }
+        },
+        {
+          "id": 2818361,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 698,
+            "x": 27.8,
+            "y": 9.6
+          }
+        },
+        {
+          "id": 2818362,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 698,
+            "x": 22.1,
+            "y": 10.5
+          }
+        }
+      ]
+    },
+    {
+      "territory": 960,
+      "mapId": 699,
+      "zone": "天外天垓",
+      "patch": "6.x",
+      "currents": [
+        {
+          "id": 2818384,
+          "type": "quest",
+          "questId": 69999,
+          "questName": "你不是孤獨一人",
+          "coords": {
+            "mapId": 699,
+            "x": 26,
+            "y": 27.8
+          }
+        },
+        {
+          "id": 2818385,
+          "type": "quest",
+          "questId": 69878,
+          "questName": " 整合的異亞之死",
+          "coords": {
+            "mapId": 699,
+            "x": 22.5,
+            "y": 11
+          }
+        },
+        {
+          "id": 2818386,
+          "type": "quest",
+          "questId": 69882,
+          "questName": " 交流的積極作用",
+          "coords": {
+            "mapId": 699,
+            "x": 23.6,
+            "y": 12.4
+          }
+        },
+        {
+          "id": 2818387,
+          "type": "quest",
+          "questId": 69891,
+          "questName": " 戰鬥能力獲得質的飛躍",
+          "coords": {
+            "mapId": 699,
+            "x": 31.7,
+            "y": 27.6
+          }
+        },
+        {
+          "id": 2818388,
+          "type": "quest",
+          "questId": 69890,
+          "questName": " 戰鬥有助於進化",
+          "coords": {
+            "mapId": 699,
+            "x": 30.9,
+            "y": 27.8
+          }
+        },
+        {
+          "id": 2818389,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 699,
+            "x": 14.8,
+            "y": 14.3
+          }
+        },
+        {
+          "id": 2818390,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 699,
+            "x": 21.8,
+            "y": 6.4
+          }
+        },
+        {
+          "id": 2818391,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 699,
+            "x": 34.7,
+            "y": 29.7
+          }
+        },
+        {
+          "id": 2818392,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 699,
+            "x": 32.3,
+            "y": 26.3
+          }
+        }
+      ]
+    },
+    {
+      "territory": 961,
+      "mapId": 700,
+      "zone": "厄爾庇斯",
+      "patch": "6.x",
+      "currents": [
+        {
+          "id": 2818369,
+          "type": "quest",
+          "questId": 69973,
+          "questName": "帶來幸福的鳥",
+          "coords": {
+            "mapId": 700,
+            "x": 31.7,
+            "y": 15.4
+          }
+        },
+        {
+          "id": 2818370,
+          "type": "quest",
+          "questId": 69824,
+          "questName": " 飛翔吧迅尾獸",
+          "coords": {
+            "mapId": 700,
+            "x": 9.3,
+            "y": 31.7
+          }
+        },
+        {
+          "id": 2818371,
+          "type": "quest",
+          "questId": 69849,
+          "questName": " 學院研究生的委託",
+          "coords": {
+            "mapId": 700,
+            "x": 11.8,
+            "y": 19.6
+          }
+        },
+        {
+          "id": 2818372,
+          "type": "quest",
+          "questId": 70043,
+          "questName": " 天測園的工作內容",
+          "coords": {
+            "mapId": 700,
+            "x": 24.8,
+            "y": 26.2
+          }
+        },
+        {
+          "id": 2818373,
+          "type": "quest",
+          "questId": 70047,
+          "questName": " 與訪客相遇",
+          "coords": {
+            "mapId": 700,
+            "x": 8.7,
+            "y": 17.7
+          }
+        },
+        {
+          "id": 2818374,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 700,
+            "x": 34.1,
+            "y": 23.7
+          }
+        },
+        {
+          "id": 2818375,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 700,
+            "x": 6.4,
+            "y": 29.7
+          }
+        },
+        {
+          "id": 2818379,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 700,
+            "x": 13.4,
+            "y": 7.7
+          }
+        },
+        {
+          "id": 2818380,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 700,
+            "x": 10.4,
+            "y": 25
+          }
+        }
+      ]
+    },
+    {
+      "territory": 1187,
+      "mapId": 857,
+      "zone": "奧闊帕恰山",
+      "patch": "7.x",
+      "currents": [
+        {
+          "id": 2818399,
+          "type": "quest",
+          "questId": 70431,
+          "questName": "封之試煉",
+          "coords": {
+            "mapId": 857,
+            "x": 5.4,
+            "y": 24.2
+          }
+        },
+        {
+          "id": 2818400,
+          "type": "quest",
+          "questId": 70575,
+          "questName": " 救助傭兵",
+          "coords": {
+            "mapId": 857,
+            "x": 29.3,
+            "y": 13.7
+          }
+        },
+        {
+          "id": 2818401,
+          "type": "quest",
+          "questId": 70587,
+          "questName": " 圖拉爾大陸的稀有物品",
+          "coords": {
+            "mapId": 857,
+            "x": 29.2,
+            "y": 13.1
+          }
+        },
+        {
+          "id": 2818402,
+          "type": "quest",
+          "questId": 70583,
+          "questName": " 照耀內心的輝石",
+          "coords": {
+            "mapId": 857,
+            "x": 29.5,
+            "y": 32.4
+          }
+        },
+        {
+          "id": 2818403,
+          "type": "quest",
+          "questId": 70591,
+          "questName": " 守護封印之人",
+          "coords": {
+            "mapId": 857,
+            "x": 30,
+            "y": 33.6
+          }
+        },
+        {
+          "id": 2818404,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 857,
+            "x": 28.6,
+            "y": 16.7
+          }
+        },
+        {
+          "id": 2818405,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 857,
+            "x": 12.3,
+            "y": 11.6
+          }
+        },
+        {
+          "id": 2818406,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 857,
+            "x": 17.5,
+            "y": 20.4
+          }
+        },
+        {
+          "id": 2818407,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 857,
+            "x": 5.2,
+            "y": 23.6
+          }
+        },
+        {
+          "id": 2818408,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 857,
+            "x": 17.4,
+            "y": 17.5
+          }
+        },
+        {
+          "id": 2818409,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 857,
+            "x": 29.8,
+            "y": 7.9
+          }
+        },
+        {
+          "id": 2818410,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 857,
+            "x": 18.8,
+            "y": 9.8
+          }
+        },
+        {
+          "id": 2818411,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 857,
+            "x": 22.9,
+            "y": 36.4
+          }
+        },
+        {
+          "id": 2818412,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 857,
+            "x": 28.9,
+            "y": 21.3
+          }
+        },
+        {
+          "id": 2818413,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 857,
+            "x": 29.5,
+            "y": 26.7
+          }
+        }
+      ]
+    },
+    {
+      "territory": 1188,
+      "mapId": 858,
+      "zone": "克扎瑪烏卡濕地",
+      "patch": "7.x",
+      "currents": [
+        {
+          "id": 2818414,
+          "type": "quest",
+          "questId": 70424,
+          "questName": "拯救烏克·拉瑪特",
+          "coords": {
+            "mapId": 858,
+            "x": 31.9,
+            "y": 25.5
+          }
+        },
+        {
+          "id": 2818415,
+          "type": "quest",
+          "questId": 70600,
+          "questName": " 奇夏伊希的供品",
+          "coords": {
+            "mapId": 858,
+            "x": 20.1,
+            "y": 11.8
+          }
+        },
+        {
+          "id": 2818416,
+          "type": "quest",
+          "questId": 70617,
+          "questName": " 風授予的通過儀式",
+          "coords": {
+            "mapId": 858,
+            "x": 16.5,
+            "y": 10.4
+          }
+        },
+        {
+          "id": 2818417,
+          "type": "quest",
+          "questId": 70610,
+          "questName": " 煩惱的罐子工護衛",
+          "coords": {
+            "mapId": 858,
+            "x": 11.7,
+            "y": 26.9
+          }
+        },
+        {
+          "id": 2818418,
+          "type": "quest",
+          "questId": 70621,
+          "questName": " 延遲退休的罐子工",
+          "coords": {
+            "mapId": 858,
+            "x": 11.1,
+            "y": 27.9
+          }
+        },
+        {
+          "id": 2818419,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 858,
+            "x": 27.5,
+            "y": 7.7
+          }
+        },
+        {
+          "id": 2818420,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 858,
+            "x": 9.5,
+            "y": 17.9
+          }
+        },
+        {
+          "id": 2818421,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 858,
+            "x": 15.6,
+            "y": 34.3
+          }
+        },
+        {
+          "id": 2818422,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 858,
+            "x": 22.5,
+            "y": 27.2
+          }
+        },
+        {
+          "id": 2818423,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 858,
+            "x": 8.7,
+            "y": 11.8
+          }
+        },
+        {
+          "id": 2818424,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 858,
+            "x": 39.9,
+            "y": 13.4
+          }
+        },
+        {
+          "id": 2818425,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 858,
+            "x": 31.8,
+            "y": 14.5
+          }
+        },
+        {
+          "id": 2818426,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 858,
+            "x": 6.4,
+            "y": 24
+          }
+        },
+        {
+          "id": 2818427,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 858,
+            "x": 24.1,
+            "y": 32
+          }
+        },
+        {
+          "id": 2818428,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 858,
+            "x": 31.2,
+            "y": 38.1
+          }
+        }
+      ]
+    },
+    {
+      "territory": 1189,
+      "mapId": 859,
+      "zone": "亞克特爾樹海",
+      "patch": "7.x",
+      "currents": [
+        {
+          "id": 2818429,
+          "type": "quest",
+          "questId": 70445,
+          "questName": "通往黃金鄉的道路",
+          "coords": {
+            "mapId": 859,
+            "x": 31.6,
+            "y": 32.7
+          }
+        },
+        {
+          "id": 2818430,
+          "type": "quest",
+          "questId": 70630,
+          "questName": " 古戰場的聯繫",
+          "coords": {
+            "mapId": 859,
+            "x": 22.3,
+            "y": 8.9
+          }
+        },
+        {
+          "id": 2818431,
+          "type": "quest",
+          "questId": 70646,
+          "questName": " 嚮往的獰豹狩獵團！",
+          "coords": {
+            "mapId": 859,
+            "x": 13.3,
+            "y": 13.5
+          }
+        },
+        {
+          "id": 2818432,
+          "type": "quest",
+          "questId": 70639,
+          "questName": " 加提卡的怪物",
+          "coords": {
+            "mapId": 859,
+            "x": 33.2,
+            "y": 31.7
+          }
+        },
+        {
+          "id": 2818433,
+          "type": "quest",
+          "questId": 70650,
+          "questName": " 前傭兵失去的力量",
+          "coords": {
+            "mapId": 859,
+            "x": 32.1,
+            "y": 31.4
+          }
+        },
+        {
+          "id": 2818434,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 859,
+            "x": 19.2,
+            "y": 10.9
+          }
+        },
+        {
+          "id": 2818435,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 859,
+            "x": 29.8,
+            "y": 10.6
+          }
+        },
+        {
+          "id": 2818436,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 859,
+            "x": 19.2,
+            "y": 34
+          }
+        },
+        {
+          "id": 2818437,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 859,
+            "x": 22.3,
+            "y": 21.5
+          }
+        },
+        {
+          "id": 2818438,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 859,
+            "x": 10.5,
+            "y": 18.7
+          }
+        },
+        {
+          "id": 2818439,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 859,
+            "x": 17.8,
+            "y": 6.5
+          }
+        },
+        {
+          "id": 2818440,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 859,
+            "x": 33.7,
+            "y": 26.2
+          }
+        },
+        {
+          "id": 2818441,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 859,
+            "x": 8,
+            "y": 26.2
+          }
+        },
+        {
+          "id": 2818442,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 859,
+            "x": 25.6,
+            "y": 24.7
+          }
+        },
+        {
+          "id": 2818443,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 859,
+            "x": 36.5,
+            "y": 35.8
+          }
+        }
+      ]
+    },
+    {
+      "territory": 1190,
+      "mapId": 860,
+      "zone": "夏勞尼荒野",
+      "patch": "7.x",
+      "currents": [
+        {
+          "id": 2818444,
+          "type": "quest",
+          "questId": 70461,
+          "questName": "因為我喜歡圖萊尤拉",
+          "coords": {
+            "mapId": 860,
+            "x": 15.2,
+            "y": 17.9
+          }
+        },
+        {
+          "id": 2818445,
+          "type": "quest",
+          "questId": 70666,
+          "questName": " 燭光中的祈禱",
+          "coords": {
+            "mapId": 860,
+            "x": 19.3,
+            "y": 27.9
+          }
+        },
+        {
+          "id": 2818446,
+          "type": "quest",
+          "questId": 70674,
+          "questName": " 迷路的犎牛",
+          "coords": {
+            "mapId": 860,
+            "x": 27.3,
+            "y": 11.9
+          }
+        },
+        {
+          "id": 2818447,
+          "type": "quest",
+          "questId": 70676,
+          "questName": " 放債人與拒絕的男人",
+          "coords": {
+            "mapId": 860,
+            "x": 29,
+            "y": 30.3
+          }
+        },
+        {
+          "id": 2818448,
+          "type": "quest",
+          "questId": 70680,
+          "questName": " 入侵荒野的藍色魔物",
+          "coords": {
+            "mapId": 860,
+            "x": 13.9,
+            "y": 19.2
+          }
+        },
+        {
+          "id": 2818449,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 860,
+            "x": 27.4,
+            "y": 31.6
+          }
+        },
+        {
+          "id": 2818450,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 860,
+            "x": 7.3,
+            "y": 19.9
+          }
+        },
+        {
+          "id": 2818451,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 860,
+            "x": 20.2,
+            "y": 18
+          }
+        },
+        {
+          "id": 2818452,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 860,
+            "x": 29.1,
+            "y": 11.3
+          }
+        },
+        {
+          "id": 2818453,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 860,
+            "x": 9.4,
+            "y": 14.4
+          }
+        },
+        {
+          "id": 2818454,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 860,
+            "x": 17.7,
+            "y": 20.4
+          }
+        },
+        {
+          "id": 2818455,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 860,
+            "x": 9.1,
+            "y": 28
+          }
+        },
+        {
+          "id": 2818456,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 860,
+            "x": 34.4,
+            "y": 13.1
+          }
+        },
+        {
+          "id": 2818457,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 860,
+            "x": 25.2,
+            "y": 20.3
+          }
+        },
+        {
+          "id": 2818458,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 860,
+            "x": 34.7,
+            "y": 23.2
+          }
+        }
+      ]
+    },
+    {
+      "territory": 1191,
+      "mapId": 861,
+      "zone": "遺產之地",
+      "patch": "7.x",
+      "currents": [
+        {
+          "id": 2818459,
+          "type": "quest",
+          "questId": 70480,
+          "questName": "向著永護塔頂層進發",
+          "coords": {
+            "mapId": 934,
+            "x": 6,
+            "y": 6.3
+          }
+        },
+        {
+          "id": 2818460,
+          "type": "quest",
+          "questId": 70689,
+          "questName": " 機器兵的驗證報告",
+          "coords": {
+            "mapId": 861,
+            "x": 17.9,
+            "y": 9.5
+          }
+        },
+        {
+          "id": 2818461,
+          "type": "quest",
+          "questId": 70692,
+          "questName": " 植物們的生存戰略",
+          "coords": {
+            "mapId": 861,
+            "x": 9.6,
+            "y": 11.7
+          }
+        },
+        {
+          "id": 2818462,
+          "type": "quest",
+          "questId": 70695,
+          "questName": " 調魂器消除的是……",
+          "coords": {
+            "mapId": 861,
+            "x": 17.3,
+            "y": 33.4
+          }
+        },
+        {
+          "id": 2818463,
+          "type": "quest",
+          "questId": 70696,
+          "questName": " 光暈農地的年輕負責人",
+          "coords": {
+            "mapId": 861,
+            "x": 18.4,
+            "y": 9.9
+          }
+        },
+        {
+          "id": 2818464,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 861,
+            "x": 29.5,
+            "y": 26
+          }
+        },
+        {
+          "id": 2818465,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 861,
+            "x": 25.6,
+            "y": 7.9
+          }
+        },
+        {
+          "id": 2818466,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 861,
+            "x": 9.8,
+            "y": 12.1
+          }
+        },
+        {
+          "id": 2818467,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 861,
+            "x": 9.5,
+            "y": 26.9
+          }
+        },
+        {
+          "id": 2818468,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 861,
+            "x": 23.1,
+            "y": 18.6
+          }
+        },
+        {
+          "id": 2818469,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 861,
+            "x": 33.6,
+            "y": 17.7
+          }
+        },
+        {
+          "id": 2818470,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 861,
+            "x": 35.2,
+            "y": 11.2
+          }
+        },
+        {
+          "id": 2818471,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 861,
+            "x": 15.8,
+            "y": 16.2
+          }
+        },
+        {
+          "id": 2818472,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 861,
+            "x": 20.9,
+            "y": 28.2
+          }
+        },
+        {
+          "id": 2818473,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 861,
+            "x": 12.3,
+            "y": 35.4
+          }
+        }
+      ]
+    },
+    {
+      "territory": 1192,
+      "mapId": 862,
+      "zone": "憶想之地",
+      "patch": "7.x",
+      "currents": [
+        {
+          "id": 2818474,
+          "type": "quest",
+          "questId": 70494,
+          "questName": "踏上永遠的旅途",
+          "coords": {
+            "mapId": 862,
+            "x": 11.1,
+            "y": 12.6
+          }
+        },
+        {
+          "id": 2818475,
+          "type": "quest",
+          "questId": 70710,
+          "questName": " 向傳說中的泉水許願",
+          "coords": {
+            "mapId": 862,
+            "x": 8.9,
+            "y": 31.5
+          }
+        },
+        {
+          "id": 2818476,
+          "type": "quest",
+          "questId": 70712,
+          "questName": " 解謎遊戲指明的方向",
+          "coords": {
+            "mapId": 862,
+            "x": 31.1,
+            "y": 35.7
+          }
+        },
+        {
+          "id": 2818477,
+          "type": "quest",
+          "questId": 70714,
+          "questName": " 考驗勇氣的動物園",
+          "coords": {
+            "mapId": 862,
+            "x": 34.1,
+            "y": 15.8
+          }
+        },
+        {
+          "id": 2818478,
+          "type": "quest",
+          "questId": 70715,
+          "questName": " 活過的證明",
+          "coords": {
+            "mapId": 862,
+            "x": 32.3,
+            "y": 17.6
+          }
+        },
+        {
+          "id": 2818479,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 862,
+            "x": 7.5,
+            "y": 30.9
+          }
+        },
+        {
+          "id": 2818480,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 862,
+            "x": 36.6,
+            "y": 28.4
+          }
+        },
+        {
+          "id": 2818481,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 862,
+            "x": 31.7,
+            "y": 8.5
+          }
+        },
+        {
+          "id": 2818482,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 862,
+            "x": 10.3,
+            "y": 11.3
+          }
+        },
+        {
+          "id": 2818483,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 862,
+            "x": 11.2,
+            "y": 35.1
+          }
+        },
+        {
+          "id": 2818484,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 862,
+            "x": 26.2,
+            "y": 32.4
+          }
+        },
+        {
+          "id": 2818485,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 862,
+            "x": 34.1,
+            "y": 34.3
+          }
+        },
+        {
+          "id": 2818486,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 862,
+            "x": 27.8,
+            "y": 10.7
+          }
+        },
+        {
+          "id": 2818487,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 862,
+            "x": 24.9,
+            "y": 15.3
+          }
+        },
+        {
+          "id": 2818488,
+          "type": "field",
+          "questId": null,
+          "questName": null,
+          "coords": {
+            "mapId": 862,
+            "x": 11.8,
+            "y": 20.5
+          }
+        }
+      ]
+    }
+  ]
+}

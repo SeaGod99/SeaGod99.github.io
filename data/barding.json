@@ -1,0 +1,2007 @@
+{
+  "schema": "barding",
+  "patch": "7.2",
+  "updated": "2026-06-23",
+  "source": "xivapi+tw-items+obtainable-methods (icons local)",
+  "count": 106,
+  "data": [
+    {
+      "id": 1,
+      "name": "碧海陸行鳥鞍",
+      "nameEn": "Lominsan Saddle",
+      "itemId": null,
+      "slot": "鞍",
+      "iconHead": "/assets/barding/058549_hr1.png",
+      "iconBody": "/assets/barding/058553_hr1.png",
+      "iconLegs": "/assets/barding/058551_hr1.png",
+      "sources": [
+        {
+          "type": "其他",
+          "detail": null
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 2,
+      "name": "碧海陸行鳥半裝甲",
+      "nameEn": "Lominsan Half Barding",
+      "itemId": 6020,
+      "slot": "半套",
+      "iconHead": "/assets/barding/058501_hr1.png",
+      "iconBody": "/assets/barding/058502_hr1.png",
+      "iconLegs": "/assets/barding/058503_hr1.png",
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "黑渦團 / 需 黑渦團軍票 x4000 / NPC：黑渦團補給負責人"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 3,
+      "name": "碧海陸行鳥裝甲",
+      "nameEn": "Lominsan Barding",
+      "itemId": 6021,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058504_hr1.png",
+      "iconBody": "/assets/barding/058505_hr1.png",
+      "iconLegs": "/assets/barding/058506_hr1.png",
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "黑渦團 / 需 黑渦團軍票 x6000 / NPC：黑渦團補給負責人"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 4,
+      "name": "碧海陸行鳥武裝甲",
+      "nameEn": "Lominsan Crested Barding",
+      "itemId": 6022,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058507_hr1.png",
+      "iconBody": "/assets/barding/058508_hr1.png",
+      "iconLegs": "/assets/barding/058509_hr1.png",
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "黑渦團 / 需 黑渦團軍票 x8000 / NPC：黑渦團補給負責人"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 5,
+      "name": "密林陸行鳥鞍",
+      "nameEn": "Gridanian Saddle",
+      "itemId": null,
+      "slot": "鞍",
+      "iconHead": "/assets/barding/058549_hr1.png",
+      "iconBody": "/assets/barding/058556_hr1.png",
+      "iconLegs": "/assets/barding/058551_hr1.png",
+      "sources": [
+        {
+          "type": "其他",
+          "detail": null
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 6,
+      "name": "密林陸行鳥半裝甲",
+      "nameEn": "Gridanian Half Barding",
+      "itemId": 6023,
+      "slot": "半套",
+      "iconHead": "/assets/barding/058510_hr1.png",
+      "iconBody": "/assets/barding/058511_hr1.png",
+      "iconLegs": "/assets/barding/058512_hr1.png",
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "雙蛇黨 / 需 雙蛇黨軍票 x4000 / NPC：雙蛇黨補給負責人"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 7,
+      "name": "密林陸行鳥裝甲",
+      "nameEn": "Gridanian Barding",
+      "itemId": 6024,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058513_hr1.png",
+      "iconBody": "/assets/barding/058514_hr1.png",
+      "iconLegs": "/assets/barding/058515_hr1.png",
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "雙蛇黨 / 需 雙蛇黨軍票 x6000 / NPC：雙蛇黨補給負責人"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 8,
+      "name": "密林陸行鳥武裝甲",
+      "nameEn": "Gridanian Crested Barding",
+      "itemId": 6025,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058516_hr1.png",
+      "iconBody": "/assets/barding/058517_hr1.png",
+      "iconLegs": "/assets/barding/058518_hr1.png",
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "雙蛇黨 / 需 雙蛇黨軍票 x8000 / NPC：雙蛇黨補給負責人"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 9,
+      "name": "黃沙陸行鳥鞍",
+      "nameEn": "Ul'dahn Saddle",
+      "itemId": null,
+      "slot": "鞍",
+      "iconHead": "/assets/barding/058549_hr1.png",
+      "iconBody": "/assets/barding/058559_hr1.png",
+      "iconLegs": "/assets/barding/058551_hr1.png",
+      "sources": [
+        {
+          "type": "其他",
+          "detail": null
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 10,
+      "name": "黃沙陸行鳥半裝甲",
+      "nameEn": "Ul'dahn Half Barding",
+      "itemId": 6026,
+      "slot": "半套",
+      "iconHead": "/assets/barding/058519_hr1.png",
+      "iconBody": "/assets/barding/058520_hr1.png",
+      "iconLegs": "/assets/barding/058521_hr1.png",
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "不滅隊 / 需 不滅隊軍票 x4000 / NPC：不滅隊補給負責人"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 11,
+      "name": "黃沙陸行鳥裝甲",
+      "nameEn": "Ul'dahn Barding",
+      "itemId": 6027,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058522_hr1.png",
+      "iconBody": "/assets/barding/058523_hr1.png",
+      "iconLegs": "/assets/barding/058524_hr1.png",
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "不滅隊 / 需 不滅隊軍票 x6000 / NPC：不滅隊補給負責人"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 12,
+      "name": "黃沙陸行鳥武裝甲",
+      "nameEn": "Ul'dahn Crested Barding",
+      "itemId": 6028,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058525_hr1.png",
+      "iconBody": "/assets/barding/058526_hr1.png",
+      "iconLegs": "/assets/barding/058527_hr1.png",
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "不滅隊 / 需 不滅隊軍票 x8000 / NPC：不滅隊補給負責人"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 13,
+      "name": "陸行鳥騎士裝甲",
+      "nameEn": "Paladin Barding",
+      "itemId": null,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058528_hr1.png",
+      "iconBody": "/assets/barding/058529_hr1.png",
+      "iconLegs": "/assets/barding/058530_hr1.png",
+      "sources": [
+        {
+          "type": "其他",
+          "detail": null
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 14,
+      "name": "陸行鳥龍騎士裝甲",
+      "nameEn": "Dragoon Barding",
+      "itemId": null,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058531_hr1.png",
+      "iconBody": "/assets/barding/058532_hr1.png",
+      "iconLegs": "/assets/barding/058533_hr1.png",
+      "sources": [
+        {
+          "type": "其他",
+          "detail": null
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 15,
+      "name": "陸行鳥白魔裝甲",
+      "nameEn": "White Mage Barding",
+      "itemId": null,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058534_hr1.png",
+      "iconBody": "/assets/barding/058535_hr1.png",
+      "iconLegs": "/assets/barding/058536_hr1.png",
+      "sources": [
+        {
+          "type": "其他",
+          "detail": null
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 16,
+      "name": "斯雷普尼爾裝甲",
+      "nameEn": "Sleipnir Barding",
+      "itemId": 6030,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058537_hr1.png",
+      "iconBody": "/assets/barding/058538_hr1.png",
+      "iconLegs": "/assets/barding/058539_hr1.png",
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "道具交易（其他） / 需 奧汀披風 x5 / NPC：艾里娜"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 17,
+      "name": "凶惡巨獸裝甲",
+      "nameEn": "Behemoth Barding",
+      "itemId": 6031,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058540_hr1.png",
+      "iconBody": "/assets/barding/058541_hr1.png",
+      "iconLegs": "/assets/barding/058542_hr1.png",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 18,
+      "name": "航空兜帽",
+      "nameEn": "Flyer Shaffron",
+      "itemId": 6032,
+      "slot": "頭",
+      "iconHead": "/assets/barding/058543_hr1.png",
+      "iconBody": "/assets/barding/000000_hr1.png",
+      "iconLegs": "/assets/barding/000000_hr1.png",
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "Master of the Rolls / 需 成就幣 x3 / NPC：喬納森"
+        }
+      ],
+      "patch": "3.0"
+    },
+    {
+      "id": 19,
+      "name": "陸行鳥黑魔裝甲",
+      "nameEn": "Black Mage Barding",
+      "itemId": 6029,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058546_hr1.png",
+      "iconBody": "/assets/barding/058547_hr1.png",
+      "iconLegs": "/assets/barding/058548_hr1.png",
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "Master of the Rolls / 需 成就幣 x3 / NPC：喬納森"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 20,
+      "name": "陸行鳥王裝甲",
+      "nameEn": "Sovereign Barding",
+      "itemId": 6995,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058561_hr1.png",
+      "iconBody": "/assets/barding/000000_hr1.png",
+      "iconLegs": "/assets/barding/000000_hr1.png",
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
+      "patch": "2.1"
+    },
+    {
+      "id": 21,
+      "name": "星芒裝甲",
+      "nameEn": "Starlight Barding",
+      "itemId": 32825,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058564_hr1.png",
+      "iconBody": "/assets/barding/058565_hr1.png",
+      "iconLegs": "/assets/barding/058566_hr1.png",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": null
+        }
+      ],
+      "patch": "2.1"
+    },
+    {
+      "id": 22,
+      "name": "利維坦裝甲",
+      "nameEn": "Tidal Barding",
+      "itemId": 7552,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058567_hr1.png",
+      "iconBody": "/assets/barding/058568_hr1.png",
+      "iconLegs": "/assets/barding/058569_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        }
+      ],
+      "patch": "2.2"
+    },
+    {
+      "id": 23,
+      "name": "光之鳥甲",
+      "nameEn": "Barding of Light",
+      "itemId": 7551,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058570_hr1.png",
+      "iconBody": "/assets/barding/058571_hr1.png",
+      "iconLegs": "/assets/barding/058572_hr1.png",
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "Master of the Rolls / 需 成就幣 x3 / NPC：喬納森"
+        }
+      ],
+      "patch": "2.2"
+    },
+    {
+      "id": 24,
+      "name": "獵蛋裝甲",
+      "nameEn": "Egg Barding",
+      "itemId": 37482,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058573_hr1.png",
+      "iconBody": "/assets/barding/000000_hr1.png",
+      "iconLegs": "/assets/barding/000000_hr1.png",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": null
+        }
+      ],
+      "patch": "2.2"
+    },
+    {
+      "id": 25,
+      "name": "拉姆裝甲",
+      "nameEn": "Levin Barding",
+      "itemId": 8570,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058576_hr1.png",
+      "iconBody": "/assets/barding/058577_hr1.png",
+      "iconLegs": "/assets/barding/058578_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        }
+      ],
+      "patch": "2.3"
+    },
+    {
+      "id": 26,
+      "name": "羽飾裝甲",
+      "nameEn": "Plumed Barding",
+      "itemId": 8571,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058579_hr1.png",
+      "iconBody": "/assets/barding/000000_hr1.png",
+      "iconLegs": "/assets/barding/000000_hr1.png",
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
+      "patch": "2.3"
+    },
+    {
+      "id": 27,
+      "name": "怪誕裝甲",
+      "nameEn": "Eerie Barding",
+      "itemId": 8718,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058582_hr1.png",
+      "iconBody": "/assets/barding/058583_hr1.png",
+      "iconLegs": "/assets/barding/058584_hr1.png",
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "惡魔餅乾 / 需 惡魔餅乾 x10 / NPC：奇怪的店員"
+        }
+      ],
+      "patch": "2.38"
+    },
+    {
+      "id": 28,
+      "name": "濕婆裝甲",
+      "nameEn": "Ice Barding",
+      "itemId": 9355,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058585_hr1.png",
+      "iconBody": "/assets/barding/058586_hr1.png",
+      "iconLegs": "/assets/barding/058587_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        }
+      ],
+      "patch": "2.4"
+    },
+    {
+      "id": 29,
+      "name": "勝負師裝甲",
+      "nameEn": "Gambler Barding",
+      "itemId": 10083,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058591_hr1.png",
+      "iconBody": "/assets/barding/058592_hr1.png",
+      "iconLegs": "/assets/barding/058593_hr1.png",
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "交換獎品（學習/收錄類·其他） / 需 金碟幣 x20000 / NPC：紀念品兌換員"
+        }
+      ],
+      "patch": "2.51"
+    },
+    {
+      "id": 30,
+      "name": "情人裝甲",
+      "nameEn": "Paramour Barding",
+      "itemId": 37483,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058588_hr1.png",
+      "iconBody": "/assets/barding/058589_hr1.png",
+      "iconLegs": "/assets/barding/058590_hr1.png",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": null
+        }
+      ],
+      "patch": "2.5"
+    },
+    {
+      "id": 31,
+      "name": "崇山陸行鳥半裝甲",
+      "nameEn": "Ishgardian Half Barding",
+      "itemId": 12077,
+      "slot": "半套",
+      "iconHead": "/assets/barding/058594_hr1.png",
+      "iconBody": "/assets/barding/058595_hr1.png",
+      "iconLegs": "/assets/barding/058596_hr1.png",
+      "sources": [
+        {
+          "type": "危命任務",
+          "detail": "Lv.56"
+        }
+      ],
+      "patch": "3.0"
+    },
+    {
+      "id": 32,
+      "name": "崇山陸行鳥裝甲",
+      "nameEn": "Ishgardian Barding",
+      "itemId": 12078,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058597_hr1.png",
+      "iconBody": "/assets/barding/058598_hr1.png",
+      "iconLegs": "/assets/barding/058599_hr1.png",
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "百智隊成員 / 需 兵團徽章 x350 / NPC：阿爾多蘭"
+        }
+      ],
+      "patch": "3.0"
+    },
+    {
+      "id": 34,
+      "name": "俾斯麥裝甲",
+      "nameEn": "Expanse Barding",
+      "itemId": 12082,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058603_hr1.png",
+      "iconBody": "/assets/barding/058604_hr1.png",
+      "iconLegs": "/assets/barding/058605_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "3 個寶箱/容器"
+        }
+      ],
+      "patch": "3.0"
+    },
+    {
+      "id": 35,
+      "name": "羅波那裝甲",
+      "nameEn": "Hive Barding",
+      "itemId": 12083,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058606_hr1.png",
+      "iconBody": "/assets/barding/058607_hr1.png",
+      "iconLegs": "/assets/barding/058608_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        }
+      ],
+      "patch": "3.0"
+    },
+    {
+      "id": 36,
+      "name": "貴族裝甲",
+      "nameEn": "Noble Barding",
+      "itemId": 12080,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058609_hr1.png",
+      "iconBody": "/assets/barding/058610_hr1.png",
+      "iconLegs": "/assets/barding/058611_hr1.png",
+      "sources": [
+        {
+          "type": "其他",
+          "detail": null
+        }
+      ],
+      "patch": "3.0"
+    },
+    {
+      "id": 37,
+      "name": "正教裝甲",
+      "nameEn": "Orthodox Barding",
+      "itemId": 12991,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058612_hr1.png",
+      "iconBody": "/assets/barding/058613_hr1.png",
+      "iconLegs": "/assets/barding/058614_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        }
+      ],
+      "patch": "3.0"
+    },
+    {
+      "id": 38,
+      "name": "高地裝甲",
+      "nameEn": "Highland Barding",
+      "itemId": 12081,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058615_hr1.png",
+      "iconBody": "/assets/barding/058616_hr1.png",
+      "iconLegs": "/assets/barding/058617_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        }
+      ],
+      "patch": "3.0"
+    },
+    {
+      "id": 39,
+      "name": "野玫瑰裝甲",
+      "nameEn": "Wild Rose Barding",
+      "itemId": 13111,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058618_hr1.png",
+      "iconBody": "/assets/barding/058619_hr1.png",
+      "iconLegs": "/assets/barding/058620_hr1.png",
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "Master of the Rolls / 需 成就幣 x3 / NPC：喬納森"
+        }
+      ],
+      "patch": "3.07"
+    },
+    {
+      "id": 40,
+      "name": "圓桌裝甲",
+      "nameEn": "Round Table Barding",
+      "itemId": 13286,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058621_hr1.png",
+      "iconBody": "/assets/barding/058622_hr1.png",
+      "iconLegs": "/assets/barding/058623_hr1.png",
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "蠻神裝備交易2 / 需 蒼天甲胄碎片 x15 / NPC：貝爾塔娜"
+        }
+      ],
+      "patch": "3.1"
+    },
+    {
+      "id": 41,
+      "name": "賽菲羅特裝甲",
+      "nameEn": "Sephirotic Barding",
+      "itemId": 14080,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058624_hr1.png",
+      "iconBody": "/assets/barding/058626_hr1.png",
+      "iconLegs": "/assets/barding/058625_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "3 個寶箱/容器"
+        }
+      ],
+      "patch": "3.2"
+    },
+    {
+      "id": 42,
+      "name": "獵蛋人裝甲",
+      "nameEn": "Egg Hunter Barding",
+      "itemId": 14081,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058627_hr1.png",
+      "iconBody": "/assets/barding/058629_hr1.png",
+      "iconLegs": "/assets/barding/058628_hr1.png",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": null
+        }
+      ],
+      "patch": "3.2"
+    },
+    {
+      "id": 43,
+      "name": "東方裝甲",
+      "nameEn": "Far Eastern Barding",
+      "itemId": 14860,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058630_hr1.png",
+      "iconBody": "/assets/barding/058632_hr1.png",
+      "iconLegs": "/assets/barding/058631_hr1.png",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": null
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 44,
+      "name": "競賽裝甲",
+      "nameEn": "Race Barding",
+      "itemId": 15129,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058633_hr1.png",
+      "iconBody": "/assets/barding/058635_hr1.png",
+      "iconLegs": "/assets/barding/058634_hr1.png",
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
+      "patch": "3.25"
+    },
+    {
+      "id": 45,
+      "name": "邪龍裝甲",
+      "nameEn": "Horde Barding",
+      "itemId": 15427,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058636_hr1.png",
+      "iconBody": "/assets/barding/058638_hr1.png",
+      "iconLegs": "/assets/barding/058637_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "3 個寶箱/容器"
+        }
+      ],
+      "patch": "3.3"
+    },
+    {
+      "id": 46,
+      "name": "管家裝甲",
+      "nameEn": "Butlery Barding",
+      "itemId": 15428,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058639_hr1.png",
+      "iconBody": "/assets/barding/058641_hr1.png",
+      "iconLegs": "/assets/barding/058640_hr1.png",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": null
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 47,
+      "name": "索菲亞裝甲",
+      "nameEn": "Sophic Barding",
+      "itemId": 16557,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058642_hr1.png",
+      "iconBody": "/assets/barding/058644_hr1.png",
+      "iconLegs": "/assets/barding/058643_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "3 個寶箱/容器"
+        }
+      ],
+      "patch": "3.4"
+    },
+    {
+      "id": 48,
+      "name": "女僕裝甲",
+      "nameEn": "Abigail Barding",
+      "itemId": 16558,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058645_hr1.png",
+      "iconBody": "/assets/barding/058647_hr1.png",
+      "iconLegs": "/assets/barding/058646_hr1.png",
+      "sources": [
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        }
+      ],
+      "patch": "3.4"
+    },
+    {
+      "id": 49,
+      "name": "曼德維爾女僕裝甲",
+      "nameEn": "Mandervillian Barding",
+      "itemId": 16926,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058648_hr1.png",
+      "iconBody": "/assets/barding/058650_hr1.png",
+      "iconLegs": "/assets/barding/058649_hr1.png",
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "交換獎品（學習/收錄類·其他） / 需 金碟幣 x150000 / NPC：紀念品兌換員"
+        }
+      ],
+      "patch": "3.4"
+    },
+    {
+      "id": 50,
+      "name": "天使裝甲",
+      "nameEn": "Angelic Barding",
+      "itemId": 16559,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058651_hr1.png",
+      "iconBody": "/assets/barding/058653_hr1.png",
+      "iconLegs": "/assets/barding/058652_hr1.png",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": null
+        }
+      ],
+      "patch": "3.5"
+    },
+    {
+      "id": 51,
+      "name": "惡魔裝甲",
+      "nameEn": "Demonic Barding",
+      "itemId": 16560,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058654_hr1.png",
+      "iconBody": "/assets/barding/058656_hr1.png",
+      "iconLegs": "/assets/barding/058655_hr1.png",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": null
+        }
+      ],
+      "patch": "3.5"
+    },
+    {
+      "id": 52,
+      "name": "祖爾宛裝甲",
+      "nameEn": "Zurvanite Barding",
+      "itemId": 17522,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058657_hr1.png",
+      "iconBody": "/assets/barding/058659_hr1.png",
+      "iconLegs": "/assets/barding/058658_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "3 個寶箱/容器"
+        }
+      ],
+      "patch": "3.5"
+    },
+    {
+      "id": 53,
+      "name": "須佐之男裝甲",
+      "nameEn": "Reveler's Barding",
+      "itemId": 20558,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058660_hr1.png",
+      "iconBody": "/assets/barding/058662_hr1.png",
+      "iconLegs": "/assets/barding/058661_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        }
+      ],
+      "patch": "4.0"
+    },
+    {
+      "id": 54,
+      "name": "峻嶺陸行鳥裝甲",
+      "nameEn": "Ala Mhigan Barding",
+      "itemId": 20559,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058663_hr1.png",
+      "iconBody": "/assets/barding/058665_hr1.png",
+      "iconLegs": "/assets/barding/058664_hr1.png",
+      "sources": [
+        {
+          "type": "危命任務",
+          "detail": "Lv.68"
+        }
+      ],
+      "patch": "4.0"
+    },
+    {
+      "id": 55,
+      "name": "吉祥天女裝甲",
+      "nameEn": "Blissful Barding",
+      "itemId": 20560,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058666_hr1.png",
+      "iconBody": "/assets/barding/058668_hr1.png",
+      "iconLegs": "/assets/barding/058667_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ],
+      "patch": "4.0"
+    },
+    {
+      "id": 56,
+      "name": "遠東裝甲",
+      "nameEn": "Hingan Barding",
+      "itemId": 20561,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058669_hr1.png",
+      "iconBody": "/assets/barding/058671_hr1.png",
+      "iconLegs": "/assets/barding/058670_hr1.png",
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "道具交易 / 需 著名兵團成員的手冊 x4 / NPC：艾西娜"
+        }
+      ],
+      "patch": "4.0"
+    },
+    {
+      "id": 57,
+      "name": "東洋裝甲",
+      "nameEn": "Oriental Barding",
+      "itemId": 20562,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058672_hr1.png",
+      "iconBody": "/assets/barding/058674_hr1.png",
+      "iconLegs": "/assets/barding/058673_hr1.png",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
+      "patch": "4.0"
+    },
+    {
+      "id": 58,
+      "name": "哪吒裝甲",
+      "nameEn": "Nezha Barding",
+      "itemId": 20563,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058675_hr1.png",
+      "iconBody": "/assets/barding/058677_hr1.png",
+      "iconLegs": "/assets/barding/058676_hr1.png",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": null
+        }
+      ],
+      "patch": "4.2"
+    },
+    {
+      "id": 59,
+      "name": "神龍裝甲",
+      "nameEn": "Shinryu Barding",
+      "itemId": 21042,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058678_hr1.png",
+      "iconBody": "/assets/barding/058680_hr1.png",
+      "iconLegs": "/assets/barding/058679_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ],
+      "patch": "4.1"
+    },
+    {
+      "id": 60,
+      "name": "伊克西翁裝甲",
+      "nameEn": "Ixion Barding",
+      "itemId": 21043,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058681_hr1.png",
+      "iconBody": "/assets/barding/058683_hr1.png",
+      "iconLegs": "/assets/barding/058682_hr1.png",
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "道具交易 / 需 伊克西翁的雷角 x5 / NPC：艾西娜"
+        }
+      ],
+      "patch": "4.1"
+    },
+    {
+      "id": 61,
+      "name": "赤紅裝甲",
+      "nameEn": "Red Mage Barding",
+      "itemId": 21191,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058684_hr1.png",
+      "iconBody": "/assets/barding/058686_hr1.png",
+      "iconLegs": "/assets/barding/058685_hr1.png",
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "最新的稀少神典石"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ],
+      "patch": "4.25"
+    },
+    {
+      "id": 62,
+      "name": "白虎裝甲",
+      "nameEn": "Byakko Barding",
+      "itemId": 21924,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058687_hr1.png",
+      "iconBody": "/assets/barding/058689_hr1.png",
+      "iconLegs": "/assets/barding/058688_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        }
+      ],
+      "patch": "4.2"
+    },
+    {
+      "id": 63,
+      "name": "防雨裝甲",
+      "nameEn": "Chocobo Raincoat",
+      "itemId": 21925,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058690_hr1.png",
+      "iconBody": "/assets/barding/058692_hr1.png",
+      "iconLegs": "/assets/barding/058691_hr1.png",
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "雜貨·釣餌 / 需 大地紫票 x800 / NPC：羅薇娜商會的商人、工票交易員"
+        }
+      ],
+      "patch": "4.2"
+    },
+    {
+      "id": 64,
+      "name": "月讀裝甲",
+      "nameEn": "Lunar Barding",
+      "itemId": 23037,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058693_hr1.png",
+      "iconBody": "/assets/barding/058695_hr1.png",
+      "iconLegs": "/assets/barding/058694_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "2 個寶箱/容器"
+        }
+      ],
+      "patch": "4.3"
+    },
+    {
+      "id": 65,
+      "name": "朱雀裝甲",
+      "nameEn": "Suzaku Barding",
+      "itemId": 24143,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058696_hr1.png",
+      "iconBody": "/assets/barding/058698_hr1.png",
+      "iconLegs": "/assets/barding/058697_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ],
+      "patch": "4.4"
+    },
+    {
+      "id": 66,
+      "name": "武士裝甲",
+      "nameEn": "Samurai Barding",
+      "itemId": 24144,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058699_hr1.png",
+      "iconBody": "/assets/barding/058701_hr1.png",
+      "iconLegs": "/assets/barding/058700_hr1.png",
+      "sources": [
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ],
+      "patch": "4.45"
+    },
+    {
+      "id": 67,
+      "name": "青龍裝甲",
+      "nameEn": "Seiryu Barding",
+      "itemId": 24799,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058702_hr1.png",
+      "iconBody": "/assets/barding/058704_hr1.png",
+      "iconLegs": "/assets/barding/058703_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ],
+      "patch": "4.45"
+    },
+    {
+      "id": 68,
+      "name": "保鑣裝甲",
+      "nameEn": "Yojimbo Barding",
+      "itemId": 24800,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058705_hr1.png",
+      "iconBody": "/assets/barding/058707_hr1.png",
+      "iconLegs": "/assets/barding/058706_hr1.png",
+      "sources": [
+        {
+          "type": "討伐戰",
+          "detail": "討伐戰 · 共 1 個副本掉落"
+        }
+      ],
+      "patch": "4.5"
+    },
+    {
+      "id": 69,
+      "name": "緹坦妮雅裝甲",
+      "nameEn": "Titania Barding",
+      "itemId": 27986,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058708_hr1.png",
+      "iconBody": "/assets/barding/058710_hr1.png",
+      "iconLegs": "/assets/barding/058709_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ],
+      "patch": "5.0"
+    },
+    {
+      "id": 70,
+      "name": "無瑕靈君裝甲",
+      "nameEn": "Innocence Barding",
+      "itemId": 27987,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058711_hr1.png",
+      "iconBody": "/assets/barding/058713_hr1.png",
+      "iconLegs": "/assets/barding/058712_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ],
+      "patch": "5.0"
+    },
+    {
+      "id": 71,
+      "name": "舞者裝甲",
+      "nameEn": "Dancer Barding",
+      "itemId": 27988,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058714_hr1.png",
+      "iconBody": "/assets/barding/058716_hr1.png",
+      "iconLegs": "/assets/barding/058715_hr1.png",
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "寶石商人 / 需 雙色寶石 x350 / NPC：廣域交易商 佩德蘿尼爾"
+        }
+      ],
+      "patch": "5.0"
+    },
+    {
+      "id": 72,
+      "name": "影淵裝甲",
+      "nameEn": "Deepshadow Barding",
+      "itemId": 27989,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058717_hr1.png",
+      "iconBody": "/assets/barding/058719_hr1.png",
+      "iconLegs": "/assets/barding/058718_hr1.png",
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "寶石商人 / 需 雙色寶石 x350 / NPC：廣域交易商 秀梅"
+        }
+      ],
+      "patch": "5.0"
+    },
+    {
+      "id": 73,
+      "name": "黑迪斯裝甲",
+      "nameEn": "Hades Barding",
+      "itemId": 28616,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058720_hr1.png",
+      "iconBody": "/assets/barding/058722_hr1.png",
+      "iconLegs": "/assets/barding/058721_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ],
+      "patch": "5.1"
+    },
+    {
+      "id": 74,
+      "name": "聖人裝甲",
+      "nameEn": "Saintly Barding",
+      "itemId": 28617,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058723_hr1.png",
+      "iconBody": "/assets/barding/058725_hr1.png",
+      "iconLegs": "/assets/barding/058724_hr1.png",
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "需 星芒祭執行委員的證書2020 x2 / NPC：星芒祭執行委員"
+        }
+      ],
+      "patch": "5.1"
+    },
+    {
+      "id": 75,
+      "name": "紅寶石武器裝甲",
+      "nameEn": "Ruby Barding",
+      "itemId": 29402,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058726_hr1.png",
+      "iconBody": "/assets/barding/058728_hr1.png",
+      "iconLegs": "/assets/barding/058727_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ],
+      "patch": "5.2"
+    },
+    {
+      "id": 76,
+      "name": "機工士裝甲",
+      "nameEn": "Machinist Barding",
+      "itemId": 29403,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058729_hr1.png",
+      "iconBody": "/assets/barding/058731_hr1.png",
+      "iconLegs": "/assets/barding/058730_hr1.png",
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "Scrip Exchange / 需 蒼天街振興票 x1200 / NPC：艾妮"
+        },
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ],
+      "patch": "5.21"
+    },
+    {
+      "id": 77,
+      "name": "真·光之鳥甲",
+      "nameEn": "True Barding of Light",
+      "itemId": 30678,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058732_hr1.png",
+      "iconBody": "/assets/barding/058734_hr1.png",
+      "iconLegs": "/assets/barding/058733_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ],
+      "patch": "5.3"
+    },
+    {
+      "id": 78,
+      "name": "綠寶石武器裝甲",
+      "nameEn": "Emerald Barding",
+      "itemId": 32823,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058735_hr1.png",
+      "iconBody": "/assets/barding/058737_hr1.png",
+      "iconLegs": "/assets/barding/058736_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ],
+      "patch": "5.4"
+    },
+    {
+      "id": 79,
+      "name": "天佑裝甲",
+      "nameEn": "Queen's Guard Barding",
+      "itemId": 32824,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058738_hr1.png",
+      "iconBody": "/assets/barding/058740_hr1.png",
+      "iconLegs": "/assets/barding/058739_hr1.png",
+      "sources": [
+        {
+          "type": "副本",
+          "detail": "共 1 個副本掉落"
+        },
+        {
+          "type": "怪物掉落",
+          "detail": null
+        }
+      ],
+      "patch": "5.45"
+    },
+    {
+      "id": 80,
+      "name": "博茲雅裝甲",
+      "nameEn": "Bozjan Barding",
+      "itemId": 33672,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058741_hr1.png",
+      "iconBody": "/assets/barding/058743_hr1.png",
+      "iconLegs": "/assets/barding/058742_hr1.png",
+      "sources": [
+        {
+          "type": "寶箱/容器",
+          "detail": "1 個寶箱/容器"
+        }
+      ],
+      "patch": "5.55"
+    },
+    {
+      "id": 81,
+      "name": "鑽石武器裝甲",
+      "nameEn": "Diamond Barding",
+      "itemId": 33673,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058744_hr1.png",
+      "iconBody": "/assets/barding/058746_hr1.png",
+      "iconLegs": "/assets/barding/058745_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ],
+      "patch": "5.5"
+    },
+    {
+      "id": 82,
+      "name": "永暗裝甲",
+      "nameEn": "Barding of Eternal Darkness",
+      "itemId": 36011,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058747_hr1.png",
+      "iconBody": "/assets/barding/058749_hr1.png",
+      "iconLegs": "/assets/barding/058748_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ],
+      "patch": "6.0"
+    },
+    {
+      "id": 83,
+      "name": "聖光裝甲",
+      "nameEn": "Barding of Divine Light",
+      "itemId": 36012,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058750_hr1.png",
+      "iconBody": "/assets/barding/058752_hr1.png",
+      "iconLegs": "/assets/barding/058751_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ],
+      "patch": "6.0"
+    },
+    {
+      "id": 84,
+      "name": "郵差裝甲",
+      "nameEn": "Postmoogle Barding",
+      "itemId": 36013,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058753_hr1.png",
+      "iconBody": "/assets/barding/058755_hr1.png",
+      "iconLegs": "/assets/barding/058754_hr1.png",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": null
+        }
+      ],
+      "patch": "6.0"
+    },
+    {
+      "id": 85,
+      "name": "薩維奈裝甲",
+      "nameEn": "Thavnairian Barding",
+      "itemId": 36014,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058756_hr1.png",
+      "iconBody": "/assets/barding/058758_hr1.png",
+      "iconLegs": "/assets/barding/058757_hr1.png",
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "道具交易 / 需 明燈天王的寶珠 x3 / NPC：涅斯瓦孜"
+        }
+      ],
+      "patch": "6.0"
+    },
+    {
+      "id": 86,
+      "name": "藍羽陸行鳥裝甲",
+      "nameEn": "Bluefeather Barding",
+      "itemId": 36849,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058759_hr1.png",
+      "iconBody": "/assets/barding/058761_hr1.png",
+      "iconLegs": "/assets/barding/058760_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ],
+      "patch": "6.1"
+    },
+    {
+      "id": 87,
+      "name": "餓狼陸行鳥裝甲",
+      "nameEn": "Wolf Barding",
+      "itemId": 36850,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058762_hr1.png",
+      "iconBody": "/assets/barding/058764_hr1.png",
+      "iconLegs": "/assets/barding/058763_hr1.png",
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "戰利水晶（其他） / 需 戰利水晶 x1000 / NPC：戰利水晶交易員"
+        }
+      ],
+      "patch": "6.1"
+    },
+    {
+      "id": 88,
+      "name": "煞風裝甲",
+      "nameEn": "Windswept Barding",
+      "itemId": 38440,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058768_hr1.png",
+      "iconBody": "/assets/barding/058770_hr1.png",
+      "iconLegs": "/assets/barding/058769_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ],
+      "patch": "6.2"
+    },
+    {
+      "id": 89,
+      "name": "海島開拓者裝甲",
+      "nameEn": "Isle Pioneer's Barding",
+      "itemId": 38441,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058765_hr1.png",
+      "iconBody": "/assets/barding/058767_hr1.png",
+      "iconLegs": "/assets/barding/058766_hr1.png",
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "貝殼兌換 / 需 謝爾達萊青船幣 x4000 / NPC：貿易小員"
+        }
+      ],
+      "patch": "6.2"
+    },
+    {
+      "id": 90,
+      "name": "煬火裝甲",
+      "nameEn": "Flamecloaked Barding",
+      "itemId": 39470,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058771_hr1.png",
+      "iconBody": "/assets/barding/058773_hr1.png",
+      "iconLegs": "/assets/barding/058772_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ],
+      "patch": "6.3"
+    },
+    {
+      "id": 91,
+      "name": "亞拉戈裝甲",
+      "nameEn": "Allagan Barding",
+      "itemId": 39471,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058774_hr1.png",
+      "iconBody": "/assets/barding/058776_hr1.png",
+      "iconLegs": "/assets/barding/058775_hr1.png",
+      "sources": [
+        {
+          "type": "寶箱/容器",
+          "detail": "3 個寶箱/容器"
+        }
+      ],
+      "patch": "6.35"
+    },
+    {
+      "id": 92,
+      "name": "高貝扎裝甲",
+      "nameEn": "Voidcast Barding",
+      "itemId": 40367,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058777_hr1.png",
+      "iconBody": "/assets/barding/058779_hr1.png",
+      "iconLegs": "/assets/barding/058778_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ],
+      "patch": "6.4"
+    },
+    {
+      "id": 93,
+      "name": "貓耳裝甲",
+      "nameEn": "Felicitous Barding",
+      "itemId": 40368,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058780_hr1.png",
+      "iconBody": "/assets/barding/058782_hr1.png",
+      "iconLegs": "/assets/barding/058781_hr1.png",
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "貝殼兌換 / 需 謝爾達萊青船幣 x4000 / NPC：貿易小員"
+        }
+      ],
+      "patch": "6.4"
+    },
+    {
+      "id": 94,
+      "name": "澤羅姆斯裝甲",
+      "nameEn": "Abyssal Barding",
+      "itemId": 41057,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058783_hr1.png",
+      "iconBody": "/assets/barding/058785_hr1.png",
+      "iconLegs": "/assets/barding/058784_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ],
+      "patch": "6.5"
+    },
+    {
+      "id": 95,
+      "name": "旅行者裝甲",
+      "nameEn": "Wayfarer's Barding",
+      "itemId": 41470,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058786_hr1.png",
+      "iconBody": "/assets/barding/058788_hr1.png",
+      "iconLegs": "/assets/barding/058787_hr1.png",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": null
+        }
+      ],
+      "patch": "6.55"
+    },
+    {
+      "id": 96,
+      "name": "圖拉爾冒險裝甲",
+      "nameEn": "Turali Barding",
+      "itemId": 43601,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058789_hr1.png",
+      "iconBody": "/assets/barding/058791_hr1.png",
+      "iconLegs": "/assets/barding/058790_hr1.png",
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "寶石商人 / 需 雙色寶石 x450 / NPC：廣域交易商 米特佩"
+        }
+      ],
+      "patch": "7.0"
+    },
+    {
+      "id": 97,
+      "name": "艷翼蛇鳥裝甲",
+      "nameEn": "Skyruin Barding",
+      "itemId": 43602,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058792_hr1.png",
+      "iconBody": "/assets/barding/058794_hr1.png",
+      "iconLegs": "/assets/barding/058793_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ],
+      "patch": "7.0"
+    },
+    {
+      "id": 98,
+      "name": "雷轉質裝甲",
+      "nameEn": "Electrope Barding",
+      "itemId": 43603,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058795_hr1.png",
+      "iconBody": "/assets/barding/058797_hr1.png",
+      "iconLegs": "/assets/barding/058796_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ],
+      "patch": "7.0"
+    },
+    {
+      "id": 99,
+      "name": "野地裝甲",
+      "nameEn": "Wild Ride Barding",
+      "itemId": 43604,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058798_hr1.png",
+      "iconBody": "/assets/barding/058800_hr1.png",
+      "iconLegs": "/assets/barding/058799_hr1.png",
+      "sources": [
+        {
+          "type": "兌換",
+          "detail": "狩獵任務的戰利品交易 / 需 狩獵任務的戰利品 x640 / NPC：流布加"
+        }
+      ],
+      "patch": "7.0"
+    },
+    {
+      "id": 100,
+      "name": "永恆裝甲",
+      "nameEn": "Eternal Barding",
+      "itemId": 44495,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058801_hr1.png",
+      "iconBody": "/assets/barding/058803_hr1.png",
+      "iconLegs": "/assets/barding/058802_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        },
+        {
+          "type": "秘籍習得",
+          "detail": null
+        }
+      ],
+      "patch": "7.1"
+    },
+    {
+      "id": 101,
+      "name": "星芒市集裝甲",
+      "nameEn": "Starlight Stalls Barding",
+      "itemId": 44496,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058804_hr1.png",
+      "iconBody": "/assets/barding/058806_hr1.png",
+      "iconLegs": "/assets/barding/058805_hr1.png",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": null
+        }
+      ],
+      "patch": "7.11"
+    },
+    {
+      "id": 102,
+      "name": "Queen's Knight Barding",
+      "nameEn": "Queen's Knight Barding",
+      "itemId": 47981,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058807_hr1.png",
+      "iconBody": "/assets/barding/058809_hr1.png",
+      "iconLegs": "/assets/barding/058808_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        }
+      ],
+      "patch": "7.2"
+    },
+    {
+      "id": 103,
+      "name": "Barding of the Dead",
+      "nameEn": "Barding of the Dead",
+      "itemId": 46789,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058810_hr1.png",
+      "iconBody": "/assets/barding/058812_hr1.png",
+      "iconLegs": "/assets/barding/058811_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        }
+      ],
+      "patch": "7.3"
+    },
+    {
+      "id": 104,
+      "name": "Pilgrim's Barding",
+      "nameEn": "Pilgrim's Barding",
+      "itemId": 46790,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058813_hr1.png",
+      "iconBody": "/assets/barding/058815_hr1.png",
+      "iconLegs": "/assets/barding/058814_hr1.png",
+      "sources": [
+        {
+          "type": "深層迷宮",
+          "detail": null
+        }
+      ],
+      "patch": "7.35"
+    },
+    {
+      "id": 105,
+      "name": "Runaway Barding",
+      "nameEn": "Runaway Barding",
+      "itemId": 50449,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058816_hr1.png",
+      "iconBody": "/assets/barding/058818_hr1.png",
+      "iconLegs": "/assets/barding/058817_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        }
+      ],
+      "patch": "7.4"
+    },
+    {
+      "id": 106,
+      "name": "Cosmic Barding",
+      "nameEn": "Cosmic Barding",
+      "itemId": 50450,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058819_hr1.png",
+      "iconBody": "/assets/barding/058821_hr1.png",
+      "iconLegs": "/assets/barding/058820_hr1.png",
+      "sources": [
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
+      "patch": "7.41"
+    },
+    {
+      "id": 107,
+      "name": "Barding of Naught",
+      "nameEn": "Barding of Naught",
+      "itemId": 52285,
+      "slot": "全套",
+      "iconHead": "/assets/barding/058822_hr1.png",
+      "iconBody": "/assets/barding/058824_hr1.png",
+      "iconLegs": "/assets/barding/058823_hr1.png",
+      "sources": [
+        {
+          "type": "製作",
+          "detail": null
+        }
+      ],
+      "patch": "7.5"
+    }
+  ]
+}

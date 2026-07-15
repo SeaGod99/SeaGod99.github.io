@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FF14 髮型收藏追蹤 — 版本篩選、來源查詢、記錄已解鎖進度">
+  <title>髮型收藏追蹤 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/common.css">
+  <style>
+    /* 髮型頁專屬樣式；通用版面（header/toolbar/filter/progress/footer）見 assets/css/common.css。
+       本頁卡片為「橫向版型」（圖左資訊右），與通用 .col-* 直式卡片不同，故保留專屬 hs-* 類。 */
+    :root {
+      --accent:   #c8a96e;                 /* 金（外框強調）*/
+      --accent-2: #e2c98a;                 /* 進度條尾色：淺金 */
+      --glow-1:   rgba(200,169,110,0.06);
+      --glow-2:   rgba(167,139,250,0.04);
+    }
+    /* 外框微調（與 common 預設不同處）*/
+    .result-meta { font-size: 13px; }
+    .empty-state { font-size: 15px; }
+    .page-footer { padding: 24px 0; margin-top: 16px; }
+    .source-filters { display: flex; gap: 6px; flex-wrap: wrap; }
+
+    /* ── Grid（橫向卡片，較寬欄）── */
+    .hs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+
+    /* ── Card（橫向）── */
+    .hs-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 18px 20px;
+      cursor: pointer;
+      transition: background var(--transition), border-color var(--transition), transform var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      user-select: none;
+      position: relative;
+      overflow: hidden;
+    }
+    .hs-card:focus-visible {
+      outline: 2px solid color-mix(in srgb, var(--accent) 60%, transparent);
+      outline-offset: 2px;
+    }
+    .hs-card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-hover);
+      transform: translateY(-1px);
+    }
+    .hs-card.owned {
+      border-color: rgba(74,222,128,0.3);
+      background: linear-gradient(135deg, var(--bg-card), rgba(74,222,128,0.04));
+    }
+    .hs-card.owned::before {
+      content: '✓';
+      position: absolute;
+      top: 8px; right: 10px;
+      font-size: 12px;
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    .hs-icon-wrap {
+      width: 52px; height: 52px;
+      flex-shrink: 0;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      background: var(--raise);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hs-icon {
+      width: 52px; height: 52px;
+      object-fit: contain;
+      image-rendering: pixelated;
+    }
+    .hs-icon-placeholder { font-size: 22px; }
+
+    .hs-info { flex: 1; min-width: 0; }
+    .hs-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 2px;
+    }
+    .hs-name-en {
+      font-size: 11px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 6px;
+    }
+    .hs-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+    .hs-tag {
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 3px;
+      font-weight: 500;
+    }
+    .tag-patch        { background: var(--purple-dim); color: var(--purple); border: 1px solid rgba(167,139,250,0.2); }
+    .tag-source       { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(79,195,247,0.2); }
+    .tag-source-event { background: rgba(251,191,36,0.1); color: #fbbf24; border: 1px solid rgba(251,191,36,0.2); }
+    .tag-source-mgp   { background: rgba(234,179,8,0.1); color: #eab308; border: 1px solid rgba(234,179,8,0.2); }
+    .tag-source-quest { background: var(--green-dim); color: var(--green); border: 1px solid rgba(74,222,128,0.2); }
+
+    /* 資料片色 */
+    .patch-arr  { color: #60a5fa; }
+    .patch-hw   { color: #a78bfa; }
+    .patch-sb   { color: #fb923c; }
+    .patch-shb  { color: #4ade80; }
+    .patch-ew   { color: #4fc3f7; }
+    .patch-dt   { color: #e2c98a; }
+
+    @media (max-width: 600px) {
+      .hs-grid { grid-template-columns: 1fr; }
+      .toolbar { gap: 8px; }
+    }
+  </style>
+  <script src="../../assets/js/patch-gate.js"></script>
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <script src="../../assets/js/theme.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <header class="page-header">
+    <a href="../../" class="back-btn">← 水神的工具箱</a>
+    <div class="page-title-wrap">
+      <h1 class="page-title">髮型收藏追蹤</h1>
+      <p class="page-subtitle">點擊卡片標記已解鎖，進度自動儲存於瀏覽器</p>
+    </div>
+  </header>
+
+  <!-- Progress -->
+  <div class="progress-bar-wrap">
+    <div class="progress-info">
+      <span id="ownedCount">0</span> / <span id="totalCount">0</span>
+      <span>已解鎖</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill" style="width:0%"></div>
+    </div>
+    <div class="progress-pct" id="progressPct">0%</div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" type="text" id="searchInput" placeholder="搜尋髮型名稱…" autocomplete="off">
+    </div>
+    <div class="own-toggle">
+      <button class="own-btn active" data-own="all">全部</button>
+      <button class="own-btn" data-own="owned">已解鎖</button>
+      <button class="own-btn" data-own="missing">未解鎖</button>
+    </div>
+    <select class="sort-select" id="sortSelect" title="排序方式">
+      <option value="default">預設排序</option>
+      <option value="patch-desc">版本新→舊</option>
+      <option value="patch-asc">版本舊→新</option>
+      <option value="name">依名稱</option>
+    </select>
+    <button class="icon-btn" id="markAllBtn" title="將目前篩選結果全部標記為已解鎖">✓ 標記全部</button>
+    <button class="icon-btn" id="unmarkAllBtn" title="取消目前篩選結果的已解鎖標記">✗ 取消全部</button>
+    <button class="icon-btn" id="exportBtn">匯出進度</button>
+    <button class="icon-btn" id="importBtn">匯入進度</button>
+    <input type="file" id="importFile" accept="application/json" style="display:none">
+    <button class="icon-btn clear-btn" id="clearBtn">清除進度</button>
+  </div>
+
+  <!-- Patch filter -->
+  <div class="filter-section" id="patchFilterSection" style="display:none">
+    <div class="filter-label">版本</div>
+    <div class="filter-tags" id="patchFilters"></div>
+  </div>
+
+  <!-- Source filter -->
+  <div class="filter-section" id="sourceFilterSection" style="display:none">
+    <div class="filter-label">來源</div>
+    <div class="source-filters" id="sourceFilters"></div>
+  </div>
+
+  <!-- Result meta -->
+  <div class="result-meta" id="resultMeta"></div>
+
+  <!-- Grid -->
+  <div class="hs-grid" id="hsGrid"></div>
+
+  <div class="empty-state" id="emptyState" style="display:none">
+    找不到符合條件的髮型
+  </div>
+
+</div>
+
+<!-- Footer -->
+<footer class="page-footer">
+  <div class="container">
+    <p class="footer-text">
+      <a href="../../">水神的工具箱</a> · 資料來源：遊戲本體、<a href="https://xivapi.com" target="_blank">XIVAPI</a>
+    </p>
+    <p class="footer-text" style="margin-top:4px">
+      FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具
+    </p>
+  </div>
+</footer>
+
+<script>
+(function() {
+  const STORAGE_KEY = 'ffxiv_hairstyles_owned';
+  const DATA_URL = '../../data/hairstyles.json';
+  // icons not used
+
+  // ── State ──
+  let HS_DATA = [];
+  let PATCHES = [];
+  let SOURCES = [];
+  let owned = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
+  let filterOwn = 'all';
+  let filterPatch = null;
+  let filterSource = null;
+  let searchQ = '';
+  let sortBy = 'default';    // default | patch-desc | patch-asc | name
+
+  // 版本區間（統一全站以資料片繁中名顯示）
+  const PATCH_BANDS = [
+    { label: '2.x 原初之地', major: 2 },
+    { label: '3.x 蒼天之禁地', major: 3 },
+    { label: '4.x 紅蓮之狂潮', major: 4 },
+    { label: '5.x 暗影之逆焰', major: 5 },
+    { label: '6.x 曉月之終途', major: 6 },
+    { label: '7.x 金曦之遺輝', major: 7 },
+  ];
+  function patchBand(p) {
+    const mj = parseInt(p, 10);
+    const b = PATCH_BANDS.find(x => x.major === mj);
+    return b ? b.label : null;
+  }
+
+  // ── Key ──
+  function keyOf(h) { return 'id:' + h.id; }
+
+  // ── Save ──
+  function save() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify([...owned]));
+  }
+
+  // ── Toggle ──
+  function toggle(k) {
+    if (owned.has(k)) owned.delete(k);
+    else owned.add(k);
+    save();
+    updateProgress();
+    renderGrid();
+  }
+
+  // ── Progress ──
+  function updateProgress() {
+    const total = HS_DATA.length;
+    const count = HS_DATA.filter(h => owned.has(keyOf(h))).length;
+    const pct = total ? Math.round(count / total * 100) : 0;
+    document.getElementById('ownedCount').textContent = count;
+    document.getElementById('totalCount').textContent = total;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressPct').textContent = pct + '%';
+    try { localStorage.setItem('ffxiv_snap_hairstyles', JSON.stringify({ c: count, t: total })); } catch (e) {} // 首頁進度儀表板快照
+  }
+
+  // ── Patch label → CSS class ──
+  function patchClass(p) {
+    if (!p) return '';
+    const v = parseFloat(p);
+    if (v < 3) return 'patch-arr';
+    if (v < 4) return 'patch-hw';
+    if (v < 5) return 'patch-sb';
+    if (v < 6) return 'patch-shb';
+    if (v < 7) return 'patch-ew';
+    return 'patch-dt';
+  }
+
+  // ── Source tag class ──
+  function sourceClass(s) {
+    if (s === '聯名活動' || s === '節慶活動') return 'tag-source-event';
+    if (s === '金碟遊樂場') return 'tag-source-mgp';
+    if (s === '主線任務' || s === '任務') return 'tag-source-quest';
+    return 'tag-source';
+  }
+
+  // ── Patch filter renderer ──
+  function renderPatchFilters() {
+    const wrap = document.getElementById('patchFilters');
+    wrap.innerHTML = '';
+    PATCHES.forEach(v => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-tag' + (filterPatch === v ? ' active' : '');
+      btn.textContent = v;
+      btn.addEventListener('click', () => {
+        filterPatch = filterPatch === v ? null : v;
+        renderPatchFilters();
+        renderGrid();
+      });
+      wrap.appendChild(btn);
+    });
+  }
+
+  // ── Source filter renderer ──
+  function renderSourceFilters() {
+    const wrap = document.getElementById('sourceFilters');
+    wrap.innerHTML = '';
+    SOURCES.forEach(s => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-tag' + (filterSource === s ? ' active' : '');
+      btn.textContent = s;
+      btn.addEventListener('click', () => {
+        filterSource = filterSource === s ? null : s;
+        renderSourceFilters();
+        renderGrid();
+      });
+      wrap.appendChild(btn);
+    });
+  }
+
+  // ── Filter ──
+  function filtered() {
+    return HS_DATA.filter(h => {
+      const k = keyOf(h);
+      if (filterOwn === 'owned'   && !owned.has(k)) return false;
+      if (filterOwn === 'missing' &&  owned.has(k)) return false;
+      if (filterPatch && patchBand(h.patch) !== filterPatch) return false;
+      if (filterSource && !(h.sources || []).includes(filterSource)) return false;
+      if (searchQ) {
+        const q = searchQ.toLowerCase();
+        const nm = h.name   && h.name.toLowerCase().includes(q);
+        const en = h.nameEn && h.nameEn.toLowerCase().includes(q);
+        if (!nm && !en) return false;
+      }
+      return true;
+    });
+  }
+
+  // ── Sort ──
+  function sortList(list) {
+    if (sortBy === 'default') return list;
+    const arr = [...list];
+    const pv = p => parseFloat(p) || 0;
+    if (sortBy === 'name') arr.sort((a, b) => (a.name || a.nameEn).localeCompare(b.name || b.nameEn, 'zh-Hant'));
+    else if (sortBy === 'patch-asc') arr.sort((a, b) => pv(a.patch) - pv(b.patch));
+    else if (sortBy === 'patch-desc') arr.sort((a, b) => pv(b.patch) - pv(a.patch));
+    return arr;
+  }
+
+  // ── Render grid ──
+  function renderGrid() {
+    const list = sortList(filtered());
+    const grid = document.getElementById('hsGrid');
+    const empty = document.getElementById('emptyState');
+    const meta = document.getElementById('resultMeta');
+
+    grid.innerHTML = '';
+    if (list.length === 0) {
+      grid.style.display = 'none';
+      empty.style.display = '';
+    } else {
+      grid.style.display = '';
+      empty.style.display = 'none';
+    }
+
+    const ownedInView = list.filter(h => owned.has(keyOf(h))).length;
+    meta.innerHTML = `顯示 <em>${list.length}</em> / ${HS_DATA.length} 個 · 已解鎖 <em>${ownedInView}</em> / ${list.length}`;
+
+    list.forEach(h => {
+      const k = keyOf(h);
+      const isOwned = owned.has(k);
+      const card = document.createElement('div');
+      card.className = 'hs-card' + (isOwned ? ' owned' : '');
+
+      // Icon
+      const iconHtml = `<span class="hs-icon-placeholder">💇</span>`;
+
+      // 名稱
+      const nameHtml = h.name
+        ? `<div class="hs-name">${h.name}</div><div class="hs-name-en">${h.nameEn}</div>`
+        : `<div class="hs-name">${h.nameEn}</div>`;
+
+      // Tags
+      const patchTag = h.patch
+        ? `<span class="hs-tag tag-patch ${patchClass(h.patch)}">${h.patch}</span>`
+        : '';
+      const sourceTags = (h.sources || []).map(s =>
+        `<span class="hs-tag ${sourceClass(s)}">${s}</span>`
+      ).join('');
+
+      card.innerHTML = `
+        <div class="hs-icon-wrap">${iconHtml}</div>
+        <div class="hs-info">
+          ${nameHtml}
+          <div class="hs-tags">${patchTag}${sourceTags}</div>
+        </div>
+      `;
+
+      card.tabIndex = 0;
+      card.setAttribute('role', 'button');
+      card.setAttribute('aria-pressed', isOwned);
+      card.addEventListener('click', () => toggle(k));
+      card.addEventListener('keydown', ev => {
+        if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); toggle(k); }
+      });
+      grid.appendChild(card);
+    });
+  }
+
+  // ── Export ──
+  function exportProgress() {
+    const payload = { schema: 'hairstyles', owned: [...owned], exported: new Date().toISOString() };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'hairstyles-progress.json';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  // ── Import ──
+  function importProgress(file) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const data = JSON.parse(e.target.result);
+        if (data.schema === 'hairstyles' && Array.isArray(data.owned)) {
+          if (owned.size && !confirm(`匯入將以檔案內容（${data.owned.length} 筆）取代目前的 ${owned.size} 筆記錄，確定嗎？`)) return;
+          owned = new Set(data.owned);
+          save();
+          updateProgress();
+          renderGrid();
+          alert('匯入成功，共 ' + owned.size + ' 筆已解鎖記錄');
+        } else {
+          alert('匯入失敗：這不是「髮型收藏」的進度檔');
+        }
+      } catch { alert('檔案解析失敗'); }
+    };
+    reader.readAsText(file);
+  }
+
+  // ── Init ──
+  async function init() {
+    try {
+      const res = await fetch(DATA_URL);
+      if (!res.ok) throw new Error(res.status);
+      const json = await res.json();
+      const gp = await PatchGate.loadGamePatch('../../data/_meta.json');
+      // 台服未開放（patch > gamePatch）者隱藏
+      HS_DATA = (json.data || []).filter(h => PatchGate.released(h.patch, gp));
+
+      // Collect patches & sources
+      const patchSet = new Set();
+      const sourceSet = new Set();
+      HS_DATA.forEach(h => {
+        if (h.patch) patchSet.add(h.patch);
+        (h.sources || []).forEach(s => sourceSet.add(s));
+      });
+      const bandSet = new Set([...patchSet].map(patchBand).filter(Boolean));
+      PATCHES = PATCH_BANDS.filter(b => bandSet.has(b.label)).map(b => b.label);
+      SOURCES = [...sourceSet].sort();
+
+      // Show filters if data has variety
+      if (PATCHES.length > 1) {
+        document.getElementById('patchFilterSection').style.display = '';
+        renderPatchFilters();
+      }
+      if (SOURCES.length > 1) {
+        document.getElementById('sourceFilterSection').style.display = '';
+        renderSourceFilters();
+      }
+
+      updateProgress();
+      renderGrid();
+    } catch (err) {
+      document.getElementById('hsGrid').innerHTML =
+        `<div class="empty-state">資料載入失敗 (${err.message})，請稍後再試</div>`;
+    }
+  }
+
+  // ── Event listeners ──
+  document.getElementById('searchInput').addEventListener('input', e => {
+    searchQ = e.target.value.trim();
+    renderGrid();
+  });
+
+  document.querySelectorAll('.own-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.own-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      filterOwn = btn.dataset.own;
+      renderGrid();
+    });
+  });
+
+  document.getElementById('exportBtn').addEventListener('click', exportProgress);
+  document.getElementById('importBtn').addEventListener('click', () => document.getElementById('importFile').click());
+  document.getElementById('importFile').addEventListener('change', e => {
+    if (e.target.files[0]) importProgress(e.target.files[0]);
+    e.target.value = '';
+  });
+  document.getElementById('clearBtn').addEventListener('click', () => {
+    if (!owned.size) { alert('目前沒有已解鎖記錄'); return; }
+    if (!confirm('確定要清除全部 ' + owned.size + ' 筆解鎖記錄嗎？\n將先自動下載一份備份檔以防誤刪。')) return;
+    exportProgress();
+    owned.clear();
+    save();
+    updateProgress();
+    renderGrid();
+  });
+
+  // ── Sort / Batch mark ──
+  document.getElementById('sortSelect').addEventListener('change', e => {
+    sortBy = e.target.value;
+    renderGrid();
+  });
+  document.getElementById('markAllBtn').addEventListener('click', () => {
+    const toAdd = filtered().filter(h => !owned.has(keyOf(h)));
+    if (!toAdd.length) { alert('目前篩選結果都已標記'); return; }
+    if (!confirm('將目前篩選結果中未標記的 ' + toAdd.length + ' 筆標記為已解鎖？')) return;
+    toAdd.forEach(h => owned.add(keyOf(h)));
+    save(); updateProgress(); renderGrid();
+  });
+  document.getElementById('unmarkAllBtn').addEventListener('click', () => {
+    const toDel = filtered().filter(h => owned.has(keyOf(h)));
+    if (!toDel.length) { alert('目前篩選結果沒有已標記項目'); return; }
+    if (!confirm('取消目前篩選結果中 ' + toDel.length + ' 筆的已解鎖標記？')) return;
+    toDel.forEach(h => owned.delete(keyOf(h)));
+    save(); updateProgress(); renderGrid();
+  });
+
+  init();
+})();
+</script>
+</body>
+</html>

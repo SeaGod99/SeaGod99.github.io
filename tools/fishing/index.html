@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FF14 釣魚紀錄追蹤 — 1449 種魚，查詢釣場/餌/時間/天氣，可釣倒數、目標魚開窗鬧鐘提醒與地圖標點，追蹤已釣紀錄">
+  <title>釣魚紀錄追蹤 | 水神的工具箱</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-base:    #0a0c10;
+      --bg-surface: #0f1117;
+      --bg-card:    #14181f;
+      --bg-card-hover: #1a1f2b;
+      --border:     rgba(255,255,255,0.07);
+      --border-hover: rgba(200,169,110,0.4);
+      --gold:       #c8a96e;
+      --gold-light: #e2c98a;
+      --gold-dim:   rgba(200,169,110,0.15);
+      --purple:     #a78bfa;
+      --purple-dim: rgba(167,139,250,0.12);
+      --green:      #4ade80;
+      --green-dim:  rgba(74,222,128,0.12);
+      --blue:       #4fc3f7;
+      --blue-dim:   rgba(79,195,247,0.12);
+      --cyan:       #22d3ee;
+      --cyan-dim:   rgba(34,211,238,0.12);
+      --orange:     #fb923c;
+      --orange-dim: rgba(251,146,60,0.12);
+      --red:        #f87171;
+      --red-dim:    rgba(248,113,113,0.12);
+      --text:       #e8e3d8;
+      --text-dim:   #9a9590;
+      --text-muted: #6b6560;
+      --radius:     8px;
+    }
+
+    html { font-size: 17.5px; }
+    body { background: var(--bg-base); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+
+    .nav {
+      background: var(--bg-surface); border-bottom: 1px solid var(--border);
+      padding: 0 1.5rem; height: 52px; display: flex; align-items: center; gap: 0.75rem;
+    }
+    .nav-back { color: var(--text-dim); text-decoration: none; font-size: 0.85rem; display: flex; align-items: center; gap: 0.4rem; transition: color 0.2s; }
+    .nav-back:hover { color: var(--gold); }
+    .nav-sep { color: var(--text-muted); font-size: 0.85rem; }
+    .nav-title { color: var(--text); font-size: 0.9rem; font-weight: 600; }
+
+    .hero {
+      background: linear-gradient(135deg, var(--bg-surface), var(--bg-base));
+      border-bottom: 1px solid var(--border); padding: 1.5rem 1.5rem;
+    }
+    .hero-inner { max-width: 1500px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .hero h1 { font-size: 1.4rem; font-weight: 700; }
+    .progress-wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 0.3rem; }
+    .progress-text { font-size: 0.8rem; color: var(--text-dim); }
+    .progress-bar { width: 200px; height: 8px; background: var(--bg-card); border-radius: 4px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--blue), var(--cyan)); border-radius: 4px; transition: width 0.4s; }
+
+    .controls { max-width: 1500px; margin: 0 auto; padding: 1rem 1.5rem; display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; }
+
+    .search-wrap { position: relative; flex: 1; min-width: 200px; max-width: 360px; }
+    .search-wrap input {
+      width: 100%; background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); color: var(--text); padding: 0.5rem 0.5rem 0.5rem 2.2rem;
+      font-size: 0.85rem; outline: none; transition: border-color 0.2s;
+    }
+    .search-wrap input:focus { border-color: var(--gold); }
+    .search-wrap .si { position: absolute; left: 0.65rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.85rem; pointer-events: none; }
+
+    .filter-row { display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center; }
+    .filter-btn {
+      font-size: 0.75rem; padding: 0.3rem 0.7rem; border-radius: 5px; cursor: pointer;
+      border: 1px solid var(--border); background: var(--bg-surface); color: var(--text-dim); transition: all 0.15s;
+    }
+    .filter-btn.active { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); }
+
+    select.filter-select {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 5px;
+      color: var(--text-dim); padding: 0.3rem 0.6rem; font-size: 0.78rem; outline: none; cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    select.filter-select:focus { border-color: var(--gold); }
+
+    .result-info { max-width: 1500px; margin: 0 auto; padding: 0 1.5rem 0.5rem; font-size: 0.78rem; color: var(--text-muted); }
+
+    /* FISH GRID */
+    .fish-grid {
+      max-width: 1500px; margin: 0 auto; padding: 0 1.5rem 2rem;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 0.5rem;
+    }
+
+    .fish-card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 0.75rem 1rem; display: flex; gap: 0.75rem; align-items: flex-start;
+      cursor: pointer; transition: border-color 0.2s, background 0.2s;
+      position: relative;
+      content-visibility: auto; contain-intrinsic-size: auto 190px; /* 一次渲染全部，離屏卡片跳過排版（與收藏頁一致） */
+    }
+    .fish-card:hover { border-color: var(--border-hover); background: var(--bg-card-hover); }
+    .fish-card.owned { border-color: rgba(74,222,128,0.3); background: rgba(74,222,128,0.04); }
+
+    .fish-check {
+      width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--border);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      font-size: 0.75rem; transition: all 0.2s; margin-top: 1px;
+    }
+    .fish-card.owned .fish-check { background: var(--green); border-color: var(--green); color: #000; }
+
+    .fish-body { flex: 1; min-width: 0; }
+    .fish-name { font-size: 0.9rem; font-weight: 600; }
+    .fish-name-en { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.1rem; }
+
+    .fish-tags { display: flex; gap: 0.3rem; flex-wrap: wrap; margin-top: 0.4rem; }
+    .tag {
+      font-size: 0.65rem; padding: 0.1rem 0.4rem; border-radius: 3px;
+      border: 1px solid; font-weight: 500;
+    }
+    .tag-big    { color: var(--purple); border-color: rgba(167,139,250,0.3); background: var(--purple-dim); }
+    .tag-time   { color: var(--gold);   border-color: rgba(200,169,110,0.3); background: var(--gold-dim); }
+    .tag-wx     { color: var(--cyan);   border-color: rgba(34,211,238,0.3);  background: var(--cyan-dim); }
+    .tag-folk   { color: var(--orange); border-color: rgba(251,146,60,0.3);  background: var(--orange-dim); }
+    .tag-snag   { color: var(--red);    border-color: rgba(248,113,113,0.3); background: var(--red-dim); }
+    .tag-eyes   { color: var(--blue);   border-color: rgba(79,195,247,0.3);  background: var(--blue-dim); }
+
+    .fish-detail { font-size: 0.75rem; color: var(--text-dim); margin-top: 0.4rem; display: flex; flex-direction: column; gap: 0.2rem; }
+    .fish-detail span { display: flex; gap: 0.4rem; align-items: baseline; }
+    .detail-label { color: var(--text-muted); width: 2rem; flex-shrink: 0; }
+    .fish-patch { position: absolute; top: 0.5rem; right: 0.65rem; font-size: 0.65rem; color: var(--text-muted); }
+
+    /* VIEW TOGGLE */
+    .view-toggle { display: flex; gap: 0; border: 1px solid var(--border); border-radius: 5px; overflow: hidden; }
+    .view-toggle button {
+      font-size: 0.75rem; padding: 0.3rem 0.7rem; cursor: pointer; border: none;
+      background: var(--bg-surface); color: var(--text-dim); transition: all 0.15s;
+    }
+    .view-toggle button.active { background: var(--gold-dim); color: var(--gold); }
+
+    /* MAP VIEW */
+    .map-view { max-width: 1500px; margin: 0 auto; padding: 0 1.5rem 2rem; }
+    .map-bar { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; margin-bottom: 0.75rem; }
+    .map-canvas {
+      position: relative; width: 100%; max-width: 720px; margin: 0 auto;
+      aspect-ratio: 1 / 1; background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+    }
+    .map-canvas img { width: 100%; height: 100%; object-fit: cover; display: block; user-select: none; }
+    .map-empty { display: flex; align-items: center; justify-content: center; height: 100%; color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 1rem; }
+    .map-dot {
+      position: absolute; width: 16px; height: 16px; border-radius: 50%;
+      transform: translate(-50%, -50%); cursor: pointer; border: 2px solid rgba(0,0,0,0.55);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.25); transition: transform 0.1s;
+      background: var(--blue);
+    }
+    .map-dot:hover, .map-dot.sel { transform: translate(-50%, -50%) scale(1.45); z-index: 5; }
+    .map-dot.done { background: var(--gold); box-shadow: 0 0 0 2px rgba(200,169,110,0.6); }
+    .map-legend { font-size: 0.72rem; color: var(--text-muted); display: flex; gap: 0.9rem; flex-wrap: wrap; margin-top: 0.5rem; justify-content: center; }
+    .map-legend span { display: inline-flex; align-items: center; gap: 0.3rem; }
+    .map-legend i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+
+    /* 釣場資訊面板 */
+    .spot-panel { max-width: 720px; margin: 0.75rem auto 0; background: var(--bg-card);
+      border: 1px solid var(--border); border-radius: var(--radius); padding: 0.75rem 1rem; }
+    .spot-panel:empty { display: none; }
+    .spot-head { display: flex; gap: 0.6rem; align-items: baseline; flex-wrap: wrap; margin-bottom: 0.5rem; }
+    .spot-name { font-size: 0.92rem; font-weight: 700; }
+    .spot-loc { font-size: 0.75rem; color: var(--text-dim); }
+    .spot-copy { font-size: 0.72rem; padding: 2px 10px; border-radius: 5px; border: 1px solid var(--border);
+      background: none; color: var(--blue); cursor: pointer; margin-left: auto; }
+    .spot-copy:hover { border-color: var(--blue); }
+    .spot-fishes { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+    .sf-chip {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      background: var(--bg-surface); border: 1px solid var(--border); border-radius: 5px;
+      padding: 0.25rem 0.6rem; font-size: 0.76rem; cursor: pointer; transition: all 0.15s; user-select: none;
+    }
+    .sf-chip:hover { border-color: var(--gold); }
+    .sf-chip.owned { background: var(--green-dim); border-color: rgba(74,222,128,0.3); color: var(--green); }
+    .sf-chip.owned::before { content: '✓ '; font-size: 0.68rem; }
+
+    /* ET 時鐘（hero 內） */
+    .hero-et { text-align: center; }
+    .hero-et .et-time { font-size: 1.5rem; font-weight: 700; color: var(--gold); font-variant-numeric: tabular-nums; letter-spacing: 1px; }
+    .hero-et .et-sub { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.1rem; }
+
+    /* 可釣狀態徽章 */
+    .st-pill {
+      font-size: 0.68rem; font-weight: 700; padding: 0.12rem 0.5rem; border-radius: 20px;
+      border: 1px solid; white-space: nowrap; font-variant-numeric: tabular-nums;
+    }
+    .st-open { color: var(--green);  border-color: rgba(74,222,128,0.35);  background: var(--green-dim); }
+    .st-wait { color: var(--gold);   border-color: rgba(200,169,110,0.35); background: var(--gold-dim); }
+    .st-far  { color: var(--text-muted); border-color: var(--border); background: none; }
+
+    /* 卡片上的目標 / 地圖按鈕 */
+    .tgt-btn {
+      position: absolute; right: 0.55rem; bottom: 0.5rem;
+      background: none; border: 1px solid var(--border); border-radius: 6px;
+      width: 28px; height: 28px; font-size: 0.8rem; cursor: pointer; color: var(--text-muted);
+      display: flex; align-items: center; justify-content: center; transition: all 0.15s;
+      filter: grayscale(1); opacity: 0.6;
+    }
+    .tgt-btn:hover { border-color: var(--gold); opacity: 1; }
+    .tgt-btn.on { filter: none; opacity: 1; border-color: rgba(200,169,110,0.5); background: var(--gold-dim); }
+    .loc-btn {
+      background: none; border: none; cursor: pointer; font-size: 0.8rem; padding: 0 0.15rem;
+      color: var(--blue); line-height: 1;
+    }
+    .loc-btn:hover { transform: scale(1.2); }
+
+    /* PAGINATION */
+    .pagination { max-width: 1500px; margin: 0 auto; padding: 0 1.5rem 3rem; display: flex; gap: 0.4rem; justify-content: center; flex-wrap: wrap; }
+    .page-btn {
+      font-size: 0.8rem; padding: 0.35rem 0.7rem; border-radius: 5px; cursor: pointer;
+      border: 1px solid var(--border); background: var(--bg-card); color: var(--text-dim); transition: all 0.15s;
+    }
+    .page-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .page-btn.active { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); font-weight: 600; }
+    .page-btn:disabled { opacity: 0.3; cursor: default; }
+
+    /* 魚詳情彈窗 */
+    .fd-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 900;
+      display: none; align-items: center; justify-content: center; padding: 16px; }
+    .fd-overlay.open { display: flex; }
+    .fd-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+      max-width: 560px; width: 100%; max-height: 92vh; overflow: auto;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.35); }
+    .fd-head { display: flex; align-items: flex-start; gap: 10px; padding: 16px 18px 10px; }
+    .fd-titles { flex: 1; min-width: 0; }
+    .fd-name { font-size: 1.05rem; font-weight: 700; }
+    .fd-name-en { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+    .fd-close { background: none; border: 1px solid var(--border); border-radius: 6px;
+      width: 30px; height: 30px; cursor: pointer; font-size: 14px; color: inherit; flex-shrink: 0; }
+    .fd-close:hover { border-color: var(--gold); color: var(--gold); }
+    .fd-actions { display: flex; gap: 8px; padding: 0 18px 10px; flex-wrap: wrap; }
+    .fd-act { font-size: 0.78rem; padding: 0.32rem 0.8rem; border-radius: 6px; cursor: pointer;
+      border: 1px solid var(--border); background: var(--bg-surface); color: var(--text-dim); transition: all 0.15s; }
+    .fd-act:hover { border-color: var(--gold); color: var(--gold); }
+    .fd-act.on { background: var(--gold-dim); border-color: rgba(200,169,110,0.5); color: var(--gold); }
+    .fd-act.owned-on { background: var(--green-dim); border-color: rgba(74,222,128,0.4); color: var(--green); }
+    .fd-tags { display: flex; gap: 0.3rem; flex-wrap: wrap; padding: 0 18px 10px; }
+    .fd-table { margin: 0 18px 12px; border-top: 1px solid var(--border); font-size: 0.82rem; }
+    .fd-row { display: flex; gap: 12px; padding: 7px 0; border-bottom: 1px solid var(--border); }
+    .fd-k { width: 5.2em; flex-shrink: 0; color: var(--text-muted); }
+    .fd-v { flex: 1; min-width: 0; }
+    .fd-v b { font-weight: 600; }
+    .fd-windows { margin: 0 18px 16px; }
+    .fd-wt { font-size: 0.8rem; font-weight: 700; color: var(--gold); margin-bottom: 6px; }
+    .fd-win { display: flex; gap: 10px; align-items: baseline; font-size: 0.8rem; padding: 4px 0;
+      font-variant-numeric: tabular-nums; }
+    .fd-win .when { color: var(--text-dim); }
+    .fd-win.now .when { color: var(--green); font-weight: 600; }
+    .fd-win .cd { margin-left: auto; color: var(--text-muted); }
+
+    /* 詳情彈窗：釣場切換 chips */
+    .fd-spots { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+    .fd-spot-chip {
+      font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 5px; cursor: pointer;
+      border: 1px solid var(--border); background: var(--bg-surface); color: var(--text-dim);
+      transition: all 0.15s; user-select: none;
+    }
+    .fd-spot-chip:hover { border-color: var(--gold); }
+    .fd-spot-chip.active { background: var(--gold-dim); border-color: rgba(200,169,110,0.5); color: var(--gold); font-weight: 600; }
+
+    /* 目標魚面板 */
+    .targets-panel {
+      max-width: 1500px; margin: 0 auto 0.5rem; padding: 0 1.5rem;
+    }
+    .targets-inner {
+      background: var(--bg-card); border: 1px solid rgba(200,169,110,0.3); border-radius: var(--radius);
+      padding: 0.75rem 1rem;
+    }
+    .tp-head { font-size: 0.85rem; font-weight: 700; color: var(--gold); display: flex; align-items: baseline; gap: 0.6rem; flex-wrap: wrap; }
+    .tp-hint { font-size: 0.7rem; font-weight: 400; color: var(--text-muted); }
+    .tp-row {
+      display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;
+      padding: 0.45rem 0; border-top: 1px solid var(--border); margin-top: 0.45rem;
+      font-size: 0.8rem;
+    }
+    .tp-row:first-of-type { border-top: none; }
+    .tp-name { font-weight: 600; cursor: pointer; }
+    .tp-name:hover { color: var(--gold); }
+    .tp-loc { color: var(--text-dim); font-size: 0.75rem; }
+    .tp-info { color: var(--text-dim); font-size: 0.75rem; margin-left: auto; display: flex; align-items: center; gap: 0.5rem; }
+    .tp-del { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.8rem; padding: 0 0.2rem; }
+    .tp-del:hover { color: var(--red); }
+
+    /* 目標魚鬧鐘提醒控制（靜態表頭，不隨倒數重繪） */
+    .tp-alarm { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; font-weight: 400; }
+    .tp-alarm .achip {
+      font-size: 0.72rem; padding: 0.2rem 0.6rem; border-radius: 5px; cursor: pointer;
+      border: 1px solid var(--border); background: var(--bg-surface); color: var(--text-dim);
+      transition: all 0.15s; user-select: none;
+    }
+    .tp-alarm .achip:hover { border-color: var(--gold); }
+    .tp-alarm .achip.active { background: var(--gold-dim); border-color: rgba(200,169,110,0.5); color: var(--gold); }
+    .tp-alarm select {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 5px;
+      color: var(--text-dim); padding: 0.2rem 0.4rem; font-size: 0.72rem; outline: none; cursor: pointer;
+    }
+    .tp-alarm-hint { font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; }
+
+  </style>
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <script src="../../assets/js/theme.js"></script>
+</head>
+<body>
+<nav class="nav">
+  <a href="../../" class="nav-back">&larr; 水神的工具箱</a>
+  <span class="nav-sep">›</span>
+  <span class="nav-title">🎣 釣魚紀錄追蹤</span>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <h1>🎣 釣魚紀錄追蹤</h1>
+    <div class="hero-et">
+      <div class="et-time" id="etClock">ET --:--</div>
+      <div class="et-sub">艾歐澤亞時間 · 1 ET 小時 ≈ 2 分 55 秒</div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-text" id="progressText">載入中…</div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="search-wrap">
+    <span class="si">🔍</span>
+    <input type="text" id="searchInput" placeholder="搜尋魚名或釣場…">
+  </div>
+
+  <div class="filter-row">
+    <button class="filter-btn active" id="fAll">全部</button>
+    <button class="filter-btn"        id="fOwned">已釣</button>
+    <button class="filter-btn"        id="fMissed">未釣</button>
+    <button class="filter-btn"        id="fTargets">🎯 目標</button>
+  </div>
+
+  <div class="filter-row">
+    <select class="filter-select" id="patchFilter">
+      <option value="">全版本</option>
+      <option value="2">2.x 原初之地</option>
+      <option value="3">3.x 蒼天之禁地</option>
+      <option value="4">4.x 紅蓮之狂潮</option>
+      <option value="5">5.x 暗影之逆焰</option>
+      <option value="6">6.x 曉月之終途</option>
+      <option value="7">7.x 金曦之遺輝</option>
+    </select>
+    <select class="filter-select" id="typeFilter">
+      <option value="">全種類</option>
+      <option value="big">大魚</option>
+      <option value="timed">限時</option>
+      <option value="weather">限天氣</option>
+      <option value="folklore">傳承錄</option>
+    </select>
+  </div>
+
+  <div class="view-toggle">
+    <button id="vList" class="active">☰ 清單</button>
+    <button id="vMap">🗺️ 地圖</button>
+  </div>
+
+  <button class="filter-btn" id="resetBtn" style="margin-left:auto">重置篩選</button>
+  <button class="filter-btn" id="exportBtn">匯出進度</button>
+  <button class="filter-btn" id="importBtn">匯入進度</button>
+  <input type="file" id="importFile" accept="application/json" style="display:none">
+  <button class="filter-btn" id="clearBtn">清除進度</button>
+</div>
+
+<div class="targets-panel" id="targetsPanel" style="display:none">
+  <div class="targets-inner">
+    <div class="tp-head">🎯 目標魚 <span class="tp-hint">依開窗時間排序 · 點魚卡右下 🎯 新增／移除</span>
+      <span class="tp-alarm">
+        <span class="achip" id="alarmToggle" title="目標魚開窗前提醒">🔔 開窗提醒</span>
+        <select id="alarmLead" title="提前多久提醒（現實時間）">
+          <option value="0">開窗時提醒</option>
+          <option value="60">提前 1 分鐘</option>
+          <option value="180">提前 3 分鐘</option>
+          <option value="300">提前 5 分鐘</option>
+          <option value="600">提前 10 分鐘</option>
+        </select>
+        <span class="achip" id="alarmSound" title="提醒音效">🔊 音效</span>
+        <button class="achip" id="alarmTest" title="試聽提醒效果">試響</button>
+      </span>
+    </div>
+    <div class="tp-alarm-hint" id="alarmHint" style="display:none"></div>
+    <div id="targetsList"></div>
+  </div>
+</div>
+
+<div class="result-info" id="resultInfo"></div>
+<div class="fish-grid" id="fishGrid"></div>
+<div class="pagination" id="pagination"></div>
+
+<div class="map-view" id="mapView" style="display:none">
+  <div class="map-bar">
+    <select class="filter-select" id="mapSelect"></select>
+  </div>
+  <div class="map-canvas" id="mapCanvas"></div>
+  <div class="map-legend">
+    <span><i style="background:var(--blue)"></i>尚有未釣</span>
+    <span><i style="background:var(--gold)"></i>已全釣</span>
+    <span>點釣場圓點看該處魚單；篩選條件會同步套用</span>
+  </div>
+  <div class="spot-panel" id="spotPanel"></div>
+</div>
+
+<div class="fd-overlay" id="fdOverlay">
+  <div class="fd-box" role="dialog" aria-modal="true">
+    <div class="fd-head">
+      <div class="fd-titles">
+        <div class="fd-name" id="fdName"></div>
+        <div class="fd-name-en" id="fdNameEn"></div>
+      </div>
+      <button class="fd-close" id="fdClose" title="關閉">✕</button>
+    </div>
+    <div class="fd-actions" id="fdActions"></div>
+    <div class="fd-tags" id="fdTags"></div>
+    <div class="fd-table" id="fdTable"></div>
+    <div class="fd-windows" id="fdWindows"></div>
+  </div>
+</div>
+
+<script type="module">
+import {
+  initWeatherTables, getMapsData, getWeatherTable, lookupWeather, calcSeed,
+  WEATHER_PERIOD, WEATHER_INFO, ET_HOUR_MS,
+} from '../../assets/js/eorzea-weather.js';
+import { initMapModal, openMapModal } from '../../assets/js/map-modal.js';
+
+const LS_KEY     = 'ffxiv_fishing_owned';
+const TARGET_KEY = 'ffxiv_fishing_targets';
+const PAGE_SIZE  = 60;
+const EORZEA_MULT = 3600 / 175;
+const ET_MIN_MS   = 175000 / 60; // 1 ET 分鐘的現實毫秒
+
+let allFish = [];
+let SPOTS = new Map();   // spotId -> 釣場（座標、mapId）
+let MAPS  = new Map();   // mapId  -> 地圖資料
+let filtered = [];
+let owned   = new Set(JSON.parse(localStorage.getItem(LS_KEY) || '[]'));
+let targets = new Set(JSON.parse(localStorage.getItem(TARGET_KEY) || '[]'));
+let page = 0;
+let statusFilter = 'all';
+let viewMode = 'list';
+let currentMapId = null;
+let selectedSpotId = null;
+
+/* ── 天氣：魚資料的英文名 → 天氣引擎 key、繁中顯示 ── */
+const EN_TO_KEY = {
+  'Clear Skies':'clearSkies','Fair Skies':'fairSkies','Clouds':'clouds','Fog':'fog',
+  'Wind':'wind','Gales':'gales','Rain':'rain','Showers':'showers','Thunder':'thunder',
+  'Thunderstorms':'thunderstorms','Dust Storms':'dustStorms','Heat Waves':'heatWaves',
+  'Snow':'snow','Blizzards':'blizzards','Gloom':'gloom','Umbral Wind':'umbralWind',
+  'Umbral Static':'umbralStatic','Moon Dust':'moonDust','Astromagnetic Storms':'astromagneticStorms',
+};
+const WX_INFO = Object.assign({ moonDust: { name: '月塵', icon: '🌘' } }, WEATHER_INFO);
+function wxKeys(set) { return (set || []).map(w => EN_TO_KEY[w.name]).filter(Boolean); }
+function wxLabel(set) {
+  return (set || []).map(w => {
+    const info = WX_INFO[EN_TO_KEY[w.name]];
+    return info ? `${info.icon}${info.name}` : w.name;
+  }).join('、');
+}
+
+/* ── 可釣狀態計算 ──
+   回傳 state：anytime（隨時）/ open（可釣中）/ wait（等開窗）/ faroff（近期無窗）/ unknown */
+const seedCache = new Map();   // periodIndex -> seed
+const wxCache = new Map();     // mapId -> Map(periodIndex -> weather key)
+function weatherOf(mapId, pi) {
+  let m = wxCache.get(mapId);
+  if (!m) { m = new Map(); wxCache.set(mapId, m); }
+  let k = m.get(pi);
+  if (k === undefined) {
+    let seed = seedCache.get(pi);
+    if (seed === undefined) { seed = calcSeed(new Date(pi * WEATHER_PERIOD)); seedCache.set(pi, seed); }
+    k = lookupWeather(getWeatherTable(mapId), seed);
+    m.set(pi, k);
+  }
+  return k;
+}
+function etHourOf(ms) { return Math.floor(ms * EORZEA_MULT / 3600000) % 24; }
+
+function fishStatus(f, now, spotIdOv) {
+  const timed = f.startHour > 0 || f.endHour < 24;
+  const wk = wxKeys(f.weatherSet), pk = wxKeys(f.previousWeatherSet);
+  const needWx = wk.length > 0 || pk.length > 0;
+  if (!timed && !needWx) return { state: 'anytime' };
+
+  // 只限時不限天氣：直接以 ET 時窗計算
+  if (!needWx) {
+    const etMin = (now * EORZEA_MULT / 60000) % 1440;
+    const s = f.startHour * 60, e = f.endHour * 60;
+    const inWin = s < e ? (etMin >= s && etMin < e) : (etMin >= s || etMin < e);
+    if (inWin) {
+      const remain = s < e ? e - etMin : (etMin >= s ? 1440 - etMin + e : e - etMin);
+      return { state: 'open', secsLeft: Math.round(remain * ET_MIN_MS / 1000) };
+    }
+    let until = s - etMin; if (until <= 0) until += 1440;
+    return { state: 'wait', secsLeft: Math.round(until * ET_MIN_MS / 1000), needWx: false };
+  }
+
+  // 限天氣（可能同時限時）：需要釣場所在地圖的天氣表
+  const spot = (spotIdOv ?? f.spotId) != null ? SPOTS.get(spotIdOv ?? f.spotId) : null;
+  const mapId = spot?.coords?.mapId;
+  if (mapId == null || !getWeatherTable(mapId)) return { state: 'unknown' };
+
+  const pi0 = Math.floor(now / WEATHER_PERIOD);
+  for (let i = 0; i < 400; i++) { // 掃約 6.5 天
+    const pi = pi0 + i;
+    if (wk.length && !wk.includes(weatherOf(mapId, pi))) continue;
+    if (pk.length && !pk.includes(weatherOf(mapId, pi - 1))) continue;
+    const pStart = pi * WEATHER_PERIOD;
+    const pEtH = etHourOf(pStart); // 0 / 8 / 16
+    let ws, we;
+    if (!timed) { ws = pStart; we = pStart + WEATHER_PERIOD; }
+    else {
+      const segs = f.startHour < f.endHour
+        ? [[f.startHour, f.endHour]]
+        : [[f.startHour, 24], [0, f.endHour]];
+      let seg = null;
+      for (const [a, b] of segs) {
+        const st = Math.max(a, pEtH), en = Math.min(b, pEtH + 8);
+        if (en > st) { seg = [st, en]; break; }
+      }
+      if (!seg) continue;
+      ws = pStart + (seg[0] - pEtH) * ET_HOUR_MS;
+      we = pStart + (seg[1] - pEtH) * ET_HOUR_MS;
+    }
+    if (now >= we) continue;
+    if (now >= ws) return { state: 'open', secsLeft: Math.round((we - now) / 1000) };
+    return { state: 'wait', secsLeft: Math.round((ws - now) / 1000), needWx: true };
+  }
+  return { state: 'faroff' };
+}
+
+const ST_RANK = { open: 0, wait: 1, anytime: 2, faroff: 3, unknown: 3 };
+function fmtCd(secs) {
+  const h = Math.floor(secs / 3600), m = Math.floor((secs % 3600) / 60), s = secs % 60;
+  if (h > 0) return `${h}時${String(m).padStart(2, '0')}分`;
+  if (m > 0) return `${m}分${String(s).padStart(2, '0')}秒`;
+  return `${s}秒`;
+}
+function statusPill(st) {
+  if (st.state === 'open') return `<span class="st-pill st-open">● 可釣中 · 剩 ${fmtCd(st.secsLeft)}</span>`;
+  if (st.state === 'wait') return `<span class="st-pill st-wait">⏳ ${fmtCd(st.secsLeft)}後${st.needWx ? '（含等天氣）' : ''}</span>`;
+  if (st.state === 'faroff') return `<span class="st-pill st-far">近 6 天無開窗</span>`;
+  return '';
+}
+
+/* ── 篩選 ── */
+function setStatusFilter(f) {
+  statusFilter = f;
+  const map = { all: 'fAll', owned: 'fOwned', missing: 'fMissed', targets: 'fTargets' };
+  ['fAll', 'fOwned', 'fMissed', 'fTargets'].forEach(id => document.getElementById(id).classList.remove('active'));
+  document.getElementById(map[f]).classList.add('active');
+  page = 0;
+  onFilter();
+}
+
+function onFilter() {
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  const patchMaj = document.getElementById('patchFilter').value;
+  const type     = document.getElementById('typeFilter').value;
+
+  filtered = allFish.filter(f => {
+    if (statusFilter === 'owned'   && !owned.has(f.itemId))   return false;
+    if (statusFilter === 'missing' &&  owned.has(f.itemId))   return false;
+    if (statusFilter === 'targets' && !targets.has(f.itemId)) return false;
+    if (patchMaj) {
+      const maj = Math.floor(f.patch);
+      if (String(maj) !== patchMaj) return false;
+    }
+    if (type === 'big'      && !f.bigFish)                return false;
+    if (type === 'timed'    && !(f.startHour > 0 || f.endHour < 24)) return false;
+    if (type === 'weather'  && !f.weatherSet?.length)    return false;
+    if (type === 'folklore' && !f.folklore)               return false;
+    if (q) {
+      const hay = (f.name||'').toLowerCase() + ' ' + (f.nameEn||'').toLowerCase()
+                + ' ' + (f.spotName||'').toLowerCase() + ' ' + (f.spotNameEn||'').toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+
+  // 篩「限時／限天氣／目標」時依開窗狀態排序：可釣中 → 最快開窗，回答「接下來釣什麼」
+  const type2 = document.getElementById('typeFilter').value;
+  if (statusFilter === 'targets' || type2 === 'timed' || type2 === 'weather') {
+    const now = Date.now();
+    const stMap = new Map(filtered.map(f => [f.itemId, fishStatus(f, now)]));
+    filtered.sort((a, b) => {
+      const sa = stMap.get(a.itemId), sb = stMap.get(b.itemId);
+      if (ST_RANK[sa.state] !== ST_RANK[sb.state]) return ST_RANK[sa.state] - ST_RANK[sb.state];
+      return (sa.secsLeft ?? Infinity) - (sb.secsLeft ?? Infinity);
+    });
+  }
+
+  page = 0;
+  renderCurrent();
+}
+
+/* ── 渲染 ── */
+function spotZone(f, spotIdOv) {
+  const spot = (spotIdOv ?? f.spotId) != null ? SPOTS.get(spotIdOv ?? f.spotId) : null;
+  if (!spot) return null;
+  const m = MAPS.get(spot.coords.mapId);
+  return { spot, mapName: m ? m.name : null };
+}
+
+function renderCurrent() {
+  if (viewMode === 'map') { updateProgress(); renderTargets(); renderFishMap(); }
+  else render();
+}
+
+function setView(mode) {
+  viewMode = mode;
+  document.getElementById('vList').classList.toggle('active', mode === 'list');
+  document.getElementById('vMap').classList.toggle('active', mode === 'map');
+  document.getElementById('fishGrid').style.display   = mode === 'list' ? '' : 'none';
+  document.getElementById('pagination').style.display = mode === 'list' ? '' : 'none';
+  document.getElementById('mapView').style.display    = mode === 'map'  ? '' : 'none';
+  renderCurrent();
+}
+
+/* ── 地圖檢視：釣場一覽（座標→比例同採集紀錄頁公式）── */
+const coordFrac = (c, sizeFactor) => ((c - 1) * (sizeFactor / 100)) / 41;
+const clamp01 = v => Math.max(0, Math.min(1, v));
+
+function renderFishMap() {
+  const fishIds = new Set(filtered.map(f => f.itemId));
+  const byMap = new Map(); // mapId -> [{spot, fish:[fishObj]}]
+  for (const spot of SPOTS.values()) {
+    const fs = (spot.fishes || [])
+      .filter(id => fishIds.has(id))
+      .map(id => allFish.find(f => f.itemId === id))
+      .filter(Boolean);
+    if (!fs.length) continue;
+    const mid = spot.coords?.mapId;
+    if (mid == null || !MAPS.get(mid)) continue;
+    if (!byMap.has(mid)) byMap.set(mid, []);
+    byMap.get(mid).push({ spot, fish: fs });
+  }
+
+  const info = document.getElementById('resultInfo');
+  const sel = document.getElementById('mapSelect');
+  const canvas = document.getElementById('mapCanvas');
+  const opts = [...byMap.entries()].sort((a, b) => b[1].length - a[1].length);
+
+  if (!opts.length) {
+    sel.innerHTML = '<option>（目前篩選無可定位釣場）</option>';
+    canvas.innerHTML = '<div class="map-empty">目前篩選沒有可定位在地圖上的釣場。</div>';
+    document.getElementById('spotPanel').innerHTML = '';
+    info.textContent = '地圖檢視：0 個釣場';
+    return;
+  }
+
+  if (currentMapId == null || !byMap.has(currentMapId)) currentMapId = opts[0][0];
+  sel.innerHTML = opts.map(([mid, arr]) =>
+    `<option value="${mid}"${mid === currentMapId ? ' selected' : ''}>${MAPS.get(mid).name}（${arr.length} 釣場）</option>`).join('');
+
+  const totalSpots = [...byMap.values()].reduce((a, v) => a + v.length, 0);
+  info.textContent = `地圖檢視：${opts.length} 張地圖、${totalSpots} 個釣場（依目前篩選）`;
+
+  const m = MAPS.get(currentMapId);
+  const list = byMap.get(currentMapId);
+  const sf = m.sizeFactor || 100;
+  const dots = list.map(({ spot, fish }) => {
+    const fx = clamp01(coordFrac(spot.coords.x, sf)) * 100;
+    const fy = clamp01(coordFrac(spot.coords.y, sf)) * 100;
+    const done = fish.every(f => owned.has(f.itemId));
+    return `<div class="map-dot${done ? ' done' : ''}${spot.id === selectedSpotId ? ' sel' : ''}" data-spot="${spot.id}"
+      style="left:${fx.toFixed(2)}%;top:${fy.toFixed(2)}%"
+      title="${spot.name}（${spot.coords.x.toFixed(1)}, ${spot.coords.y.toFixed(1)}）· ${fish.length} 種魚"></div>`;
+  }).join('');
+
+  canvas.innerHTML = `<img src="../..${m.image.local}" alt="${m.name}"
+    onerror="if(this.dataset.retry){this.parentElement.innerHTML='<div class=&quot;map-empty&quot;>此地圖底圖載入失敗</div>'}else{this.dataset.retry=1;this.src='${m.image.url}';}">${dots}`;
+
+  if (!list.some(x => x.spot.id === selectedSpotId)) selectedSpotId = null;
+  renderSpotPanel(byMap);
+}
+
+function renderSpotPanel(byMap) {
+  const panel = document.getElementById('spotPanel');
+  if (selectedSpotId == null) { panel.innerHTML = ''; return; }
+  const entry = (byMap.get(currentMapId) || []).find(x => x.spot.id === selectedSpotId);
+  if (!entry) { panel.innerHTML = ''; return; }
+  const { spot, fish } = entry;
+  const m = MAPS.get(currentMapId);
+  const flag = `/coord ${spot.coords.x.toFixed(1)} ${spot.coords.y.toFixed(1)} ${m ? m.name : ''}`.trim();
+  panel.innerHTML = `
+    <div class="spot-head">
+      <span class="spot-name">🎣 ${spot.name}</span>
+      <span class="spot-loc">${m ? m.name : ''} · X:${spot.coords.x.toFixed(1)} Y:${spot.coords.y.toFixed(1)} · ${fish.length} 種魚</span>
+      <button class="spot-copy" data-flag="${flag.replace(/"/g, '&quot;')}">📋 ${flag}</button>
+    </div>
+    <div class="spot-fishes">
+      ${fish.map(f => `<span class="sf-chip${owned.has(f.itemId) ? ' owned' : ''}" data-fishchip="${f.itemId}" title="點擊看詳情">${f.name || f.nameEn}</span>`).join('')}
+    </div>`;
+}
+
+/* 剪貼簿：clipboard API 失敗時退回 execCommand（非安全環境／遊戲內瀏覽器） */
+function copyText(text) {
+  if (navigator.clipboard?.writeText) {
+    return navigator.clipboard.writeText(text).then(() => true).catch(() => copyTextFallback(text));
+  }
+  return Promise.resolve(copyTextFallback(text));
+}
+function copyTextFallback(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.cssText = 'position:fixed;opacity:0';
+  document.body.appendChild(ta);
+  ta.select();
+  let ok = false;
+  try { ok = document.execCommand('copy'); } catch (e) {}
+  ta.remove();
+  return ok;
+}
+
+function render() {
+  updateProgress();
+  renderTargets();
+  const now = Date.now();
+  const start = page * PAGE_SIZE;
+  const pageData = filtered.slice(start, start + PAGE_SIZE);
+
+  document.getElementById('resultInfo').textContent =
+    `顯示 ${filtered.length} 筆（共 ${allFish.length} 種）`;
+
+  document.getElementById('fishGrid').innerHTML = pageData.map(f => {
+    const isOwned  = owned.has(f.itemId);
+    const isTarget = targets.has(f.itemId);
+    const timed    = f.startHour > 0 || f.endHour < 24;
+
+    const timeStr = timed
+      ? (f.endHour < f.startHour
+          ? `${f.startHour}:00–翌${f.endHour}:00`
+          : `${f.startHour}:00–${f.endHour}:00`)
+      : '全天';
+
+    const wxStr   = wxLabel(f.weatherSet);
+    const prevStr = wxLabel(f.previousWeatherSet);
+    const st = (timed || f.weatherSet?.length || f.previousWeatherSet?.length)
+      ? fishStatus(f, now) : { state: 'anytime' };
+
+    const sz = spotZone(f);
+    const locBtn = sz
+      ? `<button class="loc-btn" data-map="${f.itemId}" title="開地圖看釣場位置">📍</button>` : '';
+    const extraSpots = (f.spots?.length || 0) > 1 ? `<span style="color:var(--text-muted)">等 ${f.spots.length} 處</span>` : '';
+    const spotLine = f.spotName
+      ? `<span><span class="detail-label">釣場</span>${f.spotName}${sz?.mapName && sz.mapName !== f.spotName ? `（${sz.mapName}）` : ''}${extraSpots}${locBtn}</span>`
+      : `<span><span class="detail-label">釣場</span>—（此魚無固定釣場資料，無法標地圖）</span>`;
+
+    return `
+<div class="fish-card${isOwned?' owned':''}" data-fish="${f.itemId}">
+  <div class="fish-check" title="點擊切換已釣">${isOwned?'✓':''}</div>
+  <div class="fish-body">
+    <div class="fish-name">${f.name||f.nameEn}</div>
+    <div class="fish-name-en">${f.nameEn}</div>
+    <div class="fish-tags">
+      ${statusPill(st)}
+      ${f.bigFish   ? '<span class="tag tag-big">大魚</span>' : ''}
+      ${timed       ? '<span class="tag tag-time">⏰限時</span>' : ''}
+      ${(f.weatherSet?.length) ? '<span class="tag tag-wx">🌦限天氣</span>' : ''}
+      ${f.folklore  ? '<span class="tag tag-folk">📖傳承錄</span>' : ''}
+      ${f.snagging  ? '<span class="tag tag-snag">捕撈</span>' : ''}
+      ${f.fishEyes  ? '<span class="tag tag-eyes">魚眼</span>' : ''}
+    </div>
+    <div class="fish-detail">
+      ${spotLine}
+      ${f.bait?.length ? `<span><span class="detail-label">餌</span>${f.bait.map(b=>b.name||b.nameEn).join(' → ')}</span>` : ''}
+      ${timed       ? `<span><span class="detail-label">時間</span>${timeStr} ET</span>` : ''}
+      ${wxStr       ? `<span><span class="detail-label">天氣</span>${wxStr}${prevStr ? `（前一時段：${prevStr}）` : ''}</span>` : ''}
+    </div>
+  </div>
+  <div class="fish-patch">${f.patch ?? ''}</div>
+  <button class="tgt-btn${isTarget?' on':''}" data-target="${f.itemId}" title="${isTarget?'移出目標魚':'設為目標魚（頂部顯示開窗倒數）'}">🎯</button>
+</div>`;
+  }).join('');
+
+  renderPagination();
+}
+
+function renderPagination() {
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  const pag = document.getElementById('pagination');
+  if (totalPages <= 1) { pag.innerHTML = ''; return; }
+  let html = '';
+  html += `<button class="page-btn" ${page===0?'disabled':''} data-page="${page-1}">‹</button>`;
+  for (let i = 0; i < totalPages; i++) {
+    if (totalPages > 10 && Math.abs(i - page) > 3 && i !== 0 && i !== totalPages-1) {
+      if (i === 1 || i === totalPages-2) html += `<span style="color:var(--text-muted);padding:0 0.3rem">…</span>`;
+      continue;
+    }
+    html += `<button class="page-btn${i===page?' active':''}" data-page="${i}">${i+1}</button>`;
+  }
+  html += `<button class="page-btn" ${page===totalPages-1?'disabled':''} data-page="${page+1}">›</button>`;
+  pag.innerHTML = html;
+}
+
+/* ── 魚詳情彈窗（參照魚糕：竿型/提鉤/餌鏈/直感/天氣鏈/未來窗口）── */
+const TUG_TC = { light: '!（輕杆）', medium: '!!（中杆）', heavy: '!!!（重杆）' };
+const HOOKSET_TC = { Precision: '精準提鉤', Powerful: '強力提鉤' };
+let fdCurrentId = null;
+let fdSpotId = null;   // 詳情彈窗目前選中的釣場（多釣場魚可切換）
+
+// 未來可釣窗口（合併跨天氣期的相鄰段），回傳 [{ws, we, active}]
+function nextWindows(f, now, maxN = 3, spotIdOv) {
+  const timed = f.startHour > 0 || f.endHour < 24;
+  const wk = wxKeys(f.weatherSet), pk = wxKeys(f.previousWeatherSet);
+  const needWx = wk.length > 0 || pk.length > 0;
+  if (!timed && !needWx) return [];
+  let mapId = null;
+  if (needWx) {
+    const spot = (spotIdOv ?? f.spotId) != null ? SPOTS.get(spotIdOv ?? f.spotId) : null;
+    mapId = spot?.coords?.mapId;
+    if (mapId == null || !getWeatherTable(mapId)) return [];
+  }
+  const wins = [];
+  const pi0 = Math.floor(now / WEATHER_PERIOD);
+  for (let i = 0; i < 700 && wins.length < maxN + 1; i++) {
+    const pi = pi0 + i;
+    if (needWx) {
+      if (wk.length && !wk.includes(weatherOf(mapId, pi))) continue;
+      if (pk.length && !pk.includes(weatherOf(mapId, pi - 1))) continue;
+    }
+    const pStart = pi * WEATHER_PERIOD;
+    const pEtH = etHourOf(pStart);
+    let segs;
+    if (!timed) segs = [[pEtH, pEtH + 8]];
+    else {
+      const raw = f.startHour < f.endHour ? [[f.startHour, f.endHour]] : [[0, f.endHour], [f.startHour, 24]];
+      segs = raw.map(([a, b]) => [Math.max(a, pEtH), Math.min(b, pEtH + 8)]).filter(([a, b]) => b > a);
+    }
+    for (const [a, b] of segs) {
+      const ws = pStart + (a - pEtH) * ET_HOUR_MS;
+      const we = pStart + (b - pEtH) * ET_HOUR_MS;
+      if (now >= we) continue;
+      const last = wins[wins.length - 1];
+      if (last && Math.abs(last.we - ws) < 1000) last.we = we; // 相鄰段合併
+      else wins.push({ ws, we });
+    }
+  }
+  wins.forEach(w => { w.active = now >= w.ws; });
+  return wins.slice(0, maxN);
+}
+
+function fmtRT(ms) {
+  const d = new Date(ms);
+  return `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+function fmtET(ms) {
+  const etMin = Math.floor(ms * EORZEA_MULT / 60000);
+  return `${String(Math.floor(etMin/60)%24).padStart(2,'0')}:${String(etMin%60).padStart(2,'0')}`;
+}
+
+function openFishDetail(id, keepSpot) {
+  const f = allFish.find(x => x.itemId === id);
+  if (!f) return;
+  if (!keepSpot || fdCurrentId !== id) fdSpotId = f.spotId;
+  fdCurrentId = id;
+  const now = Date.now();
+  const timed = f.startHour > 0 || f.endHour < 24;
+  const sz = spotZone(f, fdSpotId);
+
+  document.getElementById('fdName').textContent = f.name || f.nameEn;
+  document.getElementById('fdNameEn').textContent = `${f.nameEn || ''}${f.patch ? ` · v${f.patch}` : ''}`;
+
+  renderFdActions(f);
+
+  document.getElementById('fdTags').innerHTML = [
+    f.bigFish ? '<span class="tag tag-big">大魚</span>' : '',
+    timed ? '<span class="tag tag-time">⏰限時</span>' : '',
+    (f.weatherSet?.length) ? '<span class="tag tag-wx">🌦限天氣</span>' : '',
+    f.folklore ? '<span class="tag tag-folk">📖傳承錄</span>' : '',
+    f.snagging ? '<span class="tag tag-snag">捕撈</span>' : '',
+    f.fishEyes ? '<span class="tag tag-eyes">魚眼</span>' : '',
+  ].join('');
+
+  const timeStr = timed
+    ? (f.endHour < f.startHour ? `${f.startHour}:00–翌${f.endHour}:00 ET` : `${f.startHour}:00–${f.endHour}:00 ET`)
+    : '全天';
+  const wxStr = wxLabel(f.weatherSet) || '無限制';
+  const prevStr = wxLabel(f.previousWeatherSet);
+  const baitChain = f.bait?.length ? f.bait.map(b => b.name || b.nameEn).join(' → ') : '—';
+  const preds = (f.predators || []).map(pd => {
+    const pid = Array.isArray(pd.itemId) ? pd.itemId[0] : pd.itemId;
+    const cnt = Array.isArray(pd.itemId) ? pd.itemId[1] : null;
+    const pf = allFish.find(x => x.itemId === pid);
+    return `${pf ? (pf.name || pf.nameEn) : `#${pid}`}${cnt ? ` ×${cnt}` : ''}`;
+  });
+
+  // 釣場列：多釣場 → 可切換 chips（切換後窗口/天氣依該釣場地圖重算）
+  const spotList = (f.spots?.length ? f.spots : (f.spotId != null ? [f.spotId] : []));
+  let spotCell;
+  if (!spotList.length) spotCell = '—（此魚無固定釣場資料）';
+  else if (spotList.length === 1) {
+    spotCell = f.spotName ? `${f.spotName}${sz?.mapName && sz.mapName !== f.spotName ? `（${sz.mapName}）` : ''}` : '—';
+  } else {
+    spotCell = `<div class="fd-spots">${spotList.map(sid => {
+      const sp = SPOTS.get(sid);
+      if (!sp) return '';
+      const mn = sp.coords ? MAPS.get(sp.coords.mapId)?.name : null;
+      return `<span class="fd-spot-chip${sid === fdSpotId ? ' active' : ''}" data-fdspot="${sid}" title="切換釣場（窗口依該地圖天氣重算）">${sp.name}${mn && mn !== sp.name ? `（${mn}）` : ''}</span>`;
+    }).join('')}</div>`;
+  }
+  const rows = [
+    ['釣場' + (spotList.length > 1 ? `（${spotList.length} 處）` : ''), spotCell],
+    ['竿型', TUG_TC[f.tug] || '—'],
+    ['提鉤', HOOKSET_TC[f.hookset] || '—'],
+    ['釣餌鏈', `<b>${baitChain}</b>${f.bait?.length > 1 ? '（以小釣大）' : ''}`],
+    ['時間限制', timeStr],
+    ['天氣限制', prevStr ? `${prevStr} → ${wxStr}（前一時段 → 當前）` : wxStr],
+  ];
+  if (preds.length) rows.push(['捕魚人直感', `${preds.join('、')}${f.intuitionLength ? `（直感 ${f.intuitionLength} 秒）` : ''}`]);
+  if (f.snagging) rows.push(['釣組', '需要鉤足（Snagging）']);
+  if (f.folklore) rows.push(['傳承錄', '需購買該地區釣魚傳承錄']);
+  document.getElementById('fdTable').innerHTML =
+    rows.map(([k, v]) => `<div class="fd-row"><div class="fd-k">${k}</div><div class="fd-v">${v}</div></div>`).join('');
+
+  // 未來窗口
+  const winBox = document.getElementById('fdWindows');
+  const st = (timed || f.weatherSet?.length || f.previousWeatherSet?.length) ? fishStatus(f, now, fdSpotId) : { state: 'anytime' };
+  if (st.state === 'anytime') {
+    winBox.innerHTML = '<div class="fd-wt">開窗時間</div><div class="fd-win now"><span class="when">🎣 隨時可釣（無時間/天氣限制）</span></div>';
+  } else if (st.state === 'unknown') {
+    winBox.innerHTML = '<div class="fd-wt">開窗時間</div><div class="fd-win"><span class="when">無釣場天氣資料，無法計算</span></div>';
+  } else {
+    const wins = nextWindows(f, now, 3, fdSpotId);
+    winBox.innerHTML = '<div class="fd-wt">接下來的可釣窗口</div>' + (wins.length ? wins.map(w => `
+      <div class="fd-win${w.active ? ' now' : ''}">
+        <span class="when">${w.active ? '● 可釣中' : fmtRT(w.ws)}　ET ${fmtET(w.ws)}–${fmtET(w.we)}</span>
+        <span class="cd">${w.active ? `剩 ${fmtCd(Math.round((w.we - now) / 1000))}` : `${fmtCd(Math.round((w.ws - now) / 1000))}後`}</span>
+      </div>`).join('') : '<div class="fd-win"><span class="when">近 6 天內無開窗</span></div>');
+  }
+
+  document.getElementById('fdOverlay').classList.add('open');
+}
+
+function renderFdActions(f) {
+  const sz = spotZone(f);
+  document.getElementById('fdActions').innerHTML = [
+    `<button class="fd-act${owned.has(f.itemId) ? ' owned-on' : ''}" data-fd="owned">${owned.has(f.itemId) ? '✓ 已釣' : '記為已釣'}</button>`,
+    `<button class="fd-act${targets.has(f.itemId) ? ' on' : ''}" data-fd="target">🎯 ${targets.has(f.itemId) ? '已是目標' : '設為目標'}</button>`,
+    sz ? `<button class="fd-act" data-fd="map">📍 釣場地圖</button>` : '',
+  ].join('');
+}
+
+function closeFishDetail() {
+  document.getElementById('fdOverlay').classList.remove('open');
+  fdCurrentId = null;
+}
+
+document.getElementById('fdTable').addEventListener('click', e => {
+  const chip = e.target.closest('[data-fdspot]');
+  if (!chip || fdCurrentId == null) return;
+  fdSpotId = Number(chip.dataset.fdspot);
+  openFishDetail(fdCurrentId, true);
+});
+document.getElementById('fdClose').addEventListener('click', closeFishDetail);
+document.getElementById('fdOverlay').addEventListener('click', e => { if (e.target === e.currentTarget) closeFishDetail(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeFishDetail(); });
+document.getElementById('fdActions').addEventListener('click', e => {
+  const btn = e.target.closest('[data-fd]');
+  if (!btn || fdCurrentId == null) return;
+  const f = allFish.find(x => x.itemId === fdCurrentId);
+  if (btn.dataset.fd === 'owned') {
+    if (owned.has(f.itemId)) owned.delete(f.itemId); else owned.add(f.itemId);
+    localStorage.setItem(LS_KEY, JSON.stringify([...owned]));
+    updateProgress(); renderCurrent(); renderFdActions(f);
+  } else if (btn.dataset.fd === 'target') {
+    toggleTarget(f.itemId); renderFdActions(f);
+  } else if (btn.dataset.fd === 'map') {
+    openFishMap(f.itemId, fdSpotId);
+  }
+});
+
+/* ── 目標魚面板 ── */
+function renderTargets() {
+  const panel = document.getElementById('targetsPanel');
+  if (!targets.size) { panel.style.display = 'none'; return; }
+  panel.style.display = '';
+  const now = Date.now();
+  const rows = [...targets]
+    .map(id => allFish.find(f => f.itemId === id))
+    .filter(Boolean)
+    .map(f => ({ f, st: fishStatus(f, now) }))
+    .sort((a, b) => {
+      if (ST_RANK[a.st.state] !== ST_RANK[b.st.state]) return ST_RANK[a.st.state] - ST_RANK[b.st.state];
+      return (a.st.secsLeft ?? Infinity) - (b.st.secsLeft ?? Infinity);
+    });
+
+  document.getElementById('targetsList').innerHTML = rows.map(({ f, st }) => {
+    const sz = spotZone(f);
+    const loc = f.spotName ? `${f.spotName}${sz?.mapName && sz.mapName !== f.spotName ? ' · ' + sz.mapName : ''}` : '無固定釣場資料';
+    const locBtn = sz ? `<button class="loc-btn" data-map="${f.itemId}" title="開地圖">📍</button>` : '';
+    const pill = st.state === 'anytime' ? '<span class="st-pill st-open">隨時可釣</span>' : (statusPill(st) || '<span class="st-pill st-far">條件不明</span>');
+    const bait = f.bait?.length ? `餌：${f.bait.map(b => b.name || b.nameEn).join(' → ')}` : '';
+    return `<div class="tp-row">
+      ${pill}
+      <span class="tp-name" data-goto="${f.itemId}" title="在清單中顯示">${f.name || f.nameEn}</span>
+      <span class="tp-loc">${loc}${locBtn}</span>
+      <span class="tp-info">${bait}<button class="tp-del" data-untarget="${f.itemId}" title="移除">✕</button></span>
+    </div>`;
+  }).join('');
+}
+
+/* ─────────────────────────────────────────────
+   鬧鐘提醒：目標魚於開窗前（可設提前量）以
+   系統通知＋音效＋分頁標題提醒（同限時採集頁）。
+   ───────────────────────────────────────────── */
+const ALARM_KEY = 'ffxiv_fishing_alarm';
+const BASE_TITLE = document.title;
+let alarmCfg = { on: false, lead: 60, sound: true };
+try { Object.assign(alarmCfg, JSON.parse(localStorage.getItem(ALARM_KEY) || '{}')); } catch (e) {}
+function saveAlarm() { localStorage.setItem(ALARM_KEY, JSON.stringify(alarmCfg)); }
+
+const alarmFired = new Map(); // itemId -> 該次開窗時間戳（同一窗只響一次）
+
+function alarmChime() {
+  if (!alarmCfg.sound) return;
+  try {
+    const ctx = alarmChime.ctx || (alarmChime.ctx = new (window.AudioContext || window.webkitAudioContext)());
+    if (ctx.state === 'suspended') ctx.resume();
+    const t0 = ctx.currentTime;
+    [880, 1174.66].forEach((f, i) => {   // 上行兩音，柔和不刺耳
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = 'sine'; o.frequency.value = f;
+      g.gain.setValueAtTime(0.0001, t0 + i * 0.18);
+      g.gain.exponentialRampToValueAtTime(0.22, t0 + i * 0.18 + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + i * 0.18 + 0.5);
+      o.connect(g).connect(ctx.destination);
+      o.start(t0 + i * 0.18); o.stop(t0 + i * 0.18 + 0.55);
+    });
+  } catch (e) {}
+}
+
+function fireAlarm(f, st, untilOpen) {
+  alarmChime();
+  const when = untilOpen <= 5 ? '開窗了！' : `約 ${Math.ceil(untilOpen / 60)} 分鐘後開窗`;
+  const title = `🎣 ${f.name || f.nameEn} ${when}`;
+  const sz = spotZone(f);
+  const body = [
+    f.spotName ? `釣場：${f.spotName}${sz?.mapName && sz.mapName !== f.spotName ? `（${sz.mapName}）` : ''}` : '',
+    f.bait?.length ? `餌：${f.bait.map(b => b.name || b.nameEn).join(' → ')}` : '',
+  ].filter(Boolean).join('・');
+  if ('Notification' in window && Notification.permission === 'granted') {
+    try { new Notification(title, { body, tag: 'fish-' + f.itemId }); } catch (e) {}
+  }
+  document.title = '🔔 ' + title;
+  setTimeout(() => { document.title = BASE_TITLE; }, 30000);
+}
+
+/* primeOnly=true：只登記當前已在門檻內的窗（不響），
+   用於剛開啟提醒／剛加目標／改提前量時，避免對眼前已看得到的狀態突然響鈴 */
+function checkAlarms(now, primeOnly) {
+  if (!alarmCfg.on || !targets.size) return;
+  for (const id of targets) {
+    const f = allFish.find(x => x.itemId === id);
+    if (!f) continue;
+    const st = fishStatus(f, now);
+    if (st.state !== 'open' && st.state !== 'wait') continue; // 隨時可釣／近期無窗不提醒
+    const untilOpen = st.state === 'open' ? 0 : st.secsLeft;
+    if (untilOpen > alarmCfg.lead) continue;
+    const openTs = now + untilOpen * 1000;
+    const prev = alarmFired.get(id);
+    if (prev && Math.abs(openTs - prev) < 120000) continue;
+    alarmFired.set(id, openTs);
+    if (!primeOnly) fireAlarm(f, st, untilOpen);
+  }
+}
+
+function syncAlarmUI() {
+  document.getElementById('alarmToggle').classList.toggle('active', alarmCfg.on);
+  document.getElementById('alarmSound').classList.toggle('active', alarmCfg.sound);
+  document.getElementById('alarmLead').value = String(alarmCfg.lead);
+  const hint = document.getElementById('alarmHint');
+  if (!alarmCfg.on) { hint.style.display = 'none'; return; }
+  const noNotif = !('Notification' in window) || Notification.permission !== 'granted';
+  hint.style.display = '';
+  hint.textContent = '🔔 提醒運作中——需保持此分頁開啟' +
+    (noNotif ? '；瀏覽器通知未允許，僅以音效與分頁標題提醒' : '，將以系統通知＋音效提醒');
+}
+
+document.getElementById('alarmToggle').addEventListener('click', () => {
+  alarmCfg.on = !alarmCfg.on; saveAlarm();
+  if (alarmCfg.on) {
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission().finally(syncAlarmUI);
+    }
+    checkAlarms(Date.now(), true); // 只登記當前窗，不對眼前狀態響鈴
+  }
+  syncAlarmUI();
+});
+document.getElementById('alarmSound').addEventListener('click', () => {
+  alarmCfg.sound = !alarmCfg.sound; saveAlarm(); syncAlarmUI();
+});
+document.getElementById('alarmLead').addEventListener('change', e => {
+  alarmCfg.lead = Number(e.target.value) || 0; saveAlarm();
+  checkAlarms(Date.now(), true);
+});
+document.getElementById('alarmTest').addEventListener('click', () => {
+  const sav = alarmCfg.sound; alarmCfg.sound = true; alarmChime(); alarmCfg.sound = sav;
+  if ('Notification' in window && Notification.permission === 'granted') {
+    try { new Notification('🔔 測試提醒', { body: '提醒功能運作正常。', tag: 'fish-test' }); } catch (e) {}
+  }
+});
+
+function updateProgress() {
+  const total = allFish.length;
+  const cnt   = allFish.filter(f => owned.has(f.itemId)).length;
+  const pct   = total ? Math.round(cnt / total * 100) : 0;
+  document.getElementById('progressText').textContent = `已釣 ${cnt} / ${total}（${pct}%）`;
+  document.getElementById('progressFill').style.width = pct + '%';
+  try { localStorage.setItem('ffxiv_snap_fishing', JSON.stringify({ c: cnt, t: total })); } catch (e) {} // 首頁進度儀表板快照
+}
+
+function toggleFish(id, el) {
+  if (owned.has(id)) {
+    owned.delete(id);
+    el.classList.remove('owned');
+    el.querySelector('.fish-check').textContent = '';
+  } else {
+    owned.add(id);
+    el.classList.add('owned');
+    el.querySelector('.fish-check').textContent = '✓';
+  }
+  localStorage.setItem(LS_KEY, JSON.stringify([...owned]));
+  updateProgress();
+  if (statusFilter !== 'all') onFilter();
+}
+
+function toggleTarget(id) {
+  if (targets.has(id)) targets.delete(id); else { targets.add(id); checkAlarms(Date.now(), true); } // 新加目標先登記當前窗，不立即響鈴
+  localStorage.setItem(TARGET_KEY, JSON.stringify([...targets]));
+  if (statusFilter === 'targets') onFilter(); else renderCurrent();
+}
+
+function openFishMap(id, spotIdOv) {
+  const f = allFish.find(x => x.itemId === id);
+  const sz = f && spotZone(f, spotIdOv);
+  if (!sz) return;
+  const { spot, mapName } = sz;
+  const x = spot.coords.x, y = spot.coords.y;
+  openMapModal({
+    mapId: spot.coords.mapId, x, y,
+    title: `${f.name || f.nameEn}`,
+    sub: `釣場：${spot.name}${mapName ? ' · ' + mapName : ''}`,
+    flagText: `/coord ${x.toFixed(1)} ${y.toFixed(1)} ${mapName || ''}`.trim(),
+  });
+}
+
+function resetAll() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('patchFilter').value = '';
+  document.getElementById('typeFilter').value = '';
+  setStatusFilter('all');
+}
+
+/* ── 進度匯出／匯入／清除 ── */
+function exportProgress() {
+  const payload = {
+    schema: 'fishing-progress',
+    exported: new Date().toISOString(),
+    owned: [...owned],
+    targets: [...targets],
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'fishing-progress.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function importProgress(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data || data.schema !== 'fishing-progress' || !Array.isArray(data.owned)) {
+        alert('匯入失敗：這不是「釣魚紀錄」的進度檔'); return;
+      }
+      if (owned.size && !confirm(`匯入將以檔案內容（已釣 ${data.owned.length} 筆）取代目前的 ${owned.size} 筆記錄，確定嗎？`)) return;
+      owned = new Set(data.owned);
+      if (Array.isArray(data.targets)) targets = new Set(data.targets);
+      localStorage.setItem(LS_KEY, JSON.stringify([...owned]));
+      localStorage.setItem(TARGET_KEY, JSON.stringify([...targets]));
+      updateProgress(); onFilter(); renderTargets();
+      alert('匯入成功，共 ' + owned.size + ' 筆已釣記錄');
+    } catch (err) {
+      alert('匯入失敗：檔案格式不正確');
+    }
+  };
+  reader.readAsText(file);
+}
+
+document.getElementById('exportBtn').addEventListener('click', exportProgress);
+document.getElementById('importBtn').addEventListener('click', () => document.getElementById('importFile').click());
+document.getElementById('importFile').addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (file) importProgress(file);
+  e.target.value = '';
+});
+document.getElementById('clearBtn').addEventListener('click', () => {
+  if (!owned.size) { alert('目前沒有已釣記錄'); return; }
+  if (!confirm('確定要清除全部 ' + owned.size + ' 筆已釣記錄嗎？\n將先自動下載一份備份檔以防誤刪。')) return;
+  exportProgress();
+  owned.clear();
+  localStorage.setItem(LS_KEY, JSON.stringify([]));
+  updateProgress(); onFilter();
+});
+
+/* ── ET 時鐘 ── */
+function tickClock() {
+  const etMin = Math.floor(Date.now() * EORZEA_MULT / 60000);
+  const h = String(Math.floor(etMin / 60) % 24).padStart(2, '0');
+  const m = String(etMin % 60).padStart(2, '0');
+  document.getElementById('etClock').textContent = `ET ${h}:${m}`;
+}
+
+/* ── 事件 ── */
+document.getElementById('searchInput').addEventListener('input', onFilter);
+document.getElementById('patchFilter').addEventListener('change', onFilter);
+document.getElementById('typeFilter').addEventListener('change', onFilter);
+document.getElementById('fAll').addEventListener('click', () => setStatusFilter('all'));
+document.getElementById('fOwned').addEventListener('click', () => setStatusFilter('owned'));
+document.getElementById('fMissed').addEventListener('click', () => setStatusFilter('missing'));
+document.getElementById('fTargets').addEventListener('click', () => setStatusFilter('targets'));
+document.getElementById('resetBtn').addEventListener('click', resetAll);
+
+document.getElementById('fishGrid').addEventListener('click', e => {
+  const tgt = e.target.closest('[data-target]');
+  if (tgt) { toggleTarget(Number(tgt.dataset.target)); return; }
+  const loc = e.target.closest('[data-map]');
+  if (loc) { openFishMap(Number(loc.dataset.map)); return; }
+  const card = e.target.closest('.fish-card');
+  if (!card) return;
+  // 點左側圓圈 = 勾已釣；點卡片其他區域 = 開詳情
+  if (e.target.closest('.fish-check')) toggleFish(Number(card.dataset.fish), card);
+  else openFishDetail(Number(card.dataset.fish));
+});
+
+document.getElementById('targetsPanel').addEventListener('click', e => {
+  const un = e.target.closest('[data-untarget]');
+  if (un) { toggleTarget(Number(un.dataset.untarget)); return; }
+  const loc = e.target.closest('[data-map]');
+  if (loc) { openFishMap(Number(loc.dataset.map)); return; }
+  const go = e.target.closest('[data-goto]');
+  if (go) {
+    const f = allFish.find(x => x.itemId === Number(go.dataset.goto));
+    if (f) {
+      document.getElementById('searchInput').value = f.name || f.nameEn;
+      setStatusFilter('all');
+    }
+  }
+});
+
+document.getElementById('vList').addEventListener('click', () => setView('list'));
+document.getElementById('vMap').addEventListener('click', () => setView('map'));
+document.getElementById('mapSelect').addEventListener('change', e => {
+  currentMapId = Number(e.target.value);
+  selectedSpotId = null;
+  renderFishMap();
+});
+document.getElementById('mapCanvas').addEventListener('click', e => {
+  const dot = e.target.closest('[data-spot]');
+  if (!dot) return;
+  selectedSpotId = Number(dot.dataset.spot);
+  renderFishMap();
+});
+document.getElementById('spotPanel').addEventListener('click', e => {
+  const chip = e.target.closest('[data-fishchip]');
+  if (chip) { openFishDetail(Number(chip.dataset.fishchip)); return; }
+  const cp = e.target.closest('[data-flag]');
+  if (cp) {
+    const orig = cp.textContent;
+    copyText(cp.dataset.flag).then(ok => {
+      cp.textContent = ok ? '✅ 已複製' : '❌ 複製失敗';
+      setTimeout(() => { cp.textContent = orig; }, 1400);
+    });
+  }
+});
+
+/* ── 啟動 ── */
+(async function init() {
+  const [fishes, spots] = await Promise.all([
+    fetch('../../data/fishes.json').then(r => r.json()),
+    fetch('../../data/fishing-spots.json').then(r => r.json()),
+    initWeatherTables('../../data/maps.json'),
+  ]);
+  allFish = fishes.data;
+  SPOTS = new Map(spots.data.map(s => [s.id, s]));
+  MAPS  = new Map(getMapsData().map(m => [m.id, m]));
+  initMapModal({ mapsData: getMapsData(), base: '../..' });
+  tickClock();
+  onFilter();
+  syncAlarmUI();
+  if (alarmCfg.on) checkAlarms(Date.now(), true); // 開頁先登記當前窗，只對之後的新窗響鈴
+  setInterval(tickClock, 1000);
+  setInterval(() => { if (viewMode === 'list') render(); else renderTargets(); }, 10000); // 每 10 秒更新可釣狀態與倒數
+  setInterval(() => checkAlarms(Date.now()), 5000); // 鬧鐘每 5 秒檢查（天氣快取使重算成本極低）
+})();
+</script>
+</body>
+</html>

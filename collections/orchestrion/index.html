@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FF14 樂譜收藏追蹤 — 查詢管弦樂機樂譜、版本篩選、記錄擁有進度">
+  <title>樂譜收藏追蹤 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/common.css">
+  <style>
+    /* 樂譜頁專屬樣式；通用版面與 .col-* 卡片系統見 assets/css/common.css */
+    :root {
+      --accent:   #c8a96e;                 /* 金 */
+      --accent-2: #4fc3f7;                 /* 進度條尾色：藍 */
+      --glow-1:   rgba(200,169,110,0.06);
+      --glow-2:   rgba(79,195,247,0.04);
+    }
+    .col-grid { grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
+    .col-card { padding: 18px; gap: 8px; }
+    .col-name { padding-right: 16px; }
+
+    .oc-icon-wrap { display: flex; align-items: center; gap: 8px; }
+    .oc-icon-placeholder {
+      width: 48px; height: 48px;
+      border-radius: var(--radius-sm);
+      background: var(--raise);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+    .oc-meta { font-size: 10px; color: var(--text-muted); }
+
+    .tag.src-tag { background: var(--raise); color: var(--text-secondary); border-color: var(--border); }
+    /* 資料片分類配色 */
+    .tag.cat-原初之地   { background: rgba(74,222,128,0.1);   color: var(--green);  border-color: rgba(74,222,128,0.25); }
+    .tag.cat-蒼天之禁地 { background: rgba(79,195,247,0.1);   color: var(--blue);   border-color: rgba(79,195,247,0.25); }
+    .tag.cat-紅蓮之狂潮 { background: rgba(251,146,60,0.1);   color: var(--orange); border-color: rgba(251,146,60,0.25); }
+    .tag.cat-暗影之逆焰 { background: rgba(167,139,250,0.12); color: var(--purple); border-color: rgba(167,139,250,0.25); }
+    .tag.cat-曉月之終途 { background: rgba(34,211,238,0.1);   color: var(--cyan);   border-color: rgba(34,211,238,0.25); }
+    .tag.cat-金曦之遺輝 { background: rgba(200,169,110,0.12); color: var(--gold);   border-color: rgba(200,169,110,0.25); }
+    .tag.cat-未分類     { background: var(--raise); color: var(--text-muted); border-color: var(--border); }
+    .tag.gcat { background: rgba(79,195,247,0.1); color: var(--blue); border-color: rgba(79,195,247,0.25); }
+
+    .col-detail .detail-line { margin-top: 2px; }
+    .col-detail .detail-line b { color: var(--text-secondary); font-weight: 500; }
+
+    @media (max-width: 600px) { .col-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 380px) { .col-grid { grid-template-columns: 1fr; } }
+  </style>
+  <script src="../../assets/js/patch-gate.js"></script>
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <script src="../../assets/js/theme.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <header class="page-header">
+    <a href="../../" class="back-btn">← 水神的工具箱</a>
+    <div class="page-title-wrap">
+      <h1 class="page-title">🎵 樂譜收藏追蹤</h1>
+      <p class="page-subtitle">點擊卡片標記已取得，進度自動儲存於瀏覽器</p>
+    </div>
+  </header>
+
+  <!-- Progress -->
+  <div class="progress-bar-wrap">
+    <div class="progress-info">
+      <span id="ownedCount">0</span> / <span id="totalCount">0</span>
+      <span>已取得</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill" style="width:0%"></div>
+    </div>
+    <div class="progress-pct" id="progressPct">0%</div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" type="text" id="searchInput" placeholder="搜尋樂譜名稱…" autocomplete="off">
+    </div>
+    <div class="own-toggle">
+      <button class="own-btn active" data-own="all">全部</button>
+      <button class="own-btn" data-own="owned">已取得</button>
+      <button class="own-btn" data-own="missing">未取得</button>
+    </div>
+    <select class="sort-select" id="sortSelect" title="排序方式">
+      <option value="default">預設排序</option>
+      <option value="patch-desc">版本新→舊</option>
+      <option value="patch-asc">版本舊→新</option>
+      <option value="name">依名稱</option>
+    </select>
+    <button class="icon-btn" id="markAllBtn" title="將目前篩選結果全部標記為已取得">✓ 標記全部</button>
+    <button class="icon-btn" id="unmarkAllBtn" title="取消目前篩選結果的已取得標記">✗ 取消全部</button>
+    <button class="icon-btn" id="exportBtn">匯出進度</button>
+    <button class="icon-btn" id="importBtn">匯入進度</button>
+    <input type="file" id="importFile" accept="application/json" style="display:none">
+    <button class="icon-btn clear-btn" id="clearBtn">清除進度</button>
+  </div>
+
+  <!-- Game category filter -->
+  <div class="filter-section">
+    <div class="filter-label">分類</div>
+    <div class="filter-tags" id="gameCategoryFilters"></div>
+  </div>
+
+  <!-- Version filter -->
+  <div class="filter-section">
+    <div class="filter-label">版本</div>
+    <div class="filter-tags" id="categoryFilters"></div>
+  </div>
+
+  <!-- Source filter -->
+  <div class="filter-section">
+    <div class="filter-label">取得方式</div>
+    <div class="filter-tags" id="sourceFilters"></div>
+  </div>
+
+  <!-- Result meta -->
+  <div class="result-meta" id="resultMeta"></div>
+
+  <!-- Grid -->
+  <div class="col-grid" id="ocGrid"></div>
+
+  <div class="empty-state" id="emptyState" style="display:none">
+    找不到符合條件的樂譜
+  </div>
+
+</div>
+
+<!-- Footer -->
+<footer class="page-footer">
+  <div class="container">
+    <p class="footer-text">
+      <a href="../../">水神的工具箱</a> · 資料來源：遊戲本體、<a href="https://xivapi.com" target="_blank">XIVAPI</a>
+    </p>
+    <p class="footer-text" style="margin-top:4px">
+      FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具
+    </p>
+  </div>
+</footer>
+
+<script>
+(function() {
+  const STORAGE_KEY = 'ffxiv_orchestrion_owned';
+  const DATA_URL = '../../data/orchestrion.json';
+  // icons not used
+
+  // Version order for filter display
+  const CATEGORY_ORDER = ['原初之地', '蒼天之禁地', '紅蓮之狂潮', '暗影之逆焰', '曉月之終途', '金曦之遺輝', '未分類'];
+
+  // 遊戲內樂譜分類順序（依 TC CategoryOrder）
+  const GAME_CATEGORY_ORDER = ['區域場景1', '區域場景2', '迷宮挑戰', '迷宮挑戰2', '大型任務1', '大型任務2', '討伐殲滅戰', '任務相關', '季節活動', '環境音', '商城與特典', '其他'];
+
+  // ── State ──
+  let OC_DATA = [];
+  let CATEGORIES = [];
+  let GAME_CATEGORIES = [];
+  let SOURCE_TYPES = [];
+  let owned = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
+  let filterOwn = 'all';
+  let filterCategory = null;
+  let filterGameCategory = null;
+  let filterSource = null;
+  let searchQ = '';
+  let sortBy = 'default';    // default | patch-desc | patch-asc | name
+
+  // ── Unique key ──
+  function keyOf(r) {
+    return 'id:' + r.id;
+  }
+
+  // ── Save ──
+  function save() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify([...owned]));
+  }
+
+  // ── Toggle ──
+  function toggle(k) {
+    if (owned.has(k)) owned.delete(k);
+    else owned.add(k);
+    save();
+    updateProgress();
+    renderGrid();
+  }
+
+  // ── Progress ──
+  function updateProgress() {
+    const total = OC_DATA.length;
+    const count = OC_DATA.filter(r => owned.has(keyOf(r))).length;
+    const pct = total ? Math.round(count / total * 100) : 0;
+    document.getElementById('ownedCount').textContent = count;
+    document.getElementById('totalCount').textContent = total;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressPct').textContent = pct + '%';
+    try { localStorage.setItem('ffxiv_snap_orchestrion', JSON.stringify({ c: count, t: total })); } catch (e) {} // 首頁進度儀表板快照
+  }
+
+  // ── Generic filter tag renderer ──
+  function renderTagFilters(containerId, values, current, onClick, labelFn) {
+    const wrap = document.getElementById(containerId);
+    wrap.innerHTML = '';
+    values.forEach(v => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-tag' + (current === v ? ' active' : '');
+      btn.textContent = labelFn ? labelFn(v) : v;
+      btn.addEventListener('click', () => onClick(v));
+      wrap.appendChild(btn);
+    });
+  }
+
+  // 版本篩選顯示統一「N.x 資料片名」（全站慣例）；資料值仍為資料片名
+  const EXP_PREFIX = { '原初之地':'2.x', '蒼天之禁地':'3.x', '紅蓮之狂潮':'4.x', '暗影之逆焰':'5.x', '曉月之終途':'6.x', '金曦之遺輝':'7.x' };
+  function renderCategoryFilters() {
+    renderTagFilters('categoryFilters', CATEGORIES, filterCategory,
+      v => { filterCategory = filterCategory === v ? null : v; renderCategoryFilters(); renderGrid(); },
+      v => EXP_PREFIX[v] ? `${EXP_PREFIX[v]} ${v}` : v
+    );
+  }
+
+  function renderGameCategoryFilters() {
+    renderTagFilters('gameCategoryFilters', GAME_CATEGORIES, filterGameCategory,
+      v => { filterGameCategory = filterGameCategory === v ? null : v; renderGameCategoryFilters(); renderGrid(); }
+    );
+  }
+
+  function renderSourceFilters() {
+    renderTagFilters('sourceFilters', [...SOURCE_TYPES, '__none__'], filterSource,
+      v => { filterSource = filterSource === v ? null : v; renderSourceFilters(); renderGrid(); },
+      v => v === '__none__' ? '待補充' : v
+    );
+  }
+
+  // ── Filter ──
+  function filtered() {
+    return OC_DATA.filter(r => {
+      const k = keyOf(r);
+
+      if (filterOwn === 'owned'   && !owned.has(k)) return false;
+      if (filterOwn === 'missing' &&  owned.has(k)) return false;
+
+      if (filterCategory && r.category !== filterCategory) return false;
+
+      if (filterGameCategory && r.gameCategory !== filterGameCategory) return false;
+
+      if (filterSource) {
+        const srcs = r.sources || [];
+        if (filterSource === '__none__') {
+          if (srcs.length > 0) return false;
+        } else {
+          if (!srcs.some(s => s.type === filterSource)) return false;
+        }
+      }
+
+      if (searchQ) {
+        const q = searchQ.toLowerCase();
+        const nameMatch = r.name && r.name.toLowerCase().includes(q);
+        const enMatch = r.nameEn && r.nameEn.toLowerCase().includes(q);
+        if (!nameMatch && !enMatch) return false;
+      }
+
+      return true;
+    });
+  }
+
+  // ── Icon URL ──
+  function iconUrl(r) {
+    return null;
+  }
+
+  // ── Sort ──
+  function sortList(list) {
+    if (sortBy === 'default') return list;
+    const arr = [...list];
+    const pv = p => parseFloat(p) || 0;
+    if (sortBy === 'name') arr.sort((a, b) => a.name.localeCompare(b.name, 'zh-Hant'));
+    else if (sortBy === 'patch-asc') arr.sort((a, b) => pv(a.patch) - pv(b.patch));
+    else if (sortBy === 'patch-desc') arr.sort((a, b) => pv(b.patch) - pv(a.patch));
+    return arr;
+  }
+
+  // ── Render grid ──
+  function renderGrid() {
+    const list = sortList(filtered());
+    const grid = document.getElementById('ocGrid');
+    const empty = document.getElementById('emptyState');
+    const meta = document.getElementById('resultMeta');
+
+    grid.innerHTML = '';
+    if (list.length === 0) {
+      grid.style.display = 'none';
+      empty.style.display = '';
+    } else {
+      grid.style.display = '';
+      empty.style.display = 'none';
+    }
+
+    const ownedInView = list.filter(r => owned.has(keyOf(r))).length;
+    meta.innerHTML = `顯示 <em>${list.length}</em> / ${OC_DATA.length} 個 · 已取得 <em>${ownedInView}</em> / ${list.length}`;
+
+    list.forEach(r => {
+      const k = keyOf(r);
+      const isOwned = owned.has(k);
+      const card = document.createElement('div');
+      card.className = 'col-card' + (isOwned ? ' owned' : '');
+
+      const srcs = r.sources || [];
+
+      const sourceTags = srcs.length
+        ? [...new Set(srcs.map(s => s.type))].slice(0, 2)
+            .map(t => `<span class="tag src-tag">${t}</span>`).join('')
+        : `<span class="tag placeholder">待補充</span>`;
+
+      const catClass = 'cat-' + (r.category || '未分類');
+      const catTag = `<span class="tag ${catClass}">${r.category || '未分類'}</span>`;
+      const gcatTag = r.gameCategory ? `<span class="tag gcat">${r.gameCategory}</span>` : '';
+
+      const iconHtml = `<div class="oc-icon-placeholder">🎵</div>`;
+
+      const detailLines = [];
+      if (r.number) detailLines.push(`<div class="detail-line"><b>編號：</b>No.${r.number}</div>`);
+      if (r.nameEn) detailLines.push(`<div class="detail-line"><b>英文名：</b>${r.nameEn}</div>`);
+      if (srcs.length) {
+        srcs.forEach(s => {
+          detailLines.push(`<div class="detail-line"><b>${s.type}：</b>${s.detail || ''}</div>`);
+        });
+      } else {
+        detailLines.push(`<div class="detail-line">取得方式：待補充</div>`);
+      }
+
+      card.innerHTML = `
+        <div class="oc-icon-wrap">
+          ${iconHtml}
+        </div>
+        <div class="col-name">${r.name}</div>
+        <div class="oc-meta">No.${r.number}${r.patch ? ' · ' + r.patch : ''}</div>
+        <div class="col-tags">
+          ${gcatTag}
+          ${catTag}
+          ${sourceTags}
+        </div>
+        <div class="col-detail">${detailLines.join('')}</div>
+      `;
+
+      card.tabIndex = 0;
+      card.setAttribute('role', 'button');
+      card.setAttribute('aria-pressed', isOwned);
+      card.addEventListener('click', () => toggle(k));
+      card.addEventListener('keydown', ev => {
+        if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); toggle(k); }
+      });
+      grid.appendChild(card);
+    });
+  }
+
+  // ── Export / Import ──
+  function exportProgress() {
+    const payload = {
+      schema: 'orchestrion-progress',
+      exported: new Date().toISOString(),
+      owned: [...owned]
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'orchestrion-progress.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  function importProgress(file) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const data = JSON.parse(e.target.result);
+        // 舊版備份為純陣列；新版物件需驗 schema，避免誤將其他頁的進度檔匯入
+        if (!Array.isArray(data) && data.schema !== 'orchestrion-progress') {
+          alert('匯入失敗：這不是「樂譜收藏」的進度檔'); return;
+        }
+        const list = Array.isArray(data) ? data : data.owned;
+        if (!Array.isArray(list)) throw new Error('格式錯誤');
+        if (owned.size && !confirm(`匯入將以檔案內容（${list.length} 筆）取代目前的 ${owned.size} 筆記錄，確定嗎？`)) return;
+        owned = new Set(list);
+        save();
+        updateProgress();
+        renderGrid();
+        alert('匯入成功，共 ' + owned.size + ' 筆已取得記錄');
+      } catch (err) {
+        alert('匯入失敗：檔案格式不正確');
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  // ── Own-toggle buttons ──
+  document.querySelectorAll('.own-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterOwn = btn.dataset.own;
+      document.querySelectorAll('.own-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderGrid();
+    });
+  });
+
+  // ── Search ──
+  document.getElementById('searchInput').addEventListener('input', e => {
+    searchQ = e.target.value.trim();
+    renderGrid();
+  });
+
+  // ── Export / Import / Clear ──
+  document.getElementById('exportBtn').addEventListener('click', exportProgress);
+  document.getElementById('importBtn').addEventListener('click', () => {
+    document.getElementById('importFile').click();
+  });
+  document.getElementById('importFile').addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (file) importProgress(file);
+    e.target.value = '';
+  });
+
+  document.getElementById('clearBtn').addEventListener('click', () => {
+    if (!owned.size) { alert('目前沒有已取得記錄'); return; }
+    if (!confirm('確定要清除全部 ' + owned.size + ' 筆取得記錄嗎？\n將先自動下載一份備份檔以防誤刪。')) return;
+    exportProgress();
+    owned.clear();
+    save();
+    updateProgress();
+    renderGrid();
+  });
+
+  // ── Sort / Batch mark ──
+  document.getElementById('sortSelect').addEventListener('change', e => {
+    sortBy = e.target.value;
+    renderGrid();
+  });
+  document.getElementById('markAllBtn').addEventListener('click', () => {
+    const toAdd = filtered().filter(r => !owned.has(keyOf(r)));
+    if (!toAdd.length) { alert('目前篩選結果都已標記'); return; }
+    if (!confirm('將目前篩選結果中未標記的 ' + toAdd.length + ' 筆標記為已取得？')) return;
+    toAdd.forEach(r => owned.add(keyOf(r)));
+    save(); updateProgress(); renderGrid();
+  });
+  document.getElementById('unmarkAllBtn').addEventListener('click', () => {
+    const toDel = filtered().filter(r => owned.has(keyOf(r)));
+    if (!toDel.length) { alert('目前篩選結果沒有已標記項目'); return; }
+    if (!confirm('取消目前篩選結果中 ' + toDel.length + ' 筆的已取得標記？')) return;
+    toDel.forEach(r => owned.delete(keyOf(r)));
+    save(); updateProgress(); renderGrid();
+  });
+
+  // ── Init: load data ──
+  fetch(DATA_URL)
+    .then(res => {
+      if (!res.ok) throw new Error('無法載入資料 (' + res.status + ')');
+      return res.json();
+    })
+    .then(async json => {
+      const raw = (json && json.data) ? json.data : [];
+      const gp = await PatchGate.loadGamePatch('../../data/_meta.json');
+
+      // 顯示有名稱（含台服官方英文曲名，如 Answers / Heavensward）、且台服已開放的項目
+      OC_DATA = raw.filter(r => r.name && PatchGate.released(r.patch, gp));
+
+      // 依編號排序
+      OC_DATA.sort((a, b) => (a.number || 0) - (b.number || 0));
+
+      // 版本清單（依固定順序）
+      const catSet = new Set(OC_DATA.map(r => r.category).filter(Boolean));
+      CATEGORIES = CATEGORY_ORDER.filter(c => catSet.has(c));
+
+      // 遊戲內分類清單（依固定順序）
+      const gcatSet = new Set(OC_DATA.map(r => r.gameCategory).filter(Boolean));
+      GAME_CATEGORIES = GAME_CATEGORY_ORDER.filter(c => gcatSet.has(c));
+
+      // 取得方式清單
+      const sourceSet = new Set();
+      OC_DATA.forEach(r => (r.sources || []).forEach(s => { if (s.type) sourceSet.add(s.type); }));
+      SOURCE_TYPES = [...sourceSet].sort();
+
+      renderGameCategoryFilters();
+      renderCategoryFilters();
+      renderSourceFilters();
+      updateProgress();
+      renderGrid();
+    })
+    .catch(err => {
+      const grid = document.getElementById('ocGrid');
+      const empty = document.getElementById('emptyState');
+      grid.style.display = 'none';
+      empty.style.display = '';
+      empty.textContent = '資料載入失敗：' + err.message;
+    });
+})();
+</script>
+</body>
+</html>

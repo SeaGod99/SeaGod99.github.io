@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="水神的工具箱 — 為 FFXIV 繁中玩家打造的冒險者工具集合">
+  <meta name="keywords" content="FFXIV, FF14, 最終幻想XIV, 繁體中文, 工具, 市場, 採集, 天書奇談, 仙人微彩">
+  <meta property="og:title" content="水神的工具箱 | FFXIV 繁中工具站">
+  <meta property="og:description" content="為 FFXIV 繁中玩家打造的冒險者工具集合">
+  <title>水神的工具箱 | FFXIV 繁中工具站</title>
+  <style>
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── Design tokens ── */
+    :root {
+      --bg-base:    #0a0c10;
+      --bg-surface: #0f1117;
+      --bg-card:    #14181f;
+      --bg-card-hover: #1a1f2b;
+      --border:     rgba(255,255,255,0.07);
+      --border-hover: rgba(200,169,110,0.4);
+
+      --gold:       #c8a96e;
+      --gold-light: #e2c98a;
+      --gold-dim:   rgba(200,169,110,0.15);
+      --blue:       #4fc3f7;
+      --blue-dim:   rgba(79,195,247,0.12);
+      --green:      #4ade80;
+      --green-dim:  rgba(74,222,128,0.12);
+      --purple:     #a78bfa;
+      --purple-dim: rgba(167,139,250,0.12);
+      --red:        #f87171;
+      --red-dim:    rgba(248,113,113,0.12);
+
+      --text-primary:   #e8eaf0;
+      --text-secondary: #8892a4;
+      --text-muted:     #717c91;
+
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --shadow-card: 0 2px 16px rgba(0,0,0,0.4);
+      --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    /* ── Base ── */
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Background texture ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 0%, rgba(200,169,110,0.05) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(79,195,247,0.04) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Header ── */
+    .site-header {
+      padding: 60px 0 48px;
+      text-align: center;
+    }
+
+    .site-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .logo-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--gold-dim);
+      border: 1px solid rgba(200,169,110,0.3);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .logo-text {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--gold-light);
+      letter-spacing: 0.5px;
+    }
+
+    .site-subtitle {
+      font-size: 15px;
+      color: var(--text-secondary);
+      margin-top: 6px;
+      letter-spacing: 0.3px;
+    }
+
+    .header-divider {
+      width: 60px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 20px auto 0;
+    }
+
+    /* ── Section ── */
+    .section {
+      margin-bottom: 48px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-icon {
+      font-size: 18px;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--text-secondary);
+    }
+
+    .section-count {
+      margin-left: auto;
+      font-size: 11px;
+      color: var(--text-muted);
+      background: var(--raise);
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+
+    /* ── Card Grid ── */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    /* ── Tool Card ── */
+    .tool-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: var(--transition);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tool-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: transparent;
+      transition: var(--transition);
+    }
+
+    .tool-card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-card);
+    }
+
+    .tool-card:hover::before {
+      background: linear-gradient(90deg, var(--gold), transparent);
+    }
+
+    /* Card with link */
+    .tool-card.available { cursor: pointer; }
+    .tool-card.wip { cursor: default; opacity: 0.55; }
+    .tool-card.wip:hover { transform: none; box-shadow: none; border-color: var(--border); }
+    .tool-card.wip:hover::before { background: transparent; }
+
+    .card-emoji {
+      font-size: 26px;
+      line-height: 1;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.3;
+    }
+
+    .card-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 4px;
+    }
+
+    .card-badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 20px;
+      letter-spacing: 0.3px;
+    }
+
+    .badge-ready {
+      background: rgba(74,222,128,0.15);
+      color: #4ade80;
+      border: 1px solid rgba(74,222,128,0.25);
+    }
+    .badge-wip {
+      background: rgba(148,163,184,0.1);
+      color: #64748b;
+      border: 1px solid rgba(148,163,184,0.15);
+    }
+    .badge-new {
+      background: rgba(200,169,110,0.15);
+      color: var(--gold);
+      border: 1px solid rgba(200,169,110,0.25);
+    }
+    .badge-api {
+      background: rgba(79,195,247,0.12);
+      color: var(--blue);
+      border: 1px solid rgba(79,195,247,0.2);
+    }
+
+    .card-arrow {
+      font-size: 14px;
+      color: var(--text-muted);
+      transition: var(--transition);
+    }
+    .tool-card:hover .card-arrow { color: var(--gold); transform: translateX(3px); }
+
+    /* Color accents per section */
+    .section-daily   .tool-card:hover { border-color: rgba(79,195,247,0.4); }
+    .section-daily   .tool-card:hover::before { background: linear-gradient(90deg, var(--blue), transparent); }
+    .section-collect .tool-card:hover { border-color: rgba(167,139,250,0.4); }
+    .section-collect .tool-card:hover::before { background: linear-gradient(90deg, var(--purple), transparent); }
+    .section-battle  .tool-card:hover { border-color: rgba(248,113,113,0.4); }
+    .section-battle  .tool-card:hover::before { background: linear-gradient(90deg, var(--red), transparent); }
+    .section-life    .tool-card:hover { border-color: rgba(74,222,128,0.4); }
+    .section-life    .tool-card:hover::before { background: linear-gradient(90deg, var(--green), transparent); }
+
+    /* ── 收藏進度儀表板 ── */
+    .pd-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 10px;
+    }
+    .pd-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: var(--transition);
+    }
+    .pd-item:hover { border-color: var(--border-hover); background: var(--bg-card-hover); }
+    .pd-top { display: flex; align-items: baseline; gap: 8px; }
+    .pd-name { font-size: 13.5px; font-weight: 600; color: var(--text-primary); }
+    .pd-num { margin-left: auto; font-size: 12px; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+    .pd-bar { height: 6px; background: var(--bg-surface); border-radius: 3px; overflow: hidden; }
+    .pd-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--purple), var(--blue)); transition: width 0.4s; }
+    .pd-item.done .pd-fill { background: linear-gradient(90deg, var(--gold), var(--gold-light)); }
+    .pd-item.done .pd-num { color: var(--gold); }
+    .pd-hint { font-size: 11.5px; color: var(--text-muted); margin-top: 10px; }
+    .pd-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .pd-btn {
+      padding: 8px 14px;
+      font-size: 12.5px;
+      cursor: pointer;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+    .pd-btn:hover { color: var(--text-primary); border-color: var(--border-hover); }
+    .pd-empty { font-size: 12.5px; color: var(--text-muted); padding: 4px 0; }
+
+    /* ── WIP Banner ── */
+    .wip-banner {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      margin-bottom: 40px;
+    }
+    .wip-banner-icon { font-size: 16px; }
+
+    /* ── Footer ── */
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 0 40px;
+      text-align: center;
+    }
+    .footer-text {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 2;
+    }
+    .footer-text a {
+      color: var(--text-secondary);
+      transition: var(--transition);
+    }
+    .footer-text a:hover { color: var(--gold); }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .site-header { padding: 40px 0 32px; }
+      .logo-text { font-size: 22px; }
+      .card-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .tool-card { padding: 16px; }
+    }
+    @media (max-width: 380px) {
+      .card-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+  <link rel="stylesheet" href="./assets/css/theme.css">
+  <script src="./assets/js/theme.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="site-logo">
+      <div class="logo-icon">⚓</div>
+      <h1 class="logo-text">水神的工具箱</h1>
+    </div>
+    <p class="site-subtitle">為 FFXIV 繁中玩家打造的冒險者工具集合</p>
+    <div class="header-divider"></div>
+  </header>
+
+  <!-- WIP notice -->
+  <div class="wip-banner">
+    <span class="wip-banner-icon">🛠️</span>
+    <span>工具站持續建設中，標示「可用」的功能已可使用，其餘即將推出。</span>
+  </div>
+
+  <!-- ── 我的收藏進度（取自各追蹤頁寫入的本機快照）── -->
+  <section class="section section-collect" id="progressDash" style="display:none">
+    <div class="section-header">
+      <span class="section-icon">📈</span>
+      <h2 class="section-title">我的收藏進度</h2>
+      <span class="section-count" id="pdTotal"></span>
+    </div>
+    <div class="pd-grid" id="pdGrid"></div>
+    <p class="pd-empty" id="pdEmpty" style="display:none">尚無進度紀錄——開啟任一追蹤頁後會自動出現在這裡；換裝置時可用下方「匯入全站進度」還原備份。</p>
+    <p class="pd-hint">進度為此瀏覽器的本機紀錄——各追蹤頁開啟過一次後就會出現在這裡並自動同步。</p>
+    <div class="pd-actions">
+      <button class="pd-btn" id="pdExportBtn" title="將所有追蹤頁的進度打包成單一備份檔">💾 匯出全站進度</button>
+      <button class="pd-btn" id="pdImportBtn" title="還原「匯出全站進度」產生的備份檔">📥 匯入全站進度</button>
+      <input type="file" id="pdImportFile" accept="application/json" style="display:none">
+    </div>
+  </section>
+
+  <!-- ── 日常工具 ── -->
+  <section class="section section-daily">
+    <div class="section-header">
+      <span class="section-icon">📅</span>
+      <h2 class="section-title">日常工具</h2>
+      <span class="section-count">7 項</span>
+    </div>
+    <div class="card-grid">
+
+      <a href="tools/weather/" class="tool-card available">
+        <div class="card-emoji">⛅</div>
+        <div class="card-title">艾歐澤亞天氣預報</div>
+        <div class="card-desc">即時天氣、多地圖概覽、目標天氣搜尋與天氣鏈搜尋</div>
+        <div class="card-footer">
+          <span class="card-badge badge-ready">可用</span>
+          <span class="card-badge badge-new">新</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="tools/wondrous-tails/" class="tool-card available">
+        <div class="card-emoji">📖</div>
+        <div class="card-title">天書奇談計算器</div>
+        <div class="card-desc">即時計算連線機率，建議保留或再想想</div>
+        <div class="card-footer">
+          <span class="card-badge badge-ready">可用</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="tools/cactpot/" class="tool-card available">
+        <div class="card-emoji">🎰</div>
+        <div class="card-title">仙人微彩計算機</div>
+        <div class="card-desc">期望值分析，建議最佳翻牌與選線策略</div>
+        <div class="card-footer">
+          <span class="card-badge badge-ready">可用</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="tools/gathering/" class="tool-card available">
+        <div class="card-emoji">⛏️</div>
+        <div class="card-title">限時採集節點查詢</div>
+        <div class="card-desc">傳說／稀有採集點開放時間、座標與職業，依 ET 即時更新</div>
+        <div class="card-footer">
+          <span class="card-badge badge-ready">可用</span>
+          <span class="card-badge badge-new">新</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="tools/aether-currents/" class="tool-card">
+        <div class="card-emoji">🌬️</div>
+        <div class="card-title">風脈泉追蹤器</div>
+        <div class="card-desc">各版本野外風脈泉任務與野外採集，追蹤解鎖進度</div>
+        <div class="card-footer">
+          <span class="card-badge badge-ready">可用</span>
+          <span class="card-badge badge-new">新</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a class="tool-card" href="tools/faux-hollows/">
+        <div class="card-emoji">🦊</div>
+        <div class="card-title">幻巧戰助手</div>
+        <div class="card-desc">點格標封鎖格自動辨識盤形，單擊記錄翻格，計算劍／箱／狐機率與建議</div>
+        <div class="card-footer">
+          <span class="card-badge badge-ready">可用</span>
+          <span class="card-badge badge-new">新</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a class="tool-card" href="tools/fashion-report/">
+        <div class="card-emoji">👗</div>
+        <div class="card-title">時尚品鑑推薦</div>
+        <div class="card-desc">本週 80／100 分配裝建議，週更主題與染色指南</div>
+        <div class="card-footer">
+          <span class="card-badge badge-ready">可用</span>
+          <span class="card-badge badge-new">新</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ── 收藏 / 成就 ── -->
+  <section class="section section-collect">
+    <div class="section-header">
+      <span class="section-icon">🏆</span>
+      <h2 class="section-title">收藏 / 成就</h2>
+      <span class="section-count">9 項</span>
+    </div>
+    <div class="card-grid">
+
+      <a href="collections/mounts/" class="tool-card available">
+        <div class="card-emoji">🐎</div>
+        <div class="card-title">坐騎收藏追蹤</div>
+        <div class="card-desc">查詢取得來源、版本篩選、追蹤擁有進度</div>
+        <div class="card-footer">
+          <span class="card-badge badge-ready">可用</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="minions/" class="tool-card available">
+        <div class="card-emoji">🐣</div>
+        <div class="card-title">寵物收藏追蹤</div>
+        <div class="card-desc">查詢取得來源、篩選搜尋、追蹤擁有進度</div>
+        <div class="card-footer">
+          <span class="card-badge badge-ready">可用</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="collections/orchestrion/" class="tool-card available">
+        <div class="card-emoji">🎵</div>
+        <div class="card-title">樂譜收藏追蹤</div>
+        <div class="card-desc">演奏團樂譜來源查詢，追蹤蒐集進度</div>
+        <div class="card-footer">
+          <span class="card-badge badge-ready">可用</span>
+          <span class="card-badge badge-new">新</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="collections/emotes/" class="tool-card available">
+        <div class="card-emoji">💃</div>
+        <div class="card-title">表情收藏追蹤</div>
+        <div class="card-desc">表情動作來源查詢，追蹤擁有進度</div>
+        <div class="card-footer">
+          <span class="card-badge badge-ready">可用</span>
+          <span class="card-badge badge-new">新</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="collections/hairstyles/" class="tool-card">
+        <div class="card-emoji">💇</div>
+        <div class="card-title">髮型收藏追蹤</div>
+        <div class="card-desc">髮型樣式書來源查詢，追蹤解鎖進度</div>
+        <div class="card-footer">
+          <span class="card-badge badge-ready">可用</span>
+          <span class="card-badge badge-new">新</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="collections/barding/" class="tool-card available">
+        <div class="card-emoji">🦜</div>
+        <div class="card-title">鳥鞍收藏追蹤</div>
+        <div class="card-desc">陸行鳥鞍具來源查詢，追蹤擁有進度</div>
+        <div class="card-footer">
+          <span class="card-badge badge-ready">可用</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="collections/exploration-log/" class="tool-card available">
+        <div class="card-emoji">👁️</div>
+        <div class="card-title">探索筆記追蹤器</div>
+        <div class="card-desc">全版本景觀查詢，天氣與時間提醒</div>
+        <div class="card-footer">
+          <span class="card-badge badge-ready">可用</span>
+          <span class="card-badge badge-new">新</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="collections/blue-magic/" class="tool-card available">
+        <div class="card-emoji">💙</div>
+        <div class="card-title">青魔法術收藏</div>
+        <div class="card-desc">法術來源追蹤與習得路線建議</div>
+        <div class="card-footer">
+          <span class="card-badge badge-ready">可用</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="collections/triple-triad/" class="tool-card available">
+        <div class="card-emoji">🃏</div>
+        <div class="card-title">幻卡追蹤</div>
+        <div class="card-desc">幻卡取得來源與對戰策略查詢</div>
+        <div class="card-footer">
+          <span class="card-badge badge-ready">可用</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ── 戰鬥 / 副本 ── -->
+  <section class="section section-battle">
+    <div class="section-header">
+      <span class="section-icon">⚔️</span>
+      <h2 class="section-title">戰鬥 / 副本</h2>
+      <span class="section-count">3 項</span>
+    </div>
+    <div class="card-grid">
+
+      <a href="https://gearing.ffsusu.com/" target="_blank" rel="noopener" class="tool-card available">
+        <div class="card-emoji">🛡️</div>
+        <div class="card-title">配裝規劃器</div>
+        <div class="card-desc">全職業裝備規劃、魔晶石鑲嵌、食物加成、一鍵分享</div>
+        <div class="card-footer">
+          <span class="card-badge badge-ready">外部連結</span>
+          <span class="card-arrow">↗</span>
+        </div>
+      </a>
+
+      <a href="tools/squadron/" class="tool-card">
+        <div class="card-emoji">🏰</div>
+        <div class="card-title">冒險者小隊計算機</div>
+        <div class="card-desc">設定隊員職業與等級，計算最佳任務派遣組合與成功率</div>
+        <div class="card-footer">
+          <span class="card-badge badge-ready">可用</span>
+          <span class="card-badge badge-new">新</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ── 生活職 ── -->
+  <section class="section section-life">
+    <div class="section-header">
+      <span class="section-icon">🌿</span>
+      <h2 class="section-title">生活職（採集 / 製作 / 市場）</h2>
+      <span class="section-count">7 項</span>
+
+    </div>
+    <div class="card-grid">
+
+      <a href="tools/market/" class="tool-card available">
+        <div class="card-emoji">📊</div>
+        <div class="card-title">市場查價 + 比價</div>
+        <div class="card-desc">陸行鳥 DC 即時價格、跨服比價、製作清單原料樹與買／做成本試算</div>
+        <div class="card-footer">
+          <span class="card-badge badge-ready">可用</span>
+          <span class="card-badge badge-new">新</span>
+          <span class="card-badge badge-api">API</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="tools/gc-exchange/" class="tool-card available">
+        <div class="card-emoji">🎖️</div>
+        <div class="card-title">軍票變現排行</div>
+        <div class="card-desc">軍票與雙色寶石兌換品即時市價，換算每 1 軍票值多少 gil</div>
+        <div class="card-footer">
+          <span class="card-badge badge-ready">可用</span>
+          <span class="card-badge badge-new">新</span>
+          <span class="card-badge badge-api">API</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="tools/treasure-maps/" class="tool-card available">
+        <div class="card-emoji">🗺️</div>
+        <div class="card-title">藏寶圖採集點查詢</div>
+        <div class="card-desc">陳舊的地圖 G1～G17 各等級挖寶位置，地圖標點＋座標一覽</div>
+        <div class="card-footer">
+          <span class="card-badge badge-ready">可用</span>
+          <span class="card-badge badge-new">新</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="tools/gardening/" class="tool-card">
+        <div class="card-emoji">🌱</div>
+        <div class="card-title">園藝配種計算</div>
+        <div class="card-desc">正查兩株配種結果，反查目標植物的配種路徑</div>
+        <div class="card-footer">
+          <span class="card-badge badge-ready">可用</span>
+          <span class="card-badge badge-new">新</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="tools/fishing/" class="tool-card">
+        <div class="card-emoji">🎣</div>
+        <div class="card-title">釣魚紀錄追蹤</div>
+        <div class="card-desc">1449 種魚查詢，可釣倒數、目標魚釘選、釣場地圖，追蹤已釣進度</div>
+        <div class="card-footer">
+          <span class="card-badge badge-ready">可用</span>
+          <span class="card-badge badge-new">新</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="https://fish.ffmomola.com/#/oceanFishing" target="_blank" rel="noopener" class="tool-card available">
+        <div class="card-emoji">🚢</div>
+        <div class="card-title">出海垂釣班表（魚糕）</div>
+        <div class="card-desc">未來航線時刻表、停靠點魚單與攻略，由魚糕提供</div>
+        <div class="card-footer">
+          <span class="card-badge badge-ready">外部連結</span>
+          <span class="card-arrow">↗</span>
+        </div>
+      </a>
+
+      <a href="tools/gathering-log/" class="tool-card">
+        <div class="card-emoji">⛏️</div>
+        <div class="card-title">採集紀錄追蹤</div>
+        <div class="card-desc">733 個採集節點，採礦工/園藝工，追蹤已採物品</div>
+        <div class="card-footer">
+          <span class="card-badge badge-ready">可用</span>
+          <span class="card-badge badge-new">新</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+</div>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="container">
+    <p class="footer-text">
+      水神的工具箱 &nbsp;·&nbsp;
+      <a href="https://github.com/SeaGod99/SeaGod99.github.io" target="_blank">GitHub</a>
+      &nbsp;·&nbsp; 資料來源：
+      <a href="https://xivapi.com" target="_blank">XIVAPI</a>、
+      <a href="https://universalis.app" target="_blank">Universalis</a>、
+      <a href="https://ffxivteamcraft.com" target="_blank">Teamcraft</a>
+    </p>
+    <p class="footer-text" style="margin-top:4px">
+      FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具
+    </p>
+  </div>
+</footer>
+
+<script>
+/* 收藏進度儀表板：讀各追蹤頁寫入的 ffxiv_snap_* 快照（無需載入資料檔） */
+(function () {
+  var REG = [
+    { key: 'mounts',      emoji: '🐎',  name: '坐騎',     href: 'collections/mounts/' },
+    { key: 'minions',     emoji: '🐣',  name: '寵物',     href: 'minions/' },
+    { key: 'orchestrion', emoji: '🎵',  name: '樂譜',     href: 'collections/orchestrion/' },
+    { key: 'emotes',      emoji: '💃',  name: '表情',     href: 'collections/emotes/' },
+    { key: 'hairstyles',  emoji: '💇',  name: '髮型',     href: 'collections/hairstyles/' },
+    { key: 'barding',     emoji: '🦜',  name: '鳥鞍',     href: 'collections/barding/' },
+    { key: 'triad',       emoji: '🃏',  name: '幻卡',     href: 'collections/triple-triad/' },
+    { key: 'bluemagic',   emoji: '💙',  name: '青魔法術', href: 'collections/blue-magic/' },
+    { key: 'explog',      emoji: '👁️', name: '探索筆記', href: 'collections/exploration-log/' },
+    { key: 'aether',      emoji: '🌬️', name: '風脈泉',   href: 'tools/aether-currents/' },
+    { key: 'fishing',     emoji: '🎣',  name: '釣魚紀錄', href: 'tools/fishing/' },
+    { key: 'gatherlog',   emoji: '⛏️', name: '採集紀錄', href: 'tools/gathering-log/' },
+  ];
+  var rows = [];
+  REG.forEach(function (r) {
+    try {
+      var s = JSON.parse(localStorage.getItem('ffxiv_snap_' + r.key) || 'null');
+      if (s && typeof s.c === 'number' && typeof s.t === 'number' && s.t > 0) rows.push({ r: r, c: s.c, t: s.t });
+    } catch (e) {}
+  });
+
+  if (rows.length) {
+    var sumC = 0, sumT = 0;
+    document.getElementById('pdGrid').innerHTML = rows.map(function (x) {
+      sumC += x.c; sumT += x.t;
+      var pct = Math.round(x.c / x.t * 100);
+      return '<a class="pd-item' + (x.c >= x.t ? ' done' : '') + '" href="' + x.r.href + '">' +
+        '<div class="pd-top"><span>' + x.r.emoji + '</span><span class="pd-name">' + x.r.name + '</span>' +
+        '<span class="pd-num">' + x.c + ' / ' + x.t + '（' + pct + '%）</span></div>' +
+        '<div class="pd-bar"><div class="pd-fill" style="width:' + pct + '%"></div></div></a>';
+    }).join('');
+    document.getElementById('pdTotal').textContent =
+      '合計 ' + sumC + ' / ' + sumT + '（' + Math.round(sumC / sumT * 100) + '%）';
+  } else {
+    // 沒逛過任何追蹤頁：仍顯示區塊，讓「匯入全站進度」可用（換裝置還原用）
+    document.getElementById('pdEmpty').style.display = '';
+  }
+  document.getElementById('progressDash').style.display = '';
+
+  /* ── 全站進度備份：打包所有 ffxiv_* localStorage key 成單一 JSON ── */
+  var BACKUP_SCHEMA = 'seagod-toolbox-backup';
+
+  document.getElementById('pdExportBtn').addEventListener('click', function () {
+    var keys = {};
+    var n = 0;
+    for (var i = 0; i < localStorage.length; i++) {
+      var k = localStorage.key(i);
+      if (k && k.indexOf('ffxiv_') === 0) { keys[k] = localStorage.getItem(k); n++; }
+    }
+    if (!n) { alert('目前沒有任何進度可匯出，請先到各追蹤頁記錄進度。'); return; }
+    var payload = { schema: BACKUP_SCHEMA, exported: new Date().toISOString(), keys: keys };
+    var blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'seagod-toolbox-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+
+  document.getElementById('pdImportBtn').addEventListener('click', function () {
+    document.getElementById('pdImportFile').click();
+  });
+  document.getElementById('pdImportFile').addEventListener('change', function (ev) {
+    var file = ev.target.files[0];
+    ev.target.value = '';
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      try {
+        var data = JSON.parse(e.target.result);
+        if (!data || data.schema !== BACKUP_SCHEMA || typeof data.keys !== 'object' || data.keys === null) {
+          alert('匯入失敗：這不是「匯出全站進度」產生的備份檔'); return;
+        }
+        var names = Object.keys(data.keys).filter(function (k) { return k.indexOf('ffxiv_') === 0; });
+        if (!names.length) { alert('匯入失敗：備份檔內沒有進度資料'); return; }
+        if (!confirm('將還原 ' + names.length + ' 項進度紀錄（' + (data.exported ? '備份於 ' + data.exported.slice(0, 10) : '備份時間不明') + '），此瀏覽器上同名的既有進度會被覆蓋，確定嗎？')) return;
+        names.forEach(function (k) {
+          try { localStorage.setItem(k, data.keys[k]); } catch (err) {}
+        });
+        alert('匯入成功，已還原 ' + names.length + ' 項進度紀錄。');
+        location.reload();
+      } catch (err) {
+        alert('匯入失敗：檔案格式不正確');
+      }
+    };
+    reader.readAsText(file);
+  });
+})();
+</script>
+
+</body>
+</html>

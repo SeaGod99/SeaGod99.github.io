@@ -1,0 +1,5089 @@
+{
+  "schema": "emotes",
+  "patch": "7.2",
+  "updated": "2026-06-23",
+  "source": "xivapi+itemaction+cafemaker+tw-items",
+  "count": 292,
+  "data": [
+    {
+      "id": 1,
+      "name": "驚訝",
+      "nameEn": "Surprised",
+      "command": "/surprised",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246201.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 2,
+      "name": "不滿",
+      "nameEn": "Angry",
+      "command": "/angry",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246202.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 3,
+      "name": "憤怒",
+      "nameEn": "Furious",
+      "command": "/furious",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246203.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 4,
+      "name": "害羞",
+      "nameEn": "Blush",
+      "command": "/blush",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246204.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 5,
+      "name": "行禮",
+      "nameEn": "Bow",
+      "command": "/bow",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246205.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 6,
+      "name": "加油",
+      "nameEn": "Cheer",
+      "command": "/cheer",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246206.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 7,
+      "name": "拍手",
+      "nameEn": "Clap",
+      "command": "/clap",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246207.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 8,
+      "name": "招手",
+      "nameEn": "Beckon",
+      "command": "/beckon",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246208.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 9,
+      "name": "安慰",
+      "nameEn": "Comfort",
+      "command": "/comfort",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246209.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 10,
+      "name": "哭泣",
+      "nameEn": "Cry",
+      "command": "/cry",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246210.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 11,
+      "name": "跳舞",
+      "nameEn": "Dance",
+      "command": "/dance",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246211.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 12,
+      "name": "質疑",
+      "nameEn": "Doubt",
+      "command": "/doubt",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246212.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 13,
+      "name": "打盹",
+      "nameEn": "Doze",
+      "command": "/doze",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246213.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 14,
+      "name": "後悔",
+      "nameEn": "Fume",
+      "command": "/fume",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246214.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 15,
+      "name": "道別",
+      "nameEn": "Goodbye",
+      "command": "/goodbye",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246215.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 16,
+      "name": "揮手",
+      "nameEn": "Wave",
+      "command": "/wave",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246216.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 17,
+      "name": "莫名",
+      "nameEn": "Huh",
+      "command": "/huh",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246217.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 18,
+      "name": "高興",
+      "nameEn": "Joy",
+      "command": "/joy",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246218.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 19,
+      "name": "下跪",
+      "nameEn": "Kneel",
+      "command": "/kneel",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246219.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 20,
+      "name": "輕笑",
+      "nameEn": "Chuckle",
+      "command": "/chuckle",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246220.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 21,
+      "name": "大笑",
+      "nameEn": "Laugh",
+      "command": "/laugh",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246221.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 22,
+      "name": "張望",
+      "nameEn": "Lookout",
+      "command": "/lookout",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246222.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 23,
+      "name": "展示",
+      "nameEn": "Me",
+      "command": "/me",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246223.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 24,
+      "name": "搖頭",
+      "nameEn": "No",
+      "command": "/no",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246224.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 25,
+      "name": "否定",
+      "nameEn": "Deny",
+      "command": "/deny",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246225.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 26,
+      "name": "慌張",
+      "nameEn": "Panic",
+      "command": "/panic",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246226.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 27,
+      "name": "指向",
+      "nameEn": "Point",
+      "command": "/point",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246227.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 28,
+      "name": "戳指",
+      "nameEn": "Poke",
+      "command": "/poke",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246228.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 29,
+      "name": "稱讚",
+      "nameEn": "Congratulate",
+      "command": "/congratulate",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246229.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 30,
+      "name": "激勵",
+      "nameEn": "Psych",
+      "command": "/psych",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246230.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 31,
+      "name": "敬禮",
+      "nameEn": "Salute",
+      "command": "/salute",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246231.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 32,
+      "name": "震驚",
+      "nameEn": "Shocked",
+      "command": "/shocked",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246232.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 33,
+      "name": "聳肩",
+      "nameEn": "Shrug",
+      "command": "/shrug",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246233.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 34,
+      "name": "鼓勵",
+      "nameEn": "Rally",
+      "command": "/rally",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246234.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 35,
+      "name": "安撫",
+      "nameEn": "Soothe",
+      "command": "/soothe",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246235.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 36,
+      "name": "迷糊",
+      "nameEn": "Stagger",
+      "command": "/stagger",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246236.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 37,
+      "name": "伸展",
+      "nameEn": "Stretch",
+      "command": "/stretch",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246237.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 38,
+      "name": "慍怒",
+      "nameEn": "Sulk",
+      "command": "/sulk",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246238.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 39,
+      "name": "思考",
+      "nameEn": "Think",
+      "command": "/think",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246239.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 40,
+      "name": "失望",
+      "nameEn": "Upset",
+      "command": "/upset",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246240.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 41,
+      "name": "歡迎",
+      "nameEn": "Welcome",
+      "command": "/welcome",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246241.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 42,
+      "name": "點頭",
+      "nameEn": "Yes",
+      "command": "/yes",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246242.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 43,
+      "name": "肯定",
+      "nameEn": "Thumbs Up",
+      "command": "/thumbsup",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246243.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 44,
+      "name": "自視",
+      "nameEn": "Examine Self",
+      "command": "/examineself",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246244.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 45,
+      "name": "擺造型",
+      "nameEn": "Pose",
+      "command": "/pose",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246245.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 46,
+      "name": "飛吻",
+      "nameEn": "Blow Kiss",
+      "command": "/blowkiss",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246249.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 47,
+      "name": "下跪認錯",
+      "nameEn": "Grovel",
+      "command": "/grovel",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246251.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 48,
+      "name": "欣喜若狂",
+      "nameEn": "Happy",
+      "command": "/happy",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246252.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 49,
+      "name": "大失所望",
+      "nameEn": "Disappointed",
+      "command": "/disappointed",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246253.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 50,
+      "name": "坐下",
+      "nameEn": "Sit",
+      "command": "/lounge",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246256.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 52,
+      "name": "坐下到地上",
+      "nameEn": "Sit on Ground",
+      "command": "/groundsit",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246254.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 54,
+      "name": "引用",
+      "nameEn": "Air Quotes",
+      "command": "/airquotes",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246263.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 55,
+      "name": "黑渦團軍禮",
+      "nameEn": "Storm Salute",
+      "command": "/gcsalute",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246246.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 56,
+      "name": "雙蛇黨軍禮",
+      "nameEn": "Serpent Salute",
+      "command": "/gcsalute",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246247.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 57,
+      "name": "恆輝隊軍禮",
+      "nameEn": "Flame Salute",
+      "command": "/gcsalute",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246248.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 58,
+      "name": "祈禱",
+      "nameEn": "Pray",
+      "command": "/pray",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246264.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 59,
+      "name": "帝國式軍禮",
+      "nameEn": "Imperial Salute",
+      "command": "/imperialsalute",
+      "unlockLink": 23,
+      "itemId": null,
+      "icon": "/i/246000/246266.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「另一類軍禮」獎勵"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 60,
+      "name": "頭部裝備操作",
+      "nameEn": "Visor",
+      "command": "/visor",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246265.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 62,
+      "name": "百萬核爆",
+      "nameEn": "Megaflare",
+      "command": "/megaflare",
+      "unlockLink": 379,
+      "itemId": 22461,
+      "icon": "/i/246000/246327.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·百萬火光"
+        }
+      ],
+      "patch": "4.25"
+    },
+    {
+      "id": 63,
+      "name": "練武",
+      "nameEn": "Crimson Lotus",
+      "command": "/crimsonlotus",
+      "unlockLink": 378,
+      "itemId": 22460,
+      "icon": "/i/246000/246328.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·練武"
+        }
+      ],
+      "patch": "4.3"
+    },
+    {
+      "id": 64,
+      "name": "魅惑擁抱",
+      "nameEn": "Charmed",
+      "command": "/charmed",
+      "unlockLink": 384,
+      "itemId": 22377,
+      "icon": "/i/246000/246329.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "摩偷羅: 魔金錫幣 x5, at 基拉巴尼亞邊區"
+        }
+      ],
+      "patch": "4.2"
+    },
+    {
+      "id": 65,
+      "name": "聲援小藍",
+      "nameEn": "Cheer On: Blue",
+      "command": "/cheeronblue",
+      "unlockLink": 381,
+      "itemId": 22378,
+      "icon": "/i/246000/246330.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": "演技教材·聲援小藍"
+        },
+        {
+          "type": "商城",
+          "detail": "演技教材·聲援小藍"
+        }
+      ],
+      "patch": "4.2"
+    },
+    {
+      "id": 66,
+      "name": "聲援小黃",
+      "nameEn": "Cheer Wave: Yellow",
+      "command": "/cheerwaveyellow",
+      "unlockLink": 382,
+      "itemId": 22379,
+      "icon": "/i/246000/246331.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": "演技教材·聲援小黃"
+        },
+        {
+          "type": "商城",
+          "detail": "演技教材·聲援小黃"
+        }
+      ],
+      "patch": "4.2"
+    },
+    {
+      "id": 67,
+      "name": "聲援小紅",
+      "nameEn": "Cheer Jump: Red",
+      "command": "/cheerjumpred",
+      "unlockLink": 383,
+      "itemId": 22380,
+      "icon": "/i/246000/246332.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": "演技教材·聲援小紅"
+        },
+        {
+          "type": "商城",
+          "detail": "演技教材·聲援小紅"
+        }
+      ],
+      "patch": "4.2"
+    },
+    {
+      "id": 68,
+      "name": "表情：平常",
+      "nameEn": "Straight Face",
+      "command": "/straightface",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246101.png",
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 69,
+      "name": "表情：微笑",
+      "nameEn": "Smile",
+      "command": "/smile",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246102.png",
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 70,
+      "name": "表情：笑顏",
+      "nameEn": "Grin",
+      "command": "/grin",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246103.png",
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 71,
+      "name": "表情：自信",
+      "nameEn": "Smirk",
+      "command": "/smirk",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246104.png",
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 72,
+      "name": "表情：無畏",
+      "nameEn": "Taunt",
+      "command": "/taunt",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246105.png",
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 73,
+      "name": "表情：閉目",
+      "nameEn": "Shut Eyes",
+      "command": "/shuteyes",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246106.png",
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 74,
+      "name": "表情：悲傷",
+      "nameEn": "Sad",
+      "command": "/sad",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246107.png",
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 75,
+      "name": "表情：恐怖",
+      "nameEn": "Scared",
+      "command": "/scared",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246108.png",
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 76,
+      "name": "表情：意外",
+      "nameEn": "Amazed",
+      "command": "/amazed",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246109.png",
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 77,
+      "name": "表情：痛苦",
+      "nameEn": "Ouch",
+      "command": "/ouch",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246110.png",
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 78,
+      "name": "表情：反感",
+      "nameEn": "Annoyed",
+      "command": "/annoyed",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246111.png",
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 79,
+      "name": "表情：吃驚",
+      "nameEn": "Alert",
+      "command": "/alert",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246112.png",
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 80,
+      "name": "表情：擔心",
+      "nameEn": "Worried",
+      "command": "/worried",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246113.png",
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 81,
+      "name": "表情：咧嘴",
+      "nameEn": "Big Grin",
+      "command": "/biggrin",
+      "unlockLink": 388,
+      "itemId": 22497,
+      "icon": "/i/246000/246125.png",
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "紀念品兌換員: 金碟幣 x20000, at 金碟遊樂園"
+        }
+      ],
+      "patch": "4.2"
+    },
+    {
+      "id": 82,
+      "name": "表情：沉思",
+      "nameEn": "Reflect",
+      "command": "/reflect",
+      "unlockLink": 389,
+      "itemId": 22498,
+      "icon": "/i/246000/246126.png",
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "黑渦團補給負責人: 黑渦團軍票 x2, at 利姆薩·羅敏薩上層甲板"
+        },
+        {
+          "type": "商店",
+          "detail": "雙蛇黨補給負責人: 黑渦團軍票 x2, at 格里達尼亞新街"
+        },
+        {
+          "type": "商店",
+          "detail": "不滅隊補給負責人: 黑渦團軍票 x2, at 烏爾達哈現世回廊"
+        }
+      ],
+      "patch": "4.2"
+    },
+    {
+      "id": 83,
+      "name": "表情：皺眉",
+      "nameEn": "Furrow",
+      "command": "/furrow",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246127.png",
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 84,
+      "name": "表情：苦笑",
+      "nameEn": "Scoff",
+      "command": "/scoff",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246128.png",
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 85,
+      "name": "投擲",
+      "nameEn": "Throw",
+      "command": "/throw",
+      "unlockLink": 24,
+      "itemId": null,
+      "icon": "/i/246000/246250.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「冬日的活動」獎勵"
+        }
+      ],
+      "patch": "2.1"
+    },
+    {
+      "id": 90,
+      "name": "改變姿勢",
+      "nameEn": "Change Pose",
+      "command": "/changepose",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246268.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 101,
+      "name": "踢踏舞",
+      "nameEn": "Step Dance",
+      "command": "/stepdance",
+      "unlockLink": 27,
+      "itemId": null,
+      "icon": "/i/246000/246269.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「快樂的律動之舞」獎勵"
+        }
+      ],
+      "patch": "2.2"
+    },
+    {
+      "id": 102,
+      "name": "豐饒之舞",
+      "nameEn": "Harvest Dance",
+      "command": "/harvestdance",
+      "unlockLink": 28,
+      "itemId": null,
+      "icon": "/i/246000/246270.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「為誰而舞」獎勵"
+        }
+      ],
+      "patch": "2.2"
+    },
+    {
+      "id": 103,
+      "name": "宮廷之舞",
+      "nameEn": "Ball Dance",
+      "command": "/balldance",
+      "unlockLink": 29,
+      "itemId": null,
+      "icon": "/i/246000/246271.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「舞女的夢想舞臺」獎勵"
+        }
+      ],
+      "patch": "2.2"
+    },
+    {
+      "id": 104,
+      "name": "紳士之舞",
+      "nameEn": "Manderville Dance",
+      "command": "/mandervilledance",
+      "unlockLink": 30,
+      "itemId": null,
+      "icon": "/i/246000/246272.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「白髮鬼」獎勵"
+        }
+      ],
+      "patch": "2.2"
+    },
+    {
+      "id": 105,
+      "name": "撫摸",
+      "nameEn": "Pet",
+      "command": "/stroke",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246267.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 106,
+      "name": "遞交",
+      "nameEn": "Hand Over",
+      "command": "/handover",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246273.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 109,
+      "name": "火盆舞",
+      "nameEn": "Bomb Dance",
+      "command": "/bombdance",
+      "unlockLink": 98,
+      "itemId": 12040,
+      "icon": "/i/246000/246274.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": "演技教材·火盆舞"
+        },
+        {
+          "type": "商城",
+          "detail": "演技教材·火盆舞"
+        }
+      ],
+      "patch": "2.3"
+    },
+    {
+      "id": 110,
+      "name": "勝利歡呼",
+      "nameEn": "Huzzah",
+      "command": "/hurray",
+      "unlockLink": 225,
+      "itemId": 13004,
+      "icon": "/i/246000/246275.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·勝利歡呼"
+        }
+      ],
+      "patch": "2.35"
+    },
+    {
+      "id": 111,
+      "name": "甩巴掌",
+      "nameEn": "Slap",
+      "command": "/slap",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246276.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 112,
+      "name": "擁抱",
+      "nameEn": "Hug",
+      "command": "/hug",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246277.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 113,
+      "name": "深情擁抱",
+      "nameEn": "Embrace",
+      "command": "/embrace",
+      "unlockLink": 229,
+      "itemId": null,
+      "icon": "/i/246000/246278.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「天長地久」獎勵"
+        }
+      ],
+      "patch": "2.45"
+    },
+    {
+      "id": 114,
+      "name": "紳士風度",
+      "nameEn": "Most Gentlemanly",
+      "command": "/hildibrand",
+      "unlockLink": 244,
+      "itemId": null,
+      "icon": "/i/246000/246279.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「隨風而逝的結局」獎勵"
+        }
+      ],
+      "patch": "2.5"
+    },
+    {
+      "id": 115,
+      "name": "對拳",
+      "nameEn": "Fist Bump",
+      "command": "/fistbump",
+      "unlockLink": 259,
+      "itemId": 12041,
+      "icon": "/i/246000/246280.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "其他",
+          "detail": "演技教材·對拳"
+        }
+      ],
+      "patch": "3.0"
+    },
+    {
+      "id": 118,
+      "name": "薩維奈舞",
+      "nameEn": "Thavnairian Dance",
+      "command": "/thavdance",
+      "unlockLink": 288,
+      "itemId": 13706,
+      "icon": "/i/246000/246282.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "紀念品兌換員: 金碟幣 x80000, at 金碟遊樂園"
+        }
+      ],
+      "patch": "3.1"
+    },
+    {
+      "id": 119,
+      "name": "黃金之舞",
+      "nameEn": "Gold Dance",
+      "command": "/golddance",
+      "unlockLink": 289,
+      "itemId": 13707,
+      "icon": "/i/246000/246283.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "紀念品兌換員: 金碟幣 x80000, at 金碟遊樂園"
+        }
+      ],
+      "patch": "3.1"
+    },
+    {
+      "id": 120,
+      "name": "太陽之舞",
+      "nameEn": "Sundrop Dance",
+      "command": "/sundance",
+      "unlockLink": 283,
+      "itemId": null,
+      "icon": "/i/246000/246284.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「敬畏之人」獎勵"
+        }
+      ],
+      "patch": "3.1"
+    },
+    {
+      "id": 121,
+      "name": "準備戰鬥",
+      "nameEn": "Battle Stance",
+      "command": "/battlestance",
+      "unlockLink": 305,
+      "itemId": null,
+      "icon": "/i/246000/246285.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「命運的齒輪」獎勵"
+        }
+      ],
+      "patch": "3.2"
+    },
+    {
+      "id": 122,
+      "name": "歡呼勝利",
+      "nameEn": "Victory",
+      "command": "/victorypose",
+      "unlockLink": 306,
+      "itemId": null,
+      "icon": "/i/246000/246286.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「四國聯合軍演」獎勵"
+        }
+      ],
+      "patch": "3.2"
+    },
+    {
+      "id": 123,
+      "name": "後空翻",
+      "nameEn": "Backflip",
+      "command": "/backflip",
+      "unlockLink": 308,
+      "itemId": 15096,
+      "icon": "/i/246000/246287.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·後空翻"
+        }
+      ],
+      "patch": "3.5"
+    },
+    {
+      "id": 124,
+      "name": "抱拳禮",
+      "nameEn": "Eastern Greeting",
+      "command": "/easterngreeting",
+      "unlockLink": 309,
+      "itemId": 15095,
+      "icon": "/i/246000/246288.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·抱拳禮"
+        }
+      ],
+      "patch": "3.4"
+    },
+    {
+      "id": 125,
+      "name": "靈光一現",
+      "nameEn": "Eureka",
+      "command": "/eureka",
+      "unlockLink": 304,
+      "itemId": 20640,
+      "icon": "/i/246000/246289.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": "演技教材·靈光一現"
+        },
+        {
+          "type": "商城",
+          "detail": "演技教材·靈光一現"
+        }
+      ],
+      "patch": "3.25"
+    },
+    {
+      "id": 126,
+      "name": "莫古莫古舞",
+      "nameEn": "Moogle Dance",
+      "command": "/mogdance",
+      "unlockLink": 67862,
+      "itemId": null,
+      "icon": "/i/246000/246290.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「 擊碎岩石的修復團！」獎勵"
+        }
+      ],
+      "patch": "3.3"
+    },
+    {
+      "id": 127,
+      "name": "太棒了！",
+      "nameEn": "Haurchefant",
+      "command": "/haurchefant",
+      "unlockLink": 318,
+      "itemId": null,
+      "icon": "/i/246000/246291.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「友人的微笑」獎勵"
+        }
+      ],
+      "patch": "3.3"
+    },
+    {
+      "id": 128,
+      "name": "熱身",
+      "nameEn": "Eastern Stretch",
+      "command": "/easternstretch",
+      "unlockLink": 323,
+      "itemId": 15919,
+      "icon": "/i/246000/246292.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·熱身"
+        }
+      ],
+      "patch": "4.0"
+    },
+    {
+      "id": 129,
+      "name": "東方傳統舞蹈",
+      "nameEn": "Eastern Dance",
+      "command": "/easterndance",
+      "unlockLink": 324,
+      "itemId": 15920,
+      "icon": "/i/246000/246293.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·東方傳統舞蹈"
+        }
+      ],
+      "patch": "4.0"
+    },
+    {
+      "id": 130,
+      "name": "戰隊演武正紅一式",
+      "nameEn": "Red Ranger Pose A",
+      "command": "/rangerpose1r",
+      "unlockLink": 315,
+      "itemId": 15842,
+      "icon": "/i/246000/246294.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "佩·歐碧雅諾: 紅蓮祭票據2017 x5, at 東拉諾西亞"
+        }
+      ],
+      "patch": "3.35"
+    },
+    {
+      "id": 131,
+      "name": "戰隊演武正黑二式",
+      "nameEn": "Black Ranger Pose A",
+      "command": "/rangerpose2r",
+      "unlockLink": 316,
+      "itemId": 15843,
+      "icon": "/i/246000/246295.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "佩·歐碧雅諾: 紅蓮祭票據2017 x5, at 東拉諾西亞"
+        }
+      ],
+      "patch": "3.35"
+    },
+    {
+      "id": 132,
+      "name": "戰隊演武正黃三式",
+      "nameEn": "Yellow Ranger Pose A",
+      "command": "/rangerpose3r",
+      "unlockLink": 317,
+      "itemId": 15844,
+      "icon": "/i/246000/246296.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "佩·歐碧雅諾: 紅蓮祭票據2017 x5, at 東拉諾西亞"
+        }
+      ],
+      "patch": "3.35"
+    },
+    {
+      "id": 133,
+      "name": "表情：右飛眼",
+      "nameEn": "Wink (Right)",
+      "command": "/wink",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246118.png",
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 134,
+      "name": "戰隊演武逆紅一式",
+      "nameEn": "Red Ranger Pose B",
+      "command": "/rangerpose1l",
+      "unlockLink": 315,
+      "itemId": 15842,
+      "icon": "/i/246000/246297.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "佩·歐碧雅諾: 紅蓮祭票據2017 x5, at 東拉諾西亞"
+        }
+      ],
+      "patch": "3.35"
+    },
+    {
+      "id": 135,
+      "name": "戰隊演武逆黑二式",
+      "nameEn": "Black Ranger Pose B",
+      "command": "/rangerpose2l",
+      "unlockLink": 316,
+      "itemId": 15843,
+      "icon": "/i/246000/246298.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "佩·歐碧雅諾: 紅蓮祭票據2017 x5, at 東拉諾西亞"
+        }
+      ],
+      "patch": "3.35"
+    },
+    {
+      "id": 136,
+      "name": "戰隊演武逆黃三式",
+      "nameEn": "Yellow Ranger Pose B",
+      "command": "/rangerpose3l",
+      "unlockLink": 317,
+      "itemId": 15844,
+      "icon": "/i/246000/246299.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "佩·歐碧雅諾: 紅蓮祭票據2017 x5, at 東拉諾西亞"
+        }
+      ],
+      "patch": "3.35"
+    },
+    {
+      "id": 137,
+      "name": "捂臉",
+      "nameEn": "Facepalm",
+      "command": "/facepalm",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246301.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 138,
+      "name": "斬鐵劍",
+      "nameEn": "Zantetsuken",
+      "command": "/zantetsuken",
+      "unlockLink": 328,
+      "itemId": 16040,
+      "icon": "/i/246000/246302.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·斬鐵劍"
+        }
+      ],
+      "patch": "3.4"
+    },
+    {
+      "id": 139,
+      "name": "肉體之美",
+      "nameEn": "Flex",
+      "command": "/flex",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246303.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 140,
+      "name": "默哀",
+      "nameEn": "Pay Respects",
+      "command": "/respect",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246304.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 141,
+      "name": "表情：陰險",
+      "nameEn": "Sneer",
+      "command": "/sneer",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246119.png",
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 142,
+      "name": "撒嬌",
+      "nameEn": "Pretty Please",
+      "command": "/prettyplease",
+      "unlockLink": 331,
+      "itemId": 16931,
+      "icon": "/i/246000/246305.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·撒嬌"
+        }
+      ],
+      "patch": "4.1"
+    },
+    {
+      "id": 143,
+      "name": "裝死",
+      "nameEn": "Play Dead",
+      "command": "/playdead",
+      "unlockLink": 330,
+      "itemId": 16930,
+      "icon": "/i/246000/246306.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·裝死"
+        }
+      ],
+      "patch": "3.5"
+    },
+    {
+      "id": 144,
+      "name": "寒冰的幻想",
+      "nameEn": "Diamond Dust",
+      "command": "/iceheart",
+      "unlockLink": 329,
+      "itemId": 16041,
+      "icon": "/i/246000/246307.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·寒冰的幻想"
+        }
+      ],
+      "patch": "4.05"
+    },
+    {
+      "id": 145,
+      "name": "日月之舞",
+      "nameEn": "Moonlift Dance",
+      "command": "/moonlift",
+      "unlockLink": 332,
+      "itemId": null,
+      "icon": "/i/246000/246308.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「伊修加德的盟友們」獎勵"
+        }
+      ],
+      "patch": "3.5"
+    },
+    {
+      "id": 146,
+      "name": "表達愛意",
+      "nameEn": "Dote",
+      "command": "/dote",
+      "unlockLink": 333,
+      "itemId": 21307,
+      "icon": "/i/246000/246309.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": "演技教材·表達愛意"
+        },
+        {
+          "type": "商城",
+          "detail": "演技教材·表達愛意"
+        }
+      ],
+      "patch": "3.5"
+    },
+    {
+      "id": 148,
+      "name": "託眼鏡",
+      "nameEn": "Spectacles",
+      "command": "/spectacles",
+      "unlockLink": 334,
+      "itemId": null,
+      "icon": "/i/246000/246310.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「匿名信疑雲」獎勵"
+        }
+      ],
+      "patch": "3.5"
+    },
+    {
+      "id": 149,
+      "name": "小黃鶯之舞",
+      "nameEn": "Songbird",
+      "command": "/songbird",
+      "unlockLink": 335,
+      "itemId": 20641,
+      "icon": "/i/246000/246311.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": "演技教材·小黃鶯之舞"
+        },
+        {
+          "type": "商城",
+          "detail": "演技教材·小黃鶯之舞"
+        }
+      ],
+      "patch": "3.5"
+    },
+    {
+      "id": 150,
+      "name": "浮水",
+      "nameEn": "Water Float",
+      "command": "/waterfloat",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246312.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 151,
+      "name": "水中翻跟頭",
+      "nameEn": "Water Flip",
+      "command": "/waterflip",
+      "unlockLink": 340,
+      "itemId": null,
+      "icon": "/i/246000/246313.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「遨遊大海！」獎勵"
+        }
+      ],
+      "patch": "4.0"
+    },
+    {
+      "id": 152,
+      "name": "表情：嘟嘴",
+      "nameEn": "Pucker Up",
+      "command": "/puckerup",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246120.png",
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 153,
+      "name": "蓄力迸發",
+      "nameEn": "Power Up",
+      "command": "/powerup",
+      "unlockLink": 343,
+      "itemId": 20567,
+      "icon": "/i/246000/246314.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·蓄力迸發"
+        }
+      ],
+      "patch": "4.2"
+    },
+    {
+      "id": 154,
+      "name": "行東方禮",
+      "nameEn": "Eastern Bow",
+      "command": "/easternbow",
+      "unlockLink": 68016,
+      "itemId": null,
+      "icon": "/i/246000/246315.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「失去鬥志的協助者」獎勵"
+        }
+      ],
+      "patch": "4.0"
+    },
+    {
+      "id": 155,
+      "name": "深蹲",
+      "nameEn": "Squats",
+      "command": "/squats",
+      "unlockLink": 373,
+      "itemId": null,
+      "icon": "/i/246000/246316.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "成就「可靠的隊長1」獎勵"
+        }
+      ],
+      "patch": "4.1"
+    },
+    {
+      "id": 156,
+      "name": "俯臥撐",
+      "nameEn": "Push-ups",
+      "command": "/pushups",
+      "unlockLink": 373,
+      "itemId": null,
+      "icon": "/i/246000/246317.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "成就「可靠的隊長1」獎勵"
+        }
+      ],
+      "patch": "4.1"
+    },
+    {
+      "id": 157,
+      "name": "仰臥起坐",
+      "nameEn": "Sit-ups",
+      "command": "/situps",
+      "unlockLink": 373,
+      "itemId": null,
+      "icon": "/i/246000/246318.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "成就「可靠的隊長1」獎勵"
+        }
+      ],
+      "patch": "4.1"
+    },
+    {
+      "id": 158,
+      "name": "深呼吸",
+      "nameEn": "Breath Control",
+      "command": "/breathcontrol",
+      "unlockLink": 373,
+      "itemId": null,
+      "icon": "/i/246000/246319.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "成就「可靠的隊長1」獎勵"
+        }
+      ],
+      "patch": "4.1"
+    },
+    {
+      "id": 159,
+      "name": "說話",
+      "nameEn": "Converse",
+      "command": "/converse",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246320.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 160,
+      "name": "表情：認真",
+      "nameEn": "Concentrate",
+      "command": "/concentrate",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246121.png",
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 161,
+      "name": "表情：困惑",
+      "nameEn": "Confused",
+      "command": "/disturbed",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246122.png",
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 162,
+      "name": "表情：柔和",
+      "nameEn": "Simper",
+      "command": "/simper",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246123.png",
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 163,
+      "name": "表情：滿足",
+      "nameEn": "Beam",
+      "command": "/beam",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246124.png",
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 164,
+      "name": "立正",
+      "nameEn": "Attention",
+      "command": "/attention",
+      "unlockLink": 375,
+      "itemId": 21319,
+      "icon": "/i/246000/246321.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "黑渦團補給負責人: 黑渦團軍票 x2, at 利姆薩·羅敏薩上層甲板"
+        },
+        {
+          "type": "商店",
+          "detail": "雙蛇黨補給負責人: 黑渦團軍票 x2, at 格里達尼亞新街"
+        },
+        {
+          "type": "商店",
+          "detail": "不滅隊補給負責人: 黑渦團軍票 x2, at 烏爾達哈現世回廊"
+        }
+      ],
+      "patch": "4.1"
+    },
+    {
+      "id": 165,
+      "name": "稍息",
+      "nameEn": "At Ease",
+      "command": "/atease",
+      "unlockLink": 376,
+      "itemId": 21320,
+      "icon": "/i/246000/246322.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "黑渦團補給負責人: 黑渦團軍票 x2, at 利姆薩·羅敏薩上層甲板"
+        },
+        {
+          "type": "商店",
+          "detail": "雙蛇黨補給負責人: 黑渦團軍票 x2, at 格里達尼亞新街"
+        },
+        {
+          "type": "商店",
+          "detail": "不滅隊補給負責人: 黑渦團軍票 x2, at 烏爾達哈現世回廊"
+        }
+      ],
+      "patch": "4.1"
+    },
+    {
+      "id": 166,
+      "name": "練拳",
+      "nameEn": "Box",
+      "command": "/box",
+      "unlockLink": 68498,
+      "itemId": null,
+      "icon": "/i/246000/246323.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「冒險邀請」獎勵"
+        }
+      ],
+      "patch": "4.1"
+    },
+    {
+      "id": 167,
+      "name": "祝禱",
+      "nameEn": "Ritual Prayer",
+      "command": "/ritualprayer",
+      "unlockLink": 374,
+      "itemId": 21102,
+      "icon": "/i/246000/246324.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "床單: 珊瑚幣 x3, at 紅玉海"
+        }
+      ],
+      "patch": "4.1"
+    },
+    {
+      "id": 169,
+      "name": "害怕",
+      "nameEn": "Tremble",
+      "command": "/tremble",
+      "unlockLink": 386,
+      "itemId": 22494,
+      "icon": "/i/246000/246333.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "艾西娜: 傑出兵團成員的手冊 x6, at 神拳痕"
+        }
+      ],
+      "patch": "4.2"
+    },
+    {
+      "id": 170,
+      "name": "單膝跪地",
+      "nameEn": "Winded",
+      "command": "/winded",
+      "unlockLink": 385,
+      "itemId": 22462,
+      "icon": "/i/246000/246334.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "艾西娜: 傑出兵團成員的手冊 x6, at 神拳痕"
+        }
+      ],
+      "patch": "4.2"
+    },
+    {
+      "id": 171,
+      "name": "大吃一驚",
+      "nameEn": "Aback",
+      "command": "/aback",
+      "unlockLink": 387,
+      "itemId": 22496,
+      "icon": "/i/246000/246335.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "霞: Gil x5000, at 金碟遊樂園"
+        }
+      ],
+      "patch": "4.2"
+    },
+    {
+      "id": 172,
+      "name": "打招呼",
+      "nameEn": "Greeting",
+      "command": "/greet",
+      "unlockLink": 68558,
+      "itemId": null,
+      "icon": "/i/246000/246336.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「千里急報」獎勵"
+        }
+      ],
+      "patch": "4.2"
+    },
+    {
+      "id": 173,
+      "name": "方形步",
+      "nameEn": "Box Step",
+      "command": "/boxstep",
+      "unlockLink": 260,
+      "itemId": 23361,
+      "icon": "/i/246000/246337.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·方形步"
+        }
+      ],
+      "patch": "4.4"
+    },
+    {
+      "id": 174,
+      "name": "側步",
+      "nameEn": "Side Step",
+      "command": "/sidestep",
+      "unlockLink": 261,
+      "itemId": 23362,
+      "icon": "/i/246000/246338.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·側步"
+        }
+      ],
+      "patch": "4.4"
+    },
+    {
+      "id": 175,
+      "name": "究極",
+      "nameEn": "Ultima",
+      "command": "/ultima",
+      "unlockLink": 262,
+      "itemId": 23363,
+      "icon": "/i/246000/246339.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·究極"
+        }
+      ],
+      "patch": "4.45"
+    },
+    {
+      "id": 176,
+      "name": "胡鷹之舞",
+      "nameEn": "Yol Dance",
+      "command": "/yoldance",
+      "unlockLink": 269,
+      "itemId": 23364,
+      "icon": "/i/246000/246340.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "魚商: 鯰魚小判 x8, at 太陽神草原"
+        }
+      ],
+      "patch": "4.3"
+    },
+    {
+      "id": 178,
+      "name": "撩水",
+      "nameEn": "Splash",
+      "command": "/splash",
+      "unlockLink": 270,
+      "itemId": 27978,
+      "icon": "/i/246000/246341.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": "演技教材·撩水"
+        },
+        {
+          "type": "商城",
+          "detail": "演技教材·撩水"
+        }
+      ],
+      "patch": "4.3"
+    },
+    {
+      "id": 180,
+      "name": "好熱",
+      "nameEn": "Sweat",
+      "command": "/sweat",
+      "unlockLink": 263,
+      "itemId": 23365,
+      "icon": "/i/246000/246342.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "海盜眾的物資負責人: 天之陶器碎片 x10, at 紅玉海"
+        }
+      ],
+      "patch": "4.35"
+    },
+    {
+      "id": 181,
+      "name": "好冷",
+      "nameEn": "Shiver",
+      "command": "/shiver",
+      "unlockLink": 264,
+      "itemId": 23366,
+      "icon": "/i/246000/246343.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "寶箱",
+          "detail": "發生變異的結冰上鎖寶箱"
+        }
+      ],
+      "patch": "4.36"
+    },
+    {
+      "id": 182,
+      "name": "說明",
+      "nameEn": "Elucidate",
+      "command": "/elucidate",
+      "unlockLink": 265,
+      "itemId": 23367,
+      "icon": "/i/246000/246344.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "狼印戰績交易員: 狼印戰績 x15000, at 狼獄停船場"
+        }
+      ],
+      "patch": "4.3"
+    },
+    {
+      "id": 183,
+      "name": "表情：思索",
+      "nameEn": "Ponder",
+      "command": "/ponder",
+      "unlockLink": 68612,
+      "itemId": null,
+      "icon": "/i/246000/246129.png",
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「拂曉的少年」獎勵"
+        }
+      ],
+      "patch": "4.3"
+    },
+    {
+      "id": 184,
+      "name": "表情：左飛眼",
+      "nameEn": "Wink (Left)",
+      "command": "/leftwink",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246130.png",
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 185,
+      "name": "幻想舞步",
+      "nameEn": "Get Fantasy",
+      "command": "/getfantasy",
+      "unlockLink": 393,
+      "itemId": 24220,
+      "icon": "/i/246000/246345.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·幻想舞步"
+        }
+      ],
+      "patch": "4.45"
+    },
+    {
+      "id": 186,
+      "name": "波波託步",
+      "nameEn": "Popoto Step",
+      "command": "/popotostep",
+      "unlockLink": 394,
+      "itemId": 24221,
+      "icon": "/i/246000/246346.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·波波托步"
+        }
+      ],
+      "patch": "4.45"
+    },
+    {
+      "id": 187,
+      "name": "哼歌",
+      "nameEn": "Hum",
+      "command": "/hum",
+      "unlockLink": 68688,
+      "itemId": null,
+      "icon": "/i/246000/246347.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「硃色慕戀」獎勵"
+        }
+      ],
+      "patch": "4.4"
+    },
+    {
+      "id": 188,
+      "name": "確認",
+      "nameEn": "Confirm",
+      "command": "/confirm",
+      "unlockLink": 395,
+      "itemId": 24222,
+      "icon": "/i/246000/246348.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "運河寶物庫"
+        },
+        {
+          "type": "副本掉落",
+          "detail": "運河寶物庫深層"
+        },
+        {
+          "type": "副本掉落",
+          "detail": "運河寶物庫神殿"
+        }
+      ],
+      "patch": "4.4"
+    },
+    {
+      "id": 189,
+      "name": "說明計劃",
+      "nameEn": "Scheme",
+      "command": "/scheme",
+      "unlockLink": 396,
+      "itemId": 24224,
+      "icon": "/i/246000/246349.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "尤雷卡",
+          "detail": "演技教材·說明計畫"
+        },
+        {
+          "type": "新月島",
+          "detail": "演技教材·說明計畫"
+        }
+      ],
+      "patch": "4.45"
+    },
+    {
+      "id": 190,
+      "name": "表情：忍耐",
+      "nameEn": "Endure",
+      "command": "/endure",
+      "unlockLink": 68684,
+      "itemId": null,
+      "icon": "/i/246000/246131.png",
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「響徹於拂曉之聲」獎勵"
+        }
+      ],
+      "patch": "4.4"
+    },
+    {
+      "id": 191,
+      "name": "神典石",
+      "nameEn": "Tomestone",
+      "command": "/tomestone",
+      "unlockLink": 406,
+      "itemId": null,
+      "icon": "/i/246000/246350.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "App",
+          "detail": "下載並登入 Companion App（手機）"
+        }
+      ],
+      "patch": "4.4"
+    },
+    {
+      "id": 192,
+      "name": "趾踵步",
+      "nameEn": "Heel Toe",
+      "command": "/heeltoe",
+      "unlockLink": 232,
+      "itemId": 25003,
+      "icon": "/i/246000/246351.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·趾踵步"
+        }
+      ],
+      "patch": "5.2"
+    },
+    {
+      "id": 193,
+      "name": "古菩步",
+      "nameEn": "Goobbue Do",
+      "command": "/goobbuedo",
+      "unlockLink": 233,
+      "itemId": 25004,
+      "icon": "/i/246000/246352.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·古卜步"
+        }
+      ],
+      "patch": "5.2"
+    },
+    {
+      "id": 194,
+      "name": "心意",
+      "nameEn": "Gratuity",
+      "command": "/gratuity",
+      "unlockLink": 68700,
+      "itemId": null,
+      "icon": "/i/246000/246353.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「三種至寶」獎勵"
+        }
+      ],
+      "patch": "4.5"
+    },
+    {
+      "id": 195,
+      "name": "振作精神",
+      "nameEn": "Fist Pump",
+      "command": "/fistpump",
+      "unlockLink": 234,
+      "itemId": 25001,
+      "icon": "/i/246000/246354.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "寶箱",
+          "detail": "發生變異的浸水上鎖寶箱"
+        }
+      ],
+      "patch": "4.5"
+    },
+    {
+      "id": 196,
+      "name": "提醒",
+      "nameEn": "Reprimand",
+      "command": "/reprimand",
+      "unlockLink": 235,
+      "itemId": 25002,
+      "icon": "/i/246000/246355.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "狼印戰績交易員: 狼印戰績 x15000, at 狼獄停船場"
+        }
+      ],
+      "patch": "4.45"
+    },
+    {
+      "id": 197,
+      "name": "優雅仙人刺",
+      "nameEn": "Senor Sabotender",
+      "command": "/sabotender",
+      "unlockLink": 236,
+      "itemId": 24235,
+      "icon": "/i/246000/246356.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": "演技教材·優雅仙人掌怪"
+        },
+        {
+          "type": "商城",
+          "detail": "演技教材·優雅仙人掌怪"
+        }
+      ],
+      "patch": "4.45"
+    },
+    {
+      "id": 198,
+      "name": "紳士舞步",
+      "nameEn": "Manderville Mambo",
+      "command": "/mandervillemambo",
+      "unlockLink": 68704,
+      "itemId": null,
+      "icon": "/i/246000/246357.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「最強的男人不會停歇」獎勵"
+        }
+      ],
+      "patch": "4.5"
+    },
+    {
+      "id": 199,
+      "name": "啦哩吼",
+      "nameEn": "Lali-ho",
+      "command": "/laliho",
+      "unlockLink": 69095,
+      "itemId": null,
+      "icon": "/i/246000/246358.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「 啦哩吼！！」獎勵"
+        }
+      ],
+      "patch": "5.0"
+    },
+    {
+      "id": 200,
+      "name": "歐米茄M架勢",
+      "nameEn": "Simulation M",
+      "command": "/simulationm",
+      "unlockLink": 75,
+      "itemId": 28610,
+      "icon": "/i/246000/246359.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·歐米茄架勢"
+        }
+      ],
+      "patch": "5.4"
+    },
+    {
+      "id": 201,
+      "name": "歐米茄F架勢",
+      "nameEn": "Simulation F",
+      "command": "/simulationf",
+      "unlockLink": 75,
+      "itemId": 28610,
+      "icon": "/i/246000/246360.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·歐米茄架勢"
+        }
+      ],
+      "patch": "5.4"
+    },
+    {
+      "id": 202,
+      "name": "乾杯",
+      "nameEn": "Toast",
+      "command": "/toast",
+      "unlockLink": 76,
+      "itemId": 28507,
+      "icon": "/i/246000/246361.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·乾杯"
+        }
+      ],
+      "patch": "5.1"
+    },
+    {
+      "id": 203,
+      "name": "背靠",
+      "nameEn": "Lean",
+      "command": "/lean",
+      "unlockLink": 77,
+      "itemId": 28612,
+      "icon": "/i/246000/246363.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "艾妮: 蒼天街振興票 x1800, at 蒼天街"
+        },
+        {
+          "type": "節慶活動",
+          "detail": "慶典禮物箱"
+        }
+      ],
+      "patch": "5.11"
+    },
+    {
+      "id": 204,
+      "name": "頭痛",
+      "nameEn": "Headache",
+      "command": "/headache",
+      "unlockLink": 78,
+      "itemId": 28613,
+      "icon": "/i/246000/246362.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "淚男子拉圖加: 同盟徽章 x400, at 烏爾達哈來生回廊"
+        },
+        {
+          "type": "任務",
+          "detail": "真正的齊格弗里德"
+        }
+      ],
+      "patch": "5.15"
+    },
+    {
+      "id": 205,
+      "name": "打響指",
+      "nameEn": "Snap",
+      "command": "/snap",
+      "unlockLink": 68,
+      "itemId": 30109,
+      "icon": "/i/246000/246364.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·打響指"
+        }
+      ],
+      "patch": "5.2"
+    },
+    {
+      "id": 206,
+      "name": "吃麵包",
+      "nameEn": "Break Fast",
+      "command": "/breakfast",
+      "unlockLink": 69,
+      "itemId": 30110,
+      "icon": "/i/246000/246365.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "艾妮: 蒼天街振興票 x900, at 蒼天街"
+        }
+      ],
+      "patch": "5.21"
+    },
+    {
+      "id": 207,
+      "name": "看書",
+      "nameEn": "Read",
+      "command": "/read",
+      "unlockLink": 70,
+      "itemId": 30111,
+      "icon": "/i/246000/246366.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "艾妮: 蒼天街振興票 x1800, at 蒼天街"
+        },
+        {
+          "type": "節慶活動",
+          "detail": "慶典禮物箱"
+        }
+      ],
+      "patch": "5.21"
+    },
+    {
+      "id": 208,
+      "name": "堅持主張",
+      "nameEn": "Insist",
+      "command": "/insist",
+      "unlockLink": 71,
+      "itemId": 30112,
+      "icon": "/i/246000/246368.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "艾妮: 蒼天街振興票 x1800, at 蒼天街"
+        },
+        {
+          "type": "節慶活動",
+          "detail": "慶典禮物箱"
+        }
+      ],
+      "patch": "5.21"
+    },
+    {
+      "id": 209,
+      "name": "疑問",
+      "nameEn": "Consider",
+      "command": "/consider",
+      "unlockLink": 279,
+      "itemId": 31338,
+      "icon": "/i/246000/246367.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·疑問"
+        }
+      ],
+      "patch": "5.3"
+    },
+    {
+      "id": 210,
+      "name": "嘿喲",
+      "nameEn": "Wasshoi",
+      "command": "/wasshoi",
+      "unlockLink": 271,
+      "itemId": 31398,
+      "icon": "/i/246000/246369.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·嘿喲"
+        }
+      ],
+      "patch": "5.4"
+    },
+    {
+      "id": 211,
+      "name": "花雨",
+      "nameEn": "Flower Shower",
+      "command": "/flowershower",
+      "unlockLink": 272,
+      "itemId": 31399,
+      "icon": "/i/246000/246370.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·花雨"
+        }
+      ],
+      "patch": "5.5"
+    },
+    {
+      "id": 212,
+      "name": "火焰之舞",
+      "nameEn": "Flame Dance",
+      "command": "/flamedance",
+      "unlockLink": 273,
+      "itemId": 31400,
+      "icon": "/i/246000/246371.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": "演技教材·烈焰之舞"
+        },
+        {
+          "type": "商城",
+          "detail": "演技教材·烈焰之舞"
+        }
+      ],
+      "patch": "5.3"
+    },
+    {
+      "id": 213,
+      "name": "擊掌",
+      "nameEn": "High Five",
+      "command": "/highfive",
+      "unlockLink": 275,
+      "itemId": 31401,
+      "icon": "/i/246000/246372.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "艾妮: 蒼天街振興票 x1800, at 蒼天街"
+        }
+      ],
+      "patch": "5.31"
+    },
+    {
+      "id": 214,
+      "name": "巡視",
+      "nameEn": "Guard",
+      "command": "/guard",
+      "unlockLink": 276,
+      "itemId": 31402,
+      "icon": "/i/246000/246373.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "義軍補給兵: 博茲雅晶簇 x50, at 扎杜諾爾高原"
+        }
+      ],
+      "patch": "5.35"
+    },
+    {
+      "id": 215,
+      "name": "詛咒",
+      "nameEn": "Malevolence",
+      "command": "/malevolence",
+      "unlockLink": 277,
+      "itemId": 31403,
+      "icon": "/i/246000/246374.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "義軍補給兵: 博茲雅晶簇 x50, at 扎杜諾爾高原"
+        }
+      ],
+      "patch": "5.45"
+    },
+    {
+      "id": 216,
+      "name": "蜜蜂之舞",
+      "nameEn": "Bee's Knees",
+      "command": "/beesknees",
+      "unlockLink": 278,
+      "itemId": 31404,
+      "icon": "/i/246000/246375.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "紀念品兌換員: 金碟幣 x80000, at 金碟遊樂園"
+        }
+      ],
+      "patch": "5.3"
+    },
+    {
+      "id": 217,
+      "name": "啦哩吼舞",
+      "nameEn": "Lali Hop",
+      "command": "/lalihop",
+      "unlockLink": 274,
+      "itemId": 31405,
+      "icon": "/i/246000/246376.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "蜜茲圖: 綠蛙幣 x8, at 雷克蘭德"
+        }
+      ],
+      "patch": "5.3"
+    },
+    {
+      "id": 220,
+      "name": "吃飯糰",
+      "nameEn": "Eat Rice Ball",
+      "command": "/eatriceball",
+      "unlockLink": 414,
+      "itemId": 32826,
+      "icon": "/i/246000/246377.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "伊修加德重建",
+          "detail": "演技教材·吃飯團"
+        },
+        {
+          "type": "宇宙探索",
+          "detail": "演技教材·吃飯團"
+        }
+      ],
+      "patch": "5.41"
+    },
+    {
+      "id": 221,
+      "name": "吃蘋果",
+      "nameEn": "Eat Apple",
+      "command": "/eatapple",
+      "unlockLink": 415,
+      "itemId": 32827,
+      "icon": "/i/246000/246378.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "伊修加德重建",
+          "detail": "演技教材·吃蘋果"
+        }
+      ],
+      "patch": "5.41"
+    },
+    {
+      "id": 222,
+      "name": "搓手",
+      "nameEn": "Wring Hands",
+      "command": "/wringhands",
+      "unlockLink": 416,
+      "itemId": 32828,
+      "icon": "/i/246000/246379.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "寶箱",
+          "detail": "高原上鎖的寶箱"
+        }
+      ],
+      "patch": "5.55"
+    },
+    {
+      "id": 223,
+      "name": "掃地",
+      "nameEn": "Sweep Up",
+      "command": "/sweep",
+      "unlockLink": 417,
+      "itemId": 32829,
+      "icon": "/i/246000/246380.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "艾妮: 蒼天街振興票 x1800, at 蒼天街"
+        }
+      ],
+      "patch": "5.41"
+    },
+    {
+      "id": 224,
+      "name": "黑色陸行鳥之筆",
+      "nameEn": "Paint It Black",
+      "command": "/paintblack",
+      "unlockLink": 418,
+      "itemId": 32830,
+      "icon": "/i/246000/246381.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "夢羽寶殿"
+        }
+      ],
+      "patch": "5.4"
+    },
+    {
+      "id": 225,
+      "name": "紅色陸行鳥之筆",
+      "nameEn": "Paint It Red",
+      "command": "/paintred",
+      "unlockLink": 418,
+      "itemId": 32830,
+      "icon": "/i/246000/246382.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "夢羽寶殿"
+        }
+      ],
+      "patch": "5.4"
+    },
+    {
+      "id": 226,
+      "name": "黃色陸行鳥之筆",
+      "nameEn": "Paint It Yellow",
+      "command": "/paintyellow",
+      "unlockLink": 418,
+      "itemId": 32830,
+      "icon": "/i/246000/246383.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "夢羽寶殿"
+        }
+      ],
+      "patch": "5.4"
+    },
+    {
+      "id": 227,
+      "name": "藍色陸行鳥之筆",
+      "nameEn": "Paint It Blue",
+      "command": "/paintblue",
+      "unlockLink": 418,
+      "itemId": 32830,
+      "icon": "/i/246000/246384.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "夢羽寶殿"
+        }
+      ],
+      "patch": "5.4"
+    },
+    {
+      "id": 228,
+      "name": "表情：假笑",
+      "nameEn": "Fake Smile",
+      "command": "/fakesmile",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246132.png",
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 229,
+      "name": "默劇",
+      "nameEn": "Pantomime",
+      "command": "/pantomime",
+      "unlockLink": 237,
+      "itemId": 33702,
+      "icon": "/i/246000/246385.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·默劇"
+        }
+      ],
+      "patch": "5.5"
+    },
+    {
+      "id": 230,
+      "name": "困惑",
+      "nameEn": "Vexed",
+      "command": "/vexed",
+      "unlockLink": 238,
+      "itemId": 33703,
+      "icon": "/i/246000/246386.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·困惑"
+        },
+        {
+          "type": "任務",
+          "detail": "金碟遊樂園的謝禮"
+        }
+      ],
+      "patch": "5.5"
+    },
+    {
+      "id": 231,
+      "name": "噓",
+      "nameEn": "Shush",
+      "command": "/shush",
+      "unlockLink": 69602,
+      "itemId": null,
+      "icon": "/i/246000/246387.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「死鬥至黎明」獎勵"
+        }
+      ],
+      "patch": "5.55"
+    },
+    {
+      "id": 232,
+      "name": "吃披薩",
+      "nameEn": "Eat Pizza",
+      "command": "/eatpizza",
+      "unlockLink": 240,
+      "itemId": 33705,
+      "icon": "/i/246000/246388.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·吃披薩"
+        }
+      ],
+      "patch": "5.5"
+    },
+    {
+      "id": 233,
+      "name": "抱頭",
+      "nameEn": "Clutch Head",
+      "command": "/clutchhead",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246391.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 234,
+      "name": "吃戀人巧克力",
+      "nameEn": "Eat Chocolate",
+      "command": "/eatchocolate",
+      "unlockLink": 428,
+      "itemId": 36915,
+      "icon": "/i/246000/246390.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "瓦倫提昂家的女僕: Gil x2500, at 格里達尼亞舊街"
+        }
+      ],
+      "patch": "6.2"
+    },
+    {
+      "id": 235,
+      "name": "吃水煮蛋",
+      "nameEn": "Eat Egg",
+      "command": "/eategg",
+      "unlockLink": 429,
+      "itemId": 36916,
+      "icon": "/i/246000/246392.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "彩蛋預言師: 幸運彩蛋 x9, at 格里達尼亞舊街"
+        }
+      ],
+      "patch": "6.1"
+    },
+    {
+      "id": 236,
+      "name": "表情：幸福",
+      "nameEn": "Content",
+      "command": "/content",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246133.png",
+      "category": "Expressions",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 237,
+      "name": "收回武器",
+      "nameEn": "Sheathe Weapon",
+      "command": "/sheathe",
+      "unlockLink": 430,
+      "itemId": 36919,
+      "icon": "/i/246000/246397.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "紀念品兌換員: 金碟幣 x100000, at 金碟遊樂園"
+        }
+      ],
+      "patch": "6.1"
+    },
+    {
+      "id": 238,
+      "name": "亮出武器",
+      "nameEn": "Draw Weapon",
+      "command": "/draw",
+      "unlockLink": 431,
+      "itemId": 36918,
+      "icon": "/i/246000/246398.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "紀念品兌換員: 金碟幣 x100000, at 金碟遊樂園"
+        }
+      ],
+      "patch": "6.1"
+    },
+    {
+      "id": 239,
+      "name": "飲用紅茶",
+      "nameEn": "Drink Tea",
+      "command": "/tea",
+      "unlockLink": 433,
+      "itemId": 36921,
+      "icon": "/i/246000/246393.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·飲用紅茶"
+        }
+      ],
+      "patch": "6.1"
+    },
+    {
+      "id": 240,
+      "name": "幹勁十足",
+      "nameEn": "Determined",
+      "command": "/determined",
+      "unlockLink": 432,
+      "itemId": 36920,
+      "icon": "/i/246000/246394.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": "演技教材·幹勁十足"
+        }
+      ],
+      "patch": "6.1"
+    },
+    {
+      "id": 241,
+      "name": "展現右側",
+      "nameEn": "Show Right",
+      "command": "/showright",
+      "unlockLink": 434,
+      "itemId": 36922,
+      "icon": "/i/246000/246395.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "金碟遊樂園的煩惱員工"
+        }
+      ],
+      "patch": "6.1"
+    },
+    {
+      "id": 242,
+      "name": "展現左側",
+      "nameEn": "Show Left",
+      "command": "/showleft",
+      "unlockLink": 434,
+      "itemId": 36922,
+      "icon": "/i/246000/246396.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "金碟遊樂園的煩惱員工"
+        }
+      ],
+      "patch": "6.1"
+    },
+    {
+      "id": 245,
+      "name": "叛逆精神",
+      "nameEn": "Deride",
+      "command": "/deride",
+      "unlockLink": 437,
+      "itemId": 38569,
+      "icon": "/i/246000/246399.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·叛逆精神"
+        }
+      ],
+      "patch": "6.2"
+    },
+    {
+      "id": 246,
+      "name": "兩眼放光",
+      "nameEn": "Wow",
+      "command": "/wow",
+      "unlockLink": 438,
+      "itemId": 38570,
+      "icon": "/i/246000/246400.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "德蕾莎桑: 希拉狄哈遺物 x9, at 舊薩雷安"
+        }
+      ],
+      "patch": "6.25"
+    },
+    {
+      "id": 247,
+      "name": "吃南瓜曲奇",
+      "nameEn": "Eat Pumpkin Cookie",
+      "command": "/eatpumpkincookie",
+      "unlockLink": 439,
+      "itemId": 38571,
+      "icon": "/i/246000/246389.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": "演技教材·吃南瓜餅乾"
+        },
+        {
+          "type": "商城",
+          "detail": "演技教材·吃南瓜餅乾"
+        }
+      ],
+      "patch": "6.2"
+    },
+    {
+      "id": 248,
+      "name": "觀戰",
+      "nameEn": "Spirit",
+      "command": "/spirit",
+      "unlockLink": 440,
+      "itemId": 38572,
+      "icon": "/i/246000/246401.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": "演技教材·觀戰"
+        }
+      ],
+      "patch": "6.2"
+    },
+    {
+      "id": 249,
+      "name": "魔術",
+      "nameEn": "Magic Trick",
+      "command": "/magictrick",
+      "unlockLink": 443,
+      "itemId": 39496,
+      "icon": "/i/246000/246402.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·魔術"
+        }
+      ],
+      "patch": "6.4"
+    },
+    {
+      "id": 250,
+      "name": "公主之舞",
+      "nameEn": "Little Ladies' Dance",
+      "command": "/littleladiesdance",
+      "unlockLink": 444,
+      "itemId": 39497,
+      "icon": "/i/246000/246403.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "女兒節與扇之舞"
+        }
+      ],
+      "patch": "6.3"
+    },
+    {
+      "id": 251,
+      "name": "通訊珠",
+      "nameEn": "Linkpearl",
+      "command": "/linkpearl",
+      "unlockLink": 445,
+      "itemId": 39498,
+      "icon": "/i/246000/246404.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": "演技教材·通訊珠"
+        }
+      ],
+      "patch": "6.3"
+    },
+    {
+      "id": 252,
+      "name": "搖兔兔耳",
+      "nameEn": "Ear Wiggle",
+      "command": "/earwiggle",
+      "unlockLink": 70222,
+      "itemId": null,
+      "icon": "/i/246000/246405.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「 夢想永不會完結！」獎勵"
+        }
+      ],
+      "patch": "6.35"
+    },
+    {
+      "id": 256,
+      "name": "嚇唬人",
+      "nameEn": "Frighten",
+      "command": "/frighten",
+      "unlockLink": 450,
+      "itemId": 39500,
+      "icon": "/i/246000/246406.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "彩蛋狩獵與對提燈怪的愛"
+        }
+      ],
+      "patch": "6.3"
+    },
+    {
+      "id": 257,
+      "name": "威光降臨",
+      "nameEn": "Advent of Light",
+      "command": "/adventoflight",
+      "unlockLink": 451,
+      "itemId": 40356,
+      "icon": "/i/246000/246407.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·威光降臨"
+        }
+      ],
+      "patch": "6.4"
+    },
+    {
+      "id": 258,
+      "name": "雀躍1",
+      "nameEn": "Jump for Joy 1",
+      "command": "/jumpforjoy1",
+      "unlockLink": 452,
+      "itemId": 40357,
+      "icon": "/i/246000/246408.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·雀躍"
+        }
+      ],
+      "patch": "6.5"
+    },
+    {
+      "id": 259,
+      "name": "雀躍2",
+      "nameEn": "Jump for Joy 2",
+      "command": "/jumpforjoy2",
+      "unlockLink": 452,
+      "itemId": 40357,
+      "icon": "/i/246000/246409.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·雀躍"
+        }
+      ],
+      "patch": "6.5"
+    },
+    {
+      "id": 260,
+      "name": "雀躍3",
+      "nameEn": "Jump for Joy 3",
+      "command": "/jumpforjoy3",
+      "unlockLink": 452,
+      "itemId": 40357,
+      "icon": "/i/246000/246410.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·雀躍"
+        }
+      ],
+      "patch": "6.5"
+    },
+    {
+      "id": 261,
+      "name": "雀躍4",
+      "nameEn": "Jump for Joy 4",
+      "command": "/jumpforjoy4",
+      "unlockLink": 452,
+      "itemId": 40357,
+      "icon": "/i/246000/246411.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·雀躍"
+        }
+      ],
+      "patch": "6.5"
+    },
+    {
+      "id": 262,
+      "name": "雀躍5",
+      "nameEn": "Jump for Joy 5",
+      "command": "/jumpforjoy5",
+      "unlockLink": 452,
+      "itemId": 40357,
+      "icon": "/i/246000/246412.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·雀躍"
+        }
+      ],
+      "patch": "6.5"
+    },
+    {
+      "id": 263,
+      "name": "手撫胸",
+      "nameEn": "Hand to Heart",
+      "command": "/handtoheart",
+      "unlockLink": 453,
+      "itemId": 40358,
+      "icon": "/i/246000/246413.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": "演技教材·手撫胸"
+        }
+      ],
+      "patch": "6.4"
+    },
+    {
+      "id": 264,
+      "name": "聲援小白",
+      "nameEn": "Cheer On: Bright",
+      "command": "/cheeronbright",
+      "unlockLink": 454,
+      "itemId": 40359,
+      "icon": "/i/246000/246414.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·聲援小白"
+        }
+      ],
+      "patch": "6.4"
+    },
+    {
+      "id": 265,
+      "name": "聲援小紫",
+      "nameEn": "Cheer Wave: Violet",
+      "command": "/cheerwaveviolet",
+      "unlockLink": 455,
+      "itemId": 40360,
+      "icon": "/i/246000/246415.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·聲援小紫"
+        }
+      ],
+      "patch": "6.4"
+    },
+    {
+      "id": 266,
+      "name": "聲援小綠",
+      "nameEn": "Cheer Jump: Green",
+      "command": "/cheerjumpgreen",
+      "unlockLink": 456,
+      "itemId": 40361,
+      "icon": "/i/246000/246416.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·聲援小綠"
+        }
+      ],
+      "patch": "6.4"
+    },
+    {
+      "id": 267,
+      "name": "守護天節的魔咒",
+      "nameEn": "All Saints' Charm",
+      "command": "/allsaintscharm",
+      "unlockLink": 457,
+      "itemId": 40362,
+      "icon": "/i/246000/246417.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": "演技教材·守護天節的魔咒"
+        },
+        {
+          "type": "商城",
+          "detail": "演技教材·守護天節的魔咒"
+        }
+      ],
+      "patch": "6.4"
+    },
+    {
+      "id": 269,
+      "name": "兔兔舞",
+      "nameEn": "Lop Hop",
+      "command": "/lophop",
+      "unlockLink": 458,
+      "itemId": 41457,
+      "icon": "/i/246000/246418.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "宇宙盡頭的精彩比賽"
+        }
+      ],
+      "patch": "6.55"
+    },
+    {
+      "id": 270,
+      "name": "比對文獻",
+      "nameEn": "Reference",
+      "command": "/reference",
+      "unlockLink": 459,
+      "itemId": 40363,
+      "icon": "/i/246000/246419.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "德蕾莎桑: 六根山遺物 x9, at 舊薩雷安"
+        }
+      ],
+      "patch": "6.45"
+    },
+    {
+      "id": 271,
+      "name": "吃炸雞",
+      "nameEn": "Eat Chicken",
+      "command": "/eatchicken",
+      "unlockLink": 469,
+      "itemId": 41458,
+      "icon": "/i/246000/246420.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·吃炸雞"
+        }
+      ],
+      "patch": "6.5"
+    },
+    {
+      "id": 272,
+      "name": "眾生離絕",
+      "nameEn": "Sundering",
+      "command": "/sundering",
+      "unlockLink": 470,
+      "itemId": 41459,
+      "icon": "/i/246000/246421.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·眾生離絕"
+        }
+      ],
+      "patch": "6.5"
+    },
+    {
+      "id": 273,
+      "name": "垂頭喪氣",
+      "nameEn": "Slump",
+      "command": "/slump",
+      "unlockLink": 471,
+      "itemId": 41460,
+      "icon": "/i/246000/246422.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": "演技教材·垂頭喪氣"
+        }
+      ],
+      "patch": "6.5"
+    },
+    {
+      "id": 274,
+      "name": "比心",
+      "nameEn": "Love Heart",
+      "command": "/loveheart",
+      "unlockLink": 472,
+      "itemId": 41461,
+      "icon": "/i/246000/246423.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "在戀人節傳達愛意"
+        }
+      ],
+      "patch": "6.5"
+    },
+    {
+      "id": 275,
+      "name": "得意洋洋",
+      "nameEn": "Humble Triumph",
+      "command": "/humbletriumph",
+      "unlockLink": 473,
+      "itemId": 41462,
+      "icon": "/i/246000/246424.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "德蕾莎桑: 阿羅阿羅島遺物 x9, at 舊薩雷安"
+        }
+      ],
+      "patch": "6.51"
+    },
+    {
+      "id": 276,
+      "name": "大獲全勝",
+      "nameEn": "Victory Reveal",
+      "command": "/victoryreveal",
+      "unlockLink": 474,
+      "itemId": 41463,
+      "icon": "/i/246000/246425.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "金碟聲譽兌換員: 金碟聲譽 x410, at 金碟巨豆中心廣場"
+        }
+      ],
+      "patch": "6.51"
+    },
+    {
+      "id": 277,
+      "name": "煎蛋",
+      "nameEn": "Fry Egg",
+      "command": "/fryegg",
+      "unlockLink": 475,
+      "itemId": 41464,
+      "icon": "/i/246000/246426.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·煎蛋"
+        }
+      ],
+      "patch": "7.05"
+    },
+    {
+      "id": 278,
+      "name": "扇大團扇",
+      "nameEn": "Uchiwasshoi",
+      "command": "/uchiwasshoi",
+      "unlockLink": 484,
+      "itemId": 43605,
+      "icon": "/i/246000/246427.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": "紅蓮祭與綠怪物"
+        }
+      ],
+      "patch": "7.05"
+    },
+    {
+      "id": 279,
+      "name": "待命",
+      "nameEn": "Attend",
+      "command": "/attend",
+      "unlockLink": 490,
+      "itemId": 44508,
+      "icon": "/i/246000/246428.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": "演技教材·待命"
+        }
+      ],
+      "patch": "7.1"
+    },
+    {
+      "id": 280,
+      "name": "澆水",
+      "nameEn": "Water",
+      "command": "/water",
+      "unlockLink": 491,
+      "itemId": 44511,
+      "icon": "/i/246000/246429.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "演技教材·澆水"
+        }
+      ],
+      "patch": "7.1"
+    },
+    {
+      "id": 281,
+      "name": "調飲",
+      "nameEn": "Shake Drink",
+      "command": "/shakedrink",
+      "unlockLink": 492,
+      "itemId": 44510,
+      "icon": "/i/246000/246430.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "金碟",
+          "detail": "演技教材·搖雪克杯"
+        }
+      ],
+      "patch": "7.1"
+    },
+    {
+      "id": 282,
+      "name": "象徵自由的姿勢",
+      "nameEn": "Pose of the Unbound",
+      "command": "/poseoftheunbound",
+      "unlockLink": 70725,
+      "itemId": null,
+      "icon": "/i/246000/246431.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「掙脫束縛的自由」獎勵"
+        }
+      ],
+      "patch": "7.16"
+    },
+    {
+      "id": 283,
+      "name": "贈送花束",
+      "nameEn": "Bouquet",
+      "command": "/bouquet",
+      "unlockLink": 493,
+      "itemId": 44513,
+      "icon": "/i/246000/246432.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": "習得自動作指南書"
+        },
+        {
+          "type": "商城",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.16"
+    },
+    {
+      "id": 284,
+      "name": "吹泡泡",
+      "nameEn": "Blow Bubbles",
+      "command": "/blowbubbles",
+      "unlockLink": 494,
+      "itemId": 44512,
+      "icon": "/i/246000/246433.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "演技教材·吹泡泡"
+        }
+      ],
+      "patch": "7.18"
+    },
+    {
+      "id": 285,
+      "name": "噢霍卡利",
+      "nameEn": "Ohokaliy",
+      "command": "/ohokaliy",
+      "unlockLink": 70729,
+      "itemId": null,
+      "icon": "/i/246000/246434.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "任務「 新事業！圖拉爾旅行公司」獎勵"
+        }
+      ],
+      "patch": "7.1"
+    },
+    {
+      "id": 286,
+      "name": "用觸控板記錄",
+      "nameEn": "Visage Capture",
+      "command": "/visage",
+      "unlockLink": 495,
+      "itemId": 44509,
+      "icon": "/i/246000/246435.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "宇宙探索",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.21"
+    },
+    {
+      "id": 288,
+      "name": "拍照",
+      "nameEn": "Photograph",
+      "command": "/photograph",
+      "unlockLink": 0,
+      "itemId": null,
+      "icon": "/i/246000/246436.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "預設",
+          "detail": "預設動作（角色初始即可使用）"
+        }
+      ],
+      "patch": "2.0"
+    },
+    {
+      "id": 291,
+      "name": "大驚小怪",
+      "nameEn": "Overreact",
+      "command": "/overreact",
+      "unlockLink": 543,
+      "itemId": 47982,
+      "icon": "/i/246000/246437.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": "習得自動作指南書"
+        },
+        {
+          "type": "商城",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.21"
+    },
+    {
+      "id": 292,
+      "name": "轉圈",
+      "nameEn": "Twirl",
+      "command": "/twirl",
+      "unlockLink": 544,
+      "itemId": 47983,
+      "icon": "/i/246000/246438.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "新月島",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.25"
+    },
+    {
+      "id": 293,
+      "name": "暈頭轉向",
+      "nameEn": "Dazed",
+      "command": "/dazed",
+      "unlockLink": 545,
+      "itemId": 47984,
+      "icon": "/i/246000/246439.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.2"
+    },
+    {
+      "id": 294,
+      "name": "氣得發抖",
+      "nameEn": "Rage",
+      "command": "/rage",
+      "unlockLink": 546,
+      "itemId": 47985,
+      "icon": "/i/246000/246440.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "宇宙探索",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.21"
+    },
+    {
+      "id": 295,
+      "name": "玩神典石",
+      "nameEn": "Tomescroll",
+      "command": "/tomescroll",
+      "unlockLink": 406,
+      "itemId": null,
+      "icon": "/i/246000/246441.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "App",
+          "detail": "下載並登入 Companion App（手機）"
+        }
+      ],
+      "patch": "7.2"
+    },
+    {
+      "id": 296,
+      "name": "認真看書",
+      "nameEn": "Study",
+      "command": "/study",
+      "unlockLink": 70,
+      "itemId": 30111,
+      "icon": "/i/246000/246442.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "伊修加德重建",
+          "detail": "演技教材·看書"
+        }
+      ],
+      "patch": "7.2"
+    },
+    {
+      "id": 297,
+      "name": null,
+      "nameEn": "Breaking",
+      "command": "/breakdance",
+      "unlockLink": 553,
+      "itemId": 46791,
+      "icon": "/i/246000/246453.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.5"
+    },
+    {
+      "id": 298,
+      "name": null,
+      "nameEn": "Gridanian Sip",
+      "command": "/gridaniansip",
+      "unlockLink": 554,
+      "itemId": 46792,
+      "icon": "/i/246000/246443.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.4"
+    },
+    {
+      "id": 299,
+      "name": null,
+      "nameEn": "Ul'dahn Sip",
+      "command": "/uldahnsip",
+      "unlockLink": 554,
+      "itemId": 46792,
+      "icon": "/i/246000/246444.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.4"
+    },
+    {
+      "id": 300,
+      "name": null,
+      "nameEn": "Lominsan Sip",
+      "command": "/lominsansip",
+      "unlockLink": 554,
+      "itemId": 46792,
+      "icon": "/i/246000/246445.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.4"
+    },
+    {
+      "id": 301,
+      "name": null,
+      "nameEn": "Gridanian Gulp",
+      "command": "/gridaniangulp",
+      "unlockLink": 554,
+      "itemId": 46792,
+      "icon": "/i/246000/246446.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.4"
+    },
+    {
+      "id": 302,
+      "name": null,
+      "nameEn": "Ul'dahn Gulp",
+      "command": "/uldahngulp",
+      "unlockLink": 554,
+      "itemId": 46792,
+      "icon": "/i/246000/246447.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.4"
+    },
+    {
+      "id": 303,
+      "name": null,
+      "nameEn": "Lominsan Gulp",
+      "command": "/lominsangulp",
+      "unlockLink": 554,
+      "itemId": 46792,
+      "icon": "/i/246000/246448.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.4"
+    },
+    {
+      "id": 304,
+      "name": null,
+      "nameEn": "Limber Up",
+      "command": "/limberup",
+      "unlockLink": 555,
+      "itemId": 46795,
+      "icon": "/i/246000/246449.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "宇宙探索",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.31"
+    },
+    {
+      "id": 305,
+      "name": null,
+      "nameEn": "Drink Green Tea",
+      "command": "/drinkgreentea",
+      "unlockLink": 556,
+      "itemId": 46793,
+      "icon": "/i/246000/246450.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "深層迷宮",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.35"
+    },
+    {
+      "id": 306,
+      "name": null,
+      "nameEn": "Savor Tea",
+      "command": "/savortea",
+      "unlockLink": 556,
+      "itemId": 46793,
+      "icon": "/i/246000/246451.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "深層迷宮",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.35"
+    },
+    {
+      "id": 307,
+      "name": null,
+      "nameEn": "Pen",
+      "command": "/pen",
+      "unlockLink": 557,
+      "itemId": 46794,
+      "icon": "/i/246000/246452.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.3"
+    },
+    {
+      "id": 308,
+      "name": null,
+      "nameEn": "Blown Away",
+      "command": "/blownaway",
+      "unlockLink": 577,
+      "itemId": 50329,
+      "icon": "/i/246000/246454.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.5"
+    },
+    {
+      "id": 309,
+      "name": null,
+      "nameEn": "Stomp",
+      "command": "/stomp",
+      "unlockLink": 578,
+      "itemId": 50334,
+      "icon": "/i/246000/246455.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "宇宙探索",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.41"
+    },
+    {
+      "id": 310,
+      "name": null,
+      "nameEn": "Cheer Rhythm: Red",
+      "command": "/cheerrhythmred",
+      "unlockLink": 579,
+      "itemId": 50335,
+      "icon": "/i/246000/246456.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.41"
+    },
+    {
+      "id": 311,
+      "name": null,
+      "nameEn": "Cheer Light: Yellow",
+      "command": "/cheerlightyellow",
+      "unlockLink": 580,
+      "itemId": 50336,
+      "icon": "/i/246000/246457.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.41"
+    },
+    {
+      "id": 312,
+      "name": null,
+      "nameEn": "Delighted",
+      "command": "/delighted",
+      "unlockLink": 581,
+      "itemId": 50337,
+      "icon": "/i/246000/246458.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "異聞副本",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.45"
+    },
+    {
+      "id": 313,
+      "name": null,
+      "nameEn": "Runway Walk",
+      "command": "/runwaywalk",
+      "unlockLink": 582,
+      "itemId": 50333,
+      "icon": "/i/246000/246459.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.45"
+    },
+    {
+      "id": 314,
+      "name": null,
+      "nameEn": "Cheer On: Orange",
+      "command": "/cheeronorange",
+      "unlockLink": 583,
+      "itemId": 50330,
+      "icon": "/i/246000/246460.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.5"
+    },
+    {
+      "id": 315,
+      "name": null,
+      "nameEn": "Cheer Wave: Pink",
+      "command": "/cheerwavepink",
+      "unlockLink": 584,
+      "itemId": 50331,
+      "icon": "/i/246000/246461.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.5"
+    },
+    {
+      "id": 316,
+      "name": null,
+      "nameEn": "Cheer Jump: Indigo",
+      "command": "/cheerjumpindigo",
+      "unlockLink": 585,
+      "itemId": 50332,
+      "icon": "/i/246000/246462.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "動作指南書",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.5"
+    },
+    {
+      "id": 317,
+      "name": null,
+      "nameEn": "Carry Book",
+      "command": "/carrybook",
+      "unlockLink": 586,
+      "itemId": 50328,
+      "icon": "/i/246000/246463.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.4"
+    },
+    {
+      "id": 318,
+      "name": null,
+      "nameEn": "Divine Arm",
+      "command": "/divinearm",
+      "unlockLink": 587,
+      "itemId": 50464,
+      "icon": "/i/246000/246464.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.4"
+    },
+    {
+      "id": 319,
+      "name": null,
+      "nameEn": "Divine Disk",
+      "command": "/divinedisk",
+      "unlockLink": 588,
+      "itemId": 50465,
+      "icon": "/i/246000/246465.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.4"
+    },
+    {
+      "id": 320,
+      "name": null,
+      "nameEn": "Divine Tiara",
+      "command": "/divinetiara",
+      "unlockLink": 589,
+      "itemId": 50466,
+      "icon": "/i/246000/246466.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.4"
+    },
+    {
+      "id": 321,
+      "name": null,
+      "nameEn": "Cheer Rhythm: Violet",
+      "command": "/cheerrhythmviolet",
+      "unlockLink": 590,
+      "itemId": 50460,
+      "icon": "/i/246000/246467.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.41"
+    },
+    {
+      "id": 322,
+      "name": null,
+      "nameEn": "Cheer Rhythm: Bright",
+      "command": "/cheerrhythmbright",
+      "unlockLink": 591,
+      "itemId": 50461,
+      "icon": "/i/246000/246469.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.41"
+    },
+    {
+      "id": 323,
+      "name": null,
+      "nameEn": "Cheer Light: Blue",
+      "command": "/cheerlightblue",
+      "unlockLink": 592,
+      "itemId": 50462,
+      "icon": "/i/246000/246468.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.41"
+    },
+    {
+      "id": 324,
+      "name": null,
+      "nameEn": "Cheer Light: Green",
+      "command": "/cheerlightgreen",
+      "unlockLink": 593,
+      "itemId": 50463,
+      "icon": "/i/246000/246470.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.41"
+    },
+    {
+      "id": 328,
+      "name": null,
+      "nameEn": "Cackle",
+      "command": "/cackle",
+      "unlockLink": 642,
+      "itemId": 52292,
+      "icon": "/i/246000/246473.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.5"
+    },
+    {
+      "id": 329,
+      "name": null,
+      "nameEn": "Conduct",
+      "command": "/conduct",
+      "unlockLink": 643,
+      "itemId": 52293,
+      "icon": "/i/246000/246474.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.5"
+    },
+    {
+      "id": 330,
+      "name": null,
+      "nameEn": "Eat Taco",
+      "command": "/eattaco",
+      "unlockLink": 644,
+      "itemId": 52294,
+      "icon": "/i/246000/246475.png",
+      "category": "General",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.51"
+    },
+    {
+      "id": 331,
+      "name": null,
+      "nameEn": "Devour Taco",
+      "command": "/devourtaco",
+      "unlockLink": 644,
+      "itemId": 52294,
+      "icon": "/i/246000/246476.png",
+      "category": "Special",
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "習得自動作指南書"
+        }
+      ],
+      "patch": "7.51"
+    }
+  ]
+}

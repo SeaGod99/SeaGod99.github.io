@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FF14 軍票變現排行 — 軍票交易所與雙色寶石兌換品即時市價，計算每軍票/每寶石可換多少 gil，陸行鳥 DC 全服比價">
+  <title>軍票變現排行 | 水神的工具箱</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-base:    #0a0c10;
+      --bg-surface: #0f1117;
+      --bg-card:    #14181f;
+      --bg-card-hover: #1a1f2b;
+      --border:     rgba(255,255,255,0.07);
+      --border-hover: rgba(200,169,110,0.4);
+      --gold:       #c8a96e;
+      --gold-light: #e2c98a;
+      --gold-dim:   rgba(200,169,110,0.15);
+      --green:      #4ade80;
+      --green-dim:  rgba(74,222,128,0.12);
+      --blue:       #4fc3f7;
+      --blue-dim:   rgba(79,195,247,0.12);
+      --purple:     #a78bfa;
+      --red:        #f87171;
+      --text:       #e8e3d8;
+      --text-dim:   #9a9590;
+      --text-muted: #6b6560;
+      --radius:     8px;
+    }
+
+    html { font-size: 17.5px; }
+    body { background: var(--bg-base); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+
+    .nav {
+      background: var(--bg-surface); border-bottom: 1px solid var(--border);
+      padding: 0 1.5rem; height: 52px; display: flex; align-items: center; gap: 0.75rem;
+    }
+    .nav-back { color: var(--text-dim); text-decoration: none; font-size: 0.85rem; display: flex; align-items: center; gap: 0.4rem; transition: color 0.2s; }
+    .nav-back:hover { color: var(--gold); }
+    .nav-sep { color: var(--text-muted); font-size: 0.85rem; }
+    .nav-title { color: var(--text); font-size: 0.9rem; font-weight: 600; }
+
+    .hero {
+      background: linear-gradient(135deg, var(--bg-surface), var(--bg-base));
+      border-bottom: 1px solid var(--border); padding: 1.25rem 1.5rem;
+    }
+    .hero-inner { max-width: 1200px; margin: 0 auto; }
+    .hero h1 { font-size: 1.4rem; font-weight: 700; }
+    .hero-sub { font-size: 0.8rem; color: var(--text-dim); margin-top: 0.2rem; }
+
+    .controls { max-width: 1200px; margin: 0 auto; padding: 1rem 1.5rem 0.5rem; display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; }
+    .tab-toggle { display: flex; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+    .tab-toggle button {
+      font-size: 0.85rem; padding: 0.4rem 1rem; cursor: pointer; border: none;
+      background: var(--bg-surface); color: var(--text-dim); transition: all 0.15s;
+    }
+    .tab-toggle button.active { background: var(--gold-dim); color: var(--gold); font-weight: 600; }
+
+    select.sel {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px;
+      color: var(--text-dim); padding: 0.38rem 0.6rem; font-size: 0.8rem; outline: none; cursor: pointer;
+    }
+    .chk { font-size: 0.78rem; color: var(--text-dim); display: inline-flex; align-items: center; gap: 0.3rem; cursor: pointer; user-select: none; }
+    .refresh-btn {
+      font-size: 0.78rem; padding: 0.38rem 0.8rem; border-radius: 6px; cursor: pointer; margin-left: auto;
+      border: 1px solid var(--border); background: var(--bg-surface); color: var(--text-dim); transition: all 0.15s;
+    }
+    .refresh-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+    .status { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem 0.4rem; font-size: 0.75rem; color: var(--text-muted); }
+
+    .table-wrap { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem 2rem; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    thead th {
+      text-align: right; font-size: 0.72rem; color: var(--text-muted); font-weight: 600;
+      padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--border); white-space: nowrap;
+      position: sticky; top: 0; background: var(--bg-base); z-index: 2;
+    }
+    thead th:first-child, thead th:nth-child(2) { text-align: left; }
+    tbody td { padding: 0.45rem 0.6rem; border-bottom: 1px solid var(--border); text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    tbody td:first-child, tbody td:nth-child(2) { text-align: left; }
+    tbody tr:hover { background: var(--bg-card-hover); }
+    .rank-num { color: var(--text-muted); font-size: 0.75rem; width: 2.2em; }
+    .iname { font-weight: 600; }
+    .icat { color: var(--text-muted); font-size: 0.72rem; }
+    .per { font-weight: 700; color: var(--gold); }
+    .top3 .per { color: var(--green); }
+    .dimtxt { color: var(--text-muted); }
+    .wname { font-size: 0.72rem; color: var(--blue); }
+    .vel { color: var(--text-dim); }
+    .noprice td { opacity: 0.45; }
+    .lowvel td { opacity: 0.55; }
+    .divider-row td { text-align: left; color: var(--text-muted); font-size: 0.75rem; padding: 0.7rem 0.6rem 0.4rem; background: var(--bg-card); }
+
+    .loading { text-align: center; padding: 3rem 0; color: var(--text-dim); font-size: 0.9rem; }
+    .err { color: var(--red); }
+
+    .info-note { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem 2rem; font-size: 0.72rem; color: var(--text-muted); line-height: 1.8; }
+
+    .site-footer { border-top: 1px solid var(--border); padding: 24px 0; text-align: center; }
+    .site-footer p { font-size: 12px; color: var(--text-muted); }
+    .site-footer a { color: var(--text-dim); }
+  </style>
+  <script src="../../assets/js/patch-gate.js"></script>
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <script src="../../assets/js/theme.js"></script>
+</head>
+<body>
+<nav class="nav">
+  <a href="../../" class="nav-back">&larr; 水神的工具箱</a>
+  <span class="nav-sep">›</span>
+  <span class="nav-title">🎖️ 軍票變現排行</span>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <h1>🎖️ 軍票變現排行</h1>
+    <div class="hero-sub">軍票交易所與雙色寶石兌換品的即時市價，換算「每 100 軍票／每 1 寶石可變現多少 gil」——軍票滿了不知道換什麼就看這裡</div>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="tab-toggle">
+    <button id="tabSeals" class="active">🎖️ 軍票</button>
+    <button id="tabGems">💎 雙色寶石</button>
+  </div>
+  <select class="sel" id="scopeSel"></select>
+  <label class="chk"><input type="checkbox" id="hideNoPrice" checked> 隱藏查無市價</label>
+  <button class="refresh-btn" id="refreshBtn">🔄 重新查價</button>
+</div>
+
+<div class="status" id="statusLine"></div>
+<div class="table-wrap" id="tableWrap"><div class="loading">載入資料中…</div></div>
+
+<p class="info-note">
+  變現值 ＝ 參考價 ×（兌換數量 ÷ 成本）；軍票頁以「每 100 軍票」計，寶石頁以「每 1 寶石」計。參考價優先採「近期成交均價」，無成交紀錄時退回「最低在架價」；實際入手金額另受 5% 市場稅與價格波動影響。<br>
+  日銷量低的物品可能久掛不出，建議優先挑「變現值高且日銷量 ≥ 1」的品項；日銷量不足 1 件／日的品項已自動沉到清單底部。大量拋售同一物品會壓低行情。<br>
+  品項清單來源：XIVAPI（GCScripShopItem／SpecialShop），僅列出台服已開放且可上市集板的物品；部分品項需較高軍階才可兌換。市價由 <a href="https://universalis.app" target="_blank" rel="noopener" style="color:var(--text-dim)">Universalis</a> 提供，10 分鐘快取。
+</p>
+
+<footer class="site-footer">
+  <p>水神的工具箱 · <a href="../../">回首頁</a> · FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具</p>
+</footer>
+
+<script src="../../assets/js/universalis.js"></script>
+<script>
+(function () {
+  var DATA = { seals: [], bicolor: [] };
+  var tab = 'seals';        // seals | bicolor
+  var scope = 'dc';
+  var priceCache = {};      // tab:scope -> {id: agg result}
+
+  var fmt = Universalis.fmtGil;
+
+  function scopeOptions() {
+    var s = '<option value="dc">全 DC（陸行鳥）</option>';
+    Object.keys(Universalis.WORLDS).forEach(function (id) {
+      s += '<option value="' + id + '">' + Universalis.WORLDS[id] + '</option>';
+    });
+    document.getElementById('scopeSel').innerHTML = s;
+  }
+
+  // 從 aggregated 結果取參考價：近期成交均價 → 最低在架
+  function pick(agg) {
+    if (!agg) return null;
+    var side = scope === 'dc' ? 'dc' : 'world';
+    var nq = agg.nq || {};
+    var avg = nq.averageSalePrice && nq.averageSalePrice[side] && nq.averageSalePrice[side].price;
+    var minL = nq.minListing && nq.minListing[side] && nq.minListing[side].price;
+    var minW = scope === 'dc' && nq.minListing && nq.minListing.dc ? nq.minListing.dc.worldId : null;
+    var vel = nq.dailySaleVelocity && nq.dailySaleVelocity[side] && nq.dailySaleVelocity[side].quantity;
+    var ref = avg != null ? avg : minL;
+    if (ref == null) return null;
+    return { ref: ref, avg: avg, minL: minL, minW: minW, vel: vel || 0 };
+  }
+
+  async function loadPrices() {
+    var list = DATA[tab];
+    var key = tab + ':' + scope;
+    if (priceCache[key]) return priceCache[key];
+    setStatus('查詢 Universalis 市價中…（' + list.length + ' 項）');
+    var agg = await Universalis.fetchAggregated(scope === 'dc' ? 'dc' : Number(scope), list.map(function (x) { return x.id; }));
+    if (!agg) return null;
+    priceCache[key] = agg.items || {};
+    return priceCache[key];
+  }
+
+  function setStatus(msg, isErr) {
+    var el = document.getElementById('statusLine');
+    el.textContent = msg || '';
+    el.className = 'status' + (isErr ? ' err' : '');
+  }
+
+  async function render() {
+    var wrap = document.getElementById('tableWrap');
+    var list = DATA[tab];
+    if (!list.length) { wrap.innerHTML = '<div class="loading">無資料</div>'; return; }
+    wrap.innerHTML = '<div class="loading">查價中…</div>';
+
+    var prices = await loadPrices();
+    if (!prices) {
+      wrap.innerHTML = '<div class="loading err">暫時無法連線 Universalis，請稍後按「重新查價」。</div>';
+      setStatus('');
+      return;
+    }
+
+    var isSeals = tab === 'seals';
+    var hideNP = document.getElementById('hideNoPrice').checked;
+    var rows = list.map(function (x) {
+      var p = pick(prices[x.id]);
+      var cost = isSeals ? x.seals : x.gems;
+      var cnt = x.count || 1;
+      return {
+        x: x, p: p,
+        per: p ? p.ref * cnt / cost : -1,
+      };
+    }).filter(function (r) { return !hideNP || r.p; });
+
+    // 日銷量 <1 的品項久掛難出、行情參考價值低——沉到清單底部，各組內再依變現值排序
+    var liquid = function (r) { return r.p && r.p.vel >= 1 ? 1 : 0; };
+    rows.sort(function (a, b) {
+      var d = liquid(b) - liquid(a);
+      return d !== 0 ? d : b.per - a.per;
+    });
+
+    var costHead = isSeals ? '軍票' : '寶石';
+    var perHead = isSeals ? '每100軍票變現' : '每寶石變現';
+    var nCols = isSeals ? 7 : 8;
+    var html = '<table><thead><tr>' +
+      '<th class="rank-num">#</th><th>物品</th><th>' + costHead + '</th>' +
+      (isSeals ? '' : '<th>數量</th>') +
+      '<th>參考價</th><th>最低在架</th><th>' + perHead + '</th><th>日銷量</th>' +
+      '</tr></thead><tbody>';
+
+    var dividerShown = false;
+    rows.forEach(function (r, i) {
+      var x = r.x, p = r.p;
+      var cls = [];
+      if (!p) cls.push('noprice');
+      if (!liquid(r)) {
+        cls.push('lowvel');
+        if (!dividerShown) {
+          html += '<tr class="divider-row"><td colspan="' + nCols + '">▼ 以下品項日銷量不足 1 件／日（或查無市價），久掛難出、行情參考價值低</td></tr>';
+          dividerShown = true;
+        }
+      }
+      if (p && i < 3 && liquid(r)) cls.push('top3');
+      html += '<tr class="' + cls.join(' ') + '">' +
+        '<td class="rank-num">' + (i + 1) + '</td>' +
+        '<td><span class="iname">' + x.name + '</span> <span class="icat">' + (x.category || '') + '</span></td>' +
+        '<td>' + fmt(isSeals ? x.seals : x.gems) + '</td>' +
+        (isSeals ? '' : '<td class="dimtxt">×' + (x.count || 1) + '</td>') +
+        '<td>' + (p ? fmt(p.ref) : '<span class="dimtxt">查無</span>') + '</td>' +
+        '<td>' + (p && p.minL != null
+            ? fmt(p.minL) + (p.minW ? ' <span class="wname">' + Universalis.worldName(p.minW) + '</span>' : '')
+            : '<span class="dimtxt">—</span>') + '</td>' +
+        '<td class="per">' + (p ? fmt(isSeals ? r.per * 100 : r.per) : '—') + '</td>' +
+        '<td class="vel">' + (p ? (Math.round(p.vel * 10) / 10) : '—') + '</td>' +
+        '</tr>';
+    });
+    html += '</tbody></table>';
+    wrap.innerHTML = html;
+    setStatus('共 ' + rows.length + ' 項' + (hideNP ? '（已隱藏查無市價品項）' : '') +
+      ' · 排序：' + perHead + '由高到低 · 範圍：' +
+      (scope === 'dc' ? '全 DC（陸行鳥）' : Universalis.worldName(Number(scope))));
+  }
+
+  /* ── 事件 ── */
+  document.getElementById('tabSeals').addEventListener('click', function () { setTab('seals'); });
+  document.getElementById('tabGems').addEventListener('click', function () { setTab('bicolor'); });
+  function setTab(t) {
+    tab = t;
+    document.getElementById('tabSeals').classList.toggle('active', t === 'seals');
+    document.getElementById('tabGems').classList.toggle('active', t === 'bicolor');
+    render();
+  }
+  document.getElementById('scopeSel').addEventListener('change', function (e) { scope = e.target.value; render(); });
+  document.getElementById('hideNoPrice').addEventListener('change', render);
+  document.getElementById('refreshBtn').addEventListener('click', function () {
+    Universalis.clearCache(); priceCache = {}; render();
+  });
+
+  /* ── 啟動 ── */
+  (async function init() {
+    scopeOptions();
+    try {
+      var json = await fetch('../../data/gc-shop.json').then(function (r) { return r.json(); });
+      var gp = await PatchGate.loadGamePatch('../../data/_meta.json');
+      var gate = function (x) { return PatchGate.released(x.patch, gp); };
+      DATA.seals = (json.data.seals || []).filter(gate);
+      DATA.bicolor = (json.data.bicolor || []).filter(gate);
+      render();
+    } catch (e) {
+      document.getElementById('tableWrap').innerHTML = '<div class="loading err">資料載入失敗：' + e.message + '</div>';
+    }
+  })();
+})();
+</script>
+</body>
+</html>

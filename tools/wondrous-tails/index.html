@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>天書奇談計算器 | 水神的工具箱</title>
+  <style>
+    :root {
+      --bg-base:    #0a0c10;
+      --bg-surface: #0f1117;
+      --bg-card:    #14181f;
+      --bg-card-hover: #1a1f2b;
+      --border:     rgba(255,255,255,0.08);
+      --gold:       #c8a96e;
+      --gold-light: #e2c98a;
+      --gold-dim:   rgba(200,169,110,0.15);
+      --blue:       #4fc3f7;
+      --green:      #4ade80;
+      --green-dim:  rgba(74,222,128,0.12);
+      --red:        #f87171;
+      --red-dim:    rgba(248,113,113,0.12);
+      --yellow:     #fbbf24;
+      --text-primary:   #e8eaf0;
+      --text-secondary: #8892a4;
+      --text-muted:     #4a5568;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --transition: 0.15s ease;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background: radial-gradient(ellipse 70% 40% at 50% 0%, rgba(200,169,110,0.04) 0%, transparent 60%);
+      pointer-events: none; z-index: 0;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* Nav */
+    .nav {
+      position: relative; z-index: 10;
+      display: flex; align-items: center; gap: 8px;
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-back {
+      font-size: 12px; color: var(--text-secondary);
+      display: flex; align-items: center; gap: 4px;
+      transition: color var(--transition);
+    }
+    .nav-back:hover { color: var(--gold); }
+    .nav-sep { color: var(--text-muted); font-size: 12px; }
+    .nav-current { font-size: 12px; color: var(--text-muted); }
+
+    /* Layout */
+    .container {
+      max-width: 1040px; margin: 0 auto;
+      padding: 40px 24px 60px;
+      position: relative; z-index: 1;
+    }
+
+    /* Header */
+    .page-header { text-align: center; margin-bottom: 36px; }
+    .page-icon { font-size: 40px; margin-bottom: 12px; }
+    .page-title { font-size: 22px; font-weight: 700; color: var(--gold-light); margin-bottom: 6px; }
+    .page-desc { font-size: 14px; color: var(--text-secondary); }
+
+    /* Info box */
+    .info-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 28px;
+    }
+    .info-box strong { color: var(--gold); }
+
+    /* Main board layout */
+    .board-layout {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 24px;
+      align-items: start;
+    }
+    @media (max-width: 660px) {
+      .board-layout { grid-template-columns: 1fr; }
+    }
+
+    /* Board */
+    .board-wrap { position: relative; }
+    .board-label {
+      font-size: 11px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.8px;
+      color: var(--text-muted); margin-bottom: 10px;
+    }
+    .board {
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      gap: 6px;
+    }
+    .cell {
+      aspect-ratio: 1;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      cursor: pointer;
+      transition: background var(--transition), border-color var(--transition), transform var(--transition);
+      user-select: none;
+      position: relative;
+    }
+    .cell:hover { background: var(--bg-card-hover); border-color: rgba(200,169,110,0.3); transform: scale(1.04); }
+    .cell.stamped {
+      background: rgba(200,169,110,0.12);
+      border-color: rgba(200,169,110,0.5);
+    }
+    .cell.stamped::after {
+      content: '';
+      position: absolute; inset: 0;
+      border-radius: var(--radius-sm);
+      box-shadow: inset 0 0 0 2px rgba(200,169,110,0.6);
+    }
+    /* Lines highlight */
+    .cell.in-line {
+      background: rgba(74,222,128,0.1);
+      border-color: rgba(74,222,128,0.4);
+    }
+    .cell.in-line.stamped {
+      background: rgba(74,222,128,0.2);
+      border-color: rgba(74,222,128,0.7);
+    }
+
+    /* Sidebar panel */
+    .side-panel {
+      display: flex; flex-direction: column; gap: 16px;
+    }
+
+    .panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+    .panel-head {
+      padding: 10px 14px;
+      font-size: 11px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.8px;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+    }
+    .panel-body { padding: 14px; }
+
+    /* Stamp count */
+    .stamp-display {
+      text-align: center;
+      padding: 12px 0 8px;
+    }
+    .stamp-number {
+      font-size: 42px; font-weight: 700;
+      color: var(--gold-light);
+      line-height: 1;
+    }
+    .stamp-label { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+    .stamp-bar {
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      margin-top: 10px;
+      overflow: hidden;
+    }
+    .stamp-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+      border-radius: 2px;
+      transition: width 0.3s ease;
+    }
+
+    /* Lines result */
+    .lines-row {
+      display: flex; justify-content: space-between;
+      align-items: center;
+      padding: 7px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .lines-row:last-child { border-bottom: none; }
+    .lines-label { color: var(--text-secondary); }
+    .lines-value { font-weight: 600; }
+    .lines-value.good { color: var(--green); }
+    .lines-value.warn { color: var(--yellow); }
+    .lines-value.bad  { color: var(--red); }
+    .lines-value.gold { color: var(--gold-light); }
+
+    /* Probability display */
+    .prob-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 12.5px;
+    }
+    .prob-row:last-child { border-bottom: none; }
+    .prob-lines { color: var(--text-secondary); }
+    .prob-pct {
+      font-weight: 600; font-size: 13px;
+      min-width: 52px; text-align: right;
+    }
+    .prob-bar-wrap {
+      flex: 1; margin: 0 10px;
+      height: 3px; background: var(--border);
+      border-radius: 2px; overflow: hidden;
+    }
+    .prob-bar { height: 100%; border-radius: 2px; transition: width 0.3s ease; }
+
+    /* Suggestion */
+    .suggestion {
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      line-height: 1.6;
+      display: flex; gap: 8px; align-items: flex-start;
+    }
+    .suggestion.keep  { background: var(--green-dim); border: 1px solid rgba(74,222,128,0.25); }
+    .suggestion.retry { background: var(--red-dim);   border: 1px solid rgba(248,113,113,0.25); }
+    .suggestion.ok    { background: var(--gold-dim);   border: 1px solid rgba(200,169,110,0.25); }
+    .sug-icon { font-size: 16px; flex-shrink: 0; }
+    .sug-text { }
+    .sug-title { font-weight: 600; margin-bottom: 2px; }
+    .sug-title.green  { color: var(--green); }
+    .sug-title.red    { color: var(--red); }
+    .sug-title.gold   { color: var(--gold-light); }
+    .sug-body { font-size: 12px; color: var(--text-secondary); }
+
+    /* Buttons */
+    .btn-row { display: flex; gap: 8px; margin-top: 4px; }
+    .btn {
+      flex: 1;
+      padding: 9px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 12.5px; font-weight: 600;
+      cursor: pointer; border: none;
+      transition: var(--transition); outline: none;
+      letter-spacing: 0.3px;
+    }
+    .btn-primary {
+      background: var(--gold-dim);
+      color: var(--gold-light);
+      border: 1px solid rgba(200,169,110,0.3);
+    }
+    .btn-primary:hover { background: rgba(200,169,110,0.25); }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.2); color: var(--text-primary); }
+
+    /* Divider */
+    .divider { height: 1px; background: var(--border); margin: 4px 0; }
+  </style>
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <script src="../../assets/js/theme.js"></script>
+</head>
+<body>
+
+<!-- Nav -->
+<nav class="nav">
+  <a href="../../" class="nav-back">&larr; 水神的工具箱</a>
+  <span class="nav-sep">/</span>
+  <span class="nav-current">天書奇談計算器</span>
+</nav>
+
+<div class="container">
+  <div class="page-header">
+    <div class="page-icon">📖</div>
+    <h1 class="page-title">天書奇談計算器</h1>
+    <p class="page-desc">點擊格子標記已蓋印，即時計算連線機率與建議</p>
+  </div>
+
+  <div class="info-box">
+    天書奇談共 <strong>16 格</strong>，每週可獲得 <strong>9 個蓋印</strong>。達成 <strong>2 條連線</strong>可獲得 1 次洗牌（Shuffle）機會、<strong>3 條連線</strong>可獲得 2 次。洗牌可重新隨機排列格子，洗出好局再交本換寶箱。共有 <strong>4 列、4 行、2 對角線</strong>，合計 10 條。
+  </div>
+
+  <div class="board-layout">
+    <!-- Board -->
+    <div class="board-wrap">
+      <div class="board-label">天書格（點擊切換蓋印）</div>
+      <div class="board" id="board"></div>
+      <div class="btn-row" style="margin-top:12px">
+        <button class="btn btn-ghost" onclick="clearAll()">重置全部</button>
+        <button class="btn btn-primary" onclick="highlightLines()">顯示連線</button>
+      </div>
+    </div>
+
+    <!-- Side Panel -->
+    <div class="side-panel">
+
+      <!-- Stamp count -->
+      <div class="panel">
+        <div class="panel-head">蓋印狀況</div>
+        <div class="panel-body">
+          <div class="stamp-display">
+            <div class="stamp-number" id="stampCount">0</div>
+            <div class="stamp-label">/ 9 個蓋印</div>
+            <div class="stamp-bar"><div class="stamp-fill" id="stampFill" style="width:0%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lines -->
+      <div class="panel">
+        <div class="panel-head">連線狀況</div>
+        <div class="panel-body" id="linesBody">
+          <div class="lines-row">
+            <span class="lines-label">目前完成</span>
+            <span class="lines-value gold" id="linesComplete">0 條</span>
+          </div>
+          <div class="lines-row">
+            <span class="lines-label">差 1 格完成</span>
+            <span class="lines-value" id="linesAlmost">0 條</span>
+          </div>
+          <div class="lines-row">
+            <span class="lines-label">剩餘蓋印數</span>
+            <span class="lines-value" id="stampsLeft">9 個</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Probability -->
+      <div class="panel">
+        <div class="panel-head">達成機率（剩餘蓋印隨機分配）</div>
+        <div class="panel-body" id="probBody">
+          <!-- generated by JS -->
+        </div>
+      </div>
+
+      <!-- Suggestion -->
+      <div id="suggestion"></div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Constants ──
+const EMOJIS = [
+  '🐉','🦁','🦊','🐺',
+  '🦅','🌊','⚡','🔥',
+  '🌙','⭐','🏔️','🌸',
+  '🗡️','🛡️','💎','👑'
+];
+
+const TOTAL_STAMPS = 9;
+const GRID = 4;
+
+// All lines: rows, cols, diagonals
+const LINES = [];
+for (let r = 0; r < 4; r++) {
+  const row = [];
+  for (let c = 0; c < 4; c++) row.push(r * 4 + c);
+  LINES.push(row);
+}
+for (let c = 0; c < 4; c++) {
+  const col = [];
+  for (let r = 0; r < 4; r++) col.push(r * 4 + c);
+  LINES.push(col);
+}
+LINES.push([0,5,10,15]);
+LINES.push([3,6,9,12]);
+
+// ── State ──
+let stamped = new Array(16).fill(false);
+let showLines = false;
+
+// ── Init ──
+function initBoard() {
+  const board = document.getElementById('board');
+  board.innerHTML = '';
+  for (let i = 0; i < 16; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'cell';
+    cell.textContent = EMOJIS[i];
+    cell.dataset.idx = i;
+    cell.addEventListener('click', () => toggleCell(i));
+    board.appendChild(cell);
+  }
+}
+
+function toggleCell(idx) {
+  if (!stamped[idx] && getStampCount() >= TOTAL_STAMPS) return; // 已達 9 個，不能再加
+  stamped[idx] = !stamped[idx];
+  updateUI();
+}
+
+function clearAll() {
+  stamped.fill(false);
+  showLines = false;
+  updateUI();
+}
+
+function highlightLines() {
+  showLines = !showLines;
+  updateUI();
+}
+
+// ── Core logic ──
+function getStampCount() { return stamped.filter(Boolean).length; }
+
+function analyzeLines() {
+  const complete = [];
+  const almost = []; // 1 cell away
+  for (const line of LINES) {
+    const s = line.filter(i => stamped[i]).length;
+    if (s === 4) complete.push(line);
+    else if (s === 3) almost.push(line);
+  }
+  return { complete, almost };
+}
+
+// Monte Carlo: randomly distribute remaining stamps in unstamped cells
+// Returns probability distribution for total lines (0~10)
+function simulateProbabilities() {
+  const stampCount = getStampCount();
+  const remaining = TOTAL_STAMPS - stampCount;
+  const unstamped = [];
+  for (let i = 0; i < 16; i++) if (!stamped[i]) unstamped.push(i);
+
+  if (remaining <= 0 || unstamped.length === 0) {
+    const { complete } = analyzeLines();
+    const dist = new Array(11).fill(0);
+    dist[Math.min(complete.length, 10)] = 1;
+    return dist;
+  }
+
+  if (remaining > unstamped.length) {
+    // Can fill everything
+    const dist = new Array(11).fill(0);
+    const { complete } = analyzeLines();
+    dist[Math.min(complete.length, 10)] = 1;
+    return dist;
+  }
+
+  const TRIALS = 50000;
+  const dist = new Array(11).fill(0);
+
+  for (let t = 0; t < TRIALS; t++) {
+    // Fisher-Yates shuffle first `remaining` picks
+    const pool = [...unstamped];
+    for (let k = 0; k < remaining; k++) {
+      const j = k + Math.floor(Math.random() * (pool.length - k));
+      [pool[k], pool[j]] = [pool[j], pool[k]];
+    }
+    const extra = new Set(pool.slice(0, remaining));
+    let lines = 0;
+    for (const line of LINES) {
+      if (line.every(i => stamped[i] || extra.has(i))) lines++;
+    }
+    dist[Math.min(lines, 10)]++;
+  }
+  return dist.map(v => v / TRIALS);
+}
+
+function expectedLines(dist) {
+  let e = 0;
+  for (let i = 0; i < dist.length; i++) e += i * dist[i];
+  return e;
+}
+
+// ── UI ──
+function updateUI() {
+  const count = getStampCount();
+  const remaining = Math.max(0, TOTAL_STAMPS - count);
+  const { complete, almost } = analyzeLines();
+
+  // Stamp count
+  document.getElementById('stampCount').textContent = count;
+  document.getElementById('stampFill').style.width = `${Math.min(count / TOTAL_STAMPS * 100, 100)}%`;
+
+  // Lines summary
+  document.getElementById('linesComplete').textContent = `${complete.length} 條`;
+  const almostEl = document.getElementById('linesAlmost');
+  almostEl.textContent = `${almost.length} 條`;
+  almostEl.className = 'lines-value' + (almost.length > 0 ? ' good' : '');
+  document.getElementById('stampsLeft').textContent = `${remaining} 個`;
+
+  // Highlight cells
+  const allLineCells = new Set();
+  const completeLineCells = new Set();
+  if (showLines) {
+    for (const line of complete) line.forEach(i => { allLineCells.add(i); completeLineCells.add(i); });
+    for (const line of almost) line.forEach(i => allLineCells.add(i));
+  }
+
+  const cells = document.querySelectorAll('.cell');
+  cells.forEach((cell, i) => {
+    cell.classList.toggle('stamped', stamped[i]);
+    cell.classList.toggle('in-line', showLines && allLineCells.has(i));
+  });
+
+  // Probabilities
+  const dist = simulateProbabilities();
+  const probBody = document.getElementById('probBody');
+  probBody.innerHTML = '';
+
+  // Show 0-line through 3-line (3+ grouped)
+  const buckets = [
+    { label: '0 條連線', min: 0, max: 0 },
+    { label: '1 條連線', min: 1, max: 1 },
+    { label: '2 條連線（1 次洗牌）', min: 2, max: 2 },
+    { label: '3 條連線（2 次洗牌）', min: 3, max: 10 },
+  ];
+
+  const barColors = [
+    '#f87171', '#fbbf24', '#4ade80', '#c8a96e'
+  ];
+
+  buckets.forEach((b, bi) => {
+    let p = 0;
+    for (let i = b.min; i <= b.max; i++) p += (dist[i] || 0);
+    p = Math.min(p, 1);
+    const pct = (p * 100).toFixed(1);
+
+    const row = document.createElement('div');
+    row.className = 'prob-row';
+    row.innerHTML = `
+      <span class="prob-lines">${b.label}</span>
+      <div class="prob-bar-wrap">
+        <div class="prob-bar" style="width:${pct}%;background:${barColors[bi]}"></div>
+      </div>
+      <span class="prob-pct" style="color:${barColors[bi]}">${pct}%</span>
+    `;
+    probBody.appendChild(row);
+  });
+
+  // Suggestion
+  renderSuggestion(dist, complete.length, almost.length, remaining);
+}
+
+function renderSuggestion(dist, completedLines, almostLines, remaining) {
+  const el = document.getElementById('suggestion');
+  const exp = expectedLines(dist);
+
+  // Already done
+  if (remaining === 0) {
+    el.innerHTML = buildSug('ok', '📋', '蓋印已用完', `本週最終結果：${completedLines} 條連線。`, 'gold');
+    return;
+  }
+
+  const p2plus = (dist.slice(2).reduce((a,b) => a+b, 0) * 100).toFixed(0);
+  const p3plus = (dist.slice(3).reduce((a,b) => a+b, 0) * 100).toFixed(0);
+
+  if (completedLines >= 3) {
+    el.innerHTML = buildSug('keep', '✅', '已達 3 條，強烈建議保留！', `可獲得 2 次洗牌機會。若可重貼，期望值 ${exp.toFixed(2)} 條，不值得冒險。`, 'green');
+  } else if (completedLines === 2) {
+    if (Number(p3plus) >= 40) {
+      el.innerHTML = buildSug('ok', '🤔', '視情況而定', `目前 2 條（1 次洗牌），達成 3 條機率 ${p3plus}%。期望值 ${exp.toFixed(2)}，可考慮繼續拼。`, 'gold');
+    } else {
+      el.innerHTML = buildSug('keep', '✅', '建議保留', `已有 2 條（1 次洗牌），達成 3 條機率僅 ${p3plus}%。保住既有洗牌機會比較穩。`, 'green');
+    }
+  } else if (completedLines <= 1 && almostLines === 0 && remaining <= 3) {
+    el.innerHTML = buildSug('retry', '🔄', '局面不佳，可考慮重貼', `剩 ${remaining} 個蓋印，${completedLines ? `目前完成 ${completedLines} 條` : '目前無完成線'}，達 2 條以上機率 ${p2plus}%，期望值 ${exp.toFixed(2)} 條。`, 'red');
+  } else {
+    el.innerHTML = buildSug('ok', '📊', `期望 ${exp.toFixed(2)} 條連線`, `達成 2 條以上（洗牌）機率 ${p2plus}%，3 條 ${p3plus}%。尚有 ${remaining} 個蓋印待分配。`, 'gold');
+  }
+}
+
+function buildSug(type, icon, title, body, titleColor) {
+  return `<div class="suggestion ${type}">
+    <span class="sug-icon">${icon}</span>
+    <div class="sug-text">
+      <div class="sug-title ${titleColor}">${title}</div>
+      <div class="sug-body">${body}</div>
+    </div>
+  </div>`;
+}
+
+// ── Start ──
+initBoard();
+updateUI();
+</script>
+</body>
+</html>

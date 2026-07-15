@@ -1,0 +1,114 @@
+/* ===================================================================
+   水神的工具箱 — 全站主題（亮 / 暗 / 自動）
+   各頁於自己的 <style> 內以「暗色」定義 :root 變數為預設。
+   本檔只提供「亮色」覆蓋：:root[data-theme="light"] 特定度 (0,2,0)
+   高於各頁 :root (0,1,0)，故不論載入順序都會勝出。
+   data-theme 由 assets/js/theme.js 在 <head> 同步設定（light / dark）。
+   =================================================================== */
+
+/* 原生元件（捲軸、表單）跟著主題走 */
+:root { color-scheme: dark; }
+:root[data-theme="light"] { color-scheme: light; }
+
+/* 通用「微抬升表面」：原本各頁硬寫 rgba(255,255,255,.0x)（白色微透）當底，
+   在亮底會消失。改用此變數：暗色＝白微透、亮色＝黑微透，兩色皆可見。 */
+:root { --raise: rgba(255,255,255,0.05); }
+:root[data-theme="light"] { --raise: rgba(0,0,0,0.045); }
+
+:root[data-theme="light"] {
+  /* ── 表面 ── */
+  --bg-base:        #f4f2ec;   /* 頁面底：暖白 */
+  --bg-surface:     #faf8f3;
+  --bg-card:        #ffffff;
+  --bg-card-hover:  #f1ede2;
+  --bg-hover:       #ece7dd;   /* weather 用 */
+
+  /* ── 邊框 ── */
+  --border:         rgba(0,0,0,0.12);
+  --border-hover:   rgba(154,123,63,0.55);
+
+  /* ── 金色主調（在亮底當文字需加深以保對比，逼近 AA 4.5）── */
+  --gold:           #8a6c2f;
+  --gold-light:     #6f5524;
+  --gold-dim:       rgba(154,123,63,0.16);
+
+  /* ── 強調色：亮底需更深以保 WCAG AA(4.5) 可讀；半透明 -dim 版維持淺色淡底 ── */
+  --blue:           #0c6fa6;
+  --blue-dim:       rgba(13,131,196,0.12);
+  --green:          #157f3a;
+  --green-dim:      rgba(21,163,74,0.12);
+  --purple:         #6f3fd0;
+  --purple-dim:     rgba(124,77,214,0.12);
+  --red:            #c63a2e;
+  --red-dim:        rgba(214,72,59,0.12);
+  --orange:         #b0561a;
+  --orange-dim:     rgba(217,119,43,0.14);
+  --cyan:           #0c7a8d;
+  --cyan-dim:       rgba(14,139,160,0.14);
+  --yellow:         #8a6708;
+
+  /* ── 文字（兩套命名都覆蓋）── */
+  --text:           #1d1b16;
+  --text-primary:   #16181d;
+  --text-secondary: #545b67;
+  --text-dim:       #545049;
+  --text-muted:     #6c675c;
+
+  /* ── weather 專用強調 ── */
+  --accent:         #2f6fb0;
+  --accent-dim:     rgba(47,111,176,0.15);
+
+  /* ── 陰影 ── */
+  --shadow-card:    0 2px 14px rgba(0,0,0,0.10);
+}
+
+/* ===================================================================
+   浮動主題切換鈕（由 theme.js 注入；樣式用全站通用變數＋fallback，
+   各頁變數命名不一也能適配）
+   =================================================================== */
+#theme-toggle {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 9999;
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 999px;
+  background: var(--bg-card, #14181f);
+  border: 1px solid var(--border, rgba(255,255,255,0.1));
+  box-shadow: var(--shadow-card, 0 2px 14px rgba(0,0,0,0.35));
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+#theme-toggle button {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--text-muted, var(--text-dim, #8a8a8a));
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s;
+}
+#theme-toggle button:hover { color: var(--text, var(--text-primary, #e8e3d8)); }
+#theme-toggle button.active {
+  background: var(--gold-dim, rgba(200,169,110,0.18));
+  color: var(--gold, #c8a96e);
+}
+#theme-toggle button:focus-visible {
+  outline: 2px solid var(--gold, #c8a96e);
+  outline-offset: 1px;
+}
+
+@media print { #theme-toggle { display: none; } }
+@media (max-width: 480px) {
+  #theme-toggle { right: 10px; bottom: 10px; }
+  #theme-toggle button { width: 44px; height: 44px; font-size: 17px; }
+}

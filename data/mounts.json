@@ -1,0 +1,7317 @@
+{
+  "schema": "mounts",
+  "patch": "7.2",
+  "updated": "2026-06-29",
+  "source": "tc-collection+xivapi(icon)",
+  "count": 362,
+  "data": [
+    {
+      "id": 1,
+      "name": "專屬陸行鳥",
+      "nameEn": "company chocobo",
+      "seats": 1,
+      "icon": "/i/004000/004001_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004001_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004001_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "我的專屬陸行鳥（不滅隊）"
+        },
+        {
+          "type": "任務",
+          "detail": "我的專屬陸行鳥（黑渦團）"
+        },
+        {
+          "type": "任務",
+          "detail": "我的專屬陸行鳥（雙蛇黨）"
+        }
+      ],
+      "patch": "2.0",
+      "itemId": 6001,
+      "nameSource": "tc"
+    },
+    {
+      "id": 4,
+      "name": "古卜",
+      "nameEn": "goobbue",
+      "seats": 1,
+      "icon": "/i/004000/004003_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004003_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004003_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "成就「戰鬥在外野之一」"
+        }
+      ],
+      "patch": "2.0",
+      "itemId": 6002,
+      "nameSource": "tc"
+    },
+    {
+      "id": 5,
+      "name": "遺產陸行鳥",
+      "nameEn": "legacy chocobo",
+      "seats": 1,
+      "icon": "/i/004000/004002_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004002_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004002_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "莫頓城巨城廢墟（困難）"
+        }
+      ],
+      "patch": "2.0",
+      "itemId": 6006,
+      "nameSource": "tc"
+    },
+    {
+      "id": 6,
+      "name": "魔導裝甲",
+      "nameEn": "magitek armor",
+      "seats": 1,
+      "icon": "/i/004000/004006_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004006_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004006_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "超越幻想，究極武器"
+        }
+      ],
+      "patch": "2.0",
+      "itemId": 6008,
+      "nameSource": "tc"
+    },
+    {
+      "id": 8,
+      "name": "夸爾",
+      "nameEn": "coeurl",
+      "seats": 1,
+      "icon": "/i/004000/004005_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004005_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004005_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "金碟",
+          "detail": "金碟 MGP 兌換"
+        }
+      ],
+      "patch": "2.0",
+      "itemId": 6007,
+      "nameSource": "tc"
+    },
+    {
+      "id": 9,
+      "name": "惡精靈",
+      "nameEn": "ahriman",
+      "seats": 1,
+      "icon": "/i/004000/004004_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004004_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004004_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "喬納森: 成就幣 x6, at 格里達尼亞舊街"
+        }
+      ],
+      "patch": "2.0",
+      "itemId": 6009,
+      "nameSource": "tc"
+    },
+    {
+      "id": 15,
+      "name": "獨角獸",
+      "nameEn": "unicorn",
+      "seats": 1,
+      "icon": "/i/004000/004007_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004007_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004007_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "我唯一的希望"
+        }
+      ],
+      "patch": "2.0",
+      "itemId": 6269,
+      "nameSource": "tc"
+    },
+    {
+      "id": 18,
+      "name": "凶惡巨獸",
+      "nameEn": "behemoth",
+      "seats": 1,
+      "icon": "/i/004000/004008_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004008_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004008_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "喬納森: 成就幣 x6, at 格里達尼亞舊街"
+        }
+      ],
+      "patch": "2.1",
+      "itemId": 6990,
+      "nameSource": "tc"
+    },
+    {
+      "id": 19,
+      "name": "兵隊火蛟",
+      "nameEn": "cavalry drake",
+      "seats": 1,
+      "icon": "/i/004000/004009_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004009_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004009_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "蜥蜴人族雜用商人: Gil x120000, at 南薩納蘭"
+        }
+      ],
+      "patch": "2.1",
+      "itemId": 6991,
+      "nameSource": "tc"
+    },
+    {
+      "id": 20,
+      "name": "月桂冠古卜",
+      "nameEn": "laurel goobbue",
+      "seats": 1,
+      "icon": "/i/004000/004010_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004010_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004010_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "風精靈族雜用商人: Gil x120000, at 黑衣森林東部林區"
+        }
+      ],
+      "patch": "2.1",
+      "itemId": 6992,
+      "nameSource": "tc"
+    },
+    {
+      "id": 21,
+      "name": "魔導裝甲丙型",
+      "nameEn": "gilded magitek armor",
+      "seats": 1,
+      "icon": "/i/004000/004011_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004011_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004011_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "銘記不忘的隊友"
+        }
+      ],
+      "patch": "2.1",
+      "itemId": 6993,
+      "nameSource": "tc"
+    },
+    {
+      "id": 22,
+      "name": "夢魘",
+      "nameEn": "nightmare",
+      "seats": 1,
+      "icon": "/i/004000/004012_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004012_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004012_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極 迦樓羅殲滅戰"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "極 泰坦殲滅戰"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "極 伊弗利特殲滅戰"
+        }
+      ],
+      "patch": "2.1",
+      "itemId": 6994,
+      "nameSource": "tc"
+    },
+    {
+      "id": 25,
+      "name": "胖陸行鳥",
+      "nameEn": "fat chocobo",
+      "seats": 1,
+      "icon": "/i/004000/004013_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004013_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004013_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "成就「蒼天騎士」"
+        }
+      ],
+      "patch": "2.2",
+      "itemId": 7553,
+      "nameSource": "tc"
+    },
+    {
+      "id": 26,
+      "name": "兵隊水龍蜥",
+      "nameEn": "cavalry elbst",
+      "seats": 1,
+      "icon": "/i/004000/004014_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004014_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004014_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "魚人族雜用商人: Gil x120000, at 西拉諾西亞"
+        }
+      ],
+      "patch": "2.2",
+      "itemId": 7554,
+      "nameSource": "tc"
+    },
+    {
+      "id": 27,
+      "name": "炸彈吊椅",
+      "nameEn": "bomb palanquin",
+      "seats": 1,
+      "icon": "/i/004000/004015_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004015_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004015_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "地靈族雜用商人: Gil x120000, at 拉諾西亞外地"
+        }
+      ],
+      "patch": "2.2",
+      "itemId": 7555,
+      "nameSource": "tc"
+    },
+    {
+      "id": 28,
+      "name": "火妖馬艾馱恩",
+      "nameEn": "Aithon",
+      "seats": 1,
+      "icon": "/i/004000/004016_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004016_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004016_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極 伊弗利特殲滅戰"
+        }
+      ],
+      "patch": "2.2",
+      "itemId": 7844,
+      "nameSource": "tc"
+    },
+    {
+      "id": 29,
+      "name": "風妖馬刻桑圖司",
+      "nameEn": "Xanthos",
+      "seats": 1,
+      "icon": "/i/004000/004017_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004017_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004017_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極 迦樓羅殲滅戰"
+        }
+      ],
+      "patch": "2.2",
+      "itemId": 7845,
+      "nameSource": "tc"
+    },
+    {
+      "id": 30,
+      "name": "土妖馬古爾法克西",
+      "nameEn": "Gullfaxi",
+      "seats": 1,
+      "icon": "/i/004000/004018_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004018_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004018_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極 泰坦殲滅戰"
+        }
+      ],
+      "patch": "2.2",
+      "itemId": 7846,
+      "nameSource": "tc"
+    },
+    {
+      "id": 31,
+      "name": "水妖馬艾恩巴爾",
+      "nameEn": "Enbarr",
+      "seats": 1,
+      "icon": "/i/004000/004019_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004019_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004019_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極 利維坦殲滅戰"
+        }
+      ],
+      "patch": "2.2",
+      "itemId": 7847,
+      "nameSource": "tc"
+    },
+    {
+      "id": 32,
+      "name": "戰獅",
+      "nameEn": "warlion",
+      "seats": 1,
+      "icon": "/i/004000/004020_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004020_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004020_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "頑強騎士"
+        },
+        {
+          "type": "成就",
+          "detail": "騎士出征1"
+        }
+      ],
+      "patch": "2.2",
+      "itemId": 7848,
+      "nameSource": "tc"
+    },
+    {
+      "id": 33,
+      "name": "戰熊",
+      "nameEn": "warbear",
+      "seats": 1,
+      "icon": "/i/004000/004021_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004021_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004021_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "勇猛戰士"
+        }
+      ],
+      "patch": "2.2",
+      "itemId": 7849,
+      "nameSource": "tc"
+    },
+    {
+      "id": 34,
+      "name": "大陸行鳥",
+      "nameEn": "draught chocobo",
+      "seats": 2,
+      "icon": "/i/004000/004022_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004022_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004022_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "主線任務",
+          "detail": "完成紅蓮之狂潮主線"
+        }
+      ],
+      "patch": "2.3",
+      "itemId": 8207,
+      "nameSource": "tc"
+    },
+    {
+      "id": 35,
+      "name": "恐狼",
+      "nameEn": "direwolf",
+      "seats": 1,
+      "icon": "/i/004000/004023_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004023_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004023_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "鳥人族雜用商人: Gil x120000, at 黑衣森林北部林區"
+        }
+      ],
+      "patch": "2.35",
+      "itemId": 8208,
+      "nameSource": "tc"
+    },
+    {
+      "id": 36,
+      "name": "黑渦戰馬",
+      "nameEn": "storm warsteed",
+      "seats": 1,
+      "icon": "/i/004000/004024_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004024_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004024_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "海之都的凱旋4"
+        }
+      ],
+      "patch": "2.3",
+      "itemId": 8209,
+      "nameSource": "tc"
+    },
+    {
+      "id": 37,
+      "name": "雙蛇戰馬",
+      "nameEn": "serpent warsteed",
+      "seats": 1,
+      "icon": "/i/004000/004025_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004025_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004025_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "森之都的凱旋4"
+        }
+      ],
+      "patch": "2.3",
+      "itemId": 8210,
+      "nameSource": "tc"
+    },
+    {
+      "id": 38,
+      "name": "不滅戰馬",
+      "nameEn": "flame warsteed",
+      "seats": 1,
+      "icon": "/i/004000/004026_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004026_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004026_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "沙之都的凱旋4"
+        }
+      ],
+      "patch": "2.3",
+      "itemId": 8211,
+      "nameSource": "tc"
+    },
+    {
+      "id": 40,
+      "name": "雷妖馬瑪卡布",
+      "nameEn": "Markab",
+      "seats": 1,
+      "icon": "/i/004000/004027_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004027_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004027_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極 拉姆殲滅戰"
+        }
+      ],
+      "patch": "2.3",
+      "itemId": 8212,
+      "nameSource": "tc"
+    },
+    {
+      "id": 41,
+      "name": "典禮陸行鳥",
+      "nameEn": "ceremony chocobo",
+      "seats": 2,
+      "icon": "/i/004000/004031_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004031_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004031_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極神「邪神 Byakko」"
+        }
+      ],
+      "patch": "2.45",
+      "itemId": 8702,
+      "nameSource": "tc"
+    },
+    {
+      "id": 42,
+      "name": "斯雷普尼爾",
+      "nameEn": "Sleipnir",
+      "seats": 1,
+      "icon": "/i/004000/004028_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004028_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004028_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "斯雷普尼爾"
+        }
+      ],
+      "patch": "2.38",
+      "itemId": 8726,
+      "nameSource": "tc"
+    },
+    {
+      "id": 43,
+      "name": "冰妖馬玻瑞阿斯",
+      "nameEn": "Boreas",
+      "seats": 1,
+      "icon": "/i/004000/004029_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004029_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004029_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極 濕婆殲滅戰"
+        }
+      ],
+      "patch": "2.4",
+      "itemId": 9354,
+      "nameSource": "tc"
+    },
+    {
+      "id": 44,
+      "name": "遊行陸行鳥",
+      "nameEn": "parade chocobo",
+      "seats": 1,
+      "icon": "/i/004000/004030_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004030_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004030_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "令人難忘2"
+        }
+      ],
+      "patch": "2.4",
+      "itemId": 9353,
+      "nameSource": "tc"
+    },
+    {
+      "id": 45,
+      "name": "黑陸行鳥",
+      "nameEn": "black chocobo",
+      "seats": 1,
+      "icon": "/i/004000/004036_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004036_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004036_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "蒼天騎士"
+        }
+      ],
+      "patch": "3.0",
+      "itemId": 12075,
+      "nameSource": "tc"
+    },
+    {
+      "id": 46,
+      "name": "堅鋼龜",
+      "nameEn": "adamantoise",
+      "seats": 1,
+      "icon": "/i/004000/004034_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004034_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004034_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "紀念品兌換員: 金碟幣 x200000, at 金碟遊樂園"
+        }
+      ],
+      "patch": "2.51",
+      "itemId": 10078,
+      "nameSource": "tc"
+    },
+    {
+      "id": 47,
+      "name": "麒麟",
+      "nameEn": "Kirin",
+      "seats": 1,
+      "icon": "/i/004000/004032_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004032_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004032_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "天降祥瑞"
+        }
+      ],
+      "patch": "2.5",
+      "itemId": 10080,
+      "nameSource": "tc"
+    },
+    {
+      "id": 48,
+      "name": "騎乘系統",
+      "nameEn": "logistics system",
+      "seats": 1,
+      "icon": "/i/004000/004033_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004033_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004033_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "英雄凱旋"
+        }
+      ],
+      "patch": "2.5",
+      "itemId": 10081,
+      "nameSource": "tc"
+    },
+    {
+      "id": 49,
+      "name": "芬里爾",
+      "nameEn": "Fenrir",
+      "seats": 1,
+      "icon": "/i/004000/004035_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004035_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004035_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "紀念品兌換員: 金碟幣 x1000000, at 金碟遊樂園"
+        }
+      ],
+      "patch": "2.51",
+      "itemId": 10079,
+      "nameSource": "tc"
+    },
+    {
+      "id": 50,
+      "name": "幻龍米德加爾特",
+      "nameEn": "Midgardsormr",
+      "seats": 1,
+      "icon": "/i/004000/004037_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004037_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004037_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "振翅高飛"
+        }
+      ],
+      "patch": "3.0",
+      "itemId": null,
+      "nameSource": "tc"
+    },
+    {
+      "id": 52,
+      "name": "紅大陸行鳥",
+      "nameEn": "amber draught chocobo",
+      "seats": 2,
+      "icon": "/i/004000/004044_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004044_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004044_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "失物管理人: 黃金陸行鳥的羽毛 x8, at 烏爾達哈來生回廊"
+        }
+      ],
+      "patch": "3.0",
+      "itemId": 12993,
+      "nameSource": "tc"
+    },
+    {
+      "id": 53,
+      "name": "騰雲蛇",
+      "nameEn": "sanuwa",
+      "seats": 1,
+      "icon": "/i/004000/004038_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004038_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004038_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "商人魯納瓦努: Gil x200000, at 阿巴拉提亞雲海"
+        }
+      ],
+      "patch": "3.1",
+      "itemId": 12071,
+      "nameSource": "tc"
+    },
+    {
+      "id": 54,
+      "name": "獅鷲",
+      "nameEn": "griffin",
+      "seats": 1,
+      "icon": "/i/004000/004039_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004039_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004039_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "絕境「絕亞歷山大討滅戰」"
+        }
+      ],
+      "patch": "3.0",
+      "itemId": 12072,
+      "nameSource": "tc"
+    },
+    {
+      "id": 55,
+      "name": "破魔艇",
+      "nameEn": "manacutter",
+      "seats": 1,
+      "icon": "/i/004000/004040_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004040_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004040_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "狩獵邪龍"
+        }
+      ],
+      "patch": "3.0",
+      "itemId": 12073,
+      "nameSource": "tc"
+    },
+    {
+      "id": 56,
+      "name": "戰豹",
+      "nameEn": "war panther",
+      "seats": 1,
+      "icon": "/i/004000/004041_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004041_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004041_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "毅然暗黑騎士"
+        },
+        {
+          "type": "成就",
+          "detail": "暗黑騎士出征1"
+        }
+      ],
+      "patch": "3.0",
+      "itemId": 12074,
+      "nameSource": "tc"
+    },
+    {
+      "id": 58,
+      "name": "哥布林戰車",
+      "nameEn": "gobwalker",
+      "seats": 1,
+      "icon": "/i/004000/004042_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004042_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004042_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "亞歷山大零式機神城 啟動之章4"
+        }
+      ],
+      "patch": "3.05",
+      "itemId": 12076,
+      "nameSource": "tc"
+    },
+    {
+      "id": 59,
+      "name": "雙塔尼亞",
+      "nameEn": "Twintania",
+      "seats": 1,
+      "icon": "/i/004000/004043_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004043_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004043_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "失物管理人: 黃金陸行鳥的羽毛 x15, at 烏爾達哈來生回廊"
+        }
+      ],
+      "patch": "3.0",
+      "itemId": 12992,
+      "nameSource": "tc"
+    },
+    {
+      "id": 62,
+      "name": "魔女掃帚",
+      "nameEn": "witch's broom",
+      "seats": 1,
+      "icon": "/i/004000/004045_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004045_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004045_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "魔女掃帚"
+        }
+      ],
+      "patch": "3.07",
+      "itemId": 13098,
+      "nameSource": "tc"
+    },
+    {
+      "id": 67,
+      "name": "天馬",
+      "nameEn": "pegasus",
+      "seats": 1,
+      "icon": "/i/004000/004047_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004047_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004047_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "艾妮: 蒼天街振興票 x4200, at 蒼天街"
+        }
+      ],
+      "patch": "3.1",
+      "itemId": 13287,
+      "nameSource": "tc"
+    },
+    {
+      "id": 68,
+      "name": "莉維亞專用魔導裝甲",
+      "nameEn": "White Devil",
+      "seats": 1,
+      "icon": "/i/004000/004048_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004048_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004048_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "莉維亞專用魔導裝甲"
+        }
+      ],
+      "patch": "3.1",
+      "itemId": 13689,
+      "nameSource": "tc"
+    },
+    {
+      "id": 69,
+      "name": "尼祿專用魔導裝甲",
+      "nameEn": "Red Baron",
+      "seats": 1,
+      "icon": "/i/004000/004049_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004049_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004049_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "尼祿專用魔導裝甲"
+        }
+      ],
+      "patch": "3.1",
+      "itemId": 13690,
+      "nameSource": "tc"
+    },
+    {
+      "id": 70,
+      "name": "雙足飛龍",
+      "nameEn": "wyvern",
+      "seats": 1,
+      "icon": "/i/004000/004050_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004050_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004050_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "貝爾塔娜: 兵團成員的手冊 x6, at 田園郡"
+        }
+      ],
+      "patch": "3.1",
+      "itemId": 13288,
+      "nameSource": "tc"
+    },
+    {
+      "id": 71,
+      "name": "SDS芬里爾",
+      "nameEn": "SDS Fenrir",
+      "seats": 1,
+      "icon": "/i/004000/004135_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004135_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004135_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "SDS芬里爾"
+        }
+      ],
+      "patch": "4.4",
+      "itemId": 23981,
+      "nameSource": "tc"
+    },
+    {
+      "id": 72,
+      "name": "恐甲螞蜓",
+      "nameEn": "kongamato",
+      "seats": 1,
+      "icon": "/i/004000/004051_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004051_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004051_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "做買賣: Gil x200000, at 德拉瓦尼亞山麓地"
+        }
+      ],
+      "patch": "3.2",
+      "itemId": 14082,
+      "nameSource": "tc"
+    },
+    {
+      "id": 73,
+      "name": "祖",
+      "nameEn": "zu",
+      "seats": 1,
+      "icon": "/i/004000/004052_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004052_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004052_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "住宅區管理人: 遠航白鋼通貨 x1, at 穹頂皓天"
+        },
+        {
+          "type": "商店",
+          "detail": "通貨交易員: 遠航白鋼通貨 x1, at 白銀鄉"
+        },
+        {
+          "type": "寶箱",
+          "detail": "特殊配給貨箱（新生/蒼天）"
+        }
+      ],
+      "patch": "3.2",
+      "itemId": 14083,
+      "nameSource": "tc"
+    },
+    {
+      "id": 74,
+      "name": "貝努鳥",
+      "nameEn": "bennu",
+      "seats": 1,
+      "icon": "/i/004000/004053_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004053_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004053_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "貝努鳥"
+        }
+      ],
+      "patch": "3.25",
+      "itemId": 14084,
+      "nameSource": "tc"
+    },
+    {
+      "id": 75,
+      "name": "白雲獵鷹",
+      "nameEn": "white lanner",
+      "seats": 1,
+      "icon": "/i/004000/004054_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004054_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004054_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "貝爾塔娜: 雲神圖騰 x99, at 田園郡"
+        },
+        {
+          "type": "商店",
+          "detail": "羅薇娜商會的商人: 雲神圖騰 x99, at 伊修加爾德下層"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "極 俾斯麥殲滅戰"
+        }
+      ],
+      "patch": "3.2",
+      "itemId": 14085,
+      "nameSource": "tc"
+    },
+    {
+      "id": 76,
+      "name": "怒武獵鷹",
+      "nameEn": "rose lanner",
+      "seats": 1,
+      "icon": "/i/004000/004055_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004055_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004055_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "貝爾塔娜: 武神圖騰 x99, at 田園郡"
+        },
+        {
+          "type": "商店",
+          "detail": "羅薇娜商會的商人: 武神圖騰 x99, at 伊修加爾德下層"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "極 羅波那殲滅戰"
+        }
+      ],
+      "patch": "3.2",
+      "itemId": 14086,
+      "nameSource": "tc"
+    },
+    {
+      "id": 77,
+      "name": "圓桌獵鷹",
+      "nameEn": "round lanner",
+      "seats": 1,
+      "icon": "/i/004000/004056_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004056_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004056_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "貝爾塔娜: 蒼天甲胄碎片 x99, at 田園郡"
+        },
+        {
+          "type": "商店",
+          "detail": "羅薇娜商會的商人: 蒼天甲胄碎片 x99, at 伊修加爾德下層"
+        },
+        {
+          "type": "副本掉落",
+          "detail": "蒼天幻想 圓桌騎士殲滅戰"
+        }
+      ],
+      "patch": "3.2",
+      "itemId": 14087,
+      "nameSource": "tc"
+    },
+    {
+      "id": 78,
+      "name": "戰爭獵鷹",
+      "nameEn": "warring lanner",
+      "seats": 1,
+      "icon": "/i/004000/004057_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004057_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004057_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "貝爾塔娜: 魔神圖騰 x99, at 田園郡"
+        },
+        {
+          "type": "商店",
+          "detail": "羅薇娜商會的商人: 魔神圖騰 x99, at 伊修加爾德下層"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "極 魔神賽菲羅特殲滅戰"
+        }
+      ],
+      "patch": "3.2",
+      "itemId": 14088,
+      "nameSource": "tc"
+    },
+    {
+      "id": 80,
+      "name": "榮耀號",
+      "nameEn": "Gloria-class airship",
+      "seats": 1,
+      "icon": "/i/004000/004058_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004058_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004058_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "磨礪利爪4"
+        }
+      ],
+      "patch": "3.2",
+      "itemId": 14089,
+      "nameSource": "tc"
+    },
+    {
+      "id": 81,
+      "name": "筋鬥雲",
+      "nameEn": "flying cumulus",
+      "seats": 1,
+      "icon": "/i/004000/004059_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004059_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004059_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
+      "patch": "3.5",
+      "itemId": 14982,
+      "nameSource": "tc"
+    },
+    {
+      "id": 82,
+      "name": "初代胖陸行鳥",
+      "nameEn": "original fat chocobo",
+      "seats": 1,
+      "icon": "/i/004000/004060_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004060_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004060_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
+      "patch": "3.2",
+      "itemId": 14090,
+      "nameSource": "tc"
+    },
+    {
+      "id": 83,
+      "name": "天陽馬阿斯特洛珀",
+      "nameEn": "Astrope",
+      "seats": 2,
+      "icon": "/i/004000/004061_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004061_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004061_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "可靠的前輩6"
+        }
+      ],
+      "patch": "3.3",
+      "itemId": 15433,
+      "nameSource": "tc"
+    },
+    {
+      "id": 84,
+      "name": "胖莫古利",
+      "nameEn": "fat moogle",
+      "seats": 2,
+      "icon": "/i/004000/004062_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004062_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004062_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
+      "patch": "3.35",
+      "itemId": 15430,
+      "nameSource": "tc"
+    },
+    {
+      "id": 86,
+      "name": "孢雲棉花糖",
+      "nameEn": "cloud mallow",
+      "seats": 1,
+      "icon": "/i/004000/004063_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004063_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004063_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "貪吃的莫古姆利: Gil x200000, at 德拉瓦尼亞雲海"
+        }
+      ],
+      "patch": "3.3",
+      "itemId": 15429,
+      "nameSource": "tc"
+    },
+    {
+      "id": 87,
+      "name": "威斯帕號",
+      "nameEn": "Whisper-go",
+      "seats": 1,
+      "icon": "/i/004000/004064_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004064_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004064_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        }
+      ],
+      "patch": "3.35",
+      "itemId": 15431,
+      "nameSource": "tc"
+    },
+    {
+      "id": 90,
+      "name": "暗黑獵鷹",
+      "nameEn": "dark lanner",
+      "seats": 1,
+      "icon": "/i/004000/004065_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004065_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004065_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "貝爾塔娜: 邪龍圖騰 x99, at 田園郡"
+        },
+        {
+          "type": "商店",
+          "detail": "羅薇娜商會的商人: 邪龍圖騰 x99, at 伊修加爾德下層"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "極 尼德霍格征龍戰"
+        }
+      ],
+      "patch": "3.3",
+      "itemId": 15432,
+      "nameSource": "tc"
+    },
+    {
+      "id": 91,
+      "name": "浮空系統",
+      "nameEn": "aerodynamics system",
+      "seats": 1,
+      "icon": "/i/004000/004066_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004066_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004066_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "榮譽之戰5"
+        }
+      ],
+      "patch": "3.3",
+      "itemId": 15932,
+      "nameSource": "tc"
+    },
+    {
+      "id": 92,
+      "name": "顱浮魔像",
+      "nameEn": "disembodied head",
+      "seats": 1,
+      "icon": "/i/004000/004068_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004068_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004068_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "艾·烏納·科特羅: 格爾莫拉陶器碎片 x10, at 黑衣森林南部林區"
+        }
+      ],
+      "patch": "3.35",
+      "itemId": 15933,
+      "nameSource": "tc"
+    },
+    {
+      "id": 93,
+      "name": "逐月幻狼瑪納加爾姆",
+      "nameEn": "managarm",
+      "seats": 1,
+      "icon": "/i/004000/004067_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004067_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004067_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
+      "patch": "4.1",
+      "itemId": 15934,
+      "nameSource": "tc"
+    },
+    {
+      "id": 94,
+      "name": "威斯帕前進號",
+      "nameEn": "Whisper A-go-go",
+      "seats": 1,
+      "icon": "/i/004000/004069_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004069_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004069_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        }
+      ],
+      "patch": "3.35",
+      "itemId": 15946,
+      "nameSource": "tc"
+    },
+    {
+      "id": 95,
+      "name": "轟天",
+      "nameEn": "Goten",
+      "seats": 1,
+      "icon": "/i/004000/004074_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004074_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004074_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "轟天"
+        }
+      ],
+      "patch": "3.5",
+      "itemId": 16565,
+      "nameSource": "tc"
+    },
+    {
+      "id": 96,
+      "name": "銀牙",
+      "nameEn": "Ginga",
+      "seats": 1,
+      "icon": "/i/004000/004075_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004075_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004075_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "銀牙"
+        }
+      ],
+      "patch": "3.5",
+      "itemId": 16566,
+      "nameSource": "tc"
+    },
+    {
+      "id": 97,
+      "name": "仙術熊貓",
+      "nameEn": "mystic panda",
+      "seats": 1,
+      "icon": "/i/004000/004070_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004070_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004070_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
+      "patch": "4.1",
+      "itemId": 16561,
+      "nameSource": "tc"
+    },
+    {
+      "id": 98,
+      "name": "睿智獵鷹",
+      "nameEn": "Sophic lanner",
+      "seats": 1,
+      "icon": "/i/004000/004071_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004071_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004071_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "貝爾塔娜: 女神圖騰 x99, at 田園郡"
+        },
+        {
+          "type": "商店",
+          "detail": "羅薇娜商會的商人: 女神圖騰 x99, at 伊修加爾德下層"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "極 女神索菲亞殲滅戰"
+        }
+      ],
+      "patch": "3.4",
+      "itemId": 16562,
+      "nameSource": "tc"
+    },
+    {
+      "id": 99,
+      "name": "星芒熊",
+      "nameEn": "Starlight bear",
+      "seats": 1,
+      "icon": "/i/004000/004102_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004102_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004102_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "星芒熊"
+        },
+        {
+          "type": "節慶活動",
+          "detail": "小偷與熊的星芒祭"
+        },
+        {
+          "type": "節慶活動",
+          "detail": "2025星芒祭"
+        }
+      ],
+      "patch": "4.1",
+      "itemId": 21050,
+      "nameSource": "tc"
+    },
+    {
+      "id": 100,
+      "name": "黑天馬",
+      "nameEn": "black pegasus",
+      "seats": 1,
+      "icon": "/i/004000/004072_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004072_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004072_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "藏寶圖",
+          "detail": "金飾寶藏"
+        },
+        {
+          "type": "寶箱",
+          "detail": "特殊配給貨箱（新生/蒼天）"
+        }
+      ],
+      "patch": "3.4",
+      "itemId": 16564,
+      "nameSource": "tc"
+    },
+    {
+      "id": 101,
+      "name": "阿里達烏斯",
+      "nameEn": "Arrhidaeus",
+      "seats": 1,
+      "icon": "/i/004000/004073_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004073_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004073_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "亞歷山大零式機神城 天動之章4"
+        }
+      ],
+      "patch": "3.4",
+      "itemId": 16563,
+      "nameSource": "tc"
+    },
+    {
+      "id": 102,
+      "name": "雷剛",
+      "nameEn": "Raigo",
+      "seats": 1,
+      "icon": "/i/004000/004076_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004076_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004076_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "雷剛"
+        }
+      ],
+      "patch": "3.5",
+      "itemId": 16567,
+      "nameSource": "tc"
+    },
+    {
+      "id": 103,
+      "name": "尼祿專用魔導裝甲",
+      "nameEn": "Red Baron",
+      "seats": 1,
+      "icon": "/i/000000/000000_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F000000%2F000000_hr1.tex&format=png",
+      "iconPath": "ui/icon/000000/000000_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "Mog 工房商店"
+        }
+      ],
+      "patch": "3.1",
+      "itemId": null,
+      "nameSource": "cn-opencc"
+    },
+    {
+      "id": 104,
+      "name": "厲鬼獵鷹",
+      "nameEn": "Demonic lanner",
+      "seats": 1,
+      "icon": "/i/004000/004077_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004077_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004077_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "貝爾塔娜: 鬼神圖騰 x99, at 田園郡"
+        },
+        {
+          "type": "商店",
+          "detail": "羅薇娜商會的商人: 鬼神圖騰 x99, at 伊修加爾德下層"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "極 鬼神祖爾宛殲滅戰"
+        }
+      ],
+      "patch": "3.5",
+      "itemId": 17007,
+      "nameSource": "tc"
+    },
+    {
+      "id": 105,
+      "name": "鳳皇",
+      "nameEn": "Firebird",
+      "seats": 1,
+      "icon": "/i/004000/004078_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004078_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004078_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "鳳鳴朝陽"
+        }
+      ],
+      "patch": "3.5",
+      "itemId": 17008,
+      "nameSource": "tc"
+    },
+    {
+      "id": 106,
+      "name": "彩蛋系統",
+      "nameEn": "eggshilaration system",
+      "seats": 1,
+      "icon": "/i/004000/004079_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004079_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004079_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "彩蛋狩獵和亮閃閃的寶石"
+        }
+      ],
+      "patch": "3.5",
+      "itemId": 17009,
+      "nameSource": "tc"
+    },
+    {
+      "id": 108,
+      "name": "孤傲煉獄獵犬",
+      "nameEn": "lone hellhound",
+      "seats": 1,
+      "icon": "/i/004000/004080_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004080_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004080_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ],
+      "patch": "3.55a",
+      "itemId": 17010,
+      "nameSource": "tc"
+    },
+    {
+      "id": 109,
+      "name": "首領煉獄獵犬",
+      "nameEn": "pack hellhound",
+      "seats": 1,
+      "icon": "/i/004000/004081_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004081_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004081_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ],
+      "patch": "3.55a",
+      "itemId": 17011,
+      "nameSource": "tc"
+    },
+    {
+      "id": 110,
+      "name": "賢者座椅",
+      "nameEn": "Archon throne",
+      "seats": 1,
+      "icon": "/i/004000/004084_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004084_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004084_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "紀念品兌換員: 金碟幣 x750000, at 金碟遊樂園"
+        }
+      ],
+      "patch": "3.5",
+      "itemId": 17012,
+      "nameSource": "tc"
+    },
+    {
+      "id": 111,
+      "name": "希爾德拉",
+      "nameEn": "Syldra",
+      "seats": 1,
+      "icon": "/i/004000/004085_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004085_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004085_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "聯名活動",
+          "detail": "妖怪手錶聯名（任務）"
+        }
+      ],
+      "patch": "4.0",
+      "itemId": 16037,
+      "nameSource": "tc"
+    },
+    {
+      "id": 112,
+      "name": "飛隼號",
+      "nameEn": "Falcon",
+      "seats": 1,
+      "icon": "/i/004000/004086_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004086_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004086_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "聯名活動",
+          "detail": "FF15 聯名活動（2017）"
+        }
+      ],
+      "patch": "4.05",
+      "itemId": 20548,
+      "nameSource": "tc"
+    },
+    {
+      "id": 113,
+      "name": "孤傲妖精犬",
+      "nameEn": "lone faehound",
+      "seats": 1,
+      "icon": "/i/004000/004082_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004082_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004082_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "聯名活動",
+          "detail": "FF16 聯名活動（2023）"
+        }
+      ],
+      "patch": "4.0",
+      "itemId": 17675,
+      "nameSource": "tc"
+    },
+    {
+      "id": 114,
+      "name": "首領妖精犬",
+      "nameEn": "pack faehound",
+      "seats": 1,
+      "icon": "/i/004000/004083_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004083_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004083_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ],
+      "patch": "4.0",
+      "itemId": 17676,
+      "nameSource": "tc"
+    },
+    {
+      "id": 115,
+      "name": "極樂神威",
+      "nameEn": "blissful kamuy",
+      "seats": 1,
+      "icon": "/i/004000/004087_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004087_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004087_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "艾西娜: 美神圖騰 x99, at 神拳痕"
+        },
+        {
+          "type": "商店",
+          "detail": "羅薇娜商會的商人: 美神圖騰 x99, at 黃金港"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "極 吉祥天女殲滅戰"
+        }
+      ],
+      "patch": "4.0",
+      "itemId": 20549,
+      "nameSource": "tc"
+    },
+    {
+      "id": 116,
+      "name": "狂歡神威",
+      "nameEn": "reveling kamuy",
+      "seats": 1,
+      "icon": "/i/004000/004088_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004088_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004088_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "艾西娜: 豪神圖騰 x99, at 神拳痕"
+        },
+        {
+          "type": "商店",
+          "detail": "羅薇娜商會的商人: 豪神圖騰 x99, at 黃金港"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "極 須佐之男殲滅戰"
+        }
+      ],
+      "patch": "4.0",
+      "itemId": 20550,
+      "nameSource": "tc"
+    },
+    {
+      "id": 121,
+      "name": "魔導獵手",
+      "nameEn": "magitek predator",
+      "seats": 1,
+      "icon": "/i/004000/004089_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004089_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004089_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "紅蓮決戰阿拉米格"
+        }
+      ],
+      "patch": "4.0",
+      "itemId": 20551,
+      "nameSource": "tc"
+    },
+    {
+      "id": 122,
+      "name": "鬥獅",
+      "nameEn": "battle lion",
+      "seats": 1,
+      "icon": "/i/004000/004090_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004090_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004090_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "為人民服務的騎士3"
+        },
+        {
+          "type": "成就",
+          "detail": "騎士出征1"
+        }
+      ],
+      "patch": "4.0",
+      "itemId": 20552,
+      "nameSource": "tc"
+    },
+    {
+      "id": 123,
+      "name": "鬥熊",
+      "nameEn": "battle bear",
+      "seats": 1,
+      "icon": "/i/004000/004091_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004091_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004091_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "為人民服務的戰士3"
+        }
+      ],
+      "patch": "4.0",
+      "itemId": 20553,
+      "nameSource": "tc"
+    },
+    {
+      "id": 124,
+      "name": "鬥豹",
+      "nameEn": "battle panther",
+      "seats": 1,
+      "icon": "/i/004000/004092_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004092_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004092_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "為人民服務的暗黑騎士3"
+        },
+        {
+          "type": "成就",
+          "detail": "暗黑騎士出征1"
+        }
+      ],
+      "patch": "4.0",
+      "itemId": 20554,
+      "nameSource": "tc"
+    },
+    {
+      "id": 125,
+      "name": "胡鷹",
+      "nameEn": "yol",
+      "seats": 1,
+      "icon": "/i/004000/004093_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004093_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004093_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "巴兒達木霸道的試煉"
+        }
+      ],
+      "patch": "4.0",
+      "itemId": 20555,
+      "nameSource": "tc"
+    },
+    {
+      "id": 126,
+      "name": "老者",
+      "nameEn": "Alte Roite",
+      "seats": 1,
+      "icon": "/i/004000/004094_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004094_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004094_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "歐米茄零式時空狹縫 德爾塔幻境4"
+        }
+      ],
+      "patch": "4.05",
+      "itemId": 20556,
+      "nameSource": "tc"
+    },
+    {
+      "id": 127,
+      "name": "兵團虎",
+      "nameEn": "Centurio tiger",
+      "seats": 1,
+      "icon": "/i/004000/004095_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004095_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004095_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "怪物獵人傳奇"
+        },
+        {
+          "type": "成就",
+          "detail": "A級精英殺手5"
+        },
+        {
+          "type": "成就",
+          "detail": "S級精英殺手5"
+        }
+      ],
+      "patch": "4.0",
+      "itemId": 20557,
+      "nameSource": "tc"
+    },
+    {
+      "id": 128,
+      "name": "捕獲的魔導裝甲",
+      "nameEn": "commandeered magitek armor",
+      "seats": 1,
+      "icon": "/i/000000/000000_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F000000%2F000000_hr1.tex&format=png",
+      "iconPath": "ui/icon/000000/000000_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "itemId": null,
+      "nameSource": "cn-opencc"
+    },
+    {
+      "id": 130,
+      "name": "伊克西翁",
+      "nameEn": "Ixion",
+      "seats": 1,
+      "icon": "/i/004000/004096_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004096_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004096_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "艾西娜: 伊克西翁的雷角 x12, at 神拳痕"
+        },
+        {
+          "type": "商店",
+          "detail": "庫洛·阿里亞珀: 庫洛獎狀：銀獎 x1, at 田園郡"
+        },
+        {
+          "type": "商店",
+          "detail": "宗長: 幻巧葉 x300, at 田園郡"
+        }
+      ],
+      "patch": "4.0",
+      "itemId": 20637,
+      "nameSource": "tc"
+    },
+    {
+      "id": 133,
+      "name": "夢幻神威",
+      "nameEn": "legendary kamuy",
+      "seats": 1,
+      "icon": "/i/004000/004101_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004101_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004101_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "艾西娜: 神龍圖騰 x99, at 神拳痕"
+        },
+        {
+          "type": "商店",
+          "detail": "羅薇娜商會的商人: 神龍圖騰 x99, at 黃金港"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "極 神龍殲滅戰"
+        }
+      ],
+      "patch": "4.1",
+      "itemId": 21047,
+      "nameSource": "tc"
+    },
+    {
+      "id": 135,
+      "name": "風火輪",
+      "nameEn": "Nezha chariot",
+      "seats": 1,
+      "icon": "/i/004000/004097_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004097_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004097_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "風火輪"
+        }
+      ],
+      "patch": "4.2",
+      "itemId": 21049,
+      "nameSource": "tc"
+    },
+    {
+      "id": 136,
+      "name": "鬼蝠魟",
+      "nameEn": "striped ray",
+      "seats": 1,
+      "icon": "/i/004000/004103_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004103_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004103_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "床單: 珊瑚幣 x12, at 紅玉海"
+        }
+      ],
+      "patch": "4.1",
+      "itemId": 21048,
+      "nameSource": "tc"
+    },
+    {
+      "id": 138,
+      "name": "卡邦庫爾 海藍石",
+      "nameEn": "Aquamarine Carbuncle",
+      "seats": 1,
+      "icon": "/i/004000/004104_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004104_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004104_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "卡邦庫爾 海藍石"
+        }
+      ],
+      "patch": "4.15",
+      "itemId": 21051,
+      "nameSource": "tc"
+    },
+    {
+      "id": 139,
+      "name": "卡邦庫爾 黃寶石",
+      "nameEn": "Citrine Carbuncle",
+      "seats": 1,
+      "icon": "/i/004000/004105_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004105_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004105_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "卡邦庫爾 黃寶石"
+        }
+      ],
+      "patch": "4.15",
+      "itemId": 21192,
+      "nameSource": "tc"
+    },
+    {
+      "id": 140,
+      "name": "飛行座椅",
+      "nameEn": "flying chair",
+      "seats": 1,
+      "icon": "/i/004000/004106_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004106_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004106_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "寶箱",
+          "detail": "特殊配給貨箱（紅蓮）"
+        },
+        {
+          "type": "製作",
+          "detail": "Craftable"
+        }
+      ],
+      "patch": "4.1",
+      "itemId": 21052,
+      "nameSource": "tc"
+    },
+    {
+      "id": 141,
+      "name": "魔導復仇者騎乘型",
+      "nameEn": "magitek avenger",
+      "seats": 1,
+      "icon": "/i/004000/004107_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004107_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004107_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "凱旋之翼3"
+        }
+      ],
+      "patch": "4.1",
+      "itemId": 21053,
+      "nameSource": "tc"
+    },
+    {
+      "id": 142,
+      "name": "葉大妖",
+      "nameEn": "korpokkur kolossus",
+      "seats": 1,
+      "icon": "/i/004000/004108_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004108_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004108_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "紀念品兌換員: 金碟幣 x750000, at 金碟遊樂園"
+        }
+      ],
+      "patch": "4.1",
+      "itemId": 21054,
+      "nameSource": "tc"
+    },
+    {
+      "id": 143,
+      "name": "赤兔馬",
+      "nameEn": "Red Hare",
+      "seats": 1,
+      "icon": "/i/004000/004109_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004109_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004109_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
+      "patch": "4.3",
+      "itemId": 21902,
+      "nameSource": "tc"
+    },
+    {
+      "id": 144,
+      "name": "白帝神威",
+      "nameEn": "auspicious kamuy",
+      "seats": 1,
+      "icon": "/i/004000/004110_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004110_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004110_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "艾西娜: 白虎圖騰 x99, at 神拳痕"
+        },
+        {
+          "type": "商店",
+          "detail": "羅薇娜商會的商人: 白虎圖騰 x99, at 黃金港"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "極 白虎征魂戰"
+        }
+      ],
+      "patch": "4.2",
+      "itemId": 21903,
+      "nameSource": "tc"
+    },
+    {
+      "id": 145,
+      "name": "拘束型魔導死亡爪",
+      "nameEn": "magitek death claw",
+      "seats": 1,
+      "icon": "/i/004000/004111_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004111_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004111_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "喬納森: 成就幣 x6, at 格里達尼亞舊街"
+        }
+      ],
+      "patch": "4.2",
+      "itemId": 21906,
+      "nameSource": "tc"
+    },
+    {
+      "id": 146,
+      "name": "魔象",
+      "nameEn": "marid",
+      "seats": 1,
+      "icon": "/i/004000/004112_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004112_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004112_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "摩偷羅: 魔金錫幣 x18, at 基拉巴尼亞邊區"
+        }
+      ],
+      "patch": "4.2",
+      "itemId": 21904,
+      "nameSource": "tc"
+    },
+    {
+      "id": 147,
+      "name": "力氣大的魔象",
+      "nameEn": "marid",
+      "seats": 1,
+      "icon": "/i/000000/000000_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F000000%2F000000_hr1.tex&format=png",
+      "iconPath": "ui/icon/000000/000000_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": "4.2",
+      "itemId": null,
+      "nameSource": "cn-opencc"
+    },
+    {
+      "id": 148,
+      "name": "真獅鷲",
+      "nameEn": "true griffin",
+      "seats": 1,
+      "icon": "/i/004000/004113_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004113_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004113_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "摩偷羅: 魔金錫幣 x18, at 基拉巴尼亞邊區"
+        }
+      ],
+      "patch": "4.2",
+      "itemId": 22459,
+      "nameSource": "tc"
+    },
+    {
+      "id": 149,
+      "name": "真獅鷲",
+      "nameEn": "true griffin",
+      "seats": 1,
+      "icon": "/i/000000/000000_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F000000%2F000000_hr1.tex&format=png",
+      "iconPath": "ui/icon/000000/000000_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": "4.2",
+      "itemId": null,
+      "nameSource": "cn-opencc"
+    },
+    {
+      "id": 150,
+      "name": "暴龍",
+      "nameEn": "tyrannosaur",
+      "seats": 1,
+      "icon": "/i/004000/004116_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004116_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004116_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "博茲雅",
+          "detail": "常風地帶上鎖的寶箱"
+        }
+      ],
+      "patch": "4.25",
+      "itemId": 21907,
+      "nameSource": "tc"
+    },
+    {
+      "id": 151,
+      "name": "雷迦利亞G型",
+      "nameEn": "Regalia Type-G",
+      "seats": 4,
+      "icon": "/i/004000/004138_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004138_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004138_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "加隆德煉鐵廠銷售員: 金碟幣 x200000, at 金碟遊樂園"
+        }
+      ],
+      "patch": "4.5",
+      "itemId": 24624,
+      "nameSource": "tc"
+    },
+    {
+      "id": 152,
+      "name": "飛天半心椅（右）",
+      "nameEn": "broken heart (right)",
+      "seats": 1,
+      "icon": "/i/004000/004114_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004114_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004114_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "瓦倫提昂家的女僕: 戀人巧克力2019 x6, at 格里達尼亞舊街"
+        },
+        {
+          "type": "任務",
+          "detail": "戀人節與見習愛情傳道士"
+        }
+      ],
+      "patch": "4.2",
+      "itemId": 21908,
+      "nameSource": "tc"
+    },
+    {
+      "id": 153,
+      "name": "飛天半心椅（左）",
+      "nameEn": "broken heart (left)",
+      "seats": 1,
+      "icon": "/i/004000/004115_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004115_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004115_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "瓦倫提昂家的女僕: 戀人巧克力2019 x6, at 格里達尼亞舊街"
+        },
+        {
+          "type": "任務",
+          "detail": "戀人節與見習愛情傳道士"
+        }
+      ],
+      "patch": "4.2",
+      "itemId": 21909,
+      "nameSource": "tc"
+    },
+    {
+      "id": 154,
+      "name": "杜彭老師",
+      "nameEn": "Typhon",
+      "seats": 1,
+      "icon": "/i/004000/004136_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004136_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004136_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "紀念品兌換員: 金碟幣 x750000, at 金碟遊樂園"
+        }
+      ],
+      "patch": "4.4",
+      "itemId": 21910,
+      "nameSource": "tc"
+    },
+    {
+      "id": 156,
+      "name": "空軍裝甲",
+      "nameEn": "Air Force",
+      "seats": 1,
+      "icon": "/i/004000/004117_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004117_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004117_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "歐米茄零式時空狹縫 西格瑪幻境4"
+        }
+      ],
+      "patch": "4.2",
+      "itemId": 21905,
+      "nameSource": "tc"
+    },
+    {
+      "id": 158,
+      "name": "幽夜神威",
+      "nameEn": "lunar kamuy",
+      "seats": 1,
+      "icon": "/i/004000/004127_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004127_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004127_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "艾西娜: 夜神圖騰 x99, at 神拳痕"
+        },
+        {
+          "type": "商店",
+          "detail": "羅薇娜商會的商人: 夜神圖騰 x99, at 黃金港"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "極 月讀殲滅戰"
+        }
+      ],
+      "patch": "4.3",
+      "itemId": 23020,
+      "nameSource": "tc"
+    },
+    {
+      "id": 159,
+      "name": "渡渡鳥",
+      "nameEn": "dodo",
+      "seats": 1,
+      "icon": "/i/004000/004122_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004122_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004122_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "藏寶圖",
+          "detail": "白金寶藏"
+        },
+        {
+          "type": "寶箱",
+          "detail": "特殊配給貨箱（紅蓮）"
+        }
+      ],
+      "patch": "4.35",
+      "itemId": 23023,
+      "nameSource": "tc"
+    },
+    {
+      "id": 160,
+      "name": "鬚鯨",
+      "nameEn": "Indigo whale",
+      "seats": 2,
+      "icon": "/i/004000/004119_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004119_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004119_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "成就「剿滅危機」"
+        }
+      ],
+      "patch": "4.4",
+      "itemId": 23021,
+      "nameSource": "tc"
+    },
+    {
+      "id": 161,
+      "name": "火龍",
+      "nameEn": "Rathalos",
+      "seats": 1,
+      "icon": "/i/004000/004125_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004125_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004125_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "猛漢工匠: 火龍的上鱗 x50, at 黃金港"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "極 火龍狩獵戰"
+        }
+      ],
+      "patch": "4.36",
+      "itemId": 22600,
+      "nameSource": "tc"
+    },
+    {
+      "id": 162,
+      "name": "魔導運輸器",
+      "nameEn": "magitek conveyor",
+      "seats": 1,
+      "icon": "/i/004000/004123_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004123_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004123_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "成就「FATE 征服者」"
+        }
+      ],
+      "patch": "4.3",
+      "itemId": 23025,
+      "nameSource": "tc"
+    },
+    {
+      "id": 163,
+      "name": "原型運輸器",
+      "nameEn": "prototype conveyor",
+      "seats": 1,
+      "icon": "/i/004000/004124_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004124_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004124_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "成就「漂流者」"
+        }
+      ],
+      "patch": "4.31",
+      "itemId": 23123,
+      "nameSource": "tc"
+    },
+    {
+      "id": 164,
+      "name": "巨鯰魚神轎",
+      "nameEn": "mikoshi",
+      "seats": 1,
+      "icon": "/i/004000/004118_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004118_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004118_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "魚商: 鯰魚小判 x20, at 太陽神草原"
+        }
+      ],
+      "patch": "4.3",
+      "itemId": 23022,
+      "nameSource": "tc"
+    },
+    {
+      "id": 166,
+      "name": "絕地",
+      "nameEn": "Juedi",
+      "seats": 1,
+      "icon": "/i/004000/004126_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004126_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004126_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
+      "patch": "4.35",
+      "itemId": 23024,
+      "nameSource": "tc"
+    },
+    {
+      "id": 167,
+      "name": "輸送系統",
+      "nameEn": "logistics node",
+      "seats": 1,
+      "icon": "/i/004000/004121_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004121_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004121_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        },
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ],
+      "patch": "6.3",
+      "itemId": 23125,
+      "nameSource": "tc"
+    },
+    {
+      "id": 168,
+      "name": "護送系統",
+      "nameEn": "safeguard system",
+      "seats": 1,
+      "icon": "/i/004000/004120_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004120_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004120_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "常在戰場5"
+        }
+      ],
+      "patch": "4.3",
+      "itemId": 23124,
+      "nameSource": "tc"
+    },
+    {
+      "id": 170,
+      "name": "格拉尼",
+      "nameEn": "Grani",
+      "seats": 1,
+      "icon": "/i/004000/004128_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004128_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004128_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
+      "patch": "5.0",
+      "itemId": 23982,
+      "nameSource": "tc"
+    },
+    {
+      "id": 171,
+      "name": "貓大胖",
+      "nameEn": "fatter cat",
+      "seats": 1,
+      "icon": "/i/004000/004129_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004129_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004129_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
+      "patch": "4.45",
+      "itemId": 23983,
+      "nameSource": "tc"
+    },
+    {
+      "id": 172,
+      "name": "朱焰神威",
+      "nameEn": "euphonious kamuy",
+      "seats": 1,
+      "icon": "/i/004000/004130_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004130_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004130_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "艾西娜: 朱雀圖騰 x99, at 神拳痕"
+        },
+        {
+          "type": "商店",
+          "detail": "羅薇娜商會的商人: 朱雀圖騰 x99, at 黃金港"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "極 朱雀征魂戰"
+        }
+      ],
+      "patch": "4.4",
+      "itemId": 23984,
+      "nameSource": "tc"
+    },
+    {
+      "id": 173,
+      "name": "歐米茄",
+      "nameEn": "Model O",
+      "seats": 1,
+      "icon": "/i/004000/004131_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004131_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004131_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "歐米茄零式時空狹縫 阿爾法幻境4"
+        }
+      ],
+      "patch": "4.4",
+      "itemId": 23985,
+      "nameSource": "tc"
+    },
+    {
+      "id": 174,
+      "name": "魔導浮空裝甲",
+      "nameEn": "magitek sky armor",
+      "seats": 1,
+      "icon": "/i/004000/004132_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004132_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004132_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "狼印戰績交易員: 狼印戰績 x20000, at 狼獄停船場"
+        }
+      ],
+      "patch": "4.4",
+      "itemId": 23986,
+      "nameSource": "tc"
+    },
+    {
+      "id": 175,
+      "name": "魔法飛毯",
+      "nameEn": "magicked carpet",
+      "seats": 1,
+      "icon": "/i/004000/004147_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004147_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004147_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
+      "patch": "4.45",
+      "itemId": 24627,
+      "nameSource": "tc"
+    },
+    {
+      "id": 176,
+      "name": "魔導機車大魔",
+      "nameEn": "magna roader",
+      "seats": 1,
+      "icon": "/i/004000/004133_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004133_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004133_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ],
+      "patch": "4.45",
+      "itemId": 23987,
+      "nameSource": "tc"
+    },
+    {
+      "id": 177,
+      "name": "黑色胖陸行鳥",
+      "nameEn": "fat black chocobo",
+      "seats": 1,
+      "icon": "/i/004000/004134_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004134_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004134_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        },
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
+      "patch": "4.45",
+      "itemId": 23988,
+      "nameSource": "tc"
+    },
+    {
+      "id": 178,
+      "name": "火巨人",
+      "nameEn": "Eldthurs",
+      "seats": 1,
+      "icon": "/i/004000/004137_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004137_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004137_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "禁地優雷卡 湧火之地"
+        },
+        {
+          "type": "寶箱",
+          "detail": "特殊配給貨箱（紅蓮）"
+        }
+      ],
+      "patch": "4.45",
+      "itemId": 24219,
+      "nameSource": "tc"
+    },
+    {
+      "id": 179,
+      "name": "改良型魔導機車大魔",
+      "nameEn": "maxima roader",
+      "seats": 1,
+      "icon": "/i/004000/004139_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004139_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004139_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ],
+      "patch": "4.45",
+      "itemId": 24622,
+      "nameSource": "tc"
+    },
+    {
+      "id": 180,
+      "name": "帝王仙人掌",
+      "nameEn": "Sabotender Emperador",
+      "seats": 1,
+      "icon": "/i/004000/004140_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004140_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004140_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "紀念品兌換員: 金碟幣 x2000000, at 金碟遊樂園"
+        }
+      ],
+      "patch": "4.45",
+      "itemId": 24628,
+      "nameSource": "tc"
+    },
+    {
+      "id": 181,
+      "name": "九尾神威",
+      "nameEn": "kamuy of the Nine Tails",
+      "seats": 1,
+      "icon": "/i/004000/004141_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004141_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004141_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "九尾降臨於世"
+        }
+      ],
+      "patch": "4.45",
+      "itemId": 24625,
+      "nameSource": "tc"
+    },
+    {
+      "id": 182,
+      "name": "青君神威",
+      "nameEn": "hallowed kamuy",
+      "seats": 1,
+      "icon": "/i/004000/004142_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004142_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004142_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "艾西娜: 青龍圖騰 x99, at 神拳痕"
+        },
+        {
+          "type": "商店",
+          "detail": "羅薇娜商會的商人: 青龍圖騰 x99, at 黃金港"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "極 青龍征魂戰"
+        }
+      ],
+      "patch": "4.45",
+      "itemId": 24623,
+      "nameSource": "tc"
+    },
+    {
+      "id": 183,
+      "name": "戰虎",
+      "nameEn": "war tiger",
+      "seats": 1,
+      "icon": "/i/004000/004143_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004143_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004143_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "為人民服務的絕槍戰士2"
+        },
+        {
+          "type": "成就",
+          "detail": "為人民服務的絕槍戰士1"
+        }
+      ],
+      "patch": "5.0",
+      "itemId": 24629,
+      "nameSource": "tc"
+    },
+    {
+      "id": 184,
+      "name": "優雷卡鹽藍燕",
+      "nameEn": "Eurekan petrel",
+      "seats": 1,
+      "icon": "/i/004000/004144_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004144_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004144_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "禁地優雷卡 豐水之地"
+        },
+        {
+          "type": "寶箱",
+          "detail": "特殊配給貨箱（紅蓮）"
+        }
+      ],
+      "patch": "4.5",
+      "itemId": 24630,
+      "nameSource": "tc"
+    },
+    {
+      "id": 185,
+      "name": "魔導復仇者寒冷地區特製型",
+      "nameEn": "magitek avenger A1",
+      "seats": 1,
+      "icon": "/i/004000/004145_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004145_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004145_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "隱塞之翼"
+        }
+      ],
+      "patch": "4.5",
+      "itemId": 24631,
+      "nameSource": "tc"
+    },
+    {
+      "id": 186,
+      "name": "半靈奧斯瑪",
+      "nameEn": "Demi-Ozma",
+      "seats": 1,
+      "icon": "/i/004000/004146_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004146_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004146_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "稱霸兵武塔1"
+        }
+      ],
+      "patch": "4.5",
+      "itemId": 24626,
+      "nameSource": "tc"
+    },
+    {
+      "id": 187,
+      "name": "阿馬羅",
+      "nameEn": "amaro",
+      "seats": 1,
+      "icon": "/i/004000/004156_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004156_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004156_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "十六重之道的探究者"
+        },
+        {
+          "type": "成就",
+          "detail": "精武之勇者"
+        },
+        {
+          "type": "成就",
+          "detail": "導魔之智者"
+        }
+      ],
+      "patch": "5.0",
+      "itemId": 27967,
+      "nameSource": "tc"
+    },
+    {
+      "id": 188,
+      "name": "氣墊船",
+      "nameEn": "skyslipper",
+      "seats": 4,
+      "icon": "/i/004000/004149_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004149_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004149_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "伊甸零式希望樂園 覺醒之章4"
+        }
+      ],
+      "patch": "5.05",
+      "itemId": 26779,
+      "nameSource": "tc"
+    },
+    {
+      "id": 189,
+      "name": "仙子玲龍",
+      "nameEn": "fae gwiber",
+      "seats": 1,
+      "icon": "/i/004000/004148_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004148_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004148_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "法薩德: 妖精王圖騰 x99, at 遊末邦"
+        },
+        {
+          "type": "商店",
+          "detail": "莫雯商會的商人: 妖精王圖騰 x99, at 水晶都"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "極 緹坦妮雅殲滅戰"
+        }
+      ],
+      "patch": "5.0",
+      "itemId": 26778,
+      "nameSource": "tc"
+    },
+    {
+      "id": 190,
+      "name": "三角龍",
+      "nameEn": "triceratops",
+      "seats": 1,
+      "icon": "/i/004000/004150_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004150_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004150_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "狂熱怪物獵人"
+        },
+        {
+          "type": "成就",
+          "detail": "漆黑A級精英殺手3"
+        },
+        {
+          "type": "成就",
+          "detail": "漆黑S級精英殺手3"
+        }
+      ],
+      "patch": "5.0",
+      "itemId": 26780,
+      "nameSource": "tc"
+    },
+    {
+      "id": 191,
+      "name": "青蛙號M",
+      "nameEn": "ironfrog mover",
+      "seats": 1,
+      "icon": "/i/004000/004151_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004151_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004151_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "法薩德: 畏懼裝甲的齒輪 x12, at 遊末邦"
+        }
+      ],
+      "patch": "5.0",
+      "itemId": 26781,
+      "nameSource": "tc"
+    },
+    {
+      "id": 192,
+      "name": "無瑕玲龍",
+      "nameEn": "innocent gwiber",
+      "seats": 1,
+      "icon": "/i/004000/004153_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004153_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004153_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "法薩德: 完美神圖騰 x99, at 遊末邦"
+        },
+        {
+          "type": "商店",
+          "detail": "莫雯商會的商人: 完美神圖騰 x99, at 水晶都"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "極 無瑕靈君殲滅戰"
+        }
+      ],
+      "patch": "5.0",
+      "itemId": 26783,
+      "nameSource": "tc"
+    },
+    {
+      "id": 193,
+      "name": "魔法飛床",
+      "nameEn": "magicked bed",
+      "seats": 1,
+      "icon": "/i/004000/004152_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004152_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004152_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "製作",
+          "detail": "Craftable"
+        }
+      ],
+      "patch": "5.05",
+      "itemId": 26782,
+      "nameSource": "tc"
+    },
+    {
+      "id": 194,
+      "name": "小惡精靈·阿里曼",
+      "nameEn": "Circus ahriman",
+      "seats": 1,
+      "icon": "/i/004000/004154_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004154_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004154_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "小惡精靈·阿里曼音叉"
+        }
+      ],
+      "patch": "5.0",
+      "itemId": 26784,
+      "nameSource": "tc"
+    },
+    {
+      "id": 195,
+      "name": "金斗雲",
+      "nameEn": "sunspun cumulus",
+      "seats": 1,
+      "icon": "/i/004000/004155_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004155_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004155_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "早鳥預購白金版"
+        },
+        {
+          "type": "商城",
+          "detail": "金斗雲"
+        }
+      ],
+      "patch": "5.0",
+      "itemId": 25057,
+      "nameSource": "tc"
+    },
+    {
+      "id": 197,
+      "name": "鬥虎",
+      "nameEn": "battle tiger",
+      "seats": 1,
+      "icon": "/i/004000/004157_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004157_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004157_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "為人民服務的絕槍戰士3"
+        },
+        {
+          "type": "成就",
+          "detail": "為人民服務的絕槍戰士1"
+        }
+      ],
+      "patch": "5.0",
+      "itemId": 27971,
+      "nameSource": "tc"
+    },
+    {
+      "id": 200,
+      "name": "毛爾波爾",
+      "nameEn": "morbol",
+      "seats": 1,
+      "icon": "/i/004000/004158_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004158_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004158_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "傑出的青魔道士"
+        },
+        {
+          "type": "成就",
+          "detail": "通曉大迷宮的青魔道士"
+        },
+        {
+          "type": "成就",
+          "detail": "通曉機神城的青魔道士"
+        }
+      ],
+      "patch": "5.15",
+      "itemId": 28116,
+      "nameSource": "tc"
+    },
+    {
+      "id": 201,
+      "name": "豬大仙",
+      "nameEn": "portly porxie",
+      "seats": 1,
+      "icon": "/i/004000/004159_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004159_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004159_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "由兒·歐兒: 幻晶幣 x18, at 伊爾美格"
+        }
+      ],
+      "patch": "5.1",
+      "itemId": 28117,
+      "nameSource": "tc"
+    },
+    {
+      "id": 202,
+      "name": "厄毗米修斯",
+      "nameEn": "Epimetheus",
+      "seats": 1,
+      "icon": "/i/004000/004160_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004160_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004160_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ],
+      "patch": "5.2",
+      "itemId": 28118,
+      "nameSource": "tc"
+    },
+    {
+      "id": 203,
+      "name": "墨諾提俄斯",
+      "nameEn": "Menoetius",
+      "seats": 1,
+      "icon": "/i/004000/004161_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004161_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004161_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ],
+      "patch": "5.2",
+      "itemId": 28119,
+      "nameSource": "tc"
+    },
+    {
+      "id": 204,
+      "name": "建築7號",
+      "nameEn": "Construct VII",
+      "seats": 1,
+      "icon": "/i/004000/004162_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004162_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004162_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "那達慕勇士5"
+        }
+      ],
+      "patch": "5.15",
+      "itemId": 28120,
+      "nameSource": "tc"
+    },
+    {
+      "id": 205,
+      "name": "暗影玲龍",
+      "nameEn": "shadow gwiber",
+      "seats": 1,
+      "icon": "/i/004000/004163_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004163_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004163_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "法薩德: 冥王圖騰 x99, at 遊末邦"
+        },
+        {
+          "type": "商店",
+          "detail": "莫雯商會的商人: 冥王圖騰 x99, at 水晶都"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "極 黑迪斯殲滅戰"
+        }
+      ],
+      "patch": "5.1",
+      "itemId": 28121,
+      "nameSource": "tc"
+    },
+    {
+      "id": 206,
+      "name": "搬運魔石精",
+      "nameEn": "spriggan stonecarrier",
+      "seats": 1,
+      "icon": "/i/004000/004164_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004164_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004164_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
+      "patch": "5.2",
+      "itemId": 28122,
+      "nameSource": "tc"
+    },
+    {
+      "id": 207,
+      "name": "得到寬恕的沉默",
+      "nameEn": "forgiven reticence",
+      "seats": 1,
+      "icon": "/i/004000/004165_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004165_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004165_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "伊爾弗洛伊: 狩獵任務的戰利品 x3200, at 遊末邦"
+        }
+      ],
+      "patch": "5.1",
+      "itemId": 28123,
+      "nameSource": "tc"
+    },
+    {
+      "id": 208,
+      "name": "長頸駝",
+      "nameEn": "dhalmel",
+      "seats": 1,
+      "icon": "/i/004000/004166_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004166_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004166_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "伊修加德重建",
+          "detail": null
+        }
+      ],
+      "patch": "5.21",
+      "itemId": 28124,
+      "nameSource": "tc"
+    },
+    {
+      "id": 209,
+      "name": "白化黑羊",
+      "nameEn": "albino karakul",
+      "seats": 1,
+      "icon": "/i/004000/004167_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004167_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004167_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "艾妮: 蒼天街振興票 x8400, at 蒼天街"
+        }
+      ],
+      "patch": "5.21",
+      "itemId": 28125,
+      "nameSource": "tc"
+    },
+    {
+      "id": 211,
+      "name": "巫菲提",
+      "nameEn": "ufiti",
+      "seats": 1,
+      "icon": "/i/004000/004168_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004168_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004168_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "艾妮: 蒼天街振興票 x8400, at 蒼天街"
+        }
+      ],
+      "patch": "5.11",
+      "itemId": 28917,
+      "nameSource": "tc"
+    },
+    {
+      "id": 212,
+      "name": "恐爪龍",
+      "nameEn": "deinonychus",
+      "seats": 1,
+      "icon": "/i/004000/004208_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004208_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004208_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "博茲雅",
+          "detail": null
+        },
+        {
+          "type": "新月島",
+          "detail": null
+        }
+      ],
+      "patch": "5.55",
+      "itemId": 33684,
+      "nameSource": "tc"
+    },
+    {
+      "id": 213,
+      "name": "勞動十四號",
+      "nameEn": "Construct 14",
+      "seats": 1,
+      "icon": "/i/004000/004175_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004175_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004175_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "義軍補給兵: 博茲雅晶簇 x180, at 扎杜諾爾高原"
+        }
+      ],
+      "patch": "5.35",
+      "itemId": 30102,
+      "nameSource": "tc"
+    },
+    {
+      "id": 214,
+      "name": "王孔雀",
+      "nameEn": "kingly peacock",
+      "seats": 1,
+      "icon": "/i/004000/004176_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004176_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004176_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
+      "patch": "5.2",
+      "itemId": 28508,
+      "nameSource": "tc"
+    },
+    {
+      "id": 215,
+      "name": "水蛇大人的罐子",
+      "nameEn": "Great Vessel of Ronka",
+      "seats": 1,
+      "icon": "/i/004000/004174_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004174_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004174_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "于咕盧利·瑪喏櫨: 橡果幣 x18, at 拉凱提卡大森林"
+        }
+      ],
+      "patch": "5.2",
+      "itemId": 30103,
+      "nameSource": "tc"
+    },
+    {
+      "id": 216,
+      "name": "無齒翼龍",
+      "nameEn": "pteranodon",
+      "seats": 1,
+      "icon": "/i/004000/004169_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004169_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004169_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "蒼天街的復興之王"
+        }
+      ],
+      "patch": "5.21",
+      "itemId": 30104,
+      "nameSource": "tc"
+    },
+    {
+      "id": 217,
+      "name": "紅寶石玲龍",
+      "nameEn": "ruby gwiber",
+      "seats": 1,
+      "icon": "/i/004000/004170_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004170_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004170_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "卡·因塔娜: 紅色未知蠻神圖騰 x99, at 摩杜納"
+        },
+        {
+          "type": "商店",
+          "detail": "莫雯商會的商人: 紅色未知蠻神圖騰 x99, at 水晶都"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "極 紅寶石武器破壞作戰"
+        }
+      ],
+      "patch": "5.2",
+      "itemId": 30105,
+      "nameSource": "tc"
+    },
+    {
+      "id": 218,
+      "name": "弓鮫",
+      "nameEn": "hybodus",
+      "seats": 1,
+      "icon": "/i/004000/004171_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004171_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004171_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "游釣大洋2"
+        }
+      ],
+      "patch": "5.2",
+      "itemId": 30106,
+      "nameSource": "tc"
+    },
+    {
+      "id": 219,
+      "name": "拉姆",
+      "nameEn": "Ramuh",
+      "seats": 1,
+      "icon": "/i/004000/004172_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004172_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004172_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "伊甸零式希望樂園 共鳴之章4"
+        }
+      ],
+      "patch": "5.2",
+      "itemId": 30107,
+      "nameSource": "tc"
+    },
+    {
+      "id": 220,
+      "name": "卡邦庫爾 紅電氣石",
+      "nameEn": "Rubellite Carbuncle",
+      "seats": 1,
+      "icon": "/i/004000/004173_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004173_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004173_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "卡邦庫爾 紅電氣石"
+        }
+      ],
+      "patch": "5.2",
+      "itemId": 30108,
+      "nameSource": "tc"
+    },
+    {
+      "id": 222,
+      "name": "陸行鳥篷車",
+      "nameEn": "chocobo carriage",
+      "seats": 4,
+      "icon": "/i/004000/004177_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004177_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004177_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "陸行鳥篷車"
+        }
+      ],
+      "patch": "5.3",
+      "itemId": 30859,
+      "nameSource": "tc"
+    },
+    {
+      "id": 223,
+      "name": "矮人戰車",
+      "nameEn": "Rolling Tankard",
+      "seats": 1,
+      "icon": "/i/004000/004178_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004178_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004178_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "蜜茲圖: 綠蛙幣 x18, at 雷克蘭德"
+        }
+      ],
+      "patch": "5.3",
+      "itemId": 30860,
+      "nameSource": "tc"
+    },
+    {
+      "id": 224,
+      "name": "加百列α",
+      "nameEn": "Gabriel α",
+      "seats": 1,
+      "icon": "/i/004000/004179_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004179_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004179_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "博茲雅",
+          "detail": "南方戰線上鎖的寶箱"
+        }
+      ],
+      "patch": "5.35",
+      "itemId": 30861,
+      "nameSource": "tc"
+    },
+    {
+      "id": 225,
+      "name": "碩山羊",
+      "nameEn": "megalotragus",
+      "seats": 1,
+      "icon": "/i/004000/004180_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004180_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004180_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "艾妮: 蒼天街振興票 x8400, at 蒼天街"
+        }
+      ],
+      "patch": "5.31",
+      "itemId": 30862,
+      "nameSource": "tc"
+    },
+    {
+      "id": 226,
+      "name": "光之玲龍",
+      "nameEn": "gwiber of light",
+      "seats": 1,
+      "icon": "/i/004000/004181_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004181_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004181_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "法薩德: 光之圖騰 x99, at 遊末邦"
+        },
+        {
+          "type": "商店",
+          "detail": "莫雯商會的商人: 光之圖騰 x99, at 水晶都"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "極 光之戰士殲滅戰"
+        }
+      ],
+      "patch": "5.3",
+      "itemId": 30863,
+      "nameSource": "tc"
+    },
+    {
+      "id": 228,
+      "name": "吉胖喵沙發",
+      "nameEn": "Jibanyan couch",
+      "seats": 1,
+      "icon": "/i/004000/004182_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004182_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004182_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": ""
+        }
+      ],
+      "patch": "5.3",
+      "itemId": 30864,
+      "nameSource": "tc"
+    },
+    {
+      "id": 229,
+      "name": "改良型魔導運輸器",
+      "nameEn": "magitek hyperconveyor",
+      "seats": 1,
+      "icon": "/i/004000/004183_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004183_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004183_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ],
+      "patch": "5.3",
+      "itemId": 31396,
+      "nameSource": "tc"
+    },
+    {
+      "id": 230,
+      "name": "艾爾·圖",
+      "nameEn": "Ehll Tou",
+      "seats": 1,
+      "icon": "/i/004000/004184_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004184_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004184_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "在你的雙翼上"
+        }
+      ],
+      "patch": "5.3",
+      "itemId": 30866,
+      "nameSource": "tc"
+    },
+    {
+      "id": 231,
+      "name": "英西塔土斯",
+      "nameEn": "Incitatus",
+      "seats": 1,
+      "icon": "/i/004000/004185_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004185_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004185_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "庫洛·阿里亞珀: 庫洛獎狀：金獎 x1, at 田園郡"
+        },
+        {
+          "type": "商店",
+          "detail": "宗長: 幻巧葉 x600, at 田園郡"
+        }
+      ],
+      "patch": "5.3",
+      "itemId": 30865,
+      "nameSource": "tc"
+    },
+    {
+      "id": 232,
+      "name": "雪人",
+      "nameEn": "snowman",
+      "seats": 1,
+      "icon": "/i/004000/004186_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004186_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004186_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "雪人鈴鐺"
+        },
+        {
+          "type": "節慶活動",
+          "detail": "星芒祭帶給大家笑容！"
+        }
+      ],
+      "patch": "5.4",
+      "itemId": 32837,
+      "nameSource": "tc"
+    },
+    {
+      "id": 233,
+      "name": "真月魔導鯨",
+      "nameEn": "Lunar Whale",
+      "seats": 8,
+      "icon": "/i/004000/004187_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004187_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004187_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        },
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
+      "patch": "5.5",
+      "itemId": 32838,
+      "nameSource": "tc"
+    },
+    {
+      "id": 234,
+      "name": "伊甸",
+      "nameEn": "Eden",
+      "seats": 1,
+      "icon": "/i/004000/004188_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004188_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004188_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "伊甸零式希望樂園 再生之章4"
+        }
+      ],
+      "patch": "5.4",
+      "itemId": 32839,
+      "nameSource": "tc"
+    },
+    {
+      "id": 235,
+      "name": "地獄三頭犬",
+      "nameEn": "Cerberus",
+      "seats": 4,
+      "icon": "/i/004000/004189_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004189_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004189_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "完全稱霸女王古殿1"
+        }
+      ],
+      "patch": "5.45",
+      "itemId": 32840,
+      "nameSource": "tc"
+    },
+    {
+      "id": 236,
+      "name": "大殼蟹",
+      "nameEn": "big shell",
+      "seats": 1,
+      "icon": "/i/004000/004190_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004190_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004190_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "艾妮: 蒼天街振興票 x8400, at 蒼天街"
+        }
+      ],
+      "patch": "5.41",
+      "itemId": 32841,
+      "nameSource": "tc"
+    },
+    {
+      "id": 237,
+      "name": "阿里翁",
+      "nameEn": "Arion",
+      "seats": 1,
+      "icon": "/i/004000/004191_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004191_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004191_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
+      "patch": "6.0",
+      "itemId": 32842,
+      "nameSource": "tc"
+    },
+    {
+      "id": 238,
+      "name": "綠寶石玲龍",
+      "nameEn": "emerald gwiber",
+      "seats": 1,
+      "icon": "/i/004000/004192_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004192_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004192_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "卡·因塔娜: 綠色未知蠻神圖騰 x99, at 摩杜納"
+        },
+        {
+          "type": "商店",
+          "detail": "莫雯商會的商人: 綠色未知蠻神圖騰 x99, at 水晶都"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "極 綠寶石武器破壞作戰"
+        }
+      ],
+      "patch": "5.4",
+      "itemId": 32843,
+      "nameSource": "tc"
+    },
+    {
+      "id": 239,
+      "name": "原型魔導機車大魔",
+      "nameEn": "prototype roader",
+      "seats": 1,
+      "icon": "/i/004000/004193_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004193_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004193_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ],
+      "patch": "5.4",
+      "itemId": 32844,
+      "nameSource": "tc"
+    },
+    {
+      "id": 240,
+      "name": "巧克力小妖",
+      "nameEn": "chocorpokkur",
+      "seats": 1,
+      "icon": "/i/004000/004194_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004194_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004194_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        },
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        },
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
+      "patch": "5.4",
+      "itemId": 32845,
+      "nameSource": "tc"
+    },
+    {
+      "id": 241,
+      "name": "加百列III號機",
+      "nameEn": "Gabriel Mark III",
+      "seats": 1,
+      "icon": "/i/004000/004195_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004195_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004195_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "女王古殿"
+        }
+      ],
+      "patch": "5.45",
+      "itemId": 32846,
+      "nameSource": "tc"
+    },
+    {
+      "id": 242,
+      "name": "雌羚羊",
+      "nameEn": "antelope doe",
+      "seats": 1,
+      "icon": "/i/004000/004197_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004197_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004197_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "艾妮: 蒼天街振興票 x8400, at 蒼天街"
+        }
+      ],
+      "patch": "5.5",
+      "itemId": 33674,
+      "nameSource": "tc"
+    },
+    {
+      "id": 243,
+      "name": "雄羚羊",
+      "nameEn": "antelope stag",
+      "seats": 1,
+      "icon": "/i/004000/004198_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004198_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004198_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "艾妮: 慶典參加證書 x30, at 蒼天街"
+        },
+        {
+          "type": "節慶活動",
+          "detail": "慶典禮物箱"
+        }
+      ],
+      "patch": "5.5",
+      "itemId": 33675,
+      "nameSource": "tc"
+    },
+    {
+      "id": 245,
+      "name": "黑鋼機龍連達巴非",
+      "nameEn": "Landerwaffe",
+      "seats": 2,
+      "icon": "/i/004000/004199_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004199_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004199_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "機龍怒號"
+        }
+      ],
+      "patch": "5.5",
+      "itemId": 33218,
+      "nameSource": "tc"
+    },
+    {
+      "id": 246,
+      "name": "王冠號",
+      "nameEn": "Al-iklil",
+      "seats": 2,
+      "icon": "/i/004000/004200_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004200_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004200_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "博茲雅的記錄員"
+        }
+      ],
+      "patch": "5.55",
+      "itemId": 33676,
+      "nameSource": "tc"
+    },
+    {
+      "id": 247,
+      "name": "巡航驅逐者",
+      "nameEn": "Cruise Chaser",
+      "seats": 2,
+      "icon": "/i/004000/004201_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004201_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004201_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "早鳥預購終極版"
+        }
+      ],
+      "patch": "5.5",
+      "itemId": 33677,
+      "nameSource": "tc"
+    },
+    {
+      "id": 248,
+      "name": "建築06S號",
+      "nameEn": "Construct VI-S",
+      "seats": 1,
+      "icon": "/i/004000/004196_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004196_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004196_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "宗長: 幻巧葉 x600, at 田園郡"
+        }
+      ],
+      "patch": "5.4",
+      "itemId": 33145,
+      "nameSource": "tc"
+    },
+    {
+      "id": 249,
+      "name": "鑽石玲龍",
+      "nameEn": "diamond gwiber",
+      "seats": 1,
+      "icon": "/i/004000/004209_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004209_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004209_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "卡·因塔娜: 白色未知蠻神圖騰 x99, at 摩杜納"
+        },
+        {
+          "type": "商店",
+          "detail": "莫雯商會的商人: 白色未知蠻神圖騰 x99, at 水晶都"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "極 鑽石武器捕獲作戰"
+        }
+      ],
+      "patch": "5.5",
+      "itemId": 33685,
+      "nameSource": "tc"
+    },
+    {
+      "id": 250,
+      "name": "極地熊",
+      "nameEn": "polar bear",
+      "seats": 1,
+      "icon": "/i/004000/004210_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004210_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004210_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": "紅蓮祭與特製冰品"
+        }
+      ],
+      "patch": "5.5",
+      "itemId": 33686,
+      "nameSource": "tc"
+    },
+    {
+      "id": 252,
+      "name": "巨鯰魚金轎",
+      "nameEn": "gilded mikoshi",
+      "seats": 1,
+      "icon": "/i/004000/004211_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004211_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004211_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "愛迪麗娜: Gil x50000000, at 摩杜納"
+        }
+      ],
+      "patch": "5.5",
+      "itemId": 33687,
+      "nameSource": "tc"
+    },
+    {
+      "id": 253,
+      "name": "金蛇大人的罐子",
+      "nameEn": "Resplendent Vessel of Ronka",
+      "seats": 1,
+      "icon": "/i/004000/004212_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004212_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004212_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "塔貝絲: Gil x25000000, at 遊末邦"
+        }
+      ],
+      "patch": "5.5",
+      "itemId": 33688,
+      "nameSource": "tc"
+    },
+    {
+      "id": 254,
+      "name": "魔法幻卡",
+      "nameEn": "magicked card",
+      "seats": 1,
+      "icon": "/i/004000/004213_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004213_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004213_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "贈予幻卡收藏家的禮物"
+        }
+      ],
+      "patch": "5.55",
+      "itemId": 33689,
+      "nameSource": "tc"
+    },
+    {
+      "id": 255,
+      "name": "海島曼德拉草",
+      "nameEn": "island mandragora",
+      "seats": 1,
+      "icon": "/i/004000/004202_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004202_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004202_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "Unknown Shop: 謝爾達萊青船幣 x12000, "
+        }
+      ],
+      "patch": "6.2",
+      "itemId": 33678,
+      "nameSource": "tc"
+    },
+    {
+      "id": 256,
+      "name": "海島洋蔥王子",
+      "nameEn": "island Onion Prince",
+      "seats": 1,
+      "icon": "/i/004000/004203_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004203_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004203_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "Unknown Shop: 謝爾達萊青船幣 x12000, "
+        }
+      ],
+      "patch": "6.2",
+      "itemId": 33679,
+      "nameSource": "tc"
+    },
+    {
+      "id": 257,
+      "name": "海島茄子騎士",
+      "nameEn": "island Eggplant Knight",
+      "seats": 1,
+      "icon": "/i/004000/004204_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004204_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004204_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "Unknown Shop: 謝爾達萊青船幣 x12000, "
+        }
+      ],
+      "patch": "6.2",
+      "itemId": 33680,
+      "nameSource": "tc"
+    },
+    {
+      "id": 258,
+      "name": "海島蒜頭明星",
+      "nameEn": "island Garlic Jester",
+      "seats": 1,
+      "icon": "/i/004000/004205_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004205_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004205_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "Unknown Shop: 謝爾達萊青船幣 x18000, "
+        }
+      ],
+      "patch": "6.4",
+      "itemId": 33681,
+      "nameSource": "tc"
+    },
+    {
+      "id": 259,
+      "name": "海島番茄國王",
+      "nameEn": "island Tomato King",
+      "seats": 1,
+      "icon": "/i/004000/004206_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004206_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004206_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "Unknown Shop: 謝爾達萊青船幣 x18000, "
+        }
+      ],
+      "patch": "6.4",
+      "itemId": 33682,
+      "nameSource": "tc"
+    },
+    {
+      "id": 260,
+      "name": "海島曼德拉王后",
+      "nameEn": "island Mandragora Queen",
+      "seats": 1,
+      "icon": "/i/004000/004207_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004207_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004207_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "Unknown Shop: 謝爾達萊青船幣 x18000, "
+        }
+      ],
+      "patch": "6.4",
+      "itemId": 33683,
+      "nameSource": "tc"
+    },
+    {
+      "id": 261,
+      "name": "永暗猞猁",
+      "nameEn": "lynx of eternal darkness",
+      "seats": 1,
+      "icon": "/i/004000/004214_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004214_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004214_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "涅斯瓦孜: 星極圖騰 x99, at 拉札漢"
+        },
+        {
+          "type": "商店",
+          "detail": "露天市集商人協會的商人: 星極圖騰 x99, at 舊薩雷安"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "極 佐狄亞克殲滅戰"
+        }
+      ],
+      "patch": "6.0",
+      "itemId": 36000,
+      "nameSource": "tc"
+    },
+    {
+      "id": 262,
+      "name": "聖光猞猁",
+      "nameEn": "lynx of divine light",
+      "seats": 1,
+      "icon": "/i/004000/004215_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004215_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004215_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "涅斯瓦孜: 靈極圖騰 x99, at 拉札漢"
+        },
+        {
+          "type": "商店",
+          "detail": "露天市集商人協會的商人: 靈極圖騰 x99, at 舊薩雷安"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "極 海德林殲滅戰"
+        }
+      ],
+      "patch": "6.0",
+      "itemId": 36001,
+      "nameSource": "tc"
+    },
+    {
+      "id": 263,
+      "name": "阿爾戈斯",
+      "nameEn": "Argos",
+      "seats": 1,
+      "icon": "/i/004000/004216_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004216_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004216_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "主線任務",
+          "detail": "曉月之終途"
+        }
+      ],
+      "patch": "6.0",
+      "itemId": 36002,
+      "nameSource": "tc"
+    },
+    {
+      "id": 264,
+      "name": "恐慌裝甲",
+      "nameEn": "dreadnaught",
+      "seats": 1,
+      "icon": "/i/004000/004217_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004217_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004217_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ],
+      "patch": "6.0",
+      "itemId": 36006,
+      "nameSource": "tc"
+    },
+    {
+      "id": 265,
+      "name": "亞靈菲尼克斯",
+      "nameEn": "Demi-Phoinix",
+      "seats": 1,
+      "icon": "/i/004000/004218_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004218_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004218_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "零式萬魔殿 邊境之獄4"
+        }
+      ],
+      "patch": "6.05",
+      "itemId": 36008,
+      "nameSource": "tc"
+    },
+    {
+      "id": 266,
+      "name": "卡呂冬堤斯",
+      "nameEn": "Calydontis",
+      "seats": 1,
+      "icon": "/i/004000/004219_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004219_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004219_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "庫洛·阿里亞珀: 庫洛獎狀：金獎 x1, at 田園郡"
+        },
+        {
+          "type": "商店",
+          "detail": "宗長: 幻巧葉 x600, at 田園郡"
+        }
+      ],
+      "patch": "6.0",
+      "itemId": 36003,
+      "nameSource": "tc"
+    },
+    {
+      "id": 267,
+      "name": "優勝犬",
+      "nameEn": "Victor",
+      "seats": 1,
+      "icon": "/i/004000/004220_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004220_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004220_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "傳說怪物獵人"
+        },
+        {
+          "type": "成就",
+          "detail": "曉月A級精英殺手3"
+        },
+        {
+          "type": "成就",
+          "detail": "曉月S級精英殺手3"
+        }
+      ],
+      "patch": "6.0",
+      "itemId": 36004,
+      "nameSource": "tc"
+    },
+    {
+      "id": 268,
+      "name": "等級檢測儀",
+      "nameEn": "level checker",
+      "seats": 1,
+      "icon": "/i/004000/004221_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004221_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004221_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "涅斯瓦孜: 希的螺栓 x12, at 拉札漢"
+        }
+      ],
+      "patch": "6.0",
+      "itemId": 36007,
+      "nameSource": "tc"
+    },
+    {
+      "id": 269,
+      "name": "猴面爸爸",
+      "nameEn": "Papa Paissa",
+      "seats": 1,
+      "icon": "/i/004000/004222_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004222_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004222_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "猴面雀爸爸"
+        }
+      ],
+      "patch": "6.0",
+      "itemId": 36009,
+      "nameSource": "tc"
+    },
+    {
+      "id": 273,
+      "name": "犀蜴",
+      "nameEn": "wivre",
+      "seats": 1,
+      "icon": "/i/004000/004223_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004223_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004223_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "愛迪麗娜: 雙色寶石的收據 x500, at 摩杜納"
+        }
+      ],
+      "patch": "6.0",
+      "itemId": 36005,
+      "nameSource": "tc"
+    },
+    {
+      "id": 274,
+      "name": "仙子豬大王",
+      "nameEn": "porxie king",
+      "seats": 1,
+      "icon": "/i/004000/004224_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004224_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004224_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        },
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
+      "patch": "6.0",
+      "itemId": 36010,
+      "nameSource": "tc"
+    },
+    {
+      "id": 277,
+      "name": "加隆德GL-II",
+      "nameEn": "Garlond GL-II",
+      "seats": 1,
+      "icon": "/i/004000/004235_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004235_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004235_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "Unknown Shop: 謝爾達萊青船幣 x24000, "
+        }
+      ],
+      "patch": "6.2",
+      "itemId": 38455,
+      "nameSource": "tc"
+    },
+    {
+      "id": 279,
+      "name": "機巧蓮座",
+      "nameEn": "mechanical lotus",
+      "seats": 1,
+      "icon": "/i/004000/004098_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004098_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004098_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
+      "patch": "6.2",
+      "itemId": 36632,
+      "nameSource": "tc"
+    },
+    {
+      "id": 280,
+      "name": "菲爾亞",
+      "nameEn": "Fylgja",
+      "seats": 1,
+      "icon": "/i/004000/004225_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004225_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004225_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        },
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ],
+      "patch": "6.2",
+      "itemId": 36905,
+      "nameSource": "tc"
+    },
+    {
+      "id": 281,
+      "name": "阿爾科諾斯特",
+      "nameEn": "alkonost",
+      "seats": 1,
+      "icon": "/i/004000/004226_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004226_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004226_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "涅斯瓦孜: 絢爛華麗的羽毛 x3, at 拉札漢"
+        }
+      ],
+      "patch": "6.1",
+      "itemId": 36906,
+      "nameSource": "tc"
+    },
+    {
+      "id": 282,
+      "name": "海島水牛",
+      "nameEn": "island buffalo",
+      "seats": 1,
+      "icon": "/i/004000/004265_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004265_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004265_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "Unknown Shop: 謝爾達萊青船幣 x50000, "
+        }
+      ],
+      "patch": "6.4",
+      "itemId": 40382,
+      "nameSource": "tc"
+    },
+    {
+      "id": 283,
+      "name": "腕龍",
+      "nameEn": "brachiosaur",
+      "seats": 1,
+      "icon": "/i/004000/004304_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004304_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004304_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "狩獵",
+          "detail": null
+        }
+      ],
+      "patch": "7.1",
+      "itemId": 45071,
+      "nameSource": "tw-items"
+    },
+    {
+      "id": 284,
+      "name": "輔助機602",
+      "nameEn": "pod 602",
+      "seats": 1,
+      "icon": "/i/004000/004227_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004227_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004227_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "紀念品兌換員: 金碟幣 x300000, at 金碟遊樂園"
+        }
+      ],
+      "patch": "6.1",
+      "itemId": 36910,
+      "nameSource": "tc"
+    },
+    {
+      "id": 285,
+      "name": "月面躍動機",
+      "nameEn": "moon-hopper",
+      "seats": 1,
+      "icon": "/i/004000/004245_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004245_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004245_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "發財威: 胡蘿蔔幣 x18, at 嘆息海"
+        }
+      ],
+      "patch": "6.35",
+      "itemId": 39485,
+      "nameSource": "tc"
+    },
+    {
+      "id": 286,
+      "name": "海島短吻鱷",
+      "nameEn": "island alligator",
+      "seats": 1,
+      "icon": "/i/004000/004255_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004255_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004255_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "Unknown Shop: 謝爾達萊青船幣 x35000, "
+        }
+      ],
+      "patch": "6.3",
+      "itemId": 39495,
+      "nameSource": "tc"
+    },
+    {
+      "id": 287,
+      "name": "河馬車",
+      "nameEn": "hippo cart",
+      "seats": 1,
+      "icon": "/i/004000/004228_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004228_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004228_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "甘妲: 星鈷幣 x18, at 薩維奈島"
+        }
+      ],
+      "patch": "6.15",
+      "itemId": 36907,
+      "nameSource": "tc"
+    },
+    {
+      "id": 288,
+      "name": "巨怪",
+      "nameEn": "troll",
+      "seats": 1,
+      "icon": "/i/004000/004229_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004229_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004229_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "庫洛·阿里亞珀: 庫洛獎狀：金獎 x1, at 田園郡"
+        },
+        {
+          "type": "商店",
+          "detail": "宗長: 幻巧葉 x600, at 田園郡"
+        }
+      ],
+      "patch": "6.1",
+      "itemId": 36904,
+      "nameSource": "tc"
+    },
+    {
+      "id": 290,
+      "name": "不明飛行物體？",
+      "nameEn": "UFO",
+      "seats": 1,
+      "icon": "/i/004000/004230_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004230_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004230_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "紳士的長夢"
+        }
+      ],
+      "patch": "6.55",
+      "itemId": 36908,
+      "nameSource": "tc"
+    },
+    {
+      "id": 291,
+      "name": "醋蠍龍",
+      "nameEn": "vinegaroon",
+      "seats": 1,
+      "icon": "/i/004000/004231_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004231_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004231_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "維爾梅塔: 狩獵任務的戰利品 x3200, at 拉札漢"
+        }
+      ],
+      "patch": "6.1",
+      "itemId": 36909,
+      "nameSource": "tc"
+    },
+    {
+      "id": 292,
+      "name": "正統裂鉗蟹",
+      "nameEn": "Orthos craklaw",
+      "seats": 1,
+      "icon": "/i/004000/004232_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004232_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004232_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "藏寶圖",
+          "detail": "鉑輝寶藏"
+        }
+      ],
+      "patch": "6.35",
+      "itemId": 36911,
+      "nameSource": "tc"
+    },
+    {
+      "id": 293,
+      "name": "藍羽猞猁",
+      "nameEn": "bluefeather lynx",
+      "seats": 1,
+      "icon": "/i/004000/004233_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004233_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004233_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "涅斯瓦孜: 終極圖騰 x99, at 拉札漢"
+        },
+        {
+          "type": "商店",
+          "detail": "露天市集商人協會的商人: 終極圖騰 x99, at 舊薩雷安"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "終極之戰"
+        }
+      ],
+      "patch": "6.1",
+      "itemId": 36912,
+      "nameSource": "tc"
+    },
+    {
+      "id": 294,
+      "name": "大大柴",
+      "nameEn": "megashiba",
+      "seats": 1,
+      "icon": "/i/004000/004234_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004234_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004234_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
+      "patch": "6.1",
+      "itemId": 36913,
+      "nameSource": "tc"
+    },
+    {
+      "id": 297,
+      "name": "旅行協助機",
+      "nameEn": "traveling supporter",
+      "seats": 1,
+      "icon": "/i/004000/004264_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004264_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004264_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        },
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ],
+      "patch": "6.4",
+      "itemId": 40383,
+      "nameSource": "tc"
+    },
+    {
+      "id": 298,
+      "name": "繆·繆咻",
+      "nameEn": "Miw Miisv",
+      "seats": 1,
+      "icon": "/i/004000/004236_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004236_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004236_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "N-0598: 密文幣 x18, at 天外天垓"
+        }
+      ],
+      "patch": "6.25",
+      "itemId": 38456,
+      "nameSource": "tc"
+    },
+    {
+      "id": 299,
+      "name": "幻奇獵鷹",
+      "nameEn": "wondrous lanner",
+      "seats": 1,
+      "icon": "/i/004000/004237_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004237_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004237_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "庫洛·阿里亞珀: 庫洛獎狀：金獎 x1, at 田園郡"
+        },
+        {
+          "type": "商店",
+          "detail": "宗長: 幻巧葉 x600, at 田園郡"
+        }
+      ],
+      "patch": "6.2",
+      "itemId": 38457,
+      "nameSource": "tc"
+    },
+    {
+      "id": 300,
+      "name": "魔法雨傘",
+      "nameEn": "magicked umbrella",
+      "seats": 1,
+      "icon": "/i/004000/004238_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004238_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004238_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
+      "patch": "6.3",
+      "itemId": 38458,
+      "nameSource": "tc"
+    },
+    {
+      "id": 301,
+      "name": "魔法陽傘",
+      "nameEn": "magicked parasol",
+      "seats": 1,
+      "icon": "/i/004000/004239_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004239_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004239_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
+      "patch": "6.3",
+      "itemId": 38459,
+      "nameSource": "tc"
+    },
+    {
+      "id": 302,
+      "name": "幻象閃電",
+      "nameEn": "Starlight steed",
+      "seats": 1,
+      "icon": "/i/004000/004240_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004240_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004240_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "幻象閃電"
+        },
+        {
+          "type": "節慶活動",
+          "detail": "星芒祭與孩子們的幻影"
+        },
+        {
+          "type": "節慶活動",
+          "detail": "2025星芒祭"
+        }
+      ],
+      "patch": "6.2",
+      "itemId": 38460,
+      "nameSource": "tc"
+    },
+    {
+      "id": 303,
+      "name": "希拉狄哈王座",
+      "nameEn": "Sil'dihn throne",
+      "seats": 1,
+      "icon": "/i/004000/004243_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004243_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004243_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "德蕾莎桑: 希拉狄哈銀貨 x100, at 舊薩雷安"
+        }
+      ],
+      "patch": "6.25",
+      "itemId": 38461,
+      "nameSource": "tc"
+    },
+    {
+      "id": 304,
+      "name": "羽衣精",
+      "nameEn": "silkie",
+      "seats": 1,
+      "icon": "/i/004000/004244_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004244_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004244_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "希拉狄哈水道探索記"
+        }
+      ],
+      "patch": "6.25",
+      "itemId": 38462,
+      "nameSource": "tc"
+    },
+    {
+      "id": 305,
+      "name": "炎靈獸",
+      "nameEn": "sunforged",
+      "seats": 1,
+      "icon": "/i/004000/004241_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004241_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004241_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "零式萬魔殿 煉淨之獄4"
+        }
+      ],
+      "patch": "6.2",
+      "itemId": 38463,
+      "nameSource": "tc"
+    },
+    {
+      "id": 306,
+      "name": "煞風猞猁",
+      "nameEn": "lynx of imperious wind",
+      "seats": 1,
+      "icon": "/i/004000/004242_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004242_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004242_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "涅斯瓦孜: 煞風大妖異圖騰 x99, at 拉札漢"
+        },
+        {
+          "type": "商店",
+          "detail": "露天市集商人協會的商人: 煞風大妖異圖騰 x99, at 舊薩雷安"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "極 巴爾巴莉希亞殲滅戰"
+        }
+      ],
+      "patch": "6.2",
+      "itemId": 38464,
+      "nameSource": "tc"
+    },
+    {
+      "id": 308,
+      "name": "永恆",
+      "nameEn": "aeturna",
+      "seats": 1,
+      "icon": "/i/004000/004246_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004246_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004246_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
+      "patch": "6.35",
+      "itemId": 39486,
+      "nameSource": "tc"
+    },
+    {
+      "id": 310,
+      "name": "青磷氣球",
+      "nameEn": "set of ceruleum balloons",
+      "seats": 1,
+      "icon": "/i/004000/004247_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004247_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004247_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
+      "patch": "6.3",
+      "itemId": 39487,
+      "nameSource": "tc"
+    },
+    {
+      "id": 311,
+      "name": "安登三世",
+      "nameEn": "Anden III",
+      "seats": 1,
+      "icon": "/i/004000/004248_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004248_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004248_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "照料中意之人的枝葉"
+        }
+      ],
+      "patch": "6.3",
+      "itemId": 39488,
+      "nameSource": "tc"
+    },
+    {
+      "id": 312,
+      "name": "黑傑克號",
+      "nameEn": "Blackjack",
+      "seats": 4,
+      "icon": "/i/004000/004249_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004249_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004249_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "紀念品兌換員: 金碟幣 x4000000, at 金碟遊樂園"
+        }
+      ],
+      "patch": "6.3",
+      "itemId": 39489,
+      "nameSource": "tc"
+    },
+    {
+      "id": 313,
+      "name": "法厄同",
+      "nameEn": "Phaethon",
+      "seats": 1,
+      "icon": "/i/004000/004250_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004250_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004250_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "涅斯瓦孜: 灼熱的火角 x3, at 拉札漢"
+        }
+      ],
+      "patch": "6.3",
+      "itemId": 39490,
+      "nameSource": "tc"
+    },
+    {
+      "id": 314,
+      "name": "粉紅",
+      "nameEn": "Pinky",
+      "seats": 1,
+      "icon": "/i/004000/004251_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004251_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004251_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "涅斯瓦孜: 驚奇補劑 x3, at 拉札漢"
+        }
+      ],
+      "patch": "6.3",
+      "itemId": 39491,
+      "nameSource": "tc"
+    },
+    {
+      "id": 315,
+      "name": "煬火猞猁",
+      "nameEn": "lynx of righteous fire",
+      "seats": 1,
+      "icon": "/i/004000/004252_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004252_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004252_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "涅斯瓦孜: 煬火大妖異圖騰 x99, at 拉札漢"
+        },
+        {
+          "type": "商店",
+          "detail": "露天市集商人協會的商人: 煬火大妖異圖騰 x99, at 舊薩雷安"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "極 盧比坎特殲滅戰"
+        }
+      ],
+      "patch": "6.3",
+      "itemId": 39492,
+      "nameSource": "tc"
+    },
+    {
+      "id": 316,
+      "name": "魔導復仇者金色塗裝特製型",
+      "nameEn": "magitek avenger G1",
+      "seats": 1,
+      "icon": "/i/004000/004253_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004253_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004253_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "愛迪麗娜: Gil x50000000, at 摩杜納"
+        }
+      ],
+      "patch": "6.3",
+      "itemId": 39493,
+      "nameSource": "tc"
+    },
+    {
+      "id": 317,
+      "name": "克律索馬羅斯",
+      "nameEn": "Chrysomallos",
+      "seats": 1,
+      "icon": "/i/004000/004254_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004254_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004254_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "愛迪麗娜: Gil x50000000, at 摩杜納"
+        }
+      ],
+      "patch": "6.3",
+      "itemId": 39494,
+      "nameSource": "tc"
+    },
+    {
+      "id": 318,
+      "name": "加隆德GL-IS",
+      "nameEn": "Garlond GL-IS",
+      "seats": 2,
+      "icon": "/i/004000/004256_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004256_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004256_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "加隆德GL-IS"
+        }
+      ],
+      "patch": "6.4",
+      "itemId": 40384,
+      "nameSource": "tc"
+    },
+    {
+      "id": 319,
+      "name": "巨型鈍口螈",
+      "nameEn": "megaloambystoma",
+      "seats": 1,
+      "icon": "/i/004000/004257_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004257_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004257_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "零式萬魔殿 荒天之獄4"
+        }
+      ],
+      "patch": "6.4",
+      "itemId": 40385,
+      "nameSource": "tc"
+    },
+    {
+      "id": 320,
+      "name": "新生鳳凰",
+      "nameEn": "Rising Phoenix",
+      "seats": 1,
+      "icon": "/i/004000/004258_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004258_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004258_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": "新生祭與旅途"
+        }
+      ],
+      "patch": "6.48",
+      "itemId": 40386,
+      "nameSource": "tc"
+    },
+    {
+      "id": 321,
+      "name": "蕩悠悠",
+      "nameEn": "burabura chochin",
+      "seats": 1,
+      "icon": "/i/004000/004259_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004259_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004259_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "六根山探索記"
+        }
+      ],
+      "patch": "6.45",
+      "itemId": 40387,
+      "nameSource": "tc"
+    },
+    {
+      "id": 322,
+      "name": "獅子王子",
+      "nameEn": "Shishioji",
+      "seats": 1,
+      "icon": "/i/004000/004260_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004260_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004260_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "德蕾莎桑: 紫州通寶 x100, at 舊薩雷安"
+        }
+      ],
+      "patch": "6.45",
+      "itemId": 40388,
+      "nameSource": "tc"
+    },
+    {
+      "id": 323,
+      "name": "影狼",
+      "nameEn": "shadow wolf",
+      "seats": 1,
+      "icon": "/i/004000/004261_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004261_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004261_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "影狼"
+        }
+      ],
+      "patch": "6.4",
+      "itemId": 40389,
+      "nameSource": "tc"
+    },
+    {
+      "id": 324,
+      "name": "魔法兒童床",
+      "nameEn": "magicked children's bed",
+      "seats": 1,
+      "icon": "/i/004000/004262_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004262_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004262_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "庫洛·阿里亞珀: 庫洛獎狀：金獎 x1, at 田園郡"
+        },
+        {
+          "type": "商店",
+          "detail": "宗長: 幻巧葉 x600, at 田園郡"
+        }
+      ],
+      "patch": "6.4",
+      "itemId": 40390,
+      "nameSource": "tc"
+    },
+    {
+      "id": 325,
+      "name": "暗影猞猁",
+      "nameEn": "lynx of fallen shadow",
+      "seats": 1,
+      "icon": "/i/004000/004263_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004263_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004263_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "涅斯瓦孜: 虛無大妖異圖騰 x99, at 拉札漢"
+        },
+        {
+          "type": "商店",
+          "detail": "露天市集商人協會的商人: 虛無大妖異圖騰 x99, at 舊薩雷安"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "極 高貝扎殲滅戰"
+        }
+      ],
+      "patch": "6.4",
+      "itemId": 40391,
+      "nameSource": "tc"
+    },
+    {
+      "id": 326,
+      "name": "托加爾",
+      "nameEn": "Torgal",
+      "seats": 1,
+      "icon": "/i/004000/004266_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004266_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004266_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        }
+      ],
+      "patch": "6.58",
+      "itemId": 41487,
+      "nameSource": "tc"
+    },
+    {
+      "id": 327,
+      "name": "方舟",
+      "nameEn": "Ark",
+      "seats": 1,
+      "icon": "/i/004000/004267_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004267_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004267_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
+      "patch": "7.0",
+      "itemId": 41488,
+      "nameSource": "tc"
+    },
+    {
+      "id": 328,
+      "name": "巴哈姆特·幽願",
+      "nameEn": "apocryphal Bahamut",
+      "seats": 1,
+      "icon": "/i/004000/004268_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004268_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004268_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "任務",
+          "detail": "幽願得償"
+        }
+      ],
+      "patch": "6.5",
+      "itemId": 41489,
+      "nameSource": "tc"
+    },
+    {
+      "id": 329,
+      "name": "弦月",
+      "nameEn": "crescent moon",
+      "seats": 1,
+      "icon": "/i/004000/004269_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004269_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004269_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
+      "patch": "6.5",
+      "itemId": 41490,
+      "nameSource": "tc"
+    },
+    {
+      "id": 330,
+      "name": "糖豆犀牛",
+      "nameEn": "Rhiyes",
+      "seats": 1,
+      "icon": "/i/004000/004270_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004270_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004270_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "金碟聲譽兌換員: 金碟聲譽 x410, at 金碟巨豆中心廣場"
+        }
+      ],
+      "patch": "6.51",
+      "itemId": 41491,
+      "nameSource": "tc"
+    },
+    {
+      "id": 331,
+      "name": "壓迫者",
+      "nameEn": "oppressor",
+      "seats": 1,
+      "icon": "/i/004000/004271_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004271_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004271_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": "PvP 第6輪 - 等級25"
+        }
+      ],
+      "patch": "7.0",
+      "itemId": 41492,
+      "nameSource": "tc"
+    },
+    {
+      "id": 332,
+      "name": "深淵猞猁",
+      "nameEn": "lynx of abyssal grief",
+      "seats": 1,
+      "icon": "/i/004000/004272_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004272_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004272_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "涅斯瓦孜: 暗黑圖騰 x99, at 拉札漢"
+        },
+        {
+          "type": "商店",
+          "detail": "露天市集商人協會的商人: 暗黑圖騰 x99, at 舊薩雷安"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "極 澤羅姆斯殲滅戰"
+        }
+      ],
+      "patch": "6.5",
+      "itemId": 41493,
+      "nameSource": "tc"
+    },
+    {
+      "id": 333,
+      "name": "月光仙人掌",
+      "nameEn": "sabotender de la luna",
+      "seats": 1,
+      "icon": "/i/004000/004273_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004273_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004273_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "庫洛·阿里亞珀: 庫洛獎狀：金獎 x1, at 田園郡"
+        },
+        {
+          "type": "商店",
+          "detail": "宗長: 幻巧葉 x600, at 田園郡"
+        }
+      ],
+      "patch": "6.5",
+      "itemId": 41494,
+      "nameSource": "tc"
+    },
+    {
+      "id": 334,
+      "name": "斯塔緹絲幻影",
+      "nameEn": "spectral Statice",
+      "seats": 1,
+      "icon": "/i/004000/004274_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004274_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004274_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "阿羅阿羅島探索記"
+        }
+      ],
+      "patch": "6.51",
+      "itemId": 41495,
+      "nameSource": "tc"
+    },
+    {
+      "id": 335,
+      "name": "加隆德GL-IIT",
+      "nameEn": "Garlond GL-IIT",
+      "seats": 2,
+      "icon": "/i/004000/004275_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004275_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004275_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "Unknown Shop: 謝爾達萊青船幣 x100000, "
+        }
+      ],
+      "patch": "6.5",
+      "itemId": 41496,
+      "nameSource": "tc"
+    },
+    {
+      "id": 336,
+      "name": "皮蒂",
+      "nameEn": "Peatie",
+      "seats": 1,
+      "icon": "/i/004000/004276_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004276_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004276_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": "公主節盛開的笑容之花"
+        }
+      ],
+      "patch": "6.5",
+      "itemId": 41497,
+      "nameSource": "tc"
+    },
+    {
+      "id": 337,
+      "name": "Alsvid",
+      "nameEn": "Alsvid",
+      "seats": 1,
+      "icon": "/i/004000/004277_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004277_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004277_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": "7.5",
+      "_noTwName": true,
+      "itemId": 41498
+    },
+    {
+      "id": 338,
+      "name": "庫阿庫阿",
+      "nameEn": "quaqua",
+      "seats": 1,
+      "icon": "/i/004000/004278_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004278_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004278_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "德蕾莎桑: 阿羅阿羅金貨 x100, at 舊薩雷安"
+        },
+        {
+          "type": "異聞副本",
+          "detail": "異聞迷宮 異聞阿羅阿羅島"
+        },
+        {
+          "type": "異聞副本",
+          "detail": "異聞迷宮 零式異聞阿羅阿羅島"
+        }
+      ],
+      "patch": "6.51",
+      "itemId": 41499,
+      "nameSource": "tc"
+    },
+    {
+      "id": 339,
+      "name": "海島皮里福爾",
+      "nameEn": "island Peerifool",
+      "seats": 1,
+      "icon": "/i/004000/004279_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004279_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004279_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "無人島",
+          "detail": "無人島特殊配給貨箱"
+        }
+      ],
+      "patch": "6.5",
+      "itemId": 41649,
+      "nameSource": "tc"
+    },
+    {
+      "id": 340,
+      "name": "海島沙漠玫瑰",
+      "nameEn": "island adenium",
+      "seats": 1,
+      "icon": "/i/004000/004280_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004280_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004280_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "Unknown Shop: 蔬菜券 x200, "
+        },
+        {
+          "type": "無人島",
+          "detail": "無人島特殊配給貨箱"
+        }
+      ],
+      "patch": "6.5",
+      "itemId": 41650,
+      "nameSource": "tc"
+    },
+    {
+      "id": 342,
+      "name": "小鳴鼠",
+      "nameEn": "ty'aitya",
+      "seats": 1,
+      "icon": "/i/004000/004292_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004292_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004292_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "愛迪麗娜: 圖拉爾雙色寶石的收據 x500, at 摩杜納"
+        }
+      ],
+      "patch": "7.0",
+      "itemId": 43590,
+      "nameSource": "tc"
+    },
+    {
+      "id": 343,
+      "name": "飛梭A9",
+      "nameEn": "air-wheeler A9",
+      "seats": 1,
+      "icon": "/i/004000/004281_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004281_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004281_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "尼昂: Gil x7500000, at 九號解決方案"
+        }
+      ],
+      "patch": "7.0",
+      "itemId": 43591,
+      "nameSource": "tc"
+    },
+    {
+      "id": 344,
+      "name": "羊駝",
+      "nameEn": "alpaca",
+      "seats": 1,
+      "icon": "/i/004000/004282_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004282_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004282_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "主線任務",
+          "detail": "黃金遺產"
+        }
+      ],
+      "patch": "7.0",
+      "itemId": 43592,
+      "nameSource": "tc"
+    },
+    {
+      "id": 345,
+      "name": "天災之翼",
+      "nameEn": "wings of ruin",
+      "seats": 1,
+      "icon": "/i/004000/004283_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004283_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004283_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極 艷翼蛇鳥殲滅戰"
+        }
+      ],
+      "patch": "7.0",
+      "itemId": 43593,
+      "nameSource": "tc"
+    },
+    {
+      "id": 346,
+      "name": "奇蹟之翼",
+      "nameEn": "wings of resolve",
+      "seats": 1,
+      "icon": "/i/004000/004284_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004284_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004284_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極 佐拉加殲滅戰"
+        }
+      ],
+      "patch": "7.0",
+      "itemId": 43594,
+      "nameSource": "tc"
+    },
+    {
+      "id": 347,
+      "name": "外勤機",
+      "nameEn": "outrunner",
+      "seats": 1,
+      "icon": "/i/004000/004285_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004285_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004285_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "二十重之道的探究者"
+        }
+      ],
+      "patch": "7.0",
+      "itemId": 43595,
+      "nameSource": "tc"
+    },
+    {
+      "id": 348,
+      "name": "梅瓦皮亞拉",
+      "nameEn": "mehwapyarra",
+      "seats": 1,
+      "icon": "/i/004000/004286_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004286_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004286_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "瓦赫賽帕: 德庫洛涅的鱗片 x12, at 九號解決方案"
+        }
+      ],
+      "patch": "7.0",
+      "itemId": 43596,
+      "nameSource": "tc"
+    },
+    {
+      "id": 349,
+      "name": "獨輪車S1",
+      "nameEn": "monowheel S1",
+      "seats": 1,
+      "icon": "/i/004000/004287_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004287_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004287_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "阿卡狄亞零式登天鬥技場 輕量級4"
+        }
+      ],
+      "patch": "7.05",
+      "itemId": 43597,
+      "nameSource": "tw-items"
+    },
+    {
+      "id": 350,
+      "name": "犎牛",
+      "nameEn": "rroneek",
+      "seats": 1,
+      "icon": "/i/004000/004288_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004288_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004288_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "特殊商品兌換員: 犎牛角笛的交換票據 x100, at 九號解決方案"
+        }
+      ],
+      "patch": "7.0",
+      "itemId": 43598,
+      "nameSource": "tc"
+    },
+    {
+      "id": 351,
+      "name": "烏勒爾",
+      "nameEn": "Ullr",
+      "seats": 1,
+      "icon": "/i/004000/004289_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004289_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004289_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": "黃金怪物獵人"
+        }
+      ],
+      "patch": "7.0",
+      "itemId": 43599,
+      "nameSource": "tc"
+    },
+    {
+      "id": 352,
+      "name": "凱吉古拉",
+      "nameEn": "qeziigural",
+      "seats": 1,
+      "icon": "/i/004000/004290_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004290_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004290_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "藏寶圖",
+          "detail": null
+        }
+      ],
+      "patch": "7.05",
+      "itemId": 43600,
+      "nameSource": "tw-items"
+    },
+    {
+      "id": 353,
+      "name": "半機器龜",
+      "nameEn": "automatoise",
+      "seats": 1,
+      "icon": "/i/004000/004291_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004291_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004291_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商店",
+          "detail": "流布加: 狩獵任務的戰利品 x3200, at 圖萊尤拉"
+        }
+      ],
+      "patch": "7.0",
+      "itemId": 44245,
+      "nameSource": "tc"
+    },
+    {
+      "id": 354,
+      "name": "浪祖",
+      "nameEn": "mountain zu",
+      "seats": 1,
+      "icon": "/i/004000/004293_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004293_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004293_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
+      "patch": "7.0",
+      "itemId": 41802,
+      "nameSource": "tc"
+    },
+    {
+      "id": 356,
+      "name": "酒桶仙人掌怪",
+      "nameEn": "barreltender",
+      "seats": 1,
+      "icon": "/i/004000/004294_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004294_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004294_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "採集",
+          "detail": null
+        }
+      ],
+      "patch": "7.1",
+      "itemId": 44502,
+      "nameSource": "tw-items"
+    },
+    {
+      "id": 357,
+      "name": "食蛋獸",
+      "nameEn": "eggeater",
+      "seats": 1,
+      "icon": "/i/004000/004306_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004306_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004306_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "天書奇談",
+          "detail": null
+        }
+      ],
+      "patch": "7.2",
+      "itemId": 44503,
+      "nameSource": "cn-opencc"
+    },
+    {
+      "id": 358,
+      "name": "海牛",
+      "nameEn": "punutiy",
+      "seats": 1,
+      "icon": "/i/004000/004296_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004296_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004296_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "部族任務",
+          "detail": null
+        }
+      ],
+      "patch": "7.1",
+      "itemId": 44497,
+      "nameSource": "tw-items"
+    },
+    {
+      "id": 359,
+      "name": "Alexandrian axe beak",
+      "nameEn": "Alexandrian axe beak",
+      "seats": 1,
+      "icon": "/i/004000/004297_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004297_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004297_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "天書奇談",
+          "detail": null
+        }
+      ],
+      "patch": "7.5",
+      "_noTwName": true,
+      "itemId": 44504
+    },
+    {
+      "id": 360,
+      "name": "暗黑羽衣",
+      "nameEn": "shroud of Darkness",
+      "seats": 1,
+      "icon": "/i/004000/004298_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004298_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004298_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": null
+        },
+        {
+          "type": "副本掉落",
+          "detail": null
+        }
+      ],
+      "patch": "7.15",
+      "itemId": 44501,
+      "nameSource": "cn-opencc"
+    },
+    {
+      "id": 361,
+      "name": "暗黑領域",
+      "nameEn": "dais of Darkness",
+      "seats": 1,
+      "icon": "/i/004000/004299_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004299_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004299_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": null
+        },
+        {
+          "type": "副本掉落",
+          "detail": null
+        }
+      ],
+      "patch": "7.15",
+      "itemId": 44500,
+      "nameSource": "cn-opencc"
+    },
+    {
+      "id": 362,
+      "name": "風火鍋",
+      "nameEn": "hovering hot pot",
+      "seats": 1,
+      "icon": "/i/004000/004300_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004300_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004300_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
+      "patch": "7.25",
+      "itemId": 44498,
+      "nameSource": "cn-opencc"
+    },
+    {
+      "id": 363,
+      "name": "永恆之翼",
+      "nameEn": "wings of eternity",
+      "seats": 1,
+      "icon": "/i/004000/004301_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004301_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004301_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "極 永恆女王殲滅戰"
+        }
+      ],
+      "patch": "7.1",
+      "itemId": 44499,
+      "nameSource": "tw-items"
+    },
+    {
+      "id": 364,
+      "name": "強力機兵",
+      "nameEn": "vacuum suit",
+      "seats": 1,
+      "icon": "/i/004000/004302_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004302_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004302_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "宇宙探索",
+          "detail": null
+        },
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
+      "patch": "7.21",
+      "itemId": 44505,
+      "nameSource": "cn-opencc"
+    },
+    {
+      "id": 365,
+      "name": "商賈神威",
+      "nameEn": "venturous kamuy",
+      "seats": 1,
+      "icon": "/i/004000/004303_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004303_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004303_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "天書奇談",
+          "detail": null
+        },
+        {
+          "type": "天書奇談",
+          "detail": null
+        }
+      ],
+      "patch": "7.1",
+      "itemId": 44958,
+      "nameSource": "tw-items"
+    },
+    {
+      "id": 368,
+      "name": "CHL P-0005",
+      "nameEn": "CHL P-0005",
+      "seats": 1,
+      "icon": "/i/000000/000000_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F000000%2F000000_hr1.tex&format=png",
+      "iconPath": "ui/icon/000000/000000_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "itemId": null,
+      "nameSource": "cn-opencc"
+    },
+    {
+      "id": 371,
+      "name": "cosmic countenance",
+      "nameEn": "cosmic countenance",
+      "seats": 1,
+      "icon": "/i/004000/004330_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004330_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004330_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
+      "patch": "7.41",
+      "_noTwName": true,
+      "itemId": 50435
+    },
+    {
+      "id": 372,
+      "name": "惡魔板",
+      "nameEn": "demon haul",
+      "seats": 1,
+      "icon": "/i/004000/004307_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004307_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004307_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
+      "patch": "7.25",
+      "itemId": 47978,
+      "nameSource": "cn-opencc"
+    },
+    {
+      "id": 373,
+      "name": "瓣齒鯊",
+      "nameEn": "petalodus",
+      "seats": 1,
+      "icon": "/i/004000/004308_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004308_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004308_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "新月島",
+          "detail": null
+        },
+        {
+          "type": "新月島",
+          "detail": null
+        }
+      ],
+      "patch": "7.25",
+      "itemId": 47979,
+      "nameSource": "cn-opencc"
+    },
+    {
+      "id": 374,
+      "name": "雪人裝扮",
+      "nameEn": "snowstreamer",
+      "seats": 1,
+      "icon": "/i/004000/004305_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004305_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004305_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
+      "patch": "7.11",
+      "itemId": 45577,
+      "nameSource": "tw-items"
+    },
+    {
+      "id": 378,
+      "name": "CHL W-0001",
+      "nameEn": "CHL W-0001",
+      "seats": 1,
+      "icon": "/i/000000/000000_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F000000%2F000000_hr1.tex&format=png",
+      "iconPath": "ui/icon/000000/000000_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "itemId": null,
+      "nameSource": "cn-opencc"
+    },
+    {
+      "id": 379,
+      "name": "pilgrim's protector",
+      "nameEn": "pilgrim's protector",
+      "seats": 1,
+      "icon": "/i/004000/004317_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004317_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004317_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "深層迷宮",
+          "detail": null
+        },
+        {
+          "type": "深層迷宮",
+          "detail": null
+        }
+      ],
+      "patch": "7.35",
+      "_noTwName": true,
+      "itemId": 47334
+    },
+    {
+      "id": 381,
+      "name": "擬鳥枝",
+      "nameEn": "branchbearer",
+      "seats": 1,
+      "icon": "/i/004000/004310_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004310_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004310_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "部族任務",
+          "detail": null
+        }
+      ],
+      "patch": "7.25",
+      "itemId": 47977,
+      "nameSource": "cn-opencc"
+    },
+    {
+      "id": 382,
+      "name": "飛梭C9",
+      "nameEn": "air-wheeler C9",
+      "seats": 4,
+      "icon": "/i/004000/004311_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004311_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004311_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "阿卡狄亞零式登天鬥技場 中量級4"
+        }
+      ],
+      "patch": "7.2",
+      "itemId": 47974,
+      "nameSource": "cn-opencc"
+    },
+    {
+      "id": 383,
+      "name": "古代魔法船",
+      "nameEn": "ancient airship",
+      "seats": 4,
+      "icon": "/i/004000/004312_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004312_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004312_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "新月島",
+          "detail": null
+        }
+      ],
+      "patch": "7.25",
+      "itemId": 47975,
+      "nameSource": "cn-opencc"
+    },
+    {
+      "id": 385,
+      "name": "高機動型強力機兵",
+      "nameEn": "high mobility vacuum suit",
+      "seats": 1,
+      "icon": "/i/004000/004316_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004316_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004316_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
+      "patch": "7.21",
+      "itemId": 48232,
+      "nameSource": "cn-opencc"
+    },
+    {
+      "id": 386,
+      "name": "warp loader",
+      "nameEn": "warp loader",
+      "seats": 1,
+      "icon": "/i/004000/004309_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004309_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004309_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "宇宙探索",
+          "detail": null
+        },
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
+      "patch": "7.31",
+      "_noTwName": true,
+      "itemId": 47973
+    },
+    {
+      "id": 388,
+      "name": "進擊的好腦袋",
+      "nameEn": "His Royal Headness on Parade",
+      "seats": 1,
+      "icon": "/i/004000/004313_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004313_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004313_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
+      "patch": "7.2",
+      "itemId": 47980,
+      "nameSource": "cn-opencc"
+    },
+    {
+      "id": 389,
+      "name": "騎士之翼",
+      "nameEn": "wings of the knighthood",
+      "seats": 1,
+      "icon": "/i/004000/004314_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004314_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004314_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "澤蓮尼婭殲殛戰"
+        }
+      ],
+      "patch": "7.2",
+      "itemId": 47976,
+      "nameSource": "cn-opencc"
+    },
+    {
+      "id": 390,
+      "name": "魔導螳螂",
+      "nameEn": "magitek slasher",
+      "seats": 1,
+      "icon": "/i/004000/004315_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004315_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004315_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ],
+      "patch": "7.2",
+      "itemId": 48231,
+      "nameSource": "cn-opencc"
+    },
+    {
+      "id": 393,
+      "name": "Vurgar the Loyal",
+      "nameEn": "Vurgar the Loyal",
+      "seats": 1,
+      "icon": "/i/004000/004318_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004318_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004318_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "部族任務",
+          "detail": null
+        }
+      ],
+      "patch": "7.35",
+      "_noTwName": true,
+      "itemId": 46830
+    },
+    {
+      "id": 394,
+      "name": "wanyudo",
+      "nameEn": "wanyudo",
+      "seats": 1,
+      "icon": "/i/004000/004331_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004331_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004331_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "PvP",
+          "detail": null
+        }
+      ],
+      "patch": "7.4",
+      "_noTwName": true,
+      "itemId": 50436
+    },
+    {
+      "id": 395,
+      "name": "forgiven mimicry",
+      "nameEn": "forgiven mimicry",
+      "seats": 1,
+      "icon": "/i/004000/004319_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004319_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004319_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "深層迷宮",
+          "detail": null
+        },
+        {
+          "type": "深層迷宮",
+          "detail": null
+        }
+      ],
+      "patch": "7.35",
+      "_noTwName": true,
+      "itemId": 46831
+    },
+    {
+      "id": 396,
+      "name": "Ambulario",
+      "nameEn": "Ambulario",
+      "seats": 1,
+      "icon": "/i/004000/004320_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004320_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004320_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        }
+      ],
+      "patch": "7.35",
+      "_noTwName": true,
+      "itemId": 46827
+    },
+    {
+      "id": 397,
+      "name": "shagcoat cat",
+      "nameEn": "shagcoat cat",
+      "seats": 1,
+      "icon": "/i/004000/004321_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004321_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004321_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
+      "patch": "7.3",
+      "_noTwName": true,
+      "itemId": 46828
+    },
+    {
+      "id": 398,
+      "name": "Seikret",
+      "nameEn": "Seikret",
+      "seats": 1,
+      "icon": "/i/004000/004322_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004322_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004322_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "任務",
+          "detail": null
+        }
+      ],
+      "patch": "7.35",
+      "_noTwName": true,
+      "itemId": 46833
+    },
+    {
+      "id": 399,
+      "name": "Felyne support team cart",
+      "nameEn": "Felyne support team cart",
+      "seats": 1,
+      "icon": "/i/004000/004323_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004323_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004323_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": null
+        },
+        {
+          "type": "高難度副本",
+          "detail": "護鎖刃龍狩獵戰"
+        },
+        {
+          "type": "高難度副本",
+          "detail": "護鎖刃龍上位狩獵戰"
+        }
+      ],
+      "patch": "7.35",
+      "_noTwName": true,
+      "itemId": 46834
+    },
+    {
+      "id": 400,
+      "name": "yan",
+      "nameEn": "yan",
+      "seats": 1,
+      "icon": "/i/004000/004324_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004324_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004324_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "藏寶圖",
+          "detail": null
+        }
+      ],
+      "patch": "7.3",
+      "_noTwName": true,
+      "itemId": 46829
+    },
+    {
+      "id": 401,
+      "name": "interstellar dhalmel",
+      "nameEn": "interstellar dhalmel",
+      "seats": 1,
+      "icon": "/i/004000/004325_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004325_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004325_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
+      "patch": "7.31",
+      "_noTwName": true,
+      "itemId": 46825
+    },
+    {
+      "id": 402,
+      "name": "cosmoboard",
+      "nameEn": "cosmoboard",
+      "seats": 1,
+      "icon": "/i/004000/004326_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004326_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004326_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
+      "patch": "7.31",
+      "_noTwName": true,
+      "itemId": 47336
+    },
+    {
+      "id": 403,
+      "name": "chandelier of First Light",
+      "nameEn": "chandelier of First Light",
+      "seats": 1,
+      "icon": "/i/004000/004327_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004327_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004327_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
+      "patch": "7.35",
+      "_noTwName": true,
+      "itemId": 46832
+    },
+    {
+      "id": 404,
+      "name": "CHL P-0006",
+      "nameEn": "CHL P-0006",
+      "seats": 1,
+      "icon": "/i/000000/000000_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F000000%2F000000_hr1.tex&format=png",
+      "iconPath": "ui/icon/000000/000000_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true,
+      "itemId": null
+    },
+    {
+      "id": 405,
+      "name": "CHL W-0002",
+      "nameEn": "CHL W-0002",
+      "seats": 1,
+      "icon": "/i/000000/000000_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F000000%2F000000_hr1.tex&format=png",
+      "iconPath": "ui/icon/000000/000000_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true,
+      "itemId": null
+    },
+    {
+      "id": 407,
+      "name": "wings of death",
+      "nameEn": "wings of death",
+      "seats": 1,
+      "icon": "/i/004000/004328_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004328_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004328_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "永遠之暗悲惶殲滅戰"
+        }
+      ],
+      "patch": "7.3",
+      "_noTwName": true,
+      "itemId": 46826
+    },
+    {
+      "id": 408,
+      "name": "ornamental shrublet",
+      "nameEn": "ornamental shrublet",
+      "seats": 1,
+      "icon": "/i/004000/004329_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004329_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004329_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "深層迷宮",
+          "detail": null
+        }
+      ],
+      "patch": "7.35",
+      "_noTwName": true,
+      "itemId": 47335
+    },
+    {
+      "id": 409,
+      "name": "interstellar leafkin",
+      "nameEn": "interstellar leafkin",
+      "seats": 1,
+      "icon": "/i/004000/004344_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004344_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004344_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
+      "patch": "7.51",
+      "_noTwName": true,
+      "itemId": 52257
+    },
+    {
+      "id": 411,
+      "name": "dynamite",
+      "nameEn": "dynamite",
+      "seats": 1,
+      "icon": "/i/004000/004332_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004332_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004332_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "天書奇談",
+          "detail": null
+        }
+      ],
+      "patch": "7.4",
+      "_noTwName": true,
+      "itemId": 50437
+    },
+    {
+      "id": 412,
+      "name": "genie of the lamp",
+      "nameEn": "genie of the lamp",
+      "seats": 1,
+      "icon": "/i/004000/004333_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004333_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004333_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "異聞副本",
+          "detail": null
+        },
+        {
+          "type": "異聞副本",
+          "detail": null
+        }
+      ],
+      "patch": "7.45",
+      "_noTwName": true,
+      "itemId": 50438
+    },
+    {
+      "id": 413,
+      "name": "Lowrider T1RANT",
+      "nameEn": "Lowrider T1RANT",
+      "seats": 1,
+      "icon": "/i/004000/004334_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004334_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004334_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "副本掉落",
+          "detail": "阿卡狄亞零式登天鬥技場 重量級4"
+        }
+      ],
+      "patch": "7.4",
+      "_noTwName": true,
+      "itemId": 50439
+    },
+    {
+      "id": 414,
+      "name": "uolon",
+      "nameEn": "uolon",
+      "seats": 1,
+      "icon": "/i/004000/004335_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004335_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004335_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        }
+      ],
+      "patch": "7.4",
+      "_noTwName": true,
+      "itemId": 50440
+    },
+    {
+      "id": 415,
+      "name": "volatile gravity vacuum suit",
+      "nameEn": "volatile gravity vacuum suit",
+      "seats": 1,
+      "icon": "/i/004000/004336_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004336_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004336_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "宇宙探索",
+          "detail": null
+        },
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
+      "patch": "7.41",
+      "_noTwName": true,
+      "itemId": 50441
+    },
+    {
+      "id": 416,
+      "name": "cosmic armored weapon",
+      "nameEn": "cosmic armored weapon",
+      "seats": 1,
+      "icon": "/i/004000/004337_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004337_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004337_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
+      "patch": "7.41",
+      "_noTwName": true,
+      "itemId": 50442
+    },
+    {
+      "id": 417,
+      "name": "inflatable mograft",
+      "nameEn": "inflatable mograft",
+      "seats": 1,
+      "icon": "/i/004000/004345_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004345_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004345_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        }
+      ],
+      "patch": "7.5",
+      "_noTwName": true,
+      "itemId": 52258
+    },
+    {
+      "id": 419,
+      "name": "スターライトスレイ",
+      "nameEn": "スターライトスレイ",
+      "seats": 1,
+      "icon": "/i/004000/004359_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004359_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004359_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "節慶活動",
+          "detail": null
+        }
+      ],
+      "patch": "7.5",
+      "_noTwName": true,
+      "itemId": 52640
+    },
+    {
+      "id": 420,
+      "name": "wings of legacy",
+      "nameEn": "wings of legacy",
+      "seats": 1,
+      "icon": "/i/004000/004346_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004346_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004346_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "任務",
+          "detail": null
+        }
+      ],
+      "patch": "7.5",
+      "_noTwName": true,
+      "itemId": 52259
+    },
+    {
+      "id": 421,
+      "name": "Hardy-Daytona",
+      "nameEn": "Hardy-Daytona",
+      "seats": 1,
+      "icon": "/i/004000/004338_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004338_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004338_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "商城",
+          "detail": "商城購買"
+        }
+      ],
+      "patch": "7.45",
+      "_noTwName": true,
+      "itemId": 50443
+    },
+    {
+      "id": 422,
+      "name": "wings of mist",
+      "nameEn": "wings of mist",
+      "seats": 1,
+      "icon": "/i/004000/004339_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004339_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004339_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "格萊楊拉波爾殲殛戰"
+        }
+      ],
+      "patch": "7.4",
+      "_noTwName": true,
+      "itemId": 50444
+    },
+    {
+      "id": 423,
+      "name": "CHL P-0006B",
+      "nameEn": "CHL P-0006B",
+      "seats": 1,
+      "icon": "/i/000000/000000_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F000000%2F000000_hr1.tex&format=png",
+      "iconPath": "ui/icon/000000/000000_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true,
+      "itemId": null
+    },
+    {
+      "id": 424,
+      "name": "CAM-I",
+      "nameEn": "CAM-I",
+      "seats": 1,
+      "icon": "/i/000000/000000_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F000000%2F000000_hr1.tex&format=png",
+      "iconPath": "ui/icon/000000/000000_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true,
+      "itemId": null
+    },
+    {
+      "id": 425,
+      "name": "rapid-fab vacuum suit",
+      "nameEn": "rapid-fab vacuum suit",
+      "seats": 1,
+      "icon": "/i/004000/004340_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004340_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004340_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
+      "patch": "7.41",
+      "_noTwName": true,
+      "itemId": 50445
+    },
+    {
+      "id": 426,
+      "name": "alert red warp loader",
+      "nameEn": "alert red warp loader",
+      "seats": 1,
+      "icon": "/i/004000/004341_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004341_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004341_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
+      "patch": "7.41",
+      "_noTwName": true,
+      "itemId": 50446
+    },
+    {
+      "id": 427,
+      "name": "royal magicked carpet",
+      "nameEn": "royal magicked carpet",
+      "seats": 1,
+      "icon": "/i/004000/004342_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004342_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004342_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "異聞副本",
+          "detail": null
+        }
+      ],
+      "patch": "7.45",
+      "_noTwName": true,
+      "itemId": 50447
+    },
+    {
+      "id": 428,
+      "name": "Turali snowman",
+      "nameEn": "Turali snowman",
+      "seats": 1,
+      "icon": "/i/004000/004343_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004343_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004343_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "成就",
+          "detail": null
+        }
+      ],
+      "patch": "7.4",
+      "_noTwName": true,
+      "itemId": 50448
+    },
+    {
+      "id": 432,
+      "name": "rocket punch",
+      "nameEn": "rocket punch",
+      "seats": 1,
+      "icon": "/i/004000/004348_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004348_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004348_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": "7.5",
+      "_noTwName": true,
+      "itemId": 52262
+    },
+    {
+      "id": 433,
+      "name": "xenoscaping vacuum suit",
+      "nameEn": "xenoscaping vacuum suit",
+      "seats": 1,
+      "icon": "/i/000000/000000_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F000000%2F000000_hr1.tex&format=png",
+      "iconPath": "ui/icon/000000/000000_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true,
+      "itemId": null
+    },
+    {
+      "id": 438,
+      "name": "cosmic armored weapon beta",
+      "nameEn": "cosmic armored weapon beta",
+      "seats": 1,
+      "icon": "/i/004000/004353_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004353_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004353_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
+      "patch": "7.51",
+      "_noTwName": true,
+      "itemId": 52267
+    },
+    {
+      "id": 439,
+      "name": "CAM-II",
+      "nameEn": "CAM-II",
+      "seats": 1,
+      "icon": "/i/000000/000000_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F000000%2F000000_hr1.tex&format=png",
+      "iconPath": "ui/icon/000000/000000_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true,
+      "itemId": null
+    },
+    {
+      "id": 440,
+      "name": "cosmic predator",
+      "nameEn": "cosmic predator",
+      "seats": 1,
+      "icon": "/i/004000/004354_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004354_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004354_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
+      "patch": "7.51",
+      "_noTwName": true,
+      "itemId": 52268
+    },
+    {
+      "id": 441,
+      "name": "CPD-I",
+      "nameEn": "CPD-I",
+      "seats": 1,
+      "icon": "/i/000000/000000_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F000000%2F000000_hr1.tex&format=png",
+      "iconPath": "ui/icon/000000/000000_hr1.tex",
+      "description": null,
+      "sources": [],
+      "patch": null,
+      "_noTwName": true,
+      "itemId": null
+    },
+    {
+      "id": 444,
+      "name": "wings of nihility",
+      "nameEn": "wings of nihility",
+      "seats": 1,
+      "icon": "/i/004000/004356_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004356_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004356_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "高難度副本",
+          "detail": "恩歐殲殛戰"
+        }
+      ],
+      "patch": "7.5",
+      "_noTwName": true,
+      "itemId": 52270
+    },
+    {
+      "id": 445,
+      "name": "excavating vacuum suit",
+      "nameEn": "excavating vacuum suit",
+      "seats": 1,
+      "icon": "/i/004000/004357_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004357_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004357_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
+      "patch": "7.51",
+      "_noTwName": true,
+      "itemId": 52271
+    },
+    {
+      "id": 446,
+      "name": "carbide grey warp loader",
+      "nameEn": "carbide grey warp loader",
+      "seats": 1,
+      "icon": "/i/004000/004358_hr1.png",
+      "iconUrl": "https://v2.xivapi.com/api/asset?path=ui%2Ficon%2F004000%2F004358_hr1.tex&format=png",
+      "iconPath": "ui/icon/004000/004358_hr1.tex",
+      "description": null,
+      "sources": [
+        {
+          "type": "宇宙探索",
+          "detail": null
+        }
+      ],
+      "patch": "7.51",
+      "_noTwName": true,
+      "itemId": 52272
+    }
+  ]
+}

@@ -1,0 +1,506 @@
+/* ===================================================================
+   水神的工具箱 — 收藏頁共用基底（common.css）
+   收藏類頁面（/collections/*、/minions/）共用的設計系統：
+   暗色設計變數、版面外框（header / toolbar / filter / progress / footer）、
+   以及 .col-* 卡片系統。各頁只需在自己的 <style> 內：
+     1. 設定 4 個強調色變數（--accent / --accent-2 / --glow-1 / --glow-2）
+     2. 覆寫格線欄數與該頁專屬的卡片內容樣式
+
+   主題：本檔提供「暗色」為預設；亮色覆蓋仍由 assets/css/theme.css 以
+   :root[data-theme="light"]（特定度 0,2,0）勝出，故載入順序不影響。
+   強調色 --accent 使用「暗色字面色」而非 var(--palette)，以保各頁在
+   亮/暗模式下的卡片強調表現與原本逐頁硬寫的 rgba() 完全一致。
+   （color-mix 取 N% 之結果等同原本的 rgba(...,0.N)，像素級一致。）
+
+   載入方式：於頁面 <head> 先 <link common.css>，再接該頁 <style>，
+   使頁面覆寫以同特定度後置勝出。
+   =================================================================== */
+
+/* ── 暗色設計變數（亮色由 theme.css 覆蓋）────────────────────────── */
+:root {
+  --bg-base:        #0a0c10;
+  --bg-surface:     #0f1117;
+  --bg-card:        #14181f;
+  --bg-card-hover:  #1a1f2b;
+
+  --border:         rgba(255,255,255,0.07);
+  --border-hover:   rgba(200,169,110,0.4);
+
+  --gold:           #c8a96e;
+  --gold-light:     #e2c98a;
+  --gold-dim:       rgba(200,169,110,0.15);
+  --purple:         #a78bfa;
+  --purple-dim:     rgba(167,139,250,0.12);
+  --green:          #4ade80;
+  --green-dim:      rgba(74,222,128,0.12);
+  --blue:           #4fc3f7;
+  --blue-dim:       rgba(79,195,247,0.12);
+  --red:            #f87171;
+  --red-dim:        rgba(248,113,113,0.12);
+  --cyan:           #22d3ee;
+  --cyan-dim:       rgba(34,211,238,0.12);
+  --orange:         #fb923c;
+  --orange-dim:     rgba(251,146,60,0.12);
+
+  --text-primary:   #e8eaf0;
+  --text-secondary: #8892a4;
+  --text-muted:     #717c91;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --transition: 0.18s cubic-bezier(0.4,0,0.2,1);
+
+  /* 各頁可覆寫的強調色預設（金色，最常見）。
+     色票使用暗色字面值，color-mix 之 N% 等同 rgba(...,0.N)。 */
+  --accent:   #c8a96e;                    /* 強調主色（owned / active / hover）*/
+  --accent-2: #4ade80;                    /* 進度條漸層尾色 */
+  --glow-1:   rgba(200,169,110,0.06);     /* 背景光暈 1 */
+  --glow-2:   rgba(74,222,128,0.04);      /* 背景光暈 2 */
+}
+
+/* ── Reset ─────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 0%, var(--glow-1) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 100%, var(--glow-2) 0%, transparent 60%);
+  pointer-events: none; z-index: 0;
+}
+a { color: inherit; text-decoration: none; }
+
+.container {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0 24px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Header ─────────────────────────────────────────────────────── */
+.page-header {
+  padding: 36px 0 28px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 28px;
+}
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+}
+.back-btn:hover { color: var(--gold); border-color: var(--border-hover); }
+.page-title-wrap { flex: 1; }
+.page-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--gold-light);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.page-subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* ── Progress bar ───────────────────────────────────────────────── */
+.progress-bar-wrap {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.progress-info {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--gold-light);
+  white-space: nowrap;
+}
+.progress-info span {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  margin-left: 6px;
+}
+.progress-track {
+  flex: 1;
+  height: 8px;
+  background: var(--raise);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  border-radius: 99px;
+  transition: width 0.4s ease;
+}
+.progress-pct {
+  font-size: 14px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+/* ── Toolbar ────────────────────────────────────────────────────── */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 18px;
+  align-items: center;
+}
+.search-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 180px;
+}
+.search-icon {
+  position: absolute;
+  left: 11px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+.search-input {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: 14px;
+  padding: 9px 12px 9px 34px;
+  outline: none;
+  transition: var(--transition);
+}
+.search-input:focus { border-color: color-mix(in srgb, var(--accent) 50%, transparent); }
+.search-input::placeholder { color: var(--text-muted); }
+
+.own-toggle {
+  display: flex;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.own-btn {
+  padding: 9px 15px;
+  font-size: 13px;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  transition: var(--transition);
+  white-space: nowrap;
+}
+.own-btn.active {
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  color: var(--accent);
+}
+.own-btn:hover:not(.active) { color: var(--text-primary); }
+
+.icon-btn {
+  padding: 9px 15px;
+  font-size: 13px;
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  transition: var(--transition);
+  white-space: nowrap;
+}
+.icon-btn:hover { color: var(--text-primary); border-color: rgba(255,255,255,0.2); }
+.clear-btn:hover { color: var(--red); border-color: rgba(248,113,113,0.4); }
+
+.sort-select {
+  padding: 9px 10px;
+  font-size: 13px;
+  cursor: pointer;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  transition: var(--transition);
+}
+.sort-select:hover, .sort-select:focus { color: var(--text-primary); border-color: rgba(255,255,255,0.2); outline: none; }
+
+/* ── Filter tags ────────────────────────────────────────────────── */
+.filter-section { margin-bottom: 18px; }
+.filter-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+.filter-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.filter-tag {
+  padding: 5px 13px;
+  font-size: 13px;
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  cursor: pointer;
+  background: transparent;
+  color: var(--text-secondary);
+  transition: var(--transition);
+}
+.filter-tag:hover { color: var(--text-primary); border-color: rgba(255,255,255,0.2); }
+.filter-tag.active {
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  color: var(--accent);
+}
+
+/* ── Result count ───────────────────────────────────────────────── */
+.result-meta {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+}
+.result-meta em { color: var(--text-secondary); font-style: normal; }
+
+/* ===================================================================
+   .col-* 卡片系統（收藏格線通用）
+   各頁以同名 class 套用；專屬內容（數值、機制、提示框等）留在各頁。
+   =================================================================== */
+
+/* 格線：預設欄寬 200px，各頁可覆寫 grid-template-columns 與 RWD 欄數 */
+.col-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+/* 卡片基底（左對齊）。置中版型加 .center 修飾類 */
+.col-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  cursor: pointer;
+  transition: var(--transition);
+  user-select: none;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  /* 大清單效能：跳過畫面外卡片的排版/繪製。auto 關鍵字會記住每張
+     卡片首次繪製後的真實高度，故捲軸不會跳；160px 僅為首繪前估值。
+     瀏覽器仍可在隱藏子樹內 Ctrl+F 搜尋並捲入。 */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 160px;
+}
+.col-card.center { align-items: center; text-align: center; }
+.col-card:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--accent) 60%, transparent);
+  outline-offset: 2px;
+}
+.col-card:hover {
+  background: var(--bg-card-hover);
+  border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+}
+.col-card.owned {
+  border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
+}
+.col-card.owned::before {
+  content: '✓';
+  position: absolute;
+  top: 8px; right: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* 圖示：可直接用 .col-icon（img），或包一層 .col-icon-wrap */
+.col-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  background: var(--raise);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.col-icon.placeholder,
+.col-icon-ph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: var(--text-muted);
+}
+.col-icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  background: var(--raise);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+/* 卡片排版輔助 */
+.col-head { display: flex; align-items: center; gap: 10px; }
+.col-meta { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+
+.col-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+.col-card.owned .col-name { color: var(--accent); }
+
+.col-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 2px;
+}
+.col-card.center .col-tags { justify-content: center; }
+
+/* 取得方式（預設顯示，最優先資訊）：左側金條版型。
+   置中卡片（.center）自動去除左條，避免置中版面出現側邊。 */
+.col-detail {
+  display: block;
+  margin-top: 2px;
+  padding-left: 9px;
+  border-left: 2px solid var(--gold);
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  word-break: break-word;
+}
+.col-detail:empty { display: none; }
+.col-detail::before {
+  content: "取得方式";
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .03em;
+  color: var(--gold);
+  margin-bottom: 2px;
+}
+.col-card.center .col-detail { border-left: 0; padding-left: 0; }
+
+/* ── 共用標籤 ───────────────────────────────────────────────────── */
+/* 中性小標籤 */
+.tag {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 99px;
+  background: var(--raise);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
+.tag.placeholder { color: var(--text-muted); }
+.tag.patch-tag {
+  background: rgba(167,139,250,0.1);
+  color: var(--purple);
+  border-color: rgba(167,139,250,0.2);
+}
+
+/* 詳細行（多列來源說明用） */
+.detail-line {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+/* 來源標籤：預設紫色（通用來源色），依 type-* 上色 */
+.src-tag {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 99px;
+  background: var(--purple-dim);
+  color: var(--purple);
+  border: 1px solid rgba(167,139,250,0.2);
+  white-space: nowrap;
+}
+.src-tag.placeholder {
+  background: var(--raise);
+  color: var(--text-muted);
+  border-color: var(--border);
+}
+
+/* 來源類別配色（全收藏頁通用語意）。
+   註：type-任務 在表情頁語意為「藍色任務」，該頁以 1 行覆寫。 */
+.src-tag.type-主線任務,
+.src-tag.type-任務,
+.src-tag.type-預設       { background: rgba(74,222,128,0.1);  color: var(--green);  border-color: rgba(74,222,128,0.2); }
+.src-tag.type-副本掉落,
+.src-tag.type-深層迷宮,
+.src-tag.type-異聞副本,
+.src-tag.type-探索航行   { background: rgba(79,195,247,0.1);  color: var(--blue);   border-color: rgba(79,195,247,0.2); }
+.src-tag.type-高難度副本,
+.src-tag.type-絕境,
+.src-tag.type-PvP,
+.src-tag.type-狩獵       { background: rgba(248,113,113,0.1); color: var(--red);    border-color: rgba(248,113,113,0.2); }
+.src-tag.type-商店,
+.src-tag.type-節慶活動,
+.src-tag.type-聯名活動,
+.src-tag.type-動作指南書 { background: rgba(200,169,110,0.12); color: var(--gold);  border-color: rgba(200,169,110,0.25); }
+.src-tag.type-商城,
+.src-tag.type-App        { background: rgba(167,139,250,0.12); color: var(--purple); border-color: rgba(167,139,250,0.25); }
+.src-tag.type-成就,
+.src-tag.type-金碟       { background: rgba(255,200,80,0.1);  color: #ffc850;       border-color: rgba(255,200,80,0.2); }
+.src-tag.type-市場板     { background: var(--raise); color: var(--text-secondary); border-color: var(--border); }
+
+/* ── Empty state ────────────────────────────────────────────────── */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
+  font-size: 15px;
+}
+
+/* ── Footer ─────────────────────────────────────────────────────── */
+.page-footer {
+  border-top: 1px solid var(--border);
+  padding: 24px 0 32px;
+  text-align: center;
+  margin-top: 48px;
+}
+.footer-text { font-size: 13px; color: var(--text-muted); }
+.footer-text a { color: var(--text-secondary); transition: var(--transition); }
+.footer-text a:hover { color: var(--gold); }
+
+/* ── Responsive（外框；格線欄數由各頁自訂）──────────────────────── */
+@media (max-width: 600px) {
+  .page-header { flex-wrap: wrap; padding: 24px 0 20px; }
+  .progress-bar-wrap { flex-wrap: wrap; }
+}

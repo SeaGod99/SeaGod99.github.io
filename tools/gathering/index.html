@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FFXIV 限時採集節點查詢與艾歐澤亞時間計時器 — 傳說、稀有採集點開放時間、座標、採集職業一覽">
+  <meta name="keywords" content="FFXIV, FF14, 限時採集, 傳說採集, 採集節點, 採礦工, 園藝工, ET, 艾歐澤亞時間, 繁體中文">
+  <title>限時採集節點查詢 | 水神的工具箱</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg-base:    #0a0c10;
+      --bg-surface: #0f1117;
+      --bg-card:    #14181f;
+      --bg-card-hover: #1a1f2b;
+      --border:     rgba(255,255,255,0.07);
+      --border-hover: rgba(200,169,110,0.4);
+      --gold:       #c8a96e;
+      --gold-light: #e2c98a;
+      --gold-dim:   rgba(200,169,110,0.15);
+      --blue:       #4fc3f7;
+      --blue-dim:   rgba(79,195,247,0.12);
+      --green:      #4ade80;
+      --green-dim:  rgba(74,222,128,0.12);
+      --purple:     #a78bfa;
+      --purple-dim: rgba(167,139,250,0.12);
+      --red:        #f87171;
+      --red-dim:    rgba(248,113,113,0.12);
+      --text-primary:   #e8eaf0;
+      --text-secondary: #8892a4;
+      --text-muted:     #4a5568;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --shadow-card: 0 2px 16px rgba(0,0,0,0.4);
+      --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 0%, rgba(200,169,110,0.05) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(79,195,247,0.04) 0%, transparent 60%);
+      pointer-events: none; z-index: 0;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { max-width: 1500px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+    .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-secondary); font-size:14px; margin:24px 0; transition:var(--transition);}
+    .back-link:hover { color: var(--gold); }
+
+    .tool-header { text-align:center; padding: 12px 0 24px; }
+    .tool-title { font-size: 26px; font-weight:700; color: var(--gold-light); }
+    .tool-subtitle { font-size: 14px; color: var(--text-secondary); margin-top:6px; }
+    .header-divider { width:60px; height:1px; background:linear-gradient(90deg,transparent,var(--gold),transparent); margin:16px auto 0;}
+
+    /* ── ET clock bar ── */
+    .et-bar {
+      display:flex; align-items:center; justify-content:center; gap:24px; flex-wrap:wrap;
+      background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md);
+      padding:16px 20px; margin-bottom:24px;
+    }
+    .et-block { text-align:center; }
+    .et-label { font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); }
+    .et-value { font-size:26px; font-weight:700; font-variant-numeric: tabular-nums; color:var(--gold-light); letter-spacing:1px; }
+    .et-sub { font-size:11px; color:var(--text-secondary); }
+    .et-divider { width:1px; height:36px; background:var(--border); }
+
+    /* ── controls ── */
+    .controls { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px; align-items:center; }
+    .search-box { flex:1; min-width:200px; position:relative; }
+    .search-box input {
+      width:100%; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md);
+      padding:11px 14px 11px 38px; color:var(--text-primary); font-size:14px; outline:none; transition:var(--transition);
+    }
+    .search-box input:focus { border-color:var(--border-hover); }
+    .search-box .icon { position:absolute; left:13px; top:50%; transform:translateY(-50%); color:var(--text-muted); font-size:14px; }
+
+    .filter-group { display:flex; gap:6px; flex-wrap:wrap; }
+    .chip {
+      background:var(--bg-card); border:1px solid var(--border); border-radius:20px;
+      padding:7px 14px; font-size:13.5px; color:var(--text-secondary); cursor:pointer; transition:var(--transition); user-select:none;
+    }
+    .chip:hover { border-color:var(--border-hover); color:var(--text-primary); }
+    .chip.active { background:var(--gold-dim); border-color:rgba(200,169,110,0.4); color:var(--gold-light); }
+    .chip.mine.active { background:var(--blue-dim); border-color:rgba(79,195,247,0.4); color:var(--blue); }
+    .chip.btn.active   { background:var(--green-dim); border-color:rgba(74,222,128,0.4); color:var(--green); }
+
+    .toggle-open { margin-left:auto; }
+
+    .result-meta { font-size:12px; color:var(--text-muted); margin-bottom:12px; }
+
+    /* ── node list ── */
+    .node-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(330px,1fr)); gap:14px; }
+    .node-card {
+      background:var(--bg-card); border:1px solid var(--border); border-left:3px solid var(--border);
+      border-radius:var(--radius-md); padding:16px 18px; transition:var(--transition); position:relative;
+    }
+    .node-card:hover { background:var(--bg-card-hover); }
+    .node-card.is-open  { border-left-color:var(--green); }
+    .node-card.is-soon  { border-left-color:var(--gold); }
+    .node-card.is-closed{ border-left-color:var(--border); opacity:0.72; }
+
+    .node-top { display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; padding-right:38px; /* 留位給右上追蹤 ☆ 鈕，避免與狀態標籤重疊 */ }
+    .node-job { font-size:22px; line-height:1; margin-top:2px; }
+    .node-titles { flex:1; min-width:0; }
+    .node-name { font-size:16px; font-weight:600; color:var(--text-primary); }
+    .node-loc { font-size:13px; color:var(--text-secondary); margin-top:2px; }
+
+    .status-pill { font-size:11px; font-weight:700; padding:3px 9px; border-radius:20px; white-space:nowrap; }
+    .pill-open  { background:rgba(74,222,128,0.15); color:var(--green); border:1px solid rgba(74,222,128,0.3); }
+    .pill-soon  { background:var(--gold-dim); color:var(--gold-light); border:1px solid rgba(200,169,110,0.3); }
+    .pill-closed{ background:rgba(148,163,184,0.1); color:#64748b; border:1px solid rgba(148,163,184,0.15); }
+
+    .node-meta { display:flex; flex-wrap:wrap; gap:6px 14px; font-size:13px; color:var(--text-secondary); margin-top:8px; }
+    .node-meta b { color:var(--text-primary); font-weight:600; }
+    .coords { font-variant-numeric:tabular-nums; color:var(--blue); }
+    .windows { display:flex; gap:6px; flex-wrap:wrap; margin-top:10px; }
+    .win { font-size:11px; font-variant-numeric:tabular-nums; padding:2px 8px; border-radius:var(--radius-sm);
+           background: var(--raise); border:1px solid var(--border); color:var(--text-secondary); }
+    .win.now { background:rgba(74,222,128,0.12); border-color:rgba(74,222,128,0.3); color:var(--green); }
+    .countdown { font-variant-numeric:tabular-nums; font-weight:600; }
+    .countdown.open { color:var(--green); }
+    .countdown.soon { color:var(--gold-light); }
+    .countdown.closed { color:var(--text-muted); }
+
+    .badge-ver { font-size:10px; padding:1px 7px; border-radius:20px; background:var(--purple-dim); color:var(--purple); border:1px solid rgba(167,139,250,0.2); }
+    .badge-tag { font-size:10px; padding:1px 7px; border-radius:20px; border:1px solid var(--border); color:var(--text-secondary); }
+    .badge-legendary { background:rgba(200,169,110,0.12); color:var(--gold-light); border-color:rgba(200,169,110,0.3); }
+    .badge-ephemeral { background:var(--blue-dim); color:var(--blue); border-color:rgba(79,195,247,0.25); }
+
+    /* ── 卡片迷你地圖：以節點座標為中心的局部放大圖，點擊開大地圖 ── */
+    .node-map {
+      position:relative; height:110px; margin-top:10px; border-radius:var(--radius-sm);
+      overflow:hidden; border:1px solid var(--border); background:var(--bg-surface); cursor:pointer;
+    }
+    .node-map img { position:absolute; left:50%; top:50%; width:300%; height:auto; max-width:none; }
+    .node-map::after {
+      content:'🔍'; position:absolute; right:6px; bottom:4px; font-size:11px; opacity:0;
+      transition:var(--transition); text-shadow:0 1px 3px rgba(0,0,0,.8);
+    }
+    .node-map:hover::after { opacity:.9; }
+    .node-map:hover { border-color:var(--border-hover); }
+    .nm-pin {
+      position:absolute; left:50%; top:50%; width:13px; height:13px; border-radius:50%;
+      transform:translate(-50%,-50%); border:2px solid rgba(0,0,0,.55);
+      box-shadow:0 0 6px rgba(0,0,0,.5); pointer-events:none;
+    }
+    .nm-pin.open { background:var(--green); animation:gdot-pulse 1.6s ease-out infinite; }
+    .nm-pin.soon { background:#fbbf24; }
+    .nm-pin.closed { background:#6b7280; }
+
+    .empty { text-align:center; color:var(--text-muted); padding:48px 0; font-size:14px; }
+
+    /* ── 追蹤目標固定區 ── */
+    .track-strip {
+      background:var(--bg-card); border:1px solid rgba(200,169,110,0.35); border-radius:var(--radius-md);
+      padding:12px 16px; margin-bottom:16px;
+    }
+    .ts-head { font-size:13.5px; font-weight:700; color:var(--gold-light); display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
+    .ts-hint { font-size:11px; font-weight:400; color:var(--text-muted); }
+    .ts-row {
+      display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+      padding:7px 0; border-top:1px solid var(--border); margin-top:7px; font-size:13px;
+    }
+    .ts-row:first-of-type { border-top:none; }
+    .ts-name { font-weight:600; color:var(--text-primary); }
+    .ts-loc { color:var(--text-secondary); font-size:12px; }
+    .ts-cd { margin-left:auto; display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text-secondary); }
+    /* 追蹤區鬧鐘提醒控制（靜態表頭，不隨每秒重繪） */
+    .ts-alarm { margin-left:auto; display:inline-flex; align-items:center; gap:6px; }
+    .ts-alarm .chip { padding:4px 10px; font-size:12px; }
+    .ts-alarm select { padding:4px 8px; font-size:12px; }
+    /* 追蹤列：迷你地圖縮圖與移除鈕 */
+    .ts-row { align-items:center; }
+    .ts-map {
+      position:relative; width:84px; height:46px; border-radius:var(--radius-sm); flex:none;
+      overflow:hidden; border:1px solid var(--border); background:var(--bg-surface); cursor:pointer;
+    }
+    .ts-map img { position:absolute; left:50%; top:50%; width:340%; height:auto; max-width:none; }
+    .ts-map .nm-pin { width:9px; height:9px; border-width:1.5px; }
+    .ts-map:hover { border-color:var(--border-hover); }
+    .ts-del {
+      background:none; border:1px solid var(--border); border-radius:var(--radius-sm);
+      width:24px; height:24px; font-size:11px; line-height:1; color:var(--text-muted);
+      cursor:pointer; transition:var(--transition);
+    }
+    .ts-del:hover { color:var(--red); border-color:rgba(248,113,113,0.4); background:var(--red-dim); }
+
+    .map-btn {
+      font-size:11px; padding:2px 10px; border-radius:var(--radius-sm); border:1px solid var(--border);
+      background:var(--raise); color:var(--gold-light); cursor:pointer; transition:var(--transition);
+    }
+    .map-btn:hover { border-color:rgba(200,169,110,0.45); background:var(--gold-dim); }
+
+    .items-list { font-size:13px; color:var(--text-secondary); margin-top:6px; line-height:1.7; }
+    .items-list b { color:var(--text-primary); font-weight:500; }
+
+    .track-btn {
+      position:absolute; top:14px; right:16px; background:none; border:1px solid var(--border);
+      border-radius:var(--radius-sm); width:30px; height:30px; font-size:14px; cursor:pointer;
+      color:var(--text-muted); transition:var(--transition); display:flex; align-items:center; justify-content:center;
+    }
+    .track-btn:hover { border-color:var(--border-hover); color:var(--text-primary); }
+    .track-btn.on { color:var(--gold-light); border-color:rgba(200,169,110,0.4); background:var(--gold-dim); }
+
+    .flag-btn {
+      font-size:11px; padding:2px 10px; border-radius:var(--radius-sm); border:1px solid var(--border);
+      background: var(--raise); color:var(--blue); cursor:pointer; transition:var(--transition);
+    }
+    .flag-btn:hover { border-color:rgba(79,195,247,0.4); background:var(--blue-dim); }
+    .flag-btn.copied { color:var(--green); border-color:rgba(74,222,128,0.4); background:var(--green-dim); }
+
+    .select-box select {
+      background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md);
+      padding:9px 12px; color:var(--text-primary); font-size:13px; outline:none; cursor:pointer;
+    }
+    .select-box select:hover { border-color:var(--border-hover); }
+
+    .info-note { font-size:11.5px; color:var(--text-muted); margin:28px 0 0; line-height:1.8; text-align:center; }
+
+    .site-footer { border-top:1px solid var(--border); padding:28px 0 36px; text-align:center; margin-top:40px; }
+    .footer-text { font-size:12px; color:var(--text-muted); line-height:2; }
+    .footer-text a { color:var(--text-secondary); }
+    .footer-text a:hover { color:var(--gold); }
+
+    @media (max-width:600px){
+      .node-grid { grid-template-columns:1fr; }
+      .et-bar { gap:14px; }
+      .et-value { font-size:22px; }
+      .toggle-open { margin-left:0; }
+    }
+
+    /* ── 地圖一覽檢視 ── */
+    .gmap-toolbar { display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:12px; }
+    .gmap-legend { font-size:13px; opacity:.75; display:flex; align-items:center; }
+    .gdot-demo { display:inline-block; width:11px; height:11px; border-radius:50%; margin-right:4px; border:1.5px solid rgba(0,0,0,.5); }
+    .gdot-demo.open { background:#4ade80; } .gdot-demo.soon { background:#fbbf24; } .gdot-demo.closed { background:#6b7280; }
+    .gmap-canvas { position:relative; max-width:780px; border:1px solid rgba(255,255,255,.12); border-radius:10px; overflow:hidden; background:rgba(128,128,128,.05); }
+    .gmap-canvas img { display:block; width:100%; height:auto; }
+    #gDots { position:absolute; inset:0; }
+    .gdot { position:absolute; width:14px; height:14px; border-radius:50%; transform:translate(-50%,-50%); cursor:pointer; border:2px solid rgba(0,0,0,.55); box-shadow:0 0 6px rgba(0,0,0,.5); }
+    .gdot.open { background:#4ade80; animation:gdot-pulse 1.6s ease-out infinite; }
+    .gdot.soon { background:#fbbf24; }
+    .gdot.closed { background:#6b7280; opacity:.75; }
+    .gdot.sel { outline:3px solid #4fc3f7; outline-offset:1px; }
+    @keyframes gdot-pulse { 0% { box-shadow:0 0 0 0 rgba(74,222,128,.55); } 100% { box-shadow:0 0 0 12px rgba(74,222,128,0); } }
+    .gmap-empty, .gmap-hint { padding:20px; opacity:.7; font-size:14px; }
+    .gmap-panel { margin-top:12px; max-width:780px; }
+    .gnp { display:flex; align-items:center; gap:12px; flex-wrap:wrap; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.09); border-radius:10px; padding:12px 16px; font-size:14px; }
+    .gnp-name { font-weight:700; }
+    .gnp-meta { opacity:.75; }
+    .gnp .windows { width:100%; margin-top:4px; }
+  </style>
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <script src="../../assets/js/theme.js"></script>
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← 水神的工具箱</a>
+
+  <div class="tool-header">
+    <div class="tool-title">⛏️ 限時採集節點查詢</div>
+    <p class="tool-subtitle">傳說・稀有採集點的開放時間、座標與採集職業，依艾歐澤亞時間即時更新</p>
+    <div class="header-divider"></div>
+  </div>
+
+  <!-- ET clock -->
+  <div class="et-bar">
+    <div class="et-block">
+      <div class="et-label">艾歐澤亞時間 (ET)</div>
+      <div class="et-value" id="etClock">--:--</div>
+      <div class="et-sub" id="etPhase">—</div>
+    </div>
+    <div class="et-divider"></div>
+    <div class="et-block">
+      <div class="et-label">本地時間</div>
+      <div class="et-value" id="ltClock" style="color:var(--text-primary)">--:--:--</div>
+      <div class="et-sub">1 ET 小時 ≈ 2 分 55 秒</div>
+    </div>
+  </div>
+
+  <!-- controls -->
+  <div class="controls">
+    <div class="search-box">
+      <span class="icon">🔍</span>
+      <input type="text" id="search" placeholder="搜尋物品名稱或地點…" autocomplete="off">
+    </div>
+    <div class="filter-group" id="jobFilters">
+      <span class="chip btn active" data-job="all">全部職業</span>
+      <span class="chip btn" data-job="採礦工">⛏️ 採礦工</span>
+      <span class="chip btn" data-job="園藝工">🌿 園藝工</span>
+    </div>
+    <div class="select-box">
+      <select id="verSel"><option value="all">全部版本</option></select>
+    </div>
+    <div class="select-box">
+      <select id="mapSel"><option value="all">全部地圖</option></select>
+    </div>
+    <div class="filter-group" id="typeFilters">
+      <span class="chip btn active" data-type="all">全部類型</span>
+      <span class="chip btn" data-type="legendary">傳說</span>
+      <span class="chip btn" data-type="ephemeral">靈砂</span>
+    </div>
+    <div class="select-box">
+      <select id="sortSel" title="清單排序方式">
+        <option value="ver">排序：版本＞等級</option>
+        <option value="time">排序：開放狀態＞倒數</option>
+      </select>
+    </div>
+    <span class="chip mine toggle-open" id="openOnly" data-on="0">僅顯示開放中</span>
+    <span class="chip mine" id="trackOnly" data-on="0">⭐ 只看追蹤</span>
+    <div class="filter-group" id="gViewToggle">
+      <span class="chip btn active" data-view="list">📋 清單</span>
+      <span class="chip btn" data-view="map">🗺 地圖一覽</span>
+    </div>
+  </div>
+
+  <div class="track-strip" id="trackStrip" style="display:none">
+    <div class="ts-head">⭐ 追蹤目標 <span class="ts-hint">依開放時間排序 · 點卡片右上 ☆ 新增</span>
+      <span class="ts-alarm">
+        <span class="chip mine" id="alarmToggle" title="追蹤目標開放前提醒">🔔 開放提醒</span>
+        <span class="select-box"><select id="alarmLead" title="提前多久提醒（現實時間）">
+          <option value="0">開放時提醒</option>
+          <option value="60">提前 1 分鐘</option>
+          <option value="180">提前 3 分鐘</option>
+          <option value="300">提前 5 分鐘</option>
+          <option value="600">提前 10 分鐘</option>
+        </select></span>
+        <span class="chip mine" id="alarmSound" title="提醒音效">🔊 音效</span>
+        <button class="map-btn" id="alarmTest" title="試聽提醒效果">試響</button>
+      </span>
+    </div>
+    <div class="ts-hint" id="alarmHint" style="display:none;margin-top:4px"></div>
+    <div id="tsRows"></div>
+  </div>
+
+  <div class="result-meta" id="resultMeta"></div>
+
+  <div class="node-grid" id="nodeGrid"></div>
+
+  <!-- 地圖一覽檢視：整張地圖上標出所有節點位置與開放狀態 -->
+  <div id="gMapView" style="display:none">
+    <div class="gmap-toolbar">
+      <div class="select-box"><select id="gMapSelect"></select></div>
+      <span class="gmap-legend"><i class="gdot-demo open"></i> 開放中　<i class="gdot-demo soon"></i> 即將開放　<i class="gdot-demo closed"></i> 未開放</span>
+    </div>
+    <div class="gmap-canvas" id="gMapCanvas"></div>
+    <div class="gmap-panel" id="gNodePanel"></div>
+  </div>
+
+  <div class="empty" id="emptyState" style="display:none">找不到符合條件的採集節點，試試其他關鍵字。</div>
+
+  <p class="info-note">
+    開放時段以艾歐澤亞時間 (ET) 計算，無需網路、即時更新。<br>
+    物品名稱對應台服資料；若節點產物在台服尚未開放則不列出。實際座標以遊戲內為準。<br>
+    🔔 開放提醒僅在本分頁開啟時運作；分頁置於背景時提醒可能延遲數十秒，建議搭配系統通知使用。
+  </p>
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <p class="footer-text">
+      水神的工具箱 &nbsp;·&nbsp;
+      <a href="../../">回首頁</a> &nbsp;·&nbsp;
+      資料來源：<a href="https://ffxivteamcraft.com" target="_blank" rel="noopener">Teamcraft</a>、社群整理
+    </p>
+    <p class="footer-text" style="margin-top:4px">
+      FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具
+    </p>
+  </div>
+</footer>
+
+<script type="module">
+import { initMapModal, openMapModal } from '../../assets/js/map-modal.js';
+/* ─────────────────────────────────────────────
+   艾歐澤亞時間 (Eorzea Time)
+   ET 流速 = 現實時間 × 3600/175 (1 ET 天 = 70 真實分鐘)
+   ───────────────────────────────────────────── */
+const EORZEA_MULT = 3600 / 175; // ≈ 20.5714
+
+function getEorzeaDate(now = Date.now()) {
+  const et = now * EORZEA_MULT;
+  const totalMinutes = Math.floor(et / 60000);
+  const hours = Math.floor(totalMinutes / 60) % 24;
+  const minutes = totalMinutes % 60;
+  return { hours, minutes, totalMinutes };
+}
+
+const TRACK_KEY = 'ffxiv_gathering_tracked';
+let trackedIds = new Set();
+try { trackedIds = new Set(JSON.parse(localStorage.getItem(TRACK_KEY) || '[]')); } catch(e) {}
+function saveTracked(){ localStorage.setItem(TRACK_KEY, JSON.stringify([...trackedIds])); }
+
+/* ─────────────────────────────────────────────
+   資料載入
+   ───────────────────────────────────────────── */
+let ITEMS = new Map();   // itemId -> name
+let MAPS  = new Map();   // mapId  -> {name, region, patch}
+let NODES = [];          // 處理後的限時節點列表
+
+async function loadData(){
+  const [gathering, items, maps] = await Promise.all([
+    fetch('../../data/gathering.json').then(r=>r.json()),
+    fetch('../../data/items.json').then(r=>r.json()),
+    fetch('../../data/maps.json').then(r=>r.json()),
+  ]);
+  ITEMS = new Map(items.data.map(i => [i.id, i.name]));
+  MAPS  = new Map(maps.data.map(m => [m.id, m]));
+
+  NODES = gathering.data
+    .filter(n => n.limited === true)
+    .map(n => {
+      const map = MAPS.get(n.coords.mapId);
+      const itemNames = (n.items || [])
+        .map(id => ITEMS.get(id))
+        .filter(Boolean); // 對不到名稱 = 台服未開放，直接不顯示
+      return {
+        id: n.id,
+        job: n.job,
+        typeName: n.typeName,
+        level: n.level,
+        itemNames,
+        mapId: n.coords.mapId,
+        mapName: map ? map.name : null,
+        mapMissing: !!n.mapMissing || n.coords.mapId === 0 || !map,
+        region: map ? map.region : null,
+        patch: map ? map.patch : null,
+        x: n.coords.x, y: n.coords.y,
+        spawns: n.spawns || [],
+        duration: n.duration || 0, // 分鐘 (ET)
+        legendary: !!n.legendary,
+        ephemeral: !!n.ephemeral,
+      };
+    })
+    .filter(n => n.itemNames.length > 0); // 全部產物皆台服未開放 → 整節點隱藏
+}
+
+/* ─────────────────────────────────────────────
+   狀態計算（以 ET 小時為單位）
+   spawns: ET 開始整點陣列；duration: 分鐘（ET）
+   回傳 { state:'open'|'soon'|'closed', secsLeft, startH }
+   ───────────────────────────────────────────── */
+function nodeStatus(node, now = Date.now()){
+  if (!node.spawns.length) return { state:'closed', secsLeft: Infinity, startH:null };
+  const durEtMin = node.duration; // ET 分鐘
+  const durHours = durEtMin / 60;
+  const curEtMin = (now * EORZEA_MULT / 60000) % (24*60);
+
+  // 檢查是否在任一開放區間
+  for (const startH of node.spawns) {
+    const s = ((startH % 24)+24)%24;
+    const startMin = s * 60;
+    let diffMin = curEtMin - startMin;
+    if (diffMin < 0) diffMin += 24*60;
+    if (diffMin < durEtMin) {
+      // 開放中，剩餘 = (durEtMin - diffMin) ET 分鐘 → 真實毫秒
+      const remainEtMin = durEtMin - diffMin;
+      const realMs = (remainEtMin * 60000) / EORZEA_MULT;
+      return { state:'open', secsLeft: Math.max(0, Math.round(realMs/1000)), startH: s };
+    }
+  }
+
+  // 找下一次開放
+  let bestDiff = Infinity, nextStart = null;
+  for (const startH of node.spawns) {
+    const s = ((startH % 24)+24)%24;
+    const startMin = s * 60;
+    let diff = startMin - curEtMin;
+    if (diff <= 0) diff += 24*60;
+    if (diff < bestDiff) { bestDiff = diff; nextStart = s; }
+  }
+  const realMs = (bestDiff * 60000) / EORZEA_MULT;
+  const secsLeft = Math.max(0, Math.round(realMs/1000));
+  const state = secsLeft <= 30*60 ? 'soon' : 'closed';
+  return { state, secsLeft, startH: nextStart };
+}
+
+function fmtCountdown(secs){
+  if (!isFinite(secs)) return '—';
+  const h = Math.floor(secs/3600);
+  const m = Math.floor((secs%3600)/60);
+  const s = secs%60;
+  if (h > 0) return `${h}時${String(m).padStart(2,'0')}分`;
+  if (m > 0) return `${m}分${String(s).padStart(2,'0')}秒`;
+  return `${s}秒`;
+}
+
+function fmtEtWindow(startH, durMin){
+  const s = ((startH % 24)+24)%24;
+  const endTotalMin = s*60 + durMin;
+  const eH = Math.floor(endTotalMin/60) % 24;
+  const eM = endTotalMin % 60;
+  if (eM === 0) return `${String(s).padStart(2,'0')}:00–${String(eH).padStart(2,'0')}:00`;
+  return `${String(s).padStart(2,'0')}:00–${String(eH).padStart(2,'0')}:${String(eM).padStart(2,'0')}`;
+}
+
+/* ─────────────────────────────────────────────
+   篩選 / 排序
+   ───────────────────────────────────────────── */
+const grid = document.getElementById('nodeGrid');
+const emptyState = document.getElementById('emptyState');
+const resultMeta = document.getElementById('resultMeta');
+
+let filterJob = 'all';
+let filterType = 'all';
+let filterVer = 'all';
+let filterMap = 'all';
+let openOnly = false;
+let trackOnly = false;
+let searchTerm = '';
+const SORT_KEY = 'gathering-sort-mode';
+let sortMode = 'time';  // time＝開放狀態→倒數（預設，日常「現在能採什麼」）；ver＝版本高→等級高
+try { const s = localStorage.getItem(SORT_KEY); if (s === 'ver' || s === 'time') sortMode = s; } catch(e) {}
+let gridSig = '';   // 網格簽章：成員/狀態/追蹤不變時不重建 DOM（避免迷你地圖 img 每秒重建閃爍）
+
+function jobEmoji(job){ return job === '採礦工' ? '⛏️' : '🌿'; }
+
+function passesFilter(node){
+  if (filterJob !== 'all' && node.job !== filterJob) return false;
+  if (filterVer !== 'all' && String(node.patch||'').split('.')[0] !== filterVer) return false;
+  if (filterMap !== 'all' && String(node.mapId) !== filterMap) return false;
+  if (filterType === 'legendary' && !node.legendary) return false;
+  if (filterType === 'ephemeral' && !node.ephemeral) return false;
+  if (trackOnly && !trackedIds.has(node.id)) return false;
+  if (searchTerm) {
+    const hay = `${node.itemNames.join(' ')} ${node.mapName||''} ${node.region||''}`.toLowerCase();
+    if (!hay.includes(searchTerm)) return false;
+  }
+  return true;
+}
+
+function teamcraftFlag(node){
+  if (node.mapMissing) return null;
+  return `/coord ${node.x.toFixed(1)} ${node.y.toFixed(1)} ${node.mapName||''}`.trim();
+}
+
+/* ── 迷你地圖（卡片與追蹤列共用）：底圖以節點座標置中，圖釘顏色同開放狀態，點擊開大地圖 ── */
+function miniMapHtml(n, st, cls){
+  const m = MAPS.get(n.mapId);
+  if (n.mapMissing || !m || !m.image) return '';
+  const fx = (gCoordFrac(n.x, m.sizeFactor || 100) * 100).toFixed(2);
+  const fy = (gCoordFrac(n.y, m.sizeFactor || 100) * 100).toFixed(2);
+  return `<div class="${cls}" data-mapopen="${n.id}" title="點擊放大地圖">
+    <img src="../..${m.image.local}" alt="${m.name}" loading="lazy"
+      style="transform:translate(-${fx}%,-${fy}%)"
+      onerror="if(this.dataset.retry){this.closest('.${cls}').style.display='none'}else{this.dataset.retry=1;this.src='${m.image.url}';}">
+    <span class="nm-pin ${st.state}"></span>
+  </div>`;
+}
+
+/* ── 追蹤目標固定區：釘選的節點永遠置頂顯示，開了頁面一眼就知道現在／接下來要跑哪 ── */
+let tsSig = '';   // 追蹤列簽章：同網格，成員/狀態不變時只就地更新倒數，避免縮圖每秒重建
+function renderTrackStrip(now){
+  const strip = document.getElementById('trackStrip');
+  if (!trackedIds.size){ strip.style.display='none'; tsSig=''; return; }
+  const rows = NODES.filter(n=>trackedIds.has(n.id))
+    .map(n=>({ n, st: nodeStatus(n, now) }))
+    .sort((a,b)=>{
+      const rank = { open:0, soon:1, closed:2 };
+      if (rank[a.st.state] !== rank[b.st.state]) return rank[a.st.state]-rank[b.st.state];
+      return a.st.secsLeft - b.st.secsLeft;
+    });
+  if (!rows.length){ strip.style.display='none'; tsSig=''; return; }
+  strip.style.display='';
+
+  const sig = rows.map(({n, st})=>`${n.id}:${st.state}:${st.startH ?? ''}`).join(',');
+  if (sig === tsSig){
+    rows.forEach(({n, st})=>{
+      const el = document.querySelector(`[data-tscd="${n.id}"]`);
+      if (el) el.textContent = fmtCountdown(st.secsLeft);
+    });
+    return;
+  }
+  tsSig = sig;
+
+  document.getElementById('tsRows').innerHTML =
+    rows.map(({n, st})=>{
+      const pill = st.state==='open'
+        ? '<span class="status-pill pill-open">● 開放中</span>'
+        : st.state==='soon'
+          ? '<span class="status-pill pill-soon">即將開放</span>'
+          : '<span class="status-pill pill-closed">未開放</span>';
+      const cdLabel = st.state==='open' ? '剩餘' : '距開放';
+      const cdCls = st.state==='open'?'open':st.state==='soon'?'soon':'closed';
+      const mapBtn = n.mapMissing ? '' : `<button class="map-btn" data-mapopen="${n.id}">🗺</button>`;
+      const flag = teamcraftFlag(n);
+      const flagBtn = flag ? `<button class="flag-btn" data-flag="${flag.replace(/"/g,'&quot;')}">📋</button>` : '';
+      return `<div class="ts-row">
+        ${pill}
+        ${miniMapHtml(n, st, 'ts-map')}
+        <span class="ts-name">${jobEmoji(n.job)} ${n.itemNames.join('、')}</span>
+        <span class="ts-loc">${n.mapMissing ? '地圖未知' : `${n.mapName} X:${n.x.toFixed(1)} Y:${n.y.toFixed(1)}`}</span>
+        <span class="ts-cd">${cdLabel} <b class="countdown ${cdCls}" data-tscd="${n.id}">${fmtCountdown(st.secsLeft)}</b> ${flagBtn} ${mapBtn}
+          <button class="ts-del" data-track="${n.id}" title="移除追蹤">✕</button></span>
+      </div>`;
+    }).join('');
+}
+
+/* ─────────────────────────────────────────────
+   鬧鐘提醒：追蹤節點於開放前（可設提前量）以
+   系統通知＋音效＋分頁標題提醒。需保持分頁開啟。
+   ───────────────────────────────────────────── */
+const ALARM_KEY = 'ffxiv_gathering_alarm';
+const BASE_TITLE = document.title;
+let alarmCfg = { on:false, lead:60, sound:true };
+try { Object.assign(alarmCfg, JSON.parse(localStorage.getItem(ALARM_KEY) || '{}')); } catch(e) {}
+function saveAlarm(){ localStorage.setItem(ALARM_KEY, JSON.stringify(alarmCfg)); }
+
+const alarmFired = new Map(); // nodeId -> 該次開窗實際時間戳（同一窗只響一次）
+
+function alarmChime(){
+  if (!alarmCfg.sound) return;
+  try {
+    const ctx = alarmChime.ctx || (alarmChime.ctx = new (window.AudioContext || window.webkitAudioContext)());
+    if (ctx.state === 'suspended') ctx.resume();
+    const t0 = ctx.currentTime;
+    [880, 1174.66].forEach((f, i)=>{   // 上行兩音，柔和不刺耳
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = 'sine'; o.frequency.value = f;
+      g.gain.setValueAtTime(0.0001, t0 + i*0.18);
+      g.gain.exponentialRampToValueAtTime(0.22, t0 + i*0.18 + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + i*0.18 + 0.5);
+      o.connect(g).connect(ctx.destination);
+      o.start(t0 + i*0.18); o.stop(t0 + i*0.18 + 0.55);
+    });
+  } catch(e) {}
+}
+
+function fireAlarm(n, st, untilOpen){
+  alarmChime();
+  const when = untilOpen <= 5 ? '已開放！' : `約 ${Math.ceil(untilOpen/60)} 分鐘後開放`;
+  const title = `${jobEmoji(n.job)} ${n.itemNames.join('、')} ${when}`;
+  const body = n.mapMissing ? '' :
+    `${n.mapName} X:${n.x.toFixed(1)} Y:${n.y.toFixed(1)}・開放 ${fmtEtWindow(st.startH ?? n.spawns[0], n.duration)} ET`;
+  if ('Notification' in window && Notification.permission === 'granted'){
+    try { new Notification(title, { body, tag: 'gather-' + n.id }); } catch(e) {}
+  }
+  document.title = '🔔 ' + title;
+  setTimeout(()=>{ document.title = BASE_TITLE; }, 30000);
+}
+
+/* primeOnly=true：只登記當前已在門檻內的窗（不響），
+   用於剛開啟提醒／剛加追蹤／改提前量時，避免對眼前已看得到的狀態突然響鈴 */
+function checkAlarms(now, primeOnly){
+  if (!alarmCfg.on || !trackedIds.size) return;
+  for (const id of trackedIds){
+    const n = NODE_BY_ID.get(id);
+    if (!n) continue;
+    const st = nodeStatus(n, now);
+    const untilOpen = st.state === 'open' ? 0 : st.secsLeft;
+    if (untilOpen > alarmCfg.lead) continue;
+    const openTs = now + untilOpen * 1000;
+    const prev = alarmFired.get(id);
+    if (prev && Math.abs(openTs - prev) < 120000) continue;
+    alarmFired.set(id, openTs);
+    if (!primeOnly) fireAlarm(n, st, untilOpen);
+  }
+}
+
+function syncAlarmUI(){
+  document.getElementById('alarmToggle').classList.toggle('active', alarmCfg.on);
+  document.getElementById('alarmSound').classList.toggle('active', alarmCfg.sound);
+  document.getElementById('alarmLead').value = String(alarmCfg.lead);
+  const hint = document.getElementById('alarmHint');
+  if (!alarmCfg.on){ hint.style.display = 'none'; return; }
+  const noNotif = !('Notification' in window) || Notification.permission !== 'granted';
+  hint.style.display = '';
+  hint.textContent = '🔔 提醒運作中——需保持此分頁開啟' +
+    (noNotif ? '；瀏覽器通知未允許，僅以音效與分頁標題提醒' : '，將以系統通知＋音效提醒');
+}
+
+function render(){
+  const now = Date.now();
+  renderTrackStrip(now);
+  checkAlarms(now);
+  let list = NODES.filter(passesFilter).map(n => ({ n, st: nodeStatus(n, now) }));
+
+  if (openOnly) list = list.filter(x => x.st.state === 'open');
+
+  // 排序：預設 版本高→等級高（同版本等級再看開放狀態）；time 模式為 開放中→即將→其他、各組依倒數升序
+  const rank = { open:0, soon:1, closed:2 };
+  if (sortMode === 'ver'){
+    list.sort((a,b)=>{
+      const pa = parseFloat(a.n.patch) || 0, pb = parseFloat(b.n.patch) || 0;
+      if (pb !== pa) return pb - pa;
+      if (b.n.level !== a.n.level) return b.n.level - a.n.level;
+      if (rank[a.st.state] !== rank[b.st.state]) return rank[a.st.state]-rank[b.st.state];
+      return a.st.secsLeft - b.st.secsLeft;
+    });
+  } else {
+    list.sort((a,b)=>{
+      if (rank[a.st.state] !== rank[b.st.state]) return rank[a.st.state]-rank[b.st.state];
+      return a.st.secsLeft - b.st.secsLeft;
+    });
+  }
+
+  if (list.length === 0){
+    grid.innerHTML = ''; gridSig = ''; resultMeta.textContent='';
+    if (gView === 'map'){ emptyState.style.display='none'; renderNodeMap([], now); return; }
+    emptyState.style.display='block';
+    return;
+  }
+  emptyState.style.display='none';
+  const openCount = list.filter(x=>x.st.state==='open').length;
+  resultMeta.textContent = `共 ${list.length} 個節點，其中 ${openCount} 個目前開放中`;
+
+  if (gView === 'map'){ renderNodeMap(list, now); return; }
+
+  // 成員、順序、狀態與追蹤皆未變 → 只就地更新倒數文字，不重建卡片
+  const sig = list.map(x=>`${x.n.id}:${x.st.state}:${x.st.startH ?? ''}`).join(',') + '|' + [...trackedIds].join('.');
+  if (sig === gridSig){
+    for (const {n, st} of list){
+      const el = grid.querySelector(`[data-cd="${n.id}"]`);
+      if (el) el.textContent = fmtCountdown(st.secsLeft);
+    }
+    return;
+  }
+  gridSig = sig;
+
+  grid.innerHTML = list.map(({n, st}) => {
+    const cls = st.state==='open'?'is-open':st.state==='soon'?'is-soon':'is-closed';
+    const pill = st.state==='open'
+      ? '<span class="status-pill pill-open">● 開放中</span>'
+      : st.state==='soon'
+        ? '<span class="status-pill pill-soon">即將開放</span>'
+        : '<span class="status-pill pill-closed">未開放</span>';
+    const cdLabel = st.state==='open' ? '剩餘' : '距開放';
+    const cdCls = st.state==='open'?'open':st.state==='soon'?'soon':'closed';
+    const wins = n.spawns.map(h=>{
+      const isNow = st.state==='open' && ((h%24)+24)%24===st.startH;
+      return `<span class="win ${isNow?'now':''}">${fmtEtWindow(h, n.duration)}</span>`;
+    }).join('');
+    const loc = n.mapMissing
+      ? '地圖未知'
+      : `${n.mapName}${n.region ? ' · '+n.region : ''}`;
+    const verBadge = n.patch ? `<span class="badge-ver">${n.patch}</span>` : '';
+    const tagBadges = [
+      n.legendary ? '<span class="badge-tag badge-legendary">傳說</span>' : '',
+      n.ephemeral ? '<span class="badge-tag badge-ephemeral">靈砂</span>' : '',
+    ].join('');
+    const flag = teamcraftFlag(n);
+    const flagBtn = flag
+      ? `<button class="flag-btn" data-flag="${flag.replace(/"/g,'&quot;')}">📋 ${flag}</button>`
+      : '';
+    const mapBtn = n.mapMissing ? '' : `<button class="map-btn" data-mapopen="${n.id}">🗺 地圖</button>`;
+    const tracked = trackedIds.has(n.id);
+    const miniMap = miniMapHtml(n, st, 'node-map');
+    return `
+      <div class="node-card ${cls}">
+        <button class="track-btn ${tracked?'on':''}" data-track="${n.id}" title="加入追蹤">${tracked?'★':'☆'}</button>
+        <div class="node-top">
+          <div class="node-job">${jobEmoji(n.job)}</div>
+          <div class="node-titles">
+            <div class="node-name">${n.itemNames.join('、')}</div>
+            <div class="node-loc">${loc} ${verBadge}</div>
+          </div>
+          ${pill}
+        </div>
+        <div class="node-meta">
+          <span>職業：<b>${n.job}</b></span>
+          <span>節點：<b>${n.typeName}</b>（採集 Lv.${n.level}）</span>
+          ${n.mapMissing ? '' : `<span>座標：<b class="coords">X:${n.x.toFixed(1)} Y:${n.y.toFixed(1)}</b></span>`}
+          ${tagBadges}
+        </div>
+        <div class="node-meta" style="margin-top:6px">
+          <span>${cdLabel}：<b class="countdown ${cdCls}" data-cd="${n.id}">${fmtCountdown(st.secsLeft)}</b></span>
+          ${flagBtn}
+          ${mapBtn}
+        </div>
+        <div class="windows">${wins}</div>
+        ${miniMap}
+      </div>`;
+  }).join('');
+}
+
+/* ── 地圖一覽檢視：整張地圖標出節點位置，綠=開放中／黃=即將／灰=未開放 ── */
+const gCoordFrac = (c, sf) => Math.max(0, Math.min(1, ((c - 1) * (sf / 100)) / 41));
+let gView = 'list', gMapId = null, gSelNode = null, gLastImgMap = null;
+
+function setGView(mode){
+  gView = mode;
+  document.querySelectorAll('#gViewToggle .chip').forEach(c=>c.classList.toggle('active', c.dataset.view===mode));
+  document.getElementById('nodeGrid').style.display = mode==='list' ? '' : 'none';
+  document.getElementById('gMapView').style.display = mode==='map' ? '' : 'none';
+  render();
+}
+
+function renderNodeMap(list, now){
+  const byMap = new Map();
+  for (const x of list){
+    if (x.n.mapMissing) continue;
+    if (!byMap.has(x.n.mapId)) byMap.set(x.n.mapId, []);
+    byMap.get(x.n.mapId).push(x);
+  }
+  const sel = document.getElementById('gMapSelect');
+  const canvas = document.getElementById('gMapCanvas');
+  const opts = [...byMap.entries()].sort((a,b)=>b[1].length-a[1].length);
+  if (!opts.length){
+    canvas.innerHTML = '<div class="gmap-empty">目前篩選沒有可定位在地圖上的節點。</div>';
+    document.getElementById('gNodePanel').innerHTML = '';
+    sel.innerHTML = '<option>（無）</option>'; sel.dataset.sig = ''; gLastImgMap = null;
+    return;
+  }
+  if (gMapId == null || !byMap.has(gMapId)) gMapId = opts[0][0];
+
+  // 下拉選單只在集合變動時重建（render 每秒跑，避免打斷選單操作）
+  const sig = opts.map(([id,a])=>id+':'+a.length).join(',');
+  if (sel.dataset.sig !== sig){
+    sel.dataset.sig = sig;
+    sel.innerHTML = opts.map(([mid,arr])=>
+      `<option value="${mid}"${mid===gMapId?' selected':''}>${MAPS.get(mid)?.name ?? mid}（${arr.length} 節點）</option>`).join('');
+  } else if (sel.value !== String(gMapId)) sel.value = String(gMapId);
+
+  const m = MAPS.get(gMapId);
+  if (gLastImgMap !== gMapId){
+    gLastImgMap = gMapId;
+    canvas.innerHTML = `<img src="../..${m.image.local}" alt="${m.name}"
+      onerror="if(this.dataset.retry){this.parentElement.innerHTML='<div class=&quot;gmap-empty&quot;>此地圖底圖載入失敗</div>'}else{this.dataset.retry=1;this.src='${m.image.url}';}"><div id="gDots"></div>`;
+  }
+  const sf = m.sizeFactor || 100;
+  const rows = byMap.get(gMapId);
+  if (gSelNode != null && !rows.some(x=>x.n.id===gSelNode)) gSelNode = null;
+  const dots = document.getElementById('gDots');
+  if (dots) dots.innerHTML = rows.map(({n, st})=>{
+    const fx = gCoordFrac(n.x, sf)*100, fy = gCoordFrac(n.y, sf)*100;
+    return `<div class="gdot ${st.state}${n.id===gSelNode?' sel':''}" data-gdot="${n.id}"
+      style="left:${fx.toFixed(2)}%;top:${fy.toFixed(2)}%"
+      title="${n.itemNames.join('、')}（X:${n.x.toFixed(1)} Y:${n.y.toFixed(1)}）"></div>`;
+  }).join('');
+  renderGNodePanel(rows, now);
+}
+
+function renderGNodePanel(rows){
+  const panel = document.getElementById('gNodePanel');
+  const entry = rows.find(x=>x.n.id===gSelNode);
+  if (!entry){
+    const openN = rows.filter(x=>x.st.state==='open').length;
+    panel.innerHTML = `<div class="gmap-hint">點地圖上的圓點查看節點詳情（此地圖 ${rows.length} 個節點、${openN} 個開放中）。</div>`;
+    return;
+  }
+  const { n, st } = entry;
+  const pill = st.state==='open'
+    ? '<span class="status-pill pill-open">● 開放中</span>'
+    : st.state==='soon'
+      ? '<span class="status-pill pill-soon">即將開放</span>'
+      : '<span class="status-pill pill-closed">未開放</span>';
+  const cdLabel = st.state==='open' ? '剩餘' : '距開放';
+  const cdCls = st.state==='open'?'open':st.state==='soon'?'soon':'closed';
+  const wins = n.spawns.map(h=>{
+    const isNow = st.state==='open' && ((h%24)+24)%24===st.startH;
+    return `<span class="win ${isNow?'now':''}">${fmtEtWindow(h, n.duration)}</span>`;
+  }).join('');
+  const flag = teamcraftFlag(n);
+  const tracked = trackedIds.has(n.id);
+  panel.innerHTML = `<div class="gnp">
+    ${pill}
+    <span class="gnp-name">${jobEmoji(n.job)} ${n.itemNames.join('、')}</span>
+    <span class="gnp-meta">${n.typeName}・Lv.${n.level}・X:${n.x.toFixed(1)} Y:${n.y.toFixed(1)}</span>
+    <span>${cdLabel} <b class="countdown ${cdCls}">${fmtCountdown(st.secsLeft)}</b></span>
+    <button class="track-btn ${tracked?'on':''}" data-track="${n.id}" style="position:static" title="加入追蹤">${tracked?'★':'☆'}</button>
+    ${flag ? `<button class="flag-btn" data-flag="${flag.replace(/"/g,'&quot;')}">📋 ${flag}</button>` : ''}
+    <div class="windows">${wins}</div>
+  </div>`;
+}
+
+document.getElementById('gViewToggle').addEventListener('click', e=>{
+  const chip = e.target.closest('[data-view]');
+  if (chip) setGView(chip.dataset.view);
+});
+document.getElementById('gMapSelect').addEventListener('change', e=>{
+  gMapId = Number(e.target.value); gSelNode = null; gLastImgMap = null; render();
+});
+document.getElementById('gMapView').addEventListener('click', e=>{
+  const dot = e.target.closest('[data-gdot]');
+  if (dot){ gSelNode = Number(dot.dataset.gdot); render(); return; }
+  handleActionClick(e);
+});
+
+/* ── 篩選器初始化 ── */
+function populateSelectors(){
+  const verSel = document.getElementById('verSel');
+  const EXP_NAME = { 2:'原初之地', 3:'蒼天之禁地', 4:'紅蓮之狂潮', 5:'暗影之逆焰', 6:'曉月之終途', 7:'金曦之遺輝' };
+  const majors = [...new Set(NODES.map(n=>String(n.patch||'').split('.')[0]).filter(Boolean))].sort();
+  majors.forEach(m=>{
+    const o = document.createElement('option'); o.value=m;
+    o.textContent = EXP_NAME[m] ? `${m}.x ${EXP_NAME[m]}` : `${m}.x`;
+    verSel.appendChild(o);
+  });
+
+  const mapSel = document.getElementById('mapSel');
+  const mapEntries = new Map();
+  NODES.forEach(n=>{ if(!n.mapMissing) mapEntries.set(n.mapId, n.mapName); });
+  [...mapEntries.entries()].sort((a,b)=>a[1].localeCompare(b[1],'zh-Hant')).forEach(([id,name])=>{
+    const o = document.createElement('option'); o.value=String(id); o.textContent=name; mapSel.appendChild(o);
+  });
+}
+
+/* ── ET 時鐘 ── */
+function tickClock(){
+  const e = getEorzeaDate();
+  document.getElementById('etClock').textContent =
+    `${String(e.hours).padStart(2,'0')}:${String(e.minutes).padStart(2,'0')}`;
+  const phase = e.hours>=5 && e.hours<17 ? '☀️ 白天' : (e.hours>=17 && e.hours<19 ? '🌆 黃昏' : '🌙 夜晚');
+  document.getElementById('etPhase').textContent = phase;
+  const lt = new Date();
+  document.getElementById('ltClock').textContent =
+    `${String(lt.getHours()).padStart(2,'0')}:${String(lt.getMinutes()).padStart(2,'0')}:${String(lt.getSeconds()).padStart(2,'0')}`;
+}
+
+/* ── 事件 ── */
+document.getElementById('search').addEventListener('input', e=>{
+  searchTerm = e.target.value.trim().toLowerCase(); render();
+});
+document.getElementById('jobFilters').addEventListener('click', e=>{
+  const chip = e.target.closest('.chip'); if(!chip) return;
+  document.querySelectorAll('#jobFilters .chip').forEach(c=>c.classList.remove('active'));
+  chip.classList.add('active');
+  filterJob = chip.dataset.job;
+  render();
+});
+document.getElementById('typeFilters').addEventListener('click', e=>{
+  const chip = e.target.closest('.chip'); if(!chip) return;
+  document.querySelectorAll('#typeFilters .chip').forEach(c=>c.classList.remove('active'));
+  chip.classList.add('active');
+  filterType = chip.dataset.type;
+  render();
+});
+document.getElementById('verSel').addEventListener('change', e=>{
+  filterVer = e.target.value; render();
+});
+document.getElementById('mapSel').addEventListener('change', e=>{
+  filterMap = e.target.value; render();
+});
+document.getElementById('sortSel').addEventListener('change', e=>{
+  sortMode = e.target.value;
+  try { localStorage.setItem(SORT_KEY, sortMode); } catch(e2) {}
+  render();
+});
+document.getElementById('sortSel').value = sortMode;
+document.getElementById('openOnly').addEventListener('click', e=>{
+  const chip = e.target;
+  openOnly = !openOnly;
+  chip.classList.toggle('active', openOnly);
+  render();
+});
+document.getElementById('trackOnly').addEventListener('click', e=>{
+  const chip = e.target;
+  trackOnly = !trackOnly;
+  chip.classList.toggle('active', trackOnly);
+  render();
+});
+/* 剪貼簿：clipboard API 失敗時退回 execCommand（非安全環境／遊戲內瀏覽器） */
+function copyText(text) {
+  if (navigator.clipboard?.writeText) {
+    return navigator.clipboard.writeText(text).then(()=>true).catch(()=>copyTextFallback(text));
+  }
+  return Promise.resolve(copyTextFallback(text));
+}
+function copyTextFallback(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.cssText = 'position:fixed;opacity:0';
+  document.body.appendChild(ta);
+  ta.select();
+  let ok = false;
+  try { ok = document.execCommand('copy'); } catch (e) {}
+  ta.remove();
+  return ok;
+}
+let NODE_BY_ID = new Map();
+function handleActionClick(e){
+  const trackBtn = e.target.closest('[data-track]');
+  if (trackBtn) {
+    const id = Number(trackBtn.dataset.track);
+    if (trackedIds.has(id)) trackedIds.delete(id);
+    else { trackedIds.add(id); checkAlarms(Date.now(), true); } // 新追蹤先登記當前窗，不立即響
+    saveTracked();
+    render();
+    return;
+  }
+  const mapBtn = e.target.closest('[data-mapopen]');
+  if (mapBtn) {
+    const n = NODE_BY_ID.get(Number(mapBtn.dataset.mapopen));
+    if (!n || n.mapMissing) return;
+    openMapModal({
+      mapId: n.mapId, x: n.x, y: n.y,
+      title: n.itemNames.join('、'),
+      sub: `${n.mapName} · ${n.job} · ${n.typeName}（採集 Lv.${n.level}）`,
+      flagText: teamcraftFlag(n) || '',
+    });
+    return;
+  }
+  const flagBtn = e.target.closest('[data-flag]');
+  if (flagBtn) {
+    const text = flagBtn.dataset.flag;
+    const orig = flagBtn.textContent;
+    copyText(text).then(ok=>{
+      flagBtn.classList.add('copied');
+      flagBtn.textContent = ok ? '✅ 已複製' : '❌ 複製失敗';
+      setTimeout(()=>{ flagBtn.classList.remove('copied'); flagBtn.textContent = orig; }, 1500);
+    });
+  }
+}
+grid.addEventListener('click', handleActionClick);
+document.getElementById('tsRows').addEventListener('click', handleActionClick);
+
+/* ── 鬧鐘提醒控制 ── */
+document.getElementById('alarmToggle').addEventListener('click', ()=>{
+  alarmCfg.on = !alarmCfg.on; saveAlarm();
+  if (alarmCfg.on){
+    if ('Notification' in window && Notification.permission === 'default'){
+      Notification.requestPermission().finally(syncAlarmUI);
+    }
+    checkAlarms(Date.now(), true); // 先登記已在門檻內的窗，避免一開啟就響
+  }
+  syncAlarmUI();
+});
+document.getElementById('alarmSound').addEventListener('click', ()=>{
+  alarmCfg.sound = !alarmCfg.sound; saveAlarm(); syncAlarmUI();
+});
+document.getElementById('alarmLead').addEventListener('change', e=>{
+  alarmCfg.lead = Number(e.target.value) || 0; saveAlarm();
+  checkAlarms(Date.now(), true);
+});
+document.getElementById('alarmTest').addEventListener('click', ()=>{
+  const sav = alarmCfg.sound; alarmCfg.sound = true; alarmChime(); alarmCfg.sound = sav;
+  if ('Notification' in window && Notification.permission === 'granted'){
+    try { new Notification('🔔 測試提醒', { body: '提醒功能運作正常。', tag: 'gather-test' }); } catch(e) {}
+  }
+});
+
+/* ── 啟動 ── */
+(async function init(){
+  await loadData();
+  NODE_BY_ID = new Map(NODES.map(n=>[n.id, n]));
+  initMapModal({ mapsData: [...MAPS.values()], base: '../..' });
+  populateSelectors();
+  syncAlarmUI();
+  if (alarmCfg.on) checkAlarms(Date.now(), true); // 開頁先登記當前窗，只對之後的新窗響鈴
+  tickClock();
+  render();
+  setInterval(tickClock, 1000);
+  setInterval(render, 1000); // 每秒更新倒數與排序
+})();
+</script>
+</body>
+</html>

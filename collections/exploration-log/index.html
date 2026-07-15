@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FF14 探索筆記追蹤 — 查詢眺望地點、版本篩選、記錄完成進度">
+  <title>探索筆記追蹤 | 水神的工具箱</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-base:    #0a0c10;
+      --bg-surface: #0f1117;
+      --bg-card:    #14181f;
+      --bg-card-hover: #1a1f2b;
+      --border:     rgba(255,255,255,0.07);
+      --border-hover: rgba(200,169,110,0.4);
+
+      --gold:       #c8a96e;
+      --gold-light: #e2c98a;
+      --gold-dim:   rgba(200,169,110,0.15);
+      --purple:     #a78bfa;
+      --purple-dim: rgba(167,139,250,0.12);
+      --green:      #4ade80;
+      --green-dim:  rgba(74,222,128,0.12);
+      --blue:       #4fc3f7;
+      --blue-dim:   rgba(79,195,247,0.12);
+      --red:        #f87171;
+
+      --text-primary:   #e8eaf0;
+      --text-secondary: #8892a4;
+      --text-muted:     #717c91;
+
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --transition: 0.18s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 0%, rgba(200,169,110,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(74,222,128,0.04) 0%, transparent 60%);
+      pointer-events: none; z-index: 0;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .container {
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .page-header {
+      padding: 36px 0 28px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 28px;
+    }
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      padding: 6px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      transition: var(--transition);
+    }
+    .back-btn:hover { color: var(--gold); border-color: var(--border-hover); }
+
+    .page-title-wrap { flex: 1; }
+
+    .page-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--gold-light);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .page-subtitle {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    .progress-bar-wrap {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .progress-info {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--gold-light);
+      white-space: nowrap;
+    }
+    .progress-info span {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--text-secondary);
+      margin-left: 6px;
+    }
+
+    .progress-track {
+      flex: 1;
+      height: 8px;
+      background: var(--raise);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--green));
+      border-radius: 99px;
+      transition: width 0.4s ease;
+    }
+
+    .progress-pct {
+      font-size: 14px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+      align-items: center;
+    }
+
+    .search-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 180px;
+    }
+    .search-icon {
+      position: absolute;
+      left: 11px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+    .search-input {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-size: 14px;
+      padding: 9px 12px 9px 34px;
+      outline: none;
+      transition: var(--transition);
+    }
+    .search-input:focus { border-color: rgba(200,169,110,0.5); }
+    .search-input::placeholder { color: var(--text-muted); }
+
+    .own-toggle {
+      display: flex;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+    .own-btn {
+      padding: 8px 14px;
+      font-size: 12px;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+    .own-btn.active { background: var(--gold-dim); color: var(--gold); }
+    .own-btn:hover:not(.active) { color: var(--text-primary); }
+
+    .icon-btn {
+      padding: 8px 14px;
+      font-size: 12px;
+      cursor: pointer;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+    .icon-btn:hover { color: var(--text-primary); border-color: rgba(255,255,255,0.2); }
+    .clear-btn:hover { color: var(--red); border-color: rgba(248,113,113,0.4); }
+
+    .filter-section { margin-bottom: 18px; }
+    .filter-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .filter-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .filter-tag {
+      padding: 5px 13px;
+      font-size: 13px;
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      cursor: pointer;
+      background: transparent;
+      color: var(--text-secondary);
+      transition: var(--transition);
+    }
+    .filter-tag:hover { color: var(--text-primary); border-color: rgba(255,255,255,0.2); }
+    .filter-tag.active {
+      background: var(--gold-dim);
+      border-color: rgba(200,169,110,0.4);
+      color: var(--gold);
+    }
+
+    .result-meta { font-size: 13px; color: var(--text-muted); margin-bottom: 14px; }
+    .result-meta em { color: var(--text-secondary); font-style: normal; }
+
+    .bd-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 10px;
+    }
+
+    .bd-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      cursor: pointer;
+      transition: var(--transition);
+      user-select: none;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .bd-card:focus-visible {
+      outline: 2px solid color-mix(in srgb, var(--accent) 60%, transparent);
+      outline-offset: 2px;
+    }
+    .bd-card:hover {
+      background: var(--bg-card-hover);
+      border-color: rgba(200,169,110,0.3);
+    }
+    .bd-card.owned {
+      border-color: rgba(200,169,110,0.5);
+      background: rgba(200,169,110,0.06);
+    }
+    .bd-card.owned::before {
+      content: '\2713';
+      position: absolute;
+      top: 8px; right: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--gold);
+    }
+
+    .bd-icon-wrap { display: flex; gap: 6px; align-items: center; }
+    .bd-icon-emoji {
+      width: 48px; height: 48px;
+      border-radius: var(--radius-sm);
+      background: var(--raise);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+
+    .bd-name {
+      font-size: 16px; font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.3; padding-right: 16px;
+    }
+    .bd-card.owned .bd-name { color: var(--gold); }
+
+    .bd-meta { font-size: 11px; color: var(--text-muted); }
+
+    .bd-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 2px; }
+    .tag {
+      font-size: 11px; padding: 3px 8px;
+      border-radius: 99px;
+      background: var(--raise);
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    .tag.patch-arr { background: rgba(74,222,128,0.1);   color: #4ade80; border-color: rgba(74,222,128,0.2); }
+    .tag.patch-hw  { background: rgba(79,195,247,0.1);   color: #4fc3f7; border-color: rgba(79,195,247,0.2); }
+    .tag.patch-sb  { background: rgba(167,139,250,0.1);  color: #a78bfa; border-color: rgba(167,139,250,0.2); }
+    .tag.patch-shb { background: rgba(200,169,110,0.12); color: #c8a96e; border-color: rgba(200,169,110,0.25); }
+    .tag.patch-ew  { background: rgba(248,113,113,0.1);  color: #f87171; border-color: rgba(248,113,113,0.2); }
+    .tag.patch-dt  { background: rgba(255,165,0,0.12);   color: #ffa94d; border-color: rgba(255,165,0,0.25); }
+
+    /* ── 取得方式（預設顯示，最優先資訊）── */
+    .bd-detail {
+      display: block;
+      margin-top: 2px;
+      padding-left: 9px;
+      border-left: 2px solid var(--gold);
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+    .bd-detail:empty { display: none; }
+    .bd-detail::before {
+      content: "取得方式";
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .03em;
+      color: var(--gold);
+      margin-bottom: 2px;
+    }
+    .bd-detail .detail-line { margin-top: 2px; }
+    .bd-detail .detail-line b { color: var(--text-secondary); font-weight: 500; }
+
+    .empty-state {
+      text-align: center; padding: 60px 20px;
+      color: var(--text-muted); font-size: 14px;
+    }
+
+    .page-footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 0 32px;
+      text-align: center;
+      margin-top: 48px;
+    }
+    .footer-text { font-size: 12px; color: var(--text-muted); }
+    .footer-text a { color: var(--text-secondary); transition: var(--transition); }
+    .footer-text a:hover { color: var(--gold); }
+
+    @media (max-width: 600px) {
+      .page-header { flex-wrap: wrap; padding: 24px 0 20px; }
+      .bd-grid { grid-template-columns: 1fr 1fr; }
+      .progress-bar-wrap { flex-wrap: wrap; }
+    }
+    @media (max-width: 380px) {
+      .bd-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+  <script src="../../assets/js/patch-gate.js"></script>
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <script src="../../assets/js/theme.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+  <header class="page-header">
+    <a href="../../" class="back-btn">&larr; 水神的工具箱</a>
+    <div class="page-title-wrap">
+      <h1 class="page-title">&#x1F441;&#xFE0F; 探索筆記追蹤</h1>
+      <p class="page-subtitle">點擊卡片標記已完成，進度自動儲存於瀏覽器</p>
+    </div>
+  </header>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-info">
+      <span id="ownedCount">0</span> / <span id="totalCount">0</span>
+      <span>已完成</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill" style="width:0%"></div>
+    </div>
+    <div class="progress-pct" id="progressPct">0%</div>
+  </div>
+
+  <div class="toolbar">
+    <div class="search-wrap">
+      <span class="search-icon">&#x1F50D;</span>
+      <input class="search-input" type="text" id="searchInput" placeholder="搜尋地點名稱、英文名稱、區域…" autocomplete="off">
+    </div>
+    <div class="own-toggle">
+      <button class="own-btn active" data-own="all">全部</button>
+      <button class="own-btn" data-own="owned">已完成</button>
+      <button class="own-btn" data-own="missing">未完成</button>
+    </div>
+    <button class="icon-btn" id="markAllBtn" title="將目前篩選結果全部標記為已完成">✓ 標記全部</button>
+    <button class="icon-btn" id="unmarkAllBtn" title="取消目前篩選結果的已完成標記">✗ 取消全部</button>
+    <button class="icon-btn" id="exportBtn">匯出進度</button>
+    <button class="icon-btn" id="importBtn">匯入進度</button>
+    <input type="file" id="importFile" accept="application/json" style="display:none">
+    <button class="icon-btn clear-btn" id="clearBtn">清除進度</button>
+  </div>
+
+  <div class="filter-section">
+    <div class="filter-label">版本</div>
+    <div class="filter-tags" id="patchFilters"></div>
+  </div>
+
+  <div class="filter-section">
+    <div class="filter-label">區域</div>
+    <div class="filter-tags" id="zoneFilters"></div>
+  </div>
+
+  <div class="result-meta" id="resultMeta"></div>
+  <div class="bd-grid" id="bdGrid"></div>
+  <div class="empty-state" id="emptyState" style="display:none">找不到符合條件的探索筆記地點</div>
+
+</div>
+
+<footer class="page-footer">
+  <div class="container">
+    <p class="footer-text">
+      <a href="../../">水神的工具箱</a> &middot; 資料來源：遊戲本體、<a href="https://xivapi.com" target="_blank">XIVAPI</a>
+    </p>
+    <p class="footer-text" style="margin-top:4px">
+      FINAL FANTASY XIV &copy; SQUARE ENIX　此為玩家自製非官方工具
+    </p>
+  </div>
+</footer>
+
+<script>
+(function() {
+  var STORAGE_KEY = 'ffxiv_exploration_log_done';
+  var DATA_URL = '../../data/exploration-log.json';
+
+  var PATCH_LABELS = {'2.0':'2.x 原初之地','3.0':'3.x 蒼天之禁地','4.0':'4.x 紅蓮之狂潮','5.0':'5.x 暗影之逆焰','6.0':'6.x 曉月之終途','7.0':'7.x 金曦之遺輝'};
+  var PATCH_ORDER = ['2.0','3.0','4.0','5.0','6.0','7.0'];
+  var PATCH_CSS   = {'2.0':'patch-arr','3.0':'patch-hw','4.0':'patch-sb','5.0':'patch-shb','6.0':'patch-ew','7.0':'patch-dt'};
+
+  var BD_DATA = [];
+  var PATCHES = [];
+  var ZONES = [];
+  var owned = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
+  var filterOwn = 'all';
+  var filterPatch = null;
+  var filterZone = null;
+  var searchQ = '';
+
+  function keyOf(b) { return 'id:' + b.id; }
+
+  function save() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(Array.from(owned)));
+  }
+
+  function toggle(k) {
+    if (owned.has(k)) owned.delete(k); else owned.add(k);
+    save(); updateProgress(); renderGrid();
+  }
+
+  function updateProgress() {
+    var total = BD_DATA.length;
+    var count = BD_DATA.filter(function(b){ return owned.has(keyOf(b)); }).length;
+    var pct = total ? Math.round(count / total * 100) : 0;
+    document.getElementById('ownedCount').textContent = count;
+    document.getElementById('totalCount').textContent = total;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressPct').textContent = pct + '%';
+    try { localStorage.setItem('ffxiv_snap_explog', JSON.stringify({ c: count, t: total })); } catch (e) {} // 首頁進度儀表板快照
+  }
+
+  function renderTagFilters(containerId, values, current, onClick, labelFn) {
+    var wrap = document.getElementById(containerId);
+    wrap.innerHTML = '';
+    values.forEach(function(v) {
+      var btn = document.createElement('button');
+      btn.className = 'filter-tag' + (current === v ? ' active' : '');
+      btn.textContent = labelFn ? labelFn(v) : v;
+      btn.addEventListener('click', function(){ onClick(v); });
+      wrap.appendChild(btn);
+    });
+  }
+
+  function renderPatchFilters() {
+    renderTagFilters('patchFilters', PATCHES, filterPatch,
+      function(v){ filterPatch = filterPatch === v ? null : v; renderPatchFilters(); renderGrid(); },
+      function(v){ return PATCH_LABELS[v] || v; }
+    );
+  }
+
+  function renderZoneFilters() {
+    renderTagFilters('zoneFilters', ZONES, filterZone,
+      function(v){ filterZone = filterZone === v ? null : v; renderZoneFilters(); renderGrid(); }
+    );
+  }
+
+  function pad(n) { return n < 10 ? '0' + n : '' + n; }
+  function fmtTime(start, end) {
+    if (start == null || end == null) return null;
+    var endH = end < start ? end + 24 : end;
+    return 'ET ' + pad(start) + ':00–' + pad(endH % 24) + ':59';
+  }
+
+  function filtered() {
+    return BD_DATA.filter(function(b) {
+      var k = keyOf(b);
+      if (filterOwn === 'owned'   && !owned.has(k)) return false;
+      if (filterOwn === 'missing' &&  owned.has(k)) return false;
+      if (filterPatch && b.patch !== filterPatch) return false;
+      if (filterZone  && b.zone  !== filterZone)  return false;
+      if (searchQ) {
+        var q = searchQ.toLowerCase();
+        var nm = b.name   && b.name.toLowerCase().indexOf(q)   >= 0;
+        var en = b.nameEn && b.nameEn.toLowerCase().indexOf(q) >= 0;
+        var zn = b.zone   && b.zone.toLowerCase().indexOf(q)   >= 0;
+        if (!nm && !en && !zn) return false;
+      }
+      return true;
+    });
+  }
+
+  function renderGrid() {
+    var list = filtered();
+    var grid  = document.getElementById('bdGrid');
+    var empty = document.getElementById('emptyState');
+    var meta  = document.getElementById('resultMeta');
+    grid.innerHTML = '';
+    if (list.length === 0) {
+      grid.style.display = 'none'; empty.style.display = '';
+    } else {
+      grid.style.display = ''; empty.style.display = 'none';
+    }
+    var ownedInView = list.filter(function(b){ return owned.has(keyOf(b)); }).length;
+    meta.innerHTML = '顯示 <em>' + list.length + '</em> / ' + BD_DATA.length + ' 個 &middot; 已完成 <em>' + ownedInView + '</em> / ' + list.length;
+
+    list.forEach(function(b) {
+      var k = keyOf(b);
+      var isOwned = owned.has(k);
+      var card = document.createElement('div');
+      card.className = 'bd-card' + (isOwned ? ' owned' : '');
+
+      var patchCss   = PATCH_CSS[b.patch] || '';
+      var patchLabel = PATCH_LABELS[b.patch] || b.patch || '';
+      var timeStr    = fmtTime(b.timeStart, b.timeEnd);
+
+      var detailLines = [];
+      detailLines.push('<div class="detail-line"><b>地點：</b>' + (b.zone || '') + '</div>');
+      if (timeStr) detailLines.push('<div class="detail-line"><b>時間：</b>' + timeStr + '</div>');
+      if (b.weather) detailLines.push('<div class="detail-line"><b>天氣：</b>' + b.weather + '</div>');
+      detailLines.push('<div class="detail-line"><b>觸發：</b>' + (b.trigger || '') + '</div>');
+
+      var tagsHtml = '<span class="tag ' + patchCss + '">' + patchLabel + '</span>';
+      if (timeStr) tagsHtml += '<span class="tag">' + timeStr + '</span>';
+
+      card.innerHTML =
+        '<div class="bd-icon-wrap"><div class="bd-icon-emoji">&#x1F441;&#xFE0F;</div></div>' +
+        '<div class="bd-name">' + b.name + '</div>' +
+        '<div class="bd-meta">No.' + b.id + ' &middot; ' + (b.zone || '') + '</div>' +
+        '<div class="bd-tags">' + tagsHtml + '</div>' +
+        '<div class="bd-detail">' + detailLines.join('') + '</div>';
+
+      card.tabIndex = 0;
+      card.setAttribute('role', 'button');
+      card.setAttribute('aria-pressed', isOwned ? 'true' : 'false');
+      card.addEventListener('click', (function(key){ return function(){ toggle(key); }; })(k));
+      card.addEventListener('keydown', (function(key){ return function(ev){
+        if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); toggle(key); }
+      }; })(k));
+      grid.appendChild(card);
+    });
+  }
+
+  function exportProgress() {
+    var payload = {schema:'exploration-log-progress', exported: new Date().toISOString(), owned: Array.from(owned)};
+    var blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = 'exploration-log-progress.json';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  function importProgress(file) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        var data = JSON.parse(e.target.result);
+        // 舊版備份為純陣列；新版物件需驗 schema，避免誤將其他頁的進度檔匯入
+        if (!Array.isArray(data) && data.schema !== 'exploration-log-progress') {
+          alert('匯入失敗：這不是「探索筆記」的進度檔'); return;
+        }
+        var list = Array.isArray(data) ? data : data.owned;
+        if (!Array.isArray(list)) throw new Error('格式錯誤');
+        if (owned.size && !confirm('匯入將以檔案內容（' + list.length + ' 筆）取代目前的 ' + owned.size + ' 筆記錄，確定嗎？')) return;
+        owned = new Set(list);
+        save(); updateProgress(); renderGrid();
+        alert('匯入成功，共 ' + owned.size + ' 筆已完成記錄');
+      } catch(err) { alert('匯入失敗：檔案格式不正確'); }
+    };
+    reader.readAsText(file);
+  }
+
+  document.querySelectorAll('.own-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      filterOwn = btn.dataset.own;
+      document.querySelectorAll('.own-btn').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      renderGrid();
+    });
+  });
+
+  document.getElementById('searchInput').addEventListener('input', function(e) {
+    searchQ = e.target.value.trim(); renderGrid();
+  });
+
+  document.getElementById('exportBtn').addEventListener('click', exportProgress);
+  document.getElementById('importBtn').addEventListener('click', function(){ document.getElementById('importFile').click(); });
+  document.getElementById('importFile').addEventListener('change', function(e) {
+    var file = e.target.files[0];
+    if (file) importProgress(file);
+    e.target.value = '';
+  });
+  document.getElementById('clearBtn').addEventListener('click', function() {
+    if (!owned.size) { alert('目前沒有已完成記錄'); return; }
+    if (!confirm('確定要清除全部 ' + owned.size + ' 筆完成記錄嗎？\n將先自動下載一份備份檔以防誤刪。')) return;
+    exportProgress();
+    owned.clear(); save(); updateProgress(); renderGrid();
+  });
+
+  // ── Batch mark ──
+  document.getElementById('markAllBtn').addEventListener('click', function() {
+    var toAdd = filtered().filter(function(b){ return !owned.has(keyOf(b)); });
+    if (!toAdd.length) { alert('目前篩選結果都已標記'); return; }
+    if (!confirm('將目前篩選結果中未標記的 ' + toAdd.length + ' 筆標記為已完成？')) return;
+    toAdd.forEach(function(b){ owned.add(keyOf(b)); });
+    save(); updateProgress(); renderGrid();
+  });
+  document.getElementById('unmarkAllBtn').addEventListener('click', function() {
+    var toDel = filtered().filter(function(b){ return owned.has(keyOf(b)); });
+    if (!toDel.length) { alert('目前篩選結果沒有已標記項目'); return; }
+    if (!confirm('取消目前篩選結果中 ' + toDel.length + ' 筆的已完成標記？')) return;
+    toDel.forEach(function(b){ owned.delete(keyOf(b)); });
+    save(); updateProgress(); renderGrid();
+  });
+
+  fetch(DATA_URL)
+    .then(function(res) {
+      if (!res.ok) throw new Error('無法載入資料 (' + res.status + ')');
+      return res.json();
+    })
+    .then(async function(json) {
+      var raw = (json && json.data) ? json.data : [];
+      var gp = await PatchGate.loadGamePatch('../../data/_meta.json');
+      // 台服未開放（patch > gamePatch）者隱藏
+      BD_DATA = raw.filter(function(e){ return PatchGate.released(e.patch, gp); });
+      BD_DATA.sort(function(a, b){ return (a.id || 0) - (b.id || 0); });
+
+      var patchSet = new Set(BD_DATA.map(function(b){ return b.patch; }).filter(Boolean));
+      PATCHES = PATCH_ORDER.filter(function(p){ return patchSet.has(p); });
+
+      var zoneSeen = new Set();
+      ZONES = [];
+      BD_DATA.forEach(function(b) {
+        if (b.zone && !zoneSeen.has(b.zone)) { zoneSeen.add(b.zone); ZONES.push(b.zone); }
+      });
+
+      renderPatchFilters();
+      renderZoneFilters();
+      updateProgress();
+      renderGrid();
+    })
+    .catch(function(err) {
+      document.getElementById('bdGrid').style.display = 'none';
+      var empty = document.getElementById('emptyState');
+      empty.style.display = '';
+      empty.textContent = '資料載入失敗：' + err.message;
+    });
+})();
+</script>
+</body>
+</html>

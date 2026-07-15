@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FF14 採集紀錄追蹤 — 查詢採礦工/園藝工採集點、座標、限時開放時間，追蹤已採紀錄">
+  <title>採集紀錄追蹤 | 水神的工具箱</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-base:    #0a0c10;
+      --bg-surface: #0f1117;
+      --bg-card:    #14181f;
+      --bg-card-hover: #1a1f2b;
+      --border:     rgba(255,255,255,0.07);
+      --border-hover: rgba(200,169,110,0.4);
+      --gold:       #c8a96e;
+      --gold-light: #e2c98a;
+      --gold-dim:   rgba(200,169,110,0.15);
+      --purple:     #a78bfa;
+      --purple-dim: rgba(167,139,250,0.12);
+      --green:      #4ade80;
+      --green-dim:  rgba(74,222,128,0.12);
+      --blue:       #4fc3f7;
+      --blue-dim:   rgba(79,195,247,0.12);
+      --orange:     #fb923c;
+      --orange-dim: rgba(251,146,60,0.12);
+      --text:       #e8e3d8;
+      --text-dim:   #9a9590;
+      --text-muted: #6b6560;
+      --radius:     8px;
+    }
+
+    html { font-size: 17.5px; }
+    body { background: var(--bg-base); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+
+    .nav {
+      background: var(--bg-surface); border-bottom: 1px solid var(--border);
+      padding: 0 1.5rem; height: 52px; display: flex; align-items: center; gap: 0.75rem;
+    }
+    .nav-back { color: var(--text-dim); text-decoration: none; font-size: 0.85rem; display: flex; align-items: center; gap: 0.4rem; transition: color 0.2s; }
+    .nav-back:hover { color: var(--gold); }
+    .nav-sep { color: var(--text-muted); font-size: 0.85rem; }
+    .nav-title { color: var(--text); font-size: 0.9rem; font-weight: 600; }
+
+    .hero {
+      background: linear-gradient(135deg, var(--bg-surface), var(--bg-base));
+      border-bottom: 1px solid var(--border); padding: 1.5rem;
+    }
+    .hero-inner { max-width: 1500px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .hero h1 { font-size: 1.4rem; font-weight: 700; }
+    .progress-wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 0.3rem; }
+    .progress-text { font-size: 0.8rem; color: var(--text-dim); }
+    .progress-bar { width: 200px; height: 8px; background: var(--bg-card); border-radius: 4px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--orange), var(--gold)); border-radius: 4px; transition: width 0.4s; }
+
+    .controls { max-width: 1500px; margin: 0 auto; padding: 1rem 1.5rem; display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; }
+    .search-wrap { position: relative; flex: 1; min-width: 200px; max-width: 360px; }
+    .search-wrap input {
+      width: 100%; background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); color: var(--text); padding: 0.5rem 0.5rem 0.5rem 2.2rem;
+      font-size: 0.85rem; outline: none; transition: border-color 0.2s;
+    }
+    .search-wrap input:focus { border-color: var(--gold); }
+    .search-wrap .si { position: absolute; left: 0.65rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
+
+    .filter-row { display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center; }
+    .filter-btn {
+      font-size: 0.75rem; padding: 0.3rem 0.7rem; border-radius: 5px; cursor: pointer;
+      border: 1px solid var(--border); background: var(--bg-surface); color: var(--text-dim); transition: all 0.15s;
+    }
+    .filter-btn.active { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); }
+    select.filter-select {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 5px;
+      color: var(--text-dim); padding: 0.3rem 0.6rem; font-size: 0.78rem; outline: none; cursor: pointer;
+    }
+    select.filter-select:focus { border-color: var(--gold); }
+
+    .result-info { max-width: 1500px; margin: 0 auto; padding: 0 1.5rem 0.5rem; font-size: 0.78rem; color: var(--text-muted); }
+
+    /* NODE LIST */
+    .node-list { max-width: 1500px; margin: 0 auto; padding: 0 1.5rem 2rem; display: flex; flex-direction: column; gap: 0.5rem; }
+
+    .node-card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 0.75rem 1rem; transition: border-color 0.2s, background 0.2s;
+      content-visibility: auto; contain-intrinsic-size: auto 140px; /* 一次渲染全部，離屏卡片跳過排版（與收藏頁一致） */
+    }
+    .node-card:hover { border-color: var(--border-hover); background: var(--bg-card-hover); }
+    .node-card.all-done { border-color: rgba(74,222,128,0.3); background: rgba(74,222,128,0.03); }
+
+    .node-header { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; margin-bottom: 0.5rem; }
+    .node-map { font-size: 0.85rem; font-weight: 600; }
+    .node-coords { font-size: 0.75rem; color: var(--text-muted); }
+    .node-tags { display: flex; gap: 0.3rem; flex-wrap: wrap; }
+
+    .tag {
+      font-size: 0.65rem; padding: 0.1rem 0.4rem; border-radius: 3px;
+      border: 1px solid; font-weight: 500;
+    }
+    .tag-min  { color: var(--orange); border-color: rgba(251,146,60,0.3);  background: var(--orange-dim); }
+    .tag-btn  { color: var(--green);  border-color: rgba(74,222,128,0.3);  background: var(--green-dim); }
+    .tag-lim  { color: var(--gold);   border-color: rgba(200,169,110,0.3); background: var(--gold-dim); }
+    .tag-leg  { color: var(--purple); border-color: rgba(167,139,250,0.3); background: var(--purple-dim); }
+    .tag-eph  { color: var(--blue);   border-color: rgba(79,195,247,0.3);  background: var(--blue-dim); }
+    .tag-ver  { color: var(--text-dim); border-color: var(--border); background: var(--raise); }
+
+    .node-time { font-size: 0.75rem; color: var(--gold); }
+
+    /* ITEMS */
+    .items-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .item-chip {
+      display: flex; align-items: center; gap: 0.35rem;
+      background: var(--bg-surface); border: 1px solid var(--border);
+      border-radius: 5px; padding: 0.3rem 0.65rem;
+      font-size: 0.78rem; cursor: pointer; transition: all 0.15s;
+      user-select: none;
+    }
+    .item-chip:hover { border-color: var(--gold-light); }
+    .item-chip.owned { background: var(--green-dim); border-color: rgba(74,222,128,0.3); color: var(--green); }
+    .item-chip.owned::before { content: '✓ '; font-size: 0.7rem; }
+
+    /* PAGINATION */
+    .pagination { max-width: 1500px; margin: 0 auto; padding: 0 1.5rem 3rem; display: flex; gap: 0.4rem; justify-content: center; flex-wrap: wrap; }
+    .page-btn {
+      font-size: 0.8rem; padding: 0.35rem 0.7rem; border-radius: 5px; cursor: pointer;
+      border: 1px solid var(--border); background: var(--bg-card); color: var(--text-dim); transition: all 0.15s;
+    }
+    .page-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .page-btn.active { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); font-weight: 600; }
+    .page-btn:disabled { opacity: 0.3; cursor: default; }
+
+    /* VIEW TOGGLE */
+    .view-toggle { display: flex; gap: 0; border: 1px solid var(--border); border-radius: 5px; overflow: hidden; }
+    .view-toggle button {
+      font-size: 0.75rem; padding: 0.3rem 0.7rem; cursor: pointer; border: none;
+      background: var(--bg-surface); color: var(--text-dim); transition: all 0.15s;
+    }
+    .view-toggle button.active { background: var(--gold-dim); color: var(--gold); }
+
+    /* MAP VIEW */
+    .map-view { max-width: 1500px; margin: 0 auto; padding: 0 1.5rem 2rem; }
+    .map-bar { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; margin-bottom: 0.75rem; }
+    .map-canvas {
+      position: relative; width: 100%; max-width: 720px; margin: 0 auto;
+      aspect-ratio: 1 / 1; background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+    }
+    .map-canvas img { width: 100%; height: 100%; object-fit: cover; display: block; user-select: none; }
+    .map-empty { display: flex; align-items: center; justify-content: center; height: 100%; color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 1rem; }
+    .map-dot {
+      position: absolute; width: 16px; height: 16px; border-radius: 50%;
+      transform: translate(-50%, -50%); cursor: pointer; border: 2px solid rgba(0,0,0,0.55);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.25); transition: transform 0.1s;
+    }
+    .map-dot:hover, .map-dot.sel { transform: translate(-50%, -50%) scale(1.45); z-index: 5; }
+    .map-dot.job-min { background: var(--orange); }
+    .map-dot.job-btn { background: var(--green); }
+    .map-dot.done    { background: var(--gold); box-shadow: 0 0 0 2px rgba(200,169,110,0.6); }
+    .map-legend { font-size: 0.72rem; color: var(--text-muted); display: flex; gap: 0.9rem; flex-wrap: wrap; margin-top: 0.5rem; }
+    .map-legend span { display: inline-flex; align-items: center; gap: 0.3rem; }
+    .map-legend i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+    .map-node-info { max-width: 720px; margin: 0.75rem auto 0; }
+    .map-node-info:empty { display: none; }
+  </style>
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <script src="../../assets/js/theme.js"></script>
+</head>
+<body>
+<nav class="nav">
+  <a href="../../" class="nav-back">&larr; 水神的工具箱</a>
+  <span class="nav-sep">›</span>
+  <span class="nav-title">⛏️ 採集紀錄追蹤</span>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <h1>⛏️ 採集紀錄追蹤</h1>
+    <div class="progress-wrap">
+      <div class="progress-text" id="progressText">載入中…</div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="search-wrap">
+    <span class="si">🔍</span>
+    <input type="text" id="searchInput" placeholder="搜尋物品名稱或地區…" oninput="onFilter()">
+  </div>
+
+  <div class="filter-row">
+    <button class="filter-btn active" id="fAll"    onclick="setStatusFilter('all')">全部</button>
+    <button class="filter-btn"        id="fDone"   onclick="setStatusFilter('done')">全採完</button>
+    <button class="filter-btn"        id="fPart"   onclick="setStatusFilter('partial')">部分未採</button>
+    <button class="filter-btn"        id="fNone"   onclick="setStatusFilter('none')">全未採</button>
+  </div>
+
+  <div class="filter-row">
+    <select class="filter-select" id="jobFilter" onchange="onFilter()">
+      <option value="">全職業</option>
+      <option value="採礦工">⛏ 採礦工</option>
+      <option value="園藝工">🌿 園藝工</option>
+    </select>
+    <select class="filter-select" id="typeFilter" onchange="onFilter()">
+      <option value="">全種類</option>
+      <option value="limited">限時節點</option>
+      <option value="legendary">傳說節點</option>
+      <option value="ephemeral">短暫節點</option>
+    </select>
+    <select class="filter-select" id="patchFilter" onchange="onFilter()">
+      <option value="">全版本</option>
+      <option value="2">2.x 原初之地</option>
+      <option value="3">3.x 蒼天之禁地</option>
+      <option value="4">4.x 紅蓮之狂潮</option>
+      <option value="5">5.x 暗影之逆焰</option>
+      <option value="6">6.x 曉月之終途</option>
+      <option value="7">7.x 金曦之遺輝</option>
+    </select>
+  </div>
+
+    <div class="view-toggle" id="viewToggle">
+      <button id="vList" class="active" onclick="setView('list')">☰ 清單</button>
+      <button id="vMap" onclick="setView('map')">🗺️ 地圖</button>
+    </div>
+
+  <button class="filter-btn" onclick="resetAll()" style="margin-left:auto">重置篩選</button>
+  <button class="filter-btn" id="exportBtn" onclick="exportProgress()">匯出進度</button>
+  <button class="filter-btn" id="importBtn">匯入進度</button>
+  <input type="file" id="importFile" accept="application/json" style="display:none">
+  <button class="filter-btn" id="clearBtn">清除進度</button>
+</div>
+
+<div class="result-info" id="resultInfo"></div>
+<div class="node-list" id="nodeList"></div>
+<div class="pagination" id="pagination"></div>
+
+<div class="map-view" id="mapView" style="display:none">
+  <div class="map-bar">
+    <select class="filter-select" id="mapSelect" onchange="onMapSelect()"></select>
+  </div>
+  <div class="map-canvas" id="mapCanvas"></div>
+  <div class="map-legend">
+    <span><i style="background:var(--orange)"></i>採礦工</span>
+    <span><i style="background:var(--green)"></i>園藝工</span>
+    <span><i style="background:var(--gold)"></i>已全採</span>
+    <span>點圈可勾選追蹤</span>
+  </div>
+  <div class="map-node-info" id="mapNodeInfo"></div>
+</div>
+
+<script>
+const GATHER_URL = '../../data/gathering.json';
+const ITEMS_URL  = '../../data/items.json';
+const MAPS_URL   = '../../data/maps.json';
+const PAGE_SIZE  = 40;
+const LS_KEY     = 'ffxiv_gathering_items_owned';
+
+// 基礎元素素材（六元素 × 碎晶/水晶/晶簇 = id 2–19）：每個採集點都會掉，屬雜訊，
+// 不在採集點顯示、也不計入進度（與 scripts/patch-gathering-version.mjs 的 CRYSTAL 一致）。
+const CRYSTAL_IDS = new Set();
+for (let i = 2; i <= 19; i++) CRYSTAL_IDS.add(i);
+
+let nodes = [];
+let itemMap = {};
+let mapMap = {};
+let mapMeta = {};
+let filtered = [];
+let owned = new Set(JSON.parse(localStorage.getItem(LS_KEY) || '[]'));
+let statusFilter = 'all';
+let page = 0;
+let viewMode = 'list';
+let currentMapId = null;
+let selectedNodeId = null;
+
+// total unique items for progress
+let totalItems = 0;
+
+Promise.all([
+  fetch(GATHER_URL).then(r => r.json()),
+  fetch(ITEMS_URL).then(r => r.json()),
+  fetch(MAPS_URL).then(r => r.json()),
+]).then(([gd, id, md]) => {
+  itemMap = {};
+  id.data.forEach(x => { itemMap[x.id] = x.name; });
+  mapMap = {};
+  mapMeta = {};
+  md.data.forEach(x => { mapMap[x.id] = x.name; mapMeta[x.id] = x; });
+
+  // 物品繁中名以 items.json(tw-items) 為唯一真實來源：對不到名稱＝台服未開放，直接濾除該產物
+  // （見 data/SCHEMA.md 採集點顯示規則）；同時濾除基礎元素水晶/碎晶/晶簇（雜訊）。
+  // 節點濾完無可顯示產物則整筆不顯示。
+  const keep = (i) => (i in itemMap) && !CRYSTAL_IDS.has(i);
+  nodes = gd.data.map(n => ({
+    ...n,
+    items: (n.items || []).filter(keep),
+    hiddenItems: (n.hiddenItems || []).filter(keep),
+  })).filter(n => n.items.length + n.hiddenItems.length > 0);
+
+  // count unique items for progress
+  const allItemIds = new Set();
+  nodes.forEach(n => n.items.concat(n.hiddenItems).forEach(i => allItemIds.add(i)));
+  totalItems = allItemIds.size;
+
+  onFilter();
+});
+
+function setStatusFilter(f) {
+  statusFilter = f;
+  ['fAll','fDone','fPart','fNone'].forEach(id => document.getElementById(id).classList.remove('active'));
+  const map = { all:'fAll', done:'fDone', partial:'fPart', none:'fNone' };
+  document.getElementById(map[f]).classList.add('active');
+  page = 0;
+  onFilter();
+}
+
+function nodeStatus(n) {
+  const all = (n.items || []).concat(n.hiddenItems || []);
+  if (all.length === 0) return 'empty';
+  const cnt = all.filter(i => owned.has(i)).length;
+  if (cnt === 0) return 'none';
+  if (cnt === all.length) return 'done';
+  return 'partial';
+}
+
+function onFilter() {
+  const q   = document.getElementById('searchInput').value.trim().toLowerCase();
+  const job  = document.getElementById('jobFilter').value;
+  const type = document.getElementById('typeFilter').value;
+  const ver  = document.getElementById('patchFilter').value;
+
+  filtered = nodes.filter(n => {
+    if (job && n.job !== job) return false;
+    if (type === 'limited'   && !n.limited)   return false;
+    if (type === 'legendary' && !n.legendary) return false;
+    if (type === 'ephemeral' && !n.ephemeral) return false;
+    if (ver && String(n.patch || '').split('.')[0] !== ver) return false;
+
+    const st = nodeStatus(n);
+    if (statusFilter === 'done'    && st !== 'done')   return false;
+    if (statusFilter === 'partial' && st !== 'partial') return false;
+    if (statusFilter === 'none'    && st !== 'none')    return false;
+
+    if (q) {
+      const mapName = (mapMap[n.coords?.mapId] || '').toLowerCase();
+      const itemNames = (n.items || []).map(i => (itemMap[i] || '').toLowerCase()).join(' ');
+      if (!mapName.includes(q) && !itemNames.includes(q)) return false;
+    }
+    return true;
+  });
+
+  page = 0;
+  renderCurrent();
+}
+
+function renderCurrent() {
+  updateProgress();
+  if (viewMode === 'map') renderMap();
+  else render();
+}
+
+function nodeCardHTML(n) {
+  const st = nodeStatus(n);
+  const mapName = mapMap[n.coords?.mapId] || '未知地區';
+  const x = n.coords?.x?.toFixed(1);
+  const y = n.coords?.y?.toFixed(1);
+
+  const allItems = (n.items || []).concat(n.hiddenItems || []);
+  const isHidden = (id) => !(n.items || []).includes(id);
+
+  const spawnStr = n.spawns?.length
+    ? n.spawns.map(h => `${h}:00`).join('、') + ` ET（${n.duration/60}h）`
+    : '';
+
+  return `
+<div class="node-card${st === 'done' ? ' all-done' : ''}">
+  <div class="node-header">
+    <span class="node-map">${mapName}</span>
+    ${x ? `<span class="node-coords">(${x}, ${y})</span>` : ''}
+    <div class="node-tags">
+      <span class="tag ${n.job === '採礦工' ? 'tag-min' : 'tag-btn'}">${n.job} Lv${n.level}</span>
+      ${n.legendary ? '<span class="tag tag-leg">傳說</span>' : ''}
+      ${n.ephemeral ? '<span class="tag tag-eph">短暫</span>' : ''}
+      ${n.limited && !n.legendary && !n.ephemeral ? '<span class="tag tag-lim">限時</span>' : ''}
+      ${n.patch ? `<span class="tag tag-ver">v${n.patch}</span>` : ''}
+    </div>
+    ${spawnStr ? `<span class="node-time">⏰ ${spawnStr}</span>` : ''}
+  </div>
+  <div class="items-row">
+    ${allItems.map(id => {
+      const name = itemMap[id];
+      const isOwned = owned.has(id);
+      const hidden = isHidden(id) ? ' 🔒' : '';
+      return `<span class="item-chip${isOwned?' owned':''}" onclick="toggleItem(${id}, this)">${name}${hidden}</span>`;
+    }).join('')}
+  </div>
+</div>`;
+}
+
+function render() {
+  const start = page * PAGE_SIZE;
+  const pageData = filtered.slice(start, start + PAGE_SIZE);
+
+  document.getElementById('resultInfo').textContent =
+    `顯示 ${filtered.length} 個節點（共 ${nodes.length} 個）`;
+
+  document.getElementById('nodeList').innerHTML = pageData.map(nodeCardHTML).join('');
+
+  renderPagination();
+}
+
+function renderPagination() {
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  if (totalPages <= 1) { document.getElementById('pagination').innerHTML = ''; return; }
+
+  let html = '';
+  html += `<button class="page-btn" ${page===0?'disabled':''} onclick="goPage(${page-1})">‹</button>`;
+  for (let i = 0; i < totalPages; i++) {
+    if (totalPages > 10 && Math.abs(i - page) > 3 && i !== 0 && i !== totalPages-1) {
+      if (i === 1 || i === totalPages-2) html += `<span style="color:var(--text-muted);padding:0 0.3rem">…</span>`;
+      continue;
+    }
+    html += `<button class="page-btn${i===page?' active':''}" onclick="goPage(${i})">${i+1}</button>`;
+  }
+  html += `<button class="page-btn" ${page===totalPages-1?'disabled':''} onclick="goPage(${page+1})">›</button>`;
+  document.getElementById('pagination').innerHTML = html;
+}
+
+function goPage(p) {
+  page = p;
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── 地圖檢視 ──
+function setView(mode) {
+  viewMode = mode;
+  document.getElementById('vList').classList.toggle('active', mode === 'list');
+  document.getElementById('vMap').classList.toggle('active', mode === 'map');
+  document.getElementById('nodeList').style.display   = mode === 'list' ? '' : 'none';
+  document.getElementById('pagination').style.display = mode === 'list' ? '' : 'none';
+  document.getElementById('mapView').style.display    = mode === 'map'  ? '' : 'none';
+  renderCurrent();
+}
+
+// 遊戲座標 → 底圖 0..1 比例（FFXIV 標準式，靠 Map sheet 的 sizeFactor）
+const clamp01 = (v) => Math.max(0, Math.min(1, v));
+const coordFrac = (c, sizeFactor) => ((c - 1) * (sizeFactor / 100)) / 41;
+
+function renderMap() {
+  // 依 mapId 分組（排除 mapId=0 / 無 maps.json 對應的特殊採集點）
+  const byMap = new Map();
+  filtered.forEach(n => {
+    const mid = n.coords?.mapId;
+    if (!mid || !mapMeta[mid]) return;
+    if (!byMap.has(mid)) byMap.set(mid, []);
+    byMap.get(mid).push(n);
+  });
+  const plotted = [...byMap.values()].reduce((a, v) => a + v.length, 0);
+  const noMapCount = filtered.length - plotted;
+
+  const opts = [...byMap.entries()].sort((a, b) => b[1].length - a[1].length);
+  const sel = document.getElementById('mapSelect');
+  const info = document.getElementById('resultInfo');
+
+  if (!opts.length) {
+    sel.innerHTML = '<option>（目前篩選無可定位採集點）</option>';
+    document.getElementById('mapCanvas').innerHTML =
+      '<div class="map-empty">目前篩選沒有可定位在地圖上的採集點。</div>';
+    document.getElementById('mapNodeInfo').innerHTML = '';
+    info.textContent = `地圖檢視：0 個可定位採集點${noMapCount ? `（${noMapCount} 個無座標未顯示）` : ''}`;
+    return;
+  }
+
+  if (currentMapId == null || !byMap.has(currentMapId)) currentMapId = opts[0][0];
+  sel.innerHTML = opts.map(([mid, arr]) =>
+    `<option value="${mid}"${mid === currentMapId ? ' selected' : ''}>${mapMap[mid]}（${arr.length}）</option>`
+  ).join('');
+
+  info.textContent =
+    `地圖檢視：${opts.length} 張地圖、${plotted} 個採集點${noMapCount ? `（另 ${noMapCount} 個無座標未顯示）` : ''}`;
+
+  plotMap(currentMapId, byMap.get(currentMapId));
+}
+
+function onMapSelect() {
+  currentMapId = +document.getElementById('mapSelect').value;
+  selectedNodeId = null;
+  renderMap();
+}
+
+function plotMap(mid, nodeArr) {
+  const m = mapMeta[mid];
+  const sf = m.sizeFactor || 100;
+  const dots = nodeArr.map(n => {
+    const fx = clamp01(coordFrac(n.coords.x, sf)) * 100;
+    const fy = clamp01(coordFrac(n.coords.y, sf)) * 100;
+    const st = nodeStatus(n);
+    const cls = st === 'done' ? 'done' : (n.job === '採礦工' ? 'job-min' : 'job-btn');
+    return `<div class="map-dot ${cls}${n.id === selectedNodeId ? ' sel' : ''}" data-nid="${n.id}" ` +
+      `style="left:${fx.toFixed(2)}%;top:${fy.toFixed(2)}%" onclick="selectMapNode(${n.id})" ` +
+      `title="${n.job} Lv${n.level} (${n.coords.x.toFixed(1)}, ${n.coords.y.toFixed(1)})"></div>`;
+  }).join('');
+
+  const imgSrc = `../..${m.image.local}`;
+  document.getElementById('mapCanvas').innerHTML =
+    `<img src="${imgSrc}" alt="${mapMap[mid]}" onerror="mapImgError(this, ${mid})">${dots}`;
+
+  if (!nodeArr.some(n => n.id === selectedNodeId)) selectedNodeId = null;
+  renderMapNodeInfo();
+}
+
+function mapImgError(img, mid) {
+  const canvas = img.parentElement;
+  img.remove();
+  if (!canvas.querySelector('.map-empty')) {
+    canvas.insertAdjacentHTML('afterbegin',
+      `<div class="map-empty">此地圖底圖尚未下載（${mapMap[mid]}）。<br>採集點座標仍可在「清單」檢視查看；於本機執行 <code>node scripts/download-maps.mjs</code> 可補齊底圖。</div>`);
+  }
+}
+
+function selectMapNode(nid) {
+  selectedNodeId = nid;
+  document.querySelectorAll('.map-dot').forEach(d => d.classList.toggle('sel', +d.dataset.nid === nid));
+  renderMapNodeInfo();
+}
+
+function renderMapNodeInfo() {
+  const info = document.getElementById('mapNodeInfo');
+  const n = selectedNodeId == null ? null : nodes.find(x => x.id === selectedNodeId);
+  info.innerHTML = n ? nodeCardHTML(n) : '';
+}
+
+function refreshMapDots() {
+  if (viewMode !== 'map') return;
+  document.querySelectorAll('.map-dot').forEach(d => {
+    const n = nodes.find(x => x.id === +d.dataset.nid);
+    if (!n) return;
+    const st = nodeStatus(n);
+    d.classList.remove('done', 'job-min', 'job-btn');
+    d.classList.add(st === 'done' ? 'done' : (n.job === '採礦工' ? 'job-min' : 'job-btn'));
+  });
+}
+
+function updateProgress() {
+  const ownedItems = [...owned].filter(id => {
+    // only count items that exist in our nodes
+    return nodes.some(n => (n.items||[]).concat(n.hiddenItems||[]).includes(id));
+  });
+  const cnt = ownedItems.length;
+  const pct = totalItems ? Math.round(cnt / totalItems * 100) : 0;
+  document.getElementById('progressText').textContent = `已採 ${cnt} / ${totalItems}（${pct}%）`;
+  document.getElementById('progressFill').style.width = pct + '%';
+  try { localStorage.setItem('ffxiv_snap_gatherlog', JSON.stringify({ c: cnt, t: totalItems })); } catch (e) {} // 首頁進度儀表板快照
+}
+
+function toggleItem(id, el) {
+  if (owned.has(id)) {
+    owned.delete(id);
+    el.classList.remove('owned');
+  } else {
+    owned.add(id);
+    el.classList.add('owned');
+  }
+  localStorage.setItem(LS_KEY, JSON.stringify([...owned]));
+  updateProgress();
+
+  // update parent card status
+  const card = el.closest('.node-card');
+  const chips = card.querySelectorAll('.item-chip');
+  const allOwned = [...chips].every(c => c.classList.contains('owned'));
+  card.classList.toggle('all-done', allOwned);
+
+  refreshMapDots();
+  if (statusFilter !== 'all') onFilter();
+}
+
+
+function resetAll() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('jobFilter').value = '';
+  document.getElementById('typeFilter').value = '';
+  document.getElementById('patchFilter').value = '';
+  setStatusFilter('all');
+}
+
+/* ── 進度匯出／匯入／清除 ── */
+function exportProgress() {
+  const payload = {
+    schema: 'gathering-log-progress',
+    exported: new Date().toISOString(),
+    owned: [...owned],
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'gathering-log-progress.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function importProgress(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data || data.schema !== 'gathering-log-progress' || !Array.isArray(data.owned)) {
+        alert('匯入失敗：這不是「採集紀錄」的進度檔'); return;
+      }
+      if (owned.size && !confirm(`匯入將以檔案內容（已採 ${data.owned.length} 筆）取代目前的 ${owned.size} 筆記錄，確定嗎？`)) return;
+      owned = new Set(data.owned);
+      localStorage.setItem(LS_KEY, JSON.stringify([...owned]));
+      updateProgress(); onFilter();
+      alert('匯入成功，共 ' + owned.size + ' 筆已採記錄');
+    } catch (err) {
+      alert('匯入失敗：檔案格式不正確');
+    }
+  };
+  reader.readAsText(file);
+}
+
+document.getElementById('importBtn').addEventListener('click', () => document.getElementById('importFile').click());
+document.getElementById('importFile').addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (file) importProgress(file);
+  e.target.value = '';
+});
+document.getElementById('clearBtn').addEventListener('click', () => {
+  if (!owned.size) { alert('目前沒有已採記錄'); return; }
+  if (!confirm('確定要清除全部 ' + owned.size + ' 筆已採記錄嗎？\n將先自動下載一份備份檔以防誤刪。')) return;
+  exportProgress();
+  owned.clear();
+  localStorage.setItem(LS_KEY, JSON.stringify([]));
+  updateProgress(); onFilter();
+});
+</script>
+</body>
+</html>

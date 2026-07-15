@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FF14 風脈泉追蹤器 — 依地區分組查詢，任務型標示完成任務，追蹤解鎖進度">
+  <title>風脈泉追蹤器 | 水神的工具箱</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-base:    #0a0c10;
+      --bg-surface: #0f1117;
+      --bg-card:    #14181f;
+      --bg-card-hover: #1a1f2b;
+      --border:     rgba(255,255,255,0.07);
+      --border-hover: rgba(200,169,110,0.4);
+
+      --gold:       #c8a96e;
+      --gold-light: #e2c98a;
+      --gold-dim:   rgba(200,169,110,0.15);
+      --purple:     #a78bfa;
+      --purple-dim: rgba(167,139,250,0.12);
+      --green:      #4ade80;
+      --green-dim:  rgba(74,222,128,0.12);
+      --blue:       #60a5fa;
+      --blue-dim:   rgba(96,165,250,0.12);
+      --cyan:       #4fc3f7;
+      --red:        #f87171;
+      --orange:     #ffa94d;
+
+      --text-primary:   #e8eaf0;
+      --text-secondary: #8892a4;
+      --text-muted:     #4a5568;
+
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --transition: 0.18s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    .zone-note { font-size: 13.5px; color: var(--text-secondary); background: var(--green-dim); border: 1px solid rgba(74,222,128,0.2); border-radius: var(--radius-sm); padding: 10px 14px; margin: 12px 0 6px; line-height: 1.6; }
+
+    /* 一區一地圖：地圖與清單並排，地圖 sticky 跟著捲動 */
+    .zone-content { display: grid; grid-template-columns: minmax(280px, 420px) minmax(0, 1fr); gap: 4px 28px; align-items: start; }
+    .zone-content.no-map { grid-template-columns: 1fr; }
+    .zc-map { position: sticky; top: 12px; }
+    .zc-list { min-width: 0; }
+    @media (max-width: 920px) {
+      .zone-content { grid-template-columns: 1fr; }
+      .zc-map { position: static; }
+    }
+    .zone-map-block { margin: 14px 0 12px; }
+    .zone-map { position: relative; max-width: 100%; border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; background: rgba(128,128,128,0.06); }
+    .zone-map img { display: block; width: 100%; height: auto; }
+    .zm-pin { position: absolute; width: 13px; height: 13px; border-radius: 50%; transform: translate(-50%,-50%); cursor: pointer; border: 2px solid rgba(0,0,0,0.55); box-shadow: 0 0 5px rgba(0,0,0,0.5); }
+    .zm-pin.field { background: var(--cyan); }
+    .zm-pin.quest { background: var(--purple); }
+    .zm-pin.done { background: var(--green); opacity: 0.85; }
+    .zm-pin:hover { outline: 2px solid var(--gold); }
+    .zm-pin.hot { transform: translate(-50%,-50%) scale(1.5); outline: 2px solid var(--gold); z-index: 2; }
+    .zm-legend { font-size: 12.5px; color: var(--text-secondary); margin-top: 8px; display: flex; align-items: center; flex-wrap: wrap; gap: 2px 0; }
+    .zm-demo { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; border: 1.5px solid rgba(0,0,0,0.5); }
+    .zm-demo.field { background: var(--cyan); }
+    .zm-demo.quest { background: var(--purple); }
+    .zm-demo.done { background: var(--green); }
+    .zm-tip { opacity: 0.7; margin-left: 8px; }
+    .zm-off { opacity: 0.8; margin-left: 8px; }
+    .zm-fail { padding: 30px; text-align: center; font-size: 13px; color: var(--text-secondary); }
+    .current-item.flash { animation: acflash 1.6s ease-out; }
+    @keyframes acflash { 0%, 40% { background: rgba(200,169,110,0.28); } 100% { background: transparent; } }
+
+    /* 地圖指引按鈕 */
+    .ac-map-btn {
+      flex-shrink: 0;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--cyan);
+      font-size: 12.5px;
+      padding: 5px 10px;
+      cursor: pointer;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+    .ac-map-btn:hover { border-color: var(--cyan); background: rgba(79,195,247,0.1); }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 0%, rgba(200,169,110,0.05) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(96,165,250,0.04) 0%, transparent 60%);
+      pointer-events: none; z-index: 0;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .container {
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Header ── */
+    .page-header {
+      padding: 36px 0 28px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 28px;
+    }
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      padding: 6px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      transition: var(--transition);
+    }
+    .back-btn:hover { color: var(--gold); border-color: var(--border-hover); }
+
+    .page-title-wrap { flex: 1; }
+
+    .page-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--gold-light);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .page-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    /* ── Global Progress ── */
+    .progress-bar-wrap {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .progress-info {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--gold-light);
+      white-space: nowrap;
+    }
+    .progress-info span {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--text-secondary);
+      margin-left: 6px;
+    }
+
+    .progress-track {
+      flex: 1;
+      height: 8px;
+      background: var(--raise);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--blue), var(--gold));
+      border-radius: 99px;
+      transition: width 0.4s ease;
+    }
+
+    .progress-pct {
+      font-size: 14px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+
+    /* ── Toolbar ── */
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+      align-items: center;
+    }
+
+    .search-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 180px;
+    }
+    .search-icon {
+      position: absolute;
+      left: 11px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+    .search-input {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-size: 14px;
+      padding: 9px 12px 9px 34px;
+      outline: none;
+      transition: var(--transition);
+    }
+    .search-input:focus { border-color: rgba(200,169,110,0.5); }
+    .search-input::placeholder { color: var(--text-muted); }
+
+    .own-toggle {
+      display: flex;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+    .own-btn {
+      padding: 8px 14px;
+      font-size: 12px;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+    .own-btn.active { background: var(--gold-dim); color: var(--gold); }
+    .own-btn:hover:not(.active) { color: var(--text-primary); }
+
+    .icon-btn {
+      padding: 8px 14px;
+      font-size: 12px;
+      cursor: pointer;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+    .icon-btn:hover { color: var(--text-primary); border-color: rgba(255,255,255,0.2); }
+    .clear-btn:hover { color: var(--red); border-color: rgba(248,113,113,0.4); }
+
+    /* ── Patch Filters ── */
+    .filter-section { margin-bottom: 18px; }
+    .filter-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .filter-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .filter-tag {
+      padding: 5px 13px;
+      font-size: 13px;
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      cursor: pointer;
+      background: transparent;
+      color: var(--text-secondary);
+      transition: var(--transition);
+    }
+    .filter-tag:hover { color: var(--text-primary); border-color: rgba(255,255,255,0.2); }
+    .filter-tag.active {
+      background: var(--gold-dim);
+      border-color: rgba(200,169,110,0.4);
+      color: var(--gold);
+    }
+
+    /* ── Patch color tags ── */
+    .tag {
+      display: inline-block;
+      font-size: 10px; padding: 2px 7px;
+      border-radius: 99px;
+      white-space: nowrap;
+    }
+    .tag.patch-arr { background: rgba(74,222,128,0.1);   color: #4ade80; border: 1px solid rgba(74,222,128,0.25); }
+    .tag.patch-hw  { background: rgba(79,195,247,0.1);   color: #4fc3f7; border: 1px solid rgba(79,195,247,0.25); }
+    .tag.patch-sb  { background: rgba(167,139,250,0.1);  color: #a78bfa; border: 1px solid rgba(167,139,250,0.25); }
+    .tag.patch-shb { background: rgba(200,169,110,0.12); color: #c8a96e; border: 1px solid rgba(200,169,110,0.3); }
+    .tag.patch-ew  { background: rgba(248,113,113,0.1);  color: #f87171; border: 1px solid rgba(248,113,113,0.25); }
+    .tag.patch-dt  { background: rgba(255,165,0,0.12);   color: #ffa94d; border: 1px solid rgba(255,165,0,0.3); }
+
+    .type-tag-quest { background: rgba(96,165,250,0.12); color: #60a5fa; border: 1px solid rgba(96,165,250,0.25); }
+    .type-tag-field { background: rgba(74,222,128,0.1);  color: #4ade80; border: 1px solid rgba(74,222,128,0.25); }
+
+    /* ── Zone Sections ── */
+    .zone-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      margin-bottom: 12px;
+      overflow: clip; /* 裁圓角但不建立捲動容器，讓 .zc-map 的 sticky 生效 */
+      transition: var(--transition);
+    }
+    .zone-section.hidden { display: none; }
+
+    .zone-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      cursor: pointer;
+      transition: var(--transition);
+      user-select: none;
+    }
+    .zone-header:hover { background: var(--raise); }
+
+    .zone-chevron {
+      font-size: 11px;
+      color: var(--text-muted);
+      transition: transform var(--transition);
+      flex-shrink: 0;
+    }
+    .zone-section.open .zone-chevron { transform: rotate(90deg); }
+
+    .zone-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      flex: 1;
+    }
+
+    .zone-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .zone-progress {
+      font-size: 12px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+
+    .zone-mini-bar {
+      width: 80px;
+      height: 4px;
+      background: var(--raise);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .zone-mini-fill {
+      height: 100%;
+      background: var(--gold);
+      border-radius: 99px;
+      transition: width 0.3s ease;
+    }
+    .zone-done .zone-mini-fill { background: var(--green); }
+    .zone-done .zone-name { color: var(--green); }
+    .zone-done .zone-progress { color: var(--green); }
+
+    /* ── Current List ── */
+    .zone-body {
+      display: none;
+      padding: 0 18px 14px;
+    }
+    .zone-section.open .zone-body { display: block; }
+
+    .zone-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin-bottom: 12px;
+    }
+
+    .type-group-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      margin-top: 10px;
+    }
+
+    .current-list {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .current-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: var(--transition);
+      user-select: none;
+    }
+    .current-item:hover {
+      background: var(--raise);
+      border-color: rgba(255,255,255,0.08);
+    }
+    .current-item.unlocked {
+      background: rgba(200,169,110,0.06);
+      border-color: rgba(200,169,110,0.25);
+    }
+
+    .current-checkbox {
+      width: 18px; height: 18px;
+      border-radius: 4px;
+      border: 1.5px solid var(--text-muted);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: var(--transition);
+      font-size: 11px;
+    }
+    .current-item.unlocked .current-checkbox {
+      border-color: var(--gold);
+      background: var(--gold-dim);
+      color: var(--gold);
+    }
+
+    .current-info { flex: 1; min-width: 0; }
+    .current-label {
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+    .current-item.unlocked .current-label { color: var(--gold); }
+    .current-sublabel {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    .current-type {
+      font-size: 10px; padding: 2px 7px;
+      border-radius: 99px;
+      flex-shrink: 0;
+    }
+
+    /* ── Result meta ── */
+    .result-meta { font-size: 12px; color: var(--text-muted); margin-bottom: 14px; }
+    .result-meta em { color: var(--text-secondary); font-style: normal; }
+
+    .empty-state {
+      text-align: center; padding: 60px 20px;
+      color: var(--text-muted); font-size: 14px;
+    }
+
+    /* ── Footer ── */
+    .page-footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 0 32px;
+      text-align: center;
+      margin-top: 48px;
+    }
+    .footer-text { font-size: 12px; color: var(--text-muted); }
+    .footer-text a { color: var(--text-secondary); transition: var(--transition); }
+    .footer-text a:hover { color: var(--gold); }
+
+    @media (max-width: 600px) {
+      .page-header { flex-wrap: wrap; padding: 24px 0 20px; }
+      .progress-bar-wrap { flex-wrap: wrap; }
+      .zone-mini-bar { width: 50px; }
+    }
+  </style>
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <script src="../../assets/js/theme.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+  <header class="page-header">
+    <a href="../../" class="back-btn">&larr; 水神的工具箱</a>
+    <div class="page-title-wrap">
+      <h1 class="page-title">&#x1F32C;&#xFE0F; 風脈泉追蹤器</h1>
+      <p class="page-subtitle">點擊項目標記已解鎖，進度自動儲存於瀏覽器</p>
+    </div>
+  </header>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-info">
+      <span id="ownedCount">0</span> / <span id="totalCount">0</span>
+      <span>已解鎖</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill" style="width:0%"></div>
+    </div>
+    <div class="progress-pct" id="progressPct">0%</div>
+  </div>
+
+  <div class="toolbar">
+    <div class="search-wrap">
+      <span class="search-icon">&#x1F50D;</span>
+      <input class="search-input" type="text" id="searchInput" placeholder="搜尋地區名稱或任務名稱…" autocomplete="off">
+    </div>
+    <div class="own-toggle">
+      <button class="own-btn active" data-own="all">全部</button>
+      <button class="own-btn" data-own="unlocked">已解鎖</button>
+      <button class="own-btn" data-own="missing">未解鎖</button>
+    </div>
+    <button class="icon-btn" id="exportBtn">匯出進度</button>
+    <button class="icon-btn" id="importBtn">匯入進度</button>
+    <input type="file" id="importFile" accept="application/json" style="display:none">
+    <button class="icon-btn clear-btn" id="clearBtn">清除進度</button>
+  </div>
+
+  <div class="filter-section">
+    <div class="filter-label">版本</div>
+    <div class="filter-tags" id="patchFilters"></div>
+  </div>
+
+  <div class="result-meta" id="resultMeta"></div>
+  <div id="zoneSections"></div>
+  <div class="empty-state" id="emptyState" style="display:none">找不到符合條件的地區</div>
+
+</div>
+
+<footer class="page-footer">
+  <div class="container">
+    <p class="footer-text">
+      <a href="../../">水神的工具箱</a> &middot;
+      資料來源：<a href="https://github.com/thewakingsands/ffxiv-datamining-cn" target="_blank">ffxiv-datamining-cn</a>、<a href="https://ffxivteamcraft.com" target="_blank">Teamcraft</a>
+    </p>
+    <p class="footer-text" style="margin-top:4px">
+      FINAL FANTASY XIV &copy; SQUARE ENIX　此為玩家自製非官方工具
+    </p>
+  </div>
+</footer>
+
+<script>
+(function() {
+  var STORAGE_KEY = 'ffxiv_aether_currents_unlocked';
+  var DATA_URL = '../../data/aether-currents.json';
+
+  var PATCH_LABELS = { '2.x':'2.x 原初之地', '3.x':'3.x 蒼天之禁地', '4.x':'4.x 紅蓮之狂潮', '5.x':'5.x 暗影之逆焰', '6.x':'6.x 曉月之終途', '7.x':'7.x 金曦之遺輝' };
+  var PATCH_ORDER  = ['2.x','3.x','4.x','5.x','6.x','7.x'];
+  var PATCH_CSS    = { '2.x':'patch-arr', '3.x':'patch-hw', '4.x':'patch-sb', '5.x':'patch-shb', '6.x':'patch-ew', '7.x':'patch-dt' };
+
+  var ZONES_DATA = [];   // raw zones from JSON
+  var MAPS_BY_ID = {};   // mapId -> maps.json 條目（區域地圖底圖與 sizeFactor）
+  var unlocked = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
+  var filterOwn   = 'all';
+  var filterPatch = null;
+  var searchQ     = '';
+
+  function save() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(Array.from(unlocked)));
+  }
+
+  function acKey(ac) { return 'ac:' + ac.id; }
+
+  function toggle(key) {
+    if (unlocked.has(key)) unlocked.delete(key); else unlocked.add(key);
+    save();
+    updateProgress();
+    updateZoneProgress();
+    renderItems();
+  }
+
+  /* ── Progress ── */
+  function totalAC() {
+    return ZONES_DATA.reduce(function(s, z) { return s + z.currents.length; }, 0);
+  }
+  function unlockedAC() {
+    var n = 0;
+    ZONES_DATA.forEach(function(z) {
+      z.currents.forEach(function(c) { if (unlocked.has(acKey(c))) n++; });
+    });
+    return n;
+  }
+
+  function updateProgress() {
+    var total = totalAC();
+    var count = unlockedAC();
+    var pct = total ? Math.round(count / total * 100) : 0;
+    document.getElementById('ownedCount').textContent = count;
+    document.getElementById('totalCount').textContent = total;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressPct').textContent = pct + '%';
+    try { localStorage.setItem('ffxiv_snap_aether', JSON.stringify({ c: count, t: total })); } catch (e) {} // 首頁進度儀表板快照
+  }
+
+  function updateZoneProgress() {
+    ZONES_DATA.forEach(function(z) {
+      var sec = document.getElementById('zone-' + z.territory);
+      if (!sec) return;
+      var total = z.currents.length;
+      var count = z.currents.filter(function(c){ return unlocked.has(acKey(c)); }).length;
+      var pct = total ? Math.round(count / total * 100) : 0;
+      var isDone = count === total;
+      sec.querySelector('.zone-progress').textContent = count + ' / ' + total;
+      sec.querySelector('.zone-mini-fill').style.width = pct + '%';
+      if (isDone) sec.classList.add('zone-done'); else sec.classList.remove('zone-done');
+    });
+  }
+
+  /* ── Filters ── */
+  function renderPatchFilters() {
+    var patches = PATCH_ORDER.filter(function(p) {
+      return ZONES_DATA.some(function(z){ return z.patch === p; });
+    });
+    var wrap = document.getElementById('patchFilters');
+    wrap.innerHTML = '';
+    patches.forEach(function(p) {
+      var btn = document.createElement('button');
+      btn.className = 'filter-tag' + (filterPatch === p ? ' active' : '');
+      btn.textContent = PATCH_LABELS[p] || p;
+      btn.addEventListener('click', function() {
+        filterPatch = filterPatch === p ? null : p;
+        renderPatchFilters();
+        renderZones();
+      });
+      wrap.appendChild(btn);
+    });
+  }
+
+  /* ── Visibility ── */
+  function zoneVisible(z) {
+    if (filterPatch && z.patch !== filterPatch) return false;
+    if (searchQ) {
+      var q = searchQ.toLowerCase();
+      var nameMatch = z.zone.toLowerCase().indexOf(q) >= 0;
+      var questMatch = z.currents.some(function(c){
+        return c.questName && c.questName.toLowerCase().indexOf(q) >= 0;
+      });
+      if (!nameMatch && !questMatch) return false;
+    }
+    if (filterOwn === 'unlocked') {
+      var allDone = z.currents.every(function(c){ return unlocked.has(acKey(c)); });
+      if (!allDone) return false;
+    }
+    if (filterOwn === 'missing') {
+      var allDone2 = z.currents.every(function(c){ return unlocked.has(acKey(c)); });
+      if (allDone2) return false;
+    }
+    return true;
+  }
+
+  /* ── Render Zones ── */
+  function renderZones() {
+    var visibleCount = 0;
+    ZONES_DATA.forEach(function(z) {
+      var sec = document.getElementById('zone-' + z.territory);
+      if (!sec) return;
+      var visible = zoneVisible(z);
+      sec.classList.toggle('hidden', !visible);
+      if (visible) visibleCount++;
+    });
+    var meta = document.getElementById('resultMeta');
+    meta.innerHTML = '顯示 <em>' + visibleCount + '</em> / ' + ZONES_DATA.length + ' 個地區';
+    document.getElementById('emptyState').style.display = visibleCount === 0 ? '' : 'none';
+    document.getElementById('zoneSections').style.display = visibleCount === 0 ? 'none' : '';
+  }
+
+  /* ── Render Individual Items (after unlock toggle) ── */
+  function renderItems() {
+    ZONES_DATA.forEach(function(z) {
+      z.currents.forEach(function(c) {
+        var key = acKey(c);
+        var isUnlocked = unlocked.has(key);
+        var pin = document.querySelector('[data-zmpin="' + c.id + '"]');
+        if (pin) pin.classList.toggle('done', isUnlocked);
+        var item = document.getElementById('item-' + c.id);
+        if (!item) return;
+        item.classList.toggle('unlocked', isUnlocked);
+        var cb = item.querySelector('.current-checkbox');
+        if (cb) cb.textContent = isUnlocked ? '✓' : '';
+        var lbl = item.querySelector('.current-label');
+        if (lbl) lbl.classList.toggle('unlocked', isUnlocked);
+      });
+    });
+    updateZoneProgress();
+  }
+
+  /* ── Build DOM ── */
+  function buildZoneSection(z) {
+    var patchCss = PATCH_CSS[z.patch] || '';
+    var patchLabel = PATCH_LABELS[z.patch] || z.patch;
+    var totalC = z.currents.length;
+    var unlockedC = z.currents.filter(function(c){ return unlocked.has(acKey(c)); }).length;
+    var pct = totalC ? Math.round(unlockedC / totalC * 100) : 0;
+    var isDone = unlockedC === totalC;
+
+    var sec = document.createElement('div');
+    sec.className = 'zone-section' + (isDone ? ' zone-done' : '');
+    sec.id = 'zone-' + z.territory;
+
+    // Header
+    var header = document.createElement('div');
+    header.className = 'zone-header';
+    header.innerHTML =
+      '<span class="zone-chevron">&#9658;</span>' +
+      '<span class="zone-name">' + z.zone + '</span>' +
+      '<div class="zone-meta">' +
+        '<span class="tag ' + patchCss + '">' + patchLabel + '</span>' +
+        '<div class="zone-mini-bar"><div class="zone-mini-fill" style="width:' + pct + '%"></div></div>' +
+        '<span class="zone-progress">' + unlockedC + ' / ' + totalC + '</span>' +
+      '</div>';
+    header.addEventListener('click', function() {
+      sec.classList.toggle('open');
+    });
+    sec.appendChild(header);
+
+    // Body
+    var body = document.createElement('div');
+    body.className = 'zone-body';
+
+    var hr = document.createElement('hr');
+    hr.className = 'zone-divider';
+    body.appendChild(hr);
+
+    // 區域備註（如 2.0 全區域共通解鎖說明）
+    if (z.note) {
+      var noteDiv = document.createElement('div');
+      noteDiv.className = 'zone-note';
+      noteDiv.textContent = '💡 ' + z.note;
+      body.appendChild(noteDiv);
+    }
+
+    // 一區一地圖：整張區域地圖標出全部風脈位置（青=野外、紫=任務接取、綠=已解鎖）
+    var zoneMapEl = null;
+    var zm = MAPS_BY_ID[z.mapId];
+    if (zm && zm.image) {
+      var pins = '';
+      var offMap = 0;
+      z.currents.forEach(function(c) {
+        if (!c.coords) return;
+        var cm = MAPS_BY_ID[c.coords.mapId];
+        var sameMap = c.coords.mapId === z.mapId || (cm && cm.name === zm.name);
+        if (!sameMap) { offMap++; return; } // 任務於主城／子區域接取，仍可用列上的 🗺 查看
+        var sf = (cm || zm).sizeFactor || 100;
+        var fx = Math.max(0, Math.min(100, (c.coords.x - 1) * (sf / 100) / 41 * 100));
+        var fy = Math.max(0, Math.min(100, (c.coords.y - 1) * (sf / 100) / 41 * 100));
+        var lbl = (c.type === 'quest' ? (c.questName || '任務') : '野外風脈泉') +
+          '（X:' + c.coords.x.toFixed(1) + ' Y:' + c.coords.y.toFixed(1) + '）';
+        pins += '<div class="zm-pin ' + c.type + (unlocked.has(acKey(c)) ? ' done' : '') + '" data-zmpin="' + c.id +
+          '" style="left:' + fx.toFixed(2) + '%;top:' + fy.toFixed(2) + '%" title="' + lbl.replace(/"/g, '&quot;') + '"></div>';
+      });
+      if (pins) {
+        var zmDiv = document.createElement('div');
+        zmDiv.className = 'zone-map-block';
+        zmDiv.innerHTML =
+          '<div class="zone-map">' +
+            '<img loading="lazy" src="../..' + zm.image.local + '" alt="' + zm.name + '" ' +
+            'onerror="if(this.dataset.retry){this.closest(\'.zone-map\').innerHTML=\'<div class=&quot;zm-fail&quot;>地圖底圖載入失敗</div>\'}else{this.dataset.retry=1;this.src=\'' + zm.image.url + '\';}">' +
+            pins +
+          '</div>' +
+          '<div class="zm-legend"><i class="zm-demo field"></i> 野外風脈泉　<i class="zm-demo quest"></i> 任務接取點　<i class="zm-demo done"></i> 已解鎖　<span class="zm-tip">點圖釘可跳至對應列</span>' +
+          (offMap ? '<span class="zm-off">另有 ' + offMap + ' 個任務於其他地圖接取（見列表 🗺）</span>' : '') + '</div>';
+        zoneMapEl = zmDiv;
+      }
+    }
+
+    // 地圖（左，sticky）與風脈清單（右）並排；無地圖時清單佔滿整寬
+    var cols = document.createElement('div');
+    cols.className = 'zone-content' + (zoneMapEl ? '' : ' no-map');
+    var listCol = document.createElement('div');
+    listCol.className = 'zc-list';
+    if (zoneMapEl) {
+      var mapCol = document.createElement('div');
+      mapCol.className = 'zc-map';
+      mapCol.appendChild(zoneMapEl);
+      cols.appendChild(mapCol);
+    }
+    cols.appendChild(listCol);
+    body.appendChild(cols);
+
+    // Split currents by type
+    var questCurrents = z.currents.filter(function(c){ return c.type === 'quest'; });
+    var fieldCurrents = z.currents.filter(function(c){ return c.type === 'field'; });
+
+    function buildGroup(list, labelText, typeCss, typeLabel) {
+      if (list.length === 0) return;
+      var lbl = document.createElement('div');
+      lbl.className = 'type-group-label';
+      lbl.textContent = labelText;
+      listCol.appendChild(lbl);
+
+      var ul = document.createElement('div');
+      ul.className = 'current-list';
+
+      list.forEach(function(c) {
+        var key = acKey(c);
+        var isUnlocked = unlocked.has(key);
+        var item = document.createElement('div');
+        item.className = 'current-item' + (isUnlocked ? ' unlocked' : '');
+        item.id = 'item-' + c.id;
+
+        var cbText = isUnlocked ? '✓' : '';
+        // 去除任務名裡的遊戲私有圖示字元（瀏覽器無字型會顯示豆腐字）
+        var mainLabel = c.type === 'quest'
+          ? ((c.questName || ('任務 #' + c.questId)).replace(/[-]/g, '').trim())
+          : '野外採集';
+        var co = c.coords;
+        var coordTxt = co ? 'X:' + co.x.toFixed(1) + ' Y:' + co.y.toFixed(1) : null;
+        var subLabel = c.type === 'quest'
+          ? (coordTxt ? '解鎖任務・接取 ' + coordTxt : '解鎖任務')
+          : (coordTxt ? '野外風脈泉 ' + coordTxt : '前往野外採集');
+        var mapBtn = co
+          ? '<button class="ac-map-btn" data-mapid="' + co.mapId + '" data-x="' + co.x + '" data-y="' + co.y +
+            '" data-title="' + (c.type === 'quest' ? '任務接取位置' : '野外風脈泉') +
+            '" data-sub="' + z.zone + '・' + mainLabel + '">🗺 地圖</button>'
+          : '';
+
+        item.innerHTML =
+          '<div class="current-checkbox">' + cbText + '</div>' +
+          '<div class="current-info">' +
+            '<div class="current-label">' + mainLabel + '</div>' +
+            '<div class="current-sublabel">' + subLabel + '</div>' +
+          '</div>' +
+          mapBtn +
+          '<span class="current-type tag ' + typeCss + '">' + typeLabel + '</span>';
+
+        item.addEventListener('click', (function(k){ return function(ev){
+          if (ev.target.closest && ev.target.closest('.ac-map-btn')) return;
+          toggle(k);
+        }; })(key));
+        ul.appendChild(item);
+      });
+
+      listCol.appendChild(ul);
+    }
+
+    buildGroup(questCurrents, '任務解鎖型', 'type-tag-quest', '任務');
+    buildGroup(fieldCurrents, '野外採集型', 'type-tag-field', '野外');
+
+    sec.appendChild(body);
+    return sec;
+  }
+
+  /* ── Export / Import ── */
+  function exportProgress() {
+    var payload = {
+      schema: 'aether-currents-progress',
+      exported: new Date().toISOString(),
+      unlocked: Array.from(unlocked)
+    };
+    var blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = 'aether-currents-progress.json';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  function importProgress(file) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        var data = JSON.parse(e.target.result);
+        // 舊版備份為純陣列；新版物件需驗 schema，避免誤將其他頁的進度檔匯入
+        if (!Array.isArray(data) && data.schema !== 'aether-currents-progress') {
+          alert('匯入失敗：這不是「風脈泉追蹤」的進度檔'); return;
+        }
+        var list = Array.isArray(data) ? data : data.unlocked;
+        if (!Array.isArray(list)) throw new Error('格式錯誤');
+        if (unlocked.size && !confirm('匯入將以檔案內容（' + list.length + ' 筆）取代目前的 ' + unlocked.size + ' 筆記錄，確定嗎？')) return;
+        unlocked = new Set(list);
+        save(); updateProgress(); updateZoneProgress(); renderItems();
+        alert('匯入成功，共 ' + unlocked.size + ' 筆解鎖記錄');
+      } catch(err) { alert('匯入失敗：' + err.message); }
+    };
+    reader.readAsText(file);
+  }
+
+  /* ── Init ── */
+  document.querySelectorAll('.own-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      filterOwn = btn.dataset.own;
+      document.querySelectorAll('.own-btn').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      renderZones();
+    });
+  });
+
+  document.getElementById('searchInput').addEventListener('input', function(e) {
+    searchQ = e.target.value.trim(); renderZones();
+  });
+
+  document.getElementById('exportBtn').addEventListener('click', exportProgress);
+  document.getElementById('importBtn').addEventListener('click', function(){
+    document.getElementById('importFile').click();
+  });
+  document.getElementById('importFile').addEventListener('change', function(e) {
+    var file = e.target.files[0];
+    if (file) importProgress(file);
+    e.target.value = '';
+  });
+  document.getElementById('clearBtn').addEventListener('click', function() {
+    if (!unlocked.size) { alert('目前沒有已解鎖記錄'); return; }
+    if (!confirm('確定要清除全部 ' + unlocked.size + ' 筆解鎖記錄嗎？\n將先自動下載一份備份檔以防誤刪。')) return;
+    exportProgress();
+    unlocked.clear(); save(); updateProgress(); updateZoneProgress(); renderItems();
+  });
+
+  Promise.all([
+    fetch(DATA_URL).then(function(res) {
+      if (!res.ok) throw new Error('無法載入資料 (' + res.status + ')');
+      return res.json();
+    }),
+    fetch('../../data/maps.json').then(function(r){ return r.json(); }).catch(function(){ return null; })
+  ])
+    .then(function(results) {
+      var json = results[0];
+      if (results[1]) results[1].data.forEach(function(m){ MAPS_BY_ID[m.id] = m; });
+      ZONES_DATA = json.zones || [];
+
+      // Build zone DOM
+      var container = document.getElementById('zoneSections');
+      container.innerHTML = '';
+      ZONES_DATA.forEach(function(z) {
+        var sec = buildZoneSection(z);
+        if (sec) container.appendChild(sec);
+      });
+
+      renderPatchFilters();
+      updateProgress();
+      updateZoneProgress();
+      renderZones();
+    })
+    .catch(function(err) {
+      document.getElementById('zoneSections').style.display = 'none';
+      var empty = document.getElementById('emptyState');
+      empty.style.display = '';
+      empty.textContent = '資料載入失敗：' + err.message;
+    });
+})();
+</script>
+<script type="module">
+  // 地圖指引：共用迷你地圖彈窗（與釣魚／採集頁同套件）
+  import { initMapModal, openMapModal } from '../../assets/js/map-modal.js';
+  const maps = await fetch('../../data/maps.json').then(r => r.json());
+  initMapModal({ mapsData: maps.data, base: '../..' });
+  const mapById = new Map(maps.data.map(m => [m.id, m]));
+  // 清單列 hover ↔ 地圖圖釘高亮（地圖 sticky 在側，滑過即知列與點的對應）
+  document.addEventListener('mouseover', e => {
+    const row = e.target.closest('.current-item');
+    if (!row || !row.id) return;
+    const pin = document.querySelector('[data-zmpin="' + row.id.replace('item-', '') + '"]');
+    if (pin) pin.classList.add('hot');
+  });
+  document.addEventListener('mouseout', e => {
+    const row = e.target.closest('.current-item');
+    if (!row || !row.id) return;
+    const pin = document.querySelector('[data-zmpin="' + row.id.replace('item-', '') + '"]');
+    if (pin) pin.classList.remove('hot');
+  });
+
+  document.addEventListener('click', e => {
+    const pin = e.target.closest('[data-zmpin]');
+    if (pin) {
+      const row = document.getElementById('item-' + pin.dataset.zmpin);
+      if (row) {
+        row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        row.classList.remove('flash'); void row.offsetWidth;
+        row.classList.add('flash');
+        setTimeout(() => row.classList.remove('flash'), 1700);
+      }
+      return;
+    }
+    const b = e.target.closest('.ac-map-btn');
+    if (!b) return;
+    const mapId = +b.dataset.mapid, x = +b.dataset.x, y = +b.dataset.y;
+    const m = mapById.get(mapId);
+    openMapModal({
+      mapId, x, y,
+      title: b.dataset.title,
+      sub: b.dataset.sub,
+      flagText: `/coord ${x.toFixed(1)} ${y.toFixed(1)} ${m ? m.name : ''}`.trim(),
+    });
+  });
+</script>
+</body>
+</html>
