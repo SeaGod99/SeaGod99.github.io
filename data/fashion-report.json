@@ -1,311 +1,655 @@
 {
   "schema": 1,
-  "week": 441,
+  "week": 442,
   "status": "verified",
   "source": "fashionreportxiv.com",
-  "updated": "2026-07-15",
+  "updated": "2026-07-18",
   "theme": {
-    "name": "知性蠻族工匠",
-    "nameEn": "Mindful Master"
+    "name": "亞拉戈高位裝扮",
+    "nameEn": "Allagan on High"
   },
   "slots": [
     {
-      "slot": "head",
-      "slotName": "頭部",
-      "hint": "知性",
-      "hintEn": "Brain over Brawn",
-      "categoryId": 18,
-      "items": [
-        {
-          "id": 2668,
-          "name": "黃銅眼鏡",
-          "nameEn": "Brass Spectacles",
-          "marketable": true,
-          "srcType": "npc-gil",
-          "how": "NPC 金幣商店 355 金幣"
-        },
-        {
-          "id": 2728,
-          "name": "白銀眼鏡",
-          "nameEn": "Silver Spectacles",
-          "marketable": true,
-          "srcType": "npc-gil",
-          "how": "NPC 金幣商店 1,314 金幣"
-        },
-        {
-          "id": 2774,
-          "name": "秘銀眼鏡",
-          "nameEn": "Mythril Spectacles",
-          "marketable": true,
-          "srcType": "npc-gil",
-          "how": "NPC 金幣商店 3,099 金幣"
-        },
-        {
-          "id": 7504,
-          "name": "黃金眼鏡",
-          "nameEn": "Gold Spectacles",
-          "marketable": true,
-          "srcType": "craft",
-          "how": "製作"
-        },
-        {
-          "id": 2856,
-          "name": "鼻眼鏡",
-          "nameEn": "Pince-nez",
-          "marketable": true,
-          "srcType": "drop",
-          "how": "副本／掉落"
-        },
-        {
-          "id": 20917,
-          "name": "伊瓦利斯魔道士眼鏡",
-          "nameEn": "Ivalician Enchanter's Eyeglasses",
-          "marketable": false,
-          "srcType": "drop",
-          "how": "副本／掉落"
-        },
-        {
-          "id": 20911,
-          "name": "伊瓦利斯占星家眼鏡",
-          "nameEn": "Ivalician Astrologer's Eyeglasses",
-          "marketable": false,
-          "srcType": "drop",
-          "how": "副本／掉落"
-        },
-        {
-          "id": 36015,
-          "name": "書龍眼鏡",
-          "nameEn": "Bookwyrm's Spectacles",
-          "marketable": false,
-          "srcType": "npc-gil",
-          "how": "NPC 金幣商店 1,000 金幣"
-        }
-      ]
-    },
-    {
       "slot": "body",
       "slotName": "身體",
-      "hint": "簡約",
-      "hintEn": "Simple Is Best",
-      "categoryId": 66,
+      "hint": "亞拉戈高位",
+      "hintEn": "High Allagan",
+      "categoryId": 256,
       "items": [
         {
-          "id": 13272,
-          "name": "鷹獵人襯衫",
-          "nameEn": "Falconer's Shirt",
-          "marketable": true,
-          "srcType": "craft",
-          "how": "製作"
-        },
-        {
-          "id": 13688,
-          "name": "青麻襯衫",
-          "nameEn": "Ramie Shirt",
-          "marketable": true,
-          "srcType": "craft",
-          "how": "製作"
-        },
-        {
-          "id": 15473,
-          "name": "倖存者襯衫",
-          "nameEn": "Survival Shirt",
-          "marketable": true,
-          "srcType": "craft",
-          "how": "製作"
-        },
-        {
-          "id": 15929,
-          "name": "亞麻倖存者襯衫",
-          "nameEn": "Linen Survival Shirt",
-          "marketable": true,
-          "srcType": "craft",
-          "how": "製作"
-        },
-        {
-          "id": 21204,
-          "name": "拉札漢秋意襯衫",
-          "nameEn": "Hannish Wool Autumn Shirt",
-          "marketable": true,
-          "srcType": "craft",
-          "how": "製作"
-        },
-        {
-          "id": 15476,
-          "name": "極限倖存者襯衫",
-          "nameEn": "Extreme Survival Shirt",
-          "marketable": true,
-          "srcType": "craft",
-          "how": "製作"
-        },
-        {
-          "id": 21938,
-          "name": "春意襯衫",
-          "nameEn": "Spring Shirt",
+          "id": 7163,
+          "name": "亞拉戈高位重長衣",
+          "nameEn": "Heavy High Allagan Coat",
           "marketable": false,
-          "srcType": "npc-gil",
-          "how": "NPC 金幣商店 8,910 金幣"
+          "srcType": "drop",
+          "how": "副本／掉落"
+        },
+        {
+          "id": 7173,
+          "name": "亞拉戈高位制敵胸甲",
+          "nameEn": "High Allagan Cuirass of Maiming",
+          "marketable": false,
+          "srcType": "drop",
+          "how": "副本／掉落"
+        },
+        {
+          "id": 7179,
+          "name": "亞拉戈高位強襲胸甲",
+          "nameEn": "High Allagan Cuirass of Striking",
+          "marketable": false,
+          "srcType": "drop",
+          "how": "副本／掉落"
+        },
+        {
+          "id": 7189,
+          "name": "亞拉戈高位精準長衣",
+          "nameEn": "High Allagan Coat of Aiming",
+          "marketable": false,
+          "srcType": "drop",
+          "how": "副本／掉落"
+        },
+        {
+          "id": 7209,
+          "name": "亞拉戈高位詠咒長衣",
+          "nameEn": "High Allagan Coat of Casting",
+          "marketable": false,
+          "srcType": "drop",
+          "how": "副本／掉落"
+        },
+        {
+          "id": 7199,
+          "name": "亞拉戈高位治癒長衣",
+          "nameEn": "High Allagan Coat of Healing",
+          "marketable": false,
+          "srcType": "drop",
+          "how": "副本／掉落"
+        },
+        {
+          "id": 39515,
+          "name": "威望亞拉戈高位重長衣",
+          "nameEn": "Prestige Heavy High Allagan Coat",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 戰利水晶兌換 ×1500"
+        },
+        {
+          "id": 39520,
+          "name": "威望亞拉戈高位制敵胸甲",
+          "nameEn": "Prestige High Allagan Cuirass of Maiming",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 戰利水晶兌換 ×1500"
+        },
+        {
+          "id": 39525,
+          "name": "威望亞拉戈高位強襲胸甲",
+          "nameEn": "Prestige High Allagan Cuirass of Striking",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 戰利水晶兌換 ×1500"
+        },
+        {
+          "id": 39535,
+          "name": "威望亞拉戈高位游擊胸甲",
+          "nameEn": "Prestige High Allagan Cuirass of Scouting",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 戰利水晶兌換 ×1500"
+        },
+        {
+          "id": 39530,
+          "name": "威望亞拉戈高位精準長衣",
+          "nameEn": "Prestige High Allagan Coat of Aiming",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 戰利水晶兌換 ×1500"
+        },
+        {
+          "id": 39545,
+          "name": "威望亞拉戈高位詠咒長衣",
+          "nameEn": "Prestige High Allagan Coat of Casting",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 戰利水晶兌換 ×1500"
+        },
+        {
+          "id": 39540,
+          "name": "威望亞拉戈高位治癒長衣",
+          "nameEn": "Prestige High Allagan Coat of Healing",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 戰利水晶兌換 ×1500"
+        },
+        {
+          "id": 13849,
+          "name": "亞拉戈高位重長衣（複製品）",
+          "nameEn": "Replica Heavy High Allagan Coat",
+          "marketable": true,
+          "srcType": "craft",
+          "how": "製作"
+        },
+        {
+          "id": 13854,
+          "name": "亞拉戈高位制敵胸甲（複製品）",
+          "nameEn": "Replica High Allagan Cuirass of Maiming",
+          "marketable": true,
+          "srcType": "craft",
+          "how": "製作"
+        },
+        {
+          "id": 13859,
+          "name": "亞拉戈高位強襲胸甲（複製品）",
+          "nameEn": "Replica High Allagan Cuirass of Striking",
+          "marketable": true,
+          "srcType": "craft",
+          "how": "製作"
+        },
+        {
+          "id": 13864,
+          "name": "亞拉戈高位精準長衣（複製品）",
+          "nameEn": "Replica High Allagan Coat of Aiming",
+          "marketable": true,
+          "srcType": "craft",
+          "how": "製作"
+        },
+        {
+          "id": 13874,
+          "name": "亞拉戈高位詠咒長衣（複製品）",
+          "nameEn": "Replica High Allagan Coat of Casting",
+          "marketable": true,
+          "srcType": "craft",
+          "how": "製作"
+        },
+        {
+          "id": 13869,
+          "name": "亞拉戈高位治癒長衣（複製品）",
+          "nameEn": "Replica High Allagan Coat of Healing",
+          "marketable": true,
+          "srcType": "craft",
+          "how": "製作"
         }
       ]
     },
     {
       "slot": "hands",
       "slotName": "手部",
-      "hint": "無賴",
-      "hintEn": "Vagabond",
-      "categoryId": 27,
+      "hint": "亞拉戈高位",
+      "hintEn": "High Allagan",
+      "categoryId": 256,
       "items": [
         {
-          "id": 10770,
-          "name": "長頸駝革強襲護臂",
-          "nameEn": "Dhalmelskin Armguards of Striking",
-          "marketable": true,
-          "srcType": "npc-gil",
-          "how": "NPC 金幣商店 14,744 金幣"
-        },
-        {
-          "id": 10812,
-          "name": "長頸駝革精準護臂",
-          "nameEn": "Dhalmelskin Armguards of Aiming",
-          "marketable": true,
-          "srcType": "npc-gil",
-          "how": "NPC 金幣商店 14,744 金幣"
-        },
-        {
-          "id": 10854,
-          "name": "長頸駝革游擊護臂",
-          "nameEn": "Dhalmelskin Armguards of Scouting",
-          "marketable": true,
-          "srcType": "npc-gil",
-          "how": "NPC 金幣商店 14,744 金幣"
-        },
-        {
-          "id": 9951,
-          "name": "歹徒制敵護臂",
-          "nameEn": "Picaroon's Armguards of Maiming",
+          "id": 7164,
+          "name": "亞拉戈高位禦敵手鎧",
+          "nameEn": "High Allagan Gauntlets of Fending",
           "marketable": false,
           "srcType": "drop",
           "how": "副本／掉落"
         },
         {
-          "id": 9957,
-          "name": "歹徒強襲護臂",
-          "nameEn": "Picaroon's Armguards of Striking",
+          "id": 7174,
+          "name": "亞拉戈高位制敵手鎧",
+          "nameEn": "High Allagan Gauntlets of Maiming",
           "marketable": false,
           "srcType": "drop",
           "how": "副本／掉落"
         },
         {
-          "id": 9969,
-          "name": "歹徒游擊護臂",
-          "nameEn": "Picaroon's Armguards of Scouting",
+          "id": 7180,
+          "name": "亞拉戈高位強襲手鎧",
+          "nameEn": "High Allagan Gauntlets of Striking",
           "marketable": false,
           "srcType": "drop",
           "how": "副本／掉落"
+        },
+        {
+          "id": 7190,
+          "name": "亞拉戈高位精準手套",
+          "nameEn": "High Allagan Gloves of Aiming",
+          "marketable": false,
+          "srcType": "drop",
+          "how": "副本／掉落"
+        },
+        {
+          "id": 7210,
+          "name": "亞拉戈高位詠咒手套",
+          "nameEn": "High Allagan Gloves of Casting",
+          "marketable": false,
+          "srcType": "drop",
+          "how": "副本／掉落"
+        },
+        {
+          "id": 7200,
+          "name": "亞拉戈高位治癒手套",
+          "nameEn": "High Allagan Gloves of Healing",
+          "marketable": false,
+          "srcType": "drop",
+          "how": "副本／掉落"
+        },
+        {
+          "id": 39516,
+          "name": "威望亞拉戈高位禦敵手鎧",
+          "nameEn": "Prestige High Allagan Gauntlets of Fending",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 戰利水晶兌換 ×1500"
+        },
+        {
+          "id": 39521,
+          "name": "威望亞拉戈高位制敵手鎧",
+          "nameEn": "Prestige High Allagan Gauntlets of Maiming",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 戰利水晶兌換 ×1500"
+        },
+        {
+          "id": 39526,
+          "name": "威望亞拉戈高位強襲手鎧",
+          "nameEn": "Prestige High Allagan Gauntlets of Striking",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 戰利水晶兌換 ×1500"
+        },
+        {
+          "id": 39536,
+          "name": "威望亞拉戈高位游擊手鎧",
+          "nameEn": "Prestige High Allagan Gauntlets of Scouting",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 戰利水晶兌換 ×1500"
+        },
+        {
+          "id": 39531,
+          "name": "威望亞拉戈高位精準手套",
+          "nameEn": "Prestige High Allagan Gloves of Aiming",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 戰利水晶兌換 ×1500"
+        },
+        {
+          "id": 39546,
+          "name": "威望亞拉戈高位詠咒手套",
+          "nameEn": "Prestige High Allagan Gloves of Casting",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 戰利水晶兌換 ×1500"
+        },
+        {
+          "id": 39541,
+          "name": "威望亞拉戈高位治癒手套",
+          "nameEn": "Prestige High Allagan Gloves of Healing",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 戰利水晶兌換 ×1500"
+        },
+        {
+          "id": 13850,
+          "name": "亞拉戈高位禦敵手鎧（複製品）",
+          "nameEn": "Replica High Allagan Gauntlets of Fending",
+          "marketable": true,
+          "srcType": "craft",
+          "how": "製作"
+        },
+        {
+          "id": 13855,
+          "name": "亞拉戈高位制敵手鎧（複製品）",
+          "nameEn": "Replica High Allagan Gauntlets of Maiming",
+          "marketable": true,
+          "srcType": "craft",
+          "how": "製作"
+        },
+        {
+          "id": 13860,
+          "name": "亞拉戈高位強襲手鎧（複製品）",
+          "nameEn": "Replica High Allagan Gauntlets of Striking",
+          "marketable": true,
+          "srcType": "craft",
+          "how": "製作"
+        },
+        {
+          "id": 13865,
+          "name": "亞拉戈高位精準手套（複製品）",
+          "nameEn": "Replica High Allagan Gloves of Aiming",
+          "marketable": true,
+          "srcType": "craft",
+          "how": "製作"
+        },
+        {
+          "id": 13875,
+          "name": "亞拉戈高位詠咒手套（複製品）",
+          "nameEn": "Replica High Allagan Gloves of Casting",
+          "marketable": true,
+          "srcType": "craft",
+          "how": "製作"
+        },
+        {
+          "id": 13870,
+          "name": "亞拉戈高位治癒手套（複製品）",
+          "nameEn": "Replica High Allagan Gloves of Healing",
+          "marketable": true,
+          "srcType": "craft",
+          "how": "製作"
         }
       ]
     },
     {
       "slot": "legs",
       "slotName": "腿部",
-      "hint": "蠻族工匠",
-      "hintEn": "More Beast than Man",
-      "categoryId": 198,
+      "hint": "亞拉戈高位",
+      "hintEn": "High Allagan",
+      "categoryId": 256,
       "items": [
         {
-          "id": 15460,
-          "name": "骨頜下身",
-          "nameEn": "Gnath Abdomen",
+          "id": 7165,
+          "name": "亞拉戈高位禦敵軟甲褲",
+          "nameEn": "High Allagan Trousers of Fending",
           "marketable": false,
-          "srcType": "npc-gil",
-          "how": "NPC 金幣商店 70,000 金幣"
+          "srcType": "drop",
+          "how": "副本／掉落"
         },
         {
-          "id": 15455,
-          "name": "瓦努袞杜下身",
-          "nameEn": "Vanu Vanu Waist",
+          "id": 7175,
+          "name": "亞拉戈高位制敵軟甲褲",
+          "nameEn": "High Allagan Trousers of Maiming",
           "marketable": false,
-          "srcType": "npc-gil",
-          "how": "NPC 金幣商店 70,000 金幣"
+          "srcType": "drop",
+          "how": "副本／掉落"
         },
         {
-          "id": 17489,
-          "name": "瓦努尊杜下身",
-          "nameEn": "Zundu Waist",
+          "id": 7181,
+          "name": "亞拉戈高位強襲軟甲褲",
+          "nameEn": "High Allagan Trousers of Striking",
           "marketable": false,
-          "srcType": "npc-gil",
-          "how": "NPC 金幣商店 70,000 金幣"
+          "srcType": "drop",
+          "how": "副本／掉落"
         },
         {
-          "id": 21015,
-          "name": "碧甲筒袴",
-          "nameEn": "Tsutsu-hakama of the Blue",
+          "id": 7191,
+          "name": "亞拉戈高位精準馬褲",
+          "nameEn": "High Allagan Breeches of Aiming",
+          "marketable": false,
+          "srcType": "drop",
+          "how": "副本／掉落"
+        },
+        {
+          "id": 7211,
+          "name": "亞拉戈高位詠咒馬褲",
+          "nameEn": "High Allagan Breeches of Casting",
+          "marketable": false,
+          "srcType": "drop",
+          "how": "副本／掉落"
+        },
+        {
+          "id": 7201,
+          "name": "亞拉戈高位治癒喇叭褲",
+          "nameEn": "High Allagan Pantaloons of Healing",
+          "marketable": false,
+          "srcType": "drop",
+          "how": "副本／掉落"
+        },
+        {
+          "id": 39517,
+          "name": "威望亞拉戈高位禦敵軟甲褲",
+          "nameEn": "Prestige High Allagan Trousers of Fending",
           "marketable": false,
           "srcType": "npc-trade",
-          "how": "NPC 珊瑚幣兌換 ×4"
+          "how": "NPC 戰利水晶兌換 ×1500"
         },
         {
-          "id": 8709,
-          "name": "莫古莫古短裙",
-          "nameEn": "Moogle Buns",
+          "id": 39522,
+          "name": "威望亞拉戈高位制敵軟甲褲",
+          "nameEn": "Prestige High Allagan Trousers of Maiming",
           "marketable": false,
-          "srcType": "other",
-          "how": "—"
+          "srcType": "npc-trade",
+          "how": "NPC 戰利水晶兌換 ×1500"
         },
         {
-          "id": 33503,
-          "name": "帕戈爾贊禦敵下身",
-          "nameEn": "Paglth'an Bottoms of Fending",
+          "id": 39527,
+          "name": "威望亞拉戈高位強襲軟甲褲",
+          "nameEn": "Prestige High Allagan Trousers of Striking",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 戰利水晶兌換 ×1500"
+        },
+        {
+          "id": 39537,
+          "name": "威望亞拉戈高位游擊喇叭褲",
+          "nameEn": "Prestige High Allagan Pantaloons of Scouting",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 戰利水晶兌換 ×1500"
+        },
+        {
+          "id": 39532,
+          "name": "威望亞拉戈高位精準馬褲",
+          "nameEn": "Prestige High Allagan Breeches of Aiming",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 戰利水晶兌換 ×1500"
+        },
+        {
+          "id": 39547,
+          "name": "威望亞拉戈高位詠咒馬褲",
+          "nameEn": "Prestige High Allagan Breeches of Casting",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 戰利水晶兌換 ×1500"
+        },
+        {
+          "id": 39542,
+          "name": "威望亞拉戈高位治癒喇叭褲",
+          "nameEn": "Prestige High Allagan Pantaloons of Healing",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 戰利水晶兌換 ×1500"
+        },
+        {
+          "id": 13851,
+          "name": "亞拉戈高位禦敵軟甲褲（複製品）",
+          "nameEn": "Replica High Allagan Trousers of Fending",
+          "marketable": true,
+          "srcType": "craft",
+          "how": "製作"
+        },
+        {
+          "id": 13856,
+          "name": "亞拉戈高位制敵軟甲褲（複製品）",
+          "nameEn": "Replica High Allagan Trousers of Maiming",
+          "marketable": true,
+          "srcType": "craft",
+          "how": "製作"
+        },
+        {
+          "id": 13861,
+          "name": "亞拉戈高位強襲軟甲褲（複製品）",
+          "nameEn": "Replica High Allagan Trousers of Striking",
+          "marketable": true,
+          "srcType": "craft",
+          "how": "製作"
+        },
+        {
+          "id": 13866,
+          "name": "亞拉戈高位精準馬褲（複製品）",
+          "nameEn": "Replica High Allagan Breeches of Aiming",
+          "marketable": true,
+          "srcType": "craft",
+          "how": "製作"
+        },
+        {
+          "id": 13876,
+          "name": "亞拉戈高位詠咒馬褲（複製品）",
+          "nameEn": "Replica High Allagan Breeches of Casting",
+          "marketable": true,
+          "srcType": "craft",
+          "how": "製作"
+        },
+        {
+          "id": 13871,
+          "name": "亞拉戈高位治癒喇叭褲（複製品）",
+          "nameEn": "Replica High Allagan Pantaloons of Healing",
+          "marketable": true,
+          "srcType": "craft",
+          "how": "製作"
+        }
+      ]
+    },
+    {
+      "slot": "feet",
+      "slotName": "腳部",
+      "hint": "亞拉戈高位",
+      "hintEn": "High Allagan",
+      "categoryId": 256,
+      "items": [
+        {
+          "id": 7166,
+          "name": "亞拉戈高位禦敵鎧靴",
+          "nameEn": "High Allagan Sabatons of Fending",
           "marketable": false,
           "srcType": "drop",
           "how": "副本／掉落"
         },
         {
-          "id": 33509,
-          "name": "帕戈爾贊制敵下身",
-          "nameEn": "Paglth'an Bottoms of Maiming",
+          "id": 7176,
+          "name": "亞拉戈高位制敵鎧靴",
+          "nameEn": "High Allagan Sabatons of Maiming",
           "marketable": false,
           "srcType": "drop",
           "how": "副本／掉落"
         },
         {
-          "id": 33515,
-          "name": "帕戈爾贊強襲騎兵褲",
-          "nameEn": "Paglth'an Hose of Striking",
+          "id": 7182,
+          "name": "亞拉戈高位強襲鎧靴",
+          "nameEn": "High Allagan Sabatons of Striking",
           "marketable": false,
           "srcType": "drop",
           "how": "副本／掉落"
         },
         {
-          "id": 33527,
-          "name": "帕戈爾贊游擊騎兵褲",
-          "nameEn": "Paglth'an Hose of Scouting",
+          "id": 7192,
+          "name": "亞拉戈高位精準筒靴",
+          "nameEn": "High Allagan Boots of Aiming",
           "marketable": false,
           "srcType": "drop",
           "how": "副本／掉落"
         },
         {
-          "id": 33521,
-          "name": "帕戈爾贊精準下身",
-          "nameEn": "Paglth'an Bottoms of Aiming",
+          "id": 7212,
+          "name": "亞拉戈高位詠咒筒靴",
+          "nameEn": "High Allagan Boots of Casting",
           "marketable": false,
           "srcType": "drop",
           "how": "副本／掉落"
         },
         {
-          "id": 33539,
-          "name": "帕戈爾贊詠咒馬褲",
-          "nameEn": "Paglth'an Breeches of Casting",
+          "id": 7202,
+          "name": "亞拉戈高位治癒長靴",
+          "nameEn": "High Allagan Thighboots of Healing",
           "marketable": false,
           "srcType": "drop",
           "how": "副本／掉落"
         },
         {
-          "id": 33533,
-          "name": "帕戈爾贊治癒馬褲",
-          "nameEn": "Paglth'an Breeches of Healing",
+          "id": 39518,
+          "name": "威望亞拉戈高位禦敵鎧靴",
+          "nameEn": "Prestige High Allagan Sabatons of Fending",
           "marketable": false,
-          "srcType": "drop",
-          "how": "副本／掉落"
+          "srcType": "npc-trade",
+          "how": "NPC 戰利水晶兌換 ×1500"
+        },
+        {
+          "id": 39523,
+          "name": "威望亞拉戈高位制敵鎧靴",
+          "nameEn": "Prestige High Allagan Sabatons of Maiming",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 戰利水晶兌換 ×1500"
+        },
+        {
+          "id": 39528,
+          "name": "威望亞拉戈高位強襲鎧靴",
+          "nameEn": "Prestige High Allagan Sabatons of Striking",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 戰利水晶兌換 ×1500"
+        },
+        {
+          "id": 39538,
+          "name": "威望亞拉戈高位游擊長靴",
+          "nameEn": "Prestige High Allagan Thighboots of Scouting",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 戰利水晶兌換 ×1500"
+        },
+        {
+          "id": 39533,
+          "name": "威望亞拉戈高位精準筒靴",
+          "nameEn": "Prestige High Allagan Boots of Aiming",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 戰利水晶兌換 ×1500"
+        },
+        {
+          "id": 39548,
+          "name": "威望亞拉戈高位詠咒筒靴",
+          "nameEn": "Prestige High Allagan Boots of Casting",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 戰利水晶兌換 ×1500"
+        },
+        {
+          "id": 39543,
+          "name": "威望亞拉戈高位治癒長靴",
+          "nameEn": "Prestige High Allagan Thighboots of Healing",
+          "marketable": false,
+          "srcType": "npc-trade",
+          "how": "NPC 戰利水晶兌換 ×1500"
+        },
+        {
+          "id": 13852,
+          "name": "亞拉戈高位禦敵鎧靴（複製品）",
+          "nameEn": "Replica High Allagan Sabatons of Fending",
+          "marketable": true,
+          "srcType": "craft",
+          "how": "製作"
+        },
+        {
+          "id": 13857,
+          "name": "亞拉戈高位制敵鎧靴（複製品）",
+          "nameEn": "Replica High Allagan Sabatons of Maiming",
+          "marketable": true,
+          "srcType": "craft",
+          "how": "製作"
+        },
+        {
+          "id": 13862,
+          "name": "亞拉戈高位強襲鎧靴（複製品）",
+          "nameEn": "Replica High Allagan Sabatons of Striking",
+          "marketable": true,
+          "srcType": "craft",
+          "how": "製作"
+        },
+        {
+          "id": 13867,
+          "name": "亞拉戈高位精準筒靴（複製品）",
+          "nameEn": "Replica High Allagan Boots of Aiming",
+          "marketable": true,
+          "srcType": "craft",
+          "how": "製作"
+        },
+        {
+          "id": 13877,
+          "name": "亞拉戈高位詠咒筒靴（複製品）",
+          "nameEn": "Replica High Allagan Boots of Casting",
+          "marketable": true,
+          "srcType": "craft",
+          "how": "製作"
+        },
+        {
+          "id": 13872,
+          "name": "亞拉戈高位治癒長靴（複製品）",
+          "nameEn": "Replica High Allagan Thighboots of Healing",
+          "marketable": true,
+          "srcType": "craft",
+          "how": "製作"
         }
       ]
     }
@@ -313,49 +657,49 @@
   "dyes": {
     "weapon": {
       "slotName": "武器",
-      "name": "煤煙黑",
-      "nameEn": "Soot Black",
-      "dyeItemId": 5734,
-      "family": "黑色系",
-      "familyEn": "black"
+      "name": "果酒紅",
+      "nameEn": "Wine Red",
+      "dyeItemId": 5740,
+      "family": "紅色系",
+      "familyEn": "red"
     },
     "head": {
       "slotName": "頭部",
-      "name": "鐵鏽紅",
-      "nameEn": "Rust Red",
-      "dyeItemId": 5739,
-      "family": "紅色系",
-      "familyEn": "red"
+      "name": "柔彩綠",
+      "nameEn": "Pastel Green",
+      "dyeItemId": 13711,
+      "family": "綠色系",
+      "familyEn": "green"
     },
     "body": {
       "slotName": "身體",
-      "name": "煤煙黑",
-      "nameEn": "Soot Black",
-      "dyeItemId": 5734,
-      "family": "黑色系",
-      "familyEn": "black"
+      "name": "盜龍藍",
+      "nameEn": "Raptor Blue",
+      "dyeItemId": 5797,
+      "family": "藍色系",
+      "familyEn": "blue"
     },
     "hands": {
       "slotName": "手部",
-      "name": "鐵鏽紅",
-      "nameEn": "Rust Red",
-      "dyeItemId": 5739,
-      "family": "紅色系",
-      "familyEn": "red"
+      "name": "葉岩棕",
+      "nameEn": "Shale Brown",
+      "dyeItemId": 5759,
+      "family": "棕色系",
+      "familyEn": "brown"
     },
     "legs": {
       "slotName": "腿部",
-      "name": "煤煙黑",
-      "nameEn": "Soot Black",
-      "dyeItemId": 5734,
-      "family": "黑色系",
-      "familyEn": "black"
+      "name": "盜龍藍",
+      "nameEn": "Raptor Blue",
+      "dyeItemId": 5797,
+      "family": "藍色系",
+      "familyEn": "blue"
     },
     "feet": {
       "slotName": "腳部",
-      "name": "鐵鏽紅",
-      "nameEn": "Rust Red",
-      "dyeItemId": 5739,
+      "name": "果酒紅",
+      "nameEn": "Wine Red",
+      "dyeItemId": 5740,
       "family": "紅色系",
       "familyEn": "red"
     }
@@ -366,59 +710,59 @@
     "accHints": 0,
     "maxWithoutDye": 100,
     "needDyeFor100": true,
-    "note100": "頭・身・手 3 件提示裝到位（染上指定色），腿部穿任意裝備染成「煤煙黑」即可補滿 100 分——本週驗證版滿分不需特定腿部提示裝。",
-    "easy80": "頭部 1 件（黃銅眼鏡）＋鐵鏽紅染色即達 80 分。"
+    "note100": "手・腿・腳 3 件提示裝到位並染上指定色（葉岩棕／盜龍藍／果酒紅），身體部位穿任意裝備染成「盜龍藍」即可補滿 100 分——本週驗證版滿分不需特定身體提示裝。",
+    "easy80": "手部 1 件提示裝 ＋ 身體、腿部任意裝備染「盜龍藍」即達 80 分。"
   },
   "links": {
-    "theorycraft": "https://www.reddit.com/r/ffxiv/comments/1upx7hs/fashion_report_for_week_of_20260707/",
-    "results": "https://www.reddit.com/r/ffxiv/comments/1usj9vd/fashion_report_results_for_week_of_7102026_week/"
+    "theorycraft": "https://www.reddit.com/r/ffxiv/comments/1uwxy3n/fashion_report_for_week_of_20260714/",
+    "results": "https://www.reddit.com/r/ffxiv/comments/1uyw5ew/fashion_report_results_for_week_of_7172026_week/"
   },
   "easy100": [
     {
-      "slot": "head",
-      "id": 2668,
-      "name": "黃銅眼鏡",
-      "how": "NPC 金幣商店 355 金幣",
-      "srcType": "npc-gil",
-      "dye": "鐵鏽紅",
-      "npc": true,
-      "market": true
-    },
-    {
-      "slot": "body",
-      "id": 15476,
-      "name": "極限倖存者襯衫",
-      "how": "製作",
-      "srcType": "craft",
-      "dye": "煤煙黑",
-      "market": true,
-      "alt": "春意襯衫（NPC 8,910 金幣・固定成本）"
-    },
-    {
       "slot": "hands",
-      "id": 10812,
-      "name": "長頸駝革精準護臂",
-      "how": "NPC 金幣商店 14,744 金幣",
-      "srcType": "npc-gil",
-      "dye": "鐵鏽紅",
-      "npc": true,
-      "market": true
+      "id": 13850,
+      "name": "亞拉戈高位禦敵手鎧（複製品）",
+      "how": "製作／市場板",
+      "srcType": "craft",
+      "dye": "葉岩棕",
+      "market": true,
+      "alt": "亞拉戈高位禦敵手鎧（巴哈姆特大迷宮掉落・不可交易）"
+    },
+    {
+      "slot": "legs",
+      "id": 13851,
+      "name": "亞拉戈高位禦敵軟甲褲（複製品）",
+      "how": "製作／市場板",
+      "srcType": "craft",
+      "dye": "盜龍藍",
+      "market": true,
+      "alt": "亞拉戈高位禦敵軟甲褲（巴哈姆特大迷宮掉落・不可交易）"
+    },
+    {
+      "slot": "feet",
+      "id": 13852,
+      "name": "亞拉戈高位禦敵鎧靴（複製品）",
+      "how": "製作／市場板",
+      "srcType": "craft",
+      "dye": "果酒紅",
+      "market": true,
+      "alt": "亞拉戈高位禦敵鎧靴（巴哈姆特大迷宮掉落・不可交易）"
     }
   ],
   "easy80": {
-    "desc": "史上最省——只要 1 件頭部裝備＋染色即可達標。",
+    "desc": "只要 1 件手部提示裝＋2 個部位染色即可達標。",
     "items": [
       {
-        "slot": "head",
-        "id": 2668,
-        "name": "黃銅眼鏡",
-        "how": "NPC 金幣商店 355 金幣",
-        "srcType": "npc-gil",
-        "npc": true,
-        "dye": "鐵鏽紅"
+        "slot": "hands",
+        "id": 13850,
+        "name": "亞拉戈高位禦敵手鎧（複製品）",
+        "how": "製作／市場板",
+        "srcType": "craft",
+        "market": true,
+        "dye": "葉岩棕"
       }
     ],
     "score": 80,
-    "note": "頭部戴「黃銅眼鏡」（NPC 355 金幣）染成鐵鏽紅，其餘部位穿滿任意裝備即可達 80 分、拿滿當週 MGP。社群實測驗證。"
+    "note": "手部戴「亞拉戈高位禦敵手鎧（複製品）」（可製作／市場板購入），再把身體與腿部的任意裝備染成「盜龍藍」，即可達 80 分、拿滿當週 MGP。社群實測驗證版採用非複製品的「亞拉戈高位禦敵手鎧」（巴哈姆特大迷宮掉落），兩者同屬本週接受清單、計分相同，複製品可交易故更好取得。"
   }
 }

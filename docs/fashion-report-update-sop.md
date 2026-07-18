@@ -2,6 +2,7 @@
 
 > 這是可重複執行的「照著做」版本。首次探索與各步驟自動化評估見 [fashion-report-workflow.md](fashion-report-workflow.md)（week 440 首跑記錄）。
 > 本手冊以 **week 441「知性蠻族工匠」（2026-07-15 執行）** 為 worked example，指令可直接複用。
+> **最新一次執行：week 442「亞拉戈高位裝扮」（2026-07-18），新增兩條規則——步驟 5 的 tw-items 損毀改道、步驟 6 的通用版染劑優先。**
 >
 > 產出物：更新 [`data/fashion-report.json`](../data/fashion-report.json)，頁面 [`tools/fashion-report/index.html`](../tools/fashion-report/index.html) 讀它即時渲染。
 
@@ -70,11 +71,19 @@ curl -s -H "User-Agent: $UA" "https://fashionreportxiv.com/api/hint?hint=Brain%2
 week 441 共 **33 件**：頭 8、身 7、手 6、腿 12。回傳英文名＋icon URL。
 > key 是（提示,部位）二元組——入庫時必須帶 slot。
 
-## 5. 英文名 → itemId → 台服繁中名（站內 msgpack，零外部查詢）
+## 5. 英文名 → itemId → 台服繁中名（站內資產，零外部查詢）
 
 - `out_data/en-items.msgpack`（`id→{en}`）反轉成「小寫英文名→id」索引
-- `out_data/tw-items.msgpack`（`id→{tw}`）取台服名
-- 有多個 id 時，優先取「有台服名」的那個
+- 台服名＋`marketable` 走 **`data/items.json`**（`.data` 陣列，43748 筆，欄位 `id`／`name`／`marketable`）
+- 有多個 id 時，優先取「在 items.json 內（＝有台服名）」的那個
+
+> ⚠️ **不要用 `out_data/tw-items.msgpack` 取台服名——該檔已損毀**（2026-07-18 week 442 發現）。
+> 第 11854 筆附近有字串的長度前綴與實際位元組數不符，`@msgpack/msgpack` v3 解碼會在該處失步，
+> 先報 `The type of key must be string or number but object`（把字串中段的 `0x82` 誤讀成 fixmap），
+> 加 `mapKeyConverter` 繞過後再爆 `Offset is outside the bounds of the DataView`。
+> `en-items.msgpack` 結構相同但**正常**，可照用。
+> `data/items.json` 本身就是由 tw-items 產出的，取台服名效果等同，故直接改道即可。
+> **注意：`scripts/build-*.mjs` 全都直接 decode tw-items.msgpack，重建任何資料庫前要先修檔或改道。**
 
 **week 441 驗收：33/33 命中、同名歧義 0、無台服名 0。** ✅
 
@@ -82,9 +91,14 @@ week 441 共 **33 件**：頭 8、身 7、手 6、腿 12。回傳英文名＋ico
 
 ## 6. 染色繁中化（染劑也是物品，走同一條映射）
 
-`"<色名> Dye"` → tw-items → 去掉「染劑」尾。week 441：
+`"<色名> Dye"` → 物品映射 → 去掉「染劑」尾。week 441：
 - Soot Black → **煤煙黑**（5734，黑色系）
 - Rust Red → **鐵鏽紅**（5739，紅色系）
+
+**通用版優先規則（week 442 新增）**：先查 `"General-purpose <色名> Dye"`，有台服名就用它；查不到才退回 `"<色名> Dye"`。
+原因：部分顏色有兩個物品——原版多為**商城限定**（台服名帶 `EX` 前綴），另有同色的 **General-purpose（通用）版**可在遊戲內取得。
+week 442 的 Pastel Green 就是這種：`Pastel Green Dye` = 8737「EX柔彩綠染劑」（商城），`General-purpose Pastel Green Dye` = 13711「柔彩綠染劑」（遊戲內）。
+顏色相同，推薦通用版對玩家才實用，顯示名也乾淨（不帶 EX）。ARR 系 5xxx 的老染劑沒有這個問題，會自動走 fallback。
 
 ## 7. Garland Tools 取得方式 ＋ 固定成本（每件一查，250ms 間隔）
 
@@ -116,6 +130,12 @@ week 441 驗證版特別省事：
 
 > 取捨原則（延續 440）：① NPC 金幣/詩學等固定成本最優先 → ② 市場板 → ③ 製作 → ④ 副本/掉落 → ⑤ 零式/絕版墊底。**有 verified easy 套裝時直接採用**（已實測達標），我方只補取得方式與替代。
 
+**week 442 的例外：同清單內可換更好取得的件（新增規則）**
+verified easy 套裝指定的是原版「亞拉戈高位禦敵手鎧」等（巴哈姆特大迷宮掉落・不可交易），
+但同一份接受清單裡有**複製品版**（可製作・可交易），依取捨原則②③優於④。
+兩者同屬該部位的接受清單、**計分完全相同**，故推薦改用複製品，並在 `alt`／`note` 註明原版與替換理由。
+> 判準：只有在「替換件與 verified 件同部位、同屬本週接受清單」時才可換——這不影響達標，只換取得難度。跨部位或清單外的件不可自行替換。
+
 ## 9. 組檔 & 驗收
 
 - 組出 `data/fashion-report.json`（schema 見 workflow 文件；本次新增 `scoring.note100`、`links.results`、easy 項目的 `dye` 欄）。
@@ -131,4 +151,6 @@ week 441 驗證版特別省事：
 1. **codify 成 `scripts/update-fashion-report.mjs`**：本次步驟 1–7 全程式化無阻礙（map + build 兩支腳本已在本次跑通，邏輯可直接搬）。
 2. **預建 `data/fashion-categories.json`**（270 分類字典＋week+9 位移）→ 每週零 XIVAPI 查詢。
 3. **hints-db 累積**：把（categoryId, slot）→items 寫入 `data/fashion-hints-db.json`，重複分類離線預填。
-4. **week 442**：2026-07-17（五）開放後重跑本手冊即可一步到位到當期。
+4. ~~**week 442**：2026-07-17（五）開放後重跑本手冊~~ — **已完成（2026-07-18）**，見步驟 5／6 新增規則。
+5. **修復 `out_data/tw-items.msgpack`**（步驟 5 的警告）：該檔第 11854 筆附近字串長度前綴損毀，目前時尚品鑑管線已改道 `data/items.json` 不受影響，但 `scripts/build-*.mjs` 全都還在 decode 它——**重建任何資料庫前必須先處理**（重新產出該 msgpack，或把 build 腳本一併改道 items.json）。
+6. **week 443**：2026-07-24（五）16:00 評分開放後重跑本手冊。主題已可預查＝CN CSV row 452「真麻正式装」→真麻正式裝。

@@ -22,7 +22,7 @@
 | 1.3 | 限時採集節點查詢 | `/tools/gathering/` | 完成（改接 gathering.json/items.json/maps.json，limited 225 筆→213 筆顯示，篩選/排序/追蹤清單/Teamcraft flag 補齊，06-15重做） |
 | — | 天氣預報 | `/tools/weather/` | 完成（改用共用模組 assets/js/eorzea-weather.js，天氣表接 maps.json weatherRates，mapId 統一，06-15重做） |
 | 1.5 | 風脈泉追蹤器 | `/tools/aether-currents/` | 完成（31 地區 303 個風脈泉，任務型151筆/野外型152筆，座標暫無，06-16新增） |
-| 1.6 | 時尚品鑑推薦 | `/tools/fashion-report/` | 規劃中（每週更新，需半自動） |
+| 1.6 | 時尚品鑑推薦 | `/tools/fashion-report/` | 完成（頁面 07-03 上線，每週依 [SOP](fashion-report-update-sop.md) 半自動更新；資料 `data/fashion-report.json`，前端自算週次、過期自動顯示存檔卡。**目前更新到 week 442「亞拉戈高位裝扮」verified**） |
 | 1.7 | 幻化配裝圖鑑 | `/tools/glamour/` | 完成（07-15 由獨立 repo 併入：精選配裝＋Mirapri 社群＋官方套裝 1971 套三檢視，收藏星號、染色/交易徽章、wiki 示意照；07-16 上線資產進版控——縮圖/官方示意照/icons/精選原圖＋mirapri_outfits.js/official_sets.js 共約 850MB 已 push，線上完整可用；**僅 mirapri 原圖 669MB 留本機**（加入會破 Pages 發佈 1GB 上限，彈窗自動退回縮圖），重建後衍生 js 記得 commit；資料管線為 Python（py scripts\update_all.py），細節見 tools/glamour/CLAUDE.md；07-16 介面統整——改用站內共用色票/字體、加「← 水神的工具箱」導覽與頁尾，官方套裝卡不再顯示 alljob 原始 tag） |
 
 ### 收藏／成就追蹤（共通規格見 feature-specs 第二章）
@@ -186,6 +186,9 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 6. 其他規劃：時尚品鑑、冒險者小隊計算機、藏寶圖、園藝配種、釣魚紀錄
 
 ## 五、更新紀錄
+
+- **2026-07-18（時尚品鑑 week 442 更新＋兩項管線發現）**：依 [SOP](fashion-report-update-sop.md) 更新 `data/fashion-report.json` 到 **week 442「亞拉戈高位裝扮」（Allagan on High）verified 版**。本週 4 個提示同為 `High Allagan`（categoryId 256）分佈在身/手/腿/腳，接受清單 **76 件（每部位 19 件）**，映射驗收 76/76、同名歧義 0、無台服名 0。結構單純：每部位＝原版 6 件（巴哈姆特大迷宮掉落）＋威望版 7 件（戰利水晶 ×1500）＋複製品 6 件（可製作・可交易）。染色 6 部位：武器/腳＝果酒紅、頭＝柔彩綠、身/腿＝盜龍藍、手＝葉岩棕。推薦採複製品（可製作／市場板）而非社群驗證版的原版掉落件——兩者同屬本週接受清單、計分相同，複製品可交易故更好取得（已於 easy80 note 說明）。瀏覽器實測（桌機 1440／手機 375）：週次 442 未過期、100/80 分卡與染色標籤、6 格染色表、76 件完整清單皆正確，無 console error。
+  **本次兩項新發現（已寫入 SOP）**：(1) **`out_data/tw-items.msgpack` 已損毀**——第 11854 筆附近有字串長度前綴與實際位元組不符，`@msgpack/msgpack` v3 解碼中途失步報錯（`en-items.msgpack` 正常）。本次改以 `data/items.json`（本身即由 tw-items 產出，43748 筆含 `name`＋`marketable`）取代，效果相同。**⚠️ 所有 `scripts/build-*.mjs` 都直接 decode 這個檔，重建任何資料庫前需先修復或改道**。(2) **染劑映射新增「通用版優先」規則**——本週 Pastel Green 對到 8737「EX柔彩綠染劑」（商城限定），同色的遊戲內可取得版本是 13711「柔彩綠染劑」（General-purpose）；已改為優先取 `General-purpose <色> Dye`，顯示名去掉 EX。
 
 - **2026-07-16（介面統整＋遊戲內分頁對齊＋釣魚頁魚糕式重做）**：(1) **幻化配裝圖鑑介面統整**——`tools/glamour/index.html` 由舊獨立站 GitHub 深色系（#0d1117）改為站內共用色票（--bg-base #0a0c10、金 #c8a96e、藍 #4fc3f7）、共用字體堆疊與背景光暈，navbar 加「← 水神的工具箱」返回鍵、標題改實色金並更名「幻化配裝圖鑑」、`<title>` 對齊站內格式、補共用頁尾；官方套裝卡片 tag 改套 CARD_TAGS 過濾（不再露出未翻譯的 `alljob`）。(2) **收藏頁 vs 遊戲內圖鑑分頁稽核**——樂譜（gameCategory 分類＋No. 排序）、青魔（No.）、幻卡（編號＋星級）原本已符合；**表情頁補上遊戲內分頁**（一般/特殊/情感表現，data/emotes.json 的 category 欄 General/Special/Expressions），卡片加分頁標籤；坐騎/寵物在遊戲內為無分類平鋪圖鑑，維持現狀。(3) **釣魚頁參考魚糕重做**——卡片改固定四欄資訊列（釣場/釣餌/時間/天氣，無限制時明示「全天/不限」）、ET 24 小時時間窗 bar（金色＝可釣時段、綠線＝現在 ET，跨午夜自動切兩段）、釣餌鏈以金色箭頭串接＋竿型（! 輕杆/!! 中杆/!!! 重杆）與提鉤（精準/強力）小章、天氣鏈「前一時段 → 當前」、直感標籤；新增「地區」下拉篩選（釣場→地圖→region，對應遊戲內釣魚手帳的地區分頁，選項依 maps.json 資料片順序）。瀏覽器實測（桌機 1440/手機 375）：三頁皆無 console error，地區篩選（庫爾札斯 78 筆）、表情分頁（情感表現 29 筆）、時間窗 bar 與倒數皆正常。
 
