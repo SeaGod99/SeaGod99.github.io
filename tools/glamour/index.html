@@ -652,6 +652,7 @@ function loadMirapri() {
       ALL_OUTFITS = ALL_OUTFITS.concat(_MIRAPRI_RAW.map(annotate));
     populateSrcDetail();
     applyFilters();
+    restorePage();          // 網址指定的頁碼／套裝（資料延遲載入，載完才回得去）
     loadSets();   // 社群載完再載官方套裝（彈窗「所屬套裝」反查也靠這份）
   };
   s.onerror = () => { miraLoaded = true; updateSubtitle(); loadSets(); };
@@ -683,7 +684,7 @@ function loadSets() {
         }
       }
     }
-    if (viewMode === "sets") { populateSrcDetail(); applyFilters(); }
+    if (viewMode === "sets") { populateSrcDetail(); applyFilters(); restorePage(); }
     loadItemSources();   // 最後載完整來源表（191KB），到齊後細項選單重建
   };
   s.onerror = () => { setsLoaded = true; loadItemSources(); };
@@ -731,7 +732,8 @@ function loadItemSources() {
     }
     SK_GEN++;
     populateSrcDetail();
-    if (srcDetail) applyFilters();
+    applyFilters();       // 分類與細項都依賴這份表，載入後一律重算
+    restorePage();
   };
   document.head.appendChild(s);
 }
@@ -851,9 +853,14 @@ function populateSrcDetail() {
       + items.map(([src, n]) => `<option value="${esc(src)}">${esc(src)}（${n}）</option>`).join("")
       + `</optgroup>`;
   }
+  // 選中的細項不在清單裡（換了檢視／分類，或資料還在載入）→ 補一個臨時選項撐著，
+  // 不要把 srcDetail 清掉：分享連結進站時資料尚未載完，清掉就還原不回來了
+  if (srcDetail && ![...groups.values()].flat().some(([k]) => k === srcDetail)) {
+    html += `<optgroup label="${currentLang === "en" ? "current" : "目前選擇"}">`
+      + `<option value="${esc(srcDetail)}">${esc(srcDetail)}</option></optgroup>`;
+  }
   sel.innerHTML = html;
   sel.value = srcDetail;
-  if (sel.value !== srcDetail) { srcDetail = ""; sel.value = ""; }   // 換檢視/分類後失效
 }
 
 function matchSrcDetail(e) {
@@ -1093,7 +1100,136 @@ function goPage(p) {
   if (p < 1 || p > totalPages) return;
   currentPage = p;
   renderGrid();
+  syncURL(true);
   window.scrollTo({top:0, behavior:"smooth"});
+}
+
+// ════════════════════════════════════════════════════════
+// 瀏覽器上一頁／下一頁（History API）
+// ════════════════════════════════════════════════════════
+// 檢視、篩選、頁碼、開啟的套裝全部同步到網址列，瀏覽器的上一頁才有東西可回，
+// 網址也就能直接分享／加書籤。
+// 規則：使用者動作 → pushState（可回上一步）；打字搜尋、彈窗內上下套、關彈窗
+//       → replaceState（否則每按一鍵就多一筆歷史，上一頁要按 20 次才回得去）。
+const URL_KEYS = [
+  ["v",   () => viewMode,          "outfits"],
+  ["p",   () => currentPage,       1],
+  ["src", () => [...srcTags].sort().join(","), ""],
+  ["job", () => [...jobTags].sort().join(","), ""],
+  ["d",   () => srcDetail,         ""],
+  ["q",   () => q,                 ""],
+  ["g",   () => miraFilters.gender, ""],
+  ["r",   () => miraFilters.race,  ""],
+  ["fav", () => (favOnly ? "1" : ""), ""],
+  ["tw",  () => (twOnly ? "1" : ""),  ""],
+  ["s",   () => sortMode,          "default"],
+  ["lang", () => currentLang,      "zh"],
+];
+let restoring = false;        // 正在套用網址狀態：期間一律不寫歷史
+let silentClose = false;      // 這次關彈窗是還原造成的，不要寫歷史
+let pendingModalId = null;    // 網址指定的套裝還沒載入（社群/官方套裝延遲載入）
+let openModalId = null;       // 目前開著的套裝 id（Bootstrap 的 .show class 是非同步加的，不能用來判斷）
+let modalShowing = false;     // 開啟動畫進行中——Bootstrap 此時會忽略 hide()
+let closeAfterShown = false;  // 動畫還沒跑完就被要求關（點開後馬上按上一頁）→ 等 shown 再關
+
+function currentQuery() {
+  const u = new URLSearchParams();
+  for (const [k, get, dflt] of URL_KEYS) {
+    const v = String(get());
+    if (v && v !== String(dflt)) u.set(k, v);
+  }
+  if (openModalId) u.set("id", openModalId);
+  const s = u.toString();
+  return s ? "?" + s : location.pathname;
+}
+
+function syncURL(push) {
+  if (restoring) return;
+  const url = currentQuery();
+  if (!push && url === location.search + (location.search ? "" : location.pathname)) return;
+  try {
+    history[push ? "pushState" : "replaceState"]({ url }, "", url);
+  } catch (e) { /* file:// 下部分瀏覽器不給 pushState，忽略 */ }
+}
+
+function applyURLState() {
+  const u = new URLSearchParams(location.search);
+  restoring = true;
+  try {
+    viewMode = u.get("v") === "sets" ? "sets" : "outfits";
+    srcTags = new Set((u.get("src") || "").split(",").filter(Boolean));
+    jobTags = new Set((u.get("job") || "").split(",").filter(Boolean));
+    srcDetail = u.get("d") || "";
+    q = u.get("q") || "";
+    miraFilters = { gender: u.get("g") || "", race: u.get("r") || "" };
+    favOnly = u.get("fav") === "1";
+    twOnly = u.get("tw") === "1";
+    sortMode = u.get("s") || "default";
+    const lang = u.get("lang") === "en" ? "en" : "zh";
+    if (lang !== currentLang) setLang(lang);
+
+    syncControls();
+    populateSrcDetail();
+    applyFilters();                       // 會把 currentPage 歸 1
+    const p = parseInt(u.get("p"), 10) || 1;
+    const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+    currentPage = Math.min(Math.max(1, p), totalPages);
+    renderGrid();
+
+    // 彈窗：網址有 id 就開，沒有就關（＝上一頁關掉彈窗）
+    const id = u.get("id") || "";
+    if (id) {
+      const idx = filtered.findIndex(e => String(e.id) === id);
+      if (idx >= 0) { pendingModalId = null; openModal(idx, "none"); }
+      else pendingModalId = id;          // 資料還沒載完，載完再試
+    } else if (openModalId) {
+      closeModal(true);
+    }
+  } finally {
+    restoring = false;
+  }
+}
+
+// 社群／官方套裝資料是延遲載入的，載完 applyFilters() 會把頁碼歸 1，
+// 這裡依網址把頁碼與待開的套裝補回來。
+function restorePage() {
+  const p = parseInt(new URLSearchParams(location.search).get("p"), 10) || 1;
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const want = Math.min(Math.max(1, p), totalPages);
+  if (want !== currentPage) { currentPage = want; renderGrid(); }
+  retryPendingModal();
+}
+
+// 資料延遲載入完成後，補開網址指定的套裝
+function retryPendingModal() {
+  if (!pendingModalId) return;
+  const idx = filtered.findIndex(e => String(e.id) === pendingModalId);
+  if (idx < 0) return;
+  pendingModalId = null;
+  restoring = true;
+  try { openModal(idx, "none"); } finally { restoring = false; }
+}
+
+// 把目前狀態反映回篩選列的按鈕／輸入框（上一頁回來時 UI 要跟著變）
+function syncControls() {
+  document.querySelectorAll(".filter-btn[data-filter]").forEach(b => {
+    const set = b.dataset.group === "src" ? srcTags : jobTags;
+    b.classList.toggle("active", set.has(b.dataset.filter));
+  });
+  for (const f of ["gender", "race"]) {
+    document.querySelectorAll(`.filter-btn[data-mf="${f}"]`).forEach(b => b.classList.remove("active"));
+    const b = document.querySelector(`.filter-btn[data-mf="${f}"][data-val="${miraFilters[f]}"]`);
+    if (b) b.classList.add("active");
+  }
+  document.getElementById("fav-filter-btn").classList.toggle("active", favOnly);
+  document.getElementById("tw-btn").classList.toggle("active", twOnly);
+  document.getElementById("search-input").value = q;
+  document.getElementById("sort-select").value = sortMode;
+  document.getElementById("view-outfits-btn").classList.toggle("view-active", viewMode === "outfits");
+  document.getElementById("view-sets-btn").classList.toggle("view-active", viewMode === "sets");
+  const isSets = viewMode === "sets";
+  document.getElementById("row-gender").classList.toggle("d-none", isSets);
+  document.getElementById("row-race").classList.toggle("d-none", isSets);
 }
 
 // ════════════════════════════════════════════════════════
@@ -1104,7 +1240,8 @@ function getModal() {
   if (!bsModal) bsModal = new bootstrap.Modal(document.getElementById("modal"), { focus: true });
   return bsModal;
 }
-function openModal(globalIdx) {
+// hist：push＝可用上一頁關掉（卡片點擊）｜replace＝不新增歷史（彈窗內上下套）｜none＝還原中
+function openModal(globalIdx, hist) {
   currentIdx = globalIdx;
   const e = filtered[globalIdx];
   if (!e) return;
@@ -1115,14 +1252,21 @@ function openModal(globalIdx) {
   } else {
     renderMiraModal(e, globalIdx);
   }
+  openModalId = String(e.id);
+  modalShowing = true;
+  closeAfterShown = false;
   getModal().show();
   // 切換套裝時把內容捲回頂端
   const body = document.querySelector("#modal .modal-body");
   if (body) body.scrollTop = 0;
   const ic = document.getElementById("modal-info-col"); if (ic) ic.scrollTop = 0;
+  if (hist !== "none") syncURL(hist !== "replace");
 }
 
-function closeModal() {
+function closeModal(silent) {
+  if (silent) silentClose = true;
+  // 開啟動畫進行中呼叫 hide() 會被 Bootstrap 吃掉 → 記下來，等 shown 事件再關
+  if (modalShowing) { closeAfterShown = true; return; }
   if (bsModal) bsModal.hide();
 }
 // 保留相容性（舊呼叫路徑）
@@ -1130,7 +1274,8 @@ function closeMiraModal() { closeModal(); }
 
 function navModal(dir) {
   const next = currentIdx + dir;
-  if (next >= 0 && next < filtered.length) openModal(next);
+  // replace：彈窗內翻套裝不堆歷史，上一頁一次就關掉彈窗回到列表
+  if (next >= 0 && next < filtered.length) openModal(next, "replace");
 }
 
 // ════════════════════════════════════════════════════════
@@ -1537,6 +1682,7 @@ function setView(mode) {
   document.getElementById("row-race").classList.toggle("d-none", isSets);
   populateSrcDetail();   // 兩個檢視的來源字串不同（整套 vs 逐件）→ 重建選項
   applyFilters();
+  syncURL(true);
   window.scrollTo({ top: 0 });
 }
 
@@ -1551,6 +1697,7 @@ function resetFilters() {
   document.querySelectorAll(".filter-btn.filter-reset").forEach(b => b.classList.add("active"));
   populateSrcDetail();
   applyFilters();
+  syncURL(true);
 }
 
 function setLang(lang) {
@@ -1567,6 +1714,7 @@ function setLang(lang) {
   populateSrcDetail();   // 「全部」那列的字要跟著語言走
   renderGrid();
   updateSubtitle();
+  syncURL(true);
 }
 
 // ════════════════════════════════════════════════════════
@@ -1589,6 +1737,7 @@ document.addEventListener("DOMContentLoaded", () => {
       else              { set.add(tag);    btn.classList.add("active"); }
       if (btn.dataset.group === "src") populateSrcDetail();   // 細項只列選中的分類
       applyFilters();
+      syncURL(true);
     });
   });
 
@@ -1597,6 +1746,7 @@ document.addEventListener("DOMContentLoaded", () => {
     favOnly = !favOnly;
     this.classList.toggle("active", favOnly);
     applyFilters();
+    syncURL(true);
   });
 
   // 繁中版可幻化
@@ -1604,18 +1754,21 @@ document.addEventListener("DOMContentLoaded", () => {
     twOnly = !twOnly;
     this.classList.toggle("active", twOnly);
     applyFilters();
+    syncURL(true);
   });
 
   // 取得方式細項
   document.getElementById("src-detail-select").addEventListener("change", function () {
     srcDetail = this.value;
     applyFilters();
+    syncURL(true);
   });
 
   // 排序
   document.getElementById("sort-select").addEventListener("change", function () {
     sortMode = this.value;
     applyFilters();
+    syncURL(true);
   });
 
   // 清除篩選
@@ -1631,6 +1784,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const activeBtn = document.querySelector(`.filter-btn[data-mf="${field}"][data-val="${miraFilters[field]}"]`);
       if (activeBtn) activeBtn.classList.add("active");
       applyFilters();
+      syncURL(true);
     });
   });
 
@@ -1638,7 +1792,27 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("search-input").addEventListener("input", ev => {
     q = ev.target.value.trim();
     applyFilters();
+    syncURL(false);   // 打字用 replace，否則每按一鍵就多一筆歷史
   });
+
+  // 上一頁／下一頁：把網址狀態套回來
+  window.addEventListener("popstate", applyURLState);
+
+  // 彈窗被關掉（X／Esc／點背景／程式呼叫）→ 網址去掉 id，
+  // 用 replace 而不是新增歷史，免得「關掉後按上一頁」又把它開回來
+  document.getElementById("modal").addEventListener("shown.bs.modal", () => {
+    modalShowing = false;
+    if (closeAfterShown) { closeAfterShown = false; closeModal(silentClose); }
+  });
+  document.getElementById("modal").addEventListener("hidden.bs.modal", () => {
+    modalShowing = false;
+    openModalId = null;
+    if (silentClose) { silentClose = false; return; }
+    syncURL(false);
+  });
+
+  // 進站先套用網址狀態（分享連結／重新整理都能回到原畫面）
+  applyURLState();
 
   // Lightbox 開啟時，Esc 先關放大圖（攔截，避免一起把彈窗也關掉）
   document.addEventListener("keydown", ev => {
