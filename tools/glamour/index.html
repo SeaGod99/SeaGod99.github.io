@@ -56,6 +56,7 @@ body::before{ content:''; position:fixed; inset:0; pointer-events:none; z-index:
 .fav-filter.active{ background:#b45309; border-color:#b45309; color:#fff; }
 .search-input{ width:240px; border-radius:20px; }
 .sort-select{ width:auto; border-radius:20px; }
+.src-detail-select{ width:auto; max-width:22rem; border-radius:20px; }
 
 /* ── Cards ── */
 .outfit-card{ cursor:pointer; overflow:hidden; background:var(--card-bg);
@@ -277,6 +278,10 @@ body::before{ content:''; position:fixed; inset:0; pointer-events:none; z-index:
             title="伊修加德重建、無人島開拓、宇宙探索、友好部族">🏝️ 特殊玩法</button>
     <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="other"   data-group="src" data-zh="🎁 其他"     data-en="🎁 Other"
             title="成就獎勵、寶圖，以及來源尚未確認的套裝">🎁 其他</button>
+    <select class="form-select form-select-sm src-detail-select" id="src-detail-select"
+            title="細分到單一取得方式（副本名、商人、兌換貨幣…）；隨上方分類與檢視自動更新">
+      <option value="">取得方式細項：全部</option>
+    </select>
   </div>
   <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
     <span class="filter-group-label" data-zh="職業" data-en="Job">職業</span>
@@ -451,6 +456,7 @@ let filtered    = [];
 let currentPage = 1;
 let currentIdx  = 0;
 let srcTags     = new Set();   // 取得方式（可複選）
+let srcDetail   = "";          // 取得方式細項（單選；完整來源字串，如「🗡️副本掉落：水妖幻園多恩美格禁園」）
 let jobTags     = new Set();   // 職業（可複選）
 let twOnly      = false;       // 只顯示繁中版可幻化
 let sortMode    = "default";
@@ -532,6 +538,14 @@ const JOB_TAG_MAP = {
 // 取得方式篩選 tag（與 build_site.py 的 ST_TAGS 同步；改這裡記得同步後端）
 const ST_TAG_SET = new Set(["raid","quest","npc","token","scrip","craft",
                             "pvp","store","event","gs","special","other"]);
+// 取得方式細項下拉的分組順序／組名（與上方「取得方式」按鈕列一致）
+const ST_ORDER = ["raid","quest","npc","token","scrip","craft",
+                  "pvp","store","event","gs","special","other"];
+const ST_GROUP_LABEL = {
+  raid:"🗡️ 副本", quest:"📋 任務", npc:"🛒 商店", token:"🪙 代幣兌換",
+  scrip:"🔶 票據", craft:"🔨 製作採集", pvp:"⚔️ PvP", store:"💎 商城",
+  event:"🗓️ 活動", gs:"🎲 金碟", special:"🏝️ 特殊玩法", other:"🎁 其他"
+};
 const ALL_JOB = "全職業";   // 無職業限制的 job 標籤（三邊資料共用這個字）
 // 卡片上實際顯示的 tag（其餘僅供篩選）——alljob 不上卡，否則大半張卡都掛同一個標
 const CARD_TAGS = new Set(["healer","tank","caster","melee","pranged","crafter",
@@ -622,6 +636,7 @@ function loadMirapri() {
     miraLoaded = true;
     if (typeof _MIRAPRI_RAW !== "undefined")
       ALL_OUTFITS = ALL_OUTFITS.concat(_MIRAPRI_RAW.map(annotate));
+    populateSrcDetail();
     applyFilters();
     loadSets();   // 社群載完再載官方套裝（彈窗「所屬套裝」反查也靠這份）
   };
@@ -654,7 +669,7 @@ function loadSets() {
         }
       }
     }
-    if (viewMode === "sets") applyFilters();
+    if (viewMode === "sets") { populateSrcDetail(); applyFilters(); }
   };
   s.onerror = () => { setsLoaded = true; };
   document.head.appendChild(s);
@@ -681,6 +696,65 @@ function viewSet(setId) {
 // ════════════════════════════════════════════════════════
 // FILTER
 // ════════════════════════════════════════════════════════
+// ── 取得方式細項（副本名／商人名／兌換貨幣…）──
+// 官方套裝＝整套的 source；配裝＝逐件的 source。選項由目前檢視的資料現算，
+// 上方「取得方式」有選時只列該分類底下的細項。
+function outfitPieces(e) {
+  return e.type === "mirapri" ? (e.equipments || []) : (e.pieces || []);
+}
+
+function collectSources() {
+  const cnt = new Map();   // source → {n, st}
+  const bump = (src, st) => {
+    if (!src) return;
+    const rec = cnt.get(src) || { n: 0, st: ST_TAG_SET.has(st) ? st : "other" };
+    rec.n++;
+    cnt.set(src, rec);
+  };
+  if (viewMode === "sets") {
+    for (const e of SETS) bump(e.source, e.st);
+  } else {
+    for (const e of ALL_OUTFITS) {
+      const seen = new Set();   // 同一套同一來源只計一次
+      for (const p of outfitPieces(e)) {
+        if (!p || typeof p !== "object" || !p.source || seen.has(p.source)) continue;
+        seen.add(p.source);
+        bump(p.source, p.st);
+      }
+    }
+  }
+  return cnt;
+}
+
+function populateSrcDetail() {
+  const sel = document.getElementById("src-detail-select");
+  const groups = new Map();
+  for (const [src, rec] of collectSources()) {
+    if (srcTags.size && !srcTags.has(rec.st)) continue;
+    if (!groups.has(rec.st)) groups.set(rec.st, []);
+    groups.get(rec.st).push([src, rec.n]);
+  }
+  const allLabel = currentLang === "en" ? "Source detail: all" : "取得方式細項：全部";
+  let html = `<option value="">${allLabel}</option>`;
+  for (const st of ST_ORDER) {
+    const items = groups.get(st);
+    if (!items) continue;
+    items.sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "zh-Hant"));
+    html += `<optgroup label="${esc(ST_GROUP_LABEL[st] || st)}">`
+      + items.map(([src, n]) => `<option value="${esc(src)}">${esc(src)}（${n}）</option>`).join("")
+      + `</optgroup>`;
+  }
+  sel.innerHTML = html;
+  sel.value = srcDetail;
+  if (sel.value !== srcDetail) { srcDetail = ""; sel.value = ""; }   // 換檢視/分類後失效
+}
+
+function matchSrcDetail(e) {
+  if (!srcDetail) return true;
+  if (e.type === "set") return e.source === srcDetail;
+  return outfitPieces(e).some(p => p && typeof p === "object" && p.source === srcDetail);
+}
+
 function applyFilters() {
   const qLow = q.toLowerCase();
   if (viewMode === "sets") {
@@ -688,6 +762,7 @@ function applyFilters() {
       if (favOnly && !favs.has(e.id)) return false;
       if (twOnly && !e.tw) return false;
       if (srcTags.size && !srcTags.has(e.st)) return false;
+      if (!matchSrcDetail(e)) return false;
       if (jobTags.size && ![...jobTags].some(t => (e.tags || []).includes(t))) return false;
       if (qLow) {
         const hay = [e.name_zh, e.name_ja, e.name_en, e.source,
@@ -724,6 +799,7 @@ function applyFilters() {
     if (twOnly && !e.tw) return false;
     // 取得方式／職業（可複選；群組內 OR、群組間 AND，精選＋社群都適用）
     if (srcTags.size && ![...srcTags].some(t => e.tags.includes(t))) return false;
+    if (!matchSrcDetail(e)) return false;
     if (jobTags.size && ![...jobTags].some(t => e.tags.includes(t))) return false;
     // Search (all)
     if (qLow) {
@@ -732,7 +808,11 @@ function applyFilters() {
       const equips = e.type === "mirapri"
         ? (e.equipments || []).map(eq => typeof eq === "string" ? eq : ((eq.zh || "") + " " + (eq.name || ""))).join(" ").toLowerCase()
         : (e.pieces || []).map(p => (p.zh + " " + p.en).toLowerCase()).join(" ");
-      if (!name.includes(qLow) && !user.includes(qLow) && !equips.includes(qLow)) return false;
+      // 取得方式（含副本名）也可被搜到，與官方套裝檢視一致
+      const srcs = outfitPieces(e)
+        .map(p => (p && typeof p === "object" && p.source) || "").join(" ").toLowerCase();
+      if (!name.includes(qLow) && !user.includes(qLow)
+          && !equips.includes(qLow) && !srcs.includes(qLow)) return false;
     }
     return true;
   });
@@ -1287,7 +1367,7 @@ function updateSubtitle() {
   document.getElementById("result-count").textContent =
     currentLang === "en" ? filtered.length + " results" : filtered.length + " 件";
   // 有任何篩選啟用時才顯示「清除篩選」
-  const anyFilter = srcTags.size || jobTags.size || favOnly || twOnly || q ||
+  const anyFilter = srcTags.size || srcDetail || jobTags.size || favOnly || twOnly || q ||
                     miraFilters.gender || miraFilters.race;
   document.getElementById("clear-filters-btn").classList.toggle("d-none", !anyFilter);
 }
@@ -1302,18 +1382,21 @@ function setView(mode) {
   // 官方套裝沒有性別/種族欄位 → 隱藏該兩列
   document.getElementById("row-gender").classList.toggle("d-none", isSets);
   document.getElementById("row-race").classList.toggle("d-none", isSets);
+  populateSrcDetail();   // 兩個檢視的來源字串不同（整套 vs 逐件）→ 重建選項
   applyFilters();
   window.scrollTo({ top: 0 });
 }
 
 function resetFilters() {
   srcTags.clear(); jobTags.clear();
+  srcDetail = "";
   favOnly = twOnly = false;
   q = "";
   miraFilters = { gender: "", race: "" };
   document.getElementById("search-input").value = "";
   document.querySelectorAll(".filter-btn.active").forEach(b => b.classList.remove("active"));
   document.querySelectorAll(".filter-btn.filter-reset").forEach(b => b.classList.add("active"));
+  populateSrcDetail();
   applyFilters();
 }
 
@@ -1328,6 +1411,7 @@ function setLang(lang) {
   document.querySelectorAll("[data-zh-placeholder]").forEach(el => {
     el.placeholder = lang === "en" ? el.dataset.enPlaceholder : el.dataset.zhPlaceholder;
   });
+  populateSrcDetail();   // 「全部」那列的字要跟著語言走
   renderGrid();
   updateSubtitle();
 }
@@ -1338,6 +1422,7 @@ function setLang(lang) {
 document.addEventListener("DOMContentLoaded", () => {
   ALL_OUTFITS = (typeof _CURATED_RAW !== "undefined" ? _CURATED_RAW : []).map(annotate);
   filtered = [...ALL_OUTFITS];
+  populateSrcDetail();
   renderGrid();
   updateSubtitle();
   loadMirapri();   // 社群配裝（8MB）背景載入，完成後自動併入
@@ -1349,6 +1434,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const set = btn.dataset.group === "src" ? srcTags : jobTags;
       if (set.has(tag)) { set.delete(tag); btn.classList.remove("active"); }
       else              { set.add(tag);    btn.classList.add("active"); }
+      if (btn.dataset.group === "src") populateSrcDetail();   // 細項只列選中的分類
       applyFilters();
     });
   });
@@ -1364,6 +1450,12 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("tw-btn").addEventListener("click", function () {
     twOnly = !twOnly;
     this.classList.toggle("active", twOnly);
+    applyFilters();
+  });
+
+  // 取得方式細項
+  document.getElementById("src-detail-select").addEventListener("change", function () {
+    srcDetail = this.value;
     applyFilters();
   });
 

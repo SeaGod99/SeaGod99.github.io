@@ -293,6 +293,51 @@ WIKI_STYPE_LABEL = {
 }
 
 
+# ── 副本名繁中化 ──────────────────────────────────────────────
+# wiki 的 obtain 欄給的是英文副本名（{{i|Dohn Mheg}}），台服官方名唯一權威＝
+# 工具箱主庫 data/dungeons.json 的 name（由 scripts/patch-dungeon-names.mjs 以
+# Teamcraft tw-instances 校正過）。對不到＝台服未開放（例：Occult Crescent），
+# 保留英文原名，不用簡轉繁或自行翻譯。
+DUNGEONS_JSON = ROOT.parent.parent / "data" / "dungeons.json"
+_DUTY_ZH_CACHE = None
+
+
+def _duty_key(name):
+    """副本名正規化：去 wiki 的「 (Duty)」後綴、去冠詞 the、只留英數小寫"""
+    s = name.lower()
+    if s.endswith("(duty)"):
+        s = s[:-6]
+    s = s.strip()
+    if s.startswith("the "):
+        s = s[4:]
+    return "".join(c for c in s if c.isalnum())
+
+
+def duty_zh(name):
+    """英文副本名 → 台服官方名（對不到回原字串）"""
+    global _DUTY_ZH_CACHE
+    if _DUTY_ZH_CACHE is None:
+        _DUTY_ZH_CACHE = {}
+        if DUNGEONS_JSON.exists():
+            for d in json.loads(DUNGEONS_JSON.read_text(encoding="utf-8"))["data"]:
+                if d.get("nameEn") and d.get("name"):
+                    _DUTY_ZH_CACHE.setdefault(_duty_key(d["nameEn"]), d["name"])
+    return _DUTY_ZH_CACHE.get(_duty_key(name), name)
+
+
+def zh_duty_source(source):
+    """取得方式字串裡的英文副本名換成台服官方名（🗡️ 開頭者才動）"""
+    for prefix in ("🗡️副本掉落：", "🗡️"):
+        if source.startswith(prefix):
+            rest = source[len(prefix):]
+            # 已是中文（無英文字母）就不動
+            if not any(c.isascii() and c.isalpha() for c in rest):
+                return source
+            zh = duty_zh(rest)
+            return source if zh == rest else prefix + zh
+    return source
+
+
 def _obtain_name(x):
     """obtain 條目是否像「名稱」（過濾說明文句碎片，如 'Use  obtained as…'）"""
     return (x and len(x) <= 40 and x[0].isupper()
@@ -347,6 +392,7 @@ def transform_sets():
             lbl = wiki_source_label(wiki_info.get(s["id"]))
             if lbl:
                 source = lbl
+        source = zh_duty_source(source)   # 英文副本名 → 台服官方名
         codes = set((s.get("cjc_name") or "").split())
         tags = sorted(g for g, grp in _JOB_GROUPS_EN.items() if codes & grp)
         combat = {c for g in ("tank", "healer", "caster", "pranged", "melee")

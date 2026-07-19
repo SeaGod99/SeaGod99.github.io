@@ -3,7 +3,7 @@
 > **給 Claude / 後續對話的指示**：開始任何工作前先讀本檔。完成任何功能或資料變更後，**必須更新本檔**（狀態表 + 更新紀錄），並同步 `data/_meta.json` 的 status。
 > 規格細節見 `docs/feature-specs.md`，資料格式見 `data/SCHEMA.md`。
 
-**最後更新**：2026-07-16（幻化配裝圖鑑介面統整＋表情頁遊戲內分頁＋釣魚頁魚糕式卡片重做，見更新紀錄）
+**最後更新**：2026-07-19（幻化配裝圖鑑「取得方式細項」篩選＋官方套裝副本名繁中化，見更新紀錄）
 **網站**：https://seagod99.github.io ｜ GitHub Pages 純靜態 ｜ 遊戲版本 7.2
 
 ---
@@ -186,6 +186,8 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 6. 其他規劃：時尚品鑑、冒險者小隊計算機、藏寶圖、園藝配種、釣魚紀錄
 
 ## 五、更新紀錄
+
+- **2026-07-19（幻化配裝圖鑑：取得方式細項篩選＋官方套裝副本名繁中化）**：(1) **副本名繁中化**——官方套裝（mirage 層）的取得方式來自 consolegameswiki 的 `obtain` 欄，副本名是英文（「🗡️副本掉落：Dohn Mheg」）。`tools/glamour/scripts/build_site.py` 新增 `duty_zh()`／`zh_duty_source()`，以主庫 `data/dungeons.json` 的 `nameEn → name`（已由 `scripts/patch-dungeon-names.mjs` 用 Teamcraft tw-instances 校正成台服官方名）對照，正規化時去掉 wiki 的「 (Duty)」後綴與冠詞 the。57 種英文副本來源全部對到，只剩「🗡️Occult Crescent」（台服未開放，照慣例保留英文，不自行翻譯）。重跑 `py scripts\build_site.py` 產出新的 `official_sets.js`（已 commit）。(2) **取得方式細項篩選**——`tools/glamour/index.html` 在「取得方式」按鈕列後加下拉選單 `#src-detail-select`，可篩到單一來源字串（副本名、商人名、兌換貨幣…）；官方套裝檢視用整套 `source`、配裝檢視用逐件 `source`（878 個細項），選項依 st 分 optgroup、組內按套數排序，並隨上方分類按鈕與檢視切換即時重建（切檢視後失效的選擇自動清空）。配裝檢視的搜尋框也一併納入逐件取得方式（原本只搜名稱/裝備/使用者），與官方套裝檢視一致。瀏覽器實測：官方套裝選「🗡️副本掉落：水妖幻園多恩美格禁園」得 7 套、配裝檢視同副本得 16 套、只選「🎲金碟」時細項收斂為 16 項，無 console error。
 
 - **2026-07-18（時尚品鑑 week 442 更新＋兩項管線發現）**：依 [SOP](fashion-report-update-sop.md) 更新 `data/fashion-report.json` 到 **week 442「亞拉戈高位裝扮」（Allagan on High）verified 版**。本週 4 個提示同為 `High Allagan`（categoryId 256）分佈在身/手/腿/腳，接受清單 **76 件（每部位 19 件）**，映射驗收 76/76、同名歧義 0、無台服名 0。結構單純：每部位＝原版 6 件（巴哈姆特大迷宮掉落）＋威望版 7 件（戰利水晶 ×1500）＋複製品 6 件（可製作・可交易）。染色 6 部位：武器/腳＝果酒紅、頭＝柔彩綠、身/腿＝盜龍藍、手＝葉岩棕。推薦採複製品（可製作／市場板）而非社群驗證版的原版掉落件——兩者同屬本週接受清單、計分相同，複製品可交易故更好取得（已於 easy80 note 說明）。瀏覽器實測（桌機 1440／手機 375）：週次 442 未過期、100/80 分卡與染色標籤、6 格染色表、76 件完整清單皆正確，無 console error。
   **本次兩項新發現（已寫入 SOP）**：(1) **`out_data/tw-items.msgpack` 已損毀**——第 11854 筆附近有字串長度前綴與實際位元組不符，`@msgpack/msgpack` v3 解碼中途失步報錯（`en-items.msgpack` 正常）。本次改以 `data/items.json`（本身即由 tw-items 產出，43748 筆含 `name`＋`marketable`）取代，效果相同。**⚠️ 所有 `scripts/build-*.mjs` 都直接 decode 這個檔，重建任何資料庫前需先修復或改道**。(2) **染劑映射新增「通用版優先」規則**——本週 Pastel Green 對到 8737「EX柔彩綠染劑」（商城限定），同色的遊戲內可取得版本是 13711「柔彩綠染劑」（General-purpose）；已改為優先取 `General-purpose <色> Dye`，顯示名去掉 EX。
