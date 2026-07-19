@@ -27,6 +27,7 @@ FF14時尚配裝/
 │   │                     #   並用 item_fallback 名稱精確比對把 iid/dye/mb（徽章）蓋進每件裝備
 │   ├── build_sets.py     # ★ 官方套裝資料（見「官方套裝圖鑑」一節）→ data/official_sets.json
 │   ├── build_item_sources.py # ★ 裝備ID → 完整取得方式清單 → item_sources.js（見「完整取得方式」）
+│   ├── backfill_curated_iid.py # 精選套裝道具 ID 回填（名稱唯一才填；--apply 才寫入）
 │   ├── fetch_icons.py    # 官方套裝所需裝備 icon 批次下載（可續傳、已有跳過、失敗清單重試）
 │   ├── fetch_set_photos.py # ★ 官方套裝示意照：consolegameswiki 模特照下載（見「官方示意照」）
 │   ├── health_check.py   # 資料健檢（缺圖、缺繁中、重複編號、官方套裝 ID/icon/收錄準則…）
@@ -122,13 +123,19 @@ FF14時尚配裝/
       "slot": "頭部", "zh": "繁中名稱", "en": "English Name", "ja": "日本語名",
       "dye1": "—", "dye2": "—",
       "source": "🗡️副本名稱（迷宮挑戰）", "patch": "7.0",
-      "lv": "1", "job": "全職業"
+      "lv": "1", "job": "全職業", "iid": 12345
     }
   ]
 }
 ```
 
 `st` 與 `tags` 不必填——build_site.py 會從 `source` 的 emoji 與 `job` 自動推導。
+
+**`iid`（道具 ID）要填**：這是每件裝備的權威識別，徽章（可染／可交易）與
+`item_sources.js` 的完整取得方式都靠它外連。以前不填、由 build_site.py 每次用
+「名稱精確且唯一」現猜——猜不到不會報錯，該件就靜默掉 iid 連帶掉徽章與取得方式
+（改版撞同名或官方改譯名就會踩到）。現在 500/500 件都已回填，`stamp_badges()` 改為
+**有 iid 就以 iid 為準**，只有沒 id 的新件才退回名稱比對。
 
 ### 查詢流程
 
@@ -307,6 +314,9 @@ INST_TYPE = {
 2. 在 `資料來源/items.json` 搜尋繁中名稱
 3. 透過道具 ID 在 `en-items.msgpack` 取得英文名稱
 4. 透過道具 ID 在 `ja-items.msgpack` 取得日文名稱
+5. **把道具 ID 填進 `iid` 欄**（查名稱時本來就會拿到）。不想手填就先留空，
+   之後跑 `py scripts\backfill_curated_iid.py --apply` 用名稱回填——但**名稱撞名或
+   官方改譯名時它會拒填並列進報告**，屆時仍要人工補。`health_check.py` 會擋缺 id 的件。
 
 ### 4. 查詢取得方式與限制
 

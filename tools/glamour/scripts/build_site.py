@@ -107,14 +107,16 @@ PIECE_DEFAULTS = {
 # ── 徽章標記（可染欄數 / 可上拍賣板）────────────────────────────
 # 名稱→道具的「精確」索引：只在名稱唯一對應時蓋章（低信心不標，寧缺勿錯）。
 def build_badge_index():
-    """回 (by_zh, by_ja, by_en)；值 = {"iid","dye","mb"}；名稱撞多件且屬性不同 → 剔除。"""
+    """回 {"zh","ja","en","id"} 四張索引；值 = {"iid","dye","mb"}。
+    名稱撞多件且屬性不同 → 從名稱索引剔除（寧缺勿錯）；id 索引不受影響。"""
     if not ITEM_FALLBACK.exists():
-        return {}, {}, {}
+        return {"zh": {}, "ja": {}, "en": {}, "id": {}}
     items = json.loads(ITEM_FALLBACK.read_text(encoding="utf-8"))["items"]
-    by_zh, by_ja, by_en = {}, {}, {}
+    by_zh, by_ja, by_en, by_id = {}, {}, {}, {}
     _AMB = object()
     for iid, v in items.items():
         rec = {"iid": int(iid), "dye": v.get("dye", 0), "mb": bool(v.get("mb", False))}
+        by_id[int(iid)] = rec
         for key, idx in ((v.get("zh"), by_zh), (v.get("ja"), by_ja),
                          ((v.get("en") or "").lower(), by_en)):
             if not key:
@@ -127,14 +129,26 @@ def build_badge_index():
     for idx in (by_zh, by_ja, by_en):
         for k in [k for k, v in idx.items() if v is _AMB]:
             del idx[k]
-    return by_zh, by_ja, by_en
+    return {"zh": by_zh, "ja": by_ja, "en": by_en, "id": by_id}
 
 
-def stamp_badges(piece, by_zh, by_ja, by_en):
-    """把 iid/dye/mb 蓋進一件裝備 dict（curated 的 piece 或 mirapri 的 equipment）。"""
-    rec = (by_zh.get(piece.get("zh") or "")
-           or by_ja.get(piece.get("ja") or piece.get("name") or "")
-           or by_en.get((piece.get("en") or "").lower()))
+def stamp_badges(piece, bidx):
+    """把 iid/dye/mb 蓋進一件裝備 dict（curated 的 piece 或 mirapri 的 equipment）。
+
+    **資料檔已記 iid 就以 iid 為準**（精選套裝 data/curated_outfits.json 已回填），
+    只有沒 id 的才退回名稱比對——名稱比對遇到改版同名／官方改譯名會靜默對不到，
+    該件就掉 iid、跟著失去來源與徽章（見 docs/專案慣例與記憶.md §5.9）。
+    """
+    iid = piece.get("iid")
+    if iid:
+        rec = bidx["id"].get(int(iid))
+        if rec:
+            piece["dye"] = rec["dye"]
+            piece["mb"] = rec["mb"]
+        return True          # id 是權威，就算 fallback 沒收錄也算對到
+    rec = (bidx["zh"].get(piece.get("zh") or "")
+           or bidx["ja"].get(piece.get("ja") or piece.get("name") or "")
+           or bidx["en"].get((piece.get("en") or "").lower()))
     if rec:
         piece["iid"] = rec["iid"]
         piece["dye"] = rec["dye"]
@@ -500,10 +514,10 @@ def attach_set_photos(sets, curated, mirapri):
 def main():
     curated = normalize_curated(json.loads(CURATED_JSON.read_text(encoding="utf-8")))
 
-    # 徽章（可染/拍賣板）：名稱精確對回道具 ID，蓋進每件裝備
-    by_zh, by_ja, by_en = build_badge_index()
-    if by_zh or by_ja:
-        n_cur = sum(stamp_badges(p, by_zh, by_ja, by_en)
+    # 徽章（可染/拍賣板）：以 iid 為準（精選已記 id），無 id 才用名稱對回道具 ID
+    bidx = build_badge_index()
+    if bidx["zh"] or bidx["ja"]:
+        n_cur = sum(stamp_badges(p, bidx)
                     for o in curated for p in o.get("pieces", []))
         n_tot = sum(len(o.get("pieces", [])) for o in curated)
         print(f"  徽章蓋章（精選）：{n_cur}/{n_tot} 件")
@@ -565,13 +579,13 @@ def main():
             force_recon.add(o["id"])
 
     mirapri = [transform_mirapri(o, dyemap, vismap, piecemap, reconmap, force_recon) for o in arr if o.get("type") == "mirapri"]
-    if by_zh or by_ja:
+    if bidx["zh"] or bidx["ja"]:
         n_hit = n_all = 0
         for m in mirapri:
             for eq in m.get("equipments", []):
                 if isinstance(eq, dict):
                     n_all += 1
-                    n_hit += stamp_badges(eq, by_zh, by_ja, by_en)
+                    n_hit += stamp_badges(eq, bidx)
         print(f"  徽章蓋章（社群）：{n_hit}/{n_all} 件")
     if reconmap:
         print(f"  空殼重建合併：{sum(1 for m in mirapri if m.get('id') in reconmap)} 套")

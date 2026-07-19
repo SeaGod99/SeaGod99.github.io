@@ -87,6 +87,18 @@ def main():
     total = sum(len(o["pieces"]) for o in curated)
     print(f"  共 {total} 件：缺繁中 {n_zh}、取得方式待確認 {n_src_unconfirmed}、缺版本 {n_patch}")
 
+    # 道具 ID：精選的權威來源是 data/curated_outfits.json 的 iid。缺 id 的件會
+    # 掉徽章與 item_sources.js 的完整取得方式，而且不會有任何錯誤訊息 → 這裡擋。
+    src_json = json.loads((ROOT / "data" / "curated_outfits.json").read_text(encoding="utf-8"))
+    no_id = [f"#{o.get('id')} {p.get('slot')} {p.get('zh') or p.get('ja') or p.get('en')}"
+             for o in src_json for p in o.get("pieces", []) if not p.get("iid")]
+    if no_id:
+        w(f"data/curated_outfits.json 有 {len(no_id)} 件沒有 iid"
+          f"（跑 scripts/backfill_curated_iid.py --apply 回填）：{'、'.join(no_id[:5])}"
+          + ("…" if len(no_id) > 5 else ""))
+    else:
+        print(f"  道具 ID：{total}/{total} 件已記錄 ✓")
+
     print("── 4. 染色欄位污染 ──")
     for o in curated:
         for p in o["pieces"]:
