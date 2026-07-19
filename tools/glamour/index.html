@@ -129,6 +129,20 @@ body::before{ content:''; position:fixed; inset:0; pointer-events:none; z-index:
 .item-name{ font-weight:600; }
 .item-en{ font-size:.78rem; color:var(--muted); margin-top:2px; }
 .item-src{ font-size:.74rem; color:var(--accent2); margin-top:2px; }
+/* 取得方式總覽（彈窗底部，來源 → 這套哪幾件） */
+.src-overview{ margin:14px 0 4px; padding:12px 14px; border:1px solid var(--border);
+  border-radius:10px; background:rgba(255,255,255,.02); }
+.src-ov-title{ font-size:.86rem; font-weight:600; color:var(--accent); margin-bottom:8px; }
+.src-ov-note{ font-size:.72rem; font-weight:400; color:var(--muted); margin-left:6px; }
+.src-ov-row{ display:flex; align-items:center; gap:10px; padding:4px 0;
+  border-top:1px solid rgba(255,255,255,.05); }
+.src-ov-row:first-of-type{ border-top:none; }
+.src-ov-key{ flex:1 1 auto; font-size:.82rem; color:var(--accent2); cursor:pointer;
+  overflow-wrap:anywhere; }
+.src-ov-key:hover{ text-decoration:underline; }
+.src-ov-slots{ flex:0 0 auto; display:flex; align-items:center; gap:3px; flex-wrap:wrap;
+  justify-content:flex-end; }
+.src-ov-n{ font-size:.72rem; color:var(--muted); margin-left:4px; }
 .unconfirmed{ color:#f59e0b; }
 .item-link{ cursor:pointer; border-bottom:1px dotted var(--muted); }
 .item-link:hover{ color:var(--accent2); border-bottom-color:var(--accent2); }
@@ -670,8 +684,9 @@ function loadSets() {
       }
     }
     if (viewMode === "sets") { populateSrcDetail(); applyFilters(); }
+    loadItemSources();   // 最後載完整來源表（191KB），到齊後細項選單重建
   };
-  s.onerror = () => { setsLoaded = true; };
+  s.onerror = () => { setsLoaded = true; loadItemSources(); };
   document.head.appendChild(s);
 }
 
@@ -697,30 +712,93 @@ function viewSet(setId) {
 // FILTER
 // ════════════════════════════════════════════════════════
 // ── 取得方式細項（副本名／商人名／兌換貨幣…）──
-// 官方套裝＝整套的 source；配裝＝逐件的 source。選項由目前檢視的資料現算，
-// 上方「取得方式」有選時只列該分類底下的細項。
+// 一件裝備常有多種取法，但三份資料檔每件只留一種（pipeline.py `_best()`／
+// build_sets.py `fmt_piece_source()` 的截斷），照那個篩會「拿得到卻找不到」。
+// 完整清單放在 item_sources.js（裝備 ID → 正規化來源鍵），以 ID 外連，
+// 三份資料共用同一個鍵空間——同一個副本不會再因為兩種寫法變成兩個選項。
+let ITEM_SRC = null;   // Map<裝備ID, string[]>
+let SK_GEN   = 0;      // item_sources 載入後 +1，讓已快取的 _sk 重算
+
+function loadItemSources() {
+  const s = document.createElement("script");
+  s.src = "item_sources.js";
+  s.onload = () => {
+    if (typeof _ITEM_SOURCES !== "undefined") {
+      const keys = _ITEM_SOURCES.k;
+      ITEM_SRC = new Map();
+      for (const [id, arr] of Object.entries(_ITEM_SOURCES.i))
+        ITEM_SRC.set(Number(id), arr.map(i => keys[i]));
+    }
+    SK_GEN++;
+    populateSrcDetail();
+    if (srcDetail) applyFilters();
+  };
+  document.head.appendChild(s);
+}
+
 function outfitPieces(e) {
   return e.type === "mirapri" ? (e.equipments || []) : (e.pieces || []);
 }
 
+// 顯示字串 →（近似的）來源鍵。只在 item_sources 查不到該裝備時當退路
+// （幻化套裝箱、商城／活動套等 sources.json 沒有的東西）。
+function srcKeyOf(s) {
+  if (!s) return "";
+  const m = /^([\p{Extended_Pictographic}️]+)\s*([\s\S]*)$/u.exec(String(s).trim());
+  const emoji = m ? m[1] : "";
+  let rest = (m ? m[2] : String(s)).trim();
+  rest = rest.replace(/^(副本掉落|兌換|任務獎勵)\s*[:：]\s*/, "")
+             .replace(/\s*等\d+處.*$/, "")
+             .replace(/[（(][\s\S]*$/, "")
+             .replace(/[×x]\s*[\d,]+[\s\S]*$/i, "")
+             .replace(/\s+[\d,]+\s*Gil$/i, "")
+             .trim();
+  return (emoji + rest).trim();
+}
+
+// 一件裝備的全部來源鍵：優先查 item_sources（完整），查不到才退回顯示字串
+function pieceSrcKeys(p) {
+  if (!p || typeof p !== "object") return [];
+  const id = p.iid !== undefined ? p.iid : p.id;
+  const full = ITEM_SRC && id !== undefined ? ITEM_SRC.get(Number(id)) : null;
+  if (full && full.length) return full;
+  const k = srcKeyOf(p.source || p.src || "");
+  return k ? [k] : [];
+}
+
+// 一套（配裝／官方套裝）的全部來源鍵，結果快取在 _sk
+function entrySrcKeys(e) {
+  if (e._sk && e._skGen === SK_GEN) return e._sk;
+  const set = new Set();
+  for (const p of outfitPieces(e)) for (const k of pieceSrcKeys(p)) set.add(k);
+  // 官方套裝整套層級的來源（💎商城、🗓️活動名…）在逐件資料裡查不到，補上
+  if (e.type === "set") {
+    const k = srcKeyOf(e.source);
+    if (k) set.add(k);
+  }
+  e._sk = [...set];
+  e._skGen = SK_GEN;
+  return e._sk;
+}
+
+// 來源鍵 → st 分類（沿用 emoji 慣例，與 build_site.py 的 EMOJI_ST 一致）
+const KEY_EMOJI_ST = [["🗡️","raid"],["🗺️","raid"],["🎯","raid"],["📋","quest"],
+  ["🛒","npc"],["🪙","token"],["🔶","scrip"],["🟣","scrip"],["🔨","craft"],
+  ["🎲","gs"],["⚔️","pvp"],["💎","store"],["🗓️","event"],["💒","event"],
+  ["🛡️","other"],["🚢","other"],["🎁","other"],["🏆","other"]];
+function stOfKey(k) {
+  for (const [emo, st] of KEY_EMOJI_ST) if (k.startsWith(emo)) return st;
+  return "other";
+}
+
 function collectSources() {
-  const cnt = new Map();   // source → {n, st}
-  const bump = (src, st) => {
-    if (!src) return;
-    const rec = cnt.get(src) || { n: 0, st: ST_TAG_SET.has(st) ? st : "other" };
-    rec.n++;
-    cnt.set(src, rec);
-  };
-  if (viewMode === "sets") {
-    for (const e of SETS) bump(e.source, e.st);
-  } else {
-    for (const e of ALL_OUTFITS) {
-      const seen = new Set();   // 同一套同一來源只計一次
-      for (const p of outfitPieces(e)) {
-        if (!p || typeof p !== "object" || !p.source || seen.has(p.source)) continue;
-        seen.add(p.source);
-        bump(p.source, p.st);
-      }
+  const cnt = new Map();   // 來源鍵 → {n, st}
+  const list = viewMode === "sets" ? SETS : ALL_OUTFITS;
+  for (const e of list) {
+    for (const k of entrySrcKeys(e)) {
+      const rec = cnt.get(k) || { n: 0, st: stOfKey(k) };
+      rec.n++;
+      cnt.set(k, rec);
     }
   }
   return cnt;
@@ -750,9 +828,7 @@ function populateSrcDetail() {
 }
 
 function matchSrcDetail(e) {
-  if (!srcDetail) return true;
-  if (e.type === "set") return e.source === srcDetail;
-  return outfitPieces(e).some(p => p && typeof p === "object" && p.source === srcDetail);
+  return !srcDetail || entrySrcKeys(e).includes(srcDetail);
 }
 
 function applyFilters() {
@@ -765,7 +841,7 @@ function applyFilters() {
       if (!matchSrcDetail(e)) return false;
       if (jobTags.size && ![...jobTags].some(t => (e.tags || []).includes(t))) return false;
       if (qLow) {
-        const hay = [e.name_zh, e.name_ja, e.name_en, e.source,
+        const hay = [e.name_zh, e.name_ja, e.name_en, e.source, ...entrySrcKeys(e),
           ...e.pieces.map(p => (p.zh || "") + " " + (p.ja || "") + " " + (p.en || ""))]
           .join(" ").toLowerCase();
         if (!hay.includes(qLow)) return false;
@@ -808,9 +884,8 @@ function applyFilters() {
       const equips = e.type === "mirapri"
         ? (e.equipments || []).map(eq => typeof eq === "string" ? eq : ((eq.zh || "") + " " + (eq.name || ""))).join(" ").toLowerCase()
         : (e.pieces || []).map(p => (p.zh + " " + p.en).toLowerCase()).join(" ");
-      // 取得方式（含副本名）也可被搜到，與官方套裝檢視一致
-      const srcs = outfitPieces(e)
-        .map(p => (p && typeof p === "object" && p.source) || "").join(" ").toLowerCase();
+      // 取得方式（含全部副本名，不只顯示的那一種）也可被搜到
+      const srcs = entrySrcKeys(e).join(" ").toLowerCase();
       if (!name.includes(qLow) && !user.includes(qLow)
           && !equips.includes(qLow) && !srcs.includes(qLow)) return false;
     }
@@ -1042,7 +1117,7 @@ function renderCuratedModal(e, idx) {
   const infoCol = document.getElementById("modal-info-col");
   let html = "";
   if (e.note) html += `<div class="modal-note">${esc(e.note)}</div>`;
-  html += buildTable(e.pieces || [], currentLang);
+  html += buildTable(e.pieces || [], currentLang) + sourceOverview(e);
   infoCol.innerHTML = html;
 
   const counter = document.getElementById("nav-counter");
@@ -1121,7 +1196,7 @@ function renderSetModal(e, idx) {
     `<table class="equip-table">
       <thead><tr><th>${hSlot}</th><th>${hItem}</th><th>${hInfo}</th><th>${hPatch}</th></tr></thead>
       <tbody>${rows}</tbody>
-    </table>`;
+    </table>` + sourceOverview(e);
 
   const counter = document.getElementById("nav-counter");
   counter.textContent = (idx + 1) + " / " + filtered.length;
@@ -1130,6 +1205,55 @@ function renderSetModal(e, idx) {
   document.getElementById("close-btn").onclick = closeModal;
   document.getElementById("copy-btn").onclick = () => copyOutfit(e);
   syncModalFav();
+}
+
+// ── 取得方式總覽（彈窗底部）──
+// 逐件那行只寫得下一種取法，這裡反過來以「來源 → 這套哪幾件」分組，
+// 直接回答「跑一趟哪裡能湊幾件」。點來源即以該來源篩選。
+function sourceOverview(e) {
+  const lang = currentLang;
+  const byKey = new Map();   // 來源鍵 → [部位…]
+  for (const p of outfitPieces(e)) {
+    if (!p || typeof p !== "object") continue;
+    const slot = p.slot || (lang === "en" ? "?" : "？");
+    for (const k of pieceSrcKeys(p)) {
+      if (!byKey.has(k)) byKey.set(k, []);
+      const arr = byKey.get(k);
+      if (!arr.includes(slot)) arr.push(slot);
+    }
+  }
+  if (e.type === "set") {
+    const k = srcKeyOf(e.source);
+    if (k && !byKey.has(k)) byKey.set(k, [lang === "en" ? "whole set" : "整套"]);
+  }
+  if (!byKey.size) return "";
+  const rows = [...byKey.entries()]
+    .sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0], "zh-Hant"))
+    .map(([k, slots]) => {
+      const slotHtml = slots.map(s =>
+        `<span class="slot-badge">${esc(lang === "en" ? (SLOT_EN[s] || s) : s)}</span>`).join("");
+      return `<div class="src-ov-row">
+        <span class="src-ov-key" title="${lang === "en" ? "Filter by this source" : "以此來源篩選"}"
+              onclick="filterBySource('${esc(k).replace(/'/g, "\\'")}')">${esc(k)}</span>
+        <span class="src-ov-slots">${slotHtml}<span class="src-ov-n">${slots.length}</span></span>
+      </div>`;
+    }).join("");
+  return `<div class="src-overview">
+    <div class="src-ov-title">📍 ${lang === "en" ? "Where to get it" : "取得方式總覽"}
+      <span class="src-ov-note">${lang === "en" ? "click a source to filter" : "點來源即以它篩選"}</span></div>
+    ${rows}</div>`;
+}
+
+// 彈窗點來源 → 關窗並套用該來源篩選
+function filterBySource(key) {
+  closeModal();
+  srcTags.clear();
+  document.querySelectorAll('.filter-btn[data-group="src"].active')
+          .forEach(b => b.classList.remove("active"));
+  srcDetail = key;
+  populateSrcDetail();
+  applyFilters();
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 // 從官方套裝的裝備名跳回「配裝」檢視搜尋（看誰穿過它）
@@ -1231,7 +1355,7 @@ function renderMiraModal(e, idx) {
         <th>${hPatch}</th><th>${hSrc}</th><th>${hRestr}</th>
       </tr></thead>
       <tbody>${rows}</tbody>
-    </table>` + dyeLine;
+    </table>` + dyeLine + sourceOverview(e);
 
   // 導航
   const counter = document.getElementById("nav-counter");

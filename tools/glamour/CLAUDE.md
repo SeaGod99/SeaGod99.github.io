@@ -26,6 +26,7 @@ FF14時尚配裝/
 │   ├── build_site.py     # data/curated_outfits.json → curated/mirapri_outfits.js + official_sets.js
 │   │                     #   並用 item_fallback 名稱精確比對把 iid/dye/mb（徽章）蓋進每件裝備
 │   ├── build_sets.py     # ★ 官方套裝資料（見「官方套裝圖鑑」一節）→ data/official_sets.json
+│   ├── build_item_sources.py # ★ 裝備ID → 完整取得方式清單 → item_sources.js（見「完整取得方式」）
 │   ├── fetch_icons.py    # 官方套裝所需裝備 icon 批次下載（可續傳、已有跳過、失敗清單重試）
 │   ├── fetch_set_photos.py # ★ 官方套裝示意照：consolegameswiki 模特照下載（見「官方示意照」）
 │   ├── health_check.py   # 資料健檢（缺圖、缺繁中、重複編號、官方套裝 ID/icon/收錄準則…）
@@ -424,7 +425,33 @@ py scripts\fetch_set_photos.py     # 單獨補官方示意照（可續傳；--re
 ```
 
 改版後順序：`update_db.py --apply`（繁中 DB）→ `build_item_fallback.py`（新裝備＋徽章）→
-`build_sets.py --fetch` → `fetch_icons.py` → `fetch_set_photos.py` → `build_site.py`。
+`build_sets.py --fetch` → `fetch_icons.py` → `fetch_set_photos.py` → `build_site.py` →
+**`build_item_sources.py`**（吃三份前端 js，必須最後跑）。
+
+### 完整取得方式（item_sources.js）
+
+**每件裝備在三份資料檔裡只留一種來源**——`pipeline.py` 的 `_best()` 取優先度最高那個、
+`build_sets.py` 的 `fmt_piece_source()` 取前兩條且一件掉多副本時只寫第一個副本名。
+結果約四成裝備的其他取法根本沒進前端，用取得方式篩選會「拿得到卻找不到」。
+
+修法是**外連**而非複製（`mirapri_outfits.js` 已 10MB）：`build_item_sources.py` 掃三份
+前端 js 用到的裝備 ID（curated/mirapri 是 `iid`、官方套裝是 `id`），對 sources.json
+＋recipes.json 產生 `item_sources.js`：
+
+```js
+const _ITEM_SOURCES = { k: [來源字串…], i: { 裝備ID: [k 的索引…] } };  // 792 種 / 11721 件 / 191KB
+```
+
+- 字串是**正規化來源鍵**：只有 emoji ＋ 來源名，**不含價格、NPC 地點、副本類型**
+  （`🗡️水妖幻園多恩美格禁園`、`🪙亞拉戈詩學神典石`、`🛒葉川`）。這樣同一來源在官方套裝
+  （「🗡️副本掉落：X」）與配裝（「🗡️X（迷宮挑戰）」）兩種寫法不會變成兩個對不起來的選項。
+- 一件掉多個副本時**每個副本名各自成鍵**（不再是「等N處」），這是漏最多的一類。
+- `instanceNames` 有些是英文（7.x 新副本，繁中 DB 未收）→ 共用 `build_site.duty_zh()` 翻成
+  台服官方名，與官方套裝來源對齊。
+- 前端 `pieceSrcKeys()` 優先查這張表，查不到（幻化套裝箱、商城／活動套等 sources.json 沒有的）
+  才用 `srcKeyOf()` 把顯示字串正規化當退路；`entrySrcKeys()` 取整套聯集並快取在 `_sk`
+  （`SK_GEN` 在表載入後 +1 讓快取重算）。篩選、搜尋、彈窗「取得方式總覽」都吃這份。
+- **重建任何一份前端 js 後都要重跑這支**，否則新裝備查不到來源（前端會安靜地退回單一來源）。
 
 ### 前端（index.html）
 

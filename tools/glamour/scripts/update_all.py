@@ -37,6 +37,8 @@ FULL_STEPS = [
     ("fetch_icons.py",       "套裝 icon",    "下載官方套裝所需 icon（已有的自動跳過，可續傳）", []),
     ("fetch_set_photos.py",  "套裝示意照",   "從 consolegameswiki 抓官方套裝模特照（已有的自動跳過，可續傳）", []),
     ("build_site.py",        "重建網頁資料", "curated／mirapri／重建／染色／官方套裝 → *.js 資料檔", []),
+    # 吃上一步產出的三份 js，必須排在 build_site.py 之後
+    ("build_item_sources.py", "完整取得方式", "裝備ID → 全部取法（篩選／來源總覽用）→ item_sources.js", []),
     ("health_check.py",      "資料健檢",     "檢查缺圖、缺繁中、重複編號、官方套裝、JSON 是否同步", []),
 ]
 # 本地重建：不抓網路、不 OCR，只用現有快取/enriched 重新整理＋重建
@@ -45,7 +47,7 @@ LOCAL_STEPS = [
     (n, t, d, ([] if n == "build_sets.py" else a))
     for (n, t, d, a) in FULL_STEPS
     if n in ("apply_dyes.py", "reconstruct_empty.py", "build_sets.py",
-             "build_site.py", "health_check.py")
+             "build_site.py", "build_item_sources.py", "health_check.py")
 ]
 NONFATAL = {"health_check.py", "update_db.py"}  # 非 0 退出視為提示，不中止流程
 
