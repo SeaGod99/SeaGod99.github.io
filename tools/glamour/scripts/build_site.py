@@ -110,13 +110,14 @@ def build_badge_index():
     """回 {"zh","ja","en","id"} 四張索引；值 = {"iid","dye","mb"}。
     名稱撞多件且屬性不同 → 從名稱索引剔除（寧缺勿錯）；id 索引不受影響。"""
     if not ITEM_FALLBACK.exists():
-        return {"zh": {}, "ja": {}, "en": {}, "id": {}}
+        return {"zh": {}, "ja": {}, "en": {}, "id": {}, "full": {}}
     items = json.loads(ITEM_FALLBACK.read_text(encoding="utf-8"))["items"]
-    by_zh, by_ja, by_en, by_id = {}, {}, {}, {}
+    by_zh, by_ja, by_en, by_id, by_full = {}, {}, {}, {}, {}
     _AMB = object()
     for iid, v in items.items():
         rec = {"iid": int(iid), "dye": v.get("dye", 0), "mb": bool(v.get("mb", False))}
         by_id[int(iid)] = rec
+        by_full[int(iid)] = v
         for key, idx in ((v.get("zh"), by_zh), (v.get("ja"), by_ja),
                          ((v.get("en") or "").lower(), by_en)):
             if not key:
@@ -129,7 +130,7 @@ def build_badge_index():
     for idx in (by_zh, by_ja, by_en):
         for k in [k for k, v in idx.items() if v is _AMB]:
             del idx[k]
-    return {"zh": by_zh, "ja": by_ja, "en": by_en, "id": by_id}
+    return {"zh": by_zh, "ja": by_ja, "en": by_en, "id": by_id, "full": by_full}
 
 
 def stamp_badges(piece, bidx):
@@ -155,6 +156,32 @@ def stamp_badges(piece, bidx):
         piece["mb"] = rec["mb"]
         return True
     return False
+
+
+def apply_db_fields(piece, bidx):
+    """以 iid 把 DB 的客觀欄位蓋回這件裝備（zh/ja/en/patch/lv/部位）。
+
+    精選資料是人工輸入的，2026-07-20 稽核出 211 處與 DB 不符（版本一律填 7.0、
+    等級留在預設 1、日文名濁點長音抄錯、**台服未實裝卻填自編中文名**導致 5 套被
+    誤標「繁中版可幻化」）。這些欄位客觀可推導，建置時一律重算，來源檔就算被手改
+    也不會飄。手填的主觀欄位（source／dye1／dye2／job…）不動。
+    回傳有沒有改到東西。
+    """
+    rec = bidx["full"].get(int(piece["iid"])) if piece.get("iid") else None
+    if not rec:
+        return False
+    changed = False
+    for f, v in (("zh", rec.get("zh") or ""), ("ja", rec.get("ja") or ""),
+                 ("en", rec.get("en") or ""), ("patch", rec.get("patch") or ""),
+                 ("lv", str(rec.get("equipLevel") or "1"))):
+        if f == "patch" and not v:
+            continue          # DB 沒版本就別把原本的清掉
+        if str(piece.get(f) or "") != v:
+            piece[f] = v
+            changed = True
+    # 部位不動：「上身①／②」是人工標記（DB 只會回「上身」），而完全對不上代表
+    # 抄到別部位的道具＝內容錯誤不是格式問題，交給 health_check.py 報出來人工處理。
+    return changed
 
 
 def st_from_source(source: str) -> str:
@@ -520,6 +547,12 @@ def main():
         n_cur = sum(stamp_badges(p, bidx)
                     for o in curated for p in o.get("pieces", []))
         n_tot = sum(len(o.get("pieces", [])) for o in curated)
+        # 名稱／版本／等級一律以 DB 重算（來源檔手改也不會飄，見 apply_db_fields）
+        n_fix = sum(apply_db_fields(p, bidx)
+                    for o in curated for p in o.get("pieces", []))
+        if n_fix:
+            print(f"  以 DB 校正欄位（精選）：{n_fix} 件"
+                  f"（來源檔已過時，建議跑 scripts/normalize_curated_from_db.py --apply）")
         print(f"  徽章蓋章（精選）：{n_cur}/{n_tot} 件")
 
     dyemap = {}

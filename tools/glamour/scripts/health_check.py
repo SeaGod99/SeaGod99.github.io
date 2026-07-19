@@ -99,6 +99,27 @@ def main():
     else:
         print(f"  道具 ID：{total}/{total} 件已記錄 ✓")
 
+    # 部位對不上＝抄到別部位的道具（2026-07-20 #01 腳部誤填腿部的「軍褲」，
+    # 實際圖上穿的是同系列的「軍靴」）。normalize_curated_from_db.py 不會自動修這種，
+    # 因為要看圖判斷，所以在這裡擋。「上身①/②」是刻意的雙上身標記，不算錯。
+    fb_path = ROOT / "data" / "item_fallback_multilang.json"
+    if fb_path.exists():
+        fb = json.loads(fb_path.read_text(encoding="utf-8"))["items"]
+        wrong_slot = []
+        for o in src_json:
+            for p in o.get("pieces", []):
+                rec = fb.get(str(p.get("iid") or ""))
+                db_slot = (rec or {}).get("slot") or ""
+                cur = p.get("slot") or ""
+                if db_slot and not cur.startswith(db_slot):
+                    wrong_slot.append(f"#{o.get('id')} 填在「{cur}」的"
+                                      f"「{p.get('zh') or p.get('ja')}」其實是「{db_slot}」道具")
+        if wrong_slot:
+            w(f"部位對不上 {len(wrong_slot)} 件（抄到別部位的道具，需看圖重判）："
+              + "；".join(wrong_slot[:3]) + ("…" if len(wrong_slot) > 3 else ""))
+        else:
+            print(f"  部位對應：{total}/{total} 件相符 ✓")
+
     print("── 4. 染色欄位污染 ──")
     for o in curated:
         for p in o["pieces"]:
