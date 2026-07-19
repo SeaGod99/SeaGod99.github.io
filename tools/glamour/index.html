@@ -781,14 +781,43 @@ function entrySrcKeys(e) {
   return e._sk;
 }
 
-// 來源鍵 → st 分類（沿用 emoji 慣例，與 build_site.py 的 EMOJI_ST 一致）
+// 來源鍵 → st 分類（與 build_site.py 的 ST_KEYWORDS／EMOJI_ST 同一套規則，改這裡要同步後端）
+// 關鍵字優先於 emoji，順序即優先序——「寶圖」必須排第一（箱名會帶別的玩法字眼）
+const KEY_ST_KEYWORDS = [["寶圖","other"],
+  ["伊修加德重建","special"],["無人島","special"],["宇宙探索","special"],
+  ["友好部族","special"],["友好部落","special"],
+  ["成就","other"],
+  ["橙票","scrip"],["紫票","scrip"],["白票","scrip"],["黃票","scrip"],["綠票","scrip"],
+  ["幻化套裝箱","other"]];
 const KEY_EMOJI_ST = [["🗡️","raid"],["🗺️","raid"],["🎯","raid"],["📋","quest"],
   ["🛒","npc"],["🪙","token"],["🔶","scrip"],["🟣","scrip"],["🔨","craft"],
   ["🎲","gs"],["⚔️","pvp"],["💎","store"],["🗓️","event"],["💒","event"],
   ["🛡️","other"],["🚢","other"],["🎁","other"],["🏆","other"]];
 function stOfKey(k) {
+  for (const [kw, st] of KEY_ST_KEYWORDS) if (k.includes(kw)) return st;
   for (const [emo, st] of KEY_EMOJI_ST) if (k.startsWith(emo)) return st;
   return "other";
+}
+
+// 一套涵蓋的全部 st 分類。**分類按鈕與細項下拉必須吃同一份來源**，否則會互斥：
+// 「夢幻套裝」整套來源是 🗓️Starlight Celebration（st=event），但它的件是用
+// 🪙夢幻帽布料 兌換——舊版分類只看整套那一種 st，選「🪙代幣兌換」＋細項
+// 「🪙夢幻帽布料」會篩出 0 筆（2026-07-19 使用者回報）。
+function entryStSet(e) {
+  if (e._st && e._stGen === SK_GEN) return e._st;
+  const set = new Set(entrySrcKeys(e).map(stOfKey));
+  // 退路：item_sources 沒收錄的裝備，保留原本由單一 source 推得的分類
+  if (e.type === "set") { if (e.st) set.add(e.st); }
+  else for (const t of (e.tags || [])) if (ST_TAG_SET.has(t)) set.add(t);
+  e._st = set;
+  e._stGen = SK_GEN;
+  return e._st;
+}
+
+function matchSrcTags(e) {
+  if (!srcTags.size) return true;
+  const sts = entryStSet(e);
+  return [...srcTags].some(t => sts.has(t));
 }
 
 function collectSources() {
@@ -837,7 +866,7 @@ function applyFilters() {
     filtered = SETS.filter(e => {
       if (favOnly && !favs.has(e.id)) return false;
       if (twOnly && !e.tw) return false;
-      if (srcTags.size && !srcTags.has(e.st)) return false;
+      if (!matchSrcTags(e)) return false;
       if (!matchSrcDetail(e)) return false;
       if (jobTags.size && ![...jobTags].some(t => (e.tags || []).includes(t))) return false;
       if (qLow) {
@@ -874,7 +903,7 @@ function applyFilters() {
     // 繁中版可幻化
     if (twOnly && !e.tw) return false;
     // 取得方式／職業（可複選；群組內 OR、群組間 AND，精選＋社群都適用）
-    if (srcTags.size && ![...srcTags].some(t => e.tags.includes(t))) return false;
+    if (!matchSrcTags(e)) return false;
     if (!matchSrcDetail(e)) return false;
     if (jobTags.size && ![...jobTags].some(t => e.tags.includes(t))) return false;
     // Search (all)
