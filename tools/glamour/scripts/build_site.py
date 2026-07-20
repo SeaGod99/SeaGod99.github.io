@@ -33,6 +33,7 @@ MIRAPRI_JS = ROOT / "mirapri_outfits.js"
 OFFICIAL_SETS_JSON = ROOT / "data" / "official_sets.json"   # build_sets.py 產出
 OFFICIAL_SETS_JS = ROOT / "official_sets.js"                # 官方套裝分頁（延遲載入）
 ITEM_FALLBACK = ROOT / "data" / "item_fallback_multilang.json"  # 徽章資料（dye/mb/iid）來源
+XIVAPI_CACHE = ROOT / "data" / "xivapi_sets_cache.json"  # build_sets.py 產出：含 cjc_names（cjc id → 職業字串）
 MIRAPRI_DYES = ROOT / "data" / "mirapri_dyes.json"     # apply_dyes.py 產生：{id: [繁中染色]}（整套 fallback）
 MIRAPRI_PIECE_DYES = ROOT / "data" / "mirapri_piece_dyes.json"  # {id: {裝備日文名: [繁中染色]}}（v2 逐件）
 MIRAPRI_VISIBLE = ROOT / "data" / "mirapri_visible.json"  # apply_dyes.py 產生：{id: [圖上可見裝備日文名]}
@@ -110,7 +111,7 @@ def build_badge_index():
     """回 {"zh","ja","en","id"} 四張索引；值 = {"iid","dye","mb"}。
     名稱撞多件且屬性不同 → 從名稱索引剔除（寧缺勿錯）；id 索引不受影響。"""
     if not ITEM_FALLBACK.exists():
-        return {"zh": {}, "ja": {}, "en": {}, "id": {}, "full": {}}
+        return {"zh": {}, "ja": {}, "en": {}, "id": {}, "full": {}, "cjc_names": {}}
     items = json.loads(ITEM_FALLBACK.read_text(encoding="utf-8"))["items"]
     by_zh, by_ja, by_en, by_id, by_full = {}, {}, {}, {}, {}
     _AMB = object()
@@ -130,7 +131,12 @@ def build_badge_index():
     for idx in (by_zh, by_ja, by_en):
         for k in [k for k, v in idx.items() if v is _AMB]:
             del idx[k]
-    return {"zh": by_zh, "ja": by_ja, "en": by_en, "id": by_id, "full": by_full}
+    # cjc id → 職業字串（job 欄推導用），來自 build_sets.py 的快取；缺檔就不推導 job
+    cjc_names = {}
+    if XIVAPI_CACHE.exists():
+        cjc_names = json.loads(XIVAPI_CACHE.read_text(encoding="utf-8")).get("cjc_names", {})
+    return {"zh": by_zh, "ja": by_ja, "en": by_en, "id": by_id,
+            "full": by_full, "cjc_names": cjc_names}
 
 
 def stamp_badges(piece, bidx):
@@ -158,6 +164,80 @@ def stamp_badges(piece, bidx):
     return False
 
 
+# ── job 欄由 cjc（ClassJobCategory）推導 ─────────────────────────
+# job 也是人工手填的，2026-07-20 稽核出很多錯：自創詞「偵察職業」（ROG NIN VPR，
+# 應為「忍者、劍蛇師」）、把整職能寫成單一職業（全 pranged 寫「舞者」）、只列部分職業…
+# cjc 是遊戲原生的裝備職業分類，唯一權威。cjc id → 職業字串在 xivapi_sets_cache.json
+# 的 cjc_names（build_sets.py 產出）；字串可能是代碼「ROG NIN VPR」、逗號代碼「ALC, CUL」
+# 或英文描述「All Classes」「Disciple of the Land」。
+_JOB_ZH = {
+    "PLD": "騎士", "WAR": "戰士", "DRK": "暗黑騎士", "GNB": "絕槍戰士",
+    "WHM": "白魔法師", "SCH": "學者", "AST": "占星術士", "SGE": "賢者",
+    "BLM": "黑魔法師", "SMN": "召喚師", "RDM": "赤魔法師", "BLU": "青魔法師", "PCT": "繪靈法師",
+    "BRD": "吟遊詩人", "MCH": "機工士", "DNC": "舞者",
+    "MNK": "武僧", "DRG": "龍騎士", "NIN": "忍者", "SAM": "武士", "RPR": "鐮刀師", "VPR": "劍蛇師",
+    "CRP": "木工師", "BSM": "鍛鐵師", "ARM": "甲冑師", "GSM": "雕金師", "LTW": "製革師",
+    "WVR": "裁縫師", "ALC": "煉金術士", "CUL": "廚師",
+    "MIN": "採礦工", "BTN": "採伐工", "FSH": "捕魚人",
+}
+_ROLE_SETS = [
+    ("盾衛職業", {"PLD", "WAR", "DRK", "GNB"}),
+    ("治療職業", {"WHM", "SCH", "AST", "SGE"}),
+    ("法系職業", {"BLM", "SMN", "RDM", "BLU", "PCT"}),
+    ("遠程物理職業", {"BRD", "MCH", "DNC"}),
+    ("近戰職業", {"MNK", "DRG", "NIN", "SAM", "RPR", "VPR"}),
+    ("製作職業", {"CRP", "BSM", "ARM", "GSM", "LTW", "WVR", "ALC", "CUL"}),
+    ("採集職業", {"MIN", "BTN", "FSH"}),
+]
+_COMBAT_JOBS = set().union(*[s for _, s in _ROLE_SETS[:5]])
+_BASE_CLASSES = {"GLA", "MRD", "PGL", "LNC", "ARC", "ROG", "THM", "ACN", "CNJ"}
+_JOB_ORDER = ["PLD", "WAR", "DRK", "GNB", "WHM", "SCH", "AST", "SGE",
+              "MNK", "DRG", "NIN", "SAM", "RPR", "VPR", "BRD", "MCH", "DNC",
+              "BLM", "SMN", "RDM", "BLU", "PCT", "CRP", "BSM", "ARM", "GSM",
+              "LTW", "WVR", "ALC", "CUL", "MIN", "BTN", "FSH"]
+
+
+def job_from_cjc(name):
+    """cjc_names 的職業字串 → 站內 job 標籤（整職能→群組名／子集→列具體職業／全戰鬥→全職業）。
+    對不出來回 None（不覆寫原值）。"""
+    if not name:
+        return None
+    low = name.strip().lower()
+    if (low.startswith("all class") or "disciples of war or magic" in low
+            or "disciple of war or magic" in low
+            or low.startswith("jobs of the disciples of war or magic")
+            or low.startswith("any job of the disciples")):
+        return ALL_JOB
+    if low.startswith(("disciple of the hand", "any disciple of the hand")):
+        return "製作職業"
+    if low.startswith("disciple of the land"):
+        return "採集職業"
+    if low.startswith("tank"):
+        return "盾衛職業"
+    if low.startswith("healer"):
+        return "治療職業"
+    if low.startswith("melee dps"):
+        return "近戰職業"
+    if low.startswith("physical ranged"):
+        return "遠程物理職業"
+    if low.startswith("magical ranged"):
+        return "法系職業"
+    toks = [t for t in name.replace(",", " ").split() if t]
+    if not all(t.isupper() and 2 <= len(t) <= 3 for t in toks):
+        return None          # 還有沒對應到的英文描述（Physical DPS、Land or Hand…）→ 交人工
+    adv = {t for t in toks if t not in _BASE_CLASSES}
+    if not adv:
+        return None
+    if adv >= _COMBAT_JOBS:
+        return ALL_JOB
+    for label, s in _ROLE_SETS:
+        if adv == s:
+            return label
+    if all(j in _JOB_ZH for j in adv):
+        return "、".join(_JOB_ZH[j] for j in _JOB_ORDER if j in adv)
+    return None
+
+
 def apply_db_fields(piece, bidx):
     """以 iid 把 DB 的客觀欄位蓋回這件裝備（zh/ja/en/patch/lv/部位）。
 
@@ -181,6 +261,14 @@ def apply_db_fields(piece, bidx):
             changed = True
     # 部位不動：「上身①／②」是人工標記（DB 只會回「上身」），而完全對不上代表
     # 抄到別部位的道具＝內容錯誤不是格式問題，交給 health_check.py 報出來人工處理。
+
+    # job 由 cjc 推導（cjc_names 有此 cjc 且推得出來才覆寫，否則保留原值）
+    cjc = rec.get("cjc")
+    if cjc is not None:
+        jl = job_from_cjc(bidx["cjc_names"].get(str(cjc), ""))
+        if jl and str(piece.get("job") or "") != jl:
+            piece["job"] = jl
+            changed = True
     return changed
 
 
