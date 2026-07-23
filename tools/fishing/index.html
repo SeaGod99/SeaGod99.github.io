@@ -5,11 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="FF14 釣魚紀錄追蹤 — 1449 種魚，查詢釣場/餌/時間/天氣，可釣倒數、目標魚開窗鬧鐘提醒與地圖標點，追蹤已釣紀錄">
   <title>釣魚紀錄追蹤 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/common.css">
   <link rel="stylesheet" href="../../assets/css/tool-header.css">
   <style>
+    /* 釣魚頁專屬樣式；通用版面（進度條／工具列／篩選／分頁／頁尾）見 assets/css/common.css，
+       控制面由 assets/js/collection-tracker.js 渲染。
+       ET 時鐘、目標魚面板＋鬧鐘、地圖檢視、魚詳情彈窗為本頁自有元件。 */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
+      --accent:   #4fc3f7;                 /* 藍（釣魚）*/
+      --accent-2: #22d3ee;                 /* 進度條尾色：青 */
+      --glow-1:   rgba(79,195,247,0.05);
+      --glow-2:   rgba(34,211,238,0.04);
       --bg-base:    #0a0c10;
       --bg-surface: #0f1117;
       --bg-card:    #14181f;
@@ -40,56 +48,19 @@
     html { font-size: 17.5px; }
     body { background: var(--bg-base); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
 
-    .nav {
-      background: var(--bg-surface); border-bottom: 1px solid var(--border);
-      padding: 0 1.5rem; height: 52px; display: flex; align-items: center; gap: 0.75rem;
-    }
-    .nav-back { color: var(--text-dim); text-decoration: none; font-size: 0.85rem; display: flex; align-items: center; gap: 0.4rem; transition: color 0.2s; }
-    .nav-back:hover { color: var(--gold); }
-    .nav-sep { color: var(--text-muted); font-size: 0.85rem; }
-    .nav-title { color: var(--text); font-size: 0.9rem; font-weight: 600; }
-
     .hero {
       background: linear-gradient(135deg, var(--bg-surface), var(--bg-base));
       border-bottom: 1px solid var(--border); padding: 1.5rem 1.5rem;
     }
     .hero-inner { max-width: 1500px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
-    .hero h1 { font-size: 1.4rem; font-weight: 700; }
-    .progress-wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 0.3rem; }
-    .progress-text { font-size: 0.8rem; color: var(--text-dim); }
-    .progress-bar { width: 200px; height: 8px; background: var(--bg-card); border-radius: 4px; overflow: hidden; }
-    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--blue), var(--cyan)); border-radius: 4px; transition: width 0.4s; }
 
-    .controls { max-width: 1500px; margin: 0 auto; padding: 1rem 1.5rem; display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; }
+    .result-info { font-size: 0.78rem; color: var(--text-muted); }
 
-    .search-wrap { position: relative; flex: 1; min-width: 200px; max-width: 360px; }
-    .search-wrap input {
-      width: 100%; background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius); color: var(--text); padding: 0.5rem 0.5rem 0.5rem 2.2rem;
-      font-size: 0.85rem; outline: none; transition: border-color 0.2s;
-    }
-    .search-wrap input:focus { border-color: var(--gold); }
-    .search-wrap .si { position: absolute; left: 0.65rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.85rem; pointer-events: none; }
+    /* 檢視切換列 */
+    .fi-viewbar { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; margin: 0.8rem 0; }
 
-    .filter-row { display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center; }
-    .filter-btn {
-      font-size: 0.75rem; padding: 0.3rem 0.7rem; border-radius: 5px; cursor: pointer;
-      border: 1px solid var(--border); background: var(--bg-surface); color: var(--text-dim); transition: all 0.15s;
-    }
-    .filter-btn.active { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); }
-
-    select.filter-select {
-      background: var(--bg-card); border: 1px solid var(--border); border-radius: 5px;
-      color: var(--text-dim); padding: 0.3rem 0.6rem; font-size: 0.78rem; outline: none; cursor: pointer;
-      transition: border-color 0.2s;
-    }
-    select.filter-select:focus { border-color: var(--gold); }
-
-    .result-info { max-width: 1500px; margin: 0 auto; padding: 0 1.5rem 0.5rem; font-size: 0.78rem; color: var(--text-muted); }
-
-    /* FISH GRID */
+    /* FISH GRID（引擎的 gridClass）*/
     .fish-grid {
-      max-width: 1500px; margin: 0 auto; padding: 0 1.5rem 2rem;
       display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 0.5rem;
     }
 
@@ -154,13 +125,13 @@
     /* VIEW TOGGLE */
     .view-toggle { display: flex; gap: 0; border: 1px solid var(--border); border-radius: 5px; overflow: hidden; }
     .view-toggle button {
-      font-size: 0.75rem; padding: 0.3rem 0.7rem; cursor: pointer; border: none;
+      font-size: 0.75rem; padding: 0.35rem 0.8rem; cursor: pointer; border: none; font-family: inherit;
       background: var(--bg-surface); color: var(--text-dim); transition: all 0.15s;
     }
     .view-toggle button.active { background: var(--gold-dim); color: var(--gold); }
 
     /* MAP VIEW */
-    .map-view { max-width: 1500px; margin: 0 auto; padding: 0 1.5rem 2rem; }
+    .map-view { padding: 0 0 2rem; }
     .map-bar { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; margin-bottom: 0.75rem; }
     .map-canvas {
       position: relative; width: 100%; max-width: 720px; margin: 0 auto;
@@ -232,14 +203,7 @@
     .loc-btn:hover { transform: scale(1.2); }
 
     /* PAGINATION */
-    .pagination { max-width: 1500px; margin: 0 auto; padding: 0 1.5rem 3rem; display: flex; gap: 0.4rem; justify-content: center; flex-wrap: wrap; }
-    .page-btn {
-      font-size: 0.8rem; padding: 0.35rem 0.7rem; border-radius: 5px; cursor: pointer;
-      border: 1px solid var(--border); background: var(--bg-card); color: var(--text-dim); transition: all 0.15s;
-    }
-    .page-btn:hover { border-color: var(--gold); color: var(--gold); }
-    .page-btn.active { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); font-weight: 600; }
-    .page-btn:disabled { opacity: 0.3; cursor: default; }
+    /* 分頁列改用 common.css 的 .ct-pagination（引擎 pageSize 模式渲染）*/
 
     /* 魚詳情彈窗 */
     .fd-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 900;
@@ -287,7 +251,7 @@
 
     /* 目標魚面板 */
     .targets-panel {
-      max-width: 1500px; margin: 0 auto 0.5rem; padding: 0 1.5rem;
+      margin: 0 auto 0.5rem;
     }
     .targets-inner {
       background: var(--bg-card); border: 1px solid rgba(200,169,110,0.3); border-radius: var(--radius);
@@ -324,6 +288,8 @@
     .tp-alarm-hint { font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; }
 
   </style>
+  <script src="../../assets/js/patch-gate.js"></script>
+  <script src="../../assets/js/collection-tracker.js"></script>
   <link rel="stylesheet" href="../../assets/css/theme.css">
   <script src="../../assets/js/theme.js"></script>
 </head>
@@ -340,59 +306,10 @@
       <div class="et-time" id="etClock">ET --:--</div>
       <div class="et-sub">艾歐澤亞時間 · 1 ET 小時 ≈ 2 分 55 秒</div>
     </div>
-    <div class="progress-wrap">
-      <div class="progress-text" id="progressText">載入中…</div>
-      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
-    </div>
   </div>
 </div>
 
-<div class="controls">
-  <div class="search-wrap">
-    <span class="si">🔍</span>
-    <input type="text" id="searchInput" placeholder="搜尋魚名或釣場…">
-  </div>
-
-  <div class="filter-row">
-    <button class="filter-btn active" id="fAll">全部</button>
-    <button class="filter-btn"        id="fOwned">已釣</button>
-    <button class="filter-btn"        id="fMissed">未釣</button>
-    <button class="filter-btn"        id="fTargets">🎯 目標</button>
-  </div>
-
-  <div class="filter-row">
-    <select class="filter-select" id="regionFilter" title="依地區篩選（同遊戲內釣魚手帳分頁）">
-      <option value="">全地區</option>
-    </select>
-    <select class="filter-select" id="patchFilter">
-      <option value="">全版本</option>
-      <option value="2">2.x 原初之地</option>
-      <option value="3">3.x 蒼天之禁地</option>
-      <option value="4">4.x 紅蓮之狂潮</option>
-      <option value="5">5.x 暗影之逆焰</option>
-      <option value="6">6.x 曉月之終途</option>
-      <option value="7">7.x 金曦之遺輝</option>
-    </select>
-    <select class="filter-select" id="typeFilter">
-      <option value="">全種類</option>
-      <option value="big">大魚</option>
-      <option value="timed">限時</option>
-      <option value="weather">限天氣</option>
-      <option value="folklore">傳承錄</option>
-    </select>
-  </div>
-
-  <div class="view-toggle">
-    <button id="vList" class="active">☰ 清單</button>
-    <button id="vMap">🗺️ 地圖</button>
-  </div>
-
-  <button class="filter-btn" id="resetBtn" style="margin-left:auto">重置篩選</button>
-  <button class="filter-btn" id="exportBtn">匯出進度</button>
-  <button class="filter-btn" id="importBtn">匯入進度</button>
-  <input type="file" id="importFile" accept="application/json" style="display:none">
-  <button class="filter-btn" id="clearBtn">清除進度</button>
-</div>
+<div class="container">
 
 <div class="targets-panel" id="targetsPanel" style="display:none">
   <div class="targets-inner">
@@ -415,13 +332,20 @@
   </div>
 </div>
 
-<div class="result-info" id="resultInfo"></div>
-<div class="fish-grid" id="fishGrid"></div>
-<div class="pagination" id="pagination"></div>
+  <div class="fi-viewbar">
+    <div class="view-toggle">
+      <button type="button" id="vList" class="active">☰ 清單</button>
+      <button type="button" id="vMap">🗺️ 地圖</button>
+    </div>
+  </div>
+
+  <!-- 控制面（進度／工具列／篩選／魚卡格線／分頁）由 collection-tracker.js 渲染 -->
+  <div id="ct-root"></div>
 
 <div class="map-view" id="mapView" style="display:none">
   <div class="map-bar">
-    <select class="filter-select" id="mapSelect"></select>
+    <select class="sort-select" id="mapSelect"></select>
+    <span class="result-info" id="mapInfo"></span>
   </div>
   <div class="map-canvas" id="mapCanvas"></div>
   <div class="map-legend">
@@ -431,6 +355,8 @@
   </div>
   <div class="spot-panel" id="spotPanel"></div>
 </div>
+
+</div><!-- /container -->
 
 <div class="fd-overlay" id="fdOverlay">
   <div class="fd-box" role="dialog" aria-modal="true">
@@ -457,18 +383,16 @@ import { initMapModal, openMapModal } from '../../assets/js/map-modal.js';
 
 const LS_KEY     = 'ffxiv_fishing_owned';
 const TARGET_KEY = 'ffxiv_fishing_targets';
-const PAGE_SIZE  = 60;
 const EORZEA_MULT = 3600 / 175;
 const ET_MIN_MS   = 175000 / 60; // 1 ET 分鐘的現實毫秒
 
 let allFish = [];
 let SPOTS = new Map();   // spotId -> 釣場（座標、mapId）
 let MAPS  = new Map();   // mapId  -> 地圖資料
-let filtered = [];
-let owned   = new Set(JSON.parse(localStorage.getItem(LS_KEY) || '[]'));
+let tracker = null;                 // collection-tracker 實例（進度／工具列／篩選／分頁／格線）
+let filtered = [];                  // 引擎最近一次的篩選結果（地圖檢視與目標面板吃它）
+let owned   = new Set(JSON.parse(localStorage.getItem(LS_KEY) || '[]'));  // 交給引擎後改指向 tracker.owned
 let targets = new Set(JSON.parse(localStorage.getItem(TARGET_KEY) || '[]'));
-let page = 0;
-let statusFilter = 'all';
 let viewMode = 'list';
 let currentMapId = null;
 let selectedSpotId = null;
@@ -575,15 +499,8 @@ function statusPill(st) {
   return '';
 }
 
-/* ── 篩選 ── */
-function setStatusFilter(f) {
-  statusFilter = f;
-  const map = { all: 'fAll', owned: 'fOwned', missing: 'fMissed', targets: 'fTargets' };
-  ['fAll', 'fOwned', 'fMissed', 'fTargets'].forEach(id => document.getElementById(id).classList.remove('active'));
-  document.getElementById(map[f]).classList.add('active');
-  page = 0;
-  onFilter();
-}
+/* ── 篩選：狀態、地區、版本、種類與搜尋全部交給 collection-tracker 引擎 ──
+   （見下方 CollectionTracker.init 的 filters／searchText／sorts） */
 
 /* 魚 → 所在地區（釣場 → 地圖 → region；多釣場任一符合即通過） */
 function fishSpotIds(f) {
@@ -594,49 +511,6 @@ function regionOfSpot(sid) {
   return sp?.coords ? MAPS.get(sp.coords.mapId)?.region : undefined;
 }
 
-function onFilter() {
-  const q = document.getElementById('searchInput').value.trim().toLowerCase();
-  const patchMaj = document.getElementById('patchFilter').value;
-  const type     = document.getElementById('typeFilter').value;
-  const region   = document.getElementById('regionFilter').value;
-
-  filtered = allFish.filter(f => {
-    if (statusFilter === 'owned'   && !owned.has(f.itemId))   return false;
-    if (statusFilter === 'missing' &&  owned.has(f.itemId))   return false;
-    if (statusFilter === 'targets' && !targets.has(f.itemId)) return false;
-    if (region && !fishSpotIds(f).some(sid => regionOfSpot(sid) === region)) return false;
-    if (patchMaj) {
-      const maj = Math.floor(f.patch);
-      if (String(maj) !== patchMaj) return false;
-    }
-    if (type === 'big'      && !f.bigFish)                return false;
-    if (type === 'timed'    && !(f.startHour > 0 || f.endHour < 24)) return false;
-    if (type === 'weather'  && !f.weatherSet?.length)    return false;
-    if (type === 'folklore' && !f.folklore)               return false;
-    if (q) {
-      const hay = (f.name||'').toLowerCase() + ' ' + (f.nameEn||'').toLowerCase()
-                + ' ' + (f.spotName||'').toLowerCase() + ' ' + (f.spotNameEn||'').toLowerCase();
-      if (!hay.includes(q)) return false;
-    }
-    return true;
-  });
-
-  // 篩「限時／限天氣／目標」時依開窗狀態排序：可釣中 → 最快開窗，回答「接下來釣什麼」
-  const type2 = document.getElementById('typeFilter').value;
-  if (statusFilter === 'targets' || type2 === 'timed' || type2 === 'weather') {
-    const now = Date.now();
-    const stMap = new Map(filtered.map(f => [f.itemId, fishStatus(f, now)]));
-    filtered.sort((a, b) => {
-      const sa = stMap.get(a.itemId), sb = stMap.get(b.itemId);
-      if (ST_RANK[sa.state] !== ST_RANK[sb.state]) return ST_RANK[sa.state] - ST_RANK[sb.state];
-      return (sa.secsLeft ?? Infinity) - (sb.secsLeft ?? Infinity);
-    });
-  }
-
-  page = 0;
-  renderCurrent();
-}
-
 /* ── 渲染 ── */
 function spotZone(f, spotIdOv) {
   const spot = (spotIdOv ?? f.spotId) != null ? SPOTS.get(spotIdOv ?? f.spotId) : null;
@@ -645,18 +519,18 @@ function spotZone(f, spotIdOv) {
   return { spot, mapName: m ? m.name : null };
 }
 
-function renderCurrent() {
-  if (viewMode === 'map') { updateProgress(); renderTargets(); renderFishMap(); }
-  else render();
-}
+// 重畫：一律走引擎，onRender 會接著同步目標面板與地圖檢視
+function renderCurrent() { if (tracker) tracker.renderGrid(); }
 
 function setView(mode) {
   viewMode = mode;
   document.getElementById('vList').classList.toggle('active', mode === 'list');
   document.getElementById('vMap').classList.toggle('active', mode === 'map');
-  document.getElementById('fishGrid').style.display   = mode === 'list' ? '' : 'none';
-  document.getElementById('pagination').style.display = mode === 'list' ? '' : 'none';
-  document.getElementById('mapView').style.display    = mode === 'map'  ? '' : 'none';
+  const grid = document.getElementById('ct-grid');
+  const pager = document.getElementById('ct-pagination');
+  if (grid)  grid.style.display  = mode === 'list' ? '' : 'none';
+  if (pager) pager.style.display = mode === 'list' ? '' : 'none';
+  document.getElementById('mapView').style.display = mode === 'map' ? '' : 'none';
   renderCurrent();
 }
 
@@ -679,7 +553,7 @@ function renderFishMap() {
     byMap.get(mid).push({ spot, fish: fs });
   }
 
-  const info = document.getElementById('resultInfo');
+  const info = document.getElementById('mapInfo');
   const sel = document.getElementById('mapSelect');
   const canvas = document.getElementById('mapCanvas');
   const opts = [...byMap.entries()].sort((a, b) => b[1].length - a[1].length);
@@ -769,17 +643,9 @@ function timeBarHtml(f, now) {
 const TUG_SHORT = { light: '!', medium: '!!', heavy: '!!!' };
 const TUG_NAME  = { light: '輕杆', medium: '中杆', heavy: '重杆' };
 
-function render() {
-  updateProgress();
-  renderTargets();
+/* 魚卡樣板：交給引擎逐張渲染（引擎負責篩選／排序／分頁）*/
+function fishCardHTML(f) {
   const now = Date.now();
-  const start = page * PAGE_SIZE;
-  const pageData = filtered.slice(start, start + PAGE_SIZE);
-
-  document.getElementById('resultInfo').textContent =
-    `顯示 ${filtered.length} 筆（共 ${allFish.length} 種）`;
-
-  document.getElementById('fishGrid').innerHTML = pageData.map(f => {
     const isOwned  = owned.has(f.itemId);
     const isTarget = targets.has(f.itemId);
     const timed    = f.startHour > 0 || f.endHour < 24;
@@ -818,8 +684,8 @@ function render() {
       ? (prevStr ? `${prevStr} <span class="chain-arrow">→</span> ${wxStr || '任意'}` : wxStr)
       : `<span class="fi-none">不限</span>`;
 
+    // 外層 .fish-card 由引擎產生（cardClass），這裡只回傳卡片內容
     return `
-<div class="fish-card${isOwned?' owned':''}" data-fish="${f.itemId}">
   <div class="fish-check" title="點擊切換已釣">${isOwned?'✓':''}</div>
   <div class="fish-body">
     <div class="fish-name">${f.name||f.nameEn}</div>
@@ -842,28 +708,7 @@ function render() {
     </div>
   </div>
   <div class="fish-patch">${f.patch ?? ''}</div>
-  <button class="tgt-btn${isTarget?' on':''}" data-target="${f.itemId}" title="${isTarget?'移出目標魚':'設為目標魚（頂部顯示開窗倒數）'}">🎯</button>
-</div>`;
-  }).join('');
-
-  renderPagination();
-}
-
-function renderPagination() {
-  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
-  const pag = document.getElementById('pagination');
-  if (totalPages <= 1) { pag.innerHTML = ''; return; }
-  let html = '';
-  html += `<button class="page-btn" ${page===0?'disabled':''} data-page="${page-1}">‹</button>`;
-  for (let i = 0; i < totalPages; i++) {
-    if (totalPages > 10 && Math.abs(i - page) > 3 && i !== 0 && i !== totalPages-1) {
-      if (i === 1 || i === totalPages-2) html += `<span style="color:var(--text-muted);padding:0 0.3rem">…</span>`;
-      continue;
-    }
-    html += `<button class="page-btn${i===page?' active':''}" data-page="${i}">${i+1}</button>`;
-  }
-  html += `<button class="page-btn" ${page===totalPages-1?'disabled':''} data-page="${page+1}">›</button>`;
-  pag.innerHTML = html;
+  <button class="tgt-btn${isTarget?' on':''}" data-target="${f.itemId}" title="${isTarget?'移出目標魚':'設為目標魚（頂部顯示開窗倒數）'}">🎯</button>`;
 }
 
 /* ── 魚詳情彈窗（參照魚糕：竿型/提鉤/餌鏈/直感/天氣鏈/未來窗口）── */
@@ -1033,9 +878,8 @@ document.getElementById('fdActions').addEventListener('click', e => {
   if (!btn || fdCurrentId == null) return;
   const f = allFish.find(x => x.itemId === fdCurrentId);
   if (btn.dataset.fd === 'owned') {
-    if (owned.has(f.itemId)) owned.delete(f.itemId); else owned.add(f.itemId);
-    localStorage.setItem(LS_KEY, JSON.stringify([...owned]));
-    updateProgress(); renderCurrent(); renderFdActions(f);
+    tracker.toggleKey(f.itemId);   // 引擎負責存檔、進度與重畫
+    renderFdActions(f);
   } else if (btn.dataset.fd === 'target') {
     toggleTarget(f.itemId); renderFdActions(f);
   } else if (btn.dataset.fd === 'map') {
@@ -1174,34 +1018,13 @@ document.getElementById('alarmTest').addEventListener('click', () => {
   }
 });
 
-function updateProgress() {
-  const total = allFish.length;
-  const cnt   = allFish.filter(f => owned.has(f.itemId)).length;
-  const pct   = total ? Math.round(cnt / total * 100) : 0;
-  document.getElementById('progressText').textContent = `已釣 ${cnt} / ${total}（${pct}%）`;
-  document.getElementById('progressFill').style.width = pct + '%';
-  try { localStorage.setItem('ffxiv_snap_fishing', JSON.stringify({ c: cnt, t: total })); } catch (e) {} // 首頁進度儀表板快照
-}
-
-function toggleFish(id, el) {
-  if (owned.has(id)) {
-    owned.delete(id);
-    el.classList.remove('owned');
-    el.querySelector('.fish-check').textContent = '';
-  } else {
-    owned.add(id);
-    el.classList.add('owned');
-    el.querySelector('.fish-check').textContent = '✓';
-  }
-  localStorage.setItem(LS_KEY, JSON.stringify([...owned]));
-  updateProgress();
-  if (statusFilter !== 'all') onFilter();
-}
+/* 進度條、快照、勾選已釣皆由 collection-tracker 引擎負責：
+   進度＝tracker.updateProgress()、勾選＝tracker.toggleKey(itemId)。 */
 
 function toggleTarget(id) {
   if (targets.has(id)) targets.delete(id); else { targets.add(id); checkAlarms(Date.now(), true); } // 新加目標先登記當前窗，不立即響鈴
   localStorage.setItem(TARGET_KEY, JSON.stringify([...targets]));
-  if (statusFilter === 'targets') onFilter(); else renderCurrent();
+  renderCurrent();   // 「只看目標」篩選也吃 targets，重畫即可反映
 }
 
 function openFishMap(id, spotIdOv) {
@@ -1218,70 +1041,8 @@ function openFishMap(id, spotIdOv) {
   });
 }
 
-function resetAll() {
-  document.getElementById('searchInput').value = '';
-  document.getElementById('patchFilter').value = '';
-  document.getElementById('typeFilter').value = '';
-  document.getElementById('regionFilter').value = '';
-  setStatusFilter('all');
-}
-
-/* ── 進度匯出／匯入／清除 ── */
-function exportProgress() {
-  const payload = {
-    schema: 'fishing-progress',
-    exported: new Date().toISOString(),
-    owned: [...owned],
-    targets: [...targets],
-  };
-  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'fishing-progress.json';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-}
-
-function importProgress(file) {
-  const reader = new FileReader();
-  reader.onload = e => {
-    try {
-      const data = JSON.parse(e.target.result);
-      if (!data || data.schema !== 'fishing-progress' || !Array.isArray(data.owned)) {
-        alert('匯入失敗：這不是「釣魚紀錄」的進度檔'); return;
-      }
-      if (owned.size && !confirm(`匯入將以檔案內容（已釣 ${data.owned.length} 筆）取代目前的 ${owned.size} 筆記錄，確定嗎？`)) return;
-      owned = new Set(data.owned);
-      if (Array.isArray(data.targets)) targets = new Set(data.targets);
-      localStorage.setItem(LS_KEY, JSON.stringify([...owned]));
-      localStorage.setItem(TARGET_KEY, JSON.stringify([...targets]));
-      updateProgress(); onFilter(); renderTargets();
-      alert('匯入成功，共 ' + owned.size + ' 筆已釣記錄');
-    } catch (err) {
-      alert('匯入失敗：檔案格式不正確');
-    }
-  };
-  reader.readAsText(file);
-}
-
-document.getElementById('exportBtn').addEventListener('click', exportProgress);
-document.getElementById('importBtn').addEventListener('click', () => document.getElementById('importFile').click());
-document.getElementById('importFile').addEventListener('change', e => {
-  const file = e.target.files[0];
-  if (file) importProgress(file);
-  e.target.value = '';
-});
-document.getElementById('clearBtn').addEventListener('click', () => {
-  if (!owned.size) { alert('目前沒有已釣記錄'); return; }
-  if (!confirm('確定要清除全部 ' + owned.size + ' 筆已釣記錄嗎？\n將先自動下載一份備份檔以防誤刪。')) return;
-  exportProgress();
-  owned.clear();
-  localStorage.setItem(LS_KEY, JSON.stringify([]));
-  updateProgress(); onFilter();
-});
+/* 匯出／匯入／清除進度由引擎工具列提供；目標魚清單透過
+   exportExtra／onImport 一併帶進備份檔（見下方 CollectionTracker.init）。 */
 
 /* ── ET 時鐘 ── */
 function tickClock() {
@@ -1292,27 +1053,18 @@ function tickClock() {
 }
 
 /* ── 事件 ── */
-document.getElementById('searchInput').addEventListener('input', onFilter);
-document.getElementById('patchFilter').addEventListener('change', onFilter);
-document.getElementById('typeFilter').addEventListener('change', onFilter);
-document.getElementById('regionFilter').addEventListener('change', onFilter);
-document.getElementById('fAll').addEventListener('click', () => setStatusFilter('all'));
-document.getElementById('fOwned').addEventListener('click', () => setStatusFilter('owned'));
-document.getElementById('fMissed').addEventListener('click', () => setStatusFilter('missing'));
-document.getElementById('fTargets').addEventListener('click', () => setStatusFilter('targets'));
-document.getElementById('resetBtn').addEventListener('click', resetAll);
-
-document.getElementById('fishGrid').addEventListener('click', e => {
-  const tgt = e.target.closest('[data-target]');
-  if (tgt) { toggleTarget(Number(tgt.dataset.target)); return; }
-  const loc = e.target.closest('[data-map]');
-  if (loc) { openFishMap(Number(loc.dataset.map)); return; }
-  const card = e.target.closest('.fish-card');
-  if (!card) return;
-  // 點左側圓圈 = 勾已釣；點卡片其他區域 = 開詳情
-  if (e.target.closest('.fish-check')) toggleFish(Number(card.dataset.fish), card);
-  else openFishDetail(Number(card.dataset.fish));
-});
+/* 搜尋／狀態／地區／版本／種類／排序／分頁／匯入匯出皆由引擎工具列處理。
+   魚卡的點擊分流見下方 onCardClick：🎯目標、📍地圖、開詳情都由本頁接手，
+   只有點左側圓圈才讓引擎切換「已釣」。 */
+function onFishCardClick(f, ev) {
+  const tgt = ev.target.closest('[data-target]');
+  if (tgt) { toggleTarget(Number(tgt.dataset.target)); return true; }
+  const loc = ev.target.closest('[data-map]');
+  if (loc) { openFishMap(Number(loc.dataset.map)); return true; }
+  if (ev.target.closest('.fish-check')) return false;   // 交給引擎切換已釣
+  openFishDetail(f.itemId);
+  return true;
+}
 
 document.getElementById('targetsPanel').addEventListener('click', e => {
   const un = e.target.closest('[data-untarget]');
@@ -1322,15 +1074,17 @@ document.getElementById('targetsPanel').addEventListener('click', e => {
   const go = e.target.closest('[data-goto]');
   if (go) {
     const f = allFish.find(x => x.itemId === Number(go.dataset.goto));
-    if (f) {
-      document.getElementById('searchInput').value = f.name || f.nameEn;
-      setStatusFilter('all');
+    if (!f) return;
+    // 用引擎的搜尋框帶出該魚（同時觸發引擎的篩選與網址同步）
+    const si = document.getElementById('ct-search');
+    if (si) {
+      si.value = f.name || f.nameEn;
+      si.dispatchEvent(new Event('input', { bubbles: true }));
+      si.scrollIntoView({ block: 'center' });
     }
   }
 });
 
-document.getElementById('vList').addEventListener('click', () => setView('list'));
-document.getElementById('vMap').addEventListener('click', () => setView('map'));
 document.getElementById('mapSelect').addEventListener('change', e => {
   currentMapId = Number(e.target.value);
   selectedSpotId = null;
@@ -1362,12 +1116,13 @@ document.getElementById('spotPanel').addEventListener('click', e => {
     fetch('../../data/fishing-spots.json').then(r => r.json()),
     initWeatherTables('../../data/maps.json'),
   ]);
+  // allFish 供詳情彈窗／目標面板／地圖檢視反查；引擎另有自己的一份篩選後清單
   allFish = fishes.data;
   SPOTS = new Map(spots.data.map(s => [s.id, s]));
   MAPS  = new Map(getMapsData().map(m => [m.id, m]));
   initMapModal({ mapsData: getMapsData(), base: '../..' });
 
-  // 地區下拉（同遊戲內釣魚手帳的地區分頁；依 maps.json 順序＝資料片順）
+  // 地區選項（同遊戲內釣魚手帳的地區分頁；依 maps.json 順序＝資料片順）
   const spotRegions = new Set([...SPOTS.values()].map(s => regionOfSpot(s.id)).filter(Boolean));
   const regionSeen = new Set();
   const regionOpts = [];
@@ -1377,14 +1132,92 @@ document.getElementById('spotPanel').addEventListener('click', e => {
       regionOpts.push(m.region);
     }
   }
-  document.getElementById('regionFilter').innerHTML =
-    '<option value="">全地區</option>' + regionOpts.map(r => `<option value="${r}">${r}</option>`).join('');
+
+  tracker = CollectionTracker.init({
+    dataUrl: '../../data/fishes.json',
+    metaUrl: '../../data/_meta.json',
+    storageKey: LS_KEY,                 // 沿用既有 key（存的是純數字 itemId）
+    snapKey: 'fishing',
+    schema: 'fishing-progress',
+    fileBase: 'fishing',
+    verb: '釣',
+    unit: '種',
+    noun: '魚',
+    gridClass: 'fish-grid',
+    cardClass: 'fish-card',
+    pageSize: 60,
+    searchPlaceholder: '搜尋魚名或釣場…',
+    keyOf: f => f.itemId,
+    include: () => true,                // 魚庫本身即台服可見範圍，不另做 patch gate
+    nameOf: f => f.name || f.nameEn || '',
+    searchText: f => [f.name, f.nameEn, f.spotName, f.spotNameEn].filter(Boolean).join(' ').toLowerCase(),
+    // 預設依開窗狀態排序（可釣中 → 最快開窗），直接回答「接下來釣什麼」
+    defaultSort: 'window',
+    sorts: [
+      { value: 'window', label: '開窗時間（可釣中優先）', cmp: (a, b) => {
+          const now = Date.now();
+          const sa = fishStatus(a, now), sb = fishStatus(b, now);
+          if (ST_RANK[sa.state] !== ST_RANK[sb.state]) return ST_RANK[sa.state] - ST_RANK[sb.state];
+          return (sa.secsLeft ?? Infinity) - (sb.secsLeft ?? Infinity);
+        } },
+      'name', 'patch-asc', 'patch-desc',
+    ],
+    filters: [
+      {
+        id: 'region', label: '地區（同遊戲內釣魚手帳分頁）',
+        options: () => regionOpts.map(r => ({ value: r, label: r })),
+        match: (f, v) => fishSpotIds(f).some(sid => regionOfSpot(sid) === v),
+      },
+      {
+        id: 'type', label: '種類',
+        options: () => [
+          { value: 'big', label: '大魚' },
+          { value: 'timed', label: '限時' },
+          { value: 'weather', label: '限天氣' },
+          { value: 'folklore', label: '傳承錄' },
+        ],
+        match: (f, v) => {
+          if (v === 'big') return !!f.bigFish;
+          if (v === 'timed') return f.startHour > 0 || f.endHour < 24;
+          if (v === 'weather') return !!f.weatherSet?.length;
+          return !!f.folklore;
+        },
+      },
+      {
+        id: 'target', label: '目標魚',
+        options: () => [{ value: 'on', label: '🎯 只看目標' }],
+        match: f => targets.has(f.itemId),
+      },
+      { kind: 'patch' },
+    ],
+    card: fishCardHTML,
+    onCardClick: onFishCardClick,
+    onCardCreate: (f, card) => { card.dataset.fish = f.itemId; },
+    // 目標魚清單是本頁自有的進度，跟著匯出／匯入一起走
+    exportExtra: () => ({ targets: [...targets] }),
+    onImport: data => {
+      if (Array.isArray(data.targets)) {
+        targets = new Set(data.targets);
+        localStorage.setItem(TARGET_KEY, JSON.stringify([...targets]));
+      }
+    },
+    onRender: list => {
+      owned = tracker.owned;    // 匯入會換掉 Set 實體，這裡重新對齊
+      filtered = list;          // 地圖檢視與目標面板吃同一份篩選結果
+      renderTargets();
+      if (viewMode === 'map') renderFishMap();
+    },
+  });
+
+  document.getElementById('vList').addEventListener('click', () => setView('list'));
+  document.getElementById('vMap').addEventListener('click', () => setView('map'));
+
   tickClock();
-  onFilter();
   syncAlarmUI();
   if (alarmCfg.on) checkAlarms(Date.now(), true); // 開頁先登記當前窗，只對之後的新窗響鈴
   setInterval(tickClock, 1000);
-  setInterval(() => { if (viewMode === 'list') render(); else renderTargets(); }, 10000); // 每 10 秒更新可釣狀態與倒數
+  // 每 10 秒更新可釣狀態與倒數（清單重畫；地圖檢視只需更新目標面板）
+  setInterval(() => { if (viewMode === 'list') tracker.renderGrid(); else renderTargets(); }, 10000);
   setInterval(() => checkAlarms(Date.now()), 5000); // 鬧鐘每 5 秒檢查（天氣快取使重算成本極低）
 })();
 </script>

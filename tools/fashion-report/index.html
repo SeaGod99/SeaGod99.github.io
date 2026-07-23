@@ -87,9 +87,17 @@
   .stale { background: var(--bg-card); border: 1px solid var(--gold); border-radius: 10px; padding: 26px; margin-bottom: 22px; }
   .stale h2 { font-size: 20px; color: var(--gold); margin-bottom: 10px; }
   .stale p { font-size: 16px; color: var(--text-dim); margin-bottom: 14px; }
-  .ext-links { display: flex; gap: 10px; flex-wrap: wrap; }
-  .ext-links a { color: var(--accent); text-decoration: none; border: 1px solid var(--border); border-radius: 8px; padding: 8px 16px; font-size: 15px; transition: border-color .15s; }
+  /* 過期時本週的階段與倒數：使用者最先要知道的是「現在能不能去評分、還剩多久」 */
+  .stale-phase { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; font-size: 15px; color: var(--text-dim); }
+  .stale-lead { font-size: 15px; color: var(--text-dim); margin-bottom: 8px; }
+  .ext-links { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .ext-links a { color: var(--accent); text-decoration: none; border: 1px solid var(--border); border-radius: 8px; padding: 8px 16px; font-size: 15px; transition: border-color .15s, background .15s; }
   .ext-links a:hover { border-color: var(--accent); }
+  /* 主要行動：資料沒更新時，去外部來源查本週答案才是使用者真正要做的事 */
+  .ext-links a.primary { background: var(--gold); border-color: var(--gold); color: #14161c; font-weight: 600; }
+  .ext-links a.primary:hover { filter: brightness(1.08); }
+  /* 存檔說明降為次要，排在外部來源之後 */
+  .stale-archive { font-size: 14px; color: var(--text-dim); margin: 16px 0 0; padding-top: 14px; border-top: 1px solid var(--border); }
 
   .src-line { font-size: 13px; color: var(--text-dim); margin-top: 20px; line-height: 1.7; }
   .src-line a { color: var(--text-dim); }
@@ -174,7 +182,8 @@ function render(d) {
   const now = Date.now();
   const week = curWeek(now);
   const isStale = d.week !== week;
-  const ph = isStale ? null : phaseInfo(now);
+  const phNow = phaseInfo(now);            // 一律是「當前週次」的階段
+  const ph = isStale ? null : phNow;       // 週次列的徽章：存檔週已收榜，不顯示倒數
   const hintOf = Object.fromEntries(d.slots.map(s => [s.slot, s.hint]));
   const statusTxt = d.status === 'verified' ? '✅ 已驗證（社群實測）' : '🔮 預測版・週五評分開放後更新為驗證版';
 
@@ -196,7 +205,7 @@ function render(d) {
   }).join('');
 
   $app.innerHTML = `
-    ${isStale ? staleBanner(d, week) : ''}
+    ${isStale ? staleBanner(d, week, phNow) : ''}
     <div class="week-bar">
       <div>
         <div class="week-no">第 ${d.week} 週${isStale ? '（存檔）' : ''}・${weekRange(d.week)}</div>
@@ -247,22 +256,30 @@ function render(d) {
     ${d.links?.theorycraft ? `<div class="src-line">本週社群討論：<a href="${d.links.theorycraft}" target="_blank" rel="noopener">Reddit 討論串</a></div>` : ''}
   `;
 
-  if (ph) {
-    const tick = () => { const el = document.getElementById('cnt'); if (el) el.textContent = fmtDur(ph.until - Date.now()); };
-    tick(); setInterval(tick, 1000);
-  }
+  // 倒數：正常時在週次列（#cnt），過期時在橫幅（#staleCnt），兩者都吃當前週次的 until
+  const cntId = isStale ? 'staleCnt' : 'cnt';
+  const tick = () => { const el = document.getElementById(cntId); if (el) el.textContent = fmtDur(phNow.until - Date.now()); };
+  tick(); setInterval(tick, 1000);
 }
 
-function staleBanner(d, week) {
+/* 資料落後於當前週次時顯示。排序刻意是「本週狀態 → 去哪查 → 存檔說明」：
+   使用者這時真正要做的是去外部來源查本週答案，所以外部連結是主要行動，
+   下方存檔只是備查，降為次要。ph 為「當前週次」的階段（不是存檔週）。 */
+function staleBanner(d, week, ph) {
   return `
     <div class="stale">
-      <h2>⏳ 本週（第 ${week} 週・${weekRange(week)}）資料尚未更新</h2>
-      <p>下方保留第 ${d.week} 週（${weekRange(d.week)}）「${d.theme.name}」的完整存檔供參考。新一週提示於每週二 16:00 揭曉後更新，也可先參考外部來源：</p>
+      <h2>⏳ 第 ${week} 週提示尚未收錄</h2>
+      <div class="stale-phase">
+        <span class="phase-badge ${ph.cls}">${ph.label}</span>
+        <span>${weekRange(week)}・${ph.tip} <b id="staleCnt"></b></span>
+      </div>
+      <p class="stale-lead">本週答案請先查以下來源（每週二 16:00 揭曉後陸續更新）：</p>
       <div class="ext-links">
-        <a href="https://fashionreportxiv.com/" target="_blank" rel="noopener">Fashion Report XIV</a>
+        <a class="primary" href="https://fashionreportxiv.com/" target="_blank" rel="noopener">Fashion Report XIV ↗</a>
         <a href="https://www.reddit.com/r/ffxiv/search/?q=fashion%20report&sort=new" target="_blank" rel="noopener">Reddit 週帖</a>
         <a href="https://search.bilibili.com/all?keyword=%E6%97%B6%E5%B0%9A%E5%93%81%E9%89%B4" target="_blank" rel="noopener">B 站攻略搜尋</a>
       </div>
+      <p class="stale-archive">下方保留第 ${d.week} 週（${weekRange(d.week)}）「${d.theme.name}」的完整存檔供參考。</p>
     </div>`;
 }
 

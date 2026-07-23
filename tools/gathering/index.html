@@ -407,10 +407,12 @@ let NODES = [];          // 處理後的限時節點列表
 async function loadData(){
   const [gathering, items, maps] = await Promise.all([
     fetch('../../data/gathering.json').then(r=>r.json()),
-    fetch('../../data/items.json').then(r=>r.json()),
+    // 本頁只需 id→繁中名，改讀精簡版（1.3MB，完整 items.json 為 10MB）；
+    // 兩者 id 集合相同，「查不到＝台服未開放」的判斷完全等價。見 scripts/build-items-lite.mjs
+    fetch('../../data/items-lite.json').then(r=>r.json()),
     fetch('../../data/maps.json').then(r=>r.json()),
   ]);
-  ITEMS = new Map(items.data.map(i => [i.id, i.name]));
+  ITEMS = new Map(items.data);   // data 已是 [[id, name], ...]
   MAPS  = new Map(maps.data.map(m => [m.id, m]));
 
   NODES = gathering.data

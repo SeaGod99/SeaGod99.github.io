@@ -24,6 +24,23 @@
  *     onError(err)  // 選用
  *   });
  *
+ * ── 三個選用能力（不設定即完全維持原行為）──
+ *
+ * 1) subsOf(entry) -> [子項目]　「子項目模式」
+ *    有些頁面的追蹤單位不是卡片本身，而是卡片裡的東西：風脈泉頁一張卡是「地區」、
+ *    真正要打勾的是地區內的 303 個風脈泉；採集紀錄頁一張卡是「採集點」、要打勾的
+ *    是點上的產物。設定 subsOf 後：keyOf 收到的是子項目、進度分母＝子項目總數、
+ *    卡片的 .owned 代表「該卡子項目全數完成」、批次標記作用於篩選結果的所有子項目。
+ *    此模式下引擎不綁卡片層級的點擊切換（由各頁在 onCardCreate 裡自己綁子項目），
+ *    切換請呼叫 tracker.toggleKey(key)。
+ *
+ * 2) pageSize　分頁
+ *    資料量大的頁面（釣魚 1449 筆、採集點 693 筆）一次畫完會卡。設定後在格線下方
+ *    渲染頁碼列，頁碼同步到網址 ?p=（可分享），任何篩選／搜尋／排序變動都回到第 1 頁。
+ *
+ * 3) onRender(list, pageSlice, tracker)
+ *    每次重畫格線後呼叫，讓各頁同步自己的附加檢視（地圖標點、目標清單…）。
+ *
  * 相依：patch-gate.js（PatchGate）。需先於本檔載入。
  */
 (function () {
@@ -87,7 +104,12 @@
     this.filterOwn = 'all';        // all | owned | missing
     this.filterState = {};         // filterId -> value|null
     this.searchQ = '';
-    this.sortBy = 'default';
+    this.sortBy = cfg.defaultSort || 'default';   // 頁面可指定預設排序（釣魚頁：依開窗時間）
+
+    // 子項目模式與分頁（皆為選用，見檔頭說明）
+    this.subsOf = cfg.subsOf || null;
+    this.pageSize = cfg.pageSize > 0 ? cfg.pageSize : 0;
+    this.page = 0;
 
     // 正規化 filters（展開 kind:'patch'）
     this.filters = (cfg.filters || []).map(function (f) {
@@ -158,6 +180,7 @@
       '<div id="ct-filters"></div>' +
       '<div class="result-meta" id="ct-meta"></div>' +
       '<div class="' + esc(this.gridClass) + '" id="ct-grid"></div>' +
+      (this.pageSize ? '<div class="ct-pagination" id="ct-pagination"></div>' : '') +
       '<div class="empty-state" id="ct-empty" style="display:none">找不到符合條件的' + esc(this.noun) + '</div>';
   };
 
@@ -195,6 +218,7 @@
         btn.textContent = o.label;
         btn.addEventListener('click', function () {
           self.filterState[f.id] = self.filterState[f.id] === o.value ? null : o.value;
+          self.page = 0;                     // 換條件回第一頁
           self.pushURL();
           self.renderFilters();
           self.renderGrid();
@@ -206,8 +230,35 @@
     });
   };
 
+  // 一筆卡片實際追蹤的單位：一般模式就是它自己，子項目模式是它底下的子項目
+  CollectionTracker.prototype.unitsOf = function (e) {
+    return this.subsOf ? (this.subsOf(e) || []) : [e];
+  };
+  CollectionTracker.prototype.unitOwned = function (u) {
+    return this.alwaysOwned(u) || this.owned.has(this.keyOf(u));
+  };
+  // 卡片是否算「已完成」：子項目模式下＝底下全部完成（空卡片不算完成）
   CollectionTracker.prototype.isOwned = function (e) {
-    return this.alwaysOwned(e) || this.owned.has(this.keyOf(e));
+    if (!this.subsOf) return this.unitOwned(e);
+    var us = this.unitsOf(e);
+    return us.length > 0 && us.every(this.unitOwned, this);
+  };
+  // 統計用：把一批卡片攤成「不重複的追蹤單位」。
+  // 同一個單位可能出現在多張卡片（採集紀錄頁：同一件產物出現在多個採集點），
+  // 依 keyOf 去重，進度分母才會是實際要蒐集的件數而不是出現次數。
+  CollectionTracker.prototype.unitsIn = function (list) {
+    if (!this.subsOf) return list;
+    var seen = new Set(), out = [];
+    for (var i = 0; i < list.length; i++) {
+      var us = this.unitsOf(list[i]);
+      for (var j = 0; j < us.length; j++) {
+        var k = this.keyOf(us[j]);
+        if (seen.has(k)) continue;
+        seen.add(k);
+        out.push(us[j]);
+      }
+    }
+    return out;
   };
 
   CollectionTracker.prototype.save = function () {
@@ -215,8 +266,9 @@
   };
 
   CollectionTracker.prototype.updateProgress = function () {
-    var total = this.LIST.length;
-    var count = this.LIST.filter(this.isOwned.bind(this)).length;
+    var units = this.unitsIn(this.LIST);
+    var total = units.length;
+    var count = units.filter(this.unitOwned, this).length;
     var pct = total ? Math.round(count / total * 100) : 0;
     this.$('ct-owned').textContent = count;
     this.$('ct-total').textContent = total;
@@ -227,7 +279,11 @@
 
   CollectionTracker.prototype.toggle = function (e) {
     if (this.alwaysOwned(e)) return;
-    var k = this.keyOf(e);
+    this.toggleKey(this.keyOf(e));
+  };
+
+  // 子項目模式下各頁用它切換單一子項目（e.g. 一個風脈泉、一件採集產物）
+  CollectionTracker.prototype.toggleKey = function (k) {
     if (this.owned.has(k)) this.owned.delete(k); else this.owned.add(k);
     this.save();
     this.updateProgress();
@@ -271,18 +327,32 @@
     if (list.length === 0) { grid.style.display = 'none'; empty.style.display = ''; }
     else { grid.style.display = ''; empty.style.display = 'none'; }
 
-    var ownedInView = list.filter(this.isOwned.bind(this)).length;
+    // 統計：子項目模式下「已完成 n / m」算的是子項目（如已解鎖幾個風脈泉），
+    // 「顯示 X / Y」仍算卡片（如顯示幾個地區），兩者單位不同才講得通
+    var unitsInView = this.unitsIn(list);
+    var ownedInView = unitsInView.filter(this.unitOwned, this).length;
     meta.innerHTML = '顯示 <em>' + list.length + '</em> / ' + this.LIST.length + ' ' + this.unit +
-      ' · 已' + this.verb + ' <em>' + ownedInView + '</em> / ' + list.length;
+      ' · 已' + this.verb + ' <em>' + ownedInView + '</em> / ' + unitsInView.length;
+
+    // 分頁：頁碼超出範圍時夾回（篩選變窄後仍停在舊頁會看到空白）
+    var pageSlice = list;
+    if (this.pageSize) {
+      var totalPages = Math.max(1, Math.ceil(list.length / this.pageSize));
+      if (this.page > totalPages - 1) this.page = totalPages - 1;
+      if (this.page < 0) this.page = 0;
+      pageSlice = list.slice(this.page * this.pageSize, (this.page + 1) * this.pageSize);
+    }
 
     var frag = document.createDocumentFragment();
-    list.forEach(function (e) {
+    pageSlice.forEach(function (e) {
       var owned = self.isOwned(e);
       var locked = self.alwaysOwned(e);
       var card = document.createElement('div');
       card.className = self.cardClass + (owned ? ' owned' : '') + (locked ? ' locked' : '');
       card.innerHTML = self.cfg.card(e);
-      if (!locked) {
+      // 子項目模式：卡片本身不是可切換的按鈕（要打勾的是卡片裡的子項目），
+      // 由各頁在 onCardCreate 綁定子項目的點擊並呼叫 tracker.toggleKey()
+      if (!locked && !self.subsOf) {
         card.tabIndex = 0;
         card.setAttribute('role', 'button');
         card.setAttribute('aria-pressed', owned ? 'true' : 'false');
@@ -301,11 +371,66 @@
     });
     grid.innerHTML = '';
     grid.appendChild(frag);
+
+    if (this.pageSize) this.renderPagination(list.length);
+    // 讓各頁同步自己的附加檢視（地圖標點、目標清單…）
+    if (this.cfg.onRender) this.cfg.onRender(list, pageSlice, this);
+  };
+
+  // ── 分頁列 ──
+  CollectionTracker.prototype.renderPagination = function (total) {
+    var host = this.$('ct-pagination');
+    if (!host) return;
+    var self = this;
+    var pages = Math.ceil(total / this.pageSize);
+    host.innerHTML = '';
+    if (pages <= 1) return;
+
+    function btn(label, page, opts) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'ct-page-btn' + (opts && opts.active ? ' active' : '');
+      b.textContent = label;
+      if (opts && opts.disabled) { b.disabled = true; return b; }
+      if (opts && opts.active) b.setAttribute('aria-current', 'page');
+      b.addEventListener('click', function () {
+        self.page = page;
+        self.pushURL();
+        self.renderGrid();
+        var grid = self.$('ct-grid');
+        if (grid && grid.scrollIntoView) grid.scrollIntoView({ block: 'start' });
+      });
+      return b;
+    }
+
+    host.appendChild(btn('‹', this.page - 1, { disabled: this.page === 0 }));
+    // 首頁、末頁與當前頁前後兩頁；中間以 … 省略
+    var shown = [];
+    for (var i = 0; i < pages; i++) {
+      if (i === 0 || i === pages - 1 || Math.abs(i - this.page) <= 2) shown.push(i);
+    }
+    var prev = -1;
+    shown.forEach(function (i) {
+      if (prev >= 0 && i - prev > 1) {
+        var gap = document.createElement('span');
+        gap.className = 'ct-page-gap';
+        gap.textContent = '…';
+        host.appendChild(gap);
+      }
+      host.appendChild(btn(String(i + 1), i, { active: i === self.page }));
+      prev = i;
+    });
+    host.appendChild(btn('›', this.page + 1, { disabled: this.page >= pages - 1 }));
   };
 
   // ── 匯出／匯入 ──
   CollectionTracker.prototype.exportProgress = function () {
     var payload = { schema: this.schema, exported: new Date().toISOString(), owned: Array.from(this.owned) };
+    // 頁面自有的額外進度（釣魚頁的目標魚清單）也要一起備份，否則匯出等於漏帶
+    if (this.cfg.exportExtra) {
+      var extra = this.cfg.exportExtra() || {};
+      for (var k in extra) if (k !== 'schema' && k !== 'owned') payload[k] = extra[k];
+    }
     var blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
@@ -323,10 +448,12 @@
         if (!Array.isArray(data) && data.schema !== self.schema) {
           alert('匯入失敗：這不是「' + self.noun + '收藏」的進度檔'); return;
         }
-        var list = Array.isArray(data) ? data : data.owned;
+        // 舊版各頁的鍵名不一致（owned／unlocked／done），一律接受，避免舊備份檔匯不回來
+        var list = Array.isArray(data) ? data : (data.owned || data.unlocked || data.done);
         if (!Array.isArray(list)) throw new Error('格式錯誤');
         if (self.owned.size && !confirm('匯入將以檔案內容（' + list.length + ' 筆）取代目前的 ' + self.owned.size + ' 筆記錄，確定嗎？')) return;
         self.owned = new Set(list);
+        if (self.cfg.onImport) self.cfg.onImport(data);   // 還原頁面自有的額外進度
         self.save(); self.updateProgress(); self.renderGrid();
         alert('匯入成功，共 ' + self.owned.size + ' 筆已' + self.verb + '記錄');
       } catch (err) { alert('匯入失敗：檔案格式不正確'); }
@@ -339,11 +466,12 @@
     var p = new URLSearchParams();
     if (this.searchQ) p.set('q', this.cfg._rawSearch || this.searchQ);
     if (this.filterOwn !== 'all') p.set('own', this.filterOwn);
-    if (this.sortBy !== 'default') p.set('sort', this.sortBy);
+    if (this.sortBy !== (this.cfg.defaultSort || 'default')) p.set('sort', this.sortBy);
     var self = this;
     this.filters.forEach(function (f) {
       if (self.filterState[f.id] != null) p.set('f_' + f.id, self.filterState[f.id]);
     });
+    if (this.pageSize && this.page > 0) p.set('p', String(this.page + 1));   // 網址用 1-based
     var s = p.toString();
     return s ? '?' + s : location.pathname;
   };
@@ -361,13 +489,18 @@
     this.searchQ = q.trim().toLowerCase();
     this.filterOwn = p.get('own') === 'owned' || p.get('own') === 'missing' ? p.get('own') : 'all';
     var sort = p.get('sort');
-    this.sortBy = (sort && (sort === 'default' || this.sorts.some(function (s) { return s.value === sort; }))) ? sort : 'default';
+    this.sortBy = (sort && (sort === 'default' || this.sorts.some(function (s) { return s.value === sort; })))
+      ? sort : (this.cfg.defaultSort || 'default');
     this.filters.forEach(function (f) {
       var v = p.get('f_' + f.id);
       // 僅接受確實存在於選項中的值
       var ok = v != null && (self._opts[f.id] || []).some(function (o) { return o.value === v; });
       self.filterState[f.id] = ok ? v : null;
     });
+    if (this.pageSize) {
+      var pg = parseInt(p.get('p'), 10);
+      this.page = pg > 0 ? pg - 1 : 0;      // 超出範圍由 renderGrid 夾回
+    }
     // 同步 UI 控件
     var si = this.$('ct-search'); if (si) si.value = q;
     var ss = this.$('ct-sort'); if (ss) ss.value = this.sortBy;
@@ -384,6 +517,7 @@
         self.filterOwn = btn.dataset.own;
         Array.prototype.forEach.call(self.root.querySelectorAll('#ct-own .own-btn'), function (b) { b.classList.remove('active'); });
         btn.classList.add('active');
+        self.page = 0;
         self.pushURL();
         self.renderGrid();
       });
@@ -391,11 +525,13 @@
     this.$('ct-search').addEventListener('input', function (e) {
       self.cfg._rawSearch = e.target.value;
       self.searchQ = e.target.value.trim().toLowerCase();
+      self.page = 0;
       self.replaceURL();     // 打字用 replace，避免灌爆歷史
       self.renderGrid();
     });
     this.$('ct-sort').addEventListener('change', function (e) {
       self.sortBy = e.target.value;
+      self.page = 0;
       self.pushURL();
       self.renderGrid();
     });
@@ -410,18 +546,19 @@
       self.exportProgress();
       self.owned.clear(); self.save(); self.updateProgress(); self.renderGrid();
     });
+    // 批次標記作用於「篩選結果的所有追蹤單位」（子項目模式下即卡片內的子項目）
     this.$('ct-markAll').addEventListener('click', function () {
-      var toAdd = self.filtered().filter(function (e) { return !self.isOwned(e); });
+      var toAdd = self.unitsIn(self.filtered()).filter(function (u) { return !self.unitOwned(u); });
       if (!toAdd.length) { alert('目前篩選結果都已標記'); return; }
       if (!confirm('將目前篩選結果中未標記的 ' + toAdd.length + ' 筆標記為已' + self.verb + '？')) return;
-      toAdd.forEach(function (e) { if (!self.alwaysOwned(e)) self.owned.add(self.keyOf(e)); });
+      toAdd.forEach(function (u) { if (!self.alwaysOwned(u)) self.owned.add(self.keyOf(u)); });
       self.save(); self.updateProgress(); self.renderGrid();
     });
     this.$('ct-unmarkAll').addEventListener('click', function () {
-      var toDel = self.filtered().filter(function (e) { return self.owned.has(self.keyOf(e)); });
+      var toDel = self.unitsIn(self.filtered()).filter(function (u) { return self.owned.has(self.keyOf(u)); });
       if (!toDel.length) { alert('目前篩選結果沒有可取消的標記'); return; }
       if (!confirm('取消目前篩選結果中 ' + toDel.length + ' 筆的已' + self.verb + '標記？')) return;
-      toDel.forEach(function (e) { self.owned.delete(self.keyOf(e)); });
+      toDel.forEach(function (u) { self.owned.delete(self.keyOf(u)); });
       self.save(); self.updateProgress(); self.renderGrid();
     });
     window.addEventListener('popstate', function () {
@@ -437,7 +574,9 @@
     fetch(this.cfg.dataUrl)
       .then(function (res) { if (!res.ok) throw new Error('無法載入資料 (' + res.status + ')'); return res.json(); })
       .then(function (json) {
-        var raw = (json && json.data) ? json.data : (Array.isArray(json) ? json : []);
+        // 多數庫是信封的 data[]；少數用別的鍵（風脈泉是 zones[]）→ 由 rowsOf 指定
+        var raw = self.cfg.rowsOf ? (self.cfg.rowsOf(json) || [])
+          : ((json && json.data) ? json.data : (Array.isArray(json) ? json : []));
         return PatchGate.loadGamePatch(self.cfg.metaUrl).then(function (gp) {
           self.LIST = raw.filter(function (e) { return self.include(e, gp); });
           if (self.cfg.prepare) self.LIST = self.cfg.prepare(self.LIST) || self.LIST;

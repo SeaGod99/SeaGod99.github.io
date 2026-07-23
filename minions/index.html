@@ -190,6 +190,7 @@
   <div class="tt-name" id="ttName"></div>
   <div class="tt-row" id="ttMeta"></div>
   <div id="ttSources"></div>
+  <div id="ttMarket"></div>
 </div>
 
 <script>
@@ -213,6 +214,11 @@
     } else {
       srcWrap.innerHTML = '<div class="tt-placeholder">取得方式：待補充</div>';
     }
+    // 跨工具連結：可上市寵物連到市場查價（本頁卡片是小方格，放不下，故收進提示框；
+    // 提示框只有「釘住」時 pointer-events 才開啟，所以此連結需按 ⓘ 後點擊）
+    $('ttMarket').innerHTML = m.itemId
+      ? '<a class="ct-market" href="../tools/market/#item=' + esc(m.itemId) + '" title="到市場查價工具查此物品行情">💰 市場行情</a>'
+      : '';
   }
   function showTooltip(e, m) { if (pinnedCard) return; fillTooltip(m); $('tooltip').classList.add('show'); moveTooltip(e); }
   function hideTooltip() { if (pinnedCard) return; $('tooltip').classList.remove('show'); }
