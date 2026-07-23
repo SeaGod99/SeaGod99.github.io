@@ -40,6 +40,7 @@ const SHEETS = [
   "MJIAnimals", "MJIItemPouch", "MJIItemCategory", "MJICropSeed",
   "MJIGatheringItem", "MJIGatheringTool", "MJIKeyItem",
   "MJIRecipe", "MJIRecipeMaterial",
+  "MJICraftworksObject", "MJICraftworksObjectTheme",
   "MJIBuilding", "MJILandmark", "MJIText", "MJIName",
   "MJIRank", "MJIDisposalShopItem",
 ];
@@ -139,6 +140,7 @@ const OVERRIDE_TEMPLATE = {
   buildings: {},    // MJIText row id -> 台服建築名
   categories: {},   // MJIItemCategory row id -> 台服素材分類名
   areas: {},        // MJIName row id -> 台服島嶼地區名
+  themes: {},       // MJICraftworksObjectTheme row id -> 台服工坊製作主題名
 };
 function loadOverride() {
   if (!existsSync(OVERRIDE_PATH)) {
@@ -146,7 +148,7 @@ function loadOverride() {
     return OVERRIDE_TEMPLATE;
   }
   const o = JSON.parse(readFileSync(OVERRIDE_PATH, "utf8"));
-  for (const k of ["animals", "buildings", "categories", "areas"]) o[k] = o[k] || {};
+  for (const k of ["animals", "buildings", "categories", "areas", "themes"]) o[k] = o[k] || {};
   return o;
 }
 
@@ -209,24 +211,33 @@ const report = [];
   for (const g of S.MJIGatheringItem) {
     const itemId = num(g.Item);
     if (!itemId) continue;
+    // ⚠️ 這是「採集區域」不是「單一採集點」：欄位帶 Radius（75~200 世界單位），
+    // 遊戲裡同一種素材在該區域內散佈著很多個可採集物件。前端務必以圓形範圍呈現，
+    // 不要畫成一個精確的點——那會誤導使用者以為只有一處可採。
+    // 每個採集物件的逐點座標 datamine 拿不到（MJIGathering 的 484 列只有
+    // GatheringObject 參照、沒有座標）。
     gather.set(itemId, {
       tool: num(g.Tool) || null,           // MJIGatheringTool row（0＝空手）
       // Map 欄實測只有 0/1 兩種值（島嶼地區 MJIName 有 6 個，故這欄不是地區）。
       // 0 的 39 筆是地上、1 的 9 筆全是洞窟產物（燈火茸／幻影石／水晶層…）→ 1 ＝ 洞窟。
       mapLayer: num(g.Map),
       layerName: num(g.Map) === 1 ? "洞窟" : "地上",
-      // 遊戲內地圖座標（站內標準格式 {mapId,x,y}），由世界座標換算，已用底圖疊點驗證
-      coords: {
+      // 區域中心與半徑，換算成遊戲內地圖座標系（半徑同樣是地圖座標單位）
+      area: {
         mapId: ISLAND_MAP_ID,
         x: worldToMapCoord(num(g.X), ISLAND_MAP.offsetX),
         y: worldToMapCoord(num(g.Y), ISLAND_MAP.offsetY),
+        radius: Math.round(num(g.Radius) * 41 / 2048 * 10) / 10,
       },
       // datamine 原始世界座標（保留供日後校驗）
       raw: { x: num(g.X), y: num(g.Y), radius: num(g.Radius) },
     });
   }
-  const seedItem = new Map();
-  for (const c of S.MJICropSeed) seedItem.set(mainKey(c._key), num(c.Item));
+  // ⚠️ 方向容易搞反：MJIItemPouch 的 Crop 欄不為 0 者，**該素材本身是種子／芽塊**
+  // （如「海島甘藍的種子」），它指向的 MJICropSeed.Item 才是種下去收成的作物
+  // （海島甘藍）。故欄位命名為 growsIntoItemId，不要叫 seedItemId。
+  const cropProduce = new Map();
+  for (const c of S.MJICropSeed) cropProduce.set(mainKey(c._key), num(c.Item));
 
   const rows = S.MJIItemPouch
     .filter((r) => num(r.Item))          // row 0 亦為真資料，見上方 pouchItem 註解
@@ -238,7 +249,7 @@ const report = [];
         id, itemId, name, nameMissing: !name,
         categoryId: num(r.Category) || null,
         sort: num(r.Sort),
-        seedItemId: cropRow ? seedItem.get(cropRow) || null : null,
+        growsIntoItemId: cropRow ? cropProduce.get(cropRow) || null : null,
         gathering: gather.get(itemId) || null,
       };
     });
@@ -276,8 +287,8 @@ const report = [];
     rows.filter((r) => r.name).length]);
 }
 
-/* 5) 製作：人工製作（MJIRecipe）＋經濟型製作（recipes.json jobId -10 的其餘筆）
-      合併成一份，前端才不必為了 106 筆經濟型製作去載 4.3MB 的 recipes.json */
+/* 5) 人工製作（MJIRecipe）：開拓工具／人偶設備／捕獸具／飼料。
+      經濟型製作（工坊生產）是另一套機制，走 MJICraftworksObject，見下一段。 */
 {
   // 同樣不能用 key>0 過濾：row 0 是「開拓用石斧」的真配方
   const rows = S.MJIRecipe
@@ -297,31 +308,65 @@ const report = [];
         ingredients.push({ itemId: mid, name: twName(mid), qty });
       }
       return {
-        id: `handcraft-${mainKey(r._key)}`, kind: "handcraft",
+        id: mainKey(r._key),
         itemId, name, nameMissing: !name,
         order: num(r.Order), ingredients,
       };
     })
     .filter((x) => x.itemId);
 
-  // 經濟型製作（工坊料理／家具／裝備…）：Teamcraft recipes.json 的 jobId -10 扣掉上面 28 筆
-  const handcraftIds = new Set(rows.map((r) => r.itemId));
-  const craftworks = JSON.parse(readFileSync(join(DATA, "recipes.json"), "utf8"))
-    .data.filter((r) => r.jobId === -10 && !handcraftIds.has(r.itemId))
-    .map((r) => ({
-      id: `craftworks-${r.id}`, kind: "craftworks",
-      itemId: r.itemId, name: twName(r.itemId), nameMissing: !twName(r.itemId),
-      order: null,
-      yield: r.yield || 1,
-      patch: r.patch || null,
-      ingredients: (r.ingredients || []).map((g) => ({
-        itemId: g.itemId, name: twName(g.itemId), qty: g.qty,
-      })),
-    }));
+  report.push(["island-recipes", write("island-recipes.json", "island-recipes", rows),
+    rows.filter((r) => r.name).length]);
+}
 
-  const all = rows.concat(craftworks);
-  report.push(["island-recipes", write("island-recipes.json", "island-recipes", all),
-    all.filter((r) => r.name).length]);
+/* 5b) 工坊生產（經濟型製作）：MJICraftworksObject
+   ── 使用情境 ──
+   這不是玩家自己合成的配方，而是**工坊排程生產**的品項：指派後經過 CraftingTime
+   小時產出，賣掉換取貨幣。玩家實際要決定的是「這一輪排什麼」，判斷依據是
+   所需素材（手上有沒有）、製作時數（幾小時一輪）、Value（基礎價值）、
+   以及 Theme（連續生產同主題會有效率加成），外加工房等級門檻 LevelReq。
+   故本表輸出這些欄位；**每週浮動的歡迎度／需求係數刻意不做**（需週更維護，
+   見 docs/無人島攻略工具規劃.md §1）。 */
+{
+  const themeName = new Map();
+  for (const t of S.MJICraftworksObjectTheme) {
+    const id = mainKey(t._key);
+    if (id > 0 && (t.Name || "").trim()) themeName.set(id, t.Name);
+  }
+  const themeRows = Array.from(themeName.entries()).map(([id, cn]) => ({
+    id, name: OV.themes[id] || null, nameCn: cn, nameMissing: !OV.themes[id],
+  }));
+  report.push(["island-themes", write("island-themes.json", "island-themes", themeRows),
+    themeRows.filter((r) => r.name).length]);
+
+  const rows = S.MJICraftworksObject
+    .map((r) => {
+      const itemId = num(r.Item);
+      if (!itemId) return null;
+      const name = twName(itemId);
+      const materials = [];
+      for (let i = 0; i < 4; i++) {
+        const pouchRow = num(r[`Material[${i}]`]);
+        const qty = num(r[`Amount[${i}]`]);
+        if (!qty) continue;                        // pouchRow 0 有效，只能用 qty 判空
+        const mid = pouchItem.get(pouchRow);
+        if (!mid) continue;
+        materials.push({ itemId: mid, name: twName(mid), qty });
+      }
+      const themes = [num(r["Theme[0]"]), num(r["Theme[1]"])]
+        .filter((t) => t > 0)
+        .map((t) => ({ id: t, name: OV.themes[t] || null, nameCn: themeName.get(t) || null }));
+      return {
+        id: mainKey(r._key), itemId, name, nameMissing: !name,
+        themes, materials,
+        levelReq: num(r.LevelReq) || null,
+        craftingTime: num(r.CraftingTime) || null,   // 小時
+        value: num(r.Value) || null,                 // 基礎價值
+      };
+    })
+    .filter((x) => x && x.materials.length);
+  report.push(["island-craftworks", write("island-craftworks.json", "island-craftworks", rows),
+    rows.filter((r) => r.name).length]);
 }
 
 /* 6) 建築與地標：改建素材（Material[] 指向 MJIItemPouch row） */
@@ -376,7 +421,10 @@ const report = [];
   report.push(["island-ranks", write("island-ranks.json", "island-ranks", rows), rows.length]);
 }
 
-/* 8) 素材收購（島嶼素材 → 貝幣） */
+/* 8) 素材收購：MJIDisposalShopItem。
+   ⚠️ `Currency` 欄只是個 byte，datamine 沒有給貨幣名稱，**不要自己編一個**
+   （初版曾憑印象寫「貝幣」，是錯的）。在拿到台服官方貨幣名之前，
+   前端不顯示這份資料；此檔僅保留 itemId 與數值供日後接上。 */
 {
   // Item 欄是 MJIItemPouch 的 row 參照（不是 itemId），且 row 0 有效 → 不可用 0 當空值判斷
   const rows = S.MJIDisposalShopItem

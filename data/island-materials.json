@@ -12,15 +12,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 1,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": null,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 18.4,
-          "y": 24.3
+          "y": 24.3,
+          "radius": 2
         },
         "raw": {
           "x": 20,
@@ -36,15 +37,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 11,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": 1,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 21.9,
-          "y": 25.7
+          "y": 25.7,
+          "radius": 2
         },
         "raw": {
           "x": 194,
@@ -60,15 +62,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 2,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": null,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 22.3,
-          "y": 25.9
+          "y": 25.9,
+          "radius": 2
         },
         "raw": {
           "x": 215,
@@ -84,15 +87,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 3,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": null,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 17.6,
-          "y": 23.3
+          "y": 23.3,
+          "radius": 1.6
         },
         "raw": {
           "x": -22,
@@ -108,15 +112,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 4,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": null,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 16.8,
-          "y": 10.4
+          "y": 10.4,
+          "radius": 3
         },
         "raw": {
           "x": -58,
@@ -132,15 +137,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 5,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": null,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 33.3,
-          "y": 24.6
+          "y": 24.6,
+          "radius": 2
         },
         "raw": {
           "x": 765,
@@ -156,15 +162,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 6,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": null,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 33.3,
-          "y": 24.6
+          "y": 24.6,
+          "radius": 2
         },
         "raw": {
           "x": 765,
@@ -180,15 +187,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 7,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": null,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 13,
-          "y": 12.4
+          "y": 12.4,
+          "radius": 2
         },
         "raw": {
           "x": -248,
@@ -204,15 +212,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 8,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": null,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 22.7,
-          "y": 26
+          "y": 26,
+          "radius": 1.5
         },
         "raw": {
           "x": 236,
@@ -228,15 +237,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 12,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": 1,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 22.3,
-          "y": 25.9
+          "y": 25.9,
+          "radius": 2
         },
         "raw": {
           "x": 215,
@@ -252,15 +262,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 13,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": 1,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 18.4,
-          "y": 24.3
+          "y": 24.3,
+          "radius": 2
         },
         "raw": {
           "x": 20,
@@ -276,15 +287,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 9,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": null,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 21.9,
-          "y": 25.7
+          "y": 25.7,
+          "radius": 2
         },
         "raw": {
           "x": 194,
@@ -300,15 +312,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 10,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": null,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 20.9,
-          "y": 24.5
+          "y": 24.5,
+          "radius": 2
         },
         "raw": {
           "x": 144,
@@ -324,15 +337,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 14,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": 2,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 30.4,
-          "y": 28.5
+          "y": 28.5,
+          "radius": 1.6
         },
         "raw": {
           "x": 619,
@@ -348,15 +362,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 15,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": 2,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 17.6,
-          "y": 23.3
+          "y": 23.3,
+          "radius": 1.6
         },
         "raw": {
           "x": -22,
@@ -372,15 +387,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 16,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": 2,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 31.7,
-          "y": 21.1
+          "y": 21.1,
+          "radius": 1.5
         },
         "raw": {
           "x": 685,
@@ -396,15 +412,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 19,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": 4,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 17.8,
-          "y": 17.4
+          "y": 17.4,
+          "radius": 1.5
         },
         "raw": {
           "x": -9,
@@ -420,15 +437,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 20,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": 4,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 27.5,
-          "y": 29.2
+          "y": 29.2,
+          "radius": 1.5
         },
         "raw": {
           "x": 476,
@@ -444,15 +462,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 21,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": 4,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 29.1,
-          "y": 24
+          "y": 24,
+          "radius": 2
         },
         "raw": {
           "x": 556,
@@ -468,15 +487,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 17,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": 3,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 22.7,
-          "y": 26
+          "y": 26,
+          "radius": 1.5
         },
         "raw": {
           "x": 236,
@@ -492,15 +512,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 18,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": 3,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 18.2,
-          "y": 21.5
+          "y": 21.5,
+          "radius": 1.5
         },
         "raw": {
           "x": 12,
@@ -516,15 +537,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 25,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": 6,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 27.8,
-          "y": 19.3
+          "y": 19.3,
+          "radius": 2
         },
         "raw": {
           "x": 489,
@@ -540,15 +562,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 26,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": 6,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 25.8,
-          "y": 17.1
+          "y": 17.1,
+          "radius": 4
         },
         "raw": {
           "x": 392,
@@ -564,15 +587,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 27,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": 6,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 30.1,
-          "y": 10.9
+          "y": 10.9,
+          "radius": 2.5
         },
         "raw": {
           "x": 603,
@@ -588,15 +612,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 22,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": 5,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 16.8,
-          "y": 10.4
+          "y": 10.4,
+          "radius": 3
         },
         "raw": {
           "x": -58,
@@ -612,15 +637,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 23,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": 5,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 33.3,
-          "y": 24.6
+          "y": 24.6,
+          "radius": 2
         },
         "raw": {
           "x": 765,
@@ -636,15 +662,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 24,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": 5,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 33.3,
-          "y": 24.6
+          "y": 24.6,
+          "radius": 2
         },
         "raw": {
           "x": 765,
@@ -660,7 +687,7 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 100,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -670,7 +697,7 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 101,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -680,7 +707,7 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 102,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -690,7 +717,7 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 103,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -700,7 +727,7 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 104,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -710,15 +737,16 @@
       "nameMissing": false,
       "categoryId": 3,
       "sort": 120,
-      "seedItemId": 37593,
+      "growsIntoItemId": 37593,
       "gathering": {
         "tool": 3,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 13,
-          "y": 12.4
+          "y": 12.4,
+          "radius": 2
         },
         "raw": {
           "x": -248,
@@ -734,15 +762,16 @@
       "nameMissing": false,
       "categoryId": 3,
       "sort": 121,
-      "seedItemId": 37594,
+      "growsIntoItemId": 37594,
       "gathering": {
         "tool": null,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 17.5,
-          "y": 20.3
+          "y": 20.3,
+          "radius": 1.5
         },
         "raw": {
           "x": -25,
@@ -758,7 +787,7 @@
       "nameMissing": false,
       "categoryId": 3,
       "sort": 122,
-      "seedItemId": 37595,
+      "growsIntoItemId": 37595,
       "gathering": null
     },
     {
@@ -768,15 +797,16 @@
       "nameMissing": false,
       "categoryId": 3,
       "sort": 123,
-      "seedItemId": 37596,
+      "growsIntoItemId": 37596,
       "gathering": {
         "tool": null,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 18.7,
-          "y": 26.5
+          "y": 26.5,
+          "radius": 1.5
         },
         "raw": {
           "x": 35,
@@ -792,7 +822,7 @@
       "nameMissing": false,
       "categoryId": 3,
       "sort": 124,
-      "seedItemId": 37597,
+      "growsIntoItemId": 37597,
       "gathering": null
     },
     {
@@ -802,7 +832,7 @@
       "nameMissing": false,
       "categoryId": 3,
       "sort": 125,
-      "seedItemId": 37598,
+      "growsIntoItemId": 37598,
       "gathering": null
     },
     {
@@ -812,7 +842,7 @@
       "nameMissing": false,
       "categoryId": 3,
       "sort": 126,
-      "seedItemId": 37599,
+      "growsIntoItemId": 37599,
       "gathering": null
     },
     {
@@ -822,7 +852,7 @@
       "nameMissing": false,
       "categoryId": 3,
       "sort": 127,
-      "seedItemId": 37600,
+      "growsIntoItemId": 37600,
       "gathering": null
     },
     {
@@ -832,15 +862,16 @@
       "nameMissing": false,
       "categoryId": 3,
       "sort": 128,
-      "seedItemId": 37601,
+      "growsIntoItemId": 37601,
       "gathering": {
         "tool": 3,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 13.5,
-          "y": 15.1
+          "y": 15.1,
+          "radius": 2
         },
         "raw": {
           "x": -224,
@@ -856,7 +887,7 @@
       "nameMissing": false,
       "categoryId": 3,
       "sort": 129,
-      "seedItemId": 37602,
+      "growsIntoItemId": 37602,
       "gathering": null
     },
     {
@@ -866,7 +897,7 @@
       "nameMissing": false,
       "categoryId": 4,
       "sort": 150,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -876,7 +907,7 @@
       "nameMissing": false,
       "categoryId": 4,
       "sort": 151,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -886,7 +917,7 @@
       "nameMissing": false,
       "categoryId": 4,
       "sort": 152,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -896,7 +927,7 @@
       "nameMissing": false,
       "categoryId": 4,
       "sort": 153,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -906,7 +937,7 @@
       "nameMissing": false,
       "categoryId": 4,
       "sort": 154,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -916,7 +947,7 @@
       "nameMissing": false,
       "categoryId": 4,
       "sort": 155,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -926,7 +957,7 @@
       "nameMissing": false,
       "categoryId": 4,
       "sort": 156,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -936,7 +967,7 @@
       "nameMissing": false,
       "categoryId": 4,
       "sort": 157,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -946,7 +977,7 @@
       "nameMissing": false,
       "categoryId": 4,
       "sort": 158,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -956,7 +987,7 @@
       "nameMissing": false,
       "categoryId": 4,
       "sort": 159,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -966,7 +997,7 @@
       "nameMissing": false,
       "categoryId": 5,
       "sort": 200,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -976,7 +1007,7 @@
       "nameMissing": false,
       "categoryId": 5,
       "sort": 201,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -986,7 +1017,7 @@
       "nameMissing": false,
       "categoryId": 5,
       "sort": 202,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -996,7 +1027,7 @@
       "nameMissing": false,
       "categoryId": 5,
       "sort": 203,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -1006,7 +1037,7 @@
       "nameMissing": false,
       "categoryId": 5,
       "sort": 204,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -1016,7 +1047,7 @@
       "nameMissing": false,
       "categoryId": 5,
       "sort": 205,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -1026,7 +1057,7 @@
       "nameMissing": false,
       "categoryId": 5,
       "sort": 206,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -1036,7 +1067,7 @@
       "nameMissing": false,
       "categoryId": 5,
       "sort": 207,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -1046,7 +1077,7 @@
       "nameMissing": false,
       "categoryId": 5,
       "sort": 208,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -1056,7 +1087,7 @@
       "nameMissing": false,
       "categoryId": 6,
       "sort": 209,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -1066,7 +1097,7 @@
       "nameMissing": false,
       "categoryId": 6,
       "sort": 210,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -1076,7 +1107,7 @@
       "nameMissing": false,
       "categoryId": 6,
       "sort": 211,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -1086,7 +1117,7 @@
       "nameMissing": false,
       "categoryId": 7,
       "sort": 212,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -1096,7 +1127,7 @@
       "nameMissing": false,
       "categoryId": 7,
       "sort": 213,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -1106,7 +1137,7 @@
       "nameMissing": false,
       "categoryId": 7,
       "sort": 214,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -1116,15 +1147,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 29,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": 7,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 22.3,
-          "y": 25.9
+          "y": 25.9,
+          "radius": 2
         },
         "raw": {
           "x": 215,
@@ -1140,15 +1172,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 30,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": 7,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 18.4,
-          "y": 24.3
+          "y": 24.3,
+          "radius": 2
         },
         "raw": {
           "x": 20,
@@ -1164,15 +1197,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 31,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": 7,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 21.9,
-          "y": 25.7
+          "y": 25.7,
+          "radius": 2
         },
         "raw": {
           "x": 194,
@@ -1188,15 +1222,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 32,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": 7,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 20.9,
-          "y": 24.5
+          "y": 24.5,
+          "radius": 2
         },
         "raw": {
           "x": 144,
@@ -1212,15 +1247,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 28,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": null,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 21.9,
-          "y": 16.6
+          "y": 16.6,
+          "radius": 1.5
         },
         "raw": {
           "x": 194,
@@ -1236,7 +1272,7 @@
       "nameMissing": false,
       "categoryId": 3,
       "sort": 130,
-      "seedItemId": 39231,
+      "growsIntoItemId": 39231,
       "gathering": null
     },
     {
@@ -1246,7 +1282,7 @@
       "nameMissing": false,
       "categoryId": 3,
       "sort": 131,
-      "seedItemId": 39232,
+      "growsIntoItemId": 39232,
       "gathering": null
     },
     {
@@ -1256,7 +1292,7 @@
       "nameMissing": false,
       "categoryId": 4,
       "sort": 160,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -1266,7 +1302,7 @@
       "nameMissing": false,
       "categoryId": 4,
       "sort": 161,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -1276,15 +1312,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 33,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": 2,
         "mapLayer": 1,
         "layerName": "洞窟",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 26.1,
-          "y": 19.5
+          "y": 19.5,
+          "radius": 1.6
         },
         "raw": {
           "x": 405,
@@ -1300,15 +1337,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 36,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": 8,
         "mapLayer": 1,
         "layerName": "洞窟",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 26.1,
-          "y": 19.5
+          "y": 19.5,
+          "radius": 1.6
         },
         "raw": {
           "x": 405,
@@ -1324,15 +1362,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 34,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": null,
         "mapLayer": 1,
         "layerName": "洞窟",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 27.2,
-          "y": 16.9
+          "y": 16.9,
+          "radius": 1.6
         },
         "raw": {
           "x": 458,
@@ -1348,15 +1387,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 37,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": 8,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 17.6,
-          "y": 23.3
+          "y": 23.3,
+          "radius": 1.6
         },
         "raw": {
           "x": -22,
@@ -1372,15 +1412,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 38,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": 8,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 30.4,
-          "y": 28.5
+          "y": 28.5,
+          "radius": 1.6
         },
         "raw": {
           "x": 619,
@@ -1396,15 +1437,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 35,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": 2,
         "mapLayer": 1,
         "layerName": "洞窟",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 24.1,
-          "y": 18.9
+          "y": 18.9,
+          "radius": 1.6
         },
         "raw": {
           "x": 304,
@@ -1420,15 +1462,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 39,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": 8,
         "mapLayer": 1,
         "layerName": "洞窟",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 24.1,
-          "y": 18.9
+          "y": 18.9,
+          "radius": 1.6
         },
         "raw": {
           "x": 304,
@@ -1444,7 +1487,7 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 105,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -1454,7 +1497,7 @@
       "nameMissing": false,
       "categoryId": 3,
       "sort": 132,
-      "seedItemId": 39899,
+      "growsIntoItemId": 39899,
       "gathering": null
     },
     {
@@ -1464,7 +1507,7 @@
       "nameMissing": false,
       "categoryId": 3,
       "sort": 133,
-      "seedItemId": 39900,
+      "growsIntoItemId": 39900,
       "gathering": null
     },
     {
@@ -1474,7 +1517,7 @@
       "nameMissing": false,
       "categoryId": 3,
       "sort": 134,
-      "seedItemId": 39901,
+      "growsIntoItemId": 39901,
       "gathering": null
     },
     {
@@ -1484,7 +1527,7 @@
       "nameMissing": false,
       "categoryId": 3,
       "sort": 135,
-      "seedItemId": 39902,
+      "growsIntoItemId": 39902,
       "gathering": null
     },
     {
@@ -1494,7 +1537,7 @@
       "nameMissing": false,
       "categoryId": 4,
       "sort": 162,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -1504,7 +1547,7 @@
       "nameMissing": false,
       "categoryId": 4,
       "sort": 163,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -1514,7 +1557,7 @@
       "nameMissing": false,
       "categoryId": 4,
       "sort": 164,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -1524,7 +1567,7 @@
       "nameMissing": false,
       "categoryId": 4,
       "sort": 165,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -1534,15 +1577,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 40,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": 9,
         "mapLayer": 0,
         "layerName": "地上",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 27.8,
-          "y": 19.3
+          "y": 19.3,
+          "radius": 2
         },
         "raw": {
           "x": 489,
@@ -1558,15 +1602,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 41,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": 6,
         "mapLayer": 1,
         "layerName": "洞窟",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 23.5,
-          "y": 21.6
+          "y": 21.6,
+          "radius": 1.5
         },
         "raw": {
           "x": 276,
@@ -1582,15 +1627,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 42,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": 9,
         "mapLayer": 1,
         "layerName": "洞窟",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 23.5,
-          "y": 21.6
+          "y": 21.6,
+          "radius": 1.5
         },
         "raw": {
           "x": 276,
@@ -1606,15 +1652,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 43,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": null,
         "mapLayer": 1,
         "layerName": "洞窟",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 23.5,
-          "y": 21.6
+          "y": 21.6,
+          "radius": 1.5
         },
         "raw": {
           "x": 276,
@@ -1630,15 +1677,16 @@
       "nameMissing": false,
       "categoryId": 1,
       "sort": 44,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": {
         "tool": 10,
         "mapLayer": 1,
         "layerName": "洞窟",
-        "coords": {
+        "area": {
           "mapId": 772,
           "x": 23.5,
-          "y": 21.6
+          "y": 21.6,
+          "radius": 1.5
         },
         "raw": {
           "x": 276,
@@ -1654,7 +1702,7 @@
       "nameMissing": false,
       "categoryId": 3,
       "sort": 136,
-      "seedItemId": 41635,
+      "growsIntoItemId": 41635,
       "gathering": null
     },
     {
@@ -1664,7 +1712,7 @@
       "nameMissing": false,
       "categoryId": 3,
       "sort": 137,
-      "seedItemId": 41636,
+      "growsIntoItemId": 41636,
       "gathering": null
     },
     {
@@ -1674,7 +1722,7 @@
       "nameMissing": false,
       "categoryId": 3,
       "sort": 138,
-      "seedItemId": 41637,
+      "growsIntoItemId": 41637,
       "gathering": null
     },
     {
@@ -1684,7 +1732,7 @@
       "nameMissing": false,
       "categoryId": 3,
       "sort": 139,
-      "seedItemId": 41638,
+      "growsIntoItemId": 41638,
       "gathering": null
     },
     {
@@ -1694,7 +1742,7 @@
       "nameMissing": false,
       "categoryId": 4,
       "sort": 166,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -1704,7 +1752,7 @@
       "nameMissing": false,
       "categoryId": 4,
       "sort": 167,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -1714,7 +1762,7 @@
       "nameMissing": false,
       "categoryId": 4,
       "sort": 168,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -1724,7 +1772,7 @@
       "nameMissing": false,
       "categoryId": 4,
       "sort": 169,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -1734,7 +1782,7 @@
       "nameMissing": false,
       "categoryId": 7,
       "sort": 215,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -1744,7 +1792,7 @@
       "nameMissing": false,
       "categoryId": 7,
       "sort": 216,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -1754,7 +1802,7 @@
       "nameMissing": false,
       "categoryId": 7,
       "sort": 217,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     },
     {
@@ -1764,7 +1812,7 @@
       "nameMissing": false,
       "categoryId": 10,
       "sort": 255,
-      "seedItemId": null,
+      "growsIntoItemId": null,
       "gathering": null
     }
   ]

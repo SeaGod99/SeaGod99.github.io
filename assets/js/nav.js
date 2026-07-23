@@ -45,7 +45,7 @@
     { e: '🎣', n: '釣魚紀錄追蹤', p: 'tools/fishing/', c: 'life', k: 'fishing 釣魚 大魚' },
     { e: '🚢', n: '出海垂釣班表（外部・魚糕）', u: 'https://fish.ffmomola.com/#/oceanFishing', c: 'life', k: 'ocean fishing 出海 垂釣', ext: true },
     { e: '⛏️', n: '採集紀錄追蹤', p: 'tools/gathering-log/', c: 'life', k: 'gathering log 採集紀錄 手帳' },
-    { e: '🏝️', n: '無人島素材／製作查詢', p: 'tools/island/', c: 'life', k: 'island sanctuary mji 無人島 開拓 素材 製作 採集' }
+    { e: '🏝️', n: '無人島素材／工坊查詢', p: 'tools/island/', c: 'life', k: 'island sanctuary mji 無人島 開拓 素材 工坊 製作 採集' }
   ];
 
   // 分類（顯示順序 = TOOLS 定義順序）
