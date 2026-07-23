@@ -276,7 +276,8 @@ const report = [];
     rows.filter((r) => r.name).length]);
 }
 
-/* 5) 人工製作：成品（開拓工具 KeyItem 或袋內素材）＋所需素材 */
+/* 5) 製作：人工製作（MJIRecipe）＋經濟型製作（recipes.json jobId -10 的其餘筆）
+      合併成一份，前端才不必為了 106 筆經濟型製作去載 4.3MB 的 recipes.json */
 {
   // 同樣不能用 key>0 過濾：row 0 是「開拓用石斧」的真配方
   const rows = S.MJIRecipe
@@ -296,13 +297,31 @@ const report = [];
         ingredients.push({ itemId: mid, name: twName(mid), qty });
       }
       return {
-        id: mainKey(r._key), itemId, name, nameMissing: !name,
+        id: `handcraft-${mainKey(r._key)}`, kind: "handcraft",
+        itemId, name, nameMissing: !name,
         order: num(r.Order), ingredients,
       };
     })
     .filter((x) => x.itemId);
-  report.push(["island-recipes", write("island-recipes.json", "island-recipes", rows),
-    rows.filter((r) => r.name).length]);
+
+  // 經濟型製作（工坊料理／家具／裝備…）：Teamcraft recipes.json 的 jobId -10 扣掉上面 28 筆
+  const handcraftIds = new Set(rows.map((r) => r.itemId));
+  const craftworks = JSON.parse(readFileSync(join(DATA, "recipes.json"), "utf8"))
+    .data.filter((r) => r.jobId === -10 && !handcraftIds.has(r.itemId))
+    .map((r) => ({
+      id: `craftworks-${r.id}`, kind: "craftworks",
+      itemId: r.itemId, name: twName(r.itemId), nameMissing: !twName(r.itemId),
+      order: null,
+      yield: r.yield || 1,
+      patch: r.patch || null,
+      ingredients: (r.ingredients || []).map((g) => ({
+        itemId: g.itemId, name: twName(g.itemId), qty: g.qty,
+      })),
+    }));
+
+  const all = rows.concat(craftworks);
+  report.push(["island-recipes", write("island-recipes.json", "island-recipes", all),
+    all.filter((r) => r.name).length]);
 }
 
 /* 6) 建築與地標：改建素材（Material[] 指向 MJIItemPouch row） */

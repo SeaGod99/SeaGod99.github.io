@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FF14 無人島開拓素材／製作查詢 — 人工與經濟型製作配方、素材反查（採集點座標、收購價、用途）、島嶼採集地圖">
+  <title>無人島素材／製作查詢 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/common.css">
+  <link rel="stylesheet" href="../../assets/css/tool-header.css">
+  <style>
+    /* 無人島頁專屬樣式；通用版面（工具列／篩選／頁尾／色票）見 assets/css/common.css。
+       本頁是查詢工具不是追蹤頁，故不吃 collection-tracker 引擎（沒有「已擁有」概念）。 */
+    :root {
+      --accent:   #4ade80;                 /* 綠（島嶼）*/
+      --accent-2: #22d3ee;
+      --glow-1:   rgba(74,222,128,0.05);
+      --glow-2:   rgba(34,211,238,0.04);
+      --isl-cave: #a855f7;                 /* 洞窟 */
+      --isl-land: #4ade80;                 /* 地上 */
+    }
+
+    /* ── 分頁 ── */
+    .isl-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+    .isl-tab {
+      font: inherit; font-size: 15px;
+      padding: 10px 20px; cursor: pointer;
+      background: none; border: none; border-bottom: 2px solid transparent;
+      color: var(--text-secondary); transition: var(--transition);
+    }
+    .isl-tab:hover { color: var(--text-primary); }
+    .isl-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+    .isl-panel[hidden] { display: none; }
+
+    /* ── 製作清單 ── */
+    .rec-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 10px; }
+    .rec-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 14px 16px;
+      display: flex; flex-direction: column; gap: 8px;
+      content-visibility: auto; contain-intrinsic-size: auto 130px;
+    }
+    .rec-card:hover { border-color: var(--border-hover); }
+    .rec-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+    .rec-name { font-size: 16px; font-weight: 600; color: var(--text-primary); }
+    .rec-yield { font-size: 12px; color: var(--text-muted); }
+    .rec-ing { display: flex; flex-wrap: wrap; gap: 6px; }
+    .ing-chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: var(--raise); border: 1px solid var(--border);
+      border-radius: 5px; padding: 4px 9px; font-size: 13px;
+      cursor: pointer; transition: var(--transition); color: var(--text-secondary);
+    }
+    .ing-chip:hover { border-color: var(--gold); color: var(--gold); }
+    .ing-chip:focus-visible { outline: 2px solid var(--gold); outline-offset: 1px; }
+    .ing-qty { color: var(--text-muted); font-size: 12px; }
+
+    .tag.kind-handcraft { background: var(--gold-dim); color: var(--gold); border-color: rgba(200,169,110,0.3); }
+    .tag.kind-craftworks { background: rgba(79,195,247,0.1); color: var(--blue); border-color: rgba(79,195,247,0.25); }
+
+    /* ── 素材反查 ── */
+    .mat-layout { display: grid; grid-template-columns: minmax(240px, 320px) minmax(0, 1fr); gap: 20px; align-items: start; }
+    @media (max-width: 780px) { .mat-layout { grid-template-columns: 1fr; } }
+    .mat-list { max-height: 70vh; overflow-y: auto; border: 1px solid var(--border); border-radius: var(--radius-md); }
+    .mat-group-label {
+      font-size: 11px; letter-spacing: .8px; color: var(--text-muted);
+      padding: 10px 12px 4px; position: sticky; top: 0; background: var(--bg-surface);
+    }
+    .mat-item {
+      display: flex; justify-content: space-between; gap: 8px; align-items: center;
+      padding: 8px 12px; cursor: pointer; font-size: 14px;
+      color: var(--text-secondary); border-left: 2px solid transparent; transition: var(--transition);
+    }
+    .mat-item:hover { background: var(--bg-card-hover); color: var(--text-primary); }
+    .mat-item.active { background: var(--gold-dim); color: var(--gold); border-left-color: var(--gold); }
+    .mat-item:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
+    .mat-badge { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+
+    .mat-detail { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 20px 22px; }
+    .mat-title { font-size: 22px; font-weight: 700; color: var(--gold-light); margin-bottom: 4px; }
+    .mat-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 18px; }
+    .mat-sec { margin-top: 18px; }
+    .mat-sec h3 { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; font-weight: 600; }
+    .mat-row { font-size: 14.5px; color: var(--text-primary); line-height: 1.9; }
+    .mat-row .k { color: var(--text-muted); margin-right: 6px; }
+    .use-list { display: flex; flex-wrap: wrap; gap: 6px; }
+    .use-chip {
+      background: var(--raise); border: 1px solid var(--border); border-radius: 5px;
+      padding: 4px 9px; font-size: 13px; color: var(--text-secondary);
+    }
+    .use-chip.b { border-color: rgba(167,139,250,0.3); color: var(--purple); background: var(--purple-dim); }
+    .mat-none { color: var(--text-muted); font-size: 14px; }
+    .coord-btn {
+      font: inherit; font-size: 13px; cursor: pointer; margin-left: 8px;
+      background: none; border: 1px solid var(--border); border-radius: var(--radius-sm);
+      color: var(--cyan); padding: 3px 9px; transition: var(--transition);
+    }
+    .coord-btn:hover { border-color: var(--cyan); background: rgba(34,211,238,0.1); }
+
+    /* ── 採集地圖 ── */
+    .map-bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 14px; }
+    .layer-toggle { display: flex; border: 1px solid var(--border); border-radius: 5px; overflow: hidden; }
+    .layer-toggle button {
+      font: inherit; font-size: 13px; padding: 6px 14px; cursor: pointer; border: none;
+      background: var(--bg-surface); color: var(--text-secondary); transition: var(--transition);
+    }
+    .layer-toggle button.active { background: var(--gold-dim); color: var(--gold); }
+    .map-canvas {
+      position: relative; width: 100%; max-width: 760px; margin: 0 auto;
+      aspect-ratio: 1 / 1; background: var(--bg-card);
+      border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden;
+    }
+    .map-canvas img { width: 100%; height: 100%; object-fit: cover; display: block; user-select: none; }
+    .map-empty { display: flex; align-items: center; justify-content: center; height: 100%; padding: 1rem;
+      color: var(--text-muted); font-size: 14px; text-align: center; }
+    .map-dot {
+      position: absolute; width: 15px; height: 15px; border-radius: 50%;
+      transform: translate(-50%,-50%); cursor: pointer;
+      border: 2px solid rgba(0,0,0,0.55); box-shadow: 0 0 0 1px rgba(255,255,255,0.25);
+      transition: transform .1s;
+    }
+    .map-dot:hover, .map-dot.sel { transform: translate(-50%,-50%) scale(1.5); z-index: 5; }
+    .map-dot.land { background: var(--isl-land); }
+    .map-dot.cave { background: var(--isl-cave); }
+    .map-legend { font-size: 12.5px; color: var(--text-muted); display: flex; gap: 16px; flex-wrap: wrap; margin-top: 10px; justify-content: center; }
+    .map-legend span { display: inline-flex; align-items: center; gap: 5px; }
+    .map-legend i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+    .map-info { max-width: 760px; margin: 14px auto 0; }
+    .map-info:empty { display: none; }
+
+    .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+      background: var(--gold); color: #14161c; border-radius: 8px; padding: 9px 22px;
+      font-size: 15px; font-weight: 600; opacity: 0; pointer-events: none; transition: opacity .25s; z-index: 60; }
+    .toast.show { opacity: 1; }
+  </style>
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <script src="../../assets/js/theme.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="tool-header">
+    <h1 class="tool-title">🏝️ 無人島素材／製作查詢</h1>
+    <p class="tool-subtitle">人工與經濟型製作配方、素材反查（採集點、收購價、用途）、島嶼採集地圖</p>
+    <div class="header-divider"></div>
+  </div>
+
+  <div class="isl-tabs" role="tablist">
+    <button class="isl-tab active" role="tab" data-tab="craft">🔨 製作清單</button>
+    <button class="isl-tab" role="tab" data-tab="mat">🔍 素材反查</button>
+    <button class="isl-tab" role="tab" data-tab="map">🗺️ 採集地圖</button>
+  </div>
+
+  <!-- ── 製作清單 ── -->
+  <section class="isl-panel" id="panel-craft" role="tabpanel">
+    <div class="toolbar">
+      <div class="search-wrap"><span class="search-icon">🔍</span>
+        <input class="search-input" id="craftSearch" type="text" autocomplete="off" placeholder="搜尋成品或素材名稱…"></div>
+    </div>
+    <div class="filter-section">
+      <div class="filter-label">製作類型</div>
+      <div class="filter-tags" id="craftKind"></div>
+    </div>
+    <div class="result-meta" id="craftMeta"></div>
+    <div class="rec-grid" id="craftGrid"></div>
+    <div class="empty-state" id="craftEmpty" style="display:none">找不到符合條件的配方</div>
+  </section>
+
+  <!-- ── 素材反查 ── -->
+  <section class="isl-panel" id="panel-mat" role="tabpanel" hidden>
+    <div class="toolbar">
+      <div class="search-wrap"><span class="search-icon">🔍</span>
+        <input class="search-input" id="matSearch" type="text" autocomplete="off" placeholder="搜尋素材名稱…"></div>
+    </div>
+    <div class="mat-layout">
+      <div class="mat-list" id="matList"></div>
+      <div class="mat-detail" id="matDetail"></div>
+    </div>
+  </section>
+
+  <!-- ── 採集地圖 ── -->
+  <section class="isl-panel" id="panel-map" role="tabpanel" hidden>
+    <div class="map-bar">
+      <div class="layer-toggle" id="layerToggle">
+        <button class="active" data-layer="all">全部</button>
+        <button data-layer="0">🌿 地上</button>
+        <button data-layer="1">⛰️ 洞窟</button>
+      </div>
+      <span class="result-meta" id="mapMeta"></span>
+    </div>
+    <div class="map-canvas" id="mapCanvas"></div>
+    <div class="map-legend">
+      <span><i style="background:var(--isl-land)"></i>地上採集</span>
+      <span><i style="background:var(--isl-cave)"></i>洞窟採集</span>
+      <span>點圓點看素材詳情</span>
+    </div>
+    <div class="map-info" id="mapInfo"></div>
+  </section>
+
+</div>
+
+<div class="toast" id="toast">已複製</div>
+
+<footer class="page-footer">
+  <div class="container">
+    <p class="footer-text">
+      <a href="../../">水神的工具箱</a> · 資料來源：遊戲本體、<a href="https://github.com/thewakingsands/ffxiv-datamining-cn" target="_blank">ffxiv-datamining-cn</a>、<a href="https://ffxivteamcraft.com" target="_blank">Teamcraft</a>
+    </p>
+    <p class="footer-text" style="margin-top:4px">
+      FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具
+    </p>
+  </div>
+</footer>
+
+<script type="module">
+import { initMapModal, openMapModal } from '../../assets/js/map-modal.js';
+
+const ISLAND_MAP_ID = 772;
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g,
+  (c) => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+
+/* ── 載入 ── */
+const [mats, recipes, buildings, shop, animals, maps] = await Promise.all([
+  fetch('../../data/island-materials.json').then(r => r.json()),
+  fetch('../../data/island-recipes.json').then(r => r.json()),
+  fetch('../../data/island-buildings.json').then(r => r.json()),
+  fetch('../../data/island-shop.json').then(r => r.json()),
+  fetch('../../data/island-animals.json').then(r => r.json()),
+  fetch('../../data/maps.json').then(r => r.json()),
+]);
+
+const ISLAND_MAP = maps.data.find((m) => m.id === ISLAND_MAP_ID);
+initMapModal({ mapsData: maps.data, base: '../..' });
+
+// 台服未開放（無繁中名）一律不顯示，與全站規則一致
+const MATS = mats.data.filter((m) => m.name);
+const RECIPES = recipes.data.filter((r) => r.name);
+const BUILDINGS = buildings.data;
+const SHOP = new Map(shop.data.filter((s) => s.name).map((s) => [s.itemId, s.price]));
+
+const matById = new Map(MATS.map((m) => [m.itemId, m]));
+
+/* 素材分類：datamine 的分類名只有簡中（依鐵則不簡轉繁），改由資料本身推導出取得方式 */
+const animalDrop = new Set();
+animals.data.forEach((a) => (a.rewards || []).forEach((r) => animalDrop.add(r.itemId)));
+const craftOutput = new Set(RECIPES.map((r) => r.itemId));
+function groupOf(m) {
+  if (m.gathering) return m.gathering.mapLayer === 1 ? '洞窟採集' : '地上採集';
+  if (m.seedItemId) return '農場作物';
+  if (animalDrop.has(m.itemId)) return '牧場畜產';
+  if (craftOutput.has(m.itemId)) return '製作產物';
+  return '其他';
+}
+const GROUP_ORDER = ['地上採集', '洞窟採集', '農場作物', '牧場畜產', '製作產物', '其他'];
+
+/* 反向索引：素材 → 用在哪些配方／建築 */
+const usedInRecipe = new Map();
+for (const r of RECIPES) {
+  for (const g of r.ingredients) {
+    if (!usedInRecipe.has(g.itemId)) usedInRecipe.set(g.itemId, []);
+    usedInRecipe.get(g.itemId).push(r);
+  }
+}
+const usedInBuilding = new Map();
+for (const b of BUILDINGS) {
+  for (const g of b.materials) {
+    if (!usedInBuilding.has(g.itemId)) usedInBuilding.set(g.itemId, []);
+    usedInBuilding.get(g.itemId).push(b);
+  }
+}
+/* 畜產素材 → 幾種動物會掉（動物名尚未有台服官方來源，故只給數量） */
+const dropCount = new Map();
+animals.data.forEach((a) => (a.rewards || []).forEach((r) => dropCount.set(r.itemId, (dropCount.get(r.itemId) || 0) + 1)));
+
+/* ── 分頁切換（狀態同步到網址，可分享） ── */
+let tab = 'craft';
+function setTab(t, push = true) {
+  tab = t;
+  document.querySelectorAll('.isl-tab').forEach((b) => b.classList.toggle('active', b.dataset.tab === t));
+  document.querySelectorAll('.isl-panel').forEach((p) => { p.hidden = p.id !== 'panel-' + t; });
+  if (t === 'map') renderMap();
+  if (push) syncURL();
+}
+document.querySelectorAll('.isl-tab').forEach((b) => b.addEventListener('click', () => setTab(b.dataset.tab)));
+
+function syncURL(replace = false) {
+  const p = new URLSearchParams();
+  if (tab !== 'craft') p.set('t', tab);
+  if (tab === 'craft' && kindFilter) p.set('kind', kindFilter);
+  if (tab === 'mat' && selMat) p.set('m', String(selMat));
+  if (tab === 'map' && layer !== 'all') p.set('layer', layer);
+  const url = p.toString() ? '?' + p : location.pathname;
+  try { history[replace ? 'replaceState' : 'pushState'](null, '', url); } catch (e) {}
+}
+
+/* ─────────────── 製作清單 ─────────────── */
+let kindFilter = null;
+const KINDS = [
+  { value: 'handcraft', label: '🔨 人工製作' },
+  { value: 'craftworks', label: '🏭 經濟型製作' },
+];
+$('craftKind').innerHTML = '';
+KINDS.forEach((k) => {
+  const b = document.createElement('button');
+  b.className = 'filter-tag';
+  b.textContent = k.label;
+  b.addEventListener('click', () => {
+    kindFilter = kindFilter === k.value ? null : k.value;
+    document.querySelectorAll('#craftKind .filter-tag').forEach((x) =>
+      x.classList.toggle('active', x.dataset.v === kindFilter));
+    syncURL();
+    renderCraft();
+  });
+  b.dataset.v = k.value;
+  $('craftKind').appendChild(b);
+});
+
+function renderCraft() {
+  const q = $('craftSearch').value.trim().toLowerCase();
+  const list = RECIPES.filter((r) => {
+    if (kindFilter && r.kind !== kindFilter) return false;
+    if (!q) return true;
+    if (r.name.toLowerCase().includes(q)) return true;
+    return r.ingredients.some((g) => (g.name || '').toLowerCase().includes(q));
+  }).sort((a, b) => {
+    if (a.kind !== b.kind) return a.kind === 'handcraft' ? -1 : 1;
+    if (a.kind === 'handcraft') return (a.order || 0) - (b.order || 0);
+    return a.name.localeCompare(b.name, 'zh-Hant');
+  });
+
+  $('craftMeta').innerHTML = `顯示 <em>${list.length}</em> / ${RECIPES.length} 種配方`;
+  $('craftEmpty').style.display = list.length ? 'none' : '';
+  $('craftGrid').style.display = list.length ? '' : 'none';
+  $('craftGrid').innerHTML = list.map((r) => `
+    <div class="rec-card">
+      <div class="rec-head">
+        <span class="rec-name">${esc(r.name)}</span>
+        ${r.yield > 1 ? `<span class="rec-yield">×${r.yield}</span>` : ''}
+        <span class="tag kind-${r.kind}">${r.kind === 'handcraft' ? '人工製作' : '經濟型'}</span>
+      </div>
+      <div class="rec-ing">
+        ${r.ingredients.map((g) => g.name
+          ? `<button class="ing-chip" data-mat="${g.itemId}" title="查看「${esc(g.name)}」怎麼拿">${esc(g.name)}<span class="ing-qty">×${g.qty}</span></button>`
+          : `<span class="ing-chip" style="cursor:default;opacity:.5">（台服未開放）<span class="ing-qty">×${g.qty}</span></span>`
+        ).join('')}
+      </div>
+    </div>`).join('');
+}
+$('craftSearch').addEventListener('input', renderCraft);
+$('craftGrid').addEventListener('click', (e) => {
+  const chip = e.target.closest('[data-mat]');
+  if (chip) selectMat(Number(chip.dataset.mat), true);
+});
+
+/* ─────────────── 素材反查 ─────────────── */
+let selMat = null;
+
+function renderMatList() {
+  const q = $('matSearch').value.trim().toLowerCase();
+  const groups = new Map(GROUP_ORDER.map((g) => [g, []]));
+  for (const m of MATS) {
+    if (q && !m.name.toLowerCase().includes(q)) continue;
+    groups.get(groupOf(m)).push(m);
+  }
+  let html = '';
+  for (const g of GROUP_ORDER) {
+    const arr = groups.get(g);
+    if (!arr.length) continue;
+    arr.sort((a, b) => a.sort - b.sort);
+    html += `<div class="mat-group-label">${g}（${arr.length}）</div>`;
+    html += arr.map((m) => `
+      <div class="mat-item${m.itemId === selMat ? ' active' : ''}" data-mat="${m.itemId}" tabindex="0" role="button">
+        <span>${esc(m.name)}</span>
+        ${SHOP.has(m.itemId) ? `<span class="mat-badge">${SHOP.get(m.itemId)} 貝幣</span>` : ''}
+      </div>`).join('');
+  }
+  $('matList').innerHTML = html || '<div class="mat-group-label">找不到符合的素材</div>';
+}
+
+function selectMat(itemId, switchTab) {
+  selMat = itemId;
+  if (switchTab) setTab('mat', false);
+  renderMatList();
+  renderMatDetail();
+  syncURL();
+  const el = $('matList').querySelector('.mat-item.active');
+  if (el && el.scrollIntoView) el.scrollIntoView({ block: 'nearest' });
+}
+
+function renderMatDetail() {
+  const m = matById.get(selMat);
+  if (!m) {
+    $('matDetail').innerHTML = '<div class="mat-none">從左側選一個素材，這裡會顯示它<b>怎麼拿</b>以及<b>用在哪</b>。</div>';
+    return;
+  }
+  const how = [];
+  if (m.gathering) {
+    const c = m.gathering.coords;
+    how.push(`<div class="mat-row"><span class="k">採集</span>${m.gathering.layerName}
+      · X:${c.x} Y:${c.y}
+      <button class="coord-btn" data-x="${c.x}" data-y="${c.y}">🗺 開地圖</button>
+      <button class="coord-btn" data-flag="/coord ${c.x} ${c.y} ${esc(ISLAND_MAP ? ISLAND_MAP.name : '')}">📋 座標</button></div>`);
+  }
+  if (m.seedItemId) {
+    const seed = matById.get(m.seedItemId);
+    how.push(`<div class="mat-row"><span class="k">農場</span>種植${seed ? `「${esc(seed.name)}」` : ''}收成</div>`);
+  }
+  if (dropCount.has(m.itemId)) {
+    how.push(`<div class="mat-row"><span class="k">牧場</span>由 ${dropCount.get(m.itemId)} 種動物取得
+      <span style="color:var(--text-muted);font-size:13px">（動物名尚無台服官方來源，待補）</span></div>`);
+  }
+  const madeBy = RECIPES.filter((r) => r.itemId === m.itemId);
+  madeBy.forEach((r) => {
+    how.push(`<div class="mat-row"><span class="k">製作</span>${r.kind === 'handcraft' ? '人工製作' : '經濟型製作'}：
+      ${r.ingredients.map((g) => `${esc(g.name || '（未開放）')}×${g.qty}`).join('、')}</div>`);
+  });
+  if (SHOP.has(m.itemId)) {
+    how.push(`<div class="mat-row"><span class="k">收購</span>${SHOP.get(m.itemId)} 貝幣／個</div>`);
+  }
+
+  const rUses = usedInRecipe.get(m.itemId) || [];
+  const bUses = usedInBuilding.get(m.itemId) || [];
+
+  $('matDetail').innerHTML = `
+    <div class="mat-title">${esc(m.name)}</div>
+    <div class="mat-sub">${groupOf(m)}　·　道具 ID ${m.itemId}</div>
+
+    <div class="mat-sec">
+      <h3>怎麼拿</h3>
+      ${how.length ? how.join('') : '<div class="mat-none">此素材無採集／製作／收購資料</div>'}
+    </div>
+
+    <div class="mat-sec">
+      <h3>用在哪（${rUses.length + bUses.length}）</h3>
+      ${(rUses.length || bUses.length) ? `<div class="use-list">
+        ${rUses.map((r) => `<span class="use-chip">${esc(r.name)}</span>`).join('')}
+        ${bUses.map((b) => `<span class="use-chip b">${esc(b.name || b.nameCn || b.id)}${b.level ? ` Lv${b.level}` : ''}</span>`).join('')}
+      </div>` : '<div class="mat-none">目前沒有配方或建築用到它</div>'}
+      ${bUses.length ? '<div class="mat-sub" style="margin:8px 0 0">紫色為建築／地標改建（名稱尚無台服官方來源，暫顯示簡中）</div>' : ''}
+    </div>`;
+}
+
+$('matSearch').addEventListener('input', renderMatList);
+$('matList').addEventListener('click', (e) => {
+  const it = e.target.closest('[data-mat]');
+  if (it) selectMat(Number(it.dataset.mat));
+});
+$('matList').addEventListener('keydown', (e) => {
+  const it = e.target.closest('[data-mat]');
+  if (it && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); selectMat(Number(it.dataset.mat)); }
+});
+$('matDetail').addEventListener('click', (e) => {
+  const mapBtn = e.target.closest('[data-x]');
+  if (mapBtn) {
+    const m = matById.get(selMat);
+    openMapModal({
+      mapId: ISLAND_MAP_ID, x: Number(mapBtn.dataset.x), y: Number(mapBtn.dataset.y),
+      title: m ? m.name : '無人島', sub: `無人島採集點（${m && m.gathering ? m.gathering.layerName : ''}）`,
+    });
+    return;
+  }
+  const cp = e.target.closest('[data-flag]');
+  if (cp) copyText(cp.dataset.flag);
+});
+
+function copyText(t) {
+  const done = () => { const el = $('toast'); el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 1200); };
+  if (navigator.clipboard?.writeText) navigator.clipboard.writeText(t).then(done).catch(fallback);
+  else fallback();
+  function fallback() {
+    const ta = document.createElement('textarea');
+    ta.value = t; ta.style.cssText = 'position:fixed;opacity:0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); done(); } catch (e) {}
+    ta.remove();
+  }
+}
+
+/* ─────────────── 採集地圖 ─────────────── */
+let layer = 'all';
+let selDot = null;
+
+// 遊戲座標 → 底圖 0..1 比例（與採集紀錄／風脈泉頁同一條公式）
+const coordFrac = (c) => Math.max(0, Math.min(1, ((c - 1) * ((ISLAND_MAP.sizeFactor || 100) / 100)) / 41));
+
+document.querySelectorAll('#layerToggle button').forEach((b) => b.addEventListener('click', () => {
+  layer = b.dataset.layer;
+  document.querySelectorAll('#layerToggle button').forEach((x) => x.classList.toggle('active', x === b));
+  selDot = null;
+  syncURL();
+  renderMap();
+}));
+
+function renderMap() {
+  const pts = MATS.filter((m) => m.gathering &&
+    (layer === 'all' || String(m.gathering.mapLayer) === layer));
+  $('mapMeta').innerHTML = `顯示 <em>${pts.length}</em> 個採集點`;
+
+  const dots = pts.map((m) => {
+    const c = m.gathering.coords;
+    const cls = m.gathering.mapLayer === 1 ? 'cave' : 'land';
+    return `<div class="map-dot ${cls}${m.itemId === selDot ? ' sel' : ''}" data-dot="${m.itemId}"
+      style="left:${(coordFrac(c.x) * 100).toFixed(2)}%;top:${(coordFrac(c.y) * 100).toFixed(2)}%"
+      title="${esc(m.name)}（X:${c.x} Y:${c.y}）"></div>`;
+  }).join('');
+
+  $('mapCanvas').innerHTML =
+    `<img src="../..${esc(ISLAND_MAP.image.local)}" alt="${esc(ISLAND_MAP.name)}">${dots}`;
+  const img = $('mapCanvas').querySelector('img');
+  img.addEventListener('error', () => {
+    if (img.dataset.retry) {
+      $('mapCanvas').innerHTML = '<div class="map-empty">島嶼底圖載入失敗。<br>於本機執行 <code>node scripts/download-maps.mjs --id 772</code> 可補齊。</div>';
+    } else { img.dataset.retry = '1'; img.src = ISLAND_MAP.image.url; }
+  });
+  renderMapInfo();
+}
+
+$('mapCanvas').addEventListener('click', (e) => {
+  const d = e.target.closest('[data-dot]');
+  if (!d) return;
+  selDot = Number(d.dataset.dot);
+  document.querySelectorAll('.map-dot').forEach((x) => x.classList.toggle('sel', Number(x.dataset.dot) === selDot));
+  renderMapInfo();
+});
+
+function renderMapInfo() {
+  const m = matById.get(selDot);
+  if (!m) { $('mapInfo').innerHTML = ''; return; }
+  const c = m.gathering.coords;
+  const uses = (usedInRecipe.get(m.itemId) || []).length + (usedInBuilding.get(m.itemId) || []).length;
+  $('mapInfo').innerHTML = `
+    <div class="rec-card">
+      <div class="rec-head">
+        <span class="rec-name">${esc(m.name)}</span>
+        <span class="tag">${m.gathering.layerName}</span>
+        ${SHOP.has(m.itemId) ? `<span class="tag">收購 ${SHOP.get(m.itemId)} 貝幣</span>` : ''}
+      </div>
+      <div class="mat-row" style="font-size:14px">
+        <span class="k">座標</span>X:${c.x} Y:${c.y}
+        <button class="coord-btn" data-flag="/coord ${c.x} ${c.y} ${esc(ISLAND_MAP.name)}">📋 座標</button>
+        <button class="coord-btn" data-goto="${m.itemId}">🔍 完整資料</button>
+      </div>
+      <div class="mat-row" style="font-size:14px"><span class="k">用途</span>${uses} 項配方／建築</div>
+    </div>`;
+}
+$('mapInfo').addEventListener('click', (e) => {
+  const cp = e.target.closest('[data-flag]');
+  if (cp) { copyText(cp.dataset.flag); return; }
+  const go = e.target.closest('[data-goto]');
+  if (go) selectMat(Number(go.dataset.goto), true);
+});
+
+/* ─────────────── 啟動 ─────────────── */
+function applyURL() {
+  const p = new URLSearchParams(location.search);
+  const t = p.get('t');
+  const k = p.get('kind');
+  if (k === 'handcraft' || k === 'craftworks') {
+    kindFilter = k;
+    document.querySelectorAll('#craftKind .filter-tag').forEach((x) => x.classList.toggle('active', x.dataset.v === k));
+  }
+  const l = p.get('layer');
+  if (l === '0' || l === '1') {
+    layer = l;
+    document.querySelectorAll('#layerToggle button').forEach((x) => x.classList.toggle('active', x.dataset.layer === l));
+  }
+  const m = Number(p.get('m'));
+  if (m && matById.has(m)) selMat = m;
+
+  renderCraft();
+  renderMatList();
+  renderMatDetail();
+  setTab(t === 'mat' || t === 'map' ? t : 'craft', false);
+}
+window.addEventListener('popstate', applyURL);
+applyURL();
+</script>
+</body>
+</html>
