@@ -253,6 +253,30 @@ const report = [];
         gathering: gather.get(itemId) || null,
       };
     });
+  // ── 採集區域（一級概念）──
+  // 一個區域裡通常可以採到**好幾種**素材（實測 48 個素材只分佈在 26 個區域，
+  // 最多的一區有 4 種）。前端要以區域為單位呈現，不要一種素材畫一個圈。
+  const areaMap = new Map();
+  for (const r of rows) {
+    if (!r.gathering) continue;
+    const a = r.gathering.area;
+    const key = `${a.x},${a.y},${a.radius},${r.gathering.mapLayer}`;
+    if (!areaMap.has(key)) {
+      areaMap.set(key, {
+        id: areaMap.size + 1,
+        mapId: a.mapId, x: a.x, y: a.y, radius: a.radius,
+        mapLayer: r.gathering.mapLayer, layerName: r.gathering.layerName,
+        items: [],
+      });
+    }
+    const area = areaMap.get(key);
+    area.items.push({ itemId: r.itemId, name: r.name, tool: r.gathering.tool });
+    r.gathering.areaId = area.id;          // 讓素材反查能連回區域
+  }
+  const areaRows = Array.from(areaMap.values());
+  report.push(["island-gather-areas", write("island-gather-areas.json", "island-gather-areas", areaRows),
+    areaRows.length]);
+
   report.push(["island-materials", write("island-materials.json", "island-materials", rows),
     rows.filter((r) => r.name).length]);
 }

@@ -1,0 +1,535 @@
+{
+  "schema": "island-gather-areas",
+  "patch": "6.5",
+  "updated": "2026-07-23",
+  "source": "datamining-cn MJI* + items.json(tw-items)",
+  "count": 26,
+  "data": [
+    {
+      "id": 1,
+      "mapId": 772,
+      "x": 18.4,
+      "y": 24.3,
+      "radius": 2,
+      "mapLayer": 0,
+      "layerName": "地上",
+      "items": [
+        {
+          "itemId": 37551,
+          "name": "無人島棕櫚葉",
+          "tool": null
+        },
+        {
+          "itemId": 37561,
+          "name": "無人島棕櫚原木",
+          "tool": 1
+        },
+        {
+          "itemId": 39225,
+          "name": "無人島椰子",
+          "tool": 7
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "mapId": 772,
+      "x": 21.9,
+      "y": 25.7,
+      "radius": 2,
+      "mapLayer": 0,
+      "layerName": "地上",
+      "items": [
+        {
+          "itemId": 37552,
+          "name": "無人島蘋果",
+          "tool": 1
+        },
+        {
+          "itemId": 37562,
+          "name": "無人島藤蔓",
+          "tool": null
+        },
+        {
+          "itemId": 39226,
+          "name": "無人島蜂巢",
+          "tool": 7
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "mapId": 772,
+      "x": 22.3,
+      "y": 25.9,
+      "radius": 2,
+      "mapLayer": 0,
+      "layerName": "地上",
+      "items": [
+        {
+          "itemId": 37553,
+          "name": "無人島小樹枝",
+          "tool": null
+        },
+        {
+          "itemId": 37560,
+          "name": "無人島原木",
+          "tool": 1
+        },
+        {
+          "itemId": 39224,
+          "name": "無人島天然樹脂",
+          "tool": 7
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "mapId": 772,
+      "x": 17.6,
+      "y": 23.3,
+      "radius": 1.6,
+      "mapLayer": 0,
+      "layerName": "地上",
+      "items": [
+        {
+          "itemId": 37554,
+          "name": "無人島石材",
+          "tool": null
+        },
+        {
+          "itemId": 37565,
+          "name": "無人島石灰岩",
+          "tool": 2
+        },
+        {
+          "itemId": 39890,
+          "name": "無人島大理石",
+          "tool": 8
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "mapId": 772,
+      "x": 16.8,
+      "y": 10.4,
+      "radius": 3,
+      "mapLayer": 0,
+      "layerName": "地上",
+      "items": [
+        {
+          "itemId": 37555,
+          "name": "無人島雙殼貝",
+          "tool": null
+        },
+        {
+          "itemId": 37575,
+          "name": "無人島海水魚",
+          "tool": 5
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "mapId": 772,
+      "x": 33.3,
+      "y": 24.6,
+      "radius": 2,
+      "mapLayer": 0,
+      "layerName": "地上",
+      "items": [
+        {
+          "itemId": 37556,
+          "name": "無人島球藻",
+          "tool": null
+        },
+        {
+          "itemId": 37557,
+          "name": "無人島珊瑚",
+          "tool": null
+        },
+        {
+          "itemId": 37576,
+          "name": "無人島烏賊",
+          "tool": 5
+        },
+        {
+          "itemId": 37577,
+          "name": "無人島水母",
+          "tool": 5
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "mapId": 772,
+      "x": 13,
+      "y": 12.4,
+      "radius": 2,
+      "mapLayer": 0,
+      "layerName": "地上",
+      "items": [
+        {
+          "itemId": 37558,
+          "name": "無人島草葉",
+          "tool": null
+        },
+        {
+          "itemId": 37583,
+          "name": "海島新薯的芽塊",
+          "tool": 3
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "mapId": 772,
+      "x": 22.7,
+      "y": 26,
+      "radius": 1.5,
+      "mapLayer": 0,
+      "layerName": "地上",
+      "items": [
+        {
+          "itemId": 37559,
+          "name": "無人島砂礫",
+          "tool": null
+        },
+        {
+          "itemId": 37570,
+          "name": "無人島黏土",
+          "tool": 3
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "mapId": 772,
+      "x": 20.9,
+      "y": 24.5,
+      "radius": 2,
+      "mapLayer": 0,
+      "layerName": "地上",
+      "items": [
+        {
+          "itemId": 37563,
+          "name": "無人島樹液",
+          "tool": null
+        },
+        {
+          "itemId": 39227,
+          "name": "無人島木化石",
+          "tool": 7
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "mapId": 772,
+      "x": 30.4,
+      "y": 28.5,
+      "radius": 1.6,
+      "mapLayer": 0,
+      "layerName": "地上",
+      "items": [
+        {
+          "itemId": 37564,
+          "name": "無人島銅礦",
+          "tool": 2
+        },
+        {
+          "itemId": 39891,
+          "name": "無人島靈銀礦",
+          "tool": 8
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "mapId": 772,
+      "x": 31.7,
+      "y": 21.1,
+      "radius": 1.5,
+      "mapLayer": 0,
+      "layerName": "地上",
+      "items": [
+        {
+          "itemId": 37566,
+          "name": "無人島岩鹽",
+          "tool": 2
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "mapId": 772,
+      "x": 17.8,
+      "y": 17.4,
+      "radius": 1.5,
+      "mapLayer": 0,
+      "layerName": "地上",
+      "items": [
+        {
+          "itemId": 37567,
+          "name": "無人島甘蔗",
+          "tool": 4
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "mapId": 772,
+      "x": 27.5,
+      "y": 29.2,
+      "radius": 1.5,
+      "mapLayer": 0,
+      "layerName": "地上",
+      "items": [
+        {
+          "itemId": 37568,
+          "name": "無人島棉花",
+          "tool": 4
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "mapId": 772,
+      "x": 29.1,
+      "y": 24,
+      "radius": 2,
+      "mapLayer": 0,
+      "layerName": "地上",
+      "items": [
+        {
+          "itemId": 37569,
+          "name": "無人島麻",
+          "tool": 4
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "mapId": 772,
+      "x": 18.2,
+      "y": 21.5,
+      "radius": 1.5,
+      "mapLayer": 0,
+      "layerName": "地上",
+      "items": [
+        {
+          "itemId": 37571,
+          "name": "無人島錫砂",
+          "tool": 3
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "mapId": 772,
+      "x": 27.8,
+      "y": 19.3,
+      "radius": 2,
+      "mapLayer": 0,
+      "layerName": "地上",
+      "items": [
+        {
+          "itemId": 37572,
+          "name": "無人島鐵礦",
+          "tool": 6
+        },
+        {
+          "itemId": 41630,
+          "name": "無人島翠銀沙",
+          "tool": 9
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "mapId": 772,
+      "x": 25.8,
+      "y": 17.1,
+      "radius": 4,
+      "mapLayer": 0,
+      "layerName": "地上",
+      "items": [
+        {
+          "itemId": 37573,
+          "name": "無人島石英",
+          "tool": 6
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "mapId": 772,
+      "x": 30.1,
+      "y": 10.9,
+      "radius": 2.5,
+      "mapLayer": 0,
+      "layerName": "地上",
+      "items": [
+        {
+          "itemId": 37574,
+          "name": "無人島花崗岩",
+          "tool": 6
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "mapId": 772,
+      "x": 17.5,
+      "y": 20.3,
+      "radius": 1.5,
+      "mapLayer": 0,
+      "layerName": "地上",
+      "items": [
+        {
+          "itemId": 37584,
+          "name": "海島甘藍的種子",
+          "tool": null
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "mapId": 772,
+      "x": 18.7,
+      "y": 26.5,
+      "radius": 1.5,
+      "mapLayer": 0,
+      "layerName": "地上",
+      "items": [
+        {
+          "itemId": 37586,
+          "name": "海島南瓜的種子",
+          "tool": null
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "mapId": 772,
+      "x": 13.5,
+      "y": 15.1,
+      "radius": 2,
+      "mapLayer": 0,
+      "layerName": "地上",
+      "items": [
+        {
+          "itemId": 37591,
+          "name": "海島高山蘿蔔的種子",
+          "tool": 3
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "mapId": 772,
+      "x": 21.9,
+      "y": 16.6,
+      "radius": 1.5,
+      "mapLayer": 0,
+      "layerName": "地上",
+      "items": [
+        {
+          "itemId": 39228,
+          "name": "無人島色彩繽紛的花",
+          "tool": null
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "mapId": 772,
+      "x": 26.1,
+      "y": 19.5,
+      "radius": 1.6,
+      "mapLayer": 1,
+      "layerName": "洞窟",
+      "items": [
+        {
+          "itemId": 39887,
+          "name": "無人島石炭",
+          "tool": 2
+        },
+        {
+          "itemId": 39888,
+          "name": "無人島堆積岩",
+          "tool": 8
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "mapId": 772,
+      "x": 27.2,
+      "y": 16.9,
+      "radius": 1.6,
+      "mapLayer": 1,
+      "layerName": "洞窟",
+      "items": [
+        {
+          "itemId": 39889,
+          "name": "無人島燈火茸",
+          "tool": null
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "mapId": 772,
+      "x": 24.1,
+      "y": 18.9,
+      "radius": 1.6,
+      "mapLayer": 1,
+      "layerName": "洞窟",
+      "items": [
+        {
+          "itemId": 39892,
+          "name": "無人島氣泡水",
+          "tool": 2
+        },
+        {
+          "itemId": 39893,
+          "name": "無人島幻影石",
+          "tool": 8
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "mapId": 772,
+      "x": 23.5,
+      "y": 21.6,
+      "radius": 1.5,
+      "mapLayer": 1,
+      "layerName": "洞窟",
+      "items": [
+        {
+          "itemId": 41631,
+          "name": "無人島黃銅礦",
+          "tool": 6
+        },
+        {
+          "itemId": 41632,
+          "name": "無人島金礦",
+          "tool": 9
+        },
+        {
+          "itemId": 41633,
+          "name": "無人島鷹眼砂",
+          "tool": null
+        },
+        {
+          "itemId": 41634,
+          "name": "無人島水晶層",
+          "tool": 10
+        }
+      ]
+    }
+  ]
+}

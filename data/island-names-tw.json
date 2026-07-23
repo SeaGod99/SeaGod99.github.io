@@ -2,10 +2,12 @@
   "_readme": [
     "無人島非物品名稱的台服官方名人工對照表。datamining-cn 只有簡中，依專案鐵則不可簡轉繁，",
     "故此處留給人工從台服遊戲內抄錄。填好後重跑 node scripts/build-island.mjs 即會合併。",
-    "key 皆為該 MJI* 表的 row id；留空或缺鍵者，產出的 name 會是 null（前端不顯示）。"
+    "key 皆為該 MJI* 表的 row id；留空或缺鍵者，產出的 name 會是 null（前端不顯示）。",
+    "themes = 工坊生產的製作類型（連鎖加成用），目前頁面的分類軸就是它，補齊後即可顯示台服名。"
   ],
   "animals": {},
   "buildings": {},
   "categories": {},
-  "areas": {}
+  "areas": {},
+  "themes": {}
 }

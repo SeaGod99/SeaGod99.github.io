@@ -177,8 +177,8 @@
       <div class="filter-tags" id="cwTime"></div>
     </div>
     <div class="filter-section">
-      <div class="filter-label">工房等級需求</div>
-      <div class="filter-tags" id="cwLevel"></div>
+      <div class="filter-label">製作類型（主題）<span id="themeNote"></span></div>
+      <div class="filter-tags" id="cwTheme"></div>
     </div>
     <div class="result-meta" id="cwMeta"></div>
     <div class="cw-grid" id="cwGrid"></div>
@@ -200,7 +200,9 @@
   <!-- ── 採集地圖 ── -->
   <section class="isl-panel" id="panel-map" role="tabpanel" hidden>
     <div class="isl-note">
-      圓圈是該素材的<b>採集區域</b>，不是單一採集點——區域裡散佈著很多個可採集的物件。
+      圓圈是<b>採集區域</b>：一個區域裡通常能採到<b>好幾種不同的素材</b>，
+      而且區域內散佈著很多個可採集物件——不是一種素材對應一個定點。
+      48 種可採素材其實只分佈在 <b>26 個區域</b>。點圓圈可看該區能採到的全部素材。
       遊戲資料只給得出區域的中心與範圍，逐一物件的座標拿不到。
     </div>
     <div class="map-bar">
@@ -244,9 +246,11 @@ const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g,
   (c) => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
 
 /* ── 載入 ── */
-const [mats, craftworks, recipes, buildings, animals, maps] = await Promise.all([
+const [mats, gatherAreas, craftworks, themes, recipes, buildings, animals, maps] = await Promise.all([
   fetch('../../data/island-materials.json').then(r => r.json()),
+  fetch('../../data/island-gather-areas.json').then(r => r.json()),
   fetch('../../data/island-craftworks.json').then(r => r.json()),
+  fetch('../../data/island-themes.json').then(r => r.json()),
   fetch('../../data/island-recipes.json').then(r => r.json()),
   fetch('../../data/island-buildings.json').then(r => r.json()),
   fetch('../../data/island-animals.json').then(r => r.json()),
@@ -259,6 +263,11 @@ initMapModal({ mapsData: maps.data, base: '../..' });
 // 台服未開放（無繁中名）一律不顯示，與全站規則一致
 const MATS = mats.data.filter((m) => m.name);
 const CW = craftworks.data.filter((c) => c.name);
+const THEMES = themes.data;
+// 一個採集區域裡通常能採到好幾種素材（48 個素材只分佈在 26 個區域）
+const AREAS = gatherAreas.data.map((a) => ({ ...a, items: a.items.filter((i) => i.name) }))
+  .filter((a) => a.items.length);
+const areaById = new Map(AREAS.map((a) => [a.id, a]));
 const HANDCRAFT = recipes.data.filter((r) => r.name);   // 只用於「用在哪」反查，不另列清單
 const BUILDINGS = buildings.data;
 const matById = new Map(MATS.map((m) => [m.itemId, m]));
@@ -307,7 +316,7 @@ function syncURL() {
   if (tab !== 'cw') p.set('t', tab);
   if (tab === 'cw') {
     if (timeFilter) p.set('h', String(timeFilter));
-    if (lvFilter) p.set('lv', String(lvFilter));
+    if (themeFilter) p.set('theme', String(themeFilter));
     if (cwSort !== 'value-desc') p.set('sort', cwSort);
   }
   if (tab === 'mat' && selMat) p.set('m', String(selMat));
@@ -316,7 +325,7 @@ function syncURL() {
 }
 
 /* ─────────────── 工坊生產 ─────────────── */
-let timeFilter = null, lvFilter = null, cwSort = 'value-desc';
+let timeFilter = null, themeFilter = null, cwSort = 'value-desc';
 
 function buildChips(hostId, values, get, set, label) {
   const host = $(hostId);
@@ -336,14 +345,23 @@ function buildChips(hostId, values, get, set, label) {
 }
 buildChips('cwTime', [...new Set(CW.map((c) => c.craftingTime))].sort((a, b) => a - b),
   () => timeFilter, (v) => (timeFilter = v), (v) => v + ' 小時');
-buildChips('cwLevel', [...new Set(CW.map((c) => c.levelReq))].sort((a, b) => a - b),
-  () => lvFilter, (v) => (lvFilter = v), (v) => '工房 Lv' + v);
+// 製作類型＝主題（連續生產同主題有效率加成，所以這才是排程時真正的分類軸）。
+// 主題名 datamine 只有簡中，依鐵則不簡轉繁 → 顯示簡中並標注待補台服官方名。
+const usedThemes = new Set();
+CW.forEach((c) => c.themes.forEach((t) => usedThemes.add(t.id)));
+const THEME_LIST = THEMES.filter((t) => usedThemes.has(t.id));
+buildChips('cwTheme', THEME_LIST.map((t) => t.id),
+  () => themeFilter, (v) => (themeFilter = v),
+  (id) => { const t = THEMES.find((x) => x.id === id); return t ? (t.name || t.nameCn) : String(id); });
+if (THEME_LIST.some((t) => !t.name)) {
+  $('themeNote').innerHTML = ' <span style="color:var(--text-muted);font-weight:400">— 主題名尚無台服官方來源，暫顯示簡中</span>';
+}
 
 function renderCw() {
   const q = $('cwSearch').value.trim().toLowerCase();
   let list = CW.filter((c) => {
     if (timeFilter && c.craftingTime !== timeFilter) return false;
-    if (lvFilter && c.levelReq !== lvFilter) return false;
+    if (themeFilter && !c.themes.some((t) => t.id === themeFilter)) return false;
     if (!q) return true;
     if (c.name.toLowerCase().includes(q)) return true;
     return c.materials.some((g) => (g.name || '').toLowerCase().includes(q));
@@ -432,7 +450,15 @@ function renderMatDetail() {
       <button class="coord-btn" data-x="${a.x}" data-y="${a.y}">🗺 開地圖</button>
       <button class="coord-btn" data-flag="/coord ${a.x} ${a.y} ${esc(ISLAND_MAP ? ISLAND_MAP.name : '')}">📋 座標</button>
       <div style="font-size:13px;color:var(--text-muted);line-height:1.6">
-        這是一片區域，裡面散佈著多個可採集物件；座標指的是區域中心，不是唯一的採集點。</div></div>`);
+        這是一片區域，裡面散佈著多個可採集物件；座標指的是區域中心，不是唯一的採集點。</div>`);
+    const area = areaById.get(m.gathering.areaId);
+    const others = area ? area.items.filter((i) => i.itemId !== m.itemId) : [];
+    if (others.length) {
+      how.push(`<div class="mat-row"><span class="k">同區還可採到</span>
+        <span class="use-list" style="display:inline-flex">${others.map((i) =>
+          `<button class="ing-chip" data-goto="${i.itemId}">${esc(i.name)}</button>`).join('')}</span></div>`);
+    }
+    how.push(`</div>`);
   }
   if (seedOf.has(m.itemId)) {
     how.push(`<div class="mat-row"><span class="k">農場</span>種下「${esc(seedOf.get(m.itemId).name)}」收成</div>`);
@@ -498,7 +524,9 @@ $('matDetail').addEventListener('click', (e) => {
     return;
   }
   const cp = e.target.closest('[data-flag]');
-  if (cp) copyText(cp.dataset.flag);
+  if (cp) { copyText(cp.dataset.flag); return; }
+  const go = e.target.closest('[data-goto]');
+  if (go) selectMat(Number(go.dataset.goto));
 });
 
 function copyText(t) {
@@ -530,18 +558,18 @@ document.querySelectorAll('#layerToggle button').forEach((b) => b.addEventListen
 }));
 
 function renderMap() {
-  const pts = MATS.filter((m) => m.gathering && (layer === 'all' || String(m.gathering.mapLayer) === layer));
-  $('mapMeta').innerHTML = `顯示 <em>${pts.length}</em> 個採集區域`;
+  const list = AREAS.filter((a) => layer === 'all' || String(a.mapLayer) === layer);
+  const itemCount = list.reduce((n, a) => n + a.items.length, 0);
+  $('mapMeta').innerHTML = `顯示 <em>${list.length}</em> 個採集區域 · 共 ${itemCount} 種素材`;
 
   // 大圈畫在下層，小圈才點得到
-  const sorted = pts.slice().sort((a, b) => b.gathering.area.radius - a.gathering.area.radius);
-  const areas = sorted.map((m) => {
-    const a = m.gathering.area;
+  const sorted = list.slice().sort((a, b) => b.radius - a.radius);
+  const areas = sorted.map((a) => {
     const d = lenFrac(a.radius) * 2 * 100;
-    return `<div class="map-area ${m.gathering.mapLayer === 1 ? 'cave' : 'land'}${m.itemId === selArea ? ' sel' : ''}"
-      data-area="${m.itemId}"
+    return `<div class="map-area ${a.mapLayer === 1 ? 'cave' : 'land'}${a.id === selArea ? ' sel' : ''}"
+      data-area="${a.id}"
       style="left:${(coordFrac(a.x) * 100).toFixed(2)}%;top:${(coordFrac(a.y) * 100).toFixed(2)}%;width:${d.toFixed(2)}%;height:${d.toFixed(2)}%"
-      title="${esc(m.name)}（中心 X:${a.x} Y:${a.y}）"></div>`;
+      title="${esc(a.items.map((i) => i.name).join('、'))}（中心 X:${a.x} Y:${a.y}）"></div>`;
   }).join('');
 
   $('mapCanvas').innerHTML = `<img src="../..${esc(ISLAND_MAP.image.local)}" alt="${esc(ISLAND_MAP.name)}">${areas}`;
@@ -563,22 +591,22 @@ $('mapCanvas').addEventListener('click', (e) => {
 });
 
 function renderMapInfo() {
-  const m = matById.get(selArea);
-  if (!m) { $('mapInfo').innerHTML = ''; return; }
-  const a = m.gathering.area;
-  const uses = (usedInCw.get(m.itemId) || []).length + (usedInHc.get(m.itemId) || []).length + (usedInBuilding.get(m.itemId) || []).length;
+  const a = areaById.get(selArea);
+  if (!a) { $('mapInfo').innerHTML = ''; return; }
   $('mapInfo').innerHTML = `
     <div class="cw-card">
       <div class="cw-head">
-        <span class="cw-name">${esc(m.name)}</span>
-        <span class="tag">${m.gathering.layerName}</span>
+        <span class="cw-name">採集區域 #${a.id}</span>
+        <span class="tag">${a.layerName}</span>
+        <span class="rec-yield" style="font-size:13px;color:var(--text-muted)">可採 ${a.items.length} 種素材</span>
       </div>
       <div class="mat-row" style="font-size:14px">
         <span class="k">區域中心</span>X:${a.x} Y:${a.y}（半徑約 ${a.radius}）
         <button class="coord-btn" data-flag="/coord ${a.x} ${a.y} ${esc(ISLAND_MAP.name)}">📋 座標</button>
-        <button class="coord-btn" data-goto="${m.itemId}">🔍 完整資料</button>
       </div>
-      <div class="mat-row" style="font-size:14px"><span class="k">用途</span>${uses} 項生產品／建築</div>
+      <div class="cw-ing">
+        ${a.items.map((i) => `<button class="ing-chip" data-goto="${i.itemId}" title="查看「${esc(i.name)}」完整資料">${esc(i.name)}</button>`).join('')}
+      </div>
     </div>`;
 }
 $('mapInfo').addEventListener('click', (e) => {
@@ -591,13 +619,13 @@ $('mapInfo').addEventListener('click', (e) => {
 /* ─────────────── 啟動 ─────────────── */
 function applyURL() {
   const p = new URLSearchParams(location.search);
-  const h = Number(p.get('h')), lv = Number(p.get('lv')), sort = p.get('sort');
+  const h = Number(p.get('h')), th = Number(p.get('theme')), sort = p.get('sort');
   timeFilter = h > 0 ? h : null;
-  lvFilter = lv > 0 ? lv : null;
+  themeFilter = th > 0 ? th : null;
   if (['name', 'time-asc', 'eff-desc', 'value-desc'].includes(sort)) cwSort = sort;
   $('cwSort').value = cwSort;
   $('cwTime').querySelectorAll('.filter-tag').forEach((x) => x.classList.toggle('active', timeFilter !== null && x.dataset.v === String(timeFilter)));
-  $('cwLevel').querySelectorAll('.filter-tag').forEach((x) => x.classList.toggle('active', lvFilter !== null && x.dataset.v === String(lvFilter)));
+  $('cwTheme').querySelectorAll('.filter-tag').forEach((x) => x.classList.toggle('active', themeFilter !== null && x.dataset.v === String(themeFilter)));
 
   const l = p.get('layer');
   if (l === '0' || l === '1') {
