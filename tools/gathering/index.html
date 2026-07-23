@@ -6,6 +6,7 @@
   <meta name="description" content="FFXIV 限時採集節點查詢與艾歐澤亞時間計時器 — 傳說、稀有採集點開放時間、座標、採集職業一覽">
   <meta name="keywords" content="FFXIV, FF14, 限時採集, 傳說採集, 採集節點, 採礦工, 園藝工, ET, 艾歐澤亞時間, 繁體中文">
   <title>限時採集節點查詢 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/tool-header.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -57,10 +58,7 @@
     .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-secondary); font-size:14px; margin:24px 0; transition:var(--transition);}
     .back-link:hover { color: var(--gold); }
 
-    .tool-header { text-align:center; padding: 12px 0 24px; }
-    .tool-title { font-size: 26px; font-weight:700; color: var(--gold-light); }
-    .tool-subtitle { font-size: 14px; color: var(--text-secondary); margin-top:6px; }
-    .header-divider { width:60px; height:1px; background:linear-gradient(90deg,transparent,var(--gold),transparent); margin:16px auto 0;}
+    /* .tool-header / .tool-title / .tool-subtitle / .header-divider 見 assets/css/tool-header.css（全站共用） */
 
     /* ── ET clock bar ── */
     .et-bar {
@@ -265,10 +263,9 @@
 </head>
 <body>
 <div class="container">
-  <a href="../../" class="back-link">← 水神的工具箱</a>
 
   <div class="tool-header">
-    <div class="tool-title">⛏️ 限時採集節點查詢</div>
+    <h1 class="tool-title">⛏️ 限時採集節點查詢</h1>
     <p class="tool-subtitle">傳說・稀有採集點的開放時間、座標與採集職業，依艾歐澤亞時間即時更新</p>
     <div class="header-divider"></div>
   </div>

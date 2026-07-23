@@ -1,5 +1,7 @@
 # CLAUDE.md
 
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
 水神的工具箱（SeaGod's Toolbox）— FFXIV 繁中玩家工具站。純靜態頁面，部署於 GitHub Pages，無後端。專案概況、工具清單、資料來源與結構詳見 [README.md](README.md)。
 
 ---
@@ -12,6 +14,13 @@
 2. [docs/專案慣例與記憶.md](docs/專案慣例與記憶.md) — **可攜知識庫**：慣例、決策、資料權威來源、踩過的雷（本機 memory 資料夾的鏡像）。完整文件地圖也在此檔 §6。
 3. [docs/DATA-SOURCES.md](docs/DATA-SOURCES.md)＋[data/SCHEMA.md](data/SCHEMA.md) — 資料管線與格式。
 
+動到幻化配裝圖鑑（`tools/glamour/`）時另讀 [tools/glamour/CLAUDE.md](tools/glamour/CLAUDE.md)——那是併進來的獨立子專案，有自己的 Python 管線與資料庫，慣例與全站其他頁不同。
+
+**三條最容易踩的鐵則**（細節見知識庫 §4）：
+- **繁中名稱絕不用簡轉繁（s2t／OpenCC）硬翻、也不憑印象寫**。台服官方來源優先，社群繁中站次之；對不到＝台服未開放 → 前端直接不顯示，不用英文／簡中補。
+- **職業名**查 `data/equip.json` 的 names 表（白魔道士、巴術士、奪魂者…），**副本名**查 `data/dungeons.json` 的 `nameEn → name`，**地名**查 `out_data/places.msgpack` 的 `twPlaces`。
+- **取得方式不憑印象**，一律回查資料來源。
+
 **維護規則（務必遵守，否則換機知識遺失）**：
 - 有**新慣例／決策定案** → 除了讓 Claude 存進本機 memory，**同步補進 `docs/專案慣例與記憶.md`**。
 - 有**新流程／SOP 說明** → 寫成 `docs/*.md` 並在上述知識庫的文件地圖（§6）＋本檔登記；本檔的「gstack 使用情境／常見工作流」是流程索引的入口。
@@ -19,6 +28,43 @@
 - 條目過時或被推翻 → 直接修正／刪除，不要疊加矛盾敘述。
 
 > 換到新電腦時，只要 clone repo 並讀完上面三份文件，即可無縫接續——本機 memory 缺席不影響延續。
+
+---
+
+## 專案結構與常用指令
+
+純靜態站，**沒有建置步驟、沒有測試框架**——HTML 直接開就是成品。`package.json` 只有資料腳本用的三個依賴（msgpack／opencc-js／sharp），沒有 npm scripts。
+
+```
+index.html              # 入口頁（含全站進度儀表板與備份匯出入）
+tools/<name>/           # 各工具頁，一頁一目錄，index.html 自帶樣式與邏輯
+collections/<name>/     # 收藏追蹤頁（+ minions/ 在根目錄，歷史因素）
+data/                   # 統一資料庫（SCHEMA.md／_meta.json）＋前端讀的 json
+scripts/*.mjs           # 資料產生／校正腳本（node，非執行期依賴）
+assets/css|js/          # 共用樣式與腳本（common.css、eorzea-weather.js…）
+out_data/               # 大型中繼檔（msgpack），不進前端
+tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLAUDE.md
+```
+
+| 我要做的事 | 指令 |
+|-----------|------|
+| 重建某份資料 | `node scripts/build-<名稱>.mjs` |
+| 校正既有資料（patch 系列） | `node scripts/patch-<名稱>.mjs`（多數 dry-run 預設，`--apply` 才寫入） |
+| 資料驗收（改完資料必跑） | `node scripts/validate-data.mjs` |
+| 連結檢查 | `node scripts/validate-links.mjs` |
+| 幻化配裝圖鑑重建 | `py tools\glamour\scripts\update_all.py local`（離線）／不帶 `local`＝完整抓取 |
+| 看頁面 | 直接開檔或 `/browse`；無 dev server |
+
+**環境注意**：
+- 本機 `python` 指令是 Microsoft Store 假捷徑（執行會靜默結束），**Python 一律用 `py`**。
+- 終端機走 VS Code 內建終端機，避免彈出獨立視窗。
+- Bash 工具下多行 commit 訊息要用 `git commit -F <檔案>`，**不要用 PowerShell here-string**（Bash 是 POSIX sh，`@'...'@` 會變成字面字元）。
+
+**repo 很大（約 860MB／2.8 萬檔，主要是 glamour 的圖）**：
+- `git clone`／`git pull`／`git checkout` 動輒數分鐘，**下 git 指令請把 timeout 拉到 5 分鐘以上**。曾因 2 分鐘超時中斷 checkout，留下 index.lock ＋ 5 千個沒寫完的檔案。
+- 還原檔案時**先確認範圍**：`git restore .` 會連同你正在編輯的檔案一起還原（曾因此洗掉未 commit 的文件修改），只想補回某目錄就寫 `git restore tools/glamour`。
+- 距 **GitHub Pages 1GB 發佈上限**只剩約 140MB 餘裕，新增大批圖片前先估增量。
+- 跑完 `update_all` 後，衍生的 js 與新縮圖**記得 commit**（`.gitignore` 已不擋）。
 
 ---
 
@@ -105,6 +151,8 @@
 ## 本站常見工作流建議
 
 - **改了收藏頁版面 / 樣式** → 改碼 → `/browse` 開該頁截圖 → `/design-review` 視覺把關。
-- **改了共用資料或腳本（`/data`、`/scripts`、`/assets/js`）** → `/verify` 確認受影響頁面行為正常 → `/code-review`。
+- **改了共用資料或腳本（`/data`、`/scripts`、`/assets/js`）** → `node scripts/validate-data.mjs` → `/verify` 確認受影響頁面行為正常 → `/code-review`。
 - **新增工具頁** → `/spec` 釐清需求 → 實作 → `/qa` → `/ship`。
-- **要更新外部來源資料** → `/scrape` 抓取 → 跑 `/scripts` 產生 → `/verify`。
+- **要更新外部來源資料** → `/scrape` 抓取 → 跑 `/scripts` 產生 → `node scripts/validate-data.mjs` → `/verify`。
+- **改了幻化配裝圖鑑** → 先讀 [tools/glamour/CLAUDE.md](tools/glamour/CLAUDE.md) → 改碼／改 `data/curated_outfits.json` → `py tools\glamour\scripts\update_all.py local` 重建＋健檢 → `/browse` 驗收。**重建任何一份前端 js 後都會連帶重跑 `build_item_sources.py`**，漏跑不會報錯、只會安靜地退回單一來源。
+- **升台服版本** → 改 `data/_meta.json` 的 `gamePatch` → `patch-backfill` 三支（`--apply`）→ `backfill-sources.mjs` → `validate-data.mjs` → commit。

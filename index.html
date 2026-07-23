@@ -124,6 +124,56 @@
       margin: 20px auto 0;
     }
 
+    /* ── Hub search ── */
+    .hub-search-wrap {
+      position: relative;
+      max-width: 520px;
+      margin: 0 auto 40px;
+    }
+    .hub-search-icon {
+      position: absolute;
+      left: 16px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 16px;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+    .hub-search {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-size: 15px;
+      padding: 13px 44px 13px 44px;
+      outline: none;
+      transition: var(--transition);
+    }
+    .hub-search:focus { border-color: var(--border-hover); box-shadow: 0 0 0 3px var(--gold-dim); }
+    .hub-search::placeholder { color: var(--text-muted); }
+    .hub-search-clear {
+      position: absolute;
+      right: 10px; top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 14px;
+      cursor: pointer;
+      padding: 6px 8px;
+      border-radius: var(--radius-sm);
+      transition: var(--transition);
+    }
+    .hub-search-clear:hover { color: var(--text-primary); }
+    .hub-no-result {
+      display: none;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 14px;
+      padding: 20px 0 40px;
+    }
+    .section[hidden] { display: none; }
+
     /* ── Section ── */
     .section {
       margin-bottom: 48px;
@@ -384,6 +434,15 @@
     <span class="wip-banner-icon">🛠️</span>
     <span>工具站持續建設中，標示「可用」的功能已可使用，其餘即將推出。</span>
   </div>
+
+  <!-- Hub search：即時過濾下方工具卡片 -->
+  <div class="hub-search-wrap">
+    <span class="hub-search-icon">🔍</span>
+    <input id="hubSearch" class="hub-search" type="text" autocomplete="off"
+           placeholder="搜尋工具…（天氣、採集、坐騎、市場、幻化…）" aria-label="搜尋工具">
+    <button id="hubSearchClear" class="hub-search-clear" aria-label="清除搜尋" style="display:none">✕</button>
+  </div>
+  <p class="hub-no-result" id="hubNoResult">找不到符合「<span id="hubQ"></span>」的工具</p>
 
   <!-- ── 我的收藏進度（取自各追蹤頁寫入的本機快照）── -->
   <section class="section section-collect" id="progressDash" style="display:none">
@@ -750,6 +809,61 @@
 </footer>
 
 <script>
+/* Hub 搜尋：即時過濾工具卡片（比對標題＋說明＋徽章文字），隱藏沒有命中的分類 */
+(function () {
+  var input = document.getElementById('hubSearch');
+  if (!input) return;
+  var clearBtn = document.getElementById('hubSearchClear');
+  var noResult = document.getElementById('hubNoResult');
+  var qSpan = document.getElementById('hubQ');
+
+  var cards = Array.prototype.slice.call(document.querySelectorAll('.card-grid .tool-card'));
+  var entries = cards.map(function (c) {
+    return { el: c, section: c.closest('.section'), text: (c.textContent || '').toLowerCase() };
+  });
+  var sections = [];
+  entries.forEach(function (e) { if (e.section && sections.indexOf(e.section) < 0) sections.push(e.section); });
+  // 記住各分類原始計數文字，搜尋時改為命中數、清除時還原
+  var counts = sections.map(function (s) {
+    return { el: s, node: s.querySelector('.section-count'), orig: null };
+  });
+  counts.forEach(function (c) { if (c.node) c.orig = c.node.textContent; });
+
+  function apply() {
+    var raw = input.value.trim();
+    var q = raw.toLowerCase();
+    clearBtn.style.display = raw ? '' : 'none';
+
+    if (!q) {
+      entries.forEach(function (e) { e.el.style.display = ''; });
+      sections.forEach(function (s) { s.hidden = false; });
+      counts.forEach(function (c) { if (c.node && c.orig != null) c.node.textContent = c.orig; });
+      noResult.style.display = 'none';
+      return;
+    }
+
+    var anyGlobal = false;
+    sections.forEach(function (s) {
+      var n = 0;
+      entries.forEach(function (e) {
+        if (e.section !== s) return;
+        var hit = e.text.indexOf(q) >= 0;
+        e.el.style.display = hit ? '' : 'none';
+        if (hit) { n++; anyGlobal = true; }
+      });
+      s.hidden = n === 0;
+      var c = counts.filter(function (x) { return x.el === s; })[0];
+      if (c && c.node) c.node.textContent = n + ' 項';
+    });
+    qSpan.textContent = raw;
+    noResult.style.display = anyGlobal ? 'none' : '';
+  }
+
+  input.addEventListener('input', apply);
+  input.addEventListener('keydown', function (e) { if (e.key === 'Escape') { input.value = ''; apply(); } });
+  clearBtn.addEventListener('click', function () { input.value = ''; apply(); input.focus(); });
+})();
+
 /* 收藏進度儀表板：讀各追蹤頁寫入的 ffxiv_snap_* 快照（無需載入資料檔） */
 (function () {
   var REG = [

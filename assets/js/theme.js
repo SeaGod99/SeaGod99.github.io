@@ -87,4 +87,54 @@
   } else {
     buildToggle();
   }
+
+  // 4) PWA：注入 manifest／圖示／theme-color，並在 https 下註冊 service worker。
+  //    路徑用絕對 "/"（本站為根網域託管的 GitHub Pages 使用者頁）；
+  //    file:// 本機開檔時這些 404 無害，SW 也不會註冊。
+  (function pwa() {
+    try {
+      var head = document.head || document.getElementsByTagName('head')[0];
+      if (head && !document.querySelector('link[rel="manifest"]')) {
+        function addLink(rel, href, type) {
+          var l = document.createElement('link');
+          l.rel = rel; l.href = href; if (type) l.type = type;
+          head.appendChild(l);
+        }
+        addLink('manifest', '/manifest.json');
+        addLink('icon', '/assets/icons/icon.svg', 'image/svg+xml');
+        addLink('apple-touch-icon', '/assets/icons/icon.svg');
+        if (!document.querySelector('meta[name="theme-color"]')) {
+          var tc = document.createElement('meta');
+          tc.name = 'theme-color'; tc.content = '#0a0c10';
+          head.appendChild(tc);
+        }
+      }
+    } catch (e) { /* 忽略：注入失敗不影響頁面 */ }
+
+    if ('serviceWorker' in navigator &&
+        (location.protocol === 'https:' || location.hostname === 'localhost')) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/sw.js').catch(function () { /* 忽略 */ });
+      });
+    }
+  })();
+
+  // 5) 全站跨工具快速切換器：載入 nav.js。
+  //    以本檔 <script src> 推回站根相對路徑（如 "../../"），相容 file:// 與線上。
+  (function loadNav() {
+    try {
+      var selfSrc = '';
+      var ss = document.getElementsByTagName('script');
+      for (var i = 0; i < ss.length; i++) {
+        var s = ss[i].getAttribute('src') || '';
+        if (/assets\/js\/theme\.js(\?|$)/.test(s)) { selfSrc = s; break; }
+      }
+      var root = selfSrc.replace(/assets\/js\/theme\.js.*$/, ''); // "" | "./" | "../" | "../../"
+      window.__SGT_ROOT__ = root || './';
+      var el = document.createElement('script');
+      el.src = (root || '') + 'assets/js/nav.js';
+      el.defer = true;
+      (document.head || document.documentElement).appendChild(el);
+    } catch (e) { /* 忽略：切換器載入失敗不影響頁面 */ }
+  })();
 })();

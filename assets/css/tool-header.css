@@ -1,0 +1,59 @@
+/* ===================================================================
+   水神的工具箱 — 全站統一的頁面標題區（tool-header）
+
+   置中大標 ＋ 副標 ＋ 金色分隔線。2026-07-22 起全站統一使用，
+   取代先前並存的三種寫法：nav 麵包屑列、hero 大標區、page-header。
+   （回首頁入口已由 nav.js 注入的全站頂列 #sgt-topbar 提供，
+     各頁不再放返回鍵，標題區只負責「這一頁是什麼工具」。）
+
+   用法：於該頁 <head> 加
+     <link rel="stylesheet" href="REL/assets/css/tool-header.css">
+   放在該頁自有 <style> 之前，頁面若需微調可自行覆寫。
+
+   標記：
+     <div class="tool-header">
+       <h1 class="tool-title">🗺️ 工具名稱</h1>
+       <p class="tool-subtitle">一行說明</p>
+       <div class="header-divider"></div>
+     </div>
+
+   色票取自各頁 :root（收藏頁來自 common.css），並帶 fallback 以防未定義。
+   =================================================================== */
+
+/* max-width 讓「不在 .container 內」的工具頁也不會橫跨整個視窗；
+   已在容器內的頁面因容器更窄，此值不生效 */
+.tool-header {
+  text-align: center;
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 22px 24px 24px;
+}
+
+.tool-title {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--gold-light, #e2c98a);
+}
+
+/* 長副標限寬並置中，避免在寬螢幕拉成一長條 */
+.tool-subtitle {
+  max-width: 760px;
+  margin: 6px auto 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-secondary, #8892a4);
+}
+
+.header-divider {
+  width: 60px;
+  height: 1px;
+  margin: 16px auto 0;
+  background: linear-gradient(90deg, transparent, var(--gold, #c8a96e), transparent);
+}
+
+@media (max-width: 600px) {
+  .tool-header { padding: 16px 0 20px; }
+  .tool-title { font-size: 22px; }
+}

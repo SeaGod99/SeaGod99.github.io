@@ -1,0 +1,22 @@
+{
+  "name": "水神的工具箱 — FFXIV 繁中工具站",
+  "short_name": "水神的工具箱",
+  "description": "為 FFXIV 繁體中文伺服器玩家打造的冒險者工具集合：天氣、採集、收藏追蹤、市場查價、幻化配裝圖鑑等。",
+  "lang": "zh-Hant-TW",
+  "dir": "ltr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0a0c10",
+  "theme_color": "#0a0c10",
+  "categories": ["games", "utilities"],
+  "icons": [
+    {
+      "src": "/assets/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -6,8 +6,10 @@
   <meta name="description" content="FF14 鳥鞍收藏追蹤 — 查詢取得來源、部位篩選、記錄擁有進度">
   <title>鳥鞍收藏追蹤 | 水神的工具箱</title>
   <link rel="stylesheet" href="../../assets/css/common.css">
+  <link rel="stylesheet" href="../../assets/css/tool-header.css">
   <style>
-    /* 鳥鞍頁專屬樣式；通用版面與 .col-* 卡片系統見 assets/css/common.css */
+    /* 鳥鞍頁專屬樣式；通用版面與 .col-* 卡片系統見 assets/css/common.css，
+       控制面由 assets/js/collection-tracker.js 渲染 */
     :root {
       --accent:   #c8a96e;                 /* 金 */
       --accent-2: #4ade80;                 /* 進度條尾色：綠 */
@@ -37,6 +39,7 @@
     @media (max-width: 380px) { .col-grid { grid-template-columns: 1fr; } }
   </style>
   <script src="../../assets/js/patch-gate.js"></script>
+  <script src="../../assets/js/collection-tracker.js"></script>
   <link rel="stylesheet" href="../../assets/css/theme.css">
   <script src="../../assets/js/theme.js"></script>
 </head>
@@ -45,78 +48,14 @@
 <div class="container">
 
   <!-- Header -->
-  <header class="page-header">
-    <a href="../../" class="back-btn">← 水神的工具箱</a>
-    <div class="page-title-wrap">
-      <h1 class="page-title">🐤 鳥鞍收藏追蹤</h1>
-      <p class="page-subtitle">點擊卡片標記已取得，進度自動儲存於瀏覽器</p>
-    </div>
-  </header>
-
-  <!-- Progress -->
-  <div class="progress-bar-wrap">
-    <div class="progress-info">
-      <span id="ownedCount">0</span> / <span id="totalCount">0</span>
-      <span>已取得</span>
-    </div>
-    <div class="progress-track">
-      <div class="progress-fill" id="progressFill" style="width:0%"></div>
-    </div>
-    <div class="progress-pct" id="progressPct">0%</div>
+  <div class="tool-header">
+    <h1 class="tool-title">🐤 鳥鞍收藏追蹤</h1>
+    <p class="tool-subtitle">點擊卡片標記已取得，進度自動儲存於瀏覽器</p>
+    <div class="header-divider"></div>
   </div>
 
-  <!-- Toolbar -->
-  <div class="toolbar">
-    <div class="search-wrap">
-      <span class="search-icon">🔍</span>
-      <input class="search-input" type="text" id="searchInput" placeholder="搜尋鳥鞍名稱…" autocomplete="off">
-    </div>
-    <div class="own-toggle">
-      <button class="own-btn active" data-own="all">全部</button>
-      <button class="own-btn" data-own="owned">已取得</button>
-      <button class="own-btn" data-own="missing">未取得</button>
-    </div>
-    <select class="sort-select" id="sortSelect" title="排序方式">
-      <option value="default">預設排序</option>
-      <option value="patch-desc">版本新→舊</option>
-      <option value="patch-asc">版本舊→新</option>
-      <option value="name">依名稱</option>
-    </select>
-    <button class="icon-btn" id="markAllBtn" title="將目前篩選結果全部標記為已取得">✓ 標記全部</button>
-    <button class="icon-btn" id="unmarkAllBtn" title="取消目前篩選結果的已取得標記">✗ 取消全部</button>
-    <button class="icon-btn" id="exportBtn">匯出進度</button>
-    <button class="icon-btn" id="importBtn">匯入進度</button>
-    <input type="file" id="importFile" accept="application/json" style="display:none">
-    <button class="icon-btn clear-btn" id="clearBtn">清除進度</button>
-  </div>
-
-  <!-- Slot filter -->
-  <div class="filter-section">
-    <div class="filter-label">部位</div>
-    <div class="filter-tags" id="slotFilters"></div>
-  </div>
-
-  <!-- Source filter -->
-  <div class="filter-section">
-    <div class="filter-label">取得方式</div>
-    <div class="filter-tags" id="sourceFilters"></div>
-  </div>
-
-  <!-- Patch filter -->
-  <div class="filter-section">
-    <div class="filter-label">版本</div>
-    <div class="filter-tags" id="patchFilters"></div>
-  </div>
-
-  <!-- Result meta -->
-  <div class="result-meta" id="resultMeta"></div>
-
-  <!-- Grid -->
-  <div class="col-grid" id="bdGrid"></div>
-
-  <div class="empty-state" id="emptyState" style="display:none">
-    找不到符合條件的鳥鞍
-  </div>
+  <!-- 控制面（進度／工具列／篩選／格線）由 collection-tracker.js 渲染 -->
+  <div id="ct-root"></div>
 
 </div>
 
@@ -133,365 +72,70 @@
 </footer>
 
 <script>
-(function() {
-  const STORAGE_KEY = 'ffxiv_barding_owned';
-  const DATA_URL = '../../data/barding.json';
-  const ICON_BASE = '../../assets/barding/';
-
-  // ── State ──
-  let BD_DATA = [];
-  let SLOTS = [];
-  let SOURCE_TYPES = [];
-  let PATCHES = [];
-  let owned = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
-  let filterOwn = 'all';       // all | owned | missing
-  let filterSlot = null;       // string | null
-  let filterSource = null;     // string | '__none__' | null
-  let filterPatch = null;      // string | null
-  let searchQ = '';
-  let sortBy = 'default';      // default | patch-desc | patch-asc | name
-
-  // ── Patch bands ──
-  const PATCH_BANDS = [
-    { label: '2.x 原初之地',   min: '2.0', max: '2.9' },
-    { label: '3.x 蒼天之禁地', min: '3.0', max: '3.9' },
-    { label: '4.x 紅蓮之狂潮', min: '4.0', max: '4.9' },
-    { label: '5.x 暗影之逆焰', min: '5.0', max: '5.9' },
-    { label: '6.x 曉月之終途', min: '6.0', max: '6.9' },
-    { label: '7.x 金曦之遺輝', min: '7.0', max: '7.9' },
-  ];
-
-  // ── Unique key ──
-  function keyOf(b) {
-    return 'id:' + b.id;
-  }
-
-  // ── Save ──
-  function save() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify([...owned]));
-  }
-
-  // ── Toggle ──
-  function toggle(k) {
-    if (owned.has(k)) owned.delete(k);
-    else owned.add(k);
-    save();
-    updateProgress();
-    renderGrid();
-  }
-
-  // ── Progress ──
-  function updateProgress() {
-    const total = BD_DATA.length;
-    const count = BD_DATA.filter(b => owned.has(keyOf(b))).length;
-    const pct = total ? Math.round(count / total * 100) : 0;
-    document.getElementById('ownedCount').textContent = count;
-    document.getElementById('totalCount').textContent = total;
-    document.getElementById('progressFill').style.width = pct + '%';
-    document.getElementById('progressPct').textContent = pct + '%';
-    try { localStorage.setItem('ffxiv_snap_barding', JSON.stringify({ c: count, t: total })); } catch (e) {} // 首頁進度儀表板快照
-  }
-
-  // ── Generic filter tag renderer ──
-  function renderTagFilters(containerId, values, current, onClick, labelFn) {
-    const wrap = document.getElementById(containerId);
-    wrap.innerHTML = '';
-    values.forEach(v => {
-      const btn = document.createElement('button');
-      btn.className = 'filter-tag' + (current === v ? ' active' : '');
-      btn.textContent = labelFn ? labelFn(v) : v;
-      btn.addEventListener('click', () => onClick(v));
-      wrap.appendChild(btn);
-    });
-  }
-
-  function renderSlotFilters() {
-    renderTagFilters('slotFilters', SLOTS, filterSlot,
-      v => { filterSlot = filterSlot === v ? null : v; renderSlotFilters(); renderGrid(); }
-    );
-  }
-
-  function renderSourceFilters() {
-    renderTagFilters('sourceFilters', [...SOURCE_TYPES, '__none__'], filterSource,
-      v => { filterSource = filterSource === v ? null : v; renderSourceFilters(); renderGrid(); },
-      v => v === '__none__' ? '待補充' : v
-    );
-  }
-
-  function renderPatchFilters() {
-    renderTagFilters('patchFilters', PATCHES.map(p => p.label), filterPatch,
-      v => { filterPatch = filterPatch === v ? null : v; renderPatchFilters(); renderGrid(); }
-    );
-  }
-
-  // ── Filter ──
-  function filtered() {
-    return BD_DATA.filter(b => {
-      const k = keyOf(b);
-
-      // ownership
-      if (filterOwn === 'owned'   && !owned.has(k)) return false;
-      if (filterOwn === 'missing' &&  owned.has(k)) return false;
-
-      // slot
-      if (filterSlot && b.slot !== filterSlot) return false;
-
-      // source
-      if (filterSource) {
-        const srcs = b.sources || [];
-        if (filterSource === '__none__') {
-          if (srcs.length > 0) return false;
-        } else {
-          if (!srcs.some(s => s.type === filterSource)) return false;
-        }
+CollectionTracker.init({
+  dataUrl: '../../data/barding.json',
+  metaUrl: '../../data/_meta.json',
+  storageKey: 'ffxiv_barding_owned',
+  snapKey: 'barding',
+  verb: '取得',
+  unit: '個',
+  noun: '鳥鞍',
+  searchPlaceholder: '搜尋鳥鞍名稱、取得方式…',
+  include: function (b, gp) { return b.name && /[一-鿿]/.test(b.name) && PatchGate.released(b.patch, gp); },
+  prepare: function (list) { return list.slice().sort(function (a, b) { return (a.id || 0) - (b.id || 0); }); },
+  sorts: ['patch-desc', 'patch-asc', 'name'],
+  filters: [
+    {
+      id: 'slot', label: '部位',
+      options: function (list) {
+        var order = ['鞍', '頭', '半套', '全套'];
+        var set = new Set(list.map(function (b) { return b.slot; }).filter(Boolean));
+        return order.filter(function (s) { return set.has(s); }).map(function (s) { return { value: s, label: s }; });
+      },
+      match: function (b, v) { return b.slot === v; }
+    },
+    {
+      id: 'source', label: '取得方式',
+      options: function (list) {
+        var set = new Set();
+        list.forEach(function (b) { (b.sources || []).forEach(function (s) { if (s.type) set.add(s.type); }); });
+        return Array.from(set).sort().map(function (t) { return { value: t, label: t }; })
+          .concat([{ value: '__none__', label: '待補充' }]);
+      },
+      match: function (b, v) {
+        var srcs = b.sources || [];
+        return v === '__none__' ? srcs.length === 0 : srcs.some(function (s) { return s.type === v; });
       }
-
-      // patch
-      if (filterPatch) {
-        const band = PATCH_BANDS.find(p => p.label === filterPatch);
-        if (band) {
-          if (!b.patch || b.patch < band.min || b.patch > band.max) return false;
-        }
-      }
-
-      // search
-      if (searchQ) {
-        const q = searchQ.toLowerCase();
-        const nameMatch = b.name && b.name.toLowerCase().includes(q);
-        const enMatch = b.nameEn && b.nameEn.toLowerCase().includes(q);
-        if (!nameMatch && !enMatch) return false;
-      }
-
-      return true;
-    });
+    },
+    { kind: 'patch' }
+  ],
+  onCardClick: function (b, ev) { return !!ev.target.closest('.ct-market'); },
+  card: function (b) {
+    var esc = CollectionTracker.esc;
+    var ICON_BASE = '../../assets/barding/';
+    var srcs = b.sources || [];
+    var sourceTags = srcs.length
+      ? Array.from(new Set(srcs.map(function (s) { return s.type; }))).slice(0, 2)
+          .map(function (t) { return '<span class="tag src-tag">' + esc(t) + '</span>'; }).join('')
+      : '<span class="tag placeholder">待補充</span>';
+    var iconPaths = Array.from(new Set([b.iconHead, b.iconBody, b.iconLegs].filter(Boolean)));
+    var iconsHtml = iconPaths.length
+      ? iconPaths.slice(0, 3).map(function (p) { return '<img class="col-icon" src="' + ICON_BASE + esc(p.split('/').pop()) + '" alt="" loading="lazy">'; }).join('')
+      : '<div class="col-icon placeholder">🐤</div>';
+    var detailLines = srcs.length
+      ? srcs.map(function (s) { return '<div class="detail-line"><b>' + esc(s.type) + '：</b>' + esc(s.detail || '') + '</div>'; }).join('')
+      : '<div class="detail-line">取得方式：待補充</div>';
+    return '' +
+      '<div class="bd-icons">' + iconsHtml + '</div>' +
+      '<div class="col-name">' + esc(b.name) + '</div>' +
+      '<div class="bd-meta">No.' + esc(b.id) + (b.patch ? ' · ver ' + esc(b.patch) : '') + '</div>' +
+      '<div class="col-tags">' +
+        '<span class="tag slot-' + esc(b.slot) + '">' + esc(b.slot) + '</span>' + sourceTags +
+      '</div>' +
+      '<div class="col-detail">' + detailLines + '</div>' +
+      (b.itemId ? '<a class="ct-market" href="../../tools/market/#item=' + esc(b.itemId) + '" title="到市場查價工具查此物品行情">💰 市場行情</a>' : '');
   }
-
-  // ── Sort ──
-  function sortList(list) {
-    if (sortBy === 'default') return list;
-    const arr = [...list];
-    const pv = p => parseFloat(p) || 0;
-    if (sortBy === 'name') arr.sort((a, b) => a.name.localeCompare(b.name, 'zh-Hant'));
-    else if (sortBy === 'patch-asc') arr.sort((a, b) => pv(a.patch) - pv(b.patch));
-    else if (sortBy === 'patch-desc') arr.sort((a, b) => pv(b.patch) - pv(a.patch));
-    return arr;
-  }
-
-  // ── Render grid ──
-  function renderGrid() {
-    const list = sortList(filtered());
-    const grid = document.getElementById('bdGrid');
-    const empty = document.getElementById('emptyState');
-    const meta = document.getElementById('resultMeta');
-
-    grid.innerHTML = '';
-    if (list.length === 0) {
-      grid.style.display = 'none';
-      empty.style.display = '';
-    } else {
-      grid.style.display = '';
-      empty.style.display = 'none';
-    }
-
-    const ownedInView = list.filter(b => owned.has(keyOf(b))).length;
-    meta.innerHTML = `顯示 <em>${list.length}</em> / ${BD_DATA.length} 個 · 已取得 <em>${ownedInView}</em> / ${list.length}`;
-
-    list.forEach(b => {
-      const k = keyOf(b);
-      const isOwned = owned.has(k);
-      const card = document.createElement('div');
-      card.className = 'col-card' + (isOwned ? ' owned' : '');
-
-      const srcs = b.sources || [];
-
-      const sourceTags = srcs.length
-        ? [...new Set(srcs.map(s => s.type))].slice(0, 2).map(t => `<span class="tag src-tag">${t}</span>`).join('')
-        : `<span class="tag placeholder">待補充</span>`;
-
-      // icons: head/body/legs depending on slot, dedupe
-      const iconPaths = [...new Set([b.iconHead, b.iconBody, b.iconLegs].filter(Boolean))];
-      const iconsHtml = iconPaths.length
-        ? iconPaths.slice(0, 3).map(p => `<img class="col-icon" src="${ICON_BASE}${p.split('/').pop()}" alt="" loading="lazy">`).join('')
-        : `<div class="col-icon placeholder">🐤</div>`;
-
-      // detail lines for tooltip
-      const detailLines = [];
-      if (srcs.length) {
-        srcs.forEach(s => {
-          detailLines.push(`<div class="detail-line"><b>${s.type}：</b>${s.detail || ''}</div>`);
-        });
-      } else {
-        detailLines.push(`<div class="detail-line">取得方式：待補充</div>`);
-      }
-
-      card.innerHTML = `
-        <div class="bd-icons">
-          ${iconsHtml}
-        </div>
-        <div class="col-name">${b.name}</div>
-        <div class="bd-meta">No.${b.id}${b.patch ? ' · ver ' + b.patch : ''}</div>
-        <div class="col-tags">
-          <span class="tag slot-${b.slot}">${b.slot}</span>
-          ${sourceTags}
-        </div>
-        <div class="col-detail">${detailLines.join('')}</div>
-      `;
-
-      card.tabIndex = 0;
-      card.setAttribute('role', 'button');
-      card.setAttribute('aria-pressed', isOwned);
-      card.addEventListener('click', () => toggle(k));
-      card.addEventListener('keydown', ev => {
-        if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); toggle(k); }
-      });
-      grid.appendChild(card);
-    });
-  }
-
-  // ── Export / Import ──
-  function exportProgress() {
-    const payload = {
-      schema: 'barding-progress',
-      exported: new Date().toISOString(),
-      owned: [...owned]
-    };
-    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'barding-progress.json';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  }
-
-  function importProgress(file) {
-    const reader = new FileReader();
-    reader.onload = e => {
-      try {
-        const data = JSON.parse(e.target.result);
-        // 舊版備份為純陣列；新版物件需驗 schema，避免誤將其他頁的進度檔匯入
-        if (!Array.isArray(data) && data.schema !== 'barding-progress') {
-          alert('匯入失敗：這不是「鳥鞍收藏」的進度檔'); return;
-        }
-        const list = Array.isArray(data) ? data : data.owned;
-        if (!Array.isArray(list)) throw new Error('格式錯誤');
-        if (owned.size && !confirm(`匯入將以檔案內容（${list.length} 筆）取代目前的 ${owned.size} 筆記錄，確定嗎？`)) return;
-        owned = new Set(list);
-        save();
-        updateProgress();
-        renderGrid();
-        alert('匯入成功，共 ' + owned.size + ' 筆已取得記錄');
-      } catch (err) {
-        alert('匯入失敗：檔案格式不正確');
-      }
-    };
-    reader.readAsText(file);
-  }
-
-  // ── Own-toggle buttons ──
-  document.querySelectorAll('.own-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      filterOwn = btn.dataset.own;
-      document.querySelectorAll('.own-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      renderGrid();
-    });
-  });
-
-  // ── Search ──
-  document.getElementById('searchInput').addEventListener('input', e => {
-    searchQ = e.target.value.trim();
-    renderGrid();
-  });
-
-  // ── Export / Import / Clear ──
-  document.getElementById('exportBtn').addEventListener('click', exportProgress);
-  document.getElementById('importBtn').addEventListener('click', () => {
-    document.getElementById('importFile').click();
-  });
-  document.getElementById('importFile').addEventListener('change', e => {
-    const file = e.target.files[0];
-    if (file) importProgress(file);
-    e.target.value = '';
-  });
-
-  document.getElementById('clearBtn').addEventListener('click', () => {
-    if (!owned.size) { alert('目前沒有已取得記錄'); return; }
-    if (!confirm('確定要清除全部 ' + owned.size + ' 筆取得記錄嗎？\n將先自動下載一份備份檔以防誤刪。')) return;
-    exportProgress();
-    owned.clear();
-    save();
-    updateProgress();
-    renderGrid();
-  });
-
-  // ── Sort / Batch mark ──
-  document.getElementById('sortSelect').addEventListener('change', e => {
-    sortBy = e.target.value;
-    renderGrid();
-  });
-  document.getElementById('markAllBtn').addEventListener('click', () => {
-    const toAdd = filtered().filter(b => !owned.has(keyOf(b)));
-    if (!toAdd.length) { alert('目前篩選結果都已標記'); return; }
-    if (!confirm('將目前篩選結果中未標記的 ' + toAdd.length + ' 筆標記為已取得？')) return;
-    toAdd.forEach(b => owned.add(keyOf(b)));
-    save(); updateProgress(); renderGrid();
-  });
-  document.getElementById('unmarkAllBtn').addEventListener('click', () => {
-    const toDel = filtered().filter(b => owned.has(keyOf(b)));
-    if (!toDel.length) { alert('目前篩選結果沒有已標記項目'); return; }
-    if (!confirm('取消目前篩選結果中 ' + toDel.length + ' 筆的已取得標記？')) return;
-    toDel.forEach(b => owned.delete(keyOf(b)));
-    save(); updateProgress(); renderGrid();
-  });
-
-  // ── Init: load data ──
-  fetch(DATA_URL)
-    .then(res => {
-      if (!res.ok) throw new Error('無法載入資料 (' + res.status + ')');
-      return res.json();
-    })
-    .then(async json => {
-      const raw = (json && json.data) ? json.data : [];
-      const gp = await PatchGate.loadGamePatch('../../data/_meta.json');
-      // 僅顯示有繁中名、且台服已開放（patch ≤ gamePatch）的項目
-      BD_DATA = raw.filter(b => b.name && /[一-鿿]/.test(b.name) && PatchGate.released(b.patch, gp));
-
-      // 排序：依編號
-      BD_DATA.sort((a, b) => (a.id || 0) - (b.id || 0));
-
-      // 部位清單
-      const slotOrder = ['鞍', '頭', '半套', '全套'];
-      const slotSet = new Set(BD_DATA.map(b => b.slot).filter(Boolean));
-      SLOTS = slotOrder.filter(s => slotSet.has(s));
-
-      // 取得方式清單
-      const sourceSet = new Set();
-      BD_DATA.forEach(b => (b.sources || []).forEach(s => { if (s.type) sourceSet.add(s.type); }));
-      SOURCE_TYPES = [...sourceSet].sort();
-
-      // 版本清單（只顯示資料中實際出現的版本區間）
-      const patchSet = new Set(BD_DATA.map(b => b.patch).filter(Boolean));
-      PATCHES = PATCH_BANDS.filter(band =>
-        [...patchSet].some(p => p >= band.min && p <= band.max)
-      );
-
-      renderSlotFilters();
-      renderSourceFilters();
-      renderPatchFilters();
-      updateProgress();
-      renderGrid();
-    })
-    .catch(err => {
-      const grid = document.getElementById('bdGrid');
-      const empty = document.getElementById('emptyState');
-      grid.style.display = 'none';
-      empty.style.display = '';
-      empty.textContent = '資料載入失敗：' + err.message;
-    });
-})();
+});
 </script>
 </body>
 </html>

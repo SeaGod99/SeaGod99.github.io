@@ -3,7 +3,7 @@
 > **給 Claude / 後續對話的指示**：開始任何工作前先讀本檔。完成任何功能或資料變更後，**必須更新本檔**（狀態表 + 更新紀錄），並同步 `data/_meta.json` 的 status。
 > 規格細節見 `docs/feature-specs.md`，資料格式見 `data/SCHEMA.md`。
 
-**最後更新**：2026-07-20（幻化配裝圖鑑：精選裝備改以道具 ID 紀錄、取得方式吃完整來源，見更新紀錄）
+**最後更新**：2026-07-22（全站功能面優化 #1–#7：收藏頁共用引擎、跨工具切換器、首頁搜尋、PWA、API 韌性、可分享網址、收藏連市場，見更新紀錄）
 **網站**：https://seagod99.github.io ｜ GitHub Pages 純靜態 ｜ 遊戲版本 7.2
 
 ---
@@ -50,9 +50,11 @@
 
 | # | 工具 | 路徑 | 狀態 |
 |---|------|------|------|
-| 4.1 | 市場查價工具 | `/market/` | 規劃中 |
+| 4.1 | 市場查價 + 比價 | `/tools/market/` | 完成（Universalis 即時價、跨服比價、製作原料樹、URL 深連結 `#item=`；收藏頁「💰 市場行情」連此） |
+| 4.2 | 軍票變現排行 | `/tools/gc-exchange/` | 完成（軍票／雙色寶石兌換品即時市價，每單位變現 gil） |
 | 4.3 | 物品／製作搜尋 | `/tools/item-search/` | 規劃中（items/recipes 已備） |
-| 4.4 | 藏寶圖採集點查詢 | `/tools/treasure-maps/` | 規劃中（G8–G18） |
+| 4.4 | 藏寶圖採集點查詢 | `/tools/treasure-maps/` | 完成（G1–G17 挖寶點，地圖標點＋座標） |
+| 4.9 | 幻巧戰助手 | `/tools/faux-hollows/` | 完成（16 盤形×252 擺法，自動辨識、機率計算） |
 | 4.5 | 園藝配種計算 | `/tools/gardening/` | 完成（107種植物，正查×反查，data/gardening.json，06-17新增） |
 | 4.7 | 釣魚紀錄追蹤 | `/tools/fishing/` | 完成（fishes.json 1104筆，大魚/限時/天氣篩選，追蹤進度，06-17新增；07-16 參考魚糕重做卡片——固定欄位釣場/釣餌/時間/天氣、ET 24h 時間窗 bar、竿型 !/!!/!!! 與提鉤章、天氣鏈前→今、直感標籤，加「地區」篩選對應遊戲內釣魚手帳分頁） |
 | 4.8 | 採集紀錄追蹤 | `/tools/gathering-log/` | 完成（gathering.json 733節點，採礦工/園藝工，物品勾選追蹤，06-17新增） |
@@ -186,6 +188,18 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 6. 其他規劃：時尚品鑑、冒險者小隊計算機、藏寶圖、園藝配種、釣魚紀錄
 
 ## 五、更新紀錄
+
+- **2026-07-22（全站功能面優化 #1–#7）**：一次做完 7 項跨站優化，全部以 jsdom 驗證（本機 headless Chromium 在此環境無法啟動，改用 jsdom 做 DOM 層驗證）。
+  - **#1 收藏頁共用引擎**：新增 `assets/js/collection-tracker.js`，把 8 個經典追蹤頁共通的「狀態／進度條＋首頁快照／工具列（搜尋・擁有切換・排序・批次標記・匯入匯出・清除）／標籤篩選／格線渲染／鍵盤與 ARIA」全部收進單一引擎，各頁只留 header＋一份設定（資料位置、卡片樣板、篩選規則）。已遷移 **mounts／minions／barding／orchestrion／emotes／hairstyles／blue-magic／triple-triad** 共 8 頁，每頁 body 由 ~480–690 行縮為 header＋設定。引擎 hook：`include／keyOf／alwaysOwned／searchText／prepare／filters／sorts／card／onCardClick／onCardCreate`＋`gridClass／cardClass／fileBase／schema` 覆寫。特例都保留：emotes 預設表情恆擁有且不可點掉、minions 小方格＋hover 提示框＋數字 id 進度格式（相容既有存檔）、hairstyles 橫向 hs-card、blue-magic 先載 dungeons.json 建 contentId→繁中副本名、triple-triad 的 📍 開地圖不切換擁有。驗收：全 8 頁以真實資料 jsdom 整合測試 48/48、特例 12/12、mounts 互動 18/18。
+  - **#2 搜尋涵蓋來源文字**：引擎預設 `searchText` 納入 `sources[].detail`，各頁搜尋框可搜到取得方式（如搜「金碟」「副本名」）。
+  - **#3 全站發現性**：(a) 首頁 `index.html` 加關鍵字搜尋框即時過濾工具卡片（Esc 清除、動態更新分類計數、無結果提示）；(b) 新增 `assets/js/nav.js` 跨工具快速切換器（命令面板，`/` 或 Ctrl/⌘K 開啟、方向鍵選擇、含中英關鍵字），由 `theme.js` 以相對站根路徑全站注入（相容 file://）。
+  - **#3 後續調整（同日，依使用者回饋）**：(i) 命令面板原本 26 個工具攤平成一長串難用 → 改為**依 4 分類分組**（日常／收藏／戰鬥／生活職，對應首頁分區），搜尋時只留有命中的分類；(ii) 入口原為左下角小圓鈕「很不顯眼」→ 改為**全站固定頂部工具列 `#sgt-topbar`**（sticky top:0、注入為 body 第一個子節點、內層對齊站內 1500px 容器、左＝⚓站名連首頁、右＝加長搜尋欄，點擊開面板）；(iii) 頂列 46px 會蓋住其他頁自身的 sticky 元素 → gc-exchange thead 改 `top:46px`、aether-currents `.zc-map` 與 treasure-maps `.map-side` 改 `top:58px`；(iv) 頂列站名已是全站回首頁入口 → **移除全站 23 頁頁內重複的「← 水神的工具箱」返回鍵**（三種寫法＋麵包屑分隔符一併清掉，保留頁面標題與頁尾連結）；`tools/glamour/` 因未載入 theme.js 無頂列，其返回鍵保留。
+  - **#4 收藏連市場**：`mounts／barding／orchestrion` 卡片有 `itemId` 時顯示「💰 市場行情」連結，連到市場查價工具的深連結 `tools/market/#item=<id>`；`tools/market/index.html` 新增初次載入讀 hash（`#item=`／`#node=`／`#craft`／`#lists`）的支援（原本 init 的 replaceState 會洗掉 hash）。點連結不切換擁有（`onCardClick`）。
+  - **#5 可分享網址**：引擎把搜尋／擁有切換／排序／各篩選同步到 query string（`?q=&own=&sort=&f_<id>=`），打字用 replaceState、離散操作用 pushState，`popstate` 還原，收藏頁篩選狀態可分享／加書籤／上一頁。（market 與 glamour 先前已各自具備 URL 狀態。）
+  - **#6 PWA**：新增 `manifest.json`＋`sw.js`（保守策略：導覽 network-first、同源靜態 stale-while-revalidate、跨源 API 不介入、>5MB 不快取避免撐爆配額）＋錨形 `assets/icons/icon.svg`；由 `theme.js` 全站注入 manifest／圖示／theme-color 並在 https 註冊 SW（file:// 與本機不註冊）。可加到主畫面、離線可查。
+  - **#7 API 韌性**：`assets/js/universalis.js` 的 `getJSON` 加指數退避重試（網路錯誤與 429/5xx，4xx 不重試）；新增 `fmtAge()` 與回傳 `fetched` 時間戳；`gc-exchange` 狀態列顯示「市價查詢於 X 前」、失敗訊息標明已自動重試；market 自動受惠於重試（本就有 relTime 新鮮度顯示）。
+  - **#3 後續調整（同日，續）**：(v) 全站 top 樣式統一——原本並存三種寫法（`nav 列＋hero`、`nav 列＋自有 header`、`.page-header`／`.site-header`／`.page-head`），其中「nav＋hero」那組還把標題印兩次。依使用者指定，**全部改為藏寶圖頁的 `.tool-header` 樣式**（置中大標＋副標＋金色分隔線），新增共用 `assets/css/tool-header.css`，23 頁全數轉換（首頁與 glamour 除外）。原 hero 內的功能元件（幻巧戰剩餘次數、釣魚 ET 時鐘＋進度條、採集紀錄進度條）保留於標題區下方。標題改用 `<h1 class="tool-title">` 保語意；cactpot／wondrous-tails 的大 emoji 圖示併入標題。驗收：23 頁結構檢查全過（各一個 tool-header＋h1＋divider）、追蹤頁功能回歸 48＋12＋12 全過。
+  - **文件飄移修正**：README 釣魚筆數 1104→1449（實際 `fishes.json` count=1449，頁面本就顯示 1449）；本檔工具表 market／treasure-maps 由「規劃中」更正為「完成」（早已上線）。**尚待**：gc-exchange／faux-hollows 仍未列入本檔工具表（實際已上線，見 index.html）；#4 的市場連結可再擴及 minions（小方格版型，建議放進 ⓘ 提示框）。
 
 - **2026-07-20（幻化配裝圖鑑：`job` 職業限制也改由 cjc 推導）**：使用者問「#17 上身的偵察職業是什麼」——那不是 FF14 正式職能名，是投稿者自譯 `スカウト`(Scout)。cjc 103＝ROG NIN VPR＝斥候系防具，只有忍者/劍蛇師能穿。查下去發現 `job` 跟其他欄位一樣是手填的，錯誤同樣多：自創「偵察職業」、把整職能寫成單一職業、只列部分職業（「忍者、劍蛇師」vs「偵察職業」同一 cjc 兩種寫法）、專武填錯職能（月讀太刀填「盾衛職業」，實為暗黑騎士專武）。修法：`build_site.py` 加 `job_from_cjc()`（整職能→群組名／真子集→列具體職業／全戰鬥→全職業／Disciple of Hand-Land→製作-採集），以 `data/xivapi_sets_cache.json` 的 `cjc_names` 為權威，併入 `apply_db_fields()` 建置時重算，`normalize_curated_from_db.py` 同步寫回來源檔（共用同一函式）。實測 47 種 cjc 全部推導正確、精選 104 處 job 校正（#17 上身「偵察職業」→「忍者、劍蛇師」）。前端 `jobCodes()` 用 `、` 拆多職業字串，顯示換法不影響「繁中版可幻化」判定。
 

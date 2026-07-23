@@ -480,6 +480,26 @@ a { color: inherit; text-decoration: none; }
 .src-tag.type-金碟       { background: rgba(255,200,80,0.1);  color: #ffc850;       border-color: rgba(255,200,80,0.2); }
 .src-tag.type-市場板     { background: var(--raise); color: var(--text-secondary); border-color: var(--border); }
 
+/* ── 跨工具連結：查市場行情（收藏卡連到市場查價工具）────────────── */
+.ct-market {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  align-self: flex-start;
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--gold);
+  background: var(--gold-dim);
+  border: 1px solid color-mix(in srgb, var(--gold) 30%, transparent);
+  border-radius: 99px;
+  padding: 1px 9px;
+  transition: var(--transition);
+}
+.ct-market:hover {
+  background: color-mix(in srgb, var(--gold) 22%, transparent);
+  color: var(--gold-light);
+}
+
 /* ── Empty state ────────────────────────────────────────────────── */
 .empty-state {
   text-align: center;

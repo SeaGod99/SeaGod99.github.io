@@ -6,9 +6,11 @@
   <meta name="description" content="FF14 寵物收藏追蹤 — 查詢所有隨從寵物、行為與來源篩選、記錄擁有進度">
   <title>寵物收藏追蹤 | 水神的工具箱</title>
   <link rel="stylesheet" href="../assets/css/common.css">
+  <link rel="stylesheet" href="../assets/css/tool-header.css">
   <style>
     /* 寵物頁專屬樣式；通用版面（header/toolbar/filter/progress/footer）見 assets/css/common.css。
-       本頁為「小方格 + hover 提示框」版型，與通用 .col-* 直式卡片不同，故保留專屬 minion-* 類。 */
+       本頁為「小方格 + hover 提示框」版型，以 gridClass/cardClass 指定 minion-grid/minion-card，
+       控制面其餘由 assets/js/collection-tracker.js 渲染。 */
     :root {
       --accent:   #c8a96e;                 /* 金（外框強調）*/
       --accent-2: #e2c98a;                 /* 進度條尾色：淺金 */
@@ -151,6 +153,7 @@
     }
   </style>
   <script src="../assets/js/patch-gate.js"></script>
+  <script src="../assets/js/collection-tracker.js"></script>
   <link rel="stylesheet" href="../assets/css/theme.css">
   <script src="../assets/js/theme.js"></script>
 </head>
@@ -159,78 +162,14 @@
 <div class="container">
 
   <!-- Header -->
-  <header class="page-header">
-    <a href="../" class="back-btn">← 水神的工具箱</a>
-    <div class="page-title-wrap">
-      <h1 class="page-title">🐣 寵物收藏追蹤</h1>
-      <p class="page-subtitle">點擊寵物卡片標記已擁有，進度自動儲存於瀏覽器</p>
-    </div>
-  </header>
-
-  <!-- Progress -->
-  <div class="progress-bar-wrap">
-    <div class="progress-info">
-      <span id="ownedCount">0</span> / <span id="totalCount">0</span>
-      <span>已擁有</span>
-    </div>
-    <div class="progress-track">
-      <div class="progress-fill" id="progressFill" style="width:0%"></div>
-    </div>
-    <div class="progress-pct" id="progressPct">0%</div>
+  <div class="tool-header">
+    <h1 class="tool-title">🐣 寵物收藏追蹤</h1>
+    <p class="tool-subtitle">點擊寵物卡片標記已擁有，進度自動儲存於瀏覽器</p>
+    <div class="header-divider"></div>
   </div>
 
-  <!-- Toolbar -->
-  <div class="toolbar">
-    <div class="search-wrap">
-      <span class="search-icon">🔍</span>
-      <input class="search-input" type="text" id="searchInput" placeholder="搜尋寵物名稱（中／英文）…" autocomplete="off">
-    </div>
-    <div class="own-toggle">
-      <button class="own-btn active" data-own="all">全部</button>
-      <button class="own-btn" data-own="owned">已擁有</button>
-      <button class="own-btn" data-own="missing">未擁有</button>
-    </div>
-    <select class="sort-select" id="sortSelect" title="排序方式">
-      <option value="default">預設排序</option>
-      <option value="patch-desc">版本新→舊</option>
-      <option value="patch-asc">版本舊→新</option>
-      <option value="name">依名稱</option>
-    </select>
-    <button class="icon-btn" id="markAllBtn" title="將目前篩選結果全部標記為已擁有">✓ 標記全部</button>
-    <button class="icon-btn" id="unmarkAllBtn" title="取消目前篩選結果的已擁有標記">✗ 取消全部</button>
-    <button class="icon-btn" id="exportBtn">匯出進度</button>
-    <button class="icon-btn" id="importBtn">匯入進度</button>
-    <input type="file" id="importFile" accept="application/json" style="display:none">
-    <button class="icon-btn danger" id="clearBtn">清除進度</button>
-  </div>
-
-  <!-- Behavior filter -->
-  <div class="filter-section">
-    <div class="filter-label">行為篩選</div>
-    <div class="filter-tags" id="behaviorFilters"></div>
-  </div>
-
-  <!-- Source type filter -->
-  <div class="filter-section">
-    <div class="filter-label">來源篩選</div>
-    <div class="filter-tags" id="sourceFilters"></div>
-  </div>
-
-  <!-- Patch filter -->
-  <div class="filter-section">
-    <div class="filter-label">版本</div>
-    <div class="filter-tags" id="patchFilters"></div>
-  </div>
-
-  <!-- Result meta -->
-  <div class="result-meta" id="resultMeta"></div>
-
-  <!-- Grid -->
-  <div class="minion-grid" id="minionGrid"></div>
-
-  <div class="empty-state" id="emptyState" style="display:none">
-    找不到符合條件的寵物
-  </div>
+  <!-- 控制面（進度／工具列／篩選／格線）由 collection-tracker.js 渲染 -->
+  <div id="ct-root"></div>
 
 </div>
 
@@ -254,439 +193,121 @@
 </div>
 
 <script>
-(function() {
-  const STORAGE_KEY = 'ffxiv_minions_owned';
-  const DATA_URL = '../data/minions.json';
+(function () {
+  var esc = CollectionTracker.esc;
+  var $ = function (id) { return document.getElementById(id); };
 
-  // 行為英→中對照
-  const BEHAVIOR_LABELS = {
-    'Independent': '獨立行動',
-    'Obedient':    '聽從指令',
-    'Stationary':  '靜止不動',
-  };
-  const BEHAVIORS = ['Independent', 'Obedient', 'Stationary'];
+  var BEHAVIOR_LABELS = { 'Independent': '獨立行動', 'Obedient': '聽從指令', 'Stationary': '靜止不動' };
+  var BEHAVIORS = ['Independent', 'Obedient', 'Stationary'];
 
-  // ── State ──
-  let MINION_DATA = [];
-  let SOURCE_TYPES = [];
-  let PATCHES = [];
-  let owned = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
-  let filterOwn = 'all';       // all | owned | missing
-  let filterBehavior = null;   // string | null
-  let filterSource = null;     // string | null  ('__none__' = 待補充)
-  let filterPatch = null;      // string | null
-  let searchQ = '';
-  let sortBy = 'default';      // default | patch-desc | patch-asc | name
-
-  // ── Patch bands ──
-  const PATCH_BANDS = [
-    { label: '2.x 原初之地',   min: '2.0', max: '2.9' },
-    { label: '3.x 蒼天之禁地', min: '3.0', max: '3.9' },
-    { label: '4.x 紅蓮之狂潮', min: '4.0', max: '4.9' },
-    { label: '5.x 暗影之逆焰', min: '5.0', max: '5.9' },
-    { label: '6.x 曉月之終途', min: '6.0', max: '6.9' },
-    { label: '7.x 金曦之遺輝', min: '7.0', max: '7.9' },
-  ];
-
-  const $ = id => document.getElementById(id);
-
-  // ── Save ──
-  function save() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify([...owned]));
-  }
-
-  // ── Toggle ──
-  function toggle(id) {
-    if (owned.has(id)) owned.delete(id);
-    else owned.add(id);
-    save();
-    updateProgress();
-    renderGrid();
-  }
-
-  // ── Progress ──
-  function updateProgress() {
-    const total = MINION_DATA.length;
-    const count = MINION_DATA.filter(m => owned.has(m.id)).length;
-    const pct = total ? Math.round(count / total * 100) : 0;
-    $('ownedCount').textContent = count;
-    $('totalCount').textContent = total;
-    $('progressFill').style.width = pct + '%';
-    $('progressPct').textContent = pct + '%';
-    try { localStorage.setItem('ffxiv_snap_minions', JSON.stringify({ c: count, t: total })); } catch (e) {} // 首頁進度儀表板快照
-  }
-
-  // ── Render behavior filters ──
-  function renderBehaviorFilters() {
-    const wrap = $('behaviorFilters');
-    wrap.innerHTML = '';
-    BEHAVIORS.forEach(b => {
-      if (!MINION_DATA.some(m => m.behavior === b)) return;
-      const btn = document.createElement('button');
-      btn.className = 'filter-tag' + (filterBehavior === b ? ' active' : '');
-      btn.textContent = BEHAVIOR_LABELS[b] || b;
-      btn.addEventListener('click', () => {
-        filterBehavior = filterBehavior === b ? null : b;
-        renderBehaviorFilters();
-        renderGrid();
-      });
-      wrap.appendChild(btn);
-    });
-  }
-
-  // ── Render source filters ──
-  function renderSourceFilters() {
-    const wrap = $('sourceFilters');
-    wrap.innerHTML = '';
-    SOURCE_TYPES.forEach(type => {
-      const btn = document.createElement('button');
-      btn.className = 'filter-tag' + (filterSource === type ? ' active' : '');
-      btn.textContent = type;
-      btn.addEventListener('click', () => {
-        filterSource = filterSource === type ? null : type;
-        renderSourceFilters();
-        renderGrid();
-      });
-      wrap.appendChild(btn);
-    });
-
-    // 待補充（sources 為空陣列）
-    const noneBtn = document.createElement('button');
-    noneBtn.className = 'filter-tag' + (filterSource === '__none__' ? ' active' : '');
-    noneBtn.textContent = '待補充';
-    noneBtn.addEventListener('click', () => {
-      filterSource = filterSource === '__none__' ? null : '__none__';
-      renderSourceFilters();
-      renderGrid();
-    });
-    wrap.appendChild(noneBtn);
-  }
-
-  // ── Render patch filters ──
-  function renderPatchFilters() {
-    const wrap = $('patchFilters');
-    wrap.innerHTML = '';
-    PATCHES.forEach(p => {
-      const btn = document.createElement('button');
-      btn.className = 'filter-tag' + (filterPatch === p.label ? ' active' : '');
-      btn.textContent = p.label;
-      btn.addEventListener('click', () => {
-        filterPatch = filterPatch === p.label ? null : p.label;
-        renderPatchFilters();
-        renderGrid();
-      });
-      wrap.appendChild(btn);
-    });
-  }
-
-  // ── Filter minions ──
-  function filtered() {
-    return MINION_DATA.filter(m => {
-      // ownership
-      if (filterOwn === 'owned'   && !owned.has(m.id)) return false;
-      if (filterOwn === 'missing' &&  owned.has(m.id)) return false;
-
-      // behavior
-      if (filterBehavior && m.behavior !== filterBehavior) return false;
-
-      // source
-      if (filterSource === '__none__') {
-        if (m.sources.length > 0) return false;
-      } else if (filterSource) {
-        if (!m.sources.some(s => s.type === filterSource)) return false;
-      }
-
-      // patch
-      if (filterPatch) {
-        const band = PATCH_BANDS.find(p => p.label === filterPatch);
-        if (band) {
-          if (!m.patch || m.patch < band.min || m.patch > band.max) return false;
-        }
-      }
-
-      // search（中英文、不分大小寫）
-      if (searchQ) {
-        const q = searchQ.toLowerCase();
-        const nameMatch = m.name && m.name.toLowerCase().includes(q);
-        const enMatch = m.nameEn && m.nameEn.toLowerCase().includes(q);
-        if (!nameMatch && !enMatch) return false;
-      }
-
-      return true;
-    });
-  }
-
-  // ── Sort ──
-  function sortList(list) {
-    if (sortBy === 'default') return list;
-    const arr = [...list];
-    const pv = p => parseFloat(p) || 0;
-    if (sortBy === 'name') arr.sort((a, b) => a.name.localeCompare(b.name, 'zh-Hant'));
-    else if (sortBy === 'patch-asc') arr.sort((a, b) => pv(a.patch) - pv(b.patch));
-    else if (sortBy === 'patch-desc') arr.sort((a, b) => pv(b.patch) - pv(a.patch));
-    return arr;
-  }
-
-  // ── Render grid ──
-  function renderGrid() {
-    const list = sortList(filtered());
-    const grid = $('minionGrid');
-    const empty = $('emptyState');
-    const meta = $('resultMeta');
-
-    grid.innerHTML = '';
-    if (list.length === 0) {
-      grid.style.display = 'none';
-      empty.style.display = '';
-    } else {
-      grid.style.display = '';
-      empty.style.display = 'none';
-    }
-
-    const ownedInView = list.filter(m => owned.has(m.id)).length;
-    meta.innerHTML = `顯示 <em>${list.length}</em> / ${MINION_DATA.length} 隻 · 已擁有 <em>${ownedInView}</em> / ${list.length}`;
-
-    const frag = document.createDocumentFragment();
-    list.forEach(m => {
-      const isOwned = owned.has(m.id);
-      const card = document.createElement('div');
-      card.className = 'minion-card' + (isOwned ? ' owned' : '');
-      card.dataset.id = m.id;
-
-      const srcTypes = [...new Set((m.sources || []).map(s => s.type))];
-      const srcInline = srcTypes.length
-        ? `<div class="minion-src" title="${srcTypes.join(' · ')}">${srcTypes.join(' · ')}</div>`
-        : `<div class="minion-src none">取得方式待補充</div>`;
-
-      card.innerHTML = `
-        <div class="minion-icon-wrap">
-          <img class="minion-icon" src="${m.icon}" alt="${m.name}" loading="lazy" decoding="async"
-               onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2248%22 height=%2248%22><rect fill=%22%23ffffff08%22 width=%2248%22 height=%2248%22 rx=%226%22/></svg>'">
-          <div class="check-badge">✓</div>
-          <button class="minion-info" type="button" aria-label="取得方式" title="取得方式">i</button>
-        </div>
-        <div class="minion-name">${m.name}</div>
-        ${srcInline}
-      `;
-
-      card.tabIndex = 0;
-      card.setAttribute('role', 'button');
-      card.setAttribute('aria-pressed', isOwned);
-      card.addEventListener('click', () => toggle(m.id));
-      card.addEventListener('keydown', ev => {
-        if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); toggle(m.id); }
-      });
-      card.querySelector('.minion-info').addEventListener('click', e => {
-        e.stopPropagation();                         // 不觸發整卡的「擁有」切換
-        if (pinnedCard === card) { unpinTooltip(); }
-        else { pinTooltip(m, card); }
-      });
-      card.addEventListener('mouseenter', e => showTooltip(e, m));
-      card.addEventListener('mouseleave', hideTooltip);
-      card.addEventListener('mousemove', moveTooltip);
-
-      frag.appendChild(card);
-    });
-    grid.appendChild(frag);
-  }
-
-  // ── Tooltip ──
-  // pinnedCard：以 ⓘ 釘住的卡片（觸控/點擊用，不靠 hover）。釘住時 hover 不覆蓋。
-  let pinnedCard = null;
-
+  // ── Tooltip（hover 顯示；ⓘ 釘住，觸控/點擊用）──
+  var pinnedCard = null;
   function fillTooltip(m) {
     $('ttName').textContent = m.name;
-    $('ttMeta').textContent = `行為：${BEHAVIOR_LABELS[m.behavior] || m.behavior}　版本：${m.patch}`;
-    const srcWrap = $('ttSources');
+    $('ttMeta').textContent = '行為：' + (BEHAVIOR_LABELS[m.behavior] || m.behavior) + '　版本：' + m.patch;
+    var srcWrap = $('ttSources');
     if (m.sources && m.sources.length > 0) {
-      srcWrap.innerHTML = m.sources.map(s =>
-        `<span class="tt-source">${s.type}${s.detail ? '：' + s.detail : ''}</span>`
-      ).join('');
+      srcWrap.innerHTML = m.sources.map(function (s) {
+        return '<span class="tt-source">' + esc(s.type) + (s.detail ? '：' + esc(s.detail) : '') + '</span>';
+      }).join('');
     } else {
-      srcWrap.innerHTML = `<div class="tt-placeholder">取得方式：待補充</div>`;
+      srcWrap.innerHTML = '<div class="tt-placeholder">取得方式：待補充</div>';
     }
   }
-  function showTooltip(e, m) {
-    if (pinnedCard) return;              // 已釘住時不被 hover 蓋過
-    fillTooltip(m);
-    $('tooltip').classList.add('show');
-    moveTooltip(e);
-  }
-  function hideTooltip() {
-    if (pinnedCard) return;
-    $('tooltip').classList.remove('show');
-  }
+  function showTooltip(e, m) { if (pinnedCard) return; fillTooltip(m); $('tooltip').classList.add('show'); moveTooltip(e); }
+  function hideTooltip() { if (pinnedCard) return; $('tooltip').classList.remove('show'); }
   function moveTooltip(e) {
     if (pinnedCard) return;
-    const tt = $('tooltip');
-    const x = e.clientX + 14;
-    const y = e.clientY + 14;
-    const w = tt.offsetWidth;
-    const h = tt.offsetHeight;
-    tt.style.left = (x + w > window.innerWidth  ? x - w - 20 : x) + 'px';
-    tt.style.top  = (y + h > window.innerHeight ? y - h - 20 : y) + 'px';
+    var tt = $('tooltip');
+    var x = e.clientX + 14, y = e.clientY + 14, w = tt.offsetWidth, h = tt.offsetHeight;
+    tt.style.left = (x + w > window.innerWidth ? x - w - 20 : x) + 'px';
+    tt.style.top = (y + h > window.innerHeight ? y - h - 20 : y) + 'px';
   }
   function pinTooltip(m, card) {
     fillTooltip(m);
-    const tt = $('tooltip');
+    var tt = $('tooltip');
     pinnedCard = card;
     tt.classList.add('show', 'pinned');
-    const r = card.getBoundingClientRect();
-    const w = tt.offsetWidth, h = tt.offsetHeight;
-    let x = r.left;
-    let y = r.bottom + 6;
-    if (x + w > window.innerWidth)  x = window.innerWidth - w - 8;
-    if (y + h > window.innerHeight) y = r.top - h - 6;       // 翻到上方
+    var r = card.getBoundingClientRect(), w = tt.offsetWidth, h = tt.offsetHeight;
+    var x = r.left, y = r.bottom + 6;
+    if (x + w > window.innerWidth) x = window.innerWidth - w - 8;
+    if (y + h > window.innerHeight) y = r.top - h - 6;
     tt.style.left = Math.max(8, x) + 'px';
-    tt.style.top  = Math.max(8, y) + 'px';
+    tt.style.top = Math.max(8, y) + 'px';
   }
-  function unpinTooltip() {
-    pinnedCard = null;
-    $('tooltip').classList.remove('show', 'pinned');
-  }
-  // 點擊釘住內容以外處 / 按 Esc → 取消釘住
-  document.addEventListener('click', e => {
+  function unpinTooltip() { pinnedCard = null; $('tooltip').classList.remove('show', 'pinned'); }
+  document.addEventListener('click', function (e) {
     if (pinnedCard && !e.target.closest('#tooltip') && !e.target.closest('.minion-info')) unpinTooltip();
   });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape' && pinnedCard) unpinTooltip(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && pinnedCard) unpinTooltip(); });
 
-  // ── Own-toggle buttons ──
-  document.querySelectorAll('.own-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      filterOwn = btn.dataset.own;
-      document.querySelectorAll('.own-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      renderGrid();
-    });
-  });
-
-  // ── Search ──
-  $('searchInput').addEventListener('input', e => {
-    searchQ = e.target.value.trim();
-    renderGrid();
-  });
-
-  // ── Export ──
-  function exportProgress() {
-    const payload = {
-      schema: 'minions_owned',
-      exported: new Date().toISOString(),
-      owned: [...owned],
-    };
-    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'minions_owned.json';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  }
-  $('exportBtn').addEventListener('click', exportProgress);
-
-  // ── Clear ──
-  $('clearBtn').addEventListener('click', () => {
-    if (!owned.size) { alert('目前沒有已擁有記錄'); return; }
-    if (!confirm('確定要清除全部 ' + owned.size + ' 筆擁有記錄嗎？\n將先自動下載一份備份檔以防誤刪。')) return;
-    exportProgress();
-    owned.clear();
-    save();
-    updateProgress();
-    renderGrid();
-  });
-
-  // ── Sort / Batch mark ──
-  $('sortSelect').addEventListener('change', e => {
-    sortBy = e.target.value;
-    renderGrid();
-  });
-  $('markAllBtn').addEventListener('click', () => {
-    const toAdd = filtered().filter(m => !owned.has(m.id));
-    if (!toAdd.length) { alert('目前篩選結果都已標記'); return; }
-    if (!confirm('將目前篩選結果中未標記的 ' + toAdd.length + ' 筆標記為已擁有？')) return;
-    toAdd.forEach(m => owned.add(m.id));
-    save(); updateProgress(); renderGrid();
-  });
-  $('unmarkAllBtn').addEventListener('click', () => {
-    const toDel = filtered().filter(m => owned.has(m.id));
-    if (!toDel.length) { alert('目前篩選結果沒有已標記項目'); return; }
-    if (!confirm('取消目前篩選結果中 ' + toDel.length + ' 筆的已擁有標記？')) return;
-    toDel.forEach(m => owned.delete(m.id));
-    save(); updateProgress(); renderGrid();
-  });
-
-  // ── Import ──
-  $('importBtn').addEventListener('click', () => $('importFile').click());
-  $('importFile').addEventListener('change', e => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = ev => {
-      try {
-        const data = JSON.parse(ev.target.result);
-        // 舊版備份為純陣列；新版物件需驗 schema，避免誤將其他頁的進度檔匯入
-        if (!Array.isArray(data) && data.schema !== 'minions_owned') {
-          alert('匯入失敗：這不是「寵物收藏」的進度檔');
-          $('importFile').value = '';
-          return;
+  CollectionTracker.init({
+    dataUrl: '../data/minions.json',
+    metaUrl: '../data/_meta.json',
+    storageKey: 'ffxiv_minions_owned',
+    snapKey: 'minions',
+    fileBase: 'minions_owned',
+    schema: 'minions_owned',
+    verb: '擁有',
+    unit: '隻',
+    noun: '寵物',
+    gridClass: 'minion-grid',
+    cardClass: 'minion-card',
+    searchPlaceholder: '搜尋寵物名稱（中／英文）、取得方式…',
+    // 沿用既有進度：owned 存純數字 id
+    keyOf: function (m) { return m.id; },
+    include: function (m, gp) { return m.name && m.name.trim() !== '' && PatchGate.released(m.patch, gp); },
+    sorts: ['patch-desc', 'patch-asc', 'name'],
+    filters: [
+      {
+        id: 'behavior', label: '行為篩選',
+        options: function (list) {
+          return BEHAVIORS.filter(function (b) { return list.some(function (m) { return m.behavior === b; }); })
+            .map(function (b) { return { value: b, label: BEHAVIOR_LABELS[b] || b }; });
+        },
+        match: function (m, v) { return m.behavior === v; }
+      },
+      {
+        id: 'source', label: '來源篩選',
+        options: function (list) {
+          var set = new Set();
+          list.forEach(function (m) { (m.sources || []).forEach(function (s) { if (s.type) set.add(s.type); }); });
+          return Array.from(set).sort().map(function (t) { return { value: t, label: t }; })
+            .concat([{ value: '__none__', label: '待補充' }]);
+        },
+        match: function (m, v) {
+          var srcs = m.sources || [];
+          return v === '__none__' ? srcs.length === 0 : srcs.some(function (s) { return s.type === v; });
         }
-        const list = Array.isArray(data) ? data : data.owned;
-        if (!Array.isArray(list)) throw new Error('格式錯誤');
-        if (owned.size && !confirm(`匯入將以檔案內容（${list.length} 筆）取代目前的 ${owned.size} 筆記錄，確定嗎？`)) {
-          $('importFile').value = '';
-          return;
-        }
-        owned = new Set(list.map(Number));
-        save();
-        updateProgress();
-        renderGrid();
-        alert(`已匯入 ${owned.size} 筆擁有記錄`);
-      } catch (err) {
-        alert('匯入失敗：檔案格式不正確');
-      }
-      $('importFile').value = '';
-    };
-    reader.readAsText(file);
-  });
-
-  // ── Load data ──
-  async function loadData() {
-    try {
-      const res = await fetch(DATA_URL);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const json = await res.json();
-      const gp = await PatchGate.loadGamePatch('../data/_meta.json');
-
-      // 過濾掉名稱為空、或台服未開放（patch > gamePatch）的項目
-      MINION_DATA = (json.data || []).filter(m => m.name && m.name.trim() !== '' && PatchGate.released(m.patch, gp));
-
-      // 收集來源類型
-      const types = new Set();
-      MINION_DATA.forEach(m => (m.sources || []).forEach(s => types.add(s.type)));
-      SOURCE_TYPES = [...types].sort();
-
-      // 版本清單（只顯示資料中實際出現的版本區間）
-      const patchSet = new Set(MINION_DATA.map(m => m.patch).filter(Boolean));
-      PATCHES = PATCH_BANDS.filter(band =>
-        [...patchSet].some(p => p >= band.min && p <= band.max)
-      );
-
-      renderBehaviorFilters();
-      renderSourceFilters();
-      renderPatchFilters();
-      updateProgress();
-      renderGrid();
-    } catch (err) {
-      console.error('載入寵物資料失敗', err);
-      $('minionGrid').style.display = 'none';
-      const empty = $('emptyState');
-      empty.style.display = '';
-      empty.textContent = '資料載入失敗，請重新整理頁面。';
+      },
+      { kind: 'patch' }
+    ],
+    card: function (m) {
+      var srcTypes = Array.from(new Set((m.sources || []).map(function (s) { return s.type; })));
+      var srcInline = srcTypes.length
+        ? '<div class="minion-src" title="' + esc(srcTypes.join(' · ')) + '">' + esc(srcTypes.join(' · ')) + '</div>'
+        : '<div class="minion-src none">取得方式待補充</div>';
+      return '' +
+        '<div class="minion-icon-wrap">' +
+          '<img class="minion-icon" src="' + esc(m.icon) + '" alt="' + esc(m.name) + '" loading="lazy" decoding="async"' +
+            ' onerror="this.src=\'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2248%22 height=%2248%22><rect fill=%22%23ffffff08%22 width=%2248%22 height=%2248%22 rx=%226%22/></svg>\'">' +
+          '<div class="check-badge">✓</div>' +
+          '<button class="minion-info" type="button" aria-label="取得方式" title="取得方式">i</button>' +
+        '</div>' +
+        '<div class="minion-name">' + esc(m.name) + '</div>' +
+        srcInline;
+    },
+    onCardCreate: function (m, card) {
+      var info = card.querySelector('.minion-info');
+      if (info) info.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (pinnedCard === card) unpinTooltip(); else pinTooltip(m, card);
+      });
+      card.addEventListener('mouseenter', function (e) { showTooltip(e, m); });
+      card.addEventListener('mouseleave', hideTooltip);
+      card.addEventListener('mousemove', moveTooltip);
     }
-  }
-
-  loadData();
+  });
 })();
 </script>
 </body>

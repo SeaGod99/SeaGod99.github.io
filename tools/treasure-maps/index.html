@@ -6,6 +6,7 @@
   <meta name="description" content="FFXIV 藏寶圖採集點查詢 — 陳舊的地圖 G1～G17 各等級的挖寶位置，地圖標點＋座標一覽，對照解讀後的藏寶圖找出挖掘地點">
   <meta name="keywords" content="FFXIV, FF14, 藏寶圖, 陳舊的地圖, 挖寶, 尋寶, 採集點, 座標, G8, G17, 繁體中文">
   <title>藏寶圖採集點查詢 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/tool-header.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -57,10 +58,7 @@
     .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-secondary); font-size:14px; margin:24px 0; transition:var(--transition);}
     .back-link:hover { color: var(--gold); }
 
-    .tool-header { text-align:center; padding: 12px 0 20px; }
-    .tool-title { font-size: 26px; font-weight:700; color: var(--gold-light); }
-    .tool-subtitle { font-size: 14px; color: var(--text-secondary); margin-top:6px; }
-    .header-divider { width:60px; height:1px; background:linear-gradient(90deg,transparent,var(--gold),transparent); margin:16px auto 0;}
+    /* .tool-header / .tool-title / .tool-subtitle / .header-divider 見 assets/css/tool-header.css（全站共用） */
 
     /* ── grade selector ── */
     .grade-panel { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md); padding:16px 18px; margin-bottom:18px; }
@@ -109,7 +107,7 @@
     .back-btn:hover { border-color:var(--border-hover); color:var(--text-primary); }
     .zone-detail { grid-column:1/-1; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:16px; align-items:start; }
     @media (max-width:900px) { .zone-detail { grid-template-columns:1fr; } }
-    .zone-detail .map-side { position:sticky; top:12px; }
+    .zone-detail .map-side { position:sticky; top:58px; }
     .zone-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md); overflow:hidden; }
     .zone-head { display:flex; align-items:baseline; gap:8px; padding:12px 14px 10px; }
     .zone-name { font-size:16px; font-weight:600; color:var(--text-primary); }
@@ -198,10 +196,9 @@
 </head>
 <body>
 <div class="container">
-  <a href="../../" class="back-link">← 水神的工具箱</a>
 
   <div class="tool-header">
-    <div class="tool-title">🗺️ 藏寶圖採集點查詢</div>
+    <h1 class="tool-title">🗺️ 藏寶圖採集點查詢</h1>
     <p class="tool-subtitle">陳舊的地圖 G1～G17 各等級的挖寶位置，對照解讀後的藏寶圖找出挖掘地點</p>
     <div class="header-divider"></div>
   </div>

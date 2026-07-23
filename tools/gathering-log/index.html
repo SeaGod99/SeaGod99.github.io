@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="FF14 採集紀錄追蹤 — 查詢採礦工/園藝工採集點、座標、限時開放時間，追蹤已採紀錄">
   <title>採集紀錄追蹤 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/tool-header.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -168,15 +169,14 @@
   <script src="../../assets/js/theme.js"></script>
 </head>
 <body>
-<nav class="nav">
-  <a href="../../" class="nav-back">&larr; 水神的工具箱</a>
-  <span class="nav-sep">›</span>
-  <span class="nav-title">⛏️ 採集紀錄追蹤</span>
-</nav>
+<div class="tool-header">
+  <h1 class="tool-title">⛏️ 採集紀錄追蹤</h1>
+  <p class="tool-subtitle">採礦工／園藝工採集節點一覽，勾選追蹤已採物品進度</p>
+  <div class="header-divider"></div>
+</div>
 
 <div class="hero">
   <div class="hero-inner">
-    <h1>⛏️ 採集紀錄追蹤</h1>
     <div class="progress-wrap">
       <div class="progress-text" id="progressText">載入中…</div>
       <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>

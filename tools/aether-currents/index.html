@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="FF14 風脈泉追蹤器 — 依地區分組查詢，任務型標示完成任務，追蹤解鎖進度">
   <title>風脈泉追蹤器 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/tool-header.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -44,7 +45,7 @@
     /* 一區一地圖：地圖與清單並排，地圖 sticky 跟著捲動 */
     .zone-content { display: grid; grid-template-columns: minmax(280px, 420px) minmax(0, 1fr); gap: 4px 28px; align-items: start; }
     .zone-content.no-map { grid-template-columns: 1fr; }
-    .zc-map { position: sticky; top: 12px; }
+    .zc-map { position: sticky; top: 58px; }
     .zc-list { min-width: 0; }
     @media (max-width: 920px) {
       .zone-content { grid-template-columns: 1fr; }
@@ -493,13 +494,11 @@
 
 <div class="container">
 
-  <header class="page-header">
-    <a href="../../" class="back-btn">&larr; 水神的工具箱</a>
-    <div class="page-title-wrap">
-      <h1 class="page-title">&#x1F32C;&#xFE0F; 風脈泉追蹤器</h1>
-      <p class="page-subtitle">點擊項目標記已解鎖，進度自動儲存於瀏覽器</p>
-    </div>
-  </header>
+  <div class="tool-header">
+    <h1 class="tool-title">&#x1F32C;&#xFE0F; 風脈泉追蹤器</h1>
+    <p class="tool-subtitle">點擊項目標記已解鎖，進度自動儲存於瀏覽器</p>
+    <div class="header-divider"></div>
+  </div>
 
   <div class="progress-bar-wrap">
     <div class="progress-info">

@@ -70,6 +70,8 @@
     return out;
   }
 
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+
   function uniqIds(ids) {
     var seen = {}, out = [];
     (ids || []).forEach(function (id) {
@@ -79,10 +81,27 @@
     return out;
   }
 
+  // 帶重試的 GET。網路錯誤或暫時性狀態（429／5xx）以指數退避重試，
+  // 最多 RETRIES 次；4xx（除 429）視為永久錯誤，直接丟出不重試。
+  var RETRIES = 2;          // 首次之外再試 2 次（共 3 次）
+  var BACKOFF_MS = 600;     // 600ms → 1200ms
   async function getJSON(url) {
-    var res = await fetch(url, { headers: { 'Accept': 'application/json' } });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    return res.json();
+    var lastErr = null;
+    for (var attempt = 0; attempt <= RETRIES; attempt++) {
+      if (attempt) await sleep(BACKOFF_MS * attempt);
+      try {
+        var res = await fetch(url, { headers: { 'Accept': 'application/json' } });
+        if (res.ok) return res.json();
+        // 4xx（非 429）為永久錯誤，重試無意義
+        if (res.status >= 400 && res.status < 500 && res.status !== 429) {
+          throw new Error('HTTP ' + res.status);
+        }
+        lastErr = new Error('HTTP ' + res.status); // 429／5xx → 續試
+      } catch (e) {
+        lastErr = e; // 網路層錯誤（離線／逾時／CORS）→ 續試
+      }
+    }
+    throw lastErr || new Error('fetch failed');
   }
 
   // 把單筆或多筆回應統一成 { '5057': {...}, '5056': {...} }
@@ -131,7 +150,7 @@
         });
         if (json && json.lastUploadTime > lastUpload) lastUpload = json.lastUploadTime;
       }
-      var out = { items: merged, lastUploadTime: lastUpload };
+      var out = { items: merged, lastUploadTime: lastUpload, fetched: Date.now() };
       cacheSet(key, out);
       return out;
     } catch (e) {
@@ -158,7 +177,7 @@
         var map = normItems(json, groups[g]);
         Object.keys(map).forEach(function (id) { merged[id] = map[id]; });
       }
-      var out = { items: merged };
+      var out = { items: merged, fetched: Date.now() };
       cacheSet(key, out);
       return out;
     } catch (e) {
@@ -187,6 +206,20 @@
     return Math.round(n).toLocaleString('en-US');
   }
 
+  // 把 Universalis 的 lastUploadTime（毫秒 epoch）轉成「X 前」相對時間，
+  // 供頁面標示市價新鮮度。傳入 0／null 回傳「無上傳紀錄」。
+  function fmtAge(uploadMs) {
+    if (!uploadMs || !Number.isFinite(uploadMs)) return '無上傳紀錄';
+    var sec = Math.max(0, Math.floor((Date.now() - uploadMs) / 1000));
+    if (sec < 60) return '剛剛';
+    var min = Math.floor(sec / 60);
+    if (min < 60) return min + ' 分鐘前';
+    var hr = Math.floor(min / 60);
+    if (hr < 24) return hr + ' 小時前';
+    var day = Math.floor(hr / 24);
+    return day + ' 天前';
+  }
+
   window.Universalis = {
     DC: DC,
     WORLDS: WORLDS,
@@ -195,6 +228,7 @@
     minPrice: minPrice,
     worldName: worldName,
     fmtGil: fmtGil,
+    fmtAge: fmtAge,
     clearCache: clearCache
   };
 })();

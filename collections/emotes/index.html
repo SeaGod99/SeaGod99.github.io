@@ -6,8 +6,10 @@
   <meta name="description" content="FF14 表情收藏追蹤 — 指令搜尋、版本篩選、記錄已解鎖進度">
   <title>表情收藏追蹤 | 水神的工具箱</title>
   <link rel="stylesheet" href="../../assets/css/common.css">
+  <link rel="stylesheet" href="../../assets/css/tool-header.css">
   <style>
-    /* 表情頁專屬樣式；通用版面與 .col-* 卡片系統見 assets/css/common.css */
+    /* 表情頁專屬樣式；通用版面與 .col-* 卡片系統見 assets/css/common.css，
+       控制面由 assets/js/collection-tracker.js 渲染 */
     :root {
       --accent:   #c8a96e;                 /* 金 */
       --accent-2: #a78bfa;                 /* 進度條尾色：紫 */
@@ -38,6 +40,7 @@
     @media (max-width: 380px) { .col-grid { grid-template-columns: repeat(2, 1fr); } }
   </style>
   <script src="../../assets/js/patch-gate.js"></script>
+  <script src="../../assets/js/collection-tracker.js"></script>
   <link rel="stylesheet" href="../../assets/css/theme.css">
   <script src="../../assets/js/theme.js"></script>
 </head>
@@ -46,73 +49,14 @@
 <div class="container">
 
   <!-- Header -->
-  <header class="page-header">
-    <a href="../../" class="back-btn">← 水神的工具箱</a>
-    <div class="page-title-wrap">
-      <h1 class="page-title">表情收藏追蹤</h1>
-      <p class="page-subtitle">點擊卡片標記已解鎖，進度自動儲存於瀏覽器</p>
-    </div>
-  </header>
-
-  <!-- Progress -->
-  <div class="progress-bar-wrap">
-    <div class="progress-info">
-      <span id="ownedCount">0</span> / <span id="totalCount">0</span>
-      <span>已解鎖</span>
-    </div>
-    <div class="progress-track">
-      <div class="progress-fill" id="progressFill" style="width:0%"></div>
-    </div>
-    <div class="progress-pct" id="progressPct">0%</div>
+  <div class="tool-header">
+    <h1 class="tool-title">表情收藏追蹤</h1>
+    <p class="tool-subtitle">點擊卡片標記已解鎖，進度自動儲存於瀏覽器（預設表情恆為已解鎖）</p>
+    <div class="header-divider"></div>
   </div>
 
-  <!-- Toolbar -->
-  <div class="toolbar">
-    <div class="search-wrap">
-      <span class="search-icon">🔍</span>
-      <input class="search-input" type="text" id="searchInput" placeholder="搜尋表情名稱或指令…" autocomplete="off">
-    </div>
-    <div class="own-toggle">
-      <button class="own-btn active" data-own="all">全部</button>
-      <button class="own-btn" data-own="owned">已解鎖</button>
-      <button class="own-btn" data-own="missing">未解鎖</button>
-    </div>
-    <select class="sort-select" id="sortSelect" title="排序方式">
-      <option value="default">預設排序</option>
-      <option value="patch-desc">版本新→舊</option>
-      <option value="patch-asc">版本舊→新</option>
-      <option value="name">依名稱</option>
-    </select>
-    <button class="icon-btn" id="markAllBtn" title="將目前篩選結果全部標記為已解鎖">✓ 標記全部</button>
-    <button class="icon-btn" id="unmarkAllBtn" title="取消目前篩選結果的已解鎖標記">✗ 取消全部</button>
-    <button class="icon-btn" id="exportBtn">匯出進度</button>
-    <button class="icon-btn" id="importBtn">匯入進度</button>
-    <input type="file" id="importFile" accept="application/json" style="display:none">
-    <button class="icon-btn clear-btn" id="clearBtn">清除進度</button>
-  </div>
-
-
-  <!-- 遊戲內分頁（表情視窗：一般／特殊／情感表現） -->
-  <div class="filter-section">
-    <div class="filter-label">遊戲內分頁</div>
-    <div class="filter-tags" id="categoryFilters"></div>
-  </div>
-
-  <!-- Source filter -->
-  <div class="filter-section" id="sourceFilterSection" style="display:none">
-    <div class="filter-label">取得來源</div>
-    <div class="filter-tags" id="sourceFilters"></div>
-  </div>
-
-  <!-- Result meta -->
-  <div class="result-meta" id="resultMeta"></div>
-
-  <!-- Grid -->
-  <div class="col-grid" id="emGrid"></div>
-
-  <div class="empty-state" id="emptyState" style="display:none">
-    找不到符合條件的表情
-  </div>
+  <!-- 控制面（進度／工具列／篩選／格線）由 collection-tracker.js 渲染 -->
+  <div id="ct-root"></div>
 
 </div>
 
@@ -129,360 +73,90 @@
 </footer>
 
 <script>
-(function() {
-  const STORAGE_KEY = 'ffxiv_emotes_owned';
-  const DATA_URL = '../../data/emotes.json';
-  const ICON_BASE = '../../assets/emotes'; // 地端圖示（download-emotes-icons.mjs 下載）
-
-  // ── State ──
-  let EM_DATA = [];
-  let SOURCE_TYPES = [];
-  let owned = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
-  let filterOwn = 'all';     // all | owned | missing
-  let filterSource = null;   // string | null
-  let filterCategory = null; // 'General' | 'Special' | 'Expressions' | null
-
-  // 遊戲內表情視窗的三個分頁（category 欄位 → 台服介面標籤）
-  const CATEGORY_TABS = [
+(function () {
+  var CATEGORY_TABS = [
     { key: 'General',     label: '一般' },
     { key: 'Special',     label: '特殊' },
-    { key: 'Expressions', label: '情感表現' },
+    { key: 'Expressions', label: '情感表現' }
   ];
-  let searchQ = '';
-  let sortBy = 'default';    // default | patch-desc | patch-asc | name
 
-  // ── Unique key ──
-  function keyOf(e) {
-    return 'id:' + e.id;
-  }
-
-  // 預設表情（角色初始即有）一律視為已收藏，且不可手動取消
-  function isDefault(e) {
-    return (e.sources || []).some(s => s.type === '預設');
-  }
-  function isOwned(e) {
-    return isDefault(e) || owned.has(keyOf(e));
-  }
-
-  // ── Save ──
-  function save() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify([...owned]));
-  }
-
-  // ── Toggle ──
-  function toggle(k) {
-    if (owned.has(k)) owned.delete(k);
-    else owned.add(k);
-    save();
-    updateProgress();
-    renderGrid();
-  }
-
-  // ── Progress ──
-  function updateProgress() {
-    const total = EM_DATA.length;
-    const count = EM_DATA.filter(e => isOwned(e)).length;
-    const pct = total ? Math.round(count / total * 100) : 0;
-    document.getElementById('ownedCount').textContent = count;
-    document.getElementById('totalCount').textContent = total;
-    document.getElementById('progressFill').style.width = pct + '%';
-    document.getElementById('progressPct').textContent = pct + '%';
-    try { localStorage.setItem('ffxiv_snap_emotes', JSON.stringify({ c: count, t: total })); } catch (e) {} // 首頁進度儀表板快照
-  }
-
-  // ── 遊戲內分頁 renderer ──
-  function renderCategoryFilters() {
-    const wrap = document.getElementById('categoryFilters');
-    wrap.innerHTML = '';
-    CATEGORY_TABS.forEach(t => {
-      if (!EM_DATA.some(e => e.category === t.key)) return;
-      const btn = document.createElement('button');
-      btn.className = 'filter-tag' + (filterCategory === t.key ? ' active' : '');
-      btn.textContent = t.label;
-      btn.addEventListener('click', () => {
-        filterCategory = filterCategory === t.key ? null : t.key;
-        renderCategoryFilters();
-        renderGrid();
-      });
-      wrap.appendChild(btn);
-    });
-  }
-
-  // ── Source filter renderer ──
-  function renderSourceFilters() {
-    const wrap = document.getElementById('sourceFilters');
-    wrap.innerHTML = '';
-    SOURCE_TYPES.forEach(v => {
-      const btn = document.createElement('button');
-      btn.className = 'filter-tag' + (filterSource === v ? ' active' : '');
-      btn.textContent = v;
-      btn.addEventListener('click', () => {
-        filterSource = filterSource === v ? null : v;
-        renderSourceFilters();
-        renderGrid();
-      });
-      wrap.appendChild(btn);
-    });
-  }
-
-  // ── Filter ──
-  function filtered() {
-    return EM_DATA.filter(e => {
-      if (filterOwn === 'owned'   && !isOwned(e)) return false;
-      if (filterOwn === 'missing' &&  isOwned(e)) return false;
-
-      if (filterCategory && e.category !== filterCategory) return false;
-
-      if (filterSource) {
-        const types = (e.sources || []).map(s => s.type);
-        const match = filterSource === '待補充' ? types.length === 0 : types.includes(filterSource);
-        if (!match) return false;
-      }
-
-      if (searchQ) {
-        const q = searchQ.toLowerCase();
-        const nameMatch  = e.name    && e.name.toLowerCase().includes(q);
-        const enMatch    = e.nameEn  && e.nameEn.toLowerCase().includes(q);
-        const cmdMatch   = e.command && e.command.toLowerCase().includes(q);
-        if (!nameMatch && !enMatch && !cmdMatch) return false;
-      }
-
-      return true;
-    });
-  }
-
-  // ── Sort ──
-  function sortList(list) {
-    if (sortBy === 'default') return list;
-    const arr = [...list];
-    const pv = p => parseFloat(p) || 0;
-    if (sortBy === 'name') arr.sort((a, b) => (a.name || a.nameEn).localeCompare(b.name || b.nameEn, 'zh-Hant'));
-    else if (sortBy === 'patch-asc') arr.sort((a, b) => pv(a.patch) - pv(b.patch));
-    else if (sortBy === 'patch-desc') arr.sort((a, b) => pv(b.patch) - pv(a.patch));
-    return arr;
-  }
-
-  // ── Render grid ──
-  function renderGrid() {
-    const list = sortList(filtered());
-    const grid = document.getElementById('emGrid');
-    const empty = document.getElementById('emptyState');
-    const meta = document.getElementById('resultMeta');
-
-    grid.innerHTML = '';
-    if (list.length === 0) {
-      grid.style.display = 'none';
-      empty.style.display = '';
-    } else {
-      grid.style.display = '';
-      empty.style.display = 'none';
-    }
-
-    const ownedInView = list.filter(e => isOwned(e)).length;
-    meta.innerHTML = `顯示 <em>${list.length}</em> / ${EM_DATA.length} 個 · 已解鎖 <em>${ownedInView}</em> / ${list.length}`;
-
-    list.forEach(e => {
-      const k = keyOf(e);
-      const ownedFlag = isOwned(e);
-      const lockedDefault = isDefault(e);
-      const card = document.createElement('div');
-      card.className = 'col-card' + (ownedFlag ? ' owned' : '') + (lockedDefault ? ' locked' : '');
-
-      // Icon（地端圖片：/i/246000/246201.png → 246201.webp）
-      const iconFile = e.icon ? e.icon.split('/').pop().replace(/\.png$/i, '.webp') : null;
-      const iconHtml = iconFile
-        ? `<img class="col-icon" src="${ICON_BASE}/${iconFile}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<span class=col-icon-ph>💃</span>'">`
-        : `<span class="col-icon-ph">💃</span>`;
-
-      // 名稱：顯示繁中名（指令已含英文，不另顯示英文名）；無繁中名才退回英文
-      const nameHtml = e.name && /[一-鿿]/.test(e.name)
-        ? `<div class="col-name">${e.name}</div>`
-        : `<div class="col-name">${e.nameEn}</div>`;
-
-      // 指令
-      const cmdHtml = e.command
-        ? `<span class="em-command">${e.command}</span>`
-        : '';
-
-      // Patch tag ＋ 遊戲內分頁標籤
-      const patchHtml = e.patch
-        ? `<span class="tag patch-tag">ver ${e.patch}</span>`
-        : '';
-      const catTab = CATEGORY_TABS.find(t => t.key === e.category);
-      const catHtml = catTab ? `<span class="tag">${catTab.label}</span>` : '';
-
-      // 來源標籤 + 取得方式
-      const sources = e.sources || [];
-      const sourceTags = sources.length
-        ? sources.map(s => `<span class="src-tag type-${s.type}">${s.type}</span>`).join('')
-        : `<span class="src-tag placeholder">待補充</span>`;
-      const detailText = sources.length
-        ? sources.map(s => s.detail).filter(Boolean).join('、')
-        : '取得方式待補充';
-
-      card.innerHTML = `
-        <div class="col-icon-wrap">${iconHtml}</div>
-        ${nameHtml}
-        ${cmdHtml}
-        <div class="col-tags">${sourceTags}</div>
-        <div class="col-detail">${detailText}</div>
-        <div class="col-tags">${catHtml}${patchHtml}</div>
-      `;
-
-      // 預設表情恆為已收藏，不可點掉；其餘可切換
-      if (!lockedDefault) {
-        card.tabIndex = 0;
-        card.setAttribute('role', 'button');
-        card.setAttribute('aria-pressed', ownedFlag);
-        card.addEventListener('click', () => toggle(k));
-        card.addEventListener('keydown', ev => {
-          if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); toggle(k); }
-        });
-      }
-      grid.appendChild(card);
-    });
-  }
-
-  // ── Export / Import ──
-  function exportProgress() {
-    const payload = {
-      schema: 'emotes-progress',
-      exported: new Date().toISOString(),
-      owned: [...owned]
-    };
-    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'emotes-progress.json';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  }
-
-  function importProgress(file) {
-    const reader = new FileReader();
-    reader.onload = ev => {
-      try {
-        const data = JSON.parse(ev.target.result);
-        // 舊版備份為純陣列；新版物件需驗 schema，避免誤將其他頁的進度檔匯入
-        if (!Array.isArray(data) && data.schema !== 'emotes-progress') {
-          alert('匯入失敗：這不是「表情收藏」的進度檔'); return;
+  CollectionTracker.init({
+    dataUrl: '../../data/emotes.json',
+    metaUrl: '../../data/_meta.json',
+    storageKey: 'ffxiv_emotes_owned',
+    snapKey: 'emotes',
+    verb: '解鎖',
+    unit: '個',
+    noun: '表情',
+    searchPlaceholder: '搜尋表情名稱或指令…',
+    // 台服未開放（name=null 或 patch>gamePatch）隱藏
+    include: function (e, gp) { return e.name !== null && PatchGate.released(e.patch, gp); },
+    // 預設表情恆為已解鎖、且不可點掉
+    alwaysOwned: function (e) { return (e.sources || []).some(function (s) { return s.type === '預設'; }); },
+    // 搜尋涵蓋名稱／英文名／指令
+    searchText: function (e) {
+      return [e.name, e.nameEn, e.command].filter(Boolean).join(' ').toLowerCase();
+    },
+    // 依 id 排序作為預設順序
+    prepare: function (list) { return list.slice().sort(function (a, b) { return (a.id || 0) - (b.id || 0); }); },
+    sorts: ['patch-desc', 'patch-asc', 'name'],
+    filters: [
+      {
+        id: 'category', label: '遊戲內分頁',
+        options: function (list) {
+          return CATEGORY_TABS.filter(function (t) { return list.some(function (e) { return e.category === t.key; }); })
+            .map(function (t) { return { value: t.key, label: t.label }; });
+        },
+        match: function (e, v) { return e.category === v; }
+      },
+      {
+        id: 'source', label: '取得來源',
+        options: function (list) {
+          var ORDER = ['預設', '動作指南書', '任務', '成就', 'App', '待補充'];
+          var set = new Set();
+          list.forEach(function (e) {
+            var types = (e.sources || []).map(function (s) { return s.type; });
+            if (!types.length) set.add('待補充'); else types.forEach(function (t) { set.add(t); });
+          });
+          return ORDER.filter(function (x) { return set.has(x); })
+            .concat(Array.from(set).filter(function (x) { return ORDER.indexOf(x) < 0; }))
+            .map(function (x) { return { value: x, label: x }; });
+        },
+        match: function (e, v) {
+          var types = (e.sources || []).map(function (s) { return s.type; });
+          return v === '待補充' ? types.length === 0 : types.indexOf(v) >= 0;
         }
-        const list = Array.isArray(data) ? data : data.owned;
-        if (!Array.isArray(list)) throw new Error('格式錯誤');
-        if (owned.size && !confirm(`匯入將以檔案內容（${list.length} 筆）取代目前的 ${owned.size} 筆記錄，確定嗎？`)) return;
-        owned = new Set(list);
-        save();
-        updateProgress();
-        renderGrid();
-        alert('匯入成功，共 ' + owned.size + ' 筆已解鎖記錄');
-      } catch (err) {
-        alert('匯入失敗：檔案格式不正確');
       }
-    };
-    reader.readAsText(file);
-  }
-
-  // ── Own-toggle buttons ──
-  document.querySelectorAll('.own-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      filterOwn = btn.dataset.own;
-      document.querySelectorAll('.own-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      renderGrid();
-    });
+    ],
+    card: function (e) {
+      var esc = CollectionTracker.esc;
+      var ICON_BASE = '../../assets/emotes';
+      var iconFile = e.icon ? e.icon.split('/').pop().replace(/\.png$/i, '.webp') : null;
+      var iconHtml = iconFile
+        ? '<img class="col-icon" src="' + ICON_BASE + '/' + esc(iconFile) + '" alt="" loading="lazy" onerror="this.parentElement.innerHTML=\'<span class=col-icon-ph>💃</span>\'">'
+        : '<span class="col-icon-ph">💃</span>';
+      var nameHtml = (e.name && /[一-鿿]/.test(e.name))
+        ? '<div class="col-name">' + esc(e.name) + '</div>'
+        : '<div class="col-name">' + esc(e.nameEn) + '</div>';
+      var cmdHtml = e.command ? '<span class="em-command">' + esc(e.command) + '</span>' : '';
+      var patchHtml = e.patch ? '<span class="tag patch-tag">ver ' + esc(e.patch) + '</span>' : '';
+      var catTab = CATEGORY_TABS.filter(function (t) { return t.key === e.category; })[0];
+      var catHtml = catTab ? '<span class="tag">' + catTab.label + '</span>' : '';
+      var sources = e.sources || [];
+      var sourceTags = sources.length
+        ? sources.map(function (s) { return '<span class="src-tag type-' + esc(s.type) + '">' + esc(s.type) + '</span>'; }).join('')
+        : '<span class="src-tag placeholder">待補充</span>';
+      var detailText = sources.length
+        ? esc(sources.map(function (s) { return s.detail; }).filter(Boolean).join('、'))
+        : '取得方式待補充';
+      return '' +
+        '<div class="col-icon-wrap">' + iconHtml + '</div>' +
+        nameHtml + cmdHtml +
+        '<div class="col-tags">' + sourceTags + '</div>' +
+        '<div class="col-detail">' + detailText + '</div>' +
+        '<div class="col-tags">' + catHtml + patchHtml + '</div>';
+    }
   });
-
-  // ── Search ──
-  document.getElementById('searchInput').addEventListener('input', e => {
-    searchQ = e.target.value.trim();
-    renderGrid();
-  });
-
-  // ── Export / Import / Clear ──
-  document.getElementById('exportBtn').addEventListener('click', exportProgress);
-  document.getElementById('importBtn').addEventListener('click', () => {
-    document.getElementById('importFile').click();
-  });
-  document.getElementById('importFile').addEventListener('change', e => {
-    const file = e.target.files[0];
-    if (file) importProgress(file);
-    e.target.value = '';
-  });
-  document.getElementById('clearBtn').addEventListener('click', () => {
-    if (!owned.size) { alert('目前沒有已解鎖記錄'); return; }
-    if (!confirm('確定要清除全部 ' + owned.size + ' 筆解鎖記錄嗎？\n將先自動下載一份備份檔以防誤刪。')) return;
-    exportProgress();
-    owned.clear();
-    save();
-    updateProgress();
-    renderGrid();
-  });
-
-  // ── Sort / Batch mark ──
-  document.getElementById('sortSelect').addEventListener('change', e => {
-    sortBy = e.target.value;
-    renderGrid();
-  });
-  document.getElementById('markAllBtn').addEventListener('click', () => {
-    const toAdd = filtered().filter(e => !isOwned(e));
-    if (!toAdd.length) { alert('目前篩選結果都已標記'); return; }
-    if (!confirm('將目前篩選結果中未標記的 ' + toAdd.length + ' 筆標記為已解鎖？')) return;
-    toAdd.forEach(e => owned.add(keyOf(e)));
-    save(); updateProgress(); renderGrid();
-  });
-  document.getElementById('unmarkAllBtn').addEventListener('click', () => {
-    const toDel = filtered().filter(e => owned.has(keyOf(e))); // 預設表情不在 owned 集合，不受影響
-    if (!toDel.length) { alert('目前篩選結果沒有可取消的標記'); return; }
-    if (!confirm('取消目前篩選結果中 ' + toDel.length + ' 筆的已解鎖標記？（預設表情不受影響）')) return;
-    toDel.forEach(e => owned.delete(keyOf(e)));
-    save(); updateProgress(); renderGrid();
-  });
-
-  // ── Init: load data ──
-  fetch(DATA_URL)
-    .then(res => {
-      if (!res.ok) throw new Error('無法載入資料 (' + res.status + ')');
-      return res.json();
-    })
-    .then(async json => {
-      const raw = (json && json.data) ? json.data : [];
-      const gp = await PatchGate.loadGamePatch('../../data/_meta.json');
-      // name=null 或 patch > gamePatch 表示台服未開放，前端隱藏
-      EM_DATA = raw.filter(e => e.name !== null && PatchGate.released(e.patch, gp));
-
-      // 排序：依 id
-      EM_DATA.sort((a, b) => (a.id || 0) - (b.id || 0));
-
-
-      // 來源類型清單（固定排序，未補的歸「待補充」）
-      const ORDER = ['預設', '動作指南書', '任務', '成就', 'App', '待補充'];
-      const typeSet = new Set();
-      EM_DATA.forEach(e => {
-        const types = (e.sources || []).map(s => s.type);
-        if (types.length === 0) typeSet.add('待補充');
-        else types.forEach(t => typeSet.add(t));
-      });
-      SOURCE_TYPES = ORDER.filter(t => typeSet.has(t))
-        .concat([...typeSet].filter(t => !ORDER.includes(t)));
-      if (SOURCE_TYPES.length > 0) {
-        document.getElementById('sourceFilterSection').style.display = '';
-        renderSourceFilters();
-      }
-
-      renderCategoryFilters();
-      updateProgress();
-      renderGrid();
-    })
-    .catch(err => {
-      const grid = document.getElementById('emGrid');
-      const empty = document.getElementById('emptyState');
-      grid.style.display = 'none';
-      empty.style.display = '';
-      empty.textContent = '資料載入失敗：' + err.message;
-    });
 })();
 </script>
 </body>
