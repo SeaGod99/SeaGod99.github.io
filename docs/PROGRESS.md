@@ -3,8 +3,8 @@
 > **給 Claude / 後續對話的指示**：開始任何工作前先讀本檔。完成任何功能或資料變更後，**必須更新本檔**（狀態表 + 更新紀錄），並同步 `data/_meta.json` 的 status。
 > 規格細節見 `docs/feature-specs.md`，資料格式見 `data/SCHEMA.md`。
 
-**最後更新**：2026-07-22（全站功能面優化 #1–#7：收藏頁共用引擎、跨工具切換器、首頁搜尋、PWA、API 韌性、可分享網址、收藏連市場，見更新紀錄）
-**網站**：https://seagod99.github.io ｜ GitHub Pages 純靜態 ｜ 遊戲版本 7.2
+**最後更新**：2026-07-23（全站優化第二輪：四頁遷入共用引擎、引擎支援子項目／分頁、items-lite 瘦身、SW 快取版本自動化、刪除未使用資產，見更新紀錄）
+**網站**：https://seagod99.github.io ｜ GitHub Pages 純靜態 ｜ 台服版本 **7.15**（＝`data/_meta.json` 的 `gamePatch`，全站版本閘門唯一真實來源；台服尚未開放到 7.2）
 
 ---
 
@@ -19,10 +19,10 @@
 | — | 入口頁面 | `/index.html` | 完成 |
 | 1.1 | 天書奇談計算器 | `/tools/wondrous-tails/` | 完成（Monte Carlo） |
 | 1.2 | 仙人微彩計算機 | `/tools/cactpot/` | 完成（期望值） |
-| 1.3 | 限時採集節點查詢 | `/tools/gathering/` | 完成（改接 gathering.json/items.json/maps.json，limited 225 筆→213 筆顯示，篩選/排序/追蹤清單/Teamcraft flag 補齊，06-15重做） |
+| 1.3 | 限時採集節點查詢 | `/tools/gathering/` | 完成（改接 gathering.json/items.json/maps.json，limited 225 筆→213 筆顯示，篩選/排序/追蹤清單/Teamcraft flag 補齊，06-15重做；07-23 物品名改讀 `items-lite.json`，載入量 10MB→1.3MB） |
 | — | 天氣預報 | `/tools/weather/` | 完成（改用共用模組 assets/js/eorzea-weather.js，天氣表接 maps.json weatherRates，mapId 統一，06-15重做） |
-| 1.5 | 風脈泉追蹤器 | `/tools/aether-currents/` | 完成（31 地區 303 個風脈泉，任務型151筆/野外型152筆，座標暫無，06-16新增） |
-| 1.6 | 時尚品鑑推薦 | `/tools/fashion-report/` | 完成（頁面 07-03 上線，每週依 [SOP](fashion-report-update-sop.md) 半自動更新；資料 `data/fashion-report.json`，前端自算週次、過期自動顯示存檔卡。**目前更新到 week 442「亞拉戈高位裝扮」verified**） |
+| 1.5 | 風脈泉追蹤器 | `/tools/aether-currents/` | 完成（31 地區 303 個風脈泉，任務型151筆/野外型152筆，06-16新增；07-23 遷入共用引擎的**子項目模式**——卡片＝地區、追蹤單位＝風脈泉，手風琴/地區地圖圖釘/🗺彈窗保留，新增可分享網址、批次標記、排序） |
+| 1.6 | 時尚品鑑推薦 | `/tools/fashion-report/` | 完成（頁面 07-03 上線，每週依 [SOP](fashion-report-update-sop.md) 半自動更新；資料 `data/fashion-report.json`，前端自算週次、過期自動顯示存檔卡。**目前更新到 week 442「亞拉戈高位裝扮」verified**（443 提示尚未公布）；07-23 過期橫幅重做——顯示當前週次階段徽章與倒數、外部來源升為主要行動、存檔說明降為次要） |
 | 1.7 | 幻化配裝圖鑑 | `/tools/glamour/` | 完成（07-15 由獨立 repo 併入：精選配裝＋Mirapri 社群＋官方套裝 1971 套三檢視，收藏星號、染色/交易徽章、wiki 示意照；07-16 上線資產進版控——縮圖/官方示意照/icons/精選原圖＋mirapri_outfits.js/official_sets.js 共約 850MB 已 push，線上完整可用；**僅 mirapri 原圖 669MB 留本機**（加入會破 Pages 發佈 1GB 上限，彈窗自動退回縮圖），重建後衍生 js 記得 commit；資料管線為 Python（py scripts\update_all.py），細節見 tools/glamour/CLAUDE.md；07-16 介面統整——改用站內共用色票/字體、加「← 水神的工具箱」導覽與頁尾，官方套裝卡不再顯示 alljob 原始 tag） |
 
 ### 收藏／成就追蹤（共通規格見 feature-specs 第二章）
@@ -35,7 +35,7 @@
 | 2.4 | 表情收藏追蹤 | `/collections/emotes/` | 完成（接 data/emotes.json 292筆；scripts/build-emotes.mjs 重建：繁中名 260/292（Cafemaker 簡中→OpenCC，餘 32 筆為簡中服未開放之最新表情，前端隱藏）；**來源 292/292 全補齊**：預設94+動作指南書163+任務29+成就4+App2；前端加來源顯示+來源篩選（預設/動作指南書/任務/成就/App）；06-22 重建；07-16 加遊戲內分頁篩選（一般/特殊/情感表現，接 category 欄）與卡片分頁標籤） |
 | 2.5 | 髮型收藏追蹤 | `/collections/hairstyles/` | 完成（39 筆台服已開放髮型，版本/來源篩選，06-16新增） |
 | 2.6 | 鳥鞍收藏追蹤 | `/collections/barding/` | 完成（接 data/barding.json 106筆，部位/來源篩選，15筆無sources標待補充，06-15新增） |
-| 2.9 | 探索筆記追蹤器 | `/collections/exploration-log/` | 完成（340筆，繁中景觀名已補齊：cafemaker Name_chs→手動繁化，座標因 XIVAPI SightseeingLog 不回傳而保持 null，06-17景觀名補完） |
+| 2.9 | 探索筆記追蹤器 | `/collections/exploration-log/` | 完成（340筆，繁中景觀名已補齊：cafemaker Name_chs→手動繁化，座標因 XIVAPI SightseeingLog 不回傳而保持 null，06-17景觀名補完；07-23 遷入共用引擎，692→146 行） |
 | 2.10 | 青魔法術收藏 | `/collections/blue-magic/` | 完成（改接 data/blue-magic.json 124筆，副本來源用 contentId 對 dungeons.json 取繁中名，野外/怪物來源並列，14筆無資料標待補充，06-15新增） |
 | 2.11 | 幻卡追蹤 | `/collections/triple-triad/` | 完成（接 data/triple-triad.json 425筆，星級/類型/來源篩選，NPC對戰顯示地點，06-15新增） |
 
@@ -56,8 +56,8 @@
 | 4.4 | 藏寶圖採集點查詢 | `/tools/treasure-maps/` | 完成（G1–G17 挖寶點，地圖標點＋座標） |
 | 4.9 | 幻巧戰助手 | `/tools/faux-hollows/` | 完成（16 盤形×252 擺法，自動辨識、機率計算） |
 | 4.5 | 園藝配種計算 | `/tools/gardening/` | 完成（107種植物，正查×反查，data/gardening.json，06-17新增） |
-| 4.7 | 釣魚紀錄追蹤 | `/tools/fishing/` | 完成（fishes.json 1104筆，大魚/限時/天氣篩選，追蹤進度，06-17新增；07-16 參考魚糕重做卡片——固定欄位釣場/釣餌/時間/天氣、ET 24h 時間窗 bar、竿型 !/!!/!!! 與提鉤章、天氣鏈前→今、直感標籤，加「地區」篩選對應遊戲內釣魚手帳分頁） |
-| 4.8 | 採集紀錄追蹤 | `/tools/gathering-log/` | 完成（gathering.json 733節點，採礦工/園藝工，物品勾選追蹤，06-17新增） |
+| 4.7 | 釣魚紀錄追蹤 | `/tools/fishing/` | 完成（fishes.json 1449筆，大魚/限時/天氣篩選，追蹤進度，06-17新增；07-16 參考魚糕重做卡片——固定欄位釣場/釣餌/時間/天氣、ET 24h 時間窗 bar、竿型 !/!!/!!! 與提鉤章、天氣鏈前→今、直感標籤，加「地區」篩選對應遊戲內釣魚手帳分頁；07-23 遷入共用引擎——分頁 60、預設依開窗時間排序、可分享網址、批次標記；ET 時鐘/目標魚面板+鬧鐘/地圖檢視/詳情彈窗皆保留） |
+| 4.8 | 採集紀錄追蹤 | `/tools/gathering-log/` | 完成（gathering.json 670 可顯示節點/1243 件產物，採礦工/園藝工，物品勾選追蹤，06-17新增；07-23 遷入共用引擎的**子項目模式**＋分頁 40，地圖檢視保留；物品名改讀 `items-lite.json`） |
 
 「開發中」頁面驗收後請改為「完成」並註記日期。
 
@@ -80,7 +80,9 @@
 | blue-magic | 124 | XIVAPI | 06-09 |
 | monsters | 14361 | datamining-cn + Teamcraft + XIVAPI | 06-09 |
 | obtainable-methods | 36336 | mixed | 06-08 |
-| fishes / fishing-spots | 1104 / 307 | fish-tracker + items（spots 已補 coords.mapId） | 06-11 |
+| fishes / fishing-spots | 1449 / 307 | fish-tracker + items（spots 已補 coords.mapId） | 06-11 |
+| items-lite | 43748 | items.json 精簡（只留 id→繁中名，1.3MB；`scripts/build-items-lite.mjs`） | 07-23 |
+| island-* 九檔 | 見下 | datamining-cn `MJI*` CSV ＋ items.json（`scripts/build-island.mjs`） | 07-23 |
 
 仍為空（0 bytes）：emotes、exploration-log、orchestrion、squadron、fishing（由 fishes.json 取代）。
 
@@ -183,11 +185,46 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 2-1. 資料品質小修：~~mounts 補 itemId~~（06-11 完成）；mounts sources/patch 人工校對（併入 1c）；om 40 筆 npc 譯名以 npcs.json 為準；blue-magic learnFromMob 轉怪物 id（做青魔頁前）；dungeons rewards/unlock 待填充（量大，做副本相關功能時再填）
 2-2. **繁中化升級（見二之二）**：~~mounts 補繁中名~~、~~dungeons 校正~~（06-11 完成）；~~monsters 台服化~~（06-11 完成）；抽 scripts/lib/common.mjs 共用函式庫（未做）
 3. ~~幻卡追蹤頁面 sources 待補~~ — **資料已補齊（2026-06-15）**：sources 425/425、NPC對戰地點 864/934 已補（npcs.json+maps.json），待做頁面
-4. 無人島攻略工具第一期：動物時鐘（見 `docs/無人島攻略工具規劃.md`，待建 4 個 island-* 庫）
+4. 無人島攻略工具：**資料層已建置完成（2026-07-23）**，見 `docs/無人島攻略工具規劃.md`。9 個 `data/island-*.json` 已產出、validate 全過；素材/製作/建築素材/收購/等級**台服繁中名 100% 覆蓋**（人工製作 28 筆已與 Teamcraft 逐筆對過素材，28/28 一致）。**第一期改為「素材／製作查詢」**（零卡點，可立即開工）；動物時鐘順延，卡在 43 筆動物名與出現條件 datamine 拿不到、需人工從台服抄錄（填 `data/island-names-tw.json`）
 5. 其餘收藏追蹤頁（髮型）
 6. 其他規劃：時尚品鑑、冒險者小隊計算機、藏寶圖、園藝配種、釣魚紀錄
 
 ## 五、更新紀錄
+
+- **2026-07-23（無人島資料層建置＋規劃重寫；每日待辦否決）**：
+  - **否決「每日／每週待辦清單」**（README「規劃中」移入「已否決」）：遊戲內本來就能快速看到當前待辦，工具站再做一份是重複造輪子。
+  - **無人島資料層完成**：新增 [`scripts/build-island.mjs`](../scripts/build-island.mjs)，由 `thewakingsands/ffxiv-datamining-cn` 的 `MJI*` CSV 產出 9 個 `data/island-*.json`（原始 CSV 快取於 `out_data/mji-csv/`，47KB，支援 `--offline`／`--refresh`）。**素材 109／人工製作 28／建築＋地標 25／收購 79／等級 20／動物 43／分類 10／地區 6。** validate-data 0 error 0 warning。
+    - **走 CSV 不走 XIVAPI v2**：v2 雖有 40 個 `MJI*` sheet，但 schema 沒為它們命名欄位（`MJIAnimals` 只吐 Icon、`MJIRank`／`MJIItemPouch` 回空物件），拿不到資料。
+    - **台服繁中名覆蓋**：所有物品類（素材／作物／畜產／成品／建築素材）走 itemId → `items.json`，**100% 有台服官方名**。原規劃最擔心的「參考站是簡中要人工對照素材名」問題**實際上不存在**。
+    - **交叉驗證**：人工製作 28 筆與 Teamcraft `recipes.json` jobId −10 逐筆比對，**素材與數量 28/28 完全一致**。
+    - **兩個踩過的雷（已寫進腳本註解與規劃文件）**：① `MJIItemPouch`／`MJIRecipe`／`MJIDisposalShopItem`／`MJIBuilding` 的 **row 0（子列 `0.0`）是真資料**，用 `key>0` 過濾會安靜少掉無人島棕櫚葉、開拓用石斧、小島木屋 I；② `Material[]` 指向的是 **`MJIItemPouch` 的 row 而非 itemId**（配方還要再經 `MJIRecipeMaterial` 一層），解錯會拿到不相干的物品。
+    - **卡點（已記錄，別重走）**：43 種動物的名稱 datamine 拿不到——`MJIAnimals` 只給 `BNpcBase`，實測 `BNpcBase → 本站 monsters.json.baseId` 是 **7/43 且對到的是錯的**（撞號撈到「緊張的聲音」），`BNpcBase → Teamcraft monsters.json → tw-mobs` 是 **0/43**（Teamcraft 只收有狩獵座標的 2333 隻）。動物的出現時段／天氣同樣不在任何 sheet（屬社群觀測）。**只能從台服遊戲內人工抄 43 筆**，填進 `data/island-names-tw.json`（腳本自動產生樣板）後重跑即合併。建築名 25／分類 10／地區 6 同理（datamining-cn 只有簡中，依鐵則不簡轉繁，`nameCn` 僅供比對、`name` 留 null）。
+  - **無人島底圖找到並驗證座標**：底圖其實一直在 `maps.json` 裡——**`id 772`「無名島」**（`nameEn: "Unnamed Island"`，region「？？？？」、type instance），先前沒被認出來是因為它不叫「無人島」。已用 `node scripts/download-maps.mjs --id 772` 下載 `assets/maps/h1m2_01.jpg`（608KB）；XIVAPI 另有 `h1m2/02`／`03`，實測是**未開拓地形**，`01` 才是含村莊建設的完整版。該地圖的 `weatherRates`（碧空25/晴朗45/陰天10/小雨10/薄霧5/暴雨5）**正好就是動物時鐘要用的天氣機率**。
+    - **採集點座標換算已解並驗證**：`MJIGatheringItem` 的 X/Y 是世界座標（X −248~765、Y −694~246），走 FFXIV 標準式 `frac = ((world+offset)*c+1024)/2048`、`game = frac*41/c+1`（offset −175/138）。**驗證不是憑公式**：把 48 點畫上底圖，全部落在陸地、且 `mapLayer=1` 的 9 筆（石炭／燈火茸／幻影石／水晶層…全是洞窟產物）緊密聚在東北山區洞窟；對照組把 Y 反轉重畫則有點掉海裡、洞窟點散開 → 確認方向正確。`island-materials.json` 的 `gathering.coords` 已改存站內標準 `{mapId:772,x,y}` 遊戲內座標，可直接餵既有地圖元件。
+    - **`mapLayer` 語意確認**：`MJIGatheringItem.Map` 只有 0/1（地區有 6 個故不是地區），1 的 9 筆全是洞窟產物 → **0＝地上、1＝洞窟**，已加 `layerName`。
+  - **規劃文件重寫**：[docs/無人島攻略工具規劃.md](無人島攻略工具規劃.md) 依實查結果改版——**分期順序調整為「素材／製作查詢 → 動物時鐘 → 開拓進度表」**（原本動物時鐘排第一，但它是唯一卡人工資料的；素材／製作查詢零卡點可立即開工）。另記錄兩個資料層未解項：採集點座標是 datamine 原始值尚未校準成遊戲內座標、`MJIGatheringItem.Map` 實測只有 0/1 兩值故不是地區（已命名 `mapLayer`，未臆測語意）。
+
+- **2026-07-23（全站優化第二輪：引擎擴充＋四頁遷入＋瘦身）**：接續 07-22 的共用引擎，把剩下四個「各寫各的」追蹤頁也收進來，並修掉一批體檢發現的問題。全部以 jsdom 驗證（本機 headless Chromium 在此環境無法啟動）：**追蹤頁回歸 157/157、各頁特有功能 35/35、時尚品鑑 27/27、限時採集 4/4**。
+  - **版本標示對齊**：本檔頁首原寫「遊戲版本 7.2」，但版本閘門的唯一真實來源 `data/_meta.json` 的 `gamePatch` 是 **7.15**（台服尚未開放到 7.2）。文件改為以 `_meta.json` 為準並註明，避免日後照文件誤把 gamePatch 調成 7.2 而放行未開放內容。
+  - **`orchestrion` 4 筆粗略 `N.x` patch 修完**（validate-data 由 1 warning → **0 error 0 warning**）。`scripts/fix-orchestrion-patch.mjs` 加**後備來源**：ffxivcollect 對不到時，退回本站 `items.json`（同一顆 itemId，tw-items 來源，精確到 x.y）。白帝竹林 4.x→4.2、月下芳華 4.x→4.3、究極武器（蠻荒神影）5.x→5.2、高貝扎四天王之戰 6.x→6.28；其餘 720 筆不動。
+  - **`data/items-lite.json`（新）**：`items.json` 是 10MB，但限時採集查詢與採集紀錄兩頁只用到 `id→繁中名`，卻要整包載完才能畫第一格。新增 `scripts/build-items-lite.mjs` 產出精簡版（`data` 為 `[[id,name],…]` 配對陣列，**1.3MB，省 87%**），兩頁改讀。id 集合與 items.json 完全一致，故「查不到＝台服未開放」規則等價——已用兩頁的實際過濾邏輯比對，節點數／產物名輸出完全相同。市場查價仍讀完整版（需要 marketable／ilvl／icon／category）。
+  - **刪除未使用資產**：`jquery-4.0.0.min.js`、`jquery-ui.min.js`、三支 `jquery-ui*.css`、六張 jQuery UI `ui-icons` 圖（合計 448KB）全站 **0 頁引用**；`assets/css/style.css`（524 行舊靛藍亮色調色盤，與現行金/暗色設計系統無關）同樣 0 頁引用——一併移除。另清掉根目錄空的 `market/`（真正的頁在 `tools/market/`）、空的 `assets/js/api/` 與 `data/_test_sync.txt`。
+  - **SW 快取版本自動化＋程式碼改 network-first**：`sw.js` 的 `CACHE_VERSION` 原是手寫 `'sgt-v1'`，改了共用 css/js 忘了 bump 就會被舊快取黏住 → 新增 `scripts/bump-sw-version.mjs`，依 `assets/css/*.css`＋`assets/js/*.js`＋`manifest.json`＋`sw.js`（排除版本行）的內容雜湊產生版本（`--check` 可驗證是否過期，idempotent）。另把**同源 .css/.js/.mjs 由 stale-while-revalidate 改為 network-first**——這類檔案「改了就該立刻生效」，SWR 會讓使用者第一次重整仍吃到舊版；資料庫 json／圖示維持 SWR。
+  - **時尚品鑑過期橫幅重做**：資料落後當前週次時（如現在資料 442、實際 443），原橫幅只是一段說明文字。改為「本週狀態 → 去哪查 → 存檔說明」的順序：加上**當前週次的階段徽章與倒數**（準備期／評分期，原本過期時完全看不到）、外部來源升為**主要行動**（第一個連結做成實心按鈕），存檔說明降為底部次要資訊。倒數在正常與過期兩種情境共用同一支 ticker。
+  - **`minions` 補市場連結**：小方格版型放不下，依 07-22 的建議收進 ⓘ 提示框（提示框釘住後可點）。521/533 隻可上市寵物可直接跳 `tools/market/#item=<id>`。
+  - **共用引擎擴充（`assets/js/collection-tracker.js`，四項皆選用、不影響既有 8 頁）**：
+    - **`subsOf(entry)` 子項目模式**——有些頁的追蹤單位不是卡片而是卡片裡的東西（風脈泉頁一張卡＝地區、要打勾的是 303 個風脈泉；採集紀錄頁一張卡＝採集點、要打勾的是產物）。設定後 keyOf 收到子項目、進度分母＝子項目總數、卡片 `.owned` 代表「該卡全數完成」、批次標記作用於篩選結果的所有子項目。**單位依 keyOf 去重**（同一件產物出現在多個採集點只能算一件）。
+    - **`pageSize` 分頁**——頁碼列（首末頁＋當前頁 ±2，中間省略）、同步到網址 `?p=`（可分享）、任何篩選／搜尋／排序變動回第 1 頁、頁碼超出範圍自動夾回。樣式為 common.css 的 `.ct-pagination`。
+    - **`onRender(list, pageSlice, tracker)`**——讓各頁同步自己的附加檢視（地圖標點、目標魚面板）。
+    - **`rowsOf(json)`**（風脈泉庫用 `zones[]` 而非 `data[]`）、**`defaultSort`**（釣魚頁預設依開窗時間）、**`exportExtra`／`onImport`**（釣魚頁的目標魚清單跟著匯出匯入走）；匯入改為同時接受 `owned`／`unlocked`／`done` 三種舊鍵名，避免舊備份檔匯不回來。
+  - **四頁遷入共用引擎**（各頁只留 header＋一份設定，全部沿用既有 localStorage key 與 keyOf 格式，**進度不會遺失**）：
+    - `collections/exploration-log/`（340 筆，692→146 行）：本庫 patch 只到資料片下界（`2.0`…），故用固定對照表而非引擎的 patch 區間；include 不套「name!==nameEn」規則（景觀名有音譯同名者）。
+    - `tools/aether-currents/`（31 地區／303 風脈泉，997→約 400 行）：子項目模式。手風琴展開狀態存在 `OPEN` Set，勾選後重畫仍保持展開；地區小進度條、地圖圖釘（294 個）、🗺 地圖彈窗、圖釘↔清單列 hover 連動全部保留。
+    - `tools/gathering-log/`（670 節點／1243 件產物，644→約 390 行）：子項目模式＋分頁 40。地圖檢視、底圖缺漏提示、點採集點看詳情卡全部保留；狀態篩選（全採完／部分未採／全未採）改為引擎的篩選標籤。
+    - `tools/fishing/`（1449 種，1392→約 1130 行）：分頁 60、預設排序＝開窗時間（可釣中優先）。ET 時鐘、目標魚面板＋開窗鬧鐘、地圖檢視、魚詳情彈窗（竿型／提鉤／餌鏈／直感／未來窗口）、多釣場切換全部保留；「🎯 只看目標」改為引擎篩選標籤，卡片點擊分流（🎯目標／📍地圖／點圓圈勾已釣／點其他開詳情）改由 `onCardClick` 處理。
+    - 四頁一併改吃 `common.css`（原本各自複製一份設計 token 與工具列樣式），淨減約 1300 行。
+  - **這四頁因此新獲得**：可分享網址（搜尋／篩選／排序／頁碼進 query string，支援上一頁）、批次標記全部／取消全部、排序下拉、搜尋涵蓋來源文字、統一的鍵盤與 ARIA、與其餘 8 頁一致的工具列。
+  - **未做**：SEO／og:／sitemap（依使用者指示本站目前不完全公開，暫不處理）。
 
 - **2026-07-22（全站功能面優化 #1–#7）**：一次做完 7 項跨站優化，全部以 jsdom 驗證（本機 headless Chromium 在此環境無法啟動，改用 jsdom 做 DOM 層驗證）。
   - **#1 收藏頁共用引擎**：新增 `assets/js/collection-tracker.js`，把 8 個經典追蹤頁共通的「狀態／進度條＋首頁快照／工具列（搜尋・擁有切換・排序・批次標記・匯入匯出・清除）／標籤篩選／格線渲染／鍵盤與 ARIA」全部收進單一引擎，各頁只留 header＋一份設定（資料位置、卡片樣板、篩選規則）。已遷移 **mounts／minions／barding／orchestrion／emotes／hairstyles／blue-magic／triple-triad** 共 8 頁，每頁 body 由 ~480–690 行縮為 header＋設定。引擎 hook：`include／keyOf／alwaysOwned／searchText／prepare／filters／sorts／card／onCardClick／onCardCreate`＋`gridClass／cardClass／fileBase／schema` 覆寫。特例都保留：emotes 預設表情恆擁有且不可點掉、minions 小方格＋hover 提示框＋數字 id 進度格式（相容既有存檔）、hairstyles 橫向 hs-card、blue-magic 先載 dungeons.json 建 contentId→繁中副本名、triple-triad 的 📍 開地圖不切換擁有。驗收：全 8 頁以真實資料 jsdom 整合測試 48/48、特例 12/12、mounts 互動 18/18。
@@ -199,7 +236,7 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
   - **#6 PWA**：新增 `manifest.json`＋`sw.js`（保守策略：導覽 network-first、同源靜態 stale-while-revalidate、跨源 API 不介入、>5MB 不快取避免撐爆配額）＋錨形 `assets/icons/icon.svg`；由 `theme.js` 全站注入 manifest／圖示／theme-color 並在 https 註冊 SW（file:// 與本機不註冊）。可加到主畫面、離線可查。
   - **#7 API 韌性**：`assets/js/universalis.js` 的 `getJSON` 加指數退避重試（網路錯誤與 429/5xx，4xx 不重試）；新增 `fmtAge()` 與回傳 `fetched` 時間戳；`gc-exchange` 狀態列顯示「市價查詢於 X 前」、失敗訊息標明已自動重試；market 自動受惠於重試（本就有 relTime 新鮮度顯示）。
   - **#3 後續調整（同日，續）**：(v) 全站 top 樣式統一——原本並存三種寫法（`nav 列＋hero`、`nav 列＋自有 header`、`.page-header`／`.site-header`／`.page-head`），其中「nav＋hero」那組還把標題印兩次。依使用者指定，**全部改為藏寶圖頁的 `.tool-header` 樣式**（置中大標＋副標＋金色分隔線），新增共用 `assets/css/tool-header.css`，23 頁全數轉換（首頁與 glamour 除外）。原 hero 內的功能元件（幻巧戰剩餘次數、釣魚 ET 時鐘＋進度條、採集紀錄進度條）保留於標題區下方。標題改用 `<h1 class="tool-title">` 保語意；cactpot／wondrous-tails 的大 emoji 圖示併入標題。驗收：23 頁結構檢查全過（各一個 tool-header＋h1＋divider）、追蹤頁功能回歸 48＋12＋12 全過。
-  - **文件飄移修正**：README 釣魚筆數 1104→1449（實際 `fishes.json` count=1449，頁面本就顯示 1449）；本檔工具表 market／treasure-maps 由「規劃中」更正為「完成」（早已上線）。**尚待**：gc-exchange／faux-hollows 仍未列入本檔工具表（實際已上線，見 index.html）；#4 的市場連結可再擴及 minions（小方格版型，建議放進 ⓘ 提示框）。
+  - **文件飄移修正**：README 釣魚筆數 1104→1449（實際 `fishes.json` count=1449，頁面本就顯示 1449）；本檔工具表 market／treasure-maps 由「規劃中」更正為「完成」（早已上線）。~~**尚待**：gc-exchange／faux-hollows 仍未列入本檔工具表；#4 的市場連結可再擴及 minions~~ → **均已處理（2026-07-23）**：實查工具表已含 gc-exchange(4.2)／faux-hollows(4.9)（此條當時即誤記）；minions 市場連結已補（放進 ⓘ 提示框）。
 
 - **2026-07-20（幻化配裝圖鑑：`job` 職業限制也改由 cjc 推導）**：使用者問「#17 上身的偵察職業是什麼」——那不是 FF14 正式職能名，是投稿者自譯 `スカウト`(Scout)。cjc 103＝ROG NIN VPR＝斥候系防具，只有忍者/劍蛇師能穿。查下去發現 `job` 跟其他欄位一樣是手填的，錯誤同樣多：自創「偵察職業」、把整職能寫成單一職業、只列部分職業（「忍者、劍蛇師」vs「偵察職業」同一 cjc 兩種寫法）、專武填錯職能（月讀太刀填「盾衛職業」，實為暗黑騎士專武）。修法：`build_site.py` 加 `job_from_cjc()`（整職能→群組名／真子集→列具體職業／全戰鬥→全職業／Disciple of Hand-Land→製作-採集），以 `data/xivapi_sets_cache.json` 的 `cjc_names` 為權威，併入 `apply_db_fields()` 建置時重算，`normalize_curated_from_db.py` 同步寫回來源檔（共用同一函式）。實測 47 種 cjc 全部推導正確、精選 104 處 job 校正（#17 上身「偵察職業」→「忍者、劍蛇師」）。前端 `jobCodes()` 用 `、` 拆多職業字串，顯示換法不影響「繁中版可幻化」判定。
 

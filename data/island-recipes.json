@@ -1,0 +1,776 @@
+{
+  "schema": "island-recipes",
+  "patch": "6.5",
+  "updated": "2026-07-23",
+  "source": "datamining-cn MJI* + items.json(tw-items)",
+  "count": 28,
+  "data": [
+    {
+      "id": 0,
+      "itemId": 37679,
+      "name": "開拓用石斧",
+      "nameMissing": false,
+      "order": 20,
+      "ingredients": [
+        {
+          "itemId": 37553,
+          "name": "無人島小樹枝",
+          "qty": 2
+        },
+        {
+          "itemId": 37554,
+          "name": "無人島石材",
+          "qty": 2
+        },
+        {
+          "itemId": 37551,
+          "name": "無人島棕櫚葉",
+          "qty": 3
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "itemId": 37680,
+      "name": "開拓用石錘",
+      "nameMissing": false,
+      "order": 21,
+      "ingredients": [
+        {
+          "itemId": 37554,
+          "name": "無人島石材",
+          "qty": 3
+        },
+        {
+          "itemId": 37560,
+          "name": "無人島原木",
+          "qty": 2
+        },
+        {
+          "itemId": 37562,
+          "name": "無人島藤蔓",
+          "qty": 4
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "itemId": 37681,
+      "name": "開拓用銅鏟",
+      "nameMissing": false,
+      "order": 22,
+      "ingredients": [
+        {
+          "itemId": 37560,
+          "name": "無人島原木",
+          "qty": 3
+        },
+        {
+          "itemId": 37562,
+          "name": "無人島藤蔓",
+          "qty": 3
+        },
+        {
+          "itemId": 37564,
+          "name": "無人島銅礦",
+          "qty": 4
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "itemId": 37682,
+      "name": "開拓用銅鐮",
+      "nameMissing": false,
+      "order": 23,
+      "ingredients": [
+        {
+          "itemId": 37560,
+          "name": "無人島原木",
+          "qty": 3
+        },
+        {
+          "itemId": 37570,
+          "name": "無人島黏土",
+          "qty": 3
+        },
+        {
+          "itemId": 37564,
+          "name": "無人島銅礦",
+          "qty": 4
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "itemId": 37683,
+      "name": "開拓用青銅魚叉",
+      "nameMissing": false,
+      "order": 24,
+      "ingredients": [
+        {
+          "itemId": 37560,
+          "name": "無人島原木",
+          "qty": 3
+        },
+        {
+          "itemId": 37564,
+          "name": "無人島銅礦",
+          "qty": 3
+        },
+        {
+          "itemId": 37571,
+          "name": "無人島錫砂",
+          "qty": 3
+        },
+        {
+          "itemId": 37569,
+          "name": "無人島麻",
+          "qty": 3
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "itemId": 37684,
+      "name": "開拓用十字鎬",
+      "nameMissing": false,
+      "order": 25,
+      "ingredients": [
+        {
+          "itemId": 37560,
+          "name": "無人島原木",
+          "qty": 3
+        },
+        {
+          "itemId": 37564,
+          "name": "無人島銅礦",
+          "qty": 4
+        },
+        {
+          "itemId": 37571,
+          "name": "無人島錫砂",
+          "qty": 4
+        },
+        {
+          "itemId": 37568,
+          "name": "無人島棉花",
+          "qty": 3
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "itemId": 37685,
+      "name": "魔法人偶用耕種設備",
+      "nameMissing": false,
+      "order": 40,
+      "ingredients": [
+        {
+          "itemId": 37561,
+          "name": "無人島棕櫚原木",
+          "qty": 6
+        },
+        {
+          "itemId": 37564,
+          "name": "無人島銅礦",
+          "qty": 6
+        },
+        {
+          "itemId": 37571,
+          "name": "無人島錫砂",
+          "qty": 6
+        },
+        {
+          "itemId": 37569,
+          "name": "無人島麻",
+          "qty": 6
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "itemId": 37686,
+      "name": "魔法人偶用飼養設備",
+      "nameMissing": false,
+      "order": 41,
+      "ingredients": [
+        {
+          "itemId": 37560,
+          "name": "無人島原木",
+          "qty": 6
+        },
+        {
+          "itemId": 37564,
+          "name": "無人島銅礦",
+          "qty": 6
+        },
+        {
+          "itemId": 37571,
+          "name": "無人島錫砂",
+          "qty": 6
+        },
+        {
+          "itemId": 37551,
+          "name": "無人島棕櫚葉",
+          "qty": 6
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "itemId": 37612,
+      "name": "無人島果實飼料",
+      "nameMissing": false,
+      "order": 1,
+      "ingredients": [
+        {
+          "itemId": 37552,
+          "name": "無人島蘋果",
+          "qty": 3
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "itemId": 37613,
+      "name": "無人島蔬菜飼料",
+      "nameMissing": false,
+      "order": 2,
+      "ingredients": [
+        {
+          "itemId": 37551,
+          "name": "無人島棕櫚葉",
+          "qty": 2
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "itemId": 37614,
+      "name": "無人島高級蔬菜飼料",
+      "nameMissing": false,
+      "order": 3,
+      "ingredients": [
+        {
+          "itemId": 37551,
+          "name": "無人島棕櫚葉",
+          "qty": 2
+        },
+        {
+          "itemId": 37551,
+          "name": "無人島棕櫚葉",
+          "qty": 2
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "itemId": 37615,
+      "name": "捕獸網",
+      "nameMissing": false,
+      "order": 10,
+      "ingredients": [
+        {
+          "itemId": 37553,
+          "name": "無人島小樹枝",
+          "qty": 1
+        },
+        {
+          "itemId": 37562,
+          "name": "無人島藤蔓",
+          "qty": 2
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "itemId": 37616,
+      "name": "捕獸繩",
+      "nameMissing": false,
+      "order": 11,
+      "ingredients": [
+        {
+          "itemId": 37569,
+          "name": "無人島麻",
+          "qty": 3
+        },
+        {
+          "itemId": 37564,
+          "name": "無人島銅礦",
+          "qty": 1
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "itemId": 37617,
+      "name": "捕獸用睡眠球",
+      "nameMissing": false,
+      "order": 12,
+      "ingredients": [
+        {
+          "itemId": 37556,
+          "name": "無人島球藻",
+          "qty": 2
+        },
+        {
+          "itemId": 37563,
+          "name": "無人島樹液",
+          "qty": 1
+        },
+        {
+          "itemId": 37577,
+          "name": "無人島水母",
+          "qty": 2
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "itemId": 37687,
+      "name": "魔法人偶用開拓設備",
+      "nameMissing": false,
+      "order": 26,
+      "ingredients": [
+        {
+          "itemId": 37561,
+          "name": "無人島棕櫚原木",
+          "qty": 10
+        },
+        {
+          "itemId": 37562,
+          "name": "無人島藤蔓",
+          "qty": 10
+        },
+        {
+          "itemId": 37564,
+          "name": "無人島銅礦",
+          "qty": 10
+        },
+        {
+          "itemId": 37565,
+          "name": "無人島石灰岩",
+          "qty": 10
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "itemId": 37688,
+      "name": "真厲害級魔法人偶用開拓設備",
+      "nameMissing": false,
+      "order": 50,
+      "ingredients": [
+        {
+          "itemId": 37570,
+          "name": "無人島黏土",
+          "qty": 10
+        },
+        {
+          "itemId": 37571,
+          "name": "無人島錫砂",
+          "qty": 10
+        },
+        {
+          "itemId": 37561,
+          "name": "無人島棕櫚原木",
+          "qty": 10
+        },
+        {
+          "itemId": 37564,
+          "name": "無人島銅礦",
+          "qty": 10
+        },
+        {
+          "itemId": 37565,
+          "name": "無人島石灰岩",
+          "qty": 10
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "itemId": 37689,
+      "name": "十分厲害級魔法人偶用開拓設備",
+      "nameMissing": false,
+      "order": 51,
+      "ingredients": [
+        {
+          "itemId": 37568,
+          "name": "無人島棉花",
+          "qty": 10
+        },
+        {
+          "itemId": 37569,
+          "name": "無人島麻",
+          "qty": 10
+        },
+        {
+          "itemId": 37570,
+          "name": "無人島黏土",
+          "qty": 10
+        },
+        {
+          "itemId": 37571,
+          "name": "無人島錫砂",
+          "qty": 10
+        },
+        {
+          "itemId": 37560,
+          "name": "無人島原木",
+          "qty": 10
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "itemId": 37690,
+      "name": "非常厲害級魔法人偶用開拓設備",
+      "nameMissing": false,
+      "order": 52,
+      "ingredients": [
+        {
+          "itemId": 37572,
+          "name": "無人島鐵礦",
+          "qty": 10
+        },
+        {
+          "itemId": 37573,
+          "name": "無人島石英",
+          "qty": 10
+        },
+        {
+          "itemId": 37574,
+          "name": "無人島花崗岩",
+          "qty": 10
+        },
+        {
+          "itemId": 37569,
+          "name": "無人島麻",
+          "qty": 10
+        },
+        {
+          "itemId": 37570,
+          "name": "無人島黏土",
+          "qty": 10
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "itemId": 39233,
+      "name": "開拓用鐵斧",
+      "nameMissing": false,
+      "order": 26,
+      "ingredients": [
+        {
+          "itemId": 37560,
+          "name": "無人島原木",
+          "qty": 3
+        },
+        {
+          "itemId": 37572,
+          "name": "無人島鐵礦",
+          "qty": 2
+        },
+        {
+          "itemId": 37573,
+          "name": "無人島石英",
+          "qty": 3
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "itemId": 39904,
+      "name": "魔法人偶用碎岩設備",
+      "nameMissing": false,
+      "order": 42,
+      "ingredients": [
+        {
+          "itemId": 37561,
+          "name": "無人島棕櫚原木",
+          "qty": 10
+        },
+        {
+          "itemId": 37572,
+          "name": "無人島鐵礦",
+          "qty": 10
+        },
+        {
+          "itemId": 37573,
+          "name": "無人島石英",
+          "qty": 10
+        },
+        {
+          "itemId": 39224,
+          "name": "無人島天然樹脂",
+          "qty": 10
+        },
+        {
+          "itemId": 39227,
+          "name": "無人島木化石",
+          "qty": 10
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "itemId": 39903,
+      "name": "開拓用鋼錘",
+      "nameMissing": false,
+      "order": 27,
+      "ingredients": [
+        {
+          "itemId": 37560,
+          "name": "無人島原木",
+          "qty": 3
+        },
+        {
+          "itemId": 37572,
+          "name": "無人島鐵礦",
+          "qty": 3
+        },
+        {
+          "itemId": 39227,
+          "name": "無人島木化石",
+          "qty": 3
+        },
+        {
+          "itemId": 39887,
+          "name": "無人島石炭",
+          "qty": 4
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "itemId": 39905,
+      "name": "空前絕後級魔法人偶用開拓設備",
+      "nameMissing": false,
+      "order": 53,
+      "ingredients": [
+        {
+          "itemId": 37560,
+          "name": "無人島原木",
+          "qty": 10
+        },
+        {
+          "itemId": 39887,
+          "name": "無人島石炭",
+          "qty": 10
+        },
+        {
+          "itemId": 39890,
+          "name": "無人島大理石",
+          "qty": 10
+        },
+        {
+          "itemId": 39891,
+          "name": "無人島靈銀礦",
+          "qty": 10
+        },
+        {
+          "itemId": 39893,
+          "name": "無人島幻影石",
+          "qty": 10
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "itemId": 41648,
+      "name": "真厲害級魔法人偶用碎岩設備",
+      "nameMissing": false,
+      "order": 43,
+      "ingredients": [
+        {
+          "itemId": 37561,
+          "name": "無人島棕櫚原木",
+          "qty": 10
+        },
+        {
+          "itemId": 39224,
+          "name": "無人島天然樹脂",
+          "qty": 10
+        },
+        {
+          "itemId": 39227,
+          "name": "無人島木化石",
+          "qty": 10
+        },
+        {
+          "itemId": 39890,
+          "name": "無人島大理石",
+          "qty": 10
+        },
+        {
+          "itemId": 39891,
+          "name": "無人島靈銀礦",
+          "qty": 10
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "itemId": 41646,
+      "name": "開拓用秘銀十字鎬",
+      "nameMissing": false,
+      "order": 28,
+      "ingredients": [
+        {
+          "itemId": 37572,
+          "name": "無人島鐵礦",
+          "qty": 3
+        },
+        {
+          "itemId": 39224,
+          "name": "無人島天然樹脂",
+          "qty": 3
+        },
+        {
+          "itemId": 39891,
+          "name": "無人島靈銀礦",
+          "qty": 4
+        },
+        {
+          "itemId": 41633,
+          "name": "無人島鷹眼砂",
+          "qty": 3
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "itemId": 41647,
+      "name": "開拓用鑿子",
+      "nameMissing": false,
+      "order": 29,
+      "ingredients": [
+        {
+          "itemId": 39887,
+          "name": "無人島石炭",
+          "qty": 3
+        },
+        {
+          "itemId": 41630,
+          "name": "無人島翠銀沙",
+          "qty": 3
+        },
+        {
+          "itemId": 41632,
+          "name": "無人島金礦",
+          "qty": 4
+        },
+        {
+          "itemId": 41633,
+          "name": "無人島鷹眼砂",
+          "qty": 3
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "itemId": 41643,
+      "name": "高級捕獸網",
+      "nameMissing": false,
+      "order": 13,
+      "ingredients": [
+        {
+          "itemId": 37572,
+          "name": "無人島鐵礦",
+          "qty": 25
+        },
+        {
+          "itemId": 41630,
+          "name": "無人島翠銀沙",
+          "qty": 25
+        },
+        {
+          "itemId": 37579,
+          "name": "無人島石榴石原石",
+          "qty": 25
+        },
+        {
+          "itemId": 37580,
+          "name": "無人島雲杉原木",
+          "qty": 25
+        },
+        {
+          "itemId": 37582,
+          "name": "無人島銀礦",
+          "qty": 25
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "itemId": 41644,
+      "name": "高級捕獸繩",
+      "nameMissing": false,
+      "order": 14,
+      "ingredients": [
+        {
+          "itemId": 37569,
+          "name": "無人島麻",
+          "qty": 25
+        },
+        {
+          "itemId": 41631,
+          "name": "無人島黃銅礦",
+          "qty": 25
+        },
+        {
+          "itemId": 37578,
+          "name": "無人島香薺",
+          "qty": 25
+        },
+        {
+          "itemId": 37580,
+          "name": "無人島雲杉原木",
+          "qty": 25
+        },
+        {
+          "itemId": 37582,
+          "name": "無人島銀礦",
+          "qty": 25
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "itemId": 41645,
+      "name": "高級捕獸用睡眠球",
+      "nameMissing": false,
+      "order": 15,
+      "ingredients": [
+        {
+          "itemId": 37577,
+          "name": "無人島水母",
+          "qty": 25
+        },
+        {
+          "itemId": 41633,
+          "name": "無人島鷹眼砂",
+          "qty": 25
+        },
+        {
+          "itemId": 37578,
+          "name": "無人島香薺",
+          "qty": 25
+        },
+        {
+          "itemId": 37581,
+          "name": "無人島錘頭鯊",
+          "qty": 25
+        },
+        {
+          "itemId": 39894,
+          "name": "無人島長臂蝦",
+          "qty": 25
+        }
+      ]
+    }
+  ]
+}

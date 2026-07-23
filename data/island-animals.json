@@ -1,0 +1,1041 @@
+{
+  "schema": "island-animals",
+  "patch": "6.5",
+  "updated": "2026-07-23",
+  "source": "datamining-cn MJI* + items.json(tw-items)",
+  "count": 43,
+  "data": [
+    {
+      "id": 1,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 14906,
+      "size": 1,
+      "sizeName": "小",
+      "rarity": 1,
+      "sort": 1,
+      "icon": 70121,
+      "rewards": [
+        {
+          "itemId": 37603,
+          "name": "牧場動物的絨毛"
+        },
+        {
+          "itemId": 37611,
+          "name": "牧場動物的乳汁"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 2,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 14907,
+      "size": 1,
+      "sizeName": "小",
+      "rarity": 2,
+      "sort": 1,
+      "icon": 70122,
+      "rewards": [
+        {
+          "itemId": 37611,
+          "name": "牧場動物的乳汁"
+        },
+        {
+          "itemId": 37603,
+          "name": "牧場動物的絨毛"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 3,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 14908,
+      "size": 1,
+      "sizeName": "小",
+      "rarity": 1,
+      "sort": 2,
+      "icon": 70123,
+      "rewards": [
+        {
+          "itemId": 37604,
+          "name": "牧場動物的尖爪"
+        },
+        {
+          "itemId": 37605,
+          "name": "牧場動物的獸毛"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 4,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 14909,
+      "size": 1,
+      "sizeName": "小",
+      "rarity": 2,
+      "sort": 2,
+      "icon": 70124,
+      "rewards": [
+        {
+          "itemId": 37605,
+          "name": "牧場動物的獸毛"
+        },
+        {
+          "itemId": 37604,
+          "name": "牧場動物的尖爪"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 5,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 14910,
+      "size": 1,
+      "sizeName": "小",
+      "rarity": 1,
+      "sort": 3,
+      "icon": 70125,
+      "rewards": [
+        {
+          "itemId": 37603,
+          "name": "牧場動物的絨毛"
+        },
+        {
+          "itemId": 37607,
+          "name": "牧場動物的鳥蛋"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 6,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 14911,
+      "size": 1,
+      "sizeName": "小",
+      "rarity": 2,
+      "sort": 3,
+      "icon": 70126,
+      "rewards": [
+        {
+          "itemId": 37607,
+          "name": "牧場動物的鳥蛋"
+        },
+        {
+          "itemId": 37603,
+          "name": "牧場動物的絨毛"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 7,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 14912,
+      "size": 1,
+      "sizeName": "小",
+      "rarity": 1,
+      "sort": 4,
+      "icon": 70127,
+      "rewards": [
+        {
+          "itemId": 37604,
+          "name": "牧場動物的尖爪"
+        },
+        {
+          "itemId": 37605,
+          "name": "牧場動物的獸毛"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 8,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 14913,
+      "size": 1,
+      "sizeName": "小",
+      "rarity": 2,
+      "sort": 4,
+      "icon": 70128,
+      "rewards": [
+        {
+          "itemId": 37605,
+          "name": "牧場動物的獸毛"
+        },
+        {
+          "itemId": 37604,
+          "name": "牧場動物的尖爪"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 9,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 14914,
+      "size": 1,
+      "sizeName": "小",
+      "rarity": 1,
+      "sort": 5,
+      "icon": 70129,
+      "rewards": [
+        {
+          "itemId": 37609,
+          "name": "牧場動物的尖牙"
+        },
+        {
+          "itemId": 37608,
+          "name": "牧場動物的甲殼"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 10,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 14915,
+      "size": 1,
+      "sizeName": "小",
+      "rarity": 2,
+      "sort": 5,
+      "icon": 70130,
+      "rewards": [
+        {
+          "itemId": 37608,
+          "name": "牧場動物的甲殼"
+        },
+        {
+          "itemId": 37609,
+          "name": "牧場動物的尖牙"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 11,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 14916,
+      "size": 2,
+      "sizeName": "中",
+      "rarity": 1,
+      "sort": 6,
+      "icon": 70131,
+      "rewards": [
+        {
+          "itemId": 37607,
+          "name": "牧場動物的鳥蛋"
+        },
+        {
+          "itemId": 37606,
+          "name": "牧場動物的羽毛"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 12,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 14917,
+      "size": 2,
+      "sizeName": "中",
+      "rarity": 2,
+      "sort": 6,
+      "icon": 70132,
+      "rewards": [
+        {
+          "itemId": 37606,
+          "name": "牧場動物的羽毛"
+        },
+        {
+          "itemId": 37607,
+          "name": "牧場動物的鳥蛋"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 13,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 14918,
+      "size": 2,
+      "sizeName": "中",
+      "rarity": 1,
+      "sort": 7,
+      "icon": 70133,
+      "rewards": [
+        {
+          "itemId": 37605,
+          "name": "牧場動物的獸毛"
+        },
+        {
+          "itemId": 37611,
+          "name": "牧場動物的乳汁"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 14,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 14919,
+      "size": 2,
+      "sizeName": "中",
+      "rarity": 2,
+      "sort": 7,
+      "icon": 70134,
+      "rewards": [
+        {
+          "itemId": 37605,
+          "name": "牧場動物的獸毛"
+        },
+        {
+          "itemId": 37610,
+          "name": "牧場動物的角片"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 15,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 14920,
+      "size": 2,
+      "sizeName": "中",
+      "rarity": 1,
+      "sort": 8,
+      "icon": 70135,
+      "rewards": [
+        {
+          "itemId": 37605,
+          "name": "牧場動物的獸毛"
+        },
+        {
+          "itemId": 37606,
+          "name": "牧場動物的羽毛"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 16,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 14921,
+      "size": 2,
+      "sizeName": "中",
+      "rarity": 2,
+      "sort": 8,
+      "icon": 70136,
+      "rewards": [
+        {
+          "itemId": 37606,
+          "name": "牧場動物的羽毛"
+        },
+        {
+          "itemId": 37605,
+          "name": "牧場動物的獸毛"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 17,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 14922,
+      "size": 2,
+      "sizeName": "中",
+      "rarity": 1,
+      "sort": 9,
+      "icon": 70137,
+      "rewards": [
+        {
+          "itemId": 37608,
+          "name": "牧場動物的甲殼"
+        },
+        {
+          "itemId": 37604,
+          "name": "牧場動物的尖爪"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 18,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 14923,
+      "size": 2,
+      "sizeName": "中",
+      "rarity": 2,
+      "sort": 9,
+      "icon": 70138,
+      "rewards": [
+        {
+          "itemId": 37604,
+          "name": "牧場動物的尖爪"
+        },
+        {
+          "itemId": 37608,
+          "name": "牧場動物的甲殼"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 19,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 14924,
+      "size": 3,
+      "sizeName": "大",
+      "rarity": 1,
+      "sort": 10,
+      "icon": 70139,
+      "rewards": [
+        {
+          "itemId": 37611,
+          "name": "牧場動物的乳汁"
+        },
+        {
+          "itemId": 37610,
+          "name": "牧場動物的角片"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 20,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 14925,
+      "size": 3,
+      "sizeName": "大",
+      "rarity": 2,
+      "sort": 10,
+      "icon": 70140,
+      "rewards": [
+        {
+          "itemId": 37610,
+          "name": "牧場動物的角片"
+        },
+        {
+          "itemId": 37611,
+          "name": "牧場動物的乳汁"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 21,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 14926,
+      "size": 3,
+      "sizeName": "大",
+      "rarity": 1,
+      "sort": 13,
+      "icon": 70141,
+      "rewards": [
+        {
+          "itemId": 37611,
+          "name": "牧場動物的乳汁"
+        },
+        {
+          "itemId": 37610,
+          "name": "牧場動物的角片"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 22,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 14927,
+      "size": 3,
+      "sizeName": "大",
+      "rarity": 2,
+      "sort": 13,
+      "icon": 70142,
+      "rewards": [
+        {
+          "itemId": 37610,
+          "name": "牧場動物的角片"
+        },
+        {
+          "itemId": 37603,
+          "name": "牧場動物的絨毛"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 23,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 14928,
+      "size": 3,
+      "sizeName": "大",
+      "rarity": 1,
+      "sort": 11,
+      "icon": 70143,
+      "rewards": [
+        {
+          "itemId": 37607,
+          "name": "牧場動物的鳥蛋"
+        },
+        {
+          "itemId": 37606,
+          "name": "牧場動物的羽毛"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 24,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 14929,
+      "size": 3,
+      "sizeName": "大",
+      "rarity": 2,
+      "sort": 11,
+      "icon": 70144,
+      "rewards": [
+        {
+          "itemId": 37606,
+          "name": "牧場動物的羽毛"
+        },
+        {
+          "itemId": 37607,
+          "name": "牧場動物的鳥蛋"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 25,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 14930,
+      "size": 1,
+      "sizeName": "小",
+      "rarity": 3,
+      "sort": 12,
+      "icon": 70145,
+      "rewards": [
+        {
+          "itemId": 37603,
+          "name": "牧場動物的絨毛"
+        },
+        {
+          "itemId": 37605,
+          "name": "牧場動物的獸毛"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 26,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 14931,
+      "size": 1,
+      "sizeName": "小",
+      "rarity": 3,
+      "sort": 14,
+      "icon": 70146,
+      "rewards": [
+        {
+          "itemId": 37608,
+          "name": "牧場動物的甲殼"
+        },
+        {
+          "itemId": 37604,
+          "name": "牧場動物的尖爪"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 27,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 14932,
+      "size": 2,
+      "sizeName": "中",
+      "rarity": 3,
+      "sort": 15,
+      "icon": 70147,
+      "rewards": [
+        {
+          "itemId": 37604,
+          "name": "牧場動物的尖爪"
+        },
+        {
+          "itemId": 37603,
+          "name": "牧場動物的絨毛"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 28,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 14933,
+      "size": 3,
+      "sizeName": "大",
+      "rarity": 3,
+      "sort": 16,
+      "icon": 70148,
+      "rewards": [
+        {
+          "itemId": 37604,
+          "name": "牧場動物的尖爪"
+        },
+        {
+          "itemId": 37609,
+          "name": "牧場動物的尖牙"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 29,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 14934,
+      "size": 3,
+      "sizeName": "大",
+      "rarity": 3,
+      "sort": 17,
+      "icon": 70149,
+      "rewards": [
+        {
+          "itemId": 37609,
+          "name": "牧場動物的尖牙"
+        },
+        {
+          "itemId": 37604,
+          "name": "牧場動物的尖爪"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 30,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 14935,
+      "size": 3,
+      "sizeName": "大",
+      "rarity": 3,
+      "sort": 18,
+      "icon": 70150,
+      "rewards": [
+        {
+          "itemId": 37606,
+          "name": "牧場動物的羽毛"
+        },
+        {
+          "itemId": 37604,
+          "name": "牧場動物的尖爪"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 31,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 16068,
+      "size": 2,
+      "sizeName": "中",
+      "rarity": 3,
+      "sort": 21,
+      "icon": 70151,
+      "rewards": [
+        {
+          "itemId": 37609,
+          "name": "牧場動物的尖牙"
+        },
+        {
+          "itemId": 37605,
+          "name": "牧場動物的獸毛"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 32,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 16069,
+      "size": 1,
+      "sizeName": "小",
+      "rarity": 3,
+      "sort": 22,
+      "icon": 70152,
+      "rewards": [
+        {
+          "itemId": 37608,
+          "name": "牧場動物的甲殼"
+        },
+        {
+          "itemId": 37609,
+          "name": "牧場動物的尖牙"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 33,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 14936,
+      "size": 1,
+      "sizeName": "小",
+      "rarity": 1,
+      "sort": 19,
+      "icon": 70153,
+      "rewards": [
+        {
+          "itemId": 37609,
+          "name": "牧場動物的尖牙"
+        },
+        {
+          "itemId": 37605,
+          "name": "牧場動物的獸毛"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 34,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 14937,
+      "size": 1,
+      "sizeName": "小",
+      "rarity": 2,
+      "sort": 19,
+      "icon": 70154,
+      "rewards": [
+        {
+          "itemId": 37605,
+          "name": "牧場動物的獸毛"
+        },
+        {
+          "itemId": 37609,
+          "name": "牧場動物的尖牙"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 35,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 14938,
+      "size": 3,
+      "sizeName": "大",
+      "rarity": 1,
+      "sort": 20,
+      "icon": 70155,
+      "rewards": [
+        {
+          "itemId": 37609,
+          "name": "牧場動物的尖牙"
+        },
+        {
+          "itemId": 37610,
+          "name": "牧場動物的角片"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 36,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 14939,
+      "size": 3,
+      "sizeName": "大",
+      "rarity": 2,
+      "sort": 20,
+      "icon": 70156,
+      "rewards": [
+        {
+          "itemId": 37610,
+          "name": "牧場動物的角片"
+        },
+        {
+          "itemId": 37609,
+          "name": "牧場動物的尖牙"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 37,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 14940,
+      "size": 3,
+      "sizeName": "大",
+      "rarity": 3,
+      "sort": 19,
+      "icon": 70157,
+      "rewards": [
+        {
+          "itemId": 37609,
+          "name": "牧場動物的尖牙"
+        },
+        {
+          "itemId": 37605,
+          "name": "牧場動物的獸毛"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 38,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 16340,
+      "size": 1,
+      "sizeName": "小",
+      "rarity": 3,
+      "sort": 23,
+      "icon": 70158,
+      "rewards": [
+        {
+          "itemId": 37603,
+          "name": "牧場動物的絨毛"
+        },
+        {
+          "itemId": 37605,
+          "name": "牧場動物的獸毛"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 39,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 16341,
+      "size": 2,
+      "sizeName": "中",
+      "rarity": 3,
+      "sort": 24,
+      "icon": 70159,
+      "rewards": [
+        {
+          "itemId": 37606,
+          "name": "牧場動物的羽毛"
+        },
+        {
+          "itemId": 37607,
+          "name": "牧場動物的鳥蛋"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 40,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 16628,
+      "size": 3,
+      "sizeName": "大",
+      "rarity": 3,
+      "sort": 22,
+      "icon": 70163,
+      "rewards": [
+        {
+          "itemId": 37609,
+          "name": "牧場動物的尖牙"
+        },
+        {
+          "itemId": 37608,
+          "name": "牧場動物的甲殼"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 41,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 16629,
+      "size": 3,
+      "sizeName": "大",
+      "rarity": 3,
+      "sort": 25,
+      "icon": 70160,
+      "rewards": [
+        {
+          "itemId": 37608,
+          "name": "牧場動物的甲殼"
+        },
+        {
+          "itemId": 37604,
+          "name": "牧場動物的尖爪"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 42,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 16630,
+      "size": 3,
+      "sizeName": "大",
+      "rarity": 3,
+      "sort": 26,
+      "icon": 70162,
+      "rewards": [
+        {
+          "itemId": 37604,
+          "name": "牧場動物的尖爪"
+        },
+        {
+          "itemId": 37610,
+          "name": "牧場動物的角片"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    },
+    {
+      "id": 43,
+      "name": null,
+      "nameMissing": true,
+      "bnpcBaseId": 16631,
+      "size": 3,
+      "sizeName": "大",
+      "rarity": 3,
+      "sort": 5,
+      "icon": 70161,
+      "rewards": [
+        {
+          "itemId": 37609,
+          "name": "牧場動物的尖牙"
+        },
+        {
+          "itemId": 37608,
+          "name": "牧場動物的甲殼"
+        }
+      ],
+      "spawn": null,
+      "weather": null,
+      "coords": null
+    }
+  ]
+}

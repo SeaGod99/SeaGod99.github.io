@@ -1,0 +1,109 @@
+{
+  "schema": "island-ranks",
+  "patch": "6.5",
+  "updated": "2026-07-23",
+  "source": "datamining-cn MJI* + items.json(tw-items)",
+  "count": 20,
+  "data": [
+    {
+      "level": 1,
+      "expToNext": 3000,
+      "cumulativeExp": 0
+    },
+    {
+      "level": 2,
+      "expToNext": 6000,
+      "cumulativeExp": 3000
+    },
+    {
+      "level": 3,
+      "expToNext": 9500,
+      "cumulativeExp": 9000
+    },
+    {
+      "level": 4,
+      "expToNext": 13500,
+      "cumulativeExp": 18500
+    },
+    {
+      "level": 5,
+      "expToNext": 18000,
+      "cumulativeExp": 32000
+    },
+    {
+      "level": 6,
+      "expToNext": 23000,
+      "cumulativeExp": 50000
+    },
+    {
+      "level": 7,
+      "expToNext": 28500,
+      "cumulativeExp": 73000
+    },
+    {
+      "level": 8,
+      "expToNext": 34500,
+      "cumulativeExp": 101500
+    },
+    {
+      "level": 9,
+      "expToNext": 41000,
+      "cumulativeExp": 136000
+    },
+    {
+      "level": 10,
+      "expToNext": 42000,
+      "cumulativeExp": 177000
+    },
+    {
+      "level": 11,
+      "expToNext": 43500,
+      "cumulativeExp": 219000
+    },
+    {
+      "level": 12,
+      "expToNext": 44000,
+      "cumulativeExp": 262500
+    },
+    {
+      "level": 13,
+      "expToNext": 45500,
+      "cumulativeExp": 306500
+    },
+    {
+      "level": 14,
+      "expToNext": 47500,
+      "cumulativeExp": 352000
+    },
+    {
+      "level": 15,
+      "expToNext": 65000,
+      "cumulativeExp": 399500
+    },
+    {
+      "level": 16,
+      "expToNext": 65500,
+      "cumulativeExp": 464500
+    },
+    {
+      "level": 17,
+      "expToNext": 66000,
+      "cumulativeExp": 530000
+    },
+    {
+      "level": 18,
+      "expToNext": 70000,
+      "cumulativeExp": 596000
+    },
+    {
+      "level": 19,
+      "expToNext": 100000,
+      "cumulativeExp": 666000
+    },
+    {
+      "level": 20,
+      "expToNext": 0,
+      "cumulativeExp": 766000
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "schema": "island-areas",
+  "patch": "6.5",
+  "updated": "2026-07-23",
+  "source": "datamining-cn MJI* + items.json(tw-items)",
+  "count": 6,
+  "data": [
+    {
+      "id": 1,
+      "name": null,
+      "nameCn": "草原",
+      "nameMissing": true
+    },
+    {
+      "id": 2,
+      "name": null,
+      "nameCn": "溪流",
+      "nameMissing": true
+    },
+    {
+      "id": 3,
+      "name": null,
+      "nameCn": "森林",
+      "nameMissing": true
+    },
+    {
+      "id": 4,
+      "name": null,
+      "nameCn": "沙滩",
+      "nameMissing": true
+    },
+    {
+      "id": 5,
+      "name": null,
+      "nameCn": "山",
+      "nameMissing": true
+    },
+    {
+      "id": 6,
+      "name": null,
+      "nameCn": "洞窟",
+      "nameMissing": true
+    }
+  ]
+}

@@ -1,0 +1,1771 @@
+{
+  "schema": "island-materials",
+  "patch": "6.5",
+  "updated": "2026-07-23",
+  "source": "datamining-cn MJI* + items.json(tw-items)",
+  "count": 109,
+  "data": [
+    {
+      "id": 0,
+      "itemId": 37551,
+      "name": "無人島棕櫚葉",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 1,
+      "seedItemId": null,
+      "gathering": {
+        "tool": null,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 18.4,
+          "y": 24.3
+        },
+        "raw": {
+          "x": 20,
+          "y": 0,
+          "radius": 100
+        }
+      }
+    },
+    {
+      "id": 1,
+      "itemId": 37552,
+      "name": "無人島蘋果",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 11,
+      "seedItemId": null,
+      "gathering": {
+        "tool": 1,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 21.9,
+          "y": 25.7
+        },
+        "raw": {
+          "x": 194,
+          "y": 72,
+          "radius": 100
+        }
+      }
+    },
+    {
+      "id": 2,
+      "itemId": 37553,
+      "name": "無人島小樹枝",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 2,
+      "seedItemId": null,
+      "gathering": {
+        "tool": null,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 22.3,
+          "y": 25.9
+        },
+        "raw": {
+          "x": 215,
+          "y": 82,
+          "radius": 100
+        }
+      }
+    },
+    {
+      "id": 3,
+      "itemId": 37554,
+      "name": "無人島石材",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 3,
+      "seedItemId": null,
+      "gathering": {
+        "tool": null,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 17.6,
+          "y": 23.3
+        },
+        "raw": {
+          "x": -22,
+          "y": -46,
+          "radius": 80
+        }
+      }
+    },
+    {
+      "id": 4,
+      "itemId": 37555,
+      "name": "無人島雙殼貝",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 4,
+      "seedItemId": null,
+      "gathering": {
+        "tool": null,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 16.8,
+          "y": 10.4
+        },
+        "raw": {
+          "x": -58,
+          "y": -694,
+          "radius": 150
+        }
+      }
+    },
+    {
+      "id": 5,
+      "itemId": 37556,
+      "name": "無人島球藻",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 5,
+      "seedItemId": null,
+      "gathering": {
+        "tool": null,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 33.3,
+          "y": 24.6
+        },
+        "raw": {
+          "x": 765,
+          "y": 16,
+          "radius": 100
+        }
+      }
+    },
+    {
+      "id": 6,
+      "itemId": 37557,
+      "name": "無人島珊瑚",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 6,
+      "seedItemId": null,
+      "gathering": {
+        "tool": null,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 33.3,
+          "y": 24.6
+        },
+        "raw": {
+          "x": 765,
+          "y": 16,
+          "radius": 100
+        }
+      }
+    },
+    {
+      "id": 7,
+      "itemId": 37558,
+      "name": "無人島草葉",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 7,
+      "seedItemId": null,
+      "gathering": {
+        "tool": null,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 13,
+          "y": 12.4
+        },
+        "raw": {
+          "x": -248,
+          "y": -592,
+          "radius": 100
+        }
+      }
+    },
+    {
+      "id": 8,
+      "itemId": 37559,
+      "name": "無人島砂礫",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 8,
+      "seedItemId": null,
+      "gathering": {
+        "tool": null,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 22.7,
+          "y": 26
+        },
+        "raw": {
+          "x": 236,
+          "y": 88,
+          "radius": 75
+        }
+      }
+    },
+    {
+      "id": 9,
+      "itemId": 37560,
+      "name": "無人島原木",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 12,
+      "seedItemId": null,
+      "gathering": {
+        "tool": 1,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 22.3,
+          "y": 25.9
+        },
+        "raw": {
+          "x": 215,
+          "y": 82,
+          "radius": 100
+        }
+      }
+    },
+    {
+      "id": 10,
+      "itemId": 37561,
+      "name": "無人島棕櫚原木",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 13,
+      "seedItemId": null,
+      "gathering": {
+        "tool": 1,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 18.4,
+          "y": 24.3
+        },
+        "raw": {
+          "x": 20,
+          "y": 0,
+          "radius": 100
+        }
+      }
+    },
+    {
+      "id": 11,
+      "itemId": 37562,
+      "name": "無人島藤蔓",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 9,
+      "seedItemId": null,
+      "gathering": {
+        "tool": null,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 21.9,
+          "y": 25.7
+        },
+        "raw": {
+          "x": 194,
+          "y": 72,
+          "radius": 100
+        }
+      }
+    },
+    {
+      "id": 12,
+      "itemId": 37563,
+      "name": "無人島樹液",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 10,
+      "seedItemId": null,
+      "gathering": {
+        "tool": null,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 20.9,
+          "y": 24.5
+        },
+        "raw": {
+          "x": 144,
+          "y": 11,
+          "radius": 100
+        }
+      }
+    },
+    {
+      "id": 13,
+      "itemId": 37564,
+      "name": "無人島銅礦",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 14,
+      "seedItemId": null,
+      "gathering": {
+        "tool": 2,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 30.4,
+          "y": 28.5
+        },
+        "raw": {
+          "x": 619,
+          "y": 213,
+          "radius": 80
+        }
+      }
+    },
+    {
+      "id": 14,
+      "itemId": 37565,
+      "name": "無人島石灰岩",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 15,
+      "seedItemId": null,
+      "gathering": {
+        "tool": 2,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 17.6,
+          "y": 23.3
+        },
+        "raw": {
+          "x": -22,
+          "y": -46,
+          "radius": 80
+        }
+      }
+    },
+    {
+      "id": 15,
+      "itemId": 37566,
+      "name": "無人島岩鹽",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 16,
+      "seedItemId": null,
+      "gathering": {
+        "tool": 2,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 31.7,
+          "y": 21.1
+        },
+        "raw": {
+          "x": 685,
+          "y": -156,
+          "radius": 75
+        }
+      }
+    },
+    {
+      "id": 16,
+      "itemId": 37567,
+      "name": "無人島甘蔗",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 19,
+      "seedItemId": null,
+      "gathering": {
+        "tool": 4,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 17.8,
+          "y": 17.4
+        },
+        "raw": {
+          "x": -9,
+          "y": -344,
+          "radius": 75
+        }
+      }
+    },
+    {
+      "id": 17,
+      "itemId": 37568,
+      "name": "無人島棉花",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 20,
+      "seedItemId": null,
+      "gathering": {
+        "tool": 4,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 27.5,
+          "y": 29.2
+        },
+        "raw": {
+          "x": 476,
+          "y": 246,
+          "radius": 75
+        }
+      }
+    },
+    {
+      "id": 18,
+      "itemId": 37569,
+      "name": "無人島麻",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 21,
+      "seedItemId": null,
+      "gathering": {
+        "tool": 4,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 29.1,
+          "y": 24
+        },
+        "raw": {
+          "x": 556,
+          "y": -11,
+          "radius": 100
+        }
+      }
+    },
+    {
+      "id": 19,
+      "itemId": 37570,
+      "name": "無人島黏土",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 17,
+      "seedItemId": null,
+      "gathering": {
+        "tool": 3,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 22.7,
+          "y": 26
+        },
+        "raw": {
+          "x": 236,
+          "y": 89,
+          "radius": 75
+        }
+      }
+    },
+    {
+      "id": 20,
+      "itemId": 37571,
+      "name": "無人島錫砂",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 18,
+      "seedItemId": null,
+      "gathering": {
+        "tool": 3,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 18.2,
+          "y": 21.5
+        },
+        "raw": {
+          "x": 12,
+          "y": -140,
+          "radius": 75
+        }
+      }
+    },
+    {
+      "id": 21,
+      "itemId": 37572,
+      "name": "無人島鐵礦",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 25,
+      "seedItemId": null,
+      "gathering": {
+        "tool": 6,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 27.8,
+          "y": 19.3
+        },
+        "raw": {
+          "x": 489,
+          "y": -249,
+          "radius": 100
+        }
+      }
+    },
+    {
+      "id": 22,
+      "itemId": 37573,
+      "name": "無人島石英",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 26,
+      "seedItemId": null,
+      "gathering": {
+        "tool": 6,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 25.8,
+          "y": 17.1
+        },
+        "raw": {
+          "x": 392,
+          "y": -360,
+          "radius": 200
+        }
+      }
+    },
+    {
+      "id": 23,
+      "itemId": 37574,
+      "name": "無人島花崗岩",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 27,
+      "seedItemId": null,
+      "gathering": {
+        "tool": 6,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 30.1,
+          "y": 10.9
+        },
+        "raw": {
+          "x": 603,
+          "y": -667,
+          "radius": 125
+        }
+      }
+    },
+    {
+      "id": 24,
+      "itemId": 37575,
+      "name": "無人島海水魚",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 22,
+      "seedItemId": null,
+      "gathering": {
+        "tool": 5,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 16.8,
+          "y": 10.4
+        },
+        "raw": {
+          "x": -58,
+          "y": -694,
+          "radius": 150
+        }
+      }
+    },
+    {
+      "id": 25,
+      "itemId": 37576,
+      "name": "無人島烏賊",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 23,
+      "seedItemId": null,
+      "gathering": {
+        "tool": 5,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 33.3,
+          "y": 24.6
+        },
+        "raw": {
+          "x": 765,
+          "y": 16,
+          "radius": 100
+        }
+      }
+    },
+    {
+      "id": 26,
+      "itemId": 37577,
+      "name": "無人島水母",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 24,
+      "seedItemId": null,
+      "gathering": {
+        "tool": 5,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 33.3,
+          "y": 24.6
+        },
+        "raw": {
+          "x": 765,
+          "y": 16,
+          "radius": 100
+        }
+      }
+    },
+    {
+      "id": 27,
+      "itemId": 37578,
+      "name": "無人島香薺",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 100,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 28,
+      "itemId": 37579,
+      "name": "無人島石榴石原石",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 101,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 29,
+      "itemId": 37580,
+      "name": "無人島雲杉原木",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 102,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 30,
+      "itemId": 37581,
+      "name": "無人島錘頭鯊",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 103,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 31,
+      "itemId": 37582,
+      "name": "無人島銀礦",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 104,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 32,
+      "itemId": 37583,
+      "name": "海島新薯的芽塊",
+      "nameMissing": false,
+      "categoryId": 3,
+      "sort": 120,
+      "seedItemId": 37593,
+      "gathering": {
+        "tool": 3,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 13,
+          "y": 12.4
+        },
+        "raw": {
+          "x": -248,
+          "y": -592,
+          "radius": 100
+        }
+      }
+    },
+    {
+      "id": 33,
+      "itemId": 37584,
+      "name": "海島甘藍的種子",
+      "nameMissing": false,
+      "categoryId": 3,
+      "sort": 121,
+      "seedItemId": 37594,
+      "gathering": {
+        "tool": null,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 17.5,
+          "y": 20.3
+        },
+        "raw": {
+          "x": -25,
+          "y": -198,
+          "radius": 75
+        }
+      }
+    },
+    {
+      "id": 34,
+      "itemId": 37585,
+      "name": "海島莓果的種子",
+      "nameMissing": false,
+      "categoryId": 3,
+      "sort": 122,
+      "seedItemId": 37595,
+      "gathering": null
+    },
+    {
+      "id": 35,
+      "itemId": 37586,
+      "name": "海島南瓜的種子",
+      "nameMissing": false,
+      "categoryId": 3,
+      "sort": 123,
+      "seedItemId": 37596,
+      "gathering": {
+        "tool": null,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 18.7,
+          "y": 26.5
+        },
+        "raw": {
+          "x": 35,
+          "y": 110,
+          "radius": 75
+        }
+      }
+    },
+    {
+      "id": 36,
+      "itemId": 37587,
+      "name": "海島洋蔥的種子",
+      "nameMissing": false,
+      "categoryId": 3,
+      "sort": 124,
+      "seedItemId": 37597,
+      "gathering": null
+    },
+    {
+      "id": 37,
+      "itemId": 37588,
+      "name": "海島番茄的種子",
+      "nameMissing": false,
+      "categoryId": 3,
+      "sort": 125,
+      "seedItemId": 37598,
+      "gathering": null
+    },
+    {
+      "id": 38,
+      "itemId": 37589,
+      "name": "海島小麥的種子",
+      "nameMissing": false,
+      "categoryId": 3,
+      "sort": 126,
+      "seedItemId": 37599,
+      "gathering": null
+    },
+    {
+      "id": 39,
+      "itemId": 37590,
+      "name": "海島玉米的種子",
+      "nameMissing": false,
+      "categoryId": 3,
+      "sort": 127,
+      "seedItemId": 37600,
+      "gathering": null
+    },
+    {
+      "id": 40,
+      "itemId": 37591,
+      "name": "海島高山蘿蔔的種子",
+      "nameMissing": false,
+      "categoryId": 3,
+      "sort": 128,
+      "seedItemId": 37601,
+      "gathering": {
+        "tool": 3,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 13.5,
+          "y": 15.1
+        },
+        "raw": {
+          "x": -224,
+          "y": -460,
+          "radius": 100
+        }
+      }
+    },
+    {
+      "id": 41,
+      "itemId": 37592,
+      "name": "海島小蘿蔔的種子",
+      "nameMissing": false,
+      "categoryId": 3,
+      "sort": 129,
+      "seedItemId": 37602,
+      "gathering": null
+    },
+    {
+      "id": 42,
+      "itemId": 37593,
+      "name": "海島新薯",
+      "nameMissing": false,
+      "categoryId": 4,
+      "sort": 150,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 43,
+      "itemId": 37594,
+      "name": "海島甘藍",
+      "nameMissing": false,
+      "categoryId": 4,
+      "sort": 151,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 44,
+      "itemId": 37595,
+      "name": "海島莓果",
+      "nameMissing": false,
+      "categoryId": 4,
+      "sort": 152,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 45,
+      "itemId": 37596,
+      "name": "海島南瓜",
+      "nameMissing": false,
+      "categoryId": 4,
+      "sort": 153,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 46,
+      "itemId": 37597,
+      "name": "海島洋蔥",
+      "nameMissing": false,
+      "categoryId": 4,
+      "sort": 154,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 47,
+      "itemId": 37598,
+      "name": "海島番茄",
+      "nameMissing": false,
+      "categoryId": 4,
+      "sort": 155,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 48,
+      "itemId": 37599,
+      "name": "海島小麥",
+      "nameMissing": false,
+      "categoryId": 4,
+      "sort": 156,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 49,
+      "itemId": 37600,
+      "name": "海島玉米",
+      "nameMissing": false,
+      "categoryId": 4,
+      "sort": 157,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 50,
+      "itemId": 37601,
+      "name": "海島高山蘿蔔",
+      "nameMissing": false,
+      "categoryId": 4,
+      "sort": 158,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 51,
+      "itemId": 37602,
+      "name": "海島小蘿蔔",
+      "nameMissing": false,
+      "categoryId": 4,
+      "sort": 159,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 52,
+      "itemId": 37603,
+      "name": "牧場動物的絨毛",
+      "nameMissing": false,
+      "categoryId": 5,
+      "sort": 200,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 53,
+      "itemId": 37604,
+      "name": "牧場動物的尖爪",
+      "nameMissing": false,
+      "categoryId": 5,
+      "sort": 201,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 54,
+      "itemId": 37605,
+      "name": "牧場動物的獸毛",
+      "nameMissing": false,
+      "categoryId": 5,
+      "sort": 202,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 55,
+      "itemId": 37606,
+      "name": "牧場動物的羽毛",
+      "nameMissing": false,
+      "categoryId": 5,
+      "sort": 203,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 56,
+      "itemId": 37607,
+      "name": "牧場動物的鳥蛋",
+      "nameMissing": false,
+      "categoryId": 5,
+      "sort": 204,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 57,
+      "itemId": 37608,
+      "name": "牧場動物的甲殼",
+      "nameMissing": false,
+      "categoryId": 5,
+      "sort": 205,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 58,
+      "itemId": 37609,
+      "name": "牧場動物的尖牙",
+      "nameMissing": false,
+      "categoryId": 5,
+      "sort": 206,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 59,
+      "itemId": 37610,
+      "name": "牧場動物的角片",
+      "nameMissing": false,
+      "categoryId": 5,
+      "sort": 207,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 60,
+      "itemId": 37611,
+      "name": "牧場動物的乳汁",
+      "nameMissing": false,
+      "categoryId": 5,
+      "sort": 208,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 61,
+      "itemId": 37612,
+      "name": "無人島果實飼料",
+      "nameMissing": false,
+      "categoryId": 6,
+      "sort": 209,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 62,
+      "itemId": 37613,
+      "name": "無人島蔬菜飼料",
+      "nameMissing": false,
+      "categoryId": 6,
+      "sort": 210,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 63,
+      "itemId": 37614,
+      "name": "無人島高級蔬菜飼料",
+      "nameMissing": false,
+      "categoryId": 6,
+      "sort": 211,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 64,
+      "itemId": 37615,
+      "name": "捕獸網",
+      "nameMissing": false,
+      "categoryId": 7,
+      "sort": 212,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 65,
+      "itemId": 37616,
+      "name": "捕獸繩",
+      "nameMissing": false,
+      "categoryId": 7,
+      "sort": 213,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 66,
+      "itemId": 37617,
+      "name": "捕獸用睡眠球",
+      "nameMissing": false,
+      "categoryId": 7,
+      "sort": 214,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 67,
+      "itemId": 39224,
+      "name": "無人島天然樹脂",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 29,
+      "seedItemId": null,
+      "gathering": {
+        "tool": 7,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 22.3,
+          "y": 25.9
+        },
+        "raw": {
+          "x": 215,
+          "y": 82,
+          "radius": 100
+        }
+      }
+    },
+    {
+      "id": 68,
+      "itemId": 39225,
+      "name": "無人島椰子",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 30,
+      "seedItemId": null,
+      "gathering": {
+        "tool": 7,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 18.4,
+          "y": 24.3
+        },
+        "raw": {
+          "x": 20,
+          "y": 0,
+          "radius": 100
+        }
+      }
+    },
+    {
+      "id": 69,
+      "itemId": 39226,
+      "name": "無人島蜂巢",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 31,
+      "seedItemId": null,
+      "gathering": {
+        "tool": 7,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 21.9,
+          "y": 25.7
+        },
+        "raw": {
+          "x": 194,
+          "y": 72,
+          "radius": 100
+        }
+      }
+    },
+    {
+      "id": 70,
+      "itemId": 39227,
+      "name": "無人島木化石",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 32,
+      "seedItemId": null,
+      "gathering": {
+        "tool": 7,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 20.9,
+          "y": 24.5
+        },
+        "raw": {
+          "x": 144,
+          "y": 11,
+          "radius": 100
+        }
+      }
+    },
+    {
+      "id": 71,
+      "itemId": 39228,
+      "name": "無人島色彩繽紛的花",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 28,
+      "seedItemId": null,
+      "gathering": {
+        "tool": null,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 21.9,
+          "y": 16.6
+        },
+        "raw": {
+          "x": 194,
+          "y": -384,
+          "radius": 75
+        }
+      }
+    },
+    {
+      "id": 72,
+      "itemId": 39229,
+      "name": "海島紅彩椒種子",
+      "nameMissing": false,
+      "categoryId": 3,
+      "sort": 130,
+      "seedItemId": 39231,
+      "gathering": null
+    },
+    {
+      "id": 73,
+      "itemId": 39230,
+      "name": "海島韭蔥種子",
+      "nameMissing": false,
+      "categoryId": 3,
+      "sort": 131,
+      "seedItemId": 39232,
+      "gathering": null
+    },
+    {
+      "id": 74,
+      "itemId": 39231,
+      "name": "海島紅彩椒",
+      "nameMissing": false,
+      "categoryId": 4,
+      "sort": 160,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 75,
+      "itemId": 39232,
+      "name": "海島韭蔥",
+      "nameMissing": false,
+      "categoryId": 4,
+      "sort": 161,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 76,
+      "itemId": 39887,
+      "name": "無人島石炭",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 33,
+      "seedItemId": null,
+      "gathering": {
+        "tool": 2,
+        "mapLayer": 1,
+        "layerName": "洞窟",
+        "coords": {
+          "mapId": 772,
+          "x": 26.1,
+          "y": 19.5
+        },
+        "raw": {
+          "x": 405,
+          "y": -238,
+          "radius": 80
+        }
+      }
+    },
+    {
+      "id": 77,
+      "itemId": 39888,
+      "name": "無人島堆積岩",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 36,
+      "seedItemId": null,
+      "gathering": {
+        "tool": 8,
+        "mapLayer": 1,
+        "layerName": "洞窟",
+        "coords": {
+          "mapId": 772,
+          "x": 26.1,
+          "y": 19.5
+        },
+        "raw": {
+          "x": 405,
+          "y": -238,
+          "radius": 80
+        }
+      }
+    },
+    {
+      "id": 78,
+      "itemId": 39889,
+      "name": "無人島燈火茸",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 34,
+      "seedItemId": null,
+      "gathering": {
+        "tool": null,
+        "mapLayer": 1,
+        "layerName": "洞窟",
+        "coords": {
+          "mapId": 772,
+          "x": 27.2,
+          "y": 16.9
+        },
+        "raw": {
+          "x": 458,
+          "y": -370,
+          "radius": 80
+        }
+      }
+    },
+    {
+      "id": 79,
+      "itemId": 39890,
+      "name": "無人島大理石",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 37,
+      "seedItemId": null,
+      "gathering": {
+        "tool": 8,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 17.6,
+          "y": 23.3
+        },
+        "raw": {
+          "x": -22,
+          "y": -46,
+          "radius": 80
+        }
+      }
+    },
+    {
+      "id": 80,
+      "itemId": 39891,
+      "name": "無人島靈銀礦",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 38,
+      "seedItemId": null,
+      "gathering": {
+        "tool": 8,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 30.4,
+          "y": 28.5
+        },
+        "raw": {
+          "x": 619,
+          "y": 213,
+          "radius": 80
+        }
+      }
+    },
+    {
+      "id": 81,
+      "itemId": 39892,
+      "name": "無人島氣泡水",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 35,
+      "seedItemId": null,
+      "gathering": {
+        "tool": 2,
+        "mapLayer": 1,
+        "layerName": "洞窟",
+        "coords": {
+          "mapId": 772,
+          "x": 24.1,
+          "y": 18.9
+        },
+        "raw": {
+          "x": 304,
+          "y": -269,
+          "radius": 80
+        }
+      }
+    },
+    {
+      "id": 82,
+      "itemId": 39893,
+      "name": "無人島幻影石",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 39,
+      "seedItemId": null,
+      "gathering": {
+        "tool": 8,
+        "mapLayer": 1,
+        "layerName": "洞窟",
+        "coords": {
+          "mapId": 772,
+          "x": 24.1,
+          "y": 18.9
+        },
+        "raw": {
+          "x": 304,
+          "y": -269,
+          "radius": 80
+        }
+      }
+    },
+    {
+      "id": 83,
+      "itemId": 39894,
+      "name": "無人島長臂蝦",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 105,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 84,
+      "itemId": 39895,
+      "name": "海島花豆的豆子",
+      "nameMissing": false,
+      "categoryId": 3,
+      "sort": 132,
+      "seedItemId": 39899,
+      "gathering": null
+    },
+    {
+      "id": 85,
+      "itemId": 39896,
+      "name": "海島紅菜的種子",
+      "nameMissing": false,
+      "categoryId": 3,
+      "sort": 133,
+      "seedItemId": 39900,
+      "gathering": null
+    },
+    {
+      "id": 86,
+      "itemId": 39897,
+      "name": "海島茄子的種子",
+      "nameMissing": false,
+      "categoryId": 3,
+      "sort": 134,
+      "seedItemId": 39901,
+      "gathering": null
+    },
+    {
+      "id": 87,
+      "itemId": 39898,
+      "name": "海島櫛瓜的種子",
+      "nameMissing": false,
+      "categoryId": 3,
+      "sort": 135,
+      "seedItemId": 39902,
+      "gathering": null
+    },
+    {
+      "id": 88,
+      "itemId": 39899,
+      "name": "海島花豆",
+      "nameMissing": false,
+      "categoryId": 4,
+      "sort": 162,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 89,
+      "itemId": 39900,
+      "name": "海島紅菜",
+      "nameMissing": false,
+      "categoryId": 4,
+      "sort": 163,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 90,
+      "itemId": 39901,
+      "name": "海島茄子",
+      "nameMissing": false,
+      "categoryId": 4,
+      "sort": 164,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 91,
+      "itemId": 39902,
+      "name": "海島櫛瓜",
+      "nameMissing": false,
+      "categoryId": 4,
+      "sort": 165,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 92,
+      "itemId": 41630,
+      "name": "無人島翠銀沙",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 40,
+      "seedItemId": null,
+      "gathering": {
+        "tool": 9,
+        "mapLayer": 0,
+        "layerName": "地上",
+        "coords": {
+          "mapId": 772,
+          "x": 27.8,
+          "y": 19.3
+        },
+        "raw": {
+          "x": 489,
+          "y": -249,
+          "radius": 100
+        }
+      }
+    },
+    {
+      "id": 93,
+      "itemId": 41631,
+      "name": "無人島黃銅礦",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 41,
+      "seedItemId": null,
+      "gathering": {
+        "tool": 6,
+        "mapLayer": 1,
+        "layerName": "洞窟",
+        "coords": {
+          "mapId": 772,
+          "x": 23.5,
+          "y": 21.6
+        },
+        "raw": {
+          "x": 276,
+          "y": -133,
+          "radius": 75
+        }
+      }
+    },
+    {
+      "id": 94,
+      "itemId": 41632,
+      "name": "無人島金礦",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 42,
+      "seedItemId": null,
+      "gathering": {
+        "tool": 9,
+        "mapLayer": 1,
+        "layerName": "洞窟",
+        "coords": {
+          "mapId": 772,
+          "x": 23.5,
+          "y": 21.6
+        },
+        "raw": {
+          "x": 276,
+          "y": -133,
+          "radius": 75
+        }
+      }
+    },
+    {
+      "id": 95,
+      "itemId": 41633,
+      "name": "無人島鷹眼砂",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 43,
+      "seedItemId": null,
+      "gathering": {
+        "tool": null,
+        "mapLayer": 1,
+        "layerName": "洞窟",
+        "coords": {
+          "mapId": 772,
+          "x": 23.5,
+          "y": 21.6
+        },
+        "raw": {
+          "x": 276,
+          "y": -133,
+          "radius": 75
+        }
+      }
+    },
+    {
+      "id": 96,
+      "itemId": 41634,
+      "name": "無人島水晶層",
+      "nameMissing": false,
+      "categoryId": 1,
+      "sort": 44,
+      "seedItemId": null,
+      "gathering": {
+        "tool": 10,
+        "mapLayer": 1,
+        "layerName": "洞窟",
+        "coords": {
+          "mapId": 772,
+          "x": 23.5,
+          "y": 21.6
+        },
+        "raw": {
+          "x": 276,
+          "y": -133,
+          "radius": 75
+        }
+      }
+    },
+    {
+      "id": 97,
+      "itemId": 41639,
+      "name": "海島西瓜種子",
+      "nameMissing": false,
+      "categoryId": 3,
+      "sort": 136,
+      "seedItemId": 41635,
+      "gathering": null
+    },
+    {
+      "id": 98,
+      "itemId": 41640,
+      "name": "海島甜新薯芽塊",
+      "nameMissing": false,
+      "categoryId": 3,
+      "sort": 137,
+      "seedItemId": 41636,
+      "gathering": null
+    },
+    {
+      "id": 99,
+      "itemId": 41641,
+      "name": "海島花椰菜苗",
+      "nameMissing": false,
+      "categoryId": 3,
+      "sort": 138,
+      "seedItemId": 41637,
+      "gathering": null
+    },
+    {
+      "id": 100,
+      "itemId": 41642,
+      "name": "海島水牛豆種子",
+      "nameMissing": false,
+      "categoryId": 3,
+      "sort": 139,
+      "seedItemId": 41638,
+      "gathering": null
+    },
+    {
+      "id": 101,
+      "itemId": 41635,
+      "name": "海島西瓜",
+      "nameMissing": false,
+      "categoryId": 4,
+      "sort": 166,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 102,
+      "itemId": 41636,
+      "name": "海島甜新薯",
+      "nameMissing": false,
+      "categoryId": 4,
+      "sort": 167,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 103,
+      "itemId": 41637,
+      "name": "海島花椰菜",
+      "nameMissing": false,
+      "categoryId": 4,
+      "sort": 168,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 104,
+      "itemId": 41638,
+      "name": "海島水牛豆",
+      "nameMissing": false,
+      "categoryId": 4,
+      "sort": 169,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 105,
+      "itemId": 41643,
+      "name": "高級捕獸網",
+      "nameMissing": false,
+      "categoryId": 7,
+      "sort": 215,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 106,
+      "itemId": 41644,
+      "name": "高級捕獸繩",
+      "nameMissing": false,
+      "categoryId": 7,
+      "sort": 216,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 107,
+      "itemId": 41645,
+      "name": "高級捕獸用睡眠球",
+      "nameMissing": false,
+      "categoryId": 7,
+      "sort": 217,
+      "seedItemId": null,
+      "gathering": null
+    },
+    {
+      "id": 108,
+      "itemId": 41668,
+      "name": "貓耳小員票據",
+      "nameMissing": false,
+      "categoryId": 10,
+      "sort": 255,
+      "seedItemId": null,
+      "gathering": null
+    }
+  ]
+}
