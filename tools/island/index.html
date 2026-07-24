@@ -62,11 +62,20 @@
     .ing-chip:focus-visible { outline: 2px solid var(--gold); outline-offset: 1px; }
     .ing-qty { color: var(--text-muted); font-size: 12px; }
     .tag.theme { background: rgba(79,195,247,0.1); color: var(--blue); border-color: rgba(79,195,247,0.25); }
+    button.tag.theme { font: inherit; cursor: pointer; }
+    button.tag.theme:hover { background: rgba(79,195,247,0.22); border-color: var(--blue); }
+    button.tag.theme:focus-visible { outline: 2px solid var(--blue); outline-offset: 1px; }
+
+    /* ── 採集地圖／素材（合併頁）── */
+    .gather-layout { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(320px, 420px); gap: 22px; align-items: start; }
+    @media (max-width: 900px) { .gather-layout { grid-template-columns: 1fr; } }
+    .gather-map { position: sticky; top: 12px; }
+    @media (max-width: 900px) { .gather-map { position: static; } }
+    .gather-mat { display: flex; flex-direction: column; gap: 14px; }
+    .gather-mat .toolbar { margin-bottom: 0; }
 
     /* ── 素材反查 ── */
-    .mat-layout { display: grid; grid-template-columns: minmax(240px, 320px) minmax(0, 1fr); gap: 20px; align-items: start; }
-    @media (max-width: 780px) { .mat-layout { grid-template-columns: 1fr; } }
-    .mat-list { max-height: 70vh; overflow-y: auto; border: 1px solid var(--border); border-radius: var(--radius-md); }
+    .mat-list { max-height: 46vh; overflow-y: auto; border: 1px solid var(--border); border-radius: var(--radius-md); }
     .mat-group-label {
       font-size: 11px; letter-spacing: .8px; color: var(--text-muted);
       padding: 10px 12px 4px; position: sticky; top: 0; background: var(--bg-surface);
@@ -109,7 +118,7 @@
     }
     .layer-toggle button.active { background: var(--gold-dim); color: var(--gold); }
     .map-canvas {
-      position: relative; width: 100%; max-width: 760px; margin: 0 auto;
+      position: relative; width: 100%;
       aspect-ratio: 1 / 1; background: var(--bg-card);
       border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden;
     }
@@ -128,7 +137,10 @@
     .map-legend { font-size: 12.5px; color: var(--text-muted); display: flex; gap: 16px; flex-wrap: wrap; margin-top: 10px; justify-content: center; }
     .map-legend span { display: inline-flex; align-items: center; gap: 5px; }
     .map-legend i { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
-    .map-info { max-width: 760px; margin: 14px auto 0; }
+    .map-info { margin: 14px 0 0; }
+    /* 選中素材時，高亮其採集區域圈、其他變暗 */
+    .map-area.hl { background: rgba(250,204,21,0.32); border-color: var(--gold); z-index: 6;
+      box-shadow: 0 0 0 2px rgba(250,204,21,0.5); }
     .map-info:empty { display: none; }
 
     /* ── 動物時鐘 ── */
@@ -260,9 +272,8 @@
 
   <div class="isl-tabs" role="tablist">
     <button class="isl-tab active" role="tab" data-tab="cw">🏭 工坊生產</button>
-    <button class="isl-tab" role="tab" data-tab="mat">🔍 素材反查</button>
+    <button class="isl-tab" role="tab" data-tab="gather">🗺️ 採集地圖／素材</button>
     <button class="isl-tab" role="tab" data-tab="an">🐑 動物時鐘</button>
-    <button class="isl-tab" role="tab" data-tab="map">🗺️ 採集地圖</button>
     <button class="isl-tab" role="tab" data-tab="rk">📈 開拓等級</button>
   </div>
 
@@ -288,7 +299,7 @@
       <div class="filter-tags" id="cwTime"></div>
     </div>
     <div class="filter-section">
-      <div class="filter-label">製作類型（主題）<span id="themeNote"></span></div>
+      <div class="filter-label">製作類型</div>
       <div class="filter-tags" id="cwTheme"></div>
     </div>
     <div class="result-meta" id="cwMeta"></div>
@@ -297,14 +308,44 @@
   </section>
 
   <!-- ── 素材反查 ── -->
-  <section class="isl-panel" id="panel-mat" role="tabpanel" hidden>
-    <div class="toolbar">
-      <div class="search-wrap"><span class="search-icon">🔍</span>
-        <input class="search-input" id="matSearch" type="text" autocomplete="off" placeholder="搜尋素材名稱…"></div>
+  <section class="isl-panel" id="panel-gather" role="tabpanel" hidden>
+    <div class="isl-note">
+      左邊是<b>採集地圖</b>，右邊是<b>素材反查</b>，兩邊連動：點素材會在地圖上標出它的採集區域，
+      點地圖圓圈會列出該區能採的全部素材。
+      <br>圓圈是<b>採集區域</b>（一區可採好幾種、共 26 區），圈與圈會<b>互相重疊</b>——
+      站在交界處這幾圈都採得到，最好的一處可達 <b>17 種</b>。每種素材都標了<b>需要哪把工具</b>，
+      沒解鎖對應工具就採不到。
     </div>
-    <div class="mat-layout">
-      <div class="mat-list" id="matList"></div>
-      <div class="mat-detail" id="matDetail"></div>
+    <div class="gather-layout">
+      <!-- 左：採集地圖 -->
+      <div class="gather-map">
+        <div class="map-bar">
+          <div class="layer-toggle" id="layerToggle">
+            <button class="active" data-layer="all">全部</button>
+            <button data-layer="0">🌿 地上</button>
+            <button data-layer="1">⛰️ 洞窟</button>
+          </div>
+          <select class="sort-select" id="mapTool" title="只顯示用這把工具（或徒手）採得到的區域">
+            <option value="">所有工具</option>
+          </select>
+        </div>
+        <div class="map-canvas" id="mapCanvas"></div>
+        <div class="map-legend">
+          <span><i style="background:rgba(74,222,128,.35);border:2px solid rgba(74,222,128,.75)"></i>地上採集區</span>
+          <span><i style="background:rgba(168,85,247,.35);border:2px solid rgba(168,85,247,.8)"></i>洞窟採集區</span>
+          <span class="result-meta" id="mapMeta"></span>
+        </div>
+        <div class="map-info" id="mapInfo"></div>
+      </div>
+      <!-- 右：素材反查 -->
+      <div class="gather-mat">
+        <div class="toolbar">
+          <div class="search-wrap"><span class="search-icon">🔍</span>
+            <input class="search-input" id="matSearch" type="text" autocomplete="off" placeholder="搜尋素材名稱…"></div>
+        </div>
+        <div class="mat-list" id="matList"></div>
+        <div class="mat-detail" id="matDetail"></div>
+      </div>
     </div>
   </section>
 
@@ -336,36 +377,6 @@
     <div class="result-meta" id="anMeta"></div>
     <div class="an-grid" id="anGrid"></div>
     <div class="empty-state" id="anEmpty" style="display:none">找不到符合條件的動物</div>
-  </section>
-
-  <!-- ── 採集地圖 ── -->
-  <section class="isl-panel" id="panel-map" role="tabpanel" hidden>
-    <div class="isl-note">
-      圓圈是<b>採集區域</b>：一個區域裡通常能採到<b>好幾種不同的素材</b>，
-      而且區域內散佈著很多個可採集物件——不是一種素材對應一個定點。
-      48 種可採素材其實只分佈在 <b>26 個區域</b>。
-      <br>圓圈之間會<b>互相重疊</b>，站在重疊處這幾圈的素材都採得到——所以「站這裡實際能採幾種」
-      往往比單一圈多很多（最好的一處可達 <b>17 種</b>）。點圓圈會列出該區素材、<b>各自需要哪把工具</b>，
-      以及重疊到的鄰近區域。
-    </div>
-    <div class="map-bar">
-      <div class="layer-toggle" id="layerToggle">
-        <button class="active" data-layer="all">全部</button>
-        <button data-layer="0">🌿 地上</button>
-        <button data-layer="1">⛰️ 洞窟</button>
-      </div>
-      <select class="sort-select" id="mapTool" title="只顯示用這把工具（或徒手）採得到的區域">
-        <option value="">所有工具</option>
-      </select>
-      <span class="result-meta" id="mapMeta"></span>
-    </div>
-    <div class="map-canvas" id="mapCanvas"></div>
-    <div class="map-legend">
-      <span><i style="background:rgba(74,222,128,.35);border:2px solid rgba(74,222,128,.75)"></i>地上採集區</span>
-      <span><i style="background:rgba(168,85,247,.35);border:2px solid rgba(168,85,247,.8)"></i>洞窟採集區</span>
-      <span>點圓圈看素材詳情</span>
-    </div>
-    <div class="map-info" id="mapInfo"></div>
   </section>
 
   <!-- ── 開拓等級 ── -->
@@ -489,7 +500,7 @@ function setTab(t, push = true) {
   tab = t;
   document.querySelectorAll('.isl-tab').forEach((b) => b.classList.toggle('active', b.dataset.tab === t));
   document.querySelectorAll('.isl-panel').forEach((p) => { p.hidden = p.id !== 'panel-' + t; });
-  if (t === 'map') renderMap();
+  if (t === 'gather') { renderMap(); renderMatList(); renderMatDetail(); }
   if (t === 'an') renderAn();
   if (t === 'rk') renderRk();
   if (push) syncURL();
@@ -504,14 +515,14 @@ function syncURL() {
     if (themeFilter) p.set('theme', String(themeFilter));
     if (cwSort !== 'value-desc') p.set('sort', cwSort);
   }
-  if (tab === 'mat' && selMat) p.set('m', String(selMat));
   if (tab === 'an') {
     if (anOnlyNow) p.set('now', '1');
     if (anSizeFilter) p.set('size', String(anSizeFilter));
     if (anDropFilter) p.set('drop', anDropFilter);
     if (anSort !== 'time') p.set('asort', anSort);
   }
-  if (tab === 'map') {
+  if (tab === 'gather') {
+    if (selMat) p.set('m', String(selMat));
     if (layer !== 'all') p.set('layer', layer);
     if (toolFilter) p.set('tool', toolFilter);
   }
@@ -541,15 +552,19 @@ function buildChips(hostId, values, get, set, label, render = renderCw) {
 buildChips('cwTime', [...new Set(CW.map((c) => c.craftingTime))].sort((a, b) => a - b),
   () => timeFilter, (v) => (timeFilter = v), (v) => v + ' 小時');
 // 製作類型＝主題（連續生產同主題有效率加成，所以這才是排程時真正的分類軸）。
-// 主題名 datamine 只有簡中，依鐵則不簡轉繁 → 顯示簡中並標注待補台服官方名。
+const themeName = (t) => (t && (t.name || t.nameCn)) || '';
 const usedThemes = new Set();
 CW.forEach((c) => c.themes.forEach((t) => usedThemes.add(t.id)));
 const THEME_LIST = THEMES.filter((t) => usedThemes.has(t.id));
 buildChips('cwTheme', THEME_LIST.map((t) => t.id),
   () => themeFilter, (v) => (themeFilter = v),
-  (id) => { const t = THEMES.find((x) => x.id === id); return t ? (t.name || t.nameCn) : String(id); });
-if (THEME_LIST.some((t) => !t.name)) {
-  $('themeNote').innerHTML = ' <span style="color:var(--text-muted);font-weight:400">— 主題名尚無台服官方來源，暫顯示簡中</span>';
+  (id) => themeName(THEMES.find((x) => x.id === id)));
+// 卡片上的類型標籤點擊 → 直接篩到那一類
+function setThemeFilter(id) {
+  themeFilter = themeFilter === id ? null : id;
+  $('cwTheme').querySelectorAll('.filter-tag').forEach(
+    (x) => x.classList.toggle('active', themeFilter !== null && x.dataset.v === String(themeFilter)));
+  syncURL(); renderCw();
 }
 
 function renderCw() {
@@ -576,7 +591,7 @@ function renderCw() {
       <div class="cw-head">
         ${icoTag(c.icon)}
         <span class="cw-name">${esc(c.name)}</span>
-        ${c.themes.map((t) => `<span class="tag theme">${nameHtml(t)}</span>`).join('')}
+        ${c.themes.map((t) => `<button class="tag theme" data-theme="${t.id}" title="只看「${esc(themeName(t))}」類">${esc(themeName(t))}</button>`).join('')}
       </div>
       <div class="cw-stats">
         <span>⏱ <b>${c.craftingTime}</b> 小時</span>
@@ -594,6 +609,8 @@ function renderCw() {
 $('cwSearch').addEventListener('input', renderCw);
 $('cwSort').addEventListener('change', (e) => { cwSort = e.target.value; syncURL(); renderCw(); });
 $('cwGrid').addEventListener('click', (e) => {
+  const th = e.target.closest('[data-theme]');
+  if (th) { setThemeFilter(Number(th.dataset.theme)); return; }
   const chip = e.target.closest('[data-mat]');
   if (chip) selectMat(Number(chip.dataset.mat), true);
 });
@@ -624,9 +641,13 @@ function renderMatList() {
 
 function selectMat(itemId, switchTab) {
   selMat = itemId;
-  if (switchTab) setTab('mat', false);
+  if (switchTab && tab !== 'gather') setTab('gather', false);
+  // 採集類素材 → 在地圖上標出它的採集區域，同時讓區域資訊對上
+  const m = matById.get(itemId);
+  if (m && m.gathering) selArea = m.gathering.areaId;
   renderMatList();
   renderMatDetail();
+  renderMap();          // 依 selMat 重畫圈的高亮
   syncURL();
   const el = $('matList').querySelector('.mat-item.active');
   if (el && el.scrollIntoView) el.scrollIntoView({ block: 'nearest' });
@@ -635,7 +656,7 @@ function selectMat(itemId, switchTab) {
 function renderMatDetail() {
   const m = matById.get(selMat);
   if (!m) {
-    $('matDetail').innerHTML = '<div class="mat-none">從左側選一個素材，這裡會顯示它<b>怎麼拿</b>以及<b>用在哪</b>。</div>';
+    $('matDetail').innerHTML = '<div class="mat-none">從上方清單挑一個素材，或點左邊地圖的圓圈，這裡會顯示它<b>怎麼拿</b>以及<b>用在哪</b>。</div>';
     return;
   }
   const how = [];
@@ -643,7 +664,7 @@ function renderMatDetail() {
     const a = m.gathering.area;
     how.push(`<div class="mat-row"><span class="k">採集</span>${m.gathering.layerName}
       · 區域中心 X:${a.x} Y:${a.y}（半徑約 ${a.radius}）
-      <button class="coord-btn" data-x="${a.x}" data-y="${a.y}">🗺 開地圖</button>
+      <button class="coord-btn" data-x="${a.x}" data-y="${a.y}">🗺 在地圖標示</button>
       <button class="coord-btn" data-flag="/coord ${a.x} ${a.y} ${esc(ISLAND_MAP ? ISLAND_MAP.name : '')}">📋 座標</button>
       <div style="font-size:13px;color:var(--text-muted);line-height:1.6">
         這是一片區域，裡面散佈著多個可採集物件；座標指的是區域中心，不是唯一的採集點。</div>`);
@@ -715,12 +736,10 @@ $('matList').addEventListener('keydown', (e) => {
 $('matDetail').addEventListener('click', (e) => {
   const mapBtn = e.target.closest('[data-x]');
   if (mapBtn) {
+    // 合併頁：地圖就在左側，捲過去並確保該區高亮，不再另開彈窗
     const m = matById.get(selMat);
-    openMapModal({
-      mapId: ISLAND_MAP_ID, x: Number(mapBtn.dataset.x), y: Number(mapBtn.dataset.y),
-      title: m ? m.name : '無人島',
-      sub: `採集區域中心（${m && m.gathering ? m.gathering.layerName : ''}）`,
-    });
+    if (m && m.gathering) { selArea = m.gathering.areaId; renderMap(); }
+    $('mapCanvas').scrollIntoView({ behavior: 'smooth', block: 'center' });
     return;
   }
   const cp = e.target.closest('[data-flag]');
@@ -970,11 +989,14 @@ function renderMap() {
   $('mapMeta').innerHTML = `顯示 <em>${list.length}</em> 個採集區域 · 共 ${itemCount} 種素材`
     + (tn ? `（只列出用<b>${esc(tn)}</b>採得到的區域）` : '');
 
+  // 選中素材（採集類）→ 高亮它的採集區域圈
+  const selM = matById.get(selMat);
+  const hlArea = selM && selM.gathering ? selM.gathering.areaId : null;
   // 大圈畫在下層，小圈才點得到
   const sorted = list.slice().sort((a, b) => b.radius - a.radius);
   const areas = sorted.map((a) => {
     const d = lenFrac(a.radius) * 2 * 100;
-    return `<div class="map-area ${a.mapLayer === 1 ? 'cave' : 'land'}${a.id === selArea ? ' sel' : ''}"
+    return `<div class="map-area ${a.mapLayer === 1 ? 'cave' : 'land'}${a.id === selArea ? ' sel' : ''}${a.id === hlArea ? ' hl' : ''}"
       data-area="${a.id}"
       style="left:${(coordFrac(a.x) * 100).toFixed(2)}%;top:${(coordFrac(a.y) * 100).toFixed(2)}%;width:${d.toFixed(2)}%;height:${d.toFixed(2)}%"
       title="${esc(a.items.map((i) => i.name).join('、'))}（中心 X:${a.x} Y:${a.y}）"></div>`;
@@ -1026,7 +1048,6 @@ function renderMapInfo() {
       </div>
       <div class="mat-row" style="font-size:14px">
         <span class="k">區域中心</span>X:${a.x} Y:${a.y}（半徑約 ${a.radius}）
-        <button class="coord-btn" data-x="${a.x}" data-y="${a.y}">🗺 開地圖</button>
         <button class="coord-btn" data-flag="/coord ${a.x} ${a.y} ${esc(ISLAND_MAP.name)}">📋 座標</button>
       </div>
       <div>${a.items.map(areaItemRow).join('')}</div>
@@ -1127,7 +1148,11 @@ function applyURL() {
   rkQuery = p.get('q') || '';
   $('rkSearch').value = rkQuery;
   const m = Number(p.get('m'));
-  if (m && matById.has(m)) selMat = m;
+  if (m && matById.has(m)) {
+    selMat = m;
+    const mm = matById.get(m);
+    if (mm && mm.gathering) selArea = mm.gathering.areaId;   // 讓地圖跟著標示
+  }
 
   anOnlyNow = p.get('now') === '1';
   const sz = Number(p.get('size'));
@@ -1143,7 +1168,10 @@ function applyURL() {
 
   renderCw(); renderMatList(); renderMatDetail(); renderRk();
   const t = p.get('t');
-  setTab(['mat', 'map', 'an', 'rk'].includes(t) ? t : 'cw', false);
+  // 舊網址的 mat／map 兩個分頁已合併為 gather，仍相容導向
+  const target = (t === 'mat' || t === 'map') ? 'gather'
+    : (['gather', 'an', 'rk'].includes(t) ? t : 'cw');
+  setTab(target, false);
 }
 window.addEventListener('popstate', applyURL);
 applyURL();
