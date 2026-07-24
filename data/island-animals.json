@@ -20,7 +20,7 @@
       "星點栗鼠：原文寫 9am-12am（＝09:00-00:00），但全表時窗皆為 3 小時，且同時段的古菩猩猩寫作 9am-12pm(中午)。已採 09:00-12:00。",
       "猴面雀：原文的時間與天氣兩欄對調（時間欄寫晴朗、天氣欄寫 12pm-3pm），已還原為 12:00-15:00 ＋ 晴朗。",
       "原文報酬欄有兩處與 datamine 不符（雄羚羊、公洞山羊的第二項），本站報酬一律以 MJIAnimals 為準，原文報酬僅用於對位。",
-      "MJIAnimals 共 43 筆，本表只涵蓋原文發表時（6.3）的 29 筆；id 30～43 為後續版本追加，出現條件仍缺。"
+      "id 1～29 名稱取自 steamxo（繁中站）；id 30～43（6.4 後追加）取自 steamxo/素素無人島（見 _animalSource2）。"
     ]
   },
   "data": [
@@ -1155,9 +1155,9 @@
     },
     {
       "id": 30,
-      "name": null,
-      "nameMissing": true,
-      "nameSource": null,
+      "name": "獅鷲",
+      "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 14935,
       "size": 3,
       "sizeName": "大",
@@ -1181,17 +1181,25 @@
           "icon": 22301
         }
       ],
-      "spawn": null,
-      "weather": null,
-      "coords": null,
+      "spawn": {
+        "startHour": 15,
+        "endHour": 18
+      },
+      "weather": [
+        "碧空"
+      ],
+      "coords": {
+        "x": 14,
+        "y": 22
+      },
       "note": null,
-      "obsMissing": true
+      "obsMissing": false
     },
     {
       "id": 31,
-      "name": null,
-      "nameMissing": true,
-      "nameSource": null,
+      "name": "樂園虎",
+      "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 16068,
       "size": 2,
       "sizeName": "中",
@@ -1215,17 +1223,25 @@
           "icon": 21624
         }
       ],
-      "spawn": null,
-      "weather": null,
-      "coords": null,
+      "spawn": {
+        "startHour": 18,
+        "endHour": 21
+      },
+      "weather": [
+        "晴朗"
+      ],
+      "coords": {
+        "x": 15,
+        "y": 14
+      },
       "note": null,
-      "obsMissing": true
+      "obsMissing": false
     },
     {
       "id": 32,
-      "name": null,
-      "nameMissing": true,
-      "nameSource": null,
+      "name": "魔界花骨朵",
+      "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 16069,
       "size": 1,
       "sizeName": "小",
@@ -1249,17 +1265,25 @@
           "icon": 22303
         }
       ],
-      "spawn": null,
-      "weather": null,
-      "coords": null,
+      "spawn": {
+        "startHour": 3,
+        "endHour": 6
+      },
+      "weather": [
+        "陰天"
+      ],
+      "coords": {
+        "x": 19,
+        "y": 19
+      },
       "note": null,
-      "obsMissing": true
+      "obsMissing": false
     },
     {
       "id": 33,
-      "name": null,
-      "nameMissing": true,
-      "nameSource": null,
+      "name": "石英魔石精",
+      "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 14936,
       "size": 1,
       "sizeName": "小",
@@ -1285,15 +1309,18 @@
       ],
       "spawn": null,
       "weather": null,
-      "coords": null,
+      "coords": {
+        "x": 26,
+        "y": 20
+      },
       "note": null,
-      "obsMissing": true
+      "obsMissing": false
     },
     {
       "id": 34,
-      "name": null,
-      "nameMissing": true,
-      "nameSource": null,
+      "name": "紫晶魔石精",
+      "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 14937,
       "size": 1,
       "sizeName": "小",
@@ -1317,17 +1344,23 @@
           "icon": 22303
         }
       ],
-      "spawn": null,
+      "spawn": {
+        "startHour": 21,
+        "endHour": 0
+      },
       "weather": null,
-      "coords": null,
+      "coords": {
+        "x": 28,
+        "y": 16
+      },
       "note": null,
-      "obsMissing": true
+      "obsMissing": false
     },
     {
       "id": 35,
-      "name": null,
-      "nameMissing": true,
-      "nameSource": null,
+      "name": "狂野疣豬",
+      "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 14938,
       "size": 3,
       "sizeName": "大",
@@ -1353,15 +1386,18 @@
       ],
       "spawn": null,
       "weather": null,
-      "coords": null,
+      "coords": {
+        "x": 16,
+        "y": 16
+      },
       "note": null,
-      "obsMissing": true
+      "obsMissing": false
     },
     {
       "id": 36,
-      "name": null,
-      "nameMissing": true,
-      "nameSource": null,
+      "name": "樂園疣豬",
+      "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 14939,
       "size": 3,
       "sizeName": "大",
@@ -1386,16 +1422,21 @@
         }
       ],
       "spawn": null,
-      "weather": null,
-      "coords": null,
+      "weather": [
+        "暴雨"
+      ],
+      "coords": {
+        "x": 17,
+        "y": 16
+      },
       "note": null,
-      "obsMissing": true
+      "obsMissing": false
     },
     {
       "id": 37,
-      "name": null,
-      "nameMissing": true,
-      "nameSource": null,
+      "name": "古怪魔石精",
+      "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 14940,
       "size": 3,
       "sizeName": "大",
@@ -1419,17 +1460,25 @@
           "icon": 21624
         }
       ],
-      "spawn": null,
-      "weather": null,
-      "coords": null,
+      "spawn": {
+        "startHour": 0,
+        "endHour": 3
+      },
+      "weather": [
+        "薄霧"
+      ],
+      "coords": {
+        "x": 24,
+        "y": 18
+      },
       "note": null,
-      "obsMissing": true
+      "obsMissing": false
     },
     {
       "id": 38,
-      "name": null,
-      "nameMissing": true,
-      "nameSource": null,
+      "name": "魔菇",
+      "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 16340,
       "size": 1,
       "sizeName": "小",
@@ -1453,17 +1502,25 @@
           "icon": 21624
         }
       ],
-      "spawn": null,
-      "weather": null,
-      "coords": null,
+      "spawn": {
+        "startHour": 15,
+        "endHour": 18
+      },
+      "weather": [
+        "小雨"
+      ],
+      "coords": {
+        "x": 20,
+        "y": 27
+      },
       "note": null,
-      "obsMissing": true
+      "obsMissing": false
     },
     {
       "id": 39,
-      "name": null,
-      "nameMissing": true,
-      "nameSource": null,
+      "name": "阿爾科諾斯特",
+      "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 16341,
       "size": 2,
       "sizeName": "中",
@@ -1487,17 +1544,25 @@
           "icon": 25251
         }
       ],
-      "spawn": null,
-      "weather": null,
-      "coords": null,
+      "spawn": {
+        "startHour": 21,
+        "endHour": 0
+      },
+      "weather": [
+        "碧空"
+      ],
+      "coords": {
+        "x": 23,
+        "y": 30
+      },
       "note": null,
-      "obsMissing": true
+      "obsMissing": false
     },
     {
       "id": 40,
-      "name": null,
-      "nameMissing": true,
-      "nameSource": null,
+      "name": "魔界花",
+      "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 16628,
       "size": 3,
       "sizeName": "大",
@@ -1521,17 +1586,25 @@
           "icon": 22257
         }
       ],
-      "spawn": null,
-      "weather": null,
-      "coords": null,
+      "spawn": {
+        "startHour": 21,
+        "endHour": 0
+      },
+      "weather": [
+        "暴雨"
+      ],
+      "coords": {
+        "x": 29,
+        "y": 24
+      },
       "note": null,
-      "obsMissing": true
+      "obsMissing": false
     },
     {
       "id": 41,
-      "name": null,
-      "nameMissing": true,
-      "nameSource": null,
+      "name": "精金龜",
+      "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 16629,
       "size": 3,
       "sizeName": "大",
@@ -1555,17 +1628,25 @@
           "icon": 22301
         }
       ],
-      "spawn": null,
-      "weather": null,
-      "coords": null,
+      "spawn": {
+        "startHour": 12,
+        "endHour": 15
+      },
+      "weather": [
+        "薄霧"
+      ],
+      "coords": {
+        "x": 32,
+        "y": 12.5
+      },
       "note": null,
-      "obsMissing": true
+      "obsMissing": false
     },
     {
       "id": 42,
-      "name": null,
-      "nameMissing": true,
-      "nameSource": null,
+      "name": "無齒翼龍",
+      "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 16630,
       "size": 3,
       "sizeName": "大",
@@ -1589,17 +1670,25 @@
           "icon": 22206
         }
       ],
-      "spawn": null,
-      "weather": null,
-      "coords": null,
+      "spawn": {
+        "startHour": 9,
+        "endHour": 12
+      },
+      "weather": [
+        "碧空"
+      ],
+      "coords": {
+        "x": 25,
+        "y": 16
+      },
       "note": null,
-      "obsMissing": true
+      "obsMissing": false
     },
     {
       "id": 43,
-      "name": null,
-      "nameMissing": true,
-      "nameSource": null,
+      "name": "巨礦爬蟲",
+      "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 16631,
       "size": 3,
       "sizeName": "大",
@@ -1623,11 +1712,19 @@
           "icon": 22257
         }
       ],
-      "spawn": null,
-      "weather": null,
-      "coords": null,
+      "spawn": {
+        "startHour": 3,
+        "endHour": 6
+      },
+      "weather": [
+        "晴朗"
+      ],
+      "coords": {
+        "x": 24,
+        "y": 21
+      },
       "note": null,
-      "obsMissing": true
+      "obsMissing": false
     }
   ]
 }
