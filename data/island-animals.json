@@ -1,14 +1,33 @@
 {
   "schema": "island-animals",
   "patch": "6.5",
-  "updated": "2026-07-23",
+  "updated": "2026-07-24",
   "source": "datamining-cn MJI* + items.json(tw-items)",
   "count": 43,
+  "animalSource": {
+    "name": "steamxo《FF14 無人島動物一覽》 2023-01-05",
+    "url": "https://www.steamxo.com/2023/01/05/2700775",
+    "tier": "社群繁中站（非台服官方公告）",
+    "verified": [
+      "以「體型＋稀有度＋兩項報酬素材的先後順序」對回 MJIAnimals：29 筆中 27 筆唯一命中。",
+      "奧猴 / 松鼠 兩組報酬完全相同，改以 Icon 圖像判定（70123 靈長類大眼 = 奧猴、70127 尖吻齧齒 = 松鼠）。",
+      "洞山羊 / 水牛 兩組同為 L·乳汁+角片，由稀有側 id20（角片+乳汁）鎖 sort10=水牛，餘者 sort13=洞山羊。",
+      "全部 29 個名稱的生物詞幹皆能在 data/monsters.json（nameSource=tw-mobs 台服官方怪物名）找到同詞條，",
+      "例：奧猴／碧企鵝／松鼠／星點栗鼠／渡渡鳥／雌羚羊／雄羚羊／公洞山羊／母洞山羊／短吻鱷／猴面雀／席茲／刺草球／殼蟹／犰狳／水牛。",
+      "天氣機率表已與 SaintCoinach 演算法交叉驗證（22000 時段 0 差異），見 assets/js/eorzea-weather.js。"
+    ],
+    "knownIssues": [
+      "原文「星點栗鼠 9am-12am」應為 9am-12pm：全表時窗皆為 3 小時，且同稀有度的古菩猩猩寫作 9am-12pm(中午)。已採 9→12。",
+      "原文「猴面雀」列的時間與天氣兩欄對調（時間欄寫晴朗、天氣欄寫 12pm-3pm），已還原。",
+      "原文報酬欄有兩處與 datamine 不符（雄羚羊、公洞山羊的第二項），本站報酬一律以 MJIAnimals 為準，原文報酬僅用於對位。",
+      "MJIAnimals 共 43 筆，本表只涵蓋原文發表時（6.3）的 29 筆；id 30～43 為後續版本追加，出現條件仍缺。"
+    ]
+  },
   "data": [
     {
       "id": 1,
-      "name": null,
-      "nameMissing": true,
+      "name": "綿羊",
+      "nameMissing": false,
       "bnpcBaseId": 14906,
       "size": 1,
       "sizeName": "小",
@@ -27,12 +46,17 @@
       ],
       "spawn": null,
       "weather": null,
-      "coords": null
+      "coords": {
+        "x": 20,
+        "y": 23
+      },
+      "note": null,
+      "obsMissing": false
     },
     {
       "id": 2,
-      "name": null,
-      "nameMissing": true,
+      "name": "黑羊",
+      "nameMissing": false,
       "bnpcBaseId": 14907,
       "size": 1,
       "sizeName": "小",
@@ -50,13 +74,20 @@
         }
       ],
       "spawn": null,
-      "weather": null,
-      "coords": null
+      "weather": [
+        "晴朗"
+      ],
+      "coords": {
+        "x": 20,
+        "y": 23
+      },
+      "note": null,
+      "obsMissing": false
     },
     {
       "id": 3,
-      "name": null,
-      "nameMissing": true,
+      "name": "奧猴",
+      "nameMissing": false,
       "bnpcBaseId": 14908,
       "size": 1,
       "sizeName": "小",
@@ -75,12 +106,17 @@
       ],
       "spawn": null,
       "weather": null,
-      "coords": null
+      "coords": {
+        "x": 20,
+        "y": 26
+      },
+      "note": null,
+      "obsMissing": false
     },
     {
       "id": 4,
-      "name": null,
-      "nameMissing": true,
+      "name": "白奧猴",
+      "nameMissing": false,
       "bnpcBaseId": 14909,
       "size": 1,
       "sizeName": "小",
@@ -97,14 +133,22 @@
           "name": "牧場動物的尖爪"
         }
       ],
-      "spawn": null,
+      "spawn": {
+        "startHour": 6,
+        "endHour": 9
+      },
       "weather": null,
-      "coords": null
+      "coords": {
+        "x": 20,
+        "y": 26
+      },
+      "note": null,
+      "obsMissing": false
     },
     {
       "id": 5,
-      "name": null,
-      "nameMissing": true,
+      "name": "碧企鵝",
+      "nameMissing": false,
       "bnpcBaseId": 14910,
       "size": 1,
       "sizeName": "小",
@@ -123,12 +167,17 @@
       ],
       "spawn": null,
       "weather": null,
-      "coords": null
+      "coords": {
+        "x": 19,
+        "y": 11
+      },
+      "note": null,
+      "obsMissing": false
     },
     {
       "id": 6,
-      "name": null,
-      "nameMissing": true,
+      "name": "紅企鵝",
+      "nameMissing": false,
       "bnpcBaseId": 14911,
       "size": 1,
       "sizeName": "小",
@@ -145,14 +194,22 @@
           "name": "牧場動物的絨毛"
         }
       ],
-      "spawn": null,
+      "spawn": {
+        "startHour": 12,
+        "endHour": 15
+      },
       "weather": null,
-      "coords": null
+      "coords": {
+        "x": 19,
+        "y": 11
+      },
+      "note": null,
+      "obsMissing": false
     },
     {
       "id": 7,
-      "name": null,
-      "nameMissing": true,
+      "name": "松鼠",
+      "nameMissing": false,
       "bnpcBaseId": 14912,
       "size": 1,
       "sizeName": "小",
@@ -171,12 +228,17 @@
       ],
       "spawn": null,
       "weather": null,
-      "coords": null
+      "coords": {
+        "x": 15,
+        "y": 19
+      },
+      "note": null,
+      "obsMissing": false
     },
     {
       "id": 8,
-      "name": null,
-      "nameMissing": true,
+      "name": "星點栗鼠",
+      "nameMissing": false,
       "bnpcBaseId": 14913,
       "size": 1,
       "sizeName": "小",
@@ -193,14 +255,22 @@
           "name": "牧場動物的尖爪"
         }
       ],
-      "spawn": null,
+      "spawn": {
+        "startHour": 9,
+        "endHour": 12
+      },
       "weather": null,
-      "coords": null
+      "coords": {
+        "x": 15,
+        "y": 19
+      },
+      "note": null,
+      "obsMissing": false
     },
     {
       "id": 9,
-      "name": null,
-      "nameMissing": true,
+      "name": "礦爬蟲",
+      "nameMissing": false,
       "bnpcBaseId": 14914,
       "size": 1,
       "sizeName": "小",
@@ -219,12 +289,17 @@
       ],
       "spawn": null,
       "weather": null,
-      "coords": null
+      "coords": {
+        "x": 27,
+        "y": 19
+      },
+      "note": null,
+      "obsMissing": false
     },
     {
       "id": 10,
-      "name": null,
-      "nameMissing": true,
+      "name": "黃礦爬蟲",
+      "nameMissing": false,
       "bnpcBaseId": 14915,
       "size": 1,
       "sizeName": "小",
@@ -242,13 +317,20 @@
         }
       ],
       "spawn": null,
-      "weather": null,
-      "coords": null
+      "weather": [
+        "薄霧"
+      ],
+      "coords": {
+        "x": 27,
+        "y": 19
+      },
+      "note": null,
+      "obsMissing": false
     },
     {
       "id": 11,
-      "name": null,
-      "nameMissing": true,
+      "name": "渡渡鳥",
+      "nameMissing": false,
       "bnpcBaseId": 14916,
       "size": 2,
       "sizeName": "中",
@@ -267,12 +349,17 @@
       ],
       "spawn": null,
       "weather": null,
-      "coords": null
+      "coords": {
+        "x": 16,
+        "y": 12
+      },
+      "note": null,
+      "obsMissing": false
     },
     {
       "id": 12,
-      "name": null,
-      "nameMissing": true,
+      "name": "彩色渡渡鳥",
+      "nameMissing": false,
       "bnpcBaseId": 14917,
       "size": 2,
       "sizeName": "中",
@@ -289,14 +376,22 @@
           "name": "牧場動物的鳥蛋"
         }
       ],
-      "spawn": null,
+      "spawn": {
+        "startHour": 15,
+        "endHour": 18
+      },
       "weather": null,
-      "coords": null
+      "coords": {
+        "x": 16,
+        "y": 12
+      },
+      "note": null,
+      "obsMissing": false
     },
     {
       "id": 13,
-      "name": null,
-      "nameMissing": true,
+      "name": "雌羚羊",
+      "nameMissing": false,
       "bnpcBaseId": 14918,
       "size": 2,
       "sizeName": "中",
@@ -315,12 +410,17 @@
       ],
       "spawn": null,
       "weather": null,
-      "coords": null
+      "coords": {
+        "x": 20,
+        "y": 19
+      },
+      "note": null,
+      "obsMissing": false
     },
     {
       "id": 14,
-      "name": null,
-      "nameMissing": true,
+      "name": "雄羚羊",
+      "nameMissing": false,
       "bnpcBaseId": 14919,
       "size": 2,
       "sizeName": "中",
@@ -337,14 +437,22 @@
           "name": "牧場動物的角片"
         }
       ],
-      "spawn": null,
+      "spawn": {
+        "startHour": 18,
+        "endHour": 21
+      },
       "weather": null,
-      "coords": null
+      "coords": {
+        "x": 20,
+        "y": 19
+      },
+      "note": null,
+      "obsMissing": false
     },
     {
       "id": 15,
-      "name": null,
-      "nameMissing": true,
+      "name": "陸行鳥",
+      "nameMissing": false,
       "bnpcBaseId": 14920,
       "size": 2,
       "sizeName": "中",
@@ -363,12 +471,17 @@
       ],
       "spawn": null,
       "weather": null,
-      "coords": null
+      "coords": {
+        "x": 20,
+        "y": 21
+      },
+      "note": null,
+      "obsMissing": false
     },
     {
       "id": 16,
-      "name": null,
-      "nameMissing": true,
+      "name": "黑陸行鳥",
+      "nameMissing": false,
       "bnpcBaseId": 14921,
       "size": 2,
       "sizeName": "中",
@@ -386,13 +499,20 @@
         }
       ],
       "spawn": null,
-      "weather": null,
-      "coords": null
+      "weather": [
+        "碧空"
+      ],
+      "coords": {
+        "x": 13,
+        "y": 11
+      },
+      "note": null,
+      "obsMissing": false
     },
     {
       "id": 17,
-      "name": null,
-      "nameMissing": true,
+      "name": "犰狳",
+      "nameMissing": false,
       "bnpcBaseId": 14922,
       "size": 2,
       "sizeName": "中",
@@ -411,12 +531,17 @@
       ],
       "spawn": null,
       "weather": null,
-      "coords": null
+      "coords": {
+        "x": 30,
+        "y": 11
+      },
+      "note": null,
+      "obsMissing": false
     },
     {
       "id": 18,
-      "name": null,
-      "nameMissing": true,
+      "name": "紅犰狳",
+      "nameMissing": false,
       "bnpcBaseId": 14923,
       "size": 2,
       "sizeName": "中",
@@ -433,14 +558,22 @@
           "name": "牧場動物的甲殼"
         }
       ],
-      "spawn": null,
+      "spawn": {
+        "startHour": 0,
+        "endHour": 3
+      },
       "weather": null,
-      "coords": null
+      "coords": {
+        "x": 30,
+        "y": 11
+      },
+      "note": null,
+      "obsMissing": false
     },
     {
       "id": 19,
-      "name": null,
-      "nameMissing": true,
+      "name": "水牛",
+      "nameMissing": false,
       "bnpcBaseId": 14924,
       "size": 3,
       "sizeName": "大",
@@ -459,12 +592,17 @@
       ],
       "spawn": null,
       "weather": null,
-      "coords": null
+      "coords": {
+        "x": 12,
+        "y": 17
+      },
+      "note": null,
+      "obsMissing": false
     },
     {
       "id": 20,
-      "name": null,
-      "nameMissing": true,
+      "name": "白水牛",
+      "nameMissing": false,
       "bnpcBaseId": 14925,
       "size": 3,
       "sizeName": "大",
@@ -482,13 +620,20 @@
         }
       ],
       "spawn": null,
-      "weather": null,
-      "coords": null
+      "weather": [
+        "陰天"
+      ],
+      "coords": {
+        "x": 12,
+        "y": 17
+      },
+      "note": null,
+      "obsMissing": false
     },
     {
       "id": 21,
-      "name": null,
-      "nameMissing": true,
+      "name": "母洞山羊",
+      "nameMissing": false,
       "bnpcBaseId": 14926,
       "size": 3,
       "sizeName": "大",
@@ -507,12 +652,17 @@
       ],
       "spawn": null,
       "weather": null,
-      "coords": null
+      "coords": {
+        "x": 26,
+        "y": 24
+      },
+      "note": null,
+      "obsMissing": false
     },
     {
       "id": 22,
-      "name": null,
-      "nameMissing": true,
+      "name": "公洞山羊",
+      "nameMissing": false,
       "bnpcBaseId": 14927,
       "size": 3,
       "sizeName": "大",
@@ -529,14 +679,22 @@
           "name": "牧場動物的絨毛"
         }
       ],
-      "spawn": null,
+      "spawn": {
+        "startHour": 3,
+        "endHour": 6
+      },
       "weather": null,
-      "coords": null
+      "coords": {
+        "x": 26,
+        "y": 24
+      },
+      "note": null,
+      "obsMissing": false
     },
     {
       "id": 23,
-      "name": null,
-      "nameMissing": true,
+      "name": "藍席茲",
+      "nameMissing": false,
       "bnpcBaseId": 14928,
       "size": 3,
       "sizeName": "大",
@@ -555,12 +713,17 @@
       ],
       "spawn": null,
       "weather": null,
-      "coords": null
+      "coords": {
+        "x": 28,
+        "y": 28
+      },
+      "note": null,
+      "obsMissing": false
     },
     {
       "id": 24,
-      "name": null,
-      "nameMissing": true,
+      "name": "金席茲",
+      "nameMissing": false,
       "bnpcBaseId": 14929,
       "size": 3,
       "sizeName": "大",
@@ -578,13 +741,20 @@
         }
       ],
       "spawn": null,
-      "weather": null,
-      "coords": null
+      "weather": [
+        "小雨"
+      ],
+      "coords": {
+        "x": 28,
+        "y": 28
+      },
+      "note": null,
+      "obsMissing": false
     },
     {
       "id": 25,
-      "name": null,
-      "nameMissing": true,
+      "name": "金刺草球",
+      "nameMissing": false,
       "bnpcBaseId": 14930,
       "size": 1,
       "sizeName": "小",
@@ -601,14 +771,24 @@
           "name": "牧場動物的獸毛"
         }
       ],
-      "spawn": null,
-      "weather": null,
-      "coords": null
+      "spawn": {
+        "startHour": 18,
+        "endHour": 21
+      },
+      "weather": [
+        "薄霧"
+      ],
+      "coords": {
+        "x": 22,
+        "y": 21
+      },
+      "note": null,
+      "obsMissing": false
     },
     {
       "id": 26,
-      "name": null,
-      "nameMissing": true,
+      "name": "殼蟹",
+      "nameMissing": false,
       "bnpcBaseId": 14931,
       "size": 1,
       "sizeName": "小",
@@ -625,14 +805,24 @@
           "name": "牧場動物的尖爪"
         }
       ],
-      "spawn": null,
-      "weather": null,
-      "coords": null
+      "spawn": {
+        "startHour": 0,
+        "endHour": 3
+      },
+      "weather": [
+        "小雨"
+      ],
+      "coords": {
+        "x": 18,
+        "y": 13
+      },
+      "note": null,
+      "obsMissing": false
     },
     {
       "id": 27,
-      "name": null,
-      "nameMissing": true,
+      "name": "猴面雀",
+      "nameMissing": false,
       "bnpcBaseId": 14932,
       "size": 2,
       "sizeName": "中",
@@ -649,14 +839,24 @@
           "name": "牧場動物的絨毛"
         }
       ],
-      "spawn": null,
-      "weather": null,
-      "coords": null
+      "spawn": {
+        "startHour": 12,
+        "endHour": 15
+      },
+      "weather": [
+        "晴朗"
+      ],
+      "coords": {
+        "x": 25,
+        "y": 28
+      },
+      "note": "需飛行",
+      "obsMissing": false
     },
     {
       "id": 28,
-      "name": null,
-      "nameMissing": true,
+      "name": "短吻鱷",
+      "nameMissing": false,
       "bnpcBaseId": 14933,
       "size": 3,
       "sizeName": "大",
@@ -673,14 +873,24 @@
           "name": "牧場動物的尖牙"
         }
       ],
-      "spawn": null,
-      "weather": null,
-      "coords": null
+      "spawn": {
+        "startHour": 6,
+        "endHour": 9
+      },
+      "weather": [
+        "暴雨"
+      ],
+      "coords": {
+        "x": 17,
+        "y": 24
+      },
+      "note": null,
+      "obsMissing": false
     },
     {
       "id": 29,
-      "name": null,
-      "nameMissing": true,
+      "name": "古菩猩猩",
+      "nameMissing": false,
       "bnpcBaseId": 14934,
       "size": 3,
       "sizeName": "大",
@@ -697,9 +907,19 @@
           "name": "牧場動物的尖爪"
         }
       ],
-      "spawn": null,
-      "weather": null,
-      "coords": null
+      "spawn": {
+        "startHour": 9,
+        "endHour": 12
+      },
+      "weather": [
+        "陰天"
+      ],
+      "coords": {
+        "x": 33,
+        "y": 16
+      },
+      "note": null,
+      "obsMissing": false
     },
     {
       "id": 30,
@@ -723,7 +943,9 @@
       ],
       "spawn": null,
       "weather": null,
-      "coords": null
+      "coords": null,
+      "note": null,
+      "obsMissing": true
     },
     {
       "id": 31,
@@ -747,7 +969,9 @@
       ],
       "spawn": null,
       "weather": null,
-      "coords": null
+      "coords": null,
+      "note": null,
+      "obsMissing": true
     },
     {
       "id": 32,
@@ -771,7 +995,9 @@
       ],
       "spawn": null,
       "weather": null,
-      "coords": null
+      "coords": null,
+      "note": null,
+      "obsMissing": true
     },
     {
       "id": 33,
@@ -795,7 +1021,9 @@
       ],
       "spawn": null,
       "weather": null,
-      "coords": null
+      "coords": null,
+      "note": null,
+      "obsMissing": true
     },
     {
       "id": 34,
@@ -819,7 +1047,9 @@
       ],
       "spawn": null,
       "weather": null,
-      "coords": null
+      "coords": null,
+      "note": null,
+      "obsMissing": true
     },
     {
       "id": 35,
@@ -843,7 +1073,9 @@
       ],
       "spawn": null,
       "weather": null,
-      "coords": null
+      "coords": null,
+      "note": null,
+      "obsMissing": true
     },
     {
       "id": 36,
@@ -867,7 +1099,9 @@
       ],
       "spawn": null,
       "weather": null,
-      "coords": null
+      "coords": null,
+      "note": null,
+      "obsMissing": true
     },
     {
       "id": 37,
@@ -891,7 +1125,9 @@
       ],
       "spawn": null,
       "weather": null,
-      "coords": null
+      "coords": null,
+      "note": null,
+      "obsMissing": true
     },
     {
       "id": 38,
@@ -915,7 +1151,9 @@
       ],
       "spawn": null,
       "weather": null,
-      "coords": null
+      "coords": null,
+      "note": null,
+      "obsMissing": true
     },
     {
       "id": 39,
@@ -939,7 +1177,9 @@
       ],
       "spawn": null,
       "weather": null,
-      "coords": null
+      "coords": null,
+      "note": null,
+      "obsMissing": true
     },
     {
       "id": 40,
@@ -963,7 +1203,9 @@
       ],
       "spawn": null,
       "weather": null,
-      "coords": null
+      "coords": null,
+      "note": null,
+      "obsMissing": true
     },
     {
       "id": 41,
@@ -987,7 +1229,9 @@
       ],
       "spawn": null,
       "weather": null,
-      "coords": null
+      "coords": null,
+      "note": null,
+      "obsMissing": true
     },
     {
       "id": 42,
@@ -1011,7 +1255,9 @@
       ],
       "spawn": null,
       "weather": null,
-      "coords": null
+      "coords": null,
+      "note": null,
+      "obsMissing": true
     },
     {
       "id": 43,
@@ -1035,7 +1281,9 @@
       ],
       "spawn": null,
       "weather": null,
-      "coords": null
+      "coords": null,
+      "note": null,
+      "obsMissing": true
     }
   ]
 }

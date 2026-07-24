@@ -12,7 +12,12 @@
 // datamining-cn 只有簡中，**絕不簡轉繁**：簡中放 nameCn 僅供人工比對，name 留 null。
 // 動物名更麻煩：MJIAnimals 只給 BNpcBase，實測 BNpcBase→BNpcName 這條鏈在
 // Teamcraft monsters.json（只收有狩獵座標的 2333 隻）是 0/43，我們的 monsters.json
-// 用 baseId 硬對會撞號撈到錯的東西（「緊張的聲音」之類）。故動物名一律留 null。
+// 用 baseId 硬對會撞號撈到錯的東西（「緊張的聲音」之類）。故動物名不可自動推導，
+// 只能由 island-names-tw.json 人工提供；來源與對位方法記在該檔的 _animalSource。
+//
+// 動物的出現時段／天氣／座標同樣不在 datamine，但那是**觀測數值不是譯名**，不受
+// 台服譯名鐵則限制，任何可靠來源皆可；一樣寫在 island-names-tw.json（animalSpawns）。
+// 天氣名會在此驗證必須出現在 maps.json id 772 的 weatherRates 內，寫錯即 throw。
 //
 // ── 人工補台服名 ──
 // 把台服遊戲內抄到的名字寫進 data/island-names-tw.json（本腳本會自動產生空白樣板），
@@ -137,6 +142,7 @@ const OVERRIDE_TEMPLATE = {
     "key 皆為該 MJI* 表的 row id；留空或缺鍵者，產出的 name 會是 null（前端不顯示）。",
   ],
   animals: {},      // MJIAnimals row id -> 台服動物名
+  animalSpawns: {}, // MJIAnimals row id -> { x, y, start?, end?, weather?[], note? }
   buildings: {},    // MJIText row id -> 台服建築名
   categories: {},   // MJIItemCategory row id -> 台服素材分類名
   areas: {},        // MJIName row id -> 台服島嶼地區名
@@ -148,7 +154,7 @@ function loadOverride() {
     return OVERRIDE_TEMPLATE;
   }
   const o = JSON.parse(readFileSync(OVERRIDE_PATH, "utf8"));
-  for (const k of ["animals", "buildings", "categories", "areas", "themes"]) o[k] = o[k] || {};
+  for (const k of ["animals", "animalSpawns", "buildings", "categories", "areas", "themes"]) o[k] = o[k] || {};
   return o;
 }
 
@@ -281,9 +287,11 @@ const report = [];
     rows.filter((r) => r.name).length]);
 }
 
-/* 4) 動物：體型／稀有度／掉落素材。名稱與出現時段／天氣不在 datamine，見檔頭說明 */
+/* 4) 動物：體型／稀有度／掉落素材出自 datamine；名稱與出現條件由人工表合併，見檔頭說明 */
 {
   const SIZE = { 1: "小", 2: "中", 3: "大" };
+  // 島上只會出現這 6 種天氣，拿它當 animalSpawns.weather 的白名單，打錯字直接炸掉
+  const ISLAND_WEATHERS = new Set((ISLAND_MAP.weatherRates || []).map((w) => w.weather));
   const rows = S.MJIAnimals
     .filter((r) => mainKey(r._key) > 0 && num(r.BNpcBase))
     .map((r) => {
@@ -292,6 +300,15 @@ const report = [];
         .filter(Boolean)
         .map((itemId) => ({ itemId, name: twName(itemId) }));
       const name = OV.animals[id] || null;
+      const ob = OV.animalSpawns[id] || null;
+      if (ob) {
+        for (const w of ob.weather || []) {
+          if (!ISLAND_WEATHERS.has(w)) {
+            throw new Error(`animalSpawns[${id}] 的天氣「${w}」不在無名島天氣表內：` +
+              [...ISLAND_WEATHERS].join("／"));
+          }
+        }
+      }
       return {
         id,
         name, nameMissing: !name,
@@ -301,13 +318,16 @@ const report = [];
         sort: num(r.Sort),
         icon: num(r.Icon) || null,
         rewards,
-        // 以下為社群觀測資料，datamine 沒有；待人工補後前端才能做時鐘
-        spawn: null,     // { startHour, endHour }
-        weather: null,   // [天氣繁中名]
-        coords: null,    // { x, y }
+        // 出現條件：兩者皆無＝常駐。start/end 是艾歐澤亞時間的整點半開區間 [start, end)
+        spawn: ob && ob.start != null ? { startHour: ob.start, endHour: ob.end } : null,
+        weather: ob && ob.weather ? ob.weather : null,
+        coords: ob ? { x: ob.x, y: ob.y } : null,
+        note: (ob && ob.note) || null,
+        obsMissing: !ob,
       };
     });
-  report.push(["island-animals", write("island-animals.json", "island-animals", rows),
+  report.push(["island-animals", write("island-animals.json", "island-animals", rows,
+    { animalSource: OV._animalSource || null }),
     rows.filter((r) => r.name).length]);
 }
 
@@ -476,7 +496,7 @@ console.log();
 const need = [];
 const animals = JSON.parse(readFileSync(join(DATA, "island-animals.json"), "utf8")).data;
 if (animals.some((a) => a.nameMissing)) need.push(`動物名 ${animals.filter((a) => a.nameMissing).length}/${animals.length}`);
-if (animals.every((a) => !a.spawn)) need.push("動物出現時段／天氣（datamine 無，需社群或實機）");
+if (animals.some((a) => a.obsMissing)) need.push(`動物出現條件 ${animals.filter((a) => a.obsMissing).length}/${animals.length}（datamine 無，需社群或實機）`);
 const bld = JSON.parse(readFileSync(join(DATA, "island-buildings.json"), "utf8")).data;
 if (bld.some((b) => b.nameMissing)) need.push(`建築名 ${bld.filter((b) => b.nameMissing).length}/${bld.length}`);
 if (need.length) {

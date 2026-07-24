@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="FF14 無人島開拓查詢 — 工坊生產品（時數／價值／主題／素材）、素材反查（採集區域・用途）、島嶼採集地圖">
-  <title>無人島素材／工坊查詢 | 水神的工具箱</title>
+  <meta name="description" content="FF14 無人島開拓查詢 — 工坊生產品（時數／價值／主題／素材）、素材反查（採集區域・用途）、稀有動物出現時段與天氣即時倒數、島嶼採集地圖">
+  <title>無人島開拓查詢 | 水神的工具箱</title>
   <link rel="stylesheet" href="../../assets/css/common.css">
   <link rel="stylesheet" href="../../assets/css/tool-header.css">
   <style>
@@ -131,6 +131,39 @@
     .map-info { max-width: 760px; margin: 14px auto 0; }
     .map-info:empty { display: none; }
 
+    /* ── 動物時鐘 ── */
+    .an-now {
+      display: flex; gap: 18px; flex-wrap: wrap; align-items: center;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 12px 18px; margin-bottom: 16px;
+      font-size: 14.5px; color: var(--text-secondary);
+    }
+    .an-now b { color: var(--gold-light); font-weight: 600; }
+    .an-now .sep { color: var(--border); }
+    .an-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 10px; }
+    .an-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 14px 16px;
+      display: flex; flex-direction: column; gap: 8px;
+      border-left: 3px solid var(--border);
+      content-visibility: auto; contain-intrinsic-size: auto 160px;
+    }
+    .an-card.on { border-left-color: var(--accent); }
+    .an-card:hover { border-color: var(--border-hover); }
+    .an-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+    .an-name { font-size: 16.5px; font-weight: 600; color: var(--text-primary); }
+    .an-badge {
+      margin-left: auto; font-size: 12.5px; font-weight: 600; white-space: nowrap;
+      border-radius: 5px; padding: 3px 9px; border: 1px solid transparent;
+    }
+    .an-badge.on { color: var(--accent); background: rgba(74,222,128,0.12); border-color: rgba(74,222,128,0.35); }
+    .an-badge.off { color: var(--text-muted); background: var(--raise); border-color: var(--border); }
+    .an-cond { font-size: 13.5px; color: var(--text-secondary); line-height: 1.8; }
+    .an-cond .k { color: var(--text-muted); margin-right: 6px; }
+    .an-drop { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag.size { background: var(--purple-dim); color: var(--purple); border-color: rgba(167,139,250,0.25); }
+    .tag.rare { background: rgba(244,114,182,0.1); color: #f472b6; border-color: rgba(244,114,182,0.3); }
+
     .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
       background: var(--gold); color: #14161c; border-radius: 8px; padding: 9px 22px;
       font-size: 15px; font-weight: 600; opacity: 0; pointer-events: none; transition: opacity .25s; z-index: 60; }
@@ -144,14 +177,15 @@
 <div class="container">
 
   <div class="tool-header">
-    <h1 class="tool-title">🏝️ 無人島素材／工坊查詢</h1>
-    <p class="tool-subtitle">工坊生產品的時數・價值・主題與所需素材，素材反查採集區域與用途</p>
+    <h1 class="tool-title">🏝️ 無人島開拓查詢</h1>
+    <p class="tool-subtitle">工坊生產的時數・價值・主題，素材反查採集區域與用途，稀有動物出現倒數</p>
     <div class="header-divider"></div>
   </div>
 
   <div class="isl-tabs" role="tablist">
     <button class="isl-tab active" role="tab" data-tab="cw">🏭 工坊生產</button>
     <button class="isl-tab" role="tab" data-tab="mat">🔍 素材反查</button>
+    <button class="isl-tab" role="tab" data-tab="an">🐑 動物時鐘</button>
     <button class="isl-tab" role="tab" data-tab="map">🗺️ 採集地圖</button>
   </div>
 
@@ -197,6 +231,32 @@
     </div>
   </section>
 
+  <!-- ── 動物時鐘 ── -->
+  <section class="isl-panel" id="panel-an" role="tabpanel" hidden>
+    <div class="isl-note" id="anNote"></div>
+    <div class="an-now" id="anNow"></div>
+    <div class="toolbar">
+      <div class="search-wrap"><span class="search-icon">🔍</span>
+        <input class="search-input" id="anSearch" type="text" autocomplete="off" placeholder="搜尋動物或產出素材…"></div>
+      <select class="sort-select" id="anSort" title="排序方式">
+        <option value="time">依出現時間</option>
+        <option value="size">依體型</option>
+        <option value="name">依名稱</option>
+      </select>
+    </div>
+    <div class="filter-section">
+      <div class="filter-label">狀態</div>
+      <div class="filter-tags" id="anState"></div>
+    </div>
+    <div class="filter-section">
+      <div class="filter-label">產出素材</div>
+      <div class="filter-tags" id="anDrop"></div>
+    </div>
+    <div class="result-meta" id="anMeta"></div>
+    <div class="an-grid" id="anGrid"></div>
+    <div class="empty-state" id="anEmpty" style="display:none">找不到符合條件的動物</div>
+  </section>
+
   <!-- ── 採集地圖 ── -->
   <section class="isl-panel" id="panel-map" role="tabpanel" hidden>
     <div class="isl-note">
@@ -230,6 +290,7 @@
   <div class="container">
     <p class="footer-text">
       <a href="../../">水神的工具箱</a> · 資料來源：遊戲本體、<a href="https://github.com/thewakingsands/ffxiv-datamining-cn" target="_blank">ffxiv-datamining-cn</a>、<a href="https://ffxivteamcraft.com" target="_blank">Teamcraft</a>
+      ；動物出現條件參考 <a href="https://www.steamxo.com/2023/01/05/2700775" target="_blank">steamxo</a>（已與遊戲資料表逐筆對位驗證）
     </p>
     <p class="footer-text" style="margin-top:4px">
       FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具
@@ -239,6 +300,8 @@
 
 <script type="module">
 import { initMapModal, openMapModal } from '../../assets/js/map-modal.js';
+import { initWeatherTables, getWeatherAt, wi, fmtET, fmtRT, fmtCountdown, etHourAt, ET_HOUR_MS }
+  from '../../assets/js/eorzea-weather.js';
 
 const ISLAND_MAP_ID = 772;
 const $ = (id) => document.getElementById(id);
@@ -259,6 +322,7 @@ const [mats, gatherAreas, craftworks, themes, recipes, buildings, animals, maps]
 
 const ISLAND_MAP = maps.data.find((m) => m.id === ISLAND_MAP_ID);
 initMapModal({ mapsData: maps.data, base: '../..' });
+await initWeatherTables('../../data/maps.json');
 
 // 台服未開放（無繁中名）一律不顯示，與全站規則一致
 const MATS = mats.data.filter((m) => m.name);
@@ -297,8 +361,11 @@ const push = (map, k, v) => { if (!map.has(k)) map.set(k, []); map.get(k).push(v
 CW.forEach((c) => c.materials.forEach((g) => push(usedInCw, g.itemId, c)));
 HANDCRAFT.forEach((r) => r.ingredients.forEach((g) => push(usedInHc, g.itemId, r)));
 BUILDINGS.forEach((b) => b.materials.forEach((g) => push(usedInBuilding, g.itemId, b)));
-const dropCount = new Map();
-animals.data.forEach((a) => (a.rewards || []).forEach((r) => dropCount.set(r.itemId, (dropCount.get(r.itemId) || 0) + 1)));
+const dropCount = new Map(), dropAnimals = new Map();
+animals.data.forEach((a) => (a.rewards || []).forEach((r) => {
+  dropCount.set(r.itemId, (dropCount.get(r.itemId) || 0) + 1);
+  push(dropAnimals, r.itemId, a);
+}));
 
 /* ── 分頁 ── */
 let tab = 'cw';
@@ -307,6 +374,7 @@ function setTab(t, push = true) {
   document.querySelectorAll('.isl-tab').forEach((b) => b.classList.toggle('active', b.dataset.tab === t));
   document.querySelectorAll('.isl-panel').forEach((p) => { p.hidden = p.id !== 'panel-' + t; });
   if (t === 'map') renderMap();
+  if (t === 'an') renderAn();
   if (push) syncURL();
 }
 document.querySelectorAll('.isl-tab').forEach((b) => b.addEventListener('click', () => setTab(b.dataset.tab)));
@@ -320,6 +388,11 @@ function syncURL() {
     if (cwSort !== 'value-desc') p.set('sort', cwSort);
   }
   if (tab === 'mat' && selMat) p.set('m', String(selMat));
+  if (tab === 'an') {
+    if (anOnlyNow) p.set('now', '1');
+    if (anDropFilter) p.set('drop', anDropFilter);
+    if (anSort !== 'time') p.set('asort', anSort);
+  }
   if (tab === 'map' && layer !== 'all') p.set('layer', layer);
   try { history.pushState(null, '', p.toString() ? '?' + p : location.pathname); } catch (e) {}
 }
@@ -327,7 +400,7 @@ function syncURL() {
 /* ─────────────── 工坊生產 ─────────────── */
 let timeFilter = null, themeFilter = null, cwSort = 'value-desc';
 
-function buildChips(hostId, values, get, set, label) {
+function buildChips(hostId, values, get, set, label, render = renderCw) {
   const host = $(hostId);
   host.innerHTML = '';
   values.forEach((v) => {
@@ -338,7 +411,7 @@ function buildChips(hostId, values, get, set, label) {
     b.addEventListener('click', () => {
       set(get() === v ? null : v);
       host.querySelectorAll('.filter-tag').forEach((x) => x.classList.toggle('active', get() !== null && x.dataset.v === String(get())));
-      syncURL(); renderCw();
+      syncURL(); render();
     });
     host.appendChild(b);
   });
@@ -464,8 +537,12 @@ function renderMatDetail() {
     how.push(`<div class="mat-row"><span class="k">農場</span>種下「${esc(seedOf.get(m.itemId).name)}」收成</div>`);
   }
   if (dropCount.has(m.itemId)) {
+    const named = (dropAnimals.get(m.itemId) || []).filter((a) => a.name);
+    const rest = dropCount.get(m.itemId) - named.length;
     how.push(`<div class="mat-row"><span class="k">牧場</span>由 ${dropCount.get(m.itemId)} 種動物取得
-      <span style="color:var(--text-muted);font-size:13px">（動物名尚無台服官方來源，待補）</span></div>`);
+      ${named.length ? `<span class="use-list" style="display:inline-flex">${named.map((a) =>
+        `<button class="ing-chip" data-anid="${esc(a.name)}" title="到動物時鐘看「${esc(a.name)}」何時出現">${esc(a.name)}</button>`).join('')}</span>` : ''}
+      ${rest ? `<span style="color:var(--text-muted);font-size:13px">（另 ${rest} 種尚無台服官方名，待補）</span>` : ''}</div>`);
   }
   HANDCRAFT.filter((r) => r.itemId === m.itemId).forEach((r) => {
     how.push(`<div class="mat-row"><span class="k">人工製作</span>${r.ingredients.map((g) => `${esc(g.name || '（未開放）')}×${g.qty}`).join('、')}</div>`);
@@ -525,6 +602,8 @@ $('matDetail').addEventListener('click', (e) => {
   }
   const cp = e.target.closest('[data-flag]');
   if (cp) { copyText(cp.dataset.flag); return; }
+  const an = e.target.closest('[data-anid]');
+  if (an) { $('anSearch').value = an.dataset.anid; anOnlyNow = false; setTab('an'); return; }
   const go = e.target.closest('[data-goto]');
   if (go) selectMat(Number(go.dataset.goto));
 });
@@ -541,6 +620,168 @@ function copyText(t) {
     ta.remove();
   }
 }
+
+/* ─────────────── 動物時鐘 ───────────────
+   出現條件（時段／天氣／座標）不在 datamine，來自 island-names-tw.json 的 animalSpawns，
+   來源與對位方法記在該檔 _animalSource。天氣本身則是純計算：無名島（map 772）的機率表
+   已與 SaintCoinach 演算法交叉驗證過（22000 個時段 0 差異），故時鐘不需要任何外部 API。
+   沒有台服名或沒有出現條件的動物一律不顯示，與全站規則一致。                        */
+let anOnlyNow = false, anDropFilter = null, anSort = 'time';
+
+const ANIMALS = animals.data.filter((a) => a.name && !a.obsMissing);
+const ANIMALS_PENDING = animals.data.length - ANIMALS.length;
+
+// 條件皆對齊 ET 整點：時窗是整點半開區間，天氣段是 8 ET 小時，故只需在整點取樣即可精確
+function availableAt(a, ms) {
+  if (a.spawn) {
+    const h = etHourAt(ms), s = a.spawn.startHour, e = a.spawn.endHour;
+    if (!(s < e ? h >= s && h < e : h >= s || h < e)) return false;
+  }
+  if (a.weather && !a.weather.includes(wi(getWeatherAt(ISLAND_MAP_ID, ms)).name)) return false;
+  return true;
+}
+// 往後找狀態翻轉的時間點。上限不能拍腦袋定：最稀有的組合是 3 小時時窗 × 5% 天氣，
+// 每個 ET 日只有一次 5% 的機會，十年取樣實測最長空窗 2805 ET 小時（金刺草球，現實 5.7 天）。
+// 這裡取 400 ET 天（9600 小時），機率上再長的空窗約 1e-9，實務上不會遇到。
+const FLIP_SCAN_HOURS = 24 * 400;
+function nextFlip(a, from) {
+  if (!a.spawn && !a.weather) return null;         // 常駐
+  const cur = availableAt(a, from);
+  let t = Math.floor(from / ET_HOUR_MS) * ET_HOUR_MS + ET_HOUR_MS;
+  for (let i = 0; i < FLIP_SCAN_HOURS; i++, t += ET_HOUR_MS) {
+    if (availableAt(a, t) !== cur) return t;
+  }
+  return null;
+}
+// 狀態算一次就好，撐到 flip 之前都有效；每秒的 ticker 只更新倒數文字
+const anState = new Map();
+function stateOf(a, now) {
+  const c = anState.get(a.id);
+  if (c && now < c.until) return c;
+  const on = availableAt(a, now);
+  const flip = nextFlip(a, now);
+  const st = { on, until: flip == null ? Infinity : flip };
+  anState.set(a.id, st);
+  return st;
+}
+
+const DROP_KINDS = [...new Set(ANIMALS.flatMap((a) => a.rewards.map((r) => r.name)))]
+  .sort((x, y) => x.localeCompare(y, 'zh-Hant'));
+const shortDrop = (n) => n.replace(/^牧場動物的/, '');
+// 天氣繁中名 → 圖示（animalSpawns 存的是繁中名，WEATHER_INFO 以英文 key 為索引）
+const WICON = {};
+for (const k of ['clearSkies', 'fairSkies', 'clouds', 'rain', 'fog', 'showers']) WICON[wi(k).name] = wi(k).icon;
+
+$('anNote').innerHTML = `
+  稀有動物只在<b>特定 ET 時段</b>或<b>特定天氣</b>下出現，抓到後放進牧場才會持續產出素材。
+  下方倒數是<b>即時計算</b>的——天氣是遊戲內的純數學公式，不需要連任何伺服器。
+  ${ANIMALS_PENDING ? `<br><span style="color:var(--text-muted)">另有 ${ANIMALS_PENDING} 種動物（後續版本追加）尚無可靠的台服名與出現條件，暫不列出。</span>` : ''}`;
+
+buildChips('anState', ['now'], () => (anOnlyNow ? 'now' : null),
+  (v) => (anOnlyNow = v === 'now'), () => '現在可捕獲', () => renderAn());
+buildChips('anDrop', DROP_KINDS, () => anDropFilter, (v) => (anDropFilter = v), shortDrop, () => renderAn());
+
+function renderAnNow() {
+  const now = Date.now();
+  const key = getWeatherAt(ISLAND_MAP_ID, now);
+  const nextW = Math.floor(now / 1400000) * 1400000 + 1400000;
+  $('anNow').innerHTML = `
+    <span>🕐 <b>${fmtET(now).replace('ET ', '')}</b></span>
+    <span class="sep">|</span>
+    <span>${wi(key).icon} 島上天氣 <b>${esc(wi(key).name)}</b></span>
+    <span class="sep">|</span>
+    <span>下次天氣 ${wi(getWeatherAt(ISLAND_MAP_ID, nextW)).icon}
+      <b>${esc(wi(getWeatherAt(ISLAND_MAP_ID, nextW)).name)}</b> ${fmtCountdown(nextW - now)}</span>`;
+}
+
+function anFiltered() {
+  const q = $('anSearch').value.trim().toLowerCase();
+  const now = Date.now();
+  return ANIMALS.filter((a) => {
+    if (anOnlyNow && !stateOf(a, now).on) return false;
+    if (anDropFilter && !a.rewards.some((r) => r.name === anDropFilter)) return false;
+    if (!q) return true;
+    return a.name.toLowerCase().includes(q) || a.rewards.some((r) => r.name.toLowerCase().includes(q));
+  });
+}
+
+function renderAn() {
+  renderAnNow();
+  const now = Date.now();
+  const list = anFiltered().sort((a, b) => {
+    if (anSort === 'name') return a.name.localeCompare(b.name, 'zh-Hant');
+    if (anSort === 'size') return a.size - b.size || a.sort - b.sort;
+    const sa = stateOf(a, now), sb = stateOf(b, now);
+    // 現在抓得到的排前面；同組內再依「還剩多久／還要多久」排
+    if (sa.on !== sb.on) return sa.on ? -1 : 1;
+    return sa.until - sb.until || a.sort - b.sort;
+  });
+
+  $('anMeta').innerHTML = `顯示 <em>${list.length}</em> / ${ANIMALS.length} 種動物`;
+  $('anEmpty').style.display = list.length ? 'none' : '';
+  $('anGrid').style.display = list.length ? '' : 'none';
+  $('anGrid').innerHTML = list.map((a) => {
+    const st = stateOf(a, now);
+    const cond = [];
+    if (a.spawn) cond.push(`ET ${String(a.spawn.startHour).padStart(2, '0')}:00–${String(a.spawn.endHour).padStart(2, '0')}:00`);
+    if (a.weather) cond.push(a.weather.map((w) => `${WICON[w] || ''}${w}`).join('／'));
+    return `
+    <div class="an-card${st.on ? ' on' : ''}" data-an="${a.id}">
+      <div class="an-head">
+        <span class="an-name">${esc(a.name)}</span>
+        <span class="tag size">${esc(a.sizeName)}型</span>
+        ${a.rarity === 3 ? '<span class="tag rare">稀有</span>' : ''}
+        <span class="an-badge ${st.on ? 'on' : 'off'}" data-until="${st.until}" data-on="${st.on ? 1 : 0}"></span>
+      </div>
+      <div class="an-cond">
+        <span class="k">出現</span>${cond.length ? esc(cond.join(' ＋ ')) : '常駐（隨時可捕獲）'}
+        ${a.note ? `<span style="color:var(--text-muted)">・${esc(a.note)}</span>` : ''}
+        <br><span class="k">地點</span>X:${a.coords.x} Y:${a.coords.y}
+        <button class="coord-btn" data-anx="${a.coords.x}" data-any="${a.coords.y}" data-anname="${esc(a.name)}">🗺 開地圖</button>
+        <button class="coord-btn" data-flag="/coord ${a.coords.x} ${a.coords.y} ${esc(ISLAND_MAP.name)}">📋 座標</button>
+      </div>
+      <div class="an-drop">
+        ${a.rewards.map((r) => `<button class="ing-chip" data-goto="${r.itemId}" title="查看「${esc(r.name)}」用在哪">${esc(shortDrop(r.name))}</button>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+  tickAn();
+}
+
+function tickAn() {
+  const now = Date.now();
+  let dirty = false;
+  $('anGrid').querySelectorAll('.an-badge').forEach((el) => {
+    const until = Number(el.dataset.until);
+    if (now >= until) { dirty = true; return; }
+    const on = el.dataset.on === '1';
+    if (!isFinite(until)) { el.textContent = '常駐'; el.title = '無時段／天氣限制，隨時可捕獲'; return; }
+    // 稀有組合的空窗可長達數天，那時倒數（「136時24分後」）反而難讀，改標實際時刻
+    el.textContent = on ? `剩 ${fmtCountdown(until - now).replace('後', '')}`
+      : until - now > 6 * 3600000 ? fmtRT(until)
+      : fmtCountdown(until - now);
+    el.title = on ? `到 ${fmtRT(until)} 為止` : `${fmtRT(until)}（${fmtCountdown(until - now)}）`;
+  });
+  if (dirty) { anState.clear(); renderAn(); }        // 有動物剛翻轉狀態 → 重排
+}
+setInterval(() => { if (tab === 'an') { renderAnNow(); tickAn(); } }, 1000);
+
+$('anSearch').addEventListener('input', renderAn);
+$('anSort').addEventListener('change', (e) => { anSort = e.target.value; syncURL(); renderAn(); });
+$('anGrid').addEventListener('click', (e) => {
+  const mb = e.target.closest('[data-anx]');
+  if (mb) {
+    openMapModal({
+      mapId: ISLAND_MAP_ID, x: Number(mb.dataset.anx), y: Number(mb.dataset.any),
+      title: mb.dataset.anname, sub: '無人島動物出現地點',
+    });
+    return;
+  }
+  const cp = e.target.closest('[data-flag]');
+  if (cp) { copyText(cp.dataset.flag); return; }
+  const go = e.target.closest('[data-goto]');
+  if (go) selectMat(Number(go.dataset.goto), true);
+});
 
 /* ─────────────── 採集地圖 ─────────────── */
 let layer = 'all', selArea = null;
@@ -635,9 +876,18 @@ function applyURL() {
   const m = Number(p.get('m'));
   if (m && matById.has(m)) selMat = m;
 
+  anOnlyNow = p.get('now') === '1';
+  const dr = p.get('drop');
+  anDropFilter = DROP_KINDS.includes(dr) ? dr : null;
+  const as = p.get('asort');
+  if (['time', 'size', 'name'].includes(as)) anSort = as;
+  $('anSort').value = anSort;
+  $('anState').querySelectorAll('.filter-tag').forEach((x) => x.classList.toggle('active', anOnlyNow));
+  $('anDrop').querySelectorAll('.filter-tag').forEach((x) => x.classList.toggle('active', x.dataset.v === anDropFilter));
+
   renderCw(); renderMatList(); renderMatDetail();
   const t = p.get('t');
-  setTab(t === 'mat' || t === 'map' ? t : 'cw', false);
+  setTab(['mat', 'map', 'an'].includes(t) ? t : 'cw', false);
 }
 window.addEventListener('popstate', applyURL);
 applyURL();
