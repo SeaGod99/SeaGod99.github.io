@@ -308,6 +308,22 @@ const report = [];
               [...ISLAND_WEATHERS].join("／"));
           }
         }
+        // 時間一律 24 小時制。外部來源常寫 am/pm，而 12am／12pm 極易看錯（原始來源就錯過
+        // 一次：星點栗鼠寫 9am-12am ＝ 09:00-00:00，實為 09:00-12:00）。這裡把「0–23 的整點」
+        // 變成機器強制，轉錄時若忘了換算就會炸在這裡而不是安靜地產出錯資料。
+        if ((ob.start == null) !== (ob.end == null)) {
+          throw new Error(`animalSpawns[${id}] 的 start／end 必須成對出現`);
+        }
+        for (const [k, v] of [["start", ob.start], ["end", ob.end]]) {
+          if (v == null) continue;
+          if (!Number.isInteger(v) || v < 0 || v > 23) {
+            throw new Error(`animalSpawns[${id}].${k} = ${JSON.stringify(v)}：` +
+              `必須是 0–23 的整數（24 小時制），不接受 am/pm 或非整點`);
+          }
+        }
+        if (ob.start != null && ob.start === ob.end) {
+          throw new Error(`animalSpawns[${id}] 的 start 與 end 相同（${ob.start}），時窗長度為 0`);
+        }
       }
       return {
         id,
