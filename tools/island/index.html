@@ -133,13 +133,32 @@
 
     /* ── 動物時鐘 ── */
     .an-now {
-      display: flex; gap: 18px; flex-wrap: wrap; align-items: center;
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius-md); padding: 12px 18px; margin-bottom: 16px;
-      font-size: 14.5px; color: var(--text-secondary);
+      display: flex; gap: 20px; flex-wrap: wrap; align-items: center;
+      background: linear-gradient(135deg, var(--bg-card), var(--raise));
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 18px 24px; margin-bottom: 18px;
     }
-    .an-now b { color: var(--gold-light); font-weight: 600; }
-    .an-now .sep { color: var(--border); }
+    /* 主時鐘：大字、等寬數字，看起來就是一個時鐘 */
+    .clock { display: flex; align-items: baseline; gap: 12px; }
+    .clock-face {
+      font-variant-numeric: tabular-nums; font-feature-settings: "tnum";
+      font-size: 52px; font-weight: 700; line-height: 1;
+      color: var(--gold-light); letter-spacing: 1px;
+      text-shadow: 0 0 18px rgba(200,169,110,0.28);
+    }
+    .clock-sec { font-size: 26px; font-weight: 600; color: var(--text-muted);
+      font-variant-numeric: tabular-nums; }
+    .clock-label { font-size: 12px; color: var(--text-muted); letter-spacing: 2px;
+      text-transform: uppercase; margin-top: 6px; }
+    .clock-meta { display: flex; flex-direction: column; gap: 6px; align-items: flex-start;
+      padding-left: 20px; border-left: 1px solid var(--border); }
+    .clock-meta .line { font-size: 14.5px; color: var(--text-secondary); display: flex; align-items: center; gap: 7px; }
+    .clock-meta .line b { color: var(--text-primary); font-weight: 600; }
+    .clock-meta .wx-ico { font-size: 20px; }
+    @media (max-width: 520px) {
+      .clock-face { font-size: 40px; } .clock-sec { font-size: 20px; }
+      .clock-meta { padding-left: 0; border-left: none; }
+    }
     .an-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 10px; }
     .an-card {
       background: var(--bg-card); border: 1px solid var(--border);
@@ -160,6 +179,7 @@
     .an-badge.off { color: var(--text-muted); background: var(--raise); border-color: var(--border); }
     .an-cond { font-size: 13.5px; color: var(--text-secondary); line-height: 1.8; }
     .an-cond .k { color: var(--text-muted); margin-right: 6px; }
+    .an-cond .ico { vertical-align: middle; margin-right: 3px; }
     .an-drop { display: flex; flex-wrap: wrap; gap: 6px; }
     .tag.size { background: var(--purple-dim); color: var(--purple); border-color: rgba(167,139,250,0.25); }
     .tag.rare { background: rgba(244,114,182,0.1); color: #f472b6; border-color: rgba(244,114,182,0.3); }
@@ -304,6 +324,10 @@
     <div class="filter-section">
       <div class="filter-label">狀態</div>
       <div class="filter-tags" id="anState"></div>
+    </div>
+    <div class="filter-section">
+      <div class="filter-label">體型 <span style="color:var(--text-muted);font-weight:400">— 小＝捕獸網／中＝捕獸繩／大＝捕獸用睡眠球</span></div>
+      <div class="filter-tags" id="anSize"></div>
     </div>
     <div class="filter-section">
       <div class="filter-label">產出素材</div>
@@ -483,6 +507,7 @@ function syncURL() {
   if (tab === 'mat' && selMat) p.set('m', String(selMat));
   if (tab === 'an') {
     if (anOnlyNow) p.set('now', '1');
+    if (anSizeFilter) p.set('size', String(anSizeFilter));
     if (anDropFilter) p.set('drop', anDropFilter);
     if (anSort !== 'time') p.set('asort', anSort);
   }
@@ -724,7 +749,7 @@ function copyText(t) {
    來源與對位方法記在該檔 _animalSource。天氣本身則是純計算：無名島（map 772）的機率表
    已與 SaintCoinach 演算法交叉驗證過（22000 個時段 0 差異），故時鐘不需要任何外部 API。
    沒有台服名或沒有出現條件的動物一律不顯示，與全站規則一致。                        */
-let anOnlyNow = false, anDropFilter = null, anSort = 'time';
+let anOnlyNow = false, anSizeFilter = null, anDropFilter = null, anSort = 'time';
 
 const ANIMALS = animals.data.filter((a) => a.name && !a.obsMissing);
 const ANIMALS_PENDING = animals.data.length - ANIMALS.length;
@@ -777,19 +802,36 @@ $('anNote').innerHTML = `
 
 buildChips('anState', ['now'], () => (anOnlyNow ? 'now' : null),
   (v) => (anOnlyNow = v === 'now'), () => '現在可捕獲', () => renderAn());
+// 體型：值＝size 數字，label 顯示「小型／中型／大型」
+buildChips('anSize', [1, 2, 3], () => anSizeFilter, (v) => (anSizeFilter = v),
+  (v) => ({ 1: '小', 2: '中', 3: '大' }[v]) + '型', () => renderAn());
 buildChips('anDrop', DROP_KINDS, () => anDropFilter, (v) => (anDropFilter = v), shortDrop, () => renderAn());
 
+// ET 現在時刻拆成 時:分（大）＋ 秒（小），做成一個真的在走的時鐘
+function etParts(ms) {
+  const etSec = Math.floor(ms / 1000 * (24 * 3600 / 4200));
+  const h = Math.floor(etSec / 3600) % 24, m = Math.floor(etSec / 60) % 60, s = etSec % 60;
+  const p = (n) => String(n).padStart(2, '0');
+  return { hm: `${p(h)}:${p(m)}`, s: p(s) };
+}
 function renderAnNow() {
   const now = Date.now();
   const key = getWeatherAt(ISLAND_MAP_ID, now);
   const nextW = Math.floor(now / 1400000) * 1400000 + 1400000;
+  const et = etParts(now);
+  const nk = getWeatherAt(ISLAND_MAP_ID, nextW);
   $('anNow').innerHTML = `
-    <span>🕐 <b>${fmtET(now).replace('ET ', '')}</b></span>
-    <span class="sep">|</span>
-    <span>${wi(key).icon} 島上天氣 <b>${esc(wi(key).name)}</b></span>
-    <span class="sep">|</span>
-    <span>下次天氣 ${wi(getWeatherAt(ISLAND_MAP_ID, nextW)).icon}
-      <b>${esc(wi(getWeatherAt(ISLAND_MAP_ID, nextW)).name)}</b> ${fmtCountdown(nextW - now)}</span>`;
+    <div class="clock">
+      <div>
+        <div class="clock-face">${et.hm}<span class="clock-sec">:${et.s}</span></div>
+        <div class="clock-label">Eorzea Time</div>
+      </div>
+    </div>
+    <div class="clock-meta">
+      <div class="line"><span class="wx-ico">${wi(key).icon}</span>島上天氣 <b>${esc(wi(key).name)}</b></div>
+      <div class="line">下次天氣 <span class="wx-ico">${wi(nk).icon}</span><b>${esc(wi(nk).name)}</b>
+        <span style="color:var(--text-muted)">· ${fmtCountdown(nextW - now)}</span></div>
+    </div>`;
 }
 
 function anFiltered() {
@@ -797,6 +839,7 @@ function anFiltered() {
   const now = Date.now();
   return ANIMALS.filter((a) => {
     if (anOnlyNow && !stateOf(a, now).on) return false;
+    if (anSizeFilter && a.size !== anSizeFilter) return false;
     if (anDropFilter && !a.rewards.some((r) => r.name === anDropFilter)) return false;
     if (!q) return true;
     return a.name.toLowerCase().includes(q) || a.rewards.some((r) => r.name.toLowerCase().includes(q));
@@ -828,13 +871,14 @@ function renderAn() {
       <div class="an-head">
         ${icoTag(a.icon)}
         <span class="an-name">${esc(a.name)}</span>
-        <span class="tag size">${esc(a.sizeName)}型</span>
+        <span class="tag size" title="${esc(a.sizeName)}型動物，用${a.capture ? esc(a.capture.name) : '對應道具'}捕捉">${esc(a.sizeName)}型</span>
         ${a.rarity === 3 ? '<span class="tag rare">稀有</span>' : ''}
         <span class="an-badge ${st.on ? 'on' : 'off'}" data-until="${st.until}" data-on="${st.on ? 1 : 0}"></span>
       </div>
       <div class="an-cond">
         <span class="k">出現</span>${cond.length ? esc(cond.join(' ＋ ')) : '常駐（隨時可捕獲）'}
         ${a.note ? `<span style="color:var(--text-muted)">・${esc(a.note)}</span>` : ''}
+        ${a.capture ? `<br><span class="k">捕捉</span>${icoTag(a.capture.icon, 'sm')}${esc(a.capture.name)}` : ''}
         <br><span class="k">地點</span>X:${a.coords.x} Y:${a.coords.y}
         <button class="coord-btn" data-anx="${a.coords.x}" data-any="${a.coords.y}" data-anname="${esc(a.name)}">🗺 開地圖</button>
         <button class="coord-btn" data-flag="/coord ${a.coords.x} ${a.coords.y} ${esc(ISLAND_MAP.name)}">📋 座標</button>
@@ -1086,12 +1130,15 @@ function applyURL() {
   if (m && matById.has(m)) selMat = m;
 
   anOnlyNow = p.get('now') === '1';
+  const sz = Number(p.get('size'));
+  anSizeFilter = [1, 2, 3].includes(sz) ? sz : null;
   const dr = p.get('drop');
   anDropFilter = DROP_KINDS.includes(dr) ? dr : null;
   const as = p.get('asort');
   if (['time', 'size', 'name'].includes(as)) anSort = as;
   $('anSort').value = anSort;
   $('anState').querySelectorAll('.filter-tag').forEach((x) => x.classList.toggle('active', anOnlyNow));
+  $('anSize').querySelectorAll('.filter-tag').forEach((x) => x.classList.toggle('active', x.dataset.v === String(anSizeFilter)));
   $('anDrop').querySelectorAll('.filter-tag').forEach((x) => x.classList.toggle('active', x.dataset.v === anDropFilter));
 
   renderCw(); renderMatList(); renderMatDetail(); renderRk();

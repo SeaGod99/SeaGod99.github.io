@@ -360,6 +360,10 @@ const report = [];
 /* 4) 動物：體型／稀有度／掉落素材出自 datamine；名稱與出現條件由人工表合併，見檔頭說明 */
 {
   const SIZE = { 1: "小", 2: "中", 3: "大" };
+  // 體型決定捕捉道具（遊戲固定機制，非 MJIAnimals 欄位）：小→捕獸網、中→捕獸繩、大→捕獸用睡眠球。
+  // itemId 是真實道具（MJIRecipe 的產物），對應關係已被開拓等級表交叉驗證
+  // （2 級捕獸網→小型、6 級捕獸繩→中型、8 級睡眠球→大型，見 island-names-tw.json 的 ranks）。
+  const CAPTURE_TOOL = { 1: 37615, 2: 37616, 3: 37617 };
   // 島上只會出現這 6 種天氣，拿它當 animalSpawns.weather 的白名單，打錯字直接炸掉
   const ISLAND_WEATHERS = new Set((ISLAND_MAP.weatherRates || []).map((w) => w.weather));
   const rows = S.MJIAnimals
@@ -400,6 +404,10 @@ const report = [];
         name, nameMissing: !name, nameSource: nameSrc("animals", name),
         bnpcBaseId: num(r.BNpcBase),
         size: num(r.Size), sizeName: SIZE[num(r.Size)] || null,
+        capture: (() => {
+          const ci = CAPTURE_TOOL[num(r.Size)];
+          return ci ? { itemId: ci, name: twName(ci), icon: twIcon(ci) } : null;
+        })(),
         rarity: num(r.Rarity),
         sort: num(r.Sort),
         icon: num(r.Icon) || null,

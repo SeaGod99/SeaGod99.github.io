@@ -44,7 +44,10 @@ for (const i of J("items.json").data) {
   if (m) itemIcon.set(i.id, Number(m[1]));
 }
 
-for (const a of J("island-animals.json").data) add(a.icon, "動物");
+for (const a of J("island-animals.json").data) {
+  add(a.icon, "動物");
+  if (a.capture) add(itemIcon.get(a.capture.itemId), "捕捉道具");   // 捕獸網／繩／睡眠球
+}
 for (const m of J("island-materials.json").data) {
   add(itemIcon.get(m.itemId), "素材");
   if (m.gathering && m.gathering.tool) add(itemIcon.get(m.gathering.tool.itemId), "採集工具");
