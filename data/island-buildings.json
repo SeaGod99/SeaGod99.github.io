@@ -9,30 +9,35 @@
       "id": "building-0.0",
       "type": "building",
       "level": 1,
-      "name": null,
+      "name": "小島木屋 I",
       "nameCn": "小岛木屋 I",
-      "nameMissing": true,
+      "nameMissing": false,
+      "nameSource": "cn-hant",
       "textId": 2,
       "icon": 53919,
       "materials": [
         {
           "itemId": 37561,
           "name": "無人島棕櫚原木",
+          "icon": 22410,
           "qty": 10
         },
         {
           "itemId": 37562,
           "name": "無人島藤蔓",
+          "icon": 21672,
           "qty": 5
         },
         {
           "itemId": 37554,
           "name": "無人島石材",
+          "icon": 21451,
           "qty": 5
         },
         {
           "itemId": 37559,
           "name": "無人島砂礫",
+          "icon": 21464,
           "qty": 5
         }
       ]
@@ -41,30 +46,35 @@
       "id": "building-0.1",
       "type": "building",
       "level": 2,
-      "name": null,
+      "name": "小島木屋 II",
       "nameCn": "小岛木屋 II",
-      "nameMissing": true,
+      "nameMissing": false,
+      "nameSource": "cn-hant",
       "textId": 3,
       "icon": 53920,
       "materials": [
         {
           "itemId": 37561,
           "name": "無人島棕櫚原木",
+          "icon": 22410,
           "qty": 15
         },
         {
           "itemId": 37562,
           "name": "無人島藤蔓",
+          "icon": 21672,
           "qty": 10
         },
         {
           "itemId": 37565,
           "name": "無人島石灰岩",
+          "icon": 22615,
           "qty": 10
         },
         {
           "itemId": 37564,
           "name": "無人島銅礦",
+          "icon": 21209,
           "qty": 5
         }
       ]
@@ -73,35 +83,41 @@
       "id": "building-0.2",
       "type": "building",
       "level": 3,
-      "name": null,
+      "name": "小島木屋 III",
       "nameCn": "小岛木屋 III",
-      "nameMissing": true,
+      "nameMissing": false,
+      "nameSource": "cn-hant",
       "textId": 4,
       "icon": 53921,
       "materials": [
         {
           "itemId": 37560,
           "name": "無人島原木",
+          "icon": 22407,
           "qty": 15
         },
         {
           "itemId": 37565,
           "name": "無人島石灰岩",
+          "icon": 22615,
           "qty": 10
         },
         {
           "itemId": 37568,
           "name": "無人島棉花",
+          "icon": 21652,
           "qty": 10
         },
         {
           "itemId": 37569,
           "name": "無人島麻",
+          "icon": 25213,
           "qty": 10
         },
         {
           "itemId": 37570,
           "name": "無人島黏土",
+          "icon": 22634,
           "qty": 5
         }
       ]
@@ -110,35 +126,41 @@
       "id": "building-0.3",
       "type": "building",
       "level": 4,
-      "name": null,
+      "name": "小島木屋 IV",
       "nameCn": "小岛木屋 IV",
-      "nameMissing": true,
+      "nameMissing": false,
+      "nameSource": "cn-hant",
       "textId": 73,
       "icon": 53928,
       "materials": [
         {
           "itemId": 37561,
           "name": "無人島棕櫚原木",
+          "icon": 22410,
           "qty": 15
         },
         {
           "itemId": 37572,
           "name": "無人島鐵礦",
+          "icon": 21202,
           "qty": 15
         },
         {
           "itemId": 39887,
           "name": "無人島石炭",
+          "icon": 21462,
           "qty": 10
         },
         {
           "itemId": 39893,
           "name": "無人島幻影石",
+          "icon": 21477,
           "qty": 10
         },
         {
           "itemId": 37558,
           "name": "無人島草葉",
+          "icon": 25010,
           "qty": 10
         }
       ]
@@ -147,35 +169,41 @@
       "id": "building-0.4",
       "type": "building",
       "level": 5,
-      "name": null,
+      "name": "小島木屋 V",
       "nameCn": "小岛木屋 V",
-      "nameMissing": true,
+      "nameMissing": false,
+      "nameSource": "cn-hant",
       "textId": 87,
       "icon": 53936,
       "materials": [
         {
           "itemId": 41634,
           "name": "無人島水晶層",
+          "icon": 21488,
           "qty": 15
         },
         {
           "itemId": 41631,
           "name": "無人島黃銅礦",
+          "icon": 21207,
           "qty": 15
         },
         {
           "itemId": 39891,
           "name": "無人島靈銀礦",
+          "icon": 21208,
           "qty": 15
         },
         {
           "itemId": 37570,
           "name": "無人島黏土",
+          "icon": 22634,
           "qty": 15
         },
         {
           "itemId": 37574,
           "name": "無人島花崗岩",
+          "icon": 21251,
           "qty": 10
         }
       ]
@@ -184,30 +212,35 @@
       "id": "building-1.0",
       "type": "building",
       "level": 1,
-      "name": null,
+      "name": "開拓工坊 I",
       "nameCn": "开拓工房 I",
-      "nameMissing": true,
+      "nameMissing": false,
+      "nameSource": "cn-hant",
       "textId": 5,
       "icon": 53916,
       "materials": [
         {
           "itemId": 37560,
           "name": "無人島原木",
+          "icon": 22407,
           "qty": 10
         },
         {
           "itemId": 37565,
           "name": "無人島石灰岩",
+          "icon": 22615,
           "qty": 10
         },
         {
           "itemId": 37562,
           "name": "無人島藤蔓",
+          "icon": 21672,
           "qty": 5
         },
         {
           "itemId": 37559,
           "name": "無人島砂礫",
+          "icon": 21464,
           "qty": 5
         }
       ]
@@ -216,35 +249,41 @@
       "id": "building-1.1",
       "type": "building",
       "level": 2,
-      "name": null,
+      "name": "開拓工坊 II",
       "nameCn": "开拓工房 II",
-      "nameMissing": true,
+      "nameMissing": false,
+      "nameSource": "cn-hant",
       "textId": 6,
       "icon": 53917,
       "materials": [
         {
           "itemId": 37560,
           "name": "無人島原木",
+          "icon": 22407,
           "qty": 15
         },
         {
           "itemId": 37565,
           "name": "無人島石灰岩",
+          "icon": 22615,
           "qty": 15
         },
         {
           "itemId": 37569,
           "name": "無人島麻",
+          "icon": 25213,
           "qty": 10
         },
         {
           "itemId": 37570,
           "name": "無人島黏土",
+          "icon": 22634,
           "qty": 5
         },
         {
           "itemId": 37564,
           "name": "無人島銅礦",
+          "icon": 21209,
           "qty": 5
         }
       ]
@@ -253,35 +292,41 @@
       "id": "building-1.2",
       "type": "building",
       "level": 3,
-      "name": null,
+      "name": "開拓工坊 III",
       "nameCn": "开拓工房 III",
-      "nameMissing": true,
+      "nameMissing": false,
+      "nameSource": "cn-hant",
       "textId": 7,
       "icon": 53918,
       "materials": [
         {
           "itemId": 37572,
           "name": "無人島鐵礦",
+          "icon": 21202,
           "qty": 15
         },
         {
           "itemId": 37574,
           "name": "無人島花崗岩",
+          "icon": 21251,
           "qty": 15
         },
         {
           "itemId": 37560,
           "name": "無人島原木",
+          "icon": 22407,
           "qty": 10
         },
         {
           "itemId": 37569,
           "name": "無人島麻",
+          "icon": 25213,
           "qty": 10
         },
         {
           "itemId": 37579,
           "name": "無人島石榴石原石",
+          "icon": 21456,
           "qty": 3
         }
       ]
@@ -290,35 +335,41 @@
       "id": "building-1.3",
       "type": "building",
       "level": 4,
-      "name": null,
+      "name": "開拓工坊 IV",
       "nameCn": "开拓工房 IV",
-      "nameMissing": true,
+      "nameMissing": false,
+      "nameSource": "cn-hant",
       "textId": 75,
       "icon": 53929,
       "materials": [
         {
           "itemId": 39890,
           "name": "無人島大理石",
+          "icon": 21487,
           "qty": 15
         },
         {
           "itemId": 39887,
           "name": "無人島石炭",
+          "icon": 21462,
           "qty": 15
         },
         {
           "itemId": 37572,
           "name": "無人島鐵礦",
+          "icon": 21202,
           "qty": 10
         },
         {
           "itemId": 37560,
           "name": "無人島原木",
+          "icon": 22407,
           "qty": 10
         },
         {
           "itemId": 39893,
           "name": "無人島幻影石",
+          "icon": 21477,
           "qty": 10
         }
       ]
@@ -327,35 +378,41 @@
       "id": "building-1.4",
       "type": "building",
       "level": 5,
-      "name": null,
+      "name": "開拓工坊 V",
       "nameCn": "开拓工房 V",
-      "nameMissing": true,
+      "nameMissing": false,
+      "nameSource": "cn-hant",
       "textId": 89,
       "icon": 53937,
       "materials": [
         {
           "itemId": 41634,
           "name": "無人島水晶層",
+          "icon": 21488,
           "qty": 15
         },
         {
           "itemId": 41631,
           "name": "無人島黃銅礦",
+          "icon": 21207,
           "qty": 15
         },
         {
           "itemId": 39891,
           "name": "無人島靈銀礦",
+          "icon": 21208,
           "qty": 10
         },
         {
           "itemId": 37570,
           "name": "無人島黏土",
+          "icon": 22634,
           "qty": 10
         },
         {
           "itemId": 37579,
           "name": "無人島石榴石原石",
+          "icon": 21456,
           "qty": 5
         }
       ]
@@ -364,35 +421,41 @@
       "id": "building-2.0",
       "type": "building",
       "level": 1,
-      "name": null,
+      "name": "屯貨倉庫 I",
       "nameCn": "屯货仓库 I",
-      "nameMissing": true,
+      "nameMissing": false,
+      "nameSource": "cn-hant",
       "textId": 8,
       "icon": 53922,
       "materials": [
         {
           "itemId": 37561,
           "name": "無人島棕櫚原木",
+          "icon": 22410,
           "qty": 10
         },
         {
           "itemId": 37560,
           "name": "無人島原木",
+          "icon": 22407,
           "qty": 10
         },
         {
           "itemId": 37570,
           "name": "無人島黏土",
+          "icon": 22634,
           "qty": 10
         },
         {
           "itemId": 37564,
           "name": "無人島銅礦",
+          "icon": 21209,
           "qty": 10
         },
         {
           "itemId": 37562,
           "name": "無人島藤蔓",
+          "icon": 21672,
           "qty": 5
         }
       ]
@@ -401,35 +464,41 @@
       "id": "building-2.1",
       "type": "building",
       "level": 2,
-      "name": null,
+      "name": "屯貨倉庫 II",
       "nameCn": "屯货仓库 II",
-      "nameMissing": true,
+      "nameMissing": false,
+      "nameSource": "cn-hant",
       "textId": 9,
       "icon": 53923,
       "materials": [
         {
           "itemId": 37561,
           "name": "無人島棕櫚原木",
+          "icon": 22410,
           "qty": 15
         },
         {
           "itemId": 37560,
           "name": "無人島原木",
+          "icon": 22407,
           "qty": 15
         },
         {
           "itemId": 37569,
           "name": "無人島麻",
+          "icon": 25213,
           "qty": 10
         },
         {
           "itemId": 37570,
           "name": "無人島黏土",
+          "icon": 22634,
           "qty": 5
         },
         {
           "itemId": 37571,
           "name": "無人島錫砂",
+          "icon": 21204,
           "qty": 5
         }
       ]
@@ -438,35 +507,41 @@
       "id": "building-2.2",
       "type": "building",
       "level": 3,
-      "name": null,
+      "name": "屯貨倉庫 III",
       "nameCn": "屯货仓库 III",
-      "nameMissing": true,
+      "nameMissing": false,
+      "nameSource": "cn-hant",
       "textId": 10,
       "icon": 53924,
       "materials": [
         {
           "itemId": 37560,
           "name": "無人島原木",
+          "icon": 22407,
           "qty": 15
         },
         {
           "itemId": 37572,
           "name": "無人島鐵礦",
+          "icon": 21202,
           "qty": 15
         },
         {
           "itemId": 37574,
           "name": "無人島花崗岩",
+          "icon": 21251,
           "qty": 10
         },
         {
           "itemId": 37570,
           "name": "無人島黏土",
+          "icon": 22634,
           "qty": 10
         },
         {
           "itemId": 37580,
           "name": "無人島雲杉原木",
+          "icon": 22413,
           "qty": 3
         }
       ]
@@ -475,35 +550,41 @@
       "id": "building-2.3",
       "type": "building",
       "level": 4,
-      "name": null,
+      "name": "屯貨倉庫 IV",
       "nameCn": "屯货仓库 IV",
-      "nameMissing": true,
+      "nameMissing": false,
+      "nameSource": "cn-hant",
       "textId": 69,
       "icon": 53930,
       "materials": [
         {
           "itemId": 37561,
           "name": "無人島棕櫚原木",
+          "icon": 22410,
           "qty": 15
         },
         {
           "itemId": 39887,
           "name": "無人島石炭",
+          "icon": 21462,
           "qty": 15
         },
         {
           "itemId": 39891,
           "name": "無人島靈銀礦",
+          "icon": 21208,
           "qty": 10
         },
         {
           "itemId": 39890,
           "name": "無人島大理石",
+          "icon": 21487,
           "qty": 10
         },
         {
           "itemId": 39893,
           "name": "無人島幻影石",
+          "icon": 21477,
           "qty": 10
         }
       ]
@@ -512,35 +593,41 @@
       "id": "building-2.4",
       "type": "building",
       "level": 5,
-      "name": null,
+      "name": "屯貨倉庫 V",
       "nameCn": "屯货仓库 V",
-      "nameMissing": true,
+      "nameMissing": false,
+      "nameSource": "cn-hant",
       "textId": 70,
       "icon": 53938,
       "materials": [
         {
           "itemId": 41634,
           "name": "無人島水晶層",
+          "icon": 21488,
           "qty": 15
         },
         {
           "itemId": 41631,
           "name": "無人島黃銅礦",
+          "icon": 21207,
           "qty": 15
         },
         {
           "itemId": 37574,
           "name": "無人島花崗岩",
+          "icon": 21251,
           "qty": 10
         },
         {
           "itemId": 37570,
           "name": "無人島黏土",
+          "icon": 22634,
           "qty": 10
         },
         {
           "itemId": 37580,
           "name": "無人島雲杉原木",
+          "icon": 22413,
           "qty": 5
         }
       ]
@@ -549,35 +636,41 @@
       "id": "landmark-1",
       "type": "landmark",
       "level": 1,
-      "name": null,
+      "name": "風車",
       "nameCn": "风车",
-      "nameMissing": true,
+      "nameMissing": false,
+      "nameSource": "cn-hant",
       "textId": 20,
       "icon": 53914,
       "materials": [
         {
           "itemId": 37560,
           "name": "無人島原木",
+          "icon": 22407,
           "qty": 15
         },
         {
           "itemId": 37565,
           "name": "無人島石灰岩",
+          "icon": 22615,
           "qty": 15
         },
         {
           "itemId": 37561,
           "name": "無人島棕櫚原木",
+          "icon": 22410,
           "qty": 10
         },
         {
           "itemId": 37562,
           "name": "無人島藤蔓",
+          "icon": 21672,
           "qty": 5
         },
         {
           "itemId": 37564,
           "name": "無人島銅礦",
+          "icon": 21209,
           "qty": 5
         }
       ]
@@ -586,35 +679,41 @@
       "id": "landmark-2",
       "type": "landmark",
       "level": 1,
-      "name": null,
+      "name": "樹屋",
       "nameCn": "树屋",
-      "nameMissing": true,
+      "nameMissing": false,
+      "nameSource": "cn-hant",
       "textId": 21,
       "icon": 53911,
       "materials": [
         {
           "itemId": 37561,
           "name": "無人島棕櫚原木",
+          "icon": 22410,
           "qty": 15
         },
         {
           "itemId": 37560,
           "name": "無人島原木",
+          "icon": 22407,
           "qty": 15
         },
         {
           "itemId": 37565,
           "name": "無人島石灰岩",
+          "icon": 22615,
           "qty": 10
         },
         {
           "itemId": 37558,
           "name": "無人島草葉",
+          "icon": 25010,
           "qty": 5
         },
         {
           "itemId": 37562,
           "name": "無人島藤蔓",
+          "icon": 21672,
           "qty": 5
         }
       ]
@@ -623,30 +722,35 @@
       "id": "landmark-3",
       "type": "landmark",
       "level": 1,
-      "name": null,
+      "name": "溫泉小屋",
       "nameCn": "温泉小屋",
-      "nameMissing": true,
+      "nameMissing": false,
+      "nameSource": "cn-hant",
       "textId": 22,
       "icon": 53910,
       "materials": [
         {
           "itemId": 37560,
           "name": "無人島原木",
+          "icon": 22407,
           "qty": 15
         },
         {
           "itemId": 37565,
           "name": "無人島石灰岩",
+          "icon": 22615,
           "qty": 15
         },
         {
           "itemId": 37570,
           "name": "無人島黏土",
+          "icon": 22634,
           "qty": 10
         },
         {
           "itemId": 37555,
           "name": "無人島雙殼貝",
+          "icon": 29031,
           "qty": 3
         }
       ]
@@ -655,35 +759,41 @@
       "id": "landmark-4",
       "type": "landmark",
       "level": 1,
-      "name": null,
+      "name": "燈塔",
       "nameCn": "灯塔",
-      "nameMissing": true,
+      "nameMissing": false,
+      "nameSource": "cn-hant",
       "textId": 23,
       "icon": 53913,
       "materials": [
         {
           "itemId": 37574,
           "name": "無人島花崗岩",
+          "icon": 21251,
           "qty": 20
         },
         {
           "itemId": 37569,
           "name": "無人島麻",
+          "icon": 25213,
           "qty": 10
         },
         {
           "itemId": 37560,
           "name": "無人島原木",
+          "icon": 22407,
           "qty": 10
         },
         {
           "itemId": 37570,
           "name": "無人島黏土",
+          "icon": 22634,
           "qty": 10
         },
         {
           "itemId": 37582,
           "name": "無人島銀礦",
+          "icon": 21211,
           "qty": 3
         }
       ]
@@ -692,35 +802,41 @@
       "id": "landmark-5",
       "type": "landmark",
       "level": 1,
-      "name": null,
+      "name": "獺獺噴泉",
       "nameCn": "獭獭喷泉",
-      "nameMissing": true,
+      "nameMissing": false,
+      "nameSource": "cn-hant",
       "textId": 24,
       "icon": 53912,
       "materials": [
         {
           "itemId": 37574,
           "name": "無人島花崗岩",
+          "icon": 21251,
           "qty": 15
         },
         {
           "itemId": 37565,
           "name": "無人島石灰岩",
+          "icon": 22615,
           "qty": 15
         },
         {
           "itemId": 37570,
           "name": "無人島黏土",
+          "icon": 22634,
           "qty": 10
         },
         {
           "itemId": 37558,
           "name": "無人島草葉",
+          "icon": 25010,
           "qty": 10
         },
         {
           "itemId": 37578,
           "name": "無人島香薺",
+          "icon": 22627,
           "qty": 3
         }
       ]
@@ -729,35 +845,41 @@
       "id": "landmark-6",
       "type": "landmark",
       "level": 1,
-      "name": null,
+      "name": "小島庭園",
       "nameCn": "小岛庭园",
-      "nameMissing": true,
+      "nameMissing": false,
+      "nameSource": "cn-hant",
       "textId": 67,
       "icon": 53927,
       "materials": [
         {
           "itemId": 37560,
           "name": "無人島原木",
+          "icon": 22407,
           "qty": 20
         },
         {
           "itemId": 39228,
           "name": "無人島色彩繽紛的花",
+          "icon": 23727,
           "qty": 10
         },
         {
           "itemId": 37574,
           "name": "無人島花崗岩",
+          "icon": 21251,
           "qty": 10
         },
         {
           "itemId": 37562,
           "name": "無人島藤蔓",
+          "icon": 21672,
           "qty": 10
         },
         {
           "itemId": 37578,
           "name": "無人島香薺",
+          "icon": 22627,
           "qty": 5
         }
       ]
@@ -766,35 +888,41 @@
       "id": "landmark-7",
       "type": "landmark",
       "level": 1,
-      "name": null,
+      "name": "船景跳跳樂",
       "nameCn": "船景跳跳乐",
-      "nameMissing": true,
+      "nameMissing": false,
+      "nameSource": "cn-hant",
       "textId": 80,
       "icon": 53931,
       "materials": [
         {
           "itemId": 37561,
           "name": "無人島棕櫚原木",
+          "icon": 22410,
           "qty": 20
         },
         {
           "itemId": 37572,
           "name": "無人島鐵礦",
+          "icon": 21202,
           "qty": 10
         },
         {
           "itemId": 37568,
           "name": "無人島棉花",
+          "icon": 21652,
           "qty": 10
         },
         {
           "itemId": 37562,
           "name": "無人島藤蔓",
+          "icon": 21672,
           "qty": 10
         },
         {
           "itemId": 39894,
           "name": "無人島長臂蝦",
+          "icon": 29404,
           "qty": 5
         }
       ]
@@ -803,35 +931,41 @@
       "id": "landmark-8",
       "type": "landmark",
       "level": 1,
-      "name": null,
+      "name": "小島發條鐘樓",
       "nameCn": "小岛发条钟楼",
-      "nameMissing": true,
+      "nameMissing": false,
+      "nameSource": "cn-hant",
       "textId": 82,
       "icon": 53932,
       "materials": [
         {
           "itemId": 39891,
           "name": "無人島靈銀礦",
+          "icon": 21208,
           "qty": 15
         },
         {
           "itemId": 37574,
           "name": "無人島花崗岩",
+          "icon": 21251,
           "qty": 15
         },
         {
           "itemId": 39227,
           "name": "無人島木化石",
+          "icon": 21228,
           "qty": 10
         },
         {
           "itemId": 37560,
           "name": "無人島原木",
+          "icon": 22407,
           "qty": 10
         },
         {
           "itemId": 37582,
           "name": "無人島銀礦",
+          "icon": 21211,
           "qty": 5
         }
       ]
@@ -840,35 +974,41 @@
       "id": "landmark-9",
       "type": "landmark",
       "level": 1,
-      "name": null,
+      "name": "小島魔法樹",
       "nameCn": "小岛魔法树",
-      "nameMissing": true,
+      "nameMissing": false,
+      "nameSource": "cn-hant",
       "textId": 91,
       "icon": 53943,
       "materials": [
         {
           "itemId": 37560,
           "name": "無人島原木",
+          "icon": 22407,
           "qty": 15
         },
         {
           "itemId": 37574,
           "name": "無人島花崗岩",
+          "icon": 21251,
           "qty": 15
         },
         {
           "itemId": 41634,
           "name": "無人島水晶層",
+          "icon": 21488,
           "qty": 10
         },
         {
           "itemId": 37562,
           "name": "無人島藤蔓",
+          "icon": 21672,
           "qty": 10
         },
         {
           "itemId": 37578,
           "name": "無人島香薺",
+          "icon": 22627,
           "qty": 5
         }
       ]
@@ -877,35 +1017,41 @@
       "id": "landmark-10",
       "type": "landmark",
       "level": 1,
-      "name": null,
+      "name": "小島聖堂",
       "nameCn": "小岛圣堂",
-      "nameMissing": true,
+      "nameMissing": false,
+      "nameSource": "cn-hant",
       "textId": 93,
       "icon": 53942,
       "materials": [
         {
           "itemId": 39890,
           "name": "無人島大理石",
+          "icon": 21487,
           "qty": 15
         },
         {
           "itemId": 41634,
           "name": "無人島水晶層",
+          "icon": 21488,
           "qty": 15
         },
         {
           "itemId": 37574,
           "name": "無人島花崗岩",
+          "icon": 21251,
           "qty": 10
         },
         {
           "itemId": 39893,
           "name": "無人島幻影石",
+          "icon": 21477,
           "qty": 10
         },
         {
           "itemId": 37582,
           "name": "無人島銀礦",
+          "icon": 21211,
           "qty": 5
         }
       ]

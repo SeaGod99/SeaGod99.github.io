@@ -28,6 +28,7 @@
       "id": 1,
       "name": "綿羊",
       "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 14906,
       "size": 1,
       "sizeName": "小",
@@ -37,11 +38,13 @@
       "rewards": [
         {
           "itemId": 37603,
-          "name": "牧場動物的絨毛"
+          "name": "牧場動物的絨毛",
+          "icon": 21655
         },
         {
           "itemId": 37611,
-          "name": "牧場動物的乳汁"
+          "name": "牧場動物的乳汁",
+          "icon": 24453
         }
       ],
       "spawn": null,
@@ -57,6 +60,7 @@
       "id": 2,
       "name": "黑羊",
       "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 14907,
       "size": 1,
       "sizeName": "小",
@@ -66,11 +70,13 @@
       "rewards": [
         {
           "itemId": 37611,
-          "name": "牧場動物的乳汁"
+          "name": "牧場動物的乳汁",
+          "icon": 24453
         },
         {
           "itemId": 37603,
-          "name": "牧場動物的絨毛"
+          "name": "牧場動物的絨毛",
+          "icon": 21655
         }
       ],
       "spawn": null,
@@ -88,6 +94,7 @@
       "id": 3,
       "name": "奧猴",
       "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 14908,
       "size": 1,
       "sizeName": "小",
@@ -97,11 +104,13 @@
       "rewards": [
         {
           "itemId": 37604,
-          "name": "牧場動物的尖爪"
+          "name": "牧場動物的尖爪",
+          "icon": 22301
         },
         {
           "itemId": 37605,
-          "name": "牧場動物的獸毛"
+          "name": "牧場動物的獸毛",
+          "icon": 21624
         }
       ],
       "spawn": null,
@@ -117,6 +126,7 @@
       "id": 4,
       "name": "白奧猴",
       "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 14909,
       "size": 1,
       "sizeName": "小",
@@ -126,11 +136,13 @@
       "rewards": [
         {
           "itemId": 37605,
-          "name": "牧場動物的獸毛"
+          "name": "牧場動物的獸毛",
+          "icon": 21624
         },
         {
           "itemId": 37604,
-          "name": "牧場動物的尖爪"
+          "name": "牧場動物的尖爪",
+          "icon": 22301
         }
       ],
       "spawn": {
@@ -149,6 +161,7 @@
       "id": 5,
       "name": "碧企鵝",
       "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 14910,
       "size": 1,
       "sizeName": "小",
@@ -158,11 +171,13 @@
       "rewards": [
         {
           "itemId": 37603,
-          "name": "牧場動物的絨毛"
+          "name": "牧場動物的絨毛",
+          "icon": 21655
         },
         {
           "itemId": 37607,
-          "name": "牧場動物的鳥蛋"
+          "name": "牧場動物的鳥蛋",
+          "icon": 25251
         }
       ],
       "spawn": null,
@@ -178,6 +193,7 @@
       "id": 6,
       "name": "紅企鵝",
       "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 14911,
       "size": 1,
       "sizeName": "小",
@@ -187,11 +203,13 @@
       "rewards": [
         {
           "itemId": 37607,
-          "name": "牧場動物的鳥蛋"
+          "name": "牧場動物的鳥蛋",
+          "icon": 25251
         },
         {
           "itemId": 37603,
-          "name": "牧場動物的絨毛"
+          "name": "牧場動物的絨毛",
+          "icon": 21655
         }
       ],
       "spawn": {
@@ -210,6 +228,7 @@
       "id": 7,
       "name": "松鼠",
       "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 14912,
       "size": 1,
       "sizeName": "小",
@@ -219,11 +238,13 @@
       "rewards": [
         {
           "itemId": 37604,
-          "name": "牧場動物的尖爪"
+          "name": "牧場動物的尖爪",
+          "icon": 22301
         },
         {
           "itemId": 37605,
-          "name": "牧場動物的獸毛"
+          "name": "牧場動物的獸毛",
+          "icon": 21624
         }
       ],
       "spawn": null,
@@ -239,6 +260,7 @@
       "id": 8,
       "name": "星點栗鼠",
       "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 14913,
       "size": 1,
       "sizeName": "小",
@@ -248,11 +270,13 @@
       "rewards": [
         {
           "itemId": 37605,
-          "name": "牧場動物的獸毛"
+          "name": "牧場動物的獸毛",
+          "icon": 21624
         },
         {
           "itemId": 37604,
-          "name": "牧場動物的尖爪"
+          "name": "牧場動物的尖爪",
+          "icon": 22301
         }
       ],
       "spawn": {
@@ -271,6 +295,7 @@
       "id": 9,
       "name": "礦爬蟲",
       "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 14914,
       "size": 1,
       "sizeName": "小",
@@ -280,11 +305,13 @@
       "rewards": [
         {
           "itemId": 37609,
-          "name": "牧場動物的尖牙"
+          "name": "牧場動物的尖牙",
+          "icon": 22303
         },
         {
           "itemId": 37608,
-          "name": "牧場動物的甲殼"
+          "name": "牧場動物的甲殼",
+          "icon": 22257
         }
       ],
       "spawn": null,
@@ -300,6 +327,7 @@
       "id": 10,
       "name": "黃礦爬蟲",
       "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 14915,
       "size": 1,
       "sizeName": "小",
@@ -309,11 +337,13 @@
       "rewards": [
         {
           "itemId": 37608,
-          "name": "牧場動物的甲殼"
+          "name": "牧場動物的甲殼",
+          "icon": 22257
         },
         {
           "itemId": 37609,
-          "name": "牧場動物的尖牙"
+          "name": "牧場動物的尖牙",
+          "icon": 22303
         }
       ],
       "spawn": null,
@@ -331,6 +361,7 @@
       "id": 11,
       "name": "渡渡鳥",
       "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 14916,
       "size": 2,
       "sizeName": "中",
@@ -340,11 +371,13 @@
       "rewards": [
         {
           "itemId": 37607,
-          "name": "牧場動物的鳥蛋"
+          "name": "牧場動物的鳥蛋",
+          "icon": 25251
         },
         {
           "itemId": 37606,
-          "name": "牧場動物的羽毛"
+          "name": "牧場動物的羽毛",
+          "icon": 21908
         }
       ],
       "spawn": null,
@@ -360,6 +393,7 @@
       "id": 12,
       "name": "彩色渡渡鳥",
       "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 14917,
       "size": 2,
       "sizeName": "中",
@@ -369,11 +403,13 @@
       "rewards": [
         {
           "itemId": 37606,
-          "name": "牧場動物的羽毛"
+          "name": "牧場動物的羽毛",
+          "icon": 21908
         },
         {
           "itemId": 37607,
-          "name": "牧場動物的鳥蛋"
+          "name": "牧場動物的鳥蛋",
+          "icon": 25251
         }
       ],
       "spawn": {
@@ -392,6 +428,7 @@
       "id": 13,
       "name": "雌羚羊",
       "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 14918,
       "size": 2,
       "sizeName": "中",
@@ -401,11 +438,13 @@
       "rewards": [
         {
           "itemId": 37605,
-          "name": "牧場動物的獸毛"
+          "name": "牧場動物的獸毛",
+          "icon": 21624
         },
         {
           "itemId": 37611,
-          "name": "牧場動物的乳汁"
+          "name": "牧場動物的乳汁",
+          "icon": 24453
         }
       ],
       "spawn": null,
@@ -421,6 +460,7 @@
       "id": 14,
       "name": "雄羚羊",
       "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 14919,
       "size": 2,
       "sizeName": "中",
@@ -430,11 +470,13 @@
       "rewards": [
         {
           "itemId": 37605,
-          "name": "牧場動物的獸毛"
+          "name": "牧場動物的獸毛",
+          "icon": 21624
         },
         {
           "itemId": 37610,
-          "name": "牧場動物的角片"
+          "name": "牧場動物的角片",
+          "icon": 22206
         }
       ],
       "spawn": {
@@ -453,6 +495,7 @@
       "id": 15,
       "name": "陸行鳥",
       "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 14920,
       "size": 2,
       "sizeName": "中",
@@ -462,11 +505,13 @@
       "rewards": [
         {
           "itemId": 37605,
-          "name": "牧場動物的獸毛"
+          "name": "牧場動物的獸毛",
+          "icon": 21624
         },
         {
           "itemId": 37606,
-          "name": "牧場動物的羽毛"
+          "name": "牧場動物的羽毛",
+          "icon": 21908
         }
       ],
       "spawn": null,
@@ -482,6 +527,7 @@
       "id": 16,
       "name": "黑陸行鳥",
       "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 14921,
       "size": 2,
       "sizeName": "中",
@@ -491,11 +537,13 @@
       "rewards": [
         {
           "itemId": 37606,
-          "name": "牧場動物的羽毛"
+          "name": "牧場動物的羽毛",
+          "icon": 21908
         },
         {
           "itemId": 37605,
-          "name": "牧場動物的獸毛"
+          "name": "牧場動物的獸毛",
+          "icon": 21624
         }
       ],
       "spawn": null,
@@ -513,6 +561,7 @@
       "id": 17,
       "name": "犰狳",
       "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 14922,
       "size": 2,
       "sizeName": "中",
@@ -522,11 +571,13 @@
       "rewards": [
         {
           "itemId": 37608,
-          "name": "牧場動物的甲殼"
+          "name": "牧場動物的甲殼",
+          "icon": 22257
         },
         {
           "itemId": 37604,
-          "name": "牧場動物的尖爪"
+          "name": "牧場動物的尖爪",
+          "icon": 22301
         }
       ],
       "spawn": null,
@@ -542,6 +593,7 @@
       "id": 18,
       "name": "紅犰狳",
       "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 14923,
       "size": 2,
       "sizeName": "中",
@@ -551,11 +603,13 @@
       "rewards": [
         {
           "itemId": 37604,
-          "name": "牧場動物的尖爪"
+          "name": "牧場動物的尖爪",
+          "icon": 22301
         },
         {
           "itemId": 37608,
-          "name": "牧場動物的甲殼"
+          "name": "牧場動物的甲殼",
+          "icon": 22257
         }
       ],
       "spawn": {
@@ -574,6 +628,7 @@
       "id": 19,
       "name": "水牛",
       "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 14924,
       "size": 3,
       "sizeName": "大",
@@ -583,11 +638,13 @@
       "rewards": [
         {
           "itemId": 37611,
-          "name": "牧場動物的乳汁"
+          "name": "牧場動物的乳汁",
+          "icon": 24453
         },
         {
           "itemId": 37610,
-          "name": "牧場動物的角片"
+          "name": "牧場動物的角片",
+          "icon": 22206
         }
       ],
       "spawn": null,
@@ -603,6 +660,7 @@
       "id": 20,
       "name": "白水牛",
       "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 14925,
       "size": 3,
       "sizeName": "大",
@@ -612,11 +670,13 @@
       "rewards": [
         {
           "itemId": 37610,
-          "name": "牧場動物的角片"
+          "name": "牧場動物的角片",
+          "icon": 22206
         },
         {
           "itemId": 37611,
-          "name": "牧場動物的乳汁"
+          "name": "牧場動物的乳汁",
+          "icon": 24453
         }
       ],
       "spawn": null,
@@ -634,6 +694,7 @@
       "id": 21,
       "name": "母洞山羊",
       "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 14926,
       "size": 3,
       "sizeName": "大",
@@ -643,11 +704,13 @@
       "rewards": [
         {
           "itemId": 37611,
-          "name": "牧場動物的乳汁"
+          "name": "牧場動物的乳汁",
+          "icon": 24453
         },
         {
           "itemId": 37610,
-          "name": "牧場動物的角片"
+          "name": "牧場動物的角片",
+          "icon": 22206
         }
       ],
       "spawn": null,
@@ -663,6 +726,7 @@
       "id": 22,
       "name": "公洞山羊",
       "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 14927,
       "size": 3,
       "sizeName": "大",
@@ -672,11 +736,13 @@
       "rewards": [
         {
           "itemId": 37610,
-          "name": "牧場動物的角片"
+          "name": "牧場動物的角片",
+          "icon": 22206
         },
         {
           "itemId": 37603,
-          "name": "牧場動物的絨毛"
+          "name": "牧場動物的絨毛",
+          "icon": 21655
         }
       ],
       "spawn": {
@@ -695,6 +761,7 @@
       "id": 23,
       "name": "藍席茲",
       "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 14928,
       "size": 3,
       "sizeName": "大",
@@ -704,11 +771,13 @@
       "rewards": [
         {
           "itemId": 37607,
-          "name": "牧場動物的鳥蛋"
+          "name": "牧場動物的鳥蛋",
+          "icon": 25251
         },
         {
           "itemId": 37606,
-          "name": "牧場動物的羽毛"
+          "name": "牧場動物的羽毛",
+          "icon": 21908
         }
       ],
       "spawn": null,
@@ -724,6 +793,7 @@
       "id": 24,
       "name": "金席茲",
       "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 14929,
       "size": 3,
       "sizeName": "大",
@@ -733,11 +803,13 @@
       "rewards": [
         {
           "itemId": 37606,
-          "name": "牧場動物的羽毛"
+          "name": "牧場動物的羽毛",
+          "icon": 21908
         },
         {
           "itemId": 37607,
-          "name": "牧場動物的鳥蛋"
+          "name": "牧場動物的鳥蛋",
+          "icon": 25251
         }
       ],
       "spawn": null,
@@ -755,6 +827,7 @@
       "id": 25,
       "name": "金刺草球",
       "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 14930,
       "size": 1,
       "sizeName": "小",
@@ -764,11 +837,13 @@
       "rewards": [
         {
           "itemId": 37603,
-          "name": "牧場動物的絨毛"
+          "name": "牧場動物的絨毛",
+          "icon": 21655
         },
         {
           "itemId": 37605,
-          "name": "牧場動物的獸毛"
+          "name": "牧場動物的獸毛",
+          "icon": 21624
         }
       ],
       "spawn": {
@@ -789,6 +864,7 @@
       "id": 26,
       "name": "殼蟹",
       "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 14931,
       "size": 1,
       "sizeName": "小",
@@ -798,11 +874,13 @@
       "rewards": [
         {
           "itemId": 37608,
-          "name": "牧場動物的甲殼"
+          "name": "牧場動物的甲殼",
+          "icon": 22257
         },
         {
           "itemId": 37604,
-          "name": "牧場動物的尖爪"
+          "name": "牧場動物的尖爪",
+          "icon": 22301
         }
       ],
       "spawn": {
@@ -823,6 +901,7 @@
       "id": 27,
       "name": "猴面雀",
       "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 14932,
       "size": 2,
       "sizeName": "中",
@@ -832,11 +911,13 @@
       "rewards": [
         {
           "itemId": 37604,
-          "name": "牧場動物的尖爪"
+          "name": "牧場動物的尖爪",
+          "icon": 22301
         },
         {
           "itemId": 37603,
-          "name": "牧場動物的絨毛"
+          "name": "牧場動物的絨毛",
+          "icon": 21655
         }
       ],
       "spawn": {
@@ -857,6 +938,7 @@
       "id": 28,
       "name": "短吻鱷",
       "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 14933,
       "size": 3,
       "sizeName": "大",
@@ -866,11 +948,13 @@
       "rewards": [
         {
           "itemId": 37604,
-          "name": "牧場動物的尖爪"
+          "name": "牧場動物的尖爪",
+          "icon": 22301
         },
         {
           "itemId": 37609,
-          "name": "牧場動物的尖牙"
+          "name": "牧場動物的尖牙",
+          "icon": 22303
         }
       ],
       "spawn": {
@@ -891,6 +975,7 @@
       "id": 29,
       "name": "古菩猩猩",
       "nameMissing": false,
+      "nameSource": "community-tc",
       "bnpcBaseId": 14934,
       "size": 3,
       "sizeName": "大",
@@ -900,11 +985,13 @@
       "rewards": [
         {
           "itemId": 37609,
-          "name": "牧場動物的尖牙"
+          "name": "牧場動物的尖牙",
+          "icon": 22303
         },
         {
           "itemId": 37604,
-          "name": "牧場動物的尖爪"
+          "name": "牧場動物的尖爪",
+          "icon": 22301
         }
       ],
       "spawn": {
@@ -925,6 +1012,7 @@
       "id": 30,
       "name": null,
       "nameMissing": true,
+      "nameSource": null,
       "bnpcBaseId": 14935,
       "size": 3,
       "sizeName": "大",
@@ -934,11 +1022,13 @@
       "rewards": [
         {
           "itemId": 37606,
-          "name": "牧場動物的羽毛"
+          "name": "牧場動物的羽毛",
+          "icon": 21908
         },
         {
           "itemId": 37604,
-          "name": "牧場動物的尖爪"
+          "name": "牧場動物的尖爪",
+          "icon": 22301
         }
       ],
       "spawn": null,
@@ -951,6 +1041,7 @@
       "id": 31,
       "name": null,
       "nameMissing": true,
+      "nameSource": null,
       "bnpcBaseId": 16068,
       "size": 2,
       "sizeName": "中",
@@ -960,11 +1051,13 @@
       "rewards": [
         {
           "itemId": 37609,
-          "name": "牧場動物的尖牙"
+          "name": "牧場動物的尖牙",
+          "icon": 22303
         },
         {
           "itemId": 37605,
-          "name": "牧場動物的獸毛"
+          "name": "牧場動物的獸毛",
+          "icon": 21624
         }
       ],
       "spawn": null,
@@ -977,6 +1070,7 @@
       "id": 32,
       "name": null,
       "nameMissing": true,
+      "nameSource": null,
       "bnpcBaseId": 16069,
       "size": 1,
       "sizeName": "小",
@@ -986,11 +1080,13 @@
       "rewards": [
         {
           "itemId": 37608,
-          "name": "牧場動物的甲殼"
+          "name": "牧場動物的甲殼",
+          "icon": 22257
         },
         {
           "itemId": 37609,
-          "name": "牧場動物的尖牙"
+          "name": "牧場動物的尖牙",
+          "icon": 22303
         }
       ],
       "spawn": null,
@@ -1003,6 +1099,7 @@
       "id": 33,
       "name": null,
       "nameMissing": true,
+      "nameSource": null,
       "bnpcBaseId": 14936,
       "size": 1,
       "sizeName": "小",
@@ -1012,11 +1109,13 @@
       "rewards": [
         {
           "itemId": 37609,
-          "name": "牧場動物的尖牙"
+          "name": "牧場動物的尖牙",
+          "icon": 22303
         },
         {
           "itemId": 37605,
-          "name": "牧場動物的獸毛"
+          "name": "牧場動物的獸毛",
+          "icon": 21624
         }
       ],
       "spawn": null,
@@ -1029,6 +1128,7 @@
       "id": 34,
       "name": null,
       "nameMissing": true,
+      "nameSource": null,
       "bnpcBaseId": 14937,
       "size": 1,
       "sizeName": "小",
@@ -1038,11 +1138,13 @@
       "rewards": [
         {
           "itemId": 37605,
-          "name": "牧場動物的獸毛"
+          "name": "牧場動物的獸毛",
+          "icon": 21624
         },
         {
           "itemId": 37609,
-          "name": "牧場動物的尖牙"
+          "name": "牧場動物的尖牙",
+          "icon": 22303
         }
       ],
       "spawn": null,
@@ -1055,6 +1157,7 @@
       "id": 35,
       "name": null,
       "nameMissing": true,
+      "nameSource": null,
       "bnpcBaseId": 14938,
       "size": 3,
       "sizeName": "大",
@@ -1064,11 +1167,13 @@
       "rewards": [
         {
           "itemId": 37609,
-          "name": "牧場動物的尖牙"
+          "name": "牧場動物的尖牙",
+          "icon": 22303
         },
         {
           "itemId": 37610,
-          "name": "牧場動物的角片"
+          "name": "牧場動物的角片",
+          "icon": 22206
         }
       ],
       "spawn": null,
@@ -1081,6 +1186,7 @@
       "id": 36,
       "name": null,
       "nameMissing": true,
+      "nameSource": null,
       "bnpcBaseId": 14939,
       "size": 3,
       "sizeName": "大",
@@ -1090,11 +1196,13 @@
       "rewards": [
         {
           "itemId": 37610,
-          "name": "牧場動物的角片"
+          "name": "牧場動物的角片",
+          "icon": 22206
         },
         {
           "itemId": 37609,
-          "name": "牧場動物的尖牙"
+          "name": "牧場動物的尖牙",
+          "icon": 22303
         }
       ],
       "spawn": null,
@@ -1107,6 +1215,7 @@
       "id": 37,
       "name": null,
       "nameMissing": true,
+      "nameSource": null,
       "bnpcBaseId": 14940,
       "size": 3,
       "sizeName": "大",
@@ -1116,11 +1225,13 @@
       "rewards": [
         {
           "itemId": 37609,
-          "name": "牧場動物的尖牙"
+          "name": "牧場動物的尖牙",
+          "icon": 22303
         },
         {
           "itemId": 37605,
-          "name": "牧場動物的獸毛"
+          "name": "牧場動物的獸毛",
+          "icon": 21624
         }
       ],
       "spawn": null,
@@ -1133,6 +1244,7 @@
       "id": 38,
       "name": null,
       "nameMissing": true,
+      "nameSource": null,
       "bnpcBaseId": 16340,
       "size": 1,
       "sizeName": "小",
@@ -1142,11 +1254,13 @@
       "rewards": [
         {
           "itemId": 37603,
-          "name": "牧場動物的絨毛"
+          "name": "牧場動物的絨毛",
+          "icon": 21655
         },
         {
           "itemId": 37605,
-          "name": "牧場動物的獸毛"
+          "name": "牧場動物的獸毛",
+          "icon": 21624
         }
       ],
       "spawn": null,
@@ -1159,6 +1273,7 @@
       "id": 39,
       "name": null,
       "nameMissing": true,
+      "nameSource": null,
       "bnpcBaseId": 16341,
       "size": 2,
       "sizeName": "中",
@@ -1168,11 +1283,13 @@
       "rewards": [
         {
           "itemId": 37606,
-          "name": "牧場動物的羽毛"
+          "name": "牧場動物的羽毛",
+          "icon": 21908
         },
         {
           "itemId": 37607,
-          "name": "牧場動物的鳥蛋"
+          "name": "牧場動物的鳥蛋",
+          "icon": 25251
         }
       ],
       "spawn": null,
@@ -1185,6 +1302,7 @@
       "id": 40,
       "name": null,
       "nameMissing": true,
+      "nameSource": null,
       "bnpcBaseId": 16628,
       "size": 3,
       "sizeName": "大",
@@ -1194,11 +1312,13 @@
       "rewards": [
         {
           "itemId": 37609,
-          "name": "牧場動物的尖牙"
+          "name": "牧場動物的尖牙",
+          "icon": 22303
         },
         {
           "itemId": 37608,
-          "name": "牧場動物的甲殼"
+          "name": "牧場動物的甲殼",
+          "icon": 22257
         }
       ],
       "spawn": null,
@@ -1211,6 +1331,7 @@
       "id": 41,
       "name": null,
       "nameMissing": true,
+      "nameSource": null,
       "bnpcBaseId": 16629,
       "size": 3,
       "sizeName": "大",
@@ -1220,11 +1341,13 @@
       "rewards": [
         {
           "itemId": 37608,
-          "name": "牧場動物的甲殼"
+          "name": "牧場動物的甲殼",
+          "icon": 22257
         },
         {
           "itemId": 37604,
-          "name": "牧場動物的尖爪"
+          "name": "牧場動物的尖爪",
+          "icon": 22301
         }
       ],
       "spawn": null,
@@ -1237,6 +1360,7 @@
       "id": 42,
       "name": null,
       "nameMissing": true,
+      "nameSource": null,
       "bnpcBaseId": 16630,
       "size": 3,
       "sizeName": "大",
@@ -1246,11 +1370,13 @@
       "rewards": [
         {
           "itemId": 37604,
-          "name": "牧場動物的尖爪"
+          "name": "牧場動物的尖爪",
+          "icon": 22301
         },
         {
           "itemId": 37610,
-          "name": "牧場動物的角片"
+          "name": "牧場動物的角片",
+          "icon": 22206
         }
       ],
       "spawn": null,
@@ -1263,6 +1389,7 @@
       "id": 43,
       "name": null,
       "nameMissing": true,
+      "nameSource": null,
       "bnpcBaseId": 16631,
       "size": 3,
       "sizeName": "大",
@@ -1272,11 +1399,13 @@
       "rewards": [
         {
           "itemId": 37609,
-          "name": "牧場動物的尖牙"
+          "name": "牧場動物的尖牙",
+          "icon": 22303
         },
         {
           "itemId": 37608,
-          "name": "牧場動物的甲殼"
+          "name": "牧場動物的甲殼",
+          "icon": 22257
         }
       ],
       "spawn": null,

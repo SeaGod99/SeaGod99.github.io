@@ -8,8 +8,14 @@
 // ── 繁中名策略（遵守專案鐵則）──
 // 物品類（素材／作物／畜產／成品／建築素材）全部是 itemId，一律連 data/items.json
 // 取台服官方名；對不到＝台服未開放 → name=null + nameMissing，前端不顯示。
-// 非物品的敘述字串（建築名 MJIText、素材分類 MJIItemCategory、地區名 MJIName）在
-// datamining-cn 只有簡中，**絕不簡轉繁**：簡中放 nameCn 僅供人工比對，name 留 null。
+// 非物品的敘述字串（建築名 MJIText、素材分類 MJIItemCategory、地區名 MJIName、
+// 製作類型 MJICraftworksObjectTheme）在 datamining-cn 只有簡中。這些是**純敘述性的
+// 分類詞與設施名**（開拓工房／屯貨倉庫／紡織製品／沙灘…），依使用者 2026-07-24 指示
+// 逐字轉繁後使用，並標成 nameSource: "cn-hant" 讓前端標注「非官方名」；簡中保留在 nameCn。
+//
+// ⚠️ 這個口子**只開給非物品字串**。凡是拿得到 itemId 的一律走 items.json 的台服官方名——
+// 簡轉繁對專有名詞會錯得很像真的：社群資料寫「开拓用鹤嘴锄」，官方是「開拓用十字鎬」；
+// 寫「高级捕兽用催眠球」，官方是「高級捕獸用睡眠球」。兩個都不是換字能得到的。
 // 動物名更麻煩：MJIAnimals 只給 BNpcBase，實測 BNpcBase→BNpcName 這條鏈在
 // Teamcraft monsters.json（只收有狩獵座標的 2333 隻）是 0/43，我們的 monsters.json
 // 用 baseId 硬對會撞號撈到錯的東西（「緊張的聲音」之類）。故動物名不可自動推導，
@@ -115,6 +121,14 @@ const ITEMS = new Map(
   JSON.parse(readFileSync(join(DATA, "items.json"), "utf8")).data.map((i) => [i.id, i.name])
 );
 const twName = (itemId) => (itemId ? ITEMS.get(itemId) || null : null);
+// 物品圖示：items.json 的 icon 是 "/i/025000/025026.png"，只取數字 id 存進資料層。
+// 前端載不起 10MB 的 items.json，所以 icon id 必須跟著各 island-*.json 走；
+// 實際圖檔由 scripts/download-island-icons.mjs 抓進 assets/island/icons/<id>.png。
+const ICONS = new Map(
+  JSON.parse(readFileSync(join(DATA, "items.json"), "utf8")).data
+    .map((i) => [i.id, Number((/(\d{6})\.png$/.exec(i.icon || "") || [])[1]) || null])
+);
+const twIcon = (itemId) => (itemId ? ICONS.get(itemId) || null : null);
 
 /* ── 無人島地圖與座標換算 ──
    maps.json id 772「無名島」（nameEn: Unnamed Island）即無人島，底圖 assets/maps/h1m2_01.jpg
@@ -154,9 +168,26 @@ function loadOverride() {
     return OVERRIDE_TEMPLATE;
   }
   const o = JSON.parse(readFileSync(OVERRIDE_PATH, "utf8"));
-  for (const k of ["animals", "animalSpawns", "buildings", "categories", "areas", "themes"]) o[k] = o[k] || {};
+  for (const k of ["animals", "animalSpawns", "buildings", "categories", "areas", "themes", "ranks"]) o[k] = o[k] || {};
   return o;
 }
+// 各區塊的名稱來源等級 → 寫進每筆的 nameSource，讓前端能標注「非官方名」。
+// 物品類（itemId → items.json）恆為 tw-official，不經這裡。
+// 讀 OV 的時機在函式內，因為 OV 在下方才 load。
+function nameSrc(section, name) {
+  if (!name) return null;
+  const m = (OV._nameSourceBySection || {})[section];
+  return typeof m === "string" ? m : "tw-official";
+}
+
+// 台服官方物品名的反查集合，供開拓等級解鎖敘述的護欄使用
+const ITEM_NAMES = new Set([...ITEMS.values()].filter(Boolean));
+// 解鎖敘述裡會出現、但本來就不是「物品」的詞（設施、地標、功能、外觀套裝）
+const NON_ITEM_TERMS = new Set([
+  "小島木屋", "開拓工坊", "屯貨倉庫",
+  "樹屋", "風車", "溫泉小屋", "燈塔", "小島庭園", "小島發條鐘樓", "小島聖堂", "尖尖山洞",
+  "山洞", "海島農場", "貓耳小員的委託",
+]);
 
 const TODAY = new Date().toISOString().slice(0, 10);
 const SRC = "datamining-cn MJI* + items.json(tw-items)";
@@ -179,6 +210,23 @@ for (const r of S.MJIItemPouch) if (num(r.Item)) pouchItem.set(mainKey(r._key), 
 // 開拓工具 key item：MJIKeyItem row -> itemId
 const keyItem = new Map();
 for (const r of S.MJIKeyItem) keyItem.set(mainKey(r._key), num(r.Item));
+// 採集工具鏈：MJIGatheringItem.Tool → MJIGatheringTool row → MJIKeyItem row → itemId。
+// 「需要哪把工具」是採集規劃的關鍵資訊——沒解鎖對應工具就採不到，光列出素材名沒用。
+// 這條鏈與社群攻略的敘述逐項吻合（石錘→銅礦/石灰岩/岩鹽、銅鐮→甘蔗/棉花/麻、
+// 秘銀十字鎬→金礦/翠銀沙、鑿子→水晶層…），可放心使用。Tool 0 ＝ 徒手可採。
+const gatherToolItem = new Map();
+for (const r of S.MJIGatheringTool) {
+  const ki = num(r.Item);                       // 指向 MJIKeyItem
+  if (ki) gatherToolItem.set(mainKey(r._key), ki);
+}
+function toolInfo(toolRow) {
+  if (!toolRow) return null;                    // 0 ＝ 徒手
+  const kiRow = gatherToolItem.get(toolRow);
+  const itemId = kiRow ? keyItem.get(kiRow) : 0;
+  if (!itemId) return null;
+  return { row: toolRow, itemId, name: twName(itemId), icon: twIcon(itemId) };
+}
+
 // MJIRecipeMaterial row -> MJIItemPouch row（配方素材一律指向素材袋）
 const recipeMat = new Map();
 for (const r of S.MJIRecipeMaterial) recipeMat.set(mainKey(r._key), num(r.ItemPouch));
@@ -193,7 +241,8 @@ const report = [];
     .filter((r) => mainKey(r._key) > 0 && (r.Singular || "").trim())
     .map((r) => {
       const id = mainKey(r._key);
-      return { id, name: OV.categories[id] || null, nameCn: r.Singular, nameMissing: !OV.categories[id] };
+      const nm = OV.categories[id] || null;
+      return { id, name: nm, nameCn: r.Singular, nameMissing: !nm, nameSource: nameSrc("categories", nm) };
     });
   report.push(["island-categories", write("island-categories.json", "island-categories", rows),
     rows.filter((r) => r.name).length]);
@@ -205,7 +254,8 @@ const report = [];
     .filter((r) => mainKey(r._key) > 0 && (r.Singular || "").trim())
     .map((r) => {
       const id = mainKey(r._key);
-      return { id, name: OV.areas[id] || null, nameCn: r.Singular, nameMissing: !OV.areas[id] };
+      const nm = OV.areas[id] || null;
+      return { id, name: nm, nameCn: r.Singular, nameMissing: !nm, nameSource: nameSrc("areas", nm) };
     });
   report.push(["island-areas", write("island-areas.json", "island-areas", rows),
     rows.filter((r) => r.name).length]);
@@ -223,7 +273,7 @@ const report = [];
     // 每個採集物件的逐點座標 datamine 拿不到（MJIGathering 的 484 列只有
     // GatheringObject 參照、沒有座標）。
     gather.set(itemId, {
-      tool: num(g.Tool) || null,           // MJIGatheringTool row（0＝空手）
+      tool: toolInfo(num(g.Tool)),         // { row, itemId, name }；null ＝ 徒手可採
       // Map 欄實測只有 0/1 兩種值（島嶼地區 MJIName 有 6 個，故這欄不是地區）。
       // 0 的 39 筆是地上、1 的 9 筆全是洞窟產物（燈火茸／幻影石／水晶層…）→ 1 ＝ 洞窟。
       mapLayer: num(g.Map),
@@ -252,7 +302,7 @@ const report = [];
       const name = twName(itemId);
       const cropRow = num(r.Crop);
       return {
-        id, itemId, name, nameMissing: !name,
+        id, itemId, name, nameMissing: !name, icon: twIcon(itemId),
         categoryId: num(r.Category) || null,
         sort: num(r.Sort),
         growsIntoItemId: cropRow ? cropProduce.get(cropRow) || null : null,
@@ -280,6 +330,26 @@ const report = [];
     r.gathering.areaId = area.id;          // 讓素材反查能連回區域
   }
   const areaRows = Array.from(areaMap.values());
+
+  // ── 重疊區域 ──
+  // 區域是圓形範圍，遊戲裡好幾個圈會互相重疊；玩家站在重疊處，這幾個圈的素材都採得到。
+  // 只列出「該圈自己的素材」會低估實際可採量（實測最擠的一處三圈相疊、合計 8 種素材）。
+  // 判定：兩圓有交集（圓心距 < 兩半徑和）且在同一圖層（地上/洞窟不互通）。
+  for (const a of areaRows) {
+    a.overlaps = areaRows
+      .filter((b) => b !== a && b.mapLayer === a.mapLayer &&
+        Math.hypot(b.x - a.x, b.y - a.y) < a.radius + b.radius)
+      .map((b) => b.id)
+      .sort((x, y) => x - y);
+  }
+  // 每個區域再算一次「連同重疊區在內共可採到幾種」，前端直接用
+  const areaById = new Map(areaRows.map((a) => [a.id, a]));
+  for (const a of areaRows) {
+    const set = new Set(a.items.map((i) => i.itemId));
+    for (const id of a.overlaps) for (const i of areaById.get(id).items) set.add(i.itemId);
+    a.reachableCount = set.size;
+  }
+
   report.push(["island-gather-areas", write("island-gather-areas.json", "island-gather-areas", areaRows),
     areaRows.length]);
 
@@ -298,7 +368,7 @@ const report = [];
       const id = mainKey(r._key);
       const rewards = [num(r["Reward[0]"]), num(r["Reward[1]"])]
         .filter(Boolean)
-        .map((itemId) => ({ itemId, name: twName(itemId) }));
+        .map((itemId) => ({ itemId, name: twName(itemId), icon: twIcon(itemId) }));
       const name = OV.animals[id] || null;
       const ob = OV.animalSpawns[id] || null;
       if (ob) {
@@ -327,7 +397,7 @@ const report = [];
       }
       return {
         id,
-        name, nameMissing: !name,
+        name, nameMissing: !name, nameSource: nameSrc("animals", name),
         bnpcBaseId: num(r.BNpcBase),
         size: num(r.Size), sizeName: SIZE[num(r.Size)] || null,
         rarity: num(r.Rarity),
@@ -365,11 +435,11 @@ const report = [];
         if (pouchRow == null) continue;
         const mid = pouchItem.get(pouchRow);
         if (!mid) continue;
-        ingredients.push({ itemId: mid, name: twName(mid), qty });
+        ingredients.push({ itemId: mid, name: twName(mid), icon: twIcon(mid), qty });
       }
       return {
         id: mainKey(r._key),
-        itemId, name, nameMissing: !name,
+        itemId, name, nameMissing: !name, icon: twIcon(itemId),
         order: num(r.Order), ingredients,
       };
     })
@@ -395,6 +465,7 @@ const report = [];
   }
   const themeRows = Array.from(themeName.entries()).map(([id, cn]) => ({
     id, name: OV.themes[id] || null, nameCn: cn, nameMissing: !OV.themes[id],
+    nameSource: nameSrc("themes", OV.themes[id]),
   }));
   report.push(["island-themes", write("island-themes.json", "island-themes", themeRows),
     themeRows.filter((r) => r.name).length]);
@@ -411,13 +482,14 @@ const report = [];
         if (!qty) continue;                        // pouchRow 0 有效，只能用 qty 判空
         const mid = pouchItem.get(pouchRow);
         if (!mid) continue;
-        materials.push({ itemId: mid, name: twName(mid), qty });
+        materials.push({ itemId: mid, name: twName(mid), icon: twIcon(mid), qty });
       }
       const themes = [num(r["Theme[0]"]), num(r["Theme[1]"])]
         .filter((t) => t > 0)
-        .map((t) => ({ id: t, name: OV.themes[t] || null, nameCn: themeName.get(t) || null }));
+        .map((t) => ({ id: t, name: OV.themes[t] || null, nameCn: themeName.get(t) || null,
+          nameSource: nameSrc("themes", OV.themes[t]) }));
       return {
-        id: mainKey(r._key), itemId, name, nameMissing: !name,
+        id: mainKey(r._key), itemId, name, nameMissing: !name, icon: twIcon(itemId),
         themes, materials,
         levelReq: num(r.LevelReq) || null,
         craftingTime: num(r.CraftingTime) || null,   // 小時
@@ -443,7 +515,7 @@ const report = [];
           if (!pouchRow || !qty) continue;
           const itemId = pouchItem.get(pouchRow);
           if (!itemId) continue;
-          materials.push({ itemId, name: twName(itemId), qty });
+          materials.push({ itemId, name: twName(itemId), icon: twIcon(itemId), qty });
         }
         if (!materials.length) return null;
         const textRow = num(r.Name);
@@ -453,7 +525,7 @@ const report = [];
           id: `${type}-${r._key}`, type,
           // 子列 0 起算，對應遊戲內的等級 I／II／III…（等級也寫在 nameCn 尾巴）
           level: subKey(r._key) + 1,
-          name, nameCn, nameMissing: !name,
+          name, nameCn, nameMissing: !name, nameSource: nameSrc("buildings", name),
           textId: textRow || null,
           icon: num(r.Icon) || null,
           materials,
@@ -466,7 +538,10 @@ const report = [];
     rows.filter((r) => r.name).length]);
 }
 
-/* 7) 開拓等級：升級所需經驗與累計 */
+/* 7) 開拓等級：升級所需經驗與累計 ＋ 各級解鎖內容
+   經驗值出自 MJIRank；「解鎖了什麼」datamine 沒有（MJIRank 的 LogMessage[] 只是
+   共用的通用訊息 id，跨等級重複），故由 island-names-tw.json 的 ranks 人工提供，
+   來源與驗證方法見該檔 _rankSource。 */
 {
   let cum = 0;
   const rows = S.MJIRank
@@ -474,11 +549,26 @@ const report = [];
     .map((r) => {
       const level = mainKey(r._key);
       const expToNext = num(r.ExpToNext);
-      const row = { level, expToNext, cumulativeExp: cum };
+      const unlocks = (OV.ranks || {})[level] || null;
+      // 解鎖敘述裡以「」括起來的物品名必須真的是台服官方名——這是防止有人日後
+      // 直接把簡中攻略貼進來的護欄（簡轉繁會產出「開拓用鶴嘴鋤」這種查無此物的名字）。
+      // 白名單是設施／功能等非物品詞，它們本來就不在 items.json。
+      for (const line of unlocks || []) {
+        for (const m of line.matchAll(/「([^」]+)」/g)) {
+          const nm = m[1];
+          if (NON_ITEM_TERMS.has(nm)) continue;
+          if (!ITEM_NAMES.has(nm)) {
+            throw new Error(`ranks[${level}] 的「${nm}」不是 items.json 裡的台服官方物品名。` +
+              `若它是設施／功能而非物品，請加進 build-island.mjs 的 NON_ITEM_TERMS。`);
+          }
+        }
+      }
+      const row = { level, expToNext, cumulativeExp: cum, unlocks };
       cum += expToNext;
       return row;
     });
-  report.push(["island-ranks", write("island-ranks.json", "island-ranks", rows), rows.length]);
+  report.push(["island-ranks", write("island-ranks.json", "island-ranks", rows,
+    { rankSource: OV._rankSource || null }), rows.filter((r) => r.unlocks).length]);
 }
 
 /* 8) 素材收購：MJIDisposalShopItem。
@@ -493,7 +583,7 @@ const report = [];
       const itemId = pouchItem.get(pouchRow) || 0;
       const name = twName(itemId);
       return {
-        id: mainKey(r._key), itemId, name, nameMissing: !name,
+        id: mainKey(r._key), itemId, name, nameMissing: !name, icon: twIcon(itemId),
         price: num(r.Count), categoryId: num(r.Category) || null, sort: num(r.Sort),
       };
     })

@@ -22,14 +22,32 @@
         {
           "itemId": 37561,
           "name": "無人島棕櫚原木",
-          "tool": 1
+          "tool": {
+            "row": 1,
+            "itemId": 37679,
+            "name": "開拓用石斧",
+            "icon": 23713
+          }
         },
         {
           "itemId": 39225,
           "name": "無人島椰子",
-          "tool": 7
+          "tool": {
+            "row": 7,
+            "itemId": 39233,
+            "name": "開拓用鐵斧",
+            "icon": 38121
+          }
         }
-      ]
+      ],
+      "overlaps": [
+        2,
+        4,
+        9,
+        15,
+        20
+      ],
+      "reachableCount": 13
     },
     {
       "id": 2,
@@ -43,7 +61,12 @@
         {
           "itemId": 37552,
           "name": "無人島蘋果",
-          "tool": 1
+          "tool": {
+            "row": 1,
+            "itemId": 37679,
+            "name": "開拓用石斧",
+            "icon": 23713
+          }
         },
         {
           "itemId": 37562,
@@ -53,9 +76,22 @@
         {
           "itemId": 39226,
           "name": "無人島蜂巢",
-          "tool": 7
+          "tool": {
+            "row": 7,
+            "itemId": 39233,
+            "name": "開拓用鐵斧",
+            "icon": 38121
+          }
         }
-      ]
+      ],
+      "overlaps": [
+        1,
+        3,
+        8,
+        9,
+        20
+      ],
+      "reachableCount": 14
     },
     {
       "id": 3,
@@ -74,14 +110,30 @@
         {
           "itemId": 37560,
           "name": "無人島原木",
-          "tool": 1
+          "tool": {
+            "row": 1,
+            "itemId": 37679,
+            "name": "開拓用石斧",
+            "icon": 23713
+          }
         },
         {
           "itemId": 39224,
           "name": "無人島天然樹脂",
-          "tool": 7
+          "tool": {
+            "row": 7,
+            "itemId": 39233,
+            "name": "開拓用鐵斧",
+            "icon": 38121
+          }
         }
-      ]
+      ],
+      "overlaps": [
+        2,
+        8,
+        9
+      ],
+      "reachableCount": 10
     },
     {
       "id": 4,
@@ -100,14 +152,31 @@
         {
           "itemId": 37565,
           "name": "無人島石灰岩",
-          "tool": 2
+          "tool": {
+            "row": 2,
+            "itemId": 37680,
+            "name": "開拓用石錘",
+            "icon": 23712
+          }
         },
         {
           "itemId": 39890,
           "name": "無人島大理石",
-          "tool": 8
+          "tool": {
+            "row": 8,
+            "itemId": 39903,
+            "name": "開拓用鋼錘",
+            "icon": 23734
+          }
         }
-      ]
+      ],
+      "overlaps": [
+        1,
+        9,
+        15,
+        19
+      ],
+      "reachableCount": 10
     },
     {
       "id": 5,
@@ -126,9 +195,18 @@
         {
           "itemId": 37575,
           "name": "無人島海水魚",
-          "tool": 5
+          "tool": {
+            "row": 5,
+            "itemId": 37683,
+            "name": "開拓用青銅魚叉",
+            "icon": 23718
+          }
         }
-      ]
+      ],
+      "overlaps": [
+        7
+      ],
+      "reachableCount": 4
     },
     {
       "id": 6,
@@ -152,14 +230,26 @@
         {
           "itemId": 37576,
           "name": "無人島烏賊",
-          "tool": 5
+          "tool": {
+            "row": 5,
+            "itemId": 37683,
+            "name": "開拓用青銅魚叉",
+            "icon": 23718
+          }
         },
         {
           "itemId": 37577,
           "name": "無人島水母",
-          "tool": 5
+          "tool": {
+            "row": 5,
+            "itemId": 37683,
+            "name": "開拓用青銅魚叉",
+            "icon": 23718
+          }
         }
-      ]
+      ],
+      "overlaps": [],
+      "reachableCount": 4
     },
     {
       "id": 7,
@@ -178,9 +268,19 @@
         {
           "itemId": 37583,
           "name": "海島新薯的芽塊",
-          "tool": 3
+          "tool": {
+            "row": 3,
+            "itemId": 37681,
+            "name": "開拓用銅鏟",
+            "icon": 23716
+          }
         }
-      ]
+      ],
+      "overlaps": [
+        5,
+        21
+      ],
+      "reachableCount": 5
     },
     {
       "id": 8,
@@ -199,9 +299,20 @@
         {
           "itemId": 37570,
           "name": "無人島黏土",
-          "tool": 3
+          "tool": {
+            "row": 3,
+            "itemId": 37681,
+            "name": "開拓用銅鏟",
+            "icon": 23716
+          }
         }
-      ]
+      ],
+      "overlaps": [
+        2,
+        3,
+        9
+      ],
+      "reachableCount": 10
     },
     {
       "id": 9,
@@ -220,9 +331,23 @@
         {
           "itemId": 39227,
           "name": "無人島木化石",
-          "tool": 7
+          "tool": {
+            "row": 7,
+            "itemId": 39233,
+            "name": "開拓用鐵斧",
+            "icon": 38121
+          }
         }
-      ]
+      ],
+      "overlaps": [
+        1,
+        2,
+        3,
+        4,
+        8,
+        20
+      ],
+      "reachableCount": 17
     },
     {
       "id": 10,
@@ -236,14 +361,28 @@
         {
           "itemId": 37564,
           "name": "無人島銅礦",
-          "tool": 2
+          "tool": {
+            "row": 2,
+            "itemId": 37680,
+            "name": "開拓用石錘",
+            "icon": 23712
+          }
         },
         {
           "itemId": 39891,
           "name": "無人島靈銀礦",
-          "tool": 8
+          "tool": {
+            "row": 8,
+            "itemId": 39903,
+            "name": "開拓用鋼錘",
+            "icon": 23734
+          }
         }
-      ]
+      ],
+      "overlaps": [
+        13
+      ],
+      "reachableCount": 3
     },
     {
       "id": 11,
@@ -257,9 +396,16 @@
         {
           "itemId": 37566,
           "name": "無人島岩鹽",
-          "tool": 2
+          "tool": {
+            "row": 2,
+            "itemId": 37680,
+            "name": "開拓用石錘",
+            "icon": 23712
+          }
         }
-      ]
+      ],
+      "overlaps": [],
+      "reachableCount": 1
     },
     {
       "id": 12,
@@ -273,9 +419,18 @@
         {
           "itemId": 37567,
           "name": "無人島甘蔗",
-          "tool": 4
+          "tool": {
+            "row": 4,
+            "itemId": 37682,
+            "name": "開拓用銅鐮",
+            "icon": 38151
+          }
         }
-      ]
+      ],
+      "overlaps": [
+        19
+      ],
+      "reachableCount": 2
     },
     {
       "id": 13,
@@ -289,9 +444,18 @@
         {
           "itemId": 37568,
           "name": "無人島棉花",
-          "tool": 4
+          "tool": {
+            "row": 4,
+            "itemId": 37682,
+            "name": "開拓用銅鐮",
+            "icon": 38151
+          }
         }
-      ]
+      ],
+      "overlaps": [
+        10
+      ],
+      "reachableCount": 3
     },
     {
       "id": 14,
@@ -305,9 +469,16 @@
         {
           "itemId": 37569,
           "name": "無人島麻",
-          "tool": 4
+          "tool": {
+            "row": 4,
+            "itemId": 37682,
+            "name": "開拓用銅鐮",
+            "icon": 38151
+          }
         }
-      ]
+      ],
+      "overlaps": [],
+      "reachableCount": 1
     },
     {
       "id": 15,
@@ -321,9 +492,20 @@
         {
           "itemId": 37571,
           "name": "無人島錫砂",
-          "tool": 3
+          "tool": {
+            "row": 3,
+            "itemId": 37681,
+            "name": "開拓用銅鏟",
+            "icon": 23716
+          }
         }
-      ]
+      ],
+      "overlaps": [
+        1,
+        4,
+        19
+      ],
+      "reachableCount": 8
     },
     {
       "id": 16,
@@ -337,14 +519,28 @@
         {
           "itemId": 37572,
           "name": "無人島鐵礦",
-          "tool": 6
+          "tool": {
+            "row": 6,
+            "itemId": 37684,
+            "name": "開拓用十字鎬",
+            "icon": 38001
+          }
         },
         {
           "itemId": 41630,
           "name": "無人島翠銀沙",
-          "tool": 9
+          "tool": {
+            "row": 9,
+            "itemId": 41646,
+            "name": "開拓用秘銀十字鎬",
+            "icon": 38027
+          }
         }
-      ]
+      ],
+      "overlaps": [
+        17
+      ],
+      "reachableCount": 3
     },
     {
       "id": 17,
@@ -358,9 +554,19 @@
         {
           "itemId": 37573,
           "name": "無人島石英",
-          "tool": 6
+          "tool": {
+            "row": 6,
+            "itemId": 37684,
+            "name": "開拓用十字鎬",
+            "icon": 38001
+          }
         }
-      ]
+      ],
+      "overlaps": [
+        16,
+        22
+      ],
+      "reachableCount": 4
     },
     {
       "id": 18,
@@ -374,9 +580,16 @@
         {
           "itemId": 37574,
           "name": "無人島花崗岩",
-          "tool": 6
+          "tool": {
+            "row": 6,
+            "itemId": 37684,
+            "name": "開拓用十字鎬",
+            "icon": 38001
+          }
         }
-      ]
+      ],
+      "overlaps": [],
+      "reachableCount": 1
     },
     {
       "id": 19,
@@ -392,7 +605,13 @@
           "name": "海島甘藍的種子",
           "tool": null
         }
-      ]
+      ],
+      "overlaps": [
+        4,
+        12,
+        15
+      ],
+      "reachableCount": 6
     },
     {
       "id": 20,
@@ -408,7 +627,13 @@
           "name": "海島南瓜的種子",
           "tool": null
         }
-      ]
+      ],
+      "overlaps": [
+        1,
+        2,
+        9
+      ],
+      "reachableCount": 9
     },
     {
       "id": 21,
@@ -422,9 +647,18 @@
         {
           "itemId": 37591,
           "name": "海島高山蘿蔔的種子",
-          "tool": 3
+          "tool": {
+            "row": 3,
+            "itemId": 37681,
+            "name": "開拓用銅鏟",
+            "icon": 23716
+          }
         }
-      ]
+      ],
+      "overlaps": [
+        7
+      ],
+      "reachableCount": 3
     },
     {
       "id": 22,
@@ -440,7 +674,11 @@
           "name": "無人島色彩繽紛的花",
           "tool": null
         }
-      ]
+      ],
+      "overlaps": [
+        17
+      ],
+      "reachableCount": 2
     },
     {
       "id": 23,
@@ -454,14 +692,29 @@
         {
           "itemId": 39887,
           "name": "無人島石炭",
-          "tool": 2
+          "tool": {
+            "row": 2,
+            "itemId": 37680,
+            "name": "開拓用石錘",
+            "icon": 23712
+          }
         },
         {
           "itemId": 39888,
           "name": "無人島堆積岩",
-          "tool": 8
+          "tool": {
+            "row": 8,
+            "itemId": 39903,
+            "name": "開拓用鋼錘",
+            "icon": 23734
+          }
         }
-      ]
+      ],
+      "overlaps": [
+        24,
+        25
+      ],
+      "reachableCount": 5
     },
     {
       "id": 24,
@@ -477,7 +730,11 @@
           "name": "無人島燈火茸",
           "tool": null
         }
-      ]
+      ],
+      "overlaps": [
+        23
+      ],
+      "reachableCount": 3
     },
     {
       "id": 25,
@@ -491,14 +748,29 @@
         {
           "itemId": 39892,
           "name": "無人島氣泡水",
-          "tool": 2
+          "tool": {
+            "row": 2,
+            "itemId": 37680,
+            "name": "開拓用石錘",
+            "icon": 23712
+          }
         },
         {
           "itemId": 39893,
           "name": "無人島幻影石",
-          "tool": 8
+          "tool": {
+            "row": 8,
+            "itemId": 39903,
+            "name": "開拓用鋼錘",
+            "icon": 23734
+          }
         }
-      ]
+      ],
+      "overlaps": [
+        23,
+        26
+      ],
+      "reachableCount": 8
     },
     {
       "id": 26,
@@ -512,12 +784,22 @@
         {
           "itemId": 41631,
           "name": "無人島黃銅礦",
-          "tool": 6
+          "tool": {
+            "row": 6,
+            "itemId": 37684,
+            "name": "開拓用十字鎬",
+            "icon": 38001
+          }
         },
         {
           "itemId": 41632,
           "name": "無人島金礦",
-          "tool": 9
+          "tool": {
+            "row": 9,
+            "itemId": 41646,
+            "name": "開拓用秘銀十字鎬",
+            "icon": 38027
+          }
         },
         {
           "itemId": 41633,
@@ -527,9 +809,18 @@
         {
           "itemId": 41634,
           "name": "無人島水晶層",
-          "tool": 10
+          "tool": {
+            "row": 10,
+            "itemId": 41647,
+            "name": "開拓用鑿子",
+            "icon": 23739
+          }
         }
-      ]
+      ],
+      "overlaps": [
+        25
+      ],
+      "reachableCount": 6
     }
   ]
 }

@@ -46,7 +46,7 @@
       content-visibility: auto; contain-intrinsic-size: auto 150px;
     }
     .cw-card:hover { border-color: var(--border-hover); }
-    .cw-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+    .cw-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .cw-name { font-size: 16px; font-weight: 600; color: var(--text-primary); }
     .cw-stats { display: flex; gap: 14px; flex-wrap: wrap; font-size: 13px; color: var(--text-secondary); }
     .cw-stats b { color: var(--gold-light); font-weight: 600; }
@@ -150,7 +150,7 @@
     }
     .an-card.on { border-left-color: var(--accent); }
     .an-card:hover { border-color: var(--border-hover); }
-    .an-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+    .an-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .an-name { font-size: 16.5px; font-weight: 600; color: var(--text-primary); }
     .an-badge {
       margin-left: auto; font-size: 12.5px; font-weight: 600; white-space: nowrap;
@@ -163,6 +163,62 @@
     .an-drop { display: flex; flex-wrap: wrap; gap: 6px; }
     .tag.size { background: var(--purple-dim); color: var(--purple); border-color: rgba(167,139,250,0.25); }
     .tag.rare { background: rgba(244,114,182,0.1); color: #f472b6; border-color: rgba(244,114,182,0.3); }
+
+    /* ── 圖示 ── */
+    .ico { width: 28px; height: 28px; flex-shrink: 0; object-fit: contain; image-rendering: auto; }
+    .ico.sm { width: 20px; height: 20px; }
+    .ico.lg { width: 40px; height: 40px; }
+    .ing-chip .ico, .use-chip .ico { margin-right: -1px; }
+    .mat-item .ico { margin-right: 7px; }
+    .mat-item { justify-content: flex-start; }
+    .mat-item > span:first-of-type { flex: 1; }
+    .mat-title-row { display: flex; align-items: center; gap: 11px; margin-bottom: 4px; }
+    .mat-title-row .mat-title { margin-bottom: 0; }
+    /* 非台服官方名（簡中轉繁）標記 */
+    .unofficial { border-bottom: 1px dotted var(--text-muted); cursor: help; }
+
+    /* ── 採集區域：工具與重疊 ── */
+    .area-item { display: flex; align-items: center; gap: 8px; padding: 5px 0; font-size: 14px; }
+    .area-item .nm { color: var(--text-primary); }
+    .tool-tag {
+      display: inline-flex; align-items: center; gap: 4px; margin-left: auto;
+      font-size: 12.5px; color: var(--text-secondary);
+      background: var(--raise); border: 1px solid var(--border);
+      border-radius: 5px; padding: 2px 8px; white-space: nowrap;
+    }
+    .tool-tag.bare { color: var(--accent); border-color: rgba(74,222,128,0.3); background: rgba(74,222,128,0.08); }
+    .overlap-note { font-size: 13px; color: var(--text-secondary); line-height: 1.8; margin-top: 10px;
+      border-top: 1px solid var(--border); padding-top: 10px; }
+    .map-area.dim { opacity: .25; }
+
+    /* ── 開拓等級表 ── */
+    .rk-list { display: flex; flex-direction: column; gap: 8px; }
+    .rk-row {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md);
+      display: grid; grid-template-columns: 84px minmax(0, 1fr); align-items: stretch;
+      content-visibility: auto; contain-intrinsic-size: auto 120px;
+    }
+    .rk-lv {
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+      border-right: 1px solid var(--border); padding: 12px 6px; background: var(--raise);
+      border-radius: var(--radius-md) 0 0 var(--radius-md);
+    }
+    .rk-lv b { font-size: 24px; color: var(--gold-light); line-height: 1; }
+    .rk-lv span { font-size: 11px; color: var(--text-muted); }
+    .rk-body { padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+    .rk-exp { font-size: 12.5px; color: var(--text-muted); }
+    .rk-unlock { font-size: 14px; color: var(--text-primary); line-height: 1.85; }
+    .rk-unlock ul { margin: 0; padding-left: 18px; }
+    .rk-unlock li { margin: 2px 0; }
+    .rk-unlock .sub { color: var(--text-secondary); font-size: 13.5px; }
+    .rk-sec { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+    .rk-sec .k { font-size: 12px; color: var(--text-muted); margin-right: 2px; }
+    @media (max-width: 560px) {
+      .rk-row { grid-template-columns: 1fr; }
+      .rk-lv { flex-direction: row; gap: 8px; border-right: none; border-bottom: 1px solid var(--border);
+        border-radius: var(--radius-md) var(--radius-md) 0 0; padding: 8px; }
+      .rk-lv b { font-size: 19px; }
+    }
 
     .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
       background: var(--gold); color: #14161c; border-radius: 8px; padding: 9px 22px;
@@ -187,6 +243,7 @@
     <button class="isl-tab" role="tab" data-tab="mat">🔍 素材反查</button>
     <button class="isl-tab" role="tab" data-tab="an">🐑 動物時鐘</button>
     <button class="isl-tab" role="tab" data-tab="map">🗺️ 採集地圖</button>
+    <button class="isl-tab" role="tab" data-tab="rk">📈 開拓等級</button>
   </div>
 
   <!-- ── 工坊生產 ── -->
@@ -262,8 +319,10 @@
     <div class="isl-note">
       圓圈是<b>採集區域</b>：一個區域裡通常能採到<b>好幾種不同的素材</b>，
       而且區域內散佈著很多個可採集物件——不是一種素材對應一個定點。
-      48 種可採素材其實只分佈在 <b>26 個區域</b>。點圓圈可看該區能採到的全部素材。
-      遊戲資料只給得出區域的中心與範圍，逐一物件的座標拿不到。
+      48 種可採素材其實只分佈在 <b>26 個區域</b>。
+      <br>圓圈之間會<b>互相重疊</b>，站在重疊處這幾圈的素材都採得到——所以「站這裡實際能採幾種」
+      往往比單一圈多很多（最好的一處可達 <b>17 種</b>）。點圓圈會列出該區素材、<b>各自需要哪把工具</b>，
+      以及重疊到的鄰近區域。
     </div>
     <div class="map-bar">
       <div class="layer-toggle" id="layerToggle">
@@ -271,6 +330,9 @@
         <button data-layer="0">🌿 地上</button>
         <button data-layer="1">⛰️ 洞窟</button>
       </div>
+      <select class="sort-select" id="mapTool" title="只顯示用這把工具（或徒手）採得到的區域">
+        <option value="">所有工具</option>
+      </select>
       <span class="result-meta" id="mapMeta"></span>
     </div>
     <div class="map-canvas" id="mapCanvas"></div>
@@ -280,6 +342,18 @@
       <span>點圓圈看素材詳情</span>
     </div>
     <div class="map-info" id="mapInfo"></div>
+  </section>
+
+  <!-- ── 開拓等級 ── -->
+  <section class="isl-panel" id="panel-rk" role="tabpanel" hidden>
+    <div class="isl-note" id="rkNote"></div>
+    <div class="toolbar">
+      <div class="search-wrap"><span class="search-icon">🔍</span>
+        <input class="search-input" id="rkSearch" type="text" autocomplete="off" placeholder="搜尋解鎖內容（例：捕獸繩、飛行、種子）…"></div>
+    </div>
+    <div class="result-meta" id="rkMeta"></div>
+    <div class="rk-list" id="rkList"></div>
+    <div class="empty-state" id="rkEmpty" style="display:none">找不到符合的等級</div>
   </section>
 
 </div>
@@ -309,7 +383,7 @@ const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g,
   (c) => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
 
 /* ── 載入 ── */
-const [mats, gatherAreas, craftworks, themes, recipes, buildings, animals, maps] = await Promise.all([
+const [mats, gatherAreas, craftworks, themes, recipes, buildings, animals, ranks, maps] = await Promise.all([
   fetch('../../data/island-materials.json').then(r => r.json()),
   fetch('../../data/island-gather-areas.json').then(r => r.json()),
   fetch('../../data/island-craftworks.json').then(r => r.json()),
@@ -317,8 +391,26 @@ const [mats, gatherAreas, craftworks, themes, recipes, buildings, animals, maps]
   fetch('../../data/island-recipes.json').then(r => r.json()),
   fetch('../../data/island-buildings.json').then(r => r.json()),
   fetch('../../data/island-animals.json').then(r => r.json()),
+  fetch('../../data/island-ranks.json').then(r => r.json()),
   fetch('../../data/maps.json').then(r => r.json()),
 ]);
+
+/* 圖示：icon id → assets/island/icons/<id>.png（scripts/download-island-icons.mjs 產生）。
+   前端載不起 10MB 的 items.json，故 icon id 已在資料層各檔的 icon 欄。 */
+const icoTag = (id, cls = '') => id
+  ? `<img class="ico ${cls}" src="../../assets/island/icons/${id}.png" alt="" loading="lazy"
+       onerror="this.style.visibility='hidden'">`
+  : '';
+/* 非台服官方名（由簡中轉繁）標注，避免使用者誤以為是遊戲內用字 */
+const NAME_SRC_NOTE = {
+  'cn-hant': '此為簡中資料轉繁，非台服官方譯名',
+  'community-tc': '名稱取自繁中社群站，已對回遊戲資料驗證',
+};
+const nameHtml = (o) => {
+  const note = NAME_SRC_NOTE[o && o.nameSource];
+  const t = esc((o && (o.name || o.nameCn)) || '');
+  return note ? `<span class="unofficial" title="${note}">${t}</span>` : t;
+};
 
 const ISLAND_MAP = maps.data.find((m) => m.id === ISLAND_MAP_ID);
 initMapModal({ mapsData: maps.data, base: '../..' });
@@ -375,6 +467,7 @@ function setTab(t, push = true) {
   document.querySelectorAll('.isl-panel').forEach((p) => { p.hidden = p.id !== 'panel-' + t; });
   if (t === 'map') renderMap();
   if (t === 'an') renderAn();
+  if (t === 'rk') renderRk();
   if (push) syncURL();
 }
 document.querySelectorAll('.isl-tab').forEach((b) => b.addEventListener('click', () => setTab(b.dataset.tab)));
@@ -393,7 +486,11 @@ function syncURL() {
     if (anDropFilter) p.set('drop', anDropFilter);
     if (anSort !== 'time') p.set('asort', anSort);
   }
-  if (tab === 'map' && layer !== 'all') p.set('layer', layer);
+  if (tab === 'map') {
+    if (layer !== 'all') p.set('layer', layer);
+    if (toolFilter) p.set('tool', toolFilter);
+  }
+  if (tab === 'rk' && rkQuery) p.set('q', rkQuery);
   try { history.pushState(null, '', p.toString() ? '?' + p : location.pathname); } catch (e) {}
 }
 
@@ -452,8 +549,9 @@ function renderCw() {
   $('cwGrid').innerHTML = list.map((c) => `
     <div class="cw-card">
       <div class="cw-head">
+        ${icoTag(c.icon)}
         <span class="cw-name">${esc(c.name)}</span>
-        ${c.themes.map((t) => `<span class="tag theme" title="${t.name ? '' : '主題名尚無台服官方來源，暫顯示簡中'}">${esc(t.name || t.nameCn || '')}</span>`).join('')}
+        ${c.themes.map((t) => `<span class="tag theme">${nameHtml(t)}</span>`).join('')}
       </div>
       <div class="cw-stats">
         <span>⏱ <b>${c.craftingTime}</b> 小時</span>
@@ -463,7 +561,7 @@ function renderCw() {
       </div>
       <div class="cw-ing">
         ${c.materials.map((g) => g.name
-          ? `<button class="ing-chip" data-mat="${g.itemId}" title="查看「${esc(g.name)}」怎麼拿">${esc(g.name)}<span class="ing-qty">×${g.qty}</span></button>`
+          ? `<button class="ing-chip" data-mat="${g.itemId}" title="查看「${esc(g.name)}」怎麼拿">${icoTag(g.icon, 'sm')}${esc(g.name)}<span class="ing-qty">×${g.qty}</span></button>`
           : `<span class="ing-chip" style="cursor:default;opacity:.5">（台服未開放）<span class="ing-qty">×${g.qty}</span></span>`).join('')}
       </div>
     </div>`).join('');
@@ -493,7 +591,7 @@ function renderMatList() {
     html += `<div class="mat-group-label">${g}（${arr.length}）</div>`;
     html += arr.map((m) => `
       <div class="mat-item${m.itemId === selMat ? ' active' : ''}" data-mat="${m.itemId}" tabindex="0" role="button">
-        <span>${esc(m.name)}</span>
+        ${icoTag(m.icon, 'sm')}<span>${esc(m.name)}</span>
       </div>`).join('');
   }
   $('matList').innerHTML = html || '<div class="mat-group-label">找不到符合的素材</div>';
@@ -557,7 +655,7 @@ function renderMatDetail() {
   const grow = m.growsIntoItemId ? matById.get(m.growsIntoItemId) : null;
 
   $('matDetail').innerHTML = `
-    <div class="mat-title">${esc(m.name)}</div>
+    <div class="mat-title-row">${icoTag(m.icon, 'lg')}<div class="mat-title">${esc(m.name)}</div></div>
     <div class="mat-sub">${groupOf(m)}　·　道具 ID ${m.itemId}</div>
 
     <div class="mat-sec">
@@ -573,7 +671,7 @@ function renderMatDetail() {
       ${(cwU.length || hcU.length || bU.length) ? `<div class="use-list">
         ${cwU.map((c) => `<span class="use-chip" title="工坊生產 · ${c.craftingTime}h">${esc(c.name)}</span>`).join('')}
         ${hcU.map((r) => `<span class="use-chip h" title="人工製作">${esc(r.name)}</span>`).join('')}
-        ${bU.map((b) => `<span class="use-chip b" title="建築改建">${esc(b.name || b.nameCn || b.id)}${b.level ? ` Lv${b.level}` : ''}</span>`).join('')}
+        ${bU.map((b) => `<span class="use-chip b" title="建築／地標改建">${icoTag(b.icon, 'sm')}${nameHtml(b)}</span>`).join('')}
       </div>
       <div class="mat-sub" style="margin:8px 0 0">白＝工坊生產　金＝人工製作　紫＝建築／地標改建${bU.length ? '（建築名尚無台服官方來源，暫顯示簡中）' : ''}</div>`
       : (grow ? '' : '<div class="mat-none">目前沒有生產品或建築用到它</div>')}
@@ -728,6 +826,7 @@ function renderAn() {
     return `
     <div class="an-card${st.on ? ' on' : ''}" data-an="${a.id}">
       <div class="an-head">
+        ${icoTag(a.icon)}
         <span class="an-name">${esc(a.name)}</span>
         <span class="tag size">${esc(a.sizeName)}型</span>
         ${a.rarity === 3 ? '<span class="tag rare">稀有</span>' : ''}
@@ -741,7 +840,7 @@ function renderAn() {
         <button class="coord-btn" data-flag="/coord ${a.coords.x} ${a.coords.y} ${esc(ISLAND_MAP.name)}">📋 座標</button>
       </div>
       <div class="an-drop">
-        ${a.rewards.map((r) => `<button class="ing-chip" data-goto="${r.itemId}" title="查看「${esc(r.name)}」用在哪">${esc(shortDrop(r.name))}</button>`).join('')}
+        ${a.rewards.map((r) => `<button class="ing-chip" data-goto="${r.itemId}" title="查看「${esc(r.name)}」用在哪">${icoTag(r.icon, 'sm')}${esc(shortDrop(r.name))}</button>`).join('')}
       </div>
     </div>`;
   }).join('');
@@ -784,13 +883,34 @@ $('anGrid').addEventListener('click', (e) => {
 });
 
 /* ─────────────── 採集地圖 ─────────────── */
-let layer = 'all', selArea = null;
+let layer = 'all', selArea = null, toolFilter = '';
+
+// 採集工具清單（含「徒手」）——「我只解鎖到銅鏟，現在哪些採得到」是最常見的問題
+const TOOLS = [];
+{
+  const seen = new Map();
+  for (const a of AREAS) for (const i of a.items) {
+    const k = i.tool ? i.tool.itemId : 0;
+    if (!seen.has(k)) seen.set(k, i.tool ? i.tool.name : '徒手可採');
+  }
+  for (const [k, v] of seen) TOOLS.push({ id: k, name: v });
+  TOOLS.sort((x, y) => x.id - y.id);
+  $('mapTool').insertAdjacentHTML('beforeend',
+    TOOLS.map((t) => `<option value="${t.id}">${esc(t.name)}</option>`).join(''));
+}
+const areaHasTool = (a) => !toolFilter ||
+  a.items.some((i) => String(i.tool ? i.tool.itemId : 0) === toolFilter);
 
 // 遊戲座標 → 底圖 0..1 比例（與採集紀錄／風脈泉頁同一條公式）
 const C = (ISLAND_MAP.sizeFactor || 100) / 100;
 const coordFrac = (c) => Math.max(0, Math.min(1, ((c - 1) * C) / 41));
 const lenFrac = (r) => (r * C) / 41;      // 半徑不做 -1 位移
 
+$('mapTool').addEventListener('change', (e) => {
+  toolFilter = e.target.value;
+  selArea = null;
+  syncURL(); renderMap();
+});
 document.querySelectorAll('#layerToggle button').forEach((b) => b.addEventListener('click', () => {
   layer = b.dataset.layer;
   document.querySelectorAll('#layerToggle button').forEach((x) => x.classList.toggle('active', x === b));
@@ -799,9 +919,12 @@ document.querySelectorAll('#layerToggle button').forEach((b) => b.addEventListen
 }));
 
 function renderMap() {
-  const list = AREAS.filter((a) => layer === 'all' || String(a.mapLayer) === layer);
+  const list = AREAS.filter((a) =>
+    (layer === 'all' || String(a.mapLayer) === layer) && areaHasTool(a));
   const itemCount = list.reduce((n, a) => n + a.items.length, 0);
-  $('mapMeta').innerHTML = `顯示 <em>${list.length}</em> 個採集區域 · 共 ${itemCount} 種素材`;
+  const tn = toolFilter ? (TOOLS.find((t) => String(t.id) === toolFilter) || {}).name : '';
+  $('mapMeta').innerHTML = `顯示 <em>${list.length}</em> 個採集區域 · 共 ${itemCount} 種素材`
+    + (tn ? `（只列出用<b>${esc(tn)}</b>採得到的區域）` : '');
 
   // 大圈畫在下層，小圈才點得到
   const sorted = list.slice().sort((a, b) => b.radius - a.radius);
@@ -831,28 +954,109 @@ $('mapCanvas').addEventListener('click', (e) => {
   renderMapInfo();
 });
 
+// 一列素材：名稱 ＋ 需要哪把工具。沒解鎖工具就採不到，這是規劃時真正要看的東西。
+function areaItemRow(i) {
+  return `<div class="area-item">
+    ${icoTag(i.icon, 'sm')}<span class="nm">${esc(i.name)}</span>
+    <span class="tool-tag${i.tool ? '' : ' bare'}">${i.tool
+      ? icoTag(i.tool.icon, 'sm') + esc(i.tool.name)
+      : '✋ 徒手可採'}</span>
+    <button class="coord-btn" data-goto="${i.itemId}" title="查看「${esc(i.name)}」完整資料">詳情</button>
+  </div>`;
+}
+
 function renderMapInfo() {
   const a = areaById.get(selArea);
   if (!a) { $('mapInfo').innerHTML = ''; return; }
+  const ov = a.overlaps.map((id) => areaById.get(id)).filter(Boolean);
+  const extra = [];
+  const own = new Set(a.items.map((i) => i.itemId));
+  for (const o of ov) for (const i of o.items) if (!own.has(i.itemId)) { own.add(i.itemId); extra.push(i); }
   $('mapInfo').innerHTML = `
     <div class="cw-card">
       <div class="cw-head">
         <span class="cw-name">採集區域 #${a.id}</span>
         <span class="tag">${a.layerName}</span>
-        <span class="rec-yield" style="font-size:13px;color:var(--text-muted)">可採 ${a.items.length} 種素材</span>
+        <span style="font-size:13px;color:var(--text-muted)">本區 ${a.items.length} 種${
+          extra.length ? ` · 含重疊區共 <b style="color:var(--gold-light)">${a.reachableCount}</b> 種` : ''}</span>
       </div>
       <div class="mat-row" style="font-size:14px">
         <span class="k">區域中心</span>X:${a.x} Y:${a.y}（半徑約 ${a.radius}）
+        <button class="coord-btn" data-x="${a.x}" data-y="${a.y}">🗺 開地圖</button>
         <button class="coord-btn" data-flag="/coord ${a.x} ${a.y} ${esc(ISLAND_MAP.name)}">📋 座標</button>
       </div>
-      <div class="cw-ing">
-        ${a.items.map((i) => `<button class="ing-chip" data-goto="${i.itemId}" title="查看「${esc(i.name)}」完整資料">${esc(i.name)}</button>`).join('')}
-      </div>
+      <div>${a.items.map(areaItemRow).join('')}</div>
+      ${extra.length ? `<div class="overlap-note">
+        範圍與 <b>${ov.length}</b> 個區域重疊（#${ov.map((o) => o.id).join('、#')}），
+        站在交界處還能多採到這 ${extra.length} 種：
+        <div style="margin-top:6px">${extra.map(areaItemRow).join('')}</div>
+      </div>` : '<div class="overlap-note">此區不與其他採集區重疊。</div>'}
     </div>`;
 }
 $('mapInfo').addEventListener('click', (e) => {
   const cp = e.target.closest('[data-flag]');
   if (cp) { copyText(cp.dataset.flag); return; }
+  const go = e.target.closest('[data-goto]');
+  if (go) selectMat(Number(go.dataset.goto), true);
+});
+
+/* ─────────────── 開拓等級 ───────────────
+   經驗值出自 MJIRank（datamine）；各級解鎖內容 datamine 沒有（MJIRank 的 LogMessage[]
+   只是共用的通用訊息 id），由 island-names-tw.json 的 ranks 人工提供。
+   來源與驗證見 island-ranks.json 的 rankSource——經驗值已與該來源逐級對過 19/19 一致，
+   解鎖敘述裡的物品名一律換成 items.json 的台服官方名（build-island.mjs 有護欄擋假名字）。 */
+let rkQuery = '';
+const RANKS = ranks.data;
+const RANK_SRC = ranks.rankSource || null;
+// 建築名 → 該建築的圖示，讓等級表的「可建造 X」也有圖
+const bldIcon = new Map();
+for (const b of BUILDINGS) if (b.name) bldIcon.set(b.name.replace(/\s+[IVX]+$/, ''), b.icon);
+
+$('rkNote').innerHTML = `
+  開拓等級決定<b>能做哪把工具</b>、<b>能蓋什麼</b>、<b>耕地與牧場的上限</b>。
+  多數新內容都要先做出對應工具才採得到，所以升級順序基本上是被工具卡著的。
+  <br>經驗值出自遊戲資料表；解鎖內容整理自社群攻略並已逐項對回遊戲資料
+  ${RANK_SRC ? `（<a href="${esc(RANK_SRC.url)}" target="_blank" rel="noopener">${esc(RANK_SRC.name)}</a>，經驗值 19/19 吻合）` : ''}。
+  藍幣／藍票與所需時數沿用原文，遊戲資料表無對應欄位可驗，僅供參考。`;
+
+function renderRk() {
+  const q = rkQuery.trim().toLowerCase();
+  const list = RANKS.filter((r) => !q ||
+    String(r.level) === q || (r.unlocks || []).some((u) => u.toLowerCase().includes(q)));
+  $('rkMeta').innerHTML = `顯示 <em>${list.length}</em> / ${RANKS.length} 級`;
+  $('rkEmpty').style.display = list.length ? 'none' : '';
+  $('rkList').style.display = list.length ? '' : 'none';
+  $('rkList').innerHTML = list.map((r) => {
+    const next = r.expToNext
+      ? `升下一級需 <b>${r.expToNext.toLocaleString()}</b>`
+      : '已是最高等級';
+    return `
+    <div class="rk-row">
+      <div class="rk-lv"><b>${r.level}</b><span>Lv</span></div>
+      <div class="rk-body">
+        <div class="rk-exp">累計經驗 ${r.cumulativeExp.toLocaleString()}　·　${next}</div>
+        <div class="rk-unlock">${r.unlocks && r.unlocks.length
+          ? `<ul>${r.unlocks.map((u) => `<li>${rkLine(u)}</li>`).join('')}</ul>`
+          : '<span class="sub">此級無新解鎖內容（純累積經驗）</span>'}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// 把敘述裡的「物品／設施名」變成可點的 chip：物品→跳素材反查，其餘→純標示
+const matByName = new Map(MATS.map((m) => [m.name, m]));
+function rkLine(text) {
+  return esc(text).replace(/「([^」]+)」/g, (m, nm) => {
+    const mat = matByName.get(nm);
+    const ico = mat ? icoTag(mat.icon, 'sm') : (bldIcon.has(nm) ? icoTag(bldIcon.get(nm), 'sm') : '');
+    return mat
+      ? `<button class="ing-chip" data-goto="${mat.itemId}" title="查看「${nm}」怎麼拿">${ico}${nm}</button>`
+      : `<span class="use-chip">${ico}${nm}</span>`;
+  }).replace(/→/g, '<span style="color:var(--text-muted)">→</span>');
+}
+
+$('rkSearch').addEventListener('input', (e) => { rkQuery = e.target.value; syncURL(); renderRk(); });
+$('rkList').addEventListener('click', (e) => {
   const go = e.target.closest('[data-goto]');
   if (go) selectMat(Number(go.dataset.goto), true);
 });
@@ -873,6 +1077,11 @@ function applyURL() {
     layer = l;
     document.querySelectorAll('#layerToggle button').forEach((x) => x.classList.toggle('active', x.dataset.layer === l));
   }
+  const tf = p.get('tool');
+  toolFilter = TOOLS.some((t) => String(t.id) === tf) ? tf : '';
+  $('mapTool').value = toolFilter;
+  rkQuery = p.get('q') || '';
+  $('rkSearch').value = rkQuery;
   const m = Number(p.get('m'));
   if (m && matById.has(m)) selMat = m;
 
@@ -885,9 +1094,9 @@ function applyURL() {
   $('anState').querySelectorAll('.filter-tag').forEach((x) => x.classList.toggle('active', anOnlyNow));
   $('anDrop').querySelectorAll('.filter-tag').forEach((x) => x.classList.toggle('active', x.dataset.v === anDropFilter));
 
-  renderCw(); renderMatList(); renderMatDetail();
+  renderCw(); renderMatList(); renderMatDetail(); renderRk();
   const t = p.get('t');
-  setTab(['mat', 'map', 'an'].includes(t) ? t : 'cw', false);
+  setTab(['mat', 'map', 'an', 'rk'].includes(t) ? t : 'cw', false);
 }
 window.addEventListener('popstate', applyURL);
 applyURL();

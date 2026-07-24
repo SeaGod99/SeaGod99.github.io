@@ -10,22 +10,26 @@
       "itemId": 37628,
       "name": "海島治療劑",
       "nameMissing": false,
+      "icon": 20601,
       "themes": [
         {
           "id": 8,
-          "name": null,
-          "nameCn": "药品"
+          "name": "藥品",
+          "nameCn": "药品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37551,
           "name": "無人島棕櫚葉",
+          "icon": 25026,
           "qty": 2
         },
         {
           "itemId": 37558,
           "name": "無人島草葉",
+          "icon": 25010,
           "qty": 2
         }
       ],
@@ -38,32 +42,38 @@
       "itemId": 37633,
       "name": "開拓工坊火藥",
       "nameMissing": false,
+      "icon": 22604,
       "themes": [
         {
           "id": 8,
-          "name": null,
-          "nameCn": "药品"
+          "name": "藥品",
+          "nameCn": "药品",
+          "nameSource": "cn-hant"
         },
         {
           "id": 16,
-          "name": null,
-          "nameCn": "窑炉制品"
+          "name": "窯爐製品",
+          "nameCn": "窑炉制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37559,
           "name": "無人島砂礫",
+          "icon": 21464,
           "qty": 2
         },
         {
           "itemId": 37565,
           "name": "無人島石灰岩",
+          "icon": 22615,
           "qty": 1
         },
         {
           "itemId": 37558,
           "name": "無人島草葉",
+          "icon": 25010,
           "qty": 1
         }
       ],
@@ -76,27 +86,32 @@
       "itemId": 37627,
       "name": "海島座椅",
       "nameMissing": false,
+      "icon": 52453,
       "themes": [
         {
           "id": 6,
-          "name": null,
-          "nameCn": "家具"
+          "name": "家具",
+          "nameCn": "家具",
+          "nameSource": "cn-hant"
         },
         {
           "id": 12,
-          "name": null,
-          "nameCn": "木工制品"
+          "name": "木工製品",
+          "nameCn": "木工制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37560,
           "name": "無人島原木",
+          "icon": 22407,
           "qty": 4
         },
         {
           "itemId": 37562,
           "name": "無人島藤蔓",
+          "icon": 21672,
           "qty": 2
         }
       ],
@@ -109,27 +124,32 @@
       "itemId": 37630,
       "name": "開拓工坊烤扇貝",
       "nameMissing": false,
+      "icon": 24332,
       "themes": [
         {
           "id": 3,
-          "name": null,
-          "nameCn": "菜肴"
+          "name": "菜餚",
+          "nameCn": "菜肴",
+          "nameSource": "cn-hant"
         },
         {
           "id": 15,
-          "name": null,
-          "nameCn": "海产制品"
+          "name": "海產製品",
+          "nameCn": "海产制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37555,
           "name": "無人島雙殼貝",
+          "icon": 29031,
           "qty": 2
         },
         {
           "itemId": 37556,
           "name": "無人島球藻",
+          "icon": 25225,
           "qty": 2
         }
       ],
@@ -142,27 +162,32 @@
       "itemId": 37629,
       "name": "海島木製項鍊",
       "nameMissing": false,
+      "icon": 54912,
       "themes": [
         {
           "id": 10,
-          "name": null,
-          "nameCn": "饰品"
+          "name": "飾品",
+          "nameCn": "饰品",
+          "nameSource": "cn-hant"
         },
         {
           "id": 12,
-          "name": null,
-          "nameCn": "木工制品"
+          "name": "木工製品",
+          "nameCn": "木工制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37553,
           "name": "無人島小樹枝",
+          "icon": 22416,
           "qty": 3
         },
         {
           "itemId": 37562,
           "name": "無人島藤蔓",
+          "icon": 21672,
           "qty": 1
         }
       ],
@@ -175,27 +200,32 @@
       "itemId": 37631,
       "name": "海島珊瑚戒指",
       "nameMissing": false,
+      "icon": 54434,
       "themes": [
         {
           "id": 10,
-          "name": null,
-          "nameCn": "饰品"
+          "name": "飾品",
+          "nameCn": "饰品",
+          "nameSource": "cn-hant"
         },
         {
           "id": 15,
-          "name": null,
-          "nameCn": "海产制品"
+          "name": "海產製品",
+          "nameCn": "海产制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37557,
           "name": "無人島珊瑚",
+          "icon": 29060,
           "qty": 3
         },
         {
           "itemId": 37562,
           "name": "無人島藤蔓",
+          "icon": 21672,
           "qty": 3
         }
       ],
@@ -208,27 +238,32 @@
       "itemId": 37632,
       "name": "海島開面盔",
       "nameMissing": false,
+      "icon": 40008,
       "themes": [
         {
           "id": 2,
-          "name": null,
-          "nameCn": "防具"
+          "name": "防具",
+          "nameCn": "防具",
+          "nameSource": "cn-hant"
         },
         {
           "id": 11,
-          "name": null,
-          "nameCn": "金属制品"
+          "name": "金屬製品",
+          "nameCn": "金属制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37564,
           "name": "無人島銅礦",
+          "icon": 21209,
           "qty": 3
         },
         {
           "itemId": 37559,
           "name": "無人島砂礫",
+          "icon": 21464,
           "qty": 3
         }
       ],
@@ -241,27 +276,32 @@
       "itemId": 37634,
       "name": "海島石刃棒",
       "nameMissing": false,
+      "icon": 30417,
       "themes": [
         {
           "id": 7,
-          "name": null,
-          "nameCn": "武器"
+          "name": "武器",
+          "nameCn": "武器",
+          "nameSource": "cn-hant"
         },
         {
           "id": 12,
-          "name": null,
-          "nameCn": "木工制品"
+          "name": "木工製品",
+          "nameCn": "木工制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37561,
           "name": "無人島棕櫚原木",
+          "icon": 22410,
           "qty": 3
         },
         {
           "itemId": 37554,
           "name": "無人島石材",
+          "icon": 21451,
           "qty": 3
         }
       ],
@@ -274,22 +314,26 @@
       "itemId": 37618,
       "name": "開拓工坊酸泡菜",
       "nameMissing": false,
+      "icon": 24155,
       "themes": [
         {
           "id": 1,
-          "name": null,
-          "nameCn": "耐储存食品"
+          "name": "耐儲存食品",
+          "nameCn": "耐储存食品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37594,
           "name": "海島甘藍",
+          "icon": 25208,
           "qty": 1
         },
         {
           "itemId": 37566,
           "name": "無人島岩鹽",
+          "icon": 22617,
           "qty": 3
         }
       ],
@@ -302,22 +346,26 @@
       "itemId": 37619,
       "name": "開拓工坊烤南瓜",
       "nameMissing": false,
+      "icon": 24167,
       "themes": [
         {
           "id": 3,
-          "name": null,
-          "nameCn": "菜肴"
+          "name": "菜餚",
+          "nameCn": "菜肴",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37596,
           "name": "海島南瓜",
+          "icon": 25232,
           "qty": 1
         },
         {
           "itemId": 37563,
           "name": "無人島樹液",
+          "icon": 22642,
           "qty": 3
         }
       ],
@@ -330,27 +378,32 @@
       "itemId": 37620,
       "name": "海島束腰衣",
       "nameMissing": false,
+      "icon": 42169,
       "themes": [
         {
           "id": 2,
-          "name": null,
-          "nameCn": "防具"
+          "name": "防具",
+          "nameCn": "防具",
+          "nameSource": "cn-hant"
         },
         {
           "id": 13,
-          "name": null,
-          "nameCn": "纺织制品"
+          "name": "紡織製品",
+          "nameCn": "纺织制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37603,
           "name": "牧場動物的絨毛",
+          "icon": 21655,
           "qty": 2
         },
         {
           "itemId": 37562,
           "name": "無人島藤蔓",
+          "icon": 21672,
           "qty": 4
         }
       ],
@@ -363,27 +416,32 @@
       "itemId": 37621,
       "name": "海島廚刀",
       "nameMissing": false,
+      "icon": 35751,
       "themes": [
         {
           "id": 5,
-          "name": null,
-          "nameCn": "日用品"
+          "name": "日用品",
+          "nameCn": "日用品",
+          "nameSource": "cn-hant"
         },
         {
           "id": 14,
-          "name": null,
-          "nameCn": "动物制品"
+          "name": "動物製品",
+          "nameCn": "动物制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37604,
           "name": "牧場動物的尖爪",
+          "icon": 22301,
           "qty": 1
         },
         {
           "itemId": 37561,
           "name": "無人島棕櫚原木",
+          "icon": 22410,
           "qty": 3
         }
       ],
@@ -396,27 +454,32 @@
       "itemId": 37622,
       "name": "海島木刷",
       "nameMissing": false,
+      "icon": 23719,
       "themes": [
         {
           "id": 5,
-          "name": null,
-          "nameCn": "日用品"
+          "name": "日用品",
+          "nameCn": "日用品",
+          "nameSource": "cn-hant"
         },
         {
           "id": 12,
-          "name": null,
-          "nameCn": "木工制品"
+          "name": "木工製品",
+          "nameCn": "木工制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37605,
           "name": "牧場動物的獸毛",
+          "icon": 21624,
           "qty": 1
         },
         {
           "itemId": 37561,
           "name": "無人島棕櫚原木",
+          "icon": 22410,
           "qty": 3
         }
       ],
@@ -429,27 +492,32 @@
       "itemId": 37623,
       "name": "開拓工坊水煮蛋",
       "nameMissing": false,
+      "icon": 24255,
       "themes": [
         {
           "id": 3,
-          "name": null,
-          "nameCn": "菜肴"
+          "name": "菜餚",
+          "nameCn": "菜肴",
+          "nameSource": "cn-hant"
         },
         {
           "id": 14,
-          "name": null,
-          "nameCn": "动物制品"
+          "name": "動物製品",
+          "nameCn": "动物制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37607,
           "name": "牧場動物的鳥蛋",
+          "icon": 25251,
           "qty": 1
         },
         {
           "itemId": 37556,
           "name": "無人島球藻",
+          "icon": 25225,
           "qty": 3
         }
       ],
@@ -462,27 +530,32 @@
       "itemId": 37624,
       "name": "海島骨拳",
       "nameMissing": false,
+      "icon": 31007,
       "themes": [
         {
           "id": 7,
-          "name": null,
-          "nameCn": "武器"
+          "name": "武器",
+          "nameCn": "武器",
+          "nameSource": "cn-hant"
         },
         {
           "id": 14,
-          "name": null,
-          "nameCn": "动物制品"
+          "name": "動物製品",
+          "nameCn": "动物制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37608,
           "name": "牧場動物的甲殼",
+          "icon": 22257,
           "qty": 2
         },
         {
           "itemId": 37554,
           "name": "無人島石材",
+          "icon": 21451,
           "qty": 4
         }
       ],
@@ -495,27 +568,32 @@
       "itemId": 37625,
       "name": "海島獸牙耳墜",
       "nameMissing": false,
+      "icon": 55233,
       "themes": [
         {
           "id": 10,
-          "name": null,
-          "nameCn": "饰品"
+          "name": "飾品",
+          "nameCn": "饰品",
+          "nameSource": "cn-hant"
         },
         {
           "id": 14,
-          "name": null,
-          "nameCn": "动物制品"
+          "name": "動物製品",
+          "nameCn": "动物制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37609,
           "name": "牧場動物的尖牙",
+          "icon": 22303,
           "qty": 1
         },
         {
           "itemId": 37562,
           "name": "無人島藤蔓",
+          "icon": 21672,
           "qty": 3
         }
       ],
@@ -528,27 +606,32 @@
       "itemId": 37626,
       "name": "開拓工坊奶油",
       "nameMissing": false,
+      "icon": 25052,
       "themes": [
         {
           "id": 9,
-          "name": null,
-          "nameCn": "调料"
+          "name": "調料",
+          "nameCn": "调料",
+          "nameSource": "cn-hant"
         },
         {
           "id": 14,
-          "name": null,
-          "nameCn": "动物制品"
+          "name": "動物製品",
+          "nameCn": "动物制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37611,
           "name": "牧場動物的乳汁",
+          "icon": 24453,
           "qty": 1
         },
         {
           "itemId": 37566,
           "name": "無人島岩鹽",
+          "icon": 22617,
           "qty": 3
         }
       ],
@@ -561,32 +644,38 @@
       "itemId": 37635,
       "name": "海島磚塊櫃台",
       "nameMissing": false,
+      "icon": 51695,
       "themes": [
         {
           "id": 6,
-          "name": null,
-          "nameCn": "家具"
+          "name": "家具",
+          "nameCn": "家具",
+          "nameSource": "cn-hant"
         },
         {
           "id": 16,
-          "name": null,
-          "nameCn": "窑炉制品"
+          "name": "窯爐製品",
+          "nameCn": "窑炉制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37570,
           "name": "無人島黏土",
+          "icon": 22634,
           "qty": 2
         },
         {
           "itemId": 37565,
           "name": "無人島石灰岩",
+          "icon": 22615,
           "qty": 2
         },
         {
           "itemId": 37561,
           "name": "無人島棕櫚原木",
+          "icon": 22410,
           "qty": 2
         }
       ],
@@ -599,32 +688,38 @@
       "itemId": 37636,
       "name": "綿羊銅像",
       "nameMissing": false,
+      "icon": 23715,
       "themes": [
         {
           "id": 6,
-          "name": null,
-          "nameCn": "家具"
+          "name": "家具",
+          "nameCn": "家具",
+          "nameSource": "cn-hant"
         },
         {
           "id": 11,
-          "name": null,
-          "nameCn": "金属制品"
+          "name": "金屬製品",
+          "nameCn": "金属制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37571,
           "name": "無人島錫砂",
+          "icon": 21204,
           "qty": 3
         },
         {
           "itemId": 37564,
           "name": "無人島銅礦",
+          "icon": 21209,
           "qty": 3
         },
         {
           "itemId": 37560,
           "name": "無人島原木",
+          "icon": 22407,
           "qty": 2
         }
       ],
@@ -637,27 +732,32 @@
       "itemId": 37637,
       "name": "開拓工坊植物成長劑",
       "nameMissing": false,
+      "icon": 22664,
       "themes": [
         {
           "id": 8,
-          "name": null,
-          "nameCn": "药品"
+          "name": "藥品",
+          "nameCn": "药品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37578,
           "name": "無人島香薺",
+          "icon": 22627,
           "qty": 2
         },
         {
           "itemId": 37558,
           "name": "無人島草葉",
+          "icon": 25010,
           "qty": 3
         },
         {
           "itemId": 37553,
           "name": "無人島小樹枝",
+          "icon": 22416,
           "qty": 3
         }
       ],
@@ -670,32 +770,38 @@
       "itemId": 37638,
       "name": "海島石榴石刺劍",
       "nameMissing": false,
+      "icon": 36748,
       "themes": [
         {
           "id": 7,
-          "name": null,
-          "nameCn": "武器"
+          "name": "武器",
+          "nameCn": "武器",
+          "nameSource": "cn-hant"
         },
         {
           "id": 16,
-          "name": null,
-          "nameCn": "窑炉制品"
+          "name": "窯爐製品",
+          "nameCn": "窑炉制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37579,
           "name": "無人島石榴石原石",
+          "icon": 21456,
           "qty": 2
         },
         {
           "itemId": 37564,
           "name": "無人島銅礦",
+          "icon": 21209,
           "qty": 3
         },
         {
           "itemId": 37571,
           "name": "無人島錫砂",
+          "icon": 21204,
           "qty": 3
         }
       ],
@@ -708,32 +814,38 @@
       "itemId": 37639,
       "name": "海島雲杉圓盾",
       "nameMissing": false,
+      "icon": 30243,
       "themes": [
         {
           "id": 2,
-          "name": null,
-          "nameCn": "防具"
+          "name": "防具",
+          "nameCn": "防具",
+          "nameSource": "cn-hant"
         },
         {
           "id": 12,
-          "name": null,
-          "nameCn": "木工制品"
+          "name": "木工製品",
+          "nameCn": "木工制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37580,
           "name": "無人島雲杉原木",
+          "icon": 22413,
           "qty": 2
         },
         {
           "itemId": 37564,
           "name": "無人島銅礦",
+          "icon": 21209,
           "qty": 3
         },
         {
           "itemId": 37554,
           "name": "無人島石材",
+          "icon": 21451,
           "qty": 3
         }
       ],
@@ -746,32 +858,38 @@
       "itemId": 37640,
       "name": "開拓工坊鯊油",
       "nameMissing": false,
+      "icon": 22636,
       "themes": [
         {
           "id": 5,
-          "name": null,
-          "nameCn": "日用品"
+          "name": "日用品",
+          "nameCn": "日用品",
+          "nameSource": "cn-hant"
         },
         {
           "id": 15,
-          "name": null,
-          "nameCn": "海产制品"
+          "name": "海產製品",
+          "nameCn": "海产制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37581,
           "name": "無人島錘頭鯊",
+          "icon": 29026,
           "qty": 2
         },
         {
           "itemId": 37556,
           "name": "無人島球藻",
+          "icon": 25225,
           "qty": 3
         },
         {
           "itemId": 37563,
           "name": "無人島樹液",
+          "icon": 22642,
           "qty": 3
         }
       ],
@@ -784,32 +902,38 @@
       "itemId": 37641,
       "name": "海島白銀耳夾",
       "nameMissing": false,
+      "icon": 55439,
       "themes": [
         {
           "id": 10,
-          "name": null,
-          "nameCn": "饰品"
+          "name": "飾品",
+          "nameCn": "饰品",
+          "nameSource": "cn-hant"
         },
         {
           "id": 11,
-          "name": null,
-          "nameCn": "金属制品"
+          "name": "金屬製品",
+          "nameCn": "金属制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37582,
           "name": "無人島銀礦",
+          "icon": 21211,
           "qty": 2
         },
         {
           "itemId": 37571,
           "name": "無人島錫砂",
+          "icon": 21204,
           "qty": 3
         },
         {
           "itemId": 37557,
           "name": "無人島珊瑚",
+          "icon": 29060,
           "qty": 3
         }
       ],
@@ -822,27 +946,32 @@
       "itemId": 37642,
       "name": "開拓工坊甜新薯",
       "nameMissing": false,
+      "icon": 24096,
       "themes": [
         {
           "id": 4,
-          "name": null,
-          "nameCn": "点心"
+          "name": "點心",
+          "nameCn": "点心",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37593,
           "name": "海島新薯",
+          "icon": 25204,
           "qty": 2
         },
         {
           "itemId": 37611,
           "name": "牧場動物的乳汁",
+          "icon": 24453,
           "qty": 1
         },
         {
           "itemId": 37563,
           "name": "無人島樹液",
+          "icon": 22642,
           "qty": 3
         }
       ],
@@ -855,27 +984,32 @@
       "itemId": 37643,
       "name": "開拓工坊高山蘿蔔沙拉",
       "nameMissing": false,
+      "icon": 24154,
       "themes": [
         {
           "id": 3,
-          "name": null,
-          "nameCn": "菜肴"
+          "name": "菜餚",
+          "nameCn": "菜肴",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37601,
           "name": "海島高山蘿蔔",
+          "icon": 25215,
           "qty": 2
         },
         {
           "itemId": 37558,
           "name": "無人島草葉",
+          "icon": 25010,
           "qty": 1
         },
         {
           "itemId": 37563,
           "name": "無人島樹液",
+          "icon": 22642,
           "qty": 1
         }
       ],
@@ -888,22 +1022,26 @@
       "itemId": 37644,
       "name": "開拓工坊焦糖",
       "nameMissing": false,
+      "icon": 24089,
       "themes": [
         {
           "id": 4,
-          "name": null,
-          "nameCn": "点心"
+          "name": "點心",
+          "nameCn": "点心",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37567,
           "name": "無人島甘蔗",
+          "icon": 22452,
           "qty": 4
         },
         {
           "itemId": 37611,
           "name": "牧場動物的乳汁",
+          "icon": 24453,
           "qty": 2
         }
       ],
@@ -916,32 +1054,38 @@
       "itemId": 37645,
       "name": "海島緞帶",
       "nameMissing": false,
+      "icon": 54918,
       "themes": [
         {
           "id": 10,
-          "name": null,
-          "nameCn": "饰品"
+          "name": "飾品",
+          "nameCn": "饰品",
+          "nameSource": "cn-hant"
         },
         {
           "id": 13,
-          "name": null,
-          "nameCn": "纺织制品"
+          "name": "紡織製品",
+          "nameCn": "纺织制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37568,
           "name": "無人島棉花",
+          "icon": 21652,
           "qty": 2
         },
         {
           "itemId": 37564,
           "name": "無人島銅礦",
+          "icon": 21209,
           "qty": 2
         },
         {
           "itemId": 37562,
           "name": "無人島藤蔓",
+          "icon": 21672,
           "qty": 2
         }
       ],
@@ -954,32 +1098,38 @@
       "itemId": 37646,
       "name": "海島繩索",
       "nameMissing": false,
+      "icon": 26103,
       "themes": [
         {
           "id": 5,
-          "name": null,
-          "nameCn": "日用品"
+          "name": "日用品",
+          "nameCn": "日用品",
+          "nameSource": "cn-hant"
         },
         {
           "id": 13,
-          "name": null,
-          "nameCn": "纺织制品"
+          "name": "紡織製品",
+          "nameCn": "纺织制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37569,
           "name": "無人島麻",
+          "icon": 25213,
           "qty": 2
         },
         {
           "itemId": 37558,
           "name": "無人島草葉",
+          "icon": 25010,
           "qty": 1
         },
         {
           "itemId": 37562,
           "name": "無人島藤蔓",
+          "icon": 21672,
           "qty": 1
         }
       ],
@@ -992,32 +1142,38 @@
       "itemId": 37647,
       "name": "海島騎士帽",
       "nameMissing": false,
+      "icon": 41129,
       "themes": [
         {
           "id": 2,
-          "name": null,
-          "nameCn": "防具"
+          "name": "防具",
+          "nameCn": "防具",
+          "nameSource": "cn-hant"
         },
         {
           "id": 13,
-          "name": null,
-          "nameCn": "纺织制品"
+          "name": "紡織製品",
+          "nameCn": "纺织制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37606,
           "name": "牧場動物的羽毛",
+          "icon": 21908,
           "qty": 2
         },
         {
           "itemId": 37568,
           "name": "無人島棉花",
+          "icon": 21652,
           "qty": 2
         },
         {
           "itemId": 37569,
           "name": "無人島麻",
+          "icon": 25213,
           "qty": 2
         }
       ],
@@ -1030,32 +1186,38 @@
       "itemId": 37648,
       "name": "海島角笛",
       "nameMissing": false,
+      "icon": 26038,
       "themes": [
         {
           "id": 5,
-          "name": null,
-          "nameCn": "日用品"
+          "name": "日用品",
+          "nameCn": "日用品",
+          "nameSource": "cn-hant"
         },
         {
           "id": 14,
-          "name": null,
-          "nameCn": "动物制品"
+          "name": "動物製品",
+          "nameCn": "动物制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37610,
           "name": "牧場動物的角片",
+          "icon": 22206,
           "qty": 2
         },
         {
           "itemId": 37570,
           "name": "無人島黏土",
+          "icon": 22634,
           "qty": 2
         },
         {
           "itemId": 37569,
           "name": "無人島麻",
+          "icon": 25213,
           "qty": 2
         }
       ],
@@ -1068,27 +1230,32 @@
       "itemId": 37649,
       "name": "海島鹽漬鱈魚",
       "nameMissing": false,
+      "icon": 24315,
       "themes": [
         {
           "id": 1,
-          "name": null,
-          "nameCn": "耐储存食品"
+          "name": "耐儲存食品",
+          "nameCn": "耐储存食品",
+          "nameSource": "cn-hant"
         },
         {
           "id": 15,
-          "name": null,
-          "nameCn": "海产制品"
+          "name": "海產製品",
+          "nameCn": "海产制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37575,
           "name": "無人島海水魚",
+          "icon": 29012,
           "qty": 4
         },
         {
           "itemId": 37566,
           "name": "無人島岩鹽",
+          "icon": 22617,
           "qty": 2
         }
       ],
@@ -1101,27 +1268,32 @@
       "itemId": 37650,
       "name": "海島墨魚汁",
       "nameMissing": false,
+      "icon": 25060,
       "themes": [
         {
           "id": 9,
-          "name": null,
-          "nameCn": "调料"
+          "name": "調料",
+          "nameCn": "调料",
+          "nameSource": "cn-hant"
         },
         {
           "id": 15,
-          "name": null,
-          "nameCn": "海产制品"
+          "name": "海產製品",
+          "nameCn": "海产制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37576,
           "name": "無人島烏賊",
+          "icon": 29177,
           "qty": 2
         },
         {
           "itemId": 37566,
           "name": "無人島岩鹽",
+          "icon": 22617,
           "qty": 2
         }
       ],
@@ -1134,32 +1306,38 @@
       "itemId": 37651,
       "name": "開拓工坊仙藥",
       "nameMissing": false,
+      "icon": 20705,
       "themes": [
         {
           "id": 8,
-          "name": null,
-          "nameCn": "药品"
+          "name": "藥品",
+          "nameCn": "药品",
+          "nameSource": "cn-hant"
         },
         {
           "id": 15,
-          "name": null,
-          "nameCn": "海产制品"
+          "name": "海產製品",
+          "nameCn": "海产制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37577,
           "name": "無人島水母",
+          "icon": 29657,
           "qty": 2
         },
         {
           "itemId": 37551,
           "name": "無人島棕櫚葉",
+          "icon": 25026,
           "qty": 2
         },
         {
           "itemId": 37556,
           "name": "無人島球藻",
+          "icon": 25225,
           "qty": 2
         }
       ],
@@ -1172,27 +1350,32 @@
       "itemId": 37652,
       "name": "海島莓果醬",
       "nameMissing": false,
+      "icon": 25110,
       "themes": [
         {
           "id": 9,
-          "name": null,
-          "nameCn": "调料"
+          "name": "調料",
+          "nameCn": "调料",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37595,
           "name": "海島莓果",
+          "icon": 25306,
           "qty": 3
         },
         {
           "itemId": 37567,
           "name": "無人島甘蔗",
+          "icon": 22452,
           "qty": 2
         },
         {
           "itemId": 37563,
           "name": "無人島樹液",
+          "icon": 22642,
           "qty": 1
         }
       ],
@@ -1205,27 +1388,32 @@
       "itemId": 37654,
       "name": "海島番茄醬",
       "nameMissing": false,
+      "icon": 25101,
       "themes": [
         {
           "id": 9,
-          "name": null,
-          "nameCn": "调料"
+          "name": "調料",
+          "nameCn": "调料",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37598,
           "name": "海島番茄",
+          "icon": 25209,
           "qty": 2
         },
         {
           "itemId": 37567,
           "name": "無人島甘蔗",
+          "icon": 22452,
           "qty": 1
         },
         {
           "itemId": 37558,
           "name": "無人島草葉",
+          "icon": 25010,
           "qty": 1
         }
       ],
@@ -1238,27 +1426,32 @@
       "itemId": 37653,
       "name": "開拓工坊洋蔥湯",
       "nameMissing": false,
+      "icon": 24124,
       "themes": [
         {
           "id": 3,
-          "name": null,
-          "nameCn": "菜肴"
+          "name": "菜餚",
+          "nameCn": "菜肴",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37597,
           "name": "海島洋蔥",
+          "icon": 25203,
           "qty": 3
         },
         {
           "itemId": 37566,
           "name": "無人島岩鹽",
+          "icon": 22617,
           "qty": 2
         },
         {
           "itemId": 37558,
           "name": "無人島草葉",
+          "icon": 25010,
           "qty": 1
         }
       ],
@@ -1271,32 +1464,38 @@
       "itemId": 37655,
       "name": "開拓工坊魚派",
       "nameMissing": false,
+      "icon": 24052,
       "themes": [
         {
           "id": 4,
-          "name": null,
-          "nameCn": "点心"
+          "name": "點心",
+          "nameCn": "点心",
+          "nameSource": "cn-hant"
         },
         {
           "id": 15,
-          "name": null,
-          "nameCn": "海产制品"
+          "name": "海產製品",
+          "nameCn": "海产制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37599,
           "name": "海島小麥",
+          "icon": 25357,
           "qty": 3
         },
         {
           "itemId": 37575,
           "name": "無人島海水魚",
+          "icon": 29012,
           "qty": 2
         },
         {
           "itemId": 37567,
           "name": "無人島甘蔗",
+          "icon": 22452,
           "qty": 1
         }
       ],
@@ -1309,22 +1508,26 @@
       "itemId": 37656,
       "name": "開拓工坊玉米片",
       "nameMissing": false,
+      "icon": 25061,
       "themes": [
         {
           "id": 1,
-          "name": null,
-          "nameCn": "耐储存食品"
+          "name": "耐儲存食品",
+          "nameCn": "耐储存食品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37600,
           "name": "海島玉米",
+          "icon": 25352,
           "qty": 2
         },
         {
           "itemId": 37567,
           "name": "無人島甘蔗",
+          "icon": 22452,
           "qty": 2
         }
       ],
@@ -1337,27 +1540,32 @@
       "itemId": 37657,
       "name": "開拓工坊醃小蘿蔔",
       "nameMissing": false,
+      "icon": 24168,
       "themes": [
         {
           "id": 1,
-          "name": null,
-          "nameCn": "耐储存食品"
+          "name": "耐儲存食品",
+          "nameCn": "耐储存食品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37602,
           "name": "海島小蘿蔔",
+          "icon": 25233,
           "qty": 4
         },
         {
           "itemId": 37552,
           "name": "無人島蘋果",
+          "icon": 25308,
           "qty": 2
         },
         {
           "itemId": 37567,
           "name": "無人島甘蔗",
+          "icon": 22452,
           "qty": 2
         }
       ],
@@ -1370,32 +1578,38 @@
       "itemId": 37658,
       "name": "海島鐵斧",
       "nameMissing": false,
+      "icon": 31402,
       "themes": [
         {
           "id": 7,
-          "name": null,
-          "nameCn": "武器"
+          "name": "武器",
+          "nameCn": "武器",
+          "nameSource": "cn-hant"
         },
         {
           "id": 11,
-          "name": null,
-          "nameCn": "金属制品"
+          "name": "金屬製品",
+          "nameCn": "金属制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37572,
           "name": "無人島鐵礦",
+          "icon": 21202,
           "qty": 3
         },
         {
           "itemId": 37560,
           "name": "無人島原木",
+          "icon": 22407,
           "qty": 3
         },
         {
           "itemId": 37559,
           "name": "無人島砂礫",
+          "icon": 21464,
           "qty": 2
         }
       ],
@@ -1408,32 +1622,38 @@
       "itemId": 37659,
       "name": "海島石英戒指",
       "nameMissing": false,
+      "icon": 54411,
       "themes": [
         {
           "id": 10,
-          "name": null,
-          "nameCn": "饰品"
+          "name": "飾品",
+          "nameCn": "饰品",
+          "nameSource": "cn-hant"
         },
         {
           "id": 16,
-          "name": null,
-          "nameCn": "窑炉制品"
+          "name": "窯爐製品",
+          "nameCn": "窑炉制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37573,
           "name": "無人島石英",
+          "icon": 20019,
           "qty": 3
         },
         {
           "itemId": 37572,
           "name": "無人島鐵礦",
+          "icon": 21202,
           "qty": 3
         },
         {
           "itemId": 37554,
           "name": "無人島石材",
+          "icon": 21451,
           "qty": 2
         }
       ],
@@ -1446,32 +1666,38 @@
       "itemId": 37660,
       "name": "開拓工坊瓷罐",
       "nameMissing": false,
+      "icon": 53188,
       "themes": [
         {
           "id": 5,
-          "name": null,
-          "nameCn": "日用品"
+          "name": "日用品",
+          "nameCn": "日用品",
+          "nameSource": "cn-hant"
         },
         {
           "id": 16,
-          "name": null,
-          "nameCn": "窑炉制品"
+          "name": "窯爐製品",
+          "nameCn": "窑炉制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37574,
           "name": "無人島花崗岩",
+          "icon": 21251,
           "qty": 3
         },
         {
           "itemId": 37573,
           "name": "無人島石英",
+          "icon": 20019,
           "qty": 3
         },
         {
           "itemId": 37570,
           "name": "無人島黏土",
+          "icon": 22634,
           "qty": 2
         }
       ],
@@ -1484,27 +1710,32 @@
       "itemId": 37661,
       "name": "開拓工坊果蔬汁",
       "nameMissing": false,
+      "icon": 24413,
       "themes": [
         {
           "id": 8,
-          "name": null,
-          "nameCn": "药品"
+          "name": "藥品",
+          "nameCn": "药品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37594,
           "name": "海島甘藍",
+          "icon": 25208,
           "qty": 3
         },
         {
           "itemId": 37558,
           "name": "無人島草葉",
+          "icon": 25010,
           "qty": 2
         },
         {
           "itemId": 37556,
           "name": "無人島球藻",
+          "icon": 25225,
           "qty": 1
         }
       ],
@@ -1517,27 +1748,32 @@
       "itemId": 37662,
       "name": "開拓工坊南瓜布丁",
       "nameMissing": false,
+      "icon": 24075,
       "themes": [
         {
           "id": 4,
-          "name": null,
-          "nameCn": "点心"
+          "name": "點心",
+          "nameCn": "点心",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37596,
           "name": "海島南瓜",
+          "icon": 25232,
           "qty": 3
         },
         {
           "itemId": 37607,
           "name": "牧場動物的鳥蛋",
+          "icon": 25251,
           "qty": 1
         },
         {
           "itemId": 37611,
           "name": "牧場動物的乳汁",
+          "icon": 24453,
           "qty": 1
         }
       ],
@@ -1550,32 +1786,38 @@
       "itemId": 37663,
       "name": "海島綿羊地毯",
       "nameMissing": false,
+      "icon": 52002,
       "themes": [
         {
           "id": 6,
-          "name": null,
-          "nameCn": "家具"
+          "name": "家具",
+          "nameCn": "家具",
+          "nameSource": "cn-hant"
         },
         {
           "id": 14,
-          "name": null,
-          "nameCn": "动物制品"
+          "name": "動物製品",
+          "nameCn": "动物制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37603,
           "name": "牧場動物的絨毛",
+          "icon": 21655,
           "qty": 3
         },
         {
           "itemId": 37568,
           "name": "無人島棉花",
+          "icon": 21652,
           "qty": 2
         },
         {
           "itemId": 37569,
           "name": "無人島麻",
+          "icon": 25213,
           "qty": 1
         }
       ],
@@ -1588,32 +1830,38 @@
       "itemId": 37664,
       "name": "海島園藝鐮",
       "nameMissing": false,
+      "icon": 38158,
       "themes": [
         {
           "id": 5,
-          "name": null,
-          "nameCn": "日用品"
+          "name": "日用品",
+          "nameCn": "日用品",
+          "nameSource": "cn-hant"
         },
         {
           "id": 11,
-          "name": null,
-          "nameCn": "金属制品"
+          "name": "金屬製品",
+          "nameCn": "金属制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37604,
           "name": "牧場動物的尖爪",
+          "icon": 22301,
           "qty": 3
         },
         {
           "itemId": 37572,
           "name": "無人島鐵礦",
+          "icon": 21202,
           "qty": 2
         },
         {
           "itemId": 37561,
           "name": "無人島棕櫚原木",
+          "icon": 22410,
           "qty": 1
         }
       ],
@@ -1626,32 +1874,38 @@
       "itemId": 37665,
       "name": "海島床",
       "nameMissing": false,
+      "icon": 52462,
       "themes": [
         {
           "id": 6,
-          "name": null,
-          "nameCn": "家具"
+          "name": "家具",
+          "nameCn": "家具",
+          "nameSource": "cn-hant"
         },
         {
           "id": 13,
-          "name": null,
-          "nameCn": "纺织制品"
+          "name": "紡織製品",
+          "nameCn": "纺织制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37605,
           "name": "牧場動物的獸毛",
+          "icon": 21624,
           "qty": 4
         },
         {
           "itemId": 37568,
           "name": "無人島棉花",
+          "icon": 21652,
           "qty": 2
         },
         {
           "itemId": 37560,
           "name": "無人島原木",
+          "icon": 22407,
           "qty": 2
         }
       ],
@@ -1664,32 +1918,38 @@
       "itemId": 37666,
       "name": "海島鱗指套",
       "nameMissing": false,
+      "icon": 48387,
       "themes": [
         {
           "id": 2,
-          "name": null,
-          "nameCn": "防具"
+          "name": "防具",
+          "nameCn": "防具",
+          "nameSource": "cn-hant"
         },
         {
           "id": 14,
-          "name": null,
-          "nameCn": "动物制品"
+          "name": "動物製品",
+          "nameCn": "动物制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37608,
           "name": "牧場動物的甲殼",
+          "icon": 22257,
           "qty": 4
         },
         {
           "itemId": 37572,
           "name": "無人島鐵礦",
+          "icon": 21202,
           "qty": 2
         },
         {
           "itemId": 37568,
           "name": "無人島棉花",
+          "icon": 21652,
           "qty": 2
         }
       ],
@@ -1702,32 +1962,38 @@
       "itemId": 37667,
       "name": "海島手杖",
       "nameMissing": false,
+      "icon": 32665,
       "themes": [
         {
           "id": 7,
-          "name": null,
-          "nameCn": "武器"
+          "name": "武器",
+          "nameCn": "武器",
+          "nameSource": "cn-hant"
         },
         {
           "id": 12,
-          "name": null,
-          "nameCn": "木工制品"
+          "name": "木工製品",
+          "nameCn": "木工制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37609,
           "name": "牧場動物的尖牙",
+          "icon": 22303,
           "qty": 4
         },
         {
           "itemId": 37573,
           "name": "無人島石英",
+          "icon": 20019,
           "qty": 2
         },
         {
           "itemId": 37560,
           "name": "無人島原木",
+          "icon": 22407,
           "qty": 2
         }
       ],
@@ -1740,32 +2006,38 @@
       "itemId": 39349,
       "name": "開拓工坊珊瑚劍",
       "nameMissing": false,
+      "icon": 23725,
       "themes": [
         {
           "id": 7,
-          "name": null,
-          "nameCn": "武器"
+          "name": "武器",
+          "nameCn": "武器",
+          "nameSource": "cn-hant"
         },
         {
           "id": 15,
-          "name": null,
-          "nameCn": "海产制品"
+          "name": "海產製品",
+          "nameCn": "海产制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37557,
           "name": "無人島珊瑚",
+          "icon": 29060,
           "qty": 3
         },
         {
           "itemId": 39224,
           "name": "無人島天然樹脂",
+          "icon": 22638,
           "qty": 3
         },
         {
           "itemId": 37561,
           "name": "無人島棕櫚原木",
+          "icon": 22410,
           "qty": 2
         }
       ],
@@ -1778,27 +2050,32 @@
       "itemId": 39350,
       "name": "開拓工坊椰汁",
       "nameMissing": false,
+      "icon": 53440,
       "themes": [
         {
           "id": 4,
-          "name": null,
-          "nameCn": "点心"
+          "name": "點心",
+          "nameCn": "点心",
+          "nameSource": "cn-hant"
         },
         {
           "id": 8,
-          "name": null,
-          "nameCn": "药品"
+          "name": "藥品",
+          "nameCn": "药品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 39225,
           "name": "無人島椰子",
+          "icon": 25323,
           "qty": 2
         },
         {
           "itemId": 37567,
           "name": "無人島甘蔗",
+          "icon": 22452,
           "qty": 2
         }
       ],
@@ -1811,27 +2088,32 @@
       "itemId": 39351,
       "name": "開拓工坊蜂蜜",
       "nameMissing": false,
+      "icon": 25102,
       "themes": [
         {
           "id": 4,
-          "name": null,
-          "nameCn": "点心"
+          "name": "點心",
+          "nameCn": "点心",
+          "nameSource": "cn-hant"
         },
         {
           "id": 9,
-          "name": null,
-          "nameCn": "调料"
+          "name": "調料",
+          "nameCn": "调料",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 39226,
           "name": "無人島蜂巢",
+          "icon": 22611,
           "qty": 2
         },
         {
           "itemId": 37563,
           "name": "無人島樹液",
+          "icon": 22642,
           "qty": 2
         }
       ],
@@ -1844,22 +2126,26 @@
       "itemId": 39352,
       "name": "海島藍蛋白石",
       "nameMissing": false,
+      "icon": 21276,
       "themes": [
         {
           "id": 16,
-          "name": null,
-          "nameCn": "窑炉制品"
+          "name": "窯爐製品",
+          "nameCn": "窑炉制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 39227,
           "name": "無人島木化石",
+          "icon": 21228,
           "qty": 4
         },
         {
           "itemId": 37559,
           "name": "無人島砂礫",
+          "icon": 21464,
           "qty": 4
         }
       ],
@@ -1872,32 +2158,38 @@
       "itemId": 39353,
       "name": "開拓工坊乾燥花",
       "nameMissing": false,
+      "icon": 23726,
       "themes": [
         {
           "id": 5,
-          "name": null,
-          "nameCn": "日用品"
+          "name": "日用品",
+          "nameCn": "日用品",
+          "nameSource": "cn-hant"
         },
         {
           "id": 6,
-          "name": null,
-          "nameCn": "家具"
+          "name": "家具",
+          "nameCn": "家具",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 39228,
           "name": "無人島色彩繽紛的花",
+          "icon": 23727,
           "qty": 3
         },
         {
           "itemId": 39225,
           "name": "無人島椰子",
+          "icon": 25323,
           "qty": 2
         },
         {
           "itemId": 37563,
           "name": "無人島樹液",
+          "icon": 22642,
           "qty": 1
         }
       ],
@@ -1910,27 +2202,32 @@
       "itemId": 39354,
       "name": "開拓工坊辣彩粉",
       "nameMissing": false,
+      "icon": 22648,
       "themes": [
         {
           "id": 9,
-          "name": null,
-          "nameCn": "调料"
+          "name": "調料",
+          "nameCn": "调料",
+          "nameSource": "cn-hant"
         },
         {
           "id": 8,
-          "name": null,
-          "nameCn": "药品"
+          "name": "藥品",
+          "nameCn": "药品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 39231,
           "name": "海島紅彩椒",
+          "icon": 25018,
           "qty": 2
         },
         {
           "itemId": 37558,
           "name": "無人島草葉",
+          "icon": 25010,
           "qty": 2
         }
       ],
@@ -1943,32 +2240,38 @@
       "itemId": 39355,
       "name": "開拓工坊韭蔥洋蔥湯",
       "nameMissing": false,
+      "icon": 24104,
       "themes": [
         {
           "id": 8,
-          "name": null,
-          "nameCn": "药品"
+          "name": "藥品",
+          "nameCn": "药品",
+          "nameSource": "cn-hant"
         },
         {
           "id": 14,
-          "name": null,
-          "nameCn": "动物制品"
+          "name": "動物製品",
+          "nameCn": "动物制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 39232,
           "name": "海島韭蔥",
+          "icon": 25216,
           "qty": 3
         },
         {
           "itemId": 37611,
           "name": "牧場動物的乳汁",
+          "icon": 24453,
           "qty": 1
         },
         {
           "itemId": 37556,
           "name": "無人島球藻",
+          "icon": 25225,
           "qty": 3
         }
       ],
@@ -1981,32 +2284,38 @@
       "itemId": 39356,
       "name": "開拓工坊無人麵包",
       "nameMissing": false,
+      "icon": 24037,
       "themes": [
         {
           "id": 3,
-          "name": null,
-          "nameCn": "菜肴"
+          "name": "菜餚",
+          "nameCn": "菜肴",
+          "nameSource": "cn-hant"
         },
         {
           "id": 8,
-          "name": null,
-          "nameCn": "药品"
+          "name": "藥品",
+          "nameCn": "药品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37599,
           "name": "海島小麥",
+          "icon": 25357,
           "qty": 2
         },
         {
           "itemId": 37575,
           "name": "無人島海水魚",
+          "icon": 29012,
           "qty": 1
         },
         {
           "itemId": 37566,
           "name": "無人島岩鹽",
+          "icon": 22617,
           "qty": 1
         }
       ],
@@ -2019,27 +2328,32 @@
       "itemId": 39357,
       "name": "開拓工坊新薯沙拉",
       "nameMissing": false,
+      "icon": 24164,
       "themes": [
         {
           "id": 3,
-          "name": null,
-          "nameCn": "菜肴"
+          "name": "菜餚",
+          "nameCn": "菜肴",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37593,
           "name": "海島新薯",
+          "icon": 25204,
           "qty": 2
         },
         {
           "itemId": 37552,
           "name": "無人島蘋果",
+          "icon": 25308,
           "qty": 1
         },
         {
           "itemId": 37558,
           "name": "無人島草葉",
+          "icon": 25010,
           "qty": 1
         }
       ],
@@ -2052,27 +2366,32 @@
       "itemId": 39358,
       "name": "開拓工坊調味汁",
       "nameMissing": false,
+      "icon": 25107,
       "themes": [
         {
           "id": 9,
-          "name": null,
-          "nameCn": "调料"
+          "name": "調料",
+          "nameCn": "调料",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 37597,
           "name": "海島洋蔥",
+          "icon": 25203,
           "qty": 2
         },
         {
           "itemId": 37563,
           "name": "無人島樹液",
+          "icon": 22642,
           "qty": 1
         },
         {
           "itemId": 37556,
           "name": "無人島球藻",
+          "icon": 25225,
           "qty": 1
         }
       ],
@@ -2085,32 +2404,38 @@
       "itemId": 40740,
       "name": "海島暖爐",
       "nameMissing": false,
+      "icon": 26593,
       "themes": [
         {
           "id": 6,
-          "name": null,
-          "nameCn": "家具"
+          "name": "家具",
+          "nameCn": "家具",
+          "nameSource": "cn-hant"
         },
         {
           "id": 11,
-          "name": null,
-          "nameCn": "金属制品"
+          "name": "金屬製品",
+          "nameCn": "金属制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 39887,
           "name": "無人島石炭",
+          "icon": 21462,
           "qty": 2
         },
         {
           "itemId": 37572,
           "name": "無人島鐵礦",
+          "icon": 21202,
           "qty": 3
         },
         {
           "itemId": 37574,
           "name": "無人島花崗岩",
+          "icon": 21251,
           "qty": 1
         }
       ],
@@ -2123,27 +2448,32 @@
       "itemId": 40741,
       "name": "海島提燈",
       "nameMissing": false,
+      "icon": 53285,
       "themes": [
         {
           "id": 5,
-          "name": null,
-          "nameCn": "日用品"
+          "name": "日用品",
+          "nameCn": "日用品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 39889,
           "name": "無人島燈火茸",
+          "icon": 25412,
           "qty": 3
         },
         {
           "itemId": 37573,
           "name": "無人島石英",
+          "icon": 20019,
           "qty": 3
         },
         {
           "itemId": 37564,
           "name": "無人島銅礦",
+          "icon": 21209,
           "qty": 2
         }
       ],
@@ -2156,27 +2486,32 @@
       "itemId": 40742,
       "name": "開拓工坊泡鹼",
       "nameMissing": false,
+      "icon": 22616,
       "themes": [
         {
           "id": 5,
-          "name": null,
-          "nameCn": "日用品"
+          "name": "日用品",
+          "nameCn": "日用品",
+          "nameSource": "cn-hant"
         },
         {
           "id": 8,
-          "name": null,
-          "nameCn": "药品"
+          "name": "藥品",
+          "nameCn": "药品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 39892,
           "name": "無人島氣泡水",
+          "icon": 22678,
           "qty": 2
         },
         {
           "itemId": 37566,
           "name": "無人島岩鹽",
+          "icon": 22617,
           "qty": 2
         }
       ],
@@ -2189,37 +2524,44 @@
       "itemId": 40743,
       "name": "開拓工坊五海雜燴湯",
       "nameMissing": false,
+      "icon": 24111,
       "themes": [
         {
           "id": 3,
-          "name": null,
-          "nameCn": "菜肴"
+          "name": "菜餚",
+          "nameCn": "菜肴",
+          "nameSource": "cn-hant"
         },
         {
           "id": 15,
-          "name": null,
-          "nameCn": "海产制品"
+          "name": "海產製品",
+          "nameCn": "海产制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 39894,
           "name": "無人島長臂蝦",
+          "icon": 29404,
           "qty": 2
         },
         {
           "itemId": 37555,
           "name": "無人島雙殼貝",
+          "icon": 29031,
           "qty": 2
         },
         {
           "itemId": 37576,
           "name": "無人島烏賊",
+          "icon": 29177,
           "qty": 2
         },
         {
           "itemId": 37598,
           "name": "海島番茄",
+          "icon": 25209,
           "qty": 2
         }
       ],
@@ -2232,32 +2574,38 @@
       "itemId": 40744,
       "name": "開拓工坊化石標本",
       "nameMissing": false,
+      "icon": 23731,
       "themes": [
         {
           "id": 14,
-          "name": null,
-          "nameCn": "动物制品"
+          "name": "動物製品",
+          "nameCn": "动物制品",
+          "nameSource": "cn-hant"
         },
         {
           "id": 16,
-          "name": null,
-          "nameCn": "窑炉制品"
+          "name": "窯爐製品",
+          "nameCn": "窑炉制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 39888,
           "name": "無人島堆積岩",
+          "icon": 21455,
           "qty": 3
         },
         {
           "itemId": 37561,
           "name": "無人島棕櫚原木",
+          "icon": 22410,
           "qty": 2
         },
         {
           "itemId": 37568,
           "name": "無人島棉花",
+          "icon": 21652,
           "qty": 1
         }
       ],
@@ -2270,32 +2618,38 @@
       "itemId": 40745,
       "name": "海島浴缸",
       "nameMissing": false,
+      "icon": 52445,
       "themes": [
         {
           "id": 6,
-          "name": null,
-          "nameCn": "家具"
+          "name": "家具",
+          "nameCn": "家具",
+          "nameSource": "cn-hant"
         },
         {
           "id": 16,
-          "name": null,
-          "nameCn": "窑炉制品"
+          "name": "窯爐製品",
+          "nameCn": "窑炉制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 39890,
           "name": "無人島大理石",
+          "icon": 21487,
           "qty": 4
         },
         {
           "itemId": 37574,
           "name": "無人島花崗岩",
+          "icon": 21251,
           "qty": 2
         },
         {
           "itemId": 37570,
           "name": "無人島黏土",
+          "icon": 22634,
           "qty": 2
         }
       ],
@@ -2308,32 +2662,38 @@
       "itemId": 40746,
       "name": "海島眼鏡",
       "nameMissing": false,
+      "icon": 40900,
       "themes": [
         {
           "id": 2,
-          "name": null,
-          "nameCn": "防具"
+          "name": "防具",
+          "nameCn": "防具",
+          "nameSource": "cn-hant"
         },
         {
           "id": 5,
-          "name": null,
-          "nameCn": "日用品"
+          "name": "日用品",
+          "nameCn": "日用品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 39891,
           "name": "無人島靈銀礦",
+          "icon": 21208,
           "qty": 3
         },
         {
           "itemId": 37573,
           "name": "無人島石英",
+          "icon": 20019,
           "qty": 2
         },
         {
           "itemId": 37564,
           "name": "無人島銅礦",
+          "icon": 21209,
           "qty": 1
         }
       ],
@@ -2346,22 +2706,26 @@
       "itemId": 40747,
       "name": "開拓工坊隔熱玻璃",
       "nameMissing": false,
+      "icon": 22651,
       "themes": [
         {
           "id": 16,
-          "name": null,
-          "nameCn": "窑炉制品"
+          "name": "窯爐製品",
+          "nameCn": "窑炉制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 39893,
           "name": "無人島幻影石",
+          "icon": 21477,
           "qty": 4
         },
         {
           "itemId": 37559,
           "name": "無人島砂礫",
+          "icon": 21464,
           "qty": 4
         }
       ],
@@ -2374,22 +2738,26 @@
       "itemId": 40748,
       "name": "開拓工坊煎紅花菜豆",
       "nameMissing": false,
+      "icon": 24152,
       "themes": [
         {
           "id": 3,
-          "name": null,
-          "nameCn": "菜肴"
+          "name": "菜餚",
+          "nameCn": "菜肴",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 39899,
           "name": "海島花豆",
+          "icon": 25234,
           "qty": 2
         },
         {
           "itemId": 37566,
           "name": "無人島岩鹽",
+          "icon": 22617,
           "qty": 2
         }
       ],
@@ -2402,27 +2770,32 @@
       "itemId": 40749,
       "name": "開拓工坊紅菜湯",
       "nameMissing": false,
+      "icon": 24123,
       "themes": [
         {
           "id": 3,
-          "name": null,
-          "nameCn": "菜肴"
+          "name": "菜餚",
+          "nameCn": "菜肴",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 39900,
           "name": "海島紅菜",
+          "icon": 25231,
           "qty": 3
         },
         {
           "itemId": 37593,
           "name": "海島新薯",
+          "icon": 25204,
           "qty": 1
         },
         {
           "itemId": 37611,
           "name": "牧場動物的乳汁",
+          "icon": 24453,
           "qty": 1
         }
       ],
@@ -2435,27 +2808,32 @@
       "itemId": 40750,
       "name": "海島僧厥鑲茄子",
       "nameMissing": false,
+      "icon": 24162,
       "themes": [
         {
           "id": 3,
-          "name": null,
-          "nameCn": "菜肴"
+          "name": "菜餚",
+          "nameCn": "菜肴",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 39901,
           "name": "海島茄子",
+          "icon": 25205,
           "qty": 2
         },
         {
           "itemId": 37597,
           "name": "海島洋蔥",
+          "icon": 25203,
           "qty": 2
         },
         {
           "itemId": 37598,
           "name": "海島番茄",
+          "icon": 25209,
           "qty": 2
         }
       ],
@@ -2468,27 +2846,32 @@
       "itemId": 40751,
       "name": "開拓工坊醃櫛瓜",
       "nameMissing": false,
+      "icon": 24169,
       "themes": [
         {
           "id": 1,
-          "name": null,
-          "nameCn": "耐储存食品"
+          "name": "耐儲存食品",
+          "nameCn": "耐储存食品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 39902,
           "name": "海島櫛瓜",
+          "icon": 25212,
           "qty": 4
         },
         {
           "itemId": 37556,
           "name": "無人島球藻",
+          "icon": 25225,
           "qty": 2
         },
         {
           "itemId": 37567,
           "name": "無人島甘蔗",
+          "icon": 22452,
           "qty": 2
         }
       ],
@@ -2501,27 +2884,32 @@
       "itemId": 41674,
       "name": "海島黃銅餐盤",
       "nameMissing": false,
+      "icon": 26105,
       "themes": [
         {
           "id": 5,
-          "name": null,
-          "nameCn": "日用品"
+          "name": "日用品",
+          "nameCn": "日用品",
+          "nameSource": "cn-hant"
         },
         {
           "id": 11,
-          "name": null,
-          "nameCn": "金属制品"
+          "name": "金屬製品",
+          "nameCn": "金属制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 41631,
           "name": "無人島黃銅礦",
+          "icon": 21207,
           "qty": 2
         },
         {
           "itemId": 37564,
           "name": "無人島銅礦",
+          "icon": 21209,
           "qty": 2
         }
       ],
@@ -2534,27 +2922,32 @@
       "itemId": 41676,
       "name": "海島砂輪機",
       "nameMissing": false,
+      "icon": 35357,
       "themes": [
         {
           "id": 5,
-          "name": null,
-          "nameCn": "日用品"
+          "name": "日用品",
+          "nameCn": "日用品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 41633,
           "name": "無人島鷹眼砂",
+          "icon": 21229,
           "qty": 2
         },
         {
           "itemId": 39891,
           "name": "無人島靈銀礦",
+          "icon": 21208,
           "qty": 2
         },
         {
           "itemId": 37559,
           "name": "無人島砂礫",
+          "icon": 21464,
           "qty": 2
         }
       ],
@@ -2567,32 +2960,38 @@
       "itemId": 41673,
       "name": "海島翠銀環刃",
       "nameMissing": false,
+      "icon": 36268,
       "themes": [
         {
           "id": 7,
-          "name": null,
-          "nameCn": "武器"
+          "name": "武器",
+          "nameCn": "武器",
+          "nameSource": "cn-hant"
         },
         {
           "id": 11,
-          "name": null,
-          "nameCn": "金属制品"
+          "name": "金屬製品",
+          "nameCn": "金属制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 41630,
           "name": "無人島翠銀沙",
+          "icon": 21242,
           "qty": 2
         },
         {
           "itemId": 37572,
           "name": "無人島鐵礦",
+          "icon": 21202,
           "qty": 2
         },
         {
           "itemId": 37573,
           "name": "無人島石英",
+          "icon": 20019,
           "qty": 2
         }
       ],
@@ -2605,32 +3004,38 @@
       "itemId": 41675,
       "name": "開拓工坊金髮飾",
       "nameMissing": false,
+      "icon": 23743,
       "themes": [
         {
           "id": 10,
-          "name": null,
-          "nameCn": "饰品"
+          "name": "飾品",
+          "nameCn": "饰品",
+          "nameSource": "cn-hant"
         },
         {
           "id": 11,
-          "name": null,
-          "nameCn": "金属制品"
+          "name": "金屬製品",
+          "nameCn": "金属制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 41632,
           "name": "無人島金礦",
+          "icon": 21212,
           "qty": 4
         },
         {
           "itemId": 41631,
           "name": "無人島黃銅礦",
+          "icon": 21207,
           "qty": 2
         },
         {
           "itemId": 37573,
           "name": "無人島石英",
+          "icon": 20019,
           "qty": 2
         }
       ],
@@ -2643,32 +3048,38 @@
       "itemId": 41677,
       "name": "開拓者水晶像",
       "nameMissing": false,
+      "icon": 23744,
       "themes": [
         {
           "id": 6,
-          "name": null,
-          "nameCn": "家具"
+          "name": "家具",
+          "nameCn": "家具",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 41634,
           "name": "無人島水晶層",
+          "icon": 21488,
           "qty": 2
         },
         {
           "itemId": 39893,
           "name": "無人島幻影石",
+          "icon": 21477,
           "qty": 2
         },
         {
           "itemId": 39891,
           "name": "無人島靈銀礦",
+          "icon": 21208,
           "qty": 2
         },
         {
           "itemId": 39890,
           "name": "無人島大理石",
+          "icon": 21487,
           "qty": 2
         }
       ],
@@ -2681,32 +3092,38 @@
       "itemId": 41669,
       "name": "海島水果撈",
       "nameMissing": false,
+      "icon": 24099,
       "themes": [
         {
           "id": 4,
-          "name": null,
-          "nameCn": "点心"
+          "name": "點心",
+          "nameCn": "点心",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 41635,
           "name": "海島西瓜",
+          "icon": 25328,
           "qty": 1
         },
         {
           "itemId": 37595,
           "name": "海島莓果",
+          "icon": 25306,
           "qty": 1
         },
         {
           "itemId": 37552,
           "name": "無人島蘋果",
+          "icon": 25308,
           "qty": 1
         },
         {
           "itemId": 39225,
           "name": "無人島椰子",
+          "icon": 25323,
           "qty": 1
         }
       ],
@@ -2719,37 +3136,44 @@
       "itemId": 41670,
       "name": "海島甜新薯塔",
       "nameMissing": false,
+      "icon": 24225,
       "themes": [
         {
           "id": 3,
-          "name": null,
-          "nameCn": "菜肴"
+          "name": "菜餚",
+          "nameCn": "菜肴",
+          "nameSource": "cn-hant"
         },
         {
           "id": 4,
-          "name": null,
-          "nameCn": "点心"
+          "name": "點心",
+          "nameCn": "点心",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 41636,
           "name": "海島甜新薯",
+          "icon": 25236,
           "qty": 3
         },
         {
           "itemId": 37599,
           "name": "海島小麥",
+          "icon": 25357,
           "qty": 1
         },
         {
           "itemId": 37607,
           "name": "牧場動物的鳥蛋",
+          "icon": 25251,
           "qty": 1
         },
         {
           "itemId": 37567,
           "name": "無人島甘蔗",
+          "icon": 22452,
           "qty": 3
         }
       ],
@@ -2762,27 +3186,32 @@
       "itemId": 41671,
       "name": "海島風味拌細麵",
       "nameMissing": false,
+      "icon": 24044,
       "themes": [
         {
           "id": 3,
-          "name": null,
-          "nameCn": "菜肴"
+          "name": "菜餚",
+          "nameCn": "菜肴",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 41637,
           "name": "海島花椰菜",
+          "icon": 25237,
           "qty": 2
         },
         {
           "itemId": 37599,
           "name": "海島小麥",
+          "icon": 25357,
           "qty": 1
         },
         {
           "itemId": 37566,
           "name": "無人島岩鹽",
+          "icon": 22617,
           "qty": 3
         }
       ],
@@ -2795,27 +3224,32 @@
       "itemId": 41672,
       "name": "海島水牛豆沙拉",
       "nameMissing": false,
+      "icon": 24171,
       "themes": [
         {
           "id": 3,
-          "name": null,
-          "nameCn": "菜肴"
+          "name": "菜餚",
+          "nameCn": "菜肴",
+          "nameSource": "cn-hant"
         },
         {
           "id": 14,
-          "name": null,
-          "nameCn": "动物制品"
+          "name": "動物製品",
+          "nameCn": "动物制品",
+          "nameSource": "cn-hant"
         }
       ],
       "materials": [
         {
           "itemId": 41638,
           "name": "海島水牛豆",
+          "icon": 25353,
           "qty": 2
         },
         {
           "itemId": 37611,
           "name": "牧場動物的乳汁",
+          "icon": 24453,
           "qty": 2
         }
       ],
