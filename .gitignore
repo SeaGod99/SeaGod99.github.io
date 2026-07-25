@@ -2,3 +2,5 @@ node_modules/
 .gstack/
 data/_test_sync.txt
 out_data/tmp-newdb/
+# 外部 API／CSV 回應快取（build 腳本的 --offline 用，可隨時重抓）
+out_data/cache/

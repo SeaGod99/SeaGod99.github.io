@@ -1,0 +1,163 @@
+{
+  "schema": "fashion-fillers",
+  "patch": "7.2",
+  "updated": "2026-07-25",
+  "source": "out_data/equipment.msgpack + out_data/shops.msgpack + data/items.json + XIVAPI Item.DyeCount",
+  "note": "每個部位一件：全職業（含製作採集職）可穿、NPC 金幣直購、無門檻、確定可染色。用途是時尚品鑑「其餘部位染色補分」時的具體建議，取代空泛的「穿任意裝備」。",
+  "weaponNote": "武器部位不做通用填充：武器一定有職業限制，沒有一件所有職業都能拿的可染武器。武器的染色分請用你自己該職業的武器（多數職業武器可染），若手上武器不可染就放棄武器那 2 分。",
+  "totalGil": 550,
+  "rejected": [
+    {
+      "slot": "head",
+      "id": 2659,
+      "name": "質樸蛋殼帽",
+      "price": 11,
+      "reason": "不可染色（DyeCount 0）"
+    },
+    {
+      "slot": "head",
+      "id": 2671,
+      "name": "陸行鳥蛋殼帽",
+      "price": 18,
+      "reason": "不可染色（DyeCount 0）"
+    },
+    {
+      "slot": "head",
+      "id": 2707,
+      "name": "迷彩蛋殼帽",
+      "price": 28,
+      "reason": "不可染色（DyeCount 0）"
+    },
+    {
+      "slot": "body",
+      "id": 3004,
+      "name": "訂製治癒長袍",
+      "price": 100,
+      "reason": "不可染色（DyeCount 0）"
+    },
+    {
+      "slot": "body",
+      "id": 3007,
+      "name": "訂製詠魔長袍",
+      "price": 100,
+      "reason": "不可染色（DyeCount 0）"
+    }
+  ],
+  "data": {
+    "head": {
+      "slot": "head",
+      "slotName": "頭部",
+      "id": 2652,
+      "name": "草布頭巾",
+      "price": 85,
+      "level": 5,
+      "dyeCount": 1,
+      "icon": "/i/041000/041540.png",
+      "patch": "2.0",
+      "marketable": true,
+      "jobs": "全職業",
+      "vendor": {
+        "id": 1000718,
+        "name": "雜用商人",
+        "title": "購物&修理",
+        "mapId": 7,
+        "map": "黑衣森林北部林區",
+        "x": 28.15,
+        "y": 28.15
+      },
+      "alsoAt": []
+    },
+    "body": {
+      "slot": "body",
+      "slotName": "身體",
+      "id": 3010,
+      "name": "草布短袍",
+      "price": 140,
+      "level": 5,
+      "dyeCount": 1,
+      "icon": "/i/042000/042150.png",
+      "patch": "2.0",
+      "marketable": true,
+      "jobs": "全職業",
+      "vendor": {
+        "id": 1000244,
+        "name": "防具商",
+        "title": null,
+        "mapId": 7,
+        "map": "黑衣森林北部林區",
+        "x": 29.97,
+        "y": 19.09
+      },
+      "alsoAt": []
+    },
+    "hands": {
+      "slot": "hands",
+      "slotName": "手部",
+      "id": 3533,
+      "name": "草布短手套",
+      "price": 116,
+      "level": 6,
+      "dyeCount": 1,
+      "icon": "/i/044000/044159.png",
+      "patch": "2.0",
+      "marketable": true,
+      "jobs": "全職業",
+      "vendor": {
+        "id": 1000718,
+        "name": "雜用商人",
+        "title": "購物&修理",
+        "mapId": 7,
+        "map": "黑衣森林北部林區",
+        "x": 28.15,
+        "y": 28.15
+      },
+      "alsoAt": []
+    },
+    "legs": {
+      "slot": "legs",
+      "slotName": "腿部",
+      "id": 3309,
+      "name": "草布褲襪",
+      "price": 94,
+      "level": 5,
+      "dyeCount": 1,
+      "icon": "/i/045000/045048.png",
+      "patch": "2.0",
+      "marketable": true,
+      "jobs": "全職業",
+      "vendor": {
+        "id": 1000718,
+        "name": "雜用商人",
+        "title": "購物&修理",
+        "mapId": 7,
+        "map": "黑衣森林北部林區",
+        "x": 28.15,
+        "y": 28.15
+      },
+      "alsoAt": []
+    },
+    "feet": {
+      "slot": "feet",
+      "slotName": "腳部",
+      "id": 3761,
+      "name": "鞣革皮靴",
+      "price": 115,
+      "level": 5,
+      "dyeCount": 1,
+      "icon": "/i/046000/046165.png",
+      "patch": "2.0",
+      "marketable": true,
+      "jobs": "全職業",
+      "vendor": {
+        "id": 1000718,
+        "name": "雜用商人",
+        "title": "購物&修理",
+        "mapId": 7,
+        "map": "黑衣森林北部林區",
+        "x": 28.15,
+        "y": 28.15
+      },
+      "alsoAt": []
+    }
+  }
+}

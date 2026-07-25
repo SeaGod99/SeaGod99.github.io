@@ -1,5 +1,9 @@
 # 時尚品鑑推薦 — 週更流程完整記錄
 
+> ⚠️ **歷史文件（2026-07-25 起）**：本文描述的九步驟半手工流程與「人工挑推薦裝」的做法**已被取代**。
+> 現行推薦標準、換週狀態機與版型見 [fashion-report-spec.md](fashion-report-spec.md)，操作見 [fashion-report-update-sop.md](fashion-report-update-sop.md)。
+> 保留本文只為記錄當初怎麼摸出這條管線。
+
 > 📌 **要照著更新，請直接看 [fashion-report-update-sop.md](fashion-report-update-sop.md)（可重複執行的操作手冊，含每步指令）。** 本文件是首跑探索與自動化評估的原始記錄，保留作背景。
 
 > 首次手跑：**week 440「新大陸騎手（Western Rider）」**，執行於 2026-07-03（五）10:11–10:40（UTC+8）。
