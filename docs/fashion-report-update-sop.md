@@ -2,7 +2,8 @@
 
 > 這是可重複執行的「照著做」版本。首次探索與各步驟自動化評估見 [fashion-report-workflow.md](fashion-report-workflow.md)（week 440 首跑記錄）。
 > 本手冊以 **week 441「知性蠻族工匠」（2026-07-15 執行）** 為 worked example，指令可直接複用。
-> **最新一次執行：week 442「亞拉戈高位裝扮」（2026-07-18），新增兩條規則——步驟 5 的 tw-items 損毀改道、步驟 6 的通用版染劑優先。**
+> **最新一次執行：week 443「真麻正式裝」（2026-07-25），4 提示各異（頭野獸／身真麻／手正式／腿垮襠）、84 件全固定成本可取得、照 week 442 兩條新規跑通無阻。**
+> week 442 新增的兩條規則——步驟 5 的 tw-items 損毀改道、步驟 6 的通用版染劑優先——仍適用。
 >
 > 產出物：更新 [`data/fashion-report.json`](../data/fashion-report.json)，頁面 [`tools/fashion-report/index.html`](../tools/fashion-report/index.html) 讀它即時渲染。
 
@@ -153,4 +154,5 @@ verified easy 套裝指定的是原版「亞拉戈高位禦敵手鎧」等（巴
 3. **hints-db 累積**：把（categoryId, slot）→items 寫入 `data/fashion-hints-db.json`，重複分類離線預填。
 4. ~~**week 442**：2026-07-17（五）開放後重跑本手冊~~ — **已完成（2026-07-18）**，見步驟 5／6 新增規則。
 5. **修復 `out_data/tw-items.msgpack`**（步驟 5 的警告）：該檔第 11854 筆附近字串長度前綴損毀，目前時尚品鑑管線已改道 `data/items.json` 不受影響，但 `scripts/build-*.mjs` 全都還在 decode 它——**重建任何資料庫前必須先處理**（重新產出該 msgpack，或把 build 腳本一併改道 items.json）。
-6. **week 443**：2026-07-24（五）16:00 評分開放後重跑本手冊。主題已可預查＝CN CSV row 452「真麻正式装」→真麻正式裝。
+6. ~~**week 443**：2026-07-24（五）16:00 評分開放後重跑本手冊。主題＝CN CSV row 452「真麻正式装」→真麻正式裝~~ — **已完成（2026-07-25）**，84 件全固定成本、直接採用驗證版。
+7. **week 444**：2026-07-31（五）16:00 評分開放後重跑本手冊。主題已可預查＝CN CSV row 453（week+9）。

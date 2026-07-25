@@ -22,7 +22,7 @@
 | 1.3 | 限時採集節點查詢 | `/tools/gathering/` | 完成（改接 gathering.json/items.json/maps.json，limited 225 筆→213 筆顯示，篩選/排序/追蹤清單/Teamcraft flag 補齊，06-15重做；07-23 物品名改讀 `items-lite.json`，載入量 10MB→1.3MB） |
 | — | 天氣預報 | `/tools/weather/` | 完成（改用共用模組 assets/js/eorzea-weather.js，天氣表接 maps.json weatherRates，mapId 統一，06-15重做） |
 | 1.5 | 風脈泉追蹤器 | `/tools/aether-currents/` | 完成（31 地區 303 個風脈泉，任務型151筆/野外型152筆，06-16新增；07-23 遷入共用引擎的**子項目模式**——卡片＝地區、追蹤單位＝風脈泉，手風琴/地區地圖圖釘/🗺彈窗保留，新增可分享網址、批次標記、排序） |
-| 1.6 | 時尚品鑑推薦 | `/tools/fashion-report/` | 完成（頁面 07-03 上線，每週依 [SOP](fashion-report-update-sop.md) 半自動更新；資料 `data/fashion-report.json`，前端自算週次、過期自動顯示存檔卡。**目前更新到 week 442「亞拉戈高位裝扮」verified**（443 提示尚未公布）；07-23 過期橫幅重做——顯示當前週次階段徽章與倒數、外部來源升為主要行動、存檔說明降為次要） |
+| 1.6 | 時尚品鑑推薦 | `/tools/fashion-report/` | 完成（頁面 07-03 上線，每週依 [SOP](fashion-report-update-sop.md) 半自動更新；資料 `data/fashion-report.json`，前端自算週次、過期自動顯示存檔卡。**目前更新到 week 443「真麻正式裝」verified**；07-23 過期橫幅重做——顯示當前週次階段徽章與倒數、外部來源升為主要行動、存檔說明降為次要） |
 | 1.7 | 幻化配裝圖鑑 | `/tools/glamour/` | 完成（07-15 由獨立 repo 併入：精選配裝＋Mirapri 社群＋官方套裝 1971 套三檢視，收藏星號、染色/交易徽章、wiki 示意照；07-16 上線資產進版控——縮圖/官方示意照/icons/精選原圖＋mirapri_outfits.js/official_sets.js 共約 850MB 已 push，線上完整可用；**僅 mirapri 原圖 669MB 留本機**（加入會破 Pages 發佈 1GB 上限，彈窗自動退回縮圖），重建後衍生 js 記得 commit；資料管線為 Python（py scripts\update_all.py），細節見 tools/glamour/CLAUDE.md；07-16 介面統整——改用站內共用色票/字體、加「← 水神的工具箱」導覽與頁尾，官方套裝卡不再顯示 alljob 原始 tag） |
 
 ### 收藏／成就追蹤（共通規格見 feature-specs 第二章）
@@ -191,6 +191,8 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 6. 其他規劃：時尚品鑑、冒險者小隊計算機、藏寶圖、園藝配種、釣魚紀錄
 
 ## 五、更新紀錄
+
+- **2026-07-25（時尚品鑑 week 443 更新）**：依 [SOP](fashion-report-update-sop.md) 更新 `data/fashion-report.json` 到 **week 443「真麻正式裝」（True Linen Formal）verified 版**。本週 4 個提示各異、分佈四部位：頭＝野獸（Animal Instincts, cat 4）、身＝真麻（True Linen, cat 97）、手＝正式（Fresh and Formal, cat 20）、腿＝垮襠（Suddenly Sarouels, cat 124）。接受清單 **84 件（頭 53／身 14／手 3／腿 14）**，映射驗收 84/84、同名歧義 0、無台服名 0。染色 6 部位：武器＝珊瑚粉、頭＝萄乾棕、身＝鼴鼠棕、手＝珍珠白、腿/腳＝東洲藍（`萄乾棕` 為台服官方縮寫名，非漏字，已回查 items.json 確認）。本週為近期最省：easy80＝手部「草布短手套」（NPC 116 金幣）＋頭/身各染萄乾棕/鼴鼠棕；easy100＝頭「飛龍革禦敵鬃盔」染萄乾棕＋手「草布短手套」＋腿「棉布垮褲」染東洲藍，身/腳任意裝備染鼴鼠棕/東洲藍補分。**全 84 件均為固定成本可取得（NPC 金幣／各式軍票／狼印戰績／製作／少數副本掉落）**，故直接採用社群驗證版、無需替換。SOP 步驟 5（改道 items.json）／步驟 6（通用版染劑優先）兩條 week 442 新規本次照跑無阻。瀏覽器實測（桌機 1440／手機 375）：週次 443、100/80 分卡與染色標籤、6 格染色表、84 件完整清單（53/14/3/14）皆正確，無 console error。
 
 - **2026-07-24（無人島動物時鐘補齊至 43/43）**：使用者要求參考 [素素無人島動物時鐘](https://wrd.ffsusu.com/#/bell) 補上剩餘 14 種（6.4 後追加）、簡體直接轉繁不標註。
   - **資料來源**：素素時鐘元件內嵌一份 spawn JSON（key＝MJIAnimals row id，值含 x/y/weather/spawn/duration）。從頁面 chunk 抠出（`umi.js` 模組 96259），對回我方 row id。
