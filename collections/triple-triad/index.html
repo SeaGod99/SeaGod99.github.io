@@ -8,18 +8,15 @@
   <link rel="stylesheet" href="../../assets/css/common.css">
   <link rel="stylesheet" href="../../assets/css/tool-header.css">
   <style>
-    /* 幻卡頁專屬樣式；通用版面與 .col-* 卡片系統見 assets/css/common.css，
-       控制面由 assets/js/collection-tracker.js 渲染 */
+    /* 幻卡頁專屬樣式；共用色票與版面外框見 assets/css/common.css。
+       這頁只有一種呈現＝仿遊戲內幻卡手帳（見下方），引擎（collection-tracker.js）
+       只負責進度條／工具列／篩選／排序／分頁狀態，它的卡片格線不顯示。 */
     :root {
       --accent:   #f87171;                 /* 紅 */
       --accent-2: #c8a96e;                 /* 進度條尾色：金 */
       --glow-1:   rgba(248,113,113,0.06);
       --glow-2:   rgba(200,169,110,0.04);
     }
-    .col-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
-    .col-card { padding: 18px; gap: 8px; }
-    .col-name { padding-right: 16px; }
-    .tt-meta { font-size: 10px; color: var(--text-muted); }
 
     /* 幻卡四向數值十字 */
     .tt-numbers {
@@ -51,10 +48,186 @@
     .tag.star-4 { background: rgba(255,200,80,0.1);  color: #ffc850; border-color: rgba(255,200,80,0.2); }
     .tag.star-5 { background: rgba(248,113,113,0.1); color: var(--red); border-color: rgba(248,113,113,0.2); }
     .tag.type-tag { background: rgba(200,169,110,0.12); color: var(--gold); border-color: rgba(200,169,110,0.25); }
-    .tag.src-tag  { background: var(--raise); color: var(--text-secondary); border-color: var(--border); }
 
-    .col-detail .detail-line { margin-top: 2px; }
-    .col-detail .detail-line b { color: var(--text-secondary); font-weight: 500; }
+    /* ═══════════════ 幻卡手帳（仿遊戲內版型）═══════════════
+       版面刻意對齊遊戲：一頁 5×6＝30 張、頁籤一次列 5 頁（«/» 換頁組）、
+       右側是選中卡片的詳情、底部「總計 n/m」。
+       ※ 未取得**不用遊戲的「？」牌背**，改灰階卡面（2026-07-26 使用者指定）——
+         這是追蹤工具，使用者要看得到還沒收到的卡長什麼樣。
+       篩選／排序／分頁／進度仍全由引擎掌管（pageSize:30）：
+       引擎每次 renderGrid() 後由 onRender 交出 (list, pageSlice)，pageSlice ＝這一頁。 */
+    /* 引擎的卡片格線／分頁列／空狀態一律收起：這頁只有手帳一種呈現，格線由手帳取代、
+       分頁由手帳的頁籤取代、空結果由手帳自己顯示（引擎仍負責篩選／排序／分頁狀態／進度）。
+       ※ 必須用 !important，不能用 inline style——renderGrid() 每次重畫都會把 #ct-grid 的
+         inline display 設回 ''（同 common.css 的 body.mx-mapmode 註解），inline 會被洗掉。 */
+    #ct-grid, #ct-pagination, #ct-empty { display: none !important; }
+
+    /* 這頁的篩選有 4 組（星級／類型／取得方式 15 顆／版本），直排會把手帳推到很下面，
+       改成橫向流排（同釣魚頁），短的幾組自然併到同一列 */
+    #ct-filters { display: flex; flex-wrap: wrap; align-items: flex-start; column-gap: 48px; }
+
+    .tt-album { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 20px; align-items: start; }
+
+    /* ── 左：手帳本體（頁籤 ＋ 30 格 ＋ 總計）──
+       限寬讓一格約 190px：右邊詳情的卡面（250px）才看得出是「放大的那一張」 */
+    .tt-book {
+      max-width: 1030px;
+      background: var(--bg-surface);
+      border: 1px solid color-mix(in srgb, var(--gold) 22%, var(--border));
+      border-radius: var(--radius-lg);
+      padding: 12px 14px 10px;
+    }
+    /* 頁碼列：15 頁全列出來（一鍵直達），並且 sticky 黏在頂列下方——一頁 6 排卡片很高，
+       捲到下面還要滑回去換頁很難用。負 margin 讓底色鋪滿手帳邊緣，卡片不會從縫隙透出來。 */
+    .tt-tabs {
+      position: sticky; top: 46px; z-index: 3;
+      display: flex; align-items: center; gap: 4px; flex-wrap: wrap;
+      margin: -12px -14px 12px; padding: 10px 14px;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border);
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    }
+    .tt-tab, .tt-nav {
+      height: 30px; padding: 0 9px;
+      font-family: inherit; font-size: 13px; font-weight: 600;
+      color: var(--text-secondary); background: var(--bg-card);
+      border: 1px solid var(--border); border-radius: var(--radius-sm);
+      cursor: pointer; transition: var(--transition);
+    }
+    .tt-tab { min-width: 34px; }
+    .tt-nav { padding: 0 12px; font-weight: 500; }
+    .tt-tab:hover:not(:disabled):not(.active),
+    .tt-nav:hover:not(:disabled) { color: var(--text-primary); border-color: rgba(255,255,255,0.2); }
+    .tt-tab.active {
+      background: color-mix(in srgb, var(--accent) 16%, transparent);
+      border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+      color: var(--accent);
+    }
+    .tt-tab:disabled, .tt-nav:disabled { opacity: 0.3; cursor: default; }
+    .tt-tab:focus-visible, .tt-nav:focus-visible {
+      outline: 2px solid color-mix(in srgb, var(--accent) 60%, transparent); outline-offset: 1px;
+    }
+    .tt-tab-gap { color: var(--text-muted); padding: 0 2px; }
+    .tt-tabs-info { margin-left: auto; font-size: 12px; color: var(--text-muted); }
+
+    /* 卡格：一頁固定 5×6，最後一頁不足也留空格，版面才不會忽長忽短（同遊戲） */
+    .tt-slots { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+    .tt-slots:focus-visible { outline: 2px solid color-mix(in srgb, var(--accent) 60%, transparent); outline-offset: 4px; }
+    .tt-slot {
+      position: relative; aspect-ratio: 13 / 16;      /* 卡面原圖 208×256 */
+      border-radius: 6px; overflow: hidden;
+      background: var(--raise); border: 1px solid var(--border);
+      cursor: pointer; transition: transform 0.12s ease, border-color var(--transition), box-shadow var(--transition);
+    }
+    .tt-slot:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
+    .tt-slot.sel {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 45%, transparent), 0 6px 16px rgba(0,0,0,0.35);
+    }
+    .tt-slot.own { border-color: color-mix(in srgb, var(--accent) 40%, transparent); }
+    .tt-slot img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    /* 未取得＝灰階卡面（看得出是哪張卡，但一眼分得出還沒收到）；已取得才上色 */
+    .tt-slot.miss { background: var(--raise); }
+    .tt-slot.miss img { filter: grayscale(1) brightness(0.92) contrast(0.95); }
+    /* hover 才微微透出原色（選中時刻意不透，否則「選中的未取得卡」看起來像已取得）*/
+    .tt-slot.miss:hover img { filter: grayscale(0.45); }
+    .tt-slot.empty { background: transparent; border-style: dashed; opacity: 0.3; cursor: default; }
+    .tt-slot.empty:hover { transform: none; border-color: var(--border); }
+
+    /* 編號印在卡格左下角（卡面自己的四向數值在中下方，不會互相疊到） */
+    .tt-slot-no {
+      position: absolute; left: 3px; bottom: 3px; z-index: 2;
+      padding: 0 4px; border-radius: 3px;
+      font-size: 10px; font-weight: 600; line-height: 15px;
+      color: rgba(255,255,255,0.9); background: rgba(0,0,0,0.5);
+      text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+      pointer-events: none;
+    }
+    .tt-slot-no.off { color: var(--gold-light); }   /* 編號外（FF 歷代主角卡） */
+
+    /* 卡面圖抓不到時的替身 */
+    .tt-ph {
+      width: 100%; height: 100%; display: grid; place-items: center;
+      background: var(--raise); color: var(--text-muted); font-size: clamp(14px, 2vw, 26px);
+    }
+    /* ✓ 章＝切換取得狀態的按鈕，用全站統一的 .ct-check（common.css）：卡格掛 .ct-card
+       就吃到同一份樣式（右上角、hover 浮現、已取得填強調色）。**不要在這裡另刻**，
+       否則「全站相同格式」就會又走鐘。本頁只補一條：選中的那格也讓 ✓ 浮出。 */
+    .tt-slot.sel .ct-check { opacity: 1; }
+
+    .tt-foot {
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+      margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border);
+    }
+    .tt-foot-btn {
+      font-family: inherit; font-size: 12px; padding: 5px 11px; cursor: pointer;
+      background: transparent; border: 1px solid var(--border); border-radius: var(--radius-sm);
+      color: var(--text-muted); transition: var(--transition);
+    }
+    .tt-foot-btn:hover { color: var(--text-primary); border-color: rgba(255,255,255,0.2); }
+    .tt-total { margin-left: auto; font-size: 14px; color: var(--text-secondary); }
+    .tt-total b { font-size: 17px; font-weight: 700; color: var(--gold-light); }
+    .tt-total i { font-style: normal; font-size: 12px; color: var(--text-muted); margin-left: 6px; }
+    .tt-album-empty { grid-column: 1 / -1; text-align: center; padding: 48px 10px; color: var(--text-muted); font-size: 14px; }
+
+    /* ── 右：選中卡片的詳情 ── */
+    .tt-detail {
+      /* top 58px＝nav.js 頂列 46px＋留白，與 aether-currents／treasure-maps 一致（見知識庫 §2.6）*/
+      position: sticky; top: 58px;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 14px;
+    }
+    .tt-detail-head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .tt-no { font-size: 12px; color: var(--text-muted); letter-spacing: 0.04em; }
+    .tt-no.off { color: var(--gold); }
+    /* 「手帳第 N 頁」＝進遊戲要翻到第幾頁。編號 ≠ 位置（15 張主角卡被排到最後一頁，
+       其後每張的位置都比編號小 13），所以這個對照很常用得到。 */
+    .tt-page-of {
+      margin-left: 7px; padding: 1px 7px; border-radius: 99px;
+      font-size: 11px; color: var(--gold); background: var(--gold-dim);
+      border: 1px solid color-mix(in srgb, var(--gold) 25%, transparent);
+    }
+    .tt-own-btn {
+      margin-left: auto; font-family: inherit; font-size: 12px; padding: 5px 12px;
+      border-radius: 99px; cursor: pointer; transition: var(--transition);
+      background: transparent; border: 1px solid var(--border); color: var(--text-secondary);
+    }
+    .tt-own-btn:hover { border-color: rgba(255,255,255,0.2); color: var(--text-primary); }
+    .tt-own-btn.own {
+      background: color-mix(in srgb, var(--accent) 14%, transparent);
+      border-color: color-mix(in srgb, var(--accent) 50%, transparent); color: var(--accent);
+    }
+    .tt-art {
+      position: relative; width: 100%; max-width: 250px; margin: 0 auto 10px;
+      aspect-ratio: 13 / 16; border-radius: 8px; overflow: hidden; background: var(--raise);
+    }
+    .tt-art img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .tt-art.miss img { filter: grayscale(1) brightness(0.92) contrast(0.95); }
+    .tt-art-ribbon {
+      position: absolute; left: 0; right: 0; bottom: 0; padding: 3px 0; text-align: center;
+      font-size: 11px; background: rgba(10,12,16,0.75); color: rgba(255,255,255,0.75);
+    }
+    .tt-dname { font-size: 17px; font-weight: 700; color: var(--text-primary); text-align: center; line-height: 1.3; }
+    .tt-den { margin-top: 1px; font-size: 11px; color: var(--text-muted); text-align: center; }
+    .tt-detail .col-tags { justify-content: center; margin: 8px 0 4px; }
+    .tt-numbers.big { grid-template-columns: 28px 28px 28px; grid-template-rows: 28px 28px 28px; margin: 4px auto 10px; }
+    .tt-numbers.big .tt-num { font-size: 14px; }
+    .tt-numbers.big .tt-num.n-center { font-size: 11px; }
+    .tt-srcs { border-top: 1px solid var(--border); padding-top: 10px; }
+    .tt-srcs-title { font-size: 11px; font-weight: 700; letter-spacing: 0.03em; color: var(--gold); margin-bottom: 7px; }
+    .tt-src-group { margin-bottom: 9px; }
+    .tt-src-group:last-child { margin-bottom: 0; }
+    .tt-src-group .detail-line { font-size: 12.5px; line-height: 1.5; margin-top: 3px; }
+    .tt-src-n { font-size: 11px; color: var(--text-muted); margin-left: 6px; }
+    .tt-detail-hint { padding: 40px 6px; text-align: center; font-size: 13px; color: var(--text-muted); line-height: 1.7; }
+
+    /* 來源標籤配色：common.css 只定義了通用類別，這頁的幻卡專屬來源在此補齊 */
+    .tt-srcs .src-tag.type-NPC對戰 { background: rgba(248,113,113,0.1); color: var(--red); border-color: rgba(248,113,113,0.25); }
+    .tt-srcs .src-tag.type-副本,
+    .tt-srcs .src-tag.type-多人副本,
+    .tt-srcs .src-tag.type-討伐戰 { background: rgba(79,195,247,0.1); color: var(--blue); border-color: rgba(79,195,247,0.25); }
+    .tt-srcs .src-tag.type-藏寶圖,
+    .tt-srcs .src-tag[class*="商店"] { background: rgba(200,169,110,0.12); color: var(--gold); border-color: rgba(200,169,110,0.28); }
 
     /* NPC 位置地圖按鈕（點卡片其他區域＝勾已取得，點 📍＝開地圖） */
     .tt-loc {
@@ -63,8 +236,21 @@
     }
     .tt-loc:hover { transform: scale(1.25); }
 
-    @media (max-width: 600px) { .col-grid { grid-template-columns: 1fr 1fr; } }
-    @media (max-width: 380px) { .col-grid { grid-template-columns: 1fr; } }
+    /* 窄螢幕：詳情移到手帳下方（點卡片時由 JS 捲進畫面），卡格仍保持 5 欄不改版面 */
+    @media (max-width: 900px) {
+      .tt-album { grid-template-columns: minmax(0, 1fr); }
+      .tt-detail { position: static; }
+      .tt-art { max-width: 176px; }
+    }
+    @media (max-width: 600px) {
+      .tt-book { padding: 10px 10px 8px; }
+      .tt-tabs { margin: -10px -10px 10px; padding: 8px 10px; gap: 3px; }
+      .tt-tab, .tt-nav { height: 28px; font-size: 12px; padding: 0 7px; }
+      .tt-tab { min-width: 28px; }
+      .tt-tabs-info { width: 100%; margin-left: 0; }
+      .tt-slots { gap: 5px; }
+      .tt-slot-no { font-size: 9px; line-height: 13px; }
+    }
   </style>
   <script src="../../assets/js/patch-gate.js"></script>
   <script src="../../assets/js/collection-tracker.js"></script>
@@ -78,12 +264,26 @@
   <!-- Header -->
   <div class="tool-header">
     <h1 class="tool-title">🃏 幻卡追蹤</h1>
-    <p class="tool-subtitle">點擊卡片標記已取得，進度自動儲存於瀏覽器</p>
+    <p class="tool-subtitle">一頁 30 張的幻卡手帳（灰階＝還沒取得），點卡片看詳情、點右上 ✓ 標記已取得，進度自動儲存於瀏覽器</p>
     <div class="header-divider"></div>
   </div>
 
-  <!-- 控制面（進度／工具列／篩選／格線）由 collection-tracker.js 渲染 -->
+  <!-- 控制面（進度／工具列／篩選／分頁狀態）由 collection-tracker.js 渲染。
+       這頁只有手帳一種呈現，所以引擎的卡片格線與分頁列都用 CSS 收起（見 style 內註解）。 -->
   <div id="ct-root"></div>
+
+  <!-- 手帳檢視：左頁籤＋30 格卡面，右詳情（內容由本頁下方的 TTAlbum 渲染） -->
+  <div class="tt-album" id="ttAlbum">
+    <div class="tt-book">
+      <div class="tt-tabs" id="ttTabs"></div>
+      <div class="tt-slots" id="ttSlots" tabindex="0" role="listbox" aria-label="幻卡手帳卡片格"></div>
+      <div class="tt-foot">
+        <button type="button" class="tt-foot-btn" id="ttFilterJump" title="跳到上方篩選區">⛛ 篩選</button>
+        <span class="tt-total" id="ttTotal"></span>
+      </div>
+    </div>
+    <aside class="tt-detail" id="ttDetail" aria-live="polite"></aside>
+  </div>
 
 </div>
 
@@ -100,6 +300,340 @@
 </footer>
 
 <script>
+/* ── 兩種檢視共用的小格式化 ───────────────────────────────────────── */
+var TTFmt = (function () {
+  var esc = CollectionTracker.esc;
+  return {
+    // 數值 10 在遊戲裡顯示成 A
+    num: function (n) { return n === 10 ? 'A' : (n == null ? '?' : n); },
+    // 四向數值十字
+    numbers: function (num, extraClass) {
+      num = num || {};
+      var self = this;
+      function cell(dir, v) {
+        return '<div class="tt-num n-' + dir + (v === 10 ? ' n-A' : '') + '">' + esc(self.num(v)) + '</div>';
+      }
+      return '<div class="tt-numbers' + (extraClass ? ' ' + extraClass : '') + '">' +
+        cell('top', num.top) + cell('left', num.left) +
+        '<div class="tt-num n-center">🃏</div>' +
+        cell('right', num.right) + cell('bottom', num.bottom) +
+      '</div>';
+    },
+    // NPC 對戰的 📍 開地圖鈕（點它不切換取得狀態）
+    locBtn: function (s) {
+      var loc = s && s.location;
+      if (!loc || loc.mapId == null) return '';
+      return '<button class="tt-loc" title="開地圖看 NPC 位置"' +
+        ' data-mapid="' + esc(loc.mapId) + '" data-x="' + esc(loc.x) + '" data-y="' + esc(loc.y) + '"' +
+        ' data-npc="' + esc(s.npcName) + '" data-mapname="' + esc(loc.mapName) + '">📍</button>';
+    },
+    // 一行來源說明。回空字串＝上游只給 id 沒給名稱（副本／藏寶圖），由呼叫端改標筆數
+    srcLine: function (s) {
+      if (s.type === 'NPC對戰' && s.npcName) {
+        var line = esc(s.npcName);
+        if (s.location && s.location.mapName) {
+          line += ' @ ' + esc(s.location.mapName) +
+            ' (' + esc(s.location.x) + ', ' + esc(s.location.y) + ')' + this.locBtn(s);
+        }
+        if (s.dropType) line += ' [' + esc(s.dropType) + ']';
+        return line;
+      }
+      if (s.detail) return esc(s.detail);
+      if (s.questId) return '任務 ID ' + esc(s.questId);
+      return '';
+    },
+    openLoc: function (btn, cardName) {
+      if (!window.ttOpenMap) return;
+      var x = Number(btn.dataset.x), y = Number(btn.dataset.y);
+      window.ttOpenMap({
+        mapId: Number(btn.dataset.mapid), x: x, y: y,
+        title: '🃏 ' + cardName,
+        sub: 'NPC 對戰：' + btn.dataset.npc + ' · ' + btn.dataset.mapname,
+        flagText: '/coord ' + x.toFixed(1) + ' ' + y.toFixed(1) + ' ' + btn.dataset.mapname
+      });
+    }
+  };
+})();
+
+/* ── 幻卡手帳 ─────────────────────────────────────────────────────
+   版面刻意對齊遊戲內的幻卡手帳：一頁 5×6＝30 張、頁籤一次列 5 頁（«/» 換頁組）、
+   右側是選中卡片的詳情、底部「總計 n/m」；未取得顯示灰階卡面（不是遊戲的「？」牌背）。
+   ※ 篩選／排序／分頁／進度全部仍由引擎掌管：本區塊只負責呈現——
+     引擎 pageSize 設成這裡的 PER_PAGE，每次 renderGrid() 後由 onRender 交出
+     (list, pageSlice)，pageSlice 就是這一頁的 30 張。所以頁碼也跟著上網址 ?p=。 */
+var TTAlbum = (function () {
+  var PER_PAGE = 30, COLS = 5;
+  var IMG_BASE = '../../assets/triple-triad/';
+  var esc = CollectionTracker.esc;
+
+  var tracker = null;         // 引擎實例（由 onRender 帶進來）
+  var slice = [];             // 這一頁的卡片
+  var listLen = 0, ownedInList = 0, pages = 1;
+  var selId = null;
+  var gamePageMap = null;     // id → 遊戲手帳頁碼（LIST 長度變了才重算）
+
+  function $(id) { return document.getElementById(id); }
+  function byId(id) {
+    for (var i = 0; i < slice.length; i++) if (slice[i].id === id) return slice[i];
+    return null;
+  }
+  function idxOf(id) {
+    for (var i = 0; i < slice.length; i++) if (slice[i].id === id) return i;
+    return -1;
+  }
+
+  /* 卡片顯示的編號。**遊戲的編號＝Order，不是資料的 row id**：
+     420 張一般卡是 1–420；15 張 FF 歷代主角卡（uiPriority=5）在遊戲裡不在編號序列內，
+     這裡照使用者指定標成「編號外 1–15」。row id 仍是進度存檔的鍵，不對使用者顯示。 */
+  function cardNo(c) {
+    var off = (c.uiPriority || 0) !== 0;
+    var n = c.order || c.id;
+    return { off: off, n: n, label: (off ? '編號外 ' : '編號 ') + n, short: (off ? '外' : '') + n };
+  }
+
+  /* ── 渲染 ── */
+  // 頁碼列：15 頁全列出來，一鍵直達（原本 «/» 一次跳 5 頁很難用）。
+  // 頁數多到排不下才退回「首末＋當前±3＋…」的視窗式。
+  function pageList(page) {
+    if (pages <= 20) {
+      var all = [];
+      for (var i = 0; i < pages; i++) all.push(i);
+      return all;
+    }
+    var shown = [], prev = -1;
+    for (var j = 0; j < pages; j++) {
+      if (j === 0 || j === pages - 1 || Math.abs(j - page) <= 3) {
+        if (prev >= 0 && j - prev > 1) shown.push(null);
+        shown.push(j); prev = j;
+      }
+    }
+    return shown;
+  }
+
+  function renderTabs() {
+    var page = tracker ? tracker.page : 0;
+    var h = '<button type="button" class="tt-nav" data-page="' + (page - 1) + '"' +
+      (page === 0 ? ' disabled' : '') + ' title="上一頁（也可按 PageUp）">‹ 上一頁</button>';
+    pageList(page).forEach(function (n) {
+      if (n === null) { h += '<span class="tt-tab-gap">…</span>'; return; }
+      h += '<button type="button" class="tt-tab' + (n === page ? ' active' : '') + '" data-page="' + n + '"' +
+        (n === page ? ' aria-current="page"' : '') + ' title="第 ' + (n + 1) + ' 頁">' + (n + 1) + '</button>';
+    });
+    h += '<button type="button" class="tt-nav" data-page="' + (page + 1) + '"' +
+      (page >= pages - 1 ? ' disabled' : '') + ' title="下一頁（也可按 PageDown）">下一頁 ›</button>' +
+      '<span class="tt-tabs-info">第 ' + (page + 1) + ' / ' + pages + ' 頁</span>';
+    $('ttTabs').innerHTML = h;
+  }
+
+  function renderSlots() {
+    var host = $('ttSlots');
+    if (!slice.length) {
+      host.innerHTML = '<div class="tt-album-empty">找不到符合條件的幻卡</div>';
+      return;
+    }
+    var h = '';
+    slice.forEach(function (c) {
+      var own = tracker.isOwned(c);
+      var no = cardNo(c);
+      // 未取得也照樣顯示卡面，只是灰階（使用者要看得到還沒收到的卡長什麼樣）
+      var face = '<img src="' + IMG_BASE + esc(c.id) + '.webp" alt="" loading="lazy" decoding="async"' +
+        ' onerror="this.onerror=null;this.outerHTML=\'<div class=&quot;tt-ph&quot;>🃏</div>\'">';
+      h += '<div class="tt-slot ct-card' + (own ? ' own owned' : ' miss') + (c.id === selId ? ' sel' : '') + '"' +
+        ' role="option" aria-selected="' + (c.id === selId ? 'true' : 'false') +
+        '" data-id="' + esc(c.id) + '" title="' + esc(no.label) + '　' + esc(c.name) + '">' +
+        face +
+        // 編號印在左下角（卡面自己的四向數值在中下，不會疊到），找特定編號不必逐張點開
+        '<span class="tt-slot-no' + (no.off ? ' off' : '') + '">' + esc(no.short) + '</span>' +
+        '<button type="button" class="ct-check" tabindex="-1" data-toggle="' + esc(c.id) + '"' +
+          ' title="' + (own ? '取消已取得' : '標記為已取得') + '"' +
+          ' aria-label="' + esc(no.label) + ' ' + esc(c.name) + (own ? '：已取得' : '：未取得') + '">✓</button>' +
+      '</div>';
+    });
+    // 最後一頁不足 30 張也補空格，版面才不會忽長忽短（同遊戲）
+    for (var i = slice.length; i < PER_PAGE; i++) h += '<div class="tt-slot empty" aria-hidden="true"></div>';
+    host.innerHTML = h;
+  }
+
+  function renderFoot() {
+    var all = tracker ? tracker.LIST.length : 0;
+    $('ttTotal').innerHTML = '總計 <b>' + ownedInList + '</b> / <b>' + listLen + '</b>' +
+      (listLen !== all ? '<i>（篩選中；全部 ' + all + ' 張）</i>' : '');
+  }
+
+  // 來源依類別分組。上游只給 id 沒給名稱的（副本 194 筆／藏寶圖 82 筆）只標型別＋筆數，
+  // 不憑印象補副本名——要補請回上游 build-triple-triad-all.mjs 解 instanceId。
+  function srcGroups(c) {
+    var srcs = c.sources || [];
+    if (!srcs.length) return '<div class="detail-line">待補充</div>';
+    var order = [], byType = {};
+    srcs.forEach(function (s) {
+      var t = s.type || '其他';
+      if (!byType[t]) { byType[t] = []; order.push(t); }
+      byType[t].push(s);
+    });
+    return order.map(function (t) {
+      var items = byType[t];
+      var lines = items.map(function (s) { return TTFmt.srcLine(s); }).filter(Boolean);
+      return '<div class="tt-src-group">' +
+        '<span class="src-tag type-' + esc(t) + '">' + esc(t) + '</span>' +
+        (lines.length < items.length ? '<span class="tt-src-n">×' + items.length + '</span>' : '') +
+        lines.map(function (l) { return '<div class="detail-line">' + l + '</div>'; }).join('') +
+      '</div>';
+    }).join('');
+  }
+
+  // 這張卡在「遊戲手帳」的第幾頁。算的是未篩選的完整清單（＝遊戲順序），所以站上
+  // 篩選過後這個數字仍然是「進遊戲要翻到第幾頁」。編號 ≠ 位置：15 張主角卡被排到最後，
+  // 其後每張卡的位置都比編號小 13，所以這行資訊實際上很常用得到。
+  function gamePage(c) {
+    if (!tracker) return null;
+    if (!gamePageMap || gamePageMap.size !== tracker.LIST.length) {
+      gamePageMap = new Map();
+      tracker.LIST.forEach(function (e, i) { gamePageMap.set(e.id, Math.floor(i / PER_PAGE) + 1); });
+    }
+    return gamePageMap.get(c.id) || null;
+  }
+
+  function renderDetail() {
+    var host = $('ttDetail');
+    var c = byId(selId);
+    if (!c) {
+      host.innerHTML = '<div class="tt-detail-hint">點左邊的卡片看詳情<br>方向鍵移動、空白鍵標記已取得</div>';
+      return;
+    }
+    var own = tracker.isOwned(c);
+    var page = gamePage(c);
+    host.innerHTML =
+      '<div class="tt-detail-head">' +
+        '<span class="tt-no' + (cardNo(c).off ? ' off' : '') + '">' + esc(cardNo(c).label) +
+          (page ? '<span class="tt-page-of">手帳第 ' + page + ' 頁</span>' : '') + '</span>' +
+        '<button type="button" class="tt-own-btn' + (own ? ' own' : '') + '" id="ttOwnBtn">' +
+          (own ? '✓ 已取得' : '標記已取得') +
+        '</button>' +
+      '</div>' +
+      '<div class="tt-art' + (own ? '' : ' miss') + '">' +
+        '<img src="' + IMG_BASE + esc(c.id) + '.webp" alt="' + esc(c.name) + ' 卡面" decoding="async"' +
+        ' onerror="this.onerror=null;this.outerHTML=\'<div class=&quot;tt-ph&quot;>🃏</div>\'">' +
+        (own ? '' : '<div class="tt-art-ribbon">未取得</div>') +
+      '</div>' +
+      '<div class="tt-dname">' + esc(c.name) + '</div>' +
+      (c.nameEn ? '<div class="tt-den">' + esc(c.nameEn) + '</div>' : '') +
+      '<div class="col-tags">' +
+        '<span class="tag star-' + esc(c.stars) + '">★' + esc(c.stars) + '</span>' +
+        (c.type ? '<span class="tag type-tag">' + esc(c.type) + '</span>' : '') +
+        (c.patch ? '<span class="tag patch-tag">ver ' + esc(c.patch) + '</span>' : '') +
+      '</div>' +
+      TTFmt.numbers(c.numbers, 'big') +
+      '<div class="tt-srcs"><div class="tt-srcs-title">取得方式</div>' + srcGroups(c) + '</div>';
+  }
+
+  function render() { renderTabs(); renderSlots(); renderFoot(); renderDetail(); }
+
+  /* ── 互動 ── */
+  function select(id, byUser) {
+    if (id === selId) return;
+    selId = id;
+    renderSlots(); renderDetail();
+    // 窄螢幕的詳情在手帳下方，點卡片時把它帶進畫面
+    if (byUser && window.matchMedia && window.matchMedia('(max-width: 900px)').matches) {
+      var d = $('ttDetail');
+      if (d && d.scrollIntoView) d.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }
+
+  // 換頁一律經引擎（頁碼是引擎狀態，也才會同步到網址 ?p=）
+  function goPage(p, pick) {
+    if (!tracker) return;
+    p = Math.max(0, Math.min(pages - 1, p));
+    if (p === tracker.page) return;
+    tracker.page = p;
+    selId = null;                    // 交給 sync 自動選新頁第一張
+    tracker.pushURL();
+    tracker.renderGrid();            // → onRender → sync → render
+    if (pick === 'last' && slice.length) select(slice[slice.length - 1].id, false);
+  }
+
+  // 走到這一頁的邊界就翻頁（同遊戲手感）
+  function move(next, ev) {
+    ev.preventDefault();
+    if (next < 0) { goPage(tracker.page - 1, 'last'); return; }
+    if (next >= slice.length) { goPage(tracker.page + 1, 'first'); return; }
+    select(slice[next].id, true);
+  }
+
+  function onKey(ev) {
+    if (!tracker || !slice.length) return;
+    var i = idxOf(selId); if (i < 0) i = 0;
+    switch (ev.key) {
+      case 'ArrowRight': move(i + 1, ev); break;
+      case 'ArrowLeft':  move(i - 1, ev); break;
+      case 'ArrowDown':  move(i + COLS, ev); break;
+      case 'ArrowUp':    move(i - COLS, ev); break;
+      case 'Home':       ev.preventDefault(); select(slice[0].id, true); break;
+      case 'End':        ev.preventDefault(); select(slice[slice.length - 1].id, true); break;
+      case 'PageDown':   ev.preventDefault(); goPage(tracker.page + 1, 'first'); break;
+      case 'PageUp':     ev.preventDefault(); goPage(tracker.page - 1, 'first'); break;
+      case ' ':
+      case 'Enter': {
+        ev.preventDefault();
+        var c = byId(selId);
+        if (c) tracker.toggle(c);   // → renderGrid → sync → render
+        break;
+      }
+    }
+  }
+
+  function wire() {
+    $('ttSlots').addEventListener('click', function (ev) {
+      var chk = ev.target.closest('.ct-check');
+      if (chk) {
+        var c = byId(Number(chk.dataset.toggle));
+        if (c) { select(c.id, false); tracker.toggle(c); }
+        // ✓ 鈕被重畫掉會讓焦點掉回 body，鍵盤操作接不下去 → 焦點還給卡格
+        $('ttSlots').focus({ preventScroll: true });
+        return;
+      }
+      var slot = ev.target.closest('.tt-slot');
+      if (!slot || slot.classList.contains('empty')) return;
+      select(Number(slot.dataset.id), true);
+    });
+    $('ttSlots').addEventListener('keydown', onKey);
+    $('ttTabs').addEventListener('click', function (ev) {
+      var b = ev.target.closest('.tt-tab, .tt-nav');
+      if (b && !b.disabled) goPage(Number(b.dataset.page), 'first');
+    });
+    $('ttDetail').addEventListener('click', function (ev) {
+      var loc = ev.target.closest('.tt-loc');
+      var c = byId(selId);
+      if (!c) return;
+      if (loc) { TTFmt.openLoc(loc, c.name); return; }
+      if (ev.target.closest('#ttOwnBtn')) tracker.toggle(c);
+    });
+    $('ttFilterJump').addEventListener('click', function () {
+      var f = document.getElementById('ct-filters');
+      if (f && f.scrollIntoView) f.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  }
+
+  return {
+    PER_PAGE: PER_PAGE,
+    // 引擎每次重畫格線後呼叫
+    sync: function (list, pageSlice, tk) {
+      tracker = tk;
+      slice = pageSlice || [];
+      listLen = list.length;
+      ownedInList = list.filter(function (c) { return tk.isOwned(c); }).length;
+      pages = Math.max(1, Math.ceil(list.length / PER_PAGE));
+      // 選中的卡片不在這一頁（換頁／換篩選）→ 自動選這頁第一張，詳情永遠有內容（同遊戲）
+      if (idxOf(selId) < 0) selId = slice.length ? slice[0].id : null;
+      render();
+    },
+    boot: wire
+  };
+})();
+TTAlbum.boot();
+</script>
+<script>
 CollectionTracker.init({
   dataUrl: '../../data/triple-triad.json',
   metaUrl: '../../data/_meta.json',
@@ -111,8 +645,25 @@ CollectionTracker.init({
   unit: '張',
   noun: '幻卡',
   searchPlaceholder: '搜尋幻卡名稱、NPC、地點…',
-  include: function (c, gp) { return c.name && /[一-鿿]/.test(c.name) && PatchGate.released(c.patch, gp); },
-  prepare: function (list) { return list.slice().sort(function (a, b) { return (a.id || 0) - (b.id || 0); }); },
+  // 一頁 30 張＝手帳的一頁（頁碼同步到網址 ?p=，可分享）
+  pageSize: TTAlbum.PER_PAGE,
+  onRender: function (list, pageSlice, tracker) { TTAlbum.sync(list, pageSlice, tracker); },
+  // 台服有沒有這張卡＝data 的 name 有沒有值（name 只來自台服 items.json 的卡片道具名，
+  // 見 scripts/patch-triple-triad-new-cards.mjs）。**不要再加「名稱要有中文字」那條**：
+  // 台服官方就有一批拉丁字母卡名（9S／2P／2B／N-7000／Ark Angel MR–EV／Prishe／Shadow Lord），
+  // 加了會把這 11 張正常開放的卡誤判成未開放而整批消失。
+  include: function (c, gp) { return !!c.name && PatchGate.released(c.patch, gp); },
+  // 預設排序＝遊戲手帳的排列順序，**不是編號**：先 uiPriority 再 order。
+  // 15 張 FF 歷代主角卡（編號 68–80／252／405）在遊戲裡 uiPriority=5，整批被排到
+  // 最後一頁而不是自己的編號位置；照 id 排的話每一頁都會跟遊戲對不起來。
+  // 兩欄由 scripts/patch-triple-triad-new-cards.mjs 從 TripleTriadCardResident 帶入。
+  prepare: function (list) {
+    return list.slice().sort(function (a, b) {
+      return ((a.uiPriority || 0) - (b.uiPriority || 0))
+        || ((a.order || a.id || 0) - (b.order || b.id || 0))
+        || ((a.id || 0) - (b.id || 0));
+    });
+  },
   searchText: function (c) {
     var parts = [c.name, c.nameEn];
     (c.sources || []).forEach(function (s) {
@@ -152,78 +703,10 @@ CollectionTracker.init({
     },
     { kind: 'patch' }
   ],
-  // 點 📍：開 NPC 位置地圖，不切換取得狀態
-  onCardClick: function (c, ev) {
-    var loc = ev.target.closest('.tt-loc');
-    if (!loc) return false;
-    ev.stopPropagation();
-    var x = Number(loc.dataset.x), y = Number(loc.dataset.y);
-    if (window.ttOpenMap) window.ttOpenMap({
-      mapId: Number(loc.dataset.mapid), x: x, y: y,
-      title: '🃏 ' + c.name,
-      sub: 'NPC 對戰：' + loc.dataset.npc + ' · ' + loc.dataset.mapname,
-      flagText: '/coord ' + x.toFixed(1) + ' ' + y.toFixed(1) + ' ' + loc.dataset.mapname
-    });
-    return true;
-  },
-  card: function (c) {
-    var esc = CollectionTracker.esc;
-    var ICON_BASE = '../../assets/triple-triad/';
-    var srcs = c.sources || [];
-    var sourceTags = srcs.length
-      ? Array.from(new Set(srcs.map(function (s) { return s.type; }))).slice(0, 2).map(function (t) { return '<span class="tag src-tag">' + esc(t) + '</span>'; }).join('')
-      : '<span class="tag placeholder">待補充</span>';
-    var typeTag = c.type ? '<span class="tag type-tag">' + esc(c.type) + '</span>' : '';
-    var iconHtml = '<img class="col-icon" src="' + ICON_BASE + esc(c.id) + '.webp" alt="" loading="lazy" onerror="this.onerror=null;this.outerHTML=\'<div class=&quot;col-icon placeholder&quot;>🃏</div>\'">';
-    var num = c.numbers || {};
-    var fmtNum = function (n) { return n === 10 ? 'A' : n; };
-    var numbersHtml =
-      '<div class="tt-numbers">' +
-        '<div class="tt-num n-top' + (num.top === 10 ? ' n-A' : '') + '">' + fmtNum(num.top) + '</div>' +
-        '<div class="tt-num n-left' + (num.left === 10 ? ' n-A' : '') + '">' + fmtNum(num.left) + '</div>' +
-        '<div class="tt-num n-center">🃏</div>' +
-        '<div class="tt-num n-right' + (num.right === 10 ? ' n-A' : '') + '">' + fmtNum(num.right) + '</div>' +
-        '<div class="tt-num n-bottom' + (num.bottom === 10 ? ' n-A' : '') + '">' + fmtNum(num.bottom) + '</div>' +
-      '</div>';
-    var detailLines = [];
-    if (srcs.length) {
-      srcs.slice(0, 6).forEach(function (s) {
-        var line = esc(s.type);
-        if (s.type === 'NPC對戰' && s.npcName) {
-          line += '：' + esc(s.npcName);
-          if (s.location && s.location.mapName) {
-            line += ' @ ' + esc(s.location.mapName) + ' (' + esc(s.location.x) + ', ' + esc(s.location.y) + ')';
-            if (s.location.mapId != null) {
-              line += ' <button class="tt-loc" title="開地圖看 NPC 位置"' +
-                ' data-mapid="' + esc(s.location.mapId) + '" data-x="' + esc(s.location.x) + '" data-y="' + esc(s.location.y) + '"' +
-                ' data-npc="' + esc(s.npcName) + '" data-mapname="' + esc(s.location.mapName) + '">📍</button>';
-            }
-          }
-          if (s.dropType) line += ' [' + esc(s.dropType) + ']';
-        } else if (s.detail) {
-          line += '：' + esc(s.detail);
-        } else if (s.questId) {
-          line += '：任務 ID ' + esc(s.questId);
-        }
-        detailLines.push('<div class="detail-line">' + line + '</div>');
-      });
-      if (srcs.length > 6) detailLines.push('<div class="detail-line">…等共 ' + srcs.length + ' 個來源</div>');
-    } else {
-      detailLines.push('<div class="detail-line">取得方式：待補充</div>');
-    }
-    return '' +
-      '<div class="col-head">' + iconHtml +
-        '<div style="flex:1; min-width:0;">' +
-          '<div class="col-name">' + esc(c.name) + '</div>' +
-          '<div class="tt-meta">No.' + esc(c.id) + (c.patch ? ' · ver ' + esc(c.patch) : '') + '</div>' +
-        '</div>' +
-      '</div>' +
-      numbersHtml +
-      '<div class="col-tags">' +
-        '<span class="tag star-' + esc(c.stars) + '">★' + esc(c.stars) + '</span>' + typeTag + sourceTags +
-      '</div>' +
-      '<div class="col-detail">' + detailLines.join('') + '</div>';
-  }
+  // 卡片由手帳畫（見上方 TTAlbum），引擎的格線不顯示，所以這裡不產生內容。
+  // 引擎仍會為每張卡建一個空的 .col-card——那是它綁「點擊切換已取得」的地方，
+  // 手帳自己有 ✓ 章與詳情鈕，不靠它。
+  card: function () { return ''; }
 });
 </script>
 <script type="module">

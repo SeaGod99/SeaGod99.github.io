@@ -57,6 +57,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 時尚品鑑週更（每週二／週五各一次） | `node scripts/build-fashion-report.mjs`（`--dry-run` 只印／`--offline` 用快取）|
 | 時尚品鑑跨週不變資料（改版時才跑） | `node scripts/build-dyes.mjs`／`build-fashion-fillers.mjs`／`build-fashion-themes.mjs` |
 | 重建無人島資料層 | `node scripts/build-island.mjs`（`--offline` 用快取／`--refresh` 強制重抓） |
+| 幻卡補新卡（台服開新卡時） | `node scripts/patch-triple-triad-new-cards.mjs`（dry-run／`--apply` 寫入）→ `node scripts/download-triple-triad-images.mjs` |
 | 幻化配裝圖鑑重建 | `py tools\glamour\scripts\update_all.py local`（離線）／不帶 `local`＝完整抓取 |
 | 看頁面 | 直接開檔或 `/browse`；無 dev server |
 
@@ -167,4 +168,5 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 - **改了幻化配裝圖鑑** → 先讀 [tools/glamour/CLAUDE.md](tools/glamour/CLAUDE.md) → 改碼／改 `data/curated_outfits.json` → `py tools\glamour\scripts\update_all.py local` 重建＋健檢 → `/browse` 驗收。**重建任何一份前端 js 後都會連帶重跑 `build_item_sources.py`**，漏跑不會報錯、只會安靜地退回單一來源。
 - **時尚品鑑週更** → `node scripts/build-fashion-report.mjs` → `node scripts/validate-data.mjs` → 開頁驗收。**別再手工挑推薦裝**，推薦標準與換週狀態機是程式定的，規格見 [docs/fashion-report-spec.md](docs/fashion-report-spec.md)、操作見 [docs/fashion-report-update-sop.md](docs/fashion-report-update-sop.md)。腳本報「來源尚未換週」是**正常的換週真空期，什麼都不用做**。
 - **重建釣魚資料** → `node scripts/build-fishing.mjs` → **必接** `patch-fishing-multispot.mjs` 與 `patch-fish-legendary.mjs --apply`。後者漏跑不會報錯，只會安靜地把 30 隻魚皇（釣場之皇）降級成普通魚王——上游沒有這個旗標，名單是我們自己維護的（見知識庫 §4.8）。
+- **幻卡少了新卡** → `node scripts/patch-triple-triad-new-cards.mjs`（dry-run 看要補什麼）→ 加 `--apply` → `node scripts/download-triple-triad-images.mjs` 補卡面圖 → `node scripts/validate-data.mjs`。**張數不要相信 build 腳本裡的常數**（`build-triple-triad-all.mjs` 寫死 425，7.1 的 10 張新卡就這樣安靜漏掉）；真實張數＝`items.json` 裡 category「九宮幻卡」的道具數。7.1 以後的 sheet 只有 XIVAPI **v2** 有（v1 已停更）。
 - **升台服版本** → 改 `data/_meta.json` 的 `gamePatch` → `patch-backfill` 三支（`--apply`）→ `backfill-sources.mjs` → `validate-data.mjs` → commit。

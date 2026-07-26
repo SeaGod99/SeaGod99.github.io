@@ -479,11 +479,33 @@ ARR 2.x / HW 3.x / SB 4.x / ShB 5.x / EW 6.x / DT 7.x
   "type": null,
   "numbers": { "top": 4, "right": 2, "bottom": 5, "left": 2 },
   "sources": [{ "type": "商店", "detail": "幻卡商人購入" }],
-  "patch": "2.51"
+  "patch": "2.51",
+  "icon": 27662,
+  "order": 1,
+  "uiPriority": 0
 }
 ```
 
-`type`：獸人/原初/帝國/拂曉/null。`numbers` 為四邊數值。
+`type`：獸人/蠻神/帝國/拂曉/null。`numbers` 為四邊數值（10 在遊戲裡顯示為 A）。
+`id` ＝遊戲卡片一覽的**編號**，且**第 N 個「九宮幻卡」道具（依 itemId 排序）就是編號 N**——
+台服張數與繁中名都以此推得（見 `scripts/patch-triple-triad-new-cards.mjs`）。`patch` 取該卡片道具的 patch。
+
+`order`／`uiPriority`（取自 `TripleTriadCardResident`）＝**遊戲手帳的排列順序，先 uiPriority 再 order**。
+前端一律照 `(uiPriority, order)` 排，**不要改回照 `id` 排**，否則每一頁的內容都跟遊戲對不起來。
+
+**畫面上的「編號」＝`order`，不是 `id`**（2026-07-26 定案）：420 張 `uiPriority=0` 的卡編號 1–420；
+15 張 `uiPriority=5` 的 FF 歷代主角卡（row id 68–80、252、405）在遊戲裡不在編號序列內，站上標成
+**「編號外 1–15」**（卡格左下角縮寫「外1–外15」）。`id`（row id）只當**進度存檔的鍵**與資料主鍵、
+不對使用者顯示——`keyOf` 仍是 `id`，所以改顯示編號**不會**動到既有進度。
+
+`sources[]` 依 `type` 帶不同欄位：
+
+| type | 欄位 |
+|------|------|
+| `NPC對戰` | `npcId`／`npcName`／`npcTitle`／`dropType`（固定・隨機）／`location`{`mapId`,`mapName`,`x`,`y`} |
+| `副本`／`多人副本`／`討伐戰` | 新資料：`contentId`（對 `dungeons.json` 的 id）＋`detail`（繁中副本名）；**舊資料只有 `instanceId`**，其中 2xxxx/3xxxx 段對不到 dungeons.json，屬已知缺口 |
+| `商店`（含 `MGP商店`／`雙色寶石商店`…） | `detail`；新資料另帶 `npcId`／`npcName`／`location` |
+| `任務`／`藏寶圖` | 舊資料只有 `questId`／`treasureId`，沒有名稱（已知缺口） |
 
 ### 2.8 blue-magic（青魔法）
 
