@@ -20,6 +20,13 @@
  *     filters: [ { id, label, options(list)->[{value,label}], match(e,value),
  *                  render?:'select', allLabel?:'全部' },   // render:'select' ＝選項多到標籤排不下時改下拉
  *                { kind:'patch', of?:e=>e.patch } ],
+ *
+ * ── 收藏切換：一律是卡片右上角的 ✓ 鈕（2026-07-26 全站統一）──
+ *   引擎會替每張卡片加上 `.ct-card` 與右上角的 `<button class="ct-check">`（樣式在
+ *   common.css）。**卡片本身不再切換擁有**——點整張卡太容易誤觸，卡片的點擊留給
+ *   各頁的 `onCardClick`（看詳情、開地圖…）。各頁若有自訂版型（青魔法術書、幻卡
+ *   手帳）請呼叫 `tracker.buildCheck(entry, owned, locked)` 取得同一顆鈕，不要自刻。
+ *   子項目模式（`subsOf`）的卡片不是收藏單位，引擎不會掛這顆鈕。
  *     sorts: [ 'name', 'patch-desc', 'patch-asc', {value,label,cmp} ],
  *     card(e) -> innerHTML,
  *     onError(err)  // 選用
@@ -340,6 +347,33 @@
     return arr;
   };
 
+  // 全站統一的「收藏」控制項：卡片右上角的 ✓ 鈕。各頁若有自訂版型（青魔法術書、
+  // 幻卡手帳）也呼叫這支，格式才會跟引擎畫的卡片一致。
+  CollectionTracker.prototype.buildCheck = function (e, owned, locked) {
+    var self = this;
+    var name = this.nameOf(e);
+    var chk = document.createElement('button');
+    chk.type = 'button';
+    chk.className = 'ct-check';
+    chk.textContent = '✓';
+    if (locked) {
+      // 恆為已擁有的項目（如預設表情）：顯示成已勾但不可點，不然使用者會以為點不動是壞了
+      chk.classList.add('locked');
+      chk.disabled = true;
+      chk.title = '此' + this.noun + '恆為已' + this.verb + '，無法取消';
+      chk.setAttribute('aria-label', name + '（恆為已' + this.verb + '）');
+      return chk;
+    }
+    chk.setAttribute('aria-pressed', owned ? 'true' : 'false');
+    chk.title = (owned ? '取消已' : '標記為已') + this.verb;
+    chk.setAttribute('aria-label', (owned ? '取消' : '標記') + '「' + name + '」已' + this.verb);
+    chk.addEventListener('click', function (ev) {
+      ev.stopPropagation();      // 不要連帶觸發卡片本身的點擊（看詳情）
+      self.toggle(e);
+    });
+    return chk;
+  };
+
   CollectionTracker.prototype.renderGrid = function () {
     var self = this;
     var list = this.sortList(this.filtered());
@@ -369,22 +403,17 @@
       var owned = self.isOwned(e);
       var locked = self.alwaysOwned(e);
       var card = document.createElement('div');
-      card.className = self.cardClass + (owned ? ' owned' : '') + (locked ? ' locked' : '');
+      card.className = self.cardClass + ' ct-card' + (owned ? ' owned' : '') + (locked ? ' locked' : '');
       card.innerHTML = self.cfg.card(e);
-      // 子項目模式：卡片本身不是可切換的按鈕（要打勾的是卡片裡的子項目），
-      // 由各頁在 onCardCreate 綁定子項目的點擊並呼叫 tracker.toggleKey()
-      if (!locked && !self.subsOf) {
-        card.tabIndex = 0;
-        card.setAttribute('role', 'button');
-        card.setAttribute('aria-pressed', owned ? 'true' : 'false');
-        card.addEventListener('click', function (ev) {
-          // 卡片內互動元素（如幻卡的 📍 開地圖）可攔截點擊：回傳 true 即不切換擁有
-          if (self.cfg.onCardClick && self.cfg.onCardClick(e, ev)) return;
-          self.toggle(e);
-        });
-        card.addEventListener('keydown', function (ev) {
-          if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); self.toggle(e); }
-        });
+      // 收藏切換一律走卡片右上角的 ✓ 鈕（2026-07-26 全站統一，樣式見 common.css 的 .ct-check）。
+      // 卡片本身不再切換擁有——點整張卡太容易誤觸，且各頁的卡片點擊要留給「看詳情」。
+      // 子項目模式的卡片不是收藏單位（要打勾的是卡片裡的子項目），所以不掛 ✓ 鈕，
+      // 由各頁在 onCardCreate 綁定子項目的點擊並呼叫 tracker.toggleKey()。
+      if (!self.subsOf) card.appendChild(self.buildCheck(e, owned, locked));
+      // 卡片點擊交給各頁自理（看詳情、開地圖…）；有掛才給 pointer 游標
+      if (self.cfg.onCardClick) {
+        card.classList.add('ct-clickable');
+        card.addEventListener('click', function (ev) { self.cfg.onCardClick(e, ev); });
       }
       // 卡片建立後鉤子：讓各頁掛額外互動（如寵物頁的 hover 提示框、ⓘ 釘選）
       if (self.cfg.onCardCreate) self.cfg.onCardCreate(e, card);

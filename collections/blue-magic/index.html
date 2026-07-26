@@ -3,13 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="FF14 青魔法術收藏 — 查詢習得來源、屬性/類型篩選、記錄習得進度">
+  <meta name="description" content="FF14 青魔法術收藏 — 遊戲內〈青魔法之書〉版型，查詢習得來源、屬性/類型篩選、記錄習得進度">
   <title>青魔法術收藏 | 水神的工具箱</title>
   <link rel="stylesheet" href="../../assets/css/common.css">
   <link rel="stylesheet" href="../../assets/css/tool-header.css">
   <style>
     /* 青魔頁專屬樣式；通用版面與 .col-* 卡片系統見 assets/css/common.css，
-       控制面由 assets/js/collection-tracker.js 渲染 */
+       控制面（進度／工具列／篩選）由 assets/js/collection-tracker.js 渲染。
+       本頁有兩種檢視：
+         法術書（預設）— 仿遊戲內〈青魔法之書〉：8 頁籤 × 4×4 格，右側詳情欄
+         卡片        — 原本的 .col-card 清單，一次看完機制與取得方式 */
     :root {
       --accent:   #4fc3f7;                 /* 藍 */
       --accent-2: #a78bfa;                 /* 進度條尾色：紫 */
@@ -64,7 +67,195 @@
     .col-detail .detail-line { margin-top: 2px; }
     .col-detail .detail-line b { color: var(--text-secondary); font-weight: 500; }
 
-    @media (max-width: 600px) { .col-grid { grid-template-columns: 1fr 1fr; } }
+    /* ── 篩選區壓縮 ──
+       這頁有 4 組篩選（習得方式／屬性／類型／階級），common.css 的預設是「標籤在上、
+       選項在下」各佔一整塊，直排下來會把法術書推到很下面。改成標籤與選項同一列、
+       各組橫向流排，4 組通常收得進 1～2 列。 */
+    #ct-filters { display: flex; flex-wrap: wrap; align-items: center; column-gap: 26px; row-gap: 8px; margin-bottom: 14px; }
+    .filter-section { display: flex; align-items: center; gap: 8px; margin-bottom: 0; }
+    .filter-label { margin-bottom: 0; white-space: nowrap; }
+    .filter-tag { padding: 4px 11px; font-size: 12px; }
+
+    /* ── 檢視切換（與採集紀錄／釣魚頁同版型）── */
+    .bm-viewbar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin: 0 0 14px; }
+    .view-toggle { display: flex; border: 1px solid var(--border); border-radius: 5px; overflow: hidden; }
+    .view-toggle button {
+      font-size: 13px; padding: 6px 13px; cursor: pointer; border: none; font-family: inherit;
+      background: var(--bg-surface); color: var(--text-secondary); transition: var(--transition);
+    }
+    .view-toggle button.active { background: color-mix(in srgb, var(--accent) 16%, transparent); color: var(--accent); }
+    .bm-viewhint { font-size: 12px; color: var(--text-muted); }
+
+    /* 法術書檢視時收起卡片格線與「排序」（此檢視固定依 No. 排列，排序無作用）。
+       #ct-grid 要用 class + !important——引擎每次 renderGrid 都會把它的 inline
+       display 洗回 ''（見 common.css 的 body.mx-mapmode 註解，同一個坑）。 */
+    body.bm-bookmode #ct-grid { display: none !important; }
+    body.bm-bookmode #ct-sort { display: none; }
+
+    /* ── 法術書檢視 ──────────────────────────────────────────────
+       仿遊戲內〈青魔法之書〉：每頁 16 格（4×4）、頁籤在上、技能總數在下。
+       格子位置固定依 No. 排列，跟遊戲裡看到的一模一樣，方便照著對。 */
+    .bm-book { display: flex; gap: 20px; align-items: flex-start; }
+    .bm-frame {
+      flex: 0 0 auto;
+      width: 520px;
+      max-width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px 12px 10px;
+    }
+
+    /* 頁籤：右上小圓點＝該頁完成度（綠＝全習得／金＝部分／灰＝尚無） */
+    .bm-tabs {
+      display: flex; gap: 4px; align-items: center; flex-wrap: wrap;
+      padding-bottom: 10px; margin-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .bm-tab {
+      position: relative;
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      font: 600 13px/1 inherit;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 50%;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .bm-tab:hover { color: var(--text-primary); background: var(--raise); }
+    .bm-tab.active {
+      background: color-mix(in srgb, var(--accent) 20%, transparent);
+      border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .bm-tab:focus-visible { outline: 2px solid color-mix(in srgb, var(--accent) 60%, transparent); outline-offset: 1px; }
+    .bm-tab-dot {
+      position: absolute; top: 3px; right: 3px;
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--text-muted); opacity: .3;
+    }
+    .bm-tab.partial .bm-tab-dot { background: var(--gold); opacity: 1; }
+    .bm-tab.done    .bm-tab-dot { background: var(--green); opacity: 1; }
+    .bm-tab.nomatch { opacity: .35; }
+
+    /* 格線：固定 4 欄，換頁只切換 .active */
+    .bm-page { display: none; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+    .bm-page.active { display: grid; }
+
+    /* 格子本身＝「檢視這個技能」（點了才換詳情，滑過不換——滑鼠移出去會一路掃過
+       別的格子，詳情就跟著亂跳）。標記已習得走右上角的共用 ✓ 鈕（.ct-check）。 */
+    .bm-slot {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      display: flex; align-items: center; justify-content: center;
+      padding: 0;
+      font-family: inherit;
+      /* 未習得＝灰底（圖示照原圖顯示，不換成問號）；已習得改成強調色底 */
+      background: color-mix(in srgb, var(--text-muted) 24%, var(--bg-base));
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      overflow: hidden;
+      user-select: none;
+      transition: var(--transition);
+    }
+    /* hover 只加亮不換底色：換 background 會被後面的 .learned 規則蓋掉，
+       變成「未習得的格子有 hover、已習得的沒有」 */
+    .bm-slot:hover { border-color: color-mix(in srgb, var(--accent) 55%, transparent); filter: brightness(1.14); }
+    .bm-slot:focus-visible { outline: 2px solid color-mix(in srgb, var(--accent) 65%, transparent); outline-offset: 1px; }
+    .bm-slot-icon {
+      width: 70%; height: 70%;
+      object-fit: contain;
+      pointer-events: none;
+    }
+    .bm-slot.learned {
+      background: color-mix(in srgb, var(--accent) 26%, var(--bg-card));
+      border-color: color-mix(in srgb, var(--accent) 60%, transparent);
+    }
+    /* 標記已習得＝格子右上角的 ✓ 鈕，用全站統一的 .ct-check（common.css）：
+       格子掛 .ct-card 後 hover 浮現、已習得填強調色，與其他追蹤頁完全同一份樣式。
+       鈕本身由 tracker.buildCheck() 產生，不要在這裡另刻。 */
+    .bm-slot-no {
+      position: absolute; bottom: 3px; left: 5px;
+      font-size: 10px; line-height: 1;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+    .bm-slot.learned .bm-slot-no { color: var(--accent); }
+    /* 篩選／搜尋作用時：不符合的格子淡化而不抽走，版面才跟遊戲書一致 */
+    .bm-slot.dim { opacity: .2; }
+    .bm-slot.dim:hover { opacity: .5; }
+    .bm-slot.sel { box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 70%, transparent); }
+
+    .bm-total {
+      margin-top: 10px; padding-top: 9px;
+      border-top: 1px solid var(--border);
+      text-align: right;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .bm-total b { font-size: 15px; font-weight: 700; color: var(--gold-light); }
+    .bm-filterhint { margin-top: 6px; font-size: 11px; color: var(--text-muted); text-align: right; }
+    .bm-filterhint:empty { display: none; }
+
+    /* ── 右側詳情欄（取代 hover 提示框；行動裝置疊到書下方）── */
+    .bm-detail {
+      flex: 1; min-width: 0;
+      /* top 58px＝nav.js 頂列 46px＋留白，與 triple-triad／aether-currents 一致（知識庫 §2.6） */
+      position: sticky; top: 58px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .bm-d-empty { font-size: 13px; color: var(--text-muted); line-height: 1.7; }
+    .bm-d-head { display: flex; align-items: center; gap: 12px; }
+    .bm-d-icon {
+      width: 52px; height: 52px; flex-shrink: 0;
+      object-fit: contain;
+      background: var(--raise);
+      border-radius: var(--radius-sm);
+    }
+    .bm-d-no { font-size: 11px; color: var(--text-muted); }
+    .bm-d-name { font-size: 18px; font-weight: 600; color: var(--text-primary); line-height: 1.3; }
+    .bm-d-en { font-size: 11px; color: var(--text-muted); }
+    .bm-mark {
+      align-self: flex-start;
+      margin-top: 2px;
+      padding: 6px 14px;
+      font-size: 13px; font-family: inherit;
+      border-radius: 99px;
+      cursor: pointer;
+      transition: var(--transition);
+      background: transparent;
+      border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+      color: var(--accent);
+    }
+    .bm-mark:hover { background: color-mix(in srgb, var(--accent) 14%, transparent); }
+    .bm-mark.on { border-color: color-mix(in srgb, var(--green) 45%, transparent); color: var(--green); }
+    .bm-mark.on:hover { background: color-mix(in srgb, var(--green) 14%, transparent); }
+    .bm-mark:focus-visible { outline: 2px solid color-mix(in srgb, var(--accent) 60%, transparent); outline-offset: 2px; }
+    .bm-detail .bm-mech, .bm-detail .col-detail { font-size: 13px; }
+    /* 詳情欄在寬螢幕會拉得很寬，機制與取得方式擠在左邊會留一大片空白 → 拆兩欄 */
+    .bm-d-body { display: grid; gap: 8px; }
+    @media (min-width: 1160px) {
+      .bm-d-body { grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+    }
+
+    @media (max-width: 860px) {
+      .bm-book { flex-direction: column; }
+      .bm-frame { width: 100%; }
+      .bm-detail { position: static; width: 100%; }
+    }
+    @media (max-width: 600px) {
+      .col-grid { grid-template-columns: 1fr 1fr; }
+      .bm-frame { padding: 10px 10px 8px; }
+      .bm-page { gap: 5px; }
+    }
     @media (max-width: 380px) { .col-grid { grid-template-columns: 1fr; } }
   </style>
   <script src="../../assets/js/patch-gate.js"></script>
@@ -79,12 +270,35 @@
   <!-- Header -->
   <div class="tool-header">
     <h1 class="tool-title">💙 青魔法術收藏</h1>
-    <p class="tool-subtitle">點擊技能卡片標記已習得，進度自動儲存於瀏覽器</p>
+    <p class="tool-subtitle">仿遊戲內〈青魔法之書〉排版：點格子看技能詳情，點格子右上角的 ✓ 標記已習得，進度自動儲存於瀏覽器</p>
     <div class="header-divider"></div>
   </div>
 
-  <!-- 控制面（進度／工具列／篩選／格線）由 collection-tracker.js 渲染 -->
+  <!-- 檢視切換要放在 #ct-root 之前：ct-root 連進度條、工具列、篩選都渲染在裡面，
+       擺後面的話切換鈕會被壓在整片篩選標籤底下（與釣魚／採集紀錄頁一致） -->
+  <div class="bm-viewbar">
+    <div class="view-toggle" id="viewToggle">
+      <button type="button" id="vBook" class="active">📖 法術書</button>
+      <button type="button" id="vCard">🗂️ 卡片</button>
+    </div>
+    <span class="bm-viewhint" id="viewHint"></span>
+  </div>
+
+  <!-- 控制面（進度／工具列／篩選／卡片格線）由 collection-tracker.js 渲染 -->
   <div id="ct-root"></div>
+
+  <!-- 法術書檢視：左邊書、右邊詳情，內容由本頁下方 script 建立 -->
+  <div class="bm-book" id="bookView">
+    <div class="bm-frame">
+      <div class="bm-tabs" id="bmTabs"></div>
+      <div id="bmPages"></div>
+      <div class="bm-total">技能總數 <b id="bmCount">0</b> / <span id="bmTotal">0</span></div>
+      <div class="bm-filterhint" id="bmFilterHint"></div>
+    </div>
+    <aside class="bm-detail" id="bmDetail">
+      <div class="bm-d-empty">選擇一個法術格，這裡會顯示技能詳情與習得方式。</div>
+    </aside>
+  </div>
 
 </div>
 
@@ -103,6 +317,34 @@
 <script>
 (async function () {
   var esc = CollectionTracker.esc;
+  var $ = function (id) { return document.getElementById(id); };
+
+  var PAGE_SIZE = 16;                              // 遊戲內〈青魔法之書〉每頁 16 格（4×4）
+  var VIEW_KEY  = 'ffxiv_bluemagic_view';
+  var ICON_BASE = '../../assets/blue-magic/';
+
+  function iconSrc(m) { return m.icon ? ICON_BASE + m.icon.split('/').pop() : ''; }
+
+  /* ── 檢視切換（法術書／卡片）──
+     先跑，避免資料載入前先閃一下另一種版面。狀態存 localStorage 而不是網址：
+     引擎的 buildQuery() 每次互動都會用自己的狀態重建整串 query，外掛參數會被洗掉。 */
+  var viewMode = 'book';
+  try { if (localStorage.getItem(VIEW_KEY) === 'card') viewMode = 'card'; } catch (e) {}
+
+  function setView(mode) {
+    viewMode = mode;
+    $('vBook').classList.toggle('active', mode === 'book');
+    $('vCard').classList.toggle('active', mode === 'card');
+    document.body.classList.toggle('bm-bookmode', mode === 'book');
+    $('bookView').style.display = mode === 'book' ? '' : 'none';
+    $('viewHint').textContent = mode === 'book'
+      ? '每頁 16 格，排列與遊戲內〈青魔法之書〉相同；點格子看詳情，點右上 ✓ 標記'
+      : '一次看完機制與取得方式（點卡片右上角的 ✓ 標記已習得）';
+    try { localStorage.setItem(VIEW_KEY, mode); } catch (e) {}
+    if (mode === 'book') syncBook();
+  }
+  $('vBook').addEventListener('click', function () { setView('book'); });
+  $('vCard').addEventListener('click', function () { setView('card'); });
 
   // 先載入 dungeons.json 建立 contentId→繁中副本名 對照表（learnFrom.contentId 對應 dungeons.id），
   // 再啟動追蹤引擎，確保卡片/搜尋/篩選能取到副本繁中名。
@@ -131,7 +373,196 @@
     });
   }
 
-  CollectionTracker.init({
+  // 卡片與詳情欄共用的三段內容
+  function tagsHTML(m) {
+    var learn = resolveLearnFrom(m);
+    var srcTags = learn.length
+      ? Array.from(new Set(learn.map(function (l) { return l.type; }))).map(function (t) {
+          return '<span class="tag src-' + esc(t) + '">' + esc(t) + '</span>';
+        }).join('')
+      : '<span class="tag placeholder">待補充</span>';
+    return '<span class="tag rank-' + esc(m.rank) + '">Rank ' + esc(m.rank) + '</span>' +
+      '<span class="tag aspect-' + esc(m.aspect || '無') + '">' + esc(m.aspect || '無') + '</span>' +
+      '<span class="tag">' + esc(m.type) + '</span>' + srcTags;
+  }
+  function detailLinesHTML(m) {
+    var details = Array.from(new Set(resolveLearnFrom(m).map(function (l) { return l.detail; }).filter(Boolean)));
+    if (!details.length) details = ['待補充'];
+    return details.map(function (d) { return '<div class="detail-line">' + esc(d) + '</div>'; }).join('');
+  }
+
+  /* ── 法術書 ────────────────────────────────────────────────────
+     格子只建一次、之後只換 class：每次勾選引擎都會重畫，整片重建會吃掉鍵盤焦點。 */
+  var tracker = null;
+  var BOOK = [];          // = tracker.LIST（prepare 已依 No. 排序）
+  var slotEls = [];       // index -> 格子元素
+  var markEls = [];       // index -> 格子右上的共用 ✓ 鈕（tracker.buildCheck 產生）
+  var tabEls = [];        // page  -> 頁籤元素
+  var pageEls = [];       // page  -> 該頁格線
+  var bookPage = 0;
+  var shown = null;       // 詳情欄目前顯示的法術
+  var markBtn = null;     // 詳情欄的「標記已習得」鈕
+  var lastList = null;    // 最近一次篩選結果（切檢視時重算淡化用）
+
+  function pageCount() { return Math.max(1, Math.ceil(BOOK.length / PAGE_SIZE)); }
+
+  function buildBook() {
+    var pages = pageCount();
+    var tabHost = $('bmTabs'), pageHost = $('bmPages');
+    tabHost.innerHTML = ''; pageHost.innerHTML = '';
+    tabEls = []; pageEls = []; slotEls = []; markEls = [];
+
+    for (var p = 0; p < pages; p++) {
+      var tab = document.createElement('button');
+      tab.type = 'button';
+      tab.className = 'bm-tab';
+      tab.innerHTML = '<span class="bm-tab-dot"></span>' + (p + 1);
+      tab.addEventListener('click', (function (n) { return function () { setPage(n); }; })(p));
+      tabHost.appendChild(tab);
+      tabEls.push(tab);
+
+      var grid = document.createElement('div');
+      grid.className = 'bm-page';
+      pageHost.appendChild(grid);
+      pageEls.push(grid);
+    }
+
+    BOOK.forEach(function (m, i) {
+      // 格子是 div 不是 button：裡面要放「標記已習得」的方塊鈕，button 不能巢狀
+      var slot = document.createElement('div');
+      slot.className = 'bm-slot ct-card';   // ct-card ＝共用 ✓ 鈕的 hover 規則掛鉤
+      slot.dataset.i = i;
+      slot.tabIndex = 0;
+      slot.setAttribute('role', 'button');
+      slot.title = 'No.' + m.no + ' ' + m.name;
+      slot.innerHTML =
+        (m.icon ? '<img class="bm-slot-icon" src="' + esc(iconSrc(m)) + '" alt="" loading="lazy" decoding="async">' : '') +
+        '<span class="bm-slot-no">' + esc(m.no) + '</span>';
+
+      // 點格子＝檢視（刻意不做 hover 切換：滑鼠移出去會掃過旁邊的格子，詳情會亂跳）
+      slot.addEventListener('click', function () { showDetail(m); });
+      slot.addEventListener('focus', function () { showDetail(m); });
+      slot.addEventListener('keydown', function (ev) {
+        if (ev.target !== slot) return;                 // 焦點在方塊鈕上時交給鈕自己處理
+        if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); showDetail(m); }
+      });
+
+      // 收藏鈕跟引擎畫的卡片用同一顆（右上角 .ct-check）；它自己 stopPropagation，
+      // 所以點鈕不會連帶觸發格子的「檢視」。點下去 → toggle → renderGrid → onRender → syncBook
+      var mark = tracker.buildCheck(m, tracker.isOwned(m), false);
+      slot.appendChild(mark);
+
+      pageEls[Math.floor(i / PAGE_SIZE)].appendChild(slot);
+      slotEls.push(slot);
+      markEls.push(mark);
+    });
+
+    // 方向鍵在整本書內移動（跨頁會自動翻頁）；Enter／空白鍵由 <button> 原生處理
+    $('bmPages').addEventListener('keydown', function (ev) {
+      var el = ev.target && ev.target.closest ? ev.target.closest('.bm-slot') : null;
+      if (!el) return;
+      var d = { ArrowRight: 1, ArrowLeft: -1, ArrowDown: 4, ArrowUp: -4 }[ev.key];
+      if (!d) return;
+      var t = Number(el.dataset.i) + d;
+      if (t < 0 || t >= BOOK.length) return;
+      ev.preventDefault();
+      setPage(Math.floor(t / PAGE_SIZE));
+      slotEls[t].focus();
+    });
+
+    $('bmTotal').textContent = BOOK.length;
+    setPage(0);
+  }
+
+  function setPage(p) {
+    bookPage = Math.min(Math.max(p, 0), pageCount() - 1);
+    pageEls.forEach(function (g, i) { g.classList.toggle('active', i === bookPage); });
+    tabEls.forEach(function (t, i) {
+      t.classList.toggle('active', i === bookPage);
+      t.setAttribute('aria-current', i === bookPage ? 'page' : 'false');
+    });
+  }
+
+  // 依目前的擁有狀態與篩選結果更新格子／頁籤／總數（不重建 DOM）
+  function syncBook() {
+    if (!tracker || !BOOK.length) return;
+    var list = lastList || BOOK;
+    var filtering = list.length !== BOOK.length;
+    var match = new Set(list);                       // filtered() 回傳的是 LIST 內同一批物件，可直接比參考
+
+    var learnedTotal = 0;
+    var perPage = [];
+    BOOK.forEach(function (m, i) {
+      var p = Math.floor(i / PAGE_SIZE);
+      perPage[p] = perPage[p] || { learned: 0, total: 0, match: 0 };
+      var learned = tracker.isOwned(m);
+      var hit = !filtering || match.has(m);
+      if (learned) learnedTotal++;
+      perPage[p].total++;
+      if (learned) perPage[p].learned++;
+      if (filtering && match.has(m)) perPage[p].match++;
+
+      var el = slotEls[i], mk = markEls[i];
+      el.classList.toggle('learned', learned);
+      el.classList.toggle('owned', learned);     // 共用 ✓ 鈕靠 .ct-card.owned 上色
+      el.classList.toggle('dim', !hit);
+      el.setAttribute('aria-label', 'No.' + m.no + ' ' + m.name + '，' + (learned ? '已習得' : '未習得') + '，檢視詳情');
+      mk.setAttribute('aria-pressed', learned ? 'true' : 'false');
+      mk.setAttribute('aria-label', (learned ? '取消' : '標記') + '「' + m.name + '」已習得');
+      mk.title = learned ? '取消已習得' : '標記為已習得';
+    });
+
+    tabEls.forEach(function (t, p) {
+      var s = perPage[p] || { learned: 0, total: 0, match: 0 };
+      t.classList.toggle('done', s.total > 0 && s.learned === s.total);
+      t.classList.toggle('partial', s.learned > 0 && s.learned < s.total);
+      t.classList.toggle('nomatch', filtering && s.match === 0);
+      t.title = '第 ' + (p + 1) + ' 頁 · 已習得 ' + s.learned + '/' + s.total +
+        (filtering ? ' · 符合篩選 ' + s.match : '');
+    });
+
+    $('bmCount').textContent = learnedTotal;
+    $('bmFilterHint').textContent = filtering
+      ? '篩選中：符合 ' + list.length + ' 個，其餘格子淡化顯示'
+      : '';
+    updateMarkBtn();
+  }
+
+  /* ── 詳情欄 ── */
+  function showDetail(m) {
+    if (shown === m) return;
+    shown = m;
+    slotEls.forEach(function (el, i) { el.classList.toggle('sel', BOOK[i] === m); });
+    $('bmDetail').innerHTML =
+      '<div class="bm-d-head">' +
+        (m.icon ? '<img class="bm-d-icon" src="' + esc(iconSrc(m)) + '" alt="">' : '') +
+        '<div style="min-width:0">' +
+          '<div class="bm-d-no">No.' + esc(m.no) + (m.patch ? ' · ver ' + esc(m.patch) : '') + '</div>' +
+          '<div class="bm-d-name">' + esc(m.name) + '</div>' +
+          (m.nameEn ? '<div class="bm-d-en">' + esc(m.nameEn) + '</div>' : '') +
+        '</div>' +
+      '</div>' +
+      '<div class="col-tags">' + tagsHTML(m) + '</div>' +
+      '<button class="bm-mark" type="button" id="bmMark"></button>' +
+      '<div class="bm-d-body">' +
+        '<div class="bm-mech">' + esc(m.mechanic || '') + '</div>' +
+        '<div class="col-detail">' + detailLinesHTML(m) + '</div>' +
+      '</div>';
+    markBtn = $('bmMark');
+    markBtn.addEventListener('click', function () { tracker.toggle(m); });
+    updateMarkBtn();
+  }
+
+  function updateMarkBtn() {
+    if (!markBtn || !shown || !tracker) return;
+    var learned = tracker.isOwned(shown);
+    markBtn.classList.toggle('on', learned);
+    markBtn.textContent = learned ? '✓ 已習得（點此取消）' : '標記為已習得';
+  }
+
+  setView(viewMode);
+
+  tracker = CollectionTracker.init({
     dataUrl: '../../data/blue-magic.json',
     metaUrl: '../../data/_meta.json',
     storageKey: 'ffxiv_bluemagic_learned',
@@ -188,19 +619,9 @@
       }
     ],
     card: function (m) {
-      var ICON_BASE = '../../assets/blue-magic/';
-      var learn = resolveLearnFrom(m);
-      var sourceTags = learn.length
-        ? Array.from(new Set(learn.map(function (l) { return l.type; }))).map(function (t) { return '<span class="tag src-' + esc(t) + '">' + esc(t) + '</span>'; }).join('')
-        : '<span class="tag placeholder">待補充</span>';
-      var aspectLabel = m.aspect || '無';
       var iconHtml = m.icon
-        ? '<img class="col-icon" src="' + ICON_BASE + esc(m.icon.split('/').pop()) + '" alt="" loading="lazy">'
+        ? '<img class="col-icon" src="' + esc(iconSrc(m)) + '" alt="" loading="lazy">'
         : '<div class="col-icon placeholder">💙</div>';
-      var details = Array.from(new Set(learn.map(function (l) { return l.detail; }).filter(Boolean)));
-      var detailLines = details.length
-        ? details.map(function (d) { return '<div class="detail-line">' + esc(d) + '</div>'; }).join('')
-        : '<div class="detail-line">待補充</div>';
       return '' +
         '<div class="col-head">' + iconHtml +
           '<div style="flex:1; min-width:0;">' +
@@ -208,14 +629,19 @@
             '<div class="bm-meta">No.' + esc(m.no) + (m.patch ? ' · ver ' + esc(m.patch) : '') + '</div>' +
           '</div>' +
         '</div>' +
-        '<div class="col-tags">' +
-          '<span class="tag rank-' + esc(m.rank) + '">Rank ' + esc(m.rank) + '</span>' +
-          '<span class="tag aspect-' + esc(aspectLabel) + '">' + esc(aspectLabel) + '</span>' +
-          '<span class="tag">' + esc(m.type) + '</span>' + sourceTags +
-        '</div>' +
+        '<div class="col-tags">' + tagsHTML(m) + '</div>' +
         '<div class="bm-mech">' + esc(m.mechanic || '') + '</div>' +
-        '<div class="col-detail">' + detailLines + '</div>';
-    }
+        '<div class="col-detail">' + detailLinesHTML(m) + '</div>';
+    },
+    // 引擎每次重畫卡片格線都會叫這裡，法術書跟著同步（勾選、篩選、搜尋都會經過）
+    onRender: function (list, pageSlice, tk) {
+      tracker = tracker || tk;
+      lastList = list;
+      if (!BOOK.length) { BOOK = tracker.LIST.slice(); buildBook(); }
+      if (viewMode === 'book') syncBook();
+    },
+    // 資料載不進來時收起空書，讓引擎的錯誤訊息是畫面上唯一的東西
+    onError: function () { $('bookView').style.display = 'none'; }
   });
 })();
 </script>

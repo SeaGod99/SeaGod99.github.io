@@ -62,18 +62,9 @@
       background: var(--raise);
       display: block;
     }
-    .check-badge {
-      position: absolute;
-      bottom: -4px; right: -4px;
-      width: 18px; height: 18px;
-      background: var(--green);
-      border: 2px solid var(--bg-base);
-      border-radius: 50%;
-      display: none;
-      align-items: center; justify-content: center;
-      font-size: 10px; color: #0a0c10; font-weight: 700;
-    }
-    .minion-card.owned .check-badge { display: flex; }
+    /* 原本圖示右下角有一顆 .check-badge 的 ✓，已改為全站統一的 .ct-check 鈕
+       （common.css，卡片右上角，且是唯一的收藏切換入口）。
+       ⓘ 鈕留在左上角，兩者不會撞到。 */
 
     .minion-name {
       font-size: 12px;
@@ -164,7 +155,7 @@
   <!-- Header -->
   <div class="tool-header">
     <h1 class="tool-title">🐣 寵物收藏追蹤</h1>
-    <p class="tool-subtitle">點擊寵物卡片標記已擁有，進度自動儲存於瀏覽器</p>
+    <p class="tool-subtitle">點寵物卡片右上角的 ✓ 標記已擁有，進度自動儲存於瀏覽器</p>
     <div class="header-divider"></div>
   </div>
 
@@ -297,7 +288,6 @@
         '<div class="minion-icon-wrap">' +
           '<img class="minion-icon" src="' + esc(m.icon) + '" alt="' + esc(m.name) + '" loading="lazy" decoding="async"' +
             ' onerror="this.src=\'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2248%22 height=%2248%22><rect fill=%22%23ffffff08%22 width=%2248%22 height=%2248%22 rx=%226%22/></svg>\'">' +
-          '<div class="check-badge">✓</div>' +
           '<button class="minion-info" type="button" aria-label="取得方式" title="取得方式">i</button>' +
         '</div>' +
         '<div class="minion-name">' + esc(m.name) + '</div>' +

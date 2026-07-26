@@ -337,14 +337,62 @@ a { color: inherit; text-decoration: none; }
   border-color: color-mix(in srgb, var(--accent) 50%, transparent);
   background: color-mix(in srgb, var(--accent) 6%, transparent);
 }
-.col-card.owned::before {
-  content: '✓';
+
+/* ── 收藏切換鈕 .ct-check（全站統一，2026-07-26）─────────────────────
+   由 collection-tracker.js 的 buildCheck() 產生並掛在每張卡片右上角，是**唯一**的
+   收藏切換入口（卡片本身不再切換擁有，太容易誤觸；卡片點擊留給各頁看詳情）。
+   自訂版型（青魔法術書 .bm-slot、幻卡手帳 .tt-slot）也用同一顆鈕與同一份樣式，
+   所以「格式相同」這件事只有這一處定義——要改就改這裡，不要在各頁另刻。
+   宿主需要 position:relative（.col-card 等都有；.ct-card 也補一道保險）。 */
+.ct-card { position: relative; }
+/* 卡片本身沒有動作時就不要給手指游標（點下去不會有事）。用 :not() 提高特定度，
+   因為各頁的 .hs-card／.minion-card／.fish-card 都寫在 common.css 之後、且都有
+   cursor:pointer——同特定度會被它們蓋掉。有掛 onCardClick（看詳情）的維持 pointer。 */
+.ct-card:not(.ct-clickable) { cursor: default; }
+
+.ct-check {
   position: absolute;
-  top: 8px; right: 10px;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--accent);
+  top: 6px; right: 6px;
+  z-index: 3;
+  width: 24px; height: 24px;
+  padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  font: 700 12px/1 inherit;
+  border-radius: 50%;
+  border: 1px solid var(--border-hover);
+  background: color-mix(in srgb, var(--bg-base) 72%, transparent);
+  color: var(--text-muted);
+  cursor: pointer;
+  opacity: .55;                              /* 未收藏時安靜，但看得見（要能被發現） */
+  transition: var(--transition);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
 }
+.ct-card:hover .ct-check { opacity: 1; }
+.ct-check:hover { opacity: 1; border-color: var(--accent); color: var(--accent); }
+.ct-check:focus-visible {
+  opacity: 1;
+  outline: 2px solid color-mix(in srgb, var(--accent) 70%, transparent);
+  outline-offset: 1px;
+}
+/* 已收藏：填滿強調色。文字色取 --bg-base 才能在亮/暗兩主題都有對比 */
+.ct-card.owned > .ct-check {
+  opacity: 1;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg-base);
+}
+/* 恆為已擁有（預設表情等）：看得出已勾但不可點 */
+.ct-check.locked { opacity: .8; cursor: default; }
+.ct-card.owned > .ct-check.locked { background: var(--text-muted); border-color: var(--text-muted); }
+
+/* ✓ 鈕蓋在右上角，替卡片標題留出讓位空間（長名不要跑進鈕底下）。
+   放在共用檔而不是各頁：各頁的標題 class 不同，但 .col-name 是 .col-* 卡片系統的
+   共同標題，一次處理 6 頁；非 .col-* 版型的頁（髮型／釣魚）各自補。 */
+.ct-card .col-name { padding-right: 26px; }
+
+/* ※ 刻意不做 @media 放大：幻卡手帳在手機是 5 欄、格子只約 58px，放大到 28px 會蓋掉
+   半張卡面。24px 在最小的卡片（寵物頁手機版 92px）上也按得到，全站維持同一尺寸。 */
 
 /* 圖示：可直接用 .col-icon（img），或包一層 .col-icon-wrap */
 .col-icon {

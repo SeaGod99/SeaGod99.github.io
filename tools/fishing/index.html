@@ -69,12 +69,8 @@
     .fish-card:hover { border-color: var(--border-hover); background: var(--bg-card-hover); }
     .fish-card.owned { border-color: rgba(74,222,128,0.3); background: rgba(74,222,128,0.04); }
 
-    .fish-check {
-      width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--border);
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-      font-size: 0.75rem; transition: all 0.2s; margin-top: 1px;
-    }
-    .fish-card.owned .fish-check { background: var(--green); border-color: var(--green); color: #000; }
+    /* 原本卡片左側有一顆 .fish-check 圓圈負責切換「已釣」，已改為全站統一的
+       .ct-check 鈕（common.css，卡片右上角、由引擎掛上，唯一的收藏切換入口）。 */
 
     .fish-body { flex: 1; min-width: 0; }
     .fish-name { font-size: 0.9rem; font-weight: 600; }
@@ -123,7 +119,8 @@
     .tug-chip.heavy  { color: var(--red);   border-color: rgba(248,113,113,0.35); }
     .chain-arrow { color: var(--gold); font-weight: 700; }
     .tag-int { color: #f0abfc; border-color: rgba(240,171,252,0.3); background: rgba(240,171,252,0.1); }
-    .fish-patch { position: absolute; top: 0.5rem; right: 0.65rem; font-size: 0.65rem; color: var(--text-muted); }
+    /* right 往左讓開 24px 的 .ct-check 收藏鈕（本頁 1rem=17.5px，故約 1.4rem＋間距） */
+    .fish-patch { position: absolute; top: 0.5rem; right: 2.3rem; font-size: 0.65rem; color: var(--text-muted); }
 
     /* VIEW TOGGLE */
     .view-toggle { display: flex; gap: 0; border: 1px solid var(--border); border-radius: 5px; overflow: hidden; }
@@ -606,7 +603,6 @@ const TUG_NAME  = { light: '輕杆', medium: '中杆', heavy: '重杆' };
 /* 魚卡樣板：交給引擎逐張渲染（引擎負責篩選／排序／分頁）*/
 function fishCardHTML(f) {
   const now = Date.now();
-    const isOwned  = owned.has(f.itemId);
     const isTarget = targets.has(f.itemId);
     const timed    = f.startHour > 0 || f.endHour < 24;
 
@@ -646,7 +642,6 @@ function fishCardHTML(f) {
 
     // 外層 .fish-card 由引擎產生（cardClass），這裡只回傳卡片內容
     return `
-  <div class="fish-check" title="點擊切換已釣">${isOwned?'✓':''}</div>
   <div class="fish-body">
     <div class="fish-name">${f.name||f.nameEn}</div>
     <div class="fish-name-en">${f.nameEn}</div>
@@ -1006,14 +1001,13 @@ function openFishMap(id, spotIdOv) {
 
 /* ── 事件 ── */
 /* 搜尋／狀態／地區／版本／種類／排序／分頁／匯入匯出皆由引擎工具列處理。
-   魚卡的點擊分流見下方 onCardClick：🎯目標、📍地圖、開詳情都由本頁接手，
-   只有點左側圓圈才讓引擎切換「已釣」。 */
+   魚卡的點擊分流見下方 onCardClick：🎯目標、📍地圖，其餘點擊開詳情。
+   「已釣」一律點卡片右上角的 ✓ 鈕（引擎掛的 .ct-check，全站統一）。 */
 function onFishCardClick(f, ev) {
   const tgt = ev.target.closest('[data-target]');
   if (tgt) { toggleTarget(Number(tgt.dataset.target)); return true; }
   const loc = ev.target.closest('[data-map]');
   if (loc) { openFishMap(Number(loc.dataset.map)); return true; }
-  if (ev.target.closest('.fish-check')) return false;   // 交給引擎切換已釣
   openFishDetail(f.itemId);
   return true;
 }
