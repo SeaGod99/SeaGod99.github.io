@@ -72,29 +72,10 @@
     }
     .view-toggle button.active { background: var(--gold-dim); color: var(--gold); }
 
+    /* 地圖檢視的版面由共用元件 assets/js/map-explorer.js 提供 */
     .map-view { padding: 0 0 2rem; }
-    .map-bar { display: flex; gap: 13px; align-items: center; flex-wrap: wrap; margin-bottom: 13px; }
-    .map-canvas {
-      position: relative; width: 100%; max-width: 720px; margin: 0 auto;
-      aspect-ratio: 1 / 1; background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius-md); overflow: hidden;
-    }
-    .map-canvas img { width: 100%; height: 100%; object-fit: cover; display: block; user-select: none; }
-    .map-empty { display: flex; align-items: center; justify-content: center; height: 100%; color: var(--text-muted); font-size: 15px; text-align: center; padding: 1rem; }
-    .map-dot {
-      position: absolute; width: 16px; height: 16px; border-radius: 50%;
-      transform: translate(-50%, -50%); cursor: pointer; border: 2px solid rgba(0,0,0,0.55);
-      box-shadow: 0 0 0 1px rgba(255,255,255,0.25); transition: transform 0.1s;
-    }
-    .map-dot:hover, .map-dot.sel { transform: translate(-50%, -50%) scale(1.45); z-index: 5; }
-    .map-dot.job-min { background: var(--orange); }
-    .map-dot.job-btn { background: var(--green); }
-    .map-dot.done    { background: var(--gold); box-shadow: 0 0 0 2px rgba(200,169,110,0.6); }
-    .map-legend { font-size: 12.5px; color: var(--text-muted); display: flex; gap: 16px; flex-wrap: wrap; margin-top: 9px; }
-    .map-legend span { display: inline-flex; align-items: center; gap: 5px; }
-    .map-legend i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
-    .map-node-info { max-width: 720px; margin: 13px auto 0; }
-    .map-node-info:empty { display: none; }
+    /* 詳情卡直接沿用清單的採集點卡片，去掉外框避免卡中卡 */
+    .mx-detail .node-card { background: none; border: none; padding: 0; }
   </style>
   <script src="../../assets/js/patch-gate.js"></script>
   <script src="../../assets/js/collection-tracker.js"></script>
@@ -111,9 +92,8 @@
     <div class="header-divider"></div>
   </div>
 
-  <!-- 控制面（進度／工具列／篩選／採集點列表／分頁）由 collection-tracker.js 渲染 -->
-  <div id="ct-root"></div>
-
+  <!-- 檢視切換要放在 #ct-root 之前：ct-root 連 40 張卡片格線＋分頁都渲染在裡面，
+       擺後面的話「🗺️ 地圖」會被壓在整頁卡片底下、要捲到底才看得到（與釣魚頁一致） -->
   <div class="gl-viewbar">
     <div class="view-toggle" id="viewToggle">
       <button type="button" id="vList" class="active">☰ 清單</button>
@@ -121,19 +101,11 @@
     </div>
   </div>
 
-  <div class="map-view" id="mapView" style="display:none">
-    <div class="map-bar">
-      <select class="sort-select" id="mapSelect"></select>
-    </div>
-    <div class="map-canvas" id="mapCanvas"></div>
-    <div class="map-legend">
-      <span><i style="background:var(--orange)"></i>採礦工</span>
-      <span><i style="background:var(--green)"></i>園藝工</span>
-      <span><i style="background:var(--gold)"></i>已全採</span>
-      <span>點圈可勾選追蹤</span>
-    </div>
-    <div class="map-node-info" id="mapNodeInfo"></div>
-  </div>
+  <!-- 控制面（進度／工具列／篩選／採集點列表／分頁）由 collection-tracker.js 渲染 -->
+  <div id="ct-root"></div>
+
+  <!-- 地圖檢視：內容由共用元件 map-explorer.js 掛載（左底圖標點、右搜尋＋採集點清單） -->
+  <div class="map-view" id="mapView" style="display:none"></div>
 
 </div>
 
@@ -163,13 +135,16 @@
   var mapMeta = {};       // mapId  -> maps.json 條目
   var tracker = null;
   var viewMode = 'list';
-  var currentMapId = null;
-  var selectedNodeId = null;
   var lastList = [];      // 最近一次篩選結果（地圖檢視吃它）
+  var mapExplorer = null;
 
-  // 遊戲座標 → 底圖 0..1 比例（FFXIV 標準式，靠 Map sheet 的 sizeFactor）
-  var clamp01 = function (v) { return Math.max(0, Math.min(1, v)); };
-  var coordFrac = function (c, sf) { return ((c - 1) * (sf / 100)) / 41; };
+  // 地圖元件是 ES module，本檔是傳統 script，所以走動態 import；
+  // 載完若已經在地圖檢視就補畫一次（座標換算等細節都在元件裡）
+  var createMapExplorer = null;
+  import('../../assets/js/map-explorer.js').then(function (mod) {
+    createMapExplorer = mod.createMapExplorer;
+    if (viewMode === 'map') renderMap();
+  });
 
   function allItemsOf(n) { return (n.items || []).concat(n.hiddenItems || []); }
   function nodeStatus(n) {
@@ -223,92 +198,90 @@
     });
   }
 
-  /* ── 地圖檢視 ── */
+  /* ── 地圖檢視（共用元件 assets/js/map-explorer.js）── */
   function setView(mode) {
     viewMode = mode;
     $('vList').classList.toggle('active', mode === 'list');
     $('vMap').classList.toggle('active', mode === 'map');
-    var grid = document.getElementById('ct-grid');
-    var pager = document.getElementById('ct-pagination');
-    if (grid) grid.style.display = mode === 'list' ? '' : 'none';
-    if (pager) pager.style.display = mode === 'list' ? '' : 'none';
+    // 清單的收合走 body class（見 map-explorer.js 的 .mx-mapmode 規則）：
+    // 引擎每次 renderGrid 都會把 #ct-grid 的 inline display 設回 ''，設 inline style 會被洗掉
+    document.body.classList.toggle('mx-mapmode', mode === 'map');
     $('mapView').style.display = mode === 'map' ? '' : 'none';
     if (mode === 'map') renderMap();
   }
 
+  function hasCoords(n) {
+    return !!(n.coords && n.coords.mapId && mapMeta[n.coords.mapId]);
+  }
+  function itemNamesOf(n) {
+    return allItemsOf(n).map(function (i) { return itemMap[i]; }).filter(Boolean);
+  }
+
+  /* 採集點 → 元件要的點位。
+     順序直接沿用 lastList（引擎已套用工具列選的排序），不要另外重排，
+     否則工具列的「排序」對地圖檢視形同無效。 */
+  function gatherLogPoints() {
+    return lastList.filter(hasCoords).map(function (n) {
+      var names = itemNamesOf(n);
+      var all = allItemsOf(n);
+      var got = all.filter(function (i) { return tracker.owned.has(i); }).length;
+      return {
+        id: n.id, mapId: n.coords.mapId, x: n.coords.x, y: n.coords.y,
+        name: names.join('、'),
+        // 圓點顏色沿用原本的語意：已全採＝金，否則依職業分色
+        state: nodeStatus(n) === 'done' ? 'done' : (n.job === '採礦工' ? 'min' : 'btn'),
+        meta: 'Lv.' + n.level,
+        live: got + '/' + all.length,
+        search: names.join(' ') + ' ' + (n.typeName || ''),
+        n: n
+      };
+    });
+  }
+
   function renderMap() {
-    // 依 mapId 分組（排除 mapId=0 / 無 maps.json 對應的特殊採集點）
-    var byMap = new Map();
-    lastList.forEach(function (n) {
-      var mid = n.coords && n.coords.mapId;
-      if (!mid || !mapMeta[mid]) return;
-      if (!byMap.has(mid)) byMap.set(mid, []);
-      byMap.get(mid).push(n);
-    });
-    var opts = Array.from(byMap.entries()).sort(function (a, b) { return b[1].length - a[1].length; });
-    var sel = $('mapSelect');
-
-    if (!opts.length) {
-      sel.innerHTML = '<option>（目前篩選無可定位採集點）</option>';
-      $('mapCanvas').innerHTML = '<div class="map-empty">目前篩選沒有可定位在地圖上的採集點。</div>';
-      $('mapNodeInfo').innerHTML = '';
-      return;
-    }
-    if (currentMapId == null || !byMap.has(currentMapId)) currentMapId = opts[0][0];
-    sel.innerHTML = opts.map(function (e) {
-      return '<option value="' + e[0] + '"' + (e[0] === currentMapId ? ' selected' : '') + '>' +
-        esc(mapMap[e[0]]) + '（' + e[1].length + '）</option>';
-    }).join('');
-    plotMap(currentMapId, byMap.get(currentMapId));
-  }
-
-  function plotMap(mid, nodeArr) {
-    var m = mapMeta[mid];
-    var sf = m.sizeFactor || 100;
-    var dots = nodeArr.map(function (n) {
-      var fx = clamp01(coordFrac(n.coords.x, sf)) * 100;
-      var fy = clamp01(coordFrac(n.coords.y, sf)) * 100;
-      var st = nodeStatus(n);
-      var cls = st === 'done' ? 'done' : (n.job === '採礦工' ? 'job-min' : 'job-btn');
-      return '<div class="map-dot ' + cls + (n.id === selectedNodeId ? ' sel' : '') + '" data-nid="' + n.id + '" ' +
-        'style="left:' + fx.toFixed(2) + '%;top:' + fy.toFixed(2) + '%" ' +
-        'title="' + esc(n.job + ' Lv' + n.level + ' (' + n.coords.x.toFixed(1) + ', ' + n.coords.y.toFixed(1) + ')') + '"></div>';
-    }).join('');
-
-    $('mapCanvas').innerHTML =
-      '<img src="../..' + esc(m.image.local) + '" alt="' + esc(mapMap[mid]) + '" data-mid="' + mid + '">' + dots;
-
-    var img = $('mapCanvas').querySelector('img');
-    img.addEventListener('error', function () {
-      var canvas = img.parentElement;
-      img.remove();
-      if (!canvas.querySelector('.map-empty')) {
-        canvas.insertAdjacentHTML('afterbegin',
-          '<div class="map-empty">此地圖底圖尚未下載（' + esc(mapMap[mid]) + '）。<br>' +
-          '採集點座標仍可在「清單」檢視查看；於本機執行 <code>node scripts/download-maps.mjs</code> 可補齊底圖。</div>');
-      }
-    });
-
-    Array.prototype.forEach.call($('mapCanvas').querySelectorAll('.map-dot'), function (d) {
-      d.addEventListener('click', function () {
-        selectedNodeId = +d.dataset.nid;
-        Array.prototype.forEach.call($('mapCanvas').querySelectorAll('.map-dot'), function (o) {
-          o.classList.toggle('sel', +o.dataset.nid === selectedNodeId);
-        });
-        renderMapNodeInfo();
+    if (!createMapExplorer) return;   // 模組還沒載完，載完會自己補畫一次
+    if (!mapExplorer) {
+      mapExplorer = createMapExplorer({
+        mount: $('mapView'),
+        base: '../..',
+        maps: Object.keys(mapMeta).map(function (k) { return mapMeta[k]; }),
+        unit: '採集點',
+        searchPlaceholder: '搜尋地圖、地區或物品名稱…',
+        emptyText: '目前篩選沒有可定位在地圖上的採集點。',
+        states: {
+          min:  { color: 'var(--orange)', label: '⛏ 採礦工' },
+          btn:  { color: 'var(--green)',  label: '🌿 園藝工' },
+          done: { color: 'var(--gold)',   label: '已全採' }
+        },
+        points: gatherLogPoints,
+        // 勾選產物後 live（已採 n/m）會變 → 詳情卡跟著重建，✓ 標記才會即時更新
+        detailSig: function (p) { return p.state + ':' + p.live; },
+        detail: function (p) {
+          return '<div class="node-card' + (nodeStatus(p.n) === 'done' ? ' owned' : '') + '">' +
+            nodeCardHTML(p.n) + '</div>';
+        },
+        // 產物標籤點一下就切換「已採」，與清單卡片同行為
+        onAction: function (e) {
+          var chip = e.target.closest('.item-chip');
+          if (!chip) return false;
+          tracker.toggleKey(+chip.dataset.iid);
+          return true;
+        },
+        note: function () {
+          var miss = lastList.length - lastList.filter(hasCoords).length;
+          return miss ? '另有 ' + miss + ' 個採集點沒有地圖座標（無人島開拓、雲冠群島等），只在清單檢視顯示。' : '';
+        }
       });
-    });
-
-    if (!nodeArr.some(function (n) { return n.id === selectedNodeId; })) selectedNodeId = null;
-    renderMapNodeInfo();
-  }
-
-  function renderMapNodeInfo() {
-    var info = $('mapNodeInfo');
-    var n = selectedNodeId == null ? null : lastList.filter(function (x) { return x.id === selectedNodeId; })[0];
-    if (!n) { info.innerHTML = ''; return; }
-    info.innerHTML = '<div class="node-card' + (nodeStatus(n) === 'done' ? ' owned' : '') + '">' + nodeCardHTML(n) + '</div>';
-    wireChips(info);
+      // 產物標籤是 span[role=button]，Enter/空白鍵不會自動觸發 click，補一個委派的鍵盤處理
+      $('mapView').addEventListener('keydown', function (ev) {
+        var chip = ev.target.closest && ev.target.closest('.item-chip');
+        if (chip && (ev.key === 'Enter' || ev.key === ' ')) {
+          ev.preventDefault();
+          tracker.toggleKey(+chip.dataset.iid);
+        }
+      });
+    }
+    mapExplorer.render();
   }
 
   /* ── 載入：先備好物品名與地圖，再交給引擎 ── */
@@ -362,7 +335,9 @@
         return (mapName + ' ' + names).toLowerCase();
       },
       nameOf: function (n) { return mapMap[n.coords && n.coords.mapId] || ''; },
-      sorts: ['name', 'patch-desc', 'patch-asc',
+      // 預設版本新→舊（2026-07-26 使用者指定）
+      defaultSort: 'patch-desc',
+      sorts: ['patch-desc', 'patch-asc', 'name',
         { value: 'level-asc', label: '等級低→高', cmp: function (a, b) { return (a.level || 0) - (b.level || 0); } },
         { value: 'level-desc', label: '等級高→低', cmp: function (a, b) { return (b.level || 0) - (a.level || 0); } }],
       filters: [
@@ -397,11 +372,12 @@
 
     $('vList').addEventListener('click', function () { setView('list'); });
     $('vMap').addEventListener('click', function () { setView('map'); });
-    $('mapSelect').addEventListener('change', function () {
-      currentMapId = +$('mapSelect').value;
-      selectedNodeId = null;
-      renderMap();
-    });
+    // 選圖、選採集點、搜尋都由 map-explorer 元件自理，這裡不需再綁事件
+
+    // 開頁預設地圖檢視：「這個採集點在哪」才是這頁的主要用途，清單隨時可切回去。
+    // 元件是動態 import，若此刻還沒載完，renderMap() 會直接返回，
+    // 由 import 的 .then（viewMode 已是 'map'）補畫第一次。
+    setView('map');
   }
 })();
 </script>

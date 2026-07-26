@@ -69,6 +69,13 @@
       "status": "script-ready"
     },
     {
+      "schema": "collectable-items",
+      "file": "collectable-items.json",
+      "name": "可當收藏品採集的物品",
+      "source": "xivapi Item.IsCollectable",
+      "status": "script-ready"
+    },
+    {
       "schema": "maps",
       "file": "maps.json",
       "name": "地圖／區域",

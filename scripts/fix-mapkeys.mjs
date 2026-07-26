@@ -100,11 +100,20 @@ async function main() {
   const all = await fetchAllMaps();
   console.log(`  取得 ${all.length} 筆有效 Map 列`);
 
-  // 英文地名 → 完整 map 資料（同名取第一個）
+  // 英文地名 → 完整 map 資料（同名取第一個，但佔位圖永遠讓位）
+  //
+  // 踩過的雷（2026-07-26）：同一個地名在遊戲裡常有多列 Map，其中可能有一列的 Id 是
+  // `default/00`——那是 XIVAPI 的空白羊皮紙佔位圖，不是該地的底圖。原本「取第一個」
+  // 剛好把「雲冠群島」抓成 default/00（真圖是 a2fx/00）、「完璧王座」抓成 default/00
+  // （真圖是 n4fb/00），前端於是畫出一張沒有地形的空白圖，看起來像「地圖消失了」。
+  // 規則：同名多列時，有真實底圖的優先；只有在全部都是佔位圖時才留 default/00。
+  const PLACEHOLDER_KEY = "default/00";
   const byPlace = new Map();
   for (const m of all) {
     const k = norm(m.place);
-    if (!byPlace.has(k)) byPlace.set(k, m);
+    const cur = byPlace.get(k);
+    if (!cur) { byPlace.set(k, m); continue; }
+    if (cur.id === PLACEHOLDER_KEY && m.id !== PLACEHOLDER_KEY) byPlace.set(k, m);
   }
 
   const db = JSON.parse(await readFile(MAPS_JSON, "utf8"));

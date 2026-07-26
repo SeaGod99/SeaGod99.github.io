@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="FF14 釣魚紀錄追蹤 — 1449 種魚，查詢釣場/餌/時間/天氣，可釣倒數、目標魚開窗鬧鐘提醒與地圖標點，追蹤已釣紀錄">
+  <meta name="description" content="FF14 釣魚紀錄追蹤 — 1414 種台服已開放的魚，查詢釣場/餌/時間/天氣，可釣倒數、目標魚開窗鬧鐘提醒與地圖標點，追蹤已釣紀錄">
   <title>釣魚紀錄追蹤 | 水神的工具箱</title>
   <link rel="stylesheet" href="../../assets/css/common.css">
   <link rel="stylesheet" href="../../assets/css/tool-header.css">
@@ -130,35 +130,10 @@
     }
     .view-toggle button.active { background: var(--gold-dim); color: var(--gold); }
 
-    /* MAP VIEW */
+    /* MAP VIEW — 版面由共用元件 assets/js/map-explorer.js 提供，這裡只留詳情卡內的樣式 */
     .map-view { padding: 0 0 2rem; }
-    .map-bar { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; margin-bottom: 0.75rem; }
-    .map-canvas {
-      position: relative; width: 100%; max-width: 720px; margin: 0 auto;
-      aspect-ratio: 1 / 1; background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius); overflow: hidden;
-    }
-    .map-canvas img { width: 100%; height: 100%; object-fit: cover; display: block; user-select: none; }
-    .map-empty { display: flex; align-items: center; justify-content: center; height: 100%; color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 1rem; }
-    .map-dot {
-      position: absolute; width: 16px; height: 16px; border-radius: 50%;
-      transform: translate(-50%, -50%); cursor: pointer; border: 2px solid rgba(0,0,0,0.55);
-      box-shadow: 0 0 0 1px rgba(255,255,255,0.25); transition: transform 0.1s;
-      background: var(--blue);
-    }
-    .map-dot:hover, .map-dot.sel { transform: translate(-50%, -50%) scale(1.45); z-index: 5; }
-    .map-dot.done { background: var(--gold); box-shadow: 0 0 0 2px rgba(200,169,110,0.6); }
-    .map-legend { font-size: 0.72rem; color: var(--text-muted); display: flex; gap: 0.9rem; flex-wrap: wrap; margin-top: 0.5rem; justify-content: center; }
-    .map-legend span { display: inline-flex; align-items: center; gap: 0.3rem; }
-    .map-legend i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
-
-    /* 釣場資訊面板 */
-    .spot-panel { max-width: 720px; margin: 0.75rem auto 0; background: var(--bg-card);
-      border: 1px solid var(--border); border-radius: var(--radius); padding: 0.75rem 1rem; }
-    .spot-panel:empty { display: none; }
     .spot-head { display: flex; gap: 0.6rem; align-items: baseline; flex-wrap: wrap; margin-bottom: 0.5rem; }
-    .spot-name { font-size: 0.92rem; font-weight: 700; }
-    .spot-loc { font-size: 0.75rem; color: var(--text-dim); }
+    .spot-loc { font-size: 0.75rem; color: var(--text-muted); font-variant-numeric: tabular-nums; }
     .spot-copy { font-size: 0.72rem; padding: 2px 10px; border-radius: 5px; border: 1px solid var(--border);
       background: none; color: var(--blue); cursor: pointer; margin-left: auto; }
     .spot-copy:hover { border-color: var(--blue); }
@@ -342,19 +317,8 @@
   <!-- 控制面（進度／工具列／篩選／魚卡格線／分頁）由 collection-tracker.js 渲染 -->
   <div id="ct-root"></div>
 
-<div class="map-view" id="mapView" style="display:none">
-  <div class="map-bar">
-    <select class="sort-select" id="mapSelect"></select>
-    <span class="result-info" id="mapInfo"></span>
-  </div>
-  <div class="map-canvas" id="mapCanvas"></div>
-  <div class="map-legend">
-    <span><i style="background:var(--blue)"></i>尚有未釣</span>
-    <span><i style="background:var(--gold)"></i>已全釣</span>
-    <span>點釣場圓點看該處魚單；篩選條件會同步套用</span>
-  </div>
-  <div class="spot-panel" id="spotPanel"></div>
-</div>
+<!-- 地圖檢視：內容由共用元件 map-explorer.js 掛載（左底圖標點、右搜尋＋釣場清單） -->
+<div class="map-view" id="mapView" style="display:none"></div>
 
 </div><!-- /container -->
 
@@ -380,13 +344,16 @@ import {
   WEATHER_PERIOD, WEATHER_INFO, ET_HOUR_MS,
 } from '../../assets/js/eorzea-weather.js';
 import { initMapModal, openMapModal } from '../../assets/js/map-modal.js';
+import { createMapExplorer } from '../../assets/js/map-explorer.js';
 
+const esc = CollectionTracker.esc;
 const LS_KEY     = 'ffxiv_fishing_owned';
 const TARGET_KEY = 'ffxiv_fishing_targets';
 const EORZEA_MULT = 3600 / 175;
 const ET_MIN_MS   = 175000 / 60; // 1 ET 分鐘的現實毫秒
 
 let allFish = [];
+let FISH_BY_ID = new Map();  // itemId -> 魚（釣場反查用，避免每次重畫都掃 1449 筆）
 let SPOTS = new Map();   // spotId -> 釣場（座標、mapId）
 let MAPS  = new Map();   // mapId  -> 地圖資料
 let tracker = null;                 // collection-tracker 實例（進度／工具列／篩選／分頁／格線）
@@ -394,8 +361,7 @@ let filtered = [];                  // 引擎最近一次的篩選結果（地�
 let owned   = new Set(JSON.parse(localStorage.getItem(LS_KEY) || '[]'));  // 交給引擎後改指向 tracker.owned
 let targets = new Set(JSON.parse(localStorage.getItem(TARGET_KEY) || '[]'));
 let viewMode = 'list';
-let currentMapId = null;
-let selectedSpotId = null;
+let mapExplorer = null;             // 共用地圖元件（assets/js/map-explorer.js）
 
 /* ── 天氣：魚資料的英文名 → 天氣引擎 key、繁中顯示 ── */
 const EN_TO_KEY = {
@@ -526,90 +492,74 @@ function setView(mode) {
   viewMode = mode;
   document.getElementById('vList').classList.toggle('active', mode === 'list');
   document.getElementById('vMap').classList.toggle('active', mode === 'map');
-  const grid = document.getElementById('ct-grid');
-  const pager = document.getElementById('ct-pagination');
-  if (grid)  grid.style.display  = mode === 'list' ? '' : 'none';
-  if (pager) pager.style.display = mode === 'list' ? '' : 'none';
+  // 清單的收合走 body class（見 map-explorer.js 的 .mx-mapmode 規則）：
+  // 引擎每次 renderGrid 都會把 #ct-grid 的 inline display 設回 ''，設 inline style 會被洗掉
+  document.body.classList.toggle('mx-mapmode', mode === 'map');
   document.getElementById('mapView').style.display = mode === 'map' ? '' : 'none';
   renderCurrent();
 }
 
-/* ── 地圖檢視：釣場一覽（座標→比例同採集紀錄頁公式）── */
-const coordFrac = (c, sizeFactor) => ((c - 1) * (sizeFactor / 100)) / 41;
-const clamp01 = v => Math.max(0, Math.min(1, v));
-
-function renderFishMap() {
-  const fishIds = new Set(filtered.map(f => f.itemId));
-  const byMap = new Map(); // mapId -> [{spot, fish:[fishObj]}]
-  for (const spot of SPOTS.values()) {
-    const fs = (spot.fishes || [])
-      .filter(id => fishIds.has(id))
-      .map(id => allFish.find(f => f.itemId === id))
-      .filter(Boolean);
-    if (!fs.length) continue;
-    const mid = spot.coords?.mapId;
-    if (mid == null || !MAPS.get(mid)) continue;
-    if (!byMap.has(mid)) byMap.set(mid, []);
-    byMap.get(mid).push({ spot, fish: fs });
+/* ── 地圖檢視：把目前篩選結果攤成「釣場」餵給共用元件 ──
+   一個釣場可能有多種魚；只列出仍在篩選結果內的那幾種。
+   ※ 順序＝依 filtered（已套用工具列排序）逐條魚跑，釣場以「第一次出現」的位置定序，
+     所以換排序時地圖清單會跟著動。不要改回依 spot.id 排——那會把排序整個蓋掉。 */
+function fishingPoints() {
+  const bySpot = new Map();   // spotId -> point（Map 保留插入序）
+  for (const f of filtered) {
+    for (const sid of (f.spots || (f.spotId != null ? [f.spotId] : []))) {
+      const spot = SPOTS.get(sid);
+      const mid = spot?.coords?.mapId;
+      if (mid == null || !MAPS.has(mid)) continue;
+      let p = bySpot.get(sid);
+      if (!p) {
+        p = {
+          id: spot.id, mapId: mid, x: spot.coords.x, y: spot.coords.y,
+          name: spot.name || spot.nameEn || `釣場 ${spot.id}`,
+          state: 'done', meta: '', search: '', fish: [],
+        };
+        bySpot.set(sid, p);
+      }
+      p.fish.push(f);
+    }
   }
-
-  const info = document.getElementById('mapInfo');
-  const sel = document.getElementById('mapSelect');
-  const canvas = document.getElementById('mapCanvas');
-  const opts = [...byMap.entries()].sort((a, b) => b[1].length - a[1].length);
-
-  if (!opts.length) {
-    sel.innerHTML = '<option>（目前篩選無可定位釣場）</option>';
-    canvas.innerHTML = '<div class="map-empty">目前篩選沒有可定位在地圖上的釣場。</div>';
-    document.getElementById('spotPanel').innerHTML = '';
-    info.textContent = '地圖檢視：0 個釣場';
-    return;
+  for (const p of bySpot.values()) {
+    p.state = p.fish.every(f => owned.has(f.itemId)) ? 'done' : 'todo';
+    p.meta = `${p.fish.length} 種`;
+    p.search = p.fish.map(f => `${f.name || ''} ${f.nameEn || ''}`).join(' ');
   }
-
-  if (currentMapId == null || !byMap.has(currentMapId)) currentMapId = opts[0][0];
-  sel.innerHTML = opts.map(([mid, arr]) =>
-    `<option value="${mid}"${mid === currentMapId ? ' selected' : ''}>${MAPS.get(mid).name}（${arr.length} 釣場）</option>`).join('');
-
-  const totalSpots = [...byMap.values()].reduce((a, v) => a + v.length, 0);
-  info.textContent = `地圖檢視：${opts.length} 張地圖、${totalSpots} 個釣場（依目前篩選）`;
-
-  const m = MAPS.get(currentMapId);
-  const list = byMap.get(currentMapId);
-  const sf = m.sizeFactor || 100;
-  const dots = list.map(({ spot, fish }) => {
-    const fx = clamp01(coordFrac(spot.coords.x, sf)) * 100;
-    const fy = clamp01(coordFrac(spot.coords.y, sf)) * 100;
-    const done = fish.every(f => owned.has(f.itemId));
-    return `<div class="map-dot${done ? ' done' : ''}${spot.id === selectedSpotId ? ' sel' : ''}" data-spot="${spot.id}"
-      style="left:${fx.toFixed(2)}%;top:${fy.toFixed(2)}%"
-      title="${spot.name}（${spot.coords.x.toFixed(1)}, ${spot.coords.y.toFixed(1)}）· ${fish.length} 種魚"></div>`;
-  }).join('');
-
-  canvas.innerHTML = `<img src="../..${m.image.local}" alt="${m.name}"
-    onerror="if(this.dataset.retry){this.parentElement.innerHTML='<div class=&quot;map-empty&quot;>此地圖底圖載入失敗</div>'}else{this.dataset.retry=1;this.src='${m.image.url}';}">${dots}`;
-
-  if (!list.some(x => x.spot.id === selectedSpotId)) selectedSpotId = null;
-  renderSpotPanel(byMap);
+  return [...bySpot.values()];
 }
 
-function renderSpotPanel(byMap) {
-  const panel = document.getElementById('spotPanel');
-  if (selectedSpotId == null) { panel.innerHTML = ''; return; }
-  const entry = (byMap.get(currentMapId) || []).find(x => x.spot.id === selectedSpotId);
-  if (!entry) { panel.innerHTML = ''; return; }
-  const { spot, fish } = entry;
-  const m = MAPS.get(currentMapId);
-  const flag = `/coord ${spot.coords.x.toFixed(1)} ${spot.coords.y.toFixed(1)} ${m ? m.name : ''}`.trim();
-  panel.innerHTML = `
+function spotDetailHTML(p) {
+  const m = MAPS.get(p.mapId);
+  const flag = `/coord ${p.x.toFixed(1)} ${p.y.toFixed(1)} ${m ? m.name : ''}`.trim();
+  return `
     <div class="spot-head">
-      <span class="spot-name">🎣 ${spot.name}</span>
-      <span class="spot-loc">${m ? m.name : ''} · X:${spot.coords.x.toFixed(1)} Y:${spot.coords.y.toFixed(1)} · ${fish.length} 種魚</span>
-      <button class="spot-copy" data-flag="${flag.replace(/"/g, '&quot;')}">📋 ${flag}</button>
+      <span class="spot-loc">X:${p.x.toFixed(1)} Y:${p.y.toFixed(1)} · ${p.fish.length} 種魚</span>
+      <button class="spot-copy" data-flag="${esc(flag)}">📋 ${esc(flag)}</button>
     </div>
     <div class="spot-fishes">
-      ${fish.map(f => `<span class="sf-chip${owned.has(f.itemId) ? ' owned' : ''}" data-fishchip="${f.itemId}" title="點擊看詳情">${f.name || f.nameEn}</span>`).join('')}
+      ${p.fish.map(f => `<span class="sf-chip${owned.has(f.itemId) ? ' owned' : ''}" data-fishchip="${f.itemId}" title="點擊看詳情">${esc(f.name || f.nameEn)}</span>`).join('')}
     </div>`;
 }
+
+/* 詳情卡內的互動：點魚名開詳情彈窗、點座標複製 flag */
+function onSpotAction(e) {
+  const chip = e.target.closest('[data-fishchip]');
+  if (chip) { openFishDetail(Number(chip.dataset.fishchip)); return true; }
+  const cp = e.target.closest('[data-flag]');
+  if (cp) {
+    const orig = cp.textContent;
+    copyText(cp.dataset.flag).then(ok => {
+      cp.textContent = ok ? '✅ 已複製' : '❌ 複製失敗';
+      setTimeout(() => { cp.textContent = orig; }, 1400);
+    });
+    return true;
+  }
+  return false;
+}
+
+function renderFishMap() { if (mapExplorer) mapExplorer.render(); }
 
 /* 剪貼簿：clipboard API 失敗時退回 execCommand（非安全環境／遊戲內瀏覽器） */
 function copyText(text) {
@@ -1085,29 +1035,7 @@ document.getElementById('targetsPanel').addEventListener('click', e => {
   }
 });
 
-document.getElementById('mapSelect').addEventListener('change', e => {
-  currentMapId = Number(e.target.value);
-  selectedSpotId = null;
-  renderFishMap();
-});
-document.getElementById('mapCanvas').addEventListener('click', e => {
-  const dot = e.target.closest('[data-spot]');
-  if (!dot) return;
-  selectedSpotId = Number(dot.dataset.spot);
-  renderFishMap();
-});
-document.getElementById('spotPanel').addEventListener('click', e => {
-  const chip = e.target.closest('[data-fishchip]');
-  if (chip) { openFishDetail(Number(chip.dataset.fishchip)); return; }
-  const cp = e.target.closest('[data-flag]');
-  if (cp) {
-    const orig = cp.textContent;
-    copyText(cp.dataset.flag).then(ok => {
-      cp.textContent = ok ? '✅ 已複製' : '❌ 複製失敗';
-      setTimeout(() => { cp.textContent = orig; }, 1400);
-    });
-  }
-});
+/* 地圖檢視的選圖、選釣場、搜尋都由 map-explorer 元件自理，這裡不需再綁事件。 */
 
 /* ── 啟動 ── */
 (async function init() {
@@ -1118,9 +1046,30 @@ document.getElementById('spotPanel').addEventListener('click', e => {
   ]);
   // allFish 供詳情彈窗／目標面板／地圖檢視反查；引擎另有自己的一份篩選後清單
   allFish = fishes.data;
+  FISH_BY_ID = new Map(allFish.map(f => [f.itemId, f]));
   SPOTS = new Map(spots.data.map(s => [s.id, s]));
   MAPS  = new Map(getMapsData().map(m => [m.id, m]));
   initMapModal({ mapsData: getMapsData(), base: '../..' });
+
+  // 地圖檢視（左底圖標點、右搜尋＋釣場清單，兩邊連動）
+  mapExplorer = createMapExplorer({
+    mount: document.getElementById('mapView'),
+    base: '../..',
+    maps: MAPS,
+    unit: '釣場',
+    searchPlaceholder: '搜尋地圖、地區、釣場或魚名…',
+    emptyText: '目前篩選沒有可定位在地圖上的釣場。',
+    states: {
+      todo: { color: 'var(--blue)', label: '尚有未釣' },
+      done: { color: 'var(--gold)', label: '已全釣' },
+    },
+    points: fishingPoints,
+    // 從詳情彈窗勾掉某條魚後，這裡的 ✓ 標記要跟著更新 → 把「已釣幾條」併進簽章
+    detailSig: p => `${p.state}:${p.fish.filter(f => owned.has(f.itemId)).length}`,
+    detail: spotDetailHTML,
+    onAction: onSpotAction,
+    note: () => '清單與地圖吃同一組篩選條件；點釣場看該處魚單，點魚名開詳情。',
+  });
 
   // 地區選項（同遊戲內釣魚手帳的地區分頁；依 maps.json 順序＝資料片順）
   const spotRegions = new Set([...SPOTS.values()].map(s => regionOfSpot(s.id)).filter(Boolean));
@@ -1148,19 +1097,23 @@ document.getElementById('spotPanel').addEventListener('click', e => {
     pageSize: 60,
     searchPlaceholder: '搜尋魚名或釣場…',
     keyOf: f => f.itemId,
-    include: () => true,                // 魚庫本身即台服可見範圍，不另做 patch gate
+    // 版本閘門：沿用引擎預設 `e.name && e.name !== e.nameEn && PatchGate.released(e.patch, gp)`。
+    // 舊註解寫「魚庫本身即台服可見範圍」是錯的——fishes.json 有 35 筆 patch 7.2–7.5，
+    // 它們的 itemId 不在 items.json、`name` 全是 null，原本會以英文名露出來（違反繁中名鐵則）。
+    // 兩條規則在這裡剛好完全重合（35 筆＝同一批），1449 → 1414 種。
     nameOf: f => f.name || f.nameEn || '',
     searchText: f => [f.name, f.nameEn, f.spotName, f.spotNameEn].filter(Boolean).join(' ').toLowerCase(),
-    // 預設依開窗狀態排序（可釣中 → 最快開窗），直接回答「接下來釣什麼」
-    defaultSort: 'window',
+    // 預設版本新→舊（2026-07-26 使用者指定）；「開窗時間」仍在選單裡可切
+    defaultSort: 'patch-desc',
     sorts: [
+      'patch-desc', 'patch-asc',
       { value: 'window', label: '開窗時間（可釣中優先）', cmp: (a, b) => {
           const now = Date.now();
           const sa = fishStatus(a, now), sb = fishStatus(b, now);
           if (ST_RANK[sa.state] !== ST_RANK[sb.state]) return ST_RANK[sa.state] - ST_RANK[sb.state];
           return (sa.secsLeft ?? Infinity) - (sb.secsLeft ?? Infinity);
         } },
-      'name', 'patch-asc', 'patch-desc',
+      'name',
     ],
     filters: [
       {
@@ -1211,6 +1164,9 @@ document.getElementById('spotPanel').addEventListener('click', e => {
 
   document.getElementById('vList').addEventListener('click', () => setView('list'));
   document.getElementById('vMap').addEventListener('click', () => setView('map'));
+
+  // 開頁預設地圖檢視：「這條魚在哪裡釣」才是這頁的主要用途，清單隨時可切回去
+  setView('map');
 
   tickClock();
   syncAlarmUI();

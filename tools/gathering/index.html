@@ -6,36 +6,16 @@
   <meta name="description" content="FFXIV 限時採集節點查詢與艾歐澤亞時間計時器 — 傳說、稀有採集點開放時間、座標、採集職業一覽">
   <meta name="keywords" content="FFXIV, FF14, 限時採集, 傳說採集, 採集節點, 採礦工, 園藝工, ET, 艾歐澤亞時間, 繁體中文">
   <title>限時採集節點查詢 | 水神的工具箱</title>
+  <!-- 本頁原本沒接共用樣式、整套設計自己手寫（連 :root 變數都複製一份），
+       所以工具列與篩選長得跟其他 12 頁不一樣。改為載入 common.css 沿用共用的
+       .toolbar／.filter-* 等樣式；下方 <style> 在 link 之後，既有的頁面專屬樣式仍然勝出。 -->
+  <link rel="stylesheet" href="../../assets/css/common.css">
   <link rel="stylesheet" href="../../assets/css/tool-header.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg-base:    #0a0c10;
-      --bg-surface: #0f1117;
-      --bg-card:    #14181f;
-      --bg-card-hover: #1a1f2b;
-      --border:     rgba(255,255,255,0.07);
-      --border-hover: rgba(200,169,110,0.4);
-      --gold:       #c8a96e;
-      --gold-light: #e2c98a;
-      --gold-dim:   rgba(200,169,110,0.15);
-      --blue:       #4fc3f7;
-      --blue-dim:   rgba(79,195,247,0.12);
-      --green:      #4ade80;
-      --green-dim:  rgba(74,222,128,0.12);
-      --purple:     #a78bfa;
-      --purple-dim: rgba(167,139,250,0.12);
-      --red:        #f87171;
-      --red-dim:    rgba(248,113,113,0.12);
-      --text-primary:   #e8eaf0;
-      --text-secondary: #8892a4;
-      --text-muted:     #4a5568;
-      --radius-sm: 6px;
-      --radius-md: 10px;
-      --radius-lg: 16px;
-      --shadow-card: 0 2px 16px rgba(0,0,0,0.4);
-      --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
-    }
+    /* 色票與圓角／過渡變數一律由 common.css 供應（亮色由 theme.css 覆蓋）。
+       本頁原本自己複製了一份 :root，已經飄移（--text-muted #4a5568 vs 共用的 #717c91、
+       --transition 0.2s vs 0.18s）且缺 --cyan/--orange/--accent 等，故移除。 */
     html { scroll-behavior: smooth; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
@@ -72,27 +52,29 @@
     .et-sub { font-size:11px; color:var(--text-secondary); }
     .et-divider { width:1px; height:36px; background:var(--border); }
 
-    /* ── controls ── */
-    .controls { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px; align-items:center; }
-    .search-box { flex:1; min-width:200px; position:relative; }
-    .search-box input {
-      width:100%; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md);
-      padding:11px 14px 11px 38px; color:var(--text-primary); font-size:14px; outline:none; transition:var(--transition);
-    }
-    .search-box input:focus { border-color:var(--border-hover); }
-    .search-box .icon { position:absolute; left:13px; top:50%; transform:translateY(-50%); color:var(--text-muted); font-size:14px; }
+    /* ── controls ──
+       工具列（.toolbar／.search-wrap／.search-input／.sort-select／.icon-btn）與
+       篩選區（.filter-section／.filter-label／.filter-tags／.filter-tag）全部沿用
+       assets/css/common.css 的共用樣式，這裡不再自訂，才能跟其他 12 頁長得一樣。 */
 
-    .filter-group { display:flex; gap:6px; flex-wrap:wrap; }
+    /* 檢視切換：與釣魚／採集紀錄兩頁同一套 */
+    .g-viewbar { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin:0 0 14px; }
+    .view-toggle { display:flex; border:1px solid var(--border); border-radius:5px; overflow:hidden; }
+    .view-toggle button {
+      font-size:13px; padding:6px 13px; cursor:pointer; border:none; font-family:inherit;
+      background:var(--bg-surface); color:var(--text-secondary); transition:var(--transition);
+    }
+    .view-toggle button.active { background:var(--gold-dim); color:var(--gold); }
+    /* 「只看追蹤」是開關不是篩選標籤，沿用 icon-btn 但開啟時給藍色（同站內 .chip.mine 的語意）*/
+    #trackOnly.on { background:var(--blue-dim); border-color:rgba(79,195,247,0.4); color:var(--blue); }
+
+    /* .chip 只剩追蹤列的鬧鐘開關在用（🔔 開放提醒／🔊 音效）*/
     .chip {
       background:var(--bg-card); border:1px solid var(--border); border-radius:20px;
       padding:7px 14px; font-size:13.5px; color:var(--text-secondary); cursor:pointer; transition:var(--transition); user-select:none;
     }
     .chip:hover { border-color:var(--border-hover); color:var(--text-primary); }
-    .chip.active { background:var(--gold-dim); border-color:rgba(200,169,110,0.4); color:var(--gold-light); }
     .chip.mine.active { background:var(--blue-dim); border-color:rgba(79,195,247,0.4); color:var(--blue); }
-    .chip.btn.active   { background:var(--green-dim); border-color:rgba(74,222,128,0.4); color:var(--green); }
-
-    .toggle-open { margin-left:auto; }
 
     .result-meta { font-size:12px; color:var(--text-muted); margin-bottom:12px; }
 
@@ -234,29 +216,31 @@
       .node-grid { grid-template-columns:1fr; }
       .et-bar { gap:14px; }
       .et-value { font-size:22px; }
-      .toggle-open { margin-left:0; }
     }
 
-    /* ── 地圖一覽檢視 ── */
-    .gmap-toolbar { display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:12px; }
-    .gmap-legend { font-size:13px; opacity:.75; display:flex; align-items:center; }
-    .gdot-demo { display:inline-block; width:11px; height:11px; border-radius:50%; margin-right:4px; border:1.5px solid rgba(0,0,0,.5); }
-    .gdot-demo.open { background:#4ade80; } .gdot-demo.soon { background:#fbbf24; } .gdot-demo.closed { background:#6b7280; }
-    .gmap-canvas { position:relative; max-width:780px; border:1px solid rgba(255,255,255,.12); border-radius:10px; overflow:hidden; background:rgba(128,128,128,.05); }
-    .gmap-canvas img { display:block; width:100%; height:auto; }
-    #gDots { position:absolute; inset:0; }
-    .gdot { position:absolute; width:14px; height:14px; border-radius:50%; transform:translate(-50%,-50%); cursor:pointer; border:2px solid rgba(0,0,0,.55); box-shadow:0 0 6px rgba(0,0,0,.5); }
-    .gdot.open { background:#4ade80; animation:gdot-pulse 1.6s ease-out infinite; }
-    .gdot.soon { background:#fbbf24; }
-    .gdot.closed { background:#6b7280; opacity:.75; }
-    .gdot.sel { outline:3px solid #4fc3f7; outline-offset:1px; }
+    /* ── 地圖一覽檢視 ──
+       版面由共用元件 assets/js/map-explorer.js 提供；這裡只補「開放中」圓點的脈動
+       （元件會替每個點掛上 mx-s-<state>）與節點詳情卡的排版 */
+    .mx-dot.mx-s-open { animation:gdot-pulse 1.6s ease-out infinite; }
+    .mx-dot.mx-s-closed { opacity:.75; }
     @keyframes gdot-pulse { 0% { box-shadow:0 0 0 0 rgba(74,222,128,.55); } 100% { box-shadow:0 0 0 12px rgba(74,222,128,0); } }
-    .gmap-empty, .gmap-hint { padding:20px; opacity:.7; font-size:14px; }
-    .gmap-panel { margin-top:12px; max-width:780px; }
-    .gnp { display:flex; align-items:center; gap:12px; flex-wrap:wrap; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.09); border-radius:10px; padding:12px 16px; font-size:14px; }
-    .gnp-name { font-weight:700; }
+
+    /* 右側節點列的開放狀態改用顏色表達（排序不再隨時間動，狀態就得看得出來）。
+       底色＋倒數字色兩層提示；左邊的 border 留給「選中」用，不要跟狀態搶。 */
+    .mx-point.mx-s-open   { background:rgba(74,222,128,0.10); }
+    .mx-point.mx-s-open   .mx-pname { color:var(--green); font-weight:600; }
+    .mx-point.mx-s-open   .mx-live  { color:var(--green); font-weight:600; }
+    .mx-point.mx-s-soon   { background:rgba(251,191,36,0.09); }
+    .mx-point.mx-s-soon   .mx-live  { color:#d99e0b; }
+    .mx-point.mx-s-closed .mx-pname { opacity:.72; }
+    .mx-point.mx-s-closed .mx-live  { opacity:.72; }
+    /* hover／選中仍要看得出來，壓過狀態底色 */
+    .mx-point.mx-s-open:hover, .mx-point.mx-s-soon:hover { background:var(--bg-card-hover); }
+    .mx-point.sel { background:var(--raise); }
+    .gnp { display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-size:13px; }
+    .gnp-name { font-weight:700; width:100%; }
     .gnp-meta { opacity:.75; }
-    .gnp .windows { width:100%; margin-top:4px; }
+    .gnp .windows { width:100%; margin-top:2px; }
   </style>
   <link rel="stylesheet" href="../../assets/css/theme.css">
   <script src="../../assets/js/theme.js"></script>
@@ -285,39 +269,57 @@
     </div>
   </div>
 
-  <!-- controls -->
-  <div class="controls">
-    <div class="search-box">
-      <span class="icon">🔍</span>
-      <input type="text" id="search" placeholder="搜尋物品名稱或地點…" autocomplete="off">
+  <!-- 檢視切換：位置與樣式同釣魚／採集紀錄兩頁（在控制面之上） -->
+  <div class="g-viewbar">
+    <div class="view-toggle" id="gViewToggle">
+      <button type="button" data-view="list">☰ 清單</button>
+      <button type="button" data-view="map">🗺️ 地圖</button>
     </div>
-    <div class="filter-group" id="jobFilters">
-      <span class="chip btn active" data-job="all">全部職業</span>
-      <span class="chip btn" data-job="採礦工">⛏️ 採礦工</span>
-      <span class="chip btn" data-job="園藝工">🌿 園藝工</span>
+  </div>
+
+  <!-- 控制面：版型對齊 collection-tracker 引擎的頁面——
+       上排工具列（搜尋／地圖／排序／只看追蹤），下方才是分組標籤的篩選 chips。
+       本頁沒有「已採集」進度的概念（⭐ 是待辦清單＋鬧鐘，不是進度），
+       所以不套引擎，只沿用它的 .toolbar／.filter-section／.filter-tag 樣式。 -->
+  <div class="toolbar">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" type="text" id="search" placeholder="搜尋物品名稱或地點…" autocomplete="off">
     </div>
-    <div class="select-box">
-      <select id="verSel"><option value="all">全部版本</option></select>
+    <select class="sort-select" id="mapSel" title="只看某張地圖"><option value="all">全部地圖</option></select>
+    <select class="sort-select" id="sortSel" title="排序方式">
+      <option value="ver">排序：版本新→舊＞等級（順序固定）</option>
+      <option value="time">排序：開放狀態＞倒數（會隨時間重排）</option>
+    </select>
+    <button type="button" class="icon-btn" id="trackOnly">⭐ 只看追蹤</button>
+  </div>
+
+  <div id="gFilters">
+    <div class="filter-section">
+      <div class="filter-label">職業</div>
+      <div class="filter-tags" data-fid="job">
+        <button type="button" class="filter-tag" data-v="採礦工">⛏️ 採礦工</button>
+        <button type="button" class="filter-tag" data-v="園藝工">🌿 園藝工</button>
+      </div>
     </div>
-    <div class="select-box">
-      <select id="mapSel"><option value="all">全部地圖</option></select>
+    <div class="filter-section">
+      <div class="filter-label">節點種類</div>
+      <div class="filter-tags" data-fid="type">
+        <button type="button" class="filter-tag" data-v="legendary">傳說</button>
+        <button type="button" class="filter-tag" data-v="ephemeral">靈砂</button>
+      </div>
     </div>
-    <div class="filter-group" id="typeFilters">
-      <span class="chip btn active" data-type="all">全部類型</span>
-      <span class="chip btn" data-type="legendary">傳說</span>
-      <span class="chip btn" data-type="ephemeral">靈砂</span>
+    <!-- 「節點種類」講的是節點本身（傳說／靈砂），這組講的是節點產出什麼 -->
+    <div class="filter-section">
+      <div class="filter-label">產物類型</div>
+      <div class="filter-tags" data-fid="produce">
+        <button type="button" class="filter-tag" data-v="collectable">收藏品</button>
+        <button type="button" class="filter-tag" data-v="material">素材</button>
+      </div>
     </div>
-    <div class="select-box">
-      <select id="sortSel" title="清單排序方式">
-        <option value="ver">排序：版本＞等級</option>
-        <option value="time">排序：開放狀態＞倒數</option>
-      </select>
-    </div>
-    <span class="chip mine toggle-open" id="openOnly" data-on="0">僅顯示開放中</span>
-    <span class="chip mine" id="trackOnly" data-on="0">⭐ 只看追蹤</span>
-    <div class="filter-group" id="gViewToggle">
-      <span class="chip btn active" data-view="list">📋 清單</span>
-      <span class="chip btn" data-view="map">🗺 地圖一覽</span>
+    <div class="filter-section">
+      <div class="filter-label">版本</div>
+      <div class="filter-tags" data-fid="ver" id="verTags"></div>
     </div>
   </div>
 
@@ -344,15 +346,8 @@
 
   <div class="node-grid" id="nodeGrid"></div>
 
-  <!-- 地圖一覽檢視：整張地圖上標出所有節點位置與開放狀態 -->
-  <div id="gMapView" style="display:none">
-    <div class="gmap-toolbar">
-      <div class="select-box"><select id="gMapSelect"></select></div>
-      <span class="gmap-legend"><i class="gdot-demo open"></i> 開放中　<i class="gdot-demo soon"></i> 即將開放　<i class="gdot-demo closed"></i> 未開放</span>
-    </div>
-    <div class="gmap-canvas" id="gMapCanvas"></div>
-    <div class="gmap-panel" id="gNodePanel"></div>
-  </div>
+  <!-- 地圖一覽檢視：內容由共用元件 map-explorer.js 掛載（左底圖標點、右搜尋＋節點清單） -->
+  <div id="gMapView" style="display:none"></div>
 
   <div class="empty" id="emptyState" style="display:none">找不到符合條件的採集節點，試試其他關鍵字。</div>
 
@@ -378,6 +373,7 @@
 
 <script type="module">
 import { initMapModal, openMapModal } from '../../assets/js/map-modal.js';
+import { createMapExplorer } from '../../assets/js/map-explorer.js';
 /* ─────────────────────────────────────────────
    艾歐澤亞時間 (Eorzea Time)
    ET 流速 = 現實時間 × 3600/175 (1 ET 天 = 70 真實分鐘)
@@ -403,17 +399,21 @@ function saveTracked(){ localStorage.setItem(TRACK_KEY, JSON.stringify([...track
 let ITEMS = new Map();   // itemId -> name
 let MAPS  = new Map();   // mapId  -> {name, region, patch}
 let NODES = [];          // 處理後的限時節點列表
+let COLLECTABLE = new Set();  // 可當收藏品採集／交付的 itemId（XIVAPI Item.IsCollectable）
 
 async function loadData(){
-  const [gathering, items, maps] = await Promise.all([
+  const [gathering, items, maps, collectable] = await Promise.all([
     fetch('../../data/gathering.json').then(r=>r.json()),
     // 本頁只需 id→繁中名，改讀精簡版（1.3MB，完整 items.json 為 10MB）；
     // 兩者 id 集合相同，「查不到＝台服未開放」的判斷完全等價。見 scripts/build-items-lite.mjs
     fetch('../../data/items-lite.json').then(r=>r.json()),
     fetch('../../data/maps.json').then(r=>r.json()),
+    // 收藏品旗標（6.4KB）：名稱判斷不出來，見 scripts/build-collectable-items.mjs
+    fetch('../../data/collectable-items.json').then(r=>r.json()),
   ]);
   ITEMS = new Map(items.data);   // data 已是 [[id, name], ...]
   MAPS  = new Map(maps.data.map(m => [m.id, m]));
+  COLLECTABLE = new Set(collectable.data);
 
   NODES = gathering.data
     .filter(n => n.limited === true)
@@ -438,6 +438,12 @@ async function loadData(){
         duration: n.duration || 0, // 分鐘 (ET)
         legendary: !!n.legendary,
         ephemeral: !!n.ephemeral,
+        // 收藏品節點＝任一（台服已開放的）產物可當收藏品採。
+        // **不可用「收藏用」名稱前綴判斷**：實查 325 種產物，有 48 種是收藏品卻沒有那個前綴
+        //（火砂礫、強火性岩、赤玉土、腐殖土、梅茵菲娜月桂…），會把 76 個節點少算成 38 個。
+        // 權威旗標＝XIVAPI `Item.IsCollectable`，已由 scripts/build-collectable-items.mjs
+        // 烘成 data/collectable-items.json（前端是靜態頁，不能即時打 API）。
+        collectable: (n.items || []).some(id => ITEMS.has(id) && COLLECTABLE.has(id)),
       };
     })
     .filter(n => n.itemNames.length > 0); // 全部產物皆台服未開放 → 整節點隱藏
@@ -509,26 +515,29 @@ const grid = document.getElementById('nodeGrid');
 const emptyState = document.getElementById('emptyState');
 const resultMeta = document.getElementById('resultMeta');
 
-let filterJob = 'all';
-let filterType = 'all';
-let filterVer = 'all';
+// 篩選狀態：與 collection-tracker 引擎同一套語意——每組單選、null＝該組不篩，
+// 點已選中的標籤等於取消（所以不需要「全部 XX」那顆）。
+// 刻意「沒有」開放狀態這一組：狀態每秒都在變，做成篩選會讓清單自己增減；
+// 現在改用顏色表達（開放中綠／即將開放黃／未開放灰），見 2026-07-26 的調整。
+const filterState = { job: null, type: null, produce: null, ver: null };
 let filterMap = 'all';
-let openOnly = false;
 let trackOnly = false;
 let searchTerm = '';
 const SORT_KEY = 'gathering-sort-mode';
-let sortMode = 'time';  // time＝開放狀態→倒數（預設，日常「現在能採什麼」）；ver＝版本高→等級高
+// ver＝版本新→舊、同版本再依等級高→低（預設，2026-07-26 使用者指定）；time＝開放狀態→倒數
+let sortMode = 'ver';
 try { const s = localStorage.getItem(SORT_KEY); if (s === 'ver' || s === 'time') sortMode = s; } catch(e) {}
 let gridSig = '';   // 網格簽章：成員/狀態/追蹤不變時不重建 DOM（避免迷你地圖 img 每秒重建閃爍）
 
 function jobEmoji(job){ return job === '採礦工' ? '⛏️' : '🌿'; }
 
 function passesFilter(node){
-  if (filterJob !== 'all' && node.job !== filterJob) return false;
-  if (filterVer !== 'all' && String(node.patch||'').split('.')[0] !== filterVer) return false;
+  if (filterState.job && node.job !== filterState.job) return false;
+  if (filterState.ver && String(node.patch||'').split('.')[0] !== filterState.ver) return false;
   if (filterMap !== 'all' && String(node.mapId) !== filterMap) return false;
-  if (filterType === 'legendary' && !node.legendary) return false;
-  if (filterType === 'ephemeral' && !node.ephemeral) return false;
+  if (filterState.type && !node[filterState.type]) return false;
+  if (filterState.produce === 'collectable' && !node.collectable) return false;
+  if (filterState.produce === 'material'    &&  node.collectable) return false;
   if (trackOnly && !trackedIds.has(node.id)) return false;
   if (searchTerm) {
     const hay = `${node.itemNames.join(' ')} ${node.mapName||''} ${node.region||''}`.toLowerCase();
@@ -683,17 +692,19 @@ function render(){
   checkAlarms(now);
   let list = NODES.filter(passesFilter).map(n => ({ n, st: nodeStatus(n, now) }));
 
-  if (openOnly) list = list.filter(x => x.st.state === 'open');
-
-  // 排序：預設 版本高→等級高（同版本等級再看開放狀態）；time 模式為 開放中→即將→其他、各組依倒數升序
+  // 排序：
+  //  ver（預設）＝版本新→舊＞等級高→低＞節點 id。**刻意完全不看開放狀態與倒數**——
+  //    這頁每秒重畫，只要比較條件沾到時間，清單就會自己一直重排（節點開窗／關窗時整列跳位）。
+  //    狀態改用顏色表達（開放中綠／即將開放黃／未開放灰），順序只在改篩選時才動。
+  //    最後那層 id 是為了讓同版本同等級的節點有穩定的先後，不留給引擎的不定行為。
+  //  time＝明確要「現在能採什麼」時才選，這個模式本來就會隨倒數重排。
   const rank = { open:0, soon:1, closed:2 };
   if (sortMode === 'ver'){
     list.sort((a,b)=>{
       const pa = parseFloat(a.n.patch) || 0, pb = parseFloat(b.n.patch) || 0;
       if (pb !== pa) return pb - pa;
       if (b.n.level !== a.n.level) return b.n.level - a.n.level;
-      if (rank[a.st.state] !== rank[b.st.state]) return rank[a.st.state]-rank[b.st.state];
-      return a.st.secsLeft - b.st.secsLeft;
+      return a.n.id - b.n.id;
     });
   } else {
     list.sort((a,b)=>{
@@ -704,7 +715,7 @@ function render(){
 
   if (list.length === 0){
     grid.innerHTML = ''; gridSig = ''; resultMeta.textContent='';
-    if (gView === 'map'){ emptyState.style.display='none'; renderNodeMap([], now); return; }
+    if (gView === 'map'){ emptyState.style.display='none'; gLastRows = []; renderNodeMap(); return; }
     emptyState.style.display='block';
     return;
   }
@@ -712,7 +723,7 @@ function render(){
   const openCount = list.filter(x=>x.st.state==='open').length;
   resultMeta.textContent = `共 ${list.length} 個節點，其中 ${openCount} 個目前開放中`;
 
-  if (gView === 'map'){ renderNodeMap(list, now); return; }
+  if (gView === 'map'){ gLastRows = list; renderNodeMap(); return; }
 
   // 成員、順序、狀態與追蹤皆未變 → 只就地更新倒數文字，不重建卡片
   const sig = list.map(x=>`${x.n.id}:${x.st.state}:${x.st.startH ?? ''}`).join(',') + '|' + [...trackedIds].join('.');
@@ -781,119 +792,123 @@ function render(){
   }).join('');
 }
 
-/* ── 地圖一覽檢視：整張地圖標出節點位置，綠=開放中／黃=即將／灰=未開放 ── */
-const gCoordFrac = (c, sf) => Math.max(0, Math.min(1, ((c - 1) * (sf / 100)) / 41));
-let gView = 'list', gMapId = null, gSelNode = null, gLastImgMap = null;
+/* ── 地圖一覽檢視：左底圖標點、右搜尋＋節點清單（共用元件 map-explorer.js）── */
+const gCoordFrac = (c, sf) => Math.max(0, Math.min(1, ((c - 1) * (sf / 100)) / 41));  // 卡片與追蹤列的迷你地圖仍在用
+let gView = 'list';
+let gMapExplorer = null;
+let gLastRows = [];   // render() 最近一次的篩選結果（含開放狀態），地圖檢視吃它
 
 function setGView(mode){
   gView = mode;
-  document.querySelectorAll('#gViewToggle .chip').forEach(c=>c.classList.toggle('active', c.dataset.view===mode));
+  document.querySelectorAll('#gViewToggle button').forEach(b=>b.classList.toggle('active', b.dataset.view===mode));
   document.getElementById('nodeGrid').style.display = mode==='list' ? '' : 'none';
   document.getElementById('gMapView').style.display = mode==='map' ? '' : 'none';
   render();
 }
 
-function renderNodeMap(list, now){
-  const byMap = new Map();
-  for (const x of list){
-    if (x.n.mapMissing) continue;
-    if (!byMap.has(x.n.mapId)) byMap.set(x.n.mapId, []);
-    byMap.get(x.n.mapId).push(x);
-  }
-  const sel = document.getElementById('gMapSelect');
-  const canvas = document.getElementById('gMapCanvas');
-  const opts = [...byMap.entries()].sort((a,b)=>b[1].length-a[1].length);
-  if (!opts.length){
-    canvas.innerHTML = '<div class="gmap-empty">目前篩選沒有可定位在地圖上的節點。</div>';
-    document.getElementById('gNodePanel').innerHTML = '';
-    sel.innerHTML = '<option>（無）</option>'; sel.dataset.sig = ''; gLastImgMap = null;
-    return;
-  }
-  if (gMapId == null || !byMap.has(gMapId)) gMapId = opts[0][0];
-
-  // 下拉選單只在集合變動時重建（render 每秒跑，避免打斷選單操作）
-  const sig = opts.map(([id,a])=>id+':'+a.length).join(',');
-  if (sel.dataset.sig !== sig){
-    sel.dataset.sig = sig;
-    sel.innerHTML = opts.map(([mid,arr])=>
-      `<option value="${mid}"${mid===gMapId?' selected':''}>${MAPS.get(mid)?.name ?? mid}（${arr.length} 節點）</option>`).join('');
-  } else if (sel.value !== String(gMapId)) sel.value = String(gMapId);
-
-  const m = MAPS.get(gMapId);
-  if (gLastImgMap !== gMapId){
-    gLastImgMap = gMapId;
-    canvas.innerHTML = `<img src="../..${m.image.local}" alt="${m.name}"
-      onerror="if(this.dataset.retry){this.parentElement.innerHTML='<div class=&quot;gmap-empty&quot;>此地圖底圖載入失敗</div>'}else{this.dataset.retry=1;this.src='${m.image.url}';}"><div id="gDots"></div>`;
-  }
-  const sf = m.sizeFactor || 100;
-  const rows = byMap.get(gMapId);
-  if (gSelNode != null && !rows.some(x=>x.n.id===gSelNode)) gSelNode = null;
-  const dots = document.getElementById('gDots');
-  if (dots) dots.innerHTML = rows.map(({n, st})=>{
-    const fx = gCoordFrac(n.x, sf)*100, fy = gCoordFrac(n.y, sf)*100;
-    return `<div class="gdot ${st.state}${n.id===gSelNode?' sel':''}" data-gdot="${n.id}"
-      style="left:${fx.toFixed(2)}%;top:${fy.toFixed(2)}%"
-      title="${n.itemNames.join('、')}（X:${n.x.toFixed(1)} Y:${n.y.toFixed(1)}）"></div>`;
-  }).join('');
-  renderGNodePanel(rows, now);
+/* 節點 → 元件要的點位。
+   順序直接沿用 gLastRows（render() 已套用排序下拉的結果），不要另外重排，
+   否則排序下拉對地圖檢視形同無效。元件的結構簽章與順序無關，
+   順序變動只會搬既有節點、不重建 DOM，所以每秒重排也不會打斷倒數。 */
+function gatherPoints(){
+  return gLastRows
+    .filter(x => !x.n.mapMissing)
+    .map(({ n, st }) => ({
+      id: n.id, mapId: n.mapId, x: n.x, y: n.y,
+      name: n.itemNames.join('、'),
+      state: st.state,
+      meta: `Lv.${n.level}`,
+      live: fmtCountdown(st.secsLeft),
+      search: `${n.itemNames.join(' ')} ${n.typeName} ${n.job}`,
+      n, st,
+    }));
 }
 
-function renderGNodePanel(rows){
-  const panel = document.getElementById('gNodePanel');
-  const entry = rows.find(x=>x.n.id===gSelNode);
-  if (!entry){
-    const openN = rows.filter(x=>x.st.state==='open').length;
-    panel.innerHTML = `<div class="gmap-hint">點地圖上的圓點查看節點詳情（此地圖 ${rows.length} 個節點、${openN} 個開放中）。</div>`;
-    return;
-  }
-  const { n, st } = entry;
-  const pill = st.state==='open'
-    ? '<span class="status-pill pill-open">● 開放中</span>'
-    : st.state==='soon'
-      ? '<span class="status-pill pill-soon">即將開放</span>'
-      : '<span class="status-pill pill-closed">未開放</span>';
-  const cdLabel = st.state==='open' ? '剩餘' : '距開放';
-  const cdCls = st.state==='open'?'open':st.state==='soon'?'soon':'closed';
-  const wins = n.spawns.map(h=>{
-    const isNow = st.state==='open' && ((h%24)+24)%24===st.startH;
-    return `<span class="win ${isNow?'now':''}">${fmtEtWindow(h, n.duration)}</span>`;
-  }).join('');
+/* 詳情卡：只放不會變的結構，會跳動的部分留空殼交給 gNodeTick 每秒填 */
+function gNodeDetailHTML(p){
+  const n = p.n;
+  const wins = n.spawns.map(h => `<span class="win" data-win="${h}">${fmtEtWindow(h, n.duration)}</span>`).join('');
   const flag = teamcraftFlag(n);
-  const tracked = trackedIds.has(n.id);
-  panel.innerHTML = `<div class="gnp">
-    ${pill}
-    <span class="gnp-name">${jobEmoji(n.job)} ${n.itemNames.join('、')}</span>
-    <span class="gnp-meta">${n.typeName}・Lv.${n.level}・X:${n.x.toFixed(1)} Y:${n.y.toFixed(1)}</span>
-    <span>${cdLabel} <b class="countdown ${cdCls}">${fmtCountdown(st.secsLeft)}</b></span>
-    <button class="track-btn ${tracked?'on':''}" data-track="${n.id}" style="position:static" title="加入追蹤">${tracked?'★':'☆'}</button>
+  return `<div class="gnp">
+    <span class="status-pill" data-gpill></span>
+    <span class="gnp-name">${n.itemNames.join('、')}</span>
+    <span class="gnp-meta">${jobEmoji(n.job)} ${n.job}・${n.typeName}・採集 Lv.${n.level}・X:${n.x.toFixed(1)} Y:${n.y.toFixed(1)}</span>
+    <span><span data-gcdlabel></span> <b class="countdown" data-gcd></b></span>
+    <button class="track-btn" data-track="${n.id}" style="position:static" title="加入追蹤"></button>
     ${flag ? `<button class="flag-btn" data-flag="${flag.replace(/"/g,'&quot;')}">📋 ${flag}</button>` : ''}
     <div class="windows">${wins}</div>
   </div>`;
+}
+
+/* 每秒就地更新：狀態徽章、倒數、目前正開放的那個時窗、追蹤星號 */
+function gNodeTick(p, box){
+  const { n, st } = p;
+  const pill = box.querySelector('[data-gpill]');
+  if (pill){
+    pill.className = 'status-pill ' + (st.state==='open'?'pill-open':st.state==='soon'?'pill-soon':'pill-closed');
+    pill.textContent = st.state==='open' ? '● 開放中' : st.state==='soon' ? '即將開放' : '未開放';
+  }
+  const lab = box.querySelector('[data-gcdlabel]');
+  if (lab) lab.textContent = st.state==='open' ? '剩餘' : '距開放';
+  const cd = box.querySelector('[data-gcd]');
+  if (cd){
+    cd.className = 'countdown ' + (st.state==='open'?'open':st.state==='soon'?'soon':'closed');
+    cd.textContent = fmtCountdown(st.secsLeft);
+  }
+  box.querySelectorAll('[data-win]').forEach(el => {
+    const h = Number(el.dataset.win);
+    el.classList.toggle('now', st.state==='open' && ((h%24)+24)%24===st.startH);
+  });
+  const tb = box.querySelector('[data-track]');
+  if (tb){
+    const on = trackedIds.has(n.id);
+    tb.classList.toggle('on', on);
+    tb.textContent = on ? '★' : '☆';
+  }
+}
+
+function renderNodeMap(){
+  if (!gMapExplorer){
+    gMapExplorer = createMapExplorer({
+      mount: document.getElementById('gMapView'),
+      base: '../..',
+      maps: MAPS,
+      unit: '節點',
+      searchPlaceholder: '搜尋地圖、地區、產物或節點類型…',
+      emptyText: '目前篩選沒有可定位在地圖上的節點。',
+      states: {
+        open:   { color: '#4ade80', label: '開放中' },
+        soon:   { color: '#fbbf24', label: '即將開放' },
+        closed: { color: '#6b7280', label: '未開放' },
+      },
+      points: gatherPoints,
+      detail: gNodeDetailHTML,
+      tick: gNodeTick,
+      // 詳情卡內的追蹤星與 📋 複製座標走清單檢視同一支處理器
+      onAction: e => { handleActionClick(e); return true; },
+      note: () => {
+        const miss = gLastRows.filter(x => x.n.mapMissing).length;
+        return miss ? `另有 ${miss} 個節點沒有地圖座標（無人島開拓、雲冠群島等），只在清單檢視顯示。` : '';
+      },
+    });
+  }
+  gMapExplorer.render();
 }
 
 document.getElementById('gViewToggle').addEventListener('click', e=>{
   const chip = e.target.closest('[data-view]');
   if (chip) setGView(chip.dataset.view);
 });
-document.getElementById('gMapSelect').addEventListener('change', e=>{
-  gMapId = Number(e.target.value); gSelNode = null; gLastImgMap = null; render();
-});
-document.getElementById('gMapView').addEventListener('click', e=>{
-  const dot = e.target.closest('[data-gdot]');
-  if (dot){ gSelNode = Number(dot.dataset.gdot); render(); return; }
-  handleActionClick(e);
-});
 
 /* ── 篩選器初始化 ── */
 function populateSelectors(){
-  const verSel = document.getElementById('verSel');
+  // 版本改用標籤（與其他頁的「版本」篩選同一種樣式與文案格式「N.x 資料片繁中名」）
+  const verTags = document.getElementById('verTags');
   const EXP_NAME = { 2:'原初之地', 3:'蒼天之禁地', 4:'紅蓮之狂潮', 5:'暗影之逆焰', 6:'曉月之終途', 7:'金曦之遺輝' };
   const majors = [...new Set(NODES.map(n=>String(n.patch||'').split('.')[0]).filter(Boolean))].sort();
-  majors.forEach(m=>{
-    const o = document.createElement('option'); o.value=m;
-    o.textContent = EXP_NAME[m] ? `${m}.x ${EXP_NAME[m]}` : `${m}.x`;
-    verSel.appendChild(o);
-  });
+  verTags.innerHTML = majors.map(m=>
+    `<button type="button" class="filter-tag" data-v="${m}">${EXP_NAME[m] ? `${m}.x ${EXP_NAME[m]}` : `${m}.x`}</button>`
+  ).join('');
 
   const mapSel = document.getElementById('mapSel');
   const mapEntries = new Map();
@@ -919,22 +934,15 @@ function tickClock(){
 document.getElementById('search').addEventListener('input', e=>{
   searchTerm = e.target.value.trim().toLowerCase(); render();
 });
-document.getElementById('jobFilters').addEventListener('click', e=>{
-  const chip = e.target.closest('.chip'); if(!chip) return;
-  document.querySelectorAll('#jobFilters .chip').forEach(c=>c.classList.remove('active'));
-  chip.classList.add('active');
-  filterJob = chip.dataset.job;
+// 四組篩選標籤共用一支委派：每組單選、再點一次取消（同 collection-tracker 的行為）
+document.getElementById('gFilters').addEventListener('click', e=>{
+  const tag = e.target.closest('.filter-tag'); if(!tag) return;
+  const fid = tag.parentElement.dataset.fid;
+  const v = tag.dataset.v;
+  filterState[fid] = filterState[fid] === v ? null : v;
+  tag.parentElement.querySelectorAll('.filter-tag').forEach(t=>
+    t.classList.toggle('active', t.dataset.v === filterState[fid]));
   render();
-});
-document.getElementById('typeFilters').addEventListener('click', e=>{
-  const chip = e.target.closest('.chip'); if(!chip) return;
-  document.querySelectorAll('#typeFilters .chip').forEach(c=>c.classList.remove('active'));
-  chip.classList.add('active');
-  filterType = chip.dataset.type;
-  render();
-});
-document.getElementById('verSel').addEventListener('change', e=>{
-  filterVer = e.target.value; render();
 });
 document.getElementById('mapSel').addEventListener('change', e=>{
   filterMap = e.target.value; render();
@@ -945,16 +953,10 @@ document.getElementById('sortSel').addEventListener('change', e=>{
   render();
 });
 document.getElementById('sortSel').value = sortMode;
-document.getElementById('openOnly').addEventListener('click', e=>{
-  const chip = e.target;
-  openOnly = !openOnly;
-  chip.classList.toggle('active', openOnly);
-  render();
-});
 document.getElementById('trackOnly').addEventListener('click', e=>{
-  const chip = e.target;
   trackOnly = !trackOnly;
-  chip.classList.toggle('active', trackOnly);
+  e.currentTarget.classList.toggle('on', trackOnly);
+  e.currentTarget.setAttribute('aria-pressed', trackOnly ? 'true' : 'false');
   render();
 });
 /* 剪貼簿：clipboard API 失敗時退回 execCommand（非安全環境／遊戲內瀏覽器） */
@@ -1046,7 +1048,9 @@ document.getElementById('alarmTest').addEventListener('click', ()=>{
   syncAlarmUI();
   if (alarmCfg.on) checkAlarms(Date.now(), true); // 開頁先登記當前窗，只對之後的新窗響鈴
   tickClock();
-  render();
+  // 開頁預設地圖一覽：「現在能採的節點在哪」才是這頁的主要用途，清單隨時可切回去
+  //（setGView 內部就會 render()，不必再多叫一次）
+  setGView('map');
   setInterval(tickClock, 1000);
   setInterval(render, 1000); // 每秒更新倒數與排序
 })();

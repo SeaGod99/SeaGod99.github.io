@@ -539,6 +539,15 @@ a { color: inherit; text-decoration: none; }
 }
 .ct-page-gap { color: var(--text-muted); padding: 0 2px; }
 
+/* 追蹤頁切到「地圖檢視」時收起卡片格線與分頁列（釣魚／採集紀錄）。
+   ※ 必須是 class + !important，不能用 inline style——collection-tracker.js 的
+     renderGrid() 每次重畫都會把 #ct-grid 的 inline display 設回 ''，而換篩選／勾選
+     都會觸發重畫，inline 寫法會被安靜地洗掉（釣魚頁的地圖檢視原本就是這樣壞的）。
+   ※ 放在 common.css（<head> 載入）而非地圖元件裡：採集紀錄頁的元件是動態 import，
+     規則若跟著元件才注入，開頁預設地圖檢視時清單會先閃一下。 */
+body.mx-mapmode #ct-grid,
+body.mx-mapmode #ct-pagination { display: none !important; }
+
 /* ── Empty state ────────────────────────────────────────────────── */
 .empty-state {
   text-align: center;

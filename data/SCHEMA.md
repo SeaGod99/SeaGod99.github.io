@@ -221,6 +221,22 @@ ARR 2.x / HW 3.x / SB 4.x / ShB 5.x / EW 6.x / DT 7.x
 **建置**（本機執行，需 Node 18+）：`node scripts/build-items.mjs`
 讀兩個 msgpack + XIVAPI 分頁抓圖示/分類/ilvl/可上市 → 合併輸出 `items.json`。圖示檔可另跑下載腳本存進 `/assets/icons/`，或前端直接引用 XIVAPI 圖床。
 
+#### 2.1b collectable-items（可當收藏品採集的物品）
+
+```json
+{ "schema": "collectable-items", "source": "xivapi Item.IsCollectable",
+  "count": 1023, "data": [5214, 5218, 12966, …] }
+```
+
+`data` 就是 itemId 陣列（僅收 `items.json` 有的，即台服已開放者），6.4KB。
+
+**為什麼要獨立一份**：`items.json` **沒有**任何收藏品欄位（收藏品的 `category` 一律是「雜貨」、`rarity` 1、`marketable` false，都不足以判別），而前端是純靜態頁不能即時打 XIVAPI。
+
+⚠️ **絕對不要用名稱前綴「收藏用」判斷收藏品**。台服收藏品**不一定**叫「收藏用○○」——實查限時採集節點的 325 種產物，有 **48 種是收藏品卻沒有那個前綴**（火砂礫、雷砂礫、強火性岩、赤玉土、腐殖土、水薄荷、梅茵菲娜月桂、黑雷岩、陽風岩…），用前綴會把 76 個收藏品節點少算成 38 個。反向倒是安全（有前綴的必定是收藏品）。
+⚠️ 也**不要用 `AlwaysCollectable`**：那不是「專屬收藏品」的意思，64 個「收藏用○○」裡有 48 個是 `false`。判斷「能不能當收藏品」只看 **`IsCollectable`**。
+
+**建置**：`node scripts/build-collectable-items.mjs`（`--check` 只比對不寫入）。重建 `items.json` 後建議重跑。
+
 ### 2.2 maps（地圖／區域）
 
 ```json
