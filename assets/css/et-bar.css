@@ -1,0 +1,90 @@
+/* ===================================================================
+   水神的工具箱 — 艾歐澤亞時鐘列（et-bar）全站共用元件
+   版型沿用天氣預報頁：三欄一列，px 尺寸（不吃各頁不同的 html font-size）
+     [艾歐澤亞時間＋日夜]  [週期標籤＋進度條＋倒數]  [現實時間＋ET 流速]
+   由 assets/js/et-bar.js 產生 DOM 並每秒更新，頁面只要放一個掛載點。
+
+   色票：三頁的 :root 命名不一致（tools/weather 沒載 common.css，只有
+   --text-dim；common.css 系列則是 --text-secondary），故一律帶 fallback，
+   任一頁單獨載入都能正確顯示。進度條軌道用中性灰，亮/暗主題都看得到。
+   =================================================================== */
+
+.et-bar {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  flex-wrap: wrap;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md, 10px);
+  padding: 16px 28px;
+  margin-bottom: 24px;
+}
+
+.et-bar .et-label {
+  font-size: 13px;
+  color: var(--text-secondary, var(--text-dim, #8892a4));
+  margin-bottom: 4px;
+  letter-spacing: 0.02em;
+}
+
+/* ── 左：ET 時鐘 ── */
+.et-bar .et-clock {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.et-bar .et-time {
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.05;
+  color: var(--gold);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.5px;
+}
+.et-bar .et-phase {
+  font-size: 14px;
+  color: var(--text-secondary, var(--text-dim, #8892a4));
+  white-space: nowrap;
+}
+
+/* ── 中：本週期進度（下次換天氣／下個 ET 整點）── */
+.et-bar .et-progress { flex: 1 1 200px; min-width: 170px; }
+.et-bar .et-track {
+  height: 5px;
+  background: rgba(127, 127, 127, 0.28);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 5px;
+}
+.et-bar .et-fill {
+  height: 100%;
+  background: var(--accent, var(--gold));
+  border-radius: 3px;
+  transition: width 0.5s linear;
+}
+.et-bar .et-count {
+  font-size: 13px;
+  color: var(--text-secondary, var(--text-dim, #8892a4));
+  margin-top: 5px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── 右：現實時間 ── */
+.et-bar .et-rt { margin-left: auto; text-align: right; }
+.et-bar .et-rt-time {
+  font-size: 16px;
+  color: var(--text-secondary, var(--text-dim, #8892a4));
+  font-variant-numeric: tabular-nums;
+}
+.et-bar .et-rt-sub {
+  font-size: 11.5px;
+  color: var(--text-muted, var(--text-dim, #717c91));
+  margin-top: 3px;
+}
+
+@media (max-width: 620px) {
+  .et-bar { gap: 16px; padding: 14px 18px; }
+  .et-bar .et-time { font-size: 26px; }
+  .et-bar .et-rt { margin-left: 0; text-align: left; }
+}

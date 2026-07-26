@@ -7,10 +7,11 @@
   <title>釣魚紀錄追蹤 | 水神的工具箱</title>
   <link rel="stylesheet" href="../../assets/css/common.css">
   <link rel="stylesheet" href="../../assets/css/tool-header.css">
+  <link rel="stylesheet" href="../../assets/css/et-bar.css">
   <style>
     /* 釣魚頁專屬樣式；通用版面（進度條／工具列／篩選／分頁／頁尾）見 assets/css/common.css，
-       控制面由 assets/js/collection-tracker.js 渲染。
-       ET 時鐘、目標魚面板＋鬧鐘、地圖檢視、魚詳情彈窗為本頁自有元件。 */
+       控制面由 assets/js/collection-tracker.js 渲染，ET 時鐘列見 assets/css/et-bar.css。
+       目標魚面板＋鬧鐘、地圖檢視、魚詳情彈窗為本頁自有元件。 */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
@@ -47,12 +48,6 @@
 
     html { font-size: 17.5px; }
     body { background: var(--bg-base); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
-
-    .hero {
-      background: linear-gradient(135deg, var(--bg-surface), var(--bg-base));
-      border-bottom: 1px solid var(--border); padding: 1.5rem 1.5rem;
-    }
-    .hero-inner { max-width: 1500px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
 
     .result-info { font-size: 0.78rem; color: var(--text-muted); }
 
@@ -154,11 +149,6 @@
     .sf-chip:hover { border-color: var(--gold); }
     .sf-chip.owned { background: var(--green-dim); border-color: rgba(74,222,128,0.3); color: var(--green); }
     .sf-chip.owned::before { content: '✓ '; font-size: 0.68rem; }
-
-    /* ET 時鐘（hero 內） */
-    .hero-et { text-align: center; }
-    .hero-et .et-time { font-size: 1.5rem; font-weight: 700; color: var(--gold); font-variant-numeric: tabular-nums; letter-spacing: 1px; }
-    .hero-et .et-sub { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.1rem; }
 
     /* 可釣狀態徽章 */
     .st-pill {
@@ -283,16 +273,10 @@
   <div class="header-divider"></div>
 </div>
 
-<div class="hero">
-  <div class="hero-inner">
-    <div class="hero-et">
-      <div class="et-time" id="etClock">ET --:--</div>
-      <div class="et-sub">艾歐澤亞時間 · 1 ET 小時 ≈ 2 分 55 秒</div>
-    </div>
-  </div>
-</div>
-
 <div class="container">
+
+<!-- ET 時鐘列（共用元件 assets/js/et-bar.js） -->
+<div id="etBar"></div>
 
 <div class="targets-panel" id="targetsPanel" style="display:none">
   <div class="targets-inner">
@@ -353,6 +337,7 @@ import {
 } from '../../assets/js/eorzea-weather.js';
 import { initMapModal, openMapModal } from '../../assets/js/map-modal.js';
 import { createMapExplorer } from '../../assets/js/map-explorer.js';
+import { mountEtBar } from '../../assets/js/et-bar.js';
 
 const esc = CollectionTracker.esc;
 const LS_KEY     = 'ffxiv_fishing_owned';
@@ -1019,14 +1004,6 @@ function openFishMap(id, spotIdOv) {
 /* 匯出／匯入／清除進度由引擎工具列提供；目標魚清單透過
    exportExtra／onImport 一併帶進備份檔（見下方 CollectionTracker.init）。 */
 
-/* ── ET 時鐘 ── */
-function tickClock() {
-  const etMin = Math.floor(Date.now() * EORZEA_MULT / 60000);
-  const h = String(Math.floor(etMin / 60) % 24).padStart(2, '0');
-  const m = String(etMin % 60).padStart(2, '0');
-  document.getElementById('etClock').textContent = `ET ${h}:${m}`;
-}
-
 /* ── 事件 ── */
 /* 搜尋／狀態／地區／版本／種類／排序／分頁／匯入匯出皆由引擎工具列處理。
    魚卡的點擊分流見下方 onCardClick：🎯目標、📍地圖、開詳情都由本頁接手，
@@ -1223,10 +1200,9 @@ document.getElementById('targetsPanel').addEventListener('click', e => {
   // 開頁預設地圖檢視：「這條魚在哪裡釣」才是這頁的主要用途，清單隨時可切回去
   setView('map');
 
-  tickClock();
+  mountEtBar('#etBar', { metric: 'weather' });
   syncAlarmUI();
   if (alarmCfg.on) checkAlarms(Date.now(), true); // 開頁先登記當前窗，只對之後的新窗響鈴
-  setInterval(tickClock, 1000);
   // 每 10 秒更新可釣狀態與倒數（清單重畫；地圖檢視只需更新目標面板）
   setInterval(() => { if (viewMode === 'list') tracker.renderGrid(); else renderTargets(); }, 10000);
   setInterval(() => checkAlarms(Date.now()), 5000); // 鬧鐘每 5 秒檢查（天氣快取使重算成本極低）

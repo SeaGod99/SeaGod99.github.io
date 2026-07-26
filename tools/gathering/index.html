@@ -11,6 +11,7 @@
        .toolbar／.filter-* 等樣式；下方 <style> 在 link 之後，既有的頁面專屬樣式仍然勝出。 -->
   <link rel="stylesheet" href="../../assets/css/common.css">
   <link rel="stylesheet" href="../../assets/css/tool-header.css">
+  <link rel="stylesheet" href="../../assets/css/et-bar.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     /* 色票與圓角／過渡變數一律由 common.css 供應（亮色由 theme.css 覆蓋）。
@@ -40,17 +41,7 @@
 
     /* .tool-header / .tool-title / .tool-subtitle / .header-divider 見 assets/css/tool-header.css（全站共用） */
 
-    /* ── ET clock bar ── */
-    .et-bar {
-      display:flex; align-items:center; justify-content:center; gap:24px; flex-wrap:wrap;
-      background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md);
-      padding:16px 20px; margin-bottom:24px;
-    }
-    .et-block { text-align:center; }
-    .et-label { font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); }
-    .et-value { font-size:26px; font-weight:700; font-variant-numeric: tabular-nums; color:var(--gold-light); letter-spacing:1px; }
-    .et-sub { font-size:11px; color:var(--text-secondary); }
-    .et-divider { width:1px; height:36px; background:var(--border); }
+    /* ET 時鐘列見 assets/css/et-bar.css（三頁共用元件） */
 
     /* ── controls ──
        工具列（.toolbar／.search-wrap／.search-input／.sort-select／.icon-btn）與
@@ -214,8 +205,6 @@
 
     @media (max-width:600px){
       .node-grid { grid-template-columns:1fr; }
-      .et-bar { gap:14px; }
-      .et-value { font-size:22px; }
     }
 
     /* ── 地圖一覽檢視 ──
@@ -254,20 +243,8 @@
     <div class="header-divider"></div>
   </div>
 
-  <!-- ET clock -->
-  <div class="et-bar">
-    <div class="et-block">
-      <div class="et-label">艾歐澤亞時間 (ET)</div>
-      <div class="et-value" id="etClock">--:--</div>
-      <div class="et-sub" id="etPhase">—</div>
-    </div>
-    <div class="et-divider"></div>
-    <div class="et-block">
-      <div class="et-label">本地時間</div>
-      <div class="et-value" id="ltClock" style="color:var(--text-primary)">--:--:--</div>
-      <div class="et-sub">1 ET 小時 ≈ 2 分 55 秒</div>
-    </div>
-  </div>
+  <!-- ET 時鐘列（共用元件 assets/js/et-bar.js） -->
+  <div id="etBar"></div>
 
   <!-- 檢視切換：位置與樣式同釣魚／採集紀錄兩頁（在控制面之上） -->
   <div class="g-viewbar">
@@ -374,19 +351,12 @@
 <script type="module">
 import { initMapModal, openMapModal } from '../../assets/js/map-modal.js';
 import { createMapExplorer } from '../../assets/js/map-explorer.js';
+import { mountEtBar } from '../../assets/js/et-bar.js';
 /* ─────────────────────────────────────────────
    艾歐澤亞時間 (Eorzea Time)
    ET 流速 = 現實時間 × 3600/175 (1 ET 天 = 70 真實分鐘)
    ───────────────────────────────────────────── */
 const EORZEA_MULT = 3600 / 175; // ≈ 20.5714
-
-function getEorzeaDate(now = Date.now()) {
-  const et = now * EORZEA_MULT;
-  const totalMinutes = Math.floor(et / 60000);
-  const hours = Math.floor(totalMinutes / 60) % 24;
-  const minutes = totalMinutes % 60;
-  return { hours, minutes, totalMinutes };
-}
 
 const TRACK_KEY = 'ffxiv_gathering_tracked';
 let trackedIds = new Set();
@@ -918,18 +888,6 @@ function populateSelectors(){
   });
 }
 
-/* ── ET 時鐘 ── */
-function tickClock(){
-  const e = getEorzeaDate();
-  document.getElementById('etClock').textContent =
-    `${String(e.hours).padStart(2,'0')}:${String(e.minutes).padStart(2,'0')}`;
-  const phase = e.hours>=5 && e.hours<17 ? '☀️ 白天' : (e.hours>=17 && e.hours<19 ? '🌆 黃昏' : '🌙 夜晚');
-  document.getElementById('etPhase').textContent = phase;
-  const lt = new Date();
-  document.getElementById('ltClock').textContent =
-    `${String(lt.getHours()).padStart(2,'0')}:${String(lt.getMinutes()).padStart(2,'0')}:${String(lt.getSeconds()).padStart(2,'0')}`;
-}
-
 /* ── 事件 ── */
 document.getElementById('search').addEventListener('input', e=>{
   searchTerm = e.target.value.trim().toLowerCase(); render();
@@ -1047,11 +1005,10 @@ document.getElementById('alarmTest').addEventListener('click', ()=>{
   populateSelectors();
   syncAlarmUI();
   if (alarmCfg.on) checkAlarms(Date.now(), true); // 開頁先登記當前窗，只對之後的新窗響鈴
-  tickClock();
+  mountEtBar('#etBar', { metric: 'ethour' });
   // 開頁預設地圖一覽：「現在能採的節點在哪」才是這頁的主要用途，清單隨時可切回去
   //（setGView 內部就會 render()，不必再多叫一次）
   setGView('map');
-  setInterval(tickClock, 1000);
   setInterval(render, 1000); // 每秒更新倒數與排序
 })();
 </script>

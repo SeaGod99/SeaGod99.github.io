@@ -195,6 +195,13 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 
 ## 五、更新紀錄
 
+- **2026-07-26（三頁的時間顯示統一：新增 ET 時鐘列共用元件 `assets/js/et-bar.js`）**：使用者指出釣魚紀錄追蹤、限時採集節點查詢、艾歐澤亞天氣預報「都有時間的顯示，但顯示的方式都不一樣」，要求**通通改成天氣預報的格式**。
+  - **原本三套**：釣魚＝hero 橫幅內置中大字 `ET 20:26` ＋一行小字；限時採集＝卡片內左右兩塊（ET＋日夜 ｜ 本地時間），中間一條分隔線；天氣＝三欄時鐘列（ET 時鐘 ｜ 下次換天氣進度條 ｜ 現實時間）。
+  - **新元件 [`assets/js/et-bar.js`](../assets/js/et-bar.js) ＋ [`assets/css/et-bar.css`](../assets/css/et-bar.css)**：版型取天氣預報那一套，三欄固定＝[艾歐澤亞時間＋日夜]／[週期標籤＋進度條＋倒數]／[現實時間＋「1 ET 小時 ≈ 2 分 55 秒」]。頁面只放 `<div id="etBar"></div>` 並呼叫 `mountEtBar('#etBar', { metric })`，元件自己每秒 tick。慣例見[專案慣例與記憶 §2.8](專案慣例與記憶.md#28-et-時鐘列共用元件-assetsjset-barjs2026-07-26-建立)。
+  - **中欄是唯一的頁面差異**：天氣／釣魚用 `metric:'weather'`（下次換天氣），限時採集用 `metric:'ethour'`（下個 ET 整點）——採集節點只吃 ET 整點、不吃天氣，掛「下次換天氣」在那頁是雜訊。
+  - **三頁原本各有的資訊全部保留**：限時採集的日夜（☀️白天／🌆黃昏／🌙夜晚，分界沿用原本的 5–17／17–19／其餘）與本地時間、釣魚的「1 ET 小時 ≈ 2 分 55 秒」，都併進統一版型。移除釣魚的 `.hero` 橫幅（裡面只有時鐘）與三頁各自的 `tickClock()`／`getEorzeaDate()`。
+  - **驗收**：三頁在 1440px 亮／暗兩主題與 375px 行動版皆版型一致（截圖比對），0 console error，375px 無水平溢出；`bump-sw-version.mjs` 已更新快取版本（`sgt-de07b17519` → `sgt-be154ebf6a`）；`validate-links.mjs` 無新增斷鏈。
+
 - **2026-07-26（收藏品判定改用權威旗標；新增 `data/collectable-items.json`）**：使用者指出「有些收藏品前面不會有『收藏用』字樣」，要我重查物品資料裡有沒有收藏品相關參數。**指正正確，我原本的分類器是錯的。**
   - **本機三個來源都沒有旗標**：`items.json` 只有 category／icon／ilvl／marketable／rarity／stackSize（收藏品的 `category` 一律「雜貨」、`rarity` 1、`marketable` false，都不足以判別）；`gathering.json` 也沒有；`items-lite.json` 只有 id→名稱。
   - **權威＝XIVAPI `Item.IsCollectable`**。逐筆核對限時採集節點的 **325 種產物**：

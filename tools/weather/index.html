@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>天氣預報 — 水神的工具箱</title>
 <link rel="stylesheet" href="../../assets/css/tool-header.css">
+<link rel="stylesheet" href="../../assets/css/et-bar.css">
 <style>
   :root {
     --gold: #c8a96e;
@@ -29,15 +30,7 @@
 
   .main { max-width: 1560px; margin: 0 auto; padding: 28px 28px; }
 
-  /* ET Clock bar */
-  .et-bar { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 16px 28px; margin-bottom: 28px; display: flex; align-items: center; gap: 28px; flex-wrap: wrap; }
-  .et-clock { font-size: 36px; font-weight: 700; color: var(--gold); font-variant-numeric: tabular-nums; }
-  .et-label { font-size: 14px; color: var(--text-dim); margin-bottom: 3px; }
-  .progress-wrap { flex: 1 1 180px; }
-  .progress-bar { height: 5px; background: var(--border); border-radius: 2px; overflow: hidden; margin-top: 5px; }
-  .progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width .5s linear; }
-  .progress-text { font-size: 13px; color: var(--text-dim); margin-top: 4px; }
-  .rt-clock { font-size: 16px; color: var(--text-dim); margin-left: auto; font-variant-numeric: tabular-nums; }
+  /* ET 時鐘列見 assets/css/et-bar.css（三頁共用元件） */
 
   /* Tabs */
   .tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 24px; gap: 0; }
@@ -112,19 +105,8 @@
 
 <main class="main">
 
-  <!-- ET Clock -->
-  <div class="et-bar">
-    <div>
-      <div class="et-label">艾歐澤亞時間</div>
-      <div class="et-clock" id="et-clock">00:00</div>
-    </div>
-    <div class="progress-wrap">
-      <div class="et-label">下次換天氣</div>
-      <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
-      <div class="progress-text" id="prog-text">--</div>
-    </div>
-    <div class="rt-clock" id="rt-clock"></div>
-  </div>
+  <!-- ET 時鐘列（共用元件 assets/js/et-bar.js） -->
+  <div id="etBar"></div>
 
   <!-- Tabs -->
   <div class="tabs">
@@ -201,6 +183,7 @@ import {
   initWeatherTables, getWeatherAt, getWeatherTable,
   fmtET, fmtRT, fmtCountdown
 } from '../../assets/js/eorzea-weather.js';
+import { mountEtBar } from '../../assets/js/et-bar.js';
 
 // ============================================================
 // 地圖分組定義（mapId 對應 data/maps.json，同版本野外＋城市合併）
@@ -516,28 +499,6 @@ function switchTab(name) {
 }
 
 // ============================================================
-// Clock
-// ============================================================
-function tick() {
-  const now = Date.now();
-  // ET clock
-  const etSec = now / 1000 * (24 * 3600 / 4200);
-  const h = String(Math.floor(etSec/3600)%24).padStart(2,'0');
-  const m = String(Math.floor(etSec/60)%60).padStart(2,'0');
-  document.getElementById('et-clock').textContent = `${h}:${m}`;
-  // RT clock
-  const d = new Date(now);
-  document.getElementById('rt-clock').textContent =
-    `現實 ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;
-  // Progress
-  const ps = periodStart(now);
-  const pct = ((now-ps)/WEATHER_PERIOD*100).toFixed(1);
-  const rem = WEATHER_PERIOD - (now-ps);
-  document.getElementById('prog-fill').style.width = pct+'%';
-  document.getElementById('prog-text').textContent = fmtCountdown(rem);
-}
-
-// ============================================================
 // Expose handlers used by inline onclick="" (module scope is not global)
 // ============================================================
 window.switchTab = switchTab;
@@ -561,8 +522,7 @@ window.toggleW = toggleW;
   });
   setGroup('lanoscea');
   initChain();
-  tick();
-  setInterval(tick, 1000);
+  mountEtBar('#etBar', { metric: 'weather' });
   setInterval(() => {
     renderForecast(); renderSearch(); renderChain();
     if (document.getElementById('tab-multi').classList.contains('active')) renderMulti();
