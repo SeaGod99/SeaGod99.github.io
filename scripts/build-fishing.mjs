@@ -17,20 +17,22 @@
 //     startHour, endHour          （0-24，startHour===0 && endHour===24 表示全時段）
 //     weatherSet[]                （天氣繁中名陣列，空=無限制）
 //     previousWeatherSet[]        （前置天氣）
-//     bait[]                      （最佳釣餌路徑，item ID + 繁中名）
+//     bait[]                      （最佳釣餌路徑，每段 {itemId, name}；A/B 皆可時另有 alts[]）
 //     predators[]                 （以小釣大前置魚，item ID）
 //     intuitionLength             （直覺持續秒數，null=一般釣法）
 //     hookset                     （"Precision"/"Powerful"/null）
 //     tug                         （"light"/"medium"/"heavy"/null）
-//     bigFish                     （boolean）
+//     bigFish                     （boolean，釣場之王／魚王）
+//     legendary                   （boolean，釣場之皇／魚皇；本腳本一律 false，見下方注意）
 //     fishEyes                    （boolean，需魚眼藥水）
 //     folklore                    （需要哪冊傳說圖鑑，null=不需要）
 //     patch                       （版本）
 //
 // 注意：Cowork 沙箱擋外網，需在本機執行。
 // 執行（repo 根目錄）：node scripts/build-fishing.mjs
-// ⚠️ 重建後務必接著跑：node scripts/patch-fishing-multispot.mjs
-//    （補多釣場 spots[] 與回填無主釣場的魚，否則一魚只剩單一釣點）
+// ⚠️ 重建後務必接著跑這兩支，否則資料會缺一角：
+//    node scripts/patch-fishing-multispot.mjs   （補多釣場 spots[] 與回填無主釣場的魚，否則一魚只剩單一釣點）
+//    node scripts/patch-fish-legendary.mjs --apply （標回 30 隻釣場之皇，上游沒有這個旗標）
 // 需求：Node 18+（內建 fetch）
 
 import { readFile, writeFile } from "node:fs/promises";
@@ -260,10 +262,16 @@ async function main() {
     if (!nameTw) noTwName++;
 
     // 餌料路徑（bestCatchPath）
-    const bait = (fish.bestCatchPath || []).map((id) => ({
-      itemId: id,
-      name: baitName(id),
-    }));
+    // ⚠️ 上游的每一段可能是「單一餌 id」，也可能是「[餌A, 餌B]＝兩者皆可」（82 條魚是後者）。
+    // 早期版本直接把陣列塞進 itemId，name 就變成 "43849,43852" 這種 id 字串。
+    // 正解：itemId 永遠是數字（第一個選項），多選項時另外記在 alts[]，name 用「／」串起來。
+    const bait = (fish.bestCatchPath || []).map((step) => {
+      const ids = Array.isArray(step) ? step : [step];
+      const alts = ids.map((id) => ({ itemId: id, name: baitName(id) }));
+      const out = { itemId: alts[0].itemId, name: alts.map((a) => a.name).join("／") };
+      if (alts.length > 1) out.alts = alts;
+      return out;
+    });
 
     // 以小釣大前置魚（predators）
     const predators = (fish.predators || []).map((id) => ({
@@ -301,6 +309,7 @@ async function main() {
       fishEyes: fish.fishEyes ?? false,
       snagging: fish.snagging ?? null,
       folklore: fish.folklore ?? null,
+      legendary: false,       // 釣場之皇；上游無此旗標，由 patch-fish-legendary.mjs 依名單標記
       patch: fish.patch ?? null,
     });
   }

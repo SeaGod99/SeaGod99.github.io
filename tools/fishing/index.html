@@ -85,12 +85,20 @@
     .fish-name { font-size: 0.9rem; font-weight: 600; }
     .fish-name-en { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.1rem; }
 
+    /* 這頁有 6 組篩選，直排會吃掉近 470px。改成橫向流排：
+       選項多的（地區 17 顆）自然獨佔一列，短的（稀有度／種類／魚餌／目標魚／版本）並排收在一列。
+       手機寬度下每組還是會各自換行，不必另外寫斷點。 */
+    #ct-filters { display: flex; flex-wrap: wrap; align-items: flex-start; column-gap: 56px; }
+    #ct-filters .filter-section { margin-bottom: 20px; }
+
     .fish-tags { display: flex; gap: 0.3rem; flex-wrap: wrap; margin-top: 0.4rem; }
     .tag {
       font-size: 0.65rem; padding: 0.1rem 0.4rem; border-radius: 3px;
       border: 1px solid; font-weight: 500;
     }
     .tag-big    { color: var(--purple); border-color: rgba(167,139,250,0.3); background: var(--purple-dim); }
+    /* 釣場之皇：魚王中最難的一階，用最搶眼的金框跟魚王區隔 */
+    .tag-emp    { color: var(--gold-light); border-color: rgba(226,201,138,0.55); background: var(--gold-dim); font-weight: 600; }
     .tag-time   { color: var(--gold);   border-color: rgba(200,169,110,0.3); background: var(--gold-dim); }
     .tag-wx     { color: var(--cyan);   border-color: rgba(34,211,238,0.3);  background: var(--cyan-dim); }
     .tag-folk   { color: var(--orange); border-color: rgba(251,146,60,0.3);  background: var(--orange-dim); }
@@ -477,6 +485,23 @@ function regionOfSpot(sid) {
   return sp?.coords ? MAPS.get(sp.coords.mapId)?.region : undefined;
 }
 
+/* ── 稀有度：一般魚 / 魚王 / 魚皇 ──
+   魚王＝釣場之王（日文ヌシ、英文 Big Fish），遊戲資料有旗標＝fishes.json 的 bigFish。
+   魚皇＝釣場之皇（日文オオヌシ、英文 Living Legend），是魚王裡條件最嚴苛的一階，
+        每個資料片版本末期只追加 6 隻。遊戲資料沒有這個旗標（XIVAPI FishParameter 的
+        AchievementCredit／IsHidden 在兩者間完全相同），legendary 由
+        scripts/patch-fish-legendary.mjs 依中文維基名單標記，共 30 隻。
+   三級互斥，加起來就是全部的魚。 */
+function rarityOf(f) { return f.legendary ? 'emperor' : f.bigFish ? 'king' : 'normal'; }
+function rarityTag(f) {
+  if (f.legendary) return '<span class="tag tag-emp" title="釣場之皇：魚王中條件最嚴苛的一階，每個資料片只有 6 隻">👑魚皇</span>';
+  if (f.bigFish) return '<span class="tag tag-big" title="釣場之王：綠色品質的稀有魚">魚王</span>';
+  return '';
+}
+
+/* 魚餌篩選用：一段餌可能是「A 或 B 皆可」（bait[].alts），兩個都要能篩到 */
+function baitIdsOf(step) { return step.alts ? step.alts.map(a => a.itemId) : [step.itemId]; }
+
 /* ── 渲染 ── */
 function spotZone(f, spotIdOv) {
   const spot = (spotIdOv ?? f.spotId) != null ? SPOTS.get(spotIdOv ?? f.spotId) : null;
@@ -642,13 +667,13 @@ function fishCardHTML(f) {
     <div class="fish-name-en">${f.nameEn}</div>
     <div class="fish-tags">
       ${statusPill(st)}
-      ${f.bigFish   ? '<span class="tag tag-big">大魚</span>' : ''}
+      ${rarityTag(f)}
       ${timed       ? '<span class="tag tag-time">⏰限時</span>' : ''}
       ${(f.weatherSet?.length) ? '<span class="tag tag-wx">🌦限天氣</span>' : ''}
       ${f.folklore  ? '<span class="tag tag-folk">📖傳承錄</span>' : ''}
       ${f.snagging  ? '<span class="tag tag-snag">捕撈</span>' : ''}
       ${f.fishEyes  ? '<span class="tag tag-eyes">魚眼</span>' : ''}
-      ${(f.predators?.length) ? '<span class="tag tag-int">🧠直感</span>' : ''}
+      ${(f.predators?.length) ? '<span class="tag tag-int">🧠魚識</span>' : ''}
     </div>
     <div class="fish-detail">
       <span class="detail-label">釣場</span><span class="fi-v">${spotCell}</span>
@@ -661,7 +686,7 @@ function fishCardHTML(f) {
   <button class="tgt-btn${isTarget?' on':''}" data-target="${f.itemId}" title="${isTarget?'移出目標魚':'設為目標魚（頂部顯示開窗倒數）'}">🎯</button>`;
 }
 
-/* ── 魚詳情彈窗（參照魚糕：竿型/提鉤/餌鏈/直感/天氣鏈/未來窗口）── */
+/* ── 魚詳情彈窗（參照魚糕：竿型/提鉤/餌鏈/魚識/天氣鏈/未來窗口）── */
 const TUG_TC = { light: '!（輕杆）', medium: '!!（中杆）', heavy: '!!!（重杆）' };
 const HOOKSET_TC = { Precision: '精準提鉤', Powerful: '強力提鉤' };
 let fdCurrentId = null;
@@ -732,7 +757,7 @@ function openFishDetail(id, keepSpot) {
   renderFdActions(f);
 
   document.getElementById('fdTags').innerHTML = [
-    f.bigFish ? '<span class="tag tag-big">大魚</span>' : '',
+    rarityTag(f),
     timed ? '<span class="tag tag-time">⏰限時</span>' : '',
     (f.weatherSet?.length) ? '<span class="tag tag-wx">🌦限天氣</span>' : '',
     f.folklore ? '<span class="tag tag-folk">📖傳承錄</span>' : '',
@@ -775,7 +800,7 @@ function openFishDetail(id, keepSpot) {
     ['時間限制', timeStr],
     ['天氣限制', prevStr ? `${prevStr} → ${wxStr}（前一時段 → 當前）` : wxStr],
   ];
-  if (preds.length) rows.push(['捕魚人直感', `${preds.join('、')}${f.intuitionLength ? `（直感 ${f.intuitionLength} 秒）` : ''}`]);
+  if (preds.length) rows.push(['魚識', `${preds.join('、')}${f.intuitionLength ? `（持續 ${f.intuitionLength} 秒）` : ''}`]);
   if (f.snagging) rows.push(['釣組', '需要鉤足（Snagging）']);
   if (f.folklore) rows.push(['傳承錄', '需購買該地區釣魚傳承錄']);
   document.getElementById('fdTable').innerHTML =
@@ -1122,19 +1147,49 @@ document.getElementById('targetsPanel').addEventListener('click', e => {
         match: (f, v) => fishSpotIds(f).some(sid => regionOfSpot(sid) === v),
       },
       {
+        // 三級互斥（一般魚＋魚王＋魚皇＝全部），所以不再於「種類」重複放「大魚」
+        id: 'rarity', label: '稀有度',
+        options: () => [
+          { value: 'normal', label: '一般魚' },
+          { value: 'king', label: '魚王' },
+          { value: 'emperor', label: '👑魚皇' },
+        ],
+        match: (f, v) => rarityOf(f) === v,
+      },
+      {
         id: 'type', label: '種類',
         options: () => [
-          { value: 'big', label: '大魚' },
           { value: 'timed', label: '限時' },
           { value: 'weather', label: '限天氣' },
           { value: 'folklore', label: '傳承錄' },
+          { value: 'intuition', label: '🧠魚識' },
         ],
         match: (f, v) => {
-          if (v === 'big') return !!f.bigFish;
           if (v === 'timed') return f.startHour > 0 || f.endHour < 24;
           if (v === 'weather') return !!f.weatherSet?.length;
+          if (v === 'intuition') return !!f.predators?.length;
           return !!f.folklore;
         },
+      },
+      {
+        // 選項有 90 幾種，標籤排不下 → 用下拉。只列「掛在鉤上的起始餌」，
+        // 以小釣大後面那幾段是要現釣的魚、不是能買的餌，列出來只會誤導。
+        id: 'bait', label: '魚餌（起始餌）', render: 'select', allLabel: '全部魚餌',
+        options: list => {
+          const use = new Map();   // itemId -> { name, n }
+          for (const f of list) {
+            if (!f.bait?.length) continue;
+            for (const b of (f.bait[0].alts || [f.bait[0]])) {
+              const cur = use.get(b.itemId);
+              if (cur) cur.n++;
+              else use.set(b.itemId, { name: b.name, n: 1 });
+            }
+          }
+          return [...use.entries()]
+            .sort((a, b) => b[1].n - a[1].n || a[1].name.localeCompare(b[1].name, 'zh-Hant'))
+            .map(([id, v]) => ({ value: String(id), label: `${v.name}（${v.n}）` }));
+        },
+        match: (f, v) => !!f.bait?.length && baitIdsOf(f.bait[0]).includes(Number(v)),
       },
       {
         id: 'target', label: '目標魚',

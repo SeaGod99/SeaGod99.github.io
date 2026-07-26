@@ -265,6 +265,9 @@ a { color: inherit; text-decoration: none; }
   flex-wrap: wrap;
   gap: 6px;
 }
+/* 選項太多排不成標籤時改用下拉（filters 的 render:'select'）。
+   min-width 是為了換選項時寬度不要一直跳。 */
+.filter-select { padding: 6px 10px; min-width: 180px; max-width: 100%; }
 .filter-tag {
   padding: 5px 13px;
   font-size: 13px;

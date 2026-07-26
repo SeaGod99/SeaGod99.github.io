@@ -17,7 +17,8 @@
  *     noun: '坐騎',                              // 空狀態、訊息用名詞
  *     searchPlaceholder: '搜尋坐騎名稱…',
  *     keyOf(e), include(e, gp), alwaysOwned(e), searchText(e), prepare(list),
- *     filters: [ { id, label, options(list)->[{value,label}], match(e,value) },
+ *     filters: [ { id, label, options(list)->[{value,label}], match(e,value),
+ *                  render?:'select', allLabel?:'全部' },   // render:'select' ＝選項多到標籤排不下時改下拉
  *                { kind:'patch', of?:e=>e.patch } ],
  *     sorts: [ 'name', 'patch-desc', 'patch-asc', {value,label,cmp} ],
  *     card(e) -> innerHTML,
@@ -212,19 +213,39 @@
       lab.className = 'filter-label'; lab.textContent = f.label;
       var tags = document.createElement('div');
       tags.className = 'filter-tags';
-      opts.forEach(function (o) {
-        var btn = document.createElement('button');
-        btn.className = 'filter-tag' + (self.filterState[f.id] === o.value ? ' active' : '');
-        btn.textContent = o.label;
-        btn.addEventListener('click', function () {
-          self.filterState[f.id] = self.filterState[f.id] === o.value ? null : o.value;
+      if (f.render === 'select') {
+        // 選項多到標籤排不下時用下拉（釣魚頁的魚餌有 90 幾種）。
+        // 這裡不重畫整個篩選區——下拉本身就顯示著目前值，重畫只會害使用者失去焦點。
+        var sel = document.createElement('select');
+        sel.className = 'sort-select filter-select';
+        var html = '<option value="">' + esc(f.allLabel || '全部') + '</option>';
+        opts.forEach(function (o) {
+          html += '<option value="' + esc(o.value) + '">' + esc(o.label) + '</option>';
+        });
+        sel.innerHTML = html;
+        sel.value = self.filterState[f.id] == null ? '' : self.filterState[f.id];
+        sel.addEventListener('change', function () {
+          self.filterState[f.id] = sel.value || null;
           self.page = 0;                     // 換條件回第一頁
           self.pushURL();
-          self.renderFilters();
           self.renderGrid();
         });
-        tags.appendChild(btn);
-      });
+        tags.appendChild(sel);
+      } else {
+        opts.forEach(function (o) {
+          var btn = document.createElement('button');
+          btn.className = 'filter-tag' + (self.filterState[f.id] === o.value ? ' active' : '');
+          btn.textContent = o.label;
+          btn.addEventListener('click', function () {
+            self.filterState[f.id] = self.filterState[f.id] === o.value ? null : o.value;
+            self.page = 0;                     // 換條件回第一頁
+            self.pushURL();
+            self.renderFilters();
+            self.renderGrid();
+          });
+          tags.appendChild(btn);
+        });
+      }
       sec.appendChild(lab); sec.appendChild(tags);
       host.appendChild(sec);
     });

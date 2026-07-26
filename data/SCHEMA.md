@@ -630,23 +630,45 @@ ARR 2.x / HW 3.x / SB 4.x / ShB 5.x / EW 6.x / DT 7.x
 
 ### 2.16 fishing（釣魚）
 
+實際拆成兩檔：`fishes.json`（魚）與 `fishing-spots.json`（釣場），以 `spotId` 互連。
+
 ```json
 {
-  "id": 1,
-  "itemId": 4869,
-  "name": "馬米鯛",
-  "spot": "中央濕地",
-  "coords": { "mapId": 135, "x": 24, "y": 21 },
-  "bait": [{ "itemId": 4868, "name": "淡水浮游生物" }],
-  "weather": ["晴朗", "陰天"],
-  "timeWindow": { "start": [9], "end": [16] },
-  "tug": "中",
-  "hookset": "強力提鉤",
-  "patch": "2.0"
+  "itemId": 41412,
+  "name": "星鯨",
+  "nameEn": "Cetus",
+  "spotId": 366, "spotName": "湖丙β", "spotNameEn": "...", "spotNameJa": "...",
+  "spots": [366],
+  "startHour": 0, "endHour": 24,
+  "weatherSet": [{ "id": 1, "name": "Clear Skies" }],
+  "previousWeatherSet": [],
+  "bait": [
+    { "itemId": 36597, "name": "星塵／震撼板鉤",
+      "alts": [{ "itemId": 36597, "name": "星塵" }, { "itemId": 36596, "name": "震撼板鉤" }] },
+    { "itemId": 41398, "name": "事件穹界的回歸者" }
+  ],
+  "predators": [{ "itemId": [36521, 1], "name": "36521,1" }],
+  "intuitionLength": 600,
+  "hookset": "Powerful", "tug": "heavy",
+  "bigFish": true, "legendary": true,
+  "fishEyes": false, "snagging": null, "folklore": "...",
+  "patch": "6.55"
 }
 ```
 
-`tug`：咬鉤力道（輕/中/重）。`timeWindow`/`weather` 為限定魚條件（連動天氣演算法），無限定則設 `null`。
+| 欄位 | 說明 |
+|------|------|
+| `spotId` / `spots[]` | 主釣場／所有可釣釣場（主釣場排最前，由 `patch-fishing-multispot.mjs` 補） |
+| `startHour` / `endHour` | ET 開窗，`0`+`24` 代表全天 |
+| `weatherSet` / `previousWeatherSet` | 天氣／前置天氣（`name` 目前是英文，前端用 `eorzea-weather.js` 對照表轉繁中） |
+| `bait[]` | 釣餌鏈，**第 0 段是實際掛鉤的餌，之後是要現釣的以小釣大魚**。一段若「A 或 B 皆可」，`itemId`/`name` 取第一個＋合併名，完整選項在 `alts[]`（釣魚頁的魚餌篩選要一併比對 `alts`） |
+| `predators[]` | 觸發**魚識**（以小釣大）所需的前置魚，`itemId` 是 `[魚 itemId, 需要數量]`（沿用上游形狀，`name` 不可用，前端自行回查） |
+| `intuitionLength` | 魚識持續秒數，`null`＝不需魚識 |
+| `tug` / `hookset` | 咬鉤力道（`light`/`medium`/`heavy`）／建議提鉤技能 |
+| `bigFish` | **魚王＝釣場之王**（日文ヌシ、英文 Big Fish），綠色品質稀有魚。上游有旗標 |
+| `legendary` | **魚皇＝釣場之皇**（日文オオヌシ、英文 Living Legend），魚王中條件最嚴苛的一階，每個資料片版本末期只追加 6 隻。**遊戲資料與上游都沒有這個旗標**（XIVAPI `FishParameter` 的 `AchievementCredit`／`IsHidden` 在魚王與魚皇之間完全相同），由 `scripts/patch-fish-legendary.mjs` 依中文維基名單標記，目前 30 隻（2.4／3.5／4.55／5.55／6.55 各 6）。`legendary ⊂ bigFish` |
+
+**建置**：`node scripts/build-fishing.mjs` → 接著必跑 `patch-fishing-multispot.mjs` 與 `patch-fish-legendary.mjs --apply`（後者漏跑不會報錯，只會安靜地把 30 隻魚皇降級成魚王）。
 
 ### 2.17 treasure-maps（藏寶圖採集點）
 

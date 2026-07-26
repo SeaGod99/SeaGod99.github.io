@@ -98,6 +98,7 @@ async function main() {
       bait: [], predators: [],
       intuitionLength: null, hookset: null, tug: null,
       bigFish: false, fishEyes: false, snagging: null, folklore: null,
+      legendary: false,
       patch: null,
     });
   }
