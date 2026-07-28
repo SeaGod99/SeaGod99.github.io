@@ -16,7 +16,8 @@
 | **ffxiv.consolegameswiki.com** | `/wiki/Blue_Magic_Spellbook` | 青魔法習得來源（圖騰兌換條件、副本） | 人工查證，非 API |
 | **Teamcraft treasures** | `raw.githubusercontent.com/…/libs/data/src/lib/json/treasures.json` | 藏寶圖（陳舊的地圖）挖寶座標：`{ item, map(Map row id), coords{x,y}, partySize }` | 建 `treasure-maps.json`；名稱/圖示反查 items.json、地區/資料片反查 maps.json。腳本 [`scripts/build-treasure-maps.mjs`](../scripts/build-treasure-maps.mjs) |
 | **XIVAPI v2** | `https://v2.xivapi.com` | 物品/NPC/副本等 sheet（**row 不含 patch 欄**） | patch 一律走 Teamcraft，不靠 XIVAPI |
-| out_data/cfc-content.json | 本機 | ContentFinderCondition id → InstanceContent id | dungeons patch 橋接（dungeons.id 是 CFC，Teamcraft instancecontent 是 InstanceContent） |
+| out_data/cfc-content.json | 本機 | ContentFinderCondition id → InstanceContent id | dungeons patch 橋接（dungeons.id 是 CFC，Teamcraft instancecontent 是 InstanceContent）。**幻化配裝圖鑑也靠它**把取得方式裡的副本 id 解成台服官方名（裝備類 99.95% 解得出來） |
+| **Teamcraft 台服分類名** | `raw.githubusercontent.com/…/libs/data/src/lib/json/tw/tw-item-ui-categories.json` | ItemUICategory id → 台服繁中分類名 | 建 [`data/item-categories.json`](../data/item-categories.json)（112 筆）。與 `build-items.mjs` 寫進 `items.json` 的 `category` 同源，所以「分類名 → id」保證對得起來。腳本 [`scripts/build-item-categories.mjs`](../scripts/build-item-categories.mjs) |
 
 README 的「資料來源」表為總覽；本表為這幾次回填實際用到的細節。
 
@@ -88,3 +89,21 @@ ffxivcollect 的 source `text` 是英文，無簡中可 OpenCC，故 detail 採�
 | barding 英文名 | 6（ARR GC/職業鞍） | 無 `itemId`、tw-items 查無 → 無台服官方譯名來源 | 已被前端繁中漢字 filter 隱藏（符合嚴格政策） |
 
 > 工程取捨：上述多為「一次性、邊際」項目。把一次性維護腳本再抽共用 lib（DRY）目前刻意不做——重構已驗證可用的腳本只省約數十行、卻有破壞風險，違反「engineered enough」。日後若這類腳本增多再抽。
+
+---
+
+## 6. 幻化配裝圖鑑（tools/glamour/）如何消費主庫
+
+2026-07-28 起本站**只有一份物品資料庫**。幻化配裝圖鑑原本自帶的 `資料來源/`（104MB，
+cycleapple/ffxiv-item-search-tc 快照）已移除，改由 [`tools/glamour/scripts/maindb.py`](../tools/glamour/scripts/maindb.py)
+把主庫轉成該子專案原本的欄位形狀。移除理由與稽核數字見[專案慣例與記憶 §4.14](專案慣例與記憶.md#414-子專案自帶一份資料庫遲早脫鉤2026-07-28幻化配裝圖鑑的教訓)。
+
+| 圖鑑要的東西 | 來自主庫 | 轉換重點 |
+|---|---|---|
+| 繁中名／分類／等級／職業／patch | `data/items.json` | `icon` 路徑 → 數字 id；`equip.jobs` 陣列 → `classJobCategoryName` 空白字串；有 `equip` 才給 `equipStats`（＝可裝備判定） |
+| `categoryId`（1–49＝裝備） | `data/item-categories.json` | 用分類**名稱**反查 id（主庫 items 只存名稱） |
+| 取得方式 | `out_data/obtainable-methods.msgpack`（**原始版**，不是 `data/obtainable-methods.json` 摘要版） | 副本 id→`cfc-content.json`→`dungeons.json` 名；NPC/地名→`npcs`/`places.msgpack`；任務→`tw-quests.json`；怪物→`monsters.json` 的 **`baseId`**；軍票兌換（貨幣 20/21/22）另補一條 `gcshop` |
+| 製作 | `data/recipes.json` | `jobId` → `craftType`／`craftTypeName` |
+| 日／英／簡中名 | `out_data/{ja,en,cn}-items.msgpack` | 改版新增的裝備由 `build_item_fallback.py` 就地向 XIVAPI 抓，不必手動補 |
+
+驗收：`py tools\glamour\scripts\check_maindb.py`（檢查齊全度、msgpack 是否解得開、副本名解析率）。

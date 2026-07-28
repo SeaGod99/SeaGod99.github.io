@@ -14,11 +14,14 @@ pipeline.py — FF14 時尚配裝更新流程
   python pipeline.py enrich    # 只執行步驟 B（Enrich 流程，不需網路）
 """
 
-import json, msgpack, time, sys
+import json, msgpack, os, time, sys
 from pathlib import Path
 from collections import Counter
 from urllib.request import urlopen, Request
 from urllib.error import URLError, HTTPError
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import maindb
 
 # Windows 主控台/管線預設 cp950，印 emoji/罕見字會炸——統一改 UTF-8
 for _s in (sys.stdout, sys.stderr):
@@ -30,8 +33,7 @@ for _s in (sys.stdout, sys.stderr):
 # ══════════════════════════════════════════════════════════
 # 路徑設定
 # ══════════════════════════════════════════════════════════
-ROOT_DIR      = Path(__file__).parent.parent          # FF14時尚配裝/
-DATA_DIR      = ROOT_DIR / "資料來源"
+ROOT_DIR      = Path(__file__).parent.parent          # tools/glamour/
 MIRAPRI_JSON  = ROOT_DIR / "data" / "mirapri_all.json"
 MIRAPRI_JS    = ROOT_DIR / "mirapri_data.js"
 IMAGE_DIR     = ROOT_DIR / "配裝圖片" / "mirapri"
@@ -186,44 +188,38 @@ def _load_msgpack(path):
 
 
 def load_all_data():
-    """載入所有 Enrich 步驟需要的資料庫，回傳一個 dict"""
+    """載入所有 Enrich 步驟需要的資料庫，回傳一個 dict（一律走主庫，見 maindb.py）"""
     print("[載入] ja/en-items …", end=" ", flush=True)
-    ja_data = _load_msgpack(DATA_DIR / "ja-items.msgpack")
-    en_data = _load_msgpack(DATA_DIR / "en-items.msgpack")
+    ja_data = _load_msgpack(maindb.JA_MSGPACK)
+    en_data = _load_msgpack(maindb.EN_MSGPACK)
     ja_to_id = {v.get("ja", ""): str(k) for k, v in ja_data.items() if v.get("ja")}
     en_to_id = {v.get("en", ""): str(k) for k, v in en_data.items()
                 if isinstance(v, dict) and v.get("en")}
     print(f"ja={len(ja_to_id):,}  en={len(en_to_id):,}")
 
-    print("[載入] items.json …", end=" ", flush=True)
-    with open(DATA_DIR / "items.json", encoding="utf-8") as f:
-        items = json.load(f)["items"]
+    print("[載入] 主庫 items …", end=" ", flush=True)
+    items = maindb.load_items()
     print(f"{len(items):,} 筆")
 
-    print("[載入] sources.json …", end=" ", flush=True)
-    with open(DATA_DIR / "sources.json", encoding="utf-8") as f:
-        sources = json.load(f)["sources"]
+    print("[載入] 主庫取得方式（已解析成繁中）…", end=" ", flush=True)
+    sources = maindb.load_sources()
     print(f"{len(sources):,} 筆")
 
-    print("[載入] obtainable-methods …", end=" ", flush=True)
-    om = _load_msgpack(DATA_DIR / "obtainable-methods.msgpack")
+    print("[載入] obtainable-methods（原始）…", end=" ", flush=True)
+    om = maindb.load_om()
     print(f"{len(om):,} 筆")
 
     print("[載入] npcs / places / quests …", end=" ", flush=True)
-    npcs_raw   = _load_msgpack(DATA_DIR / "npcs.msgpack")
-    places_raw = _load_msgpack(DATA_DIR / "places.msgpack")
-    quests_raw = _load_msgpack(DATA_DIR / "quests.msgpack")
-    tw_npcs    = {str(k): v.get("tw","") for k, v in npcs_raw.get("twNpcs",{}).items()}
-    tw_places  = {str(k): v.get("tw","") for k, v in places_raw.get("twPlaces",{}).items()}
-    tw_quests  = {str(k): v.get("tw","") for k, v in quests_raw.get("twQuests",{}).items()}
+    tw_npcs   = maindb.tw_npcs()
+    tw_places = maindb.tw_places()
+    tw_quests = maindb.tw_quests()
     print(f"npc={len(tw_npcs):,}  place={len(tw_places):,}  quest={len(tw_quests):,}")
 
-    print("[載入] recipes.msgpack + recipes.json …", end=" ", flush=True)
-    recipes_list = _load_msgpack(DATA_DIR / "recipes.msgpack")
+    print("[載入] recipes …", end=" ", flush=True)
+    recipes_list = _load_msgpack(Path(maindb.OUT_DATA) / "recipes.msgpack")
     recipe_by_id = {str(r["id"]): r for r in recipes_list if isinstance(r, dict)}
-    with open(DATA_DIR / "recipes.json", encoding="utf-8") as f:
-        recipes_json = json.load(f)["recipes"]
-    print(f"msgpack={len(recipe_by_id):,}  json={len(recipes_json):,} 筆")
+    recipes_json = maindb.load_recipes()
+    print(f"msgpack={len(recipe_by_id):,}  主庫={len(recipes_json):,} 種產物")
 
     # ja 名稱 → 繁中名稱（用於 zh 步驟）
     id_to_zh = {k: v["name"] for k, v in items.items() if "name" in v}
@@ -341,7 +337,10 @@ _ORANGE_SCRIP = {41784, 41785}
 _PURPLE_SCRIP = {33913, 33914}
 _OLD_SCRIP    = {28,10309,24909,30272,31339,33329,33330,
                  35834,36658,38211,38942,39365,39919,41305,41306,41786}
-_INST_TYPE    = {1:"試煉",2:"迷宮挑戰",3:"高難度討伐",4:"討伐歼滅戰",
+# ⚠ 4 是「討伐**殲**滅戰」。這裡原本寫成簡體「歼」，已漏進 mirapri_outfits.js 90 處、
+#   curated 1 處，且與 build_sets.py／maindb.py 的同名表不一致（那兩處是對的）。
+#   三處要同步（build_sets.INST_TYPE／maindb._INST_TYPE／本表）。
+_INST_TYPE    = {1:"試煉",2:"迷宮挑戰",3:"高難度討伐",4:"討伐殲滅戰",
                  5:"聯隊突擊",6:"絕境戰",22:"聯隊突擊",28:"絕境戰"}  # 28=絕（絕巴哈姆特/絕龍詩…）
 _JOB_CRAFT    = {8:"木工",9:"鍛造",10:"甲冑",11:"金工",
                  12:"皮革",13:"裁縫",14:"鍊金",15:"烹調"}
@@ -409,8 +408,10 @@ def _resolve_from_sources(item_id, items, sources, recipes_json):
             mobs = s.get("mobNames",[]); mob = mobs[0] if mobs else "怪物"
             results.append((6, f"🗡️{mob}（怪物掉落）", "raid"))
         elif t == "treasure":
-            mn = s.get("mapNames",["寶圖"])[0]
-            results.append((7, f"🗺️寶圖（{mn}）", "other"))
+            # ⚠ 不能寫 s.get("mapNames", ["寶圖"])[0]：key 存在但值是空 list 時
+            #    預設值不會生效，直接 IndexError（藏寶圖道具查不到繁中名時就會這樣）
+            maps = s.get("mapNames") or []
+            results.append((7, f"🗺️寶圖（{maps[0]}）" if maps else "🗺️寶圖", "other"))
         elif t == "voyage":
             results.append((7, "🚢潛水艇探索", "other"))
     for r in recipes_json.get(item_id, []):

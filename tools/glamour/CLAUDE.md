@@ -4,6 +4,23 @@
 
 ---
 
+## ⚠ 資料來源：一律走 repo 主庫（2026-07-28 改）
+
+本圖鑑**不再自帶資料庫**。舊的 `資料來源/`（104MB，來自 cycleapple/ffxiv-item-search-tc）
+已整個移除，所有腳本改由 [`scripts/maindb.py`](scripts/maindb.py) 讀 repo 主庫的
+`data/` 與 `out_data/`。
+
+**為什麼要改**（稽核結論）：那份快照有 45.6MB 與 `out_data/` 位元組完全相同（純重複），
+而且比主庫舊一個月、少 590 筆 7.1/7.2 道具（含 6 個幻化套裝箱）；更嚴重的是 588 筆同 id
+名稱不同，以 Teamcraft 台服 `tw-items` 當第三方裁判**主庫對 570、它只對 18**——錯的那批
+是簡中用詞（打底褲←打底裤、莽漢面具、把台服保留英文的曲名硬翻），違反
+[docs/專案慣例與記憶.md](../../docs/專案慣例與記憶.md) §4.2／§4.5。
+
+**要改資料就去改主庫**，不要在本目錄下再存一份。對照關係與轉換細節寫在 `maindb.py` 檔頭。
+跑 `py scripts\check_maindb.py` 可確認主庫齊不齊全。
+
+---
+
 ## 執行環境注意
 
 本機（Windows）的 `python` 指令是 Microsoft Store 假捷徑（執行會靜默結束），
@@ -22,6 +39,10 @@ FF14時尚配裝/
 │   ├── icons/            # 官方套裝裝備 icon（fetch_icons.py 下載，40px PNG）
 │   └── 官方套裝/         # 官方套裝示意照（fetch_set_photos.py 從 consolegameswiki 抓，640px JPG）
 ├── scripts/
+│   ├── maindb.py         # ★★ 唯一資料入口：讀 repo 主庫 data/ 與 out_data/，
+│   │                     #    轉成本專案舊格式回傳。要查物品/取得方式/配方一律經由它
+│   ├── check_maindb.py   # ★ 主庫健檢（取代舊的 update_db.py，不改檔）
+│   ├── patch_curated_sources.py # 精選「待確認／空白」取得方式補成 DB 答案（dry-run／--apply）
 │   ├── update_all.py     # ★ 一鍵更新總控（full / local 兩種模式）
 │   ├── build_site.py     # data/curated_outfits.json → curated/mirapri_outfits.js + official_sets.js
 │   │                     #   並用 item_fallback 名稱精確比對把 iid/dye/mb（徽章）蓋進每件裝備
@@ -43,8 +64,7 @@ FF14時尚配裝/
 │   │                     #   含 7.x 日英名/部位/patch，繁中 DB 未收錄時 resolve 與重建靠它）
 │   ├── resolve_ocr.py    # OCR 字串對回資料庫正式值（抓漏候選/繁中校正）→ 報告，不改 curated
 │   ├── ab_resolution.py  # Phase 4：在 OCR 失敗集上 A/B 解析度與模型（決定 max_edge）
-│   ├── reconstruct_empty.py # 空殼套裝用 OCR+DB 重建裝備（部位/繁中/染色/取得方式）→ mirapri_reconstructed.json
-│   └── update_db.py      # ★ 從 cycleapple/ffxiv-item-search-tc 抓最新繁中道具 DB（先 --check 比版本，--apply 才覆蓋）
+│   └── reconstruct_empty.py # 空殼套裝用 OCR+DB 重建裝備（部位/繁中/染色/取得方式）→ mirapri_reconstructed.json
 ├── data/
 │   ├── curated_outfits.json       # ★ 精選套裝唯一資料來源（直接編輯這份）
 │   ├── all_outfits_enriched.json  # pipeline 產出，build_site.py 的社群資料來源
@@ -61,20 +81,25 @@ FF14時尚配裝/
 │   │                              #   ＋dye(染色欄數)/mb(可交易)/icon/ilvl/cjc；本地 DB 無 DyeCount，
 │   │                              #   XIVAPI 是全件唯一來源，徽章與官方套裝分組都靠這份
 │   └── OCR無解清單.md              # 重建時「無解」的件（附套裝 id/圖）→ 待 Claude 視覺複查補 aliases
-└── 資料來源/
-    ├── items.json       # 繁中道具資料庫（主要來源）
-    ├── en-items.msgpack # 英文道具名稱（msgpack 格式）
-    ├── ja-items.msgpack # 日文道具名稱（msgpack 格式）
-    ├── zh-items.msgpack # 繁中道具名稱（msgpack 格式，備用）
-    ├── sources.json     # 道具取得來源資料庫
-    └── recipes.json     # 製作配方資料庫
+└──（沒有 資料來源/ 了：物品／取得方式／配方一律讀 repo 主庫，見下表）
 ```
 
-> **資料庫來源**：`資料來源/`（items.json / sources.json / recipes.json / items-index.json / 語言 msgpack）
-> 來自開源繁中工具站 **cycleapple/ffxiv-item-search-tc** 的 `public/data/`（繁中名上游為 ffxiv-datamining-tc；
-> 已驗證本專案 items.json 與其 byte 相同）。注意 item-names-multi.json 的 `cn` 欄是「簡中」，繁中名一律取 items.json 的 `name`。
-> 改版後更新繁中：`py scripts\update_db.py`（比對線上版本）→ `--apply`（下載覆蓋＋重產 ja/en/zh msgpack）。
-> ⚠ 上游需等社群 datamine + cycleapple 重建，**伺服器更新當天通常還抓不到新版**。
+**資料庫來源＝repo 主庫**（全部經由 `scripts/maindb.py` 存取，不要自己開檔）：
+
+| 主庫檔案 | 提供 |
+|---------|------|
+| `data/items.json` | 台服繁中名／分類／道具等級／裝備等級／職業／patch（權威＝`out_data/tw-items.msgpack`） |
+| `data/item-categories.json` | ItemUICategory id ↔ 繁中分類名（`categoryId` 靠它，1–49＝裝備） |
+| `data/recipes.json` | 製作配方 |
+| `data/dungeons.json` | 副本台服官方名（取得方式的副本名靠它翻，見知識庫 §4.3b） |
+| `data/monsters.json` | 怪物名（掉落來源；鍵是 **`baseId`** 不是 `id`） |
+| `out_data/obtainable-methods.msgpack` | 取得方式原始表（39,257 筆，比舊的 cycleapple 版多 9,612 筆） |
+| `out_data/npcs.msgpack`／`places.msgpack`／`tw-quests.json` | NPC／地名／任務的繁中名 |
+| `out_data/{ja,en,cn}-items.msgpack` | 日／英／簡中道具名（OCR 比對與備選庫用；`cn` 只當參考欄位，**不可拿來顯示**） |
+
+> 改版後要更新資料，**去跑主庫的 node 腳本**（`build-items.mjs`／`build-item-categories.mjs`…），
+> 本目錄不再有下載步驟。`py scripts\check_maindb.py` 可先確認主庫齊全。
+> 7.x 新裝備的日/英名不必手動補——`build_item_fallback.py` 會就地向 XIVAPI 抓。
 
 ---
 
@@ -137,9 +162,16 @@ FF14時尚配裝/
 （改版撞同名或官方改譯名就會踩到）。現在 500/500 件都已回填，`stamp_badges()` 改為
 **有 iid 就以 iid 為準**，只有沒 id 的新件才退回名稱比對。
 
+**職業繁中名只有一個權威＝主庫 `data/equip.json` 的 names 表**（知識庫 §4.2），
+由 `maindb.job_names()` 取用。白魔道士（非白魔法師）、召喚士（非召喚師）、
+占星術師（非占星術士）、**奪魂者**（RPR，非鐮刀師）、**毒蛇劍士**（VPR，非劍蛇師）、
+製作職一律「匠」不是「師」（刻木匠／鍛鐵匠／鑄甲匠／雕金匠／製革匠／裁衣匠／烹調師）、
+BTN 是園藝工不是採伐工。2026-07-29 前 `build_site.py`、`verify_data.py`、`index.html`
+各自抄了一份，33 個裡 16 個是錯的——**不要再在任何地方另抄一份**。
+
 **`job`（職業限制）不要手填**：由 `iid` 的 `cjc`（ClassJobCategory）推導，
 `apply_db_fields()`／`job_from_cjc()` 建置時算好。整職能→群組名（治療職業、近戰職業…）、
-子集→列具體職業（cjc 103「ROG NIN VPR」＝忍者、劍蛇師）、全戰鬥→全職業、
+子集→列具體職業（cjc 103「ROG NIN VPR」＝忍者、毒蛇劍士）、全戰鬥→全職業、
 Disciple of the Hand/Land→製作／採集職業。手填常錯：自創詞「偵察職業」、把整職能寫成
 單一職業、只列部分職業、給專武填錯職能（月讀太刀填「盾衛職業」實為暗黑騎士專武）。
 
@@ -149,7 +181,12 @@ Disciple of the Hand/Land→製作／採集職業。手填常錯：自創詞「�
 （版本一律填 7.0、等級留在預設 1、日文名濁點長音抄錯、**自編繁中名**）。
 一次性校正舊資料：`py scripts\normalize_curated_from_db.py --apply`（dry-run 預設）。
 手填的主觀欄位不受影響：`source`（取得方式）、`dye1`／`dye2`（該套實際染色）、
-`job`、`gender`／`race`、套裝名稱與色彩描述。
+`gender`／`race`、套裝名稱與色彩描述。（`job` 已改為由 cjc 推導，見上一段。）
+
+**`source` 雖是手填，「待確認／空白」的可以機器補**：`py scripts\patch_curated_sources.py`
+（dry-run 預設）把 DB 查得出來的填上，只動「待確認／空白／—」與沒附註的「🪙Gil×N」；
+JSON 與 DB 各說各話、多來源寫法、帶 NPC 附註的 Gil 一律不動，留在 `data/驗證報告.md`
+第二章給人判斷（多半是「兩邊都對」，人工寫的比較有用）。
 
 ### 查詢流程
 
@@ -162,31 +199,25 @@ img.thumbnail((800, 800))
 img.save('/tmp/thumb.jpg', 'JPEG', quality=70)
 ```
 
-**步驟 2：查詢繁中名稱（ZH）**
-`資料來源/items.json` 結構：`{"items": {"道具ID": {"name": "繁中名稱", ...}}}`
+**步驟 2–4：查名稱（一律經由 `maindb`，不要自己開檔）**
 ```python
-import json
-with open('資料來源/items.json', encoding='utf-8') as f:
-    items = json.load(f)['items']
-# 以名稱建立反查表
-name_map = {v['name']: v for v in items.values()}
-```
+import sys; sys.path.insert(0, 'scripts')
+import maindb, msgpack
 
-**步驟 3：查詢英文名稱（EN）**
-`資料來源/en-items.msgpack` 結構：`{"道具ID": {"en": "English Name"}}`
-```python
-import msgpack
-with open('資料來源/en-items.msgpack', 'rb') as f:
-    en_data = msgpack.unpackb(f.read(), raw=False)
-# en_data: {str_id: {"en": "name"}}
-en_name_by_id = {k: v['en'] for k, v in en_data.items() if isinstance(v, dict)}
-```
+items = maindb.load_items()          # {"道具ID": {"name": 台服繁中名, "categoryName": …, "patch": …}}
+name_map = {v['name']: v for v in items.values()}     # 以繁中名反查
 
-**步驟 4：查詢日文名稱（JA）**
-`資料來源/ja-items.msgpack` 結構同 EN，欄位為 `"ja"`。
+def _names(path, field):
+    d = msgpack.unpackb(open(path, 'rb').read(), raw=False)
+    return {k: v[field] for k, v in d.items() if isinstance(v, dict) and v.get(field)}
+
+en_name_by_id = _names(maindb.EN_MSGPACK, 'en')       # out_data/en-items.msgpack
+ja_name_by_id = _names(maindb.JA_MSGPACK, 'ja')       # out_data/ja-items.msgpack
+```
 
 **注意事項：**
-- 繁中版資料庫（items.json）的 ID 上限約 45590，更新版本的道具可能找不到繁中名稱，留空即可
+- 繁中名的 ID 上限實測約 45590，更新版本的道具可能查不到繁中名稱，**留空即可**
+  （台服未實裝＝不顯示，不要用日/英/簡中補，見知識庫 §4.5）
 - 以 `(outfit編號, 部位)` 的位置對應方式比名稱比對更可靠
 
 ---
@@ -195,8 +226,9 @@ en_name_by_id = {k: v['en'] for k, v in en_data.items() if isinstance(v, dict)}
 
 ### 資料來源
 
-- `資料來源/sources.json`：道具取得來源，以道具 ID 為 key
-- `資料來源/recipes.json`：製作配方，包含 `classJobLevel` 欄位
+- `maindb.load_sources()`：道具取得來源，以道具 ID 為 key
+  （由主庫 `out_data/obtainable-methods.msgpack` 解析，副本／NPC／地名／任務都已轉成台服繁中名）
+- `maindb.load_recipes()`：製作配方，含 `craftTypeName`／`classJobLevel`（由主庫 `data/recipes.json` 轉出）
 
 ### 取得方式格式（Emoji 前綴）
 
@@ -256,7 +288,7 @@ index.html 的 `ST_TAG_SET` 兩邊要同步）。**同一套資料 curated／mir
 ```python
 INST_TYPE = {
     1: '試煉', 2: '迷宮挑戰', 3: '高難度討伐',
-    4: '討伐歼滅戰', 5: '聯隊突擊', 6: '絕境戰',
+    4: '討伐殲滅戰', 5: '聯隊突擊', 6: '絕境戰',   # 「殲」不是簡體「歼」（pipeline.py 曾寫錯，已修）
     22: '聯隊突擊', 28: '絕境戰'   # 28=絕（絕巴哈姆特/絕龍詩…）
 }
 ```
@@ -273,7 +305,7 @@ INST_TYPE = {
 
 ### 資料來源
 
-`資料來源/items.json` 中每個道具的 `equipStats` 欄位：
+`maindb.load_items()` 每個道具的 `equipStats` 欄位（只有可裝備的才有）：
 ```json
 {
   "equipLevel": 80,
@@ -325,16 +357,16 @@ INST_TYPE = {
 ### 3. 查詢名稱
 
 1. 讀取圖片，從外觀辨識各部位裝備
-2. 在 `資料來源/items.json` 搜尋繁中名稱
-3. 透過道具 ID 在 `en-items.msgpack` 取得英文名稱
-4. 透過道具 ID 在 `ja-items.msgpack` 取得日文名稱
+2. 用 `maindb.load_items()` 搜尋繁中名稱
+3. 透過道具 ID 在 `out_data/en-items.msgpack` 取得英文名稱
+4. 透過道具 ID 在 `out_data/ja-items.msgpack` 取得日文名稱
 5. **把道具 ID 填進 `iid` 欄**（查名稱時本來就會拿到）。不想手填就先留空，
    之後跑 `py scripts\backfill_curated_iid.py --apply` 用名稱回填——但**名稱撞名或
    官方改譯名時它會拒填並列進報告**，屆時仍要人工補。`health_check.py` 會擋缺 id 的件。
 
 ### 4. 查詢取得方式與限制
 
-使用 `資料來源/sources.json` 和 `recipes.json` 查詢（格式參考「取得方式格式」一節），結果填入 JSON 的 `source` 欄位。
+使用 `maindb.load_sources()` 和 `maindb.load_recipes()` 查詢（格式參考「取得方式格式」一節），結果填入 JSON 的 `source` 欄位。
 
 ### 5. 重建資料檔（不再手動改 HTML）
 
@@ -448,7 +480,8 @@ py scripts\fetch_icons.py          # 單獨補 icon（可續傳；--limit N 分�
 py scripts\fetch_set_photos.py     # 單獨補官方示意照（可續傳；--retry-miss 重試對不到的）
 ```
 
-改版後順序：`update_db.py --apply`（繁中 DB）→ `build_item_fallback.py`（新裝備＋徽章）→
+改版後順序：**先更新主庫**（repo 根：`node scripts/build-items.mjs` → `build-item-categories.mjs` →
+`validate-data.mjs`）→ `check_maindb.py`（確認齊全）→ `build_item_fallback.py`（新裝備＋徽章）→
 `build_sets.py --fetch` → `fetch_icons.py` → `fetch_set_photos.py` → `build_site.py` →
 **`build_item_sources.py`**（吃三份前端 js，必須最後跑）。
 
@@ -611,7 +644,7 @@ py scripts\resolve_ocr.py   # （選用）OCR 字串對回 DB 正式值 → data
 ### 後續校正
 
 OCR 可能有錯字或幻覺，報告／JSON 出來後，可請 Claude 把 OCR 名稱比對
-`資料來源/items.json`、`ja-items.msgpack` 校正，再把確認好的 source／染色寫回
+`maindb.load_items()`、`out_data/ja-items.msgpack` 校正，再把確認好的 source／染色寫回
 `data/curated_outfits.json`，最後照「新增套裝的完整流程」跑 `update_all.py local` 重建。
 
 ## 輔助腳本位置

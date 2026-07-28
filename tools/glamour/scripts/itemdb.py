@@ -7,10 +7,10 @@ itemdb.py —— FF14 道具資料庫索引（繁中／英／日 + 日文＆英�
 resolve() 同時支援日文與英文名：英文客戶端的投稿截圖 OCR 讀到的是英文裝備名，
 也能對回正式道具（先日文、不到再英文）。沿用 ocr_check 的 norm／similar（DRY）。
 
-資料來源（資料來源/）：
-  items.json         {"items": {id: {"name": 繁中名, ...}}}（繁中，id 上限約 45590）
-  ja-items.msgpack   {id: {"ja": 日文名}}
-  en-items.msgpack   {id: {"en": 英文名}}
+資料來源（一律走主庫，見 maindb.py）：
+  maindb.load_items()          {id: {"name": 台服繁中名, ...}}（來自 data/items.json）
+  out_data/ja-items.msgpack    {id: {"ja": 日文名}}
+  out_data/en-items.msgpack    {id: {"en": 英文名}}
   data/item_fallback_multilang.json（選用，build_item_fallback.py 產）
                      7.x 新裝備（本機 msgpack 沒有的 id）的 ja/en 備選索引：
                      本機對不到時 resolve 會再查這份，救回改版新裝（zh 多為空＝繁中未實裝）
@@ -24,17 +24,16 @@ resolve() 同時支援日文與英文名：英文客戶端的投稿截圖 OCR �
 import os
 import json
 
+import maindb
 import ocr_check as oc  # norm / similar（DRY）
 
 ROOT = oc.ROOT
-SRC = os.path.join(ROOT, "資料來源")
-ITEMS_JSON = os.path.join(SRC, "items.json")
-JA_MSGPACK = os.path.join(SRC, "ja-items.msgpack")
-EN_MSGPACK = os.path.join(SRC, "en-items.msgpack")
+JA_MSGPACK = maindb.JA_MSGPACK
+EN_MSGPACK = maindb.EN_MSGPACK
 ALIAS_JSON = os.path.join(ROOT, "data", "ocr_aliases.json")  # 學習修正表（Claude 教過的 Ollama 誤讀→道具id）
 FALLBACK_JSON = os.path.join(ROOT, "data", "item_fallback_multilang.json")  # 7.x 備選庫（缺檔＝跳過此層）
 
-ZH_MAX_ID = 45590  # items.json 繁中上限；超過此 id 多半繁中尚未實裝（zh 會留空）
+ZH_MAX_ID = 45590  # 主庫繁中名的實際上限；超過此 id 多半繁中尚未實裝（zh 會留空）
 
 
 def _safe_int(s, default=10 ** 12):
@@ -54,8 +53,7 @@ def _load_msgpack(path, field):
 
 class ItemDB:
     def __init__(self):
-        raw = json.load(open(ITEMS_JSON, encoding="utf-8"))
-        items = raw.get("items", raw)
+        items = maindb.load_items()
         self.id_to_zh = {str(k): v.get("name", "") for k, v in items.items()}
         self.id_to_cat = {str(k): v.get("categoryName", "") for k, v in items.items()}
         self.id_to_equip = {str(k): bool(v.get("equipStats")) for k, v in items.items()}

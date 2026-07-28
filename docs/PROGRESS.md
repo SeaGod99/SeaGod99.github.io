@@ -3,7 +3,7 @@
 > **給 Claude / 後續對話的指示**：開始任何工作前先讀本檔。完成任何功能或資料變更後，**必須更新本檔**（狀態表 + 更新紀錄），並同步 `data/_meta.json` 的 status。
 > 規格細節見 `docs/feature-specs.md`，資料格式見 `data/SCHEMA.md`。
 
-**最後更新**：2026-07-28（資料缺口／UX 一致性／效能 三章＋收尾：副本庫 386→520 座、幻卡與青魔取得方式缺口歸零、430px 溢出、market 10MB→2MB、_meta 自動抑漂，見更新紀錄）
+**最後更新**：2026-07-29（職業名三份表統一、精選取得方式補 224 處、主庫 equip 缺口修補；07-28 幻化配裝圖鑑資料併回主庫：刪 105MB 重複、修 570 筆錯名、加 .gitattributes 修 msgpack 損壞；另有資料缺口／UX 一致性／效能 三章＋副本庫 386→520 座等，見更新紀錄）
 **網站**：https://seagod99.github.io ｜ GitHub Pages 純靜態 ｜ 台服版本 **7.15**（＝`data/_meta.json` 的 `gamePatch`，全站版本閘門唯一真實來源；台服尚未開放到 7.2）
 
 ---
@@ -23,7 +23,7 @@
 | — | 天氣預報 | `/tools/weather/` | 完成（改用共用模組 assets/js/eorzea-weather.js，天氣表接 maps.json weatherRates，mapId 統一，06-15重做） |
 | 1.5 | 風脈泉追蹤器 | `/tools/aether-currents/` | 完成（31 地區 303 個風脈泉，任務型151筆/野外型152筆，06-16新增；07-23 遷入共用引擎的**子項目模式**——卡片＝地區、追蹤單位＝風脈泉，手風琴/地區地圖圖釘/🗺彈窗保留，新增可分享網址、批次標記、排序） |
 | 1.6 | 時尚品鑑推薦 | `/tools/fashion-report/` | 完成（**07-25 全面改版**：推薦標準改為「門檻→金幣（含染劑）→件數」三層成本模型並以列舉求最佳解，答案改為每週結構相同的「涵蓋所有計分部位配裝表」，換週狀態機把遊戲階段與資料新鮮度拆成兩軸、過渡期顯示當前週主題，完整清單加上等級／職業／可否染色／性別種族限制／販賣地圖／市場連結。管線全程式化＝`build-fashion-report.mjs` 一支到底。**規格見 [fashion-report-spec.md](fashion-report-spec.md)**；目前 week 443「真麻正式裝」verified） |
-| 1.7 | 幻化配裝圖鑑 | `/tools/glamour/` | 完成（07-15 由獨立 repo 併入：精選配裝＋Mirapri 社群＋官方套裝 1971 套三檢視，收藏星號、染色/交易徽章、wiki 示意照；07-16 上線資產進版控——縮圖/官方示意照/icons/精選原圖＋mirapri_outfits.js/official_sets.js 共約 850MB 已 push，線上完整可用；**僅 mirapri 原圖 669MB 留本機**（加入會破 Pages 發佈 1GB 上限，彈窗自動退回縮圖），重建後衍生 js 記得 commit；資料管線為 Python（py scripts\update_all.py），細節見 tools/glamour/CLAUDE.md；07-16 介面統整——改用站內共用色票/字體、加「← 水神的工具箱」導覽與頁尾，官方套裝卡不再顯示 alljob 原始 tag） |
+| 1.7 | 幻化配裝圖鑑 | `/tools/glamour/` | 完成（07-15 由獨立 repo 併入：精選配裝＋Mirapri 社群＋官方套裝 1971 套三檢視，收藏星號、染色/交易徽章、wiki 示意照；07-16 上線資產進版控——縮圖/官方示意照/icons/精選原圖＋mirapri_outfits.js/official_sets.js 共約 850MB 已 push，線上完整可用；**僅 mirapri 原圖 669MB 留本機**（加入會破 Pages 發佈 1GB 上限，彈窗自動退回縮圖），重建後衍生 js 記得 commit；資料管線為 Python（py scripts\update_all.py），細節見 tools/glamour/CLAUDE.md；**07-28 資料層併回主庫**——移除自帶的 105MB `資料來源/`，改由 `scripts/maindb.py` 讀 `data/`＋`out_data/`，修掉 570 筆錯譯名並補進 7.1/7.2 新套裝箱；07-16 介面統整——改用站內共用色票/字體、加「← 水神的工具箱」導覽與頁尾，官方套裝卡不再顯示 alljob 原始 tag） |
 
 ### 收藏／成就追蹤（共通規格見 feature-specs 第二章）
 
@@ -196,6 +196,59 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 6. 其他規劃：時尚品鑑、冒險者小隊計算機、藏寶圖、園藝配種、釣魚紀錄
 
 ## 五、更新紀錄
+
+- **2026-07-29（四項判斷定案＋收藏 id 一次性遷移）**：使用者逐項裁示，全部落地。
+  - **多來源不改呈現**：查證後確認多來源的呈現「早就有了」——每件裝備下方那行是人工整理的一句話摘要，完整清單走 `item_sources.js` 呈現在彈窗底部的「📍取得方式總覽」，篩選與搜尋也吃那份。所以 18 件「JSON vs DB」衝突使用者兩邊都看得到，維持現狀；而且人工那行常帶著表裡沒有的資訊（🗺️優雷卡常風之地比🛒裝備升級兌換有用、天文護臂的皮革 Lv.90 配方表裡根本沒有），照 DB 覆蓋是退步。
+  - **28 筆譯名以主庫為準**：Teamcraft 的 tw 表自己也混雜（`寬松`／`錦磚咖啡`／`紅色山棱` 都是陸服用詞，主庫的 `寬鬆`／`馬賽克咖啡`／`紅色山稜` 才對），只有 `巨像乒` 這類明顯錯字是 Teamcraft 對。**權威維持 `tw-items.msgpack`，Teamcraft 只當交叉檢查**，不整批對齊。
+  - **106 件缺繁中名確認全部合理**：104 件 patch ≥ 7.2（超過 gamePatch 7.15）；剩 2 件雖標 7.15，但整個 クラウドダーク 系列 35 件在 `tw-items` 一個都沒有、而鄰近 id 區間（44500–45000）有 380 筆，證明不是快照截斷而是台服真的還沒這批譯名。依規則留空。
+  - **收藏影響救回來了**：147 套啟發式套裝換 id 會讓使用者的星號消失。拿改版前後的 `official_sets.js` 比「裝備 id 集合」，**145/147 對得到**（133 靠全部裝備、12 靠可見部位），已在 `index.html` 內建一次性遷移（`FAV_ID_MIGRATION` ＋ `ff14_favs_migrated` 旗標，只跑一次、認不得的 id 原樣保留、`mirage:` 不動）。瀏覽器實測：植入舊 id → 重新載入 → 自動換成新 id、「只看收藏」正確顯示、無 console error。
+  - 順手把過期的 `sw.js` `CACHE_VERSION` 補上（`sgt-d99ca5124e` → `sgt-f691f7e329`，既有漂移，非本次造成）。
+  - 詳見知識庫 §4.17（三個「看起來像缺口、其實是已定案」的判斷）與 §4.18（改到會進 id 的欄位就要準備收藏遷移）。
+
+- **2026-07-29（收尾：職業名三份表統一、精選取得方式補 224 處、修主庫 equip 缺口）**：接續 07-28 的資料併庫，把留下的清單處理完。
+
+  **① 職業繁中名也是「一份資料抄三份」**
+  - 稽核發現 `build_site.py`、`verify_data.py`、`index.html` 各有一張職業名表，**33 個職業裡 16 個與主庫 `data/equip.json` 不符**（白魔法師應為白魔道士、召喚師應為召喚士、鐮刀師/收割者應為奪魂者、劍蛇師應為毒蛇劍士、製作職一律「匠」不是「師」…），而知識庫 §4.2 早就點名那組是錯的。
+  - 全部改讀 `maindb.job_names()`；`JOB_TAGS` 改由 `_ROLE_SETS`＋職業名推導（不再硬寫）；前端 `JOB_TAG_MAP` 由後端表產生、`JOB_CODES` 補正式名（舊名留作別名）。精選 107 處 job 值同步校正。
+  - **副作用**：`verify_data` 長年報的「職業限制不符 43 件」**全是它自己那份錯表造成的假警報**（它用 `_job_label`、建置期用 `job_from_cjc`），改成同一支函式後歸零。
+
+  **② 主庫 `items.json` 的 `equip` 有缺口，害 glamour 1,388 件裝備掉職業限制**
+  - `equip` 只來自 `out_data/equipment.msgpack`（使用者提供的快照，22,416 件），比實際可裝備數少約 4,000。舊 cycleapple 那份有，所以 07-28 換庫後這批**退化成「全職業」、等級掉回 1**。
+  - `build-items.mjs` 加 XIVAPI fallback（`EquipSlotCategory`／`LevelEquip`／`ClassJobCategory`）→ **22,416 → 26,294 件**，退化歸零。剩下沒補的 1,824 件經查是腰帶（6.0 已移除該部位）、幻化套裝箱、釣餌等**本來就不可裝備**的。
+  - **順手擋掉一個大坑**：`build-items.mjs` 重建會把 `patch` 欄整份洗掉（那是 `patch-backfill-all.mjs` 事後疊上去的，而 `patch` 是前端版本閘門的依據，洗掉等於台服未開放的道具全部放行）。已改為重建時沿用既有值。
+
+  **③ 精選套裝取得方式**
+  - 07-28 換庫後取得方式表多了 9,612 筆，`verify_data` 報出 210 件「待確認／空白」其實查得到。新增 `patch_curated_sources.py`（dry-run 預設）補上 **224 處**，「待確認／空白」由 255 → 17。
+  - 刻意不動的四類：JSON 與 DB 各說各話 18 件（多半兩邊都對，人工寫的更有用）、多來源寫法 15 件、帶 NPC 附註的 Gil 2 件、DB 查不到 3 件。
+  - 另修 2 處把藏寶圖標成 🗡️（應為 🗺️）——`st` 因 `ST_KEYWORDS` 的寶圖規則本來就對，純顯示不一致。
+
+  **④ 又一個簡體字**：`pipeline._INST_TYPE` 把「討伐**殲**滅戰」寫成「討伐**歼**滅戰」，已漏進 `mirapri_outfits.js` 90 處、curated 1 處，且與 `build_sets.py`／`maindb.py` 的同名表不一致。已修並重建，全站歸零。
+
+  驗收：`verify_data` 可自動修正項全部歸零（lv/補來源/Gil/en/ja/slot/zh）、職業 0；`validate-data.mjs` 0 error 0 warning；`health_check` 全過（icon 8753/8753、示意照 1968/1969）。詳見知識庫 §4.16。
+
+- **2026-07-28（幻化配裝圖鑑的資料併回主庫：刪 105MB 重複、修 570 筆錯名）**：使用者問「幻化配裝圖鑑的物品內容跟主目錄的資料來源有沒有脫鉤、資料有沒有重複」。查下去兩個都中。
+
+  **① 稽核結果**
+  - **重複 104MB**：`tools/glamour/資料來源/` 裡 6 個 msgpack（`en-items`／`npcs`／`obtainable-methods`／`recipes`／`fates`／`loot-sources`，共 45.6MB）與 `out_data/` **MD5 完全相同**；另外 58.6MB 是同領域各存一份（items／sources／recipes／items-index…）。其中 `fates`／`loot-sources`／`ui_categories` 連 glamour 自己都沒引用。
+  - **脫鉤且名字是錯的**：那份快照（2026-05-26，來自 cycleapple/ffxiv-item-search-tc）比主庫舊一個月、少 590 筆 7.1/7.2 道具（**含 6 個幻化套裝箱**，官方套裝圖鑑因此收不到血盟公爵／零風／雷歐尼斯國王／霍倫女王等套）。**588 筆同 id 名稱不同**，抓 Teamcraft 台服 `tw-items` 當第三方裁判：**主庫對 570、它只對 18**；錯的那批 342 筆恰好等於簡中名的簡轉繁（打底褲←打底裤、莽漢面具、把台服保留英文的曲名硬翻），違反知識庫 §4.2／§4.5。
+  - **使用者看得到**：glamour 前端 js 有 995 個「打底褲」、271 個「上裝」，主站 `items.json` 是 0（用「下身」「上衣」）——同一件褲子在站內兩頁不同名。
+
+  **② 改法：子專案不再自帶資料庫**
+  - 新增 [`tools/glamour/scripts/maindb.py`](../tools/glamour/scripts/maindb.py) 當唯一資料入口，把主庫 `data/`＋`out_data/` 轉成該子專案原本的欄位形狀，**20 幾支既有腳本只改載入那一行**。`itemdb`／`build_sets`／`build_item_sources`／`build_item_fallback`／`pipeline`／`verify_data` 全部改接。
+  - 取得方式改吃 **`out_data/obtainable-methods.msgpack`（原始版，39,257 筆）**——不是 `data/obtainable-methods.json`，後者是為前端篩選做的摘要版，`instanceNames`／`vendors`／`price` 都被拿掉了。副本 id 經 `cfc-content.json` → `dungeons.json` 解成台服官方名（裝備類 99.95% 解得出來）、NPC／地名／任務／怪物分別走 `npcs`／`places`／`tw-quests`／`monsters`。
+  - 新增 [`data/item-categories.json`](../data/item-categories.json)（112 筆，`scripts/build-item-categories.mjs`）補主庫沒有的 `categoryId`（1–49＝裝備，官方套裝的「貨幣其實是裝備＝升級兌換」判定靠它）。
+  - `update_db.py`（下載 cycleapple）→ 改寫成 [`check_maindb.py`](../tools/glamour/scripts/check_maindb.py) 主庫健檢；`資料來源/` 整個移除。
+
+  **③ 成果**（`update_all.py local` 全綠、`validate-data.mjs` 0 error/0 warning）
+  - 三份前端 js 的「打底褲／上裝」歸零；官方套裝 428 件裝備改成台服官方名、177 件原本沒繁中名的補上，套裝名有繁中的 1225→1243。
+  - 官方套裝收進 7.1/7.2 的新幻化套裝箱。取得方式來源鍵與舊資料 **94% 相同**，差異裡 322 個是「日文/英文未翻譯 → 繁中」的改善，347 件裝備新增取得方式、只有 4 件全失（上游本來就沒有）。
+  - 磁碟少 105MB。**mirage 層套裝 id（`mirage:{row_id}`，遊戲原生）1078 套零漂移**；啟發式 `src:` 層因來源名變準有 147 套換 id，已重跑 `fetch_set_photos.py` 補回照片（1968/1969）並清掉孤兒條目與 147 張孤兒圖檔。
+
+  **④ 順手修掉的兩個真 bug**
+  - **`out_data/tw-items.msgpack`／`places.msgpack` 被 git autocrlf 弄壞**：repo 沒有 `.gitattributes`＋`core.autocrlf=true`，msgpack 開頭沒有 NUL 就被當文字，checkout 時 LF→CRLF（+1／+33 bytes），Python/Node 都解不開，**而 `git status` 一直顯示 clean**。已加 `.gitattributes` 標 binary 並從 blob 寫回。全 repo 掃過，只有這 2 個檔中招。
+  - **`pipeline._resolve_from_sources` 的 `s.get("mapNames", ["寶圖"])[0]`**：key 存在但值是空 list 時預設值不會生效，直接 IndexError。已改成先取再判空。
+
+  詳見知識庫 §4.14（子專案自帶資料庫的教訓）與 §4.15（`.gitattributes`）。
 
 - **2026-07-28（收尾：副本庫補收 134 座、取得方式缺口歸零、_meta 自動抑漂）**：接續同日的三章工作，把留下的尾巴收乾淨。
 

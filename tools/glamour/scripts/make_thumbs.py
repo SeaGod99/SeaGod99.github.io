@@ -2,9 +2,17 @@
 """
 make_thumbs.py — 產生卡片縮圖
 ================================
-將 配裝圖片/ 下所有圖片（含 mirapri/ 子資料夾）縮成寬 640px 的 JPEG，
+將 配裝圖片/ 下的卡片圖（含 mirapri/ 子資料夾）縮成寬 640px 的 JPEG，
 輸出到 配裝圖片/縮圖/，保留相對路徑。已存在、較新且寬度達標的縮圖會跳過
 （調大 THUMB_W 後重跑會自動重產舊尺寸縮圖；來源本身比 THUMB_W 窄的不重產）。
+
+⚠ **`icons/` 與 `官方套裝/` 不做縮圖**（SKIP_DIRS）：
+  - `icons/` 是 40px 的裝備 icon，前端直接寫 `配裝圖片/icons/{id}.png`，
+    根本不會去要縮圖版；
+  - `官方套裝/` 的 wiki 示意照已經是 640px，`thumbOf()` 第 417 行明確
+    「開頭是 配裝圖片/官方套裝/ 就原樣回傳」。
+  以前用 `rglob("*")` 掃全部，替這兩個目錄生了 10,756 張**沒有任何程式碼會載入**
+  的縮圖（icons 7MB＋官方套裝 56MB＝63MB 純浪費），2026-07-29 已刪並加上這道過濾。
 
 執行：python scripts/make_thumbs.py [秒數上限]
 （給秒數上限時跑滿即停，重跑會接續未完成的部分）
@@ -20,12 +28,19 @@ DST = SRC / "縮圖"
 THUMB_W = 640   # 卡片 CSS 寬約 250~300px，高 DPI（125%~200%）需 500~600 實體像素
 QUALITY = 78    # 72 在漸層/細節有明顯壓縮痕跡；78 檔案約 +40%，畫質明顯改善
 EXTS = {".jpe", ".jpg", ".jpeg", ".png", ".webp"}
+# 前端不會載入這兩個目錄的縮圖版（理由見檔頭）→ 不要生
+SKIP_DIRS = {"icons", "官方套裝"}
 
 
 def iter_sources():
     for p in sorted(SRC.rglob("*")):
-        if p.is_file() and p.suffix.lower() in EXTS and DST not in p.parents:
-            yield p
+        if not (p.is_file() and p.suffix.lower() in EXTS):
+            continue
+        if DST in p.parents:
+            continue
+        if SKIP_DIRS & set(p.relative_to(SRC).parts[:-1]):
+            continue
+        yield p
 
 
 def thumb_path(src: Path) -> Path:

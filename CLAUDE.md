@@ -14,7 +14,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 2. [docs/專案慣例與記憶.md](docs/專案慣例與記憶.md) — **可攜知識庫**：慣例、決策、資料權威來源、踩過的雷（本機 memory 資料夾的鏡像）。完整文件地圖也在此檔 §6。
 3. [docs/DATA-SOURCES.md](docs/DATA-SOURCES.md)＋[data/SCHEMA.md](data/SCHEMA.md) — 資料管線與格式。
 
-動到幻化配裝圖鑑（`tools/glamour/`）時另讀 [tools/glamour/CLAUDE.md](tools/glamour/CLAUDE.md)——那是併進來的獨立子專案，有自己的 Python 管線與資料庫，慣例與全站其他頁不同。
+動到幻化配裝圖鑑（`tools/glamour/`）時另讀 [tools/glamour/CLAUDE.md](tools/glamour/CLAUDE.md)——那是併進來的獨立子專案，有自己的 Python 管線，慣例與全站其他頁不同。**2026-07-28 起它的資料已併回主庫**（`data/`＋`out_data/`，入口 `tools/glamour/scripts/maindb.py`），不再自帶 `資料來源/`。
 
 **三條最容易踩的鐵則**（細節見知識庫 §4）：
 - **繁中名稱絕不用簡轉繁（s2t／OpenCC）硬翻、也不憑印象寫**。台服官方來源優先，社群繁中站次之；對不到＝台服未開放 → 前端直接不顯示，不用英文／簡中補。
@@ -43,7 +43,7 @@ data/                   # 統一資料庫（SCHEMA.md／_meta.json）＋前端�
 scripts/*.mjs           # 資料產生／校正腳本（node，非執行期依賴）
 assets/css|js/          # 共用樣式與腳本（common.css、eorzea-weather.js…）
 out_data/               # 大型中繼檔（msgpack），不進前端
-tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLAUDE.md
+tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLAUDE.md（資料吃主庫，見 scripts/maindb.py）
 ```
 
 | 我要做的事 | 指令 |
@@ -55,6 +55,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 副本庫補收漏掉的副本 | `node scripts/patch-dungeon-add-missing.mjs`（`--apply`／`--offline`） |
 | 幻卡英文散文來源結構化 | `node scripts/patch-triple-triad-prose-sources.mjs`（`--apply`） |
 | 連結檢查 | `node scripts/validate-links.mjs` |
+| 壓縮前端會載入的 data/*.json（改完資料後） | `node scripts/minify-data.mjs`（dry-run 預設／`--apply` 寫入；`_meta.json` 刻意保留可讀） |
 | 重建物品精簡表（改完 items.json **兩支都要跑**） | `node scripts/build-items-lite.mjs`（採集兩頁用）＋`node scripts/build-items-market.mjs`（市場頁用） |
 | 更新 SW 快取版本（改完 assets/ 的 css/js 必跑） | `node scripts/bump-sw-version.mjs`（`--check` 只驗證） |
 | 時尚品鑑週更（每週二／週五各一次） | `node scripts/build-fashion-report.mjs`（`--dry-run` 只印／`--offline` 用快取）|
@@ -67,7 +68,26 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 青魔補副本／地區連結 | `node scripts/patch-blue-magic-content-ids.mjs`（`--apply`） |
 | 收藏頁補空 sources（由 obtainable-methods 推） | `node scripts/patch-sources-from-om.mjs`（`--apply`） |
 | 幻化配裝圖鑑重建 | `py tools\glamour\scripts\update_all.py local`（離線）／不帶 `local`＝完整抓取 |
+| 幻化配裝圖鑑的主庫健檢 | `py tools\glamour\scripts\check_maindb.py`（不改檔；msgpack 解不開會直接報出來） |
+| 重建物品分類對照表（改完 items.json） | `node scripts/build-item-categories.mjs`（`--offline` 只驗證） |
 | 看頁面 | 直接開檔或 `/browse`；無 dev server |
+
+**一次性／低頻腳本**（不在上表，但 repo 裡有；2026-07-29 盤點補登記，免得換機後不知道它們幹嘛）：
+
+| 腳本 | 什麼時候跑 | 產出 |
+|------|-----------|------|
+| `build-squadron.mjs` | 幾乎不用（4.x 後小隊內容未變，數值內嵌在腳本裡） | `data/squadron.json` |
+| `build-blue-magic.mjs` | 台服開新青魔法時（XIVAPI AozAction 全抓） | `data/blue-magic.json` |
+| `build-barding.mjs` | 新增鳥鞍時 | `data/barding.json` |
+| `build-npcs.mjs` | 換 Teamcraft TW 版本時（只有建置用，前端不載） | `data/npcs.json` |
+| `build-obtainable.mjs` | 重建取得方式摘要表（前端篩選用；**詳細版在 `out_data/obtainable-methods.msgpack`**） | `data/obtainable-methods.json` |
+| `build-mounts-desc.mjs` | `build-mounts` 跑完補 description（那支跑完會是 null） | 就地改 `data/mounts.json` |
+| `patch-aether-coords.mjs` | 補風脈座標（303 筆，已補完） | 就地改 `data/aether-currents.json` |
+| `patch-fishing-common.mjs` | 補常駐普通魚（已補完） | 就地改 `data/fishes.json` |
+| `download-emotes-icons.mjs` | 新表情出現時 | `assets/emotes/`（前端用本地路徑） |
+| `download-barding-icons.mjs` | 新鳥鞍出現時 | `assets/barding/` |
+| `download-blue-magic-icons.mjs` | 新青魔法出現時 | `assets/blue-magic/` |
+| `download-dungeon-images.mjs` | **目前沒有頁面用**——`assets/dungeons/`（379 檔 11MB）是為未來副本頁備的素材，`dungeons.json` 的 `image` 欄有 386 筆指向它，但沒有任何頁面顯示副本圖 | `assets/dungeons/`＋改 `dungeons.json.image` |
 
 **環境注意**：
 - 本機 `python` 指令是 Microsoft Store 假捷徑（執行會靜默結束），**Python 一律用 `py`**。
@@ -174,6 +194,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 - **新增工具頁** → `/spec` 釐清需求 → 實作 → `/qa` → `/ship`。
 - **要更新外部來源資料** → `/scrape` 抓取 → 跑 `/scripts` 產生 → `node scripts/validate-data.mjs` → `/verify`。
 - **改了幻化配裝圖鑑** → 先讀 [tools/glamour/CLAUDE.md](tools/glamour/CLAUDE.md) → 改碼／改 `data/curated_outfits.json` → `py tools\glamour\scripts\update_all.py local` 重建＋健檢 → `/browse` 驗收。**重建任何一份前端 js 後都會連帶重跑 `build_item_sources.py`**，漏跑不會報錯、只會安靜地退回單一來源。
+- **改了主庫 `data/items.json`（或跑了 `build-items.mjs`）** → 除了 `build-items-lite`／`build-items-market`，**幻化配裝圖鑑也吃這份**：跑 `py tools\glamour\scripts\update_all.py local` 讓它跟上。社群套裝的裝備名另外吃 `all_outfits_enriched.json` 快取，要一併更新得跑 `py tools\glamour\scripts\pipeline.py enrich`；精選／官方套裝的名稱則來自 `item_fallback_multilang.json`，需 `py tools\glamour\scripts\build_item_fallback.py`（連網約 3 分鐘）。
 - **時尚品鑑週更** → `node scripts/build-fashion-report.mjs` → `node scripts/validate-data.mjs` → 開頁驗收。**別再手工挑推薦裝**，推薦標準與換週狀態機是程式定的，規格見 [docs/fashion-report-spec.md](docs/fashion-report-spec.md)、操作見 [docs/fashion-report-update-sop.md](docs/fashion-report-update-sop.md)。腳本報「來源尚未換週」是**正常的換週真空期，什麼都不用做**。
 - **重建釣魚資料** → `node scripts/build-fishing.mjs` → **必接** `patch-fishing-multispot.mjs` 與 `patch-fish-legendary.mjs --apply`。後者漏跑不會報錯，只會安靜地把 30 隻魚皇（釣場之皇）降級成普通魚王——上游沒有這個旗標，名單是我們自己維護的（見知識庫 §4.8）。
 - **幻卡少了新卡** → `node scripts/patch-triple-triad-new-cards.mjs`（dry-run 看要補什麼）→ 加 `--apply` → `node scripts/download-triple-triad-images.mjs` 補卡面圖 → `node scripts/patch-triple-triad-source-names.mjs --apply`（補取得方式的繁中名）→ `node scripts/validate-data.mjs`。**張數不要相信 build 腳本裡的常數**（`build-triple-triad-all.mjs` 寫死 425，7.1 的 10 張新卡就這樣安靜漏掉）；真實張數＝`items.json` 裡 category「九宮幻卡」的道具數。7.1 以後的 sheet 只有 XIVAPI **v2** 有（v1 已停更）。

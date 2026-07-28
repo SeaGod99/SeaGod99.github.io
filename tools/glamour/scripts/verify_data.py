@@ -22,6 +22,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 import pipeline as P
+from build_site import job_from_cjc   # 與建置期同一套 job 判定，避免兩處分歧
 import msgpack
 
 ROOT = Path(__file__).parent.parent
@@ -31,11 +32,10 @@ REPORT_MD = ROOT / "data" / "驗證報告.md"
 REPORT_JSON = ROOT / "data" / "驗證報告.json"
 MIRAPRI_REPORT_MD = ROOT / "data" / "mirapri品質報告.md"
 
-JOBZH = {'WHM':'白魔法師','SCH':'學者','AST':'占星術士','SGE':'賢者','PLD':'騎士','WAR':'戰士',
- 'DRK':'暗黑騎士','GNB':'絕槍戰士','BLM':'黑魔法師','SMN':'召喚師','RDM':'赤魔法師','BLU':'青魔法師',
- 'PCT':'繪靈法師','BRD':'吟遊詩人','MCH':'機工士','DNC':'舞者','MNK':'武僧','DRG':'龍騎士','NIN':'忍者',
- 'SAM':'武士','RPR':'收割者','VPR':'劍蛇師','CRP':'木工師','BSM':'鍛鐵師','ARM':'甲冑師','GSM':'寶石工藝師',
- 'LTW':'製革師','WVR':'布衣師','ALC':'煉金術士','CUL':'廚師','MIN':'採礦工','BTN':'園藝工','FSH':'捕魚人'}
+# 職業繁中名讀主庫 data/equip.json（全站權威，知識庫 §4.2）。
+# ⚠ 這裡原本自帶第三份硬寫表（收割者／劍蛇師／寶石工藝師／布衣師／木工師…），
+#   與 build_site.py、主庫都不同，害這支報出一堆假的「職業不符」。
+JOBZH = P.maindb.job_names()
 _BASE = {'GLA':'PLD','PGL':'MNK','MRD':'WAR','LNC':'DRG','ARC':'BRD',
          'CNJ':'WHM','THM':'BLM','ACN':'SMN','ROG':'NIN'}
 
@@ -52,10 +52,20 @@ def st_of(src):
 
 
 def job_ok_set(js):
-    """classJobCategoryName 可接受的中文標籤集合（群組名或單一職業名）"""
+    """classJobCategoryName 可接受的中文標籤集合（群組名或單一職業名）。
+
+    **主判定＝build_site.job_from_cjc**，也就是建置期真正寫進資料的那個函式
+    （2026-07-20 定案：整職能→群組名／子集→列具體職業）。原本這裡只認
+    `pipeline._job_label`，它把任何近戰子集一律叫「近戰職業」、製作職還會回代碼，
+    於是「忍者、毒蛇劍士」「裁衣匠」這些正確值全被報成不符（43 件假警報）。
+    `_job_label` 保留為次要可接受值，舊資料沿用它的寫法時不會被誤報。
+    """
     if not js:
         return {'全職業'}
     s = {P._job_label(js)}
+    jl = job_from_cjc(js)
+    if jl:
+        s.add(jl)
     eff = {_BASE.get(t, t) for t in js.split()}
     if len(eff) == 1 and next(iter(eff)) in JOBZH:
         s.add(JOBZH[next(iter(eff))])
@@ -66,10 +76,10 @@ def main():
     db = P.load_all_data()
     items = db['items']
     en_by_id = {str(k): v.get('en','') for k, v in
-                msgpack.unpackb(open(P.DATA_DIR/'en-items.msgpack','rb').read(), raw=False).items()
+                msgpack.unpackb(open(P.maindb.EN_MSGPACK,'rb').read(), raw=False).items()
                 if isinstance(v, dict)}
     ja_by_id = {str(k): v.get('ja','') for k, v in
-                msgpack.unpackb(open(P.DATA_DIR/'ja-items.msgpack','rb').read(), raw=False).items()
+                msgpack.unpackb(open(P.maindb.JA_MSGPACK,'rb').read(), raw=False).items()
                 if isinstance(v, dict)}
     zh2ids = {}
     for iid, v in items.items():
@@ -114,7 +124,10 @@ def main():
             if item:
                 cid = item.get('categoryId')
                 es = P._CAT_TO_SLOT.get(int(cid),'') if cid else ''
-                if es and p.get('slot') and p['slot'] != es and es != '武器':
+                # 「上身①／②」是雙上身套裝的人工標記，DB 只會回「上身」→ 前綴相符就算對
+                # （normalize_curated_from_db.py 同樣容忍，兩邊判定要一致）
+                if (es and p.get('slot') and p['slot'] != es
+                        and not p['slot'].startswith(es) and es != '武器'):
                     L['slot'].append((tag, nm, p['slot'], es))
                 lv = str(item.get('equipLevel','') or '')
                 jlv = str(p.get('lv','') or '').strip()
@@ -205,8 +218,8 @@ def main_mirapri():
     import datetime
 
     print('[載入] ja/en-items …', end=' ', flush=True)
-    ja_data = msgpack.unpackb(open(P.DATA_DIR/'ja-items.msgpack','rb').read(), raw=False)
-    en_data = msgpack.unpackb(open(P.DATA_DIR/'en-items.msgpack','rb').read(), raw=False)
+    ja_data = msgpack.unpackb(open(P.maindb.JA_MSGPACK,'rb').read(), raw=False)
+    en_data = msgpack.unpackb(open(P.maindb.EN_MSGPACK,'rb').read(), raw=False)
     ja_to_id = {v.get('ja',''): str(k) for k, v in ja_data.items() if isinstance(v,dict) and v.get('ja')}
     en_to_id = {v.get('en',''): str(k) for k, v in en_data.items() if isinstance(v,dict) and v.get('en')}
     print(f'ja={len(ja_to_id):,} en={len(en_to_id):,}')

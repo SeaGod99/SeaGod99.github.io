@@ -67,8 +67,17 @@
       "name": "全物品",
       "source": "mixed",
       "status": "script-ready",
-      "updated": "2026-06-23",
+      "updated": "2026-07-28",
       "count": 43748
+    },
+    {
+      "schema": "item-categories",
+      "file": "item-categories.json",
+      "name": "物品分類（ItemUICategory id ↔ 繁中名）",
+      "source": "teamcraft/tw-item-ui-categories.json（scripts/build-item-categories.mjs）",
+      "status": "used",
+      "updated": "2026-07-28",
+      "count": 112
     },
     {
       "schema": "collectable-items",

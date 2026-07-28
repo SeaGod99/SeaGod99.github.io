@@ -52,7 +52,42 @@ function iconPath(icon) {
   return m ? `/i/${m[1]}/${m[2]}.png` : null;
 }
 
-// 抓 XIVAPI Item sheet 補充欄位 → Map(itemId → {icon,categoryId,ilvl,rarity,stackSize,marketable})
+// 職業縮寫清單（ClassJobCategory 的布林欄位名，與 data/equip.json 的 jobs 同一組）
+const JOB_CODES = [
+  "ADV", "GLA", "PGL", "MRD", "LNC", "ARC", "CNJ", "THM",
+  "CRP", "BSM", "ARM", "GSM", "LTW", "WVR", "ALC", "CUL",
+  "MIN", "BTN", "FSH", "PLD", "MNK", "WAR", "DRG", "BRD",
+  "WHM", "BLM", "ACN", "SMN", "SCH", "ROG", "NIN", "MCH",
+  "DRK", "AST", "SAM", "RDM", "BLU", "GNB", "DNC", "RPR",
+  "SGE", "VPR", "PCT",
+];
+
+// 抓 ClassJobCategory sheet → Map(row_id → [職業縮寫…])
+// 用途：equipment.msgpack 沒收到的裝備，職業限制改由這裡推。
+// 每列有 Name（"ROG NIN VPR"）與逐職業布林欄，取布林欄比切字串可靠。
+async function fetchClassJobCategories() {
+  const fields = JOB_CODES.join(",");
+  const map = new Map();
+  let after = 0;
+  while (true) {
+    const url = `https://v2.xivapi.com/api/sheet/ClassJobCategory?fields=${encodeURIComponent(fields)}&limit=500&after=${after}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`ClassJobCategory HTTP ${res.status}`);
+    const json = await res.json();
+    const rows = json.rows || [];
+    if (!rows.length) break;
+    for (const r of rows) {
+      const f = r.fields || {};
+      map.set(r.row_id, JOB_CODES.filter((c) => f[c] === true));
+    }
+    after = rows[rows.length - 1].row_id;
+    if (rows.length < 500) break;
+  }
+  console.log(`  ClassJobCategory：${map.size} 列`);
+  return map;
+}
+
+// 抓 XIVAPI Item sheet 補充欄位 → Map(itemId → {icon,categoryId,ilvl,rarity,stackSize,marketable,…})
 // 注意：改抓 ItemUICategory.row_id（分類 ID），搭配 twUiCategories 對照表轉繁中名
 async function fetchItemMeta() {
   const fields = [
@@ -62,6 +97,10 @@ async function fetchItemMeta() {
     "Rarity",
     "StackSize",
     "IsUntradable",
+    // ↓ 給 equipment.msgpack 缺件補裝備資訊用（見 main() 的 fallback 說明）
+    "EquipSlotCategory",
+    "LevelEquip",
+    "ClassJobCategory",
   ].join(",");
 
   const meta = new Map();
@@ -82,6 +121,9 @@ async function fetchItemMeta() {
         rarity: f.Rarity ?? 0,
         stackSize: f.StackSize ?? 0,
         marketable: f.IsUntradable === false,
+        escId: f.EquipSlotCategory?.row_id ?? 0,
+        levelEquip: f.LevelEquip ?? 0,
+        cjcId: f.ClassJobCategory?.row_id ?? 0,
       });
     }
     after = rows[rows.length - 1].row_id;
@@ -92,14 +134,39 @@ async function fetchItemMeta() {
   return meta;
 }
 
+// 讀既有 items.json 的 patch 欄 → Map(itemId → "7.15")
+//
+// ⚠ `patch` **不是本腳本產生的**，是事後由 scripts/patch-backfill-all.mjs（Teamcraft
+//    patch-content）疊上去的。以前重建會把整份 43,748 筆的 patch 全部洗掉，而
+//    patch 是前端版本閘門（assets/js/patch-gate.js）的依據——洗掉等於台服未開放的
+//    道具全部放行。所以重建時一律把既有值帶過來；要更新 patch 請跑 patch-backfill-all.mjs。
+async function readExistingPatches() {
+  try {
+    const old = JSON.parse(await readFile(OUT, "utf8"));
+    const m = new Map();
+    for (const x of old.data || []) {
+      if (x.patch) m.set(x.id, x.patch);
+    }
+    console.log(`  沿用既有 patch：${m.size} 筆（由 patch-backfill-all.mjs 維護）`);
+    return m;
+  } catch {
+    console.log("  （沒有既有 items.json，patch 留空，記得跑 patch-backfill-all.mjs）");
+    return new Map();
+  }
+}
+
 async function main() {
   console.log("讀取 msgpack…");
   const tw = decode(await readFile(TW_FILE));   // {itemId: {tw}}
   const eq = decode(await readFile(EQ_FILE));   // {itemId: {...}}
   console.log(`  tw-items ${Object.keys(tw).length} 筆、equipment ${Object.keys(eq).length} 筆`);
+  const patches = await readExistingPatches();
 
   console.log("抓 Teamcraft 繁中 UI 分類對照表…");
   const twUiCategories = await fetchTwUiCategories();
+
+  console.log("抓 XIVAPI ClassJobCategory…");
+  const cjc = await fetchClassJobCategories();
 
   console.log("抓 XIVAPI Item 補充欄位…");
   const meta = await fetchItemMeta();
@@ -134,7 +201,22 @@ async function main() {
         pDef: e.pDef ?? 0, mDef: e.mDef ?? 0,
         delay: e.delay ?? 0, unique: e.unique ?? 0,
       };
+    } else if (m.escId) {
+      // equipment.msgpack 是使用者提供的快照，只涵蓋 22,416 件，比實際可裝備數少約 6,500
+      // （多為時尚裝與改版新裝）。缺件改由 XIVAPI 補「部位／裝備等級／職業限制」——
+      // 這三項才是站上會用到的；戰鬥數值（pDmg/pDef…）XIVAPI 這批沒抓，留 0。
+      // 沒有這段的話，幻化配裝圖鑑會有 5,650 件裝備被當成「非裝備」：職業限制退化成
+      // 「全職業」、等級掉回 1（2026-07-29 實測社群套裝 1,388 件受影響）。
+      entry.equip = {
+        slot: m.escId,
+        level: m.levelEquip ?? 0,
+        jobs: cjc.get(m.cjcId) ?? [],
+        pDmg: 0, mDmg: 0, pDef: 0, mDef: 0, delay: 0, unique: 0,
+        statsFrom: "xivapi",     // 標記：戰鬥數值未知（不是真的 0）
+      };
     }
+    const patch = patches.get(id);
+    if (patch) entry.patch = patch;
     data.push(entry);
   }
 

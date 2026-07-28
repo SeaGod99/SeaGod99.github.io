@@ -1,0 +1,37 @@
+# 二進位檔一律禁止行尾轉換。
+#
+# 為什麼需要這份：本機 core.autocrlf=true，沒有這份時 git 會拿「前 8000 bytes 有沒有
+# NUL」猜檔案是不是文字。msgpack 若開頭剛好沒有 NUL（純中文字串表就會這樣）就被誤判成
+# 文字，checkout 時把落單的 LF 換成 CRLF，**工作區的檔案直接損毀**：
+#   out_data/tw-items.msgpack  1,353,731 → 1,353,732 bytes（Python/Node 皆解不開）
+#   out_data/places.msgpack      596,170 →   596,203 bytes
+# 而且回寫時又會轉回去，所以 `git status` 一直顯示 clean，非常難察覺。
+#
+# 修完請確認：py -c "import msgpack;print(len(msgpack.unpackb(open('out_data/tw-items.msgpack','rb').read(),raw=False)))"
+
+*.msgpack  binary
+*.mpk      binary
+
+*.png      binary
+*.jpg      binary
+*.jpeg     binary
+*.jpe      binary
+*.gif      binary
+*.webp     binary
+*.avif     binary
+*.ico      binary
+*.bmp      binary
+
+*.woff     binary
+*.woff2    binary
+*.ttf      binary
+*.otf      binary
+*.eot      binary
+
+*.pdf      binary
+*.zip      binary
+*.gz       binary
+*.7z       binary
+*.mp3      binary
+*.mp4      binary
+*.webm     binary

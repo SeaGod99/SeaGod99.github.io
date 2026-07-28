@@ -7,9 +7,9 @@ build_sets.py —— 建「官方套裝」資料（data/official_sets.json），
   第一層（權威）：XIVAPI MirageStoreSetItem —— row_id=套裝箱道具ID，欄位=各部位道具ID。
     涵蓋商城/活動/特典「幻化套裝箱」。套裝 ID = mirage:{row_id}（遊戲原生，永久穩定）。
     空列（約 89/1170）與 row 0 垃圾列排除；數量入報告。
-  第二層（啟發式）：資料來源/sources.json 分組副本/兌換/任務裝。
+  第二層（啟發式）：主庫取得方式（maindb.load_sources()）分組副本/兌換/任務裝。
     分組鍵 = (來源簽名, ClassJobCategory ID, ItemLevel)——必含職業分類，
-    否則同副本 7 職能套會黏成一坨。來源簽名（sources.json 無數字副本 ID，用內容簽名）：
+    否則同副本 7 職能套會黏成一坨。來源簽名（來源資料無數字副本 ID，用內容簽名）：
       instance    → inst:{sorted(instanceNames)}
       specialshop → shop:cur{currencyItemId}
       quest       → quest:{questId}
@@ -44,8 +44,9 @@ for _s in (sys.stdout, sys.stderr):
     except Exception:
         pass
 
+import maindb  # noqa: E402  （sys.path 插在上面，必須放這裡）
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SRC = os.path.join(ROOT, "資料來源")
 DATA = os.path.join(ROOT, "data")
 OUT = os.path.join(DATA, "official_sets.json")
 CACHE = os.path.join(DATA, "xivapi_sets_cache.json")
@@ -130,8 +131,8 @@ def fetch_cache():
 # ───────────────────────── 資料載入 ─────────────────────────
 
 def load_inputs():
-    tc = json.load(open(os.path.join(SRC, "items.json"), encoding="utf-8"))["items"]
-    sources = json.load(open(os.path.join(SRC, "sources.json"), encoding="utf-8"))["sources"]
+    tc = maindb.load_items()          # 台服繁中名／分類／等級（主庫 data/items.json）
+    sources = maindb.load_sources()   # 取得方式（主庫 obtainable-methods，已解析成繁中）
     fb_path = os.path.join(DATA, "item_fallback_multilang.json")
     fb = json.load(open(fb_path, encoding="utf-8"))["items"]
     return tc, sources, fb

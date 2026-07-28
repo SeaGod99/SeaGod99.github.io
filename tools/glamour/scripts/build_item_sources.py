@@ -37,13 +37,13 @@ for _s in (sys.stdout, sys.stderr):
         pass
 
 ROOT = Path(__file__).parent.parent
-DB = ROOT / "資料來源"
 OUT = ROOT / "item_sources.js"
 
-# 副本名繁中化：sources.json 的 instanceNames 有些仍是英文（7.x 新副本，繁中 DB 未收），
-# 與官方套裝那邊已翻好的來源會對不起來變成兩個選項 → 共用 build_site.duty_zh()
+# 副本名繁中化：maindb 已用 dungeons.json 把副本 id 解成台服官方名，這裡再過一次
+# duty_zh() 當保險（解不出來的少數會留英文，與官方套裝那邊的寫法對齊）
 # （權威＝主庫 data/dungeons.json 的台服官方名，詳見 docs/專案慣例與記憶.md §4.3b）
 sys.path.insert(0, str(Path(__file__).parent))
+import maindb  # noqa: E402
 from build_site import duty_zh  # noqa: E402
 
 # 與 build_sets.py 同一組慣例（改任一邊要同步）
@@ -82,10 +82,9 @@ def collect_item_ids():
 
 def main():
     print("=== build_item_sources.py ===")
-    sources = json.loads((DB / "sources.json").read_text(encoding="utf-8"))["sources"]
-    items = json.loads((DB / "items.json").read_text(encoding="utf-8"))["items"]
-    recipes = json.loads((DB / "recipes.json").read_text(encoding="utf-8"))
-    recipes = recipes.get("recipes", recipes)
+    sources = maindb.load_sources()
+    items = maindb.load_items()
+    recipes = maindb.load_recipes()
     print(f"  sources {len(sources):,} 筆 ｜ items {len(items):,} 筆")
 
     def cur_info(cid):

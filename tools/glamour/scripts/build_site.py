@@ -25,6 +25,9 @@ for _s in (sys.stdout, sys.stderr):
     except Exception:
         pass
 
+sys.path.insert(0, str(Path(__file__).parent))
+import maindb  # noqa: E402
+
 ROOT = Path(__file__).parent.parent
 CURATED_JSON = ROOT / "data" / "curated_outfits.json"
 ENRICHED_PATH = ROOT / "data" / "all_outfits_enriched.json"
@@ -83,16 +86,8 @@ EMOJI_ST = [
     ("🎁", "other"),
 ]
 
-# 職業 → 卡片 tag
-JOB_TAGS = {
-    "healer": ["治療職業", "白魔法師", "賢者", "占星術士", "學者"],
-    "tank": ["盾衛職業", "騎士", "戰士", "暗黑騎士", "絕槍戰士"],
-    "caster": ["法系職業", "赤魔法師", "黑魔法師", "青魔法師", "召喚師", "繪靈法師"],
-    "pranged": ["遠程物理職業", "舞者", "吟遊詩人", "機工士"],
-    "melee": ["近戰職業", "偵察職業", "武士", "忍者", "武僧", "龍騎士", "鐮刀師", "劍蛇師"],
-    "crafter": ["布衣師", "製革師", "甲冑師", "鍛鐵師", "煉金術士", "廚師", "雕金師",
-                "木工師", "製作職業", "採礦工", "採伐工", "漁夫", "捕魚人"],
-}
+# 職業 → 卡片 tag：由 _ROLE_SETS ＋ _JOB_ZH 推導（定義在下方 job 區塊之後）。
+# 原本是硬寫的清單，職業改名或新增職業時會安靜地漏掉，已改為推導。
 ST_TAGS = {"raid", "quest", "npc", "token", "scrip", "craft",
            "pvp", "store", "event", "gs", "special", "other"}
 # 會成為篩選 tag 的取得方式（與 index.html 的 ST_TAG_SET 同步；改這裡記得同步前端）
@@ -170,16 +165,12 @@ def stamp_badges(piece, bidx):
 # cjc 是遊戲原生的裝備職業分類，唯一權威。cjc id → 職業字串在 xivapi_sets_cache.json
 # 的 cjc_names（build_sets.py 產出）；字串可能是代碼「ROG NIN VPR」、逗號代碼「ALC, CUL」
 # 或英文描述「All Classes」「Disciple of the Land」。
-_JOB_ZH = {
-    "PLD": "騎士", "WAR": "戰士", "DRK": "暗黑騎士", "GNB": "絕槍戰士",
-    "WHM": "白魔法師", "SCH": "學者", "AST": "占星術士", "SGE": "賢者",
-    "BLM": "黑魔法師", "SMN": "召喚師", "RDM": "赤魔法師", "BLU": "青魔法師", "PCT": "繪靈法師",
-    "BRD": "吟遊詩人", "MCH": "機工士", "DNC": "舞者",
-    "MNK": "武僧", "DRG": "龍騎士", "NIN": "忍者", "SAM": "武士", "RPR": "鐮刀師", "VPR": "劍蛇師",
-    "CRP": "木工師", "BSM": "鍛鐵師", "ARM": "甲冑師", "GSM": "雕金師", "LTW": "製革師",
-    "WVR": "裁縫師", "ALC": "煉金術士", "CUL": "廚師",
-    "MIN": "採礦工", "BTN": "採伐工", "FSH": "捕魚人",
-}
+# 職業繁中名一律讀主庫 data/equip.json 的 names 表（全站權威，見知識庫 §4.2）。
+# ⚠ 這裡原本自帶一張硬寫的表，33 個裡 16 個與主庫不符：白魔法師（應為白魔道士）、
+#   召喚師（召喚士）、占星術士（占星術師）、鐮刀師（奪魂者）、劍蛇師（毒蛇劍士）、
+#   製作職全部寫成「師」（應為刻木匠／鍛鐵匠／鑄甲匠／雕金匠／製革匠／裁衣匠／烹調師）、
+#   採伐工（園藝工）。**不要再在這裡另抄一份。**
+_JOB_ZH = maindb.job_names()
 _ROLE_SETS = [
     ("盾衛職業", {"PLD", "WAR", "DRK", "GNB"}),
     ("治療職業", {"WHM", "SCH", "AST", "SGE"}),
@@ -195,6 +186,20 @@ _JOB_ORDER = ["PLD", "WAR", "DRK", "GNB", "WHM", "SCH", "AST", "SGE",
               "MNK", "DRG", "NIN", "SAM", "RPR", "VPR", "BRD", "MCH", "DNC",
               "BLM", "SMN", "RDM", "BLU", "PCT", "CRP", "BSM", "ARM", "GSM",
               "LTW", "WVR", "ALC", "CUL", "MIN", "BTN", "FSH"]
+
+# 職業 → 卡片 tag（前面留了位置的那份）。由群組名＋該群組的職業繁中名推導，
+# 職業改名或新增職業都會自動跟上，不會像硬寫清單那樣安靜漏掉。
+# `_ROLE_SETS` 的順序是 tank/healer/caster/pranged/melee/crafter/gatherer。
+_ROLE_TAG = {"盾衛職業": "tank", "治療職業": "healer", "法系職業": "caster",
+             "遠程物理職業": "pranged", "近戰職業": "melee",
+             "製作職業": "crafter", "採集職業": "crafter"}
+JOB_TAGS = {}
+for _label, _codes in _ROLE_SETS:
+    _tag = _ROLE_TAG[_label]
+    _bucket = JOB_TAGS.setdefault(_tag, [])
+    _bucket.append(_label)
+    _bucket += [_JOB_ZH[c] for c in _codes if c in _JOB_ZH]
+del _label, _codes, _tag, _bucket
 
 
 def job_from_cjc(name):

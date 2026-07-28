@@ -25,7 +25,7 @@ ROOT = SCRIPTS.parent
 
 # (檔名, 標題, 說明, 參數)
 FULL_STEPS = [
-    ("update_db.py",         "檢查物品DB",   "比對線上繁中道具庫版本（只檢查不覆蓋；要更新再手動跑 --apply）", ["--check"]),
+    ("check_maindb.py",      "檢查主庫",     "確認 repo 主庫（data/ 與 out_data/）齊全可讀；資料本身由主庫的 node 腳本更新", []),
     ("pipeline.py",          "取圖＋配裝",   "從 Mirapri 抓新投稿、下載圖片，補繁中名稱／部位／取得方式（視新資料量約 1～10 分鐘）", ["all"]),
     ("compress_mirapri.py",  "圖片壓縮",     "壓縮新下載的圖片（之前壓過的會自動跳過）", []),
     ("make_thumbs.py",       "卡片縮圖",     "為新圖片產生縮圖（已有的會自動跳過）", []),
@@ -33,7 +33,7 @@ FULL_STEPS = [
     ("apply_dyes.py",        "逐件染色",     "OCR 結果 → 逐件染色 + 整套 fallback + 可見裝備", []),
     ("reconstruct_empty.py", "重建空殼裝備", "空殼套裝用 OCR+DB 重建裝備（部位／繁中／染色／取得方式）", []),
     ("build_item_fallback.py", "多語裝備庫", "XIVAPI 全件掃描（名稱/部位/可染/可交易/icon；約 3 分鐘）", []),
-    ("build_sets.py",        "官方套裝",     "MirageStoreSetItem＋sources.json → 官方套裝資料（--fetch 刷新 XIVAPI 快取）", ["--fetch"]),
+    ("build_sets.py",        "官方套裝",     "MirageStoreSetItem＋主庫取得方式 → 官方套裝資料（--fetch 刷新 XIVAPI 快取）", ["--fetch"]),
     ("fetch_icons.py",       "套裝 icon",    "下載官方套裝所需 icon（已有的自動跳過，可續傳）", []),
     ("fetch_set_photos.py",  "套裝示意照",   "從 consolegameswiki 抓官方套裝模特照（已有的自動跳過，可續傳）", []),
     ("build_site.py",        "重建網頁資料", "curated／mirapri／重建／染色／官方套裝 → *.js 資料檔", []),
@@ -46,10 +46,11 @@ FULL_STEPS = [
 LOCAL_STEPS = [
     (n, t, d, ([] if n == "build_sets.py" else a))
     for (n, t, d, a) in FULL_STEPS
-    if n in ("apply_dyes.py", "reconstruct_empty.py", "build_sets.py",
+    if n in ("check_maindb.py", "apply_dyes.py", "reconstruct_empty.py", "build_sets.py",
              "build_site.py", "build_item_sources.py", "health_check.py")
 ]
-NONFATAL = {"health_check.py", "update_db.py"}  # 非 0 退出視為提示，不中止流程
+NONFATAL = {"health_check.py"}  # 非 0 退出視為提示，不中止流程
+# check_maindb.py 刻意不列 NONFATAL：主庫缺檔就重建不出東西，該擋下來
 
 
 def fail(msg, hint=""):
@@ -71,13 +72,18 @@ def preflight(local_only):
                 continue  # local 模式用不到
             problems.append(f"缺少套件 {pkg}（{needed_by}會用到）→ 請執行：pip install {pkg}")
     # 必要檔案
-    must_have = [ROOT / "data" / "curated_outfits.json"]
+    # 主庫（repo 根的 data/ 與 out_data/）是本圖鑑唯一的資料來源，見 scripts/maindb.py
+    REPO = ROOT.parent.parent
+    must_have = [ROOT / "data" / "curated_outfits.json",
+                 REPO / "data" / "items.json",
+                 REPO / "data" / "item-categories.json",
+                 REPO / "out_data" / "obtainable-methods.msgpack",
+                 REPO / "out_data" / "ja-items.msgpack"]
     if not local_only:
-        must_have += [ROOT / "data" / "all_outfits_enriched.json",
-                      ROOT / "資料來源" / "items.json"]
+        must_have += [ROOT / "data" / "all_outfits_enriched.json"]
     for f in must_have:
         if not f.exists():
-            problems.append(f"找不到必要檔案：{f.relative_to(ROOT)}")
+            problems.append(f"找不到必要檔案：{f.relative_to(REPO)}")
     # 腳本齊全
     steps = LOCAL_STEPS if local_only else FULL_STEPS
     for name, *_ in steps:
