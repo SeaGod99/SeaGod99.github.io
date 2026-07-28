@@ -11,7 +11,7 @@
 //
 // 執行：node scripts/validate-data.mjs
 
-import { readFileSync, readdirSync } from "node:fs";
+import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
@@ -65,6 +65,29 @@ for (const f of files) {
   if (issues.length) {
     console.log(f);
     for (const [lv, m] of issues) (lv === "E" ? E : W)(m);
+  }
+}
+
+/* ── _meta.json 是否與各資料檔同步 ──────────────────────────────────────────
+   `_meta.databases[].updated/count` 以前純手動維護，結果從 2026-06-23 之後就沒人更新，
+   23 個庫有 14 個的日期停在 6 月。與其「記得去更新」，不如讓這支（改完資料必跑的那支）
+   自己抓出來——不同步就報 warning，跑 `node scripts/sync-meta.mjs --apply` 即可修好。 */
+{
+  const stale = [];
+  for (const d of meta.databases || []) {
+    if (!d.file) continue;
+    const p = join(DATA, d.file);
+    if (!existsSync(p)) continue;
+    let j;
+    try { j = JSON.parse(readFileSync(p, "utf8")); } catch (e) { continue; }
+    const arr = Array.isArray(j.data) ? j.data : (Array.isArray(j.zones) ? j.zones : null);
+    const count = j.count ?? (arr ? arr.length : null);
+    if ((j.updated && d.updated !== j.updated) || (count != null && d.count !== count)) stale.push(d.file);
+  }
+  if (stale.length) {
+    console.log("_meta.json");
+    W(`${stale.length} 個資料庫的 updated/count 與實際檔案不符 → 跑 node scripts/sync-meta.mjs --apply`
+      + `（${stale.slice(0, 5).join("、")}${stale.length > 5 ? "…" : ""}）`);
   }
 }
 

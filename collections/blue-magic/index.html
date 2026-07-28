@@ -66,6 +66,12 @@
 
     .col-detail .detail-line { margin-top: 2px; }
     .col-detail .detail-line b { color: var(--text-secondary); font-weight: 500; }
+    /* 野外習得地點的開地圖鈕（樣式對齊幻卡頁的 .tt-loc） */
+    .bm-loc {
+      background: none; border: none; cursor: pointer; font-size: 12px;
+      padding: 0 2px; line-height: 1; vertical-align: baseline;
+    }
+    .bm-loc:hover { transform: scale(1.25); }
 
     /* ── 篩選區壓縮 ──
        這頁有 4 組篩選（習得方式／屬性／類型／階級），common.css 的預設是「標籤在上、
@@ -362,7 +368,13 @@
         var name = DUNGEON_NAMES[l.contentId] || l.detail || '';
         return { type: '副本', detail: (name ? '副本「' + name + '」' : '副本') + mobs };
       }
-      if (l.type === '野外') return { type: '野外', detail: (l.detail ? '野外「' + l.detail + '」' : '野外') + mobs };
+      if (l.type === '野外') {
+        // mapId 由 scripts/patch-blue-magic-content-ids.mjs 補入（地區名 → maps.json，
+        // 同時把 detail 正規化成 maps.json 的官方地名）。只知道地區、沒有確切座標，
+        // 所以彈窗刻意不放大頭針——map-modal 收到 x/y 為 null 時會自己處理。
+        return { type: '野外', detail: (l.detail ? '野外「' + l.detail + '」' : '野外') + mobs,
+                 mapId: l.mapId != null ? l.mapId : null, zone: l.detail || '' };
+      }
       if (l.type === '圖騰') {
         var cond = l.cond ? '（' + l.cond + '）' : '';
         var where = l.npc ? ' — ' + (l.npcLocation || '') + '・' + l.npc : '';
@@ -386,9 +398,22 @@
       '<span class="tag">' + esc(m.type) + '</span>' + srcTags;
   }
   function detailLinesHTML(m) {
-    var details = Array.from(new Set(resolveLearnFrom(m).map(function (l) { return l.detail; }).filter(Boolean)));
-    if (!details.length) details = ['待補充'];
-    return details.map(function (d) { return '<div class="detail-line">' + esc(d) + '</div>'; }).join('');
+    // 以 detail 文字去重，但要保住 mapId（野外那行才畫得出 📍），所以用 Map 不用 Set
+    var byText = new Map();
+    resolveLearnFrom(m).forEach(function (l) {
+      if (!l.detail) return;
+      if (!byText.has(l.detail)) byText.set(l.detail, l);
+    });
+    if (!byText.size) return '<div class="detail-line">待補充</div>';
+    return Array.from(byText.entries()).map(function (pair) {
+      var text = pair[0], l = pair[1];
+      var btn = (l.mapId != null)
+        ? ' <button type="button" class="bm-loc" title="開地圖看這個地區"' +
+          ' data-mapid="' + esc(l.mapId) + '" data-zone="' + esc(l.zone) + '"' +
+          ' data-spell="' + esc(m.name) + '">📍</button>'
+        : '';
+      return '<div class="detail-line">' + esc(text) + btn + '</div>';
+    }).join('');
   }
 
   /* ── 法術書 ────────────────────────────────────────────────────
@@ -643,7 +668,37 @@
     // 資料載不進來時收起空書，讓引擎的錯誤訊息是畫面上唯一的東西
     onError: function () { $('bookView').style.display = 'none'; }
   });
+
+  /* 野外習得地點的 📍：卡片與詳情欄都會出現，所以在 document 上做事件代理。
+     必須 stopPropagation——外層卡片還有「點卡片＝檢視」的行為，不擋會連帶觸發。 */
+  document.addEventListener('click', function (ev) {
+    var btn = ev.target.closest && ev.target.closest('.bm-loc');
+    if (!btn || !window.bmOpenMap) return;
+    ev.preventDefault();
+    ev.stopPropagation();
+    window.bmOpenMap({
+      mapId: Number(btn.dataset.mapid),
+      title: '💙 ' + btn.dataset.spell,
+      sub: '野外習得：' + btn.dataset.zone
+      // 刻意不傳 x/y：資料只給地區、沒有確切座標，map-modal 會改標「整區皆可能」
+    });
+  });
 })();
+</script>
+
+<script type="module">
+/* 野外習得地區的地圖彈窗：maps.json 首次點擊才載入（同幻卡頁做法） */
+import { initMapModal, openMapModal } from '../../assets/js/map-modal.js';
+let ready = null;
+window.bmOpenMap = async function (opts) {
+  if (!ready) {
+    ready = fetch('../../data/maps.json')
+      .then(r => r.json())
+      .then(j => initMapModal({ mapsData: j.data, base: '../..' }));
+  }
+  try { await ready; } catch (e) { ready = null; return; }
+  openMapModal(opts);
+};
 </script>
 </body>
 </html>

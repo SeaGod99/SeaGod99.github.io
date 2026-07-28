@@ -419,6 +419,15 @@ async function loadData(){
     .filter(n => n.itemNames.length > 0); // 全部產物皆台服未開放 → 整節點隱藏
 }
 
+/* 「即將開放」的門檻（真實秒）。
+   原本是 30 分鐘，但 **ET 一天只有 70 真實分鐘**，30 分鐘等於涵蓋 43% 的循環——
+   實測 225 個限時節點在一整個 ET 日取樣 200 次，平均有 **160 個（71%）**同時掛著
+   「即將開放」，這個狀態等於沒有鑑別度（開放中才 16%）。
+   改成 5 分鐘（≈1.7 ET 小時）後平均 27 個（12%），與「開放中」同量級，
+   而且 5 分鐘也真的夠從任何一張圖傳過去。
+   量測方式見 2026-07-28 的更新紀錄；要調整請連同那份分佈一起重算，不要憑感覺改。 */
+const SOON_SECS = 5 * 60;
+
 /* ─────────────────────────────────────────────
    狀態計算（以 ET 小時為單位）
    spawns: ET 開始整點陣列；duration: 分鐘（ET）
@@ -455,7 +464,7 @@ function nodeStatus(node, now = Date.now()){
   }
   const realMs = (bestDiff * 60000) / EORZEA_MULT;
   const secsLeft = Math.max(0, Math.round(realMs/1000));
-  const state = secsLeft <= 30*60 ? 'soon' : 'closed';
+  const state = secsLeft <= SOON_SECS ? 'soon' : 'closed';
   return { state, secsLeft, startH: nextStart };
 }
 

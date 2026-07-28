@@ -3,7 +3,7 @@
 > **給 Claude / 後續對話的指示**：開始任何工作前先讀本檔。完成任何功能或資料變更後，**必須更新本檔**（狀態表 + 更新紀錄），並同步 `data/_meta.json` 的 status。
 > 規格細節見 `docs/feature-specs.md`，資料格式見 `data/SCHEMA.md`。
 
-**最後更新**：2026-07-23（全站優化第二輪：四頁遷入共用引擎、引擎支援子項目／分頁、items-lite 瘦身、SW 快取版本自動化、刪除未使用資產，見更新紀錄）
+**最後更新**：2026-07-28（資料缺口／UX 一致性／效能 三章＋收尾：副本庫 386→520 座、幻卡與青魔取得方式缺口歸零、430px 溢出、market 10MB→2MB、_meta 自動抑漂，見更新紀錄）
 **網站**：https://seagod99.github.io ｜ GitHub Pages 純靜態 ｜ 台服版本 **7.15**（＝`data/_meta.json` 的 `gamePatch`，全站版本閘門唯一真實來源；台服尚未開放到 7.2）
 
 ---
@@ -77,15 +77,16 @@
 | gathering | 733 | Teamcraft nodes（已濾 EventItem 偽 id；141 筆 mapMissing） | 06-11 |
 | npcs | 22079 | Teamcraft tw-npcs + 位置 | 06-08 |
 | minions | 581 | XIVAPI + items（圖在 /assets/minions/） | 06-05 |
-| mounts | 385 | XIVAPI + manual（圖在 /assets/mounts/） | 06-04 |
-| triple-triad | 435 | XIVAPI v2 + items（張數以 items.json 的「九宮幻卡」道具數為準）+ npcs/maps/dungeons（取得方式）；圖在 /assets/triple-triad/ 共 435 張 | 07-26 |
-| dungeons | 386 | XIVAPI（圖在 /assets/dungeons/） | 06-05 |
+| mounts | 362 | XIVAPI + manual（圖在 /assets/mounts/）；**07-28 補 `order`**（`Mount.Order`），13 筆 -1＝不在遊戲坐騎手冊的內部列，前端已擋 → 頁面 301→**297 隻** | 07-28 |
+| triple-triad | 435 | XIVAPI v2 + items（張數以 items.json 的「九宮幻卡」道具數為準）+ npcs/maps/dungeons（取得方式）；圖在 /assets/triple-triad/ 共 435 張。**07-28 取得方式補繁中名**：副本走 Garland 英文名→dungeons.json（`contentId`），卡包走 itemId→items.json，任務走 Teamcraft tw-quests；**無名稱 0 筆**，純英文僅剩 14 個成就名 | 07-28 |
+| dungeons | **520** | XIVAPI＋tw-instances（圖在 /assets/dungeons/）；07-28 補 `expansion`／`expansionId` **520/520**、清掉 18 筆已證實錯誤的 `patch`；**同日補收 134 座**（深宮 40／優雷卡 4／多變迷宮 9／單人任務戰鬥 81）——它們先前被 `IsInDutyFinder` 過濾整批擋掉。繁中名 520/520 | 07-28 |
 | barding | 106 | XIVAPI + tw-items（圖在 /assets/barding/） | 06-04 |
 | blue-magic | 124 | XIVAPI | 06-09 |
 | monsters | 14361 | datamining-cn + Teamcraft + XIVAPI | 06-09 |
 | obtainable-methods | 36336 | mixed | 06-08 |
 | fishes / fishing-spots | 1449 / 307 | fish-tracker + items（spots 已補 coords.mapId） | 06-11 |
 | items-lite | 43748 | items.json 精簡（只留 id→繁中名，1.3MB；`scripts/build-items-lite.mjs`） | 07-23 |
+| items-market | 43748 | items.json 精簡（市場頁用的六欄，2.0MB；`scripts/build-items-market.mjs`）。**改完 items.json 這支與 items-lite 都要重跑** | 07-28 |
 | island-* 十一檔 | 見下 | datamining-cn `MJI*` CSV ＋ items.json（`scripts/build-island.mjs`）；動物出現條件與台服名走人工表 `island-names-tw.json` | 07-24 |
 
 仍為空（0 bytes）：emotes、exploration-log、orchestrion、squadron、fishing（由 fishes.json 取代）。
@@ -102,7 +103,7 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 
 ### 【已修復 2026-06-11】mapId 兩套 ID 空間不一致
 
-**已完成**：maps.json 重 key 成遊戲 Map sheet row id 並擴充至 210 張；fishing-spots 307 筆全補 coords.mapId；gathering 清除 EventItem 偽 id（965→733 節點）。mapId 類斷鏈 17444/17958/524 → 全部歸零。詳見 `docs/地圖ID統一修正計畫.md` 執行結果。底圖 8 張待本機補抓（`docs/待補底圖清單.md`）。以下保留原始問題紀錄：
+**已完成**：maps.json 重 key 成遊戲 Map sheet row id 並擴充至 210 張；fishing-spots 307 筆全補 coords.mapId；gathering 清除 EventItem 偽 id（965→733 節點）。mapId 類斷鏈 17444/17958/524 → 全部歸零。詳見 `docs/地圖ID統一修正計畫.md` 執行結果。底圖 8 張已於本機補齊（2026-07-28 複查：9 張全在、`image.key` 為 `default/00` 的佔位圖 0 筆、野外／主城類 0 缺圖，原「待補底圖清單.md」已刪）。以下保留原始問題紀錄：
 
 `maps.json` 用的是**自編連號 id**（2–305，手動策展 67 張）；但 Teamcraft 來源的庫（npcs、monsters、gathering）用的是**遊戲 Map sheet row id**。例：紅玉海在 maps.json 是 83，monsters/npcs 引用的是 371；庫爾札斯西部高地 maps=60 vs 引用 211；雷克蘭德 maps=100 vs 引用 491。
 
@@ -184,7 +185,7 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 
 ## 四、待辦（依優先序）
 
-0. ~~修 mapId ID 空間不一致~~ — **完成（2026-06-11）**，見 `docs/地圖ID統一修正計畫.md` 執行結果。遺留：底圖 8 張待本機跑 `node scripts/download-maps.mjs` 補抓（`docs/待補底圖清單.md`）；新擴充地圖無 weatherRates/patch，需要時再補
+0. ~~修 mapId ID 空間不一致~~ — **完成（2026-06-11）**，見 `docs/地圖ID統一修正計畫.md` 執行結果。遺留：~~底圖 8 張待補~~ **已補齊（2026-07-28 複查通過，清單文件已刪）**；新擴充地圖無 weatherRates/patch，需要時再補
 1. ~~06-15 驗收結論：四個「開發中」頁面皆未對接已備資料庫，需重新開發前端資料層~~ — **完成（2026-06-15）**：weather（共用模組+maps.json）、gathering（gathering.json/items.json/maps.json+篩選/追蹤）、mounts（mounts.json+圖片）、minions（整頁重做）皆已重做完成。
 2. ~~同步 `data/_meta.json` status；更新 README.md 的工具清單（已過時）~~ — **完成（2026-06-15）**：_meta.json 各庫 status 已對應目前完工狀態（mounts/barding/triple-triad/blue-magic/minions），README.md 重寫工具清單與專案結構，並修正 index.html「市場查價＋比價」誤標為可用（market/ 為空目錄）改回即將推出
 2-1. 資料品質小修：~~mounts 補 itemId~~（06-11 完成）；mounts sources/patch 人工校對（併入 1c）；om 40 筆 npc 譯名以 npcs.json 為準；blue-magic learnFromMob 轉怪物 id（做青魔頁前）；dungeons rewards/unlock 待填充（量大，做副本相關功能時再填）
@@ -195,6 +196,65 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 6. 其他規劃：時尚品鑑、冒險者小隊計算機、藏寶圖、園藝配種、釣魚紀錄
 
 ## 五、更新紀錄
+
+- **2026-07-28（收尾：副本庫補收 134 座、取得方式缺口歸零、_meta 自動抑漂）**：接續同日的三章工作，把留下的尾巴收乾淨。
+
+  **① `build-dungeons.mjs` 有一道過濾把整批副本吃掉了**
+  - 根因是 `if (!IsInDutyFinder && !HighEndDuty) continue;`。**深宮（ContentType 21）／禁地優雷卡（26）／多變迷宮（30）／單人任務戰鬥（7）都有自己的進入介面**，不掛在一般隨機任務裡，`IsInDutyFinder` 一律 false，於是整批被擋——即使 21/26/30 明明就在 `VALID_CONTENT_TYPES` 白名單裡（白名單形同虛設）。已加 `DUTY_FINDER_EXEMPT_TYPES` 豁免。
+  - 順手修掉兩個錯誤：**`ContentType 30` 註解成「Bozja」是錯的**（實查 XIVAPI ＝ `V&C Dungeon Finder`），`resolveType()` 也跟著回傳 `'bozja'`；現已改為 `variant_dungeon`，並補上 `quest_battle`。
+  - **6.1 把「里塔提恩強攻戰」「皇都伊修加爾德保衛戰」從 8 人討伐戰改成單人任務戰鬥**（ContentType 7），它們**沒有下架**、只是換了型別——我先前判斷成「已移除內容」是錯的。
+  - 新增 [`patch-dungeon-add-missing.mjs`](../scripts/patch-dungeon-add-missing.mjs)（增量、dry-run 預設、`--offline`）。**刻意不整包重建**：`dungeons.json` 疊了 `patch-dungeon-names` 的 108 筆繁中名校正與 `patch-dungeon-expansion` 的 386 筆資料片，重建會全洗掉。
+  - 台服名走既有對應鏈（`CFC id → Content(InstanceContent id) → tw-instances[].tw`），**不自己翻譯**。台服叫「**多變迷宮**」不是「異聞迷宮」（36001 多變迷宮 希拉狄哈水道／36002 六根山／36003 阿羅阿羅島），Another 版才叫異聞迷宮——又一個不能憑印象寫名字的例子。
+  - **386 → 520 座**（deep_dungeon 40／eureka 4／variant_dungeon 9／quest_battle 81）；**15 筆無台服名者依鐵則不加**（Pilgrim's Traverse、The Merchant's Tale 等台服未開放內容）。
+
+  **② 取得方式缺口歸零**
+  - **幻卡「無名稱的來源」11 → 0 筆**。`patch-triple-triad-source-names.mjs` 另加一段「**已有 `contentId` 的來源每次都重新對 `dungeons.json` 同步型別與名稱**」，所以 `dungeons.json` 一變動再跑就會自我修正——這次就靠它把 10 張卡從「副本」改標成新的「多變迷宮」型別。
+  - **青魔 118 → 142/142 全解**（皇都伊修加爾德保衛戰隨副本庫補收而解掉）。護欄「規則 A–C ↔ D 交叉驗證」維持 67 一致、0 矛盾。
+  - **幻卡剩的 2 句 wiki 英文散文改寫成結構化來源**（新增 [`patch-triple-triad-prose-sources.mjs`](../scripts/patch-triple-triad-prose-sources.mjs)）。每個名字都是查來的：C'intana → `npcs.json` **卡·因塔娜**（座標吻合）；Horrendous Hoarder → `out_data/npcs.msgpack` **貿易小員**；三種圖騰與 Seafarer's Cowrie → `out_data/en-items.msgpack` 反查 itemId → `items.json` **紅／綠／白色未知蠻神圖騰**、**謝爾達萊青船幣**。卡 323 型別由「討伐戰」改為「商店」（取得動作就是找 NPC 兌換）。
+  - **純英文 detail 17 → 14 筆**，剩的 14 筆全是成就名（Title/Achievement 非物品、`tw-items` 不涵蓋，全站對成就譯名的立場是擱置）。
+  - 🔎 **附帶收穫**：`Seafarer's Cowrie ＝ 謝爾達萊青船幣（itemId 37549）`。無人島頁先前因為「`MJIDisposalShopItem.Currency` 只是個 byte、datamine 沒給貨幣名」而把收購資訊整個藏起來（見 2026-07-23 條目），**現在有官方名了，那塊可以解封**。
+
+  **③ `_meta.json` 過期問題根治**
+  - 新增 [`sync-meta.mjs`](../scripts/sync-meta.mjs)：從各資料檔自己的信封欄位（`updated`／`count`）回抄進 `_meta.databases[]`，**不自己算日期**。
+  - 真正的根治不是「記得跑它」，而是 **`validate-data.mjs`（改完資料必跑的那支）會自動報不同步**。流程變成：改資料 → validate 報 drift → 跑 sync → 再 validate，忘不掉。
+  - 同步 31 筆，並補登記 8 個前端會讀但沒登記的庫（items-market／items-lite／equip／gc-shop／fashion-report／treasure-fragments／monsters／obtainable-methods）。頂層 `updated` 2026-06-23 → 2026-07-28。
+
+  **④ 過時文件清除**：`docs/待補底圖清單.md` 刪除。刪前複查：那 8 張 field/city 底圖＋雲冠群島共 9 張全部在位、`image.key` 為 `default/00` 的佔位圖 **0 筆**、野外／主城類 **0 缺圖**。PROGRESS／地圖ID計畫／知識庫的三處引用一併更新。
+
+  **⑤ 三條死路寫進[知識庫 §4.13](專案慣例與記憶.md)**（dungeons 的 bosses/rewards、dungeons 的 68 筆 null patch、無人島 56 筆非官方譯名），附「試過什麼、為什麼不行」，避免下次重走。
+
+  **驗收**：`validate-data.mjs` **54 檔 0 error 0 warning**（含新的 _meta 抑漂檢查）；`validate-links.mjs` mapId 類全數歸零；jsdom 回歸 **34/34**（新增幻卡無名稱＝0、純英文＝14、青魔 contentId 全滿、dungeons 520 座繁中名 520/520 四項斷言）；blue-magic／triple-triad／首頁 **0 console error**；SW 版本無需再 bump（未動 `assets/`）。
+
+- **2026-07-28（資料缺口／UX 一致性／效能 三章一次做完）**：使用者指定處理盤點出來的三個章節。
+
+  **① 資料缺口——「查了但查不到」全部收斂**
+  - **幻卡取得方式 281 筆只有 id 沒有名稱 → 補到剩 11 筆**（新腳本 [`patch-triple-triad-source-names.mjs`](../scripts/patch-triple-triad-source-names.mjs)，dry-run 預設／`--offline` 可離線／冪等）。三個踩到的雷：
+    - **舊資料的 `instanceId` 是 Garland Tools 自家 id，不是 ContentFinderCondition id。** 182 個裡有 64 個「剛好」也是 `dungeons.json` 的有效 key，實測**其中 151 個對到的是錯的副本**（Garland 96＝深空天坑，dungeons.json 96＝巴哈姆特大迷宮邂逅之章4）。改用**英文名比對**解出 178/182；已解出者刪掉 `instanceId`、改存 `contentId`，免得下次又有人拿去直接對。Garland id 分段：小 id＝Dungeons、20xxx＝Trials、30xxx＝Raids、36xxx＝異聞迷宮（dungeons.json 未收）。
+    - **`treasureId` 根本是 `itemId`**，10 個裡有 7 個是金碟幣買的「九宮幻卡◯包」（`obtainable-methods` 佐證：幻卡商店・卡片兌換員・520～8000 金碟幣），型別「藏寶圖」是上游標錯 → 拆成 `卡包`／`藏寶圖`。
+    - **型別要以 `dungeons.json` 的 type 重標**，照抄上游會把「真 伊弗利特殲滅戰」標成副本。共修正 185 筆（副本→討伐戰 84／多人副本 17／大型任務 15、藏寶圖→卡包 69）。
+    - 另把 **21 筆純英文的 NPC 名 detail 換成台服官方名**（Triple Triad Trader→卡片兌換員、Hall Overseer→對局室管理員…），走 `out_data/npcs.msgpack` 的 Teamcraft `npcs`(en)＋`twNpcs`(tw)，**繁中名不唯一就跳過**。仍留 17 筆純英文＝14 個成就名（無台服來源，全站對成就譯名的立場是擱置）＋2 句 wiki 英文＋Mount Rokkon。
+  - **dungeons `expansion` 0/386 → 386/386**（新腳本 [`patch-dungeon-expansion.mjs`](../scripts/patch-dungeon-expansion.mjs)），來源＝XIVAPI `ContentFinderCondition.RequiredExVersion`。護欄用**英文名對位**（386/386 全對）而不是 patch——因為 patch 本身才是壞的：**抓到 18 筆 `patch` 與 ExVersion 矛盾，逐筆確認全是 `patch` 錯**（究極武器破壞作戰是 ARR 卻標 6.0、深空天坑是 7.0 卻標 6.0、亞歷山大機神城是 3.0 卻標 2.45），成因是 `build-dungeons.mjs` 走 XIVAPI **v1** 而 v1 已停更。已證實為錯的 patch 清成 null（保留錯值會讓版本篩選把副本分到錯的資料片），**但不猜正確值**。
+    - **不要再試這幾條路**：Teamcraft `patch-content.json` **沒有 ContentFinderCondition 類別**，拿 CFC id 去比 achievement/action/item 會得到 385/386、386/386 這種「幾乎全中」的假象（不同 id 空間撞號）；`UnlockType`／`UnlockCriteria` 實測 386 筆全是 0；bosses／rewards 無 datamine 來源。
+  - **坐騎頁有 4 筆玩家永遠拿不到的幻影條目**（新腳本 [`patch-collection-order.mjs`](../scripts/patch-collection-order.mjs)）：id 103 尼祿專用魔導裝甲（與 69 同一隻）、147 力氣大的魔象（與 146 同一隻）、149 真獅鷲（**真獅鷲一度在頁面上出現兩次**）、128 捕獲的魔導裝甲。判別依據是 **`Mount.Order === -1`**＝不在遊戲的坐騎手冊裡，不是「TC 站沒收」或「sources 是空的」那些症狀。**它們不是「取得方式待補」的資料缺口，是根本不該顯示的列**——先前把它們算進缺口是搞錯方向。引擎預設 `include` 加上 `order !== -1`（其餘 11 頁的 order 皆 ≥0，0 影響），**坐騎 301 → 297 隻**。順帶確認名稱沒有錯位：本地 `nameEn` vs XIVAPI `Singular` **0 筆不符**、TC 收藏站 **287/287 同 id 同名**。
+  - **全站收藏頁的「無 sources」歸零**（坐騎 297／寵物 525／鳥鞍 100／樂譜 724／幻卡 435／表情 250／髮型 39 皆 0 筆）。樂譜最後 3 筆（白帝竹林／月下芳華／高貝扎四天王之戰）用 [`patch-sources-from-om.mjs`](../scripts/patch-sources-from-om.mjs) 從 `obtainable-methods` 補上「討伐戰」型別——**om 只給得出型別、給不出是哪一場，所以只寫型別不編 detail**。查過但沒用的路：TC 快照只有 682/724 且上游重抓仍是 682（不是快照過期，是來源沒收）、這 3 筆無配方（TC 標的 "Craftable" 是錯的）、`loot-sources.msgpack` 查無。
+  - **青魔的副本名一直是簡轉繁**（新腳本 [`patch-blue-magic-content-ids.mjs`](../scripts/patch-blue-magic-content-ids.mjs)）：頁面早就寫好 `DUNGEON_NAMES[l.contentId] || l.detail`，但 **`contentId` 是 0/142，那段一直是死碼**。用五層「轉換後精確且唯一命中」補到 **141/142**，**35 個副本名換成台服官方名**（利維亞桑→真 利維坦殲滅戰、索菲婭→女神索菲亞、薩菲洛特→極 魔神賽菲羅特、莫古力賢王→善王莫古爾·莫古XII世、樵明洞→樵鳴洞…）。
+    - 規則 0/A/B/C 是字面規則（直接 101／真 4／極 9／同字重排 4）；**關鍵是規則 D「簡中 datamine 反查」**——`ffxiv-datamining-cn` 的 `ContentFinderCondition.csv` 每列的 **key 就是 CFC id**，把它的簡中官方名轉繁後比對即可直接得到 id。本站這些副本名本來就是簡中官方名轉繁來的，**這等於沿同一條翻譯鏈往回走**，A–C 拆不掉的譯名差異一次解掉 23 筆。
+    - **刻意不用模糊比對**：實測最相似項常常是錯的（「拉姆殲殛戰」最像「恩歐殲殛戰」、「索菲婭殲殛戰」最像「澤蓮尼婭殲殛戰」）。
+    - **護欄＝兩條獨立路徑交叉驗證**：A–C 與 D 都解得出來的那批必須給出同一個 id，矛盾就中止不寫入。實測**一致 68、矛盾 0**，這才是敢採用 D 的依據。
+    - 另有 5 筆是**我方資料寫錯字**（樵明洞／加巴勒／監牢鐵臂／帝國南方堡外圍激戰／伊修加爾德），列在腳本的 `DETAIL_TYPOS` 並逐筆附證據。仍剩 **1 筆「皇都伊修加爾德保衛戰」**——它解得出 CFC 885，但 The Steps of Faith 在 6.1 已從遊戲移除、`dungeons.json` 沒收，屬預期內。
+    - 野外 **64/64 補上 `mapId`** 並把 detail 正規化成官方地名（庫爾扎斯→**庫爾札斯**西部高地）；同名多列時只取野外類（黑衣森林東部林區有野外 5 與副本 180 兩列）。**頁面新增 📍 開地圖**：只知地區沒有座標，所以 `map-modal.js` 加了「無座標」模式——不畫大頭針、座標列改標「整區皆可能」，**不要拿 0 或 NaN 去算位置**，那會把針釘在左上角看起來像真有這個點。
+
+  **② UX 一致性**
+  - **手機 430px 水平溢出修掉了**（站內既有現象，先前被歸類為「非本次造成」就一直放著）。根因不是 `100vw`：`.col-grid` 容器只有 367px，但軌道被算成 **`198px 198px`**（198×2＋10 gap＝406）——**`1fr` 的軌道下限是項目的 min-content**，各頁在窄螢幕寫死 `grid-template-columns: 1fr 1fr` 時就縮不回去。在 `common.css` 加 `.col-grid > * { min-width: 0 }`（等同 `minmax(0,1fr)`）一次修掉所有頁。**headless Edge + CDP 實量 25 個頁面，430px 全數 scrollWidth == clientWidth**（本機 headless Chromium 起不來，Edge 可用；Node 24 有原生 WebSocket，不必裝 puppeteer）。
+  - **限時採集「即將開放」門檻 30 分 → 5 分**：ET 一天只有 70 真實分鐘，30 分鐘等於涵蓋 43% 的循環——實測 225 個節點取樣 200 次，平均 **160 個（71%）**同時掛著「即將開放」，等於沒有鑑別度（開放中才 16%）。改 5 分鐘後平均 27 個（12%），與「開放中」同量級。門檻改成具名常數 `SOON_SECS` 並附上量測方法。
+  - **首頁「我的收藏進度」精簡成合計一行**（使用者指定）：原本 12 條個別進度條資訊量太大，改為只呈現 `合計 n / m（x%）` ＋一條總進度條，細項到各追蹤頁看。同日先做的「🎯 快完成了」提示列**依使用者指示一併移除**（`.pd-nearly` 與相關 CSS／JS 已全部刪除，`REG` 只留 `key`／`name`）。無任何進度時仍顯示區塊，讓「匯入全站進度」在換裝置時可用。
+  - **首頁加「🕘 最近使用」**：26 個工具的卡片牆要捲很久。記錄點放在 `nav.js`（**每一頁都會載入**，所以不管從首頁點、用命令面板跳、還是直接開書籤都記得到），存 `ffxiv_recent_tools`，首頁沿用 `nav.js` 的 `TOOLS` 畫 chips（不另維護一份，否則新增工具會走鐘）。路徑比對取**最長相符**，否則 `tools/gathering-log/` 會被記成 `tools/gathering/`（已實測）。
+
+  **③ 效能**
+  - **市場查價頁不再阻塞在 10MB**：原本開頁 `await fetch('items.json')`，整包下載＋parse 完之前整頁不能動。實查那頁只用六個欄位，新增 [`build-items-market.mjs`](../scripts/build-items-market.mjs) → `data/items-market.json`：**10.0MB → 2.0MB（gzip 836KB → 471KB）**。三段瘦身＝只留六欄並改陣列列／category 換字典索引（113 種）／icon 只存 6 位數編號（路徑格式固定，**已對 43748 筆驗證資料夾都推得回來，不符就中止不產檔**）。**缺 icon 用 -1 不能用 0**——編號 0 是真的存在的（24225 演技教材·神典石）。展開後與 `items.json` 逐欄比對 **43748 筆 0 差異**。
+  - **lazy loading 實查後只缺一處**（market 的製作清單表格列，可達數十列，已補）。其餘沒有 `loading=lazy` 的 4 張都是單張、首屏內的圖，加了反而有害；`map-explorer.js` 那張是選中地圖才載的底圖，也不該 lazy。多數頁面根本沒有 `<img>`（釣魚／樂譜／髮型都是 0）。
+
+  **驗收**：`validate-data.mjs` **54 檔 0 error 0 warning**；`validate-links.mjs` mapId 類全數歸零；jsdom 追蹤頁回歸 **31/31**（含坐騎 297、真獅鷲去重、幻卡仍無名稱 11 筆、dungeons 欄位、11 頁 DOM 渲染）；headless Edge 實量 **25 頁 430px 全無溢出**、9 個改動頁 **0 console error**；market 搜尋「棉布」60 筆結果與 icon URL 正確；`bump-sw-version.mjs` 已更新（`sgt-e6dc6b20fc` → `sgt-d99ca5124e`）。
 
 - **2026-07-26（全站統一：收藏切換一律是卡片右上角的 ✓ 鈕）**：使用者指定「統一全網站的點擊收藏為右上角，並且要相同的格式」。原本全站有四種長相——`.col-card.owned::before` 的 ✓ 角標（6 頁，不可點、靠點整張卡切換）、寵物圖示右下的 `.check-badge`、青魔法術書左上的金色方塊、幻卡右上的 ✓ 鈕。
   - **唯一定義處**：`assets/css/common.css` 的 `.ct-check` ＋ `assets/js/collection-tracker.js` 新增的 `buildCheck()`。引擎替每張卡片加 `.ct-card` 並掛上這顆鈕（右上 6px、24px 圓形、未收藏 opacity .55、hover 1、已收藏填 `--accent`）。自訂版型（青魔 `.bm-slot`、幻卡 `.tt-slot`）改呼叫 `tracker.buildCheck()`，不再各自刻一顆。
@@ -510,7 +570,7 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 - **2026-06-15**：四頁面驗收（weather/gathering/mounts/minions）——發現皆為草稿/示範資料，未對接已備資料庫，狀態改標註具體缺陷；待辦#1重寫為「四頁面資料對接重做」，順序：weather共用模組 → gathering → mounts → minions；製作利潤計算機（原#4）順延至此之後。
 - **2026-06-11（第二輪）**：mounts 補 itemId 348/385、繁中名 337/385（nameSource：tw-items 259／cn-opencc 56；發現原 103 筆手動名大量錯位已覆蓋，sources/patch 待人工校對）；barding 補 itemId 100/106；dungeons 名稱台服化校正 108/386（tw-instances + CFC 對應，報告 docs/dungeons-名稱校正報告.md）；monsters 本機跑 patch-monster-names.mjs 完成台服化（改名 2381／同名 11040／無資料 793）；build-mounts/build-barding/build-monsters/patch-dungeon-names 同步更新。
 
-- **2026-06-11**：地圖 ID 統一修正完成（待辦 #0）。maps.json 重 key 成遊戲 Map sheet row id 並擴充 67→210 張（地名 tw-places 優先）；fishing-spots 307 筆補 coords.mapId（territory→map 對應）；gathering 濾除 EventItem 偽 id 356 次、剔除 232 個純偽 id 節點（965→733）、141 筆 mapId=0 加 mapMissing 標記。新增 scripts/validate-links.mjs（全庫連結驗證）、rekey-maps.mjs；改 build-fishing / build-gathering / download-maps。mapId 類斷鏈 17444＋17958＋524 → 全部歸零。SCHEMA.md 明文 mapId=Map sheet row id；_meta.json 同步 maps/gathering/fishes/fishing-spots。底圖 8 張待本機補（docs/待補底圖清單.md）。
+- **2026-06-11**：地圖 ID 統一修正完成（待辦 #0）。maps.json 重 key 成遊戲 Map sheet row id 並擴充 67→210 張（地名 tw-places 優先）；fishing-spots 307 筆補 coords.mapId（territory→map 對應）；gathering 濾除 EventItem 偽 id 356 次、剔除 232 個純偽 id 節點（965→733）、141 筆 mapId=0 加 mapMissing 標記。新增 scripts/validate-links.mjs（全庫連結驗證）、rekey-maps.mjs；改 build-fishing / build-gathering / download-maps。mapId 類斷鏈 17444＋17958＋524 → 全部歸零。SCHEMA.md 明文 mapId=Map sheet row id；_meta.json 同步 maps/gathering/fishes/fishing-spots。底圖 8 張待本機補（已於 2026-07-28 補齊並刪除該清單）。
 - **2026-06-10**：建立本進度文件；盤點 repo 實際狀態（比先前紀錄多了 weather/gathering 工具頁、mounts/minions 收藏頁、dungeons/barding/blue-magic/monsters/obtainable-methods/fishes 等資料庫）。
 - 2026-06-09：blue-magic、monsters 資料更新。
 - 2026-06-08：npcs（22079）、triple-triad（425）、obtainable-methods、fishes/fishing-spots 完成。

@@ -330,29 +330,30 @@
     .section-life    .tool-card:hover::before { background: linear-gradient(90deg, var(--green), transparent); }
 
     /* ── 收藏進度儀表板 ── */
-    .pd-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-      gap: 10px;
+    /* 進度只呈現「合計一行」（2026-07-28 使用者指定）：12 條個別進度條資訊量太大，
+       首頁要的是一眼看到總進度，細節到各追蹤頁看就好。 */
+    .pd-bar { height: 8px; background: var(--bg-surface); border-radius: 4px; overflow: hidden; }
+    .pd-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--purple), var(--blue)); transition: width 0.4s; }
+    .pd-bar.done .pd-fill { background: linear-gradient(90deg, var(--gold), var(--gold-light)); }
+    /* 最近使用：26 個工具的卡片牆要捲很久，常用的那幾個放最上面一排直接點 */
+    .recent-bar {
+      display: flex; align-items: center; flex-wrap: wrap; gap: 10px;
+      margin: 0 0 22px;
     }
-    .pd-item {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 12px 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
+    .recent-label { font-size: 12px; color: var(--text-muted); flex: none; }
+    .recent-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .recent-chips a {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 12px; font-size: 13px;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 99px; color: var(--text-secondary);
       transition: var(--transition);
     }
-    .pd-item:hover { border-color: var(--border-hover); background: var(--bg-card-hover); }
-    .pd-top { display: flex; align-items: baseline; gap: 8px; }
-    .pd-name { font-size: 13.5px; font-weight: 600; color: var(--text-primary); }
-    .pd-num { margin-left: auto; font-size: 12px; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
-    .pd-bar { height: 6px; background: var(--bg-surface); border-radius: 3px; overflow: hidden; }
-    .pd-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--purple), var(--blue)); transition: width 0.4s; }
-    .pd-item.done .pd-fill { background: linear-gradient(90deg, var(--gold), var(--gold-light)); }
-    .pd-item.done .pd-num { color: var(--gold); }
+    .recent-chips a:hover {
+      border-color: var(--border-hover); color: var(--gold-light);
+      background: var(--bg-card-hover);
+    }
+
     .pd-hint { font-size: 11.5px; color: var(--text-muted); margin-top: 10px; }
     .pd-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
     .pd-btn {
@@ -444,6 +445,12 @@
   </div>
   <p class="hub-no-result" id="hubNoResult">找不到符合「<span id="hubQ"></span>」的工具</p>
 
+  <!-- ── 最近使用（本機紀錄，由 assets/js/nav.js 在各工具頁寫入）── -->
+  <div class="recent-bar" id="recentBar" style="display:none">
+    <span class="recent-label">🕘 最近使用</span>
+    <div class="recent-chips" id="recentChips"></div>
+  </div>
+
   <!-- ── 我的收藏進度（取自各追蹤頁寫入的本機快照）── -->
   <section class="section section-collect" id="progressDash" style="display:none">
     <div class="section-header">
@@ -451,9 +458,9 @@
       <h2 class="section-title">我的收藏進度</h2>
       <span class="section-count" id="pdTotal"></span>
     </div>
-    <div class="pd-grid" id="pdGrid"></div>
+    <div class="pd-bar" id="pdBar" style="display:none"><div class="pd-fill" id="pdFill" style="width:0"></div></div>
     <p class="pd-empty" id="pdEmpty" style="display:none">尚無進度紀錄——開啟任一追蹤頁後會自動出現在這裡；換裝置時可用下方「匯入全站進度」還原備份。</p>
-    <p class="pd-hint">進度為此瀏覽器的本機紀錄——各追蹤頁開啟過一次後就會出現在這裡並自動同步。</p>
+    <p class="pd-hint">進度為此瀏覽器的本機紀錄——各追蹤頁開啟過一次後就會自動計入合計；個別項目的進度請到各追蹤頁查看。</p>
     <div class="pd-actions">
       <button class="pd-btn" id="pdExportBtn" title="將所有追蹤頁的進度打包成單一備份檔">💾 匯出全站進度</button>
       <button class="pd-btn" id="pdImportBtn" title="還原「匯出全站進度」產生的備份檔">📥 匯入全站進度</button>
@@ -875,21 +882,56 @@
   clearBtn.addEventListener('click', function () { input.value = ''; apply(); input.focus(); });
 })();
 
+/* 最近使用：讀 assets/js/nav.js 在各工具頁寫入的 ffxiv_recent_tools。
+   工具的 emoji／名稱直接沿用 nav.js 的 TOOLS（window.SGT_TOOLS），不另外維護一份，
+   否則新增工具時兩邊會走鐘。nav.js 由 theme.js 非同步載入，所以要等它出現。 */
+(function () {
+  function render() {
+    var TOOLS = window.SGT_TOOLS;
+    if (!TOOLS) return false;
+    var list;
+    try { list = JSON.parse(localStorage.getItem(window.SGT_RECENT_KEY || 'ffxiv_recent_tools') || '[]'); }
+    catch (e) { return true; }
+    if (!Array.isArray(list) || !list.length) return true;
+
+    var byPath = {};
+    TOOLS.forEach(function (t) { if (t.p) byPath[t.p] = t; });
+    var html = list.map(function (x) {
+      var t = x && byPath[x.p];
+      if (!t) return '';                    // 工具已改路徑或下架
+      return '<a href="' + t.p + '"><span>' + t.e + '</span><span>' + t.n + '</span></a>';
+    }).filter(Boolean).join('');
+    if (!html) return true;
+    document.getElementById('recentChips').innerHTML = html;
+    document.getElementById('recentBar').style.display = '';
+    return true;
+  }
+  if (!render()) {
+    // nav.js 還沒載到：輪詢一小段時間就放棄（沒有最近使用列不影響其他功能）
+    var tries = 0;
+    var iv = setInterval(function () {
+      if (render() || ++tries > 40) clearInterval(iv);
+    }, 100);
+  }
+})();
+
 /* 收藏進度儀表板：讀各追蹤頁寫入的 ffxiv_snap_* 快照（無需載入資料檔） */
 (function () {
+  // 只用來加總，不再逐項渲染（2026-07-28 使用者指定只留合計一行）。
+  // name 保留當作「這個 key 是哪一頁」的說明，別刪。
   var REG = [
-    { key: 'mounts',      emoji: '🐎',  name: '坐騎',     href: 'collections/mounts/' },
-    { key: 'minions',     emoji: '🐣',  name: '寵物',     href: 'minions/' },
-    { key: 'orchestrion', emoji: '🎵',  name: '樂譜',     href: 'collections/orchestrion/' },
-    { key: 'emotes',      emoji: '💃',  name: '表情',     href: 'collections/emotes/' },
-    { key: 'hairstyles',  emoji: '💇',  name: '髮型',     href: 'collections/hairstyles/' },
-    { key: 'barding',     emoji: '🦜',  name: '鳥鞍',     href: 'collections/barding/' },
-    { key: 'triad',       emoji: '🃏',  name: '幻卡',     href: 'collections/triple-triad/' },
-    { key: 'bluemagic',   emoji: '💙',  name: '青魔法術', href: 'collections/blue-magic/' },
-    { key: 'explog',      emoji: '👁️', name: '探索筆記', href: 'collections/exploration-log/' },
-    { key: 'aether',      emoji: '🌬️', name: '風脈泉',   href: 'tools/aether-currents/' },
-    { key: 'fishing',     emoji: '🎣',  name: '釣魚紀錄', href: 'tools/fishing/' },
-    { key: 'gatherlog',   emoji: '⛏️', name: '採集紀錄', href: 'tools/gathering-log/' },
+    { key: 'mounts',      name: '坐騎' },
+    { key: 'minions',     name: '寵物' },
+    { key: 'orchestrion', name: '樂譜' },
+    { key: 'emotes',      name: '表情' },
+    { key: 'hairstyles',  name: '髮型' },
+    { key: 'barding',     name: '鳥鞍' },
+    { key: 'triad',       name: '幻卡' },
+    { key: 'bluemagic',   name: '青魔法術' },
+    { key: 'explog',      name: '探索筆記' },
+    { key: 'aether',      name: '風脈泉' },
+    { key: 'fishing',     name: '釣魚紀錄' },
+    { key: 'gatherlog',   name: '採集紀錄' },
   ];
   var rows = [];
   REG.forEach(function (r) {
@@ -900,17 +942,16 @@
   });
 
   if (rows.length) {
+    // 只呈現合計：一行數字＋一條總進度條。各項細節到該追蹤頁看。
     var sumC = 0, sumT = 0;
-    document.getElementById('pdGrid').innerHTML = rows.map(function (x) {
-      sumC += x.c; sumT += x.t;
-      var pct = Math.round(x.c / x.t * 100);
-      return '<a class="pd-item' + (x.c >= x.t ? ' done' : '') + '" href="' + x.r.href + '">' +
-        '<div class="pd-top"><span>' + x.r.emoji + '</span><span class="pd-name">' + x.r.name + '</span>' +
-        '<span class="pd-num">' + x.c + ' / ' + x.t + '（' + pct + '%）</span></div>' +
-        '<div class="pd-bar"><div class="pd-fill" style="width:' + pct + '%"></div></div></a>';
-    }).join('');
+    rows.forEach(function (x) { sumC += x.c; sumT += x.t; });
+    var pct = Math.round(sumC / sumT * 100);
     document.getElementById('pdTotal').textContent =
-      '合計 ' + sumC + ' / ' + sumT + '（' + Math.round(sumC / sumT * 100) + '%）';
+      '合計 ' + sumC + ' / ' + sumT + '（' + pct + '%）';
+    var bar = document.getElementById('pdBar');
+    bar.style.display = '';
+    bar.classList.toggle('done', sumC >= sumT);
+    document.getElementById('pdFill').style.width = pct + '%';
   } else {
     // 沒逛過任何追蹤頁：仍顯示區塊，讓「匯入全站進度」可用（換裝置還原用）
     document.getElementById('pdEmpty').style.display = '';

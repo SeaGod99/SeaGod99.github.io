@@ -2,7 +2,7 @@
   "project": "水神的工具箱 統一資料庫",
   "schemaDoc": "/data/SCHEMA.md",
   "gamePatch": "7.15",
-  "updated": "2026-06-23",
+  "updated": "2026-07-28",
   "idConventions": {
     "mapId": "遊戲 Map sheet row id（XIVAPI v2 /sheet/Map 的 row_id），全站統一；2026-06-11 起 maps.json 主鍵即此 id",
     "territoryId": "TerritoryType row id，僅輔助欄位（fishing-spots、gathering.coords.zoneId），顯示/連結一律用 mapId"
@@ -66,14 +66,18 @@
       "file": "items.json",
       "name": "全物品",
       "source": "mixed",
-      "status": "script-ready"
+      "status": "script-ready",
+      "updated": "2026-06-23",
+      "count": 43748
     },
     {
       "schema": "collectable-items",
       "file": "collectable-items.json",
       "name": "可當收藏品採集的物品",
       "source": "xivapi Item.IsCollectable",
-      "status": "script-ready"
+      "status": "script-ready",
+      "updated": "2026-07-26",
+      "count": 1023
     },
     {
       "schema": "maps",
@@ -81,14 +85,17 @@
       "name": "地圖／區域",
       "source": "xivapi+tw-places",
       "status": "populated",
-      "updated": "2026-06-11"
+      "updated": "2026-06-23",
+      "count": 210
     },
     {
       "schema": "npcs",
       "file": "npcs.json",
       "name": "NPC",
       "source": "xivapi",
-      "status": "example"
+      "status": "example",
+      "updated": "2026-06-23",
+      "count": 22079
     },
     {
       "schema": "aether-currents",
@@ -96,7 +103,8 @@
       "name": "風脈泉",
       "source": "AetherCurrentCompFlgSet.csv+AetherCurrent.csv (datamining-cn); tw-quests.json (teamcraft)",
       "status": "used",
-      "updated": "2026-06-16"
+      "updated": "2026-07-03",
+      "count": 303
     },
     {
       "schema": "hairstyles",
@@ -104,7 +112,8 @@
       "name": "髮型",
       "source": "teamcraft/items.json (en+itemId); tw-items.msgpack (tw names); xivapi (icon)",
       "status": "used",
-      "updated": "2026-06-16"
+      "updated": "2026-06-16",
+      "count": 39
     },
     {
       "schema": "gathering",
@@ -112,7 +121,8 @@
       "name": "採集點",
       "source": "teamcraft",
       "status": "populated",
-      "updated": "2026-06-11"
+      "updated": "2026-06-24",
+      "count": 733
     },
     {
       "schema": "gardening",
@@ -120,14 +130,17 @@
       "name": "園藝配種",
       "source": "teamcraft/seeds.json; tw-items.msgpack",
       "status": "used",
-      "updated": "2026-06-17"
+      "updated": "2026-06-23",
+      "count": 107
     },
     {
       "schema": "recipes",
       "file": "recipes.json",
       "name": "製作配方",
       "source": "teamcraft",
-      "status": "script-ready"
+      "status": "script-ready",
+      "updated": "2026-06-23",
+      "count": 14182
     },
     {
       "schema": "dungeons",
@@ -135,7 +148,8 @@
       "name": "副本",
       "source": "xivapi+tw-instances",
       "status": "filled",
-      "updated": "2026-06-11"
+      "updated": "2026-07-28",
+      "count": 520
     },
     {
       "schema": "triple-triad",
@@ -143,14 +157,17 @@
       "name": "幻卡",
       "source": "xivapi+items+npcs+maps+dungeons",
       "status": "used",
-      "updated": "2026-07-26"
+      "updated": "2026-07-28",
+      "count": 435
     },
     {
       "schema": "blue-magic",
       "file": "blue-magic.json",
       "name": "青魔法",
       "source": "teamcraft",
-      "status": "used"
+      "status": "used",
+      "updated": "2026-07-28",
+      "count": 124
     },
     {
       "schema": "exploration-log",
@@ -158,7 +175,8 @@
       "name": "探索筆記",
       "source": "xivapi+maps",
       "status": "used",
-      "updated": "2026-06-16"
+      "updated": "2026-06-22",
+      "count": 340
     },
     {
       "schema": "emotes",
@@ -166,7 +184,8 @@
       "name": "表情",
       "source": "xivapi+tw-items",
       "status": "used",
-      "updated": "2026-06-16"
+      "updated": "2026-06-23",
+      "count": 292
     },
     {
       "schema": "orchestrion",
@@ -174,7 +193,8 @@
       "name": "樂譜",
       "source": "xivapi+tw-items",
       "status": "used",
-      "updated": "2026-06-16"
+      "updated": "2026-07-28",
+      "count": 724
     },
     {
       "schema": "minions",
@@ -182,7 +202,8 @@
       "name": "寵物",
       "source": "xivapi+items",
       "status": "populated",
-      "updated": "2026-06-05"
+      "updated": "2026-07-28",
+      "count": 581
     },
     {
       "schema": "mounts",
@@ -190,7 +211,8 @@
       "name": "坐騎",
       "source": "xivapi+tw-items+cn-opencc+manual",
       "status": "filled",
-      "updated": "2026-06-11"
+      "updated": "2026-07-28",
+      "count": 362
     },
     {
       "schema": "barding",
@@ -198,21 +220,26 @@
       "name": "鳥鞍",
       "source": "xivapi+tw-items+obtainable-methods",
       "status": "used",
-      "updated": "2026-06-15"
+      "updated": "2026-06-23",
+      "count": 106
     },
     {
       "schema": "squadron",
       "file": "squadron.json",
       "name": "冒險者小隊",
       "source": "manual",
-      "status": "example"
+      "status": "example",
+      "updated": "2026-06-23",
+      "count": 163
     },
     {
       "schema": "fishing",
       "file": "fishing.json",
       "name": "釣魚（舊，停用）",
       "source": "teamcraft",
-      "status": "superseded-by-fishes"
+      "status": "superseded-by-fishes",
+      "updated": "2026-05-29",
+      "count": 1
     },
     {
       "schema": "fishes",
@@ -220,7 +247,8 @@
       "name": "魚",
       "source": "fish-tracker+items",
       "status": "populated",
-      "updated": "2026-06-08"
+      "updated": "2026-07-26",
+      "count": 1449
     },
     {
       "schema": "fishing-spots",
@@ -228,7 +256,8 @@
       "name": "釣場",
       "source": "fish-tracker+items",
       "status": "populated",
-      "updated": "2026-06-11"
+      "updated": "2026-07-02",
+      "count": 307
     },
     {
       "schema": "treasure-maps",
@@ -236,7 +265,77 @@
       "name": "藏寶圖採集點",
       "source": "teamcraft/treasures.json+items+maps",
       "status": "populated",
-      "updated": "2026-07-01"
+      "updated": "2026-07-15",
+      "count": 18
+    },
+    {
+      "schema": "items-market",
+      "file": "items-market.json",
+      "name": "物品精簡表（市場頁）",
+      "source": "data/items.json（scripts/build-items-market.mjs 精簡）",
+      "status": "used",
+      "updated": "2026-07-28",
+      "count": 43748
+    },
+    {
+      "schema": "items-lite",
+      "file": "items-lite.json",
+      "name": "物品精簡表（採集頁）",
+      "source": "data/items.json（scripts/build-items-lite.mjs 精簡）",
+      "status": "used",
+      "updated": "2026-07-28",
+      "count": 43748
+    },
+    {
+      "schema": "equip",
+      "file": "equip.json",
+      "name": "裝備職業限制",
+      "source": "xivapi",
+      "status": "used",
+      "updated": "2026-07-06"
+    },
+    {
+      "schema": "gc-shop",
+      "file": "gc-shop.json",
+      "name": "軍票／雙色寶石兌換品",
+      "source": "xivapi+items",
+      "status": "used",
+      "updated": "2026-07-13"
+    },
+    {
+      "schema": "fashion-report",
+      "file": "fashion-report.json",
+      "name": "時尚品鑑",
+      "source": "scripts/build-fashion-report.mjs",
+      "status": "used",
+      "updated": "2026-07-25"
+    },
+    {
+      "schema": "treasure-fragments",
+      "file": "treasure-fragments.json",
+      "name": "藏寶圖碎片",
+      "source": "ff14.tw+maps",
+      "status": "used",
+      "updated": "2026-07-14",
+      "count": 208
+    },
+    {
+      "schema": "monsters",
+      "file": "monsters.json",
+      "name": "怪物",
+      "source": "datamining-cn+teamcraft+xivapi",
+      "status": "used",
+      "updated": "2026-06-23",
+      "count": 14361
+    },
+    {
+      "schema": "obtainable-methods",
+      "file": "obtainable-methods.json",
+      "name": "取得方式總表",
+      "source": "mixed",
+      "status": "used",
+      "updated": "2026-06-08",
+      "count": 36336
     }
   ]
 }

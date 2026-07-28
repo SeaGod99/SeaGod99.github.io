@@ -1,8 +1,8 @@
 {
   "schema": "triple-triad",
   "patch": "7.2",
-  "updated": "2026-07-26",
-  "source": "xivapi+items+npcs+maps+dungeons",
+  "updated": "2026-07-28",
+  "source": "xivapi+items+npcs+maps+dungeons+garland+tw-quests",
   "count": 435,
   "data": [
     {
@@ -59,7 +59,8 @@
         },
         {
           "type": "任務",
-          "questId": 65973
+          "questId": 65973,
+          "detail": "決鬥！九宮幻卡"
         }
       ],
       "patch": "2.51",
@@ -186,11 +187,13 @@
         },
         {
           "type": "副本",
-          "instanceId": 10
+          "contentId": 10,
+          "detail": "神靈聖域放浪神古神殿"
         },
         {
           "type": "副本",
-          "instanceId": 30
+          "contentId": 30,
+          "detail": "武裝聖域放浪神古神殿"
         }
       ],
       "patch": "2.51",
@@ -252,7 +255,8 @@
         },
         {
           "type": "任務",
-          "questId": 65973
+          "questId": 65973,
+          "detail": "決鬥！九宮幻卡"
         }
       ],
       "patch": "2.51",
@@ -326,8 +330,9 @@
           }
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10128
+          "type": "卡包",
+          "itemId": 10128,
+          "detail": "九宮幻卡銅包（卡片兌換員・520 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -440,8 +445,9 @@
           }
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10128
+          "type": "卡包",
+          "itemId": 10128,
+          "detail": "九宮幻卡銅包（卡片兌換員・520 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -503,7 +509,8 @@
         },
         {
           "type": "任務",
-          "questId": 65973
+          "questId": 65973,
+          "detail": "決鬥！九宮幻卡"
         }
       ],
       "patch": "2.51",
@@ -630,7 +637,8 @@
         },
         {
           "type": "任務",
-          "questId": 65973
+          "questId": 65973,
+          "detail": "決鬥！九宮幻卡"
         }
       ],
       "patch": "2.51",
@@ -769,8 +777,9 @@
           }
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10128
+          "type": "卡包",
+          "itemId": 10128,
+          "detail": "九宮幻卡銅包（卡片兌換員・520 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -832,7 +841,8 @@
         },
         {
           "type": "副本",
-          "instanceId": 5
+          "contentId": 5,
+          "detail": "毒霧洞窟黃金谷"
         }
       ],
       "patch": "2.51",
@@ -920,7 +930,8 @@
         },
         {
           "type": "任務",
-          "questId": 65973
+          "questId": 65973,
+          "detail": "決鬥！九宮幻卡"
         }
       ],
       "patch": "2.51",
@@ -1021,11 +1032,13 @@
         },
         {
           "type": "副本",
-          "instanceId": 13
+          "contentId": 13,
+          "detail": "山中戰線澤梅爾要塞"
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10128
+          "type": "卡包",
+          "itemId": 10128,
+          "detail": "九宮幻卡銅包（卡片兌換員・520 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -1125,8 +1138,9 @@
           }
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10128
+          "type": "卡包",
+          "itemId": 10128,
+          "detail": "九宮幻卡銅包（卡片兌換員・520 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -1427,8 +1441,9 @@
           }
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10129
+          "type": "卡包",
+          "itemId": 10129,
+          "detail": "九宮幻卡銀包（卡片兌換員・1150 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -1528,8 +1543,9 @@
           }
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10129
+          "type": "卡包",
+          "itemId": 10129,
+          "detail": "九宮幻卡銀包（卡片兌換員・1150 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -1577,8 +1593,9 @@
           }
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10129
+          "type": "卡包",
+          "itemId": 10129,
+          "detail": "九宮幻卡銀包（卡片兌換員・1150 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -1639,8 +1656,9 @@
           }
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10129
+          "type": "卡包",
+          "itemId": 10129,
+          "detail": "九宮幻卡銀包（卡片兌換員・1150 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -1728,7 +1746,8 @@
         },
         {
           "type": "副本",
-          "instanceId": 4
+          "contentId": 4,
+          "detail": "天然要害沙斯塔夏溶洞"
         }
       ],
       "patch": "2.51",
@@ -1815,8 +1834,9 @@
           }
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10129
+          "type": "卡包",
+          "itemId": 10129,
+          "detail": "九宮幻卡銀包（卡片兌換員・1150 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -2014,11 +2034,13 @@
         },
         {
           "type": "副本",
-          "instanceId": 17
+          "contentId": 17,
+          "detail": "領航明燈天狼星燈塔"
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10129
+          "type": "卡包",
+          "itemId": 10129,
+          "detail": "九宮幻卡銀包（卡片兌換員・1150 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -2131,8 +2153,9 @@
           }
         },
         {
-          "type": "副本",
-          "instanceId": 20026
+          "type": "討伐戰",
+          "contentId": 81,
+          "detail": "艾瑪姬娜杯鬥技大會決賽"
         }
       ],
       "patch": "2.51",
@@ -2194,11 +2217,13 @@
         },
         {
           "type": "副本",
-          "instanceId": 14
+          "contentId": 14,
+          "detail": "邪教駐地無限城古堡"
         },
         {
           "type": "副本",
-          "instanceId": 29
+          "contentId": 29,
+          "detail": "邪念妖地無限城古堡"
         }
       ],
       "patch": "2.51",
@@ -2260,15 +2285,18 @@
         },
         {
           "type": "副本",
-          "instanceId": 6
+          "contentId": 6,
+          "detail": "名門府邸靜語莊園"
         },
         {
           "type": "副本",
-          "instanceId": 19
+          "contentId": 19,
+          "detail": "惡靈府邸靜語莊園"
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10128
+          "type": "卡包",
+          "itemId": 10128,
+          "detail": "九宮幻卡銅包（卡片兌換員・520 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -2369,11 +2397,13 @@
         },
         {
           "type": "副本",
-          "instanceId": 12
+          "contentId": 12,
+          "detail": "流沙迷宮樵鳴洞"
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10128
+          "type": "卡包",
+          "itemId": 10128,
+          "detail": "九宮幻卡銅包（卡片兌換員・520 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -2500,15 +2530,18 @@
         },
         {
           "type": "副本",
-          "instanceId": 11
+          "contentId": 11,
+          "detail": "對龍城塞石衛塔"
         },
         {
           "type": "副本",
-          "instanceId": 25
+          "contentId": 25,
+          "detail": "激戰城塞石衛塔"
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10128
+          "type": "卡包",
+          "itemId": 10128,
+          "detail": "九宮幻卡銅包（卡片兌換員・520 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -2608,8 +2641,9 @@
           }
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10128
+          "type": "卡包",
+          "itemId": 10128,
+          "detail": "九宮幻卡銅包（卡片兌換員・520 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -2761,8 +2795,9 @@
           }
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10130
+          "type": "卡包",
+          "itemId": 10130,
+          "detail": "九宮幻卡金包（卡片兌換員・2160 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -2888,8 +2923,9 @@
           }
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10130
+          "type": "卡包",
+          "itemId": 10130,
+          "detail": "九宮幻卡金包（卡片兌換員・2160 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -3015,8 +3051,9 @@
           }
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10130
+          "type": "卡包",
+          "itemId": 10130,
+          "detail": "九宮幻卡金包（卡片兌換員・2160 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -3065,7 +3102,8 @@
         },
         {
           "type": "副本",
-          "instanceId": 15
+          "contentId": 15,
+          "detail": "神兵要塞帝國南方堡"
         }
       ],
       "patch": "2.51",
@@ -3153,7 +3191,8 @@
         },
         {
           "type": "副本",
-          "instanceId": 20007
+          "contentId": 865,
+          "detail": "里塔提恩強攻戰"
         }
       ],
       "patch": "2.51",
@@ -3389,8 +3428,9 @@
           }
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10130
+          "type": "卡包",
+          "itemId": 10130,
+          "detail": "九宮幻卡金包（卡片兌換員・2160 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -3894,8 +3934,9 @@
           }
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10128
+          "type": "卡包",
+          "itemId": 10128,
+          "detail": "九宮幻卡銅包（卡片兌換員・520 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -3969,12 +4010,14 @@
           }
         },
         {
-          "type": "副本",
-          "instanceId": 20021
+          "type": "討伐戰",
+          "contentId": 76,
+          "detail": "吉爾伽美什殲滅戰"
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 13380
+          "type": "卡包",
+          "itemId": 13380,
+          "detail": "九宮幻卡靈銀包（卡片兌換員・8000 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -4068,16 +4111,19 @@
           "dropType": "隨機"
         },
         {
-          "type": "副本",
-          "instanceId": 20004
+          "type": "討伐戰",
+          "contentId": 59,
+          "detail": "真 伊弗利特殲滅戰"
         },
         {
-          "type": "副本",
-          "instanceId": 20008
+          "type": "討伐戰",
+          "contentId": 63,
+          "detail": "極 伊弗利特殲滅戰"
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10129
+          "type": "卡包",
+          "itemId": 10129,
+          "detail": "九宮幻卡銀包（卡片兌換員・1150 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -4177,16 +4223,19 @@
           }
         },
         {
-          "type": "副本",
-          "instanceId": 20005
+          "type": "討伐戰",
+          "contentId": 60,
+          "detail": "真 泰坦殲滅戰"
         },
         {
-          "type": "副本",
-          "instanceId": 20009
+          "type": "討伐戰",
+          "contentId": 64,
+          "detail": "極 泰坦殲滅戰"
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10129
+          "type": "卡包",
+          "itemId": 10129,
+          "detail": "九宮幻卡銀包（卡片兌換員・1150 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -4306,16 +4355,19 @@
           "dropType": "隨機"
         },
         {
-          "type": "副本",
-          "instanceId": 20006
+          "type": "討伐戰",
+          "contentId": 61,
+          "detail": "真 迦樓羅殲滅戰"
         },
         {
-          "type": "副本",
-          "instanceId": 20010
+          "type": "討伐戰",
+          "contentId": 65,
+          "detail": "極 迦樓羅殲滅戰"
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10129
+          "type": "卡包",
+          "itemId": 10129,
+          "detail": "九宮幻卡銀包（卡片兌換員・1150 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -4442,16 +4494,19 @@
           "dropType": "隨機"
         },
         {
-          "type": "副本",
-          "instanceId": 20011
+          "type": "討伐戰",
+          "contentId": 66,
+          "detail": "善王莫古爾·莫古XII世殲滅戰"
         },
         {
-          "type": "副本",
-          "instanceId": 20012
+          "type": "討伐戰",
+          "contentId": 67,
+          "detail": "極王莫古爾·莫古XII世殲滅戰"
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10129
+          "type": "卡包",
+          "itemId": 10129,
+          "detail": "九宮幻卡銀包（卡片兌換員・1150 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -5293,8 +5348,9 @@
           "dropType": "隨機"
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10129
+          "type": "卡包",
+          "itemId": 10129,
+          "detail": "九宮幻卡銀包（卡片兌換員・1150 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -5375,8 +5431,9 @@
           "dropType": "隨機"
         },
         {
-          "type": "副本",
-          "instanceId": 20013
+          "type": "討伐戰",
+          "contentId": 68,
+          "detail": "究極幻想 究極武器破壞作戰"
         }
       ],
       "patch": "2.51",
@@ -5483,12 +5540,14 @@
           "dropType": "固定"
         },
         {
-          "type": "副本",
-          "instanceId": 20027
+          "type": "討伐戰",
+          "contentId": 82,
+          "detail": "奧汀殲滅戰"
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 13380
+          "type": "卡包",
+          "itemId": 13380,
+          "detail": "九宮幻卡靈銀包（卡片兌換員・8000 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -5556,16 +5615,19 @@
           "dropType": "固定"
         },
         {
-          "type": "副本",
-          "instanceId": 20022
+          "type": "討伐戰",
+          "contentId": 77,
+          "detail": "真 拉姆殲滅戰"
         },
         {
-          "type": "副本",
-          "instanceId": 20023
+          "type": "討伐戰",
+          "contentId": 78,
+          "detail": "極 拉姆殲滅戰"
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10130
+          "type": "卡包",
+          "itemId": 10130,
+          "detail": "九宮幻卡金包（卡片兌換員・2160 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -5672,16 +5734,19 @@
           "dropType": "隨機"
         },
         {
-          "type": "副本",
-          "instanceId": 20017
+          "type": "討伐戰",
+          "contentId": 72,
+          "detail": "真 利維坦殲滅戰"
         },
         {
-          "type": "副本",
-          "instanceId": 20018
+          "type": "討伐戰",
+          "contentId": 73,
+          "detail": "極 利維坦殲滅戰"
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10130
+          "type": "卡包",
+          "itemId": 10130,
+          "detail": "九宮幻卡金包（卡片兌換員・2160 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -5801,16 +5866,19 @@
           }
         },
         {
-          "type": "副本",
-          "instanceId": 20024
+          "type": "討伐戰",
+          "contentId": 79,
+          "detail": "真 濕婆殲滅戰"
         },
         {
-          "type": "副本",
-          "instanceId": 20025
+          "type": "討伐戰",
+          "contentId": 80,
+          "detail": "極 濕婆殲滅戰"
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10130
+          "type": "卡包",
+          "itemId": 10130,
+          "detail": "九宮幻卡金包（卡片兌換員・2160 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -5930,8 +5998,9 @@
           "dropType": "隨機"
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10129
+          "type": "卡包",
+          "itemId": 10129,
+          "detail": "九宮幻卡銀包（卡片兌換員・1150 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -5999,8 +6068,9 @@
           "dropType": "隨機"
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10129
+          "type": "卡包",
+          "itemId": 10129,
+          "detail": "九宮幻卡銀包（卡片兌換員・1150 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -6185,8 +6255,9 @@
           "dropType": "隨機"
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10130
+          "type": "卡包",
+          "itemId": 10130,
+          "detail": "九宮幻卡金包（卡片兌換員・2160 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -6333,7 +6404,8 @@
         },
         {
           "type": "藏寶圖",
-          "treasureId": 10077
+          "itemId": 10077,
+          "detail": "九宮幻卡白金包"
         }
       ],
       "patch": "2.51",
@@ -6415,7 +6487,8 @@
         },
         {
           "type": "藏寶圖",
-          "treasureId": 10077
+          "itemId": 10077,
+          "detail": "九宮幻卡白金包"
         }
       ],
       "patch": "2.51",
@@ -6692,7 +6765,8 @@
         },
         {
           "type": "藏寶圖",
-          "treasureId": 10077
+          "itemId": 10077,
+          "detail": "九宮幻卡白金包"
         }
       ],
       "patch": "2.51",
@@ -6761,11 +6835,13 @@
         },
         {
           "type": "副本",
-          "instanceId": 16
+          "contentId": 16,
+          "detail": "最終決戰天幕魔導城"
         },
         {
           "type": "副本",
-          "instanceId": 86
+          "contentId": 16,
+          "detail": "最終決戰天幕魔導城"
         }
       ],
       "patch": "2.51",
@@ -6885,8 +6961,9 @@
           "dropType": "固定"
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10130
+          "type": "卡包",
+          "itemId": 10130,
+          "detail": "九宮幻卡金包（卡片兌換員・2160 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -7006,8 +7083,9 @@
           "dropType": "固定"
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10130
+          "type": "卡包",
+          "itemId": 10130,
+          "detail": "九宮幻卡金包（卡片兌換員・2160 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -7088,8 +7166,9 @@
           "dropType": "固定"
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10130
+          "type": "卡包",
+          "itemId": 10130,
+          "detail": "九宮幻卡金包（卡片兌換員・2160 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -7111,8 +7190,9 @@
       },
       "sources": [
         {
-          "type": "藏寶圖",
-          "treasureId": 10130
+          "type": "卡包",
+          "itemId": 10130,
+          "detail": "九宮幻卡金包（卡片兌換員・2160 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -7135,7 +7215,8 @@
       "sources": [
         {
           "type": "藏寶圖",
-          "treasureId": 10077
+          "itemId": 10077,
+          "detail": "九宮幻卡白金包"
         }
       ],
       "patch": "2.51",
@@ -7170,12 +7251,14 @@
           }
         },
         {
-          "type": "副本",
-          "instanceId": 30020
+          "type": "多人副本",
+          "contentId": 111,
+          "detail": "水晶塔 暗之世界"
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 13380
+          "type": "卡包",
+          "itemId": 13380,
+          "detail": "九宮幻卡靈銀包（卡片兌換員・8000 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -7198,7 +7281,8 @@
       "sources": [
         {
           "type": "藏寶圖",
-          "treasureId": 10077
+          "itemId": 10077,
+          "detail": "九宮幻卡白金包"
         }
       ],
       "patch": "2.51",
@@ -7220,12 +7304,14 @@
       },
       "sources": [
         {
-          "type": "副本",
-          "instanceId": 20030
+          "type": "討伐戰",
+          "contentId": 85,
+          "detail": "真 吉爾伽美什殲滅戰"
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 13380
+          "type": "卡包",
+          "itemId": 13380,
+          "detail": "九宮幻卡靈銀包（卡片兌換員・8000 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -7286,12 +7372,14 @@
           }
         },
         {
-          "type": "副本",
-          "instanceId": 20026
+          "type": "討伐戰",
+          "contentId": 81,
+          "detail": "艾瑪姬娜杯鬥技大會決賽"
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 13380
+          "type": "卡包",
+          "itemId": 13380,
+          "detail": "九宮幻卡靈銀包（卡片兌換員・8000 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -7368,8 +7456,9 @@
       },
       "sources": [
         {
-          "type": "藏寶圖",
-          "treasureId": 10130
+          "type": "卡包",
+          "itemId": 10130,
+          "detail": "九宮幻卡金包（卡片兌換員・2160 金碟幣）"
         }
       ],
       "patch": "2.51",
@@ -7405,7 +7494,8 @@
         },
         {
           "type": "藏寶圖",
-          "treasureId": 10077
+          "itemId": 10077,
+          "detail": "九宮幻卡白金包"
         }
       ],
       "patch": "2.51",
@@ -7474,7 +7564,8 @@
       "sources": [
         {
           "type": "藏寶圖",
-          "treasureId": 10077
+          "itemId": 10077,
+          "detail": "九宮幻卡白金包"
         }
       ],
       "patch": "2.51",
@@ -7575,7 +7666,8 @@
         },
         {
           "type": "副本",
-          "instanceId": 36
+          "contentId": 36,
+          "detail": "冰雪廢堡暮衛塔"
         }
       ],
       "patch": "3.0",
@@ -7663,7 +7755,8 @@
         },
         {
           "type": "副本",
-          "instanceId": 37
+          "contentId": 37,
+          "detail": "天山絕頂索姆阿爾靈峰"
         }
       ],
       "patch": "3.0",
@@ -8419,15 +8512,18 @@
         },
         {
           "type": "副本",
-          "instanceId": 39
+          "contentId": 39,
+          "detail": "邪龍王座龍巢神殿"
         },
         {
-          "type": "副本",
-          "instanceId": 20039
+          "type": "討伐戰",
+          "contentId": 169,
+          "detail": "尼德霍格征龍戰"
         },
         {
-          "type": "副本",
-          "instanceId": 20040
+          "type": "討伐戰",
+          "contentId": 170,
+          "detail": "極 尼德霍格征龍戰"
         }
       ],
       "patch": "3.0",
@@ -8657,12 +8753,14 @@
           "dropType": "隨機"
         },
         {
-          "type": "副本",
-          "instanceId": 20031
+          "type": "討伐戰",
+          "contentId": 86,
+          "detail": "真 羅波那殲滅戰"
         },
         {
-          "type": "副本",
-          "instanceId": 20032
+          "type": "討伐戰",
+          "contentId": 87,
+          "detail": "極 羅波那殲滅戰"
         }
       ],
       "patch": "3.0",
@@ -8769,12 +8867,14 @@
           }
         },
         {
-          "type": "副本",
-          "instanceId": 20033
+          "type": "討伐戰",
+          "contentId": 88,
+          "detail": "真 俾斯麥殲滅戰"
         },
         {
-          "type": "副本",
-          "instanceId": 20034
+          "type": "討伐戰",
+          "contentId": 89,
+          "detail": "極 俾斯麥殲滅戰"
         }
       ],
       "patch": "3.0",
@@ -9049,7 +9149,8 @@
         },
         {
           "type": "副本",
-          "instanceId": 31
+          "contentId": 31,
+          "detail": "學識寶庫迦巴勒幻想圖書館"
         }
       ],
       "patch": "3.0",
@@ -9542,8 +9643,9 @@
           }
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 13380
+          "type": "卡包",
+          "itemId": 13380,
+          "detail": "九宮幻卡靈銀包（卡片兌換員・8000 金碟幣）"
         }
       ],
       "patch": "3.1",
@@ -9617,8 +9719,9 @@
           }
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 13380
+          "type": "卡包",
+          "itemId": 13380,
+          "detail": "九宮幻卡靈銀包（卡片兌換員・8000 金碟幣）"
         }
       ],
       "patch": "3.1",
@@ -9687,7 +9790,8 @@
         },
         {
           "type": "副本",
-          "instanceId": 40
+          "contentId": 40,
+          "detail": "地脈靈燈天狼星燈塔"
         }
       ],
       "patch": "3.1",
@@ -9762,7 +9866,8 @@
         },
         {
           "type": "副本",
-          "instanceId": 41
+          "contentId": 41,
+          "detail": "草木庭園聖茉夏娜植物園"
         }
       ],
       "patch": "3.1",
@@ -9810,8 +9915,9 @@
           }
         },
         {
-          "type": "副本",
-          "instanceId": 30029
+          "type": "多人副本",
+          "contentId": 120,
+          "detail": "魔航船虛無方舟"
         }
       ],
       "patch": "3.1",
@@ -9853,8 +9959,9 @@
           "dropType": "隨機"
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 13380
+          "type": "卡包",
+          "itemId": 13380,
+          "detail": "九宮幻卡靈銀包（卡片兌換員・8000 金碟幣）"
         }
       ],
       "patch": "3.1",
@@ -9961,7 +10068,8 @@
       "sources": [
         {
           "type": "副本",
-          "instanceId": 34
+          "contentId": 34,
+          "detail": "聖教中樞伊修加爾德教皇廳"
         }
       ],
       "patch": "3.1",
@@ -10087,8 +10195,9 @@
           "dropType": "固定"
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 17702
+          "type": "卡包",
+          "itemId": 17702,
+          "detail": "帝國九宮幻卡包（卡片兌換員・2160 金碟幣）"
         }
       ],
       "patch": "3.1",
@@ -10136,8 +10245,9 @@
           }
         },
         {
-          "type": "副本",
-          "instanceId": 20036
+          "type": "討伐戰",
+          "contentId": 91,
+          "detail": "蒼天幻想 圓桌騎士殲滅戰"
         }
       ],
       "patch": "3.1",
@@ -10217,8 +10327,9 @@
           }
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10130
+          "type": "卡包",
+          "itemId": 10130,
+          "detail": "九宮幻卡金包（卡片兌換員・2160 金碟幣）"
         }
       ],
       "patch": "3.15",
@@ -10266,8 +10377,9 @@
           }
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 13380
+          "type": "卡包",
+          "itemId": 13380,
+          "detail": "九宮幻卡靈銀包（卡片兌換員・8000 金碟幣）"
         }
       ],
       "patch": "3.15",
@@ -10355,7 +10467,8 @@
         },
         {
           "type": "副本",
-          "instanceId": 27
+          "contentId": 27,
+          "detail": "凜冽洞天披雪大冰壁"
         }
       ],
       "patch": "3.15",
@@ -10391,7 +10504,8 @@
         },
         {
           "type": "副本",
-          "instanceId": 28
+          "contentId": 28,
+          "detail": "逆轉要害沙斯塔夏溶洞"
         }
       ],
       "patch": "3.15",
@@ -10428,7 +10542,8 @@
         },
         {
           "type": "副本",
-          "instanceId": 26
+          "contentId": 26,
+          "detail": "甦醒遺跡喀恩埋沒聖堂"
         }
       ],
       "patch": "3.15",
@@ -10471,7 +10586,8 @@
         },
         {
           "type": "副本",
-          "instanceId": 30
+          "contentId": 30,
+          "detail": "武裝聖域放浪神古神殿"
         }
       ],
       "patch": "3.15",
@@ -10527,11 +10643,13 @@
         },
         {
           "type": "副本",
-          "instanceId": 29
+          "contentId": 29,
+          "detail": "邪念妖地無限城古堡"
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10129
+          "type": "卡包",
+          "itemId": 10129,
+          "detail": "九宮幻卡銀包（卡片兌換員・1150 金碟幣）"
         }
       ],
       "patch": "3.15",
@@ -10593,7 +10711,8 @@
         },
         {
           "type": "副本",
-          "instanceId": 43
+          "contentId": 141,
+          "detail": "星海空間顛倒塔"
         }
       ],
       "patch": "3.15",
@@ -10616,7 +10735,8 @@
       "sources": [
         {
           "type": "副本",
-          "instanceId": 42
+          "contentId": 140,
+          "detail": "神聖遺跡無限城市街古跡"
         }
       ],
       "patch": "3.15",
@@ -10678,8 +10798,9 @@
           }
         },
         {
-          "type": "副本",
-          "instanceId": 30001
+          "type": "多人副本",
+          "contentId": 92,
+          "detail": "水晶塔 古代人迷宮"
         }
       ],
       "patch": "3.15",
@@ -10791,8 +10912,9 @@
           }
         },
         {
-          "type": "副本",
-          "instanceId": 30011
+          "type": "多人副本",
+          "contentId": 102,
+          "detail": "水晶塔 希爾科斯塔"
         }
       ],
       "patch": "3.15",
@@ -10853,8 +10975,9 @@
           }
         },
         {
-          "type": "副本",
-          "instanceId": 30033
+          "type": "大型任務",
+          "contentId": 139,
+          "detail": "亞歷山大機神城 律動之章4"
         }
       ],
       "patch": "3.15",
@@ -10889,12 +11012,14 @@
           }
         },
         {
-          "type": "副本",
-          "instanceId": 20037
+          "type": "討伐戰",
+          "contentId": 134,
+          "detail": "魔神賽菲羅特殲滅戰"
         },
         {
-          "type": "副本",
-          "instanceId": 20038
+          "type": "討伐戰",
+          "contentId": 135,
+          "detail": "極 魔神賽菲羅特殲滅戰"
         }
       ],
       "patch": "3.15",
@@ -10937,7 +11062,8 @@
         },
         {
           "type": "藏寶圖",
-          "treasureId": 10077
+          "itemId": 10077,
+          "detail": "九宮幻卡白金包"
         }
       ],
       "patch": "3.15",
@@ -11043,8 +11169,9 @@
           }
         },
         {
-          "type": "副本",
-          "instanceId": 30020
+          "type": "多人副本",
+          "contentId": 111,
+          "detail": "水晶塔 暗之世界"
         }
       ],
       "patch": "3.15",
@@ -11112,7 +11239,7 @@
       "sources": [
         {
           "type": "NPC對戰",
-          "detail": "Elaisse"
+          "detail": "艾蕾茲"
         }
       ],
       "patch": "3.3",
@@ -11135,7 +11262,7 @@
       "sources": [
         {
           "type": "NPC對戰",
-          "detail": "Marielle"
+          "detail": "瑪麗艾勒"
         }
       ],
       "patch": "3.3",
@@ -11248,7 +11375,7 @@
       "sources": [
         {
           "type": "NPC對戰",
-          "detail": "Master Mogzin"
+          "detail": "團長莫古京"
         }
       ],
       "patch": "3.3",
@@ -11284,11 +11411,13 @@
         },
         {
           "type": "副本",
-          "instanceId": 33
+          "contentId": 33,
+          "detail": "空中神域不獲島"
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10128
+          "type": "卡包",
+          "itemId": 10128,
+          "detail": "九宮幻卡銅包（卡片兌換員・520 金碟幣）"
         }
       ],
       "patch": "3.3",
@@ -11311,7 +11440,8 @@
       "sources": [
         {
           "type": "副本",
-          "instanceId": 35
+          "contentId": 35,
+          "detail": "博物戰艦無限回廊"
         }
       ],
       "patch": "3.3",
@@ -11393,7 +11523,8 @@
         },
         {
           "type": "副本",
-          "instanceId": 45
+          "contentId": 172,
+          "detail": "黑渦傳說破艦島"
         }
       ],
       "patch": "3.3",
@@ -11499,8 +11630,9 @@
           }
         },
         {
-          "type": "副本",
-          "instanceId": 30038
+          "type": "多人副本",
+          "contentId": 168,
+          "detail": "禁忌城邦瑪哈"
         }
       ],
       "patch": "3.3",
@@ -11549,11 +11681,13 @@
         },
         {
           "type": "副本",
-          "instanceId": 44
+          "contentId": 171,
+          "detail": "天龍宮殿憶罪宮"
         },
         {
           "type": "藏寶圖",
-          "treasureId": 10077
+          "itemId": 10077,
+          "detail": "九宮幻卡白金包"
         }
       ],
       "patch": "3.3",
@@ -11704,8 +11838,9 @@
           }
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10128
+          "type": "卡包",
+          "itemId": 10128,
+          "detail": "九宮幻卡銅包（卡片兌換員・520 金碟幣）"
         }
       ],
       "patch": "3.4",
@@ -11727,8 +11862,9 @@
       },
       "sources": [
         {
-          "type": "藏寶圖",
-          "treasureId": 10128
+          "type": "卡包",
+          "itemId": 10128,
+          "detail": "九宮幻卡銅包（卡片兌換員・520 金碟幣）"
         }
       ],
       "patch": "3.4",
@@ -11795,8 +11931,9 @@
       },
       "sources": [
         {
-          "type": "藏寶圖",
-          "treasureId": 10128
+          "type": "卡包",
+          "itemId": 10128,
+          "detail": "九宮幻卡銅包（卡片兌換員・520 金碟幣）"
         }
       ],
       "patch": "3.4",
@@ -11819,7 +11956,7 @@
       "sources": [
         {
           "type": "NPC對戰",
-          "detail": "Hall Overseer"
+          "detail": "對局室管理員"
         }
       ],
       "patch": "3.4",
@@ -11868,7 +12005,8 @@
         },
         {
           "type": "副本",
-          "instanceId": 47
+          "contentId": 196,
+          "detail": "秘本寶庫迦巴勒幻想圖書館"
         }
       ],
       "patch": "3.4",
@@ -11931,11 +12069,13 @@
         },
         {
           "type": "副本",
-          "instanceId": 46
+          "contentId": 182,
+          "detail": "險峻峽谷塞爾法特爾溪谷"
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 10128
+          "type": "卡包",
+          "itemId": 10128,
+          "detail": "九宮幻卡銅包（卡片兌換員・520 金碟幣）"
         }
       ],
       "patch": "3.4",
@@ -11970,12 +12110,14 @@
           }
         },
         {
-          "type": "副本",
-          "instanceId": 30042
+          "type": "大型任務",
+          "contentId": 189,
+          "detail": "亞歷山大機神城 天動之章4"
         },
         {
-          "type": "副本",
-          "instanceId": 30046
+          "type": "大型任務",
+          "contentId": 193,
+          "detail": "亞歷山大零式機神城 天動之章4"
         }
       ],
       "patch": "3.4",
@@ -12154,12 +12296,14 @@
       },
       "sources": [
         {
-          "type": "副本",
-          "instanceId": 20041
+          "type": "討伐戰",
+          "contentId": 183,
+          "detail": "女神索菲亞殲滅戰"
         },
         {
-          "type": "副本",
-          "instanceId": 20042
+          "type": "討伐戰",
+          "contentId": 184,
+          "detail": "極 女神索菲亞殲滅戰"
         }
       ],
       "patch": "3.4",
@@ -12349,8 +12493,9 @@
           }
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 17702
+          "type": "卡包",
+          "itemId": 17702,
+          "detail": "帝國九宮幻卡包（卡片兌換員・2160 金碟幣）"
         }
       ],
       "patch": "3.5",
@@ -12372,8 +12517,9 @@
       },
       "sources": [
         {
-          "type": "藏寶圖",
-          "treasureId": 17702
+          "type": "卡包",
+          "itemId": 17702,
+          "detail": "帝國九宮幻卡包（卡片兌換員・2160 金碟幣）"
         }
       ],
       "patch": "3.5",
@@ -12441,7 +12587,8 @@
         },
         {
           "type": "副本",
-          "instanceId": 49
+          "contentId": 221,
+          "detail": "天山深境索姆阿爾靈峰"
         }
       ],
       "patch": "3.5",
@@ -12522,8 +12669,9 @@
           }
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 17702
+          "type": "卡包",
+          "itemId": 17702,
+          "detail": "帝國九宮幻卡包（卡片兌換員・2160 金碟幣）"
         }
       ],
       "patch": "3.5",
@@ -12584,8 +12732,9 @@
           }
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 17702
+          "type": "卡包",
+          "itemId": 17702,
+          "detail": "帝國九宮幻卡包（卡片兌換員・2160 金碟幣）"
         }
       ],
       "patch": "3.5",
@@ -12608,7 +12757,8 @@
       "sources": [
         {
           "type": "副本",
-          "instanceId": 48
+          "contentId": 219,
+          "detail": "堅牢鐵壁巴埃薩長城"
         }
       ],
       "patch": "3.5",
@@ -12695,8 +12845,9 @@
           }
         },
         {
-          "type": "副本",
-          "instanceId": 30047
+          "type": "多人副本",
+          "contentId": 220,
+          "detail": "影之國"
         }
       ],
       "patch": "3.5",
@@ -12783,8 +12934,9 @@
           }
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 17702
+          "type": "卡包",
+          "itemId": 17702,
+          "detail": "帝國九宮幻卡包（卡片兌換員・2160 金碟幣）"
         }
       ],
       "patch": "3.5",
@@ -12832,12 +12984,14 @@
       },
       "sources": [
         {
-          "type": "副本",
-          "instanceId": 20043
+          "type": "討伐戰",
+          "contentId": 223,
+          "detail": "鬼神祖爾宛殲滅戰"
         },
         {
-          "type": "副本",
-          "instanceId": 20044
+          "type": "討伐戰",
+          "contentId": 224,
+          "detail": "極 鬼神祖爾宛殲滅戰"
         }
       ],
       "patch": "3.5",
@@ -13174,12 +13328,14 @@
       },
       "sources": [
         {
-          "type": "副本",
-          "instanceId": 20046
+          "type": "討伐戰",
+          "contentId": 243,
+          "detail": "須佐之男殲滅戰"
         },
         {
-          "type": "副本",
-          "instanceId": 20047
+          "type": "討伐戰",
+          "contentId": 244,
+          "detail": "極 須佐之男殲滅戰"
         }
       ],
       "patch": "4.0",
@@ -13227,12 +13383,14 @@
           }
         },
         {
-          "type": "副本",
-          "instanceId": 20048
+          "type": "討伐戰",
+          "contentId": 263,
+          "detail": "吉祥天女殲滅戰"
         },
         {
-          "type": "副本",
-          "instanceId": 20049
+          "type": "討伐戰",
+          "contentId": 264,
+          "detail": "極 吉祥天女殲滅戰"
         }
       ],
       "patch": "4.0",
@@ -13307,7 +13465,8 @@
         },
         {
           "type": "副本",
-          "instanceId": 54
+          "contentId": 241,
+          "detail": "解放決戰多瑪王城"
         }
       ],
       "patch": "4.0",
@@ -13509,12 +13668,14 @@
           }
         },
         {
-          "type": "副本",
-          "instanceId": 20045
+          "type": "討伐戰",
+          "contentId": 239,
+          "detail": "神龍殲滅戰"
         },
         {
-          "type": "副本",
-          "instanceId": 20050
+          "type": "討伐戰",
+          "contentId": 278,
+          "detail": "極 神龍殲滅戰"
         }
       ],
       "patch": "4.0",
@@ -13663,7 +13824,8 @@
         },
         {
           "type": "副本",
-          "instanceId": 56
+          "contentId": 247,
+          "detail": "紅蓮決戰阿拉米格"
         }
       ],
       "patch": "4.0",
@@ -13718,7 +13880,7 @@
       "sources": [
         {
           "type": "MGP商店",
-          "detail": "Triple Triad Trader"
+          "detail": "卡片兌換員"
         }
       ],
       "patch": "4.1",
@@ -13741,7 +13903,7 @@
       "sources": [
         {
           "type": "MGP商店",
-          "detail": "Triple Triad Trader"
+          "detail": "卡片兌換員"
         }
       ],
       "patch": "4.1",
@@ -13809,7 +13971,8 @@
       "sources": [
         {
           "type": "副本",
-          "instanceId": 58
+          "contentId": 279,
+          "detail": "沉沒神殿斯卡拉遺跡"
         }
       ],
       "patch": "4.1",
@@ -13928,8 +14091,9 @@
           }
         },
         {
-          "type": "副本",
-          "instanceId": 30058
+          "type": "多人副本",
+          "contentId": 281,
+          "detail": "失落之都拉巴納斯塔"
         }
       ],
       "patch": "4.1",
@@ -14003,8 +14167,9 @@
           }
         },
         {
-          "type": "副本",
-          "instanceId": 30058
+          "type": "多人副本",
+          "contentId": 281,
+          "detail": "失落之都拉巴納斯塔"
         }
       ],
       "patch": "4.1",
@@ -14027,7 +14192,7 @@
       "sources": [
         {
           "type": "MGP商店",
-          "detail": "Triple Triad Trader"
+          "detail": "卡片兌換員"
         }
       ],
       "patch": "4.1",
@@ -14140,7 +14305,8 @@
       "sources": [
         {
           "type": "副本",
-          "instanceId": 60
+          "contentId": 285,
+          "detail": "瘋狂戰艦無限回廊"
         }
       ],
       "patch": "4.2",
@@ -14208,7 +14374,8 @@
       "sources": [
         {
           "type": "副本",
-          "instanceId": 59
+          "contentId": 284,
+          "detail": "紅玉火山獄之蓋"
         }
       ],
       "patch": "4.2",
@@ -14230,12 +14397,14 @@
       },
       "sources": [
         {
-          "type": "副本",
-          "instanceId": 20051
+          "type": "討伐戰",
+          "contentId": 290,
+          "detail": "白虎征魂戰"
         },
         {
-          "type": "副本",
-          "instanceId": 20052
+          "type": "討伐戰",
+          "contentId": 291,
+          "detail": "極 白虎征魂戰"
         }
       ],
       "patch": "4.2",
@@ -14412,7 +14581,8 @@
         },
         {
           "type": "藏寶圖",
-          "treasureId": 23223
+          "itemId": 23223,
+          "detail": "白銀寶藏"
         }
       ],
       "patch": "4.35",
@@ -14461,7 +14631,8 @@
         },
         {
           "type": "藏寶圖",
-          "treasureId": 23223
+          "itemId": 23223,
+          "detail": "白銀寶藏"
         }
       ],
       "patch": "4.35",
@@ -14542,7 +14713,8 @@
         },
         {
           "type": "副本",
-          "instanceId": 61
+          "contentId": 536,
+          "detail": "風水靈廟岩燕廟"
         }
       ],
       "patch": "4.3",
@@ -14591,7 +14763,8 @@
         },
         {
           "type": "藏寶圖",
-          "treasureId": 23224
+          "itemId": 23224,
+          "detail": "黃金寶藏"
         }
       ],
       "patch": "4.35",
@@ -14716,12 +14889,14 @@
       },
       "sources": [
         {
-          "type": "副本",
-          "instanceId": 20055
+          "type": "討伐戰",
+          "contentId": 537,
+          "detail": "月讀殲滅戰"
         },
         {
-          "type": "副本",
-          "instanceId": 20056
+          "type": "討伐戰",
+          "contentId": 538,
+          "detail": "極 月讀殲滅戰"
         }
       ],
       "patch": "4.3",
@@ -14782,8 +14957,9 @@
           }
         },
         {
-          "type": "副本",
-          "instanceId": 30068
+          "type": "多人副本",
+          "contentId": 550,
+          "detail": "封閉聖塔黎鐸拉納大燈塔"
         }
       ],
       "patch": "4.3",
@@ -14932,7 +15108,8 @@
         },
         {
           "type": "副本",
-          "instanceId": 62
+          "contentId": 584,
+          "detail": "污染庭園聖茉夏娜植物園"
         }
       ],
       "patch": "4.4",
@@ -14968,7 +15145,8 @@
         },
         {
           "type": "副本",
-          "instanceId": 63
+          "contentId": 585,
+          "detail": "死亡大地終末焦土"
         }
       ],
       "patch": "4.4",
@@ -15003,12 +15181,14 @@
           }
         },
         {
-          "type": "副本",
-          "instanceId": 20057
+          "type": "討伐戰",
+          "contentId": 596,
+          "detail": "朱雀征魂戰"
         },
         {
-          "type": "副本",
-          "instanceId": 20058
+          "type": "討伐戰",
+          "contentId": 597,
+          "detail": "極 朱雀征魂戰"
         }
       ],
       "patch": "4.4",
@@ -15236,16 +15416,19 @@
           }
         },
         {
-          "type": "副本",
-          "instanceId": 30072
+          "type": "大型任務",
+          "contentId": 590,
+          "detail": "歐米茄時空狹縫 阿爾法幻境4"
         },
         {
-          "type": "副本",
-          "instanceId": 30076
+          "type": "大型任務",
+          "contentId": 594,
+          "detail": "歐米茄零式時空狹縫 阿爾法幻境4"
         },
         {
-          "type": "副本",
-          "instanceId": 30071
+          "type": "大型任務",
+          "contentId": 589,
+          "detail": "歐米茄時空狹縫 阿爾法幻境3"
         }
       ],
       "patch": "4.4",
@@ -15268,7 +15451,7 @@
       "sources": [
         {
           "type": "MGP商店",
-          "detail": "Triple Triad Trader"
+          "detail": "卡片兌換員"
         }
       ],
       "patch": "4.5",
@@ -15381,7 +15564,8 @@
         },
         {
           "type": "副本",
-          "instanceId": 64
+          "contentId": 611,
+          "detail": "國境防線基姆利特暗區"
         }
       ],
       "patch": "4.5",
@@ -15461,12 +15645,14 @@
           }
         },
         {
-          "type": "副本",
-          "instanceId": 20060
+          "type": "討伐戰",
+          "contentId": 637,
+          "detail": "青龍征魂戰"
         },
         {
-          "type": "副本",
-          "instanceId": 20061
+          "type": "討伐戰",
+          "contentId": 638,
+          "detail": "極 青龍征魂戰"
         }
       ],
       "patch": "4.5",
@@ -15552,8 +15738,9 @@
       },
       "sources": [
         {
-          "type": "副本",
-          "instanceId": 20059
+          "type": "討伐戰",
+          "contentId": 595,
+          "detail": "真 保鑣殲滅戰"
         }
       ],
       "patch": "4.56",
@@ -15627,8 +15814,9 @@
           }
         },
         {
-          "type": "副本",
-          "instanceId": 30077
+          "type": "多人副本",
+          "contentId": 636,
+          "detail": "樂欲之所甌博訥修道院"
         }
       ],
       "patch": "4.5",
@@ -15696,7 +15884,7 @@
       "sources": [
         {
           "type": "MGP商店",
-          "detail": "Triple Triad Trader"
+          "detail": "卡片兌換員"
         }
       ],
       "patch": "4.56",
@@ -16125,11 +16313,13 @@
         },
         {
           "type": "副本",
-          "instanceId": 72
+          "contentId": 676,
+          "detail": "殺戮鄉村水灘村"
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 28652
+          "type": "卡包",
+          "itemId": 28652,
+          "detail": "九宮幻卡夢想包（卡片兌換員・3240 金碟幣）"
         }
       ],
       "patch": "5.0",
@@ -16177,16 +16367,19 @@
           }
         },
         {
-          "type": "副本",
-          "instanceId": 20062
+          "type": "討伐戰",
+          "contentId": 657,
+          "detail": "緹坦妮雅殲滅戰"
         },
         {
-          "type": "副本",
-          "instanceId": 20063
+          "type": "討伐戰",
+          "contentId": 658,
+          "detail": "極 緹坦妮雅殲滅戰"
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 28652
+          "type": "卡包",
+          "itemId": 28652,
+          "detail": "九宮幻卡夢想包（卡片兌換員・3240 金碟幣）"
         }
       ],
       "patch": "5.0",
@@ -16248,11 +16441,13 @@
         },
         {
           "type": "副本",
-          "instanceId": 66
+          "contentId": 651,
+          "detail": "文明古跡奇坦那神影洞"
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 28652
+          "type": "卡包",
+          "itemId": 28652,
+          "detail": "九宮幻卡夢想包（卡片兌換員・3240 金碟幣）"
         }
       ],
       "patch": "5.0",
@@ -16314,11 +16509,13 @@
         },
         {
           "type": "副本",
-          "instanceId": 69
+          "contentId": 656,
+          "detail": "避暑離宮馬利卡大井"
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 28652
+          "type": "卡包",
+          "itemId": 28652,
+          "detail": "九宮幻卡夢想包（卡片兌換員・3240 金碟幣）"
         }
       ],
       "patch": "5.0",
@@ -16501,16 +16698,19 @@
           }
         },
         {
-          "type": "副本",
-          "instanceId": 20064
+          "type": "討伐戰",
+          "contentId": 666,
+          "detail": "無瑕靈君殲滅戰"
         },
         {
-          "type": "副本",
-          "instanceId": 20065
+          "type": "討伐戰",
+          "contentId": 667,
+          "detail": "極 無瑕靈君殲滅戰"
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 28652
+          "type": "卡包",
+          "itemId": 28652,
+          "detail": "九宮幻卡夢想包（卡片兌換員・3240 金碟幣）"
         }
       ],
       "patch": "5.0",
@@ -16680,12 +16880,14 @@
           }
         },
         {
-          "type": "副本",
-          "instanceId": 20066
+          "type": "討伐戰",
+          "contentId": 687,
+          "detail": "黑迪斯殲滅戰"
         },
         {
-          "type": "副本",
-          "instanceId": 20067
+          "type": "討伐戰",
+          "contentId": 693,
+          "detail": "極 黑迪斯殲滅戰"
         }
       ],
       "patch": "5.0",
@@ -16730,8 +16932,9 @@
       },
       "sources": [
         {
-          "type": "藏寶圖",
-          "treasureId": 28652
+          "type": "卡包",
+          "itemId": 28652,
+          "detail": "九宮幻卡夢想包（卡片兌換員・3240 金碟幣）"
         }
       ],
       "patch": "5.1",
@@ -16798,8 +17001,9 @@
           }
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 28652
+          "type": "卡包",
+          "itemId": 28652,
+          "detail": "九宮幻卡夢想包（卡片兌換員・3240 金碟幣）"
         }
       ],
       "patch": "5.1",
@@ -16853,8 +17057,9 @@
       },
       "sources": [
         {
-          "type": "藏寶圖",
-          "treasureId": 28652
+          "type": "卡包",
+          "itemId": 28652,
+          "detail": "九宮幻卡夢想包（卡片兌換員・3240 金碟幣）"
         }
       ],
       "patch": "5.1",
@@ -16902,8 +17107,9 @@
           }
         },
         {
-          "type": "藏寶圖",
-          "treasureId": 28652
+          "type": "卡包",
+          "itemId": 28652,
+          "detail": "九宮幻卡夢想包（卡片兌換員・3240 金碟幣）"
         }
       ],
       "patch": "5.1",
@@ -16926,7 +17132,8 @@
       "sources": [
         {
           "type": "副本",
-          "instanceId": 73
+          "contentId": 692,
+          "detail": "魔法宮殿宇宙宮"
         }
       ],
       "patch": "5.1",
@@ -16948,8 +17155,9 @@
       },
       "sources": [
         {
-          "type": "藏寶圖",
-          "treasureId": 28652
+          "type": "卡包",
+          "itemId": 28652,
+          "detail": "九宮幻卡夢想包（卡片兌換員・3240 金碟幣）"
         }
       ],
       "patch": "5.1",
@@ -16971,8 +17179,9 @@
       },
       "sources": [
         {
-          "type": "藏寶圖",
-          "treasureId": 28652
+          "type": "卡包",
+          "itemId": 28652,
+          "detail": "九宮幻卡夢想包（卡片兌換員・3240 金碟幣）"
         }
       ],
       "patch": "5.1",
@@ -16994,8 +17203,9 @@
       },
       "sources": [
         {
-          "type": "副本",
-          "instanceId": 30087
+          "type": "多人副本",
+          "contentId": 700,
+          "detail": "複製工廠廢墟"
         }
       ],
       "patch": "5.1",
@@ -17224,7 +17434,8 @@
       "sources": [
         {
           "type": "副本",
-          "instanceId": 74
+          "contentId": 714,
+          "detail": "黑風海底阿尼德羅追憶館"
         }
       ],
       "patch": "5.2",
@@ -17272,12 +17483,14 @@
           }
         },
         {
-          "type": "副本",
-          "instanceId": 20068
+          "type": "討伐戰",
+          "contentId": 717,
+          "detail": "紅寶石武器破壞作戰"
         },
         {
-          "type": "副本",
-          "instanceId": 20069
+          "type": "討伐戰",
+          "contentId": 718,
+          "detail": "極 紅寶石武器破壞作戰"
         }
       ],
       "patch": "5.2",
@@ -17335,8 +17548,9 @@
           }
         },
         {
-          "type": "副本",
-          "instanceId": 20070
+          "type": "討伐戰",
+          "contentId": 725,
+          "detail": "極 博茲雅堡壘追憶戰"
         }
       ],
       "patch": "5.25",
@@ -17446,7 +17660,7 @@
       "sources": [
         {
           "type": "MGP商店",
-          "detail": "Triple Triad Trader"
+          "detail": "卡片兌換員"
         }
       ],
       "patch": "5.3",
@@ -17559,7 +17773,7 @@
       "sources": [
         {
           "type": "MGP商店",
-          "detail": "Triple Triad Trader"
+          "detail": "卡片兌換員"
         }
       ],
       "patch": "5.3",
@@ -17645,8 +17859,9 @@
       },
       "sources": [
         {
-          "type": "副本",
-          "instanceId": 30096
+          "type": "多人副本",
+          "contentId": 736,
+          "detail": "人偶軍事基地"
         }
       ],
       "patch": "5.3",
@@ -17668,12 +17883,14 @@
       },
       "sources": [
         {
-          "type": "副本",
-          "instanceId": 20071
+          "type": "討伐戰",
+          "contentId": 738,
+          "detail": "光之戰士殲滅戰"
         },
         {
-          "type": "副本",
-          "instanceId": 20072
+          "type": "討伐戰",
+          "contentId": 739,
+          "detail": "極 光之戰士殲滅戰"
         }
       ],
       "patch": "5.3",
@@ -17741,7 +17958,8 @@
         },
         {
           "type": "副本",
-          "instanceId": 76
+          "contentId": 746,
+          "detail": "魔術工坊瑪托雅工作室"
         }
       ],
       "patch": "5.4",
@@ -17922,12 +18140,14 @@
           }
         },
         {
-          "type": "副本",
-          "instanceId": 20073
+          "type": "討伐戰",
+          "contentId": 762,
+          "detail": "綠寶石武器破壞作戰"
         },
         {
-          "type": "副本",
-          "instanceId": 20074
+          "type": "討伐戰",
+          "contentId": 763,
+          "detail": "極 綠寶石武器破壞作戰"
         }
       ],
       "patch": "5.4",
@@ -18013,12 +18233,14 @@
       },
       "sources": [
         {
-          "type": "副本",
-          "instanceId": 30103
+          "type": "大型任務",
+          "contentId": 758,
+          "detail": "伊甸希望樂園 再生之章4"
         },
         {
-          "type": "副本",
-          "instanceId": 30104
+          "type": "大型任務",
+          "contentId": 759,
+          "detail": "伊甸零式希望樂園 再生之章4"
         }
       ],
       "patch": "5.4",
@@ -18087,7 +18309,8 @@
       "sources": [
         {
           "type": "副本",
-          "instanceId": 77
+          "contentId": 777,
+          "detail": "黃金平原帕戈爾贊草原"
         }
       ],
       "patch": "5.5",
@@ -18237,8 +18460,33 @@
       },
       "sources": [
         {
-          "type": "討伐戰",
-          "detail": "Purchased from C'intana in Mor Dhona (X:22.7, Y:6.7) for 1 Ruby Totem, 1 Emerald Totem, and 1 Diamond Totem"
+          "type": "商店",
+          "npcId": 1033259,
+          "npcName": "卡·因塔娜",
+          "location": {
+            "mapId": 25,
+            "mapName": "摩杜納",
+            "x": 22.8,
+            "y": 6.67
+          },
+          "itemCost": [
+            {
+              "itemId": 29001,
+              "name": "紅色未知蠻神圖騰",
+              "qty": 1
+            },
+            {
+              "itemId": 32132,
+              "name": "綠色未知蠻神圖騰",
+              "qty": 1
+            },
+            {
+              "itemId": 33480,
+              "name": "白色未知蠻神圖騰",
+              "qty": 1
+            }
+          ],
+          "detail": "卡·因塔娜（摩杜納）— 紅色未知蠻神圖騰×1、綠色未知蠻神圖騰×1、白色未知蠻神圖騰×1"
         }
       ],
       "patch": "5.5",
@@ -18260,12 +18508,14 @@
       },
       "sources": [
         {
-          "type": "副本",
-          "instanceId": 20075
+          "type": "討伐戰",
+          "contentId": 781,
+          "detail": "鑽石武器捕獲作戰"
         },
         {
-          "type": "副本",
-          "instanceId": 20076
+          "type": "討伐戰",
+          "contentId": 782,
+          "detail": "極 鑽石武器捕獲作戰"
         }
       ],
       "patch": "5.5",
@@ -18319,8 +18569,9 @@
       },
       "sources": [
         {
-          "type": "副本",
-          "instanceId": 30105
+          "type": "多人副本",
+          "contentId": 779,
+          "detail": "希望之砲臺：“塔”"
         }
       ],
       "patch": "5.5",
@@ -18420,7 +18671,7 @@
       "sources": [
         {
           "type": "雙色寶石商店",
-          "detail": "N-1499"
+          "detail": "廣域交易商 N-1499"
         }
       ],
       "patch": "6.0",
@@ -18565,7 +18816,8 @@
       "sources": [
         {
           "type": "副本",
-          "instanceId": 82
+          "contentId": 787,
+          "detail": "創造環境極北造物院"
         }
       ],
       "patch": "6.0",
@@ -18588,7 +18840,8 @@
       "sources": [
         {
           "type": "副本",
-          "instanceId": 81
+          "contentId": 786,
+          "detail": "星海深幽尋因星晶鏡"
         }
       ],
       "patch": "6.0",
@@ -18623,12 +18876,14 @@
           }
         },
         {
-          "type": "副本",
-          "instanceId": 30111
+          "type": "大型任務",
+          "contentId": 808,
+          "detail": "萬魔殿 邊境之獄1"
         },
         {
-          "type": "副本",
-          "instanceId": 30112
+          "type": "大型任務",
+          "contentId": 809,
+          "detail": "零式萬魔殿 邊境之獄1"
         }
       ],
       "patch": "6.05",
@@ -18677,7 +18932,8 @@
         },
         {
           "type": "副本",
-          "instanceId": 78
+          "contentId": 783,
+          "detail": "異形樓閣佐特塔"
         }
       ],
       "patch": "6.0",
@@ -18699,12 +18955,14 @@
       },
       "sources": [
         {
-          "type": "副本",
-          "instanceId": 20079
+          "type": "討伐戰",
+          "contentId": 796,
+          "detail": "終結之戰"
         },
         {
-          "type": "副本",
-          "instanceId": 20083
+          "type": "討伐戰",
+          "contentId": 846,
+          "detail": "終極之戰"
         }
       ],
       "patch": "6.0",
@@ -18772,7 +19030,8 @@
       "sources": [
         {
           "type": "副本",
-          "instanceId": 80
+          "contentId": 785,
+          "detail": "魔導神門巴別塔"
         }
       ],
       "patch": "6.0",
@@ -18930,12 +19189,14 @@
           }
         },
         {
-          "type": "副本",
-          "instanceId": 20080
+          "type": "討伐戰",
+          "contentId": 802,
+          "detail": "佐狄亞克殲滅戰"
         },
         {
-          "type": "副本",
-          "instanceId": 20081
+          "type": "討伐戰",
+          "contentId": 803,
+          "detail": "極 佐狄亞克殲滅戰"
         }
       ],
       "patch": "6.0",
@@ -18957,12 +19218,14 @@
       },
       "sources": [
         {
-          "type": "副本",
-          "instanceId": 20077
+          "type": "討伐戰",
+          "contentId": 790,
+          "detail": "海德林殲滅戰"
         },
         {
-          "type": "副本",
-          "instanceId": 20078
+          "type": "討伐戰",
+          "contentId": 791,
+          "detail": "極 海德林殲滅戰"
         }
       ],
       "patch": "6.0",
@@ -19021,7 +19284,8 @@
         },
         {
           "type": "副本",
-          "instanceId": 87
+          "contentId": 844,
+          "detail": "近東秘寶阿爾扎達爾海底遺跡群"
         }
       ],
       "patch": "6.1",
@@ -19184,8 +19448,9 @@
           }
         },
         {
-          "type": "副本",
-          "instanceId": 30115
+          "type": "多人副本",
+          "contentId": 866,
+          "detail": "燦爛神域阿格萊亞"
         }
       ],
       "patch": "6.1",
@@ -19240,7 +19505,7 @@
       "sources": [
         {
           "type": "雙色寶石商店",
-          "detail": "N-1499"
+          "detail": "廣域交易商 N-1499"
         }
       ],
       "patch": "6.1",
@@ -19295,7 +19560,7 @@
       "sources": [
         {
           "type": "MGP商店",
-          "detail": "Triple Triad Trader"
+          "detail": "卡片兌換員"
         }
       ],
       "patch": "6.1",
@@ -19372,8 +19637,9 @@
       },
       "sources": [
         {
-          "type": "副本",
-          "instanceId": 36001
+          "type": "多變迷宮",
+          "contentId": 868,
+          "detail": "多變迷宮 希拉狄哈水道"
         }
       ],
       "patch": "6.28",
@@ -19395,8 +19661,9 @@
       },
       "sources": [
         {
-          "type": "副本",
-          "instanceId": 36001
+          "type": "多變迷宮",
+          "contentId": 868,
+          "detail": "多變迷宮 希拉狄哈水道"
         }
       ],
       "patch": "6.28",
@@ -19419,7 +19686,8 @@
       "sources": [
         {
           "type": "副本",
-          "instanceId": 88
+          "contentId": 869,
+          "detail": "異界孤城特羅亞宮廷"
         }
       ],
       "patch": "6.28",
@@ -19442,7 +19710,7 @@
       "sources": [
         {
           "type": "MGP商店",
-          "detail": "Triple Triad Trader"
+          "detail": "卡片兌換員"
         }
       ],
       "patch": "6.28",
@@ -19464,8 +19732,9 @@
       },
       "sources": [
         {
-          "type": "副本",
-          "instanceId": 36001
+          "type": "多變迷宮",
+          "contentId": 868,
+          "detail": "多變迷宮 希拉狄哈水道"
         }
       ],
       "patch": "6.28",
@@ -19488,7 +19757,7 @@
       "sources": [
         {
           "type": "MGP商店",
-          "detail": "Triple Triad Trader"
+          "detail": "卡片兌換員"
         }
       ],
       "patch": "6.28",
@@ -19510,12 +19779,14 @@
       },
       "sources": [
         {
-          "type": "副本",
-          "instanceId": 20084
+          "type": "討伐戰",
+          "contentId": 870,
+          "detail": "巴爾巴莉希亞殲滅戰"
         },
         {
-          "type": "副本",
-          "instanceId": 20085
+          "type": "討伐戰",
+          "contentId": 871,
+          "detail": "極 巴爾巴莉希亞殲滅戰"
         }
       ],
       "patch": "6.28",
@@ -19573,12 +19844,14 @@
           }
         },
         {
-          "type": "副本",
-          "instanceId": 30122
+          "type": "大型任務",
+          "contentId": 883,
+          "detail": "萬魔殿 煉淨之獄4"
         },
         {
-          "type": "副本",
-          "instanceId": 30123
+          "type": "大型任務",
+          "contentId": 884,
+          "detail": "零式萬魔殿 煉淨之獄4"
         }
       ],
       "patch": "6.28",
@@ -19656,7 +19929,22 @@
       "sources": [
         {
           "type": "無人島",
-          "detail": "Purchased from Horrendous Hoarder in Unnamed Island (12.6, 28.3) for Seafarer's Cowrie"
+          "npcId": 1043463,
+          "npcName": "貿易小員",
+          "location": {
+            "mapId": 772,
+            "mapName": "無名島",
+            "x": 12.6,
+            "y": 28.3
+          },
+          "itemCost": [
+            {
+              "itemId": 37549,
+              "name": "謝爾達萊青船幣",
+              "qty": null
+            }
+          ],
+          "detail": "貿易小員（無名島）— 以謝爾達萊青船幣兌換"
         }
       ],
       "patch": "6.3",
@@ -19702,7 +19990,7 @@
       "sources": [
         {
           "type": "MGP商店",
-          "detail": "Triple Triad Trader"
+          "detail": "卡片兌換員"
         }
       ],
       "patch": "6.35",
@@ -19725,7 +20013,8 @@
       "sources": [
         {
           "type": "藏寶圖",
-          "treasureId": 38946
+          "itemId": 38946,
+          "detail": "金輝寶藏"
         }
       ],
       "patch": "6.35",
@@ -19747,8 +20036,9 @@
       },
       "sources": [
         {
-          "type": "副本",
-          "instanceId": 30125
+          "type": "多人副本",
+          "contentId": 911,
+          "detail": "喜悅神域歐芙洛緒涅"
         }
       ],
       "patch": "6.3",
@@ -19771,7 +20061,8 @@
       "sources": [
         {
           "type": "副本",
-          "instanceId": 89
+          "contentId": 896,
+          "detail": "雪山奧窟冥魂石洞"
         }
       ],
       "patch": "6.3",
@@ -19793,12 +20084,14 @@
       },
       "sources": [
         {
-          "type": "副本",
-          "instanceId": 20086
+          "type": "討伐戰",
+          "contentId": 886,
+          "detail": "盧比坎特殲滅戰"
         },
         {
-          "type": "副本",
-          "instanceId": 20087
+          "type": "討伐戰",
+          "contentId": 924,
+          "detail": "極 盧比坎特殲滅戰"
         }
       ],
       "patch": "6.3",
@@ -19875,8 +20168,9 @@
       },
       "sources": [
         {
-          "type": "副本",
-          "instanceId": 36002
+          "type": "多變迷宮",
+          "contentId": 945,
+          "detail": "多變迷宮 六根山"
         }
       ],
       "patch": "6.45",
@@ -19898,8 +20192,9 @@
       },
       "sources": [
         {
-          "type": "副本",
-          "instanceId": 36002
+          "type": "多變迷宮",
+          "contentId": 945,
+          "detail": "多變迷宮 六根山"
         }
       ],
       "patch": "6.45",
@@ -19922,7 +20217,8 @@
       "sources": [
         {
           "type": "副本",
-          "instanceId": 90
+          "contentId": 822,
+          "detail": "間歇靈泉哈姆島"
         }
       ],
       "patch": "6.4",
@@ -19999,8 +20295,9 @@
       },
       "sources": [
         {
-          "type": "副本",
-          "instanceId": 36002
+          "type": "多變迷宮",
+          "contentId": 945,
+          "detail": "多變迷宮 六根山"
         }
       ],
       "patch": "6.45",
@@ -20054,8 +20351,9 @@
       },
       "sources": [
         {
-          "type": "多人副本",
-          "detail": "Mount Rokkon"
+          "type": "多變迷宮",
+          "contentId": 945,
+          "detail": "多變迷宮 六根山"
         }
       ],
       "patch": "6.45",
@@ -20077,12 +20375,14 @@
       },
       "sources": [
         {
-          "type": "副本",
-          "instanceId": 20089
+          "type": "討伐戰",
+          "contentId": 949,
+          "detail": "高貝扎殲滅戰"
         },
         {
-          "type": "副本",
-          "instanceId": 20090
+          "type": "討伐戰",
+          "contentId": 950,
+          "detail": "極 高貝扎殲滅戰"
         }
       ],
       "patch": "6.4",
@@ -20117,12 +20417,14 @@
           }
         },
         {
-          "type": "副本",
-          "instanceId": 30132
+          "type": "大型任務",
+          "contentId": 942,
+          "detail": "萬魔殿 荒天之獄4"
         },
         {
-          "type": "副本",
-          "instanceId": 30133
+          "type": "大型任務",
+          "contentId": 943,
+          "detail": "零式萬魔殿 荒天之獄4"
         }
       ],
       "patch": "6.4",
@@ -20144,8 +20446,9 @@
       },
       "sources": [
         {
-          "type": "副本",
-          "instanceId": 36003
+          "type": "多變迷宮",
+          "contentId": 961,
+          "detail": "多變迷宮 阿羅阿羅島"
         }
       ],
       "patch": "6.51",
@@ -20167,8 +20470,9 @@
       },
       "sources": [
         {
-          "type": "副本",
-          "instanceId": 36003
+          "type": "多變迷宮",
+          "contentId": 961,
+          "detail": "多變迷宮 阿羅阿羅島"
         }
       ],
       "patch": "6.51",
@@ -20190,8 +20494,9 @@
       },
       "sources": [
         {
-          "type": "副本",
-          "instanceId": 36003
+          "type": "多變迷宮",
+          "contentId": 961,
+          "detail": "多變迷宮 阿羅阿羅島"
         }
       ],
       "patch": "6.51",
@@ -20214,7 +20519,7 @@
       "sources": [
         {
           "type": "MGP商店",
-          "detail": "Triple Triad Trader"
+          "detail": "卡片兌換員"
         }
       ],
       "patch": "6.55",
@@ -20236,8 +20541,9 @@
       },
       "sources": [
         {
-          "type": "副本",
-          "instanceId": 36003
+          "type": "多變迷宮",
+          "contentId": 961,
+          "detail": "多變迷宮 阿羅阿羅島"
         }
       ],
       "patch": "6.51",
@@ -20356,7 +20662,7 @@
       "sources": [
         {
           "type": "MGP商店",
-          "detail": "Triple Triad Trader"
+          "detail": "卡片兌換員"
         }
       ],
       "patch": "6.5",
@@ -20443,7 +20749,7 @@
       "sources": [
         {
           "type": "MGP商店",
-          "detail": "Triple Triad Trader"
+          "detail": "卡片兌換員"
         }
       ],
       "patch": "6.5",
@@ -20466,7 +20772,8 @@
       "sources": [
         {
           "type": "副本",
-          "instanceId": 91
+          "contentId": 823,
+          "detail": "異界深淵月面地下溪谷"
         }
       ],
       "patch": "6.5",
@@ -20488,8 +20795,9 @@
       },
       "sources": [
         {
-          "type": "副本",
-          "instanceId": 30134
+          "type": "多人副本",
+          "contentId": 962,
+          "detail": "榮華神域塔利亞"
         }
       ],
       "patch": "6.5",
@@ -20511,12 +20819,14 @@
       },
       "sources": [
         {
-          "type": "副本",
-          "instanceId": 20088
+          "type": "討伐戰",
+          "contentId": 944,
+          "detail": "阿修羅殲滅戰"
         },
         {
-          "type": "副本",
-          "instanceId": 20014
+          "type": "討伐戰",
+          "contentId": 944,
+          "detail": "阿修羅殲滅戰"
         }
       ],
       "patch": "6.55",
@@ -20538,12 +20848,14 @@
       },
       "sources": [
         {
-          "type": "副本",
-          "instanceId": 20091
+          "type": "討伐戰",
+          "contentId": 964,
+          "detail": "澤羅姆斯殲滅戰"
         },
         {
-          "type": "副本",
-          "instanceId": 20092
+          "type": "討伐戰",
+          "contentId": 965,
+          "detail": "極 澤羅姆斯殲滅戰"
         }
       ],
       "patch": "6.5",
@@ -20566,7 +20878,7 @@
       "sources": [
         {
           "type": "MGP商店",
-          "detail": "Triple Triad Trader"
+          "detail": "卡片兌換員"
         }
       ],
       "patch": "6.58",
@@ -20845,7 +21157,8 @@
       "sources": [
         {
           "type": "副本",
-          "instanceId": 94
+          "contentId": 826,
+          "detail": "叢林激流生息河岸"
         }
       ],
       "patch": "7.0",
@@ -20868,7 +21181,8 @@
       "sources": [
         {
           "type": "副本",
-          "instanceId": 92
+          "contentId": 824,
+          "detail": "通天絕壁沃克佐莫山"
         }
       ],
       "patch": "7.0",
@@ -20891,7 +21205,8 @@
       "sources": [
         {
           "type": "副本",
-          "instanceId": 96
+          "contentId": 829,
+          "detail": "神聖禁地深空天坑"
         }
       ],
       "patch": "7.0",
@@ -20914,7 +21229,8 @@
       "sources": [
         {
           "type": "副本",
-          "instanceId": 93
+          "contentId": 825,
+          "detail": "魂魄工廠創生設施"
         }
       ],
       "patch": "7.0",
@@ -20936,12 +21252,14 @@
       },
       "sources": [
         {
-          "type": "副本",
-          "instanceId": 20094
+          "type": "討伐戰",
+          "contentId": 833,
+          "detail": "極 艷翼蛇鳥殲滅戰"
         },
         {
-          "type": "副本",
-          "instanceId": 20093
+          "type": "討伐戰",
+          "contentId": 832,
+          "detail": "艷翼蛇鳥殲滅戰"
         }
       ],
       "patch": "7.0",
@@ -20963,12 +21281,14 @@
       },
       "sources": [
         {
-          "type": "副本",
-          "instanceId": 20097
+          "type": "討伐戰",
+          "contentId": 996,
+          "detail": "極 佐拉加殲滅戰"
         },
         {
-          "type": "副本",
-          "instanceId": 20096
+          "type": "討伐戰",
+          "contentId": 995,
+          "detail": "佐拉加殲滅戰"
         }
       ],
       "patch": "7.0",
@@ -20990,8 +21310,9 @@
       },
       "sources": [
         {
-          "type": "副本",
-          "instanceId": 20095
+          "type": "討伐戰",
+          "contentId": 984,
+          "detail": "永恆女王殲滅戰"
         }
       ],
       "patch": "7.0",
@@ -21013,8 +21334,9 @@
       },
       "sources": [
         {
-          "type": "副本",
-          "instanceId": 30135
+          "type": "大型任務",
+          "contentId": 985,
+          "detail": "阿卡狄亞登天鬥技場 輕量級1"
         }
       ],
       "patch": "7.01",

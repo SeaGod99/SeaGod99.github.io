@@ -246,6 +246,46 @@
     document.body.insertBefore(bar, document.body.firstChild);
   }
 
+  /* ── 最近使用的工具（給首頁的「最近使用」用）────────────────────────────
+     記錄點放在這裡而不是首頁的卡片點擊，是因為本檔**每一頁都會載入**：不管使用者是
+     從首頁點進來、用命令面板跳、還是直接開書籤／從外站連進來，都記得到。
+     只存工具路徑與時間戳（localStorage `ffxiv_recent_tools`），不存任何個人資料。 */
+  var RECENT_KEY = 'ffxiv_recent_tools';
+  var RECENT_MAX = 6;
+
+  function currentTool() {
+    var here = window.location.pathname.replace(/index\.html$/, '');
+    if (here.charAt(here.length - 1) !== '/') here += '/';
+    // 取「最長的相符路徑」：tools/gathering/ 與 tools/gathering-log/ 都以 gathering 開頭，
+    // 直接找第一個相符會把 gathering-log 記成 gathering。
+    var best = null;
+    for (var i = 0; i < TOOLS.length; i++) {
+      var t = TOOLS[i];
+      if (t.ext || !t.p) continue;
+      if (here.slice(-(t.p.length + 1)) === '/' + t.p) {
+        if (!best || t.p.length > best.p.length) best = t;
+      }
+    }
+    return best;
+  }
+
+  function recordVisit() {
+    var t = currentTool();
+    if (!t) return;                       // 首頁或非工具頁不記
+    try {
+      var list = JSON.parse(localStorage.getItem(RECENT_KEY) || '[]');
+      if (!Array.isArray(list)) list = [];
+      list = list.filter(function (x) { return x && x.p !== t.p; });
+      list.unshift({ p: t.p, at: Date.now() });
+      localStorage.setItem(RECENT_KEY, JSON.stringify(list.slice(0, RECENT_MAX)));
+    } catch (e) { /* 無痕模式或配額滿：記不到就算了，不影響頁面 */ }
+  }
+
+  // 首頁要拿工具的顯示資料（emoji／名稱）來畫最近使用，這裡一併掛出去
+  window.SGT_TOOLS = TOOLS;
+  window.SGT_RECENT_KEY = RECENT_KEY;
+
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', addTopbar);
   else addTopbar();
+  recordVisit();
 })();

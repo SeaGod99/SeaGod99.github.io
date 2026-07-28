@@ -460,8 +460,10 @@ var TTAlbum = (function () {
       (listLen !== all ? '<i>（篩選中；全部 ' + all + ' 張）</i>' : '');
   }
 
-  // 來源依類別分組。上游只給 id 沒給名稱的（副本 194 筆／藏寶圖 82 筆）只標型別＋筆數，
-  // 不憑印象補副本名——要補請回上游 build-triple-triad-all.mjs 解 instanceId。
+  // 來源依類別分組。2026-07-28 起副本／卡包／任務都有繁中 detail 了（見
+  // scripts/patch-triple-triad-source-names.mjs）；仍拿不到名稱的 11 筆會退回
+  // 「型別 ×n」——那是 dungeons.json 沒收的內容（已下架的 Cape Westwind、異聞迷宮），
+  // 要補請先補 dungeons.json，**不要在前端猜副本名**。
   function srcGroups(c) {
     var srcs = c.sources || [];
     if (!srcs.length) return '<div class="detail-line">待補充</div>';

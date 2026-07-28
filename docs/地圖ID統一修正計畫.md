@@ -121,4 +121,4 @@ build-gathering.mjs 加過濾後重跑（來源 Teamcraft nodes.json）。
 - gathering.json：過濾 EventItem 偽 id 356 次；232 個「只剩偽 id」節點整筆剔除（965 → 733）；mapId=0 節點剩 141 筆，保留並加 `mapMissing: true`。
 - 腳本：build-fishing.mjs 加 territory→map（本機檔優先、XIVAPI fallback）；build-gathering.mjs 加 EventItem 過濾與 mapMissing；download-maps.mjs 預設只抓 field/city/housing（`--all` 才抓副本圖）。
 
-**留待本機執行**：底圖下載（沙箱抓不到 XIVAPI 圖片資產）——見 `docs/待補底圖清單.md`，缺 8 張 field/city 圖，本機跑 `node scripts/download-maps.mjs` 即可。
+~~**留待本機執行**：底圖下載~~ — **已完成（2026-07-28 複查）**：8 張 field/city 圖全部到位，`image.key` 為 `default/00` 的佔位圖 0 筆，野外／主城類 0 缺圖。原 `docs/待補底圖清單.md` 已刪除。

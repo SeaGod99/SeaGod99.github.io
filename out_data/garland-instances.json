@@ -1,0 +1,912 @@
+{
+  "4": {
+    "name": "Sastasha",
+    "category": "Dungeons",
+    "patch": 2
+  },
+  "5": {
+    "name": "The Aurum Vale",
+    "category": "Dungeons",
+    "patch": 2
+  },
+  "6": {
+    "name": "Haukke Manor",
+    "category": "Dungeons",
+    "patch": 2
+  },
+  "10": {
+    "name": "The Wanderer's Palace",
+    "category": "Dungeons",
+    "patch": 2
+  },
+  "11": {
+    "name": "The Stone Vigil",
+    "category": "Dungeons",
+    "patch": 2
+  },
+  "12": {
+    "name": "Cutter's Cry",
+    "category": "Dungeons",
+    "patch": 2
+  },
+  "13": {
+    "name": "Dzemael Darkhold",
+    "category": "Dungeons",
+    "patch": 2
+  },
+  "14": {
+    "name": "Amdapor Keep",
+    "category": "Dungeons",
+    "patch": 2
+  },
+  "15": {
+    "name": "Castrum Meridianum",
+    "category": "Dungeons",
+    "patch": 2
+  },
+  "16": {
+    "name": "The Praetorium",
+    "category": "Dungeons",
+    "patch": 2
+  },
+  "17": {
+    "name": "Pharos Sirius",
+    "category": "Dungeons",
+    "patch": 2.1
+  },
+  "19": {
+    "name": "Haukke Manor (Hard)",
+    "category": "Dungeons",
+    "patch": 2.1
+  },
+  "25": {
+    "name": "The Stone Vigil (Hard)",
+    "category": "Dungeons",
+    "patch": 2.3
+  },
+  "26": {
+    "name": "The Sunken Temple of Qarn (Hard)",
+    "category": "Dungeons",
+    "patch": 2.4
+  },
+  "27": {
+    "name": "Snowcloak",
+    "category": "Dungeons",
+    "patch": 2.4
+  },
+  "28": {
+    "name": "Sastasha (Hard)",
+    "category": "Dungeons",
+    "patch": 2.4
+  },
+  "29": {
+    "name": "Amdapor Keep (Hard)",
+    "category": "Dungeons",
+    "patch": 2.5
+  },
+  "30": {
+    "name": "The Wanderer's Palace (Hard)",
+    "category": "Dungeons",
+    "patch": 2.5
+  },
+  "31": {
+    "name": "The Great Gubal Library",
+    "category": "Dungeons",
+    "patch": 3
+  },
+  "33": {
+    "name": "Neverreap",
+    "category": "Dungeons",
+    "patch": 3
+  },
+  "34": {
+    "name": "The Vault",
+    "category": "Dungeons",
+    "patch": 3
+  },
+  "35": {
+    "name": "The Fractal Continuum",
+    "category": "Dungeons",
+    "patch": 3
+  },
+  "36": {
+    "name": "The Dusk Vigil",
+    "category": "Dungeons",
+    "patch": 3
+  },
+  "37": {
+    "name": "Sohm Al",
+    "category": "Dungeons",
+    "patch": 3
+  },
+  "39": {
+    "name": "The Aery",
+    "category": "Dungeons",
+    "patch": 3
+  },
+  "40": {
+    "name": "Pharos Sirius (Hard)",
+    "category": "Dungeons",
+    "patch": 3.1
+  },
+  "41": {
+    "name": "Saint Mocianne's Arboretum",
+    "category": "Dungeons",
+    "patch": 3.1
+  },
+  "42": {
+    "name": "The Lost City of Amdapor (Hard)",
+    "category": "Dungeons",
+    "patch": 3.2
+  },
+  "43": {
+    "name": "The Antitower",
+    "category": "Dungeons",
+    "patch": 3.2
+  },
+  "44": {
+    "name": "Sohr Khai",
+    "category": "Dungeons",
+    "patch": 3.3
+  },
+  "45": {
+    "name": "Hullbreaker Isle (Hard)",
+    "category": "Dungeons",
+    "patch": 3.3
+  },
+  "46": {
+    "name": "Xelphatol",
+    "category": "Dungeons",
+    "patch": 3.4
+  },
+  "47": {
+    "name": "The Great Gubal Library (Hard)",
+    "category": "Dungeons",
+    "patch": 3.4
+  },
+  "48": {
+    "name": "Baelsar's Wall",
+    "category": "Dungeons",
+    "patch": 3.5
+  },
+  "49": {
+    "name": "Sohm Al (Hard)",
+    "category": "Dungeons",
+    "patch": 3.5
+  },
+  "54": {
+    "name": "Doma Castle",
+    "category": "Dungeons",
+    "patch": 4
+  },
+  "56": {
+    "name": "Ala Mhigo",
+    "category": "Dungeons",
+    "patch": 4
+  },
+  "58": {
+    "name": "The Drowned City of Skalla",
+    "category": "Dungeons",
+    "patch": 4.1
+  },
+  "59": {
+    "name": "Hells' Lid",
+    "category": "Dungeons",
+    "patch": 4.2
+  },
+  "60": {
+    "name": "The Fractal Continuum (Hard)",
+    "category": "Dungeons",
+    "patch": 4.2
+  },
+  "61": {
+    "name": "The Swallow's Compass",
+    "category": "Dungeons",
+    "patch": 4.3
+  },
+  "62": {
+    "name": "Saint Mocianne's Arboretum (Hard)",
+    "category": "Dungeons",
+    "patch": 4.4
+  },
+  "63": {
+    "name": "The Burn",
+    "category": "Dungeons",
+    "patch": 4.4
+  },
+  "64": {
+    "name": "The Ghimlyt Dark",
+    "category": "Dungeons",
+    "patch": 4.5
+  },
+  "66": {
+    "name": "The Qitana Ravel",
+    "category": "Dungeons",
+    "patch": 5
+  },
+  "69": {
+    "name": "Malikah's Well",
+    "category": "Dungeons",
+    "patch": 5
+  },
+  "72": {
+    "name": "Holminster Switch",
+    "category": "Dungeons",
+    "patch": 5
+  },
+  "73": {
+    "name": "The Grand Cosmos",
+    "category": "Dungeons",
+    "patch": 5.1
+  },
+  "74": {
+    "name": "Anamnesis Anyder",
+    "category": "Dungeons",
+    "patch": 5.2
+  },
+  "76": {
+    "name": "Matoya's Relict",
+    "category": "Dungeons",
+    "patch": 5.4
+  },
+  "77": {
+    "name": "Paglth'an",
+    "category": "Dungeons",
+    "patch": 5.5
+  },
+  "78": {
+    "name": "The Tower of Zot",
+    "category": "Dungeons",
+    "patch": 6
+  },
+  "80": {
+    "name": "The Tower of Babil",
+    "category": "Dungeons",
+    "patch": 6
+  },
+  "81": {
+    "name": "The Aitiascope",
+    "category": "Dungeons",
+    "patch": 6
+  },
+  "82": {
+    "name": "Ktisis Hyperboreia",
+    "category": "Dungeons",
+    "patch": 6
+  },
+  "86": {
+    "name": "The Praetorium",
+    "category": "Dungeons",
+    "patch": 6.1
+  },
+  "87": {
+    "name": "Alzadaal's Legacy",
+    "category": "Dungeons",
+    "patch": 6.1
+  },
+  "88": {
+    "name": "The Fell Court of Troia",
+    "category": "Dungeons",
+    "patch": 6.2
+  },
+  "89": {
+    "name": "Lapis Manalis",
+    "category": "Dungeons",
+    "patch": 6.3
+  },
+  "90": {
+    "name": "The Aetherfont",
+    "category": "Dungeons",
+    "patch": 6.4
+  },
+  "91": {
+    "name": "The Lunar Subterrane",
+    "category": "Dungeons",
+    "patch": 6.5
+  },
+  "92": {
+    "name": "Worqor Zormor",
+    "category": "Dungeons",
+    "patch": 7
+  },
+  "93": {
+    "name": "Origenics",
+    "category": "Dungeons",
+    "patch": 7
+  },
+  "94": {
+    "name": "Ihuykatumu",
+    "category": "Dungeons",
+    "patch": 7
+  },
+  "96": {
+    "name": "The Skydeep Cenote",
+    "category": "Dungeons",
+    "patch": 7
+  },
+  "20004": {
+    "name": "The Bowl of Embers (Hard)",
+    "category": "Trials",
+    "patch": 2
+  },
+  "20005": {
+    "name": "The Navel (Hard)",
+    "category": "Trials",
+    "patch": 2
+  },
+  "20006": {
+    "name": "The Howling Eye (Hard)",
+    "category": "Trials",
+    "patch": 2
+  },
+  "20007": {
+    "name": "Cape Westwind",
+    "category": "Trials",
+    "patch": 2
+  },
+  "20008": {
+    "name": "The Bowl of Embers (Extreme)",
+    "category": "Trials",
+    "patch": 2.1
+  },
+  "20009": {
+    "name": "The Navel (Extreme)",
+    "category": "Trials",
+    "patch": 2.1
+  },
+  "20010": {
+    "name": "The Howling Eye (Extreme)",
+    "category": "Trials",
+    "patch": 2.1
+  },
+  "20011": {
+    "name": "Thornmarch (Hard)",
+    "category": "Trials",
+    "patch": 2.1
+  },
+  "20012": {
+    "name": "Thornmarch (Extreme)",
+    "category": "Trials",
+    "patch": 2.25
+  },
+  "20013": {
+    "name": "The Minstrel's Ballad: Ultima's Bane",
+    "category": "Trials",
+    "patch": 2.1
+  },
+  "20014": {
+    "name": "The Gilded Araya",
+    "category": "Trials",
+    "patch": 3
+  },
+  "20017": {
+    "name": "The Whorleater (Hard)",
+    "category": "Trials",
+    "patch": 2.25
+  },
+  "20018": {
+    "name": "The Whorleater (Extreme)",
+    "category": "Trials",
+    "patch": 2.25
+  },
+  "20021": {
+    "name": "Battle on the Big Bridge",
+    "category": "Trials",
+    "patch": 2.25
+  },
+  "20022": {
+    "name": "The Striking Tree (Hard)",
+    "category": "Trials",
+    "patch": 2.3
+  },
+  "20023": {
+    "name": "The Striking Tree (Extreme)",
+    "category": "Trials",
+    "patch": 2.3
+  },
+  "20024": {
+    "name": "The Akh Afah Amphitheatre (Hard)",
+    "category": "Trials",
+    "patch": 2.4
+  },
+  "20025": {
+    "name": "The Akh Afah Amphitheatre (Extreme)",
+    "category": "Trials",
+    "patch": 2.4
+  },
+  "20026": {
+    "name": "The Dragon's Neck",
+    "category": "Trials",
+    "patch": 2.4
+  },
+  "20027": {
+    "name": "Urth's Fount",
+    "category": "Trials",
+    "patch": 2.38
+  },
+  "20030": {
+    "name": "Battle in the Big Keep",
+    "category": "Trials",
+    "patch": 2.5
+  },
+  "20031": {
+    "name": "Thok ast Thok (Hard)",
+    "category": "Trials",
+    "patch": 3
+  },
+  "20032": {
+    "name": "Thok ast Thok (Extreme)",
+    "category": "Trials",
+    "patch": 3
+  },
+  "20033": {
+    "name": "The Limitless Blue (Hard)",
+    "category": "Trials",
+    "patch": 3
+  },
+  "20034": {
+    "name": "The Limitless Blue (Extreme)",
+    "category": "Trials",
+    "patch": 3
+  },
+  "20036": {
+    "name": "The Minstrel's Ballad: Thordan's Reign",
+    "category": "Trials",
+    "patch": 3.1
+  },
+  "20037": {
+    "name": "Containment Bay S1T7",
+    "category": "Trials",
+    "patch": 3.2
+  },
+  "20038": {
+    "name": "Containment Bay S1T7 (Extreme)",
+    "category": "Trials",
+    "patch": 3.2
+  },
+  "20039": {
+    "name": "The Final Steps of Faith",
+    "category": "Trials",
+    "patch": 3.3
+  },
+  "20040": {
+    "name": "The Minstrel's Ballad: Nidhogg's Rage",
+    "category": "Trials",
+    "patch": 3.3
+  },
+  "20041": {
+    "name": "Containment Bay P1T6",
+    "category": "Trials",
+    "patch": 3.4
+  },
+  "20042": {
+    "name": "Containment Bay P1T6 (Extreme)",
+    "category": "Trials",
+    "patch": 3.4
+  },
+  "20043": {
+    "name": "Containment Bay Z1T9",
+    "category": "Trials",
+    "patch": 3.5
+  },
+  "20044": {
+    "name": "Containment Bay Z1T9 (Extreme)",
+    "category": "Trials",
+    "patch": 3.5
+  },
+  "20045": {
+    "name": "The Royal Menagerie",
+    "category": "Trials",
+    "patch": 4
+  },
+  "20046": {
+    "name": "The Pool of Tribute",
+    "category": "Trials",
+    "patch": 4
+  },
+  "20047": {
+    "name": "The Pool of Tribute (Extreme)",
+    "category": "Trials",
+    "patch": 4
+  },
+  "20048": {
+    "name": "Emanation",
+    "category": "Trials",
+    "patch": 4
+  },
+  "20049": {
+    "name": "Emanation (Extreme)",
+    "category": "Trials",
+    "patch": 4
+  },
+  "20050": {
+    "name": "The Minstrel's Ballad: Shinryu's Domain",
+    "category": "Trials",
+    "patch": 4.1
+  },
+  "20051": {
+    "name": "The Jade Stoa",
+    "category": "Trials",
+    "patch": 4.2
+  },
+  "20052": {
+    "name": "The Jade Stoa (Extreme)",
+    "category": "Trials",
+    "patch": 4.2
+  },
+  "20055": {
+    "name": "Castrum Fluminis",
+    "category": "Trials",
+    "patch": 4.3
+  },
+  "20056": {
+    "name": "The Minstrel's Ballad: Tsukuyomi's Pain",
+    "category": "Trials",
+    "patch": 4.3
+  },
+  "20057": {
+    "name": "Hells' Kier",
+    "category": "Trials",
+    "patch": 4.4
+  },
+  "20058": {
+    "name": "Hells' Kier (Extreme)",
+    "category": "Trials",
+    "patch": 4.4
+  },
+  "20059": {
+    "name": "Kugane Ohashi",
+    "category": "Trials",
+    "patch": 4.45
+  },
+  "20060": {
+    "name": "The Wreath of Snakes",
+    "category": "Trials",
+    "patch": 4.5
+  },
+  "20061": {
+    "name": "The Wreath of Snakes (Extreme)",
+    "category": "Trials",
+    "patch": 4.5
+  },
+  "20062": {
+    "name": "The Dancing Plague",
+    "category": "Trials",
+    "patch": 5
+  },
+  "20063": {
+    "name": "The Dancing Plague (Extreme)",
+    "category": "Trials",
+    "patch": 5
+  },
+  "20064": {
+    "name": "The Crown of the Immaculate",
+    "category": "Trials",
+    "patch": 5
+  },
+  "20065": {
+    "name": "The Crown of the Immaculate (Extreme)",
+    "category": "Trials",
+    "patch": 5
+  },
+  "20066": {
+    "name": "The Dying Gasp",
+    "category": "Trials",
+    "patch": 5
+  },
+  "20067": {
+    "name": "The Minstrel's Ballad: Hades's Elegy",
+    "category": "Trials",
+    "patch": 5.1
+  },
+  "20068": {
+    "name": "Cinder Drift",
+    "category": "Trials",
+    "patch": 5.2
+  },
+  "20069": {
+    "name": "Cinder Drift (Extreme)",
+    "category": "Trials",
+    "patch": 5.2
+  },
+  "20070": {
+    "name": "Memoria Misera (Extreme)",
+    "category": "Trials",
+    "patch": 5.25
+  },
+  "20071": {
+    "name": "The Seat of Sacrifice",
+    "category": "Trials",
+    "patch": 5.3
+  },
+  "20072": {
+    "name": "The Seat of Sacrifice (Extreme)",
+    "category": "Trials",
+    "patch": 5.3
+  },
+  "20073": {
+    "name": "Castrum Marinum",
+    "category": "Trials",
+    "patch": 5.4
+  },
+  "20074": {
+    "name": "Castrum Marinum (Extreme)",
+    "category": "Trials",
+    "patch": 5.4
+  },
+  "20075": {
+    "name": "The Cloud Deck",
+    "category": "Trials",
+    "patch": 5.5
+  },
+  "20076": {
+    "name": "The Cloud Deck (Extreme)",
+    "category": "Trials",
+    "patch": 5.5
+  },
+  "20077": {
+    "name": "The Mothercrystal",
+    "category": "Trials",
+    "patch": 6
+  },
+  "20078": {
+    "name": "The Minstrel's Ballad: Hydaelyn's Call",
+    "category": "Trials",
+    "patch": 6
+  },
+  "20079": {
+    "name": "The Final Day",
+    "category": "Trials",
+    "patch": 6
+  },
+  "20080": {
+    "name": "The Dark Inside",
+    "category": "Trials",
+    "patch": 6
+  },
+  "20081": {
+    "name": "The Minstrel's Ballad: Zodiark's Fall",
+    "category": "Trials",
+    "patch": 6
+  },
+  "20083": {
+    "name": "The Minstrel's Ballad: Endsinger's Aria",
+    "category": "Trials",
+    "patch": 6.1
+  },
+  "20084": {
+    "name": "Storm's Crown",
+    "category": "Trials",
+    "patch": 6.2
+  },
+  "20085": {
+    "name": "Storm's Crown (Extreme)",
+    "category": "Trials",
+    "patch": 6.2
+  },
+  "20086": {
+    "name": "Mount Ordeals",
+    "category": "Trials",
+    "patch": 6.3
+  },
+  "20087": {
+    "name": "Mount Ordeals (Extreme)",
+    "category": "Trials",
+    "patch": 6.3
+  },
+  "20088": {
+    "name": "The Gilded Araya",
+    "category": "Trials",
+    "patch": 6.55
+  },
+  "20089": {
+    "name": "The Voidcast Dais",
+    "category": "Trials",
+    "patch": 6.4
+  },
+  "20090": {
+    "name": "The Voidcast Dais (Extreme)",
+    "category": "Trials",
+    "patch": 6.4
+  },
+  "20091": {
+    "name": "The Abyssal Fracture",
+    "category": "Trials",
+    "patch": 6.5
+  },
+  "20092": {
+    "name": "The Abyssal Fracture (Extreme)",
+    "category": "Trials",
+    "patch": 6.5
+  },
+  "20093": {
+    "name": "Worqor Lar Dor",
+    "category": "Trials",
+    "patch": 7
+  },
+  "20094": {
+    "name": "Worqor Lar Dor (Extreme)",
+    "category": "Trials",
+    "patch": 7
+  },
+  "20095": {
+    "name": "The Interphos",
+    "category": "Trials",
+    "patch": 7
+  },
+  "20096": {
+    "name": "Everkeep",
+    "category": "Trials",
+    "patch": 7
+  },
+  "20097": {
+    "name": "Everkeep (Extreme)",
+    "category": "Trials",
+    "patch": 7
+  },
+  "30001": {
+    "name": "The Labyrinth of the Ancients",
+    "category": "Raids",
+    "patch": 2
+  },
+  "30011": {
+    "name": "Syrcus Tower",
+    "category": "Raids",
+    "patch": 2.3
+  },
+  "30020": {
+    "name": "The World of Darkness",
+    "category": "Raids",
+    "patch": 2.5
+  },
+  "30029": {
+    "name": "The Void Ark",
+    "category": "Raids",
+    "patch": 3.1
+  },
+  "30033": {
+    "name": "Alexander - The Burden of the Son",
+    "category": "Raids",
+    "patch": 3.2
+  },
+  "30038": {
+    "name": "The Weeping City of Mhach",
+    "category": "Raids",
+    "patch": 3.3
+  },
+  "30042": {
+    "name": "Alexander - The Soul of the Creator",
+    "category": "Raids",
+    "patch": 3.4
+  },
+  "30046": {
+    "name": "Alexander - The Soul of the Creator (Savage)",
+    "category": "Raids",
+    "patch": 3.4
+  },
+  "30047": {
+    "name": "Dun Scaith",
+    "category": "Raids",
+    "patch": 3.5
+  },
+  "30058": {
+    "name": "The Royal City of Rabanastre",
+    "category": "Raids",
+    "patch": 4.1
+  },
+  "30068": {
+    "name": "The Ridorana Lighthouse",
+    "category": "Raids",
+    "patch": 4.3
+  },
+  "30071": {
+    "name": "Alphascape V3.0",
+    "category": "Raids",
+    "patch": 4.4
+  },
+  "30072": {
+    "name": "Alphascape V4.0",
+    "category": "Raids",
+    "patch": 4.4
+  },
+  "30076": {
+    "name": "Alphascape V4.0 (Savage)",
+    "category": "Raids",
+    "patch": 4.4
+  },
+  "30077": {
+    "name": "The Orbonne Monastery",
+    "category": "Raids",
+    "patch": 4.5
+  },
+  "30087": {
+    "name": "The Copied Factory",
+    "category": "Raids",
+    "patch": 5.1
+  },
+  "30096": {
+    "name": "The Puppets' Bunker",
+    "category": "Raids",
+    "patch": 5.3
+  },
+  "30103": {
+    "name": "Eden's Promise: Eternity",
+    "category": "Raids",
+    "patch": 5.4
+  },
+  "30104": {
+    "name": "Eden's Promise: Eternity (Savage)",
+    "category": "Raids",
+    "patch": 5.4
+  },
+  "30105": {
+    "name": "The Tower at Paradigm's Breach",
+    "category": "Raids",
+    "patch": 5.5
+  },
+  "30111": {
+    "name": "Asphodelos: The First Circle",
+    "category": "Raids",
+    "patch": 6
+  },
+  "30112": {
+    "name": "Asphodelos: The First Circle (Savage)",
+    "category": "Raids",
+    "patch": 6.05
+  },
+  "30115": {
+    "name": "Aglaia",
+    "category": "Raids",
+    "patch": 6.1
+  },
+  "30122": {
+    "name": "Abyssos: The Eighth Circle",
+    "category": "Raids",
+    "patch": 6.2
+  },
+  "30123": {
+    "name": "Abyssos: The Eighth Circle (Savage)",
+    "category": "Raids",
+    "patch": 6.2
+  },
+  "30125": {
+    "name": "Euphrosyne",
+    "category": "Raids",
+    "patch": 6.3
+  },
+  "30132": {
+    "name": "Anabaseios: The Twelfth Circle",
+    "category": "Raids",
+    "patch": 6.4
+  },
+  "30133": {
+    "name": "Anabaseios: The Twelfth Circle (Savage)",
+    "category": "Raids",
+    "patch": 6.4
+  },
+  "30134": {
+    "name": "Thaleia",
+    "category": "Raids",
+    "patch": 6.5
+  },
+  "30135": {
+    "name": "AAC Light-heavyweight M1",
+    "category": "Raids",
+    "patch": 7.01
+  },
+  "36001": {
+    "name": "The Sil'dihn Subterrane",
+    "category": "V&C Dungeon Finder",
+    "patch": 6.25
+  },
+  "36002": {
+    "name": "Mount Rokkon",
+    "category": "V&C Dungeon Finder",
+    "patch": 6.4
+  },
+  "36003": {
+    "name": "Aloalo Island",
+    "category": "V&C Dungeon Finder",
+    "patch": 6.51
+  }
+}

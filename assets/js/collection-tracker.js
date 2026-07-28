@@ -94,8 +94,15 @@
     this.cardClass = cfg.cardClass || 'col-card';
 
     this.keyOf = cfg.keyOf || function (e) { return e.id != null ? 'id:' + e.id : 'name:' + e.name; };
+    // 預設顯示規則：有台服繁中名（name 且不等於 nameEn）＋台服版本已開放。
+    // 另外擋掉 order === -1：那是遊戲 Mount／Companion sheet 裡「不在收藏手冊」的
+    // 內部列（2026-07-28 加）。坐騎頁原本因此多出 4 筆玩家永遠拿不到的東西，其中
+    // 3 筆還是既有坐騎的重複（真獅鷲一度在頁面上出現兩次）。**這些不是「取得方式
+    // 待補」的資料缺口，是根本不該顯示的列**，補 sources 是補錯方向。
+    // 目前只有 mounts.json 有 -1；minions/triple-triad/island-recipes 的 order 皆 ≥0，
+    // 故此條對其餘 11 頁無影響。
     this.include = cfg.include || function (e, gp) {
-      return e.name && e.name !== e.nameEn && PatchGate.released(e.patch, gp);
+      return e.name && e.name !== e.nameEn && e.order !== -1 && PatchGate.released(e.patch, gp);
     };
     this.alwaysOwned = cfg.alwaysOwned || function () { return false; };
     this.searchText = cfg.searchText || function (e) {

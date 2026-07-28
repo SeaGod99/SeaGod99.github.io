@@ -16,10 +16,25 @@ const OUT = resolve(__dirname, '../data/dungeons.json');
 const BASE = 'https://v2.xivapi.com';
 
 // 有效的 ContentType.value（在清單外的一律過濾）
-// 2=Dungeon, 3=Guildhest, 4=Trial, 5=Raid, 21=DeepDungeon, 26=Eureka, 28=Ultimate/AllianceRaid, 30=Bozja
+// 2=Dungeon, 3=Guildhest, 4=Trial, 5=Raid, 7=QuestBattle（單人任務戰鬥）,
+// 21=DeepDungeon, 26=Eureka, 28=Ultimate/AllianceRaid, 30=V&C Dungeon Finder（多變迷宮）
+// ※ 7 是 2026-07-28 加的：6.1 把「里塔提恩強攻戰」「皇都伊修加爾德保衛戰」等**從 8 人
+//   討伐戰改成單人任務戰鬥**，它們沒有消失、只是換了 ContentType。不收就會有收藏品的
+//   取得方式指向查無此副本（幻卡 1 張、青魔 1 個法術）。
+// ※ 30 以前被註記成 Bozja，是錯的（2026-07-28 實查 XIVAPI ContentType 30 = "V&C Dungeon Finder"）。
 // 注意：幻卡(Triple Triad)、麻將、PvP(ContentType=6,9) 不在清單，直接過濾
 // 絕境戰(Ultimate) 的 HighEndDuty=true，用此與 Alliance Raid 區分
-const VALID_CONTENT_TYPES = new Set([2, 3, 4, 5, 21, 26, 28, 30]);
+const VALID_CONTENT_TYPES = new Set([2, 3, 4, 5, 7, 21, 26, 28, 30]);
+
+// 這些 ContentType 有自己的進入介面、不掛在一般隨機任務裡，所以 IsInDutyFinder=false，
+// 但它們是**真的副本**，不能被下面那道 IsInDutyFinder 過濾擋掉（2026-07-28 修）。
+//   7  單人任務戰鬥（劇情用，不進隨機任務）
+//   21 深宮（死者宮殿／天之側／歐米茄之殿，各樓層段一列）
+//   26 禁地優雷卡（4 個區域）
+//   30 多變迷宮（希拉狄哈水道／六根山／阿羅阿羅島，含 Another／零式變體）
+// 漏了它們的代價：幻卡有 10 張卡的取得方式指向多變迷宮，卻因為 dungeons.json 沒收
+// 而只能顯示「副本 ×3」；青魔也有一筆卡在這。
+const DUTY_FINDER_EXEMPT_TYPES = new Set([7, 21, 26, 30]);
 
 const EXPANSION_MAP = {
   'A Realm Reborn': 'ARR',
@@ -51,10 +66,12 @@ function resolveType(ctValue, nameEn, highEnd, allianceRoulette, isSavage) {
   }
   if (ctValue === 5) return (highEnd || isSavage) ? 'raid_savage' : 'raid_normal';
   if (ctValue === 28 && highEnd) return 'ultimate';
+  if (ctValue === 7) return 'quest_battle';
   if (ctValue === 21) return 'deep_dungeon';
   if (ctValue === 26) return 'eureka';
   if (ctValue === 28) return 'alliance_raid';
-  if (ctValue === 30) return 'bozja';
+  // 30 是 V&C Dungeon Finder（多變迷宮／異聞迷宮），不是博茲雅——先前回傳 'bozja' 是錯的
+  if (ctValue === 30) return 'variant_dungeon';
   return 'other';
 }
 
@@ -114,10 +131,14 @@ async function main() {
 
     // 過濾：Name 為空 → 跳過（絕境戰 IsInDutyFinder=false，不能用此過濾）
     if (!f.Name || f.Name.trim() === '') continue;
-    // 非 DutyFinder 且非 HighEndDuty（絕境戰）→ 跳過
-    if (!f.IsInDutyFinder && !f.HighEndDuty) continue;
 
     const ctValue       = f['ContentType.value'] ?? f.ContentType?.value ?? 0;
+
+    // 非 DutyFinder 且非 HighEndDuty（絕境戰）→ 跳過。
+    // 但深宮／優雷卡／多變迷宮有自己的進入介面，IsInDutyFinder 一律是 false，
+    // 不豁免的話這三類會整批消失（見 DUTY_FINDER_EXEMPT_TYPES 的說明）。
+    if (!f.IsInDutyFinder && !f.HighEndDuty && !DUTY_FINDER_EXEMPT_TYPES.has(ctValue)) continue;
+
     const highEnd       = f.HighEndDuty ?? false;
     const isPvP         = f.PvP ?? false;
     const allianceRoul  = f.AllianceRoulette ?? false;

@@ -1,7 +1,7 @@
 {
   "schema": "orchestrion",
   "patch": "7.2",
-  "updated": "2026-07-23",
+  "updated": "2026-07-28",
   "source": "xivapi+tw-items",
   "count": 724,
   "data": [
@@ -12862,7 +12862,11 @@
       "icon": "/i/025000/025958.png",
       "category": "紅蓮之狂潮",
       "patch": "4.2",
-      "sources": [],
+      "sources": [
+        {
+          "type": "討伐戰"
+        }
+      ],
       "gameCategory": "其他"
     },
     {
@@ -12874,7 +12878,11 @@
       "icon": "/i/025000/025958.png",
       "category": "紅蓮之狂潮",
       "patch": "4.3",
-      "sources": [],
+      "sources": [
+        {
+          "type": "討伐戰"
+        }
+      ],
       "gameCategory": "其他"
     },
     {
@@ -12903,7 +12911,11 @@
       "icon": "/i/025000/025958.png",
       "category": "曉月之終途",
       "patch": "6.28",
-      "sources": [],
+      "sources": [
+        {
+          "type": "討伐戰"
+        }
+      ],
       "gameCategory": "其他"
     }
   ]

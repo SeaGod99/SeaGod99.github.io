@@ -304,6 +304,13 @@ a { color: inherit; text-decoration: none; }
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 10px;
 }
+/* 格線項目必須可以縮到 min-content 以下（2026-07-28 修手機水平溢出）。
+   `1fr` 的軌道下限是項目的 min-content，不是 0——所以各頁在窄螢幕寫死
+   `grid-template-columns: 1fr 1fr` 時，軌道會被卡片的 min-content 撐住縮不回去：
+   坐騎頁在 430px 實測容器只有 367px，軌道卻算成 `198px 198px`（198×2＋10 gap＝406），
+   整頁因此橫向溢出 15px。加這條等同把每欄變成 minmax(0, 1fr)，一次修掉所有
+   用 .col-grid 的頁，也不影響預設的 auto-fill minmax(200px,1fr)（那本來就有明確下限）。 */
+.col-grid > * { min-width: 0; }
 
 /* 卡片基底（左對齊）。置中版型加 .center 修飾類 */
 .col-card {

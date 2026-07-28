@@ -104,12 +104,20 @@ function ensureDom() {
  * 開啟地圖彈窗
  * @param {{mapId:number, x:number, y:number, title:string, sub?:string, flagText?:string}} opts
  */
+/**
+ * 開啟地圖彈窗。
+ * x／y 可以省略——有些來源只知道「在哪一區」而不知道確切座標（青魔法的野外習得就是
+ * 這種：資料只給地區與怪物名）。這時不畫大頭針，座標列改標「整區皆可能」，
+ * **不要拿 0 或 NaN 去算位置**，那會把針釘在地圖左上角、看起來像真的有這個點。
+ */
 export function openMapModal({ mapId, x, y, title, sub, flagText }) {
   const overlay = ensureDom();
   const m = _maps.get(mapId);
+  const hasCoord = Number.isFinite(Number(x)) && Number.isFinite(Number(y));
   overlay.querySelector('.mmw-title').textContent = title || '';
   overlay.querySelector('.mmw-sub').textContent = sub || (m ? m.name : '');
-  overlay.querySelector('.mmw-coord').textContent = `X: ${fmt(x)}　Y: ${fmt(y)}`;
+  overlay.querySelector('.mmw-coord').textContent =
+    hasCoord ? `X: ${fmt(x)}　Y: ${fmt(y)}` : '整區皆可能（本站資料未提供確切座標）';
 
   const flagBtn = overlay.querySelector('.mmw-flag');
   if (flagText) {
@@ -124,14 +132,19 @@ export function openMapModal({ mapId, x, y, title, sub, flagText }) {
   if (!m || !m.image) {
     box.innerHTML = '<div class="mmw-empty">此區域尚無地圖底圖，請依座標前往。</div>';
   } else {
-    const span = 41 * 100 / (m.sizeFactor || 100); // 地圖座標跨度
-    const px = clamp((x - 1) / span * 100);
-    const py = clamp((y - 1) / span * 100);
-    box.innerHTML = `
+    const img = `
       <img src="${_base}${m.image.local}" alt="${m.name}"
-           onerror="if(this.dataset.retry){this.parentElement.innerHTML='<div class=&quot;mmw-empty&quot;>地圖載入失敗，請依座標前往。</div>'}else{this.dataset.retry=1;this.src='${m.image.url}';}">
-      <span class="mmw-ring" style="left:${px}%;top:${py}%"></span>
-      <span class="mmw-pin" style="left:${px}%;top:${py}%">📍</span>`;
+           onerror="if(this.dataset.retry){this.parentElement.innerHTML='<div class=&quot;mmw-empty&quot;>地圖載入失敗，請依座標前往。</div>'}else{this.dataset.retry=1;this.src='${m.image.url}';}">`;
+    if (!hasCoord) {
+      box.innerHTML = img;                       // 只給區域：只放底圖，不釘針
+    } else {
+      const span = 41 * 100 / (m.sizeFactor || 100); // 地圖座標跨度
+      const px = clamp((x - 1) / span * 100);
+      const py = clamp((y - 1) / span * 100);
+      box.innerHTML = img +
+        `<span class="mmw-ring" style="left:${px}%;top:${py}%"></span>
+         <span class="mmw-pin" style="left:${px}%;top:${py}%">📍</span>`;
+    }
   }
   overlay.style.display = 'flex';
 }

@@ -502,10 +502,26 @@ ARR 2.x / HW 3.x / SB 4.x / ShB 5.x / EW 6.x / DT 7.x
 
 | type | 欄位 |
 |------|------|
-| `NPC對戰` | `npcId`／`npcName`／`npcTitle`／`dropType`（固定・隨機）／`location`{`mapId`,`mapName`,`x`,`y`} |
-| `副本`／`多人副本`／`討伐戰` | 新資料：`contentId`（對 `dungeons.json` 的 id）＋`detail`（繁中副本名）；**舊資料只有 `instanceId`**，其中 2xxxx/3xxxx 段對不到 dungeons.json，屬已知缺口 |
-| `商店`（含 `MGP商店`／`雙色寶石商店`…） | `detail`；新資料另帶 `npcId`／`npcName`／`location` |
-| `任務`／`藏寶圖` | 舊資料只有 `questId`／`treasureId`，沒有名稱（已知缺口） |
+| `NPC對戰` | `npcId`／`npcName`／`npcTitle`／`dropType`（固定・隨機）／`location`{`mapId`,`mapName`,`x`,`y`}。**這型別沒有 `detail` 是正常的**，前端靠 `npcName`＋`location` 組行 |
+| `副本`／`多人副本`／`討伐戰`／`大型任務` | `contentId`（對 `dungeons.json` 的 id）＋`detail`（繁中副本名）。type 一律由 `dungeons.json` 的 `type` 推得，不沿用上游 |
+| `商店`（含 `MGP商店`／`雙色寶石商店`…） | `detail`；部分另帶 `npcId`／`npcName`／`location` |
+| `卡包` | `itemId`（對 `items.json`）＋`detail`＝「卡包名（兌換 NPC・價格）」 |
+| `任務` | `questId`＋`detail`（Teamcraft `tw/tw-quests.json` 官方繁中任務名） |
+| `藏寶圖` | `itemId`＋`detail`（寶藏物品名） |
+
+**2026-07-28 補齊**（[`patch-triple-triad-source-names.mjs`](../scripts/patch-triple-triad-source-names.mjs)）：
+原本 281 筆來源只有 id 沒有名稱，已補到剩 11 筆。三個必須記住的點：
+
+1. **舊資料的 `instanceId` 是 Garland Tools 自家 id，不是 ContentFinderCondition id。**
+   182 個裡有 64 個「剛好」也是 `dungeons.json` 的有效 key，但實測 **151 個對到的是錯的副本**
+   （Garland 96＝深空天坑，dungeons.json 96＝巴哈姆特大迷宮邂逅之章4）。解析一律走
+   **英文名比對**。已解出的 178 個副本，`instanceId` 已刪除、改存 `contentId`，避免下次誤用。
+2. **舊資料的 `treasureId` 其實是 `itemId`**，而且 10 個裡有 7 個是金碟幣買的「九宮幻卡◯包」
+   卡包（`obtainable-methods.json` 佐證），型別「藏寶圖」是上游標錯的，已拆成 `卡包`／`藏寶圖`。
+3. **仍留 17 筆純英文 `detail`**：14 筆成就名（Title/Achievement 非物品，`tw-items` 不涵蓋，
+   全站對成就繁中名的立場是擱置）＋2 筆 wiki 英文句子＋1 筆 `Mount Rokkon`。另 11 筆無名稱＝
+   `dungeons.json` 沒收的內容（Cape Westwind 已下架、36xxx 段的異聞迷宮 3 座）。**要補請先補
+   `dungeons.json`，不要在前端或這支腳本裡猜。**
 
 ### 2.8 blue-magic（青魔法）
 

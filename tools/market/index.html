@@ -504,6 +504,24 @@
     var $ = function (s, r) { return (r || document).querySelector(s); };
     var fmt = function (n) { return Universalis.fmtGil(n); };
     function iconUrl(it) { return it && it.icon ? ICON_CDN + it.icon : ''; }
+
+    /* 把 items-market.json 的陣列列展開回本頁其餘程式吃的物件形狀。
+       列格式：[id, name, categoryIndex, iconNo, marketable(0/1), patch]
+       icon 路徑由編號組回——格式固定是 /i/<編號/1000*1000>/<編號>.png，
+       build 腳本已對 43748 筆驗證過資料夾都推得回來（不符就會中止不產檔）。 */
+    function expandMarketItems(db) {
+      var cats = db.categories || [];
+      return db.data.map(function (r) {
+        var no = r[3];                       // -1 ＝沒有 icon；0 是合法編號，不能當假值判斷
+        var icon = no < 0 ? null
+          : '/i/' + String(Math.floor(no / 1000) * 1000).padStart(6, '0') + '/' + String(no).padStart(6, '0') + '.png';
+        return {
+          id: r[0], name: r[1],
+          category: cats[r[2]] || null,      // 空字串還原成 null，與 items.json 一致
+          icon: icon, marketable: !!r[4], patch: r[5] || null
+        };
+      });
+    }
     function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]; }); }
     function relTime(ms) {
       if (!ms) return '';
@@ -1261,7 +1279,7 @@
       var shopHtml = shopRows.length ? ('<div class="got-progress" id="gotProgress">' + gotProgressInnerHtml(gotStats()) + '</div>' +
         '<table class="listings"><thead><tr><th>原料</th><th class="num">數量</th><th class="num">已收集</th>' + (dc ? '<th>最便宜伺服器</th>' : '') + '<th class="num">單價</th><th class="num">小計</th></tr></thead><tbody>' +
         shopRows.map(function (r) {
-          return '<tr data-gotrow="' + r.id + '"' + (r.got >= r.qty ? ' class="got-done"' : '') + '><td><img class="item-icon" style="width:20px;height:20px;vertical-align:middle;margin-right:6px" src="' + r.icon + '" onerror="this.style.visibility=\'hidden\'">' + esc(r.name) + '</td>' +
+          return '<tr data-gotrow="' + r.id + '"' + (r.got >= r.qty ? ' class="got-done"' : '') + '><td><img class="item-icon" style="width:20px;height:20px;vertical-align:middle;margin-right:6px" src="' + r.icon + '" loading="lazy" onerror="this.style.visibility=\'hidden\'">' + esc(r.name) + '</td>' +
             '<td class="num">' + r.qty + '</td>' +
             '<td class="num got-cell"><input type="number" class="got-input" data-got="' + r.id + '" min="0" max="' + r.qty + '" value="' + r.got + '" aria-label="' + esc(r.name) + ' 已收集數量"><button class="got-all" data-gotall="' + r.id + '" title="一鍵收齊／再按一次重設為 0">✓</button></td>' +
             (dc ? '<td>' + (r.world ? '<span class="tag world">' + esc(r.world) + '</span>' : '—') + (r.hq ? ' <span class="hqb">HQ</span>' : '') + '</td>' : '') +
@@ -1748,9 +1766,11 @@
       // 載入資料
       try {
         gamePatch = await PatchGate.loadGamePatch('../../data/_meta.json');
-        var res = await fetch('../../data/items.json');
+        // 讀精簡表而不是 10MB 的 items.json：本頁只用到六個欄位，整包載完才能動實在太貴。
+        // 產生方式與欄位說明見 scripts/build-items-market.mjs（改完 items.json 要重跑）。
+        var res = await fetch('../../data/items-market.json');
         var db = await res.json();
-        items = db.data;
+        items = expandMarketItems(db);
         itemById = new Map(items.map(function (it) { return [it.id, it]; }));
         // 背景預載：配方（卡片職業列／製作清單零等待）＋裝備限制（填職業下拉）
         ensureRecipes().then(function () {
