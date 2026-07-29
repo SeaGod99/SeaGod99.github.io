@@ -76,7 +76,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 
 | 腳本 | 什麼時候跑 | 產出 |
 |------|-----------|------|
-| `build-squadron.mjs` | 幾乎不用（4.x 後小隊內容未變，數值內嵌在腳本裡） | `data/squadron.json` |
+| `build-squadron.mjs` | 幾乎不用（4.x 後小隊內容未變，數值內嵌在腳本裡）。**跑完必接 `minify-data.mjs --apply`＋`sync-meta.mjs --apply`**（腳本寫的是 pretty JSON，但前端載的是壓縮版） | `data/squadron.json` |
 | `build-blue-magic.mjs` | 台服開新青魔法時（XIVAPI AozAction 全抓） | `data/blue-magic.json` |
 | `build-barding.mjs` | 新增鳥鞍時 | `data/barding.json` |
 | `build-npcs.mjs` | 換 Teamcraft TW 版本時（只有建置用，前端不載） | `data/npcs.json` |
@@ -200,5 +200,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 - **幻卡少了新卡** → `node scripts/patch-triple-triad-new-cards.mjs`（dry-run 看要補什麼）→ 加 `--apply` → `node scripts/download-triple-triad-images.mjs` 補卡面圖 → `node scripts/patch-triple-triad-source-names.mjs --apply`（補取得方式的繁中名）→ `node scripts/validate-data.mjs`。**張數不要相信 build 腳本裡的常數**（`build-triple-triad-all.mjs` 寫死 425，7.1 的 10 張新卡就這樣安靜漏掉）；真實張數＝`items.json` 裡 category「九宮幻卡」的道具數。7.1 以後的 sheet 只有 XIVAPI **v2** 有（v1 已停更）。
 - **接外部工具站的 id 之前** → **先用名稱對一次再接**。幻卡舊資料的 `instanceId` 是 Garland 自家 id，182 個裡 64 個「剛好」也是 `dungeons.json` 的有效 key，但其中 **151 個對到的是錯的副本**（知識庫 §4.10）。同一個坑在 mapId 已經踩過一次。
 - **看到收藏頁某筆「沒有取得方式」** → 先確認**它在遊戲裡是不是真的存在**。坐騎有 4 筆是 `Mount.Order === -1` 的內部列（玩家拿不到、其中 3 筆還是重複），補 sources 是補錯方向（知識庫 §4.11）。
+- **要重跑任何 `build-*.mjs` 之前** → 先確認那份 JSON 裡**每個 `kind`／區塊都有腳本會產生**。`squadron.json` 的 60 筆隊員曾經只存在於 JSON、沒有腳本產它，重跑會安靜洗掉（知識庫 §4.19）。最快的檢查＝跑完跟舊檔 diff 一次。
+- **新頁要存 localStorage** → key 一律 `ffxiv_` 開頭，否則首頁全站備份掃不到、使用者的資料備份不出去也不會有提示（知識庫 §2.3）。
 - **要量版面／水平溢出／console error** → 用 headless **Edge** ＋ CDP（本機 Chromium 起不來，Node 24 有原生 WebSocket 故不必裝 puppeteer）。**`setDeviceMetricsOverride` 要 `mobile:false`**，傳路徑參數要 `MSYS_NO_PATHCONV=1`（知識庫 §3.5）。jsdom 只驗得了 DOM 結構，量不了版面。
 - **升台服版本** → 改 `data/_meta.json` 的 `gamePatch` → `patch-backfill` 三支（`--apply`）→ `backfill-sources.mjs` → `validate-data.mjs` → commit。

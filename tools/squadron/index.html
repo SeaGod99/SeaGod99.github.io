@@ -66,35 +66,47 @@
     .roster-count strong { color:var(--gold); }
 
     /* MEMBER CARDS */
-    .member-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:.75rem; }
-    .member-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:.9rem; position:relative; }
+    /* 名冊固定 8 格（4 欄 × 2 列），對應遊戲內小隊上限 */
+    .member-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:.6rem; }
+    @media(max-width:1100px){ .member-grid { grid-template-columns:repeat(2,1fr); } }
+    @media(max-width:560px){  .member-grid { grid-template-columns:1fr; } }
+    .member-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:.6rem .7rem; position:relative; }
     .member-card.active-slot { border-color:rgba(200,169,110,.25); }
-    .member-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:.55rem; }
-    .member-num { font-size:.72rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:.05em; }
-    .member-actions { display:flex; gap:.3rem; }
-    .member-name-row { display:flex; align-items:baseline; gap:.4rem; margin-bottom:.3rem; }
-    .member-name { font-size:.9rem; font-weight:600; color:var(--text); }
-    .member-sub { font-size:.72rem; color:var(--text-dim); }
-    .member-race-badge { font-size:.65rem; padding:.05rem .3rem; border-radius:3px; background:var(--bg-surface); border:1px solid var(--border); color:var(--text-dim); }
-    .member-row { display:grid; grid-template-columns:2.2rem 1fr; gap:.32rem; align-items:center; margin-bottom:.32rem; }
-    .member-row label { font-size:.74rem; color:var(--text-dim); }
-    select, input[type=number], input[type=text] { width:100%; background:var(--bg-surface); border:1px solid var(--border); border-radius:5px; color:var(--text); padding:.28rem .42rem; font-size:.78rem; outline:none; transition:border-color .2s; }
+    .member-header { display:flex; align-items:baseline; justify-content:space-between; gap:.4rem; margin-bottom:.4rem; }
+    .member-name { font-size:.86rem; font-weight:600; color:var(--text); }
+    .member-race-badge { font-size:.64rem; padding:.05rem .28rem; border-radius:3px; background:var(--bg-surface); border:1px solid var(--border); color:var(--text-dim); }
+    .member-del { background:none; border:none; color:var(--text-muted); font-size:.85rem; line-height:1; cursor:pointer; padding:.1rem .2rem; }
+    .member-del:hover { color:var(--red); }
+    /* 職業與等級併成一列，省掉兩個欄位標籤 */
+    .member-jl { display:grid; grid-template-columns:1fr 4.2rem; gap:.35rem; margin-bottom:.4rem; }
+    select, input[type=number], input[type=text] { width:100%; background:var(--bg-surface); border:1px solid var(--border); border-radius:5px; color:var(--text); padding:.26rem .4rem; font-size:.76rem; outline:none; transition:border-color .2s; }
     select:focus, input[type=number]:focus, input[type=text]:focus { border-color:var(--gold); }
-    .member-stats { display:flex; gap:.3rem; margin-top:.45rem; flex-wrap:wrap; }
-    .stat-badge { font-size:.7rem; padding:.1rem .35rem; border-radius:4px; background:var(--bg-surface); border:1px solid var(--border); }
+    .member-row { display:grid; grid-template-columns:2.8rem 1fr; gap:.32rem; align-items:center; margin-bottom:.3rem; }
+    .member-row label { font-size:.72rem; color:var(--text-dim); }
+    .member-stats { display:flex; gap:.28rem; flex-wrap:wrap; }
+    .stat-badge { font-size:.69rem; padding:.1rem .34rem; border-radius:4px; background:var(--bg-surface); border:1px solid var(--border); }
     .stat-ph { color:var(--red); } .stat-me { color:var(--blue); } .stat-ta { color:var(--green); }
-    .chem-divider { height:1px; background:var(--border); margin:.5rem 0; }
-    .chem-label { font-size:.66rem; color:var(--gold); letter-spacing:.05em; text-transform:uppercase; margin-bottom:.3rem; }
-    .chem-effect { font-size:.71rem; color:var(--cyan); margin-top:.22rem; min-height:.85rem; }
-    .chem-triggered { font-size:.68rem; padding:.08rem .3rem; border-radius:3px; margin-left:.3rem; }
+
+    /* 吉兆收合區：預設只顯示一行摘要，要調整才展開 */
+    .chem-box { margin-top:.45rem; border-top:1px solid var(--border); padding-top:.4rem; }
+    .chem-summary { display:flex; align-items:center; gap:.3rem; cursor:pointer; font-size:.71rem; color:var(--text-dim); list-style:none; }
+    .chem-summary::-webkit-details-marker { display:none; }
+    .chem-summary::before { content:'▸'; color:var(--gold); font-size:.7rem; flex-shrink:0; }
+    details[open] > .chem-summary::before { content:'▾'; }
+    .chem-summary:hover { color:var(--gold); }
+    .chem-sum-text { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--cyan); }
+    .chem-sum-text.none { color:var(--text-muted); }
+    .chem-fields { padding-top:.45rem; }
+    .chem-effect { font-size:.7rem; color:var(--cyan); margin-top:.2rem; }
+    .chem-triggered { font-size:.66rem; padding:.06rem .28rem; border-radius:3px; flex-shrink:0; }
     .chem-on  { background:rgba(74,222,128,.15); color:var(--green); border:1px solid rgba(74,222,128,.3); }
     .chem-off { background:var(--bg-surface); color:var(--text-muted); border:1px solid var(--border); }
 
     /* EMPTY SLOT */
-    .member-empty { border:1px dashed rgba(255,255,255,.08); cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.4rem; min-height:100px; transition:border-color .2s; }
+    .member-empty { border:1px dashed rgba(255,255,255,.08); cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.3rem; min-height:96px; transition:border-color .2s; }
     .member-empty:hover { border-color:rgba(200,169,110,.3); }
-    .member-empty-icon { font-size:1.4rem; opacity:.3; }
-    .member-empty-text { font-size:.75rem; color:var(--text-muted); }
+    .member-empty-icon { font-size:1.2rem; opacity:.3; }
+    .member-empty-text { font-size:.72rem; color:var(--text-muted); }
 
     /* TEAM TOTAL */
     .team-total { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:1rem 1.5rem; display:flex; gap:2rem; flex-wrap:wrap; align-items:center; }
@@ -123,43 +135,63 @@
     /* MISSION SECTION */
     .mission-controls { display:flex; gap:.6rem; flex-wrap:wrap; align-items:center; margin-bottom:1rem; }
     .variant-sel { display:flex; gap:.3rem; align-items:center; font-size:.78rem; color:var(--text-dim); }
-    .filter-btns { display:flex; gap:.3rem; flex-wrap:wrap; }
-    .filter-btn { border:1px solid var(--border); background:var(--bg-surface); color:var(--text-dim); border-radius:5px; padding:.22rem .6rem; font-size:.73rem; cursor:pointer; transition:all .15s; }
-    .filter-btn.active { background:var(--gold-dim); border-color:rgba(200,169,110,.4); color:var(--gold); }
-    .best4-btn { background:rgba(167,139,250,.12); border:1px solid rgba(167,139,250,.3); color:var(--purple); border-radius:6px; padding:.32rem .9rem; font-size:.78rem; cursor:pointer; transition:all .15s; }
-    .best4-btn:hover { background:rgba(167,139,250,.22); }
+    /* 任務列表頁籤 */
+    .mission-tabs { display:flex; gap:.15rem; border-bottom:1px solid var(--border); margin-bottom:.9rem; overflow-x:auto; }
+    .mission-tab { flex-shrink:0; background:none; border:none; border-bottom:2px solid transparent; color:var(--text-dim);
+                   padding:.45rem .8rem; font-size:.82rem; cursor:pointer; transition:all .15s; white-space:nowrap;
+                   font-family:inherit; margin-bottom:-1px; }
+    .mission-tab:hover { color:var(--text); }
+    .mission-tab.active { color:var(--gold); border-bottom-color:var(--gold); }
+    .mission-tab .tab-count { font-size:.7rem; color:var(--text-muted); margin-left:.3rem; }
+    .mission-tab.active .tab-count { color:var(--gold); opacity:.75; }
 
-    /* MISSION LIST */
-    .mission-list { display:flex; flex-direction:column; gap:.45rem; }
-    .mission-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; transition:border-color .2s; }
-    .mission-card.can-100 { border-color:rgba(74,222,128,.4); }
-    .mission-card.can-partial { border-color:rgba(200,169,110,.25); }
-    .mission-card.impossible { opacity:.38; }
-    .mission-main { display:flex; align-items:center; gap:1rem; padding:.6rem 1rem; flex-wrap:wrap; cursor:default; }
-    .mission-info { flex:1; min-width:150px; }
-    .mission-name { font-size:.88rem; font-weight:600; }
-    .mission-meta { font-size:.71rem; color:var(--text-dim); margin-top:.15rem; display:flex; gap:.4rem; flex-wrap:wrap; align-items:center; }
-    .mission-type { font-size:.63rem; padding:.06rem .38rem; border-radius:3px; font-weight:600; }
+    /* MISSION TABLE */
+    .mission-list { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); overflow-x:auto; }
+    /* min-width 是必要的：表格預設會壓縮欄寬去塞進容器，窄螢幕下任務名會被擠成一行一個字。
+       給了下限它才會改成在容器內橫向捲動（外層 .mission-list 有 overflow-x:auto）。 */
+    .mtable { width:100%; min-width:900px; border-collapse:collapse; font-size:.78rem; }
+    /* 表頭不用 sticky：外層為了避免整頁橫向溢出而開了 overflow-x，
+       這會讓它變成 sticky 的容器、但它本身不垂直捲動，設了也不會生效 */
+    .mtable th { background:var(--bg-card); text-align:left; white-space:nowrap;
+                 font-size:.68rem; font-weight:600; color:var(--text-muted); letter-spacing:.04em;
+                 padding:.55rem .6rem; border-bottom:1px solid var(--border); }
+    .mtable th.sortable { cursor:pointer; user-select:none; }
+    .mtable th.sortable:hover { color:var(--gold); }
+    .mtable th .arrow { color:var(--gold); font-size:.62rem; margin-left:.15rem; }
+    .mtable td { padding:.45rem .6rem; border-bottom:1px solid rgba(255,255,255,.04); vertical-align:middle; }
+    .mtable tbody tr:last-child td { border-bottom:none; }
+    .mtable tbody tr:hover { background:rgba(255,255,255,.025); }
+    /* 左緣色條標成功率高低，一眼掃得出哪些能打 */
+    .mtable tbody tr td:first-child { border-left:3px solid transparent; }
+    .mtable tr.can-100 td:first-child { border-left-color:var(--green); }
+    .mtable tr.can-partial td:first-child { border-left-color:var(--gold); }
+    .mtable tr.impossible { opacity:.42; }
+    .mtable tr.impossible td:first-child { border-left-color:var(--red); }
+
+    .m-name { font-weight:600; color:var(--text); white-space:nowrap; }
+    .m-name .flag { color:var(--purple); }
+    .m-reward { font-size:.68rem; color:var(--text-muted); margin-top:.1rem; white-space:nowrap; }
+    .mission-type { font-size:.63rem; padding:.06rem .38rem; border-radius:3px; font-weight:600; white-space:nowrap; }
     .type-trainee  { background:var(--blue-dim);   color:var(--blue);   border:1px solid rgba(79,195,247,.25); }
     .type-routine  { background:var(--gold-dim);   color:var(--gold);   border:1px solid rgba(200,169,110,.25); }
     .type-priority { background:var(--purple-dim); color:var(--purple); border:1px solid rgba(167,139,250,.25); }
-    .mission-reqs { display:flex; gap:.45rem; }
-    .req-item { font-size:.7rem; display:flex; flex-direction:column; align-items:center; gap:.06rem; }
-    .req-lbl { color:var(--text-muted); font-size:.6rem; }
-    .req-val { font-weight:700; }
-    .req-met   { color:var(--green); } .req-unmet { color:var(--red); }
-    .mission-rate { min-width:72px; text-align:right; }
-    .rate-val { font-size:1.2rem; font-weight:700; }
-    .rate-100 { color:var(--green); } .rate-hi { color:var(--gold); } .rate-lo { color:var(--orange); } .rate-no { color:var(--text-muted); }
-    .rate-bonus { font-size:.66rem; color:var(--cyan); display:block; }
-    .rate-pool  { font-size:.66rem; color:var(--purple); display:block; }
+    .m-num { text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; }
+    .mission-warn { font-size:.64rem; color:var(--orange); white-space:nowrap; }
 
-    /* BEST-4 RESULT */
-    .best4-result { background:var(--bg-card); border:1px solid rgba(167,139,250,.3); border-radius:var(--radius); padding:1rem 1.2rem; margin-bottom:1rem; }
-    .best4-title { font-size:.78rem; font-weight:700; color:var(--purple); margin-bottom:.5rem; }
-    .best4-members { display:flex; gap:.4rem; flex-wrap:wrap; margin-bottom:.4rem; }
-    .best4-chip { background:var(--purple-dim); border:1px solid rgba(167,139,250,.3); border-radius:5px; padding:.18rem .5rem; font-size:.76rem; color:var(--purple); }
-    .best4-stats { font-size:.75rem; color:var(--text-dim); }
+    /* 屬性欄：我的數值 / 門檻 */
+    .m-stat { text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; }
+    .m-have { font-weight:700; }
+    .m-have.met   { color:var(--green); }
+    .m-have.unmet { color:var(--red); }
+    .m-sep  { color:var(--text-muted); margin:0 .1rem; }
+    .m-need { color:var(--text-dim); }
+    .m-gap  { display:block; font-size:.63rem; color:var(--red); }
+
+    .m-rate { text-align:right; font-size:1.05rem; font-weight:700; white-space:nowrap; }
+    .rate-100 { color:var(--green); } .rate-hi { color:var(--gold); } .rate-lo { color:var(--orange); } .rate-no { color:var(--text-muted); }
+    .rate-pool { display:block; font-size:.62rem; font-weight:400; color:var(--purple); }
+    .m-squad { font-size:.71rem; color:var(--purple); min-width:150px; }
+    .m-squad .lbl { color:var(--text-muted); }
 
     /* MODAL */
     .modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,.7); display:flex; align-items:center; justify-content:center; z-index:1000; padding:1rem; }
@@ -187,8 +219,31 @@
     .filter-pill { border:1px solid var(--border); background:var(--bg-surface); color:var(--text-dim); border-radius:5px; padding:.18rem .55rem; font-size:.72rem; cursor:pointer; transition:all .15s; }
     .filter-pill.active { background:var(--gold-dim); border-color:rgba(200,169,110,.4); color:var(--gold); }
 
+    /* VARIANT FINDER */
+    .variant-finder { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:.7rem .9rem; margin-bottom:.8rem; }
+    .vf-row { display:flex; gap:.4rem; align-items:flex-end; flex-wrap:wrap; }
+    .vf-field { display:flex; flex-direction:column; gap:.15rem; }
+    .vf-field label { font-size:.66rem; color:var(--text-dim); }
+    .vf-field input { width:76px; text-align:center; }
+    .vf-result { font-size:.73rem; color:var(--text-dim); margin-top:.45rem; min-height:1rem; }
+    .vf-ok { color:var(--green); } .vf-bad { color:var(--red); }
+
+    /* TACTICS REFERENCE */
+    .tactic-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:.6rem; }
+    .tactic-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:.7rem .85rem; }
+    .tactic-name { font-size:.82rem; font-weight:600; color:var(--cyan); }
+    .tactic-desc { font-size:.71rem; color:var(--text-dim); margin:.25rem 0 .4rem; line-height:1.45; }
+    .tactic-nums { display:flex; gap:.35rem; flex-wrap:wrap; }
+    details.reference > summary { cursor:pointer; font-size:.78rem; color:var(--text-dim); list-style:none; padding:.3rem 0; }
+    details.reference > summary::-webkit-details-marker { display:none; }
+    details.reference > summary::before { content:'▸ '; color:var(--gold); }
+    details.reference[open] > summary::before { content:'▾ '; }
+    details.reference > summary:hover { color:var(--gold); }
+    .ref-body { padding-top:.6rem; }
+
     /* MISC */
     .empty-state { text-align:center; padding:2.5rem 1rem; color:var(--text-muted); font-size:.85rem; }
+    .hint { font-size:.7rem; color:var(--text-muted); line-height:1.5; }
     .loading { text-align:center; padding:2rem; color:var(--text-muted); }
     .two-col { display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; }
     @media(max-width:700px){ .two-col { grid-template-columns:1fr; } }
@@ -211,27 +266,37 @@
     <div class="section-title">小隊設定</div>
     <div class="roster-bar">
       <button class="btn btn-primary" onclick="openModal()">＋ 新增隊員</button>
-      <span class="roster-count">已選 <strong id="rosterCount">0</strong> / 8 位</span>
+      <span class="roster-count">名冊 <strong id="rosterCount">0</strong> / 8 位</span>
+      <button class="btn btn-sm" onclick="clearAll()">清除全部</button>
     </div>
+    <p class="hint" style="margin-bottom:.75rem;">
+      隊員屬性只由「目前職業」＋等級決定；職業可在遊戲中用〈戰鬥技巧教材〉更換，這裡直接改即可。
+      遊戲一次派 4 人出擊，<strong style="color:var(--purple)">每個任務會自動從名冊挑出成功率最高的 4 人</strong>，
+      派誰標在任務列表上，不用自己勾。
+    </p>
     <div class="member-grid" id="memberGrid"></div>
   </div>
 
-  <!-- 小隊能力總值 -->
+  <!-- 名冊能力上限 -->
   <div class="section">
-    <div class="section-title">小隊能力總值</div>
+    <div class="section-title">名冊能力上限</div>
     <div class="team-total" id="teamTotal">
       <div>
         <div class="total-label">體能</div>
-        <div><span class="total-val stat-ph" id="totPh">0</span><span class="total-bonus" id="bonPh"></span><span class="total-pool" id="poolPh"></span></div>
+        <div><span class="total-val stat-ph" id="totPh">0</span><span class="total-pool" id="poolPh"></span></div>
+        <div class="hint" id="whoPh"></div>
       </div>
       <div>
         <div class="total-label">心智</div>
-        <div><span class="total-val stat-me" id="totMe">0</span><span class="total-bonus" id="bonMe"></span><span class="total-pool" id="poolMe"></span></div>
+        <div><span class="total-val stat-me" id="totMe">0</span><span class="total-pool" id="poolMe"></span></div>
+        <div class="hint" id="whoMe"></div>
       </div>
       <div>
         <div class="total-label">戰術</div>
-        <div><span class="total-val stat-ta" id="totTa">0</span><span class="total-bonus" id="bonTa"></span><span class="total-pool" id="poolTa"></span></div>
+        <div><span class="total-val stat-ta" id="totTa">0</span><span class="total-pool" id="poolTa"></span></div>
+        <div class="hint" id="whoTa"></div>
       </div>
+      <div id="totalNote" class="hint" style="flex:1;min-width:170px"></div>
     </div>
   </div>
 
@@ -249,23 +314,28 @@
         <div class="pool-stats">
           <div class="pool-stat">
             <label class="stat-ph">體能</label>
-            <input type="number" id="poolPhInput" min="0" value="0" oninput="onPoolChange()">
+            <input type="number" id="poolPhInput" min="0" step="20" value="0" oninput="onPoolChange()">
           </div>
           <div class="pool-stat">
             <label class="stat-me">心智</label>
-            <input type="number" id="poolMeInput" min="0" value="0" oninput="onPoolChange()">
+            <input type="number" id="poolMeInput" min="0" step="20" value="0" oninput="onPoolChange()">
           </div>
           <div class="pool-stat">
             <label class="stat-ta">戰術</label>
-            <input type="number" id="poolTaInput" min="0" value="0" oninput="onPoolChange()">
+            <input type="number" id="poolTaInput" min="0" step="20" value="0" oninput="onPoolChange()">
           </div>
         </div>
         <div class="pool-total">
           <span>總計：<span id="poolTotalTxt">0</span> / <span id="poolCapTxt">400</span></span>
           <div class="pool-bar"><div class="pool-bar-fill" id="poolBarFill" style="width:0%"></div></div>
           <span id="poolOverTxt"></span>
+          <button class="btn btn-sm" id="poolTrimBtn" onclick="trimPool()" style="display:none">壓回上限</button>
         </div>
-        <div style="margin:.7rem 0 .5rem; font-size:.72rem; color:var(--text-muted);">點擊訓練：未超上限直接加值；超上限時自動按比例重分配</div>
+        <p class="hint" style="margin:.7rem 0 .5rem;">
+          點擊訓練會加值；總和碰到上限後改成「挖東牆補西牆」——<strong>扣的是這次沒被訓練到的屬性，各項平均分攤，
+          且一律以 20 為一個單位</strong>（基礎訓練＝該項 +40、其他兩項各 −20；組合訓練＝兩項各 +20、剩下那項 −40）。
+          手動輸入不強制壓上限，方便照抄遊戲內現況；超出時按「壓回上限」即可（三項平均扣，同樣走 20 單位）。
+        </p>
         <div class="training-btns" id="trainingBtns"></div>
       </div>
     </div>
@@ -285,22 +355,61 @@
             <option value="5">配置 6</option>
           </select>
         </div>
-        <div class="filter-btns">
-          <button class="filter-btn active" data-filter="all" onclick="setFilter(this,'all')">全部</button>
-          <button class="filter-btn" data-filter="trainee" onclick="setFilter(this,'trainee')">簡單</button>
-          <button class="filter-btn" data-filter="routine" onclick="setFilter(this,'routine')">一般</button>
-          <button class="filter-btn" data-filter="priority" onclick="setFilter(this,'priority')">優先</button>
-        </div>
       </div>
-      <button class="best4-btn" onclick="calcBest4()" style="margin-bottom:.8rem; width:100%;">★ 計算最佳4人組合</button>
-      <div id="best4Result" style="display:none"></div>
+      <div class="variant-finder">
+        <div class="hint" style="margin-bottom:.4rem;">
+          不確定這週是第幾組配置？把遊戲裡看到的三個門檻打進來，反推給你。
+          指定是哪個任務可以一次問到答案；選「不指定」則會比對全部任務，可能會對到多組。
+        </div>
+        <div class="vf-row">
+          <div class="vf-field" style="flex:1;min-width:180px">
+            <label>來源任務</label>
+            <select id="vfMission"><option value="any">不指定（比對全部任務）</option></select>
+          </div>
+          <div class="vf-field"><label class="stat-ph">體能門檻</label><input type="number" id="vfPh" min="0" placeholder="—"></div>
+          <div class="vf-field"><label class="stat-me">心智門檻</label><input type="number" id="vfMe" min="0" placeholder="—"></div>
+          <div class="vf-field"><label class="stat-ta">戰術門檻</label><input type="number" id="vfTa" min="0" placeholder="—"></div>
+          <button class="btn" onclick="findVariant()">反推配置</button>
+        </div>
+        <div class="vf-result" id="vfResult"></div>
+      </div>
+
     </div>
   </div>
 
   <!-- 任務列表 -->
   <div class="section">
     <div class="section-title">任務列表</div>
+    <div class="mission-tabs" id="missionTabs" role="tablist"></div>
+    <p class="hint" style="margin-bottom:.6rem;">
+      體能／心智／戰術欄為「<span class="m-have met">出擊隊伍實際數值</span><span class="m-sep">/</span><span class="m-need">任務門檻</span>」——
+      數字<span style="color:var(--green)">綠色</span>代表達標、<span style="color:var(--red)">紅色</span>代表不足並標出還差多少。
+      每列的實際數值會不一樣，因為每個任務都是各自挑最適合的 4 人。點「等級／成功率／軍票／經驗」欄位標題可排序。
+    </p>
     <div class="mission-list" id="missionList"></div>
+  </div>
+
+  <!-- 參考資料 -->
+  <div class="section">
+    <div class="section-title">參考資料</div>
+
+    <details class="reference">
+      <summary>隊員轉職：戰鬥技巧教材對照</summary>
+      <div class="ref-body">
+        <div class="tactic-grid" id="bookGrid"></div>
+        <p class="hint" style="margin-top:.6rem;">
+          三本教材皆售於軍隊需求品交換員（黑渦團／雙蛇黨／恆輝隊），各 3000 軍票，需一等軍銜以上。
+          轉職會保留吉兆的效果與等階，但會損失經驗值、可能因此掉等級。
+        </p>
+      </div>
+    </details>
+
+    <details class="reference">
+      <summary>指令任務作戰方針（副本同行用，不影響上方派遣計算）</summary>
+      <div class="ref-body">
+        <div class="tactic-grid" id="tacticGrid"></div>
+      </div>
+    </details>
   </div>
 
 </div>
@@ -320,7 +429,7 @@
     <div class="modal-body">
       <table class="npc-table">
         <thead><tr>
-          <th>名稱</th><th>種族/性別</th><th>職業</th><th>取得方式</th>
+          <th>名稱</th><th>種族/性別</th><th>初始職業</th><th>取得方式</th>
         </tr></thead>
         <tbody id="npcBody"></tbody>
       </table>
@@ -330,25 +439,37 @@
 
 <script>
 // ─── STATE ───────────────────────────────────────────────────────────────────
-let DB = { recruits:[], missions:[], chemistry:[], chemCond:[], growths:[], trainings:[] };
+let DB = { recruits:[], missions:[], chemistry:[], chemCond:[], growths:[], trainings:[], tactics:[], books:[] };
 // roster: selected NPCs with per-member settings
-// { recruitId, level, chemId(0=none), chemRank(1-5) }
+// { recruitId, job, level, chemId(0=none), chemCondId(0=無條件), chemRank(1-5) }
+// job 是「目前職業」——遊戲內可用戰鬥技巧教材更換，故與 recruit.job（初始職業）分開存
+// 出擊的 4 人不存在 state 裡：每個任務各自從名冊算出最佳組合（見 bestForMission）
 let roster = [];
 let poolRank = 3;
 let pool = { physical:0, mental:0, tactical:0 };
 let missionFilter = 'all';
+let openChem = new Set();  // 展開了吉兆設定的 recruitId（僅本次瀏覽，不寫進存檔）
+
+const MAX_ROSTER = 8;
+const MAX_DEPLOY = 4;
+const POOL_STEP = 20;      // 訓練池屬性之間一律以 20 為單位轉換
+const STORAGE_KEY = 'ffxiv_squadron';      // 全站備份只匯出 ffxiv_ 開頭的 key
+const LEGACY_STORAGE_KEY = 'squadron_v3';  // 2026-07 以前的舊 key，載入時一次性搬移
 
 const RANK_CAP = { 1:200, 2:280, 3:400 };
 const JOB_NAME = { MRD:'斧術師', GLA:'劍術師', ARC:'弓箭手', ROG:'雙劍師', LNC:'槍術師', PGL:'格鬥家', CNJ:'幻術師', THM:'咒術師', ACN:'秘術師' };
-const RACE_NAME = { hyur:'人族', elezen:'精靈族', lalafell:'拉拉菲爾族', miqote:'貓魅族', roegadyn:'魯加族', aura:'敖龍族' };
+const JOB_ORDER = ['GLA','MRD','PGL','LNC','ARC','ROG','CNJ','THM','ACN'];
 const CHEM_STAT = {
   1:{scope:'self',stat:'physical'}, 2:{scope:'self',stat:'mental'}, 3:{scope:'self',stat:'tactical'},
   4:{scope:'all',stat:'physical'},  5:{scope:'all',stat:'mental'},  6:{scope:'all',stat:'tactical'}
 };
+const STAT_KEYS = ['physical','mental','tactical'];
 
 // Modal filter state
 let modalRaceFilter = 'all';
 let modalJobFilter = 'all';
+
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 // ─── LOAD DATA ────────────────────────────────────────────────────────────────
 async function loadData() {
@@ -367,30 +488,66 @@ async function loadData() {
   }
   const data = json.data;
   DB.recruits  = data.filter(d => d.kind === 'recruit');
-  DB.missions  = data.filter(d => d.kind === 'mission');
+  // 資料表的 id15 與 id14 同名同值（解鎖旗標不同），遊戲內是同一個任務 → 只留一筆
+  DB.missions  = data.filter(d => d.kind === 'mission' && !d.duplicateOf);
   DB.chemistry = data.filter(d => d.kind === 'chemistry');
   DB.chemCond  = data.filter(d => d.kind === 'chemistryCondition');
   DB.growths   = data.filter(d => d.kind === 'memberGrowth');
   DB.trainings = data.filter(d => d.kind === 'training');
+  DB.tactics   = data.filter(d => d.kind === 'tactic');
+  DB.books     = data.filter(d => d.kind === 'classChangeBook');
   console.log('DB loaded: recruits='+DB.recruits.length+' missions='+DB.missions.length);
   loadStorage();
   buildTrainingBtns();
   buildModalFilters();
+  buildVariantFinderOptions();
+  buildMissionTabs();
+  buildReferencePanels();
   renderAll();
 }
 
 // ─── STORAGE ─────────────────────────────────────────────────────────────────
 function loadStorage() {
-  try {
-    const s = JSON.parse(localStorage.getItem('squadron_v3') || '{}');
-    if (s.roster) roster = s.roster;
-    if (s.pool) pool = s.pool;
-    if (s.poolRank) poolRank = s.poolRank;
-  } catch(e) {}
+  let raw = localStorage.getItem(STORAGE_KEY);
+  let legacy = false;
+  if (raw === null) { raw = localStorage.getItem(LEGACY_STORAGE_KEY); legacy = raw !== null; }
+  let s = {};
+  try { s = JSON.parse(raw || '{}'); } catch(e) {}
+  if (Array.isArray(s.roster)) roster = s.roster;
+  if (s.pool) pool = s.pool;
+  if (s.poolRank) poolRank = s.poolRank;
+  if (s.missionFilter) missionFilter = tabDef(s.missionFilter).id;
+  if (s.missionSort && (s.missionSort.key === 'default' || SORT_VALUE[s.missionSort.key])) missionSort = s.missionSort;
+
+  // 補齊／清掉舊存檔的欄位：job（舊版沒有轉職概念）、deployed（已改成每個任務自動挑）
+  roster = roster.filter(rm => DB.recruits.some(r => r.id === rm.recruitId)).slice(0, MAX_ROSTER);
+  roster.forEach(rm => {
+    const rec = DB.recruits.find(r => r.id === rm.recruitId);
+    if (!JOB_NAME[rm.job]) rm.job = rec.job;
+    rm.level = clampLevel(rm.level);
+    rm.chemId = parseInt(rm.chemId) || 0;
+    rm.chemCondId = parseInt(rm.chemCondId) || 0;
+    rm.chemRank = Math.max(1, Math.min(5, parseInt(rm.chemRank) || 1));
+    delete rm.deployed;
+  });
+
+  pool = { physical: Math.max(0, parseInt(pool.physical) || 0),
+           mental:   Math.max(0, parseInt(pool.mental)   || 0),
+           tactical: Math.max(0, parseInt(pool.tactical) || 0) };
+  if (!RANK_CAP[poolRank]) poolRank = 3;
+
+  // 有舊存檔就順手把正規化後的樣子寫回去（清掉 deployed 之類的殘欄位）；
+  // 沒存檔的新使用者不要寫，免得全站備份多出一筆空資料
+  if (raw !== null) saveStorage();
+  if (legacy) localStorage.removeItem(LEGACY_STORAGE_KEY);
 }
 function saveStorage() {
-  localStorage.setItem('squadron_v3', JSON.stringify({ roster, pool, poolRank }));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({ roster, pool, poolRank, missionFilter, missionSort }));
+  invalidateCombos();
 }
+function clampLevel(v) { return Math.max(1, Math.min(60, parseInt(v) || 1)); }
+const recruitOf = (rm) => DB.recruits.find(r => r.id === rm.recruitId);
+const nameOf = (rm) => { const r = recruitOf(rm); return r ? r.name : '?'; };
 
 // ─── GROWTH ──────────────────────────────────────────────────────────────────
 function baseStats(jobAbbr, level) {
@@ -401,11 +558,14 @@ function baseStats(jobAbbr, level) {
 }
 
 // ─── CHEMISTRY CONDITION ─────────────────────────────────────────────────────
-function checkCondition(condId, member, activeMembers) {
+// ctx.missionLevel 有值時，條件 2「達到分隊任務所需等級」才判得出來；
+// 總值面板沒有任務脈絡 → 傳 null，此時視為成立。
+function checkCondition(condId, member, activeMembers, ctx) {
   const others = activeMembers.filter(m => m !== member);
+  const missionLevel = ctx && ctx.missionLevel;
   switch(condId) {
     case 1:  return true; // always
-    case 2:  return true; // level >= mission level (treat as true for now)
+    case 2:  return missionLevel == null ? true : member.level >= missionLevel;
     case 3:  return member.level >= 50;
     case 4:  return others.some(m => m.race === 'hyur');
     case 5:  return others.some(m => m.race === 'elezen');
@@ -434,33 +594,37 @@ function checkCondition(condId, member, activeMembers) {
   }
 }
 
-// Build "rich" member list (with race/job from recruit data)
+// Build "rich" member list（帶入種族與「目前職業」；roster 的 job 優先於 recruit 的初始職業）
 function getActiveMembers(rosterSubset) {
   return rosterSubset.map(rm => {
     const rec = DB.recruits.find(r => r.id === rm.recruitId);
     if (!rec) return null;
-    const chem = DB.chemistry.find(c => c.id === rm.chemId);
-    const condId = rm.chemId > 0 ? getChemCondId(rm.chemId) : 0;
-    return { ...rec, level: rm.level, chemId: rm.chemId, chemRank: rm.chemRank, chem, condId };
+    return {
+      ...rec,
+      job: rm.job || rec.job,
+      initialJob: rec.job,
+      level: clampLevel(rm.level),
+      chemId: rm.chemId || 0,
+      chemCondId: rm.chemCondId || 0,
+      chemRank: Math.max(1, Math.min(5, rm.chemRank || 1)),
+      chem: DB.chemistry.find(c => c.id === rm.chemId) || null,
+    };
   }).filter(Boolean);
 }
 
-// Each chemistry has a condition — in real game these are assigned per member
-// For simplicity we use chemId's "common" condition (from cycleapple: 1:1, 2:2, ... etc)
-// The condition id is part of the chemistry assignment; we just use condId stored per member
-function getChemCondId(chemId) {
-  // In FF14 each chemistry has a fixed condition. We map chemId -> condId based on game data.
-  // Source: cycleapple reference — condition is stored alongside chem on each member.
-  // We let user pick condition separately.
-  return 0; // placeholder; actual condId set by member.chemCondId
+// 吉兆是否生效：條件 0 =「無條件」（遊戲內每個吉兆都綁一個條件，選 0 代表使用者還沒填）
+function chemTriggered(member, active, ctx) {
+  if (!member.chemId) return false;
+  if (!member.chemCondId) return true;
+  return checkCondition(member.chemCondId, member, active, ctx);
 }
 
 // ─── COMPUTE TOTALS ───────────────────────────────────────────────────────────
-function computeTotals(rosterSubset) {
+function computeTotals(rosterSubset, ctx) {
   const active = getActiveMembers(rosterSubset);
   if (!active.length) return { ph:0, me:0, ta:0, bonPh:0, bonMe:0, bonTa:0 };
 
-  // Base stats
+  // Base stats（用「目前職業」的成長表）
   let basePh=0, baseMe=0, baseTa=0;
   active.forEach(m => {
     const s = baseStats(m.job, m.level);
@@ -471,13 +635,10 @@ function computeTotals(rosterSubset) {
   // 1. Collect "all" scope boosts
   let allBonPh=0, allBonMe=0, allBonTa=0;
   active.forEach(m => {
-    if (!m.chemId || m.chemId < 4 || m.chemId > 6) return;
     const cs = CHEM_STAT[m.chemId];
     if (!cs || cs.scope !== 'all') return;
-    const triggered = m.chemCondId ? checkCondition(m.chemCondId, m, active) : true;
-    if (!triggered) return;
-    const rank = Math.max(1, Math.min(5, m.chemRank));
-    const val = m.chem ? m.chem.valuesByRank[rank-1] : 0;
+    if (!chemTriggered(m, active, ctx)) return;
+    const val = m.chem ? m.chem.valuesByRank[m.chemRank-1] : 0;
     if (cs.stat === 'physical') allBonPh += val;
     else if (cs.stat === 'mental') allBonMe += val;
     else if (cs.stat === 'tactical') allBonTa += val;
@@ -486,13 +647,10 @@ function computeTotals(rosterSubset) {
   // 2. Per-member self boosts
   let selfBonPh=0, selfBonMe=0, selfBonTa=0;
   active.forEach(m => {
-    if (!m.chemId || m.chemId < 1 || m.chemId > 3) return;
     const cs = CHEM_STAT[m.chemId];
     if (!cs || cs.scope !== 'self') return;
-    const triggered = m.chemCondId ? checkCondition(m.chemCondId, m, active) : true;
-    if (!triggered) return;
-    const rank = Math.max(1, Math.min(5, m.chemRank));
-    const val = m.chem ? m.chem.valuesByRank[rank-1] : 0;
+    if (!chemTriggered(m, active, ctx)) return;
+    const val = m.chem ? m.chem.valuesByRank[m.chemRank-1] : 0;
     const s = baseStats(m.job, m.level);
     if (cs.stat === 'physical') selfBonPh += Math.floor(s.physical * val / 100);
     else if (cs.stat === 'mental') selfBonMe += Math.floor(s.mental * val / 100);
@@ -514,94 +672,128 @@ function computeTotals(rosterSubset) {
   };
 }
 
+function currentVariant() {
+  const el = document.getElementById('variantSel');
+  return el ? (parseInt(el.value) || 0) : 0;
+}
+
 // ─── MISSION CALC ─────────────────────────────────────────────────────────────
-function calcMission(mission, rosterSubset) {
-  const v = parseInt(document.getElementById('variantSel').value) || 0;
-  const req = {
-    physical:  mission.requireVariants.physical[v],
-    mental:    mission.requireVariants.mental[v],
-    tactical:  mission.requireVariants.tactical[v],
-  };
-
-  const { ph, me, ta } = computeTotals(rosterSubset);
-  const withPool = {
-    ph: ph + (pool.physical || 0),
-    me: me + (pool.mental || 0),
-    ta: ta + (pool.tactical || 0),
-  };
-
-  function rate(totals) {
-    if (!mission.success) return 100;
-    const { base, perStatMet, allMet } = mission.success;
-    let met = 0;
-    if (totals.ph >= req.physical)  met++;
-    if (totals.me >= req.mental)    met++;
-    if (totals.ta >= req.tactical)  met++;
-    const flagged = mission.flagged;
-    if (flagged && met < 3) return 0;
-    let r = base + perStatMet * met;
-    if (met === 3) r += allMet;
-    return Math.min(100, r);
-  }
-
+function missionReq(mission, variant) {
+  const v = variant === undefined ? currentVariant() : variant;
   return {
-    req,
-    base: { ph, me, ta },
-    withPool,
-    rateBase: rate({ ph, me, ta }),
-    ratePool: rate(withPool),
-    metBase:  [ph>=req.physical, me>=req.mental, ta>=req.tactical],
-    metPool:  [withPool.ph>=req.physical, withPool.me>=req.mental, withPool.ta>=req.tactical],
+    physical: mission.requireVariants.physical[v],
+    mental:   mission.requireVariants.mental[v],
+    tactical: mission.requireVariants.tactical[v],
   };
 }
 
-// ─── BEST 4 COMBO ────────────────────────────────────────────────────────────
-function calcBest4() {
-  if (roster.length < 4) {
-    document.getElementById('best4Result').style.display = 'none';
-    alert('請至少選擇4名隊員才能計算最佳組合。');
-    return;
+// totals 可預先算好傳進來（挑最佳組合時會重複用到同一組數字）
+function missionResult(mission, combo, totals, variant) {
+  const req = missionReq(mission, variant);
+  const t = totals || computeTotals(combo, { missionLevel: mission.level });
+  const withPool = {
+    ph: t.ph + (pool.physical || 0),
+    me: t.me + (pool.mental   || 0),
+    ta: t.ta + (pool.tactical || 0),
+  };
+
+  const rate = (v) => {
+    if (!mission.success) return 100;
+    const { base, perStatMet, allMet } = mission.success;
+    let met = 0;
+    if (v.ph >= req.physical) met++;
+    if (v.me >= req.mental)   met++;
+    if (v.ta >= req.tactical) met++;
+    if (mission.flagged && met < 3) return 0;
+    let r = base + perStatMet * met;
+    if (met === 3) r += allMet;
+    return Math.min(100, r);
+  };
+
+  // 遊戲內任務有等級門檻（隊員等級不足時任務會反灰）。社群資料對「全員還是至少一人」
+  // 說法不一致 → 這裡只警示不歸零，仍照屬性算出成功率供參考，但挑人時優先挑等級夠的。
+  const minLevel = combo.length ? Math.min(...combo.map(rm => clampLevel(rm.level))) : 0;
+
+  return {
+    combo, req,
+    base: { ph:t.ph, me:t.me, ta:t.ta },
+    withPool,
+    statSum: withPool.ph + withPool.me + withPool.ta,
+    rateBase: rate(t),
+    ratePool: rate(withPool),
+    met: [withPool.ph>=req.physical, withPool.me>=req.mental, withPool.ta>=req.tactical],
+    gaps: [
+      Math.max(0, req.physical - withPool.ph),
+      Math.max(0, req.mental   - withPool.me),
+      Math.max(0, req.tactical - withPool.ta),
+    ],
+    minLevel,
+    levelOk: combo.length ? minLevel >= mission.level : false,
+  };
+}
+
+// ─── 出擊組合：每個任務各自挑最佳 4 人 ────────────────────────────────────────
+// 名冊上限 8 人 → C(8,4)=70 組，全掃即可。吉兆條件 2 會看任務等級，
+// 所以總值要按「任務等級」分別快取（不同等級只有 10 種，成本仍很低）。
+let comboCache = null;
+
+function invalidateCombos() { comboCache = null; }
+
+function comboList() {
+  if (!comboCache) {
+    const combos = [];
+    const n = roster.length;
+    if (n >= MAX_DEPLOY) {
+      for (let a=0; a<n-3; a++)
+      for (let b=a+1; b<n-2; b++)
+      for (let c=b+1; c<n-1; c++)
+      for (let d=c+1; d<n;   d++) combos.push([roster[a], roster[b], roster[c], roster[d]]);
+    } else if (n > 0) {
+      combos.push(roster.slice()); // 不足 4 人：就用手上這些，並在畫面上標示人數不足
+    }
+    comboCache = { combos, byLevel: new Map() };
   }
-  const v = parseInt(document.getElementById('variantSel').value) || 0;
+  return comboCache.combos;
+}
+
+function comboTotals(missionLevel) {
+  const combos = comboList();
+  const key = missionLevel == null ? 'none' : missionLevel;
+  if (!comboCache.byLevel.has(key)) {
+    const ctx = missionLevel == null ? null : { missionLevel };
+    comboCache.byLevel.set(key, combos.map(c => computeTotals(c, ctx)));
+  }
+  return comboCache.byLevel.get(key);
+}
+
+// 針對單一任務挑出最佳 4 人：先看等級接不接得了，再比成功率，最後比屬性餘裕
+function bestForMission(mission, variant) {
+  const combos = comboList();
+  if (!combos.length) return null;
+  const totalsList = comboTotals(mission.level);
+
   let best = null;
-  let bestScore = -1;
-  // C(n,4)
-  const n = roster.length;
-  for (let a=0; a<n-3; a++)
-  for (let b=a+1; b<n-2; b++)
-  for (let c=b+1; c<n-1; c++)
-  for (let d=c+1; d<n;   d++) {
-    const combo = [roster[a], roster[b], roster[c], roster[d]];
-    const totals = computeTotals(combo);
-    // Score = sum across all missions of rateBase (higher is better)
-    let score = 0;
-    DB.missions.forEach(m => {
-      const req = { ph:m.requireVariants.physical[v], me:m.requireVariants.mental[v], ta:m.requireVariants.tactical[v] };
-      const { base, perStatMet, allMet } = m.success || { base:100, perStatMet:0, allMet:0 };
-      let met=0;
-      if (totals.ph >= req.ph) met++;
-      if (totals.me >= req.me) met++;
-      if (totals.ta >= req.ta) met++;
-      if (m.flagged && met<3) return;
-      let r = Math.min(100, base + perStatMet*met + (met===3 ? allMet : 0));
-      score += r;
-    });
-    if (score > bestScore) { bestScore = score; best = combo; }
+  for (let i = 0; i < combos.length; i++) {
+    const r = missionResult(mission, combos[i], totalsList[i], variant);
+    if (!best) { best = r; continue; }
+    // 等級接得了 > 成功率高 > 屬性餘裕大
+    if (r.levelOk !== best.levelOk) { if (r.levelOk) best = r; continue; }
+    if (r.ratePool !== best.ratePool) { if (r.ratePool > best.ratePool) best = r; continue; }
+    if (r.statSum > best.statSum) best = r;
   }
-  const totals = computeTotals(best);
-  const names = best.map(rm => {
-    const rec = DB.recruits.find(r => r.id === rm.recruitId);
-    return rec ? rec.name : '?';
+  return best;
+}
+
+// 名冊裡「任選 4 人」各項屬性能達到的最高值（含吉兆，不含訓練池）
+function rosterCeiling() {
+  const combos = comboList();
+  if (!combos.length) return null;
+  const totalsList = comboTotals(null);
+  const out = { ph:{v:-1,combo:null}, me:{v:-1,combo:null}, ta:{v:-1,combo:null} };
+  totalsList.forEach((t, i) => {
+    for (const k of ['ph','me','ta']) if (t[k] > out[k].v) { out[k] = { v: t[k], combo: combos[i] }; }
   });
-  const el = document.getElementById('best4Result');
-  el.style.display = 'block';
-  el.innerHTML = `
-    <div class="best4-result">
-      <div class="best4-title">★ 最佳4人組合</div>
-      <div class="best4-members">${names.map(n=>`<span class="best4-chip">${n}</span>`).join('')}</div>
-      <div class="best4-stats">體能 <strong>${totals.ph}</strong> · 心智 <strong>${totals.me}</strong> · 戰術 <strong>${totals.ta}</strong>　（以當前Chemistry設定計算）</div>
-    </div>`;
-  renderMissions();
+  return out;
 }
 
 // ─── RENDER ALL ───────────────────────────────────────────────────────────────
@@ -615,101 +807,145 @@ function renderAll() {
 // ─── RENDER ROSTER ────────────────────────────────────────────────────────────
 function renderRoster() {
   const grid = document.getElementById('memberGrid');
+  // 每次輸入等級都會重畫整份名冊 → 先記住焦點欄位，畫完再還原，否則打第一個字就跳掉
+  const act = document.activeElement;
+  const focusKey = act && grid.contains(act) ? act.dataset.fkey : null;
+  let caret = null;
+  if (focusKey) { try { caret = act.selectionStart; } catch(e) {} }
+
   grid.innerHTML = '';
   document.getElementById('rosterCount').textContent = roster.length;
 
+  // 觸發判定的「同行者」＝整份名冊（實際出擊組每個任務不同，這裡給的是概況預覽）
+  const active = getActiveMembers(roster);
+
   roster.forEach((rm, idx) => {
-    const rec = DB.recruits.find(r => r.id === rm.recruitId);
+    const rec = recruitOf(rm);
     if (!rec) return;
-    const s = baseStats(rec.job, rm.level);
+    const job = rm.job || rec.job;
+    const s = baseStats(job, rm.level);
     const card = document.createElement('div');
     card.className = 'member-card active-slot';
 
-    // Chemistry options for this member
+    const jobOptions = JOB_ORDER.map(j =>
+      `<option value="${j}" ${job===j?'selected':''}>${JOB_NAME[j]}${j===rec.job?'（初始）':''}</option>`
+    ).join('');
+
+    // 全部 23 種吉兆都能選；只有 1~6 會影響屬性，其餘標示出來免得誤以為沒生效
     const chemOptions = ['<option value="0">無</option>',
-      ...DB.chemistry.slice(0,6).map(c => `<option value="${c.id}" ${rm.chemId===c.id?'selected':''}>${c.text.replace('{value}%','%')}</option>`)
+      ...DB.chemistry.map(c => {
+        const label = c.text.replace('{value}%','%').replace('{value}','N');
+        const suffix = CHEM_STAT[c.id] ? '' : '（不影響屬性）';
+        return `<option value="${c.id}" ${rm.chemId===c.id?'selected':''}>${esc(label + suffix)}</option>`;
+      })
     ].join('');
 
-    // Chemistry condition options
-    const condOptions = ['<option value="0">自動判斷</option>',
-      ...DB.chemCond.map(cc => `<option value="${cc.id}" ${(rm.chemCondId||0)===cc.id?'selected':''}>${cc.text}</option>`)
+    const condOptions = ['<option value="0">未指定（一律計入）</option>',
+      ...DB.chemCond.map(cc => `<option value="${cc.id}" ${(rm.chemCondId||0)===cc.id?'selected':''}>${esc(cc.text)}</option>`)
     ].join('');
 
     const chem = rm.chemId ? DB.chemistry.find(c=>c.id===rm.chemId) : null;
     const rank = Math.max(1, Math.min(5, rm.chemRank||1));
-    const chemEffectText = chem ? chem.text.replace('{value}', chem.valuesByRank[rank-1]) : '';
+    const chemEffectText = chem
+      ? chem.text.replace('{value}', CHEM_STAT[chem.id] ? chem.valuesByRank[rank-1] : chem.chanceByRank[rank-1])
+      : '';
 
-    // Chemistry trigger check
-    const active = getActiveMembers(roster);
-    const mSelf = active.find(m => m.id === rec.id);
-    let triggered = false;
-    if (mSelf && rm.chemId && rm.chemCondId) {
-      triggered = checkCondition(rm.chemCondId, mSelf, active);
+    // 摘要列的觸發 badge：沒選條件 = 「無條件」（計入），選了條件才判斷成立與否
+    let trigBadge = '';
+    if (chem) {
+      if (!rm.chemCondId) {
+        trigBadge = '<span class="chem-triggered chem-on">無條件</span>';
+      } else {
+        const mSelf = active.find(m => m.id === rec.id);
+        const ok = mSelf ? checkCondition(rm.chemCondId, mSelf, active, null) : false;
+        trigBadge = `<span class="chem-triggered ${ok?'chem-on':'chem-off'}">${ok?'觸發':'未觸發'}</span>`;
+      }
     }
 
-    const trigBadge = rm.chemId
-      ? `<span class="chem-triggered ${triggered ? 'chem-on' : 'chem-off'}">${triggered ? '觸發' : '未觸發'}</span>`
-      : '';
+    const isOpen = openChem.has(rm.recruitId);
 
     card.innerHTML = `
       <div class="member-header">
-        <span class="member-num">隊員 ${idx+1}</span>
-        <div class="member-actions">
-          <button class="btn btn-sm btn-danger" onclick="removeMember(${idx})">移除</button>
-        </div>
+        <span>
+          <span class="member-name">${esc(rec.name)}</span>
+          <span class="member-race-badge">${esc(rec.raceName)}</span>
+        </span>
+        <button class="member-del" title="從名冊移除" onclick="removeMember(${idx})">✕</button>
       </div>
-      <div class="member-name-row">
-        <span class="member-name">${rec.name}</span>
-        <span class="member-race-badge">${rec.raceName}</span>
-        <span class="member-sub">${JOB_NAME[rec.job] || rec.job}</span>
-      </div>
-      <div class="member-row" style="grid-template-columns:2.8rem 1fr">
-        <label>等級</label>
-        <input type="number" min="1" max="60" value="${rm.level}" oninput="setLevel(${idx},this.value)">
+      <div class="member-jl">
+        <select onchange="setJob(${idx},this.value)" title="遊戲內以戰鬥技巧教材轉職">${jobOptions}</select>
+        <input type="number" min="1" max="60" value="${rm.level}" title="等級"
+               data-fkey="lv-${rm.recruitId}" oninput="setLevel(${idx},this.value)">
       </div>
       <div class="member-stats">
         <span class="stat-badge stat-ph">體 ${s.physical}</span>
         <span class="stat-badge stat-me">心 ${s.mental}</span>
         <span class="stat-badge stat-ta">戰 ${s.tactical}</span>
       </div>
-      <div class="chem-divider"></div>
-      <div class="chem-label">吉兆（Chemistry）${trigBadge}</div>
-      <div class="member-row" style="grid-template-columns:2.8rem 1fr">
-        <label>技能</label>
-        <select onchange="setChemId(${idx},this.value)">${chemOptions}</select>
-      </div>
-      <div class="member-row" style="grid-template-columns:2.8rem 1fr">
-        <label>條件</label>
-        <select onchange="setChemCond(${idx},this.value)">${condOptions}</select>
-      </div>
-      <div class="member-row" style="grid-template-columns:2.8rem 1fr">
-        <label>等階</label>
-        <select onchange="setChemRank(${idx},this.value)">
-          ${[1,2,3,4,5].map(r=>`<option value="${r}" ${rank===r?'selected':''}>${r}階</option>`).join('')}
-        </select>
-      </div>
-      <div class="chem-effect">${chemEffectText}</div>
+      <details class="chem-box" data-chem="${rm.recruitId}" ${isOpen?'open':''}
+               ontoggle="setChemOpen(${rm.recruitId}, this.open)">
+        <summary class="chem-summary">
+          <span class="chem-sum-text ${chem?'':'none'}">${chem ? esc(chemEffectText) : '吉兆：無'}</span>
+          ${trigBadge}
+        </summary>
+        <div class="chem-fields">
+          <div class="member-row"><label>技能</label>
+            <select onchange="setChemId(${idx},this.value)">${chemOptions}</select></div>
+          <div class="member-row"><label>條件</label>
+            <select onchange="setChemCond(${idx},this.value)">${condOptions}</select></div>
+          <div class="member-row"><label>等階</label>
+            <select onchange="setChemRank(${idx},this.value)">
+              ${[1,2,3,4,5].map(r=>`<option value="${r}" ${rank===r?'selected':''}>${r}階</option>`).join('')}
+            </select></div>
+        </div>
+      </details>
     `;
     grid.appendChild(card);
   });
 
-  // Empty slot hint
-  if (roster.length < 8) {
+  // 名冊固定 8 格：剩下的位置一律補空格，版面才不會隨人數跳動
+  for (let i = roster.length; i < MAX_ROSTER; i++) {
     const empty = document.createElement('div');
     empty.className = 'member-card member-empty';
     empty.onclick = openModal;
-    empty.innerHTML = `<div class="member-empty-icon">＋</div><div class="member-empty-text">點擊新增隊員</div>`;
+    empty.innerHTML = `<div class="member-empty-icon">＋</div><div class="member-empty-text">空位 ${i+1}</div>`;
     grid.appendChild(empty);
+  }
+
+  if (focusKey) {
+    const el = grid.querySelector(`[data-fkey="${focusKey}"]`);
+    if (el) {
+      el.focus();
+      if (caret != null) { try { el.setSelectionRange(caret, caret); } catch(e) {} }
+    }
   }
 }
 
+function setChemOpen(recruitId, open) {
+  if (open) openChem.add(recruitId); else openChem.delete(recruitId);
+}
 function removeMember(idx) {
+  openChem.delete(roster[idx].recruitId);
   roster.splice(idx, 1);
   saveStorage();
   renderAll();
 }
+function clearAll() {
+  if (!roster.length) return;
+  if (!confirm('確定要清除整份名冊嗎？訓練池設定會保留。')) return;
+  roster = [];
+  openChem.clear();
+  saveStorage();
+  renderAll();
+}
+function setJob(idx, v) {
+  if (!JOB_NAME[v]) return;
+  roster[idx].job = v;
+  saveStorage();
+  renderAll();
+}
 function setLevel(idx, v) {
-  roster[idx].level = Math.max(1, Math.min(60, parseInt(v)||1));
+  roster[idx].level = clampLevel(v);
   saveStorage();
   renderAll();
 }
@@ -724,32 +960,39 @@ function setChemCond(idx, v) {
   renderAll();
 }
 function setChemRank(idx, v) {
-  roster[idx].chemRank = parseInt(v)||1;
+  roster[idx].chemRank = Math.max(1, Math.min(5, parseInt(v)||1));
   saveStorage();
   renderAll();
 }
 
 // ─── TOTALS ───────────────────────────────────────────────────────────────────
+// 出擊組每個任務都不一樣，所以這裡顯示的是「名冊任選 4 人，各項屬性最高能到多少」。
+// 三項各自取最佳組合，所以三個數字通常不是同一組人 —— 底下會標出各自是誰。
 function updateTotals() {
-  if (!roster.length) {
-    ['Ph','Me','Ta'].forEach(k=>{
-      document.getElementById('tot'+k).textContent='0';
-      document.getElementById('bon'+k).textContent='';
-      document.getElementById('pool'+k).textContent='';
-    });
+  const note = document.getElementById('totalNote');
+  const ceiling = rosterCeiling();
+  const poolBy = { ph: pool.physical||0, me: pool.mental||0, ta: pool.tactical||0 };
+  const label  = { ph: 'Ph', me: 'Me', ta: 'Ta' };
+
+  if (!ceiling) {
+    for (const k of ['ph','me','ta']) {
+      document.getElementById('tot'+label[k]).textContent = '0';
+      document.getElementById('pool'+label[k]).textContent = '';
+      document.getElementById('who'+label[k]).textContent = '';
+    }
+    note.textContent = '尚未加入隊員。';
     return;
   }
-  const { ph, me, ta, bonPh, bonMe, bonTa } = computeTotals(roster);
-  document.getElementById('totPh').textContent = ph;
-  document.getElementById('totMe').textContent = me;
-  document.getElementById('totTa').textContent = ta;
-  document.getElementById('bonPh').textContent = bonPh > 0 ? `+${bonPh}吉兆` : '';
-  document.getElementById('bonMe').textContent = bonMe > 0 ? `+${bonMe}吉兆` : '';
-  document.getElementById('bonTa').textContent = bonTa > 0 ? `+${bonTa}吉兆` : '';
-  const pp = pool.physical||0, pm = pool.mental||0, pt = pool.tactical||0;
-  document.getElementById('poolPh').textContent = pp > 0 ? `+${pp}訓練` : '';
-  document.getElementById('poolMe').textContent = pm > 0 ? `+${pm}訓練` : '';
-  document.getElementById('poolTa').textContent = pt > 0 ? `+${pt}訓練` : '';
+
+  for (const k of ['ph','me','ta']) {
+    document.getElementById('tot'+label[k]).textContent = ceiling[k].v + poolBy[k];
+    document.getElementById('pool'+label[k]).textContent = poolBy[k] > 0 ? `（含訓練 +${poolBy[k]}）` : '';
+    document.getElementById('who'+label[k]).textContent = ceiling[k].combo.map(nameOf).join('、');
+  }
+
+  note.textContent = roster.length < MAX_DEPLOY
+    ? `名冊只有 ${roster.length} 位，遊戲內一次要派 ${MAX_DEPLOY} 位——目前的數字是這 ${roster.length} 位的合計，會比實際低。`
+    : '三項各自取名冊裡最好的 4 人組合，所以通常不是同一組人；實際派誰看任務列表。';
 }
 
 // ─── TRAINING POOL ────────────────────────────────────────────────────────────
@@ -765,29 +1008,36 @@ function buildTrainingBtns() {
   });
 }
 
+// 訓練池一動，三個地方都得跟著更新（池子本身、能力上限、任務成功率）。
+// 統一走這支，漏更新其中一塊就會出現「面板說 0 但成功率還照舊」那種自相矛盾的畫面。
+function refreshAfterPoolChange() {
+  updatePool();
+  updateTotals();
+  renderMissions();
+}
+
 function setRank(r) {
   poolRank = r;
   [1,2,3].forEach(i => {
     document.getElementById('rank'+i).classList.toggle('active', i===r);
   });
   saveStorage();
-  updatePool();
-  renderMissions();
+  refreshAfterPoolChange();
 }
 
 function onPoolChange() {
-  pool.physical  = parseInt(document.getElementById('poolPhInput').value)||0;
-  pool.mental    = parseInt(document.getElementById('poolMeInput').value)||0;
-  pool.tactical  = parseInt(document.getElementById('poolTaInput').value)||0;
+  pool.physical = Math.max(0, parseInt(document.getElementById('poolPhInput').value) || 0);
+  pool.mental   = Math.max(0, parseInt(document.getElementById('poolMeInput').value) || 0);
+  pool.tactical = Math.max(0, parseInt(document.getElementById('poolTaInput').value) || 0);
   saveStorage();
-  updatePool();
-  updateTotals();
-  renderMissions();
+  refreshAfterPoolChange();
 }
+
+function poolTotal() { return STAT_KEYS.reduce((s,k) => s + (pool[k]||0), 0); }
 
 function updatePool() {
   const cap = RANK_CAP[poolRank];
-  const total = (pool.physical||0) + (pool.mental||0) + (pool.tactical||0);
+  const total = poolTotal();
   document.getElementById('poolCapTxt').textContent = cap;
   document.getElementById('poolTotalTxt').textContent = total;
   document.getElementById('poolBarFill').style.width = Math.min(100, total/cap*100) + '%';
@@ -795,90 +1045,303 @@ function updatePool() {
   document.getElementById('poolMeInput').value = pool.mental||0;
   document.getElementById('poolTaInput').value = pool.tactical||0;
   const over = document.getElementById('poolOverTxt');
-  if (total > cap) { over.textContent = `超出 ${total-cap}`; over.className = 'pool-over'; }
-  else { over.textContent = ''; over.className = ''; }
+  const trim = document.getElementById('poolTrimBtn');
+  if (total > cap) {
+    over.textContent = `超出 ${total-cap}`; over.className = 'pool-over';
+    trim.style.display = '';
+  } else {
+    over.textContent = ''; over.className = '';
+    trim.style.display = 'none';
+  }
+}
+
+// 以 20 為一個單位，在 keys 之間「輪流平均」扣，直到扣滿 need 或全部見底。
+// 扣的對象是沒被這次訓練加值的屬性，且各項平均分攤 —— 不是從數值最多的那項扣：
+//   基礎訓練 +40，有兩項沒被訓練 → 各扣 20
+//   組合訓練 +20/+20，只有一項沒被訓練 → 該項扣 40
+// 與 squadron.json 的 deltaAtCap 一致。回傳還沒扣掉的量。
+function takeInSteps(v, keys, need) {
+  while (need > 0) {
+    const avail = keys.filter(k => v[k] > 0);
+    if (!avail.length) break;
+    let took = 0;
+    for (const k of avail) {
+      if (need <= 0) break;
+      // 最後一輪可能不足 20（手動輸入了非 20 倍數，或該項餘額不夠）
+      const cut = Math.min(POOL_STEP, need, v[k]);
+      v[k] -= cut; need -= cut; took += cut;
+    }
+    if (!took) break;
+  }
+  return need;
+}
+
+// 總和超過上限時，先從「這次沒被加值」的屬性扣，扣光了才動加值的屬性
+function clampToCap(next, boosted) {
+  const cap = RANK_CAP[poolRank];
+  let over = STAT_KEYS.reduce((s,k) => s + next[k], 0) - cap;
+  if (over <= 0) return next;
+  over = takeInSteps(next, STAT_KEYS.filter(k => !boosted[k]), over);
+  if (over > 0) takeInSteps(next, STAT_KEYS.filter(k => boosted[k]), over);
+  return next;
+}
+
+function trimPool() {
+  pool = clampToCap({ ...pool }, {});
+  saveStorage();
+  refreshAfterPoolChange();
 }
 
 function applyTraining(t) {
-  const cap = RANK_CAP[poolRank];
-  const cur = (pool.physical||0) + (pool.mental||0) + (pool.tactical||0);
-  if (cur + (t.bonus.physical + t.bonus.mental + t.bonus.tactical) > cap && t.deltaAtCap) {
-    // At cap: use deltaAtCap redistribution
-    pool.physical  = Math.max(0, (pool.physical||0)  + (t.deltaAtCap.physical||0));
-    pool.mental    = Math.max(0, (pool.mental||0)    + (t.deltaAtCap.mental||0));
-    pool.tactical  = Math.max(0, (pool.tactical||0)  + (t.deltaAtCap.tactical||0));
-  } else {
-    pool.physical  = (pool.physical||0)  + (t.bonus.physical||0);
-    pool.mental    = (pool.mental||0)    + (t.bonus.mental||0);
-    pool.tactical  = (pool.tactical||0)  + (t.bonus.tactical||0);
-  }
+  const boosted = {};
+  const next = {};
+  STAT_KEYS.forEach(k => {
+    const add = t.bonus[k] || 0;
+    boosted[k] = add > 0;
+    next[k] = (pool[k]||0) + add;
+  });
+  pool = clampToCap(next, boosted);
   saveStorage();
-  updatePool();
-  updateTotals();
-  renderMissions();
+  refreshAfterPoolChange();
 }
 
-// ─── FILTER ───────────────────────────────────────────────────────────────────
-function setFilter(btn, f) {
-  missionFilter = f;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b===btn));
+// ─── 任務列表頁籤 ─────────────────────────────────────────────────────────────
+// 「重要任務」與前三個是交集關係（旗艦任務本身也分屬簡單／普通），
+// 但遊戲內就是獨立看待的一類，單獨開一個頁籤比較好找。
+const MISSION_TABS = [
+  { id:'all',      label:'全部',     match: () => true },
+  { id:'trainee',  label:'簡單任務', match: m => m.type === 'trainee' },
+  { id:'routine',  label:'普通任務', match: m => m.type === 'routine' },
+  { id:'priority', label:'特殊任務', match: m => m.type === 'priority' },
+  { id:'flagged',  label:'重要任務 ⚑', match: m => m.flagged },
+];
+const tabDef = (id) => MISSION_TABS.find(t => t.id === id) || MISSION_TABS[0];
+
+function buildMissionTabs() {
+  const bar = document.getElementById('missionTabs');
+  bar.innerHTML = MISSION_TABS.map(t => {
+    const n = DB.missions.filter(t.match).length;
+    return `<button class="mission-tab ${t.id===missionFilter?'active':''}" role="tab"
+      aria-selected="${t.id===missionFilter}" data-tab="${t.id}" onclick="setFilter('${t.id}')">
+      ${t.label}<span class="tab-count">${n}</span></button>`;
+  }).join('');
+}
+
+function setFilter(f) {
+  missionFilter = tabDef(f).id;
+  document.querySelectorAll('.mission-tab').forEach(b => {
+    const on = b.dataset.tab === missionFilter;
+    b.classList.toggle('active', on);
+    b.setAttribute('aria-selected', on);
+  });
+  saveStorage();
   renderMissions();
 }
 
 // ─── RENDER MISSIONS ──────────────────────────────────────────────────────────
 function renderMissions() {
   const list = document.getElementById('missionList');
-  let missions = DB.missions;
-  if (missionFilter !== 'all') missions = missions.filter(m => m.type === missionFilter);
+  const missions = DB.missions.filter(tabDef(missionFilter).match);
 
   if (!missions.length) { list.innerHTML = '<div class="empty-state">沒有符合的任務</div>'; return; }
 
-  const effectiveRoster = roster.length >= 4 ? roster.slice(0,4) : roster;
+  const v = currentVariant();
 
-  list.innerHTML = missions.map(m => {
-    const { req, rateBase, ratePool, metBase, metPool } = roster.length
-      ? calcMission(m, effectiveRoster)
-      : { req:{ physical:m.requireVariants.physical[0], mental:m.requireVariants.mental[0], tactical:m.requireVariants.tactical[0] }, rateBase:0, ratePool:0, metBase:[false,false,false], metPool:[false,false,false] };
+  // 先把每筆任務算好，才能依成功率／經驗值之類的欄位排序
+  const rows = missions.map(m => ({ m, r: bestForMission(m, v) }));
+  sortRows(rows);
+
+  const cols = [
+    { key:'name',  label:'任務' },
+    { key:'type',  label:'類型' },
+    { key:'level', label:'等級', sortable:true, cls:'m-num' },
+    { key:'ph',    label:'體能', cls:'m-stat' },
+    { key:'me',    label:'心智', cls:'m-stat' },
+    { key:'ta',    label:'戰術', cls:'m-stat' },
+    { key:'rate',  label:'成功率', sortable:true, cls:'m-rate' },
+    { key:'seals', label:'軍票', sortable:true, cls:'m-num' },
+    { key:'exp',   label:'經驗', sortable:true, cls:'m-num' },
+    { key:'squad', label:'派遣 4 人' },
+  ];
+
+  const head = cols.map(c => {
+    const on = missionSort.key === c.key;
+    const arrow = on ? `<span class="arrow">${missionSort.dir === 'asc' ? '▲' : '▼'}</span>` : '';
+    return c.sortable
+      ? `<th class="sortable ${c.cls||''}" onclick="setSort('${c.key}')" title="點擊排序">${c.label}${arrow}</th>`
+      : `<th class="${c.cls||''}">${c.label}</th>`;
+  }).join('');
+
+  // 我的數值 / 門檻；達標綠、未達紅並標出還差多少
+  const statCell = (have, need, ok, gap) => `
+    <td class="m-stat">
+      <span class="m-have ${ok?'met':'unmet'}">${have}</span><span class="m-sep">/</span><span class="m-need">${need}</span>
+      ${!ok && gap > 0 ? `<span class="m-gap">差 ${gap}</span>` : ''}
+    </td>`;
+
+  const body = rows.map(({ m, r }) => {
+    const req = r ? r.req : missionReq(m, v);
+    const ratePool = r ? r.ratePool : 0;
+    const rateBase = r ? r.rateBase : 0;
+    const have = r ? r.withPool : { ph:'—', me:'—', ta:'—' };
+    const met = r ? r.met : [false,false,false];
+    const gaps = r ? r.gaps : [0,0,0];
+    const levelShort = r ? !r.levelOk : false;
 
     const rc = ratePool>=100 ? 'rate-100' : ratePool>=60 ? 'rate-hi' : ratePool>0 ? 'rate-lo' : 'rate-no';
-    const cardCls = ratePool>=100 ? 'can-100' : ratePool>0 ? 'can-partial' : 'impossible';
-    const typeCls = 'type-' + m.type;
-    const flagStr = m.flagged ? ' ⚑' : '';
+    const rowCls = !r ? '' : ratePool>=100 ? 'can-100' : ratePool>0 ? 'can-partial' : 'impossible';
 
-    const [mb0,mb1,mb2] = metPool;
-    const v = parseInt(document.getElementById('variantSel').value)||0;
+    const rewardTxt = m.rewardItem
+      ? `${esc(m.rewardItem.name || ('道具#' + m.rewardItem.itemId))}${m.rewardItem.quantity > 1 ? ' ×' + m.rewardItem.quantity : ''}`
+      : '';
 
-    return `<div class="mission-card ${cardCls}">
-      <div class="mission-main">
-        <div class="mission-info">
-          <div class="mission-name">${m.name}${flagStr}</div>
-          <div class="mission-meta">
-            <span class="mission-type ${typeCls}">${m.typeName}</span>
-            <span>Lv.${m.level}</span>
-            ${m.rewardItem ? `<span>${m.rewardItem}</span>` : ''}
-          </div>
-        </div>
-        <div class="mission-reqs">
-          <div class="req-item"><span class="req-lbl">體</span><span class="req-val ${mb0?'req-met':'req-unmet'}">${req.physical}</span></div>
-          <div class="req-item"><span class="req-lbl">心</span><span class="req-val ${mb1?'req-met':'req-unmet'}">${req.mental}</span></div>
-          <div class="req-item"><span class="req-lbl">戰</span><span class="req-val ${mb2?'req-met':'req-unmet'}">${req.tactical}</span></div>
-        </div>
-        <div class="mission-rate">
-          ${roster.length ? `
-            <div class="rate-val ${rc}">${ratePool}%</div>
-            ${rateBase !== ratePool ? `<span class="rate-pool">（基礎${rateBase}%）</span>` : ''}
-          ` : '<div class="rate-val rate-no">—</div>'}
-        </div>
-      </div>
-    </div>`;
+    return `<tr class="${rowCls}">
+      <td>
+        <div class="m-name">${esc(m.name)}${m.flagged ? ' <span class="flag">⚑</span>' : ''}</div>
+        ${rewardTxt ? `<div class="m-reward">${rewardTxt}</div>` : ''}
+      </td>
+      <td><span class="mission-type type-${m.type}">${esc(m.typeName)}</span></td>
+      <td class="m-num">
+        ${m.level}
+        ${levelShort ? `<div class="mission-warn" title="遊戲內任務有等級門檻，隊員等級不足時任務會反灰。此處仍依屬性計算成功率供參考。">⚠ 隊員 Lv.${r.minLevel}</div>` : ''}
+      </td>
+      ${statCell(have.ph, req.physical, met[0], gaps[0])}
+      ${statCell(have.me, req.mental,   met[1], gaps[1])}
+      ${statCell(have.ta, req.tactical, met[2], gaps[2])}
+      <td class="m-rate ${rc}">
+        ${r ? `${ratePool}%${rateBase !== ratePool ? `<span class="rate-pool">未含訓練池 ${rateBase}%</span>` : ''}` : '—'}
+      </td>
+      <td class="m-num">${m.sealsCost ? m.sealsCost.toLocaleString() : '—'}</td>
+      <td class="m-num">${m.rewardExp.toLocaleString()}</td>
+      <td class="m-squad">${r
+        ? esc(r.combo.map(nameOf).join('、')) + (r.combo.length < MAX_DEPLOY ? `<span class="lbl">（名冊不足 ${MAX_DEPLOY} 人）</span>` : '')
+        : '<span class="lbl">尚未加入隊員</span>'}</td>
+    </tr>`;
   }).join('');
+
+  list.innerHTML = `<table class="mtable"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table>`;
+}
+
+// ─── 任務表排序 ───────────────────────────────────────────────────────────────
+// key='default' = 資料表原順序（等同遊戲內的任務排列）
+let missionSort = { key:'default', dir:'asc' };
+
+const SORT_VALUE = {
+  level: ({ m }) => m.level,
+  rate:  ({ r }) => (r ? r.ratePool : -1),
+  seals: ({ m }) => m.sealsCost,
+  exp:   ({ m }) => m.rewardExp,
+};
+
+function sortRows(rows) {
+  const get = SORT_VALUE[missionSort.key];
+  if (!get) return;                       // default：維持資料表順序
+  const sign = missionSort.dir === 'asc' ? 1 : -1;
+  rows.sort((a, b) => {
+    const d = get(a) - get(b);
+    return d !== 0 ? d * sign : a.m.id - b.m.id;  // 同值時回到原順序，排序才穩定
+  });
+}
+
+function setSort(key) {
+  if (missionSort.key === key) {
+    // 同一欄再點：升冪 → 降冪 → 取消（回到原順序）
+    if (missionSort.dir === 'asc') missionSort.dir = 'desc';
+    else missionSort = { key:'default', dir:'asc' };
+  } else {
+    // 成功率／經驗值預設看「最高的」，等級與軍票預設看「最低的」
+    missionSort = { key, dir: (key === 'rate' || key === 'exp') ? 'desc' : 'asc' };
+  }
+  saveStorage();
+  renderMissions();
+}
+
+// ─── 由門檻反推當週配置 ───────────────────────────────────────────────────────
+function findVariant() {
+  const out = document.getElementById('vfResult');
+  const nums = ['vfPh','vfMe','vfTa'].map(id => parseInt(document.getElementById(id).value));
+  if (nums.some(n => !Number.isFinite(n))) {
+    out.className = 'vf-result vf-bad';
+    out.textContent = '請把三個門檻都填上（照遊戲裡任務畫面顯示的數字）。';
+    return;
+  }
+  const [p, me, t] = nums;
+  const pick = document.getElementById('vfMission').value;
+  const pool = pick === 'any' ? DB.missions : DB.missions.filter(m => String(m.id) === pick);
+
+  const hits = [];
+  for (const m of pool) {
+    for (let i = 0; i < 6; i++) {
+      if (m.requireVariants.physical[i] === p &&
+          m.requireVariants.mental[i]   === me &&
+          m.requireVariants.tactical[i] === t) hits.push({ mission: m, variant: i });
+    }
+  }
+  if (!hits.length) {
+    out.className = 'vf-result vf-bad';
+    out.textContent = pick === 'any'
+      ? '這組門檻對不到任何任務，請確認數字是否抄對。'
+      : `「${pool[0].name}」的六組配置裡沒有這組門檻，請確認數字是否抄對。`;
+    return;
+  }
+  const variants = [...new Set(hits.map(h => h.variant))];
+  if (variants.length === 1) {
+    const v = variants[0];
+    document.getElementById('variantSel').value = String(v);
+    renderMissions();
+    out.className = 'vf-result vf-ok';
+    out.textContent = `對到「${hits[0].mission.name}」→ 本週是配置 ${v+1}，已幫你切過去。`;
+    return;
+  }
+  // 旗艦任務六組門檻相同，本來就分不出配置；其餘情況多半是沒指定任務造成的巧合
+  out.className = 'vf-result';
+  if (pick !== 'any') {
+    out.textContent = `「${hits[0].mission.name}」有多組配置門檻相同（配置 ${variants.map(v=>v+1).join('、')}），`
+      + '無法用它判斷週次——旗艦任務六組門檻都一樣，請改用一般任務。';
+  } else {
+    out.textContent = `這組門檻在 ${hits.map(h=>`${h.mission.name}（配置 ${h.variant+1}）`).join('、')} 都出現過。`
+      + '請在「來源任務」指定是哪一個，就能確定週次。';
+  }
+}
+
+// ─── 參考面板 ─────────────────────────────────────────────────────────────────
+function buildVariantFinderOptions() {
+  const vf = document.getElementById('vfMission');
+  DB.missions.forEach(m => {
+    // 旗艦任務六組門檻相同，拿來反推週次沒有意義 → 不列入來源任務
+    if (m.flagged) return;
+    const o = document.createElement('option');
+    o.value = String(m.id);
+    o.textContent = `${m.name}（Lv.${m.level}）`;
+    vf.appendChild(o);
+  });
+}
+
+function buildReferencePanels() {
+  document.getElementById('bookGrid').innerHTML = DB.books.map(b => `
+    <div class="tactic-card">
+      <div class="tactic-name">${esc(b.name)}</div>
+      <div class="tactic-desc">${esc(b.nameEn)}<br>${b.sealsCost.toLocaleString()} 軍票 · ${esc(b.requiredRank)}</div>
+      <div class="tactic-nums">${b.jobs.map(j=>`<span class="stat-badge">${JOB_NAME[j]}</span>`).join('')}</div>
+    </div>`).join('');
+
+  document.getElementById('tacticGrid').innerHTML = DB.tactics.map(t => `
+    <div class="tactic-card">
+      <div class="tactic-name">${esc(t.name)}</div>
+      <div class="tactic-desc">${esc(t.desc)}</div>
+      <div class="tactic-nums">
+        <span class="stat-badge">體力上限 +${t.bonus.hpPct}%</span>
+        <span class="stat-badge">給予傷害 +${t.bonus.damageDealtPct}%</span>
+        <span class="stat-badge">受到傷害 -${t.bonus.damageReceivedPct}%</span>
+      </div>
+    </div>`).join('');
 }
 
 // ─── MODAL ────────────────────────────────────────────────────────────────────
 function buildModalFilters() {
   const races = ['all','hyur','elezen','lalafell','miqote','roegadyn','aura'];
   const raceNames = { all:'全部種族', hyur:'人族', elezen:'精靈族', lalafell:'拉拉菲爾族', miqote:'貓魅族', roegadyn:'魯加族', aura:'敖龍族' };
-  const jobs = ['all','GLA','MRD','LNC','PGL','ARC','ROG','CNJ','THM','ACN'];
+  const jobs = ['all', ...JOB_ORDER];
 
   document.getElementById('racePills').innerHTML = races.map(r =>
     `<button class="filter-pill ${r==='all'?'active':''}" onclick="setRaceFilter('${r}',this)">${raceNames[r]||r}</button>`
@@ -921,21 +1384,27 @@ function renderNpcList() {
 
   tbody.innerHTML = npcs.map(n => {
     const taken = selectedIds.has(n.id);
-    const full  = roster.length >= 8;
-    const dis   = taken || (full && !taken);
+    const dis   = taken || roster.length >= MAX_ROSTER;
     return `<tr class="npc-row ${dis?'disabled':''}" onclick="${dis?'':`addMember(${n.id})`}">
-      <td><div class="npc-name">${n.name}</div><div style="font-size:.68rem;color:var(--text-muted)">${n.nameEn}</div></td>
-      <td><div class="npc-race">${n.raceName}</div><div style="font-size:.68rem;color:var(--text-muted)">${n.gender==='M'?'男':'女'}</div></td>
+      <td><div class="npc-name">${esc(n.name)}${taken?' <span class="npc-race">（已在名冊）</span>':''}</div><div style="font-size:.68rem;color:var(--text-muted)">${esc(n.nameEn)}</div></td>
+      <td><div class="npc-race">${esc(n.raceName)}</div><div style="font-size:.68rem;color:var(--text-muted)">${n.gender==='M'?'男':'女'}</div></td>
       <td><span class="npc-job-badge">${JOB_NAME[n.job]||n.job}</span></td>
-      <td class="npc-obtain">${n.obtainFrom}</td>
+      <td class="npc-obtain">${esc(n.obtainFrom)}</td>
     </tr>`;
   }).join('');
 }
 
 function addMember(recruitId) {
-  if (roster.length >= 8) return;
+  if (roster.length >= MAX_ROSTER) return;
   if (roster.some(r=>r.recruitId===recruitId)) return;
-  roster.push({ recruitId, level:60, chemId:0, chemCondId:0, chemRank:1 });
+  const rec = DB.recruits.find(r => r.id === recruitId);
+  if (!rec) return;
+  roster.push({
+    recruitId,
+    job: rec.job,               // 初始職業，之後可在卡片上改（等同遊戲內用教材轉職）
+    level: 60,
+    chemId: 0, chemCondId: 0, chemRank: 1,
+  });
   saveStorage();
   renderNpcList();
   renderAll();

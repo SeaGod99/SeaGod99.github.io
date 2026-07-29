@@ -14,14 +14,20 @@
 //
 // 執行（repo 根目錄）： node scripts/build-squadron.mjs
 //
-// data[] 以 kind 區分六類：
+// data[] 以 kind 區分八類：
 //   mission(34)            訓練/一般/特殊任務。requireVariants 為 6 組每週輪替門檻；
 //                          旗艦任務(flagged) 6 組相同 → require 給固定值，未達全部門檻必失敗
 //   training(7)            訓練項目（sheet 僅載加值；屬性總和達上限時其他屬性會下降-社群觀察）
 //   chemistry(23)          化學反應效果。valuesByRank/chanceByRank 為等級 1~5 的效果值/觸發率(%)
 //   chemistryCondition(26) 化學反應觸發條件（與效果隨機配對）
 //   tactic(4)              指令任務（副本）作戰方針 buff
-//   memberGrowth(9)        各職業隊員 Lv1~60 屬性成長表（隊員屬性僅由職業+等級決定）
+//   memberGrowth(9)        各職業隊員 Lv1~60 屬性成長表（隊員屬性僅由「當前職業」+等級決定）
+//   recruit(60)            可徵募的 NPC 隊員（名稱/種族/性別/初始職業/取得方式）
+//   classChangeBook(3)     戰鬥技巧教材 → 可轉換的職業清單（隊員職業可換，見下）
+//
+// ⚠ recruit 60 筆是本腳本的權威來源，**不要改成從舊 squadron.json 讀取**。
+//    2026-07-29 以前這 60 筆只存在於 data/squadron.json、沒有任何腳本會產生，
+//    重跑本腳本會把它們整組洗掉（前端 NPC 清單直接空掉）。已內嵌回來。
 
 import { writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
@@ -72,6 +78,7 @@ const MISSIONS = [
     p:[315,315,315,315,315,315], m:[325,325,325,325,325,325], t:[340,340,340,340,340,340] },
   { id:15, en:"Flagged Mission: Crystal Recovery", cn:"重要任务：夺取水晶", lvl:40, seals:4000, exp:30000, base:0, type:2, item:0, qty:0,
     p:[315,315,315,315,315,315], m:[325,325,325,325,325,325], t:[340,340,340,340,340,340],
+    duplicateOf:14,
     note:"資料表中與 id14 同名同值的重複列（解鎖旗標不同），遊戲內為同一任務" },
   { id:16, en:"Stronghold Assault",     cn:"强袭蛮族据点",       lvl:40, seals:2000, exp:30000, base:20, type:3, item:14946, qty:5,
     p:[530,530,385,245,385,265], m:[385,275,560,560,265,385], t:[275,385,245,385,540,540] },
@@ -117,6 +124,21 @@ const TYPE = {
   1: { en: "Trainee Mission",  cn: "简单任务", key: "trainee" },
   2: { en: "Routine Mission",  cn: "普通任务", key: "routine" },
   3: { en: "Priority Mission", cn: "特殊任务", key: "priority" },
+};
+
+// 獎勵道具繁中名（台服官方名，查自 data/items.json；不要用簡轉繁）
+const REWARD_ITEM_NAME = {
+  14945: "軍用徵兵指南",
+  14946: "軍票預支單",
+  14947: "金碟優待券",
+  14948: "軍用戰鬥指南",
+  14949: "軍用生存學指南第三卷",
+  14950: "軍用工程學指南第三卷",
+  14951: "軍用精神學指南",
+  14952: "軍用營養學指南",
+  14953: "軍用工具指南",
+  14954: "傳送網使用優惠券",
+  15772: "戰鬥技巧教材：守勢",
 };
 
 // trainings（GcArmyTraining rows 1-7）
@@ -236,6 +258,87 @@ const GROWTH = [
     t:[36,37,37,38,38,39,40,41,41,42,42,43,44,45,45,46,46,47,48,49,49,50,50,51,52,53,53,54,54,55,56,57,57,58,58,59,60,61,61,62,62,63,64,65,65,66,66,67,68,69,69,70,70,71,72,73,73,74,74,75] },
 ];
 
+// 可徵募 NPC 隊員（3.4 冒險者小隊開放時的 60 人，之後未增補）
+// 名稱為台服官方譯名；race/gender/job 為「初始」職業 — 入隊後可用戰鬥技巧教材更換（見 CLASS_BOOKS）
+const RACE_NAME = {
+  hyur: "人族", elezen: "精靈族", lalafell: "拉拉菲爾族",
+  miqote: "貓魅族", roegadyn: "魯加族", aura: "敖龍族",
+};
+const RECRUITS = [
+  { id:1016926, name:"塞西莉", en:"Cecily", race:"hyur", gender:"F", job:"CNJ", obtain:"行會令、危命任務、軍隊" },
+  { id:1016927, name:"奧琳", en:"Auelin", race:"hyur", gender:"F", job:"ARC", obtain:"迷宮挑戰、金碟遊樂場" },
+  { id:1016928, name:"莫賴爾", en:"Morel", race:"hyur", gender:"M", job:"ACN", obtain:"危命任務、金碟遊樂場" },
+  { id:1016929, name:"赫羅克", en:"Hroch", race:"hyur", gender:"M", job:"LNC", obtain:"行會令、危命任務、軍隊" },
+  { id:1016930, name:"克里莎貝爾", en:"Chrysabel", race:"hyur", gender:"F", job:"PGL", obtain:"迷宮挑戰、金碟遊樂場" },
+  { id:1016931, name:"艾麗絲", en:"Ellice", race:"hyur", gender:"F", job:"GLA", obtain:"行會令、危命任務、軍隊" },
+  { id:1016932, name:"多爾芬", en:"Dolfin", race:"hyur", gender:"M", job:"THM", obtain:"迷宮挑戰、金碟遊樂場" },
+  { id:1016933, name:"西莉亞", en:"Cilia", race:"hyur", gender:"F", job:"THM", obtain:"大地使者、尋寶" },
+  { id:1016984, name:"休巴爾德", en:"Huebald", race:"hyur", gender:"M", job:"MRD", obtain:"大地使者、雇員探險" },
+  { id:1016985, name:"阿里馬烏斯", en:"Alimahus", race:"hyur", gender:"M", job:"ROG", obtain:"大地使者、尋寶、金碟遊樂場" },
+  { id:1016934, name:"帕尼爾", en:"Pagneul", race:"elezen", gender:"M", job:"LNC", obtain:"行會令、危命任務、軍隊" },
+  { id:1016935, name:"德爾布瓦斯", en:"Delboisse", race:"elezen", gender:"M", job:"GLA", obtain:"行會令、危命任務、軍隊" },
+  { id:1016936, name:"索莉", en:"Ceaulie", race:"elezen", gender:"F", job:"ARC", obtain:"迷宮挑戰、金碟遊樂場" },
+  { id:1016937, name:"里威恩娜", en:"Rivienne", race:"elezen", gender:"F", job:"CNJ", obtain:"迷宮挑戰、金碟遊樂場" },
+  { id:1016938, name:"拉邦里", en:"Labonrit", race:"elezen", gender:"M", job:"THM", obtain:"危命任務、金碟遊樂場" },
+  { id:1016939, name:"特勒扎克", en:"Teulzacq", race:"elezen", gender:"M", job:"PGL", obtain:"行會令、危命任務、軍隊" },
+  { id:1016940, name:"若萊娜", en:"Jolaine", race:"elezen", gender:"F", job:"MRD", obtain:"大地使者、尋寶、金碟遊樂場" },
+  { id:1016941, name:"索菲娜", en:"Sofine", race:"elezen", gender:"F", job:"ACN", obtain:"大地使者、雇員探險" },
+  { id:1016942, name:"默力艾爾", en:"Meuliaire", race:"elezen", gender:"M", job:"ROG", obtain:"大地使者、雇員探險" },
+  { id:1016943, name:"克利爾朵", en:"Crilde", race:"elezen", gender:"F", job:"ROG", obtain:"大地使者、尋寶" },
+  { id:1016944, name:"奴奴魯帕·塔塔魯帕", en:"Nunulupa Tatalupa", race:"lalafell", gender:"M", job:"THM", obtain:"行會令、危命任務、軍隊" },
+  { id:1016945, name:"納納索米", en:"Nanasomi", race:"lalafell", gender:"M", job:"ARC", obtain:"迷宮挑戰、金碟遊樂場" },
+  { id:1016946, name:"莉莉芭", en:"Liliba", race:"lalafell", gender:"F", job:"CNJ", obtain:"危命任務、金碟遊樂場" },
+  { id:1016947, name:"薩薩修", en:"Sasashu", race:"lalafell", gender:"F", job:"LNC", obtain:"行會令、危命任務、軍隊" },
+  { id:1016948, name:"姆吉恩·珀拉吉恩", en:"Mujen Polajen", race:"lalafell", gender:"M", job:"ROG", obtain:"迷宮挑戰、金碟遊樂場" },
+  { id:1016949, name:"穆穆塔諾", en:"Mumutano", race:"lalafell", gender:"M", job:"GLA", obtain:"迷宮挑戰、金碟遊樂場" },
+  { id:1016950, name:"特瓦瓦", en:"Tewawa", race:"lalafell", gender:"F", job:"ACN", obtain:"大地使者、尋寶、金碟遊樂場" },
+  { id:1016951, name:"托托蒂", en:"Totodi", race:"lalafell", gender:"F", job:"PGL", obtain:"大地使者、尋寶" },
+  { id:1016952, name:"克魯莫莫", en:"Kelmomo", race:"lalafell", gender:"F", job:"MRD", obtain:"大地使者、尋寶" },
+  { id:1016953, name:"塞塞力庫", en:"Seserikku", race:"lalafell", gender:"M", job:"MRD", obtain:"大地使者、雇員探險" },
+  { id:1016954, name:"碧·貝納·提亞", en:"B'benha Tia", race:"miqote", gender:"M", job:"LNC", obtain:"行會令、危命任務、軍隊" },
+  { id:1016955, name:"玖茲·阿·嘉奇亞", en:"Ziuz'a Jakkya", race:"miqote", gender:"M", job:"ROG", obtain:"迷宮挑戰、金碟遊樂場" },
+  { id:1016956, name:"維·恩波蘿", en:"V'nbolo", race:"miqote", gender:"F", job:"ARC", obtain:"危命任務、金碟遊樂場" },
+  { id:1016957, name:"奧雅·奈爾赫", en:"Oah Nelhah", race:"miqote", gender:"F", job:"PGL", obtain:"行會令、危命任務、軍隊" },
+  { id:1016958, name:"德·福爾·提亞", en:"D'fhul Tia", race:"miqote", gender:"M", job:"CNJ", obtain:"迷宮挑戰、金碟遊樂場" },
+  { id:1016959, name:"格塔·阿·帕尼帕爾", en:"Gota'a Panipahr", race:"miqote", gender:"M", job:"THM", obtain:"大地使者、尋寶、金碟遊樂場" },
+  { id:1016960, name:"嘉·魯達巴", en:"J'ludaba", race:"miqote", gender:"F", job:"ACN", obtain:"大地使者、尋寶" },
+  { id:1016961, name:"伊恩·雅瑪里約", en:"Yehn Amariyo", race:"miqote", gender:"F", job:"GLA", obtain:"大地使者、雇員探險" },
+  { id:1016962, name:"艾·派特爾密", en:"E'ptolmi", race:"miqote", gender:"F", job:"ARC", obtain:"大地使者、雇員探險" },
+  { id:1016963, name:"凱達·托·莫伊", en:"Kehda'to Moui", race:"miqote", gender:"M", job:"ARC", obtain:"大地使者、尋寶" },
+  { id:1016964, name:"哈斯塔爾烏雅", en:"Hastaloeya", race:"roegadyn", gender:"M", job:"MRD", obtain:"行會令、危命任務、軍隊" },
+  { id:1016965, name:"納因·戈特", en:"Gnawing Goat", race:"roegadyn", gender:"M", job:"CNJ", obtain:"迷宮挑戰、金碟遊樂場" },
+  { id:1016966, name:"庫恩布瑞達", en:"Koenbryda", race:"roegadyn", gender:"F", job:"GLA", obtain:"危命任務、金碟遊樂場" },
+  { id:1016967, name:"科爾蕾絲·威斯帕", en:"Careless Whisper", race:"roegadyn", gender:"F", job:"ROG", obtain:"行會令、危命任務、軍隊" },
+  { id:1016968, name:"里爾哈厄", en:"Rhylharr", race:"roegadyn", gender:"M", job:"PGL", obtain:"迷宮挑戰、金碟遊樂場" },
+  { id:1016969, name:"卡拉斯·斯泰德", en:"Callous Steed", race:"roegadyn", gender:"M", job:"THM", obtain:"大地使者、尋寶、金碟遊樂場" },
+  { id:1016970, name:"因格希爾希斯", en:"Inghilswys", race:"roegadyn", gender:"F", job:"LNC", obtain:"大地使者、尋寶" },
+  { id:1016971, name:"菲爾萊絲·馮", en:"Fearless Fawn", race:"roegadyn", gender:"F", job:"ARC", obtain:"大地使者、雇員探險" },
+  { id:1016972, name:"雷爾托塔", en:"Raelthota", race:"roegadyn", gender:"F", job:"ACN", obtain:"大地使者、雇員探險" },
+  { id:1016973, name:"瑞京·奧克斯", en:"Raging Ox", race:"roegadyn", gender:"M", job:"ACN", obtain:"大地使者、尋寶" },
+  { id:1016974, name:"彩雲", en:"Saiun", race:"aura", gender:"M", job:"MRD", obtain:"迷宮挑戰、金碟遊樂場" },
+  { id:1016975, name:"艾爾齊", en:"Elchi", race:"aura", gender:"M", job:"LNC", obtain:"危命任務、金碟遊樂場" },
+  { id:1016976, name:"淡雪", en:"Awayuki", race:"aura", gender:"F", job:"CNJ", obtain:"行會令、危命任務、軍隊" },
+  { id:1016977, name:"薩姆嘉", en:"Samga", race:"aura", gender:"F", job:"ACN", obtain:"危命任務、金碟遊樂場" },
+  { id:1016978, name:"梅園", en:"Baien", race:"aura", gender:"M", job:"THM", obtain:"行會令、危命任務、軍隊" },
+  { id:1016979, name:"貝科特爾", en:"Begter", race:"aura", gender:"M", job:"ROG", obtain:"大地使者、尋寶、金碟遊樂場" },
+  { id:1016980, name:"雲切", en:"Kumokiri", race:"aura", gender:"F", job:"GLA", obtain:"行會令、危命任務、軍隊" },
+  { id:1016981, name:"朵拉嘉娜", en:"Toragana", race:"aura", gender:"F", job:"ARC", obtain:"迷宮挑戰、金碟遊樂場" },
+  { id:1016982, name:"雷電", en:"Raiden", race:"aura", gender:"M", job:"PGL", obtain:"大地使者、雇員探險" },
+  { id:1016983, name:"科爾琪", en:"Khorchi", race:"aura", gender:"F", job:"PGL", obtain:"金碟遊樂場" },
+];
+
+// 隊員職業可更換：向軍隊需求品交換員買「戰鬥技巧教材」（各 3000 軍票，需一等軍銜以上）使用即可轉職。
+// 轉職後保留吉兆（效果與等階不變），但會損失經驗值 → 可能掉等級。
+// 來源：consolegameswiki 三本教材的道具說明頁（見檔頭）；道具繁中名查自 data/items.json。
+const CLASS_BOOKS = [
+  { itemId:15772, name:"戰鬥技巧教材：守勢", en:"Contemporary Warfare: Defense",
+    descEn:"Grand Company-issue literature on defensive battle techniques.", jobs:["GLA","MRD"] },
+  { itemId:15773, name:"戰鬥技巧教材：攻勢", en:"Contemporary Warfare: Offense",
+    descEn:"Grand Company-issue literature on offensive battle techniques.", jobs:["PGL","LNC","ARC","ROG"] },
+  { itemId:15774, name:"戰鬥技巧教材：魔法", en:"Contemporary Warfare: Magicks",
+    descEn:"Grand Company-issue literature on magic battle techniques.", jobs:["CNJ","THM","ACN"] },
+];
+
 // --------------------------------------------------------------------------
 // 組裝
 // --------------------------------------------------------------------------
@@ -261,7 +364,11 @@ for (const ms of MISSIONS) {
     flagged,
     sealsCost: ms.seals,
     rewardExp: ms.exp,
-    rewardItem: ms.item ? { itemId: ms.item, quantity: ms.qty } : null,
+    rewardItem: ms.item
+      ? { itemId: ms.item, quantity: ms.qty, name: REWARD_ITEM_NAME[ms.item] || null }
+      : null,
+    // 資料表 id15 與 id14 同名同值（解鎖旗標不同），遊戲內為同一任務 → 前端只顯示一筆
+    ...(ms.duplicateOf ? { duplicateOf: ms.duplicateOf } : {}),
     require: flagged ? { physical: ms.p[0], mental: ms.m[0], tactical: ms.t[0] } : null,
     requireVariants: { physical: ms.p, mental: ms.m, tactical: ms.t },
     success: flagged
@@ -345,11 +452,49 @@ for (const g of GROWTH) {
   });
 }
 
+const JOB_SET = new Set(GROWTH.map((g) => g.abbr));
+for (const r of RECRUITS) {
+  if (!JOB_SET.has(r.job)) throw new Error(`recruit ${r.id}: 未知職業 ${r.job}`);
+  if (!RACE_NAME[r.race]) throw new Error(`recruit ${r.id}: 未知種族 ${r.race}`);
+  data.push({
+    kind: "recruit",
+    id: r.id,
+    name: r.name,
+    nameEn: r.en,
+    race: r.race,
+    raceName: RACE_NAME[r.race],
+    gender: r.gender,
+    job: r.job, // 初始職業；入隊後可用戰鬥技巧教材更換
+    obtainFrom: r.obtain,
+    patch: "3.4",
+  });
+}
+if (new Set(RECRUITS.map((r) => r.id)).size !== RECRUITS.length)
+  throw new Error("recruit id 重複");
+
+// 三本教材涵蓋的職業必須剛好等於 9 個成長表職業，否則前端轉職清單會缺
+const bookJobs = CLASS_BOOKS.flatMap((b) => b.jobs);
+if (new Set(bookJobs).size !== bookJobs.length) throw new Error("教材職業重複");
+for (const j of JOB_SET) if (!bookJobs.includes(j)) throw new Error(`職業 ${j} 沒有對應教材`);
+for (const b of CLASS_BOOKS) {
+  data.push({
+    kind: "classChangeBook",
+    itemId: b.itemId,
+    name: b.name,
+    nameEn: b.en,
+    descEn: b.descEn,
+    sealsCost: 3000,
+    requiredRank: "一等軍銜（First Lieutenant）以上",
+    jobs: b.jobs,
+    note: "轉職保留吉兆效果與等階，但會損失經驗值（可能掉等級）",
+  });
+}
+
 const out = {
   schema: "squadron",
   patch: "7.2",
   updated: new Date().toISOString().slice(0, 10),
-  source: "xivapi-v2(GcArmy* sheets) + thewakingsands cn-csv(OpenCC 轉繁) + consolegameswiki(驗證)",
+  source: "xivapi-v2(GcArmy* sheets) + thewakingsands cn-csv(OpenCC 轉繁) + consolegameswiki(驗證) + data/items.json(道具繁中名)",
   count: data.length,
   data,
 };

@@ -18,6 +18,7 @@
 | **XIVAPI v2** | `https://v2.xivapi.com` | 物品/NPC/副本等 sheet（**row 不含 patch 欄**） | patch 一律走 Teamcraft，不靠 XIVAPI |
 | out_data/cfc-content.json | 本機 | ContentFinderCondition id → InstanceContent id | dungeons patch 橋接（dungeons.id 是 CFC，Teamcraft instancecontent 是 InstanceContent）。**幻化配裝圖鑑也靠它**把取得方式裡的副本 id 解成台服官方名（裝備類 99.95% 解得出來） |
 | **Teamcraft 台服分類名** | `raw.githubusercontent.com/…/libs/data/src/lib/json/tw/tw-item-ui-categories.json` | ItemUICategory id → 台服繁中分類名 | 建 [`data/item-categories.json`](../data/item-categories.json)（112 筆）。與 `build-items.mjs` 寫進 `items.json` 的 `category` 同源，所以「分類名 → id」保證對得起來。腳本 [`scripts/build-item-categories.mjs`](../scripts/build-item-categories.mjs) |
+| **ffxiv.consolegameswiki.com** | `/wiki/Contemporary_Warfare:_{Defense,Offense,Magicks}` | 小隊隊員轉職：哪本教材能換成哪些職業、售價與軍銜門檻 | 人工查證，非 API。三本各 3000 軍票、需一等軍銜；守勢→劍術師/斧術師、攻勢→格鬥家/槍術師/弓箭手/雙劍師、魔法→幻術師/咒術師/秘術師。**道具繁中名一律查 `data/items.json`（15772–15774），不要簡轉繁**。寫進 `squadron.json` 的 `kind:"classChangeBook"` |
 
 README 的「資料來源」表為總覽；本表為這幾次回填實際用到的細節。
 
