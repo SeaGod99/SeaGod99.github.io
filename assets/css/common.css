@@ -6,56 +6,23 @@
      1. 設定 4 個強調色變數（--accent / --accent-2 / --glow-1 / --glow-2）
      2. 覆寫格線欄數與該頁專屬的卡片內容樣式
 
-   主題：本檔提供「暗色」為預設；亮色覆蓋仍由 assets/css/theme.css 以
-   :root[data-theme="light"]（特定度 0,2,0）勝出，故載入順序不影響。
-   強調色 --accent 使用「暗色字面色」而非 var(--palette)，以保各頁在
-   亮/暗模式下的卡片強調表現與原本逐頁硬寫的 rgba() 完全一致。
-   （color-mix 取 N% 之結果等同原本的 rgba(...,0.N)，像素級一致。）
+   主題：色票 token（暗色基準）已於 2026-08-01 移到 assets/css/tokens.css，
+   亮色覆蓋在 assets/css/theme.css。本檔只留「強調色預設」與元件樣式。
 
-   載入方式：於頁面 <head> 先 <link common.css>，再接該頁 <style>，
-   使頁面覆寫以同特定度後置勝出。
+   載入方式：於頁面 <head> 依序 <link tokens.css> → <link theme.css>
+   → <link common.css> → 該頁 <style>，使頁面覆寫以同特定度後置勝出。
    =================================================================== */
 
-/* ── 暗色設計變數（亮色由 theme.css 覆蓋）────────────────────────── */
+/* ── 強調色預設（各頁可覆寫；金色最常見）───────────────────────────
+   **一律寫成 var(--色票) 而非暗色字面值**：色票 token 本身是亮/暗雙套的，
+   accent 指過去就自動跟著主題走。先前這裡寫死 #c8a96e，導致亮色模式
+   得在 theme.css 補一個全域 --accent 才有對比，而那條又把所有頁面的
+   識別色壓成同一個藍（詳見 tokens.css §強調色）。
+   color-mix 取 N% 的結果仍等同原本的 rgba(...,0.N)。 */
 :root {
-  --bg-base:        #0a0c10;
-  --bg-surface:     #0f1117;
-  --bg-card:        #14181f;
-  --bg-card-hover:  #1a1f2b;
-
-  --border:         rgba(255,255,255,0.07);
-  --border-hover:   rgba(200,169,110,0.4);
-
-  --gold:           #c8a96e;
-  --gold-light:     #e2c98a;
-  --gold-dim:       rgba(200,169,110,0.15);
-  --purple:         #a78bfa;
-  --purple-dim:     rgba(167,139,250,0.12);
-  --green:          #4ade80;
-  --green-dim:      rgba(74,222,128,0.12);
-  --blue:           #4fc3f7;
-  --blue-dim:       rgba(79,195,247,0.12);
-  --red:            #f87171;
-  --red-dim:        rgba(248,113,113,0.12);
-  --cyan:           #22d3ee;
-  --cyan-dim:       rgba(34,211,238,0.12);
-  --orange:         #fb923c;
-  --orange-dim:     rgba(251,146,60,0.12);
-
-  --text-primary:   #e8eaf0;
-  --text-secondary: #8892a4;
-  --text-muted:     #717c91;
-
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
-  --transition: 0.18s cubic-bezier(0.4,0,0.2,1);
-
-  /* 各頁可覆寫的強調色預設（金色，最常見）。
-     色票使用暗色字面值，color-mix 之 N% 等同 rgba(...,0.N)。 */
-  --accent:   #c8a96e;                    /* 強調主色（owned / active / hover）*/
-  --accent-2: #4ade80;                    /* 進度條漸層尾色 */
-  --glow-1:   rgba(200,169,110,0.06);     /* 背景光暈 1 */
+  --accent:   var(--gold);                /* 強調主色（owned / active / hover）*/
+  --accent-2: var(--green);               /* 進度條漸層尾色 */
+  --glow-1:   rgba(200,169,110,0.06);     /* 背景光暈 1（兩主題共用，alpha 極低）*/
   --glow-2:   rgba(74,222,128,0.04);      /* 背景光暈 2 */
 }
 
@@ -64,7 +31,7 @@
 
 html { scroll-behavior: smooth; }
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
+  font-family: var(--font-sans);
   background: var(--bg-base);
   color: var(--text-primary);
   min-height: 100vh;
@@ -249,7 +216,10 @@ a { color: inherit; text-decoration: none; }
   color: var(--text-secondary);
   transition: var(--transition);
 }
-.sort-select:hover, .sort-select:focus { color: var(--text-primary); border-color: rgba(255,255,255,0.2); outline: none; }
+/* ※ 不要在這裡加 outline:none——本規則特定度 (0,2,0) 與 tokens.css 的
+   全站 :focus-visible 焦點環相同，而 common.css 後載入會勝出，
+   鍵盤使用者就再也看不到焦點在哪。 */
+.sort-select:hover, .sort-select:focus { color: var(--text-primary); border-color: rgba(255,255,255,0.2); }
 
 /* ── Filter tags ────────────────────────────────────────────────── */
 .filter-section { margin-bottom: 18px; }
@@ -534,8 +504,10 @@ a { color: inherit; text-decoration: none; }
 .src-tag.type-動作指南書 { background: rgba(200,169,110,0.12); color: var(--gold);  border-color: rgba(200,169,110,0.25); }
 .src-tag.type-商城,
 .src-tag.type-App        { background: rgba(167,139,250,0.12); color: var(--purple); border-color: rgba(167,139,250,0.25); }
+/* 成就／金碟的黃：走 --yellow token（亮色模式有加深值）。
+   原本寫死 #ffc850，在亮色卡片上只有 1.54:1，等於看不見。 */
 .src-tag.type-成就,
-.src-tag.type-金碟       { background: rgba(255,200,80,0.1);  color: #ffc850;       border-color: rgba(255,200,80,0.2); }
+.src-tag.type-金碟       { background: var(--yellow-dim);     color: var(--yellow); border-color: color-mix(in srgb, var(--yellow) 25%, transparent); }
 .src-tag.type-市場板     { background: var(--raise); color: var(--text-secondary); border-color: var(--border); }
 
 /* ── 跨工具連結：查市場行情（收藏卡連到市場查價工具）────────────── */

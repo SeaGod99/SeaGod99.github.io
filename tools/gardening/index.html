@@ -5,36 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="FF14 園藝配種計算機 — 正查兩株配種結果，反查目標植物的配種路徑">
   <title>園藝配種計算 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/theme.css">
   <link rel="stylesheet" href="../../assets/css/tool-header.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    :root {
-      --bg-base:    #0a0c10;
-      --bg-surface: #0f1117;
-      --bg-card:    #14181f;
-      --bg-card-hover: #1a1f2b;
-      --border:     rgba(255,255,255,0.07);
-      --border-hover: rgba(200,169,110,0.4);
-      --gold:       #c8a96e;
-      --gold-light: #e2c98a;
-      --gold-dim:   rgba(200,169,110,0.15);
-      --purple:     #a78bfa;
-      --purple-dim: rgba(167,139,250,0.12);
-      --green:      #4ade80;
-      --green-dim:  rgba(74,222,128,0.12);
-      --blue:       #4fc3f7;
-      --blue-dim:   rgba(79,195,247,0.12);
-      --orange:     #fb923c;
-      --orange-dim: rgba(251,146,60,0.12);
-      --text:       #e8e3d8;
-      --text-dim:   #9a9590;
-      --text-muted: #6b6560;
-      --radius:     8px;
-    }
-
     html { font-size: 17.5px; }
-    body { background: var(--bg-base); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+    body { background: var(--bg-base); color: var(--text); font-family: var(--font-sans); min-height: 100vh; }
 
     .nav {
       background: var(--bg-surface); border-bottom: 1px solid var(--border);
@@ -166,7 +144,6 @@
     }
     .tip strong { color: var(--gold); }
   </style>
-  <link rel="stylesheet" href="../../assets/css/theme.css">
   <script src="../../assets/js/theme.js"></script>
 </head>
 <body>

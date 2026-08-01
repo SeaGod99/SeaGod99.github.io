@@ -5,25 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="FF14 時尚品鑑週更推薦 — 每週固定版型的完整配裝表，含裝備與染劑的真實成本、部族聲望等隱形門檻，以及完整接受裝備清單">
 <title>時尚品鑑推薦 — 水神的工具箱</title>
+<link rel="stylesheet" href="../../assets/css/tokens.css">
+<link rel="stylesheet" href="../../assets/css/theme.css">
 <link rel="stylesheet" href="../../assets/css/tool-header.css">
 <style>
+  /* 本頁專屬強調色（時尚粉）。色票／版面 token 見 assets/css/tokens.css；
+     --ok／--warn／--danger 現在是 tokens.css 內 --green／--orange／--red 的別名，
+     兩個主題都有對應值，不必也不要在這裡重新寫死。 */
   :root {
-    --gold: #c8a96e;
-    --bg-base: #0a0c10;
-    --bg-card: #12161e;
-    --bg-hover: #1a2030;
-    --border: #2a3040;
-    --text: #d4cfc7;
-    --text-dim: #7a8090;
-    --accent: #d97ab0;
+    --accent:    #d97ab0;
     --accent-dim: rgba(217,122,176,0.14);
-    --ok: #6fbf73;
-    --warn: #e0a95c;
-    --danger: #e07a7a;
-    --blue: #7fb6e8;
+  }
+  :root[data-theme="light"] {
+    --accent:    #ad3a78;                    /* 亮底 5.13:1 */
+    --accent-dim: rgba(173,58,120,0.14);
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg-base); color: var(--text); font-family: 'Segoe UI','Noto Sans TC',sans-serif; min-height: 100vh; font-size: 17px; }
+  body { background: var(--bg-base); color: var(--text); font-family: var(--font-sans); min-height: 100vh; font-size: 17px; }
   .main { max-width: 1180px; margin: 0 auto; padding: 26px 28px 60px; }
   b { color: var(--text); }
 
@@ -148,7 +146,6 @@
     .state-side { text-align: left; margin-left: 0; }
   }
 </style>
-  <link rel="stylesheet" href="../../assets/css/theme.css">
   <script src="../../assets/js/theme.js"></script>
 </head>
 <body>

@@ -1,9 +1,15 @@
 /* ===================================================================
    水神的工具箱 — 全站主題（亮 / 暗 / 自動）
-   各頁於自己的 <style> 內以「暗色」定義 :root 變數為預設。
-   本檔只提供「亮色」覆蓋：:root[data-theme="light"] 特定度 (0,2,0)
-   高於各頁 :root (0,1,0)，故不論載入順序都會勝出。
+   暗色基準在 assets/css/tokens.css，本檔只提供「亮色」覆蓋。
+   :root[data-theme="light"] 特定度 (0,2,0) 高於 tokens.css 的 :root (0,1,0)。
    data-theme 由 assets/js/theme.js 在 <head> 同步設定（light / dark）。
+
+   ※ 本檔一律排在各頁 <style> **之前**（2026-08-01 起）。頁面若要自訂
+     自己的亮色表現，就在自己的 <style> 內寫 :root[data-theme="light"]{…}，
+     同特定度後載入者勝——不必、也不應該把單頁的色寫進本檔。
+   ※ 只列「基準 token」。tokens.css 內以 var() 定義的別名（--text／--ok／
+     --amber／--isl-land…）會自動跟著，不要在這裡重複覆寫，
+     否則別名會斷開、又長回一份平行色票。
    =================================================================== */
 
 /* 原生元件（捲軸、表單）跟著主題走 */
@@ -46,17 +52,21 @@
   --cyan:           #0c7a8d;
   --cyan-dim:       rgba(14,139,160,0.14);
   --yellow:         #8a6708;
+  --yellow-dim:     rgba(180,133,16,0.16);
+  --pink:           #a8306f;
+  --pink-dim:       rgba(190,60,130,0.14);
 
-  /* ── 文字（兩套命名都覆蓋）── */
-  --text:           #1d1b16;
+  /* ── 文字 ──
+     只覆蓋正式名；--text／--text-dim／--muted 是 tokens.css 裡的別名，
+     會自動跟著這三個走。 */
   --text-primary:   #16181d;
   --text-secondary: #545b67;
-  --text-dim:       #545049;
   --text-muted:     #6c675c;
 
-  /* ── weather 專用強調 ── */
-  --accent:         #2f6fb0;
-  --accent-dim:     rgba(47,111,176,0.15);
+  /* ※ 這裡曾有一組 `--accent:#2f6fb0; --accent-dim:…`，註解寫「weather 專用」，
+     但 :root[data-theme="light"] 是全域選擇器——它把 13 個頁面各自的識別色
+     （金／紫／紅／綠／橘／藍）在亮色模式下全部壓成同一個藍。
+     已移除；weather 與 fashion-report 改在自己的 <style> 內宣告。 */
 
   /* ── 陰影 ── */
   --shadow-card:    0 2px 14px rgba(0,0,0,0.10);

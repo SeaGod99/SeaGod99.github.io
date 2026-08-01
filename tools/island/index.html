@@ -5,20 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="FF14 無人島開拓查詢 — 工坊生產品（時數／價值／主題／素材）、素材反查（採集區域・用途）、稀有動物出現時段與天氣即時倒數、島嶼採集地圖">
   <title>無人島開拓查詢 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/theme.css">
   <link rel="stylesheet" href="../../assets/css/common.css">
   <link rel="stylesheet" href="../../assets/css/tool-header.css">
   <style>
     /* 無人島頁專屬樣式；通用版面見 assets/css/common.css。
        本頁是查詢工具不是追蹤頁，故不吃 collection-tracker 引擎（沒有「已擁有」概念）。 */
     :root {
-      --accent:   #4ade80;
-      --accent-2: #22d3ee;
-      --glow-1:   rgba(74,222,128,0.05);
-      --glow-2:   rgba(34,211,238,0.04);
-      --isl-cave: #a855f7;
-      --isl-land: #4ade80;
+      --accent:    var(--green);
+      --accent-2:  var(--cyan);
+      --glow-1:    rgba(74,222,128,0.05);
+      --glow-2:    rgba(34,211,238,0.04);
     }
-
     /* ── 分頁 ── */
     .isl-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 20px; flex-wrap: wrap; }
     .isl-tab {
@@ -257,7 +256,6 @@
       font-size: 15px; font-weight: 600; opacity: 0; pointer-events: none; transition: opacity .25s; z-index: 60; }
     .toast.show { opacity: 1; }
   </style>
-  <link rel="stylesheet" href="../../assets/css/theme.css">
   <script src="../../assets/js/theme.js"></script>
 </head>
 <body>

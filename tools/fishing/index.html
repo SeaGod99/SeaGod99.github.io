@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="FF14 釣魚紀錄追蹤 — 1414 種台服已開放的魚，查詢釣場/餌/時間/天氣，可釣倒數、目標魚開窗鬧鐘提醒與地圖標點，追蹤已釣紀錄">
   <title>釣魚紀錄追蹤 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/theme.css">
   <link rel="stylesheet" href="../../assets/css/common.css">
   <link rel="stylesheet" href="../../assets/css/tool-header.css">
   <link rel="stylesheet" href="../../assets/css/et-bar.css">
@@ -15,39 +17,13 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --accent:   #4fc3f7;                 /* 藍（釣魚）*/
-      --accent-2: #22d3ee;                 /* 進度條尾色：青 */
-      --glow-1:   rgba(79,195,247,0.05);
-      --glow-2:   rgba(34,211,238,0.04);
-      --bg-base:    #0a0c10;
-      --bg-surface: #0f1117;
-      --bg-card:    #14181f;
-      --bg-card-hover: #1a1f2b;
-      --border:     rgba(255,255,255,0.07);
-      --border-hover: rgba(200,169,110,0.4);
-      --gold:       #c8a96e;
-      --gold-light: #e2c98a;
-      --gold-dim:   rgba(200,169,110,0.15);
-      --purple:     #a78bfa;
-      --purple-dim: rgba(167,139,250,0.12);
-      --green:      #4ade80;
-      --green-dim:  rgba(74,222,128,0.12);
-      --blue:       #4fc3f7;
-      --blue-dim:   rgba(79,195,247,0.12);
-      --cyan:       #22d3ee;
-      --cyan-dim:   rgba(34,211,238,0.12);
-      --orange:     #fb923c;
-      --orange-dim: rgba(251,146,60,0.12);
-      --red:        #f87171;
-      --red-dim:    rgba(248,113,113,0.12);
-      --text:       #e8e3d8;
-      --text-dim:   #9a9590;
-      --text-muted: #6b6560;
-      --radius:     8px;
+      --accent:    var(--blue);                 /* 藍（釣魚）*/
+      --accent-2:  var(--cyan);                 /* 進度條尾色：青 */
+      --glow-1:    rgba(79,195,247,0.05);
+      --glow-2:    rgba(34,211,238,0.04);
     }
-
     html { font-size: 17.5px; }
-    body { background: var(--bg-base); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+    body { background: var(--bg-base); color: var(--text); font-family: var(--font-sans); min-height: 100vh; }
 
     .result-info { font-size: 0.78rem; color: var(--text-muted); }
 
@@ -260,7 +236,6 @@
   </style>
   <script src="../../assets/js/patch-gate.js"></script>
   <script src="../../assets/js/collection-tracker.js"></script>
-  <link rel="stylesheet" href="../../assets/css/theme.css">
   <script src="../../assets/js/theme.js"></script>
 </head>
 <body>

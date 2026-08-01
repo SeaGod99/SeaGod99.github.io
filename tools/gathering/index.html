@@ -9,6 +9,8 @@
   <!-- 本頁原本沒接共用樣式、整套設計自己手寫（連 :root 變數都複製一份），
        所以工具列與篩選長得跟其他 12 頁不一樣。改為載入 common.css 沿用共用的
        .toolbar／.filter-* 等樣式；下方 <style> 在 link 之後，既有的頁面專屬樣式仍然勝出。 -->
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/theme.css">
   <link rel="stylesheet" href="../../assets/css/common.css">
   <link rel="stylesheet" href="../../assets/css/tool-header.css">
   <link rel="stylesheet" href="../../assets/css/et-bar.css">
@@ -19,7 +21,7 @@
        --transition 0.2s vs 0.18s）且缺 --cyan/--orange/--accent 等，故移除。 */
     html { scroll-behavior: smooth; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
+      font-family: var(--font-sans);
       background: var(--bg-base);
       color: var(--text-primary);
       min-height: 100vh;
@@ -231,7 +233,6 @@
     .gnp-meta { opacity:.75; }
     .gnp .windows { width:100%; margin-top:2px; }
   </style>
-  <link rel="stylesheet" href="../../assets/css/theme.css">
   <script src="../../assets/js/theme.js"></script>
 </head>
 <body>

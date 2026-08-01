@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="FF14 風脈泉追蹤器 — 依地區分組查詢，任務型標示完成任務，追蹤解鎖進度">
   <title>風脈泉追蹤器 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/theme.css">
   <link rel="stylesheet" href="../../assets/css/common.css">
   <link rel="stylesheet" href="../../assets/css/tool-header.css">
   <style>
@@ -12,13 +14,11 @@
        控制面由 assets/js/collection-tracker.js 渲染。
        本頁採「子項目模式」：一張卡＝一個地區，真正追蹤的是地區內的每個風脈泉。 */
     :root {
-      --accent:   #c8a96e;                 /* 金（進度條與強調）*/
-      --accent-2: #4ade80;                 /* 進度條尾色：綠 */
-      --glow-1:   rgba(200,169,110,0.05);
-      --glow-2:   rgba(96,165,250,0.04);
-      --cyan:     #4fc3f7;                 /* 沿用本頁原本的淺藍（地圖圖釘／地圖鈕）*/
+      --accent:    var(--gold);                 /* 金（進度條與強調）*/
+      --accent-2:  var(--green);                 /* 進度條尾色：綠 */
+      --glow-1:    rgba(200,169,110,0.05);
+      --glow-2:    rgba(96,165,250,0.04);
     }
-
     /* 地區卡片是整段區塊，不套 .col-grid 的格線 */
     .ac-zones { display: block; }
 
@@ -37,14 +37,14 @@
     .zone-map { position: relative; max-width: 100%; border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; background: rgba(128,128,128,0.06); }
     .zone-map img { display: block; width: 100%; height: auto; }
     .zm-pin { position: absolute; width: 13px; height: 13px; border-radius: 50%; transform: translate(-50%,-50%); cursor: pointer; border: 2px solid rgba(0,0,0,0.55); box-shadow: 0 0 5px rgba(0,0,0,0.5); }
-    .zm-pin.field { background: var(--cyan); }
+    .zm-pin.field { background: var(--blue); }
     .zm-pin.quest { background: var(--purple); }
     .zm-pin.done { background: var(--green); opacity: 0.85; }
     .zm-pin:hover { outline: 2px solid var(--gold); }
     .zm-pin.hot { transform: translate(-50%,-50%) scale(1.5); outline: 2px solid var(--gold); z-index: 2; }
     .zm-legend { font-size: 12.5px; color: var(--text-secondary); margin-top: 8px; display: flex; align-items: center; flex-wrap: wrap; gap: 2px 0; }
     .zm-demo { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; border: 1.5px solid rgba(0,0,0,0.5); }
-    .zm-demo.field { background: var(--cyan); }
+    .zm-demo.field { background: var(--blue); }
     .zm-demo.quest { background: var(--purple); }
     .zm-demo.done { background: var(--green); }
     .zm-tip { opacity: 0.7; margin-left: 8px; }
@@ -59,14 +59,14 @@
       background: none;
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
-      color: var(--cyan);
+      color: var(--blue);
       font-size: 12.5px;
       padding: 5px 10px;
       cursor: pointer;
       transition: var(--transition);
       white-space: nowrap;
     }
-    .ac-map-btn:hover { border-color: var(--cyan); background: rgba(79,195,247,0.1); }
+    .ac-map-btn:hover { border-color: var(--blue); background: rgba(79,195,247,0.1); }
 
     /* ── 資料片色票 ── */
     .tag.patch-arr { background: rgba(74,222,128,0.1);   color: #4ade80; border-color: rgba(74,222,128,0.25); }
@@ -167,7 +167,6 @@
   </style>
   <script src="../../assets/js/patch-gate.js"></script>
   <script src="../../assets/js/collection-tracker.js"></script>
-  <link rel="stylesheet" href="../../assets/css/theme.css">
   <script src="../../assets/js/theme.js"></script>
 </head>
 <body>

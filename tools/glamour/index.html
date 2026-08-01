@@ -4,48 +4,96 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>幻化配裝圖鑑 | 水神的工具箱</title>
+<link rel="stylesheet" href="../../assets/css/tokens.css">
+<link rel="stylesheet" href="../../assets/css/theme.css">
 <link rel="stylesheet" href="vendor/bootstrap/bootstrap.min.css">
+<script src="../../assets/js/theme.js"></script>
 <script src="curated_outfits.js"></script>
 <style>
-/* ===== 站內共用設計語彙（同 assets/css/common.css 色票）：映射到 Bootstrap 5 變數 ===== */
+/* ===== 站內共用設計語彙 → 映射到 Bootstrap 5 變數 =====
+   色票／字體／圓角 token 一律來自 assets/css/tokens.css（暗色基準）
+   ＋ assets/css/theme.css（亮色覆蓋）。本頁 2026-08-01 前是全站唯一
+   沒接主題系統的頁（切亮色仍是純暗底），也沒有全站頂列——theme.js
+   同時負責注入 #sgt-topbar 與主題鈕，補上這支就一起回來了。
+   本頁只留 Bootstrap 對接與自己的 --accent2／--tag-other。 */
 :root{
-  --bg:#0a0c10; --card-bg:#14181f; --panel-bg:#0f1117; --border:rgba(255,255,255,.07);
-  --accent:#c8a96e; --accent-light:#e2c98a; --accent2:#4fc3f7; --text:#e8eaf0; --muted:#8892a4;
-  --female:#f472b6; --male:#60a5fa; --unknown:#6b7280;
+  --accent:  var(--gold);                  /* 本頁識別色（本頁不載 common.css，要自己給）*/
+  --accent2: var(--blue);                  /* 次強調 */
   --tag-other:#374151;
 }
+/* Bootstrap 的變數改吃共用 token，兩個主題各一組。
+   data-bs-theme 由 theme.js 跟著 data-theme 一起設。 */
+[data-bs-theme="dark"], [data-bs-theme="light"]{
+  --bs-body-bg:var(--bg-base); --bs-body-color:var(--text-primary);
+  --bs-tertiary-bg:var(--bg-card); --bs-secondary-bg:var(--bg-surface);
+  --bs-border-color:var(--border); --bs-border-color-translucent:var(--border);
+  --bs-primary:var(--accent2);
+  --bs-link-color:var(--accent2);
+}
 [data-bs-theme="dark"]{
-  --bs-body-bg:#0a0c10; --bs-body-color:#e8eaf0;
-  --bs-tertiary-bg:#14181f; --bs-secondary-bg:#0f1117;
-  --bs-border-color:rgba(255,255,255,.12); --bs-border-color-translucent:rgba(255,255,255,.1);
-  --bs-primary:#4fc3f7; --bs-primary-rgb:79,195,247;
+  --bs-primary-rgb:79,195,247;
   --bs-emphasis-color:#fff; --bs-emphasis-color-rgb:255,255,255;
-  --bs-link-color:#4fc3f7; --bs-link-color-rgb:79,195,247;
+  --bs-link-color-rgb:79,195,247;
   --bs-link-hover-color:#8ad8fa;
 }
-/* 根字級：Bootstrap 全 rem 制，調這裡＝整站等比例放大 */
-html{ font-size:17px; }
-body{ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans TC',sans-serif; }
+[data-bs-theme="light"]{
+  --bs-primary-rgb:12,111,166;
+  --bs-emphasis-color:#16181d; --bs-emphasis-color-rgb:22,24,29;
+  --bs-link-color-rgb:12,111,166;
+  --bs-link-hover-color:#09517a;
+}
+/* .btn-outline-light 是「白字白框」，亮底等於隱形（檢視切換與語言切換的
+   未選中那顆會整顆消失）。Bootstrap 5 的按鈕吃 --bs-btn-* 變數，改導到
+   共用色票即可，不必改 HTML 的 class。 */
+[data-bs-theme="light"] .btn-outline-light{
+  --bs-btn-color:var(--text-secondary);
+  --bs-btn-border-color:var(--border-hover);
+  --bs-btn-hover-color:var(--bg-card);
+  --bs-btn-hover-bg:var(--text-secondary);
+  --bs-btn-hover-border-color:var(--text-secondary);
+  --bs-btn-active-color:var(--bg-card);
+  --bs-btn-active-bg:var(--text-secondary);
+  --bs-btn-active-border-color:var(--text-secondary);
+}
+/* 鍵盤焦點環：Bootstrap 的 `.btn:focus-visible{outline:0;box-shadow:…}` 與
+   tokens.css 的全站規則同特定度 (0,2,0)，而 bootstrap.min.css 後載入會勝出，
+   它換上的 box-shadow 光暈在 btn-outline-light 上幾乎看不見。這裡補一條
+   讓本頁跟全站一致。 */
+.btn:focus-visible, .form-control:focus-visible, .form-select:focus-visible{
+  outline:2px solid var(--focus-ring); outline-offset:2px; box-shadow:none;
+}
+
+/* 根字級：與其他 rem 制的頁一致（faux-hollows／fishing／gardening／
+   gc-exchange／market／squadron 都是 17.5px）。本頁原為 17px，同一句
+   .8rem 在這裡是 13.6px、在那六頁是 14px。
+   ※ 用 px 寫死 root font-size 會蓋掉使用者的瀏覽器字級設定，
+     這七頁都有這個問題，改成 109.375% 才會跟著放大——待辦。 */
+html{ font-size:17.5px; }
+body{ font-family:var(--font-sans); }
 /* 站內共通背景光暈 */
 body::before{ content:''; position:fixed; inset:0; pointer-events:none; z-index:-1;
   background:radial-gradient(ellipse 80% 50% at 20% 0%, rgba(200,169,110,.05) 0%, transparent 60%),
              radial-gradient(ellipse 60% 40% at 80% 100%, rgba(79,195,247,.04) 0%, transparent 60%); }
 
 /* ── Navbar ── */
-.app-navbar{ background:rgba(15,17,23,.92);
-  border-bottom:1px solid var(--border); backdrop-filter:blur(12px); z-index:1030; }
+/* top:46px ＝ nav.js 注入的全站頂列 #sgt-topbar 高度。兩者都是 sticky top:0 時
+   會疊在同一位置，而頂列 z-index 9997 高過這裡的 1030，捲動時本頁的 navbar
+   會被蓋掉——所以往下讓一個頂列的高度。 */
+.app-navbar{ background:color-mix(in srgb, var(--bg-surface) 92%, transparent);
+  border-bottom:1px solid var(--border); backdrop-filter:blur(12px); z-index:1030; top:46px; }
+@media (max-width:600px){ .app-navbar{ top:46px; } }
 .back-link{ display:inline-flex; align-items:center; gap:6px; font-size:.82rem; white-space:nowrap;
   color:var(--muted); padding:6px 12px; border:1px solid var(--border); border-radius:6px;
   text-decoration:none; transition:all .18s; }
-.back-link:hover{ color:var(--accent); border-color:rgba(200,169,110,.4); }
+.back-link:hover{ color:var(--accent); border-color:var(--border-hover); }
 .app-title{ font-size:1.35rem; font-weight:700; margin:0; color:var(--accent-light); }
 .app-subtitle{ color:var(--muted); font-size:.85rem; }
-.lang-btn.lang-active{ background:var(--accent)!important; border-color:var(--accent)!important; color:#0a0c10!important; }
+.lang-btn.lang-active{ background:var(--accent)!important; border-color:var(--accent)!important; color:var(--bg-base)!important; }
 
 /* ── Filter bar ── */
 .filter-bar{ background:var(--card-bg); border-bottom:1px solid var(--border); }
 .filter-group-label{ font-size:.8rem; color:var(--muted); white-space:nowrap;
-  background:rgba(255,255,255,.05); border:1px solid var(--border); border-radius:4px; padding:2px 8px; }
+  background:var(--raise); border:1px solid var(--border); border-radius:4px; padding:2px 8px; }
 .filter-sep{ width:1px; height:20px; background:var(--border); }
 .filter-btn{ --bs-btn-padding-y:.28rem; --bs-btn-padding-x:.85rem; --bs-btn-font-size:.875rem; border-radius:20px; }
 .filter-btn.active{ background:var(--accent2); border-color:var(--accent2); color:#fff; }
@@ -61,27 +109,31 @@ body::before{ content:''; position:fixed; inset:0; pointer-events:none; z-index:
 /* ── Cards ── */
 .outfit-card{ cursor:pointer; overflow:hidden; background:var(--card-bg);
   transition:transform .2s, box-shadow .2s, border-color .2s; }
-.outfit-card:hover{ transform:translateY(-4px); border-color:rgba(200,169,110,.4)!important;
-  box-shadow:0 2px 16px rgba(0,0,0,.4); }
+.outfit-card:hover{ transform:translateY(-4px); border-color:var(--border-hover)!important;
+  box-shadow:var(--shadow-card); }
 .card-img-top{ aspect-ratio:3/4; object-fit:cover; object-position:top; background:var(--panel-bg); }
 .card-noimg{ aspect-ratio:3/4; display:flex; align-items:center; justify-content:center;
   color:var(--muted); font-size:.7rem; background:var(--panel-bg); }
 .card-name{ font-size:1.1rem; line-height:1.3; }
-.star-badge{ position:absolute; top:8px; left:8px; background:var(--accent); color:#000;
+.star-badge{ position:absolute; top:8px; left:8px; background:var(--accent); color:var(--bg-base);
   border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center;
   font-size:.7rem; font-weight:700; z-index:2; }
 .fav-btn{ position:absolute; top:8px; right:8px; z-index:2; width:30px; height:30px; border-radius:50%;
-  background:rgba(0,0,0,.5); border:1px solid rgba(255,255,255,.15); color:#9ca3af; line-height:1;
+  background:color-mix(in srgb, var(--bg-base) 55%, transparent); border:1px solid var(--border); color:var(--text-muted); line-height:1;
   display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .2s; }
-.fav-btn:hover{ color:#fbbf24; border-color:#fbbf24; }
-.fav-btn.faved{ color:#fbbf24; border-color:rgba(251,191,36,.5); background:rgba(251,191,36,.12); }
+.fav-btn:hover{ color:var(--yellow); border-color:var(--yellow); }
+.fav-btn.faved{ color:var(--yellow); border-color:color-mix(in srgb, var(--yellow) 50%, transparent); background:var(--yellow-dim); }
 
 /* card meta / tags */
 .tag-female,.tag-male,.tag-unk,.tag-race{ font-size:.72rem; padding:2px 8px; border-radius:10px; white-space:nowrap; }
-.tag-female{ background:rgba(244,114,182,.15); color:var(--female); border:1px solid rgba(244,114,182,.4); }
-.tag-male{ background:rgba(96,165,250,.15); color:var(--male); border:1px solid rgba(96,165,250,.4); }
-.tag-unk{ background:rgba(107,114,128,.15); color:var(--unknown); border:1px solid rgba(107,114,128,.4); }
-.tag-race{ background:rgba(255,255,255,.05); color:var(--muted); border:1px solid var(--border); }
+.tag-female{ background:color-mix(in srgb, var(--female) 15%, transparent); color:var(--female); border:1px solid color-mix(in srgb, var(--female) 40%, transparent); }
+.tag-male{ background:color-mix(in srgb, var(--male) 15%, transparent); color:var(--male); border:1px solid color-mix(in srgb, var(--male) 40%, transparent); }
+.tag-unk{ background:color-mix(in srgb, var(--unknown) 15%, transparent); color:var(--unknown); border:1px solid color-mix(in srgb, var(--unknown) 40%, transparent); }
+.tag-race{ background:var(--raise); color:var(--muted); border:1px solid var(--border); }
+/* 卡片標籤：職能／來源那組 .badge-* 是「深色實心底＋淺色字」的色票晶片
+   （#065f46 綠、#7f1d1d 紅…），兩個主題都維持深底才讀得到，所以文字色
+   固定淺色、--tag-other 也不隨主題變淺。別改成 var(--text-primary)：
+   亮色模式會變成深字配深底。 */
 .card-tag{ font-size:.72rem; padding:2px 8px; border-radius:10px; color:#e5e7eb; background:var(--tag-other); }
 .badge-healer{background:#065f46}.badge-tank{background:#1e3a5f}.badge-caster{background:#4c1d95}
 .badge-melee{background:#7f1d1d}.badge-pranged{background:#713f12}.badge-crafter{background:#1f2937;border:1px solid #4b5563}
@@ -123,7 +175,7 @@ body::before{ content:''; position:fixed; inset:0; pointer-events:none; z-index:
   font-weight:600; border-bottom:1px solid var(--border); white-space:nowrap; position:sticky; top:0; z-index:2; }
 .equip-table td{ padding:11px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
 .equip-table tr:last-child td{ border-bottom:none; }
-.equip-table tr:hover td{ background:rgba(255,255,255,.035); }
+.equip-table tr:hover td{ background:var(--raise); }
 .slot-badge{ display:inline-block; min-width:3.2em; padding:2px 8px; border-radius:4px; font-size:.78rem;
   font-weight:600; text-align:center; background:var(--panel-bg); color:var(--accent); white-space:nowrap; }
 .item-name{ font-weight:600; }
@@ -131,11 +183,11 @@ body::before{ content:''; position:fixed; inset:0; pointer-events:none; z-index:
 .item-src{ font-size:.74rem; color:var(--accent2); margin-top:2px; }
 /* 取得方式總覽（彈窗底部，來源 → 這套哪幾件） */
 .src-overview{ margin:14px 0 4px; padding:12px 14px; border:1px solid var(--border);
-  border-radius:10px; background:rgba(255,255,255,.02); }
+  border-radius:10px; background:var(--raise); }
 .src-ov-title{ font-size:.86rem; font-weight:600; color:var(--accent); margin-bottom:8px; }
 .src-ov-note{ font-size:.72rem; font-weight:400; color:var(--muted); margin-left:6px; }
 .src-ov-row{ display:flex; align-items:center; gap:10px; padding:4px 0;
-  border-top:1px solid rgba(255,255,255,.05); }
+  border-top:1px solid var(--border); }
 .src-ov-row:first-of-type{ border-top:none; }
 .src-ov-key{ flex:1 1 auto; font-size:.82rem; color:var(--accent2); cursor:pointer;
   overflow-wrap:anywhere; }
@@ -143,38 +195,38 @@ body::before{ content:''; position:fixed; inset:0; pointer-events:none; z-index:
 .src-ov-slots{ flex:0 0 auto; display:flex; align-items:center; gap:3px; flex-wrap:wrap;
   justify-content:flex-end; }
 .src-ov-n{ font-size:.72rem; color:var(--muted); margin-left:4px; }
-.unconfirmed{ color:#f59e0b; }
+.unconfirmed{ color:var(--orange); }
 .item-link{ cursor:pointer; border-bottom:1px dotted var(--muted); }
 .item-link:hover{ color:var(--accent2); border-bottom-color:var(--accent2); }
 .dye-cell{ white-space:nowrap; }
 .dye-dash{ color:var(--muted); }
-.dye-dot{ display:inline-block; width:11px; height:11px; border-radius:50%; border:1px solid rgba(255,255,255,.35); vertical-align:-1px; margin-right:4px; }
+.dye-dot{ display:inline-block; width:11px; height:11px; border-radius:50%; border:1px solid color-mix(in srgb, var(--text-primary) 35%, transparent); vertical-align:-1px; margin-right:4px; }
 .mirapri-dye-line{ margin-top:10px; font-size:.85rem; color:var(--muted); display:flex; flex-wrap:wrap; gap:4px 10px; align-items:center; }
 .mirapri-dye-line .dye-cell{ color:var(--text); }
 .modal-note{ background:var(--panel-bg); border-left:3px solid var(--accent); padding:8px 14px;
   border-radius:0 6px 6px 0; font-size:.88rem; color:var(--muted); margin-bottom:16px; }
-.patch-tag{ display:inline-block; background:#1e293b; color:#94a3b8; border:1px solid #334155;
+.patch-tag{ display:inline-block; background:var(--raise); color:var(--text-secondary); border:1px solid var(--border);
   border-radius:4px; font-size:.78rem; font-weight:600; padding:1px 6px; white-space:nowrap; }
 .patch-cell{ text-align:center; white-space:nowrap; }
 .source-tag{ display:inline-flex; align-items:center; gap:4px; padding:3px 9px; border-radius:12px;
   font-size:.78rem; font-weight:500; white-space:normal; margin:1px 0; }
-.src-raid{ background:rgba(124,58,237,.25); color:#a78bfa; border:1px solid rgba(124,58,237,.4); }
-.src-pvp{ background:rgba(220,38,38,.2); color:#f87171; border:1px solid rgba(220,38,38,.4); }
-.src-store{ background:rgba(217,119,6,.2); color:#fbbf24; border:1px solid rgba(217,119,6,.4); }
-.src-event{ background:rgba(22,163,74,.2); color:#4ade80; border:1px solid rgba(22,163,74,.4); }
-.src-craft{ background:rgba(37,99,235,.2); color:#60a5fa; border:1px solid rgba(37,99,235,.4); }
-.src-scrip{ background:rgba(8,145,178,.2); color:#22d3ee; border:1px solid rgba(8,145,178,.4); }
-.src-gs{ background:rgba(202,138,4,.2); color:#fde047; border:1px solid rgba(202,138,4,.4); }
-.src-npc{ background:rgba(75,85,99,.3); color:#9ca3af; border:1px solid rgba(75,85,99,.5); }
-.src-ceremony{ background:rgba(219,39,119,.2); color:#f472b6; border:1px solid rgba(219,39,119,.4); }
-.src-other{ background:rgba(55,65,81,.3); color:#9ca3af; border:1px solid rgba(55,65,81,.5); }
+.src-raid{ background:color-mix(in srgb, var(--purple) 22%, transparent); color:var(--purple); border:1px solid color-mix(in srgb, var(--purple) 40%, transparent); }
+.src-pvp{ background:color-mix(in srgb, var(--red) 20%, transparent); color:var(--red); border:1px solid color-mix(in srgb, var(--red) 40%, transparent); }
+.src-store{ background:color-mix(in srgb, var(--orange) 20%, transparent); color:var(--orange); border:1px solid color-mix(in srgb, var(--orange) 40%, transparent); }
+.src-event{ background:color-mix(in srgb, var(--green) 20%, transparent); color:var(--green); border:1px solid color-mix(in srgb, var(--green) 40%, transparent); }
+.src-craft{ background:color-mix(in srgb, var(--blue) 20%, transparent); color:var(--blue); border:1px solid color-mix(in srgb, var(--blue) 40%, transparent); }
+.src-scrip{ background:color-mix(in srgb, var(--cyan) 20%, transparent); color:var(--cyan); border:1px solid color-mix(in srgb, var(--cyan) 40%, transparent); }
+.src-gs{ background:var(--yellow-dim); color:var(--yellow); border:1px solid color-mix(in srgb, var(--yellow) 40%, transparent); }
+.src-npc{ background:var(--raise); color:var(--text-secondary); border:1px solid var(--border); }
+.src-ceremony{ background:color-mix(in srgb, var(--pink) 20%, transparent); color:var(--pink); border:1px solid color-mix(in srgb, var(--pink) 40%, transparent); }
+.src-other{ background:var(--raise); color:var(--text-secondary); border:1px solid var(--border); }
 .restrict-level,.restrict-job,.restrict-gender,.restrict-race{ display:inline-block; margin:0 4px 4px 0;
   padding:2px 8px; border-radius:10px; font-size:.7rem; background:var(--panel-bg);
   border:1px solid var(--border); color:var(--text); white-space:nowrap; }
-.restrict-level{ border-color:#4b5563; }
+.restrict-level{ border-color:var(--border-hover); }
 .restrict-job{ border-color:#2563eb; color:var(--accent2); }
-.restrict-gender{ border-color:#db2777; color:#f472b6; }
-.restrict-race{ border-color:#7c3aed; color:#a78bfa; }
+.restrict-gender{ border-color:color-mix(in srgb, var(--pink) 55%, transparent); color:var(--pink); }
+.restrict-race{ border-color:color-mix(in srgb, var(--purple) 55%, transparent); color:var(--purple); }
 
 /* ── Mobile: equipment table → stacked cards ── */
 @media (max-width:640px){
@@ -183,7 +235,7 @@ body::before{ content:''; position:fixed; inset:0; pointer-events:none; z-index:
   .equip-table thead{ display:none; }
   .equip-table,.equip-table tbody{ display:block; width:100%; }
   .equip-table tr{ display:block; border:1px solid var(--border); border-radius:10px;
-    margin-bottom:10px; padding:8px 12px 10px; background:rgba(255,255,255,.02); }
+    margin-bottom:10px; padding:8px 12px 10px; background:var(--raise); }
   .equip-table tr:hover td{ background:none; }
   .equip-table td{ display:flex; gap:12px; justify-content:space-between; align-items:baseline; border:none; padding:5px 0; }
   .equip-table td::before{ content:attr(data-label); flex:0 0 auto; color:var(--muted); font-size:.7rem; font-weight:600; }
@@ -204,17 +256,17 @@ body::before{ content:''; position:fixed; inset:0; pointer-events:none; z-index:
   border-radius:10px; padding:2px 8px; pointer-events:none; max-width:85%; white-space:nowrap;
   overflow:hidden; text-overflow:ellipsis; }
 .set-card-imgwrap{ position:relative; }
-.set-icons img{ width:44px; height:44px; border-radius:6px; border:1px solid var(--border); background:#0a0d12; }
-.set-modal-icons img{ width:40px; height:40px; border-radius:6px; border:1px solid var(--border); background:#0a0d12; vertical-align:middle; }
+.set-icons img{ width:44px; height:44px; border-radius:6px; border:1px solid var(--border); background:var(--bg-base); }
+.set-modal-icons img{ width:40px; height:40px; border-radius:6px; border:1px solid var(--border); background:var(--bg-base); vertical-align:middle; }
 .mini-chips{ display:flex; flex-wrap:wrap; gap:4px; margin-top:4px; }
 .mini-chip{ display:inline-block; font-size:.68rem; padding:1px 7px; border-radius:9px;
   background:var(--panel-bg); border:1px solid var(--border); color:var(--muted); white-space:nowrap; }
-.chip-dye{ color:#c084fc; border-color:rgba(192,132,252,.4); }
-.chip-nodye{ color:#6b7280; }
-.chip-mb{ color:#4ade80; border-color:rgba(74,222,128,.35); }
+.chip-dye{ color:var(--purple); border-color:color-mix(in srgb, var(--purple) 40%, transparent); }
+.chip-nodye{ color:var(--text-muted); }
+.chip-mb{ color:var(--green); border-color:color-mix(in srgb, var(--green) 35%, transparent); }
 .chip-set{ color:var(--accent2); border-color:rgba(110,159,212,.4); cursor:pointer; }
 .chip-set:hover{ background:rgba(110,159,212,.15); }
-.zh-missing{ color:#f59e0b; font-size:.68rem; border:1px solid rgba(245,158,11,.4); border-radius:9px; padding:1px 7px; white-space:nowrap; }
+.zh-missing{ color:var(--orange); font-size:.68rem; border:1px solid color-mix(in srgb, var(--orange) 40%, transparent); border-radius:9px; padding:1px 7px; white-space:nowrap; }
 .empty-state{ text-align:center; color:var(--muted); padding:60px 20px; font-size:.95rem; }
 
 /* ── 站內共用頁尾 ── */
@@ -234,7 +286,8 @@ body::before{ content:''; position:fixed; inset:0; pointer-events:none; z-index:
 <nav class="app-navbar sticky-top px-3 px-md-4 py-3">
   <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
     <div class="d-flex align-items-center gap-3 flex-wrap">
-      <a href="../../" class="back-link">← 水神的工具箱</a>
+      <!-- 回首頁入口已由 nav.js 注入的全站頂列 #sgt-topbar 提供（全站慣例，
+           見 assets/css/tool-header.css 檔頭），故不再自刻返回鍵。 -->
       <div>
         <h1 class="app-title" id="site-title">👘 幻化配裝圖鑑</h1>
         <p class="app-subtitle mb-0" id="site-subtitle"></p>

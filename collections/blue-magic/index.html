@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="FF14 青魔法術收藏 — 遊戲內〈青魔法之書〉版型，查詢習得來源、屬性/類型篩選、記錄習得進度">
   <title>青魔法術收藏 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/theme.css">
   <link rel="stylesheet" href="../../assets/css/common.css">
   <link rel="stylesheet" href="../../assets/css/tool-header.css">
   <style>
@@ -14,10 +16,10 @@
          法術書（預設）— 仿遊戲內〈青魔法之書〉：8 頁籤 × 4×4 格，右側詳情欄
          卡片        — 原本的 .col-card 清單，一次看完機制與取得方式 */
     :root {
-      --accent:   #4fc3f7;                 /* 藍 */
-      --accent-2: #a78bfa;                 /* 進度條尾色：紫 */
-      --glow-1:   rgba(79,195,247,0.06);
-      --glow-2:   rgba(200,169,110,0.04);
+      --accent:    var(--blue);                 /* 藍 */
+      --accent-2:  var(--purple);                 /* 進度條尾色：紫 */
+      --glow-1:    rgba(79,195,247,0.06);
+      --glow-2:    rgba(200,169,110,0.04);
     }
     .col-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
     .col-card { padding: 18px; }
@@ -177,6 +179,15 @@
       object-fit: contain;
       pointer-events: none;
     }
+    /* 未習得＝灰階圖示（看得出是哪個法術，但一眼分得出還沒學到）。
+       只靠底色深淺分辨不夠：圖示佔了格子七成、又個個高彩度，
+       背後那層 24% 的灰幾乎看不見，整本書看起來全都學會了。
+       做法與幻卡手帳的 .tt-slot.miss 一致（知識庫 §2.9 仿遊戲版型慣例）。 */
+    .bm-slot:not(.learned) .bm-slot-icon {
+      filter: grayscale(1) brightness(0.92) contrast(0.95);
+    }
+    /* hover 才微微透出原色；選中時刻意不透，否則「選中的未習得格」看起來像已習得 */
+    .bm-slot:not(.learned):hover .bm-slot-icon { filter: grayscale(0.45); }
     .bm-slot.learned {
       background: color-mix(in srgb, var(--accent) 26%, var(--bg-card));
       border-color: color-mix(in srgb, var(--accent) 60%, transparent);
@@ -226,6 +237,10 @@
       background: var(--raise);
       border-radius: var(--radius-sm);
     }
+    /* 詳情欄的圖示跟著格子一起灰（比照幻卡的 .tt-art.miss）。
+       .miss 由 updateMarkBtn() 掛在 .bm-detail 上——那支在 showDetail 與
+       syncBook 尾端都會跑，所以不論從格子的 ✓ 鈕還是詳情欄的按鈕切換都同步。 */
+    .bm-detail.miss .bm-d-icon { filter: grayscale(1) brightness(0.92) contrast(0.95); }
     .bm-d-no { font-size: 11px; color: var(--text-muted); }
     .bm-d-name { font-size: 18px; font-weight: 600; color: var(--text-primary); line-height: 1.3; }
     .bm-d-en { font-size: 11px; color: var(--text-muted); }
@@ -266,7 +281,6 @@
   </style>
   <script src="../../assets/js/patch-gate.js"></script>
   <script src="../../assets/js/collection-tracker.js"></script>
-  <link rel="stylesheet" href="../../assets/css/theme.css">
   <script src="../../assets/js/theme.js"></script>
 </head>
 <body>
@@ -583,6 +597,7 @@
     var learned = tracker.isOwned(shown);
     markBtn.classList.toggle('on', learned);
     markBtn.textContent = learned ? '✓ 已習得（點此取消）' : '標記為已習得';
+    $('bmDetail').classList.toggle('miss', !learned);   // 詳情欄圖示跟著灰
   }
 
   setView(viewMode);

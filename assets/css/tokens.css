@@ -1,0 +1,141 @@
+/* ===================================================================
+   水神的工具箱 — 全站設計 token（單一來源）
+
+   2026-08-01 建立。此前每一頁都在自己的 <style> 內複製一份 :root 色票，
+   26 頁共 4 套以上副本，同名變數的值已經漂移（--bg-card 有 #14181f／#12161e，
+   --border 有 3 種寫法，內文色有 #e8eaf0／#e8e3d8／#d4cfc7 三種）。
+   本檔把「暗色」定為唯一基準；「亮色」覆蓋仍在 theme.css。
+
+   ── 載入順序（重要）──────────────────────────────────────────────
+     1. tokens.css   ← 本檔，暗色基準
+     2. theme.css    ← 亮色覆蓋（:root[data-theme="light"]）
+     3. common.css / tool-header.css / et-bar.css 等元件層
+     4. 該頁自己的 <style>
+   各頁 <style> 排最後，才能覆寫元件層；若該頁要改自己的亮色表現，
+   在自己的 <style> 內寫 :root[data-theme="light"]{...} 即可勝出
+   （同特定度、後載入）——weather 與 fashion-report 就是這樣保留自己的
+   accent，不再污染全站（見 §強調色）。
+
+   ── 命名 ──────────────────────────────────────────────────────────
+   全站曾並存兩套文字色命名，本檔把第二套定義成第一套的別名，
+   舊頁不必逐條改寫 CSS 規則：
+     --text-primary / --text-secondary / --text-muted   ← 正式名
+     --text         / --text-dim       / --muted        ← 別名
+   =================================================================== */
+
+:root {
+  /* ── 表面 ───────────────────────────────────────────────────── */
+  --bg-base:        #0a0c10;
+  --bg-surface:     #0f1117;
+  --bg-card:        #14181f;
+  --bg-card-hover:  #1a1f2b;
+  --bg-hover:       #1a1f2b;   /* weather／fashion-report 用的別名 */
+
+  --border:         rgba(255,255,255,0.07);
+  --border-hover:   rgba(200,169,110,0.4);
+
+  /* ── 色票 ───────────────────────────────────────────────────── */
+  --gold:           #c8a96e;
+  --gold-light:     #e2c98a;
+  --gold-dim:       rgba(200,169,110,0.15);
+  --purple:         #a78bfa;
+  --purple-dim:     rgba(167,139,250,0.12);
+  --green:          #4ade80;
+  --green-dim:      rgba(74,222,128,0.12);
+  --blue:           #4fc3f7;
+  --blue-dim:       rgba(79,195,247,0.12);
+  --red:            #f87171;
+  --red-dim:        rgba(248,113,113,0.12);
+  --cyan:           #22d3ee;
+  --cyan-dim:       rgba(34,211,238,0.12);
+  --orange:         #fb923c;
+  --orange-dim:     rgba(251,146,60,0.12);
+  --yellow:         #fbbf24;
+  --yellow-dim:     rgba(251,191,36,0.12);
+  --pink:           #f472b6;
+  --pink-dim:       rgba(244,114,182,0.12);
+
+  /* ── 文字 ───────────────────────────────────────────────────── */
+  --text-primary:   #e8eaf0;
+  --text-secondary: #8892a4;
+  --text-muted:     #717c91;
+
+  /* ── 字體 ───────────────────────────────────────────────────
+     全站曾有 3 套堆疊並存，其中 `'Segoe UI', system-ui, sans-serif`（5 頁）
+     **缺 Noto Sans TC**、`'Segoe UI','Noto Sans TC'`（2 頁）缺 -apple-system，
+     繁中字會 fallback 到不同字體。統一走這個 token。 */
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+
+  /* ── 幾何與動態 ─────────────────────────────────────────────── */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --transition: 0.18s cubic-bezier(0.4,0,0.2,1);
+  --shadow-card: 0 2px 16px rgba(0,0,0,0.4);
+
+  /* ── 別名（保留舊頁面的命名，值一律指向上面的正式 token）────── */
+  --text:          var(--text-primary);
+  --text-dim:      var(--text-secondary);
+  --muted:         var(--text-secondary);
+  --radius:        var(--radius-md);
+  --bg:            var(--bg-base);
+  --card-bg:       var(--bg-card);
+  --panel-bg:      var(--bg-surface);
+  --accent-light:  var(--gold-light);
+  --amber:         var(--yellow);        /* market */
+  --ok:            var(--green);         /* fashion-report */
+  --warn:          var(--orange);        /* fashion-report */
+  --danger:        var(--red);           /* fashion-report */
+  --isl-land:      var(--green);         /* island */
+  --isl-cave:      var(--purple);        /* island */
+  --female:        var(--pink);          /* glamour */
+  --male:          var(--blue);          /* glamour */
+  --unknown:       var(--text-muted);    /* glamour */
+
+  /* ── 焦點環 ─────────────────────────────────────────────────
+     取該頁的 --accent；沒設 --accent 的頁退回金色。 */
+  --focus-ring: var(--accent, var(--gold));
+}
+
+/* ===================================================================
+   強調色 --accent 的規則（2026-08-01）
+
+   各頁的識別色請寫成 var(--gold) / var(--purple) / … 這種**指向 token
+   的形式**，不要寫暗色字面值。理由：色票 token 本身是亮/暗雙套的，
+   accent 指過去就自動跟著主題走。
+
+   先前各頁寫死暗色字面值，亮色模式只好在 theme.css 補一個
+   `--accent:#2f6fb0`（原意是給 weather 用）——那條 :root[data-theme="light"]
+   特定度 (0,2,0) 高於各頁 :root (0,1,0)，結果把 13 個頁面的識別色
+   （金／紫／紅／綠／橘／藍）在亮色下全部壓成同一個藍。
+
+   真的需要自訂 accent 的頁（weather、fashion-report），在該頁 <style>
+   內自己補 :root[data-theme="light"]{--accent:…} —— 那是頁面自己的事，
+   不會外溢。
+   =================================================================== */
+
+/* ===================================================================
+   全站無障礙基準
+   =================================================================== */
+
+/* 鍵盤焦點環：特定度 (0,2,0)，蓋得過各頁 `input{outline:none}` 一類
+   (0,1,0)～(0,1,1) 的寫法，所以舊頁不必逐條刪 outline:none。
+   :is() 取其中最高的特定度（[tabindex] 的 (0,1,0)），加上 :focus-visible
+   再一個 (0,1,0)。只在鍵盤操作時出現，滑鼠點擊不受影響。 */
+:is(a, button, input, select, textarea, summary, [tabindex], [role="button"]):focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* 尊重系統的「減少動態效果」。本站的動效都是裝飾性（hover 過場、
+   進度條補間、平滑捲動），全部關掉不影響任何功能。 */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+}

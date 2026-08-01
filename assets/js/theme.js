@@ -26,7 +26,12 @@
     return (mq && mq.matches) ? 'light' : 'dark';
   }
   function apply(pref) {
-    root.setAttribute('data-theme', resolve(pref));
+    var v = resolve(pref);
+    root.setAttribute('data-theme', v);
+    // Bootstrap 5 的配色開關。只有幻化配裝圖鑑（tools/glamour）用 Bootstrap，
+    // 其他頁沒有任何規則讀這個屬性，設了也沒有副作用——放這裡是為了讓
+    // 「切主題」對全站一視同仁，不必在該頁另外掛 MutationObserver。
+    root.setAttribute('data-bs-theme', v);
   }
 
   // 1) 盡早套用（在 <head> 同步執行，首次繪製前），避免閃白/閃黑

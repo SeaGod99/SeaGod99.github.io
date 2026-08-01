@@ -41,7 +41,7 @@ tools/<name>/           # 各工具頁，一頁一目錄，index.html 自帶樣�
 collections/<name>/     # 收藏追蹤頁（+ minions/ 在根目錄，歷史因素）
 data/                   # 統一資料庫（SCHEMA.md／_meta.json）＋前端讀的 json
 scripts/*.mjs           # 資料產生／校正腳本（node，非執行期依賴）
-assets/css|js/          # 共用樣式與腳本（common.css、eorzea-weather.js…）
+assets/css|js/          # 共用樣式與腳本（tokens.css＝全站色票/字體/圓角單一來源、theme.css＝亮色覆蓋、common.css、eorzea-weather.js…）
 out_data/               # 大型中繼檔（msgpack），不進前端
 tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLAUDE.md（資料吃主庫，見 scripts/maindb.py）
 ```
@@ -100,9 +100,18 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 - 距 **GitHub Pages 1GB 發佈上限**只剩約 140MB 餘裕，新增大批圖片前先估增量。
 - 跑完 `update_all` 後，衍生的 js 與新縮圖**記得 commit**（`.gitignore` 已不擋）。
 
-**另外兩條鐵則**（違反過、代價高，細節見「專案慣例與記憶」）：
+**另外三條鐵則**（違反過、代價高，細節見「專案慣例與記憶」）：
 - **對使用者一律繁體中文回覆**；技術名詞可保留原文（§1.1）。
 - 天氣槽位順序不可合併同名天氣、`WEATHER_TC` 與 `eorzea-weather.js` 的譯名表改任一邊必須同步另一邊（§4.4）；收藏頁「取得方式」永遠預設顯示，勿改回 hover／toggle（§2.1）。
+- **色票／字體／圓角一律取自 `assets/css/tokens.css`，頁面不要自己開一份 `:root` 色票**（§3.6）。曾經 26 頁各抄一份、值全飄掉。單頁專屬的顏色（含亮色版）寫在該頁自己的 `<style>`，**不要塞進 `theme.css`**——那裡的 `:root[data-theme="light"]` 是全域選擇器，一個「weather 專用」的 `--accent` 就把 13 頁的識別色全壓成同一個藍。
+
+---
+
+## UI/UX 設計輔助 Skill（ui-ux-pro-max）
+
+已安裝 [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) 到系統層 `~/.claude/skills/`（隨帳號走、非本 repo 內容，不會進 git）。內含 7 個技能，本站以 `ui-ux-pro-max` 為主：可查版面／色彩／字體／無障礙／動效／圖表的設計知識庫（84 種風格、192 組色票、74 組字體配對、98 條 UX 準則），涵蓋純 HTML/CSS（本站無框架）。其餘 6 個（banner-design／brand／design／design-system／slides／ui-styling）多半是 React/Tailwind 元件庫或品牌／簡報用途，本站少用，備而不查。
+
+**規則：本專案只要碰到「畫面」相關的問題或任務（版面、間距、配色、字體排印、無障礙、互動動效、圖表呈現、視覺一致性），一律先呼叫 `ui-ux-pro-max` Skill 取得設計依據，再動手改**。與既有 gstack 流程分工：`ui-ux-pro-max` 提供「該怎麼設計／哪裡不符準則」的知識庫查詢，`/design-review`（gstack）負責實際開頁截圖抓視覺缺陷並修——兩者可接續使用（先問 ui-ux-pro-max 定調，再用 `/design-review` 驗收）。
 
 ---
 

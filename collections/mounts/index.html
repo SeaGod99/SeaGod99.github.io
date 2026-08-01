@@ -5,16 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="FF14 坐騎收藏追蹤 — 查詢取得來源、版本篩選、記錄擁有進度">
   <title>坐騎收藏追蹤 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/theme.css">
   <link rel="stylesheet" href="../../assets/css/common.css">
   <link rel="stylesheet" href="../../assets/css/tool-header.css">
   <style>
     /* 坐騎頁專屬樣式；通用版面與 .col-* 卡片系統見 assets/css/common.css，
        控制面（工具列／篩選／格線）由 assets/js/collection-tracker.js 渲染 */
     :root {
-      --accent:   #a78bfa;                 /* 紫 */
-      --accent-2: #c8a96e;                 /* 進度條尾色：金 */
-      --glow-1:   rgba(167,139,250,0.06);
-      --glow-2:   rgba(200,169,110,0.04);
+      --accent:    var(--purple);                 /* 紫 */
+      --accent-2:  var(--gold);                 /* 進度條尾色：金 */
+      --glow-1:    rgba(167,139,250,0.06);
+      --glow-2:    rgba(200,169,110,0.04);
     }
     .col-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
     .col-card { padding: 18px; }
@@ -26,7 +28,6 @@
   </style>
   <script src="../../assets/js/patch-gate.js"></script>
   <script src="../../assets/js/collection-tracker.js"></script>
-  <link rel="stylesheet" href="../../assets/css/theme.css">
   <script src="../../assets/js/theme.js"></script>
 </head>
 <body>

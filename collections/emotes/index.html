@@ -5,16 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="FF14 表情收藏追蹤 — 指令搜尋、版本篩選、記錄已解鎖進度">
   <title>表情收藏追蹤 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/theme.css">
   <link rel="stylesheet" href="../../assets/css/common.css">
   <link rel="stylesheet" href="../../assets/css/tool-header.css">
   <style>
     /* 表情頁專屬樣式；通用版面與 .col-* 卡片系統見 assets/css/common.css，
        控制面由 assets/js/collection-tracker.js 渲染 */
     :root {
-      --accent:   #c8a96e;                 /* 金 */
-      --accent-2: #a78bfa;                 /* 進度條尾色：紫 */
-      --glow-1:   rgba(200,169,110,0.06);
-      --glow-2:   rgba(167,139,250,0.04);
+      --accent:    var(--gold);                 /* 金 */
+      --accent-2:  var(--purple);                 /* 進度條尾色：紫 */
+      --glow-1:    rgba(200,169,110,0.06);
+      --glow-2:    rgba(167,139,250,0.04);
     }
     /* 表情卡：置中版型 */
     .col-card { align-items: center; text-align: center; }
@@ -28,7 +30,7 @@
     .em-command {
       font-size: 11px;
       color: var(--blue);
-      font-family: 'SF Mono', 'Consolas', monospace;
+      font-family: var(--font-mono);
       background: var(--blue-dim);
       padding: 2px 7px;
       border-radius: 4px;
@@ -41,7 +43,6 @@
   </style>
   <script src="../../assets/js/patch-gate.js"></script>
   <script src="../../assets/js/collection-tracker.js"></script>
-  <link rel="stylesheet" href="../../assets/css/theme.css">
   <script src="../../assets/js/theme.js"></script>
 </head>
 <body>

@@ -18,7 +18,7 @@
  *
  * 注意：本站為 GitHub Pages 使用者頁（根網域託管），故 scope／start_url 皆為 "/"。
  */
-const CACHE_VERSION = 'sgt-e7de43a2f6'; /* AUTO-BUMP */
+const CACHE_VERSION = 'sgt-bd07260b0d'; /* AUTO-BUMP */
 const MAX_CACHE_BYTES = 5 * 1024 * 1024;
 
 // 安裝時預先快取的最小殼層（全站共用資源 + 首頁）
@@ -26,6 +26,7 @@ const PRECACHE = [
   '/',
   '/index.html',
   '/manifest.json',
+  '/assets/css/tokens.css',   /* 全站 token 單一來源，每頁都載，缺了會整站掉色 */
   '/assets/css/common.css',
   '/assets/css/theme.css',
   '/assets/js/theme.js',

@@ -4,22 +4,25 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>天氣預報 — 水神的工具箱</title>
+<link rel="stylesheet" href="../../assets/css/tokens.css">
+<link rel="stylesheet" href="../../assets/css/theme.css">
 <link rel="stylesheet" href="../../assets/css/tool-header.css">
 <link rel="stylesheet" href="../../assets/css/et-bar.css">
 <style>
+  /* 本頁專屬強調色（天氣藍）。色票／版面 token 見 assets/css/tokens.css。
+     亮色值原本放在 theme.css 的 :root[data-theme="light"]，但那是全域選擇器，
+     會把其他 13 頁的識別色一起壓成這個藍——所以收回本頁自己宣告。
+     本頁 <style> 排在 theme.css 之後，同特定度後載入者勝。 */
   :root {
-    --gold: #c8a96e;
-    --bg-base: #0a0c10;
-    --bg-card: #12161e;
-    --bg-hover: #1a2030;
-    --border: #2a3040;
-    --text: #d4cfc7;
-    --text-dim: #7a8090;
-    --accent: #4a90d9;
+    --accent:    #4a90d9;
     --accent-dim: rgba(74,144,217,0.15);
   }
+  :root[data-theme="light"] {
+    --accent:    #2f6fb0;                    /* 亮底 4.66:1 */
+    --accent-dim: rgba(47,111,176,0.15);
+  }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg-base); color: var(--text); font-family: 'Segoe UI','Noto Sans TC',sans-serif; min-height: 100vh; font-size: 18px; }
+  body { background: var(--bg-base); color: var(--text); font-family: var(--font-sans); min-height: 100vh; font-size: 18px; }
 
   /* Header */
   .site-header { background: var(--bg-surface); border-bottom: 1px solid var(--border); padding: 14px 28px; display: flex; align-items: center; gap: 14px; }
@@ -92,7 +95,6 @@
   .chain-arrow { color: var(--text-dim); font-size: 24px; }
   .chain-desc { font-size: 14px; color: var(--text-dim); margin-bottom: 16px; }
 </style>
-  <link rel="stylesheet" href="../../assets/css/theme.css">
   <script src="../../assets/js/theme.js"></script>
 </head>
 <body>

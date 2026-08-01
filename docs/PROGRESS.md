@@ -3,7 +3,7 @@
 > **給 Claude / 後續對話的指示**：開始任何工作前先讀本檔。完成任何功能或資料變更後，**必須更新本檔**（狀態表 + 更新紀錄），並同步 `data/_meta.json` 的 status。
 > 規格細節見 `docs/feature-specs.md`，資料格式見 `data/SCHEMA.md`。
 
-**最後更新**：2026-07-29（職業名三份表統一、精選取得方式補 224 處、主庫 equip 缺口修補；07-28 幻化配裝圖鑑資料併回主庫：刪 105MB 重複、修 570 筆錯名、加 .gitattributes 修 msgpack 損壞；另有資料缺口／UX 一致性／效能 三章＋副本庫 386→520 座等，見更新紀錄）
+**最後更新**：2026-08-01（全站設計 token 收斂到 `assets/css/tokens.css`、修掉亮色 `--accent` 全站洩漏、幻化配裝圖鑑併入主題／頂列系統、加上全站焦點環與 `prefers-reduced-motion`；07-29 冒險者小隊計算機 9 個算錯／顯示錯的 bug 全修＋任務列表改表格、SW `CACHE_VERSION` 跨機無限漂移的根因（autocrlf）修掉、職業名三份表統一、精選取得方式補 224 處、主庫 equip 缺口修補；07-28 幻化配裝圖鑑資料併回主庫：刪 105MB 重複、修 570 筆錯名、加 .gitattributes 修 msgpack 損壞；另有資料缺口／UX 一致性／效能 三章＋副本庫 386→520 座等，見更新紀錄）
 **網站**：https://seagod99.github.io ｜ GitHub Pages 純靜態 ｜ 台服版本 **7.15**（＝`data/_meta.json` 的 `gamePatch`，全站版本閘門唯一真實來源；台服尚未開放到 7.2）
 
 ---
@@ -196,6 +196,15 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 6. 其他規劃：時尚品鑑、冒險者小隊計算機、藏寶圖、園藝配種、釣魚紀錄
 
 ## 五、更新紀錄
+
+- **2026-08-01（全站設計 token 收斂＋亮色 accent 洩漏修復＋glamour 併入主題系統＋無障礙基準）**：一次風格體檢後的四項落地，只動樣式層，未動任何 `data/`。
+  - **新增 `assets/css/tokens.css`（單一 token 來源）**：此前 26 頁各自複製一份 `:root` 色票，4 套以上副本且值已漂移（`--bg-card` 有 `#14181f`／`#12161e`、`--border` 3 種寫法、**內文色 3 種**、`--radius` 8px vs 10px、`--transition` 0.18s vs 0.2s）。現已刪掉重複宣告 **245 個**（各頁 `:root`）＋ common.css 31 個 ＋ glamour 10 個，並把兩套並存命名（`--text/--text-dim/--muted` 等）在 tokens.css 內定義成別名，舊頁 CSS 規則不必改寫。字體也收成 `--font-sans`／`--font-mono`（原本三套堆疊，其中 5 頁**缺 `Noto Sans TC`**）。head 順序全站統一成 tokens → theme → 元件層 → 頁面 `<style>`。
+  - **修掉亮色模式的 `--accent` 全站洩漏**：theme.css 有一組註解寫「weather 專用」的 `--accent:#2f6fb0`，但它掛在全域的 `:root[data-theme="light"]`，把 13 個頁面各自的識別色（金／紫／紅／綠／橘／藍）在亮色下全壓成同一個藍。改成各頁 `--accent: var(--gold)` 這類指向 token 的寫法（自動跟主題走），weather 與 fashion-report 的自訂色收回各自 `<style>` 的 `:root[data-theme="light"]`。瀏覽器實測 6 頁 × 2 主題，識別色已各自保留。另補齊亮色缺的 token：`--ok/--warn/--danger`（fashion-report）、`--amber`（market）、`--isl-*`（island）、`--yellow-dim`、`--pink`；common.css 寫死的成就／金碟標籤色 `#ffc850`（白底僅 **1.54:1**）改走 `--yellow`。
+  - **`tools/glamour/` 併入全站系統**：原本是唯一沒有頂列、沒有主題鈕、切亮色仍純暗底的頁。補上 tokens/theme css＋theme.js（連帶拿回 `#sgt-topbar` 與主題鈕），`.app-navbar` 加 `top:46px` 讓開頂列，移除自刻返回鍵，40 處寫死暗色改走 token，Bootstrap 變數改吃共用色票並補 `[data-bs-theme="light"]`；`theme.js` 現在會同步設 `data-bs-theme`。根字級 17px → **17.5px**（對齊其他 6 個 rem 制頁面，非 16px——px 制頁面用不到 rem）。
+  - **無障礙基準**：tokens.css 加全站 `:focus-visible` 焦點環與 `prefers-reduced-motion`（此前全站 **0 次**出現，且 11 處 `outline:none` 沒補焦點指示）。CDP 實測 9 頁 × 22 個 tab stop 全數有可見焦點環。
+  - 副作用：暖色系 6 頁的 `--text-muted` 由 `#6b6560`（卡片底 **3.10:1**）併入 `#717c91`（4.23:1），部分改善但仍未達 AA——連同亮色 `--gold` 4.40、`--orange` 4.47、`--cyan` 4.48 一併列入待辦。
+  - 詳見知識庫 §3.6（token 單一來源與 accent 洩漏）與 §3.7（無障礙基準與驗收方式）。
+  - **青魔法術收藏：未習得改成灰階圖示**。該頁的〈青魔法之書〉版型原本只靠格子底色深淺分辨已/未習得，但圖示佔了格子七成又個個高彩度，背後那層 24% 的灰幾乎看不見——0/124 時整本書看起來像全學會了。改成比照幻卡手帳的 `.tt-slot.miss`：未習得 `filter: grayscale(1) brightness(.92) contrast(.95)`、hover 才透出 `grayscale(.45)`、選中時刻意不透。右側詳情欄的圖示同步（`.bm-detail.miss`，由 `updateMarkBtn()` 掛，格子的 ✓ 鈕與詳情欄的按鈕兩邊都會同步）。**卡片檢視刻意不動**——那是全站通用的 `.col-card` 版型，其他 8 個收藏頁都不灰階圖示，只用外框／底色／名稱色分辨。
 
 - **2026-07-29（SW 的 CACHE_VERSION 一直漂移，根因是 autocrlf）**：小隊頁推完後回頭查這個一直報「過期」的東西，發現不是「忘記 bump」。
 

@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="FF14 幻卡追蹤 — 查詢取得來源、星級篩選、記錄收藏進度">
   <title>幻卡追蹤 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/theme.css">
   <link rel="stylesheet" href="../../assets/css/common.css">
   <link rel="stylesheet" href="../../assets/css/tool-header.css">
   <style>
@@ -12,12 +14,11 @@
        這頁只有一種呈現＝仿遊戲內幻卡手帳（見下方），引擎（collection-tracker.js）
        只負責進度條／工具列／篩選／排序／分頁狀態，它的卡片格線不顯示。 */
     :root {
-      --accent:   #f87171;                 /* 紅 */
-      --accent-2: #c8a96e;                 /* 進度條尾色：金 */
-      --glow-1:   rgba(248,113,113,0.06);
-      --glow-2:   rgba(200,169,110,0.04);
+      --accent:    var(--red);                 /* 紅 */
+      --accent-2:  var(--gold);                 /* 進度條尾色：金 */
+      --glow-1:    rgba(248,113,113,0.06);
+      --glow-2:    rgba(200,169,110,0.04);
     }
-
     /* 幻卡四向數值十字 */
     .tt-numbers {
       display: grid;
@@ -254,7 +255,6 @@
   </style>
   <script src="../../assets/js/patch-gate.js"></script>
   <script src="../../assets/js/collection-tracker.js"></script>
-  <link rel="stylesheet" href="../../assets/css/theme.css">
   <script src="../../assets/js/theme.js"></script>
 </head>
 <body>

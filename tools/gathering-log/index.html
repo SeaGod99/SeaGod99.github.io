@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="FF14 採集紀錄追蹤 — 查詢採礦工/園藝工採集點、座標、限時開放時間，追蹤已採紀錄">
   <title>採集紀錄追蹤 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/theme.css">
   <link rel="stylesheet" href="../../assets/css/common.css">
   <link rel="stylesheet" href="../../assets/css/tool-header.css">
   <style>
@@ -12,14 +14,11 @@
        控制面由 assets/js/collection-tracker.js 渲染。
        本頁採「子項目模式」：一張卡＝一個採集點，真正追蹤的是點上的每件產物。 */
     :root {
-      --accent:   #fb923c;                 /* 橘（採集）*/
-      --accent-2: #c8a96e;                 /* 進度條尾色：金 */
-      --glow-1:   rgba(251,146,60,0.05);
-      --glow-2:   rgba(74,222,128,0.04);
-      --orange:     #fb923c;
-      --orange-dim: rgba(251,146,60,0.12);
+      --accent:    var(--orange);                 /* 橘（採集）*/
+      --accent-2:  var(--gold);                 /* 進度條尾色：金 */
+      --glow-1:    rgba(251,146,60,0.05);
+      --glow-2:    rgba(74,222,128,0.04);
     }
-
     /* 採集點是整列橫幅，不套 .col-grid 的格線 */
     .gl-nodes { display: flex; flex-direction: column; gap: 8px; }
 
@@ -79,7 +78,6 @@
   </style>
   <script src="../../assets/js/patch-gate.js"></script>
   <script src="../../assets/js/collection-tracker.js"></script>
-  <link rel="stylesheet" href="../../assets/css/theme.css">
   <script src="../../assets/js/theme.js"></script>
 </head>
 <body>
