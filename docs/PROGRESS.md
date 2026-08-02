@@ -22,7 +22,7 @@
 | 1.3 | 限時採集節點查詢 | `/tools/gathering/` | 完成（改接 gathering.json/items.json/maps.json，limited 225 筆→213 筆顯示，篩選/排序/追蹤清單/Teamcraft flag 補齊，06-15重做；07-23 物品名改讀 `items-lite.json`，載入量 10MB→1.3MB；07-25 地圖一覽改用共用元件 `map-explorer.js`——左底圖標點、右跨地圖搜尋＋節點清單，兩邊連動） |
 | — | 天氣預報 | `/tools/weather/` | 完成（改用共用模組 assets/js/eorzea-weather.js，天氣表接 maps.json weatherRates，mapId 統一，06-15重做） |
 | 1.5 | 風脈泉追蹤器 | `/tools/aether-currents/` | 完成（31 地區 303 個風脈泉，任務型151筆/野外型152筆，06-16新增；07-23 遷入共用引擎的**子項目模式**——卡片＝地區、追蹤單位＝風脈泉，手風琴/地區地圖圖釘/🗺彈窗保留，新增可分享網址、批次標記、排序） |
-| 1.6 | 時尚品鑑推薦 | `/tools/fashion-report/` | 完成（**07-25 全面改版**：推薦標準改為「門檻→金幣（含染劑）→件數」三層成本模型並以列舉求最佳解，答案改為每週結構相同的「涵蓋所有計分部位配裝表」，換週狀態機把遊戲階段與資料新鮮度拆成兩軸、過渡期顯示當前週主題，完整清單加上等級／職業／可否染色／性別種族限制／販賣地圖／市場連結。管線全程式化＝`build-fashion-report.mjs` 一支到底。**規格見 [fashion-report-spec.md](fashion-report-spec.md)**；目前 week 443「真麻正式裝」verified） |
+| 1.6 | 時尚品鑑推薦 | `/tools/fashion-report/` | 完成（**07-25 全面改版**：推薦標準改為「門檻→金幣（含染劑）→件數」三層成本模型並以列舉求最佳解，答案改為每週結構相同的「涵蓋所有計分部位配裝表」，換週狀態機把遊戲階段與資料新鮮度拆成兩軸、過渡期顯示當前週主題，完整清單加上等級／職業／可否染色／性別種族限制／販賣地圖／市場連結。管線全程式化＝`build-fashion-report.mjs` 一支到底。**規格見 [fashion-report-spec.md](fashion-report-spec.md)**；目前 week 444「風信子冒險者」verified） |
 | 1.7 | 幻化配裝圖鑑 | `/tools/glamour/` | 完成（07-15 由獨立 repo 併入：精選配裝＋Mirapri 社群＋官方套裝 1971 套三檢視，收藏星號、染色/交易徽章、wiki 示意照；07-16 上線資產進版控——縮圖/官方示意照/icons/精選原圖＋mirapri_outfits.js/official_sets.js 共約 850MB 已 push，線上完整可用；**僅 mirapri 原圖 669MB 留本機**（加入會破 Pages 發佈 1GB 上限，彈窗自動退回縮圖），重建後衍生 js 記得 commit；資料管線為 Python（py scripts\update_all.py），細節見 tools/glamour/CLAUDE.md；**07-28 資料層併回主庫**——移除自帶的 105MB `資料來源/`，改由 `scripts/maindb.py` 讀 `data/`＋`out_data/`，修掉 570 筆錯譯名並補進 7.1/7.2 新套裝箱；07-16 介面統整——改用站內共用色票/字體、加「← 水神的工具箱」導覽與頁尾，官方套裝卡不再顯示 alljob 原始 tag） |
 
 ### 收藏／成就追蹤（共通規格見 feature-specs 第二章）
@@ -496,6 +496,13 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
   - **順手修掉**：釣魚頁 `renderFishMap` 原本每次重畫都對 1449 筆做 `allFish.find()` 反查，改建 `FISH_BY_ID` Map；地圖欄 sticky 由 `top:12px` 改 `58px`（否則被全站頂列蓋住，見慣例 §2.6）。
   - **採集紀錄頁的「🗺️ 地圖」按鈕根本找不到**（使用者回報）：`.gl-viewbar` 排在 `#ct-root` **之後**，而 `#ct-root` 連 40 張卡片格線＋分頁都渲染在裡面，等於按鈕被壓在整頁卡片底下（頁高 6730px、按鈕在 5000px 之後），要捲到底才看得到。已搬到 `#ct-root` 之前，與釣魚頁一致——現在按鈕在頁面 173px 處，一進頁就看得到。**新增有檢視切換的頁面時記得：切換鈕一律放 `#ct-root` 前面。**
   - **驗收**（本機靜態站 + headless Chromium，桌機 1440／1280、手機 390）：三頁 list↔map 來回切換、切到地圖後改篩選清單不再跑回來、跨地圖搜尋、點圓點↔點清單雙向連動與捲動定位、勾選即時反映、限時採集倒數原地更新、追蹤星、深淺兩色系皆正常，**三頁 0 console error**，手機無水平溢出。`validate-data.mjs` 52 檔 0 error 0 warning；`validate-links.mjs` mapId 類全數歸零；`bump-sw-version.mjs` 已更新（新檔自動納入雜湊）。
+
+- **2026-08-02（時尚品鑑 week 444 更新＋推薦器兩個成本模型 bug）**：更新到 **week 444「風信子冒險者」（Adventurous Hyacinth）verified**。4 提示分佈四部位：頭＝風信子（Flower Power）、身＝西格瑪（The Great Sigmascape）、手＝冒險的開始（Adventure First Worn）、腿＝Star "Studded"（台服無對應分類名，保留原文）。接受清單 **45 件（頭 9／身 14／手 16／腿 6）**，台服未開放 0 件。染色六格：武器＝鮮血紅、頭/腿＝煤煙黑、身＝仙子梅、手＝絲雀黃、腳＝金屬綠。
+  - **結果**：拿滿 MGP＝80 分・**270 金幣・完全無門檻**（手部「人族手套」42 金幣＋武器染鮮血紅 40＋腳部染金屬綠市價約 188）；滿分＝100 分・17,340 金幣・**1 個門檻（鳥人族聲望，煤煙黑染劑）**，並明載「本週沒有完全無門檻就能達到 100 分的作法」——本週六格染色有四格卡門檻（鳥人族聲望 ×2／刻木匠製作／金碟），這正是新成本模型該講出來的事。
+  - **bug 1：非金幣兌換貨幣被當成無門檻**。身體的「鑽石禦敵戰甲」兌換價是**西格瑪戰鬥記錄之四 ×8**（零式戰利品），卻判成 `access=open`、無 gate，推薦器據此排出「80 分只要 42 金幣」的假結論。修法在 `game-sources.mjs` 新增 `currencyGate()`：**貨幣 id ≠ 1 就一定掛門檻**，無白名單；認得出種類的給準確權重（raid 5／event 4／tribe・craft・pvp・currency 3／tome・grind・content 2）。教訓：**推薦器的預設要往「代價被高估」偏**。
+  - **bug 2：「價格不明」被當成排序鍵**。原比較序是 門檻→unknown→金幣，導致寧可花 12,680 金幣也不用一支市場板染劑（正解 270）。改為 門檻→金幣→unknown→件數，並對「可上市但無 NPC 標價」的件打一次 Universalis 取參考價（記在 `quality.marketRefAt`）；真的沒人上架才算 unknown。前端對應文案同步改成「已用參考價 N 金幣估算」／「查不到報價，總額沒算進去」兩種說法。
+  - **來源站品名掉所有格**：腿部送來 `Picaroon Trousers of X`，遊戲實為 `Picaroon's Trousers of X`（XIVAPI 確認無不帶所有格的同名物品；台服有 9952／9958／9970 歹徒制敵・強襲・游擊軟甲褲）。映射器加「去所有格」的寬鬆比對，**只接受唯一解**，命中寫進 `quality.looseMatched` 並印出供人工核對。同批的 `Flame Private's Sarouel` 是好的，故非整站規則。
+  - **驗收**：`validate-data` 55 檔 0 error 0 warning（`sync-meta --apply` 後）、`minify-data --apply`；DOM stub render 回歸**六個週狀態全過**、無 undefined／NaN 洩漏；提示含雙引號的 `Star "Studded"` 確認 `esc()` 有轉成 `&quot;`、未打壞屬性。
 
 - **2026-07-25（時尚品鑑全面改版：推薦標準／換週流程／過渡期顯示／清單加值）**：使用者回報「每次更新都用不一樣的方式顯示」，並指出染色也要花錢、也要找購買方式，且完整清單不該只能複製名稱。逐項處理：
   - **根因確認（git 歷史佐證）**：答案的完整性寫在**人工散文**（`scoring.note100`／`easy80.note`／`easy80.desc`）而非資料結構裡——440 給 4 件、441～443 給 3 件＋一段文字補述，沒被推薦到的部位有時交代有時不交代，item 欄位也逐週漂移（`npc`／`alt`／`dye` 時有時無）。schema 2 已刪除全部散文欄位。

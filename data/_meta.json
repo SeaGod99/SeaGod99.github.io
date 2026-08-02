@@ -2,7 +2,7 @@
   "project": "水神的工具箱 統一資料庫",
   "schemaDoc": "/data/SCHEMA.md",
   "gamePatch": "7.15",
-  "updated": "2026-07-29",
+  "updated": "2026-08-02",
   "idConventions": {
     "mapId": "遊戲 Map sheet row id（XIVAPI v2 /sheet/Map 的 row_id），全站統一；2026-06-11 起 maps.json 主鍵即此 id",
     "territoryId": "TerritoryType row id，僅輔助欄位（fishing-spots、gathering.coords.zoneId），顯示/連結一律用 mapId"
@@ -317,7 +317,7 @@
       "name": "時尚品鑑",
       "source": "scripts/build-fashion-report.mjs",
       "status": "used",
-      "updated": "2026-07-25"
+      "updated": "2026-08-02"
     },
     {
       "schema": "treasure-fragments",

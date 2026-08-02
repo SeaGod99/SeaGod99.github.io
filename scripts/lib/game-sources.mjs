@@ -47,6 +47,32 @@ export const CURRENCY_GATES = {
   41629: { kind: "content", label: "金碟遊樂場", note: "金碟聲譽需在金碟遊樂場累積" },
 };
 
+/* 貨幣門檻的**預設規則**（week 444 踩雷後補上，2026-08-02）：
+   「西格瑪戰鬥記錄之四 ×8」曾被判成無門檻的 open，害推薦器把零式戰利品當免費，
+   排出「42 金幣拿滿 MGP」這種假結論。根因是門檻只認得上面那張染劑貨幣表，
+   裝備用的兌換貨幣（戰利品／神典石／軍票／戰績／金碟幣…）全部漏掉。
+   改成安全預設：**只要兌換貨幣不是金幣，就一定掛門檻**——沒有例外、沒有白名單。
+   認得出種類的給準確標籤與權重，認不出來的一律給中等權重的通用門檻，
+   寧可高估代價，也不要再把「要打零式」講成「不用錢」。 */
+const CURRENCY_KIND = [
+  [/戰鬥記錄|戰利|零式/, { kind: "raid", note: "零式等高難度副本的兌換素材，要先打得過" }],
+  [/神典石|詩學|天曆|傳承|以太之力/, { kind: "tome", note: "神典石有每週上限，要時間累積" }],
+  [/軍票/, { kind: "grind", note: "大國防聯軍軍票，需靠軍團工作等累積" }],
+  [/戰績/, { kind: "pvp", note: "PvP 戰績，需打 PvP 累積" }],
+  [/金碟|MGP/, { kind: "grind", note: "金碟遊樂場貨幣，需在金碟累積" }],
+  [/振興票|青船幣|開拓/, { kind: "content", note: "需先開放並參與該項內容" }],
+  [/證書|紀念|慶典/, { kind: "event", note: "限時活動貨幣，活動結束就拿不到" }],
+];
+
+/** 非金幣兌換一律回一個 gate；金幣（id 1）回 null。 */
+export function currencyGate(curId, curName) {
+  if (curId === 1) return null;
+  if (curId != null && CURRENCY_GATES[curId]) return CURRENCY_GATES[curId];
+  const name = curName || "特殊貨幣";
+  for (const [re, g] of CURRENCY_KIND) if (re.test(name)) return { ...g, label: `${name}兌換` };
+  return { kind: "currency", label: `${name}兌換`, note: "不是用金幣買的，得先想辦法弄到這個貨幣" };
+}
+
 /* obtainable-methods 的 craft.jobId → 製作職業繁中名。
    對照由「obtainable-methods 有 jobId 且 recipes.json 也有配方」的約 1 萬件物品交叉統計得出
    （8→刻木匠 1304 件、14→煉金術士 1107 件…），每個 jobId 對到的職業名唯一。 */
@@ -161,7 +187,7 @@ export function resolveSources(id, ix, { includeMarket = true } = {}) {
         currency: m.currency ? { id: curId, name: curName, amount: m.currency.amount } : null,
         shopNameEn: m.shopName || null,
         npcs: vendors.slice(0, 3),
-        gate: (curId != null ? CURRENCY_GATES[curId] : null) ?? vendors.map((v) => VENDOR_GATES[v.id]).find(Boolean) ?? null,
+        gate: currencyGate(curId, curName) ?? vendors.map((v) => VENDOR_GATES[v.id]).find(Boolean) ?? null,
       });
     } else if (m.type === "craft") {
       const job = CRAFT_JOB[m.jobId] ?? null;

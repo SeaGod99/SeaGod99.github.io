@@ -331,7 +331,11 @@ function planCard(p) {
   const market = c.market?.length ? `
     <div class="gates" style="border-color:rgba(127,182,232,.35);background:rgba(127,182,232,.06)">
       <div class="g-title" style="color:var(--blue)">💠 有 ${c.market.length} 件沒有 NPC 固定價</div>
-      <ul>${c.market.map(m => `<li><b style="color:var(--blue)">${esc(m.name)}</b>——${esc(m.how)}，價格浮動，上面的金幣總額<b style="color:var(--blue)">沒有</b>把它算進去</li>`).join('')}</ul>
+      <ul>${c.market.map(m => `<li><b style="color:var(--blue)">${esc(m.name)}</b>——${esc(m.how)}${
+        m.marketGil != null
+          ? `，上面的金幣總額已用<b style="color:var(--blue)">參考價 ${gil(m.marketGil)} 金幣</b>估算，實際成交價會浮動`
+          : `，<b style="color:var(--blue)">目前市場板查不到報價</b>（多半是沒人上架），總額<b style="color:var(--blue)">沒有</b>把它算進去`
+      }</li>`).join('')}</ul>
     </div>` : '';
 
   const alt = p.openAlternative ? `

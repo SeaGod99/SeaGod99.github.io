@@ -58,7 +58,10 @@ const ACCESSORY_SLOTS = new Set(["ears", "neck", "wrists", "finger"]);
 /** 版型固定的部位順序——每週都照這個順序列，缺的補「不影響分數」。 */
 const ROW_ORDER = ["weapon", "head", "body", "hands", "legs", "feet", "ears", "neck", "wrists", "finger"];
 /** 門檻嚴重度：排序時先比這個總和，數字越大越難。 */
-const GATE_WEIGHT = { tribe: 3, craft: 3, content: 2, event: 4, rng: 5, once: 5 };
+/* 門檻的「難受程度」權重（越大越不想要）。推薦器先比這個總和，再比金幣。
+   tome/grind/content 屬於「肯花時間就一定拿得到」，raid/event/rng 則是
+   「可能根本拿不到」——所以後者遠貴於前者，不是差一點點。 */
+const GATE_WEIGHT = { tome: 2, grind: 2, content: 2, currency: 3, tribe: 3, craft: 3, pvp: 3, event: 4, raid: 5, rng: 5, once: 5 };
 
 async function getJson(url, cacheName) {
   const cachePath = join(CACHE_DIR, cacheName);
@@ -149,8 +152,33 @@ for (const h of hints) {
 }
 
 /* ── 4. 英文名 → itemId → 台服名（驗收門檻：一件都不能漏）────────── */
+
+/* 來源站的品名偶爾會掉所有格：week 444 的腿部清單送來 "Picaroon Trousers of Maiming"，
+   但遊戲裡叫 "Picaroon's Trousers of Maiming"（已用 XIVAPI 確認沒有不帶所有格的同名物品）。
+   同一份清單裡的 "Flame Private's Sarouel" 卻是好的，所以不是整站規則、是零星髒資料。
+   對策：精確比對失敗才退而求其次，用「拿掉所有格後相同」的寬鬆鍵再找一次，
+   且**只接受唯一解**——配到兩件以上寧可讓它掛掉，也不要默默選錯一件。
+   每次動用寬鬆比對都會列進 loose[] 印出來，讓週更的人知道有東西在飄。 */
+const looseKey = (s) => String(s).trim().toLowerCase().replace(/[''`']s\b/g, "").replace(/[''`']/g, "").replace(/\s+/g, " ");
+const enToIdsLoose = new Map();
+for (const [name, ids] of ix.enToIds) {
+  const k = looseKey(name);
+  if (!enToIdsLoose.has(k)) enToIdsLoose.set(k, new Set());
+  for (const i of ids) enToIdsLoose.get(k).add(i);
+}
+
+const loose = [];
 function toItemId(nameEn) {
-  const ids = ix.enToIds.get(String(nameEn).trim().toLowerCase()) || [];
+  let ids = ix.enToIds.get(String(nameEn).trim().toLowerCase()) || [];
+  if (!ids.length) {
+    const cand = [...(enToIdsLoose.get(looseKey(nameEn)) || [])];
+    const withTw = cand.filter((i) => ix.byId.get(i)?.name);
+    const pick = withTw.length ? withTw : cand;
+    if (pick.length === 1) {
+      ids = pick;
+      loose.push(`${nameEn} → ${ix.enName(pick[0]) ?? "?"}（${ix.byId.get(pick[0])?.name ?? "無台服名"}・id ${pick[0]}）`);
+    }
+  }
   const withTw = ids.filter((i) => ix.byId.get(i)?.name);
   return { id: withTw[0] ?? ids[0] ?? null, ambiguous: withTw.length > 1, hasTw: withTw.length > 0 };
 }
@@ -259,6 +287,48 @@ for (const [slot, d] of Object.entries(state.dyeData)) {
   };
 }
 
+/* ── 7b. 只能靠市場板的件，去 Universalis 撈參考價 ─────────────────
+   為什麼一定要撈：最佳化器要比較「多買一件提示裝」和「多染一格」哪個划算，
+   但沒有 NPC 標價的件（製作品／市場板限定染劑）在離線資料裡是 null。
+   把 null 當成「未知」丟給比較器排序，會逼出荒謬解——week 444 第一版就這樣
+   選了 12,680 金幣的兩件提示裝，只為了避開一支市場板染劑，而實際上
+   「一件 42 金幣的提示裝 + 武器染 40 金幣 + 腳部染市價」便宜兩個數量級。
+   價格會浮動，所以只當**排序用的參考值**存進 marketRef，前端顯示時另有即時查價。 */
+const needPrice = [
+  ...slotsOut.flatMap((s) => s.items.filter((i) => i.gil == null && i.marketable)),
+  ...Object.values(dyes).filter((d) => d.gil == null && d.marketable),
+];
+let priceAt = null;
+if (needPrice.length && !offline) {
+  const ids = [...new Set(needPrice.map((x) => x.id))];
+  for (let i = 0; i < ids.length; i += 100) {
+    const chunk = ids.slice(i, i + 100);
+    try {
+      const j = await getJson(
+        `https://universalis.app/api/v2/${encodeURIComponent("陸行鳥")}/${chunk.join(",")}?listings=1&entries=0`,
+        `universalis-${i}.json`
+      );
+      const map = j.items ?? (j.itemID ? { [j.itemID]: j } : {});
+      for (const [id, v] of Object.entries(map)) {
+        const p = v?.minPriceNQ || v?.minPrice || v?.listings?.[0]?.pricePerUnit || null;
+        if (p) for (const x of needPrice) if (x.id === Number(id)) x.marketGil = Math.round(p);
+      }
+      priceAt = new Date().toISOString();
+    } catch (e) {
+      console.warn(`   ⚠️ Universalis 查價失敗（${e.message}），這批件只能以「價格不明」參與排序`);
+    }
+  }
+}
+/** 這件東西實際要花多少金幣：NPC 標價優先，其次市場板參考價，都沒有才是 null。 */
+const effGil = (x) => x?.gil ?? x?.marketGil ?? null;
+
+// 有了市場參考價，清單排序也要跟著用實際花費，不然「無標價」永遠沉到最後
+for (const s of slotsOut) {
+  s.items.sort((a, b) =>
+    ({ open: 0, gated: 1, rng: 2, unreleased: 3, none: 3 })[a.access] - ({ open: 0, gated: 1, rng: 2, unreleased: 3, none: 3 })[b.access] ||
+    (effGil(a) ?? 9e9) - (effGil(b) ?? 9e9) || (a.equipLevel ?? 0) - (b.equipLevel ?? 0));
+}
+
 /* ── 8. 成本最佳化推薦器 ─────────────────────────────────────── */
 const hintSlots = slotsOut.map((s) => s.slot);
 const hasAcc = hintSlots.some((s) => ACCESSORY_SLOTS.has(s));
@@ -298,9 +368,11 @@ function solve(target, { openOnly = false } = {}) {
       const item = openOnly ? p.openItem : p.item;
       if (!item) { ok = false; break; }
       score += p.points; pieces++;
-      // 沒有 NPC 標價的件（只能製作或上市場板）**不能當成免費**，否則最佳化會偏向不明價格
-      if (item.gil == null) { unknown++; market.push({ slot: p.slot, id: item.id, name: item.name, how: item.how }); }
-      else gil += item.gil;
+      // 有市場參考價就照它計費；連參考價都沒有（製作品且無人上架）才算「價格不明」
+      const c = effGil(item);
+      if (c == null) unknown++;
+      else gil += c;
+      if (item.gil == null) market.push({ slot: p.slot, id: item.id, name: item.name, how: item.how, marketGil: item.marketGil ?? null });
       if (item.gate) gates.set(gateKey(item.gate), { ...item.gate, where: `${SLOT_TC[p.slot]}裝備` });
       useHints.push({ slot: p.slot, item });
     }
@@ -309,19 +381,23 @@ function solve(target, { openOnly = false } = {}) {
       const d = dyes[dyeSlots[i]];
       if (openOnly && d.access !== "open") { ok = false; break; }
       score += SCORING.dyeExact; pieces++;
-      if (d.gil == null) { unknown++; market.push({ slot: d.slot, id: d.id, name: d.fullName, how: d.how }); }
-      else gil += d.gil;
+      const c = effGil(d);
+      if (c == null) unknown++;
+      else gil += c;
+      if (d.gil == null) market.push({ slot: d.slot, id: d.id, name: d.fullName, how: d.how, marketGil: d.marketGil ?? null });
       if (d.gate) gates.set(gateKey(d.gate), { ...d.gate, where: `${d.slotName}染劑` });
       useDyes.push(d);
     }
     if (!ok || Math.min(score, SCORING.max) < target) continue;
     const gateScore = [...gates.values()].reduce((s, g) => s + gateCost(g), 0);
     const cand = { score: Math.min(score, SCORING.max), gil, pieces, unknown, market, gates: [...gates.values()], gateScore, useHints, useDyes };
-    // 依序比：門檻嚴重度 → 價格不明的件數（固定成本優先）→ 金幣 → 件數
+    // 依序比：門檻嚴重度 → 金幣總額 → 完全查不到價的件數 → 件數。
+    // 金幣要排在「價格不明」前面：市場板參考價已經補進 gil，剩下的 unknown 是真的
+    // 查不到價（無人上架），拿它當第一順位會像 week 444 那樣選出貴兩個數量級的解。
     const better = (a, b) =>
       a.gateScore !== b.gateScore ? a.gateScore < b.gateScore :
-      a.unknown !== b.unknown ? a.unknown < b.unknown :
-      a.gil !== b.gil ? a.gil < b.gil : a.pieces < b.pieces;
+      a.gil !== b.gil ? a.gil < b.gil :
+      a.unknown !== b.unknown ? a.unknown < b.unknown : a.pieces < b.pieces;
     if (!bestPlan || better(cand, bestPlan)) bestPlan = cand;
   }
   return bestPlan;
@@ -436,6 +512,8 @@ const out = {
     hintNotTranslated: [...new Set(hintMissTc)],
     ambiguous: [...new Set(ambiguous)],
     noTwName: [...new Set(noTw)],
+    looseMatched: [...new Set(loose)], // 靠所有格容錯救回來的，每次都要人看一眼
+    marketRefAt: priceAt, // 市場板參考價的抓取時間（只用於排序，顯示以前端即時查價為準）
   },
 };
 
@@ -447,6 +525,10 @@ if (dryRun) {
 
 console.log(`✅ week ${apiWeek}「${out.theme.name}」${status}`);
 console.log(`   接受清單 ${slotsOut.map((s) => `${s.slotName}${s.items.length}`).join("／")}，共 ${allIds.length} 件；台服未開放 ${out.quality.noTwName.length} 件`);
+if (out.quality.looseMatched.length) {
+  console.log(`   ⚠️ 來源品名少了所有格、以寬鬆比對救回 ${out.quality.looseMatched.length} 件（請確認對得沒錯）：`);
+  for (const l of out.quality.looseMatched) console.log(`      ${l}`);
+}
 for (const p of plans) {
   const g = p.cost.gates.map((x) => x.label).join("、") || "無門檻";
   console.log(`   ${p.title}：${p.score} 分・${p.cost.gil.toLocaleString("en-US")} 金幣・${p.cost.itemCount} 件裝備 + ${p.cost.dyeCount} 支染劑・門檻＝${g}`);
