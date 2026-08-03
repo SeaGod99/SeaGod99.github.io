@@ -36,10 +36,8 @@
       pointer-events: none; z-index: 0;
     }
     a { color: inherit; text-decoration: none; }
-    .container { max-width: 1500px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+    .container { max-width: var(--w-wide); margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
 
-    .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-secondary); font-size:14px; margin:24px 0; transition:var(--transition);}
-    .back-link:hover { color: var(--gold); }
 
     /* .tool-header / .tool-title / .tool-subtitle / .header-divider 見 assets/css/tool-header.css（全站共用） */
 
@@ -218,11 +216,13 @@
 
     /* 右側節點列的開放狀態改用顏色表達（排序不再隨時間動，狀態就得看得出來）。
        底色＋倒數字色兩層提示；左邊的 border 留給「選中」用，不要跟狀態搶。 */
-    .mx-point.mx-s-open   { background:rgba(74,222,128,0.10); }
+    /* 底色改用 -dim token：原本是暗色字面值，亮色模式下底色沒跟著變淡，
+       疊上同色文字後對比掉到 2.0–4.4。 */
+    .mx-point.mx-s-open   { background:var(--green-dim); }
     .mx-point.mx-s-open   .mx-pname { color:var(--green); font-weight:600; }
     .mx-point.mx-s-open   .mx-live  { color:var(--green); font-weight:600; }
-    .mx-point.mx-s-soon   { background:rgba(251,191,36,0.09); }
-    .mx-point.mx-s-soon   .mx-live  { color:#d99e0b; }
+    .mx-point.mx-s-soon   { background:var(--yellow-dim); }
+    .mx-point.mx-s-soon   .mx-live  { color:var(--yellow); font-weight:600; }
     .mx-point.mx-s-closed .mx-pname { opacity:.72; }
     .mx-point.mx-s-closed .mx-live  { opacity:.72; }
     /* hover／選中仍要看得出來，壓過狀態底色 */

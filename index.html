@@ -42,7 +42,7 @@
 
     /* ── Layout ── */
     .container {
-      max-width: 1500px;
+      max-width: var(--w-wide);
       margin: 0 auto;
       padding: 0 24px;
       position: relative;
@@ -262,15 +262,17 @@
       letter-spacing: 0.3px;
     }
 
+    /* 原本寫死暗色字面值：#4ade80 的綠疊在同色淡底上，亮色模式實測只有 1.59:1，
+       等於完全看不見。改指 token 後亮/暗各自取對應色階。 */
     .badge-ready {
-      background: rgba(74,222,128,0.15);
-      color: #4ade80;
-      border: 1px solid rgba(74,222,128,0.25);
+      background: var(--green-dim);
+      color: var(--green);
+      border: 1px solid color-mix(in srgb, var(--green) 25%, transparent);
     }
     .badge-wip {
-      background: rgba(148,163,184,0.1);
-      color: #64748b;
-      border: 1px solid rgba(148,163,184,0.15);
+      background: var(--raise);
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
     }
     .badge-new {
       background: rgba(200,169,110,0.15);

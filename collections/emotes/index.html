@@ -36,7 +36,7 @@
       border-radius: 4px;
     }
     /* 表情頁語意：type-任務 為藍色任務（覆寫 common 的綠色） */
-    .src-tag.type-任務 { background: rgba(79,195,247,0.1); color: var(--blue); border-color: rgba(79,195,247,0.2); }
+    .src-tag.type-任務 { background: var(--blue-dim); color: var(--blue); border-color: color-mix(in srgb, var(--blue) 20%, transparent); }
 
     @media (max-width: 600px) { .col-grid { grid-template-columns: repeat(3, 1fr); } }
     @media (max-width: 380px) { .col-grid { grid-template-columns: repeat(2, 1fr); } }

@@ -24,7 +24,7 @@
    已在容器內的頁面因容器更窄，此值不生效 */
 .tool-header {
   text-align: center;
-  max-width: 1500px;
+  max-width: var(--w-wide);
   margin: 0 auto;
   padding: 22px 24px 24px;
 }

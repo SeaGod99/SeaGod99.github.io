@@ -58,7 +58,10 @@
   /* ── 文字 ───────────────────────────────────────────────────── */
   --text-primary:   #e8eaf0;
   --text-secondary: #8892a4;
-  --text-muted:     #717c91;
+  /* 2026-08-03：原 #717c91 在 --bg-card 上只有 4.23:1，差一點點沒過 WCAG AA(4.5)。
+     它是全站「次要資訊」的預設色（卡片 meta 行、提示、placeholder、頂列搜尋鈕），
+     量測時 25 頁裡有 24 頁的暗色未達標項都是它。提亮到 #78829a ＝ 4.63:1。 */
+  --text-muted:     #78829a;
 
   /* ── 字體 ───────────────────────────────────────────────────
      全站曾有 3 套堆疊並存，其中 `'Segoe UI', system-ui, sans-serif`（5 頁）
@@ -73,6 +76,25 @@
   --radius-lg: 16px;
   --transition: 0.18s cubic-bezier(0.4,0,0.2,1);
   --shadow-card: 0 2px 16px rgba(0,0,0,0.4);
+
+  /* ── 內容欄寬階梯（2026-08-03）─────────────────────────────────
+     此前 26 頁量到 9 種內容寬（1030／1040／1080／1100／1120／1180／1200／1500／1560），
+     彼此差 20–80px——看不出是刻意分級，只看得出沒對齊。收斂成三階：
+
+       --w-narrow   單欄計算機／表單（天書、仙人微彩、幻巧戰）
+       --w-content  中密度：表格、清單、單欄圖文（時尚品鑑、軍票、園藝）
+       --w-wide     高密度網格／地圖／收藏格線（其餘全部，也是頂列 .sgt-tb-inner 的寬）
+
+     選 --w-wide = 1500px 是因為全站頂列已經是這個值：內容比它窄時，
+     視覺上頁面會「掛」在頂列左右兩端內側，對不齊的感覺就是從這裡來的。 */
+  --w-narrow:  1080px;
+  --w-content: 1200px;
+  --w-wide:    1500px;
+
+  /* ── 觸控目標下限 ───────────────────────────────────────────
+     Apple HIG 44pt／Material 48dp。本站取 44px，只在 `pointer: coarse`
+     （手指操作）時套用，桌機滑鼠的密集版面完全不受影響。 */
+  --tap-min: 44px;
 
   /* ── 別名（保留舊頁面的命名，值一律指向上面的正式 token）────── */
   --text:          var(--text-primary);
@@ -127,6 +149,52 @@
   outline: 2px solid var(--focus-ring);
   outline-offset: 2px;
 }
+
+/* 觸控目標的全站保底（2026-08-03）
+   共用元件（common.css 的篩選標籤／收藏鈕、nav.js 的頂列）已各自處理，
+   但 26 頁裡各自刻的鈕還有一大票落在 12–40px：幻卡的 .tt-nav/.tt-tab 28px、
+   小隊的輸入框 26px、軍票頁的核取方塊 13px、時尚品鑑的「在哪買」19px…
+   逐頁改要動 20 個檔案，這裡設一道底線。
+
+   刻意**只設 min-height**：垂直長高不會把橫向密集的版面（工具列、頁籤列、
+   卡片內的籌碼列）撐破，寬度維持原樣。同樣只在 pointer: coarse 生效，
+   桌機零變化。個別頁若真的不能長高，在自己的 <style> 內覆寫回去即可。 */
+@media (pointer: coarse) {
+  button,
+  select,
+  summary,
+  [role="button"],
+  input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]) {
+    min-height: var(--tap-min);
+  }
+  /* 核取／單選鈕不能用 min-height（原生控制項會變形），直接放大本體 */
+  input[type="checkbox"],
+  input[type="radio"] { width: 22px; height: 22px; }
+
+  /* 例外：這幾個是「格線的格子」或已用透明擴張層處理過命中區的，
+     長高只會破版或蓋掉相鄰內容。 */
+  .ct-check, .tt-slot, .bm-slot, .col-card, .cell { min-height: 0; }
+}
+
+/* 跳至主要內容（由 nav.js 注入在頂列之前，2026-08-03）。
+   本站的篩選頁動輒 20–40 個標籤鈕排在內容之前，鍵盤使用者原本要一路 Tab 過去。
+   平常完全看不見，只有取得焦點時才滑出來。 */
+.sgt-skip {
+  position: fixed;
+  top: 0; left: 12px;
+  z-index: 10001;
+  transform: translateY(-120%);
+  padding: 10px 16px;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  background: var(--bg-card);
+  border: 1px solid var(--border-hover);
+  border-top: 0;
+  color: var(--gold-light);
+  font: 600 14px/1 var(--font-sans);
+  box-shadow: var(--shadow-card);
+  transition: transform var(--transition);
+}
+.sgt-skip:focus { transform: translateY(0); }
 
 /* 尊重系統的「減少動態效果」。本站的動效都是裝飾性（hover 過場、
    進度條補間、平滑捲動），全部關掉不影響任何功能。 */

@@ -105,19 +105,18 @@
       border-radius: 3px;
       font-weight: 500;
     }
-    .tag-patch        { background: var(--purple-dim); color: var(--purple); border: 1px solid rgba(167,139,250,0.2); }
+    /* .tag-patch 原本把所有資料片標籤染成同一個紫，再讓後面的 .patch-* 只改 color——
+       等於底色與文字色來自兩個不同的資料片。整組（底/字/框）已統一在 common.css
+       的 .patch-*，這裡不再宣告顏色，只留 .hs-tag 負責形狀。 */
+    .hs-tag { border: 1px solid transparent; }
     .tag-source       { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(79,195,247,0.2); }
-    .tag-source-event { background: rgba(251,191,36,0.1); color: #fbbf24; border: 1px solid rgba(251,191,36,0.2); }
-    .tag-source-mgp   { background: rgba(234,179,8,0.1); color: #eab308; border: 1px solid rgba(234,179,8,0.2); }
+    .tag-source-event { background: var(--yellow-dim); color: var(--yellow); border: 1px solid color-mix(in srgb, var(--yellow) 20%, transparent); }
+    .tag-source-mgp   { background: var(--yellow-dim); color: var(--yellow); border: 1px solid color-mix(in srgb, var(--yellow) 20%, transparent); }
     .tag-source-quest { background: var(--green-dim); color: var(--green); border: 1px solid rgba(74,222,128,0.2); }
 
-    /* 資料片色 */
-    .patch-arr  { color: #60a5fa; }
-    .patch-hw   { color: #a78bfa; }
-    .patch-sb   { color: #fb923c; }
-    .patch-shb  { color: #4ade80; }
-    .patch-ew   { color: #4fc3f7; }
-    .patch-dt   { color: #e2c98a; }
+    /* 資料片色見 common.css 的 .patch-*（本頁標籤基底是 .hs-tag 不是 .tag，
+       靠的是那組規則裡不帶 .tag 的選擇器）。patchClass() 只要有版號就必定回傳
+       一個 patch-* class，不會有沒上色的漏網標籤。 */
 
     @media (max-width: 600px) {
       .hs-grid { grid-template-columns: 1fr; }

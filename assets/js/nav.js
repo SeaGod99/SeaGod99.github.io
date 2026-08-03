@@ -89,6 +89,19 @@
       'border:1px solid var(--border,rgba(255,255,255,.18));border-radius:4px;padding:2px 6px;}' +
       '@media print{#sgt-topbar{display:none;}}' +
       '@media (max-width:600px){.sgt-tb-inner{padding:0 14px;gap:10px;}.sgt-tb-brand span:last-child{display:none;}.sgt-tb-search kbd{display:none;}}' +
+      // 觸控裝置：頂列是每一頁都在的東西，站名與搜尋鈕原本只有 19／32px 高。
+      // 站名不放大字體、改用透明擴張層把命中區推到 44px（見 common.css 同款做法）。
+      '@media (pointer:coarse){.sgt-tb-inner{height:52px;}.sgt-tb-search{height:44px;}' +
+      '.sgt-tb-brand{position:relative;}' +
+      // 手機上站名只剩 ⚓ 一個字（19px 寬），左右各推 13px 才湊得到 44
+      '.sgt-tb-brand::after{content:"";position:absolute;left:-13px;right:-13px;top:50%;height:44px;transform:translateY(-50%);}}' +
+      // 全站統一頁尾（缺頁尾的 15 頁由本檔補上；已自帶 .page-footer 的頁不注入）
+      '#sgt-footer{border-top:1px solid var(--border,rgba(255,255,255,.08));margin-top:48px;' +
+      'padding:24px 24px 32px;text-align:center;position:relative;z-index:1;}' +
+      '#sgt-footer p{max-width:1500px;margin:0 auto;font-size:13px;line-height:1.7;color:var(--text-muted,#78829a);}' +
+      '#sgt-footer a{color:var(--text-secondary,#8892a4);text-decoration:none;}' +
+      '#sgt-footer a:hover{color:var(--gold,#c8a96e);}' +
+      '@media print{#sgt-footer{display:none;}}' +
       '#sgt-nav-overlay{position:fixed;inset:0;z-index:10000;display:none;background:rgba(0,0,0,.5);' +
       '-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);}' +
       '#sgt-nav-overlay.open{display:block;}' +
@@ -244,6 +257,53 @@
     inner.appendChild(search);
     bar.appendChild(inner);
     document.body.insertBefore(bar, document.body.firstChild);
+
+    addSkipLink(bar);
+    addFooter();
+  }
+
+  /* ── 跳至主要內容（樣式在 tokens.css 的 .sgt-skip）────────────────────
+     本站的篩選頁在內容之前有 20–40 顆標籤鈕，鍵盤／讀屏使用者原本每換一頁
+     都要重按一次。必須排在頂列**之前**才是第一個 tab stop。
+     目標依序找 <main> → .container → .tool-header 之後的內容；都沒有就掛在
+     頂列後面第一個元素上，並補 tabindex="-1" 讓 focus() 有效。 */
+  function addSkipLink(bar) {
+    if (document.querySelector('.sgt-skip')) return;
+    // ※ querySelector 傳選擇器清單時是「文件順序最前者」勝，不是「清單順序」勝。
+    //   收藏頁的 .container 包著 .tool-header，寫成一串會選到 .container、
+    //   等於只跳過頂列。所以這裡逐項自己試，並把「標題區的下一個兄弟」排在最前面。
+    var hdr = document.querySelector('.tool-header');
+    var target = (hdr && hdr.nextElementSibling)
+              || document.querySelector('main')
+              || document.querySelector('.main')
+              || document.querySelector('.container')
+              || document.querySelector('.wrap');
+    if (!target) return;
+    if (!target.id) target.id = 'sgt-main';
+    if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+    var a = document.createElement('a');
+    a.className = 'sgt-skip';
+    a.href = '#' + target.id;
+    a.textContent = '跳至主要內容';
+    // 只用 href 的話，focus 不會真的移過去（僅捲動），讀屏仍停在頂列
+    a.addEventListener('click', function () { setTimeout(function () { target.focus(); }, 0); });
+    document.body.insertBefore(a, bar);
+  }
+
+  /* ── 頁尾 ────────────────────────────────────────────────────────
+     2026-08-03 盤點：26 頁只有 11 頁有頁尾，其餘 15 頁捲到底就直接沒了，
+     版權聲明與資料來源標示也跟著漏掉。頁尾內容各頁本來就一樣，改由此處統一注入；
+     已自帶 .page-footer 的頁（收藏頁走 common.css 那套）維持原樣不動。 */
+  function addFooter() {
+    if (document.getElementById('sgt-footer')) return;
+    if (document.querySelector('.page-footer, footer')) return;
+    var f = document.createElement('footer');
+    f.id = 'sgt-footer';
+    f.innerHTML =
+      '<p><a href="' + (ROOT || './') + '">水神的工具箱</a> · 資料來源：遊戲本體、' +
+      '<a href="https://xivapi.com" target="_blank" rel="noopener">XIVAPI</a><br>' +
+      'FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具</p>';
+    document.body.appendChild(f);
   }
 
   /* ── 最近使用的工具（給首頁的「最近使用」用）────────────────────────────

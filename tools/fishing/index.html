@@ -22,7 +22,10 @@
       --glow-1:    rgba(79,195,247,0.05);
       --glow-2:    rgba(34,211,238,0.04);
     }
-    html { font-size: 17.5px; }
+    /* 109.375% = 16 × 1.09375 = 17.5px。預設瀏覽器下渲染尺寸與原本的 17.5px 完全相同，
+       但用 px 寫死 root font-size 會**蓋掉使用者在瀏覽器設定的字級**（放大字體對本頁無效），
+       用 % 才會跟著放大。2026-08-03 七頁一起改。 */
+    html { font-size: 109.375%; }
     body { background: var(--bg-base); color: var(--text); font-family: var(--font-sans); min-height: 100vh; }
 
     .result-info { font-size: 0.78rem; color: var(--text-muted); }

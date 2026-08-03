@@ -26,28 +26,13 @@
     }
     a { color: inherit; text-decoration: none; }
 
-    /* Nav */
-    .nav {
-      position: relative; z-index: 10;
-      display: flex; align-items: center; gap: 8px;
-      padding: 16px 24px;
-      border-bottom: 1px solid var(--border);
-    }
-    .nav-back { font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 4px; transition: color var(--transition); }
-    .nav-back:hover { color: var(--gold); }
-    .nav-sep { color: var(--text-muted); font-size: 12px; }
-    .nav-current { font-size: 12px; color: var(--text-muted); }
 
     /* Layout */
     .container {
-      max-width: 1080px; margin: 0 auto;
+      max-width: var(--w-narrow); margin: 0 auto;
       padding: 40px 24px 60px;
       position: relative; z-index: 1;
     }
-    .page-header { text-align: center; margin-bottom: 32px; }
-    .page-icon { font-size: 40px; margin-bottom: 12px; }
-    .page-title { font-size: 26px; font-weight: 700; color: var(--gold-light); margin-bottom: 6px; }
-    .page-desc { font-size: 15px; color: var(--text-secondary); }
 
     /* Tabs */
     .tabs {

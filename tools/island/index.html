@@ -59,7 +59,8 @@
     }
     .ing-chip:hover { border-color: var(--gold); color: var(--gold); }
     .ing-chip:focus-visible { outline: 2px solid var(--gold); outline-offset: 1px; }
-    .ing-qty { color: var(--text-muted); font-size: 12px; }
+    /* 數量是這張籌碼的重點資訊，不該用最淡的 --text-muted（在 --raise 底上僅 4.07） */
+    .ing-qty { color: var(--text-secondary); font-size: 12px; }
     .tag.theme { background: rgba(79,195,247,0.1); color: var(--blue); border-color: rgba(79,195,247,0.25); }
     button.tag.theme { font: inherit; cursor: pointer; }
     button.tag.theme:hover { background: rgba(79,195,247,0.22); border-color: var(--blue); }

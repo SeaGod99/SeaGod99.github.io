@@ -90,7 +90,9 @@ function injectStyle() {
   .mx-group.open > .mx-ghead { background:var(--gold-dim,rgba(200,169,110,0.15));
     color:var(--gold,#c8a96e); border-left-color:var(--gold,#c8a96e); font-weight:600; }
   .mx-gname { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .mx-gregion { font-size:0.7rem; color:var(--text-muted,#717c91); flex-shrink:0; }
+  /* 這一行會落在被 accent 染色的「選中列」上，--text-muted 在該底色只有 4.0–4.2。
+     升一級到 --text-secondary（未選中的一般列上也仍是次要資訊的層級）。 */
+  .mx-gregion { font-size:0.7rem; color:var(--text-secondary,#8892a4); flex-shrink:0; }
   .mx-gcount { font-size:0.72rem; font-variant-numeric:tabular-nums; flex-shrink:0;
     padding:1px 7px; border-radius:9px; background:var(--raise,rgba(255,255,255,0.05)); }
 
@@ -106,7 +108,8 @@ function injectStyle() {
   .mx-pdot { width:9px; height:9px; border-radius:50%; flex-shrink:0;
     border:1px solid rgba(0,0,0,0.45); }
   .mx-pname { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .mx-pmeta, .mx-live { font-size:0.72rem; color:var(--text-muted,#717c91); flex-shrink:0;
+  /* 這兩個會落在「開窗中／即將開窗」那種染色的列上，--text-muted 在該底色只有 4.4。 */
+  .mx-pmeta, .mx-live { font-size:0.72rem; color:var(--text-secondary,#8892a4); flex-shrink:0;
     font-variant-numeric:tabular-nums; }
 
   .mx-detail { padding:10px 12px 14px 20px; border-left:2px solid var(--gold,#c8a96e);

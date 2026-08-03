@@ -18,20 +18,17 @@
     --accent-dim: rgba(74,144,217,0.15);
   }
   :root[data-theme="light"] {
-    --accent:    #2f6fb0;                    /* 亮底 4.66:1 */
-    --accent-dim: rgba(47,111,176,0.15);
+    /* 4.66:1 是「藍字 vs 純白底」，但本頁的 active 頁籤／目前時段卡是
+       「藍字疊在 --accent-dim 藍色淡底」，合成後只剩 3.85。加深＋淡底降 alpha。 */
+    --accent:    #2a5f96;
+    --accent-dim: rgba(47,111,176,0.10);
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: var(--bg-base); color: var(--text); font-family: var(--font-sans); min-height: 100vh; font-size: 18px; }
 
   /* Header */
-  .site-header { background: var(--bg-surface); border-bottom: 1px solid var(--border); padding: 14px 28px; display: flex; align-items: center; gap: 14px; }
-  .back-link { color: var(--gold); text-decoration: none; font-size: 16px; opacity: .8; transition: opacity .2s; }
-  .back-link:hover { opacity: 1; }
-  .sep { color: var(--border); }
-  .page-title { font-size: 22px; color: var(--gold); font-weight: 600; letter-spacing: .04em; }
 
-  .main { max-width: 1560px; margin: 0 auto; padding: 28px 28px; }
+  .main { max-width: var(--w-wide); margin: 0 auto; padding: 28px 28px; }
 
   /* ET 時鐘列見 assets/css/et-bar.css（三頁共用元件） */
 
@@ -55,8 +52,12 @@
   .sec-title { font-size: 16px; color: var(--gold); font-weight: 600; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
   .sec-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-  /* Forecast grid */
-  .forecast-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 32px; }
+  /* Forecast grid
+     minmax(0,1fr) 而非 1fr：`1fr` 的軌道下限是內容的 min-content，
+     「ET 00:00 ⟵ 現在」這行縮不到 108px 以下，於是 375px 手機上
+     三欄算成 108×3＋24 gap＝348 > 可用的 319，整頁橫向溢出 15px。
+     （同一個坑 common.css 的 .col-grid 已經踩過一次） */
+  .forecast-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 32px; }
   .fc-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; }
   .fc-card.now { border-color: var(--accent); background: var(--accent-dim); }
   .fc-time { font-size: 15px; color: var(--text-dim); margin-bottom: 7px; font-variant-numeric: tabular-nums; }
@@ -94,6 +95,29 @@
   .chain-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
   .chain-arrow { color: var(--text-dim); font-size: 24px; }
   .chain-desc { font-size: 14px; color: var(--text-dim); margin-bottom: 16px; }
+
+  /* ── 手機（2026-08-03 補）──────────────────────────────────────
+     本頁原本一條 @media 都沒有：28px 的左右留白、三欄預報卡、
+     min-width:240px 的下拉在 375px 上全部擠在一起。 */
+  @media (max-width: 600px) {
+    .main { padding: 20px 14px 40px; }
+    .tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .tab { padding: 12px 16px; font-size: 16px; white-space: nowrap; }
+    .forecast-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .fc-card { padding: 12px 14px; }
+    .fc-weather { font-size: 19px; }
+    .fc-icon { font-size: 22px; }
+    select { min-width: 0; width: 100%; }
+    .search-panel, .chain-panel { padding: 16px 14px; }
+    .result-row { gap: 10px 14px; padding: 10px 14px; font-size: 15px; flex-wrap: wrap; }
+    .r-et { min-width: 0; }
+  }
+
+  /* 觸控裝置：本頁的頁籤／地區鈕／天氣籌碼原本只有 35–39px 高 */
+  @media (pointer: coarse) {
+    .tab, .grp-btn, .chip, select { min-height: var(--tap-min); }
+    .grp-btn, .chip { display: inline-flex; align-items: center; }
+  }
 </style>
   <script src="../../assets/js/theme.js"></script>
 </head>

@@ -11,30 +11,24 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    html { font-size: 17.5px; }
+    /* 109.375% = 16 × 1.09375 = 17.5px。預設瀏覽器下渲染尺寸與原本的 17.5px 完全相同，
+       但用 px 寫死 root font-size 會**蓋掉使用者在瀏覽器設定的字級**（放大字體對本頁無效），
+       用 % 才會跟著放大。2026-08-03 七頁一起改。 */
+    html { font-size: 109.375%; }
     body { background: var(--bg-base); color: var(--text); font-family: var(--font-sans); min-height: 100vh; }
 
-    .nav {
-      background: var(--bg-surface); border-bottom: 1px solid var(--border);
-      padding: 0 1.5rem; height: 52px; display: flex; align-items: center; gap: 0.75rem;
-    }
-    .nav-back { color: var(--text-dim); text-decoration: none; font-size: 0.85rem; display: flex; align-items: center; gap: 0.4rem; transition: color 0.2s; }
-    .nav-back:hover { color: var(--gold); }
-    .nav-sep { color: var(--text-muted); font-size: 0.85rem; }
-    .nav-title { color: var(--text); font-size: 0.9rem; font-weight: 600; }
 
     .hero {
       background: linear-gradient(135deg, var(--bg-surface), var(--bg-base));
       border-bottom: 1px solid var(--border); padding: 1.25rem 1.5rem;
     }
-    .hero-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .hero-inner { max-width: var(--w-narrow); margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
     .hero h1 { font-size: 1.4rem; font-weight: 700; }
-    .hero-sub { font-size: 0.8rem; color: var(--text-dim); margin-top: 0.2rem; }
     .moves { text-align: right; }
     .moves .n { font-size: 1.5rem; font-weight: 700; color: var(--gold); font-variant-numeric: tabular-nums; }
     .moves .lbl { font-size: 0.72rem; color: var(--text-muted); }
 
-    .wrap { max-width: 1100px; margin: 0 auto; padding: 1.25rem 1.5rem 0; display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: flex-start; transition: opacity 0.15s; }
+    .wrap { max-width: var(--w-narrow); margin: 0 auto; padding: 1.25rem 1.5rem 0; display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: flex-start; transition: opacity 0.15s; }
     .wrap.centered { justify-content: center; }
 
     /* 階段指示（被動顯示，由盤形是否鎖定推導） */
@@ -127,7 +121,7 @@
     .hint .sw { color: var(--blue); } .hint .ch { color: var(--gold); } .hint .fx { color: var(--purple); }
 
     /* 盤形候選（未鎖定時顯示於盤面下方，純資訊卡） */
-    .cands-wrap { max-width: 1100px; margin: 1rem auto 0; padding: 0 1.5rem; display: none; }
+    .cands-wrap { max-width: var(--w-narrow); margin: 1rem auto 0; padding: 0 1.5rem; display: none; }
     .cands-wrap.show { display: block; }
     .cand-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0.6rem; }
     .cand {
@@ -145,7 +139,7 @@
     .cand.row { flex-direction: row; text-align: left; }
     .cand.row .meta { flex: 1; }
 
-    .info-note { max-width: 1100px; margin: 0 auto; padding: 1.5rem 1.5rem 2rem; font-size: 0.72rem; color: var(--text-muted); line-height: 1.8; }
+    .info-note { max-width: var(--w-narrow); margin: 0 auto; padding: 1.5rem 1.5rem 2rem; font-size: 0.72rem; color: var(--text-muted); line-height: 1.8; }
 
     @media (max-width: 560px) {
       .board { grid-template-columns: repeat(6, 48px); grid-template-rows: repeat(6, 48px); }

@@ -11,26 +11,20 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    html { scroll-behavior: smooth; font-size: 17.5px; }
+    /* 109.375% = 16 × 1.09375 = 17.5px。預設瀏覽器下渲染尺寸與原本的 17.5px 完全相同，
+       但用 px 寫死 root font-size 會**蓋掉使用者在瀏覽器設定的字級**（放大字體對本頁無效），
+       用 % 才會跟著放大。2026-08-03 七頁一起改。 */
+    html { scroll-behavior: smooth; font-size: 109.375%; }
     body {
       font-family: var(--font-sans);
       background: var(--bg-base); color: var(--text); min-height: 100vh; line-height: 1.6;
       -webkit-font-smoothing: antialiased;
     }
     a { color: inherit; text-decoration: none; }
-    .container { max-width: 1500px; margin: 0 auto; padding: 0 20px; }
+    .container { max-width: var(--w-wide); margin: 0 auto; padding: 0 20px; }
 
-    /* nav */
-    .nav-back {
-      display: inline-flex; align-items: center; gap: 0.4rem;
-      color: var(--text-dim); font-size: 0.85rem; padding: 14px 18px; transition: color var(--transition);
-    }
-    .nav-back:hover { color: var(--gold); }
 
     /* header */
-    .page-head { padding: 8px 0 20px; }
-    .page-head h1 { font-size: 1.5rem; color: var(--gold-light); font-weight: 700; }
-    .page-head .subtitle { font-size: 0.85rem; color: var(--text-dim); margin-top: 4px; }
 
     /* toolbar */
     .toolbar {
@@ -334,7 +328,6 @@
     footer .ft a:hover { color: var(--gold); }
 
     @media (max-width: 600px) {
-      .page-head h1 { font-size: 1.25rem; }
       .update-time { margin-left: 0; width: 100%; }
       .tab { padding: 9px 9px; font-size: 0.82rem; }
     }

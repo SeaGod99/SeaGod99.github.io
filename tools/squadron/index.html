@@ -10,24 +10,18 @@
   <link rel="stylesheet" href="../../assets/css/tool-header.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { font-size: 17.5px; }
+    /* 109.375% = 16 × 1.09375 = 17.5px。預設瀏覽器下渲染尺寸與原本的 17.5px 完全相同，
+       但用 px 寫死 root font-size 會**蓋掉使用者在瀏覽器設定的字級**（放大字體對本頁無效），
+       用 % 才會跟著放大。2026-08-03 七頁一起改。 */
+    html { font-size: 109.375%; }
     body { background:var(--bg-base); color:var(--text); font-family: var(--font-sans); min-height:100vh; }
 
     /* NAV */
-    .nav { background:var(--bg-surface); border-bottom:1px solid var(--border); padding:0 1.5rem; height:52px; display:flex; align-items:center; gap:.75rem; }
-    .nav-back { color:var(--text-dim); text-decoration:none; font-size:.85rem; display:flex; align-items:center; gap:.4rem; transition:color .2s; }
-    .nav-back:hover { color:var(--gold); }
-    .nav-sep { color:var(--text-muted); font-size:.85rem; }
-    .nav-title { color:var(--text); font-size:.9rem; font-weight:600; }
 
     /* HERO */
-    .hero { background:linear-gradient(135deg, var(--bg-surface), var(--bg-base)); border-bottom:1px solid var(--border); padding:2rem 1.5rem; }
-    .hero-inner { max-width:1500px; margin:0 auto; }
-    .hero h1 { font-size:1.6rem; font-weight:700; display:flex; align-items:center; gap:.5rem; }
-    .hero p { color:var(--text-dim); margin-top:.4rem; font-size:.9rem; }
 
     /* MAIN */
-    .main { max-width:1500px; margin:0 auto; padding:1.5rem; }
+    .main { max-width:var(--w-wide); margin:0 auto; padding:1.5rem; }
     .section { margin-bottom:2rem; }
     .section-title { font-size:.8rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--gold); margin-bottom:1rem; display:flex; align-items:center; gap:.5rem; }
     .section-title::after { content:''; flex:1; height:1px; background:var(--border); }

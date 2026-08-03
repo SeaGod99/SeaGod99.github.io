@@ -43,7 +43,7 @@
 
     /* Layout */
     .container {
-      max-width: 1040px; margin: 0 auto;
+      max-width: var(--w-narrow); margin: 0 auto;
       padding: 40px 24px 60px;
       position: relative; z-index: 1;
     }
@@ -495,8 +495,10 @@ function updateUI() {
     { label: '3 條連線（2 次洗牌）', min: 3, max: 10 },
   ];
 
+  // 走 token 而非暗色字面值：原本 #fbbf24 的黃字在亮色模式的白底卡片上只有 1.67:1。
+  // token 版的 --yellow 在亮色是加深過的 #8a6708，兩個主題都讀得到。
   const barColors = [
-    '#f87171', '#fbbf24', '#4ade80', '#c8a96e'
+    'var(--red)', 'var(--yellow)', 'var(--green)', 'var(--gold)'
   ];
 
   buckets.forEach((b, bi) => {

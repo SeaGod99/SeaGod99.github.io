@@ -33,28 +33,40 @@
   --border:         rgba(0,0,0,0.12);
   --border-hover:   rgba(154,123,63,0.55);
 
-  /* ── 金色主調（在亮底當文字需加深以保對比，逼近 AA 4.5）── */
-  --gold:           #8a6c2f;
+  /* ── 金色主調（在亮底當文字需加深以保對比）──
+     2026-08-03：原 #8a6c2f 在**純白／米白**底上是 4.7–5.0，看起來沒問題，
+     但全站的 active 狀態是「金字疊在 --gold-dim 金色淡底上」（.filter-tag.active、
+     .tab.active、.own-btn.active、.btn-primary…），合成後底色變成 rgb(230,223,208)，
+     實測只剩 3.71:1。當下選中的那一顆反而是整列最難讀的——加深到 #755a26 後為 4.88:1。 */
+  --gold:           #755a26;
   --gold-light:     #6f5524;
   --gold-dim:       rgba(154,123,63,0.16);
 
-  /* ── 強調色：亮底需更深以保 WCAG AA(4.5) 可讀；半透明 -dim 版維持淺色淡底 ── */
-  --blue:           #0c6fa6;
-  --blue-dim:       rgba(13,131,196,0.12);
-  --green:          #157f3a;
-  --green-dim:      rgba(21,163,74,0.12);
-  --purple:         #6f3fd0;
-  --purple-dim:     rgba(124,77,214,0.12);
-  --red:            #c63a2e;
-  --red-dim:        rgba(214,72,59,0.12);
-  --orange:         #b0561a;
-  --orange-dim:     rgba(217,119,43,0.14);
-  --cyan:           #0c7a8d;
-  --cyan-dim:       rgba(14,139,160,0.14);
-  --yellow:         #8a6708;
-  --yellow-dim:     rgba(180,133,16,0.16);
-  --pink:           #a8306f;
-  --pink-dim:       rgba(190,60,130,0.14);
+  /* ── 強調色：亮底需更深以保 WCAG AA(4.5) 可讀；半透明 -dim 版維持淺色淡底 ──
+
+     2026-08-03 調整。原本這組是拿「色 vs 純白卡片」算出來的，都剛好過 4.5。
+     但實際版面上它幾乎總是**同色配對**——`background: var(--x-dim); color: var(--x)`
+     （標籤、籌碼、資料片色、src-tag…全站數百個）。-dim 疊上白卡後底色掉到
+     L≈0.85，同一組色就只剩 3.8–4.45，全部差臨門一腳。
+
+     兩邊各讓一步：-dim 的 alpha 統一降到 0.10（底色變淡），文字色再各加深
+     一級。單獨用（純白底上的彩色文字）也因此更清楚，沒有副作用。 */
+  --blue:           #0b6598;
+  --blue-dim:       rgba(13,131,196,0.10);
+  --green:          #127033;
+  --green-dim:      rgba(21,163,74,0.10);
+  --purple:         #6537c4;
+  --purple-dim:     rgba(124,77,214,0.10);
+  --red:            #b53528;
+  --red-dim:        rgba(214,72,59,0.10);
+  --orange:         #9c4c16;
+  --orange-dim:     rgba(217,119,43,0.10);
+  --cyan:           #0a6d7e;
+  --cyan-dim:       rgba(14,139,160,0.10);
+  --yellow:         #7a5b07;
+  --yellow-dim:     rgba(180,133,16,0.12);
+  --pink:           #982c64;
+  --pink-dim:       rgba(190,60,130,0.10);
 
   /* ── 文字 ──
      只覆蓋正式名；--text／--text-dim／--muted 是 tokens.css 裡的別名，

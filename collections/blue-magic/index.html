@@ -91,7 +91,8 @@
       font-size: 13px; padding: 6px 13px; cursor: pointer; border: none; font-family: inherit;
       background: var(--bg-surface); color: var(--text-secondary); transition: var(--transition);
     }
-    .view-toggle button.active { background: color-mix(in srgb, var(--accent) 16%, transparent); color: var(--accent); }
+    /* 16% 的藍底讓藍字掉到 4.47，降到 11% 後 5.0 */
+    .view-toggle button.active { background: color-mix(in srgb, var(--accent) 11%, transparent); color: var(--accent); }
     .bm-viewhint { font-size: 12px; color: var(--text-muted); }
 
     /* 法術書檢視時收起卡片格線與「排序」（此檢視固定依 No. 排列，排序無作用）。
@@ -162,7 +163,8 @@
       padding: 0;
       font-family: inherit;
       /* 未習得＝灰底（圖示照原圖顯示，不換成問號）；已習得改成強調色底 */
-      background: color-mix(in srgb, var(--text-muted) 24%, var(--bg-base));
+      /* 24% 的灰底讓左下角 10px 編號掉到 4.47，降到 16% */
+      background: color-mix(in srgb, var(--text-muted) 16%, var(--bg-base));
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
       cursor: pointer;
@@ -198,7 +200,8 @@
     .bm-slot-no {
       position: absolute; bottom: 3px; left: 5px;
       font-size: 10px; line-height: 1;
-      color: var(--text-muted);
+      /* 10px 的小字用 --text-muted 在格子底色上只有 3.7–3.8，升一級 */
+      color: var(--text-secondary);
       pointer-events: none;
     }
     .bm-slot.learned .bm-slot-no { color: var(--accent); }

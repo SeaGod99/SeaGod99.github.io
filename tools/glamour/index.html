@@ -64,11 +64,12 @@
 }
 
 /* 根字級：與其他 rem 制的頁一致（faux-hollows／fishing／gardening／
-   gc-exchange／market／squadron 都是 17.5px）。本頁原為 17px，同一句
-   .8rem 在這裡是 13.6px、在那六頁是 14px。
-   ※ 用 px 寫死 root font-size 會蓋掉使用者的瀏覽器字級設定，
-     這七頁都有這個問題，改成 109.375% 才會跟著放大——待辦。 */
-html{ font-size:17.5px; }
+   gc-exchange／market／squadron）。本頁原為 17px，同一句 .8rem 在這裡是
+   13.6px、在那六頁是 14px。
+   109.375% = 16 × 1.09375 = 17.5px：預設瀏覽器下渲染尺寸與原本的 17.5px 完全相同，
+   但**用 px 寫死 root font-size 會蓋掉使用者在瀏覽器設定的字級**（放大字體對本頁無效），
+   用 % 才會跟著放大。2026-08-03 七頁一起改完。 */
+html{ font-size:109.375%; }
 body{ font-family:var(--font-sans); }
 /* 站內共通背景光暈 */
 body::before{ content:''; position:fixed; inset:0; pointer-events:none; z-index:-1;
@@ -95,16 +96,32 @@ body::before{ content:''; position:fixed; inset:0; pointer-events:none; z-index:
 .filter-group-label{ font-size:.8rem; color:var(--muted); white-space:nowrap;
   background:var(--raise); border:1px solid var(--border); border-radius:4px; padding:2px 8px; }
 .filter-sep{ width:1px; height:20px; background:var(--border); }
+/* .btn-outline-secondary 用的是 Bootstrap 預設灰，在本站深底上只有 2.0:1——
+   35 顆篩選鈕全數踩到。與上面 .btn-outline-light 同一招，改導到共用色票。 */
 .filter-btn{ --bs-btn-padding-y:.28rem; --bs-btn-padding-x:.85rem; --bs-btn-font-size:.875rem; border-radius:20px; }
-.filter-btn.active{ background:var(--accent2); border-color:var(--accent2); color:#fff; }
-.filter-btn.female-btn.active{ background:var(--female); border-color:var(--female); color:#fff; }
-.filter-btn.male-btn.active{ background:var(--male); border-color:var(--male); color:#fff; }
-.filter-btn.unk-btn.active,.filter-btn.filter-reset.active{ background:var(--unknown); border-color:var(--unknown); color:#fff; }
+.filter-btn.btn-outline-secondary{
+  --bs-btn-color:var(--text-secondary);
+  --bs-btn-border-color:var(--border);
+  --bs-btn-hover-color:var(--bg-card);
+  --bs-btn-hover-bg:var(--text-secondary);
+  --bs-btn-hover-border-color:var(--text-secondary);
+}
+/* Bootstrap 的 .text-secondary 在兩個主題都偏淡（3.79／4.19），導到站內 token */
+.text-secondary{ --bs-secondary-color:var(--text-secondary); color:var(--text-secondary) !important; }
+/* 選中的篩選鈕：底色是 token（亮/暗兩套），文字硬寫 #fff 就只有暗色那邊對——
+   --unknown（＝--text-muted）配白字在暗色只有 3.85:1。統一改 --bg-base，
+   底色亮時字就深、底色深時字就亮，兩個主題都成立。 */
+.filter-btn.active{ background:var(--accent2); border-color:var(--accent2); color:var(--bg-base); }
+.filter-btn.female-btn.active{ background:var(--female); border-color:var(--female); color:var(--bg-base); }
+.filter-btn.male-btn.active{ background:var(--male); border-color:var(--male); color:var(--bg-base); }
+.filter-btn.unk-btn.active,.filter-btn.filter-reset.active{ background:var(--unknown); border-color:var(--unknown); color:var(--bg-base); }
 .tw-btn.active{ background:#16a34a; border-color:#16a34a; color:#fff; }
 .fav-filter.active{ background:#b45309; border-color:#b45309; color:#fff; }
 .search-input{ width:240px; border-radius:20px; }
 .sort-select{ width:auto; border-radius:20px; }
-.src-detail-select{ width:auto; max-width:22rem; border-radius:20px; }
+/* max-width 原本寫死 22rem＝385px（本頁 root 是 17.5px），比 375px 手機還寬，
+   加上容器左緣 18px 之後整頁橫向溢出 30px。min() 讓它在窄螢幕退回容器寬。 */
+.src-detail-select{ width:auto; max-width:min(22rem, 100%); border-radius:20px; }
 
 /* ── Cards ── */
 .outfit-card{ cursor:pointer; overflow:hidden; background:var(--card-bg);
@@ -137,8 +154,11 @@ body::before{ content:''; position:fixed; inset:0; pointer-events:none; z-index:
 .card-tag{ font-size:.72rem; padding:2px 8px; border-radius:10px; color:#e5e7eb; background:var(--tag-other); }
 .badge-healer{background:#065f46}.badge-tank{background:#1e3a5f}.badge-caster{background:#4c1d95}
 .badge-melee{background:#7f1d1d}.badge-pranged{background:#713f12}.badge-crafter{background:#1f2937;border:1px solid #4b5563}
-.badge-event{background:#16a34a}.badge-pvp{background:#dc2626}.badge-store{background:#d97706}.badge-raid{background:#7c3aed}
-.badge-viera{background:#7c3aed}.badge-scrip{background:#0891b2}.badge-gs{background:#ca8a04}
+/* 2026-08-03：這一排原本混了 Tailwind 500/600 的**亮**色（#16a34a／#dc2626／
+   #d97706／#7c3aed／#0891b2／#ca8a04），跟上面那排 800/900 的深色不同層級。
+   淺字 #e5e7eb 疊上去只有 2.57–3.9:1。統一降到與上排同深度的 800 級。 */
+.badge-event{background:#166534}.badge-pvp{background:#991b1b}.badge-store{background:#854d0e}.badge-raid{background:#5b21b6}
+.badge-viera{background:#5b21b6}.badge-scrip{background:#155e75}.badge-gs{background:#854d0e}
 
 /* ── Modal (Bootstrap base + FF14 skin) ── */
 .modal-content{ background:var(--card-bg); border:1px solid var(--border); }
@@ -248,7 +268,10 @@ body::before{ content:''; position:fixed; inset:0; pointer-events:none; z-index:
 }
 
 /* ── 官方套裝分頁 ── */
-.view-btn.view-active{ background:var(--accent2)!important; border-color:var(--accent2)!important; color:#fff!important; }
+/* color:#fff 疊在 --accent2（暗色是亮藍 #4fc3f7）上只有 2.0:1。改用 --bg-base：
+   暗色＝深底色配亮藍(9.7)、亮色＝米白配深藍(5.5)，兩個主題都成立。
+   這與站內 .ct-card.owned > .ct-check 用的是同一招（common.css）。 */
+.view-btn.view-active{ background:var(--accent2)!important; border-color:var(--accent2)!important; color:var(--bg-base)!important; }
 .set-icons{ min-height:120px; background:var(--panel-bg); display:flex; flex-wrap:wrap; gap:6px;
   align-items:center; justify-content:center; padding:14px 10px; }
 .set-photo-note{ position:absolute; left:8px; bottom:8px; z-index:2; font-size:.68rem;

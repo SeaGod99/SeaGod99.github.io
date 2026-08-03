@@ -49,7 +49,7 @@ body::before {
 a { color: inherit; text-decoration: none; }
 
 .container {
-  max-width: 1500px;
+  max-width: var(--w-wide);
   margin: 0 auto;
   padding: 0 24px;
   position: relative;
@@ -457,10 +457,26 @@ a { color: inherit; text-decoration: none; }
 }
 .tag.placeholder { color: var(--text-muted); }
 .tag.patch-tag {
-  background: rgba(167,139,250,0.1);
+  background: var(--purple-dim);
   color: var(--purple);
-  border-color: rgba(167,139,250,0.2);
+  border-color: color-mix(in srgb, var(--purple) 20%, transparent);
 }
+
+/* ── 資料片色（單一來源，2026-08-03）──────────────────────────────
+   此前三頁各自刻了一份，而且**對應還不一樣**：
+     風脈泉／探索筆記   2.x綠 3.x藍 4.x紫 5.x金 6.x紅 7.x橘
+     髮型               2.x藍 3.x紫 4.x橘 5.x綠 6.x青  ← 同一個資料片兩種顏色
+   以前兩頁（多數）的對應為準，統一放這裡。
+
+   另外，原本三頁寫的都是**暗色字面值**（#4ade80／#ffa94d…），亮色模式沒有覆蓋，
+   實測 11px 綠字疊在淺綠底上只有 1.64:1（形同看不見）。改指 token 後
+   亮/暗會各自取到對應的色階。 */
+.tag.patch-arr,  .patch-arr  { background: var(--green-dim);  color: var(--green);  border-color: color-mix(in srgb, var(--green)  25%, transparent); }
+.tag.patch-hw,   .patch-hw   { background: var(--blue-dim);   color: var(--blue);   border-color: color-mix(in srgb, var(--blue)   25%, transparent); }
+.tag.patch-sb,   .patch-sb   { background: var(--purple-dim); color: var(--purple); border-color: color-mix(in srgb, var(--purple) 25%, transparent); }
+.tag.patch-shb,  .patch-shb  { background: var(--gold-dim);   color: var(--gold);   border-color: color-mix(in srgb, var(--gold)   30%, transparent); }
+.tag.patch-ew,   .patch-ew   { background: var(--red-dim);    color: var(--red);    border-color: color-mix(in srgb, var(--red)    25%, transparent); }
+.tag.patch-dt,   .patch-dt   { background: var(--orange-dim); color: var(--orange); border-color: color-mix(in srgb, var(--orange) 30%, transparent); }
 
 /* 詳細行（多列來源說明用） */
 .detail-line {
@@ -487,23 +503,25 @@ a { color: inherit; text-decoration: none; }
 
 /* 來源類別配色（全收藏頁通用語意）。
    註：type-任務 在表情頁語意為「藍色任務」，該頁以 1 行覆寫。 */
+/* 底色／框線原本是暗色 rgba 字面值，只有 color 走 token——亮色模式下
+   「加深過的字」配「沒加深的底」，實測 4.0–4.4 差一步沒過 AA。全部改指 -dim token。 */
 .src-tag.type-主線任務,
 .src-tag.type-任務,
-.src-tag.type-預設       { background: rgba(74,222,128,0.1);  color: var(--green);  border-color: rgba(74,222,128,0.2); }
+.src-tag.type-預設       { background: var(--green-dim);  color: var(--green);  border-color: color-mix(in srgb, var(--green)  20%, transparent); }
 .src-tag.type-副本掉落,
 .src-tag.type-深層迷宮,
 .src-tag.type-異聞副本,
-.src-tag.type-探索航行   { background: rgba(79,195,247,0.1);  color: var(--blue);   border-color: rgba(79,195,247,0.2); }
+.src-tag.type-探索航行   { background: var(--blue-dim);   color: var(--blue);   border-color: color-mix(in srgb, var(--blue)   20%, transparent); }
 .src-tag.type-高難度副本,
 .src-tag.type-絕境,
 .src-tag.type-PvP,
-.src-tag.type-狩獵       { background: rgba(248,113,113,0.1); color: var(--red);    border-color: rgba(248,113,113,0.2); }
+.src-tag.type-狩獵       { background: var(--red-dim);    color: var(--red);    border-color: color-mix(in srgb, var(--red)    20%, transparent); }
 .src-tag.type-商店,
 .src-tag.type-節慶活動,
 .src-tag.type-聯名活動,
-.src-tag.type-動作指南書 { background: rgba(200,169,110,0.12); color: var(--gold);  border-color: rgba(200,169,110,0.25); }
+.src-tag.type-動作指南書 { background: var(--gold-dim);   color: var(--gold);   border-color: color-mix(in srgb, var(--gold)   25%, transparent); }
 .src-tag.type-商城,
-.src-tag.type-App        { background: rgba(167,139,250,0.12); color: var(--purple); border-color: rgba(167,139,250,0.25); }
+.src-tag.type-App        { background: var(--purple-dim); color: var(--purple); border-color: color-mix(in srgb, var(--purple) 25%, transparent); }
 /* 成就／金碟的黃：走 --yellow token（亮色模式有加深值）。
    原本寫死 #ffc850，在亮色卡片上只有 1.54:1，等於看不見。 */
 .src-tag.type-成就,
@@ -601,4 +619,65 @@ body.mx-mapmode #ct-pagination { display: none !important; }
 @media (max-width: 600px) {
   .page-header { flex-wrap: wrap; padding: 24px 0 20px; }
   .progress-bar-wrap { flex-wrap: wrap; }
+}
+
+/* ===================================================================
+   觸控目標（2026-08-03）
+
+   用 headless Edge 在 375px 量過 26 頁，手指要點的東西幾乎全部低於
+   Apple HIG 的 44pt／Material 的 48dp：
+     .filter-tag 31px（**每一頁最主要的操作**，一頁 20–40 顆）
+     .own-btn / .icon-btn / .sort-select 31–36px
+     .ct-page-btn 36×29px、.ct-market 21px
+     .ct-check 24×24px（12 個追蹤頁**唯一**的「標記已收藏」入口）
+
+   為什麼用 `pointer: coarse` 而不是 `max-width`：
+   這是「手指粗細」的問題，不是「螢幕多寬」的問題。用寬度當條件會同時
+   (a) 漏掉橫放的平板與觸控筆電，(b) 在窄視窗的桌機上把密集版面撐開。
+   桌機滑鼠（pointer: fine）走到這裡完全不會套用，視覺零變化。
+
+   ※ .ct-check 刻意**只擴大命中區、不放大視覺**：幻卡手帳在手機是 5 欄、
+     格子只約 58px，鈕本體放大會蓋掉半張卡面（見上面 .ct-check 的註解）。
+     改用 ::after 的透明擴張層，看起來仍是 24px，手指按得到 44px。
+   =================================================================== */
+@media (pointer: coarse) {
+  .filter-tag,
+  .own-btn,
+  .icon-btn,
+  .ct-page-btn {
+    min-height: var(--tap-min);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .search-input,
+  .sort-select,
+  .filter-select { min-height: var(--tap-min); }
+
+  /* 加大後彼此要留 8px 間隙，否則變成「一大片按鈕牆」更容易按錯（HIG touch-spacing） */
+  .filter-tags { gap: 8px; }
+  .ct-pagination { gap: 8px; }
+
+  /* 內文中的小連結（💰 市場行情）：把命中區往外推到 44px，版面不動 */
+  .ct-market { position: relative; }
+  .ct-market::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    top: 50%;
+    height: var(--tap-min);
+    transform: translateY(-50%);
+  }
+
+  /* 收藏切換鈕：視覺維持 24px，命中區擴到 44px */
+  .ct-check::after {
+    content: '';
+    position: absolute;
+    inset: -10px;
+    border-radius: 50%;
+  }
+  /* 仿遊戲版型的密集格（幻卡手帳 5 欄約 58px、青魔法之書 4×4）擴太多會吃掉
+     整格、讓「點格子看詳情」按不到，這兩處收斂成 36px 命中區。 */
+  .tt-slot .ct-check::after,
+  .bm-slot .ct-check::after { inset: -6px; }
 }
