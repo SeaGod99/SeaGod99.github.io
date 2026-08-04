@@ -1,6 +1,6 @@
 {
 "_meta": {
-"generated": "2026-07-10 02:04:32"
+"generated": "2026-08-04 08:01:27"
 },
 "mirage": [
 {
@@ -11991,23 +11991,51 @@
 },
 {
 "row_id": 52586,
-"pieces": {}
+"pieces": {
+"Body": 51952,
+"Hands": 51953,
+"Legs": 51954,
+"Feet": 51955
+}
 },
 {
 "row_id": 52587,
-"pieces": {}
+"pieces": {
+"Body": 51957,
+"Hands": 51958,
+"Feet": 51960
+}
 },
 {
 "row_id": 52588,
-"pieces": {}
+"pieces": {
+"Head": 51961,
+"Body": 51962,
+"Hands": 51963,
+"Legs": 51964,
+"Feet": 51965
+}
 },
 {
 "row_id": 52589,
-"pieces": {}
+"pieces": {
+"Body": 52323,
+"Hands": 52324,
+"Legs": 52325,
+"Feet": 52326,
+"Earrings": 52327
+}
 },
 {
 "row_id": 52590,
-"pieces": {}
+"pieces": {
+"Head": 52328,
+"Body": 52329,
+"Hands": 52330,
+"Legs": 52331,
+"Feet": 52332,
+"Earrings": 52647
+}
 },
 {
 "row_id": 52591,
@@ -12119,7 +12147,12 @@
 },
 {
 "row_id": 52653,
-"pieces": {}
+"pieces": {
+"Body": 52634,
+"Hands": 52635,
+"Legs": 52636,
+"Feet": 52637
+}
 },
 {
 "row_id": 52660,
@@ -12188,16 +12221,16 @@
 "53": "CNJ WHM",
 "54": "GLA PGL MRD LNC ARC ROG CNJ THM ACN WHM BLM SMN SCH AST",
 "55": "THM BLM",
-"56": "GLA CNJ THM PLD WHM BLM",
-"57": "GLA THM PLD BLM",
-"58": "GLA CNJ PLD WHM",
+"56": "GLA CNJ THM PLD WHM BLM BST",
+"57": "GLA THM PLD BLM BST",
+"58": "GLA CNJ PLD WHM BST",
 "59": "GLA MRD PLD WAR DRK GNB",
 "60": "GLA MRD LNC PLD WAR DRG DRK GNB RPR",
 "61": "CNJ THM ACN WHM SCH AST",
 "62": "CNJ THM ACN WHM BLM SMN SCH AST",
 "63": "THM ACN BLM SMN RDM BLU PCT",
 "64": "CNJ WHM SCH AST SGE",
-"65": "PGL MNK SAM",
+"65": "PGL MNK SAM BST",
 "66": "ARC BRD MCH DNC",
 "67": "GLA PGL MRD LNC ROG MNK DRG NIN",
 "68": "ACN SMN SCH",
@@ -12216,7 +12249,7 @@
 "81": "",
 "82": "",
 "83": "",
-"84": "PGL LNC MNK DRG SAM RPR",
+"84": "PGL LNC MNK DRG SAM RPR BST",
 "85": "Jobs of the Disciples of War or Magic",
 "86": "PLD WAR DRK GNB MNK DRG NIN SAM",
 "87": "BRD MCH DNC BLM SMN RDM WHM SCH AST",
@@ -12234,7 +12267,7 @@
 "99": "AST",
 "100": "ARC ROG BRD NIN MCH",
 "101": "PGL LNC ROG MNK DRG NIN",
-"102": "PGL ROG MNK NIN SAM VPR",
+"102": "PGL ROG MNK NIN SAM VPR BST",
 "103": "ROG NIN VPR",
 "104": "",
 "105": "ARC ROG BRD NIN MCH DNC VPR",
@@ -15737,7 +15770,7 @@
 "ja": "ドラヴァニアン・ディフェンダー・アタイア"
 },
 "51387": {
-"en": "Dravanian Attire of Slaying",
+"en": "Dravanian Attire of Maiming",
 "ja": "ドラヴァニアン・スレイヤー・アタイア"
 },
 "51388": {
@@ -16437,7 +16470,7 @@
 "ja": "マヌシャ・ディフェンダー・アタイア"
 },
 "51562": {
-"en": "Manusya Attire of Slaying",
+"en": "Manusya Attire of Maiming",
 "ja": "マヌシャ・スレイヤー・アタイア"
 },
 "51563": {
@@ -16937,24 +16970,24 @@
 "ja": "プレマジテック・キャスター・アタイア"
 },
 "52586": {
-"en": "",
-"ja": ""
+"en": "Tule Attire",
+"ja": "トゥール・アタイア"
 },
 "52587": {
-"en": "",
-"ja": ""
+"en": "Torna Attire",
+"ja": "トルナ・アタイア"
 },
 "52588": {
-"en": "",
-"ja": ""
+"en": "Carwen Attire",
+"ja": "カーウェン・アタイア"
 },
 "52589": {
-"en": "",
-"ja": ""
+"en": "Avalanche Brawler's Attire",
+"ja": "アバランチブロウラー・アタイア"
 },
 "52590": {
-"en": "",
-"ja": ""
+"en": "Avalanche Leader's Attire",
+"ja": "アバランチリーダー・アタイア"
 },
 "52591": {
 "en": "Shadowhound Attire",
@@ -17009,8 +17042,8 @@
 "ja": "コスモエクスプローラー・アタイア【F】"
 },
 "52653": {
-"en": "",
-"ja": ""
+"en": "Tradewinds Attire",
+"ja": "トレードウィンズ・アタイア"
 },
 "52660": {
 "en": "Zero's Luminary Attire",

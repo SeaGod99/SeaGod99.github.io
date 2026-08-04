@@ -3,7 +3,7 @@
 > **給 Claude / 後續對話的指示**：開始任何工作前先讀本檔。完成任何功能或資料變更後，**必須更新本檔**（狀態表 + 更新紀錄），並同步 `data/_meta.json` 的 status。
 > 規格細節見 `docs/feature-specs.md`，資料格式見 `data/SCHEMA.md`。
 
-**最後更新**：2026-08-03（全站 UI/UX 一致性體檢：亮/暗兩主題 26 頁的文字對比 168 類未達 AA **全數修完歸零**、觸控目標加 44px 下限、內容欄寬 9 種收斂成 3 階 token、頁尾 19/26 → 26/26 並加 skip link、手機水平溢出歸零；08-01 全站設計 token 收斂到 `assets/css/tokens.css`、修掉亮色 `--accent` 全站洩漏、幻化配裝圖鑑併入主題／頂列系統、加上全站焦點環與 `prefers-reduced-motion`；07-29 冒險者小隊計算機 9 個算錯／顯示錯的 bug 全修＋任務列表改表格、SW `CACHE_VERSION` 跨機無限漂移的根因（autocrlf）修掉、職業名三份表統一、精選取得方式補 224 處、主庫 equip 缺口修補；07-28 幻化配裝圖鑑資料併回主庫：刪 105MB 重複、修 570 筆錯名、加 .gitattributes 修 msgpack 損壞；另有資料缺口／UX 一致性／效能 三章＋副本庫 386→520 座等，見更新紀錄）
+**最後更新**：2026-08-04（幻化配裝圖鑑資料更新：Mirapri 社群投稿 6,628→6,774、官方套裝 1,971→1,975 套、多語裝備庫重抓 28,963 件、icon 與 wiki 示意照補齊，健檢全過；**遺留：249 張新圖的 Claude 視覺 OCR 尚未跑**，見更新紀錄；08-03 全站 UI/UX 一致性體檢：亮/暗兩主題 26 頁的文字對比 168 類未達 AA **全數修完歸零**、觸控目標加 44px 下限、內容欄寬 9 種收斂成 3 階 token、頁尾 19/26 → 26/26 並加 skip link、手機水平溢出歸零；08-01 全站設計 token 收斂到 `assets/css/tokens.css`、修掉亮色 `--accent` 全站洩漏、幻化配裝圖鑑併入主題／頂列系統、加上全站焦點環與 `prefers-reduced-motion`；07-29 冒險者小隊計算機 9 個算錯／顯示錯的 bug 全修＋任務列表改表格、SW `CACHE_VERSION` 跨機無限漂移的根因（autocrlf）修掉、職業名三份表統一、精選取得方式補 224 處、主庫 equip 缺口修補；07-28 幻化配裝圖鑑資料併回主庫：刪 105MB 重複、修 570 筆錯名、加 .gitattributes 修 msgpack 損壞；另有資料缺口／UX 一致性／效能 三章＋副本庫 386→520 座等，見更新紀錄）
 **網站**：https://seagod99.github.io ｜ GitHub Pages 純靜態 ｜ 台服版本 **7.15**（＝`data/_meta.json` 的 `gamePatch`，全站版本閘門唯一真實來源；台服尚未開放到 7.2）
 
 ---
@@ -23,7 +23,7 @@
 | — | 天氣預報 | `/tools/weather/` | 完成（改用共用模組 assets/js/eorzea-weather.js，天氣表接 maps.json weatherRates，mapId 統一，06-15重做） |
 | 1.5 | 風脈泉追蹤器 | `/tools/aether-currents/` | 完成（31 地區 303 個風脈泉，任務型151筆/野外型152筆，06-16新增；07-23 遷入共用引擎的**子項目模式**——卡片＝地區、追蹤單位＝風脈泉，手風琴/地區地圖圖釘/🗺彈窗保留，新增可分享網址、批次標記、排序） |
 | 1.6 | 時尚品鑑推薦 | `/tools/fashion-report/` | 完成（**07-25 全面改版**：推薦標準改為「門檻→金幣（含染劑）→件數」三層成本模型並以列舉求最佳解，答案改為每週結構相同的「涵蓋所有計分部位配裝表」，換週狀態機把遊戲階段與資料新鮮度拆成兩軸、過渡期顯示當前週主題，完整清單加上等級／職業／可否染色／性別種族限制／販賣地圖／市場連結。管線全程式化＝`build-fashion-report.mjs` 一支到底。**規格見 [fashion-report-spec.md](fashion-report-spec.md)**；目前 week 444「風信子冒險者」verified） |
-| 1.7 | 幻化配裝圖鑑 | `/tools/glamour/` | 完成（07-15 由獨立 repo 併入：精選配裝＋Mirapri 社群＋官方套裝 1971 套三檢視，收藏星號、染色/交易徽章、wiki 示意照；07-16 上線資產進版控——縮圖/官方示意照/icons/精選原圖＋mirapri_outfits.js/official_sets.js 共約 850MB 已 push，線上完整可用；**僅 mirapri 原圖 669MB 留本機**（加入會破 Pages 發佈 1GB 上限，彈窗自動退回縮圖），重建後衍生 js 記得 commit；資料管線為 Python（py scripts\update_all.py），細節見 tools/glamour/CLAUDE.md；**07-28 資料層併回主庫**——移除自帶的 105MB `資料來源/`，改由 `scripts/maindb.py` 讀 `data/`＋`out_data/`，修掉 570 筆錯譯名並補進 7.1/7.2 新套裝箱；07-16 介面統整——改用站內共用色票/字體、加「← 水神的工具箱」導覽與頁尾，官方套裝卡不再顯示 alljob 原始 tag） |
+| 1.7 | 幻化配裝圖鑑 | `/tools/glamour/` | 完成（**08-04 資料更新**：社群 6,727 套／官方套裝 **1,975** 套／精選 95 套，多語裝備庫 28,963 件；07-15 由獨立 repo 併入：精選配裝＋Mirapri 社群＋官方套裝三檢視，收藏星號、染色/交易徽章、wiki 示意照；07-16 上線資產進版控——縮圖/官方示意照/icons/精選原圖＋mirapri_outfits.js/official_sets.js 共約 850MB 已 push，線上完整可用；**僅 mirapri 原圖 669MB 留本機**（加入會破 Pages 發佈 1GB 上限，彈窗自動退回縮圖），重建後衍生 js 記得 commit；資料管線為 Python（py scripts\update_all.py），細節見 tools/glamour/CLAUDE.md；**07-28 資料層併回主庫**——移除自帶的 105MB `資料來源/`，改由 `scripts/maindb.py` 讀 `data/`＋`out_data/`，修掉 570 筆錯譯名並補進 7.1/7.2 新套裝箱；07-16 介面統整——改用站內共用色票/字體、加「← 水神的工具箱」導覽與頁尾，官方套裝卡不再顯示 alljob 原始 tag） |
 
 ### 收藏／成就追蹤（共通規格見 feature-specs 第二章）
 
@@ -196,6 +196,14 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 6. 其他規劃：時尚品鑑、冒險者小隊計算機、藏寶圖、園藝配種、釣魚紀錄
 
 ## 五、更新紀錄
+
+- **2026-08-04（幻化配裝圖鑑資料更新；OCR 一步未完成）**：走 `tools/glamour/CLAUDE.md` 的 full 順序，但拆成單步跑（好控制失敗點），主庫 `data/`／`out_data/` 未動。
+  - **主庫健檢先行**：`check_maindb.py` 12 份來源全綠（items 43,748／取得方式 39,257／副本名 386，裝備的副本來源 5,068 條解得出 5,044 ＝ 99%）。台服仍是 7.15、items 涵蓋到 7.2，**沒有改版**，所以不必重跑主庫的 `build-items.mjs` 系列。
+  - **Mirapri 社群**：`pipeline.py all` 抓到 **6,628 → 6,774 筆**（+146）。順手補下載了本機缺的舊圖，壓縮 154 張、產縮圖 203 張（縮圖覆蓋 6,879/6,879）。enrich 後有 source 的件數 31,056/32,967（94%）。
+  - **多語裝備庫**：`build_item_fallback.py` 重掃 XIVAPI → **28,963 件**（有繁中 26,264／無繁中 2,699＝台服未實裝，走備選庫）。徽章（可染欄數／可交易）與官方套裝分組都吃這份。
+  - **官方套裝**：`build_sets.py --fetch` → MirageStoreSetItem 1,170 列、成套 1,086，加第二層啟發式後 v1 準則收錄 **1,971 → 1,975 套**。`fetch_icons.py` 補 27 張（8,780/8,780 全覆蓋），`fetch_set_photos.py` 補 6 套（**1,974/1,975** 有官方示意照）。唯一沒圖的仍是 7.5 的 Zero's Luminary（`miss:page-no-model-image`），兩個 wiki 都還沒上圖。
+  - **前端重建**：`build_site.py` → 精選 95 套／社群 **6,727** 套（原始 6,774 扣掉人工決定移除的 47 套）／官方 1,975 套；`build_item_sources.py` → **976 種來源 / 11,858 件**（其中 4,317 件有多種取法）。`health_check.py` **全部通過**。開頁驗收：兩個檢視都正常、console 零錯誤。
+  - **⚠ 未完成：249 張新圖的 Claude 視覺 OCR**（202 張全新投稿 ＋ 47 張圖檔位元組變動）。這批交給 sub-agent 並行判讀時**整批撞到 session 額度上限**，一張都沒寫出來，`data/ocr_cache.json` 未變動（備份在被 gitignore 的 `ocr_cache.bak_20260804_preclaude.json`）。影響：這 249 套**沒有逐件染色、也沒做替代裝備過濾**，裝備清單退回 Mirapri API 自帶的原始清單——會顯示，只是可能多列投稿者附的替代款。**補跑方式**：Claude 視覺讀圖 → 以 `src:"claude"`／`ver:2`／`pieces:[{item,dyes}]`／`sig=mtime-size` 寫進 `ocr_cache.json` → 依序重跑 `apply_dyes.py` → `reconstruct_empty.py` → `build_site.py` → `build_item_sources.py`。**不要改用 ollama 補**（見知識庫：Claude 視覺讀取才是權威）。
 
 - **2026-08-03（全站 UI/UX 一致性體檢：對比 168 類全修、觸控目標、欄寬三階、頁尾補齊）**：只動樣式層與 `nav.js`，未動任何 `data/`。做法是先用 §3.5 的 headless Edge ＋ CDP 把 26 頁 × 亮/暗兩主題 × 375/1440 兩尺寸全量量一遍，拿數據排序再改，改完重量驗收。細節與可重用的判準寫進知識庫 §3.8–§3.11。
   - **對比：168 類 → 0 類**（暗色 87 → 0、亮色 81 → 0，兩主題 26 頁全綠）。三個系統性成因：

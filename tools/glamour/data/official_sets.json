@@ -1,12 +1,12 @@
 {
 "_meta": {
-"generated": "2026-07-29 00:59:08",
-"sets": 1969,
-"mirage_sets": 1078,
+"generated": "2026-08-04 08:01:28",
+"sets": 1975,
+"mirage_sets": 1084,
 "src_sets": 891,
 "excluded_by_criteria": 10049,
 "dedup_dropped": 1053,
-"mirage_empty_rows": 89,
+"mirage_empty_rows": 83,
 "no_source_items": 9034,
 "conflict_groups": 206
 },
@@ -1470,7 +1470,7 @@
 "src": ""
 }
 ],
-"cjc_name": "PGL MNK SAM",
+"cjc_name": "PGL MNK SAM BST",
 "zh_ok": false
 },
 {
@@ -2243,7 +2243,7 @@
 "src": "🪙兌換×6（希灰）"
 }
 ],
-"cjc_name": "PGL MNK SAM",
+"cjc_name": "PGL MNK SAM BST",
 "zh_ok": false
 },
 {
@@ -2859,7 +2859,7 @@
 "src": "🪙兌換×495（澤爾康）"
 }
 ],
-"cjc_name": "PGL MNK SAM",
+"cjc_name": "PGL MNK SAM BST",
 "zh_ok": false
 },
 {
@@ -4365,7 +4365,7 @@
 "src": ""
 }
 ],
-"cjc_name": "PGL MNK SAM",
+"cjc_name": "PGL MNK SAM BST",
 "zh_ok": false
 },
 {
@@ -6382,7 +6382,7 @@
 "src": "🪙兌換×11（艾蓮涅）"
 }
 ],
-"cjc_name": "PGL MNK SAM",
+"cjc_name": "PGL MNK SAM BST",
 "zh_ok": false
 },
 {
@@ -7225,7 +7225,7 @@
 "src": "🗡️桑多利亞：第二巡行（聯隊突擊）"
 }
 ],
-"cjc_name": "PGL MNK SAM",
+"cjc_name": "PGL MNK SAM BST",
 "zh_ok": false
 },
 {
@@ -7876,7 +7876,7 @@
 "src": "🪙兌換×4000"
 }
 ],
-"cjc_name": "PGL MNK SAM",
+"cjc_name": "PGL MNK SAM BST",
 "zh_ok": false
 },
 {
@@ -9033,7 +9033,7 @@
 "src": ""
 }
 ],
-"cjc_name": "PGL MNK SAM",
+"cjc_name": "PGL MNK SAM BST",
 "zh_ok": false
 },
 {
@@ -11195,7 +11195,7 @@
 "src": "🪙兌換×6（希灰）"
 }
 ],
-"cjc_name": "PGL MNK SAM",
+"cjc_name": "PGL MNK SAM BST",
 "zh_ok": false
 },
 {
@@ -11747,7 +11747,7 @@
 "src": "🪙兌換×495（澤爾康）"
 }
 ],
-"cjc_name": "PGL MNK SAM",
+"cjc_name": "PGL MNK SAM BST",
 "zh_ok": false
 },
 {
@@ -13096,7 +13096,7 @@
 "src": ""
 }
 ],
-"cjc_name": "PGL MNK SAM",
+"cjc_name": "PGL MNK SAM BST",
 "zh_ok": false
 },
 {
@@ -14292,7 +14292,7 @@
 "src": "🪙兌換×2（瓦赫賽帕）"
 }
 ],
-"cjc_name": "PGL MNK SAM",
+"cjc_name": "PGL MNK SAM BST",
 "zh_ok": false
 },
 {
@@ -67122,7 +67122,7 @@
 "layer": "mirage",
 "name_zh": "",
 "name_ja": "マヌシャ・スレイヤー・アタイア",
-"name_en": "Manusya Attire of Slaying",
+"name_en": "Manusya Attire of Maiming",
 "source": "🎁幻化套裝箱",
 "patch": "6.0",
 "pieces": [
@@ -160829,7 +160829,7 @@
 "layer": "mirage",
 "name_zh": "",
 "name_ja": "ドラヴァニアン・スレイヤー・アタイア",
-"name_en": "Dravanian Attire of Slaying",
+"name_en": "Dravanian Attire of Maiming",
 "source": "🎁幻化套裝箱",
 "patch": "3.15",
 "pieces": [
@@ -201618,6 +201618,83 @@
 "zh_ok": true
 },
 {
+"id": "mirage:52653",
+"layer": "mirage",
+"name_zh": "",
+"name_ja": "トレードウィンズ・アタイア",
+"name_en": "Tradewinds Attire",
+"source": "🎁幻化套裝箱",
+"patch": "",
+"pieces": [
+{
+"id": 52634,
+"zh": "",
+"ja": "トレードウィンズ・チュニック",
+"en": "Tradewinds Tunic",
+"slot": "上身",
+"patch": "",
+"lv": 1,
+"dye": 1,
+"mb": false,
+"icon": 57396,
+"ilvl": 1,
+"cjc": 1,
+"cjc_name": "",
+"src": ""
+},
+{
+"id": 52635,
+"zh": "",
+"ja": "トレードウィンズ・リストグローブ",
+"en": "Tradewinds Wristgloves",
+"slot": "手部",
+"patch": "",
+"lv": 1,
+"dye": 1,
+"mb": false,
+"icon": 56465,
+"ilvl": 1,
+"cjc": 1,
+"cjc_name": "",
+"src": ""
+},
+{
+"id": 52636,
+"zh": "",
+"ja": "トレードウィンズ・ガスキン",
+"en": "Tradewinds Gaskins",
+"slot": "腿部",
+"patch": "",
+"lv": 1,
+"dye": 1,
+"mb": false,
+"icon": 57482,
+"ilvl": 1,
+"cjc": 1,
+"cjc_name": "",
+"src": ""
+},
+{
+"id": 52637,
+"zh": "",
+"ja": "トレードウィンズ・シューズ",
+"en": "Tradewinds Shoes",
+"slot": "腳部",
+"patch": "",
+"lv": 1,
+"dye": 1,
+"mb": false,
+"icon": 57975,
+"ilvl": 1,
+"cjc": 1,
+"cjc_name": "",
+"src": ""
+}
+],
+"cjc_name": "All Classes",
+"zh_ok": false
+},
+{
 "id": "mirage:52603",
 "layer": "mirage",
 "name_zh": "",
@@ -201871,6 +201948,439 @@
 "dye": 2,
 "mb": true,
 "icon": 57974,
+"ilvl": 1,
+"cjc": 1,
+"cjc_name": "",
+"src": ""
+}
+],
+"cjc_name": "All Classes",
+"zh_ok": false
+},
+{
+"id": "mirage:52590",
+"layer": "mirage",
+"name_zh": "",
+"name_ja": "アバランチリーダー・アタイア",
+"name_en": "Avalanche Leader's Attire",
+"source": "🎁幻化套裝箱",
+"patch": "",
+"pieces": [
+{
+"id": 52328,
+"zh": "",
+"ja": "アバランチリーダー・サングラス",
+"en": "Avalanche Leader's Sunglasses",
+"slot": "頭部",
+"patch": "",
+"lv": 1,
+"dye": 2,
+"mb": false,
+"icon": 56944,
+"ilvl": 1,
+"cjc": 1,
+"cjc_name": "",
+"src": ""
+},
+{
+"id": 52329,
+"zh": "",
+"ja": "アバランチリーダー・ベスト",
+"en": "Avalanche Leader's Vest",
+"slot": "上身",
+"patch": "",
+"lv": 1,
+"dye": 2,
+"mb": false,
+"icon": 57373,
+"ilvl": 1,
+"cjc": 1,
+"cjc_name": "",
+"src": ""
+},
+{
+"id": 52330,
+"zh": "",
+"ja": "アバランチリーダー・ハーフグローブ",
+"en": "Avalanche Leader's Halfgloves",
+"slot": "手部",
+"patch": "",
+"lv": 1,
+"dye": 2,
+"mb": false,
+"icon": 56448,
+"ilvl": 1,
+"cjc": 1,
+"cjc_name": "",
+"src": ""
+},
+{
+"id": 52331,
+"zh": "",
+"ja": "アバランチリーダー・カーゴパンツ",
+"en": "Avalanche Leader's Cargo Trousers",
+"slot": "腿部",
+"patch": "",
+"lv": 1,
+"dye": 2,
+"mb": false,
+"icon": 57466,
+"ilvl": 1,
+"cjc": 1,
+"cjc_name": "",
+"src": ""
+},
+{
+"id": 52332,
+"zh": "",
+"ja": "アバランチリーダー・ブーツ",
+"en": "Avalanche Leader's Boots",
+"slot": "腳部",
+"patch": "",
+"lv": 1,
+"dye": 2,
+"mb": false,
+"icon": 57958,
+"ilvl": 1,
+"cjc": 1,
+"cjc_name": "",
+"src": ""
+},
+{
+"id": 52647,
+"zh": "",
+"ja": "アバランチリーダー・イヤリング",
+"en": "Avalanche Leader's Earring",
+"slot": "耳飾",
+"patch": "",
+"lv": 1,
+"dye": 0,
+"mb": false,
+"icon": 55573,
+"ilvl": 1,
+"cjc": 1,
+"cjc_name": "",
+"src": ""
+}
+],
+"cjc_name": "All Classes",
+"zh_ok": false
+},
+{
+"id": "mirage:52589",
+"layer": "mirage",
+"name_zh": "",
+"name_ja": "アバランチブロウラー・アタイア",
+"name_en": "Avalanche Brawler's Attire",
+"source": "🎁幻化套裝箱",
+"patch": "",
+"pieces": [
+{
+"id": 52323,
+"zh": "",
+"ja": "アバランチブロウラー・トップス",
+"en": "Avalanche Brawler's Top",
+"slot": "上身",
+"patch": "",
+"lv": 1,
+"dye": 2,
+"mb": false,
+"icon": 57372,
+"ilvl": 1,
+"cjc": 1,
+"cjc_name": "",
+"src": ""
+},
+{
+"id": 52324,
+"zh": "",
+"ja": "アバランチブロウラー・ハーフグローブ",
+"en": "Avalanche Brawler's Halfgloves",
+"slot": "手部",
+"patch": "",
+"lv": 1,
+"dye": 2,
+"mb": false,
+"icon": 56447,
+"ilvl": 1,
+"cjc": 1,
+"cjc_name": "",
+"src": ""
+},
+{
+"id": 52325,
+"zh": "",
+"ja": "アバランチブロウラー・ボトム",
+"en": "Avalanche Brawler's Bottoms",
+"slot": "腿部",
+"patch": "",
+"lv": 1,
+"dye": 2,
+"mb": false,
+"icon": 57465,
+"ilvl": 1,
+"cjc": 1,
+"cjc_name": "",
+"src": ""
+},
+{
+"id": 52326,
+"zh": "",
+"ja": "アバランチブロウラー・ブーツ",
+"en": "Avalanche Brawler's Boots",
+"slot": "腳部",
+"patch": "",
+"lv": 1,
+"dye": 2,
+"mb": false,
+"icon": 57957,
+"ilvl": 1,
+"cjc": 1,
+"cjc_name": "",
+"src": ""
+},
+{
+"id": 52327,
+"zh": "",
+"ja": "アバランチブロウラー・イヤリング",
+"en": "Avalanche Brawler's Earring",
+"slot": "耳飾",
+"patch": "",
+"lv": 1,
+"dye": 0,
+"mb": false,
+"icon": 55574,
+"ilvl": 1,
+"cjc": 1,
+"cjc_name": "",
+"src": ""
+}
+],
+"cjc_name": "All Classes",
+"zh_ok": false
+},
+{
+"id": "mirage:52588",
+"layer": "mirage",
+"name_zh": "",
+"name_ja": "カーウェン・アタイア",
+"name_en": "Carwen Attire",
+"source": "🎁幻化套裝箱",
+"patch": "",
+"pieces": [
+{
+"id": 51961,
+"zh": "",
+"ja": "カーウェン・バンダナ",
+"en": "Carwen Bandana",
+"slot": "頭部",
+"patch": "",
+"lv": 1,
+"dye": 1,
+"mb": true,
+"icon": 56952,
+"ilvl": 1,
+"cjc": 1,
+"cjc_name": "",
+"src": ""
+},
+{
+"id": 51962,
+"zh": "",
+"ja": "カーウェン・チュニック",
+"en": "Carwen Tunic",
+"slot": "上身",
+"patch": "",
+"lv": 1,
+"dye": 2,
+"mb": true,
+"icon": 57382,
+"ilvl": 1,
+"cjc": 1,
+"cjc_name": "",
+"src": ""
+},
+{
+"id": 51963,
+"zh": "",
+"ja": "カーウェン・アームレット",
+"en": "Carwen Armlets",
+"slot": "手部",
+"patch": "",
+"lv": 1,
+"dye": 2,
+"mb": true,
+"icon": 56457,
+"ilvl": 1,
+"cjc": 1,
+"cjc_name": "",
+"src": ""
+},
+{
+"id": 51964,
+"zh": "",
+"ja": "カーウェン・タイツ",
+"en": "Carwen Tights",
+"slot": "腿部",
+"patch": "",
+"lv": 1,
+"dye": 2,
+"mb": true,
+"icon": 57475,
+"ilvl": 1,
+"cjc": 1,
+"cjc_name": "",
+"src": ""
+},
+{
+"id": 51965,
+"zh": "",
+"ja": "カーウェン・ブーツ",
+"en": "Carwen Boots",
+"slot": "腳部",
+"patch": "",
+"lv": 1,
+"dye": 2,
+"mb": true,
+"icon": 57967,
+"ilvl": 1,
+"cjc": 1,
+"cjc_name": "",
+"src": ""
+}
+],
+"cjc_name": "All Classes",
+"zh_ok": false
+},
+{
+"id": "mirage:52587",
+"layer": "mirage",
+"name_zh": "",
+"name_ja": "トルナ・アタイア",
+"name_en": "Torna Attire",
+"source": "🎁幻化套裝箱",
+"patch": "",
+"pieces": [
+{
+"id": 51957,
+"zh": "",
+"ja": "トルナ・チュニック",
+"en": "Torna Tunic",
+"slot": "上身",
+"patch": "",
+"lv": 1,
+"dye": 2,
+"mb": true,
+"icon": 57383,
+"ilvl": 1,
+"cjc": 1,
+"cjc_name": "",
+"src": ""
+},
+{
+"id": 51958,
+"zh": "",
+"ja": "トルナ・リストレット",
+"en": "Torna Wristlets",
+"slot": "手部",
+"patch": "",
+"lv": 1,
+"dye": 2,
+"mb": true,
+"icon": 56458,
+"ilvl": 1,
+"cjc": 1,
+"cjc_name": "",
+"src": ""
+},
+{
+"id": 51960,
+"zh": "",
+"ja": "トルナ・ブーツ",
+"en": "Torna Boots",
+"slot": "腳部",
+"patch": "",
+"lv": 1,
+"dye": 2,
+"mb": true,
+"icon": 57968,
+"ilvl": 1,
+"cjc": 1,
+"cjc_name": "",
+"src": ""
+}
+],
+"cjc_name": "All Classes",
+"zh_ok": false
+},
+{
+"id": "mirage:52586",
+"layer": "mirage",
+"name_zh": "",
+"name_ja": "トゥール・アタイア",
+"name_en": "Tule Attire",
+"source": "🎁幻化套裝箱",
+"patch": "",
+"pieces": [
+{
+"id": 51952,
+"zh": "",
+"ja": "トゥール・チュニック",
+"en": "Tule Tunic",
+"slot": "上身",
+"patch": "",
+"lv": 1,
+"dye": 2,
+"mb": true,
+"icon": 57381,
+"ilvl": 1,
+"cjc": 1,
+"cjc_name": "",
+"src": ""
+},
+{
+"id": 51953,
+"zh": "",
+"ja": "トゥール・ハーフグローブ",
+"en": "Tule Halfgloves",
+"slot": "手部",
+"patch": "",
+"lv": 1,
+"dye": 2,
+"mb": true,
+"icon": 56456,
+"ilvl": 1,
+"cjc": 1,
+"cjc_name": "",
+"src": ""
+},
+{
+"id": 51954,
+"zh": "",
+"ja": "トゥール・トラウザー",
+"en": "Tule Trousers",
+"slot": "腿部",
+"patch": "",
+"lv": 1,
+"dye": 2,
+"mb": true,
+"icon": 57474,
+"ilvl": 1,
+"cjc": 1,
+"cjc_name": "",
+"src": ""
+},
+{
+"id": 51955,
+"zh": "",
+"ja": "トゥール・ロングブーツ",
+"en": "Tule Longboots",
+"slot": "腳部",
+"patch": "",
+"lv": 1,
+"dye": 2,
+"mb": true,
+"icon": 57966,
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "",
