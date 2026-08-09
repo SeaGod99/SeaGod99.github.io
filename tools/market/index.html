@@ -1308,25 +1308,29 @@
     // 同一層的相同物品合併成一列。不合併的話，一種料被兩個成品（或兩個中間物）用到
     // 就會拆成兩列各報各的數，根本看不出「總共要幾個」。
     // entries: [{ n: 計畫節點, parentName: 上游名稱 }]，回傳合併後的節點陣列。
-    // active＝這一列真的要備（上游沒有任何一層是「直接買」）。false 的列只是參考，
-    // 不計入項數／金額／採買彙總。
-    function mergeLevel(entries, active) {
+    // active＝這一列真的要備（上游沒有任何一層是「直接買」）。false 的列照樣顯示，
+    // 只是不計入項數／金額／採買彙總。
+    // ⚠ active 必須逐個 occurrence 判斷再取聯集，不能整層共用一個旗標：同一種料
+    //    可能在 A 成品底下是真的要備、在 B 成品底下卻因為上層改用買的而只是參考。
+    function mergeLevel(entries) {
       var byId = new Map();
       entries.forEach(function (x) {
         var n = x.n;
         var e = byId.get(n.id);
-        if (!e) { e = { id: n.id, qty: 0, have: 0, need: 0, kids: [], modes: new Set(), parents: new Set() }; byId.set(n.id, e); }
+        if (!e) { e = { id: n.id, qty: 0, have: 0, need: 0, active: false, kids: [], modes: new Set(), parents: new Set() }; byId.set(n.id, e); }
         e.qty += n.qty; e.have += n.have; e.need += n.need;
         e.modes.add(n.mode);
+        if (x.active) e.active = true;
         if (x.parentName) e.parents.add(x.parentName);
-        displayChildren(n).forEach(function (c) { e.kids.push({ n: c, parentName: nameOf(n.id) }); });
+        var childActive = x.active && (n.mode === 'craft' || n.mode === 'na');
+        displayChildren(n).forEach(function (c) { e.kids.push({ n: c, parentName: nameOf(n.id), active: childActive }); });
       });
       return Array.from(byId.values()).map(function (e) {
         // 合併後的狀態由合併後的數量決定：湊滿了就是「已有」，否則沿用各處的決定
         var mode = e.need === 0 ? 'have'
           : e.modes.has('craft') ? 'craft'
           : e.modes.has('buy') ? 'buy' : 'na';
-        var children = mode === 'have' ? [] : mergeLevel(e.kids, active && mode !== 'buy');
+        var children = mode === 'have' ? [] : mergeLevel(e.kids);
         var it = itemById.get(e.id), unit = unitBuy(e.id);
         var buy = (it && it.marketable && unit != null) ? unit * e.need : Infinity;
         var craft = children.length
@@ -1334,7 +1338,7 @@
           : Infinity;
         var cost = mode === 'have' ? 0 : mode === 'buy' ? buy : mode === 'craft' ? craft : Infinity;
         return {
-          id: e.id, qty: e.qty, have: e.have, need: e.need, mode: mode, active: active,
+          id: e.id, qty: e.qty, have: e.have, need: e.need, mode: mode, active: e.active,
           buy: buy, craft: craft, cost: cost, children: children,
           marketable: !!(it && it.marketable), parents: Array.from(e.parents)
         };
@@ -1345,10 +1349,14 @@
       });
     }
     // 成品本身不進計畫（它是目標，不是要備的料），所以從各成品的下一層開始合併攤平。
+    // ⚠ 這裡要用 displayChildren 而非 activeChildren：成品若被判定「直購較省」，
+    //    activeChildren 會回空陣列，整份配方都不進計畫——加了那種成品進清單，
+    //    畫面上會完全看不出有變化（實測「五加木木材」加進去列數 20 → 20）。
     function buildMergedTop(trees) {
       return mergeLevel(trees.reduce(function (a, t) {
-        return a.concat(activeChildren(t).map(function (c) { return { n: c, parentName: nameOf(t.id) }; }));
-      }, []), true);
+        var act = (t.mode === 'craft' || t.mode === 'na');
+        return a.concat(displayChildren(t).map(function (c) { return { n: c, parentName: nameOf(t.id), active: act }; }));
+      }, []));
     }
     // 展開狀態：買與做一視同仁，預設都展開（使用者指定兩者顯示方式要相同）。
     // 優先序：個別點過的覆寫 > 全部展開／收合 > 預設。
