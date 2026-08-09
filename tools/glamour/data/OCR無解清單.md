@@ -3,7 +3,7 @@
 重建時「無解」跳過的裝備名（本機 DB＋7.x 備選庫都對不到）。
 多為 Ollama OCR 亂碼／幻覺；請 Claude 看圖確認正確裝備名後，寫入 ocr_aliases 或 recon_override。
 描述性幻覺（如「パンツ」「猫耳」）看圖後若圖上根本沒有名稱標籤，直接忽略即可。
-共 185 件。
+共 187 件。
 
 - `eb4b62b2-39e3-40f0-bb7d-f767b9b5de47` 踊り子風！　→ 蛯尾耳飾　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1732800094466-e4f779.jpg）
 - `2769b909-c4c6-490f-b5d2-be78190b416b` 鉄扇を使いたいやつ　→ 夜館髪留　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1734889663503-hv60p3.jpg）
@@ -151,3 +151,5 @@
 - `4a52ed83-379d-4993-85e1-9ceb43c051c4` VD装備を使わないアラビアン②　→ サバネアンソルエル　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1782893025226-n1iw.jpg）
 - `b67aca86-3cdb-4d95-b8fd-73dbd8f8e451` 地獄の門番　→ スタイアン・ショース　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1783220054331-83o5vr.jpg）
 - `d134883d-7b71-43a9-b336-26c43766bd6a` 011(118)　→ デコレート・フラワーグラス　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1784949532764-4d7nqt.jpg）
+- `c8ee75e6-0ae6-4a90-a675-75aafb26a659` 遊びに行く用　→ ライトカラーグラス　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1785949498919-ag2fyb.jpg）
+- `5b79896b-f9ce-4d3a-8a71-12f5860c4b11` 無題の投稿　→ メタルアイパッチ:左　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1786180958749-3tu8o.jpg）
