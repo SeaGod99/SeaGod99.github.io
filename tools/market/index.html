@@ -1381,9 +1381,11 @@
     //   all    全部素材＝整份計畫跨層合併（同一物品出現在第 1 層與第 3 層也併成一列）
     //   base   基礎素材＝all 之中沒有配方的（採集／掉落／商店）
     //   mid    中間物  ＝all 之中有配方的（自己做得出來的）
+    // ⚠ 這裡**不能**用 active 過濾。過濾掉「買」節點底下的材料，會讓叫「全部素材」的
+    //    檢視比「階層」還少（實測 16 項變 7 項），使用者只會覺得清單漏東西。
+    //    攤平檢視回答的是「這份配方到底由什麼組成」，跟買／做的建議是兩回事。
     function flatAggregate(list, acc) {
       list.forEach(function (n) {
-        if (!n.active) return;               // 決定買的節點底下不算（買了上層就用不到）
         var e = acc.get(n.id);
         if (!e) { e = { id: n.id, qty: 0, have: 0, need: 0, craftCost: 0, craftInf: false, modes: new Set(), parents: new Set() }; acc.set(n.id, e); }
         e.qty += n.qty; e.have += n.have; e.need += n.need;
@@ -1588,9 +1590,12 @@
         return '<button data-pview="' + v.k + '"' + (planView === v.k ? ' class="active"' : '') + '>' + v.t + '</button>';
       }).join('') + '</span>';
 
-      // 攤平檢視的合計。'all' 同時含中間物與它的材料，直加會重複計算，故不列合計。
+      // 攤平檢視的合計：只在「列與列之間不會互相包含」時才給。
+      //   direct 全是兄弟、base 全是葉子 → 可加總
+      //   all    含中間物與它的材料          → 重複計算
+      //   mid    中間物本身也會互相巢套（氧化鎂砥石 在 黑星石 底下）→ 重複計算
       var viewTotal = '';
-      if (!isTree && planView !== 'all' && rows.length) {
+      if (!isTree && planView !== 'all' && planView !== 'mid' && rows.length) {
         var vs = 0, vna = false;
         rows.forEach(function (r) {
           var c = r.n.mode === 'buy' ? r.n.buy : r.n.mode === 'craft' ? r.n.craft : (r.n.mode === 'have' ? 0 : Infinity);
