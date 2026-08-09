@@ -238,7 +238,20 @@
     .node-card .pr.none { color: var(--text-muted); font-weight: 400; font-size: 0.76rem; }
     .node-card .hqb { display: inline-block; font-size: 0.6rem; font-weight: 700; color: var(--amber); background: rgba(251,191,36,0.15); border: 1px solid rgba(251,191,36,0.3); border-radius: 3px; padding: 0 3px; margin-right: 3px; vertical-align: 1px; }
     .node-card .wd { font-size: 0.66rem; color: var(--blue); margin-top: 1px; }
+    .node-card .pr.done { color: var(--green); font-size: 0.8rem; }
+    .node-card.have { opacity: .6; border-color: rgba(74,222,128,0.45); }
+    .node-card.have .nm { text-decoration: line-through; }
     .node-root-controls { display: flex; align-items: center; justify-content: center; margin-top: 6px; }
+    /* 每張節點卡都能就地標「我有了」——樹上看到哪一層有，就在哪一層勾 */
+    .node-have {
+      display: block; width: 100%; margin-top: 6px; padding: 3px 4px;
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm);
+      color: var(--text-muted); font-size: 0.68rem; font-family: inherit; cursor: pointer;
+      transition: all var(--transition);
+    }
+    .node-have:hover { color: var(--green); border-color: var(--green); }
+    .node-have.on { color: var(--green); background: var(--green-dim); border-color: rgba(74,222,128,0.45); }
+    @media (pointer: coarse) { .node-have { min-height: var(--tap-min, 44px); } }
 
     /* comparison badge */
     .cmp-badge { margin: 14px auto 0; font-size: 0.72rem; line-height: 1.4; border-radius: 6px; padding: 5px 9px; text-align: center; max-width: 210px; }
@@ -307,6 +320,61 @@
     table.listings tr.got-done td { opacity: .5; }
     table.listings tr.got-done td:first-child { text-decoration: line-through; }
     table.listings tr.got-done td.got-cell { opacity: 1; }
+
+    /* 製作計畫：縮排可折疊的樹狀表格。
+       層級靠「縮排＋導引線」表達（不是只靠顏色分區），每列都能勾「已有」。
+       設計依據見 JS 內 flattenPlan 的註解。 */
+    .shop-hint { margin: 0 0 8px; }
+    .plan-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 8px; }
+    .plan-seg button { font-size: 0.78rem; padding: 5px 11px; }
+    .plan-bulk { display: inline-flex; gap: 6px; }
+    .plan-bulk .btn { padding: 3px 9px; font-size: 0.74rem; }
+    .plan-legend { margin-left: auto; font-size: 0.74rem; color: var(--text-muted); }
+    .plan-legend .lg-mid, .plan-legend .lg-base {
+      display: inline-block; width: 11px; height: 11px; border-radius: 3px;
+      margin: 0 5px 0 12px; vertical-align: -1px; border: 1px solid var(--border);
+    }
+    .plan-legend .lg-mid { background: var(--green-dim); border-color: rgba(74,222,128,0.4); }
+    .plan-legend .lg-base { background: var(--bg-card); }
+    /* 綠底＝中間素材（有配方、自己做得出來）；無底色＝基礎素材。
+       這跟「買／做」的建議是兩個不同的軸——中間素材也可能因為市價便宜而建議用買的。 */
+    table.listings tr.plan-mid td { background: var(--green-dim); }
+    table.listings tr.plan-mid:hover td { background: rgba(74,222,128,0.2); }
+    table.listings tr.plan-total th { color: var(--text-dim); font-weight: 600; }
+    table.listings tr.plan-total td { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--gold-light); }
+    .plan-cell { display: flex; align-items: stretch; gap: 6px; min-height: 34px; }
+    .plan-guide { flex: 0 0 16px; border-left: 1px solid var(--border); }
+    .plan-toggle {
+      flex: 0 0 22px; align-self: stretch; background: none; border: none; padding: 0;
+      color: var(--text-secondary); cursor: pointer; font-size: 0.82rem; line-height: 1;
+    }
+    .plan-toggle:hover { color: var(--gold); }
+    .plan-spacer { flex: 0 0 22px; }
+    .plan-ic { width: 24px; height: 24px; border-radius: 4px; background: var(--bg-surface); object-fit: contain; align-self: center; flex-shrink: 0; }
+    .plan-main { display: flex; flex-direction: column; justify-content: center; min-width: 0; }
+    .plan-nm { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .plan-node { cursor: pointer; border-radius: 3px; }
+    .plan-node:hover { color: var(--gold-light); text-decoration: underline; }
+    .plan-node:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+    .plan-of { color: var(--text-muted); font-weight: 400; }
+    .plan-badge { font-size: 0.66rem; font-weight: 700; border-radius: 3px; padding: 0 5px; border: 1px solid; white-space: nowrap; }
+    .plan-badge.buy   { color: var(--blue);  background: var(--blue-dim);  border-color: rgba(79,195,247,0.3); }
+    .plan-badge.craft { color: var(--green); background: var(--green-dim); border-color: rgba(74,222,128,0.3); }
+    .plan-badge.have  { color: var(--green); background: var(--green-dim); border-color: rgba(74,222,128,0.35); }
+    .plan-badge.na    { color: var(--amber); background: rgba(251,191,36,0.12); border-color: rgba(251,191,36,0.3); }
+    table.listings tr.plan-have td { opacity: .55; }
+    table.listings tr.plan-have .plan-nm { text-decoration: line-through; }
+    table.listings tr.plan-have td.got-cell { opacity: 1; }
+    /* 手指操作時把展開鈕與 ✓ 鈕的命中區拉高（只長高，不撐寬——見知識庫 §3.9） */
+    @media (pointer: coarse) {
+      .plan-toggle, .got-all { min-height: var(--tap-min, 44px); }
+    }
+    /* 六欄表在窄螢幕會超出：讓它自己橫捲，而不是撐破版面或把「野營套裝」壓成一字一行。
+       沒有 min-width 的話 table 會硬縮欄寬，wrapper 反而永遠捲不動。 */
+    .shop-scroll { overflow-x: auto; }
+    .shop-scroll table.listings { min-width: 660px; }
+    .shop-scroll table.listings > * > tr > :first-child { min-width: 260px; }
+    .shop-use { font-size: 0.7rem; color: var(--text-muted); margin-top: 2px; }
 
     .craft-actions, .list-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
 
@@ -444,6 +512,7 @@
     var LS_OPTS = 'sgt-market-opts';
     var LS_CVIEW = 'sgt-market-craftview';
     var LS_GOT = 'sgt-market-got';
+    var LS_PVIEW = 'sgt-market-planview';
     var PAGE_SIZE = 60;                // 每頁筆數（結果總數不設上限）
     var MAX_DEPTH = 12;
     var MAX_CRAFT_ITEMS = 10;          // 製作清單至多 10 件，避免合併樹狀圖過大
@@ -463,8 +532,12 @@
     var excludeCrystals = true;        // 省略水晶（不列入樹與成本），預設開
     var hqProduct = true;              // 可製作成品以 HQ 市價比較，預設開
     var craftView = 'simple';          // 製作清單子分頁：simple（簡易清單）/ tree（樹狀分析）
-    var gotMap = {};                   // 總採買清單已收集數量：itemId -> 已收集數（清空清單時一併重設）
-    var shopState = [];                // 最近一次彙總的採買列 [{id, qty, unit}]，供收集進度即時重算
+    var gotMap = {};                   // 「手上已有」的數量：itemId -> 已有數。**會參與計畫計算**：
+                                       // 標記已有的節點整個子樹會從計畫消失（清空清單時一併重設）
+    var planIndex = new Map();         // 目前計畫每個物品的合計 {qty, need}，供「✓ 我有了」一次補滿
+    var planOpen = new Map();          // 計畫清單展開狀態的個別覆寫：path -> 是否展開（不持久化）
+    var planAll = null;                // 全部展開／收合：true／false／null＝各自照預設
+    var planView = 'tree';             // 製作計畫檢視：tree 階層／direct 直接材料／all 全部素材／base 基礎素材／mid 中間物
     var craftToken = 0;                // 製作清單渲染競態守門（切換檢視時放棄舊的非同步渲染）
 
     // ---- 工具 ----
@@ -509,6 +582,7 @@
       try { var o = JSON.parse(localStorage.getItem(LS_OPTS) || '{}'); if (o && typeof o === 'object') { if (o.excludeCrystals != null) excludeCrystals = !!o.excludeCrystals; if (o.hqProduct != null) hqProduct = !!o.hqProduct; } } catch (e) {}
       try { var cv = localStorage.getItem(LS_CVIEW); if (cv === 'simple' || cv === 'tree') craftView = cv; } catch (e) {}
       try { gotMap = JSON.parse(localStorage.getItem(LS_GOT) || '{}'); } catch (e) { gotMap = {}; }
+      try { var pv = localStorage.getItem(LS_PVIEW); if (pv && ['tree', 'direct', 'all', 'base', 'mid'].indexOf(pv) >= 0) planView = pv; } catch (e) {}
       if (!gotMap || typeof gotMap !== 'object' || Array.isArray(gotMap)) gotMap = {};
       if (!Array.isArray(lists)) lists = [];
       if (!Array.isArray(craft)) craft = [];
@@ -519,6 +593,7 @@
     function saveOpts() { try { localStorage.setItem(LS_OPTS, JSON.stringify({ excludeCrystals: excludeCrystals, hqProduct: hqProduct })); } catch (e) {} }
     function saveCview() { try { localStorage.setItem(LS_CVIEW, craftView); } catch (e) {} }
     function saveGot() { try { localStorage.setItem(LS_GOT, JSON.stringify(gotMap)); } catch (e) {} }
+    function savePview() { try { localStorage.setItem(LS_PVIEW, planView); } catch (e) {} }
     function gotOf(id) { var v = Number(gotMap[id]); return isFinite(v) && v > 0 ? Math.floor(v) : 0; }
 
     function isCrystal(id) { var it = itemById.get(id); return !!(it && it.category === '水晶'); }
@@ -1010,26 +1085,64 @@
       return usedHq(id) ? p.hqWorld : p.nqWorld;
     }
 
+    // 手上已有的存量池（Map<id, 還可分配的數量>），由 gotMap 建。
+    function buildStockPool() {
+      var m = new Map();
+      Object.keys(gotMap).forEach(function (k) {
+        var v = Math.floor(Number(gotMap[k]));
+        if (isFinite(v) && v > 0) m.set(Number(k), v);
+      });
+      return m;
+    }
+
     // 買 vs 做最佳化（省略水晶時材料不計入樹與成本）
-    function optimal(id, qty, seen, depth) {
+    //
+    // pool＝「手上已有」的存量，深度優先邊走邊扣。需求被存量蓋滿的節點收斂成
+    // mode='have' 且**不再往下展開**——這就是「我已經有第一層材料，就不該再叫我去湊
+    // 第二層」的實作。存量是全域的（同一物品出現在多處會依走訪順序先到先扣）。
+    //
+    // ⚠ 子節點要在 pool 的**複本**上試算：決定「直購」時整個子樹會被丟棄，
+    //    若直接在本體上扣，那批存量就會被憑空吃掉。只有真的採自製才寫回。
+    function optimal(id, qty, seen, depth, pool) {
       var it = itemById.get(id);
+      var stock = pool.get(id) || 0;
+      var have = Math.min(stock, qty);
+      if (have > 0) pool.set(id, stock - have);
+      var need = qty - have;
+      var base = { id: id, qty: qty, have: have, need: need, marketable: !!(it && it.marketable) };
+      if (need === 0) {
+        return Object.assign(base, { leaf: true, mode: 'have', buy: 0, craft: Infinity, cost: 0, children: [] });
+      }
       var unit = unitBuy(id);
-      var buy = (it && it.marketable && unit != null) ? unit * qty : Infinity;
+      var buy = (it && it.marketable && unit != null) ? unit * need : Infinity;
       var r = recipesByItem.get(id);
       if (!r || (seen && seen.has(id)) || depth >= MAX_DEPTH) {
-        return { id: id, qty: qty, leaf: true, mode: buy === Infinity ? 'na' : 'buy', buy: buy, craft: Infinity, cost: buy, children: [], marketable: !!(it && it.marketable) };
+        return Object.assign(base, { leaf: true, mode: buy === Infinity ? 'na' : 'buy', buy: buy, craft: Infinity, cost: buy, children: [] });
       }
       var s2 = new Set(seen); s2.add(id);
-      var batches = Math.ceil(qty / (r.yield || 1));
+      var batches = Math.ceil(need / (r.yield || 1));
       var ings = r.ingredients.filter(function (g) { return !(excludeCrystals && isCrystal(g.itemId)); });
-      var children = ings.map(function (ing) { return optimal(ing.itemId, batches * ing.qty, s2, depth + 1); });
+      var sub = new Map(pool);
+      var children = ings.map(function (ing) { return optimal(ing.itemId, batches * ing.qty, s2, depth + 1, sub); });
       var canCraft = children.every(function (c) { return c.cost !== Infinity; });
       var craftCost = canCraft ? children.reduce(function (a, c) { return a + c.cost; }, 0) : Infinity;
       var mode, cost;
       if (buy === Infinity && craftCost === Infinity) { mode = 'na'; cost = Infinity; }
       else if (buy <= craftCost) { mode = 'buy'; cost = buy; }
       else { mode = 'craft'; cost = craftCost; }
-      return { id: id, qty: qty, leaf: false, mode: mode, buy: buy, craft: craftCost, cost: cost, yield: r.yield, children: children, marketable: !!(it && it.marketable) };
+      if (mode !== 'buy') { pool.clear(); sub.forEach(function (v, k) { pool.set(k, v); }); }   // 子樹真的會做，才認列它扣掉的存量
+      return Object.assign(base, { leaf: false, mode: mode, buy: buy, craft: craftCost, cost: cost, yield: r.yield, children: children });
+    }
+
+    // 目前計畫裡每個物品的**全計畫**合計需求：供「✓ 我有了」一次補滿所有分支，
+    // 也用來提示「這一列只是其中一層，全部要幾個」。只走真的會做的分支
+    // （決定直接買的節點，它的材料不在計畫裡，算進來會多補存量）。
+    function indexPlan(n, idx) {
+      var e = idx.get(n.id);
+      if (!e) { e = { qty: 0, need: 0 }; idx.set(n.id, e); }
+      e.qty += n.qty; e.need += n.need;
+      activeChildren(n).forEach(function (c) { indexPlan(c, idx); });
+      return idx;
     }
 
     // ── 節點圖渲染 ──
@@ -1037,11 +1150,17 @@
       var it = itemById.get(n.id);
       var nm = it ? it.name : ('#' + n.id);
       var craftable = recipesByItem.has(n.id);
-      var cls = isRoot ? 'root' : (craftable ? 'prod' : 'mat');
+      var cls = (isRoot ? 'root' : (craftable ? 'prod' : 'mat')) + (n.mode === 'have' ? ' have' : '');
       var unit = unitBuy(n.id), hq = usedHq(n.id), world = buyWorld(n.id);
-      var pr = unit == null
-        ? '<div class="pr none">無販售</div>'
-        : ('<div class="pr">' + (hq ? '<span class="hqb">HQ</span>' : '') + fmt(unit) + '</div>' + (isDcMode() && world ? '<div class="wd">' + esc(world) + '</div>' : ''));
+      var pr = n.mode === 'have'
+        ? '<div class="pr done">✅ 已有</div>'
+        : unit == null
+          ? '<div class="pr none">無販售</div>'
+          : ('<div class="pr">' + (hq ? '<span class="hqb">HQ</span>' : '') + fmt(unit) + '</div>' + (isDcMode() && world ? '<div class="wd">' + esc(world) + '</div>' : ''));
+      // 每張卡都能直接標「我有了」——在樹上就地宣告，不必再回清單找
+      var nTot = planIndex.get(n.id);
+      var haveBtn = '<button class="node-have' + (n.need === 0 ? ' on' : '') + '" data-have="' + n.id + '" data-need="' + (nTot && nTot.need > 0 ? nTot.need : n.need) + '" title="標記為已有／取消">' +
+        (n.need === 0 ? '✓ 已有' : (n.have > 0 ? '已有 ' + n.have + '/' + n.qty : '＋ 我有了')) + '</button>';
       var qtyBadge = isRoot ? '' : '<span class="node-qty">' + n.qty + '</span>';
       var del = isRoot ? '<button class="node-del" data-act="del" data-id="' + n.id + '" title="從清單移除">✕</button>' : '';
       var ctrl = isRoot
@@ -1052,7 +1171,7 @@
         qtyBadge + del +
         '<button class="node-copy" data-copy="' + esc(nm) + '" title="複製名稱">⧉</button>' +
         '<img class="ic" src="' + iconUrl(it) + '" alt="" loading="lazy" onerror="this.style.visibility=\'hidden\'">' +
-        '<div class="nm" title="' + esc(nm) + '">' + esc(nm) + '</div>' + pr + ctrl +
+        '<div class="nm" title="' + esc(nm) + '">' + esc(nm) + '</div>' + pr + ctrl + haveBtn +
         '</div>';
     }
 
@@ -1113,12 +1232,18 @@
     }
 
     // 樹狀分析用：載入配方 + 查整棵樹所有材料價，回傳各需求物品的最省樹
+    // 價格的 id 集合刻意**不看存量**（用全展開），這樣勾「已有」重算時
+    // 不會因為集合變小而觸發新的查詢，也不會在取消勾選時缺價。
     async function prepareCraftData() {
       await ensureRecipes();
       var idset = new Set();
       craft.forEach(function (c) { collectIds(c.itemId, idset, 0); });
       await fetchPriceMap(Array.from(idset));
-      return craft.map(function (c) { return optimal(c.itemId, c.qty, new Set(), 0); });
+      var pool = buildStockPool();
+      var trees = craft.map(function (c) { return optimal(c.itemId, c.qty, new Set(), 0, pool); });
+      planIndex = new Map();
+      trees.forEach(function (t) { indexPlan(t, planIndex); });
+      return trees;
     }
 
     // 簡易清單用：只查成品＋第一層直接原料的價格（不遞迴）
@@ -1156,46 +1281,203 @@
         '</div>';
     }
 
-    // 彙總採買清單（mode=buy 的節點）
-    function collectShopping(n, acc) {
-      if (n.mode === 'buy') { acc.set(n.id, (acc.get(n.id) || 0) + n.qty); return; }
-      if (n.mode === 'na') return;
-      (n.children || []).forEach(function (c) { collectShopping(c, acc); });
+    // ── 製作計畫清單（縮排可折疊的樹狀表格）──────────────────────────────
+    //
+    // 為什麼不是「攤平成一張表、再依層級分組」：每個節點各自比買／做，樹本來就不會
+    // 齊頭停在同一層，攤平後「第 1 層原料」與「第 3 層原料」變成平行的兩堆，看不出
+    // 誰是誰的材料；更糟的是**計畫中要自己做的中間物根本不會出現**（它不是 buy 節點），
+    // 於是「我已經有第一層材料了」在畫面上無處可表達，只能被迫去勾第二層。
+    //
+    // 改成保留樹的形狀：一列一個節點、縮排＋導引線表示上下層、每列都能勾「已有」。
+    // 勾了就 mode='have'、整個子樹從計畫消失（見 optimal 的 pool）。
+    // 設計依據（ui-ux-pro-max）：階層 >3 層不適用 treemap／sunburst（無障礙 C），
+    // 應以可折疊縮排表格為主檢視、圖形樹為輔；層級要靠縮排與間距表達而非只靠顏色。
+    // 計畫「實際會做」的分支：買到就停（含做不出來的 na——底下買得到的仍要列）。
+    // 項數、金額、採買彙總、存量分配都只認這個，否則會叫人去買用不到的東西。
+    function activeChildren(n) {
+      return (n.mode === 'craft' || n.mode === 'na') ? (n.children || []) : [];
+    }
+    // 畫面上「可以展開來看」的下層：決定買的節點也照樣列出它的材料（預設收起）。
+    // 這不只是資訊——手上若已經有那些料，標記已有後自製成本會降，
+    // 那一列就會自己從「買」翻成「做」。已標記為手上有的節點例外（都有了，底下不重要）。
+    function displayChildren(n) {
+      return n.mode === 'have' ? [] : (n.children || []);
+    }
+    function nameOf(id) { var it = itemById.get(id); return it ? it.name : ('#' + id); }
+
+    // 同一層的相同物品合併成一列。不合併的話，一種料被兩個成品（或兩個中間物）用到
+    // 就會拆成兩列各報各的數，根本看不出「總共要幾個」。
+    // entries: [{ n: 計畫節點, parentName: 上游名稱 }]，回傳合併後的節點陣列。
+    // active＝這一列真的要備（上游沒有任何一層是「直接買」）。false 的列只是參考，
+    // 不計入項數／金額／採買彙總。
+    function mergeLevel(entries, active) {
+      var byId = new Map();
+      entries.forEach(function (x) {
+        var n = x.n;
+        var e = byId.get(n.id);
+        if (!e) { e = { id: n.id, qty: 0, have: 0, need: 0, kids: [], modes: new Set(), parents: new Set() }; byId.set(n.id, e); }
+        e.qty += n.qty; e.have += n.have; e.need += n.need;
+        e.modes.add(n.mode);
+        if (x.parentName) e.parents.add(x.parentName);
+        displayChildren(n).forEach(function (c) { e.kids.push({ n: c, parentName: nameOf(n.id) }); });
+      });
+      return Array.from(byId.values()).map(function (e) {
+        // 合併後的狀態由合併後的數量決定：湊滿了就是「已有」，否則沿用各處的決定
+        var mode = e.need === 0 ? 'have'
+          : e.modes.has('craft') ? 'craft'
+          : e.modes.has('buy') ? 'buy' : 'na';
+        var children = mode === 'have' ? [] : mergeLevel(e.kids, active && mode !== 'buy');
+        var it = itemById.get(e.id), unit = unitBuy(e.id);
+        var buy = (it && it.marketable && unit != null) ? unit * e.need : Infinity;
+        var craft = children.length
+          ? children.reduce(function (a, c) { return a + c.cost; }, 0)
+          : Infinity;
+        var cost = mode === 'have' ? 0 : mode === 'buy' ? buy : mode === 'craft' ? craft : Infinity;
+        return {
+          id: e.id, qty: e.qty, have: e.have, need: e.need, mode: mode, active: active,
+          buy: buy, craft: craft, cost: cost, children: children,
+          marketable: !!(it && it.marketable), parents: Array.from(e.parents)
+        };
+      }).sort(function (a, b) {
+        var an = a.cost === Infinity, bn = b.cost === Infinity;   // 取不到的排最後
+        if (an !== bn) return an ? 1 : -1;
+        return b.cost - a.cost;
+      });
+    }
+    // 成品本身不進計畫（它是目標，不是要備的料），所以從各成品的下一層開始合併攤平。
+    function buildMergedTop(trees) {
+      return mergeLevel(trees.reduce(function (a, t) {
+        return a.concat(activeChildren(t).map(function (c) { return { n: c, parentName: nameOf(t.id) }; }));
+      }, []), true);
+    }
+    // 展開狀態：買與做一視同仁，預設都展開（使用者指定兩者顯示方式要相同）。
+    // 優先序：個別點過的覆寫 > 全部展開／收合 > 預設。
+    // ⚠ 全部展開不能只套用在「當下畫面上有的列」——收合狀態下深層的列還沒渲染出來，
+    //    那樣按一次只會展開一層。所以用一個全域旗標，讓沒被個別覆寫的節點通通跟著走。
+    function planIsOpen(path) {
+      if (planOpen.has(path)) return planOpen.get(path);
+      if (planAll !== null) return planAll;
+      return true;
+    }
+    function flattenPlan(n, depth, parentPath, out) {
+      var path = parentPath + '/' + n.id;
+      var kids = n.children || [];
+      var open = planIsOpen(path);
+      out.push({ n: n, depth: depth, path: path, hasKids: kids.length > 0, open: open });
+      if (!open) return out;
+      kids.forEach(function (c) { flattenPlan(c, depth + 1, path, out); });
+      return out;
+    }
+    function buildPlanRows(mergedTop) {
+      var out = [];
+      mergedTop.forEach(function (n) { flattenPlan(n, 0, '', out); });
+      return out;
     }
 
-    // ---- 已收集統計（總採買清單） ----
-    function gotStats() {
-      var s = { total: shopState.length, done: 0, needSum: 0, gotSum: 0, remainCost: 0, anyNa: false };
-      shopState.forEach(function (r) {
-        var g = Math.min(gotOf(r.id), r.qty);
-        if (g >= r.qty) s.done++;
-        s.needSum += r.qty; s.gotSum += g;
-        if (r.unit != null) s.remainCost += r.unit * (r.qty - g);
-        else if (r.qty - g > 0) s.anyNa = true;
+    // ── 多面向查閱：同一份計畫的四種攤平檢視 ──────────────────────────────
+    // 階層看得出「誰是誰的材料」，但要「總共要幾個某某」得跨層加總；反過來攤平看得到
+    // 總數卻看不出關係。兩種都要，所以做成可切換：
+    //   direct 直接材料＝只列成品的第一層（不往下拆）
+    //   all    全部素材＝整份計畫跨層合併（同一物品出現在第 1 層與第 3 層也併成一列）
+    //   base   基礎素材＝all 之中沒有配方的（採集／掉落／商店）
+    //   mid    中間物  ＝all 之中有配方的（自己做得出來的）
+    function flatAggregate(list, acc) {
+      list.forEach(function (n) {
+        if (!n.active) return;               // 決定買的節點底下不算（買了上層就用不到）
+        var e = acc.get(n.id);
+        if (!e) { e = { id: n.id, qty: 0, have: 0, need: 0, craftCost: 0, craftInf: false, modes: new Set(), parents: new Set() }; acc.set(n.id, e); }
+        e.qty += n.qty; e.have += n.have; e.need += n.need;
+        e.modes.add(n.mode);
+        if (n.mode === 'craft') { if (n.craft === Infinity) e.craftInf = true; else e.craftCost += n.craft; }
+        (n.parents || []).forEach(function (p) { e.parents.add(p); });
+        flatAggregate(n.children || [], acc);
       });
+      return acc;
+    }
+    function aggToNode(e) {
+      var mode = e.need === 0 ? 'have'
+        : e.modes.has('craft') ? 'craft'
+        : e.modes.has('buy') ? 'buy' : 'na';
+      var it = itemById.get(e.id), unit = unitBuy(e.id);
+      var buy = (it && it.marketable && unit != null) ? unit * e.need : Infinity;
+      var craft = (e.craftInf || !e.craftCost) ? Infinity : e.craftCost;
+      return {
+        id: e.id, qty: e.qty, have: e.have, need: e.need, mode: mode, active: true,
+        buy: buy, craft: craft, children: [], parents: Array.from(e.parents),
+        cost: mode === 'have' ? 0 : mode === 'buy' ? buy : mode === 'craft' ? craft : Infinity,
+        marketable: !!(it && it.marketable)
+      };
+    }
+    function byCostDesc(a, b) {
+      var an = a.cost === Infinity, bn = b.cost === Infinity;
+      if (an !== bn) return an ? 1 : -1;
+      return b.cost - a.cost;
+    }
+    // 回傳 planRowHtml 吃的列（扁平檢視沒有縮排與展開鈕）
+    function buildFlatRows(mergedTop, view) {
+      if (view === 'direct') {
+        return mergedTop.slice().sort(byCostDesc).map(function (n) {
+          return { n: n, depth: 0, path: '', hasKids: false, open: true };
+        });
+      }
+      var nodes = Array.from(flatAggregate(mergedTop, new Map()).values()).map(aggToNode);
+      if (view === 'base') nodes = nodes.filter(function (n) { return !recipesByItem.has(n.id); });
+      else if (view === 'mid') nodes = nodes.filter(function (n) { return recipesByItem.has(n.id); });
+      return nodes.sort(byCostDesc).map(function (n) {
+        return { n: n, depth: 0, path: '', hasKids: false, open: true };
+      });
+    }
+
+    var PLAN_VIEWS = [
+      { k: 'tree',   t: '階層' },
+      { k: 'direct', t: '直接材料' },
+      { k: 'all',    t: '全部素材' },
+      { k: 'base',   t: '基礎素材' },
+      { k: 'mid',    t: '中間物' }
+    ];
+
+    // 一列的狀態徽章（同時是「這層要買還是要做」的答案）
+    function planBadge(n) {
+      if (n.mode === 'have') return '<span class="plan-badge have">✅ 已有</span>';
+      if (n.mode === 'buy') return '<span class="plan-badge buy">🛒 買</span>';
+      if (n.mode === 'craft') return '<span class="plan-badge craft">🔨 做</span>';
+      return '<span class="plan-badge na">⚠ 取不到</span>';
+    }
+
+    // ---- 計畫統計（進度列）----
+    // 項數走整份計畫而不是「畫面上看得到的列」，否則收合一段進度數字就跟著跳動。
+    // 金額用各成品的最省成本合計（含直接買成品的那筆，那也是要花的錢）。
+    function planStats(trees, mergedTop) {
+      var s = { total: 0, done: 0, remainCost: 0, anyNa: false };
+      // 金額直接加總所有「要買」的節點（含直接買的成品本身）。
+      // 不用各成品的 cost 合計——只要樹裡有一件取不到，那個 cost 就是 Infinity，
+      // 整份預算會塌成 0，畫面上就會變成「一項無市價 → 全部都無市價」。
+      trees.forEach(function (t) {                       // 成品層：只有「直接買」的才是花費
+        if (t.mode === 'buy') s.remainCost += t.buy;
+        else if (t.mode === 'na' && !(t.children || []).length) s.anyNa = true;
+      });
+      (function walk(list) {                             // 材料層走合併後的計畫，項數才跟畫面一致
+        list.forEach(function (n) {
+          if (!n.active) return;                         // 「買」的節點底下只是參考，不計入
+          s.total++;
+          if (n.mode === 'have') { s.done++; return; }
+          if (n.mode === 'buy') { s.remainCost += n.buy; return; }
+          if (n.mode === 'na' && !n.children.length) { s.anyNa = true; return; }
+          walk(n.children);
+        });
+      })(mergedTop);
       return s;
     }
-    function gotProgressInnerHtml(s) {
-      var pct = s.needSum ? Math.round(100 * s.gotSum / s.needSum) : 0;
+    function planProgressInnerHtml(s) {
+      var pct = s.total ? Math.round(100 * s.done / s.total) : 0;
       var allDone = s.total > 0 && s.done === s.total;
-      var right = allDone ? '✅ 全部收齊' :
-        ('剩餘採買 ' + fmt(s.remainCost) + ' G' + (s.anyNa ? '（部分無市價）' : ''));
-      return '<div class="got-line"><span>📦 已收集 <b>' + s.done + '</b> / ' + s.total + ' 項 · 數量 ' + fmt(s.gotSum) + ' / ' + fmt(s.needSum) + '</span>' +
+      // 全部都查不到市價時 remainCost 會是 0，直接印「還要花 0 G」會被讀成「不用花錢」
+      var right = allDone ? '✅ 全部備齊'
+        : s.remainCost > 0 ? ('還要採買 ' + fmt(s.remainCost) + ' G' + (s.anyNa ? '（另有項目無市價）' : ''))
+        : s.anyNa ? '剩餘項目皆無市價' : '還要採買 0 G';
+      return '<div class="got-line"><span>📦 已備齊 <b>' + s.done + '</b> / ' + s.total + ' 項</span>' +
         '<span>' + right + '</span></div>' +
         '<div class="got-bar"><div class="got-bar-fill' + (allDone ? ' full' : '') + '" style="width:' + pct + '%"></div></div>';
-    }
-    // 收集數量變更時就地更新（進度列＋表格列＋採買路線），不重新渲染整棵樹
-    function updateGotUI() {
-      var p = $('#gotProgress');
-      if (p) p.innerHTML = gotProgressInnerHtml(gotStats());
-      shopState.forEach(function (r) {
-        var done = Math.min(gotOf(r.id), r.qty) >= r.qty;
-        var tr = $('[data-gotrow="' + r.id + '"]');
-        if (tr) tr.classList.toggle('got-done', done);
-        Array.prototype.forEach.call(document.querySelectorAll('[data-gotline="' + r.id + '"]'), function (el) {
-          el.classList.toggle('got-done', done);
-        });
-      });
     }
 
     function renderCraft() {
@@ -1203,24 +1485,32 @@
       var sub = craftSubtabsHtml();
       if (!craft.length) {
         body.innerHTML = sub + '<div class="empty-state">製作清單是空的。<br>到「物品查詢」搜尋物品，開視窗按「＋ 加入」即可開始試算。</div>';
-        return;
+        return Promise.resolve();
       }
-      if (craftView === 'simple') renderCraftSimple(body, sub);
-      else renderCraftTree(body, sub);
+      return craftView === 'simple' ? renderCraftSimple(body, sub) : renderCraftTree(body, sub);
+    }
+    // 勾「已有」會改變計畫（子樹整段消失），必須整區重算重繪；
+    // 依 UX 準則 back-behavior：互動後要保留捲動位置，否則畫面會跳掉。
+    function rerenderKeepScroll() {
+      var y = window.scrollY;
+      Promise.resolve(renderCraft()).then(function () { window.scrollTo(0, y); });
     }
 
-    // 兩個檢視共用：成本統計（智慧最省／全買成品／可省）
+    // 兩個檢視共用：成本統計（智慧最省／全買成品／可省）。數字都已扣掉「手上已有」。
     function craftTotals(trees) {
       var grandOptimal = trees.reduce(function (a, t) { return a + (t.cost === Infinity ? 0 : t.cost); }, 0);
       var anyNa = trees.some(function (t) { return t.cost === Infinity; });
       var allNa = trees.every(function (t) { return t.cost === Infinity; });
-      // 全買成品的成本（供比較）
+      // 全買成品的成本（供比較）——同樣扣掉已有的成品，兩邊才是同一個基準
       var buyAll = 0, buyAllOk = true;
-      craft.forEach(function (c) {
-        var it = itemById.get(c.itemId), u = unitBuy(c.itemId);
-        if (it && it.marketable && u != null) buyAll += u * c.qty; else buyAllOk = false;
+      trees.forEach(function (t) {
+        if (t.need === 0) return;
+        var it = itemById.get(t.id), u = unitBuy(t.id);
+        if (it && it.marketable && u != null) buyAll += u * t.need; else buyAllOk = false;
       });
-      return { grandOptimal: grandOptimal, anyNa: anyNa, allNa: allNa, buyAll: buyAll, buyAllOk: buyAllOk };
+      var hasStock = trees.some(function (t) { return t.have > 0; }) ||
+        Array.from(planIndex.values()).some(function (e) { return e.qty > e.need; });
+      return { grandOptimal: grandOptimal, anyNa: anyNa, allNa: allNa, buyAll: buyAll, buyAllOk: buyAllOk, hasStock: hasStock };
     }
 
     function craftActionsHtml() {
@@ -1230,60 +1520,151 @@
         '</div>';
     }
 
-    // 兩個檢視共用：成本統計卡＋總採買清單（含已收集進度）＋最適採買路線
+    // 兩個檢視共用：成本統計卡＋製作計畫（縮排樹狀、可勾已有）＋採買彙總（依伺服器）
     function craftSummaryHtml(trees, T) {
-      // 採買彙總
-      var acc = new Map();
-      trees.forEach(function (t) { collectShopping(t, acc); });
-      var shopRows = Array.from(acc.entries()).map(function (e) {
-        var it = itemById.get(e[0]), u = unitBuy(e[0]);
-        var sub = (u != null) ? u * e[1] : null;
-        return { name: it ? it.name : '#' + e[0], icon: iconUrl(it), qty: e[1], unit: u, sub: sub, id: e[0], world: buyWorld(e[0]), hq: usedHq(e[0]), got: Math.min(gotOf(e[0]), e[1]) };
-      }).sort(function (a, b) { return (b.sub || 0) - (a.sub || 0); });
-      shopState = shopRows.map(function (r) { return { id: r.id, qty: r.qty, unit: r.unit }; });
-
+      var mergedTop = buildMergedTop(trees);
+      var isTree = planView === 'tree';
+      var rows = isTree ? buildPlanRows(mergedTop) : buildFlatRows(mergedTop, planView);
       var dc = isDcMode();
-      var shopHtml = shopRows.length ? ('<div class="got-progress" id="gotProgress">' + gotProgressInnerHtml(gotStats()) + '</div>' +
-        '<table class="listings"><thead><tr><th>原料</th><th class="num">數量</th><th class="num">已收集</th>' + (dc ? '<th>最便宜伺服器</th>' : '') + '<th class="num">單價</th><th class="num">小計</th></tr></thead><tbody>' +
-        shopRows.map(function (r) {
-          return '<tr data-gotrow="' + r.id + '"' + (r.got >= r.qty ? ' class="got-done"' : '') + '><td><img class="item-icon" style="width:20px;height:20px;vertical-align:middle;margin-right:6px" src="' + r.icon + '" loading="lazy" onerror="this.style.visibility=\'hidden\'">' + esc(r.name) + '</td>' +
-            '<td class="num">' + r.qty + '</td>' +
-            '<td class="num got-cell"><input type="number" class="got-input" data-got="' + r.id + '" min="0" max="' + r.qty + '" value="' + r.got + '" aria-label="' + esc(r.name) + ' 已收集數量"><button class="got-all" data-gotall="' + r.id + '" title="一鍵收齊／再按一次重設為 0">✓</button></td>' +
-            (dc ? '<td>' + (r.world ? '<span class="tag world">' + esc(r.world) + '</span>' : '—') + (r.hq ? ' <span class="hqb">HQ</span>' : '') + '</td>' : '') +
-            '<td class="num">' + (r.unit != null ? fmt(r.unit) : '—') + '</td>' +
-            '<td class="num">' + (r.sub != null ? fmt(r.sub) : '—') + '</td></tr>';
-        }).join('') + '</tbody></table>') : '<div class="note">沒有需要採買的原料。</div>';
+      var cols = dc ? 6 : 5;
 
-      // 最適採買路線：把每項材料依「最便宜的伺服器」分組（僅全DC 模式有意義，
-      // 因為每個材料／子材料可能在不同伺服器最便宜）
+      function planRowHtml(r) {
+        var n = r.n, it = itemById.get(n.id);
+        var nm = it ? it.name : '#' + n.id;
+        var stock = gotOf(n.id);
+        var total = n.active ? planIndex.get(n.id) : null;
+        var open = r.open;
+        var toggle = r.hasKids
+          ? '<button class="plan-toggle" data-plan-toggle="' + esc(r.path) + '" aria-expanded="' + open + '" aria-label="' + (open ? '收合' : '展開') + esc(nm) + '的材料">' + (open ? '▾' : '▸') + '</button>'
+          : '<span class="plan-spacer" aria-hidden="true"></span>';
+        var guides = '';
+        for (var i = 0; i < r.depth; i++) guides += '<span class="plan-guide" aria-hidden="true"></span>';
+
+        // 副標：這一列是誰的材料（縮排看得出深淺，文字補上到底掛在哪些項目下；
+        // 合併後可能同時供應多個上游，列出來才知道這個總數是怎麼來的）
+        var ps = n.parents || [];
+        var sub = esc(ps.slice(0, 3).join('、') + (ps.length > 3 ? ' 等 ' + ps.length + ' 項' : '')) + ' 的材料';
+        // 買與做用同一種句型（只是方向相反），欄位也一樣填——兩者顯示方式一致
+        if (n.mode === 'craft') sub += n.buy === Infinity ? ' · 自製（市場買不到成品）' : ' · 自製較省（直接買要 ' + fmt(n.buy) + ' G）';
+        else if (n.mode === 'buy' && r.hasKids) sub += n.craft === Infinity ? ' · 直購（材料湊不齊）' : ' · 直購較省（自己做要 ' + fmt(n.craft) + ' G）';
+        else if (n.mode === 'have') sub += ' · 已標記為手上有，底下的材料不用再湊';
+        else if (n.mode === 'na' && r.hasKids) sub += ' · 這條路線缺料，做不出來';
+        // 同一種料若還出現在別的層（同層才合併得起來），把全計畫總數講明，
+        // 否則使用者看到 270 卻要買 297，會以為清單漏了
+        if (total && total.need > n.need) sub += ' · <b>全計畫共需 ' + total.need + '</b>（另 ' + (total.need - n.need) + ' 個在其他層）';
+
+        var qtyCell = n.mode === 'have' ? '0' : ('<b>' + n.need + '</b>' + (n.have > 0 ? ' <span class="plan-of">/ ' + n.qty + '</span>' : ''));
+        // 「做」的列也填單價／小計（自製的單位成本與總成本），欄位不再一邊有數字一邊空著
+        var unitVal = n.mode === 'buy' ? unitBuy(n.id)
+          : (n.mode === 'craft' && n.need > 0 && n.craft !== Infinity) ? n.craft / n.need
+          : null;
+        var totalVal = n.mode === 'buy' ? n.buy : n.mode === 'craft' ? n.craft : null;
+        var priceCell = unitVal != null ? fmt(unitVal) : '—';
+        var subCell = (totalVal != null && totalVal !== Infinity) ? fmt(totalVal) : '—';
+        var world = n.mode === 'buy' ? buyWorld(n.id) : null;
+        // ✓ 要補的量：計畫內的列補到全計畫都夠，其餘只補它自己這一格
+        var fillNeed = total && total.need > 0 ? total.need : n.need;
+
+        // 綠底＝中間素材（自己做得出來），無底色＝基礎素材。與買／做的建議是兩件事：
+        // 一個中間素材也可能因為市價便宜而被建議「買」。
+        return '<tr class="plan-row' + (n.mode === 'have' ? ' plan-have' : '') +
+          (recipesByItem.has(n.id) ? ' plan-mid' : '') + '" data-depth="' + r.depth + '">' +
+          '<td><div class="plan-cell">' + guides + toggle +
+            '<img class="plan-ic" src="' + iconUrl(it) + '" alt="" loading="lazy" onerror="this.style.visibility=\'hidden\'">' +
+            '<div class="plan-main"><div class="plan-nm"><span class="plan-node" data-node="' + n.id + '" role="button" tabindex="0" title="查看即時價格與上下游配方">' + esc(nm) + '</span>' + planBadge(n) + '</div>' +
+            '<div class="shop-use">' + sub + '</div></div></div></td>' +
+          '<td class="num">' + qtyCell + '</td>' +
+          '<td class="num got-cell"><input type="number" class="got-input" data-got="' + n.id + '" min="0" max="' + (total ? total.qty : n.qty) + '" value="' + stock + '" aria-label="' + esc(nm) + ' 手上已有的數量">' +
+            '<button class="got-all" data-gotall="' + n.id + '" data-need="' + fillNeed + '" title="我已經有了／再按一次歸零">✓</button></td>' +
+          (dc ? '<td>' + (world ? '<span class="tag world">' + esc(world) + '</span>' : '—') + (n.mode === 'buy' && usedHq(n.id) ? ' <span class="hqb">HQ</span>' : '') + '</td>' : '') +
+          '<td class="num">' + priceCell + '</td>' +
+          '<td class="num">' + subCell + '</td></tr>';
+      }
+
+      var S = planStats(trees, mergedTop);
+
+      // 檢視切換：階層看關係，其餘三種攤平看總數
+      var viewSeg = '<span class="seg plan-seg">' + PLAN_VIEWS.map(function (v) {
+        return '<button data-pview="' + v.k + '"' + (planView === v.k ? ' class="active"' : '') + '>' + v.t + '</button>';
+      }).join('') + '</span>';
+
+      // 攤平檢視的合計。'all' 同時含中間物與它的材料，直加會重複計算，故不列合計。
+      var viewTotal = '';
+      if (!isTree && planView !== 'all' && rows.length) {
+        var vs = 0, vna = false;
+        rows.forEach(function (r) {
+          var c = r.n.mode === 'buy' ? r.n.buy : r.n.mode === 'craft' ? r.n.craft : (r.n.mode === 'have' ? 0 : Infinity);
+          if (c === Infinity) vna = true; else vs += c;
+        });
+        viewTotal = '<tfoot><tr class="plan-total"><th scope="row" colspan="' + (cols - 1) + '">本檢視合計 ' + rows.length + ' 項</th>' +
+          '<td class="num">' + fmt(vs) + (vna ? ' <span class="plan-of">+無市價</span>' : '') + '</td></tr></tfoot>';
+      }
+
+      var planHtml = rows.length ? (
+        '<div class="got-progress" id="gotProgress">' + planProgressInnerHtml(S) + '</div>' +
+        '<div class="plan-bar">' + viewSeg +
+        (isTree ? '<span class="plan-bulk"><button class="btn" data-plan-all="open">全部展開</button>' +
+          '<button class="btn" data-plan-all="close">全部收合</button></span>' : '') +
+        '<span class="plan-legend"><span class="lg-mid"></span>中間素材<span class="lg-base"></span>基礎素材</span></div>' +
+        (isTree ? '<div class="note shop-hint">縮排＝上下層關係：往右一格就是「上一列的材料」。' +
+          '<b>任何一列按 ✓ 就是「我已經有了」</b>——它底下的材料會整段從計畫消失，不用再湊下一層。</div>' : '') +
+        '<div class="shop-scroll"><table class="listings"><thead><tr>' +
+        '<th>材料</th><th class="num">還需要</th><th class="num">已有</th>' +
+        (dc ? '<th>最便宜伺服器</th>' : '') + '<th class="num">單價</th><th class="num">小計</th>' +
+        '</tr></thead><tbody>' + rows.map(planRowHtml).join('') + '</tbody>' + viewTotal + '</table></div>'
+      ) : '<div class="note">不需要備料——清單裡的成品直接買比自製便宜（或已標記為手上有），見下方採買彙總。</div>';
+
+      // 採買彙總：把計畫裡所有「要買」的節點依物品合併（同一料被多處用到只跑一趟），
+      // 全DC 模式再依最便宜的伺服器分組成路線。這是計畫檢視給不了的「一次買齊」視角。
+      var buyAcc = new Map();
+      trees.forEach(function (t) { if (t.mode === 'buy') buyAcc.set(t.id, (buyAcc.get(t.id) || 0) + t.need); });
+      (function walk(list) {
+        list.forEach(function (n) {
+          if (!n.active || n.mode === 'have') return;
+          if (n.mode === 'buy') { buyAcc.set(n.id, (buyAcc.get(n.id) || 0) + n.need); return; }
+          walk(n.children || []);
+        });
+      })(mergedTop);
+      var buyList = Array.from(buyAcc.entries()).map(function (e) {
+        var it = itemById.get(e[0]), u = unitBuy(e[0]);
+        return { id: e[0], name: it ? it.name : '#' + e[0], qty: e[1], unit: u, sub: u != null ? u * e[1] : null, world: buyWorld(e[0]), hq: usedHq(e[0]) };
+      }).sort(function (a, b) { return (b.sub || 0) - (a.sub || 0); });
+
       var routeHtml = '';
-      if (dc && shopRows.length) {
+      if (buyList.length) {
         var byWorld = new Map();
-        shopRows.forEach(function (r) {
-          var w = r.world || '（查無市價）';
+        buyList.forEach(function (r) {
+          var w = dc ? (r.world || '（查無市價）') : scopeLabel();
           if (!byWorld.has(w)) byWorld.set(w, { items: [], sub: 0 });
           var g = byWorld.get(w); g.items.push(r); if (r.sub != null) g.sub += r.sub;
         });
         var worlds = Array.from(byWorld.entries()).sort(function (a, b) { return b[1].sub - a[1].sub; });
-        routeHtml = '<div class="section-title">最適採買路線（依伺服器 · 共 ' + worlds.length + ' 個伺服器）</div>' +
+        routeHtml = '<div class="section-title">採買彙總' + (dc ? '（依伺服器 · 共 ' + worlds.length + ' 個伺服器）' : '（' + esc(scopeLabel()) + '）') + '</div>' +
           '<div class="route-grid">' + worlds.map(function (e) {
             return '<div class="route-card"><div class="route-head"><span class="tag world">' + esc(e[0]) + '</span><span class="route-sub">' + fmt(e[1].sub) + ' G</span></div>' +
               e[1].items.map(function (r) {
-                return '<div class="route-line' + (r.got >= r.qty ? ' got-done' : '') + '" data-gotline="' + r.id + '"><span>' + esc(r.name) + ' ×' + r.qty + (r.hq ? ' <span class="hqb">HQ</span>' : '') + '</span><span>' + (r.sub != null ? fmt(r.sub) : '—') + '</span></div>';
+                return '<div class="route-line"><span>' + esc(r.name) + ' ×' + r.qty + (r.hq ? ' <span class="hqb">HQ</span>' : '') + '</span><span>' + (r.sub != null ? fmt(r.sub) : '—') + '</span></div>';
               }).join('') + '</div>';
           }).join('') + '</div>';
       }
 
-      var saving = (T.buyAllOk && T.grandOptimal > 0) ? T.buyAll - T.grandOptimal : null;
+      // 有材料取不到時，各成品的 cost 是 Infinity；此時改用「可購得部分」的合計，
+      // 至少讓使用者知道已知的錢要花多少，而不是整格變成「—」。
+      var costOk = !T.anyNa && !T.allNa;
+      var saving = (T.buyAllOk && costOk && T.grandOptimal > 0) ? T.buyAll - T.grandOptimal : null;
+      var stockNote = T.hasStock ? '（已扣除手上已有）' : '';
 
       return '<div class="summary-card">' +
         '<div class="summary-totals">' +
-        stat('智慧製作總成本', T.allNa ? '—' : ((T.anyNa ? '<span style="color:var(--amber)">' : '') + fmt(T.grandOptimal) + ' <small>G</small>' + (T.anyNa ? '</span>' : '')), T.allNa ? '此範圍查無市場資料' : (T.anyNa ? '部分材料無市場資料' : '買／做自動取最省')) +
-        stat('全部直接買成品', T.buyAllOk ? fmt(T.buyAll) + ' <small>G</small>' : '—', T.buyAllOk ? '不自製' : '部分成品查無市價') +
+        stat('智慧製作總成本',
+          costOk ? (fmt(T.grandOptimal) + ' <small>G</small>')
+            : S.remainCost > 0 ? ('<span style="color:var(--amber)">' + fmt(S.remainCost) + ' <small>G</small></span>') : '—',
+          (costOk ? '買／做自動取最省' : (S.remainCost > 0 ? '僅計可購得部分（有材料取不到）' : '此範圍查無市場資料')) + stockNote) +
+        stat('全部直接買成品', T.buyAllOk ? fmt(T.buyAll) + ' <small>G</small>' : '—', (T.buyAllOk ? '不自製' : '部分成品查無市價') + stockNote) +
         '<div class="stat"><div class="label">自製可省</div><div class="value ' + (saving != null && saving > 0 ? 'save' : (saving != null && saving < 0 ? 'bad' : '')) + '">' +
         (saving == null ? '—' : (saving > 0 ? fmt(saving) + ' G' : (saving < 0 ? '反而貴 ' + fmt(-saving) + ' G' : '持平'))) + '</div></div>' +
         '</div>' +
-        '<div class="section-title">總採買清單</div>' + shopHtml + routeHtml +
+        '<div class="section-title">製作計畫</div>' + planHtml + routeHtml +
         '</div>';
     }
 
@@ -1358,8 +1739,8 @@
       }).join('');
 
       body.innerHTML = tools + rows +
-        '<div class="note">原料只列第一層；想看完整配方逐層展開與買／做比較，切到「🌲 樹狀分析」。</div>' +
-        '<div id="simpleSummary"><div class="loading">完整展開配方、統整總採買清單中…</div></div>' +
+        '<div class="note">上面只列第一層原料；完整的逐層計畫在下方「製作計畫」，想看圖形化的買／做比較切到「🌲 樹狀分析」。</div>' +
+        '<div id="simpleSummary"><div class="loading">完整展開配方、統整製作計畫中…</div></div>' +
         craftActionsHtml();
 
       // 第二段：完整展開配方，接上與樹狀分析同一份總採買清單（含已收集進度）
@@ -1668,17 +2049,31 @@
         if (cview) { craftView = cview.getAttribute('data-cview'); saveCview(); renderCraft(); return; }
         var copy = e.target.closest('.node-copy');
         if (copy) { copyName(copy.getAttribute('data-copy')); var o = copy.textContent; copy.textContent = '✓'; setTimeout(function () { copy.textContent = o; }, 900); return; }
-        var gall = e.target.closest('[data-gotall]');
+        // 「✓ 我有了」：一次補滿該物品在計畫裡**所有分支**的剩餘需求（同一料被兩個成品用到
+        // 也一起解決）；已經滿足時再按一次歸零。之後整份計畫重算——子樹會整段消失。
+        var gall = e.target.closest('[data-gotall], [data-have]');
         if (gall) {
-          var gid = Number(gall.getAttribute('data-gotall'));
-          var grow = shopState.find(function (r) { return r.id === gid; });
-          if (grow) {
-            gotMap[gid] = (Math.min(gotOf(gid), grow.qty) >= grow.qty) ? 0 : grow.qty;   // 收齊 ↔ 重設切換
-            saveGot();
-            var ginp = $('input[data-got="' + gid + '"]');
-            if (ginp) ginp.value = gotMap[gid];
-            updateGotUI();
-          }
+          var gid = Number(gall.getAttribute('data-gotall') || gall.getAttribute('data-have'));
+          var fill = Number(gall.getAttribute('data-need'));
+          if (!isFinite(fill)) { var tt = planIndex.get(gid); fill = tt ? tt.need : 0; }
+          gotMap[gid] = fill > 0 ? gotOf(gid) + fill : 0;
+          saveGot(); rerenderKeepScroll();
+          return;
+        }
+        var pview = e.target.closest('[data-pview]');
+        if (pview) { planView = pview.getAttribute('data-pview'); savePview(); rerenderKeepScroll(); return; }
+        var ptog = e.target.closest('[data-plan-toggle]');
+        if (ptog) {
+          var pth = ptog.getAttribute('data-plan-toggle');
+          planOpen.set(pth, ptog.getAttribute('aria-expanded') !== 'true');
+          rerenderKeepScroll();
+          return;
+        }
+        var pall = e.target.closest('[data-plan-all]');
+        if (pall) {
+          planAll = pall.getAttribute('data-plan-all') === 'open';
+          planOpen = new Map();
+          rerenderKeepScroll();
           return;
         }
         var act = e.target.closest('[data-act]');
@@ -1688,21 +2083,29 @@
           else if (a === 'dec') setQty(id, getQty(id) - 1);
           else if (a === 'del') removeFromCraft(id);
           else if (a === 'saveAs') saveAsList();
-          else if (a === 'clear') { if (confirm('確定清空目前的製作清單？（已儲存的清單不受影響，已收集進度將一併重設）')) { craft = []; gotMap = {}; saveGot(); saveDraft(); updateCraftCount(); renderCraft(); } }
+          else if (a === 'clear') { if (confirm('確定清空目前的製作清單？（已儲存的清單不受影響，「已有」的標記將一併重設）')) { craft = []; gotMap = {}; planOpen = new Map(); saveGot(); saveDraft(); updateCraftCount(); renderCraft(); } }
           return;
         }
         var srow = e.target.closest('[data-simple]');
         if (srow) { navTo({ node: Number(srow.getAttribute('data-simple')) }); return; }
-        var card = e.target.closest('.node-card');
+        var card = e.target.closest('[data-node]');
         if (card) navTo({ node: Number(card.getAttribute('data-node')) });
+      });
+      // 計畫列的品名是 role="button"，鍵盤也要能開詳情
+      cb.addEventListener('keydown', function (e) {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        var nd = e.target.closest('.plan-node[data-node]');
+        if (!nd) return;
+        e.preventDefault();
+        navTo({ node: Number(nd.getAttribute('data-node')) });
       });
       cb.addEventListener('change', function (e) {
         if (e.target.matches('input[data-act="qty"]')) { setQty(Number(e.target.getAttribute('data-id')), parseInt(e.target.value, 10) || 1); }
-        else if (e.target.matches('input[data-got]')) { e.target.value = Math.min(gotOf(Number(e.target.getAttribute('data-got'))), Number(e.target.getAttribute('max')) || 0); }
+        else if (e.target.matches('input[data-got]')) { rerenderKeepScroll(); }   // 打完數字才重算，不要邊打邊重繪
         else if (e.target.id === 'optCrystal') { excludeCrystals = e.target.checked; saveOpts(); renderCraft(); }
         else if (e.target.id === 'optHq') { hqProduct = e.target.checked; saveOpts(); renderCraft(); }
       });
-      // 已收集數量：邊打邊更新進度（不重繪整區，僅就地更新進度列與列樣式）
+      // 「已有」數量：邊打邊存（夾在 0～計畫總需求），重算等到 change
       cb.addEventListener('input', function (e) {
         if (!e.target.matches('input[data-got]')) return;
         var gid = Number(e.target.getAttribute('data-got'));
@@ -1711,7 +2114,7 @@
         if (!isFinite(v) || v < 0) v = 0;
         if (v > gmax) { v = gmax; e.target.value = v; }
         gotMap[gid] = v;
-        saveGot(); updateGotUI();
+        saveGot();
       });
 
       // 節點詳情 modal：委派（關閉 / 上下游導覽 / 加入清單）
