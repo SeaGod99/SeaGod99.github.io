@@ -222,9 +222,12 @@ async function main() {
 
   data.sort((a, b) => a.id - b.id);
 
+  // 檔頭 patch ＝ 台服當前版本，取自 _meta.json（別寫死，會跟著升版飄掉）
+  const gamePatch = JSON.parse(await readFile(join(DATA, "_meta.json"), "utf8")).gamePatch;
+
   const out = {
     schema: "items",
-    patch: "7.2",
+    patch: gamePatch,
     updated: new Date().toISOString().slice(0, 10),
     source: "mixed",
     count: data.length,

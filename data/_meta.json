@@ -1,7 +1,7 @@
 {
   "project": "水神的工具箱 統一資料庫",
   "schemaDoc": "/data/SCHEMA.md",
-  "gamePatch": "7.15",
+  "gamePatch": "7.21",
   "updated": "2026-08-11",
   "idConventions": {
     "mapId": "遊戲 Map sheet row id（XIVAPI v2 /sheet/Map 的 row_id），全站統一；2026-06-11 起 maps.json 主鍵即此 id",
@@ -67,8 +67,8 @@
       "name": "全物品",
       "source": "mixed",
       "status": "script-ready",
-      "updated": "2026-07-28",
-      "count": 43748
+      "updated": "2026-08-11",
+      "count": 45548
     },
     {
       "schema": "item-categories",
@@ -76,7 +76,7 @@
       "name": "物品分類（ItemUICategory id ↔ 繁中名）",
       "source": "teamcraft/tw-item-ui-categories.json（scripts/build-item-categories.mjs）",
       "status": "used",
-      "updated": "2026-07-28",
+      "updated": "2026-08-11",
       "count": 112
     },
     {
@@ -139,7 +139,7 @@
       "name": "園藝配種",
       "source": "teamcraft/seeds.json; tw-items.msgpack",
       "status": "used",
-      "updated": "2026-06-23",
+      "updated": "2026-08-11",
       "count": 107
     },
     {
@@ -157,7 +157,7 @@
       "name": "副本",
       "source": "xivapi+tw-instances",
       "status": "filled",
-      "updated": "2026-07-28",
+      "updated": "2026-08-11",
       "count": 520
     },
     {
@@ -193,7 +193,7 @@
       "name": "表情",
       "source": "xivapi+tw-items",
       "status": "used",
-      "updated": "2026-06-23",
+      "updated": "2026-08-11",
       "count": 292
     },
     {
@@ -211,7 +211,7 @@
       "name": "寵物",
       "source": "xivapi+items",
       "status": "populated",
-      "updated": "2026-07-28",
+      "updated": "2026-08-11",
       "count": 581
     },
     {
@@ -220,7 +220,7 @@
       "name": "坐騎",
       "source": "xivapi+tw-items+cn-opencc+manual",
       "status": "filled",
-      "updated": "2026-07-28",
+      "updated": "2026-08-11",
       "count": 362
     },
     {
@@ -229,7 +229,7 @@
       "name": "鳥鞍",
       "source": "xivapi+tw-items+obtainable-methods",
       "status": "used",
-      "updated": "2026-06-23",
+      "updated": "2026-08-11",
       "count": 106
     },
     {
@@ -238,7 +238,7 @@
       "name": "冒險者小隊",
       "source": "manual",
       "status": "example",
-      "updated": "2026-07-29",
+      "updated": "2026-08-11",
       "count": 166
     },
     {
@@ -256,7 +256,7 @@
       "name": "魚",
       "source": "fish-tracker+items",
       "status": "populated",
-      "updated": "2026-07-26",
+      "updated": "2026-08-11",
       "count": 1449
     },
     {
@@ -283,8 +283,8 @@
       "name": "物品精簡表（市場頁）",
       "source": "data/items.json（scripts/build-items-market.mjs 精簡）",
       "status": "used",
-      "updated": "2026-07-28",
-      "count": 43748
+      "updated": "2026-08-11",
+      "count": 45548
     },
     {
       "schema": "market-sources",
@@ -301,8 +301,8 @@
       "name": "物品精簡表（採集頁）",
       "source": "data/items.json（scripts/build-items-lite.mjs 精簡）",
       "status": "used",
-      "updated": "2026-07-28",
-      "count": 43748
+      "updated": "2026-08-11",
+      "count": 45548
     },
     {
       "schema": "equip",

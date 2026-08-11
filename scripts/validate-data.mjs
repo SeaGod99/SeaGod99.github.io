@@ -19,7 +19,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const DATA = join(__dirname, "..", "data");
 
 const meta = JSON.parse(readFileSync(join(DATA, "_meta.json"), "utf8"));
-const GAME_PATCH = meta.gamePatch || "7.15";
+const GAME_PATCH = meta.gamePatch || "7.21";
 
 // 有「取得來源／來源查詢」UI 的收藏檔：sources 空覆蓋率要盯，patch 要能數值化
 const SOURCE_PAGES = new Set(["mounts", "minions", "orchestrion", "barding", "triple-triad"]);

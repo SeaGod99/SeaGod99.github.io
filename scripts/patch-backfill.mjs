@@ -2,8 +2,8 @@
 //
 // 目的：為收藏類資料補上準確的 patch（版本）欄位，作為「台服未開放即隱藏」規則的依據。
 //   隱藏規則（後續步驟套用，本腳本不動名稱）：
-//     entry.patch  > 台服當前版本(7.15) → 台服未開放 → 後續 name=null 隱藏
-//     entry.patch ≤ 7.15              → 台服已開放 → 缺繁中名/來源 = 真缺口要補
+//     entry.patch  > 台服當前版本(7.21) → 台服未開放 → 後續 name=null 隱藏
+//     entry.patch ≤ 7.21              → 台服已開放 → 缺繁中名/來源 = 真缺口要補
 //
 // 資料來源：ffxivcollect API（patch 為全球版本號，跨區相同，只是台服較晚上線）。
 //   本沙箱可連 ffxivcollect.com（v2.xivapi.com 才被擋）。
@@ -29,7 +29,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
 const DATA = join(ROOT, "data");
 const APPLY = process.argv.includes("--apply");
-const TW_PATCH = "7.15"; // 台服當前版本門檻
+const TW_PATCH = "7.21"; // 台服當前版本門檻（依 Teamcraft tw-items 實測：台服客戶端已含 7.2＋7.21，無 7.25 以上）
 
 const FC = "https://ffxivcollect.com/api";
 const lc = (s) => (s == null ? "" : String(s)).toLowerCase().trim();
@@ -133,7 +133,7 @@ async function run() {
     }
   }
 
-  // _meta.json gamePatch → 7.15（台服當前版本）
+  // _meta.json gamePatch → TW_PATCH（台服當前版本）
   const metaPath = join(DATA, "_meta.json");
   const meta = JSON.parse(await readFile(metaPath, "utf8"));
   console.log(`\n_meta.json gamePatch: ${meta.gamePatch} → ${TW_PATCH}`);

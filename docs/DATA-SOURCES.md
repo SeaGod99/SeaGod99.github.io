@@ -13,6 +13,7 @@
 |------|------|------|------|
 | **ffxivcollect** | `https://ffxivcollect.com/api/{mounts,minions,emotes,bardings,orchestrions}` | 收藏品的 `patch`（跨區版本號）、`item_id`、`sources`（type+text，**英文**） | **無 cards（幻卡）端點**；**無簡中 locale**（`?language=` 僅 en/de/fr/ja）。id 對齊：mounts/minions/emotes = 遊戲 row id；orchestrion 用 `item_id` 對 |
 | **Teamcraft patch 資料** | `raw.githubusercontent.com/ffxiv-teamcraft/ffxiv-teamcraft/staging/libs/data/src/lib/json/patch-content.json` 與 `patch-names.json` | `patch-content` = `{patchId:{contentType:[ids]}}`；`patch-names` = `{patchId:{version:"7.15",...}}` | contentType 含 `item / recipe(無，用 item) / enpcresident / bnpcname / instancecontent / fate / placename …`。反查 id→patchId→version |
+| **Teamcraft 台服物品名** | `raw.githubusercontent.com/…/libs/data/src/lib/json/tw/tw-items.json` | `{itemId:{tw:"繁中名"}}`，由台服客戶端抽出＝台服官方譯名 | **`out_data/tw-items.msgpack` 的來源**（腳本 [`scripts/build-tw-items-msgpack.mjs`](../scripts/build-tw-items-msgpack.mjs)，護欄：必須是既有快照的超集）。同時是**判斷台服在哪一版**的依據（見 §2）。2026-08-11：45,548 筆 |
 | **ffxiv.consolegameswiki.com** | `/wiki/Blue_Magic_Spellbook` | 青魔法習得來源（圖騰兌換條件、副本） | 人工查證，非 API |
 | **Teamcraft treasures** | `raw.githubusercontent.com/…/libs/data/src/lib/json/treasures.json` | 藏寶圖（陳舊的地圖）挖寶座標：`{ item, map(Map row id), coords{x,y}, partySize }` | 建 `treasure-maps.json`；名稱/圖示反查 items.json、地區/資料片反查 maps.json。腳本 [`scripts/build-treasure-maps.mjs`](../scripts/build-treasure-maps.mjs) |
 | **XIVAPI v2** | `https://v2.xivapi.com` | 物品/NPC/副本等 sheet（**row 不含 patch 欄**） | patch 一律走 Teamcraft，不靠 XIVAPI |
@@ -26,7 +27,8 @@ README 的「資料來源」表為總覽；本表為這幾次回填實際用到�
 
 ## 2. patch（版本）欄位
 
-台服當前版本門檻寫在 [`data/_meta.json`](../data/_meta.json) 的 `gamePatch`（目前 **7.15**）。
+台服當前版本門檻寫在 [`data/_meta.json`](../data/_meta.json) 的 `gamePatch`（目前 **7.21**）。
+判定台服在哪一版的方法：拿 Teamcraft 台服語系檔 `tw/tw-items.json` 的 id 去對 `patch-content.json`→`patch-names.json`，取最高版本（2026-08-11 實測 7.2／7.21 皆滿、7.25 起 0 件）。
 前端 [`assets/js/patch-gate.js`](../assets/js/patch-gate.js)：`條目 patch > gamePatch → 台服未開放 → 隱藏`；patch 未知者不隱藏。
 
 | 範圍 | 來源 | 腳本 |
@@ -35,7 +37,7 @@ README 的「資料來源」表為總覽；本表為這幾次回填實際用到�
 | 結構表 items/recipes/npcs/dungeons/gardening/triple-triad | Teamcraft patch-content（反查）；dungeons 經 cfc 橋；recipes 用產物 itemId；triple-triad 用 sources[].instanceId | [`scripts/patch-backfill-all.mjs`](../scripts/patch-backfill-all.mjs) |
 | 無來源表 gathering/maps/fishing-spots/monsters/squadron | 站內 patch 反推（代理）：gathering←物品最早、fishing-spots←魚最早、maps←副本名/region、monsters←出沒地圖/掉落、squadron←3.4 系統開放 | [`scripts/patch-backfill-proxy.mjs`](../scripts/patch-backfill-proxy.mjs) |
 
-更新做法：升台服版本時改 `_meta.json` gamePatch；補新內容 patch 重跑上述三支（皆 dry-run 預設、`--apply` 寫入、fill-only 不覆蓋既有、保留檔案 minified/pretty 格式）。
+更新做法：升台服版本時改 `patch-backfill.mjs` 的 `TW_PATCH`（它會把 `_meta.json` 的 gamePatch 一起寫掉）；補新內容 patch 重跑上述三支（皆 dry-run 預設、`--apply` 寫入、fill-only 不覆蓋既有、保留檔案 minified/pretty 格式）。**跑這三支之前要先刷新繁中名快照**（見 §4 流程），否則新開放的條目會缺繁中名。
 
 **已知殘留（無對應，正常）**：monsters 僅約 10%（雜魚無逐隻 patch datamining）、maps 18（特殊區）、recipes/dungeons/mounts/minions 少量（台服未開放或特殊條目）。
 
@@ -69,10 +71,12 @@ ffxivcollect 的 source `text` 是英文，無簡中可 OpenCC，故 detail 採�
 
 ## 4. 更新流程速查
 
-1. 升台服版本 → 改 `data/_meta.json` `gamePatch`。
-2. 新增收藏品/內容 → 重跑 `patch-backfill.mjs` → `patch-backfill-all.mjs` → `patch-backfill-proxy.mjs`（dry-run 看數字，`--apply` 寫入）。
+1. 升台服版本 → **先** `node scripts/build-tw-items-msgpack.mjs --apply`（刷新繁中名快照）→ `node scripts/build-items.mjs`（items.json 收下新物品）。
+2. 改 `patch-backfill.mjs` 的 `TW_PATCH` → 重跑 `patch-backfill.mjs` → `patch-backfill-all.mjs` → `patch-backfill-proxy.mjs`（dry-run 看數字，`--apply` 寫入）。
 3. 補取得來源 → 重跑 `backfill-sources.mjs`（只補新空缺）。青魔特殊來源 → 改 `patch-blue-magic-totems.mjs` 的 `FIX` 表。
-4. 跑 `node scripts/validate-data.mjs` 驗證（count 一致、無粗略 patch、覆蓋率），commit。
+4. 補新開放條目的繁中名 → `node scripts/patch-tw-names.mjs --apply`（魚／園藝／鳥鞍／隨從，來源＝items.json）。
+5. 重建衍生檔（`build-items-lite`／`build-items-market`／`build-item-categories`／`build-market-sources`）→ `minify-data --apply` → `sync-meta --apply`。
+6. 跑 `node scripts/validate-data.mjs` 驗證（count 一致、無粗略 patch、覆蓋率），改過 `assets/` 再跑 `bump-sw-version.mjs`，commit。
 
 ---
 

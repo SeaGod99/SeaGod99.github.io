@@ -3,8 +3,8 @@
 > **給 Claude / 後續對話的指示**：開始任何工作前先讀本檔。完成任何功能或資料變更後，**必須更新本檔**（狀態表 + 更新紀錄），並同步 `data/_meta.json` 的 status。
 > 規格細節見 `docs/feature-specs.md`，資料格式見 `data/SCHEMA.md`。
 
-**最後更新**：2026-08-09（幻化配裝圖鑑再更新一輪：Mirapri 社群投稿 6,774→6,828、社群顯示 6,781 套，空殼重建 2,170 套、逐件染色 5,996 套、item_sources 985 種/11,876 件，健檢全過、開頁零錯誤。本輪**實測 Haiku 判讀**：名稱只有 39% 對得上道具庫（比 ollama 的 58% 還差，Claude 親讀 99%），改用 API 清單吸附搶救後覆蓋率仍只有 57%，整批捨棄；但 Haiku **在「有沒有裝備清單面板」的二元判斷上 4/4 正確**，該 11 張予以採信——分工結論是低階模型可做圖片分類、不可做逐字轉錄。另發現 **Mirapri API 會把相鄰投稿的清單黏在一起**（#048 的清單與圖完全不相干）與 **7.x 臉部飾品整類在道具庫缺本體**（47 筆解鎖書對應 27 筆查無），見更新紀錄；08-08 幻化配裝圖鑑資料更新完成：Mirapri 社群投稿 6,628→6,774、官方套裝 1,971→1,975 套、多語裝備庫重抓 28,963 件；**249 張新圖判讀全數完成**（206 張 Claude 視覺親讀＋43 張保留 ollama），並**量化了 ollama OCR 的兩個系統性失效**（無面板圖會捏造、空殼套錯了整套都錯）、修掉注入腳本「只跳過不刪除」的漏洞；08-03 全站 UI/UX 一致性體檢：亮/暗兩主題 26 頁的文字對比 168 類未達 AA **全數修完歸零**、觸控目標加 44px 下限、內容欄寬 9 種收斂成 3 階 token、頁尾 19/26 → 26/26 並加 skip link、手機水平溢出歸零；08-01 全站設計 token 收斂到 `assets/css/tokens.css`、修掉亮色 `--accent` 全站洩漏、幻化配裝圖鑑併入主題／頂列系統、加上全站焦點環與 `prefers-reduced-motion`；07-29 冒險者小隊計算機 9 個算錯／顯示錯的 bug 全修＋任務列表改表格、SW `CACHE_VERSION` 跨機無限漂移的根因（autocrlf）修掉、職業名三份表統一、精選取得方式補 224 處、主庫 equip 缺口修補；07-28 幻化配裝圖鑑資料併回主庫：刪 105MB 重複、修 570 筆錯名、加 .gitattributes 修 msgpack 損壞；另有資料缺口／UX 一致性／效能 三章＋副本庫 386→520 座等，見更新紀錄）
-**網站**：https://seagod99.github.io ｜ GitHub Pages 純靜態 ｜ 台服版本 **7.15**（＝`data/_meta.json` 的 `gamePatch`，全站版本閘門唯一真實來源；台服尚未開放到 7.2）
+**最後更新**：2026-08-11（**台服版本閘門 7.15 → 7.21**：依 Teamcraft 台服語系檔實測，台服這次把國際服 7.2＋7.21 併成一次更新，門檻設 7.21 才不會把 526 筆內容繼續關在門外。重點不是版本號而是繁中名——`tw-items.msgpack` 原本是沒有腳本產它的一次性快照、卡在 7.15，新增 `build-tw-items-msgpack.mjs` 重建後 items.json 43,748 → **45,548**，順帶修掉 80 個混進來的簡中用語；再以新增的 `patch-tw-names.mjs` 補齊魚 8／園藝 2／鳥鞍 1／隨從 5 筆缺名，`validate-data` 0 error。幻化配裝圖鑑同步重建跟上，缺繁中名的裝備件少 1,022 件、「繁中版可幻化」套數 +347，見更新紀錄⑤；08-09 幻化配裝圖鑑再更新一輪：Mirapri 社群投稿 6,774→6,828、社群顯示 6,781 套，空殼重建 2,170 套、逐件染色 5,996 套、item_sources 985 種/11,876 件，健檢全過、開頁零錯誤。本輪**實測 Haiku 判讀**：名稱只有 39% 對得上道具庫（比 ollama 的 58% 還差，Claude 親讀 99%），改用 API 清單吸附搶救後覆蓋率仍只有 57%，整批捨棄；但 Haiku **在「有沒有裝備清單面板」的二元判斷上 4/4 正確**，該 11 張予以採信——分工結論是低階模型可做圖片分類、不可做逐字轉錄。另發現 **Mirapri API 會把相鄰投稿的清單黏在一起**（#048 的清單與圖完全不相干）與 **7.x 臉部飾品整類在道具庫缺本體**（47 筆解鎖書對應 27 筆查無），見更新紀錄；08-08 幻化配裝圖鑑資料更新完成：Mirapri 社群投稿 6,628→6,774、官方套裝 1,971→1,975 套、多語裝備庫重抓 28,963 件；**249 張新圖判讀全數完成**（206 張 Claude 視覺親讀＋43 張保留 ollama），並**量化了 ollama OCR 的兩個系統性失效**（無面板圖會捏造、空殼套錯了整套都錯）、修掉注入腳本「只跳過不刪除」的漏洞；08-03 全站 UI/UX 一致性體檢：亮/暗兩主題 26 頁的文字對比 168 類未達 AA **全數修完歸零**、觸控目標加 44px 下限、內容欄寬 9 種收斂成 3 階 token、頁尾 19/26 → 26/26 並加 skip link、手機水平溢出歸零；08-01 全站設計 token 收斂到 `assets/css/tokens.css`、修掉亮色 `--accent` 全站洩漏、幻化配裝圖鑑併入主題／頂列系統、加上全站焦點環與 `prefers-reduced-motion`；07-29 冒險者小隊計算機 9 個算錯／顯示錯的 bug 全修＋任務列表改表格、SW `CACHE_VERSION` 跨機無限漂移的根因（autocrlf）修掉、職業名三份表統一、精選取得方式補 224 處、主庫 equip 缺口修補；07-28 幻化配裝圖鑑資料併回主庫：刪 105MB 重複、修 570 筆錯名、加 .gitattributes 修 msgpack 損壞；另有資料缺口／UX 一致性／效能 三章＋副本庫 386→520 座等，見更新紀錄）
+**網站**：https://seagod99.github.io ｜ GitHub Pages 純靜態 ｜ 台服版本 **7.21**（＝`data/_meta.json` 的 `gamePatch`，全站版本閘門唯一真實來源；2026-08-11 由 7.15 推進，依 Teamcraft 台服語系檔實測台服已含 7.2＋7.21 全部內容、7.25 起 0 件）
 
 ---
 
@@ -23,7 +23,7 @@
 | — | 天氣預報 | `/tools/weather/` | 完成（改用共用模組 assets/js/eorzea-weather.js，天氣表接 maps.json weatherRates，mapId 統一，06-15重做） |
 | 1.5 | 風脈泉追蹤器 | `/tools/aether-currents/` | 完成（31 地區 303 個風脈泉，任務型151筆/野外型152筆，06-16新增；07-23 遷入共用引擎的**子項目模式**——卡片＝地區、追蹤單位＝風脈泉，手風琴/地區地圖圖釘/🗺彈窗保留，新增可分享網址、批次標記、排序） |
 | 1.6 | 時尚品鑑推薦 | `/tools/fashion-report/` | 完成（**07-25 全面改版**：推薦標準改為「門檻→金幣（含染劑）→件數」三層成本模型並以列舉求最佳解，答案改為每週結構相同的「涵蓋所有計分部位配裝表」，換週狀態機把遊戲階段與資料新鮮度拆成兩軸、過渡期顯示當前週主題，完整清單加上等級／職業／可否染色／性別種族限制／販賣地圖／市場連結。管線全程式化＝`build-fashion-report.mjs` 一支到底。**規格見 [fashion-report-spec.md](fashion-report-spec.md)**；目前 week 445「鱗鎧小丑」verified） |
-| 1.7 | 幻化配裝圖鑑 | `/tools/glamour/` | 完成（**08-09 資料更新**：社群 **6,781** 套／官方套裝 **1,975** 套／精選 95 套，空殼重建 2,170 套、逐件染色 5,996 套；08-04 社群 6,727 套，多語裝備庫 28,963 件；07-15 由獨立 repo 併入：精選配裝＋Mirapri 社群＋官方套裝三檢視，收藏星號、染色/交易徽章、wiki 示意照；07-16 上線資產進版控——縮圖/官方示意照/icons/精選原圖＋mirapri_outfits.js/official_sets.js 共約 850MB 已 push，線上完整可用；**僅 mirapri 原圖 669MB 留本機**（加入會破 Pages 發佈 1GB 上限，彈窗自動退回縮圖），重建後衍生 js 記得 commit；資料管線為 Python（py scripts\update_all.py），細節見 tools/glamour/CLAUDE.md；**07-28 資料層併回主庫**——移除自帶的 105MB `資料來源/`，改由 `scripts/maindb.py` 讀 `data/`＋`out_data/`，修掉 570 筆錯譯名並補進 7.1/7.2 新套裝箱；07-16 介面統整——改用站內共用色票/字體、加「← 水神的工具箱」導覽與頁尾，官方套裝卡不再顯示 alljob 原始 tag） |
+| 1.7 | 幻化配裝圖鑑 | `/tools/glamour/` | 完成（**08-11 跟上台服 7.21**：套數不變（社群 6,781／官方 1,975／精選 95），缺繁中名的裝備件 5,373→4,351、「🇹🇼 繁中版可幻化」套數 +347、item_sources 來源種類 985→999。⚠「繁中版可幻化」仍要求**整套能由單一職業穿戴**——台服尚未開放跨職業裝備混搭幻化，這條判定不要拿掉；08-09 資料更新：社群 **6,781** 套／官方套裝 **1,975** 套／精選 95 套，空殼重建 2,170 套、逐件染色 5,996 套；08-04 社群 6,727 套，多語裝備庫 28,963 件；07-15 由獨立 repo 併入：精選配裝＋Mirapri 社群＋官方套裝三檢視，收藏星號、染色/交易徽章、wiki 示意照；07-16 上線資產進版控——縮圖/官方示意照/icons/精選原圖＋mirapri_outfits.js/official_sets.js 共約 850MB 已 push，線上完整可用；**僅 mirapri 原圖 669MB 留本機**（加入會破 Pages 發佈 1GB 上限，彈窗自動退回縮圖），重建後衍生 js 記得 commit；資料管線為 Python（py scripts\update_all.py），細節見 tools/glamour/CLAUDE.md；**07-28 資料層併回主庫**——移除自帶的 105MB `資料來源/`，改由 `scripts/maindb.py` 讀 `data/`＋`out_data/`，修掉 570 筆錯譯名並補進 7.1/7.2 新套裝箱；07-16 介面統整——改用站內共用色票/字體、加「← 水神的工具箱」導覽與頁尾，官方套裝卡不再顯示 alljob 原始 tag） |
 
 ### 收藏／成就追蹤（共通規格見 feature-specs 第二章）
 
@@ -68,7 +68,7 @@
 
 | 庫 | 筆數 | 來源 | 更新 |
 |------|------|------|------|
-| items | 43748 | tw-items.msgpack + XIVAPI | — |
+| items | **45548** | tw-items.msgpack + XIVAPI；**08-11 升 7.21 補 1800 筆**（7.2:758／7.21:948／7.15 補漏 91）並修正 80 個舊譯名（多為簡中用語，如馬蘇里拉乳酪→莫札瑞拉起司）。快照現由 `scripts/build-tw-items-msgpack.mjs` 從 Teamcraft 台服語系檔重建 | 08-11 |
 | dyes | 114 | XIVAPI Stain（顏色／色群）+ shops/obtainable-methods/npcs/maps（取得與門檻）；台服未實裝 11 支未收 | 07-25 |
 | fashion-themes | 86 | ffxiv-datamining-cn FashionCheckWeeklyTheme（row = 週次+9），week 440–525，簡轉繁非官方譯名 | 07-25 |
 | fashion-fillers | 5 | equipment/shops/items + XIVAPI DyeCount，每部位最便宜可染的全職業 NPC 裝 | 07-25 |
@@ -85,8 +85,8 @@
 | monsters | 14361 | datamining-cn + Teamcraft + XIVAPI | 06-09 |
 | obtainable-methods | 36336 | mixed | 06-08 |
 | fishes / fishing-spots | 1449 / 307 | fish-tracker + items（spots 已補 coords.mapId） | 06-11 |
-| items-lite | 43748 | items.json 精簡（只留 id→繁中名，1.3MB；`scripts/build-items-lite.mjs`） | 07-23 |
-| items-market | 43748 | items.json 精簡（市場頁用的六欄，2.0MB；`scripts/build-items-market.mjs`）。**改完 items.json 這支與 items-lite 都要重跑** | 07-28 |
+| items-lite | **45548** | items.json 精簡（只留 id→繁中名，1.3MB；`scripts/build-items-lite.mjs`） | 08-11 |
+| items-market | **45548** | items.json 精簡（市場頁用的六欄，2.1MB；`scripts/build-items-market.mjs`）。**改完 items.json 這支與 items-lite 都要重跑** | 08-11 |
 | market-sources | 7558 | 取得管道精簡表（市場頁用，751KB／gzip 52KB；`scripts/build-market-sources.mjs`）。由 obtainable-methods（7.7MB，前端載不動）＋gathering 座標＋gc-shop 軍票壓成「只含配方相關物品」。**改完 recipes／gathering／obtainable-methods 要重跑** | 08-10 |
 | island-* 十一檔 | 見下 | datamining-cn `MJI*` CSV ＋ items.json（`scripts/build-island.mjs`）；動物出現條件與台服名走人工表 `island-names-tw.json` | 07-24 |
 
@@ -122,7 +122,7 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 | recipes.ingredients → items | 2528 | 同上（如 7.x 素材） |
 | gathering.items → items | 468 | 其中 352 個為 2000000+ 的 EventItem 偽 id，建議 build 時過濾 |
 | triple-triad.sources.npcId → npcs | 66 | npcs.json 只收有繁中名+座標者 |
-| fishes.itemId → items | 35 | 台服未開放魚 |
+| fishes.itemId → items | 35 → **27**（08-11 升 7.21 後） | 台服未開放魚 |
 | fishes.bait → items | 81 | 同上 |
 | fishes.spotId → fishing-spots | 203 | spots 只收 307 個有繁中資料者；另 31 筆魚 spotId=null |
 | obtainable-methods 內 currency/npc | 233 / 699 | 同上 |
@@ -197,6 +197,20 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 6. 其他規劃：時尚品鑑、冒險者小隊計算機、藏寶圖、園藝配種、釣魚紀錄
 
 ## 五、更新紀錄
+
+- **2026-08-11（台服版本閘門 7.15 → 7.21）**：`validate-data` 56 檔 **0 error 0 warning**；`validate-links` 的 `fishes.itemId → items` 由 35 降到 27、`recipes.itemId → items` 由 2308 降到 1590。動到 `assets/js/patch-gate.js`，已 bump `CACHE_VERSION`（`sgt-213828ee98` → `sgt-0558ff1cf5`）。
+
+  **① 台服到底在哪一版：用資料判，不用公告判。** 拿 Teamcraft 台服語系檔 `tw/tw-items.json` 的 id 去對 `patch-content.json`→`patch-names.json`：7.2 有 **758** 件、7.21 有 **948** 件、7.25 以上 **0** 件 → 台服這次是把國際服 7.2＋7.21 併成一次更新，門檻應設 **7.21**。若只設 7.2，`pnum("7.21")=7.21 > 7.20` 會把 **526 筆**（配方 520／坐騎 2／隨從 1／表情 3）繼續關在門外。
+
+  **② 真正的工程在「繁中名」，不在版本號。** `out_data/tw-items.msgpack` 原本是使用者提供、**沒有腳本產它**的一次性快照，卡在 43,748 筆／7.15。閘門一開，新開放條目就地缺名：魚 8 筆 `name=null`（釣魚頁 `f.name || f.nameEn` → 英文魚名見客）、園藝 2 筆顯示 `#47951`、隨從 4 筆＋鳥鞍 1 筆整串英文、158 筆 7.2 配方的產物根本不在 items.json。新增 **`scripts/build-tw-items-msgpack.mjs`** 從 Teamcraft 台服語系檔重建（護欄：上游必須是既有快照的**超集**才寫入，避免上游抽取不完整就洗掉已開放物品），items.json 隨之 43,748 → **45,548**，順帶修正 **80 個舊譯名**——其中多筆根本是簡中用語混進來的（馬蘇里拉乳酪→莫札瑞拉起司、面向收藏家的→給收藏家的、明日複明日→明日復明日、呐喊→吶喊）。
+
+  **③ 新增 `scripts/patch-tw-names.mjs`**：以 items.json（台服官方物品名）補齊各庫缺名條目——魚 8、園藝 2、鳥鞍 1、隨從 5（含一筆 7.15 就該修好的舊漏網「薄暗之雲」）。**只補不覆蓋**，既有的 ffxiv-collection-tc 社群慣用名（「迷你巨人掌」vs 官方「迷你巨人掌怪」）一律保留，避免和 `patch-*-tc.mjs` 打架。隨從沒有 `itemId`，走 build-minions 同一套「companion 圖示編號 + 55000 ＝ 道具圖示編號」對法（實測 504/521 同名，可信）。閘門內剩下的 8 筆英文名經查**不是漏譯**：`Nano Lord` 台服官方物品名就是英文、`2B` 是專有名詞、其餘 6 筆是玩家拿不到的內部列。
+
+  **④ 順手修掉兩個會安靜出錯的地方**：`build-items.mjs` 的檔頭 `patch` 寫死 `"7.2"`（改為讀 `_meta.json` 的 gamePatch）；`build-minions.mjs` 的寵物道具篩選還在用英文分類 `category === "Minion"`，而 items.json 的 category 早就是繁中「寵物」——**現在重跑它會 0 命中、整份退回英文名**（本次未動它，先記在此）。
+
+  **⑤ 幻化配裝圖鑑同步跟上 7.21**：套數與件數完全沒變（社群 6,781／官方 1,975／精選 95），但**缺繁中名的裝備件少了 1,022 件**（社群 4,422→3,621、官方 845→631、精選 106→99），「🇹🇼 繁中版可幻化」的套數 **+347**（社群 3,504→3,811、官方 1,821→1,861）。`item_sources.js` 的來源種類 985→**999** 種。健檢全過。
+
+  卡關點與解法記在這裡，換機時會再遇到：`update_all.py local` 的步驟 5 需要 `data/all_outfits_enriched.json`，那是 gitignore 的本機快取，新機器沒有。**不必重抓 669MB 原圖**——`pipeline.py` 的 `step_a_fetch()` 只打一次 API 就能重建 `mirapri_all.json`，社群卡片吃的是**已進版控的 `配裝圖片/縮圖/mirapri/`（6,836 張）**，原圖缺席前端會自動退回縮圖。做法：`step_a_fetch()` → **只保留本機有縮圖的項目**（API 當下 6,837 筆，9 筆是還沒下載縮圖的新投稿，留著會變破圖卡）→ `pipeline.py enrich` → `update_all.py local`。想連新投稿一起收要走 `update_all.py full`（會下載圖）。另本機補裝了 Python 依賴 msgpack／pillow／requests 與 `item_fallback_multilang.json`。
 
 - **2026-08-11（市場查價：JS 抽檔、材料排序改依 ID、我的清單改折疊卡）**：動 `tools/market/index.html`＋新增 `tools/market/market.js`。未動 `data/`／`assets/`，故**不需** bump `CACHE_VERSION`（SW 對同源 `.js` 走 network-first，且 `bump-sw-version.mjs` 只雜湊 `assets/` 下的共用資產；`--check` 已確認 `sgt-213828ee98` 仍為最新）。`validate-data` 56 檔 0 error 0 warning。
 

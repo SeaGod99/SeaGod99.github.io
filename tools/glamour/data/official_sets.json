@@ -1,6 +1,6 @@
 {
 "_meta": {
-"generated": "2026-08-09 08:51:44",
+"generated": "2026-08-11 15:39:42",
 "sets": 1975,
 "mirage_sets": 1084,
 "src_sets": 891,
@@ -1810,7 +1810,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "",
-"src": "🪙兌換×4800"
+"src": "🪙宇宙信用點數×4800"
 },
 {
 "id": 50304,
@@ -1826,7 +1826,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "",
-"src": "🪙兌換×8400"
+"src": "🪙宇宙信用點數×8400"
 },
 {
 "id": 50305,
@@ -1842,7 +1842,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "",
-"src": "🪙兌換×4800"
+"src": "🪙宇宙信用點數×4800"
 },
 {
 "id": 50306,
@@ -1858,7 +1858,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "",
-"src": "🪙兌換×7200"
+"src": "🪙宇宙信用點數×7200"
 },
 {
 "id": 50307,
@@ -1874,7 +1874,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "",
-"src": "🪙兌換×4800"
+"src": "🪙宇宙信用點數×4800"
 }
 ],
 "cjc_name": "All Classes",
@@ -6036,7 +6036,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "",
-"src": "🪙兌換×4800"
+"src": "🪙宇宙信用點數×4800"
 },
 {
 "id": 47280,
@@ -6052,7 +6052,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "",
-"src": "🪙兌換×8400"
+"src": "🪙宇宙信用點數×8400"
 },
 {
 "id": 47281,
@@ -6068,7 +6068,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "",
-"src": "🪙兌換×4800"
+"src": "🪙宇宙信用點數×4800"
 },
 {
 "id": 47282,
@@ -6084,7 +6084,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "",
-"src": "🪙兌換×7200"
+"src": "🪙宇宙信用點數×7200"
 },
 {
 "id": 47283,
@@ -6100,7 +6100,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "",
-"src": "🪙兌換×4800"
+"src": "🪙宇宙信用點數×4800"
 }
 ],
 "cjc_name": "All Classes",
@@ -10819,7 +10819,7 @@
 {
 "id": "mirage:48744",
 "layer": "mirage",
-"name_zh": "",
+"name_zh": "宇航服套裝",
 "name_ja": "コスモスーツ・アタイア",
 "name_en": "Cosmosuit",
 "source": "🎁幻化套裝箱",
@@ -10827,7 +10827,7 @@
 "pieces": [
 {
 "id": 47933,
-"zh": "",
+"zh": "宇航員頭盔",
 "ja": "コスモスーツ・ヘルム",
 "en": "Cosmosuit Helm",
 "slot": "頭部",
@@ -10838,12 +10838,12 @@
 "icon": 56832,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47934,
-"zh": "",
+"zh": "宇航員上衣",
 "ja": "コスモスーツ・トップス",
 "en": "Cosmosuit Top",
 "slot": "上身",
@@ -10854,12 +10854,12 @@
 "icon": 57225,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47935,
-"zh": "",
+"zh": "宇航員手套",
 "ja": "コスモスーツ・グローブ",
 "en": "Cosmosuit Gloves",
 "slot": "手部",
@@ -10870,12 +10870,12 @@
 "icon": 56340,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47936,
-"zh": "",
+"zh": "宇航員下身",
 "ja": "コスモスーツ・ボトム",
 "en": "Cosmosuit Bottoms",
 "slot": "腿部",
@@ -10886,17 +10886,17 @@
 "icon": 57750,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 }
 ],
-"cjc_name": "All Classes",
-"zh_ok": false
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"zh_ok": true
 },
 {
 "id": "mirage:48743",
 "layer": "mirage",
-"name_zh": "",
+"name_zh": "星際航員套裝",
 "name_ja": "コスモクルー・アタイア",
 "name_en": "Star Crew Attire",
 "source": "🎁幻化套裝箱",
@@ -10904,7 +10904,7 @@
 "pieces": [
 {
 "id": 47929,
-"zh": "",
+"zh": "星際航員短衣",
 "ja": "コスモクルー・ジャケット",
 "en": "Star Crew Jacket",
 "slot": "上身",
@@ -10915,12 +10915,12 @@
 "icon": 57224,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
-"src": "🪙兌換×8400"
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"src": "🪙宇宙信用點數×8400"
 },
 {
 "id": 47930,
-"zh": "",
+"zh": "星際航員手套",
 "ja": "コスモクルー・グローブ",
 "en": "Star Crew Gloves",
 "slot": "手部",
@@ -10931,12 +10931,12 @@
 "icon": 56339,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
-"src": "🪙兌換×4800"
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"src": "🪙宇宙信用點數×4800"
 },
 {
 "id": 47931,
-"zh": "",
+"zh": "星際航員長褲",
 "ja": "コスモクルー・トラウザー",
 "en": "Star Crew Trousers",
 "slot": "腿部",
@@ -10947,12 +10947,12 @@
 "icon": 57749,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
-"src": "🪙兌換×7200"
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"src": "🪙宇宙信用點數×7200"
 },
 {
 "id": 47932,
-"zh": "",
+"zh": "星際航員長靴",
 "ja": "コスモクルー・ブーツ",
 "en": "Star Crew Boots",
 "slot": "腳部",
@@ -10963,17 +10963,17 @@
 "icon": 57841,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
-"src": "🪙兌換×4800"
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"src": "🪙宇宙信用點數×4800"
 }
 ],
-"cjc_name": "All Classes",
-"zh_ok": false
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"zh_ok": true
 },
 {
 "id": "src:a3c48b6c:33:720",
 "layer": "src",
-"name_zh": "",
+"name_zh": "革新者巧匠",
 "name_ja": "イノベーター・クラフター",
 "name_en": "Innovator's",
 "source": "🪙兌換：巧手橙票",
@@ -10981,7 +10981,7 @@
 "pieces": [
 {
 "id": 46304,
-"zh": "",
+"zh": "革新者巧匠護目鏡",
 "ja": "イノベーター・クラフターゴーグル",
 "en": "Innovator's Goggles of Crafting",
 "slot": "頭部",
@@ -10992,12 +10992,12 @@
 "icon": 56858,
 "ilvl": 720,
 "cjc": 33,
-"cjc_name": "",
+"cjc_name": "CRP BSM ARM GSM LTW WVR ALC CUL",
 "src": "🪙巧手橙票×100（工票交易員）"
 },
 {
 "id": 46305,
-"zh": "",
+"zh": "革新者巧匠長衣",
 "ja": "イノベーター・クラフターコート",
 "en": "Innovator's Coat of Crafting",
 "slot": "上身",
@@ -11008,12 +11008,12 @@
 "icon": 57261,
 "ilvl": 720,
 "cjc": 33,
-"cjc_name": "",
+"cjc_name": "CRP BSM ARM GSM LTW WVR ALC CUL",
 "src": "🪙巧手橙票×300（工票交易員）"
 },
 {
 "id": 46306,
-"zh": "",
+"zh": "革新者巧匠手套",
 "ja": "イノベーター・クラフターグローブ",
 "en": "Innovator's Gloves of Crafting",
 "slot": "手部",
@@ -11024,12 +11024,12 @@
 "icon": 56366,
 "ilvl": 720,
 "cjc": 33,
-"cjc_name": "",
+"cjc_name": "CRP BSM ARM GSM LTW WVR ALC CUL",
 "src": "🪙巧手橙票×100（工票交易員）"
 },
 {
 "id": 46307,
-"zh": "",
+"zh": "革新者巧匠軟甲褲",
 "ja": "イノベーター・クラフタートラウザー",
 "en": "Innovator's Trousers of Crafting",
 "slot": "腿部",
@@ -11040,12 +11040,12 @@
 "icon": 57782,
 "ilvl": 720,
 "cjc": 33,
-"cjc_name": "",
+"cjc_name": "CRP BSM ARM GSM LTW WVR ALC CUL",
 "src": "🪙巧手橙票×100（工票交易員）"
 },
 {
 "id": 46308,
-"zh": "",
+"zh": "革新者巧匠筒靴",
 "ja": "イノベーター・クラフターブーツ",
 "en": "Innovator's Boots of Crafting",
 "slot": "腳部",
@@ -11056,25 +11056,25 @@
 "icon": 57871,
 "ilvl": 720,
 "cjc": 33,
-"cjc_name": "",
+"cjc_name": "CRP BSM ARM GSM LTW WVR ALC CUL",
 "src": "🪙巧手橙票×100（工票交易員）"
 }
 ],
-"cjc_name": "Disciple of the Hand",
-"zh_ok": false
+"cjc_name": "CRP BSM ARM GSM LTW WVR ALC CUL",
+"zh_ok": true
 },
 {
 "id": "src:5303898f:76:760",
 "layer": "src",
-"name_zh": "",
+"name_zh": "天選冠軍制敵",
 "name_ja": "ベビーフェイスチャンピオン・スレイヤー",
 "name_en": "Babyface Champion's",
-"source": "🪙兌換",
+"source": "🪙兌換：第3頁次重量級斷章",
 "patch": "7.2",
 "pieces": [
 {
 "id": 46658,
-"zh": "",
+"zh": "天選冠軍制敵外套",
 "ja": "ベビーフェイスチャンピオン・スレイヤージャケット",
 "en": "Babyface Champion's Jacket of Maiming",
 "slot": "上身",
@@ -11085,12 +11085,12 @@
 "icon": 57230,
 "ilvl": 760,
 "cjc": 76,
-"cjc_name": "",
-"src": "🪙兌換×6（希灰）"
+"cjc_name": "LNC DRG RPR",
+"src": "🪙第3頁次重量級斷章×6（希灰）"
 },
 {
 "id": 46660,
-"zh": "",
+"zh": "天選冠軍制敵襯褲",
 "ja": "ベビーフェイスチャンピオン・スレイヤーブレー",
 "en": "Babyface Champion's Brais of Maiming",
 "slot": "腿部",
@@ -11101,25 +11101,25 @@
 "icon": 57754,
 "ilvl": 760,
 "cjc": 76,
-"cjc_name": "",
-"src": "🪙兌換×6（希灰）"
+"cjc_name": "LNC DRG RPR",
+"src": "🪙第3頁次重量級斷章×6（希灰）"
 }
 ],
 "cjc_name": "LNC DRG RPR",
-"zh_ok": false
+"zh_ok": true
 },
 {
 "id": "src:5303898f:66:760",
 "layer": "src",
-"name_zh": "",
+"name_zh": "天選冠軍精準",
 "name_ja": "ベビーフェイスチャンピオン・レンジャー",
 "name_en": "Babyface Champion's",
-"source": "🪙兌換",
+"source": "🪙兌換：第3頁次重量級斷章",
 "patch": "7.2",
 "pieces": [
 {
 "id": 46668,
-"zh": "",
+"zh": "天選冠軍精準皮衣",
 "ja": "ベビーフェイスチャンピオン・レンジャージャーキン",
 "en": "Babyface Champion's Jerkin of Aiming",
 "slot": "上身",
@@ -11130,12 +11130,12 @@
 "icon": 57231,
 "ilvl": 760,
 "cjc": 66,
-"cjc_name": "",
-"src": "🪙兌換×6（希灰）"
+"cjc_name": "ARC BRD MCH DNC",
+"src": "🪙第3頁次重量級斷章×6（希灰）"
 },
 {
 "id": 46670,
-"zh": "",
+"zh": "天選冠軍精準襯褲",
 "ja": "ベビーフェイスチャンピオン・レンジャーブレー",
 "en": "Babyface Champion's Brais of Aiming",
 "slot": "腿部",
@@ -11146,25 +11146,25 @@
 "icon": 57755,
 "ilvl": 760,
 "cjc": 66,
-"cjc_name": "",
-"src": "🪙兌換×6（希灰）"
+"cjc_name": "ARC BRD MCH DNC",
+"src": "🪙第3頁次重量級斷章×6（希灰）"
 }
 ],
 "cjc_name": "ARC BRD MCH DNC",
-"zh_ok": false
+"zh_ok": true
 },
 {
 "id": "src:5303898f:65:760",
 "layer": "src",
-"name_zh": "",
+"name_zh": "天選冠軍強襲",
 "name_ja": "ベビーフェイスチャンピオン・ストライカー",
 "name_en": "Babyface Champion's",
-"source": "🪙兌換",
+"source": "🪙兌換：第3頁次重量級斷章",
 "patch": "7.2",
 "pieces": [
 {
 "id": 46663,
-"zh": "",
+"zh": "天選冠軍強襲坎肩",
 "ja": "ベビーフェイスチャンピオン・ストライカーベスト",
 "en": "Babyface Champion's Vest of Striking",
 "slot": "上身",
@@ -11175,12 +11175,12 @@
 "icon": 57233,
 "ilvl": 760,
 "cjc": 65,
-"cjc_name": "",
-"src": "🪙兌換×6（希灰）"
+"cjc_name": "PGL MNK SAM",
+"src": "🪙第3頁次重量級斷章×6（希灰）"
 },
 {
 "id": 46665,
-"zh": "",
+"zh": "天選冠軍強襲馬褲",
 "ja": "ベビーフェイスチャンピオン・ストライカーブリーチ",
 "en": "Babyface Champion's Breeches of Striking",
 "slot": "腿部",
@@ -11191,25 +11191,25 @@
 "icon": 57757,
 "ilvl": 760,
 "cjc": 65,
-"cjc_name": "",
-"src": "🪙兌換×6（希灰）"
+"cjc_name": "PGL MNK SAM",
+"src": "🪙第3頁次重量級斷章×6（希灰）"
 }
 ],
-"cjc_name": "PGL MNK SAM BST",
-"zh_ok": false
+"cjc_name": "PGL MNK SAM",
+"zh_ok": true
 },
 {
 "id": "src:5303898f:64:760",
 "layer": "src",
-"name_zh": "",
+"name_zh": "天選冠軍治癒",
 "name_ja": "ベビーフェイスチャンピオン・ヒーラー",
 "name_en": "Babyface Champion's",
-"source": "🪙兌換",
+"source": "🪙兌換：第3頁次重量級斷章",
 "patch": "7.2",
 "pieces": [
 {
 "id": 46678,
-"zh": "",
+"zh": "天選冠軍治癒外套",
 "ja": "ベビーフェイスチャンピオン・ヒーラーコート",
 "en": "Babyface Champion's Coat of Healing",
 "slot": "上身",
@@ -11220,12 +11220,12 @@
 "icon": 57228,
 "ilvl": 760,
 "cjc": 64,
-"cjc_name": "",
-"src": "🪙兌換×6（希灰）"
+"cjc_name": "CNJ WHM SCH AST SGE",
+"src": "🪙第3頁次重量級斷章×6（希灰）"
 },
 {
 "id": 46680,
-"zh": "",
+"zh": "天選冠軍治癒襯褲",
 "ja": "ベビーフェイスチャンピオン・ヒーラーブレー",
 "en": "Babyface Champion's Brais of Healing",
 "slot": "腿部",
@@ -11236,25 +11236,25 @@
 "icon": 57752,
 "ilvl": 760,
 "cjc": 64,
-"cjc_name": "",
-"src": "🪙兌換×6（希灰）"
+"cjc_name": "CNJ WHM SCH AST SGE",
+"src": "🪙第3頁次重量級斷章×6（希灰）"
 }
 ],
 "cjc_name": "CNJ WHM SCH AST SGE",
-"zh_ok": false
+"zh_ok": true
 },
 {
 "id": "src:5303898f:63:760",
 "layer": "src",
-"name_zh": "",
+"name_zh": "天選冠軍詠咒",
 "name_ja": "ベビーフェイスチャンピオン・キャスター",
 "name_en": "Babyface Champion's",
-"source": "🪙兌換",
+"source": "🪙兌換：第3頁次重量級斷章",
 "patch": "7.2",
 "pieces": [
 {
 "id": 46683,
-"zh": "",
+"zh": "天選冠軍詠咒外套",
 "ja": "ベビーフェイスチャンピオン・キャスターコート",
 "en": "Babyface Champion's Coat of Casting",
 "slot": "上身",
@@ -11265,12 +11265,12 @@
 "icon": 57227,
 "ilvl": 760,
 "cjc": 63,
-"cjc_name": "",
-"src": "🪙兌換×6（希灰）"
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
+"src": "🪙第3頁次重量級斷章×6（希灰）"
 },
 {
 "id": 46685,
-"zh": "",
+"zh": "天選冠軍詠咒襯褲",
 "ja": "ベビーフェイスチャンピオン・キャスターブレー",
 "en": "Babyface Champion's Brais of Casting",
 "slot": "腿部",
@@ -11281,25 +11281,25 @@
 "icon": 57751,
 "ilvl": 760,
 "cjc": 63,
-"cjc_name": "",
-"src": "🪙兌換×6（希灰）"
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
+"src": "🪙第3頁次重量級斷章×6（希灰）"
 }
 ],
-"cjc_name": "THM ACN BLM SMN RDM BLU PCT",
-"zh_ok": false
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
+"zh_ok": true
 },
 {
 "id": "src:5303898f:59:760",
 "layer": "src",
-"name_zh": "",
+"name_zh": "天選冠軍禦敵",
 "name_ja": "ベビーフェイスチャンピオン・ディフェンダー",
 "name_en": "Babyface Champion's",
-"source": "🪙兌換",
+"source": "🪙兌換：第3頁次重量級斷章",
 "patch": "7.2",
 "pieces": [
 {
 "id": 46653,
-"zh": "",
+"zh": "天選冠軍禦敵外套",
 "ja": "ベビーフェイスチャンピオン・ディフェンダージャケット",
 "en": "Babyface Champion's Jacket of Fending",
 "slot": "上身",
@@ -11310,12 +11310,12 @@
 "icon": 57229,
 "ilvl": 760,
 "cjc": 59,
-"cjc_name": "",
-"src": "🪙兌換×6（希灰）；🗡️阿卡狄亞零式登天鬥技場 中量級3（聯隊突擊）"
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
+"src": "🪙第3頁次重量級斷章×6（希灰）；🗡️阿卡狄亞零式登天鬥技場 中量級3（聯隊突擊）"
 },
 {
 "id": 46655,
-"zh": "",
+"zh": "天選冠軍禦敵襯褲",
 "ja": "ベビーフェイスチャンピオン・ディフェンダーブレー",
 "en": "Babyface Champion's Brais of Fending",
 "slot": "腿部",
@@ -11326,25 +11326,25 @@
 "icon": 57753,
 "ilvl": 760,
 "cjc": 59,
-"cjc_name": "",
-"src": "🪙兌換×6（希灰）"
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
+"src": "🪙第3頁次重量級斷章×6（希灰）"
 }
 ],
 "cjc_name": "GLA MRD PLD WAR DRK GNB",
-"zh_ok": false
+"zh_ok": true
 },
 {
 "id": "src:5303898f:103:760",
 "layer": "src",
-"name_zh": "",
+"name_zh": "天選冠軍游擊",
 "name_ja": "ベビーフェイスチャンピオン・スカウト",
 "name_en": "Babyface Champion's",
-"source": "🪙兌換",
+"source": "🪙兌換：第3頁次重量級斷章",
 "patch": "7.2",
 "pieces": [
 {
 "id": 46673,
-"zh": "",
+"zh": "天選冠軍游擊坎肩",
 "ja": "ベビーフェイスチャンピオン・スカウトベスト",
 "en": "Babyface Champion's Vest of Scouting",
 "slot": "上身",
@@ -11355,12 +11355,12 @@
 "icon": 57232,
 "ilvl": 760,
 "cjc": 103,
-"cjc_name": "",
-"src": "🪙兌換×6（希灰）"
+"cjc_name": "ROG NIN VPR",
+"src": "🪙第3頁次重量級斷章×6（希灰）"
 },
 {
 "id": 46675,
-"zh": "",
+"zh": "天選冠軍游擊馬褲",
 "ja": "ベビーフェイスチャンピオン・スカウトブリーチ",
 "en": "Babyface Champion's Breeches of Scouting",
 "slot": "腿部",
@@ -11371,17 +11371,17 @@
 "icon": 57756,
 "ilvl": 760,
 "cjc": 103,
-"cjc_name": "",
-"src": "🪙兌換×6（希灰）"
+"cjc_name": "ROG NIN VPR",
+"src": "🪙第3頁次重量級斷章×6（希灰）"
 }
 ],
 "cjc_name": "ROG NIN VPR",
-"zh_ok": false
+"zh_ok": true
 },
 {
 "id": "src:521990c7:32:720",
 "layer": "src",
-"name_zh": "",
+"name_zh": "革新者大地",
 "name_ja": "イノベーター・ギャザラー",
 "name_en": "Innovator's",
 "source": "🪙兌換：大地橙票",
@@ -11389,7 +11389,7 @@
 "pieces": [
 {
 "id": 46309,
-"zh": "",
+"zh": "革新者大地頭燈帽",
 "ja": "イノベーター・ギャザラーヘルメット",
 "en": "Innovator's Helmet of Gathering",
 "slot": "頭部",
@@ -11400,12 +11400,12 @@
 "icon": 56857,
 "ilvl": 720,
 "cjc": 32,
-"cjc_name": "",
+"cjc_name": "MIN BTN FSH",
 "src": "🪙大地橙票×100（工票交易員）"
 },
 {
 "id": 46310,
-"zh": "",
+"zh": "革新者大地工作坎肩",
 "ja": "イノベーター・ギャザラーダブレットベスト",
 "en": "Innovator's Doublet Vest of Gathering",
 "slot": "上身",
@@ -11416,12 +11416,12 @@
 "icon": 57260,
 "ilvl": 720,
 "cjc": 32,
-"cjc_name": "",
+"cjc_name": "MIN BTN FSH",
 "src": "🪙大地橙票×300（工票交易員）"
 },
 {
 "id": 46311,
-"zh": "",
+"zh": "革新者大地護臂",
 "ja": "イノベーター・ギャザラーアームガード",
 "en": "Innovator's Armguards of Gathering",
 "slot": "手部",
@@ -11432,12 +11432,12 @@
 "icon": 56365,
 "ilvl": 720,
 "cjc": 32,
-"cjc_name": "",
+"cjc_name": "MIN BTN FSH",
 "src": "🪙大地橙票×100（工票交易員）"
 },
 {
 "id": 46312,
-"zh": "",
+"zh": "革新者大地下身",
 "ja": "イノベーター・ギャザラーボトム",
 "en": "Innovator's Bottoms of Gathering",
 "slot": "腿部",
@@ -11448,12 +11448,12 @@
 "icon": 57781,
 "ilvl": 720,
 "cjc": 32,
-"cjc_name": "",
+"cjc_name": "MIN BTN FSH",
 "src": "🪙大地橙票×100（工票交易員）"
 },
 {
 "id": 46313,
-"zh": "",
+"zh": "革新者大地皮靴",
 "ja": "イノベーター・ギャザラーシューズ",
 "en": "Innovator's Shoes of Gathering",
 "slot": "腳部",
@@ -11464,25 +11464,25 @@
 "icon": 57870,
 "ilvl": 720,
 "cjc": 32,
-"cjc_name": "",
+"cjc_name": "MIN BTN FSH",
 "src": "🪙大地橙票×100（工票交易員）"
 }
 ],
-"cjc_name": "Disciple of the Land",
-"zh_ok": false
+"cjc_name": "MIN BTN FSH",
+"zh_ok": true
 },
 {
 "id": "src:3b27d5bd:76:750",
 "layer": "src",
-"name_zh": "",
+"name_zh": "王國傳奇制敵",
 "name_ja": "キングダムテール・スレイヤー",
 "name_en": "Historia",
-"source": "🪙兌換",
+"source": "🪙兌換：亞拉戈數理神典石",
 "patch": "7.2",
 "pieces": [
 {
 "id": 46503,
-"zh": "",
+"zh": "王國傳奇制敵頭盔",
 "ja": "キングダムテール・スレイヤーヘルム",
 "en": "Historia Helm of Maiming",
 "slot": "頭部",
@@ -11493,12 +11493,12 @@
 "icon": 56841,
 "ilvl": 750,
 "cjc": 76,
-"cjc_name": "",
-"src": "🪙兌換×495（澤爾康）"
+"cjc_name": "LNC DRG RPR",
+"src": "🪙亞拉戈數理神典石×495（澤爾康）"
 },
 {
 "id": 46504,
-"zh": "",
+"zh": "王國傳奇制敵胸甲",
 "ja": "キングダムテール・スレイヤーキュイラス",
 "en": "Historia Cuirass of Maiming",
 "slot": "上身",
@@ -11509,12 +11509,12 @@
 "icon": 57235,
 "ilvl": 750,
 "cjc": 76,
-"cjc_name": "",
-"src": "🪙兌換×825（澤爾康）"
+"cjc_name": "LNC DRG RPR",
+"src": "🪙亞拉戈數理神典石×825（澤爾康）"
 },
 {
 "id": 46505,
-"zh": "",
+"zh": "王國傳奇制敵手鎧",
 "ja": "キングダムテール・スレイヤーガントレット",
 "en": "Historia Gauntlets of Maiming",
 "slot": "手部",
@@ -11525,12 +11525,12 @@
 "icon": 56349,
 "ilvl": 750,
 "cjc": 76,
-"cjc_name": "",
-"src": "🪙兌換×495（澤爾康）"
+"cjc_name": "LNC DRG RPR",
+"src": "🪙亞拉戈數理神典石×495（澤爾康）"
 },
 {
 "id": 46506,
-"zh": "",
+"zh": "王國傳奇制敵軟甲褲",
 "ja": "キングダムテール・スレイヤートラウザー",
 "en": "Historia Trousers of Maiming",
 "slot": "腿部",
@@ -11541,12 +11541,12 @@
 "icon": 57759,
 "ilvl": 750,
 "cjc": 76,
-"cjc_name": "",
-"src": "🪙兌換×825（澤爾康）"
+"cjc_name": "LNC DRG RPR",
+"src": "🪙亞拉戈數理神典石×825（澤爾康）"
 },
 {
 "id": 46507,
-"zh": "",
+"zh": "王國傳奇制敵鎖甲靴",
 "ja": "キングダムテール・スレイヤーソルレット",
 "en": "Historia Sollerets of Maiming",
 "slot": "腳部",
@@ -11557,25 +11557,25 @@
 "icon": 57851,
 "ilvl": 750,
 "cjc": 76,
-"cjc_name": "",
-"src": "🪙兌換×495（澤爾康）"
+"cjc_name": "LNC DRG RPR",
+"src": "🪙亞拉戈數理神典石×495（澤爾康）"
 }
 ],
 "cjc_name": "LNC DRG RPR",
-"zh_ok": false
+"zh_ok": true
 },
 {
 "id": "src:3b27d5bd:66:750",
 "layer": "src",
-"name_zh": "",
+"name_zh": "王國傳奇精準",
 "name_ja": "キングダムテール・レンジャー",
 "name_en": "Historia",
-"source": "🪙兌換",
+"source": "🪙兌換：亞拉戈數理神典石",
 "patch": "7.2",
 "pieces": [
 {
 "id": 46513,
-"zh": "",
+"zh": "王國傳奇精準三角帽",
 "ja": "キングダムテール・レンジャートライコーン",
 "en": "Historia Tricorne of Aiming",
 "slot": "頭部",
@@ -11586,12 +11586,12 @@
 "icon": 56844,
 "ilvl": 750,
 "cjc": 66,
-"cjc_name": "",
-"src": "🪙兌換×495（澤爾康）"
+"cjc_name": "ARC BRD MCH DNC",
+"src": "🪙亞拉戈數理神典石×495（澤爾康）"
 },
 {
 "id": 46514,
-"zh": "",
+"zh": "王國傳奇精準外袍",
 "ja": "キングダムテール・レンジャーブリオー",
 "en": "Historia Bliaud of Aiming",
 "slot": "上身",
@@ -11602,12 +11602,12 @@
 "icon": 57238,
 "ilvl": 750,
 "cjc": 66,
-"cjc_name": "",
-"src": "🪙兌換×825（澤爾康）"
+"cjc_name": "ARC BRD MCH DNC",
+"src": "🪙亞拉戈數理神典石×825（澤爾康）"
 },
 {
 "id": 46515,
-"zh": "",
+"zh": "王國傳奇精準手套",
 "ja": "キングダムテール・レンジャーグローブ",
 "en": "Historia Gloves of Aiming",
 "slot": "手部",
@@ -11618,12 +11618,12 @@
 "icon": 56352,
 "ilvl": 750,
 "cjc": 66,
-"cjc_name": "",
-"src": "🪙兌換×495（澤爾康）"
+"cjc_name": "ARC BRD MCH DNC",
+"src": "🪙亞拉戈數理神典石×495（澤爾康）"
 },
 {
 "id": 46516,
-"zh": "",
+"zh": "王國傳奇精準軟甲褲",
 "ja": "キングダムテール・レンジャートラウザー",
 "en": "Historia Trousers of Aiming",
 "slot": "腿部",
@@ -11634,12 +11634,12 @@
 "icon": 57762,
 "ilvl": 750,
 "cjc": 66,
-"cjc_name": "",
-"src": "🪙兌換×825（澤爾康）"
+"cjc_name": "ARC BRD MCH DNC",
+"src": "🪙亞拉戈數理神典石×825（澤爾康）"
 },
 {
 "id": 46517,
-"zh": "",
+"zh": "王國傳奇精準長靴",
 "ja": "キングダムテール・レンジャーサイブーツ",
 "en": "Historia Thighboots of Aiming",
 "slot": "腳部",
@@ -11650,25 +11650,25 @@
 "icon": 57854,
 "ilvl": 750,
 "cjc": 66,
-"cjc_name": "",
-"src": "🪙兌換×495（澤爾康）"
+"cjc_name": "ARC BRD MCH DNC",
+"src": "🪙亞拉戈數理神典石×495（澤爾康）"
 }
 ],
 "cjc_name": "ARC BRD MCH DNC",
-"zh_ok": false
+"zh_ok": true
 },
 {
 "id": "src:3b27d5bd:65:750",
 "layer": "src",
-"name_zh": "",
+"name_zh": "王國傳奇強襲",
 "name_ja": "キングダムテール・ストライカー",
 "name_en": "Historia",
-"source": "🪙兌換",
+"source": "🪙兌換：亞拉戈數理神典石",
 "patch": "7.2",
 "pieces": [
 {
 "id": 46508,
-"zh": "",
+"zh": "王國傳奇強襲頭巾",
 "ja": "キングダムテール・ストライカーバンダナ",
 "en": "Historia Bandana of Striking",
 "slot": "頭部",
@@ -11679,12 +11679,12 @@
 "icon": 56846,
 "ilvl": 750,
 "cjc": 65,
-"cjc_name": "",
-"src": "🪙兌換×495（澤爾康）"
+"cjc_name": "PGL MNK SAM",
+"src": "🪙亞拉戈數理神典石×495（澤爾康）"
 },
 {
 "id": 46509,
-"zh": "",
+"zh": "王國傳奇強襲背心",
 "ja": "キングダムテール・ストライカージレ",
 "en": "Historia Gilet of Striking",
 "slot": "上身",
@@ -11695,12 +11695,12 @@
 "icon": 57240,
 "ilvl": 750,
 "cjc": 65,
-"cjc_name": "",
-"src": "🪙兌換×825（澤爾康）"
+"cjc_name": "PGL MNK SAM",
+"src": "🪙亞拉戈數理神典石×825（澤爾康）"
 },
 {
 "id": 46510,
-"zh": "",
+"zh": "王國傳奇強襲半指手套",
 "ja": "キングダムテール・ストライカーハーフグローブ",
 "en": "Historia Halfgloves of Striking",
 "slot": "手部",
@@ -11711,12 +11711,12 @@
 "icon": 56354,
 "ilvl": 750,
 "cjc": 65,
-"cjc_name": "",
-"src": "🪙兌換×495（澤爾康）"
+"cjc_name": "PGL MNK SAM",
+"src": "🪙亞拉戈數理神典石×495（澤爾康）"
 },
 {
 "id": 46511,
-"zh": "",
+"zh": "王國傳奇強襲束膝褲",
 "ja": "キングダムテール・ストライカーガスキン",
 "en": "Historia Gaskins of Striking",
 "slot": "腿部",
@@ -11727,12 +11727,12 @@
 "icon": 57764,
 "ilvl": 750,
 "cjc": 65,
-"cjc_name": "",
-"src": "🪙兌換×825（澤爾康）"
+"cjc_name": "PGL MNK SAM",
+"src": "🪙亞拉戈數理神典石×825（澤爾康）"
 },
 {
 "id": 46512,
-"zh": "",
+"zh": "王國傳奇強襲筒靴",
 "ja": "キングダムテール・ストライカーブーツ",
 "en": "Historia Boots of Striking",
 "slot": "腳部",
@@ -11743,25 +11743,25 @@
 "icon": 57856,
 "ilvl": 750,
 "cjc": 65,
-"cjc_name": "",
-"src": "🪙兌換×495（澤爾康）"
+"cjc_name": "PGL MNK SAM",
+"src": "🪙亞拉戈數理神典石×495（澤爾康）"
 }
 ],
-"cjc_name": "PGL MNK SAM BST",
-"zh_ok": false
+"cjc_name": "PGL MNK SAM",
+"zh_ok": true
 },
 {
 "id": "src:3b27d5bd:64:750",
 "layer": "src",
-"name_zh": "",
+"name_zh": "王國傳奇治癒",
 "name_ja": "キングダムテール・ヒーラー",
 "name_en": "Historia",
-"source": "🪙兌換",
+"source": "🪙兌換：亞拉戈數理神典石",
 "patch": "7.2",
 "pieces": [
 {
 "id": 46523,
-"zh": "",
+"zh": "王國傳奇治癒無檐帽",
 "ja": "キングダムテール・ヒーラーキャップ",
 "en": "Historia Cap of Healing",
 "slot": "頭部",
@@ -11772,12 +11772,12 @@
 "icon": 56842,
 "ilvl": 750,
 "cjc": 64,
-"cjc_name": "",
-"src": "🪙兌換×495（澤爾康）"
+"cjc_name": "CNJ WHM SCH AST SGE",
+"src": "🪙亞拉戈數理神典石×495（澤爾康）"
 },
 {
 "id": 46524,
-"zh": "",
+"zh": "王國傳奇治癒長袍",
 "ja": "キングダムテール・ヒーラーローブ",
 "en": "Historia Robe of Healing",
 "slot": "上身",
@@ -11788,12 +11788,12 @@
 "icon": 57236,
 "ilvl": 750,
 "cjc": 64,
-"cjc_name": "",
-"src": "🪙兌換×825（澤爾康）"
+"cjc_name": "CNJ WHM SCH AST SGE",
+"src": "🪙亞拉戈數理神典石×825（澤爾康）"
 },
 {
 "id": 46525,
-"zh": "",
+"zh": "王國傳奇治癒手套",
 "ja": "キングダムテール・ヒーラーグローブ",
 "en": "Historia Gloves of Healing",
 "slot": "手部",
@@ -11804,12 +11804,12 @@
 "icon": 56350,
 "ilvl": 750,
 "cjc": 64,
-"cjc_name": "",
-"src": "🪙兌換×495（澤爾康）"
+"cjc_name": "CNJ WHM SCH AST SGE",
+"src": "🪙亞拉戈數理神典石×495（澤爾康）"
 },
 {
 "id": 46526,
-"zh": "",
+"zh": "王國傳奇治癒垮褲",
 "ja": "キングダムテール・ヒーラーサルエル",
 "en": "Historia Sarouel of Healing",
 "slot": "腿部",
@@ -11820,12 +11820,12 @@
 "icon": 57760,
 "ilvl": 750,
 "cjc": 64,
-"cjc_name": "",
-"src": "🪙兌換×825（澤爾康）"
+"cjc_name": "CNJ WHM SCH AST SGE",
+"src": "🪙亞拉戈數理神典石×825（澤爾康）"
 },
 {
 "id": 46527,
-"zh": "",
+"zh": "王國傳奇治癒皮鞋",
 "ja": "キングダムテール・ヒーラーシューズ",
 "en": "Historia Shoes of Healing",
 "slot": "腳部",
@@ -11836,12 +11836,12 @@
 "icon": 57852,
 "ilvl": 750,
 "cjc": 64,
-"cjc_name": "",
-"src": "🪙兌換×495（澤爾康）"
+"cjc_name": "CNJ WHM SCH AST SGE",
+"src": "🪙亞拉戈數理神典石×495（澤爾康）"
 },
 {
 "id": 46536,
-"zh": "",
+"zh": "王國傳奇治癒耳墜",
 "ja": "キングダムテール・ヒーラーイヤリング",
 "en": "Historia Earrings of Healing",
 "slot": "耳飾",
@@ -11852,12 +11852,12 @@
 "icon": 55555,
 "ilvl": 750,
 "cjc": 64,
-"cjc_name": "",
-"src": "🪙兌換×375（澤爾康）"
+"cjc_name": "CNJ WHM SCH AST SGE",
+"src": "🪙亞拉戈數理神典石×375（澤爾康）"
 },
 {
 "id": 46541,
-"zh": "",
+"zh": "王國傳奇治癒項環",
 "ja": "キングダムテール・ヒーラーチョーカー",
 "en": "Historia Choker of Healing",
 "slot": "項鍊",
@@ -11868,12 +11868,12 @@
 "icon": 55103,
 "ilvl": 750,
 "cjc": 64,
-"cjc_name": "",
-"src": "🪙兌換×375（澤爾康）"
+"cjc_name": "CNJ WHM SCH AST SGE",
+"src": "🪙亞拉戈數理神典石×375（澤爾康）"
 },
 {
 "id": 46546,
-"zh": "",
+"zh": "王國傳奇治癒手環",
 "ja": "キングダムテール・ヒーラーリストバンド",
 "en": "Historia Wristband of Healing",
 "slot": "手鐲",
@@ -11884,12 +11884,12 @@
 "icon": 55901,
 "ilvl": 750,
 "cjc": 64,
-"cjc_name": "",
-"src": "🪙兌換×375（澤爾康）"
+"cjc_name": "CNJ WHM SCH AST SGE",
+"src": "🪙亞拉戈數理神典石×375（澤爾康）"
 },
 {
 "id": 46551,
-"zh": "",
+"zh": "王國傳奇治癒指環",
 "ja": "キングダムテール・ヒーラーリング",
 "en": "Historia Ring of Healing",
 "slot": "戒指",
@@ -11900,25 +11900,25 @@
 "icon": 54753,
 "ilvl": 750,
 "cjc": 64,
-"cjc_name": "",
-"src": "🪙兌換×375（澤爾康）"
+"cjc_name": "CNJ WHM SCH AST SGE",
+"src": "🪙亞拉戈數理神典石×375（澤爾康）"
 }
 ],
 "cjc_name": "CNJ WHM SCH AST SGE",
-"zh_ok": false
+"zh_ok": true
 },
 {
 "id": "src:3b27d5bd:63:750",
 "layer": "src",
-"name_zh": "",
+"name_zh": "王國傳奇詠咒",
 "name_ja": "キングダムテール・キャスター",
 "name_en": "Historia",
-"source": "🪙兌換",
+"source": "🪙兌換：亞拉戈數理神典石",
 "patch": "7.2",
 "pieces": [
 {
 "id": 46528,
-"zh": "",
+"zh": "王國傳奇詠咒無檐帽",
 "ja": "キングダムテール・キャスターキャップ",
 "en": "Historia Cap of Casting",
 "slot": "頭部",
@@ -11929,12 +11929,12 @@
 "icon": 56843,
 "ilvl": 750,
 "cjc": 63,
-"cjc_name": "",
-"src": "🪙兌換×495（澤爾康）"
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
+"src": "🪙亞拉戈數理神典石×495（澤爾康）"
 },
 {
 "id": 46529,
-"zh": "",
+"zh": "王國傳奇詠咒長袍",
 "ja": "キングダムテール・キャスターローブ",
 "en": "Historia Robe of Casting",
 "slot": "上身",
@@ -11945,12 +11945,12 @@
 "icon": 57237,
 "ilvl": 750,
 "cjc": 63,
-"cjc_name": "",
-"src": "🪙兌換×825（澤爾康）"
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
+"src": "🪙亞拉戈數理神典石×825（澤爾康）"
 },
 {
 "id": 46530,
-"zh": "",
+"zh": "王國傳奇詠咒手套",
 "ja": "キングダムテール・キャスターグローブ",
 "en": "Historia Gloves of Casting",
 "slot": "手部",
@@ -11961,12 +11961,12 @@
 "icon": 56351,
 "ilvl": 750,
 "cjc": 63,
-"cjc_name": "",
-"src": "🪙兌換×495（澤爾康）"
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
+"src": "🪙亞拉戈數理神典石×495（澤爾康）"
 },
 {
 "id": 46531,
-"zh": "",
+"zh": "王國傳奇詠咒垮褲",
 "ja": "キングダムテール・キャスターサルエル",
 "en": "Historia Sarouel of Casting",
 "slot": "腿部",
@@ -11977,12 +11977,12 @@
 "icon": 57761,
 "ilvl": 750,
 "cjc": 63,
-"cjc_name": "",
-"src": "🪙兌換×825（澤爾康）"
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
+"src": "🪙亞拉戈數理神典石×825（澤爾康）"
 },
 {
 "id": 46532,
-"zh": "",
+"zh": "王國傳奇詠咒皮鞋",
 "ja": "キングダムテール・キャスターシューズ",
 "en": "Historia Shoes of Casting",
 "slot": "腳部",
@@ -11993,12 +11993,12 @@
 "icon": 57853,
 "ilvl": 750,
 "cjc": 63,
-"cjc_name": "",
-"src": "🪙兌換×495（澤爾康）"
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
+"src": "🪙亞拉戈數理神典石×495（澤爾康）"
 },
 {
 "id": 46537,
-"zh": "",
+"zh": "王國傳奇詠咒耳墜",
 "ja": "キングダムテール・キャスターイヤリング",
 "en": "Historia Earrings of Casting",
 "slot": "耳飾",
@@ -12009,12 +12009,12 @@
 "icon": 55555,
 "ilvl": 750,
 "cjc": 63,
-"cjc_name": "",
-"src": "🪙兌換×375（澤爾康）"
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
+"src": "🪙亞拉戈數理神典石×375（澤爾康）"
 },
 {
 "id": 46542,
-"zh": "",
+"zh": "王國傳奇詠咒項環",
 "ja": "キングダムテール・キャスターチョーカー",
 "en": "Historia Choker of Casting",
 "slot": "項鍊",
@@ -12025,12 +12025,12 @@
 "icon": 55103,
 "ilvl": 750,
 "cjc": 63,
-"cjc_name": "",
-"src": "🪙兌換×375（澤爾康）"
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
+"src": "🪙亞拉戈數理神典石×375（澤爾康）"
 },
 {
 "id": 46547,
-"zh": "",
+"zh": "王國傳奇詠咒手環",
 "ja": "キングダムテール・キャスターリストバンド",
 "en": "Historia Wristband of Casting",
 "slot": "手鐲",
@@ -12041,12 +12041,12 @@
 "icon": 55901,
 "ilvl": 750,
 "cjc": 63,
-"cjc_name": "",
-"src": "🪙兌換×375（澤爾康）"
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
+"src": "🪙亞拉戈數理神典石×375（澤爾康）"
 },
 {
 "id": 46552,
-"zh": "",
+"zh": "王國傳奇詠咒指環",
 "ja": "キングダムテール・キャスターリング",
 "en": "Historia Ring of Casting",
 "slot": "戒指",
@@ -12057,25 +12057,25 @@
 "icon": 54753,
 "ilvl": 750,
 "cjc": 63,
-"cjc_name": "",
-"src": "🪙兌換×375（澤爾康）"
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
+"src": "🪙亞拉戈數理神典石×375（澤爾康）"
 }
 ],
-"cjc_name": "THM ACN BLM SMN RDM BLU PCT",
-"zh_ok": false
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
+"zh_ok": true
 },
 {
 "id": "src:3b27d5bd:59:750",
 "layer": "src",
-"name_zh": "",
+"name_zh": "王國傳奇禦敵",
 "name_ja": "キングダムテール・ディフェンダー",
 "name_en": "Historia",
-"source": "🪙兌換",
+"source": "🪙兌換：亞拉戈數理神典石",
 "patch": "7.2",
 "pieces": [
 {
 "id": 46498,
-"zh": "",
+"zh": "王國傳奇禦敵頭盔",
 "ja": "キングダムテール・ディフェンダーヘルム",
 "en": "Historia Helm of Fending",
 "slot": "頭部",
@@ -12086,12 +12086,12 @@
 "icon": 56840,
 "ilvl": 750,
 "cjc": 59,
-"cjc_name": "",
-"src": "🪙兌換×495（澤爾康）"
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
+"src": "🪙亞拉戈數理神典石×495（澤爾康）"
 },
 {
 "id": 46499,
-"zh": "",
+"zh": "王國傳奇禦敵胸甲",
 "ja": "キングダムテール・ディフェンダーキュイラス",
 "en": "Historia Cuirass of Fending",
 "slot": "上身",
@@ -12102,12 +12102,12 @@
 "icon": 57234,
 "ilvl": 750,
 "cjc": 59,
-"cjc_name": "",
-"src": "🪙兌換×825（澤爾康）"
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
+"src": "🪙亞拉戈數理神典石×825（澤爾康）"
 },
 {
 "id": 46500,
-"zh": "",
+"zh": "王國傳奇禦敵手鎧",
 "ja": "キングダムテール・ディフェンダーガントレット",
 "en": "Historia Gauntlets of Fending",
 "slot": "手部",
@@ -12118,12 +12118,12 @@
 "icon": 56348,
 "ilvl": 750,
 "cjc": 59,
-"cjc_name": "",
-"src": "🪙兌換×495（澤爾康）"
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
+"src": "🪙亞拉戈數理神典石×495（澤爾康）"
 },
 {
 "id": 46501,
-"zh": "",
+"zh": "王國傳奇禦敵軟甲褲",
 "ja": "キングダムテール・ディフェンダートラウザー",
 "en": "Historia Trousers of Fending",
 "slot": "腿部",
@@ -12134,12 +12134,12 @@
 "icon": 57758,
 "ilvl": 750,
 "cjc": 59,
-"cjc_name": "",
-"src": "🪙兌換×825（澤爾康）"
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
+"src": "🪙亞拉戈數理神典石×825（澤爾康）"
 },
 {
 "id": 46502,
-"zh": "",
+"zh": "王國傳奇禦敵鎖甲靴",
 "ja": "キングダムテール・ディフェンダーソルレット",
 "en": "Historia Sollerets of Fending",
 "slot": "腳部",
@@ -12150,12 +12150,12 @@
 "icon": 57850,
 "ilvl": 750,
 "cjc": 59,
-"cjc_name": "",
-"src": "🪙兌換×495（澤爾康）"
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
+"src": "🪙亞拉戈數理神典石×495（澤爾康）"
 },
 {
 "id": 46533,
-"zh": "",
+"zh": "王國傳奇禦敵耳墜",
 "ja": "キングダムテール・ディフェンダーイヤリング",
 "en": "Historia Earrings of Fending",
 "slot": "耳飾",
@@ -12166,12 +12166,12 @@
 "icon": 55555,
 "ilvl": 750,
 "cjc": 59,
-"cjc_name": "",
-"src": "🪙兌換×375（澤爾康）"
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
+"src": "🪙亞拉戈數理神典石×375（澤爾康）"
 },
 {
 "id": 46538,
-"zh": "",
+"zh": "王國傳奇禦敵項環",
 "ja": "キングダムテール・ディフェンダーチョーカー",
 "en": "Historia Choker of Fending",
 "slot": "項鍊",
@@ -12182,12 +12182,12 @@
 "icon": 55103,
 "ilvl": 750,
 "cjc": 59,
-"cjc_name": "",
-"src": "🪙兌換×375（澤爾康）"
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
+"src": "🪙亞拉戈數理神典石×375（澤爾康）"
 },
 {
 "id": 46543,
-"zh": "",
+"zh": "王國傳奇禦敵手環",
 "ja": "キングダムテール・ディフェンダーリストバンド",
 "en": "Historia Wristband of Fending",
 "slot": "手鐲",
@@ -12198,12 +12198,12 @@
 "icon": 55901,
 "ilvl": 750,
 "cjc": 59,
-"cjc_name": "",
-"src": "🪙兌換×375（澤爾康）"
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
+"src": "🪙亞拉戈數理神典石×375（澤爾康）"
 },
 {
 "id": 46548,
-"zh": "",
+"zh": "王國傳奇禦敵指環",
 "ja": "キングダムテール・ディフェンダーリング",
 "en": "Historia Ring of Fending",
 "slot": "戒指",
@@ -12214,25 +12214,25 @@
 "icon": 54753,
 "ilvl": 750,
 "cjc": 59,
-"cjc_name": "",
-"src": "🪙兌換×375（澤爾康）"
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
+"src": "🪙亞拉戈數理神典石×375（澤爾康）"
 }
 ],
 "cjc_name": "GLA MRD PLD WAR DRK GNB",
-"zh_ok": false
+"zh_ok": true
 },
 {
 "id": "src:3b27d5bd:103:750",
 "layer": "src",
-"name_zh": "",
+"name_zh": "王國傳奇游擊",
 "name_ja": "キングダムテール・スカウト",
 "name_en": "Historia",
-"source": "🪙兌換",
+"source": "🪙兌換：亞拉戈數理神典石",
 "patch": "7.2",
 "pieces": [
 {
 "id": 46518,
-"zh": "",
+"zh": "王國傳奇游擊頭巾",
 "ja": "キングダムテール・スカウトバンダナ",
 "en": "Historia Bandana of Scouting",
 "slot": "頭部",
@@ -12243,12 +12243,12 @@
 "icon": 56845,
 "ilvl": 750,
 "cjc": 103,
-"cjc_name": "",
-"src": "🪙兌換×495（澤爾康）"
+"cjc_name": "ROG NIN VPR",
+"src": "🪙亞拉戈數理神典石×495（澤爾康）"
 },
 {
 "id": 46519,
-"zh": "",
+"zh": "王國傳奇游擊背心",
 "ja": "キングダムテール・スカウトジレ",
 "en": "Historia Gilet of Scouting",
 "slot": "上身",
@@ -12259,12 +12259,12 @@
 "icon": 57239,
 "ilvl": 750,
 "cjc": 103,
-"cjc_name": "",
-"src": "🪙兌換×825（澤爾康）"
+"cjc_name": "ROG NIN VPR",
+"src": "🪙亞拉戈數理神典石×825（澤爾康）"
 },
 {
 "id": 46520,
-"zh": "",
+"zh": "王國傳奇游擊半指手套",
 "ja": "キングダムテール・スカウトハーフグローブ",
 "en": "Historia Halfgloves of Scouting",
 "slot": "手部",
@@ -12275,12 +12275,12 @@
 "icon": 56353,
 "ilvl": 750,
 "cjc": 103,
-"cjc_name": "",
-"src": "🪙兌換×495（澤爾康）"
+"cjc_name": "ROG NIN VPR",
+"src": "🪙亞拉戈數理神典石×495（澤爾康）"
 },
 {
 "id": 46521,
-"zh": "",
+"zh": "王國傳奇游擊束膝褲",
 "ja": "キングダムテール・スカウトガスキン",
 "en": "Historia Gaskins of Scouting",
 "slot": "腿部",
@@ -12291,12 +12291,12 @@
 "icon": 57763,
 "ilvl": 750,
 "cjc": 103,
-"cjc_name": "",
-"src": "🪙兌換×825（澤爾康）"
+"cjc_name": "ROG NIN VPR",
+"src": "🪙亞拉戈數理神典石×825（澤爾康）"
 },
 {
 "id": 46522,
-"zh": "",
+"zh": "王國傳奇游擊筒靴",
 "ja": "キングダムテール・スカウトブーツ",
 "en": "Historia Boots of Scouting",
 "slot": "腳部",
@@ -12307,12 +12307,12 @@
 "icon": 57855,
 "ilvl": 750,
 "cjc": 103,
-"cjc_name": "",
-"src": "🪙兌換×495（澤爾康）"
+"cjc_name": "ROG NIN VPR",
+"src": "🪙亞拉戈數理神典石×495（澤爾康）"
 }
 ],
 "cjc_name": "ROG NIN VPR",
-"zh_ok": false
+"zh_ok": true
 },
 {
 "id": "mirage:51665",
@@ -12325,7 +12325,7 @@
 "pieces": [
 {
 "id": 46374,
-"zh": "",
+"zh": "塔底詠咒頭盔",
 "ja": "アンダーキープ・キャスターヘルム",
 "en": "Underkeep Helm of Casting",
 "slot": "頭部",
@@ -12336,12 +12336,12 @@
 "icon": 56851,
 "ilvl": 725,
 "cjc": 63,
-"cjc_name": "",
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
 "src": ""
 },
 {
 "id": 46375,
-"zh": "",
+"zh": "塔底詠咒長衣",
 "ja": "アンダーキープ・キャスターコート",
 "en": "Underkeep Coat of Casting",
 "slot": "上身",
@@ -12352,12 +12352,12 @@
 "icon": 57251,
 "ilvl": 725,
 "cjc": 63,
-"cjc_name": "",
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
 "src": ""
 },
 {
 "id": 46376,
-"zh": "",
+"zh": "塔底詠咒手套",
 "ja": "アンダーキープ・キャスターグローブ",
 "en": "Underkeep Gloves of Casting",
 "slot": "手部",
@@ -12368,12 +12368,12 @@
 "icon": 56358,
 "ilvl": 725,
 "cjc": 63,
-"cjc_name": "",
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
 "src": ""
 },
 {
 "id": 46377,
-"zh": "",
+"zh": "塔底詠咒軟甲褲",
 "ja": "アンダーキープ・キャスターパンタロン",
 "en": "Underkeep Pantaloons of Casting",
 "slot": "腿部",
@@ -12384,12 +12384,12 @@
 "icon": 57771,
 "ilvl": 725,
 "cjc": 63,
-"cjc_name": "",
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
 "src": ""
 },
 {
 "id": 46378,
-"zh": "",
+"zh": "塔底詠咒鎧靴",
 "ja": "アンダーキープ・キャスターサバトン",
 "en": "Underkeep Sabatons of Casting",
 "slot": "腳部",
@@ -12400,12 +12400,12 @@
 "icon": 57862,
 "ilvl": 725,
 "cjc": 63,
-"cjc_name": "",
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
 "src": ""
 },
 {
 "id": 46383,
-"zh": "",
+"zh": "塔底詠咒耳墜",
 "ja": "アンダーキープ・キャスターイヤリング",
 "en": "Underkeep Earrings of Casting",
 "slot": "耳飾",
@@ -12416,12 +12416,12 @@
 "icon": 55554,
 "ilvl": 725,
 "cjc": 63,
-"cjc_name": "",
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
 "src": ""
 },
 {
 "id": 46388,
-"zh": "",
+"zh": "塔底詠咒項環",
 "ja": "アンダーキープ・キャスターネックバンド",
 "en": "Underkeep Neckband of Casting",
 "slot": "項鍊",
@@ -12432,12 +12432,12 @@
 "icon": 55102,
 "ilvl": 725,
 "cjc": 63,
-"cjc_name": "",
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
 "src": ""
 },
 {
 "id": 46393,
-"zh": "",
+"zh": "塔底詠咒手環",
 "ja": "アンダーキープ・キャスターリストバンド",
 "en": "Underkeep Wristband of Casting",
 "slot": "手鐲",
@@ -12448,12 +12448,12 @@
 "icon": 55900,
 "ilvl": 725,
 "cjc": 63,
-"cjc_name": "",
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
 "src": ""
 },
 {
 "id": 46398,
-"zh": "",
+"zh": "塔底詠咒指環",
 "ja": "アンダーキープ・キャスターリング",
 "en": "Underkeep Ring of Casting",
 "slot": "戒指",
@@ -12464,12 +12464,12 @@
 "icon": 54752,
 "ilvl": 725,
 "cjc": 63,
-"cjc_name": "",
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
 "src": ""
 }
 ],
-"cjc_name": "THM ACN BLM SMN RDM BLU PCT",
-"zh_ok": false
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
+"zh_ok": true
 },
 {
 "id": "mirage:51664",
@@ -12482,7 +12482,7 @@
 "pieces": [
 {
 "id": 46369,
-"zh": "",
+"zh": "塔底治癒頭盔",
 "ja": "アンダーキープ・ヒーラーヘルム",
 "en": "Underkeep Helm of Healing",
 "slot": "頭部",
@@ -12493,12 +12493,12 @@
 "icon": 56852,
 "ilvl": 725,
 "cjc": 64,
-"cjc_name": "",
+"cjc_name": "CNJ WHM SCH AST SGE",
 "src": ""
 },
 {
 "id": 46370,
-"zh": "",
+"zh": "塔底治癒長衣",
 "ja": "アンダーキープ・ヒーラーコート",
 "en": "Underkeep Coat of Healing",
 "slot": "上身",
@@ -12509,12 +12509,12 @@
 "icon": 57247,
 "ilvl": 725,
 "cjc": 64,
-"cjc_name": "",
+"cjc_name": "CNJ WHM SCH AST SGE",
 "src": ""
 },
 {
 "id": 46371,
-"zh": "",
+"zh": "塔底治癒手套",
 "ja": "アンダーキープ・ヒーラーグローブ",
 "en": "Underkeep Gloves of Healing",
 "slot": "手部",
@@ -12525,12 +12525,12 @@
 "icon": 56359,
 "ilvl": 725,
 "cjc": 64,
-"cjc_name": "",
+"cjc_name": "CNJ WHM SCH AST SGE",
 "src": ""
 },
 {
 "id": 46372,
-"zh": "",
+"zh": "塔底治癒軟甲褲",
 "ja": "アンダーキープ・ヒーラーパンタロン",
 "en": "Underkeep Pantaloons of Healing",
 "slot": "腿部",
@@ -12541,12 +12541,12 @@
 "icon": 57772,
 "ilvl": 725,
 "cjc": 64,
-"cjc_name": "",
+"cjc_name": "CNJ WHM SCH AST SGE",
 "src": ""
 },
 {
 "id": 46373,
-"zh": "",
+"zh": "塔底治癒鎧靴",
 "ja": "アンダーキープ・ヒーラーサバトン",
 "en": "Underkeep Sabatons of Healing",
 "slot": "腳部",
@@ -12557,12 +12557,12 @@
 "icon": 57863,
 "ilvl": 725,
 "cjc": 64,
-"cjc_name": "",
+"cjc_name": "CNJ WHM SCH AST SGE",
 "src": ""
 },
 {
 "id": 46382,
-"zh": "",
+"zh": "塔底治癒耳墜",
 "ja": "アンダーキープ・ヒーラーイヤリング",
 "en": "Underkeep Earrings of Healing",
 "slot": "耳飾",
@@ -12573,12 +12573,12 @@
 "icon": 55554,
 "ilvl": 725,
 "cjc": 64,
-"cjc_name": "",
+"cjc_name": "CNJ WHM SCH AST SGE",
 "src": ""
 },
 {
 "id": 46387,
-"zh": "",
+"zh": "塔底治癒項環",
 "ja": "アンダーキープ・ヒーラーネックバンド",
 "en": "Underkeep Neckband of Healing",
 "slot": "項鍊",
@@ -12589,12 +12589,12 @@
 "icon": 55102,
 "ilvl": 725,
 "cjc": 64,
-"cjc_name": "",
+"cjc_name": "CNJ WHM SCH AST SGE",
 "src": ""
 },
 {
 "id": 46392,
-"zh": "",
+"zh": "塔底治癒手環",
 "ja": "アンダーキープ・ヒーラーリストバンド",
 "en": "Underkeep Wristband of Healing",
 "slot": "手鐲",
@@ -12605,12 +12605,12 @@
 "icon": 55900,
 "ilvl": 725,
 "cjc": 64,
-"cjc_name": "",
+"cjc_name": "CNJ WHM SCH AST SGE",
 "src": ""
 },
 {
 "id": 46397,
-"zh": "",
+"zh": "塔底治癒指環",
 "ja": "アンダーキープ・ヒーラーリング",
 "en": "Underkeep Ring of Healing",
 "slot": "戒指",
@@ -12621,12 +12621,12 @@
 "icon": 54752,
 "ilvl": 725,
 "cjc": 64,
-"cjc_name": "",
+"cjc_name": "CNJ WHM SCH AST SGE",
 "src": ""
 }
 ],
 "cjc_name": "CNJ WHM SCH AST SGE",
-"zh_ok": false
+"zh_ok": true
 },
 {
 "id": "mirage:51663",
@@ -12639,7 +12639,7 @@
 "pieces": [
 {
 "id": 46364,
-"zh": "",
+"zh": "塔底游擊頭甲",
 "ja": "アンダーキープ・スカウトヘッドギア",
 "en": "Underkeep Headgear of Scouting",
 "slot": "頭部",
@@ -12650,12 +12650,12 @@
 "icon": 56856,
 "ilvl": 725,
 "cjc": 103,
-"cjc_name": "",
+"cjc_name": "ROG NIN VPR",
 "src": ""
 },
 {
 "id": 46365,
-"zh": "",
+"zh": "塔底游擊短衣",
 "ja": "アンダーキープ・スカウトジャケット",
 "en": "Underkeep Jacket of Scouting",
 "slot": "上身",
@@ -12666,12 +12666,12 @@
 "icon": 57252,
 "ilvl": 725,
 "cjc": 103,
-"cjc_name": "",
+"cjc_name": "ROG NIN VPR",
 "src": ""
 },
 {
 "id": 46366,
-"zh": "",
+"zh": "塔底游擊手套",
 "ja": "アンダーキープ・スカウトグローブ",
 "en": "Underkeep Gloves of Scouting",
 "slot": "手部",
@@ -12682,12 +12682,12 @@
 "icon": 56363,
 "ilvl": 725,
 "cjc": 103,
-"cjc_name": "",
+"cjc_name": "ROG NIN VPR",
 "src": ""
 },
 {
 "id": 46367,
-"zh": "",
+"zh": "塔底游擊軟甲褲",
 "ja": "アンダーキープ・スカウトパンタロン",
 "en": "Underkeep Pantaloons of Scouting",
 "slot": "腿部",
@@ -12698,12 +12698,12 @@
 "icon": 57774,
 "ilvl": 725,
 "cjc": 103,
-"cjc_name": "",
+"cjc_name": "ROG NIN VPR",
 "src": ""
 },
 {
 "id": 46368,
-"zh": "",
+"zh": "塔底游擊鎧靴",
 "ja": "アンダーキープ・スカウトサバトン",
 "en": "Underkeep Sabatons of Scouting",
 "slot": "腳部",
@@ -12714,12 +12714,12 @@
 "icon": 57865,
 "ilvl": 725,
 "cjc": 103,
-"cjc_name": "",
+"cjc_name": "ROG NIN VPR",
 "src": ""
 },
 {
 "id": 46381,
-"zh": "",
+"zh": "塔底精準耳墜",
 "ja": "アンダーキープ・レンジャーイヤリング",
 "en": "Underkeep Earrings of Aiming",
 "slot": "耳飾",
@@ -12730,12 +12730,12 @@
 "icon": 55554,
 "ilvl": 725,
 "cjc": 105,
-"cjc_name": "",
+"cjc_name": "ARC BRD ROG NIN MCH DNC VPR",
 "src": ""
 },
 {
 "id": 46386,
-"zh": "",
+"zh": "塔底精準項環",
 "ja": "アンダーキープ・レンジャーネックバンド",
 "en": "Underkeep Neckband of Aiming",
 "slot": "項鍊",
@@ -12746,12 +12746,12 @@
 "icon": 55102,
 "ilvl": 725,
 "cjc": 105,
-"cjc_name": "",
+"cjc_name": "ARC BRD ROG NIN MCH DNC VPR",
 "src": ""
 },
 {
 "id": 46391,
-"zh": "",
+"zh": "塔底精準手環",
 "ja": "アンダーキープ・レンジャーリストバンド",
 "en": "Underkeep Wristband of Aiming",
 "slot": "手鐲",
@@ -12762,12 +12762,12 @@
 "icon": 55900,
 "ilvl": 725,
 "cjc": 105,
-"cjc_name": "",
+"cjc_name": "ARC BRD ROG NIN MCH DNC VPR",
 "src": ""
 },
 {
 "id": 46396,
-"zh": "",
+"zh": "塔底精準指環",
 "ja": "アンダーキープ・レンジャーリング",
 "en": "Underkeep Ring of Aiming",
 "slot": "戒指",
@@ -12778,12 +12778,12 @@
 "icon": 54752,
 "ilvl": 725,
 "cjc": 105,
-"cjc_name": "",
+"cjc_name": "ARC BRD ROG NIN MCH DNC VPR",
 "src": ""
 }
 ],
-"cjc_name": "ARC ROG BRD NIN MCH DNC VPR",
-"zh_ok": false
+"cjc_name": "ROG NIN VPR",
+"zh_ok": true
 },
 {
 "id": "mirage:51662",
@@ -12796,7 +12796,7 @@
 "pieces": [
 {
 "id": 46359,
-"zh": "",
+"zh": "塔底精準頭盔",
 "ja": "アンダーキープ・レンジャーヘルム",
 "en": "Underkeep Helm of Aiming",
 "slot": "頭部",
@@ -12807,12 +12807,12 @@
 "icon": 56855,
 "ilvl": 725,
 "cjc": 66,
-"cjc_name": "",
+"cjc_name": "ARC BRD MCH DNC",
 "src": ""
 },
 {
 "id": 46360,
-"zh": "",
+"zh": "塔底精準短衣",
 "ja": "アンダーキープ・レンジャージャケット",
 "en": "Underkeep Jacket of Aiming",
 "slot": "上身",
@@ -12823,12 +12823,12 @@
 "icon": 57250,
 "ilvl": 725,
 "cjc": 66,
-"cjc_name": "",
+"cjc_name": "ARC BRD MCH DNC",
 "src": ""
 },
 {
 "id": 46361,
-"zh": "",
+"zh": "塔底精準手套",
 "ja": "アンダーキープ・レンジャーグローブ",
 "en": "Underkeep Gloves of Aiming",
 "slot": "手部",
@@ -12839,12 +12839,12 @@
 "icon": 56362,
 "ilvl": 725,
 "cjc": 66,
-"cjc_name": "",
+"cjc_name": "ARC BRD MCH DNC",
 "src": ""
 },
 {
 "id": 46362,
-"zh": "",
+"zh": "塔底精準馬褲",
 "ja": "アンダーキープ・レンジャーブリーチ",
 "en": "Underkeep Breeches of Aiming",
 "slot": "腿部",
@@ -12855,12 +12855,12 @@
 "icon": 57776,
 "ilvl": 725,
 "cjc": 66,
-"cjc_name": "",
+"cjc_name": "ARC BRD MCH DNC",
 "src": ""
 },
 {
 "id": 46363,
-"zh": "",
+"zh": "塔底精準高筒靴",
 "ja": "アンダーキープ・レンジャーサイブーツ",
 "en": "Underkeep Thighboots of Aiming",
 "slot": "腳部",
@@ -12871,12 +12871,12 @@
 "icon": 57867,
 "ilvl": 725,
 "cjc": 66,
-"cjc_name": "",
+"cjc_name": "ARC BRD MCH DNC",
 "src": ""
 },
 {
 "id": 46381,
-"zh": "",
+"zh": "塔底精準耳墜",
 "ja": "アンダーキープ・レンジャーイヤリング",
 "en": "Underkeep Earrings of Aiming",
 "slot": "耳飾",
@@ -12887,12 +12887,12 @@
 "icon": 55554,
 "ilvl": 725,
 "cjc": 105,
-"cjc_name": "",
+"cjc_name": "ARC BRD ROG NIN MCH DNC VPR",
 "src": ""
 },
 {
 "id": 46386,
-"zh": "",
+"zh": "塔底精準項環",
 "ja": "アンダーキープ・レンジャーネックバンド",
 "en": "Underkeep Neckband of Aiming",
 "slot": "項鍊",
@@ -12903,12 +12903,12 @@
 "icon": 55102,
 "ilvl": 725,
 "cjc": 105,
-"cjc_name": "",
+"cjc_name": "ARC BRD ROG NIN MCH DNC VPR",
 "src": ""
 },
 {
 "id": 46391,
-"zh": "",
+"zh": "塔底精準手環",
 "ja": "アンダーキープ・レンジャーリストバンド",
 "en": "Underkeep Wristband of Aiming",
 "slot": "手鐲",
@@ -12919,12 +12919,12 @@
 "icon": 55900,
 "ilvl": 725,
 "cjc": 105,
-"cjc_name": "",
+"cjc_name": "ARC BRD ROG NIN MCH DNC VPR",
 "src": ""
 },
 {
 "id": 46396,
-"zh": "",
+"zh": "塔底精準指環",
 "ja": "アンダーキープ・レンジャーリング",
 "en": "Underkeep Ring of Aiming",
 "slot": "戒指",
@@ -12935,12 +12935,12 @@
 "icon": 54752,
 "ilvl": 725,
 "cjc": 105,
-"cjc_name": "",
+"cjc_name": "ARC BRD ROG NIN MCH DNC VPR",
 "src": ""
 }
 ],
-"cjc_name": "ARC ROG BRD NIN MCH DNC VPR",
-"zh_ok": false
+"cjc_name": "ARC BRD MCH DNC",
+"zh_ok": true
 },
 {
 "id": "mirage:51661",
@@ -12953,7 +12953,7 @@
 "pieces": [
 {
 "id": 46354,
-"zh": "",
+"zh": "塔底強襲頭甲",
 "ja": "アンダーキープ・ストライカーヘッドギア",
 "en": "Underkeep Headgear of Striking",
 "slot": "頭部",
@@ -12964,12 +12964,12 @@
 "icon": 56854,
 "ilvl": 725,
 "cjc": 65,
-"cjc_name": "",
+"cjc_name": "PGL MNK SAM",
 "src": ""
 },
 {
 "id": 46355,
-"zh": "",
+"zh": "塔底強襲外套",
 "ja": "アンダーキープ・ストライカーコート",
 "en": "Underkeep Coat of Striking",
 "slot": "上身",
@@ -12980,12 +12980,12 @@
 "icon": 57249,
 "ilvl": 725,
 "cjc": 65,
-"cjc_name": "",
+"cjc_name": "PGL MNK SAM",
 "src": ""
 },
 {
 "id": 46356,
-"zh": "",
+"zh": "塔底強襲手套",
 "ja": "アンダーキープ・ストライカーグローブ",
 "en": "Underkeep Gloves of Striking",
 "slot": "手部",
@@ -12996,12 +12996,12 @@
 "icon": 56361,
 "ilvl": 725,
 "cjc": 65,
-"cjc_name": "",
+"cjc_name": "PGL MNK SAM",
 "src": ""
 },
 {
 "id": 46357,
-"zh": "",
+"zh": "塔底強襲馬褲",
 "ja": "アンダーキープ・ストライカーブリーチ",
 "en": "Underkeep Breeches of Striking",
 "slot": "腿部",
@@ -13012,12 +13012,12 @@
 "icon": 57775,
 "ilvl": 725,
 "cjc": 65,
-"cjc_name": "",
+"cjc_name": "PGL MNK SAM",
 "src": ""
 },
 {
 "id": 46358,
-"zh": "",
+"zh": "塔底強襲高筒靴",
 "ja": "アンダーキープ・ストライカーサイブーツ",
 "en": "Underkeep Thighboots of Striking",
 "slot": "腳部",
@@ -13028,12 +13028,12 @@
 "icon": 57866,
 "ilvl": 725,
 "cjc": 65,
-"cjc_name": "",
+"cjc_name": "PGL MNK SAM",
 "src": ""
 },
 {
 "id": 46380,
-"zh": "",
+"zh": "塔底強攻耳墜",
 "ja": "アンダーキープ・アタッカーイヤリング",
 "en": "Underkeep Earrings of Slaying",
 "slot": "耳飾",
@@ -13044,12 +13044,12 @@
 "icon": 55554,
 "ilvl": 725,
 "cjc": 84,
-"cjc_name": "",
+"cjc_name": "PGL LNC MNK DRG SAM RPR",
 "src": ""
 },
 {
 "id": 46385,
-"zh": "",
+"zh": "塔底強攻項環",
 "ja": "アンダーキープ・アタッカーネックバンド",
 "en": "Underkeep Neckband of Slaying",
 "slot": "項鍊",
@@ -13060,12 +13060,12 @@
 "icon": 55102,
 "ilvl": 725,
 "cjc": 84,
-"cjc_name": "",
+"cjc_name": "PGL LNC MNK DRG SAM RPR",
 "src": ""
 },
 {
 "id": 46390,
-"zh": "",
+"zh": "塔底強攻手環",
 "ja": "アンダーキープ・アタッカーリストバンド",
 "en": "Underkeep Wristband of Slaying",
 "slot": "手鐲",
@@ -13076,12 +13076,12 @@
 "icon": 55900,
 "ilvl": 725,
 "cjc": 84,
-"cjc_name": "",
+"cjc_name": "PGL LNC MNK DRG SAM RPR",
 "src": ""
 },
 {
 "id": 46395,
-"zh": "",
+"zh": "塔底強攻指環",
 "ja": "アンダーキープ・アタッカーリング",
 "en": "Underkeep Ring of Slaying",
 "slot": "戒指",
@@ -13092,12 +13092,12 @@
 "icon": 54752,
 "ilvl": 725,
 "cjc": 84,
-"cjc_name": "",
+"cjc_name": "PGL LNC MNK DRG SAM RPR",
 "src": ""
 }
 ],
-"cjc_name": "PGL MNK SAM BST",
-"zh_ok": false
+"cjc_name": "PGL MNK SAM",
+"zh_ok": true
 },
 {
 "id": "mirage:51660",
@@ -13110,7 +13110,7 @@
 "pieces": [
 {
 "id": 46349,
-"zh": "",
+"zh": "塔底制敵頭盔",
 "ja": "アンダーキープ・スレイヤーヘルム",
 "en": "Underkeep Helm of Maiming",
 "slot": "頭部",
@@ -13121,12 +13121,12 @@
 "icon": 56853,
 "ilvl": 725,
 "cjc": 76,
-"cjc_name": "",
+"cjc_name": "LNC DRG RPR",
 "src": ""
 },
 {
 "id": 46350,
-"zh": "",
+"zh": "塔底制敵戰甲",
 "ja": "アンダーキープ・スレイヤーサーコート",
 "en": "Underkeep Surcoat of Maiming",
 "slot": "上身",
@@ -13137,12 +13137,12 @@
 "icon": 57248,
 "ilvl": 725,
 "cjc": 76,
-"cjc_name": "",
+"cjc_name": "LNC DRG RPR",
 "src": ""
 },
 {
 "id": 46351,
-"zh": "",
+"zh": "塔底制敵手套",
 "ja": "アンダーキープ・スレイヤーグローブ",
 "en": "Underkeep Gloves of Maiming",
 "slot": "手部",
@@ -13153,12 +13153,12 @@
 "icon": 56360,
 "ilvl": 725,
 "cjc": 76,
-"cjc_name": "",
+"cjc_name": "LNC DRG RPR",
 "src": ""
 },
 {
 "id": 46352,
-"zh": "",
+"zh": "塔底制敵軟甲褲",
 "ja": "アンダーキープ・スレイヤーパンタロン",
 "en": "Underkeep Pantaloons of Maiming",
 "slot": "腿部",
@@ -13169,12 +13169,12 @@
 "icon": 57773,
 "ilvl": 725,
 "cjc": 76,
-"cjc_name": "",
+"cjc_name": "LNC DRG RPR",
 "src": ""
 },
 {
 "id": 46353,
-"zh": "",
+"zh": "塔底制敵鎧靴",
 "ja": "アンダーキープ・スレイヤーサバトン",
 "en": "Underkeep Sabatons of Maiming",
 "slot": "腳部",
@@ -13185,12 +13185,12 @@
 "icon": 57864,
 "ilvl": 725,
 "cjc": 76,
-"cjc_name": "",
+"cjc_name": "LNC DRG RPR",
 "src": ""
 },
 {
 "id": 46380,
-"zh": "",
+"zh": "塔底強攻耳墜",
 "ja": "アンダーキープ・アタッカーイヤリング",
 "en": "Underkeep Earrings of Slaying",
 "slot": "耳飾",
@@ -13201,12 +13201,12 @@
 "icon": 55554,
 "ilvl": 725,
 "cjc": 84,
-"cjc_name": "",
+"cjc_name": "PGL LNC MNK DRG SAM RPR",
 "src": ""
 },
 {
 "id": 46385,
-"zh": "",
+"zh": "塔底強攻項環",
 "ja": "アンダーキープ・アタッカーネックバンド",
 "en": "Underkeep Neckband of Slaying",
 "slot": "項鍊",
@@ -13217,12 +13217,12 @@
 "icon": 55102,
 "ilvl": 725,
 "cjc": 84,
-"cjc_name": "",
+"cjc_name": "PGL LNC MNK DRG SAM RPR",
 "src": ""
 },
 {
 "id": 46390,
-"zh": "",
+"zh": "塔底強攻手環",
 "ja": "アンダーキープ・アタッカーリストバンド",
 "en": "Underkeep Wristband of Slaying",
 "slot": "手鐲",
@@ -13233,12 +13233,12 @@
 "icon": 55900,
 "ilvl": 725,
 "cjc": 84,
-"cjc_name": "",
+"cjc_name": "PGL LNC MNK DRG SAM RPR",
 "src": ""
 },
 {
 "id": 46395,
-"zh": "",
+"zh": "塔底強攻指環",
 "ja": "アンダーキープ・アタッカーリング",
 "en": "Underkeep Ring of Slaying",
 "slot": "戒指",
@@ -13249,12 +13249,12 @@
 "icon": 54752,
 "ilvl": 725,
 "cjc": 84,
-"cjc_name": "",
+"cjc_name": "PGL LNC MNK DRG SAM RPR",
 "src": ""
 }
 ],
 "cjc_name": "LNC DRG RPR",
-"zh_ok": false
+"zh_ok": true
 },
 {
 "id": "mirage:51659",
@@ -13267,7 +13267,7 @@
 "pieces": [
 {
 "id": 46344,
-"zh": "",
+"zh": "塔底禦敵頭盔",
 "ja": "アンダーキープ・ディフェンダーヘルム",
 "en": "Underkeep Helm of Fending",
 "slot": "頭部",
@@ -13278,12 +13278,12 @@
 "icon": 56850,
 "ilvl": 725,
 "cjc": 59,
-"cjc_name": "",
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
 "src": ""
 },
 {
 "id": 46345,
-"zh": "",
+"zh": "塔底禦敵戰甲",
 "ja": "アンダーキープ・ディフェンダーサーコート",
 "en": "Underkeep Surcoat of Fending",
 "slot": "上身",
@@ -13294,12 +13294,12 @@
 "icon": 57246,
 "ilvl": 725,
 "cjc": 59,
-"cjc_name": "",
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
 "src": ""
 },
 {
 "id": 46346,
-"zh": "",
+"zh": "塔底禦敵手鎧",
 "ja": "アンダーキープ・ディフェンダーガントレット",
 "en": "Underkeep Gauntlets of Fending",
 "slot": "手部",
@@ -13310,12 +13310,12 @@
 "icon": 56357,
 "ilvl": 725,
 "cjc": 59,
-"cjc_name": "",
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
 "src": ""
 },
 {
 "id": 46347,
-"zh": "",
+"zh": "塔底禦敵軟甲褲",
 "ja": "アンダーキープ・ディフェンダートラウザー",
 "en": "Underkeep Trousers of Fending",
 "slot": "腿部",
@@ -13326,12 +13326,12 @@
 "icon": 57770,
 "ilvl": 725,
 "cjc": 59,
-"cjc_name": "",
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
 "src": ""
 },
 {
 "id": 46348,
-"zh": "",
+"zh": "塔底禦敵鎧靴",
 "ja": "アンダーキープ・ディフェンダーサバトン",
 "en": "Underkeep Sabatons of Fending",
 "slot": "腳部",
@@ -13342,12 +13342,12 @@
 "icon": 57861,
 "ilvl": 725,
 "cjc": 59,
-"cjc_name": "",
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
 "src": ""
 },
 {
 "id": 46379,
-"zh": "",
+"zh": "塔底禦敵耳墜",
 "ja": "アンダーキープ・ディフェンダーイヤリング",
 "en": "Underkeep Earrings of Fending",
 "slot": "耳飾",
@@ -13358,12 +13358,12 @@
 "icon": 55554,
 "ilvl": 725,
 "cjc": 59,
-"cjc_name": "",
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
 "src": ""
 },
 {
 "id": 46384,
-"zh": "",
+"zh": "塔底禦敵項環",
 "ja": "アンダーキープ・ディフェンダーネックバンド",
 "en": "Underkeep Neckband of Fending",
 "slot": "項鍊",
@@ -13374,12 +13374,12 @@
 "icon": 55102,
 "ilvl": 725,
 "cjc": 59,
-"cjc_name": "",
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
 "src": ""
 },
 {
 "id": 46389,
-"zh": "",
+"zh": "塔底禦敵手環",
 "ja": "アンダーキープ・ディフェンダーリストバンド",
 "en": "Underkeep Wristband of Fending",
 "slot": "手鐲",
@@ -13390,12 +13390,12 @@
 "icon": 55900,
 "ilvl": 725,
 "cjc": 59,
-"cjc_name": "",
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
 "src": ""
 },
 {
 "id": 46394,
-"zh": "",
+"zh": "塔底禦敵指環",
 "ja": "アンダーキープ・ディフェンダーリング",
 "en": "Underkeep Ring of Fending",
 "slot": "戒指",
@@ -13406,17 +13406,17 @@
 "icon": 54752,
 "ilvl": 725,
 "cjc": 59,
-"cjc_name": "",
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
 "src": ""
 }
 ],
 "cjc_name": "GLA MRD PLD WAR DRK GNB",
-"zh_ok": false
+"zh_ok": true
 },
 {
 "id": "mirage:48741",
 "layer": "mirage",
-"name_zh": "",
+"name_zh": "保鑣套裝",
 "name_ja": "バウンサー・アタイア",
 "name_en": "Bouncer's Attire",
 "source": "🎁幻化套裝箱",
@@ -13424,7 +13424,7 @@
 "pieces": [
 {
 "id": 47920,
-"zh": "",
+"zh": "保鑣背心",
 "ja": "バウンサーベスト",
 "en": "Bouncer's Vest",
 "slot": "上身",
@@ -13435,12 +13435,12 @@
 "icon": 57243,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47921,
-"zh": "",
+"zh": "保鑣半指手套",
 "ja": "バウンサーハーフグローブ",
 "en": "Bouncer's Halfgloves",
 "slot": "手部",
@@ -13451,12 +13451,12 @@
 "icon": 56355,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47922,
-"zh": "",
+"zh": "保鑣長褲",
 "ja": "バウンサースラックス",
 "en": "Bouncer's Slacks",
 "slot": "腿部",
@@ -13467,12 +13467,12 @@
 "icon": 57767,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47923,
-"zh": "",
+"zh": "保鑣禮鞋",
 "ja": "バウンサードレスシューズ",
 "en": "Bouncer's Dress Shoes",
 "slot": "腳部",
@@ -13483,17 +13483,17 @@
 "icon": 57858,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 }
 ],
-"cjc_name": "All Classes",
-"zh_ok": false
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"zh_ok": true
 },
 {
 "id": "mirage:48740",
 "layer": "mirage",
-"name_zh": "",
+"name_zh": "保鑣槍帶套裝",
 "name_ja": "バウンサーズ・ホルスター・アタイア",
 "name_en": "Bouncer's Holster Attire",
 "source": "🎁幻化套裝箱",
@@ -13501,7 +13501,7 @@
 "pieces": [
 {
 "id": 47919,
-"zh": "",
+"zh": "保鑣槍帶背心",
 "ja": "バウンサーズ・ホルスターベスト",
 "en": "Bouncer's Holster Vest",
 "slot": "上身",
@@ -13512,12 +13512,12 @@
 "icon": 57242,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47921,
-"zh": "",
+"zh": "保鑣半指手套",
 "ja": "バウンサーハーフグローブ",
 "en": "Bouncer's Halfgloves",
 "slot": "手部",
@@ -13528,12 +13528,12 @@
 "icon": 56355,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47928,
-"zh": "",
+"zh": "保鑣槍帶長褲",
 "ja": "バウンサーズ・ホルスタースラックス",
 "en": "Bouncer's Holster Slacks",
 "slot": "腿部",
@@ -13544,12 +13544,12 @@
 "icon": 57766,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47923,
-"zh": "",
+"zh": "保鑣禮鞋",
 "ja": "バウンサードレスシューズ",
 "en": "Bouncer's Dress Shoes",
 "slot": "腳部",
@@ -13560,17 +13560,17 @@
 "icon": 57858,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 }
 ],
-"cjc_name": "All Classes",
-"zh_ok": false
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"zh_ok": true
 },
 {
 "id": "mirage:48739",
 "layer": "mirage",
-"name_zh": "",
+"name_zh": "霓虹街頭套裝",
 "name_ja": "ネオンストリート・アタイア",
 "name_en": "Neon Street Attire",
 "source": "🎁幻化套裝箱",
@@ -13578,7 +13578,7 @@
 "pieces": [
 {
 "id": 47915,
-"zh": "",
+"zh": "霓虹街頭鴨舌帽",
 "ja": "ネオンストリート・キャップ",
 "en": "Neon Street Cap",
 "slot": "頭部",
@@ -13589,12 +13589,12 @@
 "icon": 56847,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47916,
-"zh": "",
+"zh": "霓虹街頭寬鬆夾克",
 "ja": "ネオンストリート・ブルゾン",
 "en": "Neon Street Blouson",
 "slot": "上身",
@@ -13605,12 +13605,12 @@
 "icon": 57241,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47917,
-"zh": "",
+"zh": "霓虹街頭工裝褲",
 "ja": "ネオンストリート・カーゴパンツ",
 "en": "Neon Street Cargo Trousers",
 "slot": "腿部",
@@ -13621,12 +13621,12 @@
 "icon": 57765,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47918,
-"zh": "",
+"zh": "霓虹街頭鞋",
 "ja": "ネオンストリート・シューズ",
 "en": "Neon Street Shoes",
 "slot": "腳部",
@@ -13637,17 +13637,17 @@
 "icon": 57857,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 }
 ],
-"cjc_name": "All Classes",
-"zh_ok": false
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"zh_ok": true
 },
 {
 "id": "mirage:48738",
 "layer": "mirage",
-"name_zh": "",
+"name_zh": "水晶都反叛者套裝",
 "name_ja": "クリスタリウムリベリオン・アタイア",
 "name_en": "Crystarium Rebel's Attire",
 "source": "🎁幻化套裝箱",
@@ -13655,7 +13655,7 @@
 "pieces": [
 {
 "id": 47911,
-"zh": "",
+"zh": "水晶都反叛者上衣",
 "ja": "クリスタリウムリベリオン・トップス",
 "en": "Crystarium Rebel's Top",
 "slot": "上身",
@@ -13666,12 +13666,12 @@
 "icon": 57259,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47912,
-"zh": "",
+"zh": "水晶都反叛者腕環",
 "ja": "クリスタリウムリベリオン・リストトーク",
 "en": "Crystarium Rebel's Wrist Torque",
 "slot": "手部",
@@ -13682,12 +13682,12 @@
 "icon": 56364,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47913,
-"zh": "",
+"zh": "水晶都反叛者緊身短褲",
 "ja": "クリスタリウムリベリオン・ハーフタイツ",
 "en": "Crystarium Rebel's Halftights",
 "slot": "腿部",
@@ -13698,12 +13698,12 @@
 "icon": 57780,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47914,
-"zh": "",
+"zh": "水晶都反叛者長靴",
 "ja": "クリスタリウムリベリオン・サイブーツ",
 "en": "Crystarium Rebel's Thighboots",
 "slot": "腳部",
@@ -13714,17 +13714,17 @@
 "icon": 57869,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 }
 ],
-"cjc_name": "All Classes",
-"zh_ok": false
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"zh_ok": true
 },
 {
 "id": "mirage:48737",
 "layer": "mirage",
-"name_zh": "",
+"name_zh": "阿澤瑪套裝",
 "name_ja": "アーゼマ・アタイア",
 "name_en": "The Warden's Attire",
 "source": "🎁幻化套裝箱",
@@ -13732,7 +13732,7 @@
 "pieces": [
 {
 "id": 47906,
-"zh": "",
+"zh": "阿澤瑪花冠",
 "ja": "アーゼマ・リース",
 "en": "The Warden's Wreath",
 "slot": "頭部",
@@ -13743,12 +13743,12 @@
 "icon": 56848,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47907,
-"zh": "",
+"zh": "阿澤瑪紗裙",
 "ja": "アーゼマ・ドレス",
 "en": "The Warden's Dress",
 "slot": "上身",
@@ -13759,12 +13759,12 @@
 "icon": 57244,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47908,
-"zh": "",
+"zh": "阿澤瑪臂甲",
 "ja": "アーゼマ・ヴァンブレイス",
 "en": "The Warden's Vambraces",
 "slot": "手部",
@@ -13775,12 +13775,12 @@
 "icon": 56356,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47909,
-"zh": "",
+"zh": "阿澤瑪夏褲",
 "ja": "アーゼマ・タンガ",
 "en": "The Warden's Tanga",
 "slot": "腿部",
@@ -13791,12 +13791,12 @@
 "icon": 57768,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47910,
-"zh": "",
+"zh": "阿澤瑪長靴",
 "ja": "アーゼマ・サイブーツ",
 "en": "The Warden's Thighboots",
 "slot": "腳部",
@@ -13807,12 +13807,12 @@
 "icon": 57859,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 48727,
-"zh": "",
+"zh": "阿澤瑪耳環",
 "ja": "アーゼマ・ピアス",
 "en": "The Warden's Earring",
 "slot": "耳飾",
@@ -13823,17 +13823,17 @@
 "icon": 55556,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 }
 ],
-"cjc_name": "All Classes",
-"zh_ok": false
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"zh_ok": true
 },
 {
 "id": "mirage:45572",
 "layer": "mirage",
-"name_zh": "",
+"name_zh": "皮帶七分褲套裝",
 "name_ja": "ベルトレザー・クロップドパンツ・アタイア",
 "name_en": "Belt-leather Attire (Cropped Slops)",
 "source": "🎁幻化套裝箱",
@@ -13841,7 +13841,7 @@
 "pieces": [
 {
 "id": 44668,
-"zh": "",
+"zh": "皮帶貝雷帽",
 "ja": "ベルトレザー・ベレー",
 "en": "Belt-leather Beret",
 "slot": "頭部",
@@ -13852,12 +13852,12 @@
 "icon": 56804,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 44673,
-"zh": "",
+"zh": "皮帶開口上衣",
 "ja": "ベルトレザー・オープンハーネストップス",
 "en": "Open-back Belt-leather Harness Top",
 "slot": "上身",
@@ -13868,12 +13868,12 @@
 "icon": 57197,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 44670,
-"zh": "",
+"zh": "皮帶指套",
 "ja": "ベルトレザー・フィンガーストール",
 "en": "Belt-leather Fingerstalls",
 "slot": "手部",
@@ -13884,12 +13884,12 @@
 "icon": 56312,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 44674,
-"zh": "",
+"zh": "皮帶七分褲",
 "ja": "ベルトレザー・クロップドパンツ",
 "en": "Cropped Belt-leather Slops",
 "slot": "腿部",
@@ -13900,12 +13900,12 @@
 "icon": 57722,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 44675,
-"zh": "",
+"zh": "皮帶便鞋",
 "ja": "ベルトレザー・ローファー",
 "en": "Belt-leather Loafers",
 "slot": "腳部",
@@ -13916,17 +13916,17 @@
 "icon": 57814,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 }
 ],
-"cjc_name": "All Classes",
-"zh_ok": false
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"zh_ok": true
 },
 {
 "id": "mirage:45571",
 "layer": "mirage",
-"name_zh": "",
+"name_zh": "皮帶軟甲褲套裝",
 "name_ja": "ベルトレザー・トラウザー・アタイア",
 "name_en": "Belt-leather Attire (Trousers)",
 "source": "🎁幻化套裝箱",
@@ -13934,7 +13934,7 @@
 "pieces": [
 {
 "id": 44668,
-"zh": "",
+"zh": "皮帶貝雷帽",
 "ja": "ベルトレザー・ベレー",
 "en": "Belt-leather Beret",
 "slot": "頭部",
@@ -13945,12 +13945,12 @@
 "icon": 56804,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 44669,
-"zh": "",
+"zh": "皮帶上衣",
 "ja": "ベルトレザー・ハーネストップス",
 "en": "Belt-leather Harness Top",
 "slot": "上身",
@@ -13961,12 +13961,12 @@
 "icon": 57196,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 44670,
-"zh": "",
+"zh": "皮帶指套",
 "ja": "ベルトレザー・フィンガーストール",
 "en": "Belt-leather Fingerstalls",
 "slot": "手部",
@@ -13977,12 +13977,12 @@
 "icon": 56312,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 44671,
-"zh": "",
+"zh": "皮帶軟甲褲",
 "ja": "ベルトレザー・トラウザー",
 "en": "Belt-leather Trousers",
 "slot": "腿部",
@@ -13993,12 +13993,12 @@
 "icon": 57721,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 44672,
-"zh": "",
+"zh": "皮帶皮靴",
 "ja": "ベルトレザー・ブーツ",
 "en": "Belt-leather Boots",
 "slot": "腳部",
@@ -14009,25 +14009,25 @@
 "icon": 57813,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 }
 ],
-"cjc_name": "All Classes",
-"zh_ok": false
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"zh_ok": true
 },
 {
 "id": "src:504890f1:76:730",
 "layer": "src",
-"name_zh": "",
+"name_zh": "黯雲制敵",
 "name_ja": "クラウドダーク・スレイヤー",
 "name_en": "Clouddark",
-"source": "🪙兌換",
+"source": "🪙兌換：暗雲半魔晶石",
 "patch": "7.15",
 "pieces": [
 {
 "id": 44610,
-"zh": "",
+"zh": "黯雲制敵頭盔",
 "ja": "クラウドダーク・スレイヤーヘルム",
 "en": "Clouddark Helm of Maiming",
 "slot": "頭部",
@@ -14038,12 +14038,12 @@
 "icon": 56808,
 "ilvl": 730,
 "cjc": 76,
-"cjc_name": "",
-"src": "🪙兌換×2（瓦赫賽帕）"
+"cjc_name": "LNC DRG RPR",
+"src": "🪙暗雲半魔晶石×2（瓦赫賽帕）"
 },
 {
 "id": 44611,
-"zh": "",
+"zh": "黯雲制敵戰甲",
 "ja": "クラウドダーク・スレイヤーアーマー",
 "en": "Clouddark Armor of Maiming",
 "slot": "上身",
@@ -14054,12 +14054,12 @@
 "icon": 57201,
 "ilvl": 730,
 "cjc": 76,
-"cjc_name": "",
-"src": "🪙兌換×3（瓦赫賽帕）"
+"cjc_name": "LNC DRG RPR",
+"src": "🪙暗雲半魔晶石×3（瓦赫賽帕）"
 },
 {
 "id": 44612,
-"zh": "",
+"zh": "黯雲制敵手鎧",
 "ja": "クラウドダーク・スレイヤーガントレット",
 "en": "Clouddark Gauntlets of Maiming",
 "slot": "手部",
@@ -14070,12 +14070,12 @@
 "icon": 56316,
 "ilvl": 730,
 "cjc": 76,
-"cjc_name": "",
-"src": "🪙兌換×2（瓦赫賽帕）"
+"cjc_name": "LNC DRG RPR",
+"src": "🪙暗雲半魔晶石×2（瓦赫賽帕）"
 },
 {
 "id": 44613,
-"zh": "",
+"zh": "黯雲制敵腿甲",
 "ja": "クラウドダーク・スレイヤークウィス",
 "en": "Clouddark Cuisses of Maiming",
 "slot": "腿部",
@@ -14086,12 +14086,12 @@
 "icon": 57726,
 "ilvl": 730,
 "cjc": 76,
-"cjc_name": "",
-"src": "🪙兌換×3（瓦赫賽帕）"
+"cjc_name": "LNC DRG RPR",
+"src": "🪙暗雲半魔晶石×3（瓦赫賽帕）"
 },
 {
 "id": 44614,
-"zh": "",
+"zh": "黯雲制敵脛甲",
 "ja": "クラウドダーク・スレイヤーグリーヴ",
 "en": "Clouddark Greaves of Maiming",
 "slot": "腳部",
@@ -14102,25 +14102,25 @@
 "icon": 57818,
 "ilvl": 730,
 "cjc": 76,
-"cjc_name": "",
-"src": "🪙兌換×2（瓦赫賽帕）"
+"cjc_name": "LNC DRG RPR",
+"src": "🪙暗雲半魔晶石×2（瓦赫賽帕）"
 }
 ],
 "cjc_name": "LNC DRG RPR",
-"zh_ok": false
+"zh_ok": true
 },
 {
 "id": "src:504890f1:66:730",
 "layer": "src",
-"name_zh": "",
+"name_zh": "黯雲精準",
 "name_ja": "クラウドダーク・レンジャー",
 "name_en": "Clouddark",
-"source": "🪙兌換",
+"source": "🪙兌換：暗雲半魔晶石",
 "patch": "7.15",
 "pieces": [
 {
 "id": 44620,
-"zh": "",
+"zh": "黯雲精準頭甲",
 "ja": "クラウドダーク・レンジャーヘッド",
 "en": "Clouddark Headplume of Aiming",
 "slot": "頭部",
@@ -14131,12 +14131,12 @@
 "icon": 56813,
 "ilvl": 730,
 "cjc": 66,
-"cjc_name": "",
-"src": "🪙兌換×2（瓦赫賽帕）"
+"cjc_name": "ARC BRD MCH DNC",
+"src": "🪙暗雲半魔晶石×2（瓦赫賽帕）"
 },
 {
 "id": 44621,
-"zh": "",
+"zh": "黯雲精準長衣",
 "ja": "クラウドダーク・レンジャークローク",
 "en": "Clouddark Cloak of Aiming",
 "slot": "上身",
@@ -14147,12 +14147,12 @@
 "icon": 57204,
 "ilvl": 730,
 "cjc": 66,
-"cjc_name": "",
-"src": "🪙兌換×3（瓦赫賽帕）"
+"cjc_name": "ARC BRD MCH DNC",
+"src": "🪙暗雲半魔晶石×3（瓦赫賽帕）"
 },
 {
 "id": 44622,
-"zh": "",
+"zh": "黯雲精準尖爪",
 "ja": "クラウドダーク・レンジャークローティップ",
 "en": "Clouddark Clawtips of Aiming",
 "slot": "手部",
@@ -14163,12 +14163,12 @@
 "icon": 56321,
 "ilvl": 730,
 "cjc": 66,
-"cjc_name": "",
-"src": "🪙兌換×2（瓦赫賽帕）"
+"cjc_name": "ARC BRD MCH DNC",
+"src": "🪙暗雲半魔晶石×2（瓦赫賽帕）"
 },
 {
 "id": 44623,
-"zh": "",
+"zh": "黯雲精準長褲",
 "ja": "クラウドダーク・レンジャータイツ",
 "en": "Clouddark Tights of Aiming",
 "slot": "腿部",
@@ -14179,12 +14179,12 @@
 "icon": 57731,
 "ilvl": 730,
 "cjc": 66,
-"cjc_name": "",
-"src": "🪙兌換×3（瓦赫賽帕）"
+"cjc_name": "ARC BRD MCH DNC",
+"src": "🪙暗雲半魔晶石×3（瓦赫賽帕）"
 },
 {
 "id": 44624,
-"zh": "",
+"zh": "黯雲精準鎖甲靴",
 "ja": "クラウドダーク・レンジャーソルレット",
 "en": "Clouddark Sollerets of Aiming",
 "slot": "腳部",
@@ -14195,25 +14195,25 @@
 "icon": 57823,
 "ilvl": 730,
 "cjc": 66,
-"cjc_name": "",
-"src": "🪙兌換×2（瓦赫賽帕）"
+"cjc_name": "ARC BRD MCH DNC",
+"src": "🪙暗雲半魔晶石×2（瓦赫賽帕）"
 }
 ],
 "cjc_name": "ARC BRD MCH DNC",
-"zh_ok": false
+"zh_ok": true
 },
 {
 "id": "src:504890f1:65:730",
 "layer": "src",
-"name_zh": "",
+"name_zh": "黯雲強襲",
 "name_ja": "クラウドダーク・ストライカー",
 "name_en": "Clouddark",
-"source": "🪙兌換",
+"source": "🪙兌換：暗雲半魔晶石",
 "patch": "7.15",
 "pieces": [
 {
 "id": 44615,
-"zh": "",
+"zh": "黯雲強襲頭甲",
 "ja": "クラウドダーク・ストライカーヘッド",
 "en": "Clouddark Headplume of Striking",
 "slot": "頭部",
@@ -14224,12 +14224,12 @@
 "icon": 56812,
 "ilvl": 730,
 "cjc": 65,
-"cjc_name": "",
-"src": "🪙兌換×2（瓦赫賽帕）"
+"cjc_name": "PGL MNK SAM",
+"src": "🪙暗雲半魔晶石×2（瓦赫賽帕）"
 },
 {
 "id": 44616,
-"zh": "",
+"zh": "黯雲強襲長衣",
 "ja": "クラウドダーク・ストライカーキトン",
 "en": "Clouddark Chiton of Striking",
 "slot": "上身",
@@ -14240,12 +14240,12 @@
 "icon": 57206,
 "ilvl": 730,
 "cjc": 65,
-"cjc_name": "",
-"src": "🪙兌換×3（瓦赫賽帕）"
+"cjc_name": "PGL MNK SAM",
+"src": "🪙暗雲半魔晶石×3（瓦赫賽帕）"
 },
 {
 "id": 44617,
-"zh": "",
+"zh": "黯雲強襲尖爪",
 "ja": "クラウドダーク・ストライカークローティップ",
 "en": "Clouddark Clawtips of Striking",
 "slot": "手部",
@@ -14256,12 +14256,12 @@
 "icon": 56320,
 "ilvl": 730,
 "cjc": 65,
-"cjc_name": "",
-"src": "🪙兌換×2（瓦赫賽帕）"
+"cjc_name": "PGL MNK SAM",
+"src": "🪙暗雲半魔晶石×2（瓦赫賽帕）"
 },
 {
 "id": 44618,
-"zh": "",
+"zh": "黯雲強襲長褲",
 "ja": "クラウドダーク・ストライカータイツ",
 "en": "Clouddark Tights of Striking",
 "slot": "腿部",
@@ -14272,12 +14272,12 @@
 "icon": 57730,
 "ilvl": 730,
 "cjc": 65,
-"cjc_name": "",
-"src": "🪙兌換×3（瓦赫賽帕）"
+"cjc_name": "PGL MNK SAM",
+"src": "🪙暗雲半魔晶石×3（瓦赫賽帕）"
 },
 {
 "id": 44619,
-"zh": "",
+"zh": "黯雲強襲鎖甲靴",
 "ja": "クラウドダーク・ストライカーソルレット",
 "en": "Clouddark Sollerets of Striking",
 "slot": "腳部",
@@ -14288,25 +14288,25 @@
 "icon": 57822,
 "ilvl": 730,
 "cjc": 65,
-"cjc_name": "",
-"src": "🪙兌換×2（瓦赫賽帕）"
+"cjc_name": "PGL MNK SAM",
+"src": "🪙暗雲半魔晶石×2（瓦赫賽帕）"
 }
 ],
-"cjc_name": "PGL MNK SAM BST",
-"zh_ok": false
+"cjc_name": "PGL MNK SAM",
+"zh_ok": true
 },
 {
 "id": "src:504890f1:64:730",
 "layer": "src",
-"name_zh": "",
+"name_zh": "黯雲治癒",
 "name_ja": "クラウドダーク・ヒーラー",
 "name_en": "Clouddark",
-"source": "🪙兌換",
+"source": "🪙兌換：暗雲半魔晶石",
 "patch": "7.15",
 "pieces": [
 {
 "id": 44630,
-"zh": "",
+"zh": "黯雲治癒長角",
 "ja": "クラウドダーク・ヒーラーホーン",
 "en": "Clouddark Horns of Healing",
 "slot": "頭部",
@@ -14317,12 +14317,12 @@
 "icon": 56809,
 "ilvl": 730,
 "cjc": 64,
-"cjc_name": "",
-"src": "🪙兌換×2（瓦赫賽帕）"
+"cjc_name": "CNJ WHM SCH AST SGE",
+"src": "🪙暗雲半魔晶石×2（瓦赫賽帕）"
 },
 {
 "id": 44631,
-"zh": "",
+"zh": "黯雲治癒上衣",
 "ja": "クラウドダーク・ヒーラートップス",
 "en": "Clouddark Top of Healing",
 "slot": "上身",
@@ -14333,12 +14333,12 @@
 "icon": 57202,
 "ilvl": 730,
 "cjc": 64,
-"cjc_name": "",
-"src": "🪙兌換×3（瓦赫賽帕）"
+"cjc_name": "CNJ WHM SCH AST SGE",
+"src": "🪙暗雲半魔晶石×3（瓦赫賽帕）"
 },
 {
 "id": 44632,
-"zh": "",
+"zh": "黯雲治癒手鎧",
 "ja": "クラウドダーク・ヒーラーガントレット",
 "en": "Clouddark Gauntlets of Healing",
 "slot": "手部",
@@ -14349,12 +14349,12 @@
 "icon": 56317,
 "ilvl": 730,
 "cjc": 64,
-"cjc_name": "",
-"src": "🪙兌換×2（瓦赫賽帕）"
+"cjc_name": "CNJ WHM SCH AST SGE",
+"src": "🪙暗雲半魔晶石×2（瓦赫賽帕）"
 },
 {
 "id": 44633,
-"zh": "",
+"zh": "黯雲治癒襯褲",
 "ja": "クラウドダーク・ヒーラーブレー",
 "en": "Clouddark Brais of Healing",
 "slot": "腿部",
@@ -14365,12 +14365,12 @@
 "icon": 57727,
 "ilvl": 730,
 "cjc": 64,
-"cjc_name": "",
-"src": "🪙兌換×3（瓦赫賽帕）"
+"cjc_name": "CNJ WHM SCH AST SGE",
+"src": "🪙暗雲半魔晶石×3（瓦赫賽帕）"
 },
 {
 "id": 44634,
-"zh": "",
+"zh": "黯雲治癒爪靴",
 "ja": "クラウドダーク・ヒーラークローブーツ",
 "en": "Clouddark Clawboots of Healing",
 "slot": "腳部",
@@ -14381,25 +14381,25 @@
 "icon": 57819,
 "ilvl": 730,
 "cjc": 64,
-"cjc_name": "",
-"src": "🪙兌換×2（瓦赫賽帕）"
+"cjc_name": "CNJ WHM SCH AST SGE",
+"src": "🪙暗雲半魔晶石×2（瓦赫賽帕）"
 }
 ],
 "cjc_name": "CNJ WHM SCH AST SGE",
-"zh_ok": false
+"zh_ok": true
 },
 {
 "id": "src:504890f1:63:730",
 "layer": "src",
-"name_zh": "",
+"name_zh": "黯雲詠咒",
 "name_ja": "クラウドダーク・キャスター",
 "name_en": "Clouddark",
-"source": "🪙兌換",
+"source": "🪙兌換：暗雲半魔晶石",
 "patch": "7.15",
 "pieces": [
 {
 "id": 44635,
-"zh": "",
+"zh": "黯雲詠咒長角",
 "ja": "クラウドダーク・キャスターホーン",
 "en": "Clouddark Horns of Casting",
 "slot": "頭部",
@@ -14410,12 +14410,12 @@
 "icon": 56810,
 "ilvl": 730,
 "cjc": 63,
-"cjc_name": "",
-"src": "🪙兌換×2（瓦赫賽帕）"
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
+"src": "🪙暗雲半魔晶石×2（瓦赫賽帕）"
 },
 {
 "id": 44636,
-"zh": "",
+"zh": "黯雲詠咒上衣",
 "ja": "クラウドダーク・キャスタートップス",
 "en": "Clouddark Top of Casting",
 "slot": "上身",
@@ -14426,12 +14426,12 @@
 "icon": 57203,
 "ilvl": 730,
 "cjc": 63,
-"cjc_name": "",
-"src": "🪙兌換×3（瓦赫賽帕）"
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
+"src": "🪙暗雲半魔晶石×3（瓦赫賽帕）"
 },
 {
 "id": 44637,
-"zh": "",
+"zh": "黯雲詠咒手鎧",
 "ja": "クラウドダーク・キャスターガントレット",
 "en": "Clouddark Gauntlets of Casting",
 "slot": "手部",
@@ -14442,12 +14442,12 @@
 "icon": 56318,
 "ilvl": 730,
 "cjc": 63,
-"cjc_name": "",
-"src": "🪙兌換×2（瓦赫賽帕）"
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
+"src": "🪙暗雲半魔晶石×2（瓦赫賽帕）"
 },
 {
 "id": 44638,
-"zh": "",
+"zh": "黯雲詠咒襯褲",
 "ja": "クラウドダーク・キャスターブレー",
 "en": "Clouddark Brais of Casting",
 "slot": "腿部",
@@ -14458,12 +14458,12 @@
 "icon": 57728,
 "ilvl": 730,
 "cjc": 63,
-"cjc_name": "",
-"src": "🪙兌換×3（瓦赫賽帕）"
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
+"src": "🪙暗雲半魔晶石×3（瓦赫賽帕）"
 },
 {
 "id": 44639,
-"zh": "",
+"zh": "黯雲詠咒爪靴",
 "ja": "クラウドダーク・キャスタークローブーツ",
 "en": "Clouddark Clawboots of Casting",
 "slot": "腳部",
@@ -14474,25 +14474,25 @@
 "icon": 57820,
 "ilvl": 730,
 "cjc": 63,
-"cjc_name": "",
-"src": "🪙兌換×2（瓦赫賽帕）"
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
+"src": "🪙暗雲半魔晶石×2（瓦赫賽帕）"
 }
 ],
-"cjc_name": "THM ACN BLM SMN RDM BLU PCT",
-"zh_ok": false
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
+"zh_ok": true
 },
 {
 "id": "src:504890f1:59:730",
 "layer": "src",
-"name_zh": "",
+"name_zh": "黯雲禦敵",
 "name_ja": "クラウドダーク・ディフェンダー",
 "name_en": "Clouddark",
-"source": "🪙兌換",
+"source": "🪙兌換：暗雲半魔晶石",
 "patch": "7.15",
 "pieces": [
 {
 "id": 44605,
-"zh": "",
+"zh": "黯雲禦敵頭盔",
 "ja": "クラウドダーク・ディフェンダーヘルム",
 "en": "Clouddark Helm of Fending",
 "slot": "頭部",
@@ -14503,12 +14503,12 @@
 "icon": 56807,
 "ilvl": 730,
 "cjc": 59,
-"cjc_name": "",
-"src": "🪙兌換×2（瓦赫賽帕）"
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
+"src": "🪙暗雲半魔晶石×2（瓦赫賽帕）"
 },
 {
 "id": 44606,
-"zh": "",
+"zh": "黯雲禦敵戰甲",
 "ja": "クラウドダーク・ディフェンダーアーマー",
 "en": "Clouddark Armor of Fending",
 "slot": "上身",
@@ -14519,12 +14519,12 @@
 "icon": 57200,
 "ilvl": 730,
 "cjc": 59,
-"cjc_name": "",
-"src": "🪙兌換×3（瓦赫賽帕）"
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
+"src": "🪙暗雲半魔晶石×3（瓦赫賽帕）"
 },
 {
 "id": 44607,
-"zh": "",
+"zh": "黯雲禦敵手鎧",
 "ja": "クラウドダーク・ディフェンダーガントレット",
 "en": "Clouddark Gauntlets of Fending",
 "slot": "手部",
@@ -14535,12 +14535,12 @@
 "icon": 56315,
 "ilvl": 730,
 "cjc": 59,
-"cjc_name": "",
-"src": "🪙兌換×2（瓦赫賽帕）"
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
+"src": "🪙暗雲半魔晶石×2（瓦赫賽帕）"
 },
 {
 "id": 44608,
-"zh": "",
+"zh": "黯雲禦敵腿甲",
 "ja": "クラウドダーク・ディフェンダークウィス",
 "en": "Clouddark Cuisses of Fending",
 "slot": "腿部",
@@ -14551,12 +14551,12 @@
 "icon": 57725,
 "ilvl": 730,
 "cjc": 59,
-"cjc_name": "",
-"src": "🪙兌換×3（瓦赫賽帕）"
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
+"src": "🪙暗雲半魔晶石×3（瓦赫賽帕）"
 },
 {
 "id": 44609,
-"zh": "",
+"zh": "黯雲禦敵脛甲",
 "ja": "クラウドダーク・ディフェンダーグリーヴ",
 "en": "Clouddark Greaves of Fending",
 "slot": "腳部",
@@ -14567,25 +14567,25 @@
 "icon": 57817,
 "ilvl": 730,
 "cjc": 59,
-"cjc_name": "",
-"src": "🪙兌換×2（瓦赫賽帕）"
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
+"src": "🪙暗雲半魔晶石×2（瓦赫賽帕）"
 }
 ],
 "cjc_name": "GLA MRD PLD WAR DRK GNB",
-"zh_ok": false
+"zh_ok": true
 },
 {
 "id": "src:504890f1:103:730",
 "layer": "src",
-"name_zh": "",
+"name_zh": "黯雲游擊",
 "name_ja": "クラウドダーク・スカウト",
 "name_en": "Clouddark",
-"source": "🪙兌換",
+"source": "🪙兌換：暗雲半魔晶石",
 "patch": "7.15",
 "pieces": [
 {
 "id": 44625,
-"zh": "",
+"zh": "黯雲游擊頭甲",
 "ja": "クラウドダーク・スカウトヘッド",
 "en": "Clouddark Headplume of Scouting",
 "slot": "頭部",
@@ -14596,12 +14596,12 @@
 "icon": 56811,
 "ilvl": 730,
 "cjc": 103,
-"cjc_name": "",
-"src": "🪙兌換×2（瓦赫賽帕）"
+"cjc_name": "ROG NIN VPR",
+"src": "🪙暗雲半魔晶石×2（瓦赫賽帕）"
 },
 {
 "id": 44626,
-"zh": "",
+"zh": "黯雲游擊長衣",
 "ja": "クラウドダーク・スカウトキトン",
 "en": "Clouddark Chiton of Scouting",
 "slot": "上身",
@@ -14612,12 +14612,12 @@
 "icon": 57205,
 "ilvl": 730,
 "cjc": 103,
-"cjc_name": "",
-"src": "🪙兌換×3（瓦赫賽帕）"
+"cjc_name": "ROG NIN VPR",
+"src": "🪙暗雲半魔晶石×3（瓦赫賽帕）"
 },
 {
 "id": 44627,
-"zh": "",
+"zh": "黯雲游擊尖爪",
 "ja": "クラウドダーク・スカウトクローティップ",
 "en": "Clouddark Clawtips of Scouting",
 "slot": "手部",
@@ -14628,12 +14628,12 @@
 "icon": 56319,
 "ilvl": 730,
 "cjc": 103,
-"cjc_name": "",
-"src": "🪙兌換×2（瓦赫賽帕）"
+"cjc_name": "ROG NIN VPR",
+"src": "🪙暗雲半魔晶石×2（瓦赫賽帕）"
 },
 {
 "id": 44628,
-"zh": "",
+"zh": "黯雲游擊長褲",
 "ja": "クラウドダーク・スカウトタイツ",
 "en": "Clouddark Tights of Scouting",
 "slot": "腿部",
@@ -14644,12 +14644,12 @@
 "icon": 57729,
 "ilvl": 730,
 "cjc": 103,
-"cjc_name": "",
-"src": "🪙兌換×3（瓦赫賽帕）"
+"cjc_name": "ROG NIN VPR",
+"src": "🪙暗雲半魔晶石×3（瓦赫賽帕）"
 },
 {
 "id": 44629,
-"zh": "",
+"zh": "黯雲游擊鎖甲靴",
 "ja": "クラウドダーク・スカウトソルレット",
 "en": "Clouddark Sollerets of Scouting",
 "slot": "腳部",
@@ -14660,17 +14660,17 @@
 "icon": 57821,
 "ilvl": 730,
 "cjc": 103,
-"cjc_name": "",
-"src": "🪙兌換×2（瓦赫賽帕）"
+"cjc_name": "ROG NIN VPR",
+"src": "🪙暗雲半魔晶石×2（瓦赫賽帕）"
 }
 ],
 "cjc_name": "ROG NIN VPR",
-"zh_ok": false
+"zh_ok": true
 },
 {
 "id": "mirage:45568",
 "layer": "mirage",
-"name_zh": "",
+"name_zh": "黃金晨輝套裝",
 "name_ja": "ドーンブレイザー・アタイア",
 "name_en": "Dawnblazer Attire",
 "source": "🎁幻化套裝箱",
@@ -14678,7 +14678,7 @@
 "pieces": [
 {
 "id": 44655,
-"zh": "",
+"zh": "黃金晨輝寬邊帽",
 "ja": "ドーンブレイザー・ハット",
 "en": "Dawnblazer Hat",
 "slot": "頭部",
@@ -14689,12 +14689,12 @@
 "icon": 56792,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
-"src": "🛒失物管理人（格里達尼亞舊街） 100 Gil；🗺️藏寶圖"
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"src": "🛒失物管理人（格里達尼亞舊街） 100 Gil；🗺️藏寶圖（黃金晨輝裝備箱 等）"
 },
 {
 "id": 44656,
-"zh": "",
+"zh": "黃金晨輝皮衣",
 "ja": "ドーンブレイザー・ジャーキン",
 "en": "Dawnblazer Jerkin",
 "slot": "上身",
@@ -14705,12 +14705,12 @@
 "icon": 57180,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
-"src": "🛒失物管理人（格里達尼亞舊街） 100 Gil；🗺️藏寶圖"
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"src": "🛒失物管理人（格里達尼亞舊街） 100 Gil；🗺️藏寶圖（黃金晨輝裝備箱 等）"
 },
 {
 "id": 44657,
-"zh": "",
+"zh": "黃金晨輝手套",
 "ja": "ドーンブレイザー・グローブ",
 "en": "Dawnblazer Gloves",
 "slot": "手部",
@@ -14721,12 +14721,12 @@
 "icon": 56301,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
-"src": "🛒失物管理人（格里達尼亞舊街） 100 Gil；🗺️藏寶圖"
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"src": "🛒失物管理人（格里達尼亞舊街） 100 Gil；🗺️藏寶圖（黃金晨輝裝備箱 等）"
 },
 {
 "id": 44658,
-"zh": "",
+"zh": "黃金晨輝皮套褲",
 "ja": "ドーンブレイザー・チャップス",
 "en": "Dawnblazer Chaps",
 "slot": "腿部",
@@ -14737,12 +14737,12 @@
 "icon": 57705,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
-"src": "🛒失物管理人（格里達尼亞舊街） 100 Gil；🗺️藏寶圖"
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"src": "🛒失物管理人（格里達尼亞舊街） 100 Gil；🗺️藏寶圖（黃金晨輝裝備箱 等）"
 },
 {
 "id": 44659,
-"zh": "",
+"zh": "黃金晨輝短靴",
 "ja": "ドーンブレイザー・ブーツ",
 "en": "Dawnblazer Boots",
 "slot": "腳部",
@@ -14753,12 +14753,12 @@
 "icon": 49799,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
-"src": "🛒失物管理人（格里達尼亞舊街） 100 Gil；🗺️藏寶圖"
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"src": "🛒失物管理人（格里達尼亞舊街） 100 Gil；🗺️藏寶圖（黃金晨輝裝備箱 等）"
 }
 ],
-"cjc_name": "All Classes",
-"zh_ok": false
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"zh_ok": true
 },
 {
 "id": "mirage:45565",
@@ -56107,7 +56107,7 @@
 "name_zh": "星戰士制敵",
 "name_ja": "レディアント・スレイヤー",
 "name_en": "Radiant's",
-"source": "🪙兌換",
+"source": "🪙兌換：亞拉戈數理神典石",
 "patch": "6.05",
 "pieces": [
 {
@@ -56124,7 +56124,7 @@
 "ilvl": 590,
 "cjc": 76,
 "cjc_name": "LNC DRG RPR",
-"src": "🪙兌換×495"
+"src": "🪙亞拉戈數理神典石×495"
 },
 {
 "id": 35121,
@@ -56140,7 +56140,7 @@
 "ilvl": 590,
 "cjc": 76,
 "cjc_name": "LNC DRG RPR",
-"src": "🪙兌換×825"
+"src": "🪙亞拉戈數理神典石×825"
 },
 {
 "id": 35122,
@@ -56156,7 +56156,7 @@
 "ilvl": 590,
 "cjc": 76,
 "cjc_name": "LNC DRG RPR",
-"src": "🪙兌換×495"
+"src": "🪙亞拉戈數理神典石×495"
 },
 {
 "id": 35123,
@@ -56172,7 +56172,7 @@
 "ilvl": 590,
 "cjc": 76,
 "cjc_name": "LNC DRG RPR",
-"src": "🪙兌換×825"
+"src": "🪙亞拉戈數理神典石×825"
 },
 {
 "id": 35124,
@@ -56188,7 +56188,7 @@
 "ilvl": 590,
 "cjc": 76,
 "cjc_name": "LNC DRG RPR",
-"src": "🪙兌換×495"
+"src": "🪙亞拉戈數理神典石×495"
 }
 ],
 "cjc_name": "LNC DRG RPR",
@@ -56200,7 +56200,7 @@
 "name_zh": "星戰士精準",
 "name_ja": "レディアント・レンジャー",
 "name_en": "Radiant's",
-"source": "🪙兌換",
+"source": "🪙兌換：亞拉戈數理神典石",
 "patch": "6.05",
 "pieces": [
 {
@@ -56217,7 +56217,7 @@
 "ilvl": 590,
 "cjc": 66,
 "cjc_name": "ARC BRD MCH DNC",
-"src": "🪙兌換×495"
+"src": "🪙亞拉戈數理神典石×495"
 },
 {
 "id": 35131,
@@ -56233,7 +56233,7 @@
 "ilvl": 590,
 "cjc": 66,
 "cjc_name": "ARC BRD MCH DNC",
-"src": "🪙兌換×825"
+"src": "🪙亞拉戈數理神典石×825"
 },
 {
 "id": 35132,
@@ -56249,7 +56249,7 @@
 "ilvl": 590,
 "cjc": 66,
 "cjc_name": "ARC BRD MCH DNC",
-"src": "🪙兌換×495"
+"src": "🪙亞拉戈數理神典石×495"
 },
 {
 "id": 35133,
@@ -56265,7 +56265,7 @@
 "ilvl": 590,
 "cjc": 66,
 "cjc_name": "ARC BRD MCH DNC",
-"src": "🪙兌換×825"
+"src": "🪙亞拉戈數理神典石×825"
 },
 {
 "id": 35134,
@@ -56281,7 +56281,7 @@
 "ilvl": 590,
 "cjc": 66,
 "cjc_name": "ARC BRD MCH DNC",
-"src": "🪙兌換×495"
+"src": "🪙亞拉戈數理神典石×495"
 }
 ],
 "cjc_name": "ARC BRD MCH DNC",
@@ -56293,7 +56293,7 @@
 "name_zh": "星戰士強襲",
 "name_ja": "レディアント・ストライカー",
 "name_en": "Radiant's",
-"source": "🪙兌換",
+"source": "🪙兌換：亞拉戈數理神典石",
 "patch": "6.05",
 "pieces": [
 {
@@ -56310,7 +56310,7 @@
 "ilvl": 590,
 "cjc": 65,
 "cjc_name": "PGL MNK SAM",
-"src": "🪙兌換×495"
+"src": "🪙亞拉戈數理神典石×495"
 },
 {
 "id": 35126,
@@ -56326,7 +56326,7 @@
 "ilvl": 590,
 "cjc": 65,
 "cjc_name": "PGL MNK SAM",
-"src": "🪙兌換×825"
+"src": "🪙亞拉戈數理神典石×825"
 },
 {
 "id": 35127,
@@ -56342,7 +56342,7 @@
 "ilvl": 590,
 "cjc": 65,
 "cjc_name": "PGL MNK SAM",
-"src": "🪙兌換×495"
+"src": "🪙亞拉戈數理神典石×495"
 },
 {
 "id": 35128,
@@ -56358,7 +56358,7 @@
 "ilvl": 590,
 "cjc": 65,
 "cjc_name": "PGL MNK SAM",
-"src": "🪙兌換×825"
+"src": "🪙亞拉戈數理神典石×825"
 },
 {
 "id": 35129,
@@ -56374,7 +56374,7 @@
 "ilvl": 590,
 "cjc": 65,
 "cjc_name": "PGL MNK SAM",
-"src": "🪙兌換×495"
+"src": "🪙亞拉戈數理神典石×495"
 }
 ],
 "cjc_name": "PGL MNK SAM",
@@ -56386,7 +56386,7 @@
 "name_zh": "星戰士治癒",
 "name_ja": "レディアント・ヒーラー",
 "name_en": "Radiant's",
-"source": "🪙兌換",
+"source": "🪙兌換：亞拉戈數理神典石",
 "patch": "6.05",
 "pieces": [
 {
@@ -56403,7 +56403,7 @@
 "ilvl": 590,
 "cjc": 64,
 "cjc_name": "CNJ WHM SCH AST SGE",
-"src": "🪙兌換×495"
+"src": "🪙亞拉戈數理神典石×495"
 },
 {
 "id": 35141,
@@ -56419,7 +56419,7 @@
 "ilvl": 590,
 "cjc": 64,
 "cjc_name": "CNJ WHM SCH AST SGE",
-"src": "🪙兌換×825"
+"src": "🪙亞拉戈數理神典石×825"
 },
 {
 "id": 35142,
@@ -56435,7 +56435,7 @@
 "ilvl": 590,
 "cjc": 64,
 "cjc_name": "CNJ WHM SCH AST SGE",
-"src": "🪙兌換×495"
+"src": "🪙亞拉戈數理神典石×495"
 },
 {
 "id": 35143,
@@ -56451,7 +56451,7 @@
 "ilvl": 590,
 "cjc": 64,
 "cjc_name": "CNJ WHM SCH AST SGE",
-"src": "🪙兌換×825"
+"src": "🪙亞拉戈數理神典石×825"
 },
 {
 "id": 35144,
@@ -56467,7 +56467,7 @@
 "ilvl": 590,
 "cjc": 64,
 "cjc_name": "CNJ WHM SCH AST SGE",
-"src": "🪙兌換×495"
+"src": "🪙亞拉戈數理神典石×495"
 },
 {
 "id": 35153,
@@ -56483,7 +56483,7 @@
 "ilvl": 590,
 "cjc": 64,
 "cjc_name": "CNJ WHM SCH AST SGE",
-"src": "🪙兌換×375"
+"src": "🪙亞拉戈數理神典石×375"
 },
 {
 "id": 35158,
@@ -56499,7 +56499,7 @@
 "ilvl": 590,
 "cjc": 64,
 "cjc_name": "CNJ WHM SCH AST SGE",
-"src": "🪙兌換×375"
+"src": "🪙亞拉戈數理神典石×375"
 },
 {
 "id": 35163,
@@ -56515,7 +56515,7 @@
 "ilvl": 590,
 "cjc": 64,
 "cjc_name": "CNJ WHM SCH AST SGE",
-"src": "🪙兌換×375"
+"src": "🪙亞拉戈數理神典石×375"
 },
 {
 "id": 35168,
@@ -56531,7 +56531,7 @@
 "ilvl": 590,
 "cjc": 64,
 "cjc_name": "CNJ WHM SCH AST SGE",
-"src": "🪙兌換×375"
+"src": "🪙亞拉戈數理神典石×375"
 }
 ],
 "cjc_name": "CNJ WHM SCH AST SGE",
@@ -56543,7 +56543,7 @@
 "name_zh": "星戰士詠咒",
 "name_ja": "レディアント・キャスター",
 "name_en": "Radiant's",
-"source": "🪙兌換",
+"source": "🪙兌換：亞拉戈數理神典石",
 "patch": "6.05",
 "pieces": [
 {
@@ -56560,7 +56560,7 @@
 "ilvl": 590,
 "cjc": 63,
 "cjc_name": "THM BLM ACN SMN RDM BLU PCT",
-"src": "🪙兌換×495"
+"src": "🪙亞拉戈數理神典石×495"
 },
 {
 "id": 35146,
@@ -56576,7 +56576,7 @@
 "ilvl": 590,
 "cjc": 63,
 "cjc_name": "THM BLM ACN SMN RDM BLU PCT",
-"src": "🪙兌換×825"
+"src": "🪙亞拉戈數理神典石×825"
 },
 {
 "id": 35147,
@@ -56592,7 +56592,7 @@
 "ilvl": 590,
 "cjc": 63,
 "cjc_name": "THM BLM ACN SMN RDM BLU PCT",
-"src": "🪙兌換×495"
+"src": "🪙亞拉戈數理神典石×495"
 },
 {
 "id": 35148,
@@ -56608,7 +56608,7 @@
 "ilvl": 590,
 "cjc": 63,
 "cjc_name": "THM BLM ACN SMN RDM BLU PCT",
-"src": "🪙兌換×825"
+"src": "🪙亞拉戈數理神典石×825"
 },
 {
 "id": 35149,
@@ -56624,7 +56624,7 @@
 "ilvl": 590,
 "cjc": 63,
 "cjc_name": "THM BLM ACN SMN RDM BLU PCT",
-"src": "🪙兌換×495"
+"src": "🪙亞拉戈數理神典石×495"
 },
 {
 "id": 35154,
@@ -56640,7 +56640,7 @@
 "ilvl": 590,
 "cjc": 63,
 "cjc_name": "THM BLM ACN SMN RDM BLU PCT",
-"src": "🪙兌換×375"
+"src": "🪙亞拉戈數理神典石×375"
 },
 {
 "id": 35159,
@@ -56656,7 +56656,7 @@
 "ilvl": 590,
 "cjc": 63,
 "cjc_name": "THM BLM ACN SMN RDM BLU PCT",
-"src": "🪙兌換×375"
+"src": "🪙亞拉戈數理神典石×375"
 },
 {
 "id": 35164,
@@ -56672,7 +56672,7 @@
 "ilvl": 590,
 "cjc": 63,
 "cjc_name": "THM BLM ACN SMN RDM BLU PCT",
-"src": "🪙兌換×375"
+"src": "🪙亞拉戈數理神典石×375"
 },
 {
 "id": 35169,
@@ -56688,7 +56688,7 @@
 "ilvl": 590,
 "cjc": 63,
 "cjc_name": "THM BLM ACN SMN RDM BLU PCT",
-"src": "🪙兌換×375"
+"src": "🪙亞拉戈數理神典石×375"
 }
 ],
 "cjc_name": "THM BLM ACN SMN RDM BLU PCT",
@@ -56700,7 +56700,7 @@
 "name_zh": "星戰士禦敵",
 "name_ja": "レディアント・ディフェンダー",
 "name_en": "Radiant's",
-"source": "🪙兌換",
+"source": "🪙兌換：亞拉戈數理神典石",
 "patch": "6.05",
 "pieces": [
 {
@@ -56717,7 +56717,7 @@
 "ilvl": 590,
 "cjc": 59,
 "cjc_name": "GLA MRD PLD WAR DRK GNB",
-"src": "🪙兌換×495"
+"src": "🪙亞拉戈數理神典石×495"
 },
 {
 "id": 35116,
@@ -56733,7 +56733,7 @@
 "ilvl": 590,
 "cjc": 59,
 "cjc_name": "GLA MRD PLD WAR DRK GNB",
-"src": "🪙兌換×825"
+"src": "🪙亞拉戈數理神典石×825"
 },
 {
 "id": 35117,
@@ -56749,7 +56749,7 @@
 "ilvl": 590,
 "cjc": 59,
 "cjc_name": "GLA MRD PLD WAR DRK GNB",
-"src": "🪙兌換×495"
+"src": "🪙亞拉戈數理神典石×495"
 },
 {
 "id": 35118,
@@ -56765,7 +56765,7 @@
 "ilvl": 590,
 "cjc": 59,
 "cjc_name": "GLA MRD PLD WAR DRK GNB",
-"src": "🪙兌換×825"
+"src": "🪙亞拉戈數理神典石×825"
 },
 {
 "id": 35119,
@@ -56781,7 +56781,7 @@
 "ilvl": 590,
 "cjc": 59,
 "cjc_name": "GLA MRD PLD WAR DRK GNB",
-"src": "🪙兌換×495"
+"src": "🪙亞拉戈數理神典石×495"
 },
 {
 "id": 35150,
@@ -56797,7 +56797,7 @@
 "ilvl": 590,
 "cjc": 59,
 "cjc_name": "GLA MRD PLD WAR DRK GNB",
-"src": "🪙兌換×375"
+"src": "🪙亞拉戈數理神典石×375"
 },
 {
 "id": 35155,
@@ -56813,7 +56813,7 @@
 "ilvl": 590,
 "cjc": 59,
 "cjc_name": "GLA MRD PLD WAR DRK GNB",
-"src": "🪙兌換×375"
+"src": "🪙亞拉戈數理神典石×375"
 },
 {
 "id": 35160,
@@ -56829,7 +56829,7 @@
 "ilvl": 590,
 "cjc": 59,
 "cjc_name": "GLA MRD PLD WAR DRK GNB",
-"src": "🪙兌換×375"
+"src": "🪙亞拉戈數理神典石×375"
 },
 {
 "id": 35165,
@@ -56845,7 +56845,7 @@
 "ilvl": 590,
 "cjc": 59,
 "cjc_name": "GLA MRD PLD WAR DRK GNB",
-"src": "🪙兌換×375"
+"src": "🪙亞拉戈數理神典石×375"
 }
 ],
 "cjc_name": "GLA MRD PLD WAR DRK GNB",
@@ -56857,7 +56857,7 @@
 "name_zh": "星戰士游擊",
 "name_ja": "レディアント・スカウト",
 "name_en": "Radiant's",
-"source": "🪙兌換",
+"source": "🪙兌換：亞拉戈數理神典石",
 "patch": "6.05",
 "pieces": [
 {
@@ -56874,7 +56874,7 @@
 "ilvl": 590,
 "cjc": 103,
 "cjc_name": "ROG NIN VPR",
-"src": "🪙兌換×495"
+"src": "🪙亞拉戈數理神典石×495"
 },
 {
 "id": 35136,
@@ -56890,7 +56890,7 @@
 "ilvl": 590,
 "cjc": 103,
 "cjc_name": "ROG NIN VPR",
-"src": "🪙兌換×825"
+"src": "🪙亞拉戈數理神典石×825"
 },
 {
 "id": 35137,
@@ -56906,7 +56906,7 @@
 "ilvl": 590,
 "cjc": 103,
 "cjc_name": "ROG NIN VPR",
-"src": "🪙兌換×495"
+"src": "🪙亞拉戈數理神典石×495"
 },
 {
 "id": 35138,
@@ -56922,7 +56922,7 @@
 "ilvl": 590,
 "cjc": 103,
 "cjc_name": "ROG NIN VPR",
-"src": "🪙兌換×825"
+"src": "🪙亞拉戈數理神典石×825"
 },
 {
 "id": 35139,
@@ -56938,7 +56938,7 @@
 "ilvl": 590,
 "cjc": 103,
 "cjc_name": "ROG NIN VPR",
-"src": "🪙兌換×495"
+"src": "🪙亞拉戈數理神典石×495"
 }
 ],
 "cjc_name": "ROG NIN VPR",
@@ -158695,7 +158695,7 @@
 {
 "id": "mirage:45192",
 "layer": "mirage",
-"name_zh": "首席機械師套裝",
+"name_zh": "首席機工師套裝",
 "name_ja": "リードエンジニア・アタイア",
 "name_en": "Head Engineer's Attire",
 "source": "🎁幻化套裝箱",

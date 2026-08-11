@@ -62,7 +62,7 @@
   var recipesByItem = null;          // itemId -> 配方（延後載入）
   var usedInByItem = null;           // ingredientId -> Set<成品 itemId>（反查「向上」用途）
   var recipeJobsByItem = null;       // itemId -> Map<職業名, {job, level, stars}>（同職業取最低等級配方）
-  var gamePatch = '7.15';
+  var gamePatch = '7.21';
   // 買與賣的範圍**不是同一個**：採購可以跨伺服器（世界訪問），所以 scope 預設全 DC；
   // 但掛售只能在自己角色所在的伺服器，所以售價與利潤一律以 homeWorld 為準。
   // 兩者混用會讓賺錢排行拿「別的伺服器的最低價」當你的售價，那個價你根本掛不上去。

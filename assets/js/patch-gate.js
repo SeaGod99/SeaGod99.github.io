@@ -4,14 +4,14 @@
 // 尚未開放的條目：條目 patch 已知且 > gamePatch → 台服未開放 → 不顯示。
 // patch 未知(null/空)者不主動隱藏（交既有 name 規則或視為資料缺口）。
 //
-// gamePatch 取自 /data/_meta.json，全站單一真實來源（目前 7.15）。
+// gamePatch 取自 /data/_meta.json，全站單一真實來源（目前 7.21）。
 //
 // 用法：
 //   const gp = await PatchGate.loadGamePatch('../../data/_meta.json');
 //   const data = raw.filter(e => e.name && PatchGate.released(e.patch, gp));
 //
-// 版本號比較：取主.次兩段，次段補滿兩位（"7.2"→7.20、"7.15"→7.15、"7.5"→7.50），
-// 數值比較。7.20 > 7.15 → 隱藏；7.10 ≤ 7.15 → 顯示。
+// 版本號比較：取主.次兩段，次段補滿兩位（"7.2"→7.20、"7.21"→7.21、"7.5"→7.50），
+// 數值比較。7.25 > 7.21 → 隱藏；7.20 ≤ 7.21 → 顯示。
 (function () {
   let _gamePatch = null;
 
@@ -35,9 +35,9 @@
     try {
       const res = await fetch(metaUrl || "/data/_meta.json");
       const meta = await res.json();
-      _gamePatch = meta && meta.gamePatch ? meta.gamePatch : "7.15";
+      _gamePatch = meta && meta.gamePatch ? meta.gamePatch : "7.21";
     } catch (e) {
-      _gamePatch = "7.15"; // 後備：抓不到 _meta 時用已知台服版本
+      _gamePatch = "7.21"; // 後備：抓不到 _meta 時用已知台服版本
     }
     return _gamePatch;
   }

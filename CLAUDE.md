@@ -58,6 +58,8 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 幻卡英文散文來源結構化 | `node scripts/patch-triple-triad-prose-sources.mjs`（`--apply`） |
 | 連結檢查 | `node scripts/validate-links.mjs` |
 | 壓縮前端會載入的 data/*.json（改完資料後） | `node scripts/minify-data.mjs`（dry-run 預設／`--apply` 寫入；`_meta.json` 刻意保留可讀） |
+| 刷新台服物品繁中名快照（**升台服版本的第一步**） | `node scripts/build-tw-items-msgpack.mjs`（dry-run 預設／`--apply`；跑完必接 `build-items.mjs`） |
+| 補新開放條目的繁中名（魚／園藝／鳥鞍／隨從） | `node scripts/patch-tw-names.mjs`（dry-run 預設／`--apply`，來源＝items.json，只補不覆蓋） |
 | 重建物品精簡表（改完 items.json **兩支都要跑**） | `node scripts/build-items-lite.mjs`（採集兩頁用）＋`node scripts/build-items-market.mjs`（市場頁用） |
 | 重建市場頁的「取得管道」索引（改完 recipes／gathering／obtainable-methods） | `node scripts/build-market-sources.mjs` |
 | 更新 SW 快取版本（改完 assets/ 的 css/js 必跑） | `node scripts/bump-sw-version.mjs`（`--check` 只驗證） |
@@ -217,4 +219,4 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 - **要算「買 N 個多少錢」** → 一律用 `Universalis.fillQuote()` 逐筆吃掉掛單，**絕不可用「最低價 × N」**。最便宜那筆常常只有 1～3 個，乘法會系統性低估、且低估幅度隨數量放大（知識庫 §3.14）。
 - **做「會一邊操作一邊看」的清單** → **排序鍵不可以是會變的值**。市場頁的製作計畫原本依金額排，重新查價／改數量／按一次「✓ 已有」就整份洗牌，剛在看的那列跑掉了；改成依**物品 ID 遞增**（順序永遠一樣，且 FFXIV 的 id 大致依資料片遞增、同階材料自然聚在一起）。**不要為此開排序選單**，但要用表頭 `title` 說明依據；欄位不可點就**不要掛 `aria-sort`**（知識庫 §3.19）。
 - **要量版面／水平溢出／console error** → 用 headless **Edge** ＋ CDP（本機 Chromium 起不來，Node 24 有原生 WebSocket 故不必裝 puppeteer）。**`setDeviceMetricsOverride` 要 `mobile:false`**，傳路徑參數要 `MSYS_NO_PATHCONV=1`（知識庫 §3.5）。jsdom 只驗得了 DOM 結構，量不了版面。
-- **升台服版本** → 改 `data/_meta.json` 的 `gamePatch` → `patch-backfill` 三支（`--apply`）→ `backfill-sources.mjs` → `validate-data.mjs` → commit。
+- **升台服版本** → **先確認台服真的在哪一版**（拿 Teamcraft `tw/tw-items.json` 的 id 對 `patch-content`→`patch-names`，取最高版本；台服會把國際服的小改版併進同一次更新，2026-08-11 就是 7.2＋7.21 一起到）→ `build-tw-items-msgpack.mjs --apply` → `build-items.mjs` → 改 `patch-backfill.mjs` 的 `TW_PATCH`（它會寫 `_meta.json` 的 gamePatch）→ `patch-backfill` 三支（`--apply`）→ `backfill-sources.mjs --apply` → `patch-tw-names.mjs --apply` → 衍生檔四支＋`minify-data --apply`＋`sync-meta --apply` → `validate-data.mjs` → 動過 `assets/` 再 `bump-sw-version.mjs` → commit。**版本號改了但沒刷新繁中名快照＝把英文名放行到前端**（知識庫 §4.5）。
