@@ -6,6 +6,11 @@
  * 用法（頁面以 <script src="REL/assets/js/universalis.js"></script> 引入，REL 依深度）：
  *   const data = await Universalis.fetchListings('dc', [5057, 5056], { listings: 10 });
  *   const agg  = await Universalis.fetchAggregated(4034, [5057]);
+ *   const hist = await Universalis.fetchHistory('dc', [5057], { entries: 80, days: 30 });
+ *   const q    = Universalis.fillQuote(data.items[5057], 120, { hq: false, cap: 30 });
+ *
+ * ⚠ 要「買 N 個」的成本一律用 fillQuote，不要 `最低價 × N`——最便宜那筆常常只有
+ *   幾個，乘法會系統性低估，且低估幅度隨數量放大（見該函式註解）。
  *
  * 繁中服只有一個資料中心「陸行鳥」（region 繁中服），底下 8 個世界（4028–4035）。
  * scope 參數可為 'dc'（整個陸行鳥 DC，跨服比價）或某個世界 id（單一伺服器）。
@@ -185,6 +190,103 @@
     }
   }
 
+  /* 近期成交紀錄（供價格走勢與「目前價位在近 N 筆的第幾百分位」）。
+   * Universalis 的 /history 回應形狀與 current data 相同（單/多物品兩種），
+   * 故沿用 normItems。回傳 { items: { id: { entries:[{pricePerUnit,quantity,hq,timestamp}] } } }。
+   * ⚠ entries 的 timestamp 是**秒**，不是毫秒——與 lastUploadTime（毫秒）不同單位。 */
+  async function fetchHistory(scope, itemIds, opts) {
+    opts = opts || {};
+    var entries = opts.entries != null ? opts.entries : 80;
+    var days = opts.days != null ? opts.days : 30;
+    var ids = uniqIds(itemIds);
+    if (!ids.length) return { items: {} };
+    var sp = scopePath(scope);
+    var key = 'uni:hist:' + scopeKey(scope) + ':' + entries + ':' + days + ':' + ids.join(',');
+    var cached = cacheGet(key);
+    if (cached) return cached;
+
+    try {
+      var merged = {};
+      var groups = chunk(ids, MAX_PER_REQ);
+      for (var g = 0; g < groups.length; g++) {
+        var url = API + '/history/' + sp + '/' + groups[g].join(',') +
+          '?entriesToReturn=' + entries + '&statsWithin=' + (days * 86400000);
+        var json = await getJSON(url);
+        var map = normItems(json, groups[g]);
+        Object.keys(map).forEach(function (id) { merged[id] = map[id]; });
+      }
+      var out = { items: merged, fetched: Date.now() };
+      cacheSet(key, out);
+      return out;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // 市場板交易稅 5%：**買方負擔**，成交時另外加在標價之上。
+  // 也就是掛牌 1000 G 的東西，買家實際付 1050 G，賣家收到 1000 G。
+  // ⚠ 方向弄反會讓利潤試算兩邊都錯（成本少算 5%、收入又多扣 5%），
+  //   合計偏差約 10%。fillQuote 回傳的是**未稅**市價，稅由呼叫端加。
+  var TAX_RATE = 0.05;
+
+  /* 「買 N 個實際要花多少」——逐筆吃掉掛單，而不是拿最低價乘以數量。
+   *
+   * 最便宜那筆常常只有 1～3 個，用 `最低價 × N` 會系統性低估採購成本，
+   * 而且**低估幅度隨數量放大**，正好是「買 vs 自製」決策最關鍵的輸入。
+   *
+   * opts:
+   *   hq   true＝偏好 HQ／false＝偏好 NQ／null＝不分（偏好而非硬條件：
+   *        想要的品質完全沒在架時退回另一種，並回報 hqFallback）
+   *   cap  當初向 API 要了幾筆 listings。取滿代表資料被截斷，此時湊不滿
+   *        不是「在架量不足」而是「超出取樣範圍」，兩者的處置完全不同。
+   *
+   * 回傳 null（完全無在架）或統計物件；湊不滿時餘量以最後一筆單價外推，
+   * 並以 short／estimated 分別標示「真的不夠」與「只是沒取樣到」。
+   */
+  function fillQuote(itemData, need, opts) {
+    opts = opts || {};
+    var all = (itemData && itemData.listings) || [];
+    if (!all.length || !(need > 0)) return null;
+    var cap = opts.cap || 0;
+    var want = opts.hq;
+
+    var pick = function (hq) {
+      return all.filter(function (l) { return hq == null ? true : (hq ? !!l.hq : !l.hq); });
+    };
+    var pool = pick(want), hqFallback = false;
+    if (!pool.length && want != null) { pool = pick(!want); hqFallback = pool.length > 0; }
+    if (!pool.length) return null;
+    var hqUsed = want == null ? null : (hqFallback ? !want : want);
+
+    pool = pool.slice().sort(function (a, b) { return a.pricePerUnit - b.pricePerUnit; });
+
+    var left = need, total = 0, filled = 0, lines = [], worlds = [];
+    for (var i = 0; i < pool.length && left > 0; i++) {
+      var l = pool[i];
+      var take = Math.min(left, l.quantity);
+      total += take * l.pricePerUnit;
+      filled += take; left -= take;
+      lines.push({ p: l.pricePerUnit, q: take, w: l.worldName || null, hq: !!l.hq });
+      if (l.worldName && worlds.indexOf(l.worldName) < 0) worlds.push(l.worldName);
+    }
+
+    // 湊不滿：餘量用「最後（最貴）一筆」的單價外推，至少不會低估。
+    // capped＝API 回應已被 listings 上限截斷，看不到的掛單不算「不足」。
+    var capped = cap > 0 && all.length >= cap;
+    var short = 0, estimated = false;
+    if (left > 0) {
+      total += left * pool[pool.length - 1].pricePerUnit;
+      estimated = true;
+      if (!capped) short = left;
+    }
+
+    return {
+      total: total, unit: total / need, minUnit: pool[0].pricePerUnit, minQty: pool[0].quantity,
+      lines: lines, worlds: worlds, filled: filled, short: short, estimated: estimated,
+      hqUsed: hqUsed, hqFallback: hqFallback, capped: capped
+    };
+  }
+
   /* 由 fetchListings 結果取某物品在該 scope 內最低單價。
    * hq: true 只看 HQ、false 只看 NQ、null 兩者皆可。找不到回傳 null。 */
   function minPrice(itemData, hq) {
@@ -225,7 +327,10 @@
     WORLDS: WORLDS,
     fetchListings: fetchListings,
     fetchAggregated: fetchAggregated,
+    fetchHistory: fetchHistory,
     minPrice: minPrice,
+    fillQuote: fillQuote,
+    TAX_RATE: TAX_RATE,
     worldName: worldName,
     fmtGil: fmtGil,
     fmtAge: fmtAge,

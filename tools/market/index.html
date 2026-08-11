@@ -49,13 +49,20 @@
     .btn.danger:hover { color: var(--red); border-color: rgba(248,113,113,0.4); }
     .btn:disabled { opacity: 0.4; cursor: not-allowed; }
     .update-time { font-size: 0.74rem; color: var(--text-muted); margin-left: auto; }
+    /* 表頭的第二行小字（單位／是否含稅），避免把說明塞進儲存格 */
+    .th-sub { display: block; font-weight: 400; font-size: 0.66rem; color: var(--text-muted); }
 
-    /* tabs */
-    .tabs { display: flex; gap: 6px; margin-bottom: 18px; border-bottom: 1px solid var(--border); }
+    /* tabs — 四個分頁在 430px 以下排不進一行（實測溢出 46px）。讓分頁列自己
+       橫捲，而不是讓整個頁面橫捲：頁面橫捲會把所有內容都推歪，分頁列橫捲是
+       行動裝置上的標準做法，且每個分頁都還帶文字標籤（nav-label-icon）。 */
+    .tabs {
+      display: flex; gap: 6px; margin-bottom: 18px; border-bottom: 1px solid var(--border);
+      overflow-x: auto; flex-wrap: nowrap; scrollbar-width: thin;
+    }
     .tab {
       background: none; border: none; border-bottom: 2px solid transparent; color: var(--text-dim);
       padding: 10px 14px; font-size: 0.9rem; cursor: pointer; font-family: inherit; transition: all var(--transition);
-      display: flex; align-items: center; gap: 6px; white-space: nowrap;
+      display: flex; align-items: center; gap: 6px; white-space: nowrap; flex: 0 0 auto;
     }
     .tab:hover { color: var(--text); }
     .tab.active { color: var(--gold); border-bottom-color: var(--gold); }
@@ -107,9 +114,33 @@
     .result-cat { font-size: 0.72rem; color: var(--text-muted); }
     .result-craft { font-size: 0.7rem; color: var(--purple); }
 
-    /* 製作職業篩選（複選 chip）*/
-    .job-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 10px; }
+    /* ── 篩選面板 ────────────────────────────────────────────────────────
+       原本一列裡的十個職業 chip、「等級」標籤、兩個輸入框全部 gap:6px 平均排開，
+       看不出哪幾個是一組——所有間距一樣就等於沒有分組。改成兩級節奏（4/8 基準）：
+
+         群組內  6px   chip 與 chip、標籤與它的控制項
+         群組間  24px  「製作職業」與「製作等級」之間（4 倍差距才讀得出斷點）
+         列與列  12px ＋ 一條分隔線
+
+       再把整塊包成一張卡（比照本頁 .toolbar／.craft-tools），讓「這些是篩選條件」
+       和下方的結果在視覺上分開。 */
+    .filter-panel {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 14px 16px; margin-top: 12px;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .job-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 24px; }
+    /* 列與列之間補一條分隔線：純靠間距在窄螢幕換行後就分不出來了 */
+    .job-filter + .job-filter { border-top: 1px solid var(--border); padding-top: 12px; }
+    .jf-group { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-width: 0; }
+    .jf-group.jf-end { margin-left: auto; }
     .job-filter .jf-label { font-size: 0.76rem; color: var(--text-muted); margin-right: 2px; }
+    .jf-dash { color: var(--text-muted); font-size: 0.76rem; }
+    /* 窄螢幕：靠右的群組不再靠右（會被擠出去），群組間距收斂但仍大於群組內 */
+    @media (max-width: 640px) {
+      .job-filter { gap: 8px 16px; }
+      .jf-group.jf-end { margin-left: 0; }
+    }
     .job-chip {
       background: var(--bg-surface); border: 1px solid var(--border); color: var(--text-dim);
       border-radius: 20px; padding: 3px 12px; font-size: 0.8rem; cursor: pointer;
@@ -172,17 +203,23 @@
       display: flex; align-items: center; gap: 8px; cursor: pointer;
       border-radius: var(--radius-sm); padding: 7px 11px; transition: all var(--transition);
     }
-    .sr-prod { background: var(--gold-dim); border: 1px solid rgba(200,169,110,0.5); flex: 0 0 auto; }
+    .sr-prod { background: var(--gold-dim); border: 1px solid rgba(200,169,110,0.5); flex: 0 1 auto; }
     .sr-prod:hover { border-color: var(--gold); }
     .sr-mat { background: var(--bg-surface); border: 1px solid var(--border); }
     .sr-mat:hover { border-color: var(--border-hover); background: var(--bg-card-hover); }
     .sr-arrow { color: var(--text-muted); font-size: 0.9rem; flex: 0 0 auto; }
     .sr-mats { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; flex: 1; min-width: 0; }
     .sr-ic { width: 32px; height: 32px; border-radius: 5px; background: var(--bg-card); object-fit: contain; flex-shrink: 0; }
-    .sr-nm { font-size: 0.84rem; line-height: 1.3; }
-    .sr-sub { font-size: 0.72rem; color: var(--text-dim); font-variant-numeric: tabular-nums; }
+    /* 籌碼內容加了報價徽章之後會變長，沒有 max-width/min-width:0 就會把整列撐出畫面
+       （430px 實測溢出 101px）。籌碼可以縮、文字可以換行，就是不准撐破頁面。 */
+    .sr-prod, .sr-mat { max-width: 100%; min-width: 0; }
+    .sr-prod > div, .sr-mat > div { min-width: 0; }
+    .sr-nm { font-size: 0.84rem; line-height: 1.3; overflow-wrap: anywhere; }
+    .sr-sub { font-size: 0.72rem; color: var(--text-dim); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
     .sr-price { color: var(--gold-light); font-weight: 600; }
-    .sr-total { font-size: 0.78rem; color: var(--text-dim); padding: 4px 8px; white-space: nowrap; }
+    /* 「原料合計 1,234,567 G（部分無市價）」是一行摘要文字，不是表格欄位——
+       曾經設 nowrap，在 430px 直接把頁面撐寬 167px。文字一律允許換行。 */
+    .sr-total { font-size: 0.78rem; color: var(--text-dim); padding: 4px 8px; overflow-wrap: anywhere; }
 
     /* craft 子工具列（水晶 / HQ 選項）*/
     .craft-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 16px; margin-bottom: 14px; }
@@ -362,6 +399,157 @@
     .plan-badge.craft { color: var(--green); background: var(--green-dim); border-color: rgba(74,222,128,0.3); }
     .plan-badge.have  { color: var(--green); background: var(--green-dim); border-color: rgba(74,222,128,0.35); }
     .plan-badge.na    { color: var(--amber); background: rgba(251,191,36,0.12); border-color: rgba(251,191,36,0.3); }
+    /* ── 報價可信度徽章 ──────────────────────────────────────────────
+       三級：danger（結論可能不成立）／warn（可用但有前提）／info（補充）。
+       每一枚都自帶符號與文字，顏色只是加權——依 color-not-only 準則，
+       不可只靠顏色表意（色盲、灰階列印、亮色主題下都要讀得出來）。
+       刻意避開金色：金色是本頁「主要金額」的識別色，警示搶了會削弱它。 */
+    .flag {
+      display: inline-block; font-size: 0.66rem; line-height: 1.5; white-space: nowrap;
+      border-radius: 3px; padding: 1px 6px; border: 1px solid; margin-left: 6px;
+      vertical-align: 1px; cursor: help;
+    }
+    /* 徽章／標籤成串出現時一律走 flex gap。先前各處自己用 2～3px 的 margin，
+       兩三枚排在一起會糊成一塊看不出是幾個標籤（實測「遠航探索寶箱/容器分解獲得」）。
+       6px 是本頁「群組內」的基準間距，跟篩選列的 chip 一致。 */
+    .flag-run {
+      display: inline-flex; flex-wrap: wrap; gap: 5px 6px;
+      align-items: center; vertical-align: middle; max-width: 100%;
+    }
+    .flag-run > .flag, .flag-run > .src-tag { margin: 0; }
+    /* 徽章在密集表格裡要 nowrap（避免一枚拆成兩行），但在說明文字裡它是一整句話，
+       nowrap 會在 320px 把版面撐破。散文情境一律允許換行。 */
+    .note .flag, .shop-hint .flag, .pf-liq .flag, .bulk-row .flag, .src-row .flag, .sr-sub .flag {
+      white-space: normal;
+    }
+    .flag.danger { color: var(--red);    background: var(--red-dim);    border-color: rgba(248,113,113,0.35); }
+    .flag.warn   { color: var(--yellow); background: var(--yellow-dim); border-color: rgba(251,191,36,0.32); }
+    .flag.info   { color: var(--blue);   background: var(--blue-dim);   border-color: rgba(79,195,247,0.3); }
+    /* 節點卡很窄，徽章要能換行且不撐寬卡片 */
+    .node-flags { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; margin-top: 4px; }
+    .node-flags .flag { margin: 0; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+    /* 「這個範圍查無在架」≠「不可交易」——後者要去採集，前者只要換範圍或等一下 */
+    .sr-na { color: var(--yellow); }
+
+    /* ── 單品面板的折疊區塊 ──────────────────────────────────────────────
+       原本走勢／試算／自訂價／利潤／取得管道／在架明細／上下游配方全部攤開，
+       一個物品要捲三四螢幕。改成折疊，但**摘要那一行本身就是資訊**（百分位、
+       淨利、在架筆數、材料/用途數量）——多數情況看摘要就夠，展開才看細節。
+       單純把東西藏起來不算解決資訊過載，只是換個地方塞。 */
+    /* 卡與卡之間 10px。先前 6px ＋ 淡邊框，四張並排時看起來像一整塊表格、
+       分不出是幾個區塊（使用者回報「連在一起」）。10px 才讀得出是各自獨立的列。 */
+    .fold {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); margin-bottom: 10px;
+    }
+    /* 取得管道也走 .fold（見 renderSources），下面幾條只補它內部的排版 */
+    #nmSrc, #dSrc { display: block; }
+    .fold > summary {
+      display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px;
+      padding: 9px 12px; cursor: pointer; font-size: 0.84rem; list-style: revert;
+    }
+    .fold > summary::-webkit-details-marker { color: var(--text-muted); }
+    .fold > summary:hover .fold-t { color: var(--gold-light); }
+    .fold-t { font-weight: 600; color: var(--text-dim); }
+    .fold-s { color: var(--text-muted); font-size: 0.78rem; min-width: 0; overflow-wrap: anywhere; }
+    .fold-s b { color: var(--gold-light); font-variant-numeric: tabular-nums; }
+    .fold-s b.good { color: var(--green); }
+    .fold-s b.bad { color: var(--red); }
+    .fold[open] > summary { border-bottom: 1px solid var(--border); }
+    .fold-b { padding: 10px 12px; }
+    .fold-row + .fold-row { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+    .nav-label { font-size: 0.74rem; color: var(--text-muted); margin-bottom: 5px; }
+    @media (pointer: coarse) { .fold > summary { min-height: var(--tap-min, 44px); align-items: center; } }
+
+    /* 品質切換與行情新鮮度同一行：新鮮度只是附註，不值得佔一整張數字卡 */
+    .quality-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 14px 0 10px; }
+    .fresh-ok { font-size: 0.72rem; color: var(--text-muted); }
+
+    /* ── 單品面板：走勢／批量試算／自訂買價／利潤／取得管道 ────────────── */
+    /* 走勢：文字結論在前，圖只是輔助（折線圖屬 AA，但單靠圖不夠） */
+    .hist-verdict { font-size: 0.85rem; margin-bottom: 4px; }
+    .hist-verdict b { color: var(--gold-light); font-variant-numeric: tabular-nums; }
+    .hist-verdict b.good { color: var(--green); }
+    .hist-verdict b.bad  { color: var(--red); }
+    .hist-range {
+      display: flex; justify-content: space-between; gap: 10px;
+      font-size: 0.72rem; color: var(--text-muted); font-variant-numeric: tabular-nums;
+      margin: 2px 0 4px;
+    }
+    .spark { display: block; width: 100%; height: 44px; }
+    .spark-line { fill: none; stroke: var(--blue); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+    .spark-dot { fill: var(--gold-light); }
+
+    .bulk-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 0.82rem; color: var(--text-dim); }
+    .bulk-input { width: 84px; text-align: right; }
+    .bulk-input.wide { width: 116px; }
+    .bulk-out { font-variant-numeric: tabular-nums; }
+    .bulk-out b { color: var(--gold-light); }
+
+    /* 利潤：正負值除了顏色一定帶 ▲▼ 與 ＋− 符號（color-not-only） */
+    .profit-grid { display: grid; gap: 4px; }
+    .pf { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 0.84rem; }
+    .pf-l { color: var(--text-dim); }
+    .pf-v { font-variant-numeric: tabular-nums; font-weight: 600; }
+    .pf-v.good { color: var(--green); }
+    .pf-v.bad  { color: var(--red); }
+    .pf-net { border-top: 1px solid var(--border); margin-top: 4px; padding-top: 6px; font-size: 0.95rem; }
+    .pf-net .pf-v small { font-size: 0.72rem; font-weight: 400; }
+    .pf-liq { margin-top: 8px; font-size: 0.8rem; color: var(--text-dim); }
+    .pf-liq b { color: var(--text); font-variant-numeric: tabular-nums; }
+
+    /* 取得管道：外框走共用的 .fold（見 renderSources），這裡只管內容排版。
+       收合時的摘要就要有用——第一個可行管道＋總數，看了才知道要不要展開。 */
+    /* 上游只給了「有這條管道」沒給地點的，收成一行，不佔滿版 */
+    .src-vague {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+      margin-top: 8px; font-size: 0.78rem; color: var(--text-dim);
+    }
+    .src-vague + .src-list, .src-list + .src-vague { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+
+    .src-list { display: flex; flex-direction: column; gap: 4px; }
+    .src-row {
+      display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px;
+      background: var(--bg-surface); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 6px 10px; font-size: 0.82rem;
+    }
+    .src-tag { font-size: 0.7rem; font-weight: 600; border-radius: 3px; padding: 1px 7px; border: 1px solid; white-space: nowrap; }
+    .src-gather { color: var(--green);  background: var(--green-dim);  border-color: rgba(74,222,128,0.3); }
+    .src-seal   { color: var(--yellow); background: var(--yellow-dim); border-color: rgba(251,191,36,0.3); }
+    .src-shop   { color: var(--blue);   background: var(--blue-dim);   border-color: rgba(79,195,247,0.3); }
+    .src-duty   { color: var(--purple); background: var(--purple-dim); border-color: rgba(167,139,250,0.3); }
+    .src-island { color: var(--cyan);   background: var(--cyan-dim);   border-color: rgba(34,211,238,0.3); }
+    .src-other  { color: var(--text-dim); background: var(--bg-card);  border-color: var(--border); }
+    .src-d { flex: 1; min-width: 0; }
+    .src-where { color: var(--text-muted); font-size: 0.76rem; font-variant-numeric: tabular-nums; }
+
+    /* 逐物品的 HQ/NQ 覆寫（節點卡與簡易列共用）。三顆鈕擠在 156px 的卡片上，
+       字級與內距都得比一般 .seg 再小一號，但 pointer:coarse 下仍拉到 44px。 */
+    .hq-seg { display: flex; justify-content: center; margin-top: 5px; }
+    .hq-seg .seg button { padding: 2px 7px; font-size: 0.66rem; }
+    @media (pointer: coarse) { .hq-seg .seg button { min-height: var(--tap-min, 44px); } }
+
+    /* 一站購足比較表：正負差額除了顏色還一定帶 ＋／− 符號 */
+    .wc-table tr.wc-best td { background: var(--green-dim); }
+    .delta-good { color: var(--green); }
+    .delta-bad  { color: var(--red); }
+
+    /* 賺錢排行：可排序表頭（aria-sort 在 <th> 上，箭頭同時是視覺與文字提示） */
+    .pf-table { min-width: 780px; }
+    .pf-sort {
+      background: none; border: none; padding: 0; font: inherit; color: inherit;
+      cursor: pointer; white-space: nowrap;
+    }
+    .pf-sort:hover { color: var(--gold); }
+    .pf-sort.on { color: var(--gold); }
+    /* 物品圖：跟搜尋卡／計畫列一致，靠圖形快速辨認品項 */
+    .pf-name { display: flex; align-items: center; gap: 9px; min-width: 0; }
+    .pf-ic { width: 32px; height: 32px; border-radius: 5px; background: var(--bg-surface); object-fit: contain; flex-shrink: 0; }
+    .pf-nm { min-width: 0; }
+    .pf-table > * > tr > :first-child { min-width: 250px; }
+    table.listings td.good { color: var(--green); }
+    table.listings td.bad  { color: var(--red); }
+
     table.listings tr.plan-have td { opacity: .55; }
     table.listings tr.plan-have .plan-nm { text-decoration: line-through; }
     table.listings tr.plan-have td.got-cell { opacity: 1; }
@@ -378,14 +566,42 @@
 
     .craft-actions, .list-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
 
-    /* saved lists */
-    .saved-row {
-      display: flex; align-items: center; gap: 12px; background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 12px 14px; margin-bottom: 10px;
+    /* ── 我的清單：每份清單一張可展開的卡 ───────────────────────────────
+       原本是三行文字＋三顆鈕的死板列，內容只能截成「A×1、B×1、C×1 …」一行，
+       既認不出是哪一份、也看不到完整品項。改成折疊卡：
+         收合 → 名稱／規模／更新日 ＋ 前 6 件的物品圖示（圖比截斷的文字好認）
+         展開 → 完整品項清單，點任一件直接開該物品的市價視窗
+       載入／改名／刪除留在 summary 內，收合狀態也能直接操作（最常用的是「載入」，
+       不該逼使用者先展開）。外框沿用 .fold，與站內其他折疊區塊同一種元件。 */
+    .saved-fold { border-radius: var(--radius); }
+    .saved-fold > summary { align-items: center; gap: 8px 12px; padding: 12px 14px; font-size: 0.9rem; }
+    .sl-main { flex: 1 1 200px; min-width: 0; }
+    .sl-nm { font-weight: 600; color: var(--text); overflow-wrap: anywhere; }
+    .sl-meta {
+      display: block; margin-top: 2px; font-size: 0.74rem;
+      color: var(--text-muted); font-variant-numeric: tabular-nums;
     }
-    .saved-row .meta { flex: 1; }
-    .saved-row .nm { font-weight: 600; }
-    .saved-row .sub { font-size: 0.74rem; color: var(--text-muted); }
+    .sl-ics { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+    .sl-ics img { width: 26px; height: 26px; border-radius: 4px; background: var(--bg-surface); object-fit: contain; }
+    .sl-more { font-size: 0.72rem; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+    .sl-acts { display: flex; flex-wrap: wrap; gap: 6px; flex-shrink: 0; }
+
+    /* 品項用 auto-fill 網格：寬螢幕排成多欄，窄螢幕自動退成一欄 */
+    .sl-items { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 5px; }
+    .sl-item {
+      display: flex; align-items: center; gap: 8px; width: 100%; text-align: left;
+      background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
+      padding: 5px 9px; font-size: 0.82rem; font-family: inherit; color: var(--text-dim);
+      cursor: pointer; transition: all var(--transition);
+    }
+    .sl-item:hover { color: var(--text); border-color: var(--border-hover); }
+    .sl-item:focus-visible { outline: 2px solid var(--gold); outline-offset: 1px; }
+    .sl-ic { width: 24px; height: 24px; flex-shrink: 0; object-fit: contain; }
+    .sl-inm { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+    .sl-qty { color: var(--gold-light); font-variant-numeric: tabular-nums; flex-shrink: 0; }
+    @media (pointer: coarse) {
+      .sl-acts .btn, .sl-item { min-height: var(--tap-min, 44px); }
+    }
 
     .note { font-size: 0.78rem; color: var(--text-muted); }
     .loading { color: var(--text-dim); font-size: 0.85rem; padding: 10px 0; }
@@ -398,6 +614,20 @@
     @media (max-width: 600px) {
       .update-time { margin-left: 0; width: 100%; }
       .tab { padding: 9px 9px; font-size: 0.82rem; }
+    }
+
+    /* 極窄螢幕（320px）不得水平溢出。以前 .sr-total 的 nowrap 與分頁列的長文字
+       會把 body 撐寬——頁面本身橫捲是最傷的破版，寬表格請各自用 .shop-scroll 橫捲。 */
+    @media (max-width: 420px) {
+      .simple-row { gap: 8px; }
+      .sr-prod, .sr-mat { max-width: 100%; }
+      .sr-nm, .sr-sub { overflow-wrap: anywhere; }
+      .search-pager { font-size: 0.78rem; }
+      .search-pager > span:first-child { flex: 1 1 100%; }
+      .page-btn { padding: 5px 9px; }
+      .plan-bar, .plan-bulk { max-width: 100%; }
+      .plan-legend { margin-left: 0; }
+      .bulk-row { align-items: flex-start; }
     }
   </style>
   <script src="../../assets/js/theme.js"></script>
@@ -412,8 +642,8 @@
     </div>
 
     <div class="toolbar">
-      <label>查價範圍
-        <select id="scopeSel"></select>
+      <label>我的伺服器
+        <select id="homeSel" title="掛售只能在自己角色所在的伺服器，所以售價與利潤一律以這裡為準；採購則不受限，一律取全 DC 最低價"></select>
       </label>
       <button class="btn" id="refreshBtn" title="清除快取並重新查詢">↻ 重新整理</button>
       <span class="update-time" id="updateTime"></span>
@@ -422,6 +652,7 @@
     <nav class="tabs">
       <button class="tab active" data-tab="search">🔍 物品查詢</button>
       <button class="tab" data-tab="craft">🧱 製作清單 <span class="pill" id="craftCount">0</span></button>
+      <button class="tab" data-tab="profit">💰 賺錢排行</button>
       <button class="tab" data-tab="lists">📁 我的清單</button>
     </nav>
 
@@ -433,38 +664,58 @@
           <input type="search" id="searchInput" placeholder="輸入物品名稱（繁中），或只設條件直接搜尋…" autocomplete="off" aria-label="物品名稱關鍵字">
           <button class="btn primary" id="searchBtn" type="button">🔍 搜尋</button>
         </div>
-        <div class="job-filter" id="craftRow">
-          <span class="jf-label">🔨 製作</span>
-          <button class="job-chip" data-job="刻木匠">刻木匠</button>
-          <button class="job-chip" data-job="鍛鐵匠">鍛鐵匠</button>
-          <button class="job-chip" data-job="鑄甲匠">鑄甲匠</button>
-          <button class="job-chip" data-job="雕金匠">雕金匠</button>
-          <button class="job-chip" data-job="製革匠">製革匠</button>
-          <button class="job-chip" data-job="裁衣匠">裁衣匠</button>
-          <button class="job-chip" data-job="煉金術士">煉金術士</button>
-          <button class="job-chip" data-job="烹調師">烹調師</button>
-          <button class="job-chip" data-job="工會工坊">工會工坊</button>
-          <button class="job-chip" data-job="無人島">無人島</button>
-          <span class="jf-label">等級</span>
-          <input type="number" class="lv-input" id="craftMin" min="1" max="100" placeholder="不限" aria-label="製作等級下限">
-          <span class="jf-label">–</span>
-          <input type="number" class="lv-input" id="craftMax" min="1" max="100" placeholder="不限" aria-label="製作等級上限">
-        </div>
-        <div class="job-filter" id="equipRow">
-          <span class="jf-label">⚔ 裝備</span>
-          <span class="jf-label">等級</span>
-          <input type="number" class="lv-input" id="equipMin" min="1" max="100" placeholder="不限" aria-label="裝備等級下限">
-          <span class="jf-label">–</span>
-          <input type="number" class="lv-input" id="equipMax" min="1" max="100" placeholder="不限" aria-label="裝備等級上限">
-          <span class="jf-label">職業</span>
-          <select id="equipJob" aria-label="可裝備職業"><option value="">全部</option></select>
-          <span class="jf-label" style="margin-left:auto">排序</span>
-          <select id="sortSel" aria-label="結果排序">
-            <option value="craftDesc" selected>製作等級 高→低</option>
-            <option value="craftAsc">製作等級 低→高</option>
-            <option value="equipDesc">裝備等級 高→低</option>
-            <option value="equipAsc">裝備等級 低→高</option>
-          </select>
+        <div class="filter-panel">
+          <div class="job-filter" id="craftRow">
+            <span class="jf-group">
+              <span class="jf-label">🔨 製作職業</span>
+              <button class="job-chip" data-job="刻木匠">刻木匠</button>
+              <button class="job-chip" data-job="鍛鐵匠">鍛鐵匠</button>
+              <button class="job-chip" data-job="鑄甲匠">鑄甲匠</button>
+              <button class="job-chip" data-job="雕金匠">雕金匠</button>
+              <button class="job-chip" data-job="製革匠">製革匠</button>
+              <button class="job-chip" data-job="裁衣匠">裁衣匠</button>
+              <button class="job-chip" data-job="煉金術士">煉金術士</button>
+              <button class="job-chip" data-job="烹調師">烹調師</button>
+              <button class="job-chip" data-job="工會工坊">工會工坊</button>
+              <button class="job-chip" data-job="無人島">無人島</button>
+            </span>
+            <span class="jf-group">
+              <span class="jf-label">製作等級</span>
+              <input type="number" class="lv-input" id="craftMin" min="1" max="100" placeholder="不限" aria-label="製作等級下限">
+              <span class="jf-dash" aria-hidden="true">–</span>
+              <input type="number" class="lv-input" id="craftMax" min="1" max="100" placeholder="不限" aria-label="製作等級上限">
+            </span>
+          </div>
+          <div class="job-filter" id="equipRow">
+            <span class="jf-group">
+              <span class="jf-label">⚔ 裝備等級</span>
+              <input type="number" class="lv-input" id="equipMin" min="1" max="100" placeholder="不限" aria-label="裝備等級下限">
+              <span class="jf-dash" aria-hidden="true">–</span>
+              <input type="number" class="lv-input" id="equipMax" min="1" max="100" placeholder="不限" aria-label="裝備等級上限">
+            </span>
+            <span class="jf-group">
+              <span class="jf-label">可裝備職業</span>
+              <select id="equipJob" aria-label="可裝備職業"><option value="">全部</option></select>
+            </span>
+          </div>
+          <div class="job-filter" id="miscRow">
+            <span class="jf-group">
+              <span class="jf-label">🏷 分類</span>
+              <select id="catSel" aria-label="物品分類"><option value="">全部分類</option></select>
+            </span>
+            <span class="jf-group">
+              <label class="switch"><input type="checkbox" id="onlyMarket"><span class="track"></span>只顯示可上市場板</label>
+            </span>
+            <span class="jf-group jf-end">
+              <span class="jf-label">排序</span>
+              <select id="sortSel" aria-label="結果排序">
+                <option value="craftDesc" selected>製作等級 高→低</option>
+                <option value="craftAsc">製作等級 低→高</option>
+                <option value="equipDesc">裝備等級 高→低</option>
+                <option value="equipAsc">裝備等級 低→高</option>
+              </select>
+            </span>
+          </div>
         </div>
         <div class="search-results" id="searchResults"></div>
       </div>
@@ -474,6 +725,52 @@
     <!-- 製作清單 -->
     <section class="tab-panel" id="tab-craft">
       <div id="craftBody"></div>
+    </section>
+
+    <!-- 賺錢排行：反過來問「我這個職業這個等級，做什麼有賺頭」 -->
+    <section class="tab-panel" id="tab-profit">
+      <div class="filter-panel">
+        <div class="job-filter" id="pfJobRow">
+          <span class="jf-group">
+            <span class="jf-label">🔨 製作職業</span>
+            <button class="job-chip" data-pfjob="刻木匠">刻木匠</button>
+            <button class="job-chip" data-pfjob="鍛鐵匠">鍛鐵匠</button>
+            <button class="job-chip" data-pfjob="鑄甲匠">鑄甲匠</button>
+            <button class="job-chip" data-pfjob="雕金匠">雕金匠</button>
+            <button class="job-chip" data-pfjob="製革匠">製革匠</button>
+            <button class="job-chip" data-pfjob="裁衣匠">裁衣匠</button>
+            <button class="job-chip" data-pfjob="煉金術士">煉金術士</button>
+            <button class="job-chip" data-pfjob="烹調師">烹調師</button>
+          </span>
+        </div>
+        <div class="job-filter" id="pfOptRow">
+          <span class="jf-group">
+            <span class="jf-label">製作等級</span>
+            <input type="number" class="lv-input" id="pfMin" min="1" max="100" placeholder="不限" aria-label="製作等級下限">
+            <span class="jf-dash" aria-hidden="true">–</span>
+            <input type="number" class="lv-input" id="pfMax" min="1" max="100" placeholder="不限" aria-label="製作等級上限">
+          </span>
+          <span class="jf-group">
+            <span class="jf-label">售價品質</span>
+            <span class="seg" id="pfHqSeg" role="group" aria-label="售價品質">
+              <button data-pfhq="0" class="active" aria-pressed="true">NQ</button>
+              <button data-pfhq="1" aria-pressed="false">HQ</button>
+            </span>
+          </span>
+          <span class="jf-group">
+            <span class="jf-label">取樣</span>
+            <select id="pfLimit" aria-label="取樣筆數">
+              <option value="100">100 項</option>
+              <option value="250" selected>250 項</option>
+              <option value="500">500 項</option>
+            </select>
+          </span>
+          <span class="jf-group jf-end">
+            <button class="btn primary" id="pfRun" type="button">💰 計算利潤</button>
+          </span>
+        </div>
+      </div>
+      <div id="profitBody"></div>
     </section>
 
     <!-- 我的清單 -->
@@ -501,1689 +798,6 @@
 
   <script src="../../assets/js/patch-gate.js"></script>
   <script src="../../assets/js/universalis.js"></script>
-  <script>
-  (function () {
-    'use strict';
-
-    var ICON_CDN = 'https://xivapi.com';
-    var LS_LISTS = 'sgt-market-lists';
-    var LS_SCOPE = 'sgt-market-scope';
-    var LS_DRAFT = 'sgt-market-draft';
-    var LS_OPTS = 'sgt-market-opts';
-    var LS_CVIEW = 'sgt-market-craftview';
-    var LS_GOT = 'sgt-market-got';
-    var LS_PVIEW = 'sgt-market-planview';
-    var PAGE_SIZE = 60;                // 每頁筆數（結果總數不設上限）
-    var MAX_DEPTH = 12;
-    var MAX_CRAFT_ITEMS = 10;          // 製作清單至多 10 件，避免合併樹狀圖過大
-
-    // ---- 狀態 ----
-    var items = [];
-    var itemById = new Map();
-    var recipesByItem = null;          // itemId -> 配方（延後載入）
-    var usedInByItem = null;           // ingredientId -> Set<成品 itemId>（反查「向上」用途）
-    var recipeJobsByItem = null;       // itemId -> Map<職業名, {job, level, stars}>（同職業取最低等級配方）
-    var gamePatch = '7.15';
-    var scope = 'dc';
-    var craft = [];                    // [{itemId, qty}]
-    var lists = [];                    // 具名清單
-    var priceMap = new Map();          // itemId -> { nq, nqWorld, hq, hqWorld } 依目前 scope
-    var lastUpload = 0;
-    var excludeCrystals = true;        // 省略水晶（不列入樹與成本），預設開
-    var hqProduct = true;              // 可製作成品以 HQ 市價比較，預設開
-    var craftView = 'simple';          // 製作清單子分頁：simple（簡易清單）/ tree（樹狀分析）
-    var gotMap = {};                   // 「手上已有」的數量：itemId -> 已有數。**會參與計畫計算**：
-                                       // 標記已有的節點整個子樹會從計畫消失（清空清單時一併重設）
-    var planIndex = new Map();         // 目前計畫每個物品的合計 {qty, need}，供「✓ 我有了」一次補滿
-    var planOpen = new Map();          // 計畫清單展開狀態的個別覆寫：path -> 是否展開（不持久化）
-    var planAll = null;                // 全部展開／收合：true／false／null＝各自照預設
-    var planView = 'tree';             // 製作計畫檢視：tree 階層／direct 直接材料／all 全部素材／base 基礎素材／mid 中間物
-    var craftToken = 0;                // 製作清單渲染競態守門（切換檢視時放棄舊的非同步渲染）
-
-    // ---- 工具 ----
-    var $ = function (s, r) { return (r || document).querySelector(s); };
-    var fmt = function (n) { return Universalis.fmtGil(n); };
-    function iconUrl(it) { return it && it.icon ? ICON_CDN + it.icon : ''; }
-
-    /* 把 items-market.json 的陣列列展開回本頁其餘程式吃的物件形狀。
-       列格式：[id, name, categoryIndex, iconNo, marketable(0/1), patch]
-       icon 路徑由編號組回——格式固定是 /i/<編號/1000*1000>/<編號>.png，
-       build 腳本已對 43748 筆驗證過資料夾都推得回來（不符就會中止不產檔）。 */
-    function expandMarketItems(db) {
-      var cats = db.categories || [];
-      return db.data.map(function (r) {
-        var no = r[3];                       // -1 ＝沒有 icon；0 是合法編號，不能當假值判斷
-        var icon = no < 0 ? null
-          : '/i/' + String(Math.floor(no / 1000) * 1000).padStart(6, '0') + '/' + String(no).padStart(6, '0') + '.png';
-        return {
-          id: r[0], name: r[1],
-          category: cats[r[2]] || null,      // 空字串還原成 null，與 items.json 一致
-          icon: icon, marketable: !!r[4], patch: r[5] || null
-        };
-      });
-    }
-    function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]; }); }
-    function relTime(ms) {
-      if (!ms) return '';
-      var d = Date.now() - ms, m = Math.round(d / 60000);
-      if (m < 1) return '剛剛';
-      if (m < 60) return m + ' 分鐘前';
-      var h = Math.round(m / 60); if (h < 24) return h + ' 小時前';
-      return Math.round(h / 24) + ' 天前';
-    }
-    function scopeLabel() { return scope === 'dc' ? '全DC（陸行鳥）' : Universalis.worldName(Number(scope)); }
-    function isDcMode() { return scope === 'dc'; }
-
-    // ---- localStorage ----
-    function loadState() {
-      try { scope = localStorage.getItem(LS_SCOPE) || 'dc'; } catch (e) {}
-      try { lists = JSON.parse(localStorage.getItem(LS_LISTS) || '[]'); } catch (e) { lists = []; }
-      try { craft = JSON.parse(localStorage.getItem(LS_DRAFT) || '[]'); } catch (e) { craft = []; }
-      try { var o = JSON.parse(localStorage.getItem(LS_OPTS) || '{}'); if (o && typeof o === 'object') { if (o.excludeCrystals != null) excludeCrystals = !!o.excludeCrystals; if (o.hqProduct != null) hqProduct = !!o.hqProduct; } } catch (e) {}
-      try { var cv = localStorage.getItem(LS_CVIEW); if (cv === 'simple' || cv === 'tree') craftView = cv; } catch (e) {}
-      try { gotMap = JSON.parse(localStorage.getItem(LS_GOT) || '{}'); } catch (e) { gotMap = {}; }
-      try { var pv = localStorage.getItem(LS_PVIEW); if (pv && ['tree', 'direct', 'all', 'base', 'mid'].indexOf(pv) >= 0) planView = pv; } catch (e) {}
-      if (!gotMap || typeof gotMap !== 'object' || Array.isArray(gotMap)) gotMap = {};
-      if (!Array.isArray(lists)) lists = [];
-      if (!Array.isArray(craft)) craft = [];
-    }
-    function saveLists() { try { localStorage.setItem(LS_LISTS, JSON.stringify(lists)); } catch (e) {} }
-    function saveDraft() { try { localStorage.setItem(LS_DRAFT, JSON.stringify(craft)); } catch (e) {} }
-    function saveScope() { try { localStorage.setItem(LS_SCOPE, scope); } catch (e) {} }
-    function saveOpts() { try { localStorage.setItem(LS_OPTS, JSON.stringify({ excludeCrystals: excludeCrystals, hqProduct: hqProduct })); } catch (e) {} }
-    function saveCview() { try { localStorage.setItem(LS_CVIEW, craftView); } catch (e) {} }
-    function saveGot() { try { localStorage.setItem(LS_GOT, JSON.stringify(gotMap)); } catch (e) {} }
-    function savePview() { try { localStorage.setItem(LS_PVIEW, planView); } catch (e) {} }
-    function gotOf(id) { var v = Number(gotMap[id]); return isFinite(v) && v > 0 ? Math.floor(v) : 0; }
-
-    function isCrystal(id) { var it = itemById.get(id); return !!(it && it.category === '水晶'); }
-    function getQty(id) { var c = craft.find(function (x) { return x.itemId === id; }); return c ? c.qty : 1; }
-    function copyName(name) {
-      // clipboard API 失敗時退回 execCommand（非安全環境／遊戲內瀏覽器）
-      function fallback() {
-        var ta = document.createElement('textarea');
-        ta.value = name;
-        ta.style.cssText = 'position:fixed;opacity:0';
-        document.body.appendChild(ta);
-        ta.select();
-        try { document.execCommand('copy'); } catch (e) {}
-        ta.remove();
-      }
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(name).catch(fallback);
-      } else {
-        fallback();
-      }
-    }
-
-    // ---- 延遲載入工具：promise 記憶化（背景預載與使用時同呼叫不重複抓取；失敗清空可重試）----
-    function lazyJson(url) {
-      var p = null;
-      return function () {
-        if (!p) p = fetch(url).then(function (r) {
-          if (!r.ok) throw new Error(url + ' HTTP ' + r.status);
-          return r.json();
-        }).catch(function (e) { p = null; throw e; });
-        return p;
-      };
-    }
-
-    // ---- 裝備限制資料（equip.json：{ jobs, names, items: {id:[裝等,[職業索引]]} }）----
-    var equipData = null;
-    var loadEquipRaw = lazyJson('../../data/equip.json');
-    function ensureEquip() {
-      return loadEquipRaw().then(function (d) { equipData = d; return d; });
-    }
-
-    // 職能分類（名稱依繁中版官方網站：防護職業/治療職業；進攻依官方敘述拆近戰/遠程物理/遠程魔法）。
-    // 集合含基礎職——低等裝備的職業清單常只標基礎職；「全職業可裝」＝含 ADV 標記的無職業限制裝備。
-    var EQUIP_ROLES = [
-      { key: 'all',      name: '全職業可裝',   abbrs: ['ADV'] },
-      { key: 'tank',     name: '防護職業',     abbrs: ['GLA', 'PLD', 'MRD', 'WAR', 'DRK', 'GNB'] },
-      { key: 'healer',   name: '治療職業',     abbrs: ['CNJ', 'WHM', 'SCH', 'AST', 'SGE'] },
-      { key: 'melee',    name: '近戰職業',     abbrs: ['PGL', 'MNK', 'LNC', 'DRG', 'ROG', 'NIN', 'SAM', 'RPR', 'VPR'] },
-      { key: 'pranged',  name: '遠程物理職業', abbrs: ['ARC', 'BRD', 'MCH', 'DNC'] },
-      { key: 'caster',   name: '遠程魔法職業', abbrs: ['THM', 'BLM', 'ACN', 'SMN', 'RDM', 'BLU', 'PCT'] },
-      { key: 'crafter',  name: '製作職業',     abbrs: ['CRP', 'BSM', 'ARM', 'GSM', 'LTW', 'WVR', 'ALC', 'CUL'] },
-      { key: 'gatherer', name: '採集職業',     abbrs: ['MIN', 'BTN', 'FSH'] }
-    ];
-    // 個別職業選單不列出基礎職與冒險者（僅在職能集合內參與比對）
-    var HIDDEN_JOBS = { ADV: 1, GLA: 1, PGL: 1, MRD: 1, LNC: 1, ARC: 1, CNJ: 1, THM: 1, ACN: 1, ROG: 1 };
-
-    // 選單值 → 職業索引集合：'g:tank'＝職能、'j:PLD'＝單一職業；需 equipData 已載入
-    function equipJobIdxSet(ej) {
-      var abbrs;
-      if (ej.indexOf('g:') === 0) {
-        var role = null;
-        for (var i = 0; i < EQUIP_ROLES.length; i++) if (EQUIP_ROLES[i].key === ej.slice(2)) role = EQUIP_ROLES[i];
-        abbrs = role ? role.abbrs : [];
-      } else {
-        abbrs = [ej.slice(2)];
-      }
-      var s = new Set();
-      abbrs.forEach(function (a) { var idx = equipData.jobs.indexOf(a); if (idx >= 0) s.add(idx); });
-      return s;
-    }
-    function equipJobLabel(ej) {
-      if (ej.indexOf('g:') === 0) {
-        for (var i = 0; i < EQUIP_ROLES.length; i++) if (EQUIP_ROLES[i].key === ej.slice(2)) return EQUIP_ROLES[i].name;
-        return ej;
-      }
-      return equipData ? equipData.names[ej.slice(2)] : ej.slice(2);
-    }
-
-    // ---- 配方索引（延後載入）----
-    var loadRecipesRaw = lazyJson('../../data/recipes.json');
-    var recipesPromise = null;
-    function ensureRecipes() {
-      if (!recipesPromise) recipesPromise = loadRecipes().catch(function (e) { recipesPromise = null; throw e; });
-      return recipesPromise;
-    }
-    async function loadRecipes() {
-      var db = await loadRecipesRaw();
-      recipesByItem = new Map();
-      usedInByItem = new Map();
-      recipeJobsByItem = new Map();
-      var score = function (r) { return (r.expert ? 1e6 : 0) + (r.rlvl || 0); };
-      for (var i = 0; i < db.data.length; i++) {
-        var r = db.data[i];
-        var cur = recipesByItem.get(r.itemId);
-        if (!cur || score(r) < score(cur)) recipesByItem.set(r.itemId, r);
-        if (r.job) {
-          var jm = recipeJobsByItem.get(r.itemId);
-          if (!jm) { jm = new Map(); recipeJobsByItem.set(r.itemId, jm); }
-          var ej = jm.get(r.job);
-          if (!ej || r.level < ej.level) jm.set(r.job, { job: r.job, level: r.level, stars: r.stars || 0 });
-        }
-        for (var j = 0; j < r.ingredients.length; j++) {
-          var gid = r.ingredients[j].itemId;
-          var s = usedInByItem.get(gid);
-          if (!s) { s = new Set(); usedInByItem.set(gid, s); }
-          s.add(r.itemId);
-        }
-      }
-      return recipesByItem;
-    }
-
-    // 可製作物品的職業＋等級需求文字（需先 ensureRecipes），如「鍛鐵匠 Lv.62★★／鑄甲匠 Lv.61」
-    function craftJobsText(id) {
-      var jm = recipeJobsByItem && recipeJobsByItem.get(id);
-      if (!jm || !jm.size) return '';
-      return Array.from(jm.values()).map(function (j) {
-        return j.job + ' Lv.' + j.level + (j.stars ? Array(j.stars + 1).join('★') : '');
-      }).join('／');
-    }
-    // 詳情視窗副標用
-    function craftJobsHtml(id) {
-      var txt = craftJobsText(id);
-      return txt ? ' · 🔨 製作：' + esc(txt) : '';
-    }
-    // 搜尋卡用（配方載入完成前回空字串，載入後由 init 補渲染）
-    function craftJobsLine(id) {
-      var txt = craftJobsText(id);
-      return txt ? '<span class="result-craft">🔨 ' + esc(txt) + '</span>' : '';
-    }
-
-    // ===================== 搜尋（全延遲觸發：條件皆 staged，按搜尋鈕／Enter 才執行）=====================
-    var jobFilter = new Set();         // 製作職業篩選（複選；空＝不篩）
-    var searchOut = [];                // 目前搜尋結果（換頁重繪用）
-    var searchPage = 1;                // 目前頁碼
-    var searchToken = 0;               // 連續搜尋競態守門
-
-    function matchesJobFilter(it) {
-      if (!jobFilter.size) return true;
-      var jm = recipeJobsByItem && recipeJobsByItem.get(it.id);
-      if (!jm) return false;
-      var ks = Array.from(jm.keys());
-      for (var i = 0; i < ks.length; i++) if (jobFilter.has(ks[i])) return true;
-      return false;
-    }
-
-    // 範圍輸入解析：留空＝不限；min>max 靜默交換（同時回寫輸入框讓交換可見）
-    function parseRange(minEl, maxEl) {
-      var min = minEl.value === '' ? null : Math.max(1, parseInt(minEl.value, 10) || 1);
-      var max = maxEl.value === '' ? null : Math.max(1, parseInt(maxEl.value, 10) || 1);
-      if (min != null && max != null && min > max) {
-        var t = min; min = max; max = t;
-        minEl.value = min; maxEl.value = max;
-      }
-      return { min: min, max: max, active: min != null || max != null };
-    }
-
-    // 製作等級：任一配方職業等級落在範圍內（若有選職業 chips，只看被選職業的配方）
-    function matchesCraftLv(it, cr) {
-      if (!cr.active) return true;
-      var jm = recipeJobsByItem && recipeJobsByItem.get(it.id);
-      if (!jm) return false;
-      var ok = false;
-      jm.forEach(function (j) {
-        if (ok) return;
-        if (jobFilter.size && !jobFilter.has(j.job)) return;
-        if ((cr.min == null || j.level >= cr.min) && (cr.max == null || j.level <= cr.max)) ok = true;
-      });
-      return ok;
-    }
-
-    // 裝備限制：非裝備物品在任一裝備條件下一律排除；ejSet＝允許職業索引集合（null＝不篩）
-    function matchesEquip(it, er, ejSet) {
-      if (!er.active && !ejSet) return true;
-      var e = equipData && equipData.items[it.id];
-      if (!e) return false;
-      if (er.min != null && e[0] < er.min) return false;
-      if (er.max != null && e[0] > er.max) return false;
-      if (ejSet) {
-        var hit = false;
-        for (var i = 0; i < e[1].length; i++) if (ejSet.has(e[1][i])) { hit = true; break; }
-        if (!hit) return false;
-      }
-      return true;
-    }
-
-    // 排序鍵：製作＝各職業配方最高等級需求（★ 當小數細分）；裝備＝裝備等級。無資料回 -1（固定排最後）
-    function craftLevelKey(id) {
-      var jm = recipeJobsByItem && recipeJobsByItem.get(id);
-      if (!jm || !jm.size) return -1;
-      var mx = 0;
-      jm.forEach(function (j) { var k = j.level + (j.stars || 0) / 10; if (k > mx) mx = k; });
-      return mx;
-    }
-    function equipLevelKey(id) {
-      var e = equipData && equipData.items[id];
-      return e ? e[0] : -1;
-    }
-
-    function resultCardHtml(it) {
-      var tags = '';
-      if (!it.marketable) tags += '<span class="tag untradable">不可交易</span>';
-      return '<div class="result-card" data-id="' + it.id + '" title="點擊查看即時價格與在架明細">' +
-        '<img class="item-icon" src="' + iconUrl(it) + '" alt="" loading="lazy" onerror="this.style.visibility=\'hidden\'">' +
-        '<div class="result-meta"><span class="result-name">' + esc(it.name) + '</span>' +
-        '<span class="result-cat">' + esc(it.category || '') + '</span>' + craftJobsLine(it.id) + '</div>' + tags +
-        '</div>';
-    }
-
-    // 條件變更（尚未執行）→ 搜尋鈕高亮提示
-    function markDirty() { $('#searchBtn').classList.add('dirty'); }
-
-    // 目前生效條件的人話描述（查無訊息點名兇手用）
-    function condsText(cr, er, ej) {
-      var parts = [];
-      if (jobFilter.size) parts.push('製作職業：' + Array.from(jobFilter).join('、'));
-      if (cr.active) parts.push('製作等級 ' + (cr.min == null ? '1' : cr.min) + '–' + (cr.max == null ? '不限' : cr.max));
-      if (er.active) parts.push('裝備等級 ' + (er.min == null ? '1' : er.min) + '–' + (er.max == null ? '不限' : er.max));
-      if (ej !== '') parts.push('裝備職業：' + equipJobLabel(ej));
-      return parts.length ? '（' + parts.join('；') + '）' : '';
-    }
-
-    // 執行搜尋：讀取目前所有條件 → 平行載入所需資料 → 過濾＋排序＋分頁
-    async function executeSearch() {
-      var box = $('#searchResults');
-      var q = $('#searchInput').value.trim();
-      var cr = parseRange($('#craftMin'), $('#craftMax'));
-      var er = parseRange($('#equipMin'), $('#equipMax'));
-      var ej = $('#equipJob').value;
-      var sort = $('#sortSel').value;
-      searchOut = []; searchPage = 1;
-
-      var hasCond = jobFilter.size || cr.active || er.active || ej !== '';
-      if (!q && !hasCond) {
-        box.innerHTML = '<div class="search-note">請輸入關鍵字或設定篩選條件。</div>';
-        $('#searchBtn').classList.remove('dirty');
-        return;
-      }
-      $('#searchBtn').classList.remove('dirty');
-
-      // 需要的資料平行載入；失敗明確報錯，絕不靜默顯示查無（ENG-1）
-      var needs = [ensureRecipes()];   // 卡片職業列與製作排序皆用（init 已背景預載，多半即時）
-      if (er.active || ej !== '' || sort.indexOf('equip') === 0) needs.push(ensureEquip());
-      var t = ++searchToken;
-      box.innerHTML = '<div class="search-note">查詢中…</div>';
-      try { await Promise.all(needs); }
-      catch (e) {
-        if (t !== searchToken) return;
-        box.innerHTML = '<div class="search-note" style="color:var(--red)">資料載入失敗，請按上方「↻ 重新整理」或稍後再按搜尋重試。</div>';
-        return;
-      }
-      if (t !== searchToken) return;   // 期間又按了一次搜尋
-
-      var ejSet = ej !== '' ? equipJobIdxSet(ej) : null;
-      var starts = [], contains = [];
-      for (var i = 0; i < items.length; i++) {
-        var it = items[i];
-        if (!it.name || !PatchGate.released(it.patch, gamePatch)) continue;
-        if (!matchesJobFilter(it)) continue;
-        if (!matchesCraftLv(it, cr)) continue;
-        if (!matchesEquip(it, er, ejSet)) continue;
-        if (!q) starts.push(it);       // 純條件查詢（按鈕制下意圖明確，允許）
-        else {
-          var idx = it.name.indexOf(q);
-          if (idx === 0) starts.push(it);
-          else if (idx > 0) contains.push(it);
-        }
-      }
-      // 可交易物品優先（查價工具主要對象），組內維持原順序
-      var byMarketable = function (a, b) { return (b.marketable ? 1 : 0) - (a.marketable ? 1 : 0); };
-      starts.sort(byMarketable);
-      contains.sort(byMarketable);
-      searchOut = starts.concat(contains);
-      // 等級排序（穩定排序，等級相同時保留原相關性順序；無對應資料一律排最後）
-      var keyFn = sort.indexOf('equip') === 0 ? equipLevelKey : craftLevelKey;
-      var dir = /Asc$/.test(sort) ? 1 : -1;
-      searchOut.sort(function (a, b) {
-        var la = keyFn(a.id), lb = keyFn(b.id);
-        if (la < 0 && lb < 0) return 0;
-        if (la < 0) return 1;
-        if (lb < 0) return -1;
-        return (la - lb) * dir;
-      });
-      if (!searchOut.length) {
-        box.innerHTML = '<div class="search-note">查無符合' + (q ? '「' + esc(q) + '」' : '') +
-          esc(condsText(cr, er, ej)) + '的物品</div>';
-        return;
-      }
-      renderResultsPage(false);
-    }
-
-    // 分頁渲染：每頁 PAGE_SIZE 筆，換頁時捲回結果頂端
-    function renderResultsPage(scrollTop) {
-      var box = $('#searchResults');
-      var total = searchOut.length;
-      var pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
-      if (searchPage < 1) searchPage = 1;
-      if (searchPage > pages) searchPage = pages;
-      var slice = searchOut.slice((searchPage - 1) * PAGE_SIZE, searchPage * PAGE_SIZE);
-      var pager = '<div class="search-pager"><span>共 ' + fmt(total) + ' 筆' +
-        (pages > 1 ? ' · 第 ' + searchPage + '/' + pages + ' 頁' : '') + '</span>';
-      if (pages > 1) {
-        pager += '<span style="margin-left:auto"></span>' +
-          '<button class="page-btn" data-page="' + (searchPage - 1) + '"' + (searchPage <= 1 ? ' disabled' : '') + '>‹ 上一頁</button>';
-        // 頁碼視窗：1、2 … 當前±2 … 末兩頁（頁數多時不整排展開）
-        var win = [];
-        var push = function (p) { if (p >= 1 && p <= pages && win.indexOf(p) < 0) win.push(p); };
-        push(1); push(2);
-        for (var p = searchPage - 2; p <= searchPage + 2; p++) push(p);
-        push(pages - 1); push(pages);
-        win.sort(function (a, b) { return a - b; });
-        var last = 0;
-        win.forEach(function (p2) {
-          if (p2 - last > 1) pager += '<span class="page-gap">…</span>';
-          pager += '<button class="page-btn' + (p2 === searchPage ? ' active' : '') + '" data-page="' + p2 + '">' + p2 + '</button>';
-          last = p2;
-        });
-        pager += '<button class="page-btn" data-page="' + (searchPage + 1) + '"' + (searchPage >= pages ? ' disabled' : '') + '>下一頁 ›</button>';
-      }
-      pager += '</div>';
-      box.innerHTML = slice.map(resultCardHtml).join('') + pager;
-      if (scrollTop) box.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-
-    // ===================== 單品明細 =====================
-    var detailHq = false; // 明細表 HQ/NQ 篩選
-    var currentDetailId = null;
-
-    async function showDetail(id) {
-      currentDetailId = id;
-      var it = itemById.get(id);
-      if (!it) return;
-      var box = $('#itemDetail');
-      box.innerHTML =
-        '<div class="detail-head">' +
-        '<img class="item-icon" src="' + iconUrl(it) + '" alt="" onerror="this.style.visibility=\'hidden\'">' +
-        '<div><div class="detail-title">' + esc(it.name) + '</div>' +
-        '<div class="detail-sub">' + esc(it.category || '') + ' · 物品 #' + it.id + ' · 查價範圍：' + esc(scopeLabel()) + '</div></div></div>';
-
-      if (!it.marketable) {
-        box.innerHTML += '<div class="error">此物品無法在市場交易（不可上架）。</div>' + qtyAddHtml(id);
-        bindQtyAdd(box, id);
-        return;
-      }
-      box.innerHTML += '<div class="loading" id="detailLoading">查詢市場資料中…</div>';
-
-      var agg = await Universalis.fetchAggregated(scope, [id]);
-      var lst = await Universalis.fetchListings(scope, [id], { listings: 20 });
-      if (currentDetailId !== id) return; // 期間切換了物品
-      if (!agg && !lst) {
-        box.innerHTML = box.innerHTML.replace(/<div class="loading"[^>]*>[^<]*<\/div>/, '') +
-          '<div class="error">暫時無法連線 Universalis，請稍後再試或按重新整理。</div>' + qtyAddHtml(id);
-        bindQtyAdd(box, id);
-        return;
-      }
-
-      var aggItem = agg && agg.items ? agg.items[id] : null;
-      var lstItem = lst && lst.items ? lst.items[id] : null;
-      lastUpload = (lst && lst.lastUploadTime) || lastUpload;
-      renderUpdateTime();
-
-      var html = '';
-      // 摘要
-      html += '<div class="stat-grid">';
-      html += statCheapest(aggItem, false);
-      html += statCheapest(aggItem, true);
-      html += statAvg(aggItem);
-      html += statVelocity(aggItem);
-      html += '</div>';
-
-      // 明細表
-      html += '<div class="section-title toggle-row">在架明細' +
-        '<span class="seg" id="hqSeg" style="margin-left:auto">' +
-        '<button data-hq="0" class="' + (detailHq ? '' : 'active') + '">NQ</button>' +
-        '<button data-hq="1" class="' + (detailHq ? 'active' : '') + '">HQ</button></span></div>';
-      html += listingsTable(lstItem);
-
-      box.innerHTML = box.innerHTML.replace(/<div class="loading"[^>]*>[^<]*<\/div>/, '') + html + qtyAddHtml(id);
-
-      var seg = $('#hqSeg', box);
-      if (seg) seg.querySelectorAll('button').forEach(function (b) {
-        b.addEventListener('click', function () { detailHq = b.getAttribute('data-hq') === '1'; showDetail(id); });
-      });
-      bindQtyAdd(box, id);
-    }
-
-    function statCheapest(aggItem, hq) {
-      var q = aggItem && aggItem[hq ? 'hq' : 'nq'];
-      var ml = q && q.minListing && (q.minListing.dc || q.minListing.world);
-      var label = (hq ? 'HQ' : 'NQ') + ' 最低價';
-      if (!ml) return stat(label, '—', '無在架');
-      var where = ml.worldId ? Universalis.worldName(ml.worldId) : scopeLabel();
-      return stat(label, fmt(ml.price) + ' <small>G</small>', isDcMode() ? '@ ' + esc(where) : esc(scopeLabel()));
-    }
-    function statAvg(aggItem) {
-      var q = aggItem && aggItem.nq && aggItem.nq.averageSalePrice;
-      var p = q && (q.dc || q.world);
-      return stat('近期成交均價', p ? fmt(p.price) + ' <small>G</small>' : '—', 'NQ');
-    }
-    function statVelocity(aggItem) {
-      var q = aggItem && aggItem.nq && aggItem.nq.dailySaleVelocity;
-      var p = q && (q.dc || q.world);
-      return stat('每日銷量', p ? (Math.round(p.quantity * 10) / 10) + ' <small>件/日</small>' : '—', 'NQ');
-    }
-    function stat(label, value, sub) {
-      return '<div class="stat"><div class="label">' + label + '</div><div class="value">' + value + '</div>' +
-        (sub ? '<div class="label" style="margin-top:2px">' + sub + '</div>' : '') + '</div>';
-    }
-
-    function listingsTable(lstItem) {
-      var rows = (lstItem && lstItem.listings) ? lstItem.listings.filter(function (l) { return detailHq ? l.hq : !l.hq; }) : [];
-      if (!rows.length) return '<div class="note">目前沒有 ' + (detailHq ? 'HQ' : 'NQ') + ' 在架商品。</div>';
-      rows.sort(function (a, b) { return a.pricePerUnit - b.pricePerUnit; });
-      var head = '<table class="listings"><thead><tr>' +
-        (isDcMode() ? '<th>伺服器</th>' : '') +
-        '<th class="num">單價</th><th class="num">數量</th><th class="num">總價</th><th>雇員</th></tr></thead><tbody>';
-      var body = rows.slice(0, 15).map(function (l) {
-        return '<tr>' +
-          (isDcMode() ? '<td><span class="tag world">' + esc(l.worldName || '') + '</span></td>' : '') +
-          '<td class="num">' + fmt(l.pricePerUnit) + '</td>' +
-          '<td class="num">' + l.quantity + '</td>' +
-          '<td class="num">' + fmt(l.total) + '</td>' +
-          '<td>' + esc(l.retainerName || '') + '</td></tr>';
-      }).join('');
-      return head + body + '</tbody></table>';
-    }
-
-    function qtyAddHtml(id) {
-      return '<div class="qty-add"><span class="note">加入製作清單：</span>' +
-        '<input type="number" id="addQty" min="1" value="1">' +
-        '<button class="btn primary" id="addBtn">＋ 加入</button></div>';
-    }
-    function bindQtyAdd(box, id) {
-      var btn = $('#addBtn', box);
-      if (!btn) return;
-      btn.addEventListener('click', function () {
-        var q = Math.max(1, parseInt($('#addQty', box).value, 10) || 1);
-        addToCraft(id, q);
-        btn.textContent = '✓ 已加入';
-        setTimeout(function () { btn.textContent = '＋ 加入'; }, 1200);
-      });
-    }
-
-    // ===================== 製作清單 =====================
-    function addToCraft(id, qty) {
-      var ex = craft.find(function (c) { return c.itemId === id; });
-      if (ex) { ex.qty += qty; }
-      else {
-        if (craft.length >= MAX_CRAFT_ITEMS) {
-          alert('製作清單最多 ' + MAX_CRAFT_ITEMS + ' 件物品（避免樹狀圖過大）。\n請先移除部分項目，或另存後清空再加入。');
-          return;
-        }
-        craft.push({ itemId: id, qty: qty });
-      }
-      saveDraft(); updateCraftCount(); renderCraft();
-    }
-    function removeFromCraft(id) {
-      craft = craft.filter(function (c) { return c.itemId !== id; });
-      saveDraft(); updateCraftCount(); renderCraft();
-    }
-    function setQty(id, qty) {
-      var ex = craft.find(function (c) { return c.itemId === id; });
-      if (ex) { ex.qty = Math.max(1, qty); saveDraft(); renderCraft(); }
-    }
-    function updateCraftCount() { $('#craftCount').textContent = craft.length; }
-
-    // 收集樹中所有會用到的物品 id（含全展開的可製作中間物；省略水晶時跳過）
-    function collectIds(id, set, depth) {
-      if (excludeCrystals && isCrystal(id)) return;
-      set.add(id);
-      if (depth >= MAX_DEPTH) return;
-      var r = recipesByItem.get(id);
-      if (!r) return;
-      for (var i = 0; i < r.ingredients.length; i++) collectIds(r.ingredients[i].itemId, set, depth + 1);
-    }
-
-    // 該節點「購買」單價：可製作成品優先用 HQ（hqProduct 開時），原料用 NQ。無資料回 null。
-    function unitBuy(id) {
-      var p = priceMap.get(id);
-      if (!p) return null;
-      if (recipesByItem.has(id) && hqProduct && p.hq != null) return p.hq;
-      return p.nq;
-    }
-    function usedHq(id) {
-      var p = priceMap.get(id);
-      return !!(p && recipesByItem.has(id) && hqProduct && p.hq != null);
-    }
-    function buyWorld(id) {
-      var p = priceMap.get(id); if (!p) return null;
-      return usedHq(id) ? p.hqWorld : p.nqWorld;
-    }
-
-    // 手上已有的存量池（Map<id, 還可分配的數量>），由 gotMap 建。
-    function buildStockPool() {
-      var m = new Map();
-      Object.keys(gotMap).forEach(function (k) {
-        var v = Math.floor(Number(gotMap[k]));
-        if (isFinite(v) && v > 0) m.set(Number(k), v);
-      });
-      return m;
-    }
-
-    // 買 vs 做最佳化（省略水晶時材料不計入樹與成本）
-    //
-    // pool＝「手上已有」的存量，深度優先邊走邊扣。需求被存量蓋滿的節點收斂成
-    // mode='have' 且**不再往下展開**——這就是「我已經有第一層材料，就不該再叫我去湊
-    // 第二層」的實作。存量是全域的（同一物品出現在多處會依走訪順序先到先扣）。
-    //
-    // ⚠ 子節點要在 pool 的**複本**上試算：決定「直購」時整個子樹會被丟棄，
-    //    若直接在本體上扣，那批存量就會被憑空吃掉。只有真的採自製才寫回。
-    function optimal(id, qty, seen, depth, pool) {
-      var it = itemById.get(id);
-      var stock = pool.get(id) || 0;
-      var have = Math.min(stock, qty);
-      if (have > 0) pool.set(id, stock - have);
-      var need = qty - have;
-      var base = { id: id, qty: qty, have: have, need: need, marketable: !!(it && it.marketable) };
-      if (need === 0) {
-        return Object.assign(base, { leaf: true, mode: 'have', buy: 0, craft: Infinity, cost: 0, children: [] });
-      }
-      var unit = unitBuy(id);
-      var buy = (it && it.marketable && unit != null) ? unit * need : Infinity;
-      var r = recipesByItem.get(id);
-      if (!r || (seen && seen.has(id)) || depth >= MAX_DEPTH) {
-        return Object.assign(base, { leaf: true, mode: buy === Infinity ? 'na' : 'buy', buy: buy, craft: Infinity, cost: buy, children: [] });
-      }
-      var s2 = new Set(seen); s2.add(id);
-      var batches = Math.ceil(need / (r.yield || 1));
-      var ings = r.ingredients.filter(function (g) { return !(excludeCrystals && isCrystal(g.itemId)); });
-      var sub = new Map(pool);
-      var children = ings.map(function (ing) { return optimal(ing.itemId, batches * ing.qty, s2, depth + 1, sub); });
-      var canCraft = children.every(function (c) { return c.cost !== Infinity; });
-      var craftCost = canCraft ? children.reduce(function (a, c) { return a + c.cost; }, 0) : Infinity;
-      var mode, cost;
-      if (buy === Infinity && craftCost === Infinity) { mode = 'na'; cost = Infinity; }
-      else if (buy <= craftCost) { mode = 'buy'; cost = buy; }
-      else { mode = 'craft'; cost = craftCost; }
-      if (mode !== 'buy') { pool.clear(); sub.forEach(function (v, k) { pool.set(k, v); }); }   // 子樹真的會做，才認列它扣掉的存量
-      return Object.assign(base, { leaf: false, mode: mode, buy: buy, craft: craftCost, cost: cost, yield: r.yield, children: children });
-    }
-
-    // 目前計畫裡每個物品的**全計畫**合計需求：供「✓ 我有了」一次補滿所有分支，
-    // 也用來提示「這一列只是其中一層，全部要幾個」。只走真的會做的分支
-    // （決定直接買的節點，它的材料不在計畫裡，算進來會多補存量）。
-    function indexPlan(n, idx) {
-      var e = idx.get(n.id);
-      if (!e) { e = { qty: 0, need: 0 }; idx.set(n.id, e); }
-      e.qty += n.qty; e.need += n.need;
-      activeChildren(n).forEach(function (c) { indexPlan(c, idx); });
-      return idx;
-    }
-
-    // ── 節點圖渲染 ──
-    function nodeCardHtml(n, isRoot) {
-      var it = itemById.get(n.id);
-      var nm = it ? it.name : ('#' + n.id);
-      var craftable = recipesByItem.has(n.id);
-      var cls = (isRoot ? 'root' : (craftable ? 'prod' : 'mat')) + (n.mode === 'have' ? ' have' : '');
-      var unit = unitBuy(n.id), hq = usedHq(n.id), world = buyWorld(n.id);
-      var pr = n.mode === 'have'
-        ? '<div class="pr done">✅ 已有</div>'
-        : unit == null
-          ? '<div class="pr none">無販售</div>'
-          : ('<div class="pr">' + (hq ? '<span class="hqb">HQ</span>' : '') + fmt(unit) + '</div>' + (isDcMode() && world ? '<div class="wd">' + esc(world) + '</div>' : ''));
-      // 每張卡都能直接標「我有了」——在樹上就地宣告，不必再回清單找
-      var nTot = planIndex.get(n.id);
-      var haveBtn = '<button class="node-have' + (n.need === 0 ? ' on' : '') + '" data-have="' + n.id + '" data-need="' + (nTot && nTot.need > 0 ? nTot.need : n.need) + '" title="標記為已有／取消">' +
-        (n.need === 0 ? '✓ 已有' : (n.have > 0 ? '已有 ' + n.have + '/' + n.qty : '＋ 我有了')) + '</button>';
-      var qtyBadge = isRoot ? '' : '<span class="node-qty">' + n.qty + '</span>';
-      var del = isRoot ? '<button class="node-del" data-act="del" data-id="' + n.id + '" title="從清單移除">✕</button>' : '';
-      var ctrl = isRoot
-        ? ('<div class="node-root-controls"><span class="stepper"><button data-act="dec" data-id="' + n.id + '">−</button>' +
-           '<input type="number" min="1" value="' + n.qty + '" data-act="qty" data-id="' + n.id + '"><button data-act="inc" data-id="' + n.id + '">＋</button></span></div>')
-        : '';
-      return '<div class="node-card ' + cls + '" data-node="' + n.id + '" title="點擊查看詳情與上下游配方">' +
-        qtyBadge + del +
-        '<button class="node-copy" data-copy="' + esc(nm) + '" title="複製名稱">⧉</button>' +
-        '<img class="ic" src="' + iconUrl(it) + '" alt="" loading="lazy" onerror="this.style.visibility=\'hidden\'">' +
-        '<div class="nm" title="' + esc(nm) + '">' + esc(nm) + '</div>' + pr + ctrl + haveBtn +
-        '</div>';
-    }
-
-    function cmpBadgeHtml(n) {
-      var prodLabel = (n.qty > 1 ? n.qty + '個成品' : '成品');
-      if (n.buy === Infinity && n.craft === Infinity) return '<div class="cmp-badge cmp-na"><div class="l2">無法取得</div></div>';
-      if (n.buy === Infinity) return '<div class="cmp-badge cmp-na"><div class="l1">成品無販售</div><div class="l2">採自製 ' + fmt(n.craft) + '</div></div>';
-      if (n.craft === Infinity) return '<div class="cmp-badge cmp-buy"><div class="l1">材料缺市價</div><div class="l2">🛒 直購 ' + fmt(n.buy) + '</div></div>';
-      if (n.mode === 'craft') return '<div class="cmp-badge cmp-craft"><div class="l1">材料 ' + fmt(n.craft) + '　vs　' + prodLabel + ' ' + fmt(n.buy) + '</div><div class="l2">✓ 自製省 ' + fmt(n.buy - n.craft) + '</div></div>';
-      return '<div class="cmp-badge cmp-buy"><div class="l1">材料 ' + fmt(n.craft) + '　vs　' + prodLabel + ' ' + fmt(n.buy) + '</div><div class="l2">🛒 直購省 ' + fmt(n.craft - n.buy) + '</div></div>';
-    }
-
-    function rootBadgeHtml(n) {
-      if (n.cost === Infinity) return '<div class="root-badge cmp-na"><div class="l1">以最優路線計算</div><div class="big">部分材料無市價</div></div>';
-      var label = n.mode === 'craft' ? '自製最佳' : '直接購買最便宜';
-      return '<div class="root-badge"><div class="l1">以最優路線計算（每項材料取買／製的較低價）</div><div class="big">✓ ' + label + '：' + fmt(n.cost) + ' G</div></div>';
-    }
-
-    function treeLi(n, isRoot) {
-      var html = nodeCardHtml(n, isRoot);
-      if (n.children && n.children.length) {
-        var badge = isRoot ? rootBadgeHtml(n) : cmpBadgeHtml(n);
-        var green = (n.mode === 'craft') ? ' green' : '';
-        html += badge + '<ul class="children' + green + '">' + n.children.map(function (c) { return treeLi(c, false); }).join('') + '</ul>';
-      }
-      return '<li>' + html + '</li>';
-    }
-
-    // 製作清單子分頁切換（簡易清單 / 樹狀分析）
-    function craftSubtabsHtml() {
-      return '<div class="craft-subtabs"><span class="seg">' +
-        '<button data-cview="simple" class="' + (craftView === 'simple' ? 'active' : '') + '">📋 簡易清單</button>' +
-        '<button data-cview="tree" class="' + (craftView === 'tree' ? 'active' : '') + '">🌲 樹狀分析</button>' +
-        '</span></div>';
-    }
-    // mode='tree' 才顯示「省略水晶」（簡易模式只看成品、不展開材料）
-    function craftToolsHtml() {
-      return '<div class="craft-tools">' +
-        '<label class="switch"><input type="checkbox" id="optCrystal"' + (excludeCrystals ? ' checked' : '') + '><span class="track"></span>省略水晶</label>' +
-        '<label class="switch"><input type="checkbox" id="optHq"' + (hqProduct ? ' checked' : '') + '><span class="track"></span>成品用 HQ 價</label>' +
-        '<span class="note">查價範圍：' + esc(scopeLabel()) + '（於頁首切換）· 清單上限 ' + MAX_CRAFT_ITEMS + ' 件</span>' +
-        '</div>';
-    }
-
-    // 共用：批次查價建 priceMap
-    async function fetchPriceMap(ids) {
-      var lst = await Universalis.fetchListings(scope, ids, { listings: 8 });
-      priceMap = new Map();
-      if (lst && lst.items) {
-        lastUpload = lst.lastUploadTime || lastUpload;
-        ids.forEach(function (id) {
-          var d = lst.items[id];
-          var nq = Universalis.minPrice(d, false), hq = Universalis.minPrice(d, true);
-          priceMap.set(id, { nq: nq ? nq.pricePerUnit : null, nqWorld: nq ? nq.worldName : null, hq: hq ? hq.pricePerUnit : null, hqWorld: hq ? hq.worldName : null });
-        });
-      }
-      renderUpdateTime();
-    }
-
-    // 樹狀分析用：載入配方 + 查整棵樹所有材料價，回傳各需求物品的最省樹
-    // 價格的 id 集合刻意**不看存量**（用全展開），這樣勾「已有」重算時
-    // 不會因為集合變小而觸發新的查詢，也不會在取消勾選時缺價。
-    async function prepareCraftData() {
-      await ensureRecipes();
-      var idset = new Set();
-      craft.forEach(function (c) { collectIds(c.itemId, idset, 0); });
-      await fetchPriceMap(Array.from(idset));
-      var pool = buildStockPool();
-      var trees = craft.map(function (c) { return optimal(c.itemId, c.qty, new Set(), 0, pool); });
-      planIndex = new Map();
-      trees.forEach(function (t) { indexPlan(t, planIndex); });
-      return trees;
-    }
-
-    // 簡易清單用：只查成品＋第一層直接原料的價格（不遞迴）
-    async function prepareSimpleData() {
-      await ensureRecipes();
-      var idset = new Set();
-      craft.forEach(function (c) {
-        idset.add(c.itemId);
-        var r = recipesByItem.get(c.itemId);
-        if (r) r.ingredients.forEach(function (g) {
-          if (!(excludeCrystals && isCrystal(g.itemId))) idset.add(g.itemId);
-        });
-      });
-      await fetchPriceMap(Array.from(idset));
-    }
-
-    // 合併樹的虛擬總根卡（顯示整份清單的智慧最省總成本）
-    function grandRootCardHtml(grandOptimal, buyAll, anyNa, allNa, buyAllOk) {
-      var saving = (buyAllOk && !allNa) ? buyAll - grandOptimal : null;
-      var savingTxt = saving == null ? '' : (saving > 0 ? '　自製省 ' + fmt(saving) + ' G' : (saving < 0 ? '　直購省 ' + fmt(-saving) + ' G' : '　買做持平'));
-      return '<div class="node-card grand-root">' +
-        '<div class="nm">📋 製作清單（' + craft.length + ' 項）</div>' +
-        '<div class="pr">' + (allNa ? '—' : fmt(grandOptimal)) + '</div>' +
-        '<div class="wd">智慧最省總成本' + (anyNa ? '（部分無市價）' : '') + esc(savingTxt) + '</div>' +
-        '</div>';
-    }
-
-    function legendHtml() {
-      return '<div class="legend">' +
-        '<span><span class="sw sw-root"></span>最終成品</span>' +
-        '<span><span class="sw sw-prod"></span>可製作中間物</span>' +
-        '<span><span class="sw sw-mat"></span>基礎素材</span>' +
-        '<span><span class="sw-line"></span>綠線＝該層自製較省</span>' +
-        '<span>價格＝NQ最低　HQ＝HQ最低　⧉＝複製名稱　·　點節點看詳情/配方</span>' +
-        '</div>';
-    }
-
-    // ── 製作計畫清單（縮排可折疊的樹狀表格）──────────────────────────────
-    //
-    // 為什麼不是「攤平成一張表、再依層級分組」：每個節點各自比買／做，樹本來就不會
-    // 齊頭停在同一層，攤平後「第 1 層原料」與「第 3 層原料」變成平行的兩堆，看不出
-    // 誰是誰的材料；更糟的是**計畫中要自己做的中間物根本不會出現**（它不是 buy 節點），
-    // 於是「我已經有第一層材料了」在畫面上無處可表達，只能被迫去勾第二層。
-    //
-    // 改成保留樹的形狀：一列一個節點、縮排＋導引線表示上下層、每列都能勾「已有」。
-    // 勾了就 mode='have'、整個子樹從計畫消失（見 optimal 的 pool）。
-    // 設計依據（ui-ux-pro-max）：階層 >3 層不適用 treemap／sunburst（無障礙 C），
-    // 應以可折疊縮排表格為主檢視、圖形樹為輔；層級要靠縮排與間距表達而非只靠顏色。
-    // 計畫「實際會做」的分支：買到就停（含做不出來的 na——底下買得到的仍要列）。
-    // 項數、金額、採買彙總、存量分配都只認這個，否則會叫人去買用不到的東西。
-    function activeChildren(n) {
-      return (n.mode === 'craft' || n.mode === 'na') ? (n.children || []) : [];
-    }
-    // 畫面上「可以展開來看」的下層：決定買的節點也照樣列出它的材料（預設收起）。
-    // 這不只是資訊——手上若已經有那些料，標記已有後自製成本會降，
-    // 那一列就會自己從「買」翻成「做」。已標記為手上有的節點例外（都有了，底下不重要）。
-    function displayChildren(n) {
-      return n.mode === 'have' ? [] : (n.children || []);
-    }
-    function nameOf(id) { var it = itemById.get(id); return it ? it.name : ('#' + id); }
-
-    // 同一層的相同物品合併成一列。不合併的話，一種料被兩個成品（或兩個中間物）用到
-    // 就會拆成兩列各報各的數，根本看不出「總共要幾個」。
-    // entries: [{ n: 計畫節點, parentName: 上游名稱 }]，回傳合併後的節點陣列。
-    // active＝這一列真的要備（上游沒有任何一層是「直接買」）。false 的列照樣顯示，
-    // 只是不計入項數／金額／採買彙總。
-    // ⚠ active 必須逐個 occurrence 判斷再取聯集，不能整層共用一個旗標：同一種料
-    //    可能在 A 成品底下是真的要備、在 B 成品底下卻因為上層改用買的而只是參考。
-    function mergeLevel(entries) {
-      var byId = new Map();
-      entries.forEach(function (x) {
-        var n = x.n;
-        var e = byId.get(n.id);
-        if (!e) { e = { id: n.id, qty: 0, have: 0, need: 0, active: false, kids: [], modes: new Set(), parents: new Set() }; byId.set(n.id, e); }
-        e.qty += n.qty; e.have += n.have; e.need += n.need;
-        e.modes.add(n.mode);
-        if (x.active) e.active = true;
-        if (x.parentName) e.parents.add(x.parentName);
-        var childActive = x.active && (n.mode === 'craft' || n.mode === 'na');
-        displayChildren(n).forEach(function (c) { e.kids.push({ n: c, parentName: nameOf(n.id), active: childActive }); });
-      });
-      return Array.from(byId.values()).map(function (e) {
-        // 合併後的狀態由合併後的數量決定：湊滿了就是「已有」，否則沿用各處的決定
-        var mode = e.need === 0 ? 'have'
-          : e.modes.has('craft') ? 'craft'
-          : e.modes.has('buy') ? 'buy' : 'na';
-        var children = mode === 'have' ? [] : mergeLevel(e.kids);
-        var it = itemById.get(e.id), unit = unitBuy(e.id);
-        var buy = (it && it.marketable && unit != null) ? unit * e.need : Infinity;
-        var craft = children.length
-          ? children.reduce(function (a, c) { return a + c.cost; }, 0)
-          : Infinity;
-        var cost = mode === 'have' ? 0 : mode === 'buy' ? buy : mode === 'craft' ? craft : Infinity;
-        return {
-          id: e.id, qty: e.qty, have: e.have, need: e.need, mode: mode, active: e.active,
-          buy: buy, craft: craft, cost: cost, children: children,
-          marketable: !!(it && it.marketable), parents: Array.from(e.parents)
-        };
-      }).sort(function (a, b) {
-        var an = a.cost === Infinity, bn = b.cost === Infinity;   // 取不到的排最後
-        if (an !== bn) return an ? 1 : -1;
-        return b.cost - a.cost;
-      });
-    }
-    // 成品本身不進計畫（它是目標，不是要備的料），所以從各成品的下一層開始合併攤平。
-    // ⚠ 這裡要用 displayChildren 而非 activeChildren：成品若被判定「直購較省」，
-    //    activeChildren 會回空陣列，整份配方都不進計畫——加了那種成品進清單，
-    //    畫面上會完全看不出有變化（實測「五加木木材」加進去列數 20 → 20）。
-    function buildMergedTop(trees) {
-      return mergeLevel(trees.reduce(function (a, t) {
-        var act = (t.mode === 'craft' || t.mode === 'na');
-        return a.concat(displayChildren(t).map(function (c) { return { n: c, parentName: nameOf(t.id), active: act }; }));
-      }, []));
-    }
-    // 展開狀態：買與做一視同仁，預設都展開（使用者指定兩者顯示方式要相同）。
-    // 優先序：個別點過的覆寫 > 全部展開／收合 > 預設。
-    // ⚠ 全部展開不能只套用在「當下畫面上有的列」——收合狀態下深層的列還沒渲染出來，
-    //    那樣按一次只會展開一層。所以用一個全域旗標，讓沒被個別覆寫的節點通通跟著走。
-    function planIsOpen(path) {
-      if (planOpen.has(path)) return planOpen.get(path);
-      if (planAll !== null) return planAll;
-      return true;
-    }
-    function flattenPlan(n, depth, parentPath, out) {
-      var path = parentPath + '/' + n.id;
-      var kids = n.children || [];
-      var open = planIsOpen(path);
-      out.push({ n: n, depth: depth, path: path, hasKids: kids.length > 0, open: open });
-      if (!open) return out;
-      kids.forEach(function (c) { flattenPlan(c, depth + 1, path, out); });
-      return out;
-    }
-    function buildPlanRows(mergedTop) {
-      var out = [];
-      mergedTop.forEach(function (n) { flattenPlan(n, 0, '', out); });
-      return out;
-    }
-
-    // ── 多面向查閱：同一份計畫的四種攤平檢視 ──────────────────────────────
-    // 階層看得出「誰是誰的材料」，但要「總共要幾個某某」得跨層加總；反過來攤平看得到
-    // 總數卻看不出關係。兩種都要，所以做成可切換：
-    //   direct 直接材料＝只列成品的第一層（不往下拆）
-    //   all    全部素材＝整份計畫跨層合併（同一物品出現在第 1 層與第 3 層也併成一列）
-    //   base   基礎素材＝all 之中沒有配方的（採集／掉落／商店）
-    //   mid    中間物  ＝all 之中有配方的（自己做得出來的）
-    // ⚠ 這裡**不能**用 active 過濾。過濾掉「買」節點底下的材料，會讓叫「全部素材」的
-    //    檢視比「階層」還少（實測 16 項變 7 項），使用者只會覺得清單漏東西。
-    //    攤平檢視回答的是「這份配方到底由什麼組成」，跟買／做的建議是兩回事。
-    function flatAggregate(list, acc) {
-      list.forEach(function (n) {
-        var e = acc.get(n.id);
-        if (!e) { e = { id: n.id, qty: 0, have: 0, need: 0, craftCost: 0, craftInf: false, modes: new Set(), parents: new Set() }; acc.set(n.id, e); }
-        e.qty += n.qty; e.have += n.have; e.need += n.need;
-        e.modes.add(n.mode);
-        if (n.mode === 'craft') { if (n.craft === Infinity) e.craftInf = true; else e.craftCost += n.craft; }
-        (n.parents || []).forEach(function (p) { e.parents.add(p); });
-        flatAggregate(n.children || [], acc);
-      });
-      return acc;
-    }
-    function aggToNode(e) {
-      var mode = e.need === 0 ? 'have'
-        : e.modes.has('craft') ? 'craft'
-        : e.modes.has('buy') ? 'buy' : 'na';
-      var it = itemById.get(e.id), unit = unitBuy(e.id);
-      var buy = (it && it.marketable && unit != null) ? unit * e.need : Infinity;
-      var craft = (e.craftInf || !e.craftCost) ? Infinity : e.craftCost;
-      return {
-        id: e.id, qty: e.qty, have: e.have, need: e.need, mode: mode, active: true,
-        buy: buy, craft: craft, children: [], parents: Array.from(e.parents),
-        cost: mode === 'have' ? 0 : mode === 'buy' ? buy : mode === 'craft' ? craft : Infinity,
-        marketable: !!(it && it.marketable)
-      };
-    }
-    function byCostDesc(a, b) {
-      var an = a.cost === Infinity, bn = b.cost === Infinity;
-      if (an !== bn) return an ? 1 : -1;
-      return b.cost - a.cost;
-    }
-    // 回傳 planRowHtml 吃的列（扁平檢視沒有縮排與展開鈕）
-    function buildFlatRows(mergedTop, view) {
-      if (view === 'direct') {
-        return mergedTop.slice().sort(byCostDesc).map(function (n) {
-          return { n: n, depth: 0, path: '', hasKids: false, open: true };
-        });
-      }
-      var nodes = Array.from(flatAggregate(mergedTop, new Map()).values()).map(aggToNode);
-      if (view === 'base') nodes = nodes.filter(function (n) { return !recipesByItem.has(n.id); });
-      else if (view === 'mid') nodes = nodes.filter(function (n) { return recipesByItem.has(n.id); });
-      return nodes.sort(byCostDesc).map(function (n) {
-        return { n: n, depth: 0, path: '', hasKids: false, open: true };
-      });
-    }
-
-    var PLAN_VIEWS = [
-      { k: 'tree',   t: '階層' },
-      { k: 'direct', t: '直接材料' },
-      { k: 'all',    t: '全部素材' },
-      { k: 'base',   t: '基礎素材' },
-      { k: 'mid',    t: '中間物' }
-    ];
-
-    // 一列的狀態徽章（同時是「這層要買還是要做」的答案）
-    function planBadge(n) {
-      if (n.mode === 'have') return '<span class="plan-badge have">✅ 已有</span>';
-      if (n.mode === 'buy') return '<span class="plan-badge buy">🛒 買</span>';
-      if (n.mode === 'craft') return '<span class="plan-badge craft">🔨 做</span>';
-      return '<span class="plan-badge na">⚠ 取不到</span>';
-    }
-
-    // ---- 計畫統計（進度列）----
-    // 項數走整份計畫而不是「畫面上看得到的列」，否則收合一段進度數字就跟著跳動。
-    // 金額用各成品的最省成本合計（含直接買成品的那筆，那也是要花的錢）。
-    function planStats(trees, mergedTop) {
-      var s = { total: 0, done: 0, remainCost: 0, anyNa: false };
-      // 金額直接加總所有「要買」的節點（含直接買的成品本身）。
-      // 不用各成品的 cost 合計——只要樹裡有一件取不到，那個 cost 就是 Infinity，
-      // 整份預算會塌成 0，畫面上就會變成「一項無市價 → 全部都無市價」。
-      trees.forEach(function (t) {                       // 成品層：只有「直接買」的才是花費
-        if (t.mode === 'buy') s.remainCost += t.buy;
-        else if (t.mode === 'na' && !(t.children || []).length) s.anyNa = true;
-      });
-      (function walk(list) {                             // 材料層走合併後的計畫，項數才跟畫面一致
-        list.forEach(function (n) {
-          if (!n.active) return;                         // 「買」的節點底下只是參考，不計入
-          s.total++;
-          if (n.mode === 'have') { s.done++; return; }
-          if (n.mode === 'buy') { s.remainCost += n.buy; return; }
-          if (n.mode === 'na' && !n.children.length) { s.anyNa = true; return; }
-          walk(n.children);
-        });
-      })(mergedTop);
-      return s;
-    }
-    function planProgressInnerHtml(s) {
-      var pct = s.total ? Math.round(100 * s.done / s.total) : 0;
-      var allDone = s.total > 0 && s.done === s.total;
-      // 全部都查不到市價時 remainCost 會是 0，直接印「還要花 0 G」會被讀成「不用花錢」
-      var right = allDone ? '✅ 全部備齊'
-        : s.remainCost > 0 ? ('還要採買 ' + fmt(s.remainCost) + ' G' + (s.anyNa ? '（另有項目無市價）' : ''))
-        : s.anyNa ? '剩餘項目皆無市價' : '還要採買 0 G';
-      return '<div class="got-line"><span>📦 已備齊 <b>' + s.done + '</b> / ' + s.total + ' 項</span>' +
-        '<span>' + right + '</span></div>' +
-        '<div class="got-bar"><div class="got-bar-fill' + (allDone ? ' full' : '') + '" style="width:' + pct + '%"></div></div>';
-    }
-
-    function renderCraft() {
-      var body = $('#craftBody');
-      var sub = craftSubtabsHtml();
-      if (!craft.length) {
-        body.innerHTML = sub + '<div class="empty-state">製作清單是空的。<br>到「物品查詢」搜尋物品，開視窗按「＋ 加入」即可開始試算。</div>';
-        return Promise.resolve();
-      }
-      return craftView === 'simple' ? renderCraftSimple(body, sub) : renderCraftTree(body, sub);
-    }
-    // 勾「已有」會改變計畫（子樹整段消失），必須整區重算重繪；
-    // 依 UX 準則 back-behavior：互動後要保留捲動位置，否則畫面會跳掉。
-    function rerenderKeepScroll() {
-      var y = window.scrollY;
-      Promise.resolve(renderCraft()).then(function () { window.scrollTo(0, y); });
-    }
-
-    // 兩個檢視共用：成本統計（智慧最省／全買成品／可省）。數字都已扣掉「手上已有」。
-    function craftTotals(trees) {
-      var grandOptimal = trees.reduce(function (a, t) { return a + (t.cost === Infinity ? 0 : t.cost); }, 0);
-      var anyNa = trees.some(function (t) { return t.cost === Infinity; });
-      var allNa = trees.every(function (t) { return t.cost === Infinity; });
-      // 全買成品的成本（供比較）——同樣扣掉已有的成品，兩邊才是同一個基準
-      var buyAll = 0, buyAllOk = true;
-      trees.forEach(function (t) {
-        if (t.need === 0) return;
-        var it = itemById.get(t.id), u = unitBuy(t.id);
-        if (it && it.marketable && u != null) buyAll += u * t.need; else buyAllOk = false;
-      });
-      var hasStock = trees.some(function (t) { return t.have > 0; }) ||
-        Array.from(planIndex.values()).some(function (e) { return e.qty > e.need; });
-      return { grandOptimal: grandOptimal, anyNa: anyNa, allNa: allNa, buyAll: buyAll, buyAllOk: buyAllOk, hasStock: hasStock };
-    }
-
-    function craftActionsHtml() {
-      return '<div class="craft-actions">' +
-        '<button class="btn primary" data-act="saveAs">💾 另存為清單</button>' +
-        '<button class="btn danger" data-act="clear">清空清單</button>' +
-        '</div>';
-    }
-
-    // 兩個檢視共用：成本統計卡＋製作計畫（縮排樹狀、可勾已有）＋採買彙總（依伺服器）
-    function craftSummaryHtml(trees, T) {
-      var mergedTop = buildMergedTop(trees);
-      var isTree = planView === 'tree';
-      var rows = isTree ? buildPlanRows(mergedTop) : buildFlatRows(mergedTop, planView);
-      var dc = isDcMode();
-      var cols = dc ? 6 : 5;
-
-      function planRowHtml(r) {
-        var n = r.n, it = itemById.get(n.id);
-        var nm = it ? it.name : '#' + n.id;
-        var stock = gotOf(n.id);
-        var total = n.active ? planIndex.get(n.id) : null;
-        var open = r.open;
-        var toggle = r.hasKids
-          ? '<button class="plan-toggle" data-plan-toggle="' + esc(r.path) + '" aria-expanded="' + open + '" aria-label="' + (open ? '收合' : '展開') + esc(nm) + '的材料">' + (open ? '▾' : '▸') + '</button>'
-          : '<span class="plan-spacer" aria-hidden="true"></span>';
-        var guides = '';
-        for (var i = 0; i < r.depth; i++) guides += '<span class="plan-guide" aria-hidden="true"></span>';
-
-        // 副標：這一列是誰的材料（縮排看得出深淺，文字補上到底掛在哪些項目下；
-        // 合併後可能同時供應多個上游，列出來才知道這個總數是怎麼來的）
-        var ps = n.parents || [];
-        var sub = esc(ps.slice(0, 3).join('、') + (ps.length > 3 ? ' 等 ' + ps.length + ' 項' : '')) + ' 的材料';
-        // 買與做用同一種句型（只是方向相反），欄位也一樣填——兩者顯示方式一致
-        if (n.mode === 'craft') sub += n.buy === Infinity ? ' · 自製（市場買不到成品）' : ' · 自製較省（直接買要 ' + fmt(n.buy) + ' G）';
-        else if (n.mode === 'buy' && r.hasKids) sub += n.craft === Infinity ? ' · 直購（材料湊不齊）' : ' · 直購較省（自己做要 ' + fmt(n.craft) + ' G）';
-        else if (n.mode === 'have') sub += ' · 已標記為手上有，底下的材料不用再湊';
-        else if (n.mode === 'na' && r.hasKids) sub += ' · 這條路線缺料，做不出來';
-        // 同一種料若還出現在別的層（同層才合併得起來），把全計畫總數講明，
-        // 否則使用者看到 270 卻要買 297，會以為清單漏了
-        if (total && total.need > n.need) sub += ' · <b>全計畫共需 ' + total.need + '</b>（另 ' + (total.need - n.need) + ' 個在其他層）';
-
-        var qtyCell = n.mode === 'have' ? '0' : ('<b>' + n.need + '</b>' + (n.have > 0 ? ' <span class="plan-of">/ ' + n.qty + '</span>' : ''));
-        // 「做」的列也填單價／小計（自製的單位成本與總成本），欄位不再一邊有數字一邊空著
-        var unitVal = n.mode === 'buy' ? unitBuy(n.id)
-          : (n.mode === 'craft' && n.need > 0 && n.craft !== Infinity) ? n.craft / n.need
-          : null;
-        var totalVal = n.mode === 'buy' ? n.buy : n.mode === 'craft' ? n.craft : null;
-        var priceCell = unitVal != null ? fmt(unitVal) : '—';
-        var subCell = (totalVal != null && totalVal !== Infinity) ? fmt(totalVal) : '—';
-        var world = n.mode === 'buy' ? buyWorld(n.id) : null;
-        // ✓ 要補的量：計畫內的列補到全計畫都夠，其餘只補它自己這一格
-        var fillNeed = total && total.need > 0 ? total.need : n.need;
-
-        // 綠底＝中間素材（自己做得出來），無底色＝基礎素材。與買／做的建議是兩件事：
-        // 一個中間素材也可能因為市價便宜而被建議「買」。
-        return '<tr class="plan-row' + (n.mode === 'have' ? ' plan-have' : '') +
-          (recipesByItem.has(n.id) ? ' plan-mid' : '') + '" data-depth="' + r.depth + '">' +
-          '<td><div class="plan-cell">' + guides + toggle +
-            '<img class="plan-ic" src="' + iconUrl(it) + '" alt="" loading="lazy" onerror="this.style.visibility=\'hidden\'">' +
-            '<div class="plan-main"><div class="plan-nm"><span class="plan-node" data-node="' + n.id + '" role="button" tabindex="0" title="查看即時價格與上下游配方">' + esc(nm) + '</span>' + planBadge(n) + '</div>' +
-            '<div class="shop-use">' + sub + '</div></div></div></td>' +
-          '<td class="num">' + qtyCell + '</td>' +
-          '<td class="num got-cell"><input type="number" class="got-input" data-got="' + n.id + '" min="0" max="' + (total ? total.qty : n.qty) + '" value="' + stock + '" aria-label="' + esc(nm) + ' 手上已有的數量">' +
-            '<button class="got-all" data-gotall="' + n.id + '" data-need="' + fillNeed + '" title="我已經有了／再按一次歸零">✓</button></td>' +
-          (dc ? '<td>' + (world ? '<span class="tag world">' + esc(world) + '</span>' : '—') + (n.mode === 'buy' && usedHq(n.id) ? ' <span class="hqb">HQ</span>' : '') + '</td>' : '') +
-          '<td class="num">' + priceCell + '</td>' +
-          '<td class="num">' + subCell + '</td></tr>';
-      }
-
-      var S = planStats(trees, mergedTop);
-
-      // 檢視切換：階層看關係，其餘三種攤平看總數
-      var viewSeg = '<span class="seg plan-seg">' + PLAN_VIEWS.map(function (v) {
-        return '<button data-pview="' + v.k + '"' + (planView === v.k ? ' class="active"' : '') + '>' + v.t + '</button>';
-      }).join('') + '</span>';
-
-      // 攤平檢視的合計：只在「列與列之間不會互相包含」時才給。
-      //   direct 全是兄弟、base 全是葉子 → 可加總
-      //   all    含中間物與它的材料          → 重複計算
-      //   mid    中間物本身也會互相巢套（氧化鎂砥石 在 黑星石 底下）→ 重複計算
-      var viewTotal = '';
-      if (!isTree && planView !== 'all' && planView !== 'mid' && rows.length) {
-        var vs = 0, vna = false;
-        rows.forEach(function (r) {
-          var c = r.n.mode === 'buy' ? r.n.buy : r.n.mode === 'craft' ? r.n.craft : (r.n.mode === 'have' ? 0 : Infinity);
-          if (c === Infinity) vna = true; else vs += c;
-        });
-        viewTotal = '<tfoot><tr class="plan-total"><th scope="row" colspan="' + (cols - 1) + '">本檢視合計 ' + rows.length + ' 項</th>' +
-          '<td class="num">' + fmt(vs) + (vna ? ' <span class="plan-of">+無市價</span>' : '') + '</td></tr></tfoot>';
-      }
-
-      var planHtml = rows.length ? (
-        '<div class="got-progress" id="gotProgress">' + planProgressInnerHtml(S) + '</div>' +
-        '<div class="plan-bar">' + viewSeg +
-        (isTree ? '<span class="plan-bulk"><button class="btn" data-plan-all="open">全部展開</button>' +
-          '<button class="btn" data-plan-all="close">全部收合</button></span>' : '') +
-        '<span class="plan-legend"><span class="lg-mid"></span>中間素材<span class="lg-base"></span>基礎素材</span></div>' +
-        (isTree ? '<div class="note shop-hint">縮排＝上下層關係：往右一格就是「上一列的材料」。' +
-          '<b>任何一列按 ✓ 就是「我已經有了」</b>——它底下的材料會整段從計畫消失，不用再湊下一層。</div>' : '') +
-        '<div class="shop-scroll"><table class="listings"><thead><tr>' +
-        '<th>材料</th><th class="num">還需要</th><th class="num">已有</th>' +
-        (dc ? '<th>最便宜伺服器</th>' : '') + '<th class="num">單價</th><th class="num">小計</th>' +
-        '</tr></thead><tbody>' + rows.map(planRowHtml).join('') + '</tbody>' + viewTotal + '</table></div>'
-      ) : '<div class="note">不需要備料——清單裡的成品直接買比自製便宜（或已標記為手上有），見下方採買彙總。</div>';
-
-      // 採買彙總：把計畫裡所有「要買」的節點依物品合併（同一料被多處用到只跑一趟），
-      // 全DC 模式再依最便宜的伺服器分組成路線。這是計畫檢視給不了的「一次買齊」視角。
-      var buyAcc = new Map();
-      trees.forEach(function (t) { if (t.mode === 'buy') buyAcc.set(t.id, (buyAcc.get(t.id) || 0) + t.need); });
-      (function walk(list) {
-        list.forEach(function (n) {
-          if (!n.active || n.mode === 'have') return;
-          if (n.mode === 'buy') { buyAcc.set(n.id, (buyAcc.get(n.id) || 0) + n.need); return; }
-          walk(n.children || []);
-        });
-      })(mergedTop);
-      var buyList = Array.from(buyAcc.entries()).map(function (e) {
-        var it = itemById.get(e[0]), u = unitBuy(e[0]);
-        return { id: e[0], name: it ? it.name : '#' + e[0], qty: e[1], unit: u, sub: u != null ? u * e[1] : null, world: buyWorld(e[0]), hq: usedHq(e[0]) };
-      }).sort(function (a, b) { return (b.sub || 0) - (a.sub || 0); });
-
-      var routeHtml = '';
-      if (buyList.length) {
-        var byWorld = new Map();
-        buyList.forEach(function (r) {
-          var w = dc ? (r.world || '（查無市價）') : scopeLabel();
-          if (!byWorld.has(w)) byWorld.set(w, { items: [], sub: 0 });
-          var g = byWorld.get(w); g.items.push(r); if (r.sub != null) g.sub += r.sub;
-        });
-        var worlds = Array.from(byWorld.entries()).sort(function (a, b) { return b[1].sub - a[1].sub; });
-        routeHtml = '<div class="section-title">採買彙總' + (dc ? '（依伺服器 · 共 ' + worlds.length + ' 個伺服器）' : '（' + esc(scopeLabel()) + '）') + '</div>' +
-          '<div class="route-grid">' + worlds.map(function (e) {
-            return '<div class="route-card"><div class="route-head"><span class="tag world">' + esc(e[0]) + '</span><span class="route-sub">' + fmt(e[1].sub) + ' G</span></div>' +
-              e[1].items.map(function (r) {
-                return '<div class="route-line"><span>' + esc(r.name) + ' ×' + r.qty + (r.hq ? ' <span class="hqb">HQ</span>' : '') + '</span><span>' + (r.sub != null ? fmt(r.sub) : '—') + '</span></div>';
-              }).join('') + '</div>';
-          }).join('') + '</div>';
-      }
-
-      // 有材料取不到時，各成品的 cost 是 Infinity；此時改用「可購得部分」的合計，
-      // 至少讓使用者知道已知的錢要花多少，而不是整格變成「—」。
-      var costOk = !T.anyNa && !T.allNa;
-      var saving = (T.buyAllOk && costOk && T.grandOptimal > 0) ? T.buyAll - T.grandOptimal : null;
-      var stockNote = T.hasStock ? '（已扣除手上已有）' : '';
-
-      return '<div class="summary-card">' +
-        '<div class="summary-totals">' +
-        stat('智慧製作總成本',
-          costOk ? (fmt(T.grandOptimal) + ' <small>G</small>')
-            : S.remainCost > 0 ? ('<span style="color:var(--amber)">' + fmt(S.remainCost) + ' <small>G</small></span>') : '—',
-          (costOk ? '買／做自動取最省' : (S.remainCost > 0 ? '僅計可購得部分（有材料取不到）' : '此範圍查無市場資料')) + stockNote) +
-        stat('全部直接買成品', T.buyAllOk ? fmt(T.buyAll) + ' <small>G</small>' : '—', (T.buyAllOk ? '不自製' : '部分成品查無市價') + stockNote) +
-        '<div class="stat"><div class="label">自製可省</div><div class="value ' + (saving != null && saving > 0 ? 'save' : (saving != null && saving < 0 ? 'bad' : '')) + '">' +
-        (saving == null ? '—' : (saving > 0 ? fmt(saving) + ' G' : (saving < 0 ? '反而貴 ' + fmt(-saving) + ' G' : '持平'))) + '</div></div>' +
-        '</div>' +
-        '<div class="section-title">製作計畫</div>' + planHtml + routeHtml +
-        '</div>';
-    }
-
-    // 樹狀分析：統整所有需求物品 → 買/做最省樹狀圖 + 共用彙總區（總採買清單）
-    async function renderCraftTree(body, sub) {
-      var token = ++craftToken;
-      var tools = sub + craftToolsHtml();
-      body.innerHTML = tools + '<div class="loading">展開配方並查詢材料價格中…</div>';
-
-      var trees = await prepareCraftData();
-      if (token !== craftToken) return;          // 期間已切換檢視／重新渲染，放棄本次
-      var T = craftTotals(trees);
-
-      // 合併成單一樹：虛擬總根「製作清單」→ 各需求物品（可調數量）→ 材料
-      var childrenLis = trees.map(function (t) { return treeLi(t, true); }).join('');
-      var html = '<div class="craft-item"><div class="tree-scroll"><div class="tree"><ul><li>' +
-        grandRootCardHtml(T.grandOptimal, T.buyAll, T.anyNa, T.allNa, T.buyAllOk) +
-        '<ul class="children">' + childrenLis + '</ul></li></ul></div></div>' + legendHtml() + '</div>';
-
-      body.innerHTML = tools + html + craftSummaryHtml(trees, T) + craftActionsHtml();
-    }
-
-    // 簡易清單：橫向一層式——每列「成品 ▶ 直接原料」；下方接與樹狀分析共用的彙總區（總採買清單）
-    async function renderCraftSimple(body, sub) {
-      var token = ++craftToken;
-      var tools = sub + craftToolsHtml();
-      body.innerHTML = tools + '<div class="loading">查詢成品與原料價格中…</div>';
-
-      await prepareSimpleData();
-      if (token !== craftToken) return;
-      var dc = isDcMode();
-
-      function priceSub(id, mult) {
-        var it = itemById.get(id);
-        if (!it || !it.marketable) return '<span class="tag untradable">不可交易</span>';
-        var unit = unitBuy(id);
-        if (unit == null) return '無市價';
-        var w = buyWorld(id);
-        return '<span class="sr-price">' + (usedHq(id) ? '<span class="hqb">HQ</span> ' : '') + fmt(unit * mult) + ' G</span>' +
-          (dc && w ? ' @ ' + esc(w) : '');
-      }
-      function chip(cls, id, name, qty, sub2) {
-        var it = itemById.get(id);
-        return '<div class="' + cls + '" data-simple="' + id + '" title="點擊查看即時價格與配方">' +
-          '<img class="sr-ic" src="' + iconUrl(it) + '" alt="" loading="lazy" onerror="this.style.visibility=\'hidden\'">' +
-          '<div><div class="sr-nm">' + esc(name) + ' <span class="sr-sub">×' + qty + '</span></div>' +
-          '<div class="sr-sub">' + sub2 + '</div></div></div>';
-      }
-
-      var rows = craft.map(function (c) {
-        var it = itemById.get(c.itemId);
-        var nm = it ? it.name : '#' + c.itemId;
-        var prod = chip('sr-prod', c.itemId, nm, c.qty, priceSub(c.itemId, c.qty));
-        var r = recipesByItem.get(c.itemId);
-        var mats;
-        if (r) {
-          var batches = Math.ceil(c.qty / (r.yield || 1));
-          var ings = r.ingredients.filter(function (g) { return !(excludeCrystals && isCrystal(g.itemId)); });
-          var matSum = 0, matNa = false;
-          mats = ings.map(function (g) {
-            var git = itemById.get(g.itemId);
-            var need = batches * g.qty;
-            var unit = unitBuy(g.itemId);
-            if (unit != null) matSum += unit * need; else matNa = true;
-            return chip('sr-mat', g.itemId, git ? git.name : '#' + g.itemId, need, priceSub(g.itemId, need));
-          }).join('');
-          mats += '<span class="sr-total">原料合計 ' + fmt(matSum) + ' G' + (matNa ? '（部分無市價）' : '') + '</span>';
-        } else {
-          mats = '<span class="sr-total">無製作配方（採集／商店／掉落取得）</span>';
-        }
-        return '<div class="simple-row">' + prod + '<span class="sr-arrow">▶</span><div class="sr-mats">' + mats + '</div></div>';
-      }).join('');
-
-      body.innerHTML = tools + rows +
-        '<div class="note">上面只列第一層原料；完整的逐層計畫在下方「製作計畫」，想看圖形化的買／做比較切到「🌲 樹狀分析」。</div>' +
-        '<div id="simpleSummary"><div class="loading">完整展開配方、統整製作計畫中…</div></div>' +
-        craftActionsHtml();
-
-      // 第二段：完整展開配方，接上與樹狀分析同一份總採買清單（含已收集進度）
-      var trees = await prepareCraftData();
-      if (token !== craftToken) return;
-      var elSum = $('#simpleSummary');
-      if (elSum) elSum.innerHTML = craftSummaryHtml(trees, craftTotals(trees));
-    }
-
-    // ===================== 節點詳情 / 上下游配方 =====================
-    var nmCurrentId = null;
-    async function openNodeDetail(id) {
-      await ensureRecipes();
-      var it = itemById.get(id);
-      if (!it) return;
-      nmCurrentId = id;
-      var mask = $('#nodeModal'), body = $('#nodeModalBody');
-      mask.classList.add('open');
-      body.innerHTML =
-        '<div class="modal-head">' +
-        '<img class="ic" src="' + iconUrl(it) + '" alt="" onerror="this.style.visibility=\'hidden\'">' +
-        '<div class="t">' + esc(it.name) + '</div>' +
-        '<button class="modal-close" data-nm="close" title="關閉">✕</button></div>' +
-        '<div class="detail-sub" style="margin-bottom:10px">' + esc(it.category || '') + ' · 物品 #' + it.id + ' · 查價範圍：' + esc(scopeLabel()) + (isCrystal(id) ? ' · 水晶' : '') + craftJobsHtml(id) + '</div>' +
-        '<div id="nmMarket">' + (it.marketable ? '<div class="loading">查詢市場資料中…</div>' : '<div class="note">此物品無法在市場交易。</div>') + '</div>' +
-        nmRecipeSection(id) +
-        '<div class="qty-add"><span class="note">加入製作清單：</span><input type="number" id="nmQty" min="1" value="1"><button class="btn primary" data-nm="add" data-id="' + id + '">＋ 加入</button></div>';
-
-      if (it.marketable) {
-        var agg = await Universalis.fetchAggregated(scope, [id]);
-        var lst = await Universalis.fetchListings(scope, [id], { listings: 12 });
-        if (nmCurrentId !== id) return;
-        var aggItem = agg && agg.items ? agg.items[id] : null;
-        var lstItem = lst && lst.items ? lst.items[id] : null;
-        if (lst && lst.lastUploadTime) { lastUpload = lst.lastUploadTime; renderUpdateTime(); }
-        var mk = $('#nmMarket');
-        if (mk) {
-          if (!agg && !lst) mk.innerHTML = '<div class="error">暫時無法連線 Universalis。</div>';
-          else mk.innerHTML = '<div class="stat-grid">' + statCheapest(aggItem, false) + statCheapest(aggItem, true) + statAvg(aggItem) + statVelocity(aggItem) + '</div>' + listingsTable(lstItem);
-        }
-      }
-    }
-
-    // 是否顯示某物品（有繁中名且台服已開放；無名者＝台服未開放，依站規隱藏）
-    function visibleItem(id) {
-      var it = itemById.get(id);
-      return !!(it && it.name && PatchGate.released(it.patch, gamePatch));
-    }
-    function nmRecipeSection(id) {
-      // 水晶為基礎素材、又被上千配方使用，列出上下游無意義
-      if (isCrystal(id)) return '<div class="note" style="margin-top:8px">水晶為基礎素材，不列出上下游配方。</div>';
-
-      var html = '';
-      var r = recipesByItem.get(id);
-      html += '<div class="section-title">製作材料（向下）</div>';
-      var ings = r ? r.ingredients.filter(function (g) { return visibleItem(g.itemId); }) : [];
-      if (ings.length) html += '<div class="nav-list">' + ings.map(function (g) {
-        return navChipHtml(g.itemId, itemById.get(g.itemId).name + ' ×' + g.qty);
-      }).join('') + '</div>';
-      else html += '<div class="note">基礎素材，無製作配方。</div>';
-
-      html += '<div class="section-title">用於製作（向上）</div>';
-      var ups = usedInByItem.get(id);
-      var arr = ups ? Array.from(ups).filter(visibleItem) : [];
-      if (arr.length) {
-        html += '<div class="nav-list">' + arr.slice(0, 50).map(function (pid) {
-          return navChipHtml(pid, itemById.get(pid).name);
-        }).join('') + '</div>' + (arr.length > 50 ? '<div class="note">… 另有 ' + (arr.length - 50) + ' 項</div>' : '');
-      } else html += '<div class="note">無已知用途。</div>';
-      return html;
-    }
-    function navChipHtml(id, label) {
-      var it = itemById.get(id);
-      return '<span class="nav-chip" data-nm="nav" data-id="' + id + '"><img src="' + iconUrl(it) + '" alt="" onerror="this.style.display=\'none\'">' + esc(label) + '</span>';
-    }
-    function closeNodeModal() { nmCurrentId = null; $('#nodeModal').classList.remove('open'); }
-    // 關閉節點視窗＝退回上一筆歷史，讓瀏覽器上/下頁與工具內導覽一致
-    function backOrClose() { if (applied.node != null) history.back(); else closeNodeModal(); }
-
-    // ===================== 我的清單 =====================
-    function saveAsList() {
-      if (!craft.length) return;
-      var name = prompt('清單名稱：', '製作清單 ' + (lists.length + 1));
-      if (name == null) return;
-      name = name.trim() || ('製作清單 ' + (lists.length + 1));
-      var now = Date.now();
-      lists.push({ id: 'L' + now + Math.floor(Math.random() * 1000), name: name, createdAt: now, updatedAt: now, items: craft.map(function (c) { return { itemId: c.itemId, qty: c.qty }; }) });
-      saveLists(); renderLists();
-      alert('已儲存清單「' + name + '」');
-    }
-    function loadList(id) {
-      var l = lists.find(function (x) { return x.id === id; });
-      if (!l) return;
-      craft = l.items.slice(0, MAX_CRAFT_ITEMS).map(function (c) { return { itemId: c.itemId, qty: c.qty }; });
-      if (l.items.length > MAX_CRAFT_ITEMS) alert('此清單有 ' + l.items.length + ' 件，超過上限，已載入前 ' + MAX_CRAFT_ITEMS + ' 件。');
-      saveDraft(); updateCraftCount(); switchTab('craft'); renderCraft();
-    }
-    function renameList(id) {
-      var l = lists.find(function (x) { return x.id === id; });
-      if (!l) return;
-      var n = prompt('新名稱：', l.name);
-      if (n == null) return;
-      l.name = n.trim() || l.name; l.updatedAt = Date.now(); saveLists(); renderLists();
-    }
-    function deleteList(id) {
-      var l = lists.find(function (x) { return x.id === id; });
-      if (!l) return;
-      if (!confirm('刪除清單「' + l.name + '」？')) return;
-      lists = lists.filter(function (x) { return x.id !== id; }); saveLists(); renderLists();
-    }
-    function renderLists() {
-      var body = $('#listsBody');
-      if (!lists.length) { body.innerHTML = '<div class="empty-state">還沒有儲存任何清單。<br>在「製作清單」分頁按「💾 另存為清單」即可建立。</div>'; return; }
-      body.innerHTML = lists.slice().sort(function (a, b) { return b.updatedAt - a.updatedAt; }).map(function (l) {
-        var names = l.items.map(function (c) { var it = itemById.get(c.itemId); return (it ? it.name : '#' + c.itemId) + '×' + c.qty; }).slice(0, 4).join('、');
-        if (l.items.length > 4) names += ' …';
-        return '<div class="saved-row">' +
-          '<div class="meta"><div class="nm">' + esc(l.name) + '</div>' +
-          '<div class="sub">' + l.items.length + ' 項 · 更新於 ' + new Date(l.updatedAt).toLocaleDateString('zh-TW') + '<br>' + esc(names) + '</div></div>' +
-          '<button class="btn primary" data-act="load" data-id="' + l.id + '">載入</button>' +
-          '<button class="btn" data-act="rename" data-id="' + l.id + '">改名</button>' +
-          '<button class="btn danger" data-act="del" data-id="' + l.id + '">刪除</button>' +
-          '</div>';
-      }).join('');
-      body.querySelectorAll('[data-act]').forEach(function (el) {
-        var act = el.getAttribute('data-act'), id = el.getAttribute('data-id');
-        el.addEventListener('click', function () {
-          if (act === 'load') loadList(id); else if (act === 'rename') renameList(id); else if (act === 'del') deleteList(id);
-        });
-      });
-    }
-
-    function exportLists() {
-      var blob = new Blob([JSON.stringify({ schema: 'sgt-market-lists', exported: new Date().toISOString(), lists: lists }, null, 2)], { type: 'application/json' });
-      var a = document.createElement('a');
-      a.href = URL.createObjectURL(blob); a.download = 'market-lists.json'; a.click();
-      setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
-    }
-    function importLists(file) {
-      var fr = new FileReader();
-      fr.onload = function () {
-        try {
-          var obj = JSON.parse(fr.result);
-          var incoming = Array.isArray(obj) ? obj : (obj.lists || []);
-          if (!Array.isArray(incoming) || !incoming.length) { alert('檔案內沒有清單資料。'); return; }
-          var ok = 0;
-          incoming.forEach(function (l) {
-            if (l && Array.isArray(l.items)) {
-              lists.push({ id: 'L' + Date.now() + Math.floor(Math.random() * 100000), name: (l.name || '匯入清單'), createdAt: l.createdAt || Date.now(), updatedAt: Date.now(), items: l.items.filter(function (c) { return c && c.itemId; }).slice(0, MAX_CRAFT_ITEMS).map(function (c) { return { itemId: Number(c.itemId), qty: Math.max(1, Number(c.qty) || 1) }; }) });
-              ok++;
-            }
-          });
-          saveLists(); renderLists();
-          alert('已匯入 ' + ok + ' 份清單。');
-        } catch (e) { alert('匯入失敗：檔案格式錯誤。'); }
-      };
-      fr.readAsText(file);
-    }
-
-    // ===================== 分頁 / 瀏覽歷史（上一頁/下一頁）=====================
-    // 用 History API 讓瀏覽器上一頁/下一頁可在「分頁 → 物品詳情 → 節點視窗」之間
-    // 逐步前進後退，而不是一按上一頁就離開整個工具回首頁。
-    // 狀態 nav = { tab, detail(物品查詢選中的物品), node(節點視窗開啟的物品) }。
-    var applied = { tab: 'search', detail: null, node: null };
-
-    function setTab(name) {
-      document.querySelectorAll('.tab').forEach(function (t) { t.classList.toggle('active', t.getAttribute('data-tab') === name); });
-      document.querySelectorAll('.tab-panel').forEach(function (p) { p.classList.toggle('active', p.id === 'tab-' + name); });
-      if (name === 'craft') renderCraft();
-      if (name === 'lists') renderLists();
-    }
-
-    // 套用某個歷史狀態到畫面（不再寫入歷史）
-    function applyNav(s) {
-      s = s || { tab: 'search', detail: null, node: null };
-      if (s.tab !== applied.tab) setTab(s.tab);
-      if (s.tab === 'search' && s.detail !== applied.detail) {
-        if (s.detail != null) showDetail(s.detail);
-        else { $('#itemDetail').innerHTML = ''; currentDetailId = null; }
-      }
-      if (s.node !== applied.node) {
-        if (s.node != null) openNodeDetail(s.node);
-        else { nmCurrentId = null; $('#nodeModal').classList.remove('open'); }
-      }
-      applied = { tab: s.tab, detail: s.detail != null ? s.detail : null, node: s.node != null ? s.node : null };
-    }
-
-    function urlFor(s) {
-      if (s.node != null) return '#node=' + s.node;
-      if (s.tab === 'search' && s.detail != null) return '#item=' + s.detail;
-      return '#' + s.tab;
-    }
-
-    // 使用者操作 → 寫入一筆歷史並套用（上一頁即可回到先前狀態）
-    function navTo(partial) {
-      var s = {
-        tab: 'tab' in partial ? partial.tab : applied.tab,
-        detail: 'detail' in partial ? partial.detail : applied.detail,
-        node: 'node' in partial ? partial.node : applied.node
-      };
-      // 節點視窗內的上下游導覽（node→node、同分頁）以 replaceState 取代，
-      // 讓整個視窗瀏覽只佔一筆歷史；如此關閉／點空白處／上一頁一次即可回到原頁面，
-      // 不必依瀏覽層數重複點擊。
-      var inModalNav = (applied.node != null && s.node != null && s.tab === applied.tab);
-      try {
-        if (inModalNav) history.replaceState(s, '', urlFor(s));
-        else history.pushState(s, '', urlFor(s));
-      } catch (e) {}
-      applyNav(s);
-    }
-    function switchTab(name) { navTo({ tab: name, node: null }); }
-    function renderUpdateTime() {
-      $('#updateTime').textContent = lastUpload ? ('資料更新：' + relTime(lastUpload)) : '';
-    }
-    function buildScopeSelect() {
-      var sel = $('#scopeSel');
-      var opts = '<option value="dc">全DC（陸行鳥 8 服比價）</option><optgroup label="單一伺服器">';
-      Object.keys(Universalis.WORLDS).forEach(function (id) { opts += '<option value="' + id + '">' + Universalis.WORLDS[id] + '</option>'; });
-      opts += '</optgroup>';
-      sel.innerHTML = opts;
-      sel.value = scope;
-      sel.addEventListener('change', function () {
-        scope = sel.value; saveScope();
-        priceMap = new Map(); lastUpload = 0; renderUpdateTime();
-        if (currentDetailId && $('#tab-search').classList.contains('active')) showDetail(currentDetailId);
-        if ($('#tab-craft').classList.contains('active')) renderCraft();
-        if ($('#nodeModal').classList.contains('open') && nmCurrentId) openNodeDetail(nmCurrentId);
-      });
-    }
-
-    // ===================== 初始化 =====================
-    async function init() {
-      loadState();
-      buildScopeSelect();
-      updateCraftCount();
-
-      // 分頁切換
-      document.querySelectorAll('.tab').forEach(function (t) {
-        t.addEventListener('click', function () { switchTab(t.getAttribute('data-tab')); });
-      });
-
-      // 瀏覽歷史：初始狀態 + 上一頁/下一頁
-      try { history.replaceState({ tab: 'search', detail: null, node: null }, '', location.pathname + location.search); } catch (e) {}
-      window.addEventListener('popstate', function (e) { applyNav(e.state || { tab: 'search', detail: null, node: null }); });
-
-      // 深連結：初次載入若帶 #item=<id> / #node=<id> / #craft|#lists，套用之
-      // （供收藏頁「查市場行情」等外部連結直接開到指定物品）
-      (function applyInitialHash() {
-        var h = location.hash || '';
-        var mItem = h.match(/^#item=(\d+)/);
-        var mNode = h.match(/^#node=(\d+)/);
-        if (mItem) navTo({ tab: 'search', detail: Number(mItem[1]), node: null });
-        else if (mNode) navTo({ node: Number(mNode[1]) });
-        else if (h === '#craft' || h === '#lists') navTo({ tab: h.slice(1), node: null });
-      })();
-
-      // 搜尋：全延遲觸發——輸入/條件變更只標記 dirty，按搜尋鈕或 Enter 才執行
-      var input = $('#searchInput');
-      $('#searchBtn').addEventListener('click', executeSearch);
-      input.addEventListener('keydown', function (e) {
-        // 中文輸入法組字中的 Enter（isComposing / keyCode 229）不觸發搜尋
-        if (e.key === 'Enter' && !e.isComposing && e.keyCode !== 229) executeSearch();
-      });
-      input.addEventListener('input', markDirty);
-
-      // 條件群（chips／等級範圍／裝備職業／排序）：變更僅 staged，不即時查詢
-      $('#craftRow').addEventListener('click', function (e) {
-        var chip = e.target.closest('.job-chip');
-        if (!chip) return;
-        var j = chip.getAttribute('data-job');
-        if (jobFilter.has(j)) jobFilter.delete(j); else jobFilter.add(j);
-        chip.classList.toggle('active', jobFilter.has(j));
-        markDirty();
-      });
-      ['craftMin', 'craftMax', 'equipMin', 'equipMax'].forEach(function (id) {
-        $('#' + id).addEventListener('input', markDirty);
-      });
-      $('#equipJob').addEventListener('change', markDirty);
-      $('#sortSel').addEventListener('change', markDirty);
-      $('#searchResults').addEventListener('click', function (e) {
-        var pb = e.target.closest('.page-btn[data-page]');
-        if (pb) { if (!pb.disabled) { searchPage = Number(pb.getAttribute('data-page')); renderResultsPage(true); } return; }
-        var card = e.target.closest('.result-card[data-id]');
-        if (!card) return;
-        // 與「製作清單」的節點卡片同效果：開啟節點詳情視窗（市價 + 上下游配方 + 加入清單）
-        navTo({ node: Number(card.getAttribute('data-id')) });
-      });
-
-      // 重新整理
-      $('#refreshBtn').addEventListener('click', function () {
-        Universalis.clearCache(); priceMap = new Map();
-        if (currentDetailId && $('#tab-search').classList.contains('active')) showDetail(currentDetailId);
-        if ($('#tab-craft').classList.contains('active')) renderCraft();
-        if ($('#nodeModal').classList.contains('open') && nmCurrentId) openNodeDetail(nmCurrentId);
-      });
-
-      // 匯出 / 匯入
-      $('#exportBtn').addEventListener('click', exportLists);
-      $('#importBtn').addEventListener('click', function () { $('#importFile').click(); });
-      $('#importFile').addEventListener('change', function (e) { if (e.target.files[0]) importLists(e.target.files[0]); e.target.value = ''; });
-
-      // 製作清單：事件委派（點節點 / 數量 / 複製 / 動作 / 選項切換）
-      var cb = $('#craftBody');
-      cb.addEventListener('click', function (e) {
-        var cview = e.target.closest('[data-cview]');
-        if (cview) { craftView = cview.getAttribute('data-cview'); saveCview(); renderCraft(); return; }
-        var copy = e.target.closest('.node-copy');
-        if (copy) { copyName(copy.getAttribute('data-copy')); var o = copy.textContent; copy.textContent = '✓'; setTimeout(function () { copy.textContent = o; }, 900); return; }
-        // 「✓ 我有了」：一次補滿該物品在計畫裡**所有分支**的剩餘需求（同一料被兩個成品用到
-        // 也一起解決）；已經滿足時再按一次歸零。之後整份計畫重算——子樹會整段消失。
-        var gall = e.target.closest('[data-gotall], [data-have]');
-        if (gall) {
-          var gid = Number(gall.getAttribute('data-gotall') || gall.getAttribute('data-have'));
-          var fill = Number(gall.getAttribute('data-need'));
-          if (!isFinite(fill)) { var tt = planIndex.get(gid); fill = tt ? tt.need : 0; }
-          gotMap[gid] = fill > 0 ? gotOf(gid) + fill : 0;
-          saveGot(); rerenderKeepScroll();
-          return;
-        }
-        var pview = e.target.closest('[data-pview]');
-        if (pview) { planView = pview.getAttribute('data-pview'); savePview(); rerenderKeepScroll(); return; }
-        var ptog = e.target.closest('[data-plan-toggle]');
-        if (ptog) {
-          var pth = ptog.getAttribute('data-plan-toggle');
-          planOpen.set(pth, ptog.getAttribute('aria-expanded') !== 'true');
-          rerenderKeepScroll();
-          return;
-        }
-        var pall = e.target.closest('[data-plan-all]');
-        if (pall) {
-          planAll = pall.getAttribute('data-plan-all') === 'open';
-          planOpen = new Map();
-          rerenderKeepScroll();
-          return;
-        }
-        var act = e.target.closest('[data-act]');
-        if (act) {
-          var a = act.getAttribute('data-act'), id = Number(act.getAttribute('data-id'));
-          if (a === 'inc') setQty(id, getQty(id) + 1);
-          else if (a === 'dec') setQty(id, getQty(id) - 1);
-          else if (a === 'del') removeFromCraft(id);
-          else if (a === 'saveAs') saveAsList();
-          else if (a === 'clear') { if (confirm('確定清空目前的製作清單？（已儲存的清單不受影響，「已有」的標記將一併重設）')) { craft = []; gotMap = {}; planOpen = new Map(); saveGot(); saveDraft(); updateCraftCount(); renderCraft(); } }
-          return;
-        }
-        var srow = e.target.closest('[data-simple]');
-        if (srow) { navTo({ node: Number(srow.getAttribute('data-simple')) }); return; }
-        var card = e.target.closest('[data-node]');
-        if (card) navTo({ node: Number(card.getAttribute('data-node')) });
-      });
-      // 計畫列的品名是 role="button"，鍵盤也要能開詳情
-      cb.addEventListener('keydown', function (e) {
-        if (e.key !== 'Enter' && e.key !== ' ') return;
-        var nd = e.target.closest('.plan-node[data-node]');
-        if (!nd) return;
-        e.preventDefault();
-        navTo({ node: Number(nd.getAttribute('data-node')) });
-      });
-      cb.addEventListener('change', function (e) {
-        if (e.target.matches('input[data-act="qty"]')) { setQty(Number(e.target.getAttribute('data-id')), parseInt(e.target.value, 10) || 1); }
-        else if (e.target.matches('input[data-got]')) { rerenderKeepScroll(); }   // 打完數字才重算，不要邊打邊重繪
-        else if (e.target.id === 'optCrystal') { excludeCrystals = e.target.checked; saveOpts(); renderCraft(); }
-        else if (e.target.id === 'optHq') { hqProduct = e.target.checked; saveOpts(); renderCraft(); }
-      });
-      // 「已有」數量：邊打邊存（夾在 0～計畫總需求），重算等到 change
-      cb.addEventListener('input', function (e) {
-        if (!e.target.matches('input[data-got]')) return;
-        var gid = Number(e.target.getAttribute('data-got'));
-        var gmax = Number(e.target.getAttribute('max')) || 0;
-        var v = parseInt(e.target.value, 10);
-        if (!isFinite(v) || v < 0) v = 0;
-        if (v > gmax) { v = gmax; e.target.value = v; }
-        gotMap[gid] = v;
-        saveGot();
-      });
-
-      // 節點詳情 modal：委派（關閉 / 上下游導覽 / 加入清單）
-      $('#nodeModalBody').addEventListener('click', function (e) {
-        var t = e.target.closest('[data-nm]');
-        if (!t) return;
-        var k = t.getAttribute('data-nm');
-        if (k === 'close') backOrClose();
-        else if (k === 'nav') navTo({ node: Number(t.getAttribute('data-id')) });
-        else if (k === 'add') {
-          var q = Math.max(1, parseInt($('#nmQty').value, 10) || 1);
-          addToCraft(Number(t.getAttribute('data-id')), q);
-          t.textContent = '✓ 已加入'; setTimeout(function () { t.textContent = '＋ 加入'; }, 1200);
-        }
-      });
-      $('#nodeModal').addEventListener('click', function (e) { if (e.target === this) backOrClose(); });
-      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && $('#nodeModal').classList.contains('open')) backOrClose(); });
-
-      // 載入資料
-      try {
-        gamePatch = await PatchGate.loadGamePatch('../../data/_meta.json');
-        // 讀精簡表而不是 10MB 的 items.json：本頁只用到六個欄位，整包載完才能動實在太貴。
-        // 產生方式與欄位說明見 scripts/build-items-market.mjs（改完 items.json 要重跑）。
-        var res = await fetch('../../data/items-market.json');
-        var db = await res.json();
-        items = expandMarketItems(db);
-        itemById = new Map(items.map(function (it) { return [it.id, it]; }));
-        // 背景預載：配方（卡片職業列／製作清單零等待）＋裝備限制（填職業下拉）
-        ensureRecipes().then(function () {
-          if (searchOut.length) renderResultsPage(false);   // 補上卡片的製作職業列
-        }).catch(function () {});
-        ensureEquip().then(function () {
-          var html = '<option value="">全部</option>' +
-            '<option value="g:all">全職業可裝</option>' +
-            '<optgroup label="職能分類">' +
-            EQUIP_ROLES.filter(function (r) { return r.key !== 'all'; }).map(function (r) {
-              return '<option value="g:' + r.key + '">' + esc(r.name) + '</option>';
-            }).join('') + '</optgroup>';
-          EQUIP_ROLES.forEach(function (r) {
-            if (r.key === 'all') return;
-            var jobs = r.abbrs.filter(function (a) { return !HIDDEN_JOBS[a] && equipData.names[a]; });
-            if (!jobs.length) return;
-            html += '<optgroup label="' + esc(r.name) + '">' + jobs.map(function (a) {
-              return '<option value="j:' + a + '">' + esc(equipData.names[a]) + '</option>';
-            }).join('') + '</optgroup>';
-          });
-          $('#equipJob').innerHTML = html;
-        }).catch(function () {});
-      } catch (e) {
-        $('#itemDetail').innerHTML = '<div class="error">物品資料載入失敗，請重新整理頁面。</div>';
-      }
-    }
-
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-    else init();
-  })();
-  </script>
+  <script src="market.js"></script>
 </body>
 </html>
