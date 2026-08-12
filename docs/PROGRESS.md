@@ -198,6 +198,18 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 
 ## 五、更新紀錄
 
+- **2026-08-12b（園藝頁二輪：補用途與照料時程、修 a11y）**：動 `tools/gardening/*`、`scripts/build-gardening.mjs`，重建 `data/gardening.json`（111.7K → 128.5K）。未動 `assets/`，不需 bump SW。
+
+  **① 最有價值的補充是「拿來幹嘛」。** 原本 16 種作物顯示不出用途，而那 16 種正好是最重要的。補完後只剩 3 種。四個判定全部由資料推導：`usedIn`（被幾個配方吃掉）、**`parentOf`（它的種子是幾種作物的父本——48 小時那批的存在意義幾乎只有這個）**、`minion`（**6 個園藝產物其實是寵物，其中 4 隻沒有別條路**，對回 `minions.json` 的 `type:"園藝獲得"`）、`productSources`（收成物自己買不買得到）。只有薩維奈圓蔥與克拉卡蘿蔔的陸行鳥用途算不出來，寫成 `USE_NOTE` 並附出處。
+
+  **② 「產物可直接取得」只能收可重複的管道。** 第一版把薩維奈圓蔥的 `quest`（任務獎勵）也算進去，畫面就會寫「本身就能直接取得，不必種」——那是一次性獎勵，這輩子只拿得到一次。加上排除 `once`／`rng` 後由 64 種降為 51 種。
+
+  **③ 照料時程**：資料早就有 48h 枯萎／24h 枯死，但只寫規則等於沒說。改成依開始時間直接算出「最晚幾點要回來、要顧哪幾格」（薩維奈圓蔥那條鏈是 8 個時間點）。
+
+  **④ a11y 五修**：標題階層 1→3 跳級（目標卡的 `h3` 出現在第一個 `h2` 前）；結果換掉時沒有 `role="status"` 播報；觸控間距 5–7px（tokens.css 把鈕撐到 44px 但沒管間距，`common.css` 對 `.filter-tags` 早有 8px 先例）；「全部作物」的篩選／搜尋／排序沒進網址（另外三個檢視都有深層連結）；換配方後展開的 `<details>` 被重繪關掉。
+
+  **⑤ 量測環境的兩個坑（差點寫出假報告）**：headless Edge **無法用 `Emulation.setEmulatedMedia` 模擬 `pointer: coarse`**（指令收下、`matchMedia` 仍 false），第一次量到「`.quick-btn` 33px、`summary` 19px」全是桌機值；改成**由伺服器把 CSS／HTML 裡的 `(pointer: coarse)` 換成 `all` 再送出**才是真的，實測全部 ≥44px。另外 `:focus-visible` **不吃程式呼叫的 `el.focus()`**，要送真的 Tab 鍵，否則整排誤報「沒有焦點環」。重測結果：375／768／1440 × 亮暗 × 四個檢視 → 溢出 0、對比未達標 0、console error 0。
+
 - **2026-08-12（園藝配種計算重做：從查表改成算路徑）**：動 `tools/gardening/index.html`、新增 `tools/gardening/gardening.js`＋`scripts/build-gardening.mjs`＋`docs/gardening-rules.md`，重建 `data/gardening.json`（36.6K → 111.7K）。未動 `assets/`，故**不需** bump `CACHE_VERSION`（`--check` 確認 `sgt-0558ff1cf5` 仍最新）。`validate-data` 56 檔 0 error 0 warning。
 
   **① 舊版最大的錯不是版面，是它算錯了。** 舊頁面對「薩維奈圓蔥」只印 `240h`。實際上：配種**收到的是種子不是作物**（本株那格仍長本株自己的作物，只是收成時額外掉出目標種子，**還要再種一輪**），而且它的兩個父本自己也只能靠配種。實算是 **480 小時（20 天）**，整整差一倍。「反查」只給一層配方，等於把三層的問題丟回給使用者自己算。

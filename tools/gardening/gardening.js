@@ -158,20 +158,43 @@
     if (!skipHash) writeHash();
   }
 
-  /* 深層連結：#/plan/8166、#/flower/21876、#/all、#/rules。
-     每個檢視都能直接分享，重新整理也回到同一個地方。 */
+  /* 深層連結：#/plan/8166、#/flower/21876、#/rules，
+     以及 #/all?kind=flower&q=鬱&sort=duration——「全部作物」的篩選／搜尋／排序也要能分享與重整，
+     否則調了半天的條件一重整就沒了（其他三個檢視都有，就它沒有）。 */
   function writeHash() {
     var h = '#/' + STATE.tab;
     if (STATE.tab === 'plan' && STATE.target) h += '/' + STATE.target;
     if (STATE.tab === 'flower' && STATE.species) h += '/' + STATE.species;
+    if (STATE.tab === 'all') {
+      var qs = [];
+      if (STATE.kind !== 'all') qs.push('kind=' + STATE.kind);
+      if (STATE.q) qs.push('q=' + encodeURIComponent(STATE.q));
+      if (STATE.sort !== 'name') qs.push('sort=' + STATE.sort);
+      if (qs.length) h += '?' + qs.join('&');
+    }
     if (location.hash !== h) history.replaceState(null, '', h);
   }
   function applyHash() {
-    var m = (location.hash || '').match(/^#\/(plan|flower|all|rules)(?:\/(\d+))?/);
+    var raw = location.hash || '';
+    var m = raw.match(/^#\/(plan|flower|all|rules)(?:\/(\d+))?/);
     if (!m) { showTab('plan', true); return; }
     showTab(m[1], true);
     if (m[1] === 'plan' && m[2]) selectTarget(Number(m[2]), true);
     if (m[1] === 'flower' && m[2]) selectSpecies(Number(m[2]), true);
+    if (m[1] === 'all') {
+      var qi = raw.indexOf('?');
+      var params = new URLSearchParams(qi >= 0 ? raw.slice(qi + 1) : '');
+      STATE.kind = params.get('kind') || 'all';
+      STATE.q = (params.get('q') || '').toLowerCase();
+      STATE.sort = params.get('sort') || 'name';
+      var si = $('allSearch'), so = $('allSort');
+      if (si) si.value = params.get('q') || '';
+      if (so) so.value = STATE.sort;
+      document.querySelectorAll('#allFilters [data-kind]').forEach(function (x) {
+        x.setAttribute('aria-pressed', x.dataset.kind === STATE.kind ? 'true' : 'false');
+      });
+      renderAll();
+    }
   }
 
   // ── 配種路徑 ──────────────────────────────────────────────────────────
@@ -211,8 +234,24 @@
         return;
       }
       var jump = e.target.closest('[data-goto]');
-      if (jump) selectTarget(Number(jump.dataset.goto));
+      if (jump) { selectTarget(Number(jump.dataset.goto)); return; }
+      var fl = e.target.closest('[data-flower]');
+      if (fl) { selectSpecies(Number(fl.dataset.flower)); return; }
+      var cp = e.target.closest('[data-copy]');
+      if (cp) copyText(cp, cp.dataset.copy);
     });
+  }
+
+  /** 複製英文名——查國際服攻略／Universalis 時用得到（本站的名字全是台服官方繁中名）。 */
+  function copyText(btn, text) {
+    var done = function () {
+      var old = btn.textContent;
+      btn.textContent = '已複製 ✓';
+      setTimeout(function () { btn.textContent = old; }, 1500);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () {});
+    }
   }
 
   function selectTarget(productId, skipHash) {
@@ -293,24 +332,71 @@
     return '';
   }
 
+  /** 這個作物到底拿來幹嘛。全部由資料推導，只有陸行鳥那兩條是註記（出處見 docs/gardening-rules.md）。 */
+  function usesBlock(p) {
+    var rows = [];
+    if (p.minion) {
+      rows.push('<div class="use-row"><span class="use-tag">寵物</span><span>' +
+        '收成後可登錄成寵物「' + esc(p.name) + '」' +
+        (p.minion.gardeningOnly ? '，<b>只有園藝這條路</b>' : '') +
+        '　<a href="../../minions/">到寵物圖鑑看 →</a></span></div>');
+    }
+    if (p.useNote) rows.push('<div class="use-row"><span class="use-tag">用途</span><span>' + esc(p.useNote) + '</span></div>');
+    if (p.usedIn) {
+      rows.push('<div class="use-row"><span class="use-tag">製作素材</span><span>' +
+        '<b class="num">' + p.usedIn.count + '</b> 個配方會用到，例如 ' +
+        p.usedIn.top.map(function (x) { return esc(x.name); }).join('、') + '…</span></div>');
+    }
+    if (p.parentOf) {
+      var names = p.parentOf.map(function (id) { return BY_PRODUCT.get(id); }).filter(Boolean);
+      if (names.length) {
+        rows.push('<div class="use-row"><span class="use-tag">配種父本</span><span>' +
+          '它的種子是 <b class="num">' + names.length + '</b> 種作物的父本，例如 ' +
+          names.slice(0, 4).map(function (x) {
+            return '<button type="button" class="plant-link" style="min-height:auto" data-goto="' + x.productId + '">' + esc(x.name) + '</button>';
+          }).join('、') + '</span></div>');
+      }
+    }
+    if (p.flower) {
+      rows.push('<div class="use-row"><span class="use-tag">花卉</span><span>共 9 個顏色，' +
+        '<button type="button" class="plant-link" style="min-height:auto" data-flower="' + p.productId + '">看油粕配方 →</button></span></div>');
+    }
+    if (!rows.length) return '';
+    return '<h2>拿來幹嘛</h2><div class="card"><div class="use-list">' + rows.join('') + '</div></div>';
+  }
+
+  /** 收成物自己就買得到／採得到 → 先講，不然使用者白種好幾天。 */
+  function shortcutBlock(p) {
+    if (!p.productSources) return '';
+    return '<div class="card" style="margin-top:0.5rem"><div class="step-line">' +
+      '⚡ <b>' + esc(p.name) + '</b> 本身就能直接取得，只是要「量產」或「順便拿種子」才需要種：</div>' +
+      '<div class="step-meta">' + p.productSources.map(function (s) {
+        return '<span class="chip ok">' + esc(s.text) + '</span>' + (s.npc ? '<span class="chip">' + esc(s.npc) + '</span>' : '');
+      }).join('') + '</div></div>';
+  }
+
   function renderPlan() {
     var p = BY_PRODUCT.get(STATE.target);
     if (!p) return;
     var t0 = startMs();
     var html = '';
 
-    // 目標卡
-    html += '<div class="card" style="display:flex;gap:0.75rem;align-items:flex-start">' +
+    // 目標卡。標題用 h2（曾經是 h3，害整頁的標題階層變成 1→3 跳級）
+    html += '<h2>目標</h2>' +
+      '<div class="card" style="display:flex;gap:0.75rem;align-items:flex-start">' +
       icon(p.icon, 'lg') +
       '<div style="flex:1;min-width:0">' +
         '<h3>' + esc(p.name) + '</h3>' +
         '<div class="plant-meta">' +
           '<span class="chip">種子：' + esc(p.seedName) + '</span>' +
           '<span class="chip">培育 <span class="num">' + p.duration + '</span> 小時</span>' +
-          (p.usedIn ? '<span class="chip info">' + p.usedIn.count + ' 種配方的材料</span>' : '') +
+          (p.minion ? '<span class="chip gold">寵物</span>' : '') +
           (p.flower ? '<span class="chip gold">花卉 · 9 色</span>' : '') +
+          (p.nameEn ? '<button type="button" class="copy-btn" data-copy="' + esc(p.nameEn) + '">複製英文名</button>' : '') +
         '</div>' +
-      '</div></div>';
+      '</div></div>' +
+      shortcutBlock(p) +
+      usesBlock(p);
 
     if (directOK(p.seedId)) {
       // 不必配種：這是最重要的省時提示，放在最前面而不是埋在樹裡
@@ -326,7 +412,11 @@
             return '<li class="alt-btn" style="cursor:default">' + recipeBody(c) + '</li>';
           }).join('') + '</ul></details>';
       }
-      $('planResult').innerHTML = html;
+      // 種子直接買得到，也就沒有多段培育——照料時程只有這一段
+      html += careBlock([], 0, p, t0);
+      setHTML('planResult', html);
+      say('planStatus', p.name + '：不必配種，種子可直接取得，培育 ' + dur(p.duration) +
+        (t0 ? '，預計 ' + at(t0, p.duration) + ' 收成' : ''));
       return;
     }
 
@@ -338,7 +428,8 @@
     if (!steps.length) {
       html += '<h2>沒有已知配方</h2><div class="card"><p class="note">' +
         '這個種子在資料裡沒有任何配種組合，只能到市場板購買。</p></div>';
-      $('planResult').innerHTML = html;
+      setHTML('planResult', html);
+      say('planStatus', p.name + '：沒有已知配種組合，種子只能到市場板購買。');
       return;
     }
 
@@ -385,6 +476,9 @@
         (t0 ? '<span class="chip">' + at(t0, total) + '</span>' : '') +
       '</div></div></div></div>';
 
+    // 照料時程：48 小時沒照料就枯萎、再 24 小時枯死。使用者真正要的不是規則，是「幾點以前要回來」。
+    html += careBlock(steps, seedReady, p, t0);
+
     // 需要先備齊的可直接取得種子
     var leaves = [];
     (function walk(n) {
@@ -401,8 +495,63 @@
         }).join('') + '</div>';
     }
 
-    $('planResult').innerHTML = html;
+    setHTML('planResult', html);
+    say('planStatus', p.name + '：總工期 ' + dur(total) + '，' + steps.length + ' 個配種步驟，至少需要 ' +
+      peakBeds(steps) + ' 格園圃' + (t0 ? '，預計 ' + at(t0, total) + ' 收成' : ''));
   }
+
+  /* ── 照料時程 ──────────────────────────────────────────────────────────
+     規則在 rules.care：多數作物 48h 沒照料會枯萎、再 24h 枯死；可收成後就不會枯死。
+     所以每一段「種下 → 收成」中間，每 48 小時要回來一次。這裡把時刻直接算出來。 */
+  function careBlock(steps, seedReady, product, t0) {
+    var W = DB.rules.care.wiltHours;
+    var jobs = steps.map(function (s) { return { at: s.start, till: s.end, what: s.p.crossBreeds[s.idx] ? s.baseCrop.name : s.p.name }; });
+    jobs.push({ at: seedReady, till: seedReady + product.duration, what: product.name });
+
+    var marks = [];
+    jobs.forEach(function (j) {
+      for (var h = j.at + W; h < j.till; h += W) marks.push({ h: h, what: j.what });
+    });
+    if (!marks.length) {
+      return '<h2>照料時程</h2><div class="card"><p class="note">' +
+        '每一段的培育時間都不到 <b class="num">' + W + '</b> 小時，種下去之後不必回來照料就能直接收。</p></div>';
+    }
+    marks.sort(function (a, b) { return a.h - b.h; });
+    // 同一個時間點要顧的併成一列
+    var groups = [];
+    marks.forEach(function (m) {
+      var last = groups[groups.length - 1];
+      if (last && last.h === m.h) last.what.push(m.what);
+      else groups.push({ h: m.h, what: [m.what] });
+    });
+
+    return '<h2>照料時程</h2><div class="card">' +
+      '<p class="note">作物 <b class="num">' + W + '</b> 小時沒照料就枯萎、再 <b class="num">' +
+      DB.rules.care.witherHours + '</b> 小時枯死。以下是<b>最晚</b>要回來的時間點（提早照料只會更安全，' +
+      '長到可收成之後就不會再枯死）。</p>' +
+      '<div class="care-list">' + groups.map(function (g) {
+        return '<div class="care-row"><span class="care-when num">' +
+          (t0 ? at(t0, g.h) : '第 ' + dur(g.h)) + '</span>' +
+          '<span class="care-what">照料 ' + [...new Set(g.what)].map(esc).join('、') +
+          (t0 ? '（第 ' + dur(g.h) + '）' : '') + '</span></div>';
+      }).join('') + '</div></div>';
+  }
+
+  /* ── A5：重繪會把展開的 <details> 關掉 ─────────────────────────────────
+     換配方會整塊重畫，剛展開的「換一組配方」跟著收合，想比下一組要再點一次。
+     用 data-alts-key 記住哪些是開的，畫完再還原。 */
+  function setHTML(id, html) {
+    var el = $(id);
+    var open = {};
+    el.querySelectorAll('details.alts[open][data-alts-key]').forEach(function (d) { open[d.dataset.altsKey] = 1; });
+    el.innerHTML = html;
+    el.querySelectorAll('details.alts[data-alts-key]').forEach(function (d) {
+      if (open[d.dataset.altsKey]) d.open = true;
+    });
+  }
+
+  /** 更新只給讀屏聽的即時播報。 */
+  function say(id, text) { var el = $(id); if (el) el.textContent = text; }
 
   function recipeBody(c) {
     var also = c.alsoYields && c.alsoYields.length
@@ -423,7 +572,8 @@
       ? '<span class="chip warn">⚠ 這組也可能配出 ' + c.alsoYields.map(function (a) { return esc(a.name); }).join('、') + '（隨機）</span>'
       : '';
     var alts = s.p.crossBreeds.length > 1
-      ? '<details class="alts"><summary>換一組配方（共 ' + s.p.crossBreeds.length + ' 組）</summary><div class="alt-list">' +
+      ? '<details class="alts" data-alts-key="' + s.seedId + '"><summary>換一組配方（共 ' +
+        s.p.crossBreeds.length + ' 組）</summary><div class="alt-list">' +
         s.p.crossBreeds.map(function (cc, i) { return recipeButton(cc, i === s.idx, s.seedId, i); }).join('') +
         '</div></details>' : '';
 
@@ -462,6 +612,10 @@
       var b = e.target.closest('[data-id]');
       if (b) selectSpecies(Number(b.dataset.id));
     });
+    $('flowerResult').addEventListener('click', function (e) {
+      var cp = e.target.closest('[data-copy]');
+      if (cp) copyText(cp, cp.dataset.copy);
+    });
     if (flowers.length) $('flowerResult').innerHTML = '<p class="empty">選一種花，看它 9 個顏色各要施哪些油粕。</p>';
   }
 
@@ -485,9 +639,26 @@
 
   function renderFlower(p) {
     var f = p.flower;
+    // 種子哪裡買、油粕哪裡買——查得到配方卻不知道去哪拿材料，等於還是要再查一次
+    var seedSrc = p.seed.sources.length
+      ? p.seed.sources.map(function (s) {
+          return '<span class="chip ok">' + esc(s.text) + '</span>' + (s.npc ? '<span class="chip">' + esc(s.npc) + '</span>' : '');
+        }).join('')
+      : '<span class="chip warn">只能市場板購買</span>';
+
     var html = '<h2>' + esc(f.species) + ' — 9 色配方</h2>' +
-      '<p class="note" style="margin-bottom:0.6rem">原色是 <b>' + esc(f.defaultColor) + '</b>：' +
-      '什麼都不施就是這個顏色。種子＝' + esc(p.seedName) + '，培育 <b class="num">' + p.duration + '</b> 小時。</p>' +
+      '<div class="card" style="margin-bottom:0.7rem">' +
+        '<div class="step-line">原色是 <b>' + esc(f.defaultColor) + '</b>（什麼都不施就是這個顏色）' +
+        '　種子：' + esc(p.seedName) + '　培育 <b class="num">' + p.duration + '</b> 小時</div>' +
+        '<div class="step-meta">' + seedSrc +
+          (p.nameEn ? '<button type="button" class="copy-btn" data-copy="' + esc(p.nameEn) + '">複製英文名</button>' : '') +
+        '</div>' +
+        '<div class="step-meta" style="margin-top:0.35rem">' +
+          DB.rules.pomace.map(function (pm) {
+            return '<span class="chip">' + esc(pm.name) + (pm.buy ? '：' + esc(pm.buy) : '') + '</span>';
+          }).join('') +
+        '</div>' +
+      '</div>' +
       '<div class="color-grid">' +
       f.colors.map(function (c) {
         var bg = c.hex === 'linear'
@@ -506,6 +677,7 @@
       '白色／黑色／' + esc(f.colors[8].color) + ' 沒有固定配方：三種油粕都施完之後隨機開出其中一種，' +
       '<b>也可能退回原色</b>，配不到就再跑一輪。</p>';
     $('flowerResult').innerHTML = html;
+    say('flowerStatus', f.species + '：原色 ' + f.defaultColor + '，已列出 9 個顏色的油粕配方。');
   }
 
   // ── 全部作物 ──────────────────────────────────────────────────────────
@@ -514,7 +686,8 @@
     { key: 'crop', label: '作物' },
     { key: 'flower', label: '花卉' },
     { key: 'crystal', label: '晶草' },
-    { key: 'cross', label: '需要配種' }
+    { key: 'cross', label: '需要配種' },
+    { key: 'minion', label: '寵物' }
   ];
 
   function initAll() {
@@ -529,10 +702,10 @@
       document.querySelectorAll('#allFilters [data-kind]').forEach(function (x) {
         x.setAttribute('aria-pressed', x.dataset.kind === STATE.kind ? 'true' : 'false');
       });
-      renderAll();
+      renderAll(); writeHash();
     });
-    $('allSearch').addEventListener('input', function () { STATE.q = this.value.trim().toLowerCase(); renderAll(); });
-    $('allSort').addEventListener('change', function () { STATE.sort = this.value; renderAll(); });
+    $('allSearch').addEventListener('input', function () { STATE.q = this.value.trim().toLowerCase(); renderAll(); writeHash(); });
+    $('allSort').addEventListener('change', function () { STATE.sort = this.value; renderAll(); writeHash(); });
     $('allGrid').addEventListener('click', function (e) {
       var b = e.target.closest('[data-goto]');
       if (b) selectTarget(Number(b.dataset.goto));
@@ -543,6 +716,7 @@
   function renderAll() {
     var list = ROWS.filter(function (p) {
       if (STATE.kind === 'cross') { if (!p.seed.crossOnly || !p.crossBreeds.length) return false; }
+      else if (STATE.kind === 'minion') { if (!p.minion) return false; }
       else if (STATE.kind !== 'all' && p.kind !== STATE.kind) return false;
       if (!STATE.q) return true;
       return (p.name + ' ' + p.seedName + ' ' + (p.nameEn || '') + ' ' + (p.seedNameEn || ''))
@@ -568,7 +742,10 @@
         '<div class="plant-meta">' +
           '<span class="chip">培育 <span class="num">' + p.duration + '</span>h</span>' + src +
           (p.flower ? '<span class="chip gold">9 色</span>' : '') +
+          (p.minion ? '<span class="chip gold">寵物' + (p.minion.gardeningOnly ? '·限園藝' : '') + '</span>' : '') +
           (p.usedIn ? '<span class="chip info">' + p.usedIn.count + ' 配方</span>' : '') +
+          (p.parentOf ? '<span class="chip">' + p.parentOf.length + ' 種的父本</span>' : '') +
+          (p.productSources ? '<span class="chip ok">產物可直接買／採</span>' : '') +
         '</div>' +
         (need ? '<button type="button" class="plant-link" data-goto="' + p.productId + '">看配種路徑（約 ' +
                 Math.round(totalEffort(p) / 24) + ' 天）</button>' : '') +
@@ -584,11 +761,15 @@
   // ── 機制速查 ──────────────────────────────────────────────────────────
   function renderRules() {
     var r = DB.rules;
+    // 土壤除了名字，還要寫「去哪弄」——3 級要採集、1～2 級 NPC 就有，差很多
     var soilRows = r.soils.map(function (s) {
       return '<tr><th scope="row">' + esc(s.family) + '</th><td>' + esc(s.effect) + '</td><td>' +
-             s.grades.map(function (g) { return esc(g.name); }).join('｜') + '</td></tr>';
+             s.grades.map(function (g) {
+               return esc(g.grade + ' 級') + (g.buy ? '　<span class="note">' + esc(g.buy) + '</span>' : '');
+             }).join('<br>') + '</td></tr>';
     }).join('') +
-    '<tr><th scope="row">' + esc(r.plainSoil.name) + '</th><td>' + esc(r.plainSoil.effect) + '</td><td>—</td></tr>';
+    '<tr><th scope="row">' + esc(r.plainSoil.name) + '</th><td>' + esc(r.plainSoil.effect) + '</td><td>' +
+      (r.plainSoil.buy ? '<span class="note">' + esc(r.plainSoil.buy) + '</span>' : '—') + '</td></tr>';
 
     // 鄰接檢查順序：新種下的那格會依「右→下→上→左」找第一個配得起來的鄰居（3×3 示意）
     var bedMap = ['', '3<br><small>上</small>', '',
@@ -631,6 +812,9 @@
       '<h2>花色（油粕染色）</h2>' +
       '<div class="tbl-wrap"><table><caption>每現實小時只能施一次，只對未成熟的花有效，與施放順序無關。</caption>' +
       '<thead><tr><th scope="col">目標色</th><th scope="col">要施的油粕</th></tr></thead><tbody>' +
+      '<tr><th scope="row">油粕哪裡買</th><td>' + r.pomace.map(function (p) {
+        return esc(p.name) + '：' + esc(p.buy || '市場板');
+      }).join('｜') + '</td></tr>' +
       '<tr><th scope="row">原色</th><td>不施（原色因花種而異，多數是紅色）</td></tr>' +
       '<tr><th scope="row">紅 / 藍 / 黃</th><td>' + r.pomace.map(function (p) { return pomChip(p.key); }).join(' 或 ') + '（各 1 次）</td></tr>' +
       '<tr><th scope="row">紫</th><td>' + pomChip('crimson') + pomChip('cerulean') + '</td></tr>' +

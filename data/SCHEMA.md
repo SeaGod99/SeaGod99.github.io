@@ -792,10 +792,15 @@ ARR 2.x / HW 3.x / SB 4.x / ShB 5.x / EW 6.x / DT 7.x
 | `crossBreeds[].alsoYields` | 同一組合也可能配出的其他結果（隨機）。選填；全庫 14 組有此欄 |
 | `flower` | 花卉才有：`{ species, defaultColor, colors[9] }`；每色帶 `id`／`name`／`icon`／`hex`／`pomace[]`／`rng`／`isDefault` |
 | `usedIn` | 這個作物被幾個配方吃掉（由 recipes.json 推），`top` 最多 4 筆。選填 |
+| `parentOf` | **這個作物的種子是哪些作物的配種父本**（productId 陣列，名稱由前端自己查）。對 48 小時那批（塞爾法特爾沙果、瓦爾醋栗…）來說這就是它們唯一的用途。選填 |
+| `productSources` | **收成物自己**買不買得到／採不採得到。有的話代表「根本不必種」。⚠ 只收**可重複**的管道——薩維奈圓蔥有一筆一次性的 `quest`，收了它等於騙人。選填 |
+| `minion` | 收成物是寵物時才有：`{ id, gardeningOnly }`（對回 minions.json；`gardeningOnly` ＝除了園藝沒有別條路）。全庫 6 隻，其中 4 隻只能靠園藝 |
+| `useNote` | 既不是製作素材、也不是配種父本、也不是寵物，但確實有用的少數例外（薩維奈圓蔥、克拉卡蘿蔔的陸行鳥用途）。**社群來源**，出處記在 [`docs/gardening-rules.md`](../docs/gardening-rules.md)，寫在 `build-gardening.mjs` 的 `USE_NOTE` 表。選填 |
 | `patch` | 物品版本（前端 `PatchGate` 用） |
 
-信封的 `rules`：`pomace`（三種油粕）、`colorOrder`／`colorHex`、`soils`／`plainSoil`、
-`crossbreed`（判定時機、鄰接順序、產出是種子、園圃格數）、`care`（枯萎／施肥）。
+信封的 `rules`：`pomace`（三種油粕，附 `buy` ＝哪裡買）、`colorOrder`／`colorHex`、
+`soils`／`plainSoil`（各級附 `buy`）、`crossbreed`（判定時機、鄰接順序、產出是種子、園圃格數）、
+`care`（枯萎／施肥）。
 
 **資料來源**：Teamcraft `seeds.json`（配方與時數）＋ items.json（名稱／圖示／分類）＋
 `out_data/en-items.msgpack`（英文名）＋ `lib/game-sources.mjs`（種子管道）＋ recipes.json（用途）。

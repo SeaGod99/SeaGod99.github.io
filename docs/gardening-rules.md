@@ -104,6 +104,37 @@ cost(種子) = 0                                          若該種子能直接�
 
 ---
 
+---
+
+## 6. 「這東西拿來幹嘛」的判定
+
+絕大多數作物的用途是**資料算得出來的**，不必手寫：
+
+| 來源 | 欄位 | 說明 |
+|------|------|------|
+| `recipes.json` | `usedIn` | 被幾個配方吃掉（91 種作物有） |
+| `crossBreeds` 反查 | `parentOf` | 它的種子是幾種作物的父本。48 小時那批（塞爾法特爾沙果、瓦爾醋栗…）存在的意義幾乎只有這個 |
+| `minions.json` | `minion` | **6 個園藝產物其實是寵物**：洋蔥王子、茄子騎士、蒜頭明星、番茄國王、曼德拉王后、亞拉戈西瓜。其中 4 隻 `gardeningOnly`＝沒有別條路 |
+| `obtainable-methods` | `productSources` | 收成物**自己**買不買得到。有的話等於「不必種」 |
+
+**只有兩樣算不出來**，寫在 `build-gardening.mjs` 的 `USE_NOTE`：
+
+| 物品 | 用途 | 出處 |
+|------|------|------|
+| 薩維奈圓蔥（8166） | 陸行鳥夥伴突破等級上限：rank 10 起每餵 1 顆 +1 級，到 rank 20 共需 10 顆 | [Thavnairian Onion — consolegameswiki](https://ffxiv.consolegameswiki.com/wiki/Thavnairian_Onion)、[Chocobo Companion 指南（Lodestone）](https://na.finalfantasyxiv.com/lodestone/character/31628334/blog/4882104/) |
+| 克拉卡蘿蔔（8165） | 餵食陸行鳥夥伴累積經驗值（訓練用） | 同上 |
+
+補完之後「說不出用途」的從 16 種降到 **3 種**（拉札漢檸檬、阿爾基克薰衣草、虛無界風茄）。
+
+⚠ **`productSources` 只能收可重複取得的管道。** 薩維奈圓蔥有一筆 `quest`（任務獎勵），
+那是一次性的——拿它當「不必種」會直接騙人，那顆洋蔥你這輩子只拿得到一次。
+副本掉落／寶箱這種看運氣的同理排除。加上這條過濾後，「產物可直接取得」由 64 種降為 51 種。
+
+⚠ **社群指南的配方可能過時。** 有指南說薩維奈圓蔥＝克里耶蘿蔔 × 妮美雅百合，但 datamine
+（Teamcraft `seeds.json`）的三組配方裡沒有妮美雅百合。**以 datamine 為準**，那是遊戲 sheet 直出的。
+
+---
+
 ## 出處
 
 - [Gardening Guide — consolegameswiki](https://ffxiv.consolegameswiki.com/wiki/Gardening_Guide) — 判定時機、鄰接優先順序、空床規則、枯萎時程、施肥 1%

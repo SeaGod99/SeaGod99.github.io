@@ -105,6 +105,16 @@ const POTS = [6488, 6489, 14055, 14056, 14057];
 /* ── 作物大類。晶草(碎晶)自成一類，其餘依 items.json 的分類歸「花卉／作物」。 */
 const CRYSTAL_IDS = new Set([2, 3, 4, 5, 6, 7]);
 
+/* ── 「這東西拿來幹嘛」的例外表 ───────────────────────────────────────────
+   絕大多數作物的用途是資料算得出來的：`usedIn`（被幾個配方吃掉）與 `parentOf`
+   （是幾種作物的配種父本）。但有兩樣**既不是製作素材、也不是配種父本**，
+   而它們正好是整個園藝最多人在找的東西——沒有這行字，頁面會把它們顯示成「沒用途」。
+   社群來源，出處記在 docs/gardening-rules.md，不要憑印象改。 */
+const USE_NOTE = {
+  8166: "陸行鳥夥伴突破等級上限：rank 10 起每餵 1 顆 +1 級，到 rank 20 共需 10 顆",
+  8165: "餵食陸行鳥夥伴累積經驗值（訓練用）",
+};
+
 // ──────────────────────────────────────────────────────────────────────────
 
 async function loadSeeds() {
@@ -125,7 +135,23 @@ const enItems = decode(readFileSync(O("en-items.msgpack")));
 const meta = JSON.parse(readFileSync(D("_meta.json"), "utf8"));
 const gamePatch = meta.gamePatch || "7.21";
 const recipes = JSON.parse(readFileSync(D("recipes.json"), "utf8")).data;
+const minions = JSON.parse(readFileSync(D("minions.json"), "utf8")).data;
 const seeds = await loadSeeds();
+
+/* 有 6 個園藝產物其實是**寵物**（洋蔥王子、茄子騎士…），其中幾隻只能靠園藝拿。
+   這是「為什麼要種這個」最強的答案之一，但光看 items.json 只知道 category 是「寵物」。
+   對回 minions.json 才拿得到收藏頁的 id 與「是不是只有園藝這條路」。 */
+const minionByName = new Map(minions.map((m) => [m.name, m]));
+function minionOf(name) {
+  const m = minionByName.get(name);
+  if (!m) return null;
+  const src = m.sources || [];
+  return {
+    id: m.id,
+    // 除了「園藝獲得」之外還有別條路嗎？沒有＝非種不可
+    gardeningOnly: src.length > 0 && src.every((s) => String(s.type).includes("園藝")),
+  };
+}
 
 const nameOf = (id) => ix.byId.get(id)?.name ?? `#${id}`;
 const iconOf = (id) => ix.byId.get(id)?.icon ?? null;
@@ -170,17 +196,34 @@ function seedSourceOf(seedId) {
   const all = resolveSources(seedId, ix).filter((s) => s.released !== false);
   const direct = all.filter((s) => s.type !== "market");
   return {
-    // 最多留 3 筆，前端只顯示最上面 1～2 筆
-    sources: direct.slice(0, 3).map((s) => ({
-      type: s.type,
-      text: s.type === "gather" ? (gatherDetail(seedId) ?? describeSource(s)) : describeSource(s),
-      gate: s.gate ? s.gate.label : null,
-      npc: s.npcs?.[0] ? `${s.npcs[0].name}（${s.npcs[0].map} X:${s.npcs[0].x} Y:${s.npcs[0].y}）` : null,
-    })),
+    sources: shortSources(seedId, direct), // 最多 3 筆，前端只顯示最上面 1～2 筆
     marketable: all.some((s) => s.type === "market"),
     // true＝除了市場板與配種之外沒別的管道，也就是「真的得自己配」
     crossOnly: direct.length === 0,
   };
+}
+
+/** 把 resolveSources 的結果壓成前端要的樣子。 */
+function shortSources(id, list) {
+  return list.slice(0, 3).map((s) => ({
+    type: s.type,
+    text: s.type === "gather" ? (gatherDetail(id) ?? describeSource(s)) : describeSource(s),
+    gate: s.gate ? s.gate.label : null,
+    npc: s.npcs?.[0] ? `${s.npcs[0].name}（${s.npcs[0].map} X:${s.npcs[0].x} Y:${s.npcs[0].y}）` : null,
+  }));
+}
+
+/** 收成物**自己**能不能直接買／採。有的話「根本不必種」——跟種子的管道一樣是省時提示。
+    例：野洋蔥、拉諾西亞萵苣、低地葡萄 NPC 商店就有，種它只是為了量產或順便拿種子。
+
+    ⚠ 只收**可重複取得**的管道。薩維奈圓蔥有一筆 `quest`（任務獎勵），那是一次性的，
+    拿它當「不必種」會直接騙人——那顆洋蔥你這輩子只拿得到一次，之後還是得種。
+    同理排除副本掉落／寶箱這種看運氣的。 */
+function productSourceOf(productId) {
+  const direct = resolveSources(productId, ix).filter((s) =>
+    s.released !== false && s.type !== "market" &&
+    !(s.gate && (s.gate.kind === "once" || s.gate.kind === "rng")));
+  return direct.length ? shortSources(productId, direct) : null;
 }
 
 /* ── 花卉：找出同種的 9 個顏色 ───────────────────────────────────────────
@@ -252,10 +295,27 @@ for (const [pid, t] of Object.entries(seeds)) {
         }
       : null,
     usedIn: usedIn(productId),
+    productSources: productSourceOf(productId),
+    minion: minionOf(nameOf(productId)),
+    useNote: USE_NOTE[productId] ?? null,
     patch: patchOf(productId) ?? t.patch ?? null,
   });
 }
 entries.sort((a, b) => a.productId - b.productId);
+
+/* 「這個種子是誰的父本」——對那些既不是製作素材也不是寵物的作物來說，這就是它的用途。
+   48 小時那批（塞爾法特爾沙果、瓦爾醋栗…）存在的意義幾乎只有當配種夥伴。
+   只存 productId，名稱由前端從自己的索引取，免得同一份名字在檔案裡放兩次。 */
+for (const e of entries) {
+  const of = new Set();
+  for (const other of entries) {
+    for (const c of other.crossBreeds) {
+      if (c.baseSeedId === e.seedId || c.adjacentSeedId === e.seedId) of.add(other.productId);
+    }
+  }
+  of.delete(e.productId);
+  e.parentOf = of.size ? [...of].sort((a, b) => a - b) : null;
+}
 
 /* 同一組（本株×鄰株）可能配出不只一種東西——遊戲是隨機挑一個。標出來，
    否則使用者會以為配方是確定的，等了 5 天才發現拿到另一種。
@@ -275,9 +335,16 @@ for (const e of entries) {
   }
 }
 
+/** 消耗品（油粕／土壤）哪裡買。只寫最上面一筆——使用者要的是「去哪弄」不是完整清單。 */
+const buyText = (id) => {
+  const s = resolveSources(id, ix).filter((x) => x.released !== false && x.type !== "market")[0];
+  if (!s) return ix.byId.get(id)?.marketable ? "市場板" : null;
+  return s.type === "gather" ? (gatherDetail(id) ?? describeSource(s)) : describeSource(s);
+};
+
 const rules = {
   // 花色：施油粕，不是配種。順序無關、每現實小時 1 次、只對未成熟的花有效。
-  pomace: POMACE.map((p) => ({ ...p, id: p.id, name: nameOf(p.id), icon: iconOf(p.id) })),
+  pomace: POMACE.map((p) => ({ ...p, id: p.id, name: nameOf(p.id), icon: iconOf(p.id), buy: buyText(p.id) })),
   colorOrder: COLOR_ORDER.slice(0, 9),
   colorHex: COLOR_HEX,
   pomacePerHour: 1,
@@ -286,9 +353,9 @@ const rules = {
     family: s.family,
     effect: s.effect,
     useFor: s.useFor,
-    grades: [0, 1, 2].map((k) => ({ grade: k + 1, id: s.base + k, name: nameOf(s.base + k) })),
+    grades: [0, 1, 2].map((k) => ({ grade: k + 1, id: s.base + k, name: nameOf(s.base + k), buy: buyText(s.base + k) })),
   })),
-  plainSoil: { id: PLAIN_SOIL, name: nameOf(PLAIN_SOIL), effect: "無任何加成" },
+  plainSoil: { id: PLAIN_SOIL, name: nameOf(PLAIN_SOIL), effect: "無任何加成", buy: buyText(PLAIN_SOIL) },
   // 配種機制
   crossbreed: {
     decidedAt: "planting",          // 種下的瞬間就判定，不是收成時
@@ -328,6 +395,12 @@ console.log(`  作物條目      ${entries.length}（花卉 ${flowers.length}／
 console.log(`  花色道具      ${flowers.reduce((n, e) => n + e.flower.colors.length, 0)} 件（${flowers.length} 種 × 9 色）`);
 console.log(`  配種組合      ${comboIndex.size}（其中 ${ambiguous} 組會隨機產出多種結果）`);
 console.log(`  只能配種取得   ${crossOnly.length} 種種子（除市場板外沒有別的管道）`);
+console.log(`  寵物            ${entries.filter((e) => e.minion).length} 隻（其中 ${entries.filter((e) => e.minion?.gardeningOnly).length} 隻只能靠園藝）`);
+console.log(`  產物本身可直接取得 ${entries.filter((e) => e.productSources).length} 種（種它只是為了量產／拿種子）`);
+{
+  const noUse = entries.filter((e) => !e.usedIn && !e.parentOf && !e.minion && !e.useNote && e.kind !== "flower");
+  console.log(`  說不出用途的     ${noUse.length}${noUse.length ? `（${noUse.map((e) => e.name).join("、")}）` : ""}`);
+}
 console.log(`  無台服名      ${noTwName.length}${noTwName.length ? `（${noTwName.map((e) => e.productId).join("、")}，前端會擋掉）` : ""}`);
 if (prev) {
   const prevIds = new Set((prev.data || []).map((e) => e.productId));
