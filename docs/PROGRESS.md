@@ -208,7 +208,9 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 
   **④ a11y 五修**：標題階層 1→3 跳級（目標卡的 `h3` 出現在第一個 `h2` 前）；結果換掉時沒有 `role="status"` 播報；觸控間距 5–7px（tokens.css 把鈕撐到 44px 但沒管間距，`common.css` 對 `.filter-tags` 早有 8px 先例）；「全部作物」的篩選／搜尋／排序沒進網址（另外三個檢視都有深層連結）；換配方後展開的 `<details>` 被重繪關掉。
 
-  **⑤ 量測環境的兩個坑（差點寫出假報告）**：headless Edge **無法用 `Emulation.setEmulatedMedia` 模擬 `pointer: coarse`**（指令收下、`matchMedia` 仍 false），第一次量到「`.quick-btn` 33px、`summary` 19px」全是桌機值；改成**由伺服器把 CSS／HTML 裡的 `(pointer: coarse)` 換成 `all` 再送出**才是真的，實測全部 ≥44px。另外 `:focus-visible` **不吃程式呼叫的 `el.focus()`**，要送真的 Tab 鍵，否則整排誤報「沒有焦點環」。重測結果：375／768／1440 × 亮暗 × 四個檢視 → 溢出 0、對比未達標 0、console error 0。
+  **⑤ 機制速查加上園圃格位圖**（4／6／8 格）與種植順序。**刻意不畫實體形狀**——各款園圃的實際排列查不到可信來源（ffxivgardening 的格位圖是圖片檔、wiki 沒寫），畫錯只會誤導；只畫「格子編號 × 本株/鄰株交替樣式」，並標明判定只看鄰接方向優先序、進遊戲點格子就知道編號。順帶把「複製英文名」改成**複製台服繁中名**（按鈕文字「複製名稱」）——貼進遊戲搜尋或市場板要的是中文名。
+
+  **⑥ 量測環境的兩個坑（差點寫出假報告）**：headless Edge **無法用 `Emulation.setEmulatedMedia` 模擬 `pointer: coarse`**（指令收下、`matchMedia` 仍 false），第一次量到「`.quick-btn` 33px、`summary` 19px」全是桌機值；改成**由伺服器把 CSS／HTML 裡的 `(pointer: coarse)` 換成 `all` 再送出**才是真的，實測全部 ≥44px。另外 `:focus-visible` **不吃程式呼叫的 `el.focus()`**，要送真的 Tab 鍵，否則整排誤報「沒有焦點環」。重測結果：375／768／1440 × 亮暗 × 四個檢視 → 溢出 0、對比未達標 0、console error 0。
 
 - **2026-08-12（園藝配種計算重做：從查表改成算路徑）**：動 `tools/gardening/index.html`、新增 `tools/gardening/gardening.js`＋`scripts/build-gardening.mjs`＋`docs/gardening-rules.md`，重建 `data/gardening.json`（36.6K → 111.7K）。未動 `assets/`，故**不需** bump `CACHE_VERSION`（`--check` 確認 `sgt-0558ff1cf5` 仍最新）。`validate-data` 56 檔 0 error 0 warning。
 

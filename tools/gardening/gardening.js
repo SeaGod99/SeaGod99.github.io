@@ -242,7 +242,7 @@
     });
   }
 
-  /** 複製英文名——查國際服攻略／Universalis 時用得到（本站的名字全是台服官方繁中名）。 */
+  /** 複製台服官方繁中名——貼進遊戲內搜尋、市場板或跟朋友講話時直接用。 */
   function copyText(btn, text) {
     var done = function () {
       var old = btn.textContent;
@@ -392,7 +392,7 @@
           '<span class="chip">培育 <span class="num">' + p.duration + '</span> 小時</span>' +
           (p.minion ? '<span class="chip gold">寵物</span>' : '') +
           (p.flower ? '<span class="chip gold">花卉 · 9 色</span>' : '') +
-          (p.nameEn ? '<button type="button" class="copy-btn" data-copy="' + esc(p.nameEn) + '">複製英文名</button>' : '') +
+          '<button type="button" class="copy-btn" data-copy="' + esc(p.name) + '">複製名稱</button>' +
         '</div>' +
       '</div></div>' +
       shortcutBlock(p) +
@@ -651,7 +651,7 @@
         '<div class="step-line">原色是 <b>' + esc(f.defaultColor) + '</b>（什麼都不施就是這個顏色）' +
         '　種子：' + esc(p.seedName) + '　培育 <b class="num">' + p.duration + '</b> 小時</div>' +
         '<div class="step-meta">' + seedSrc +
-          (p.nameEn ? '<button type="button" class="copy-btn" data-copy="' + esc(p.nameEn) + '">複製英文名</button>' : '') +
+          '<button type="button" class="copy-btn" data-copy="' + esc(p.name) + '">複製名稱</button>' +
         '</div>' +
         '<div class="step-meta" style="margin-top:0.35rem">' +
           DB.rules.pomace.map(function (pm) {
@@ -759,6 +759,31 @@
   }
 
   // ── 機制速查 ──────────────────────────────────────────────────────────
+
+  /** 清田用的墊檔作物：挑培育時數最短、種子又拿得到的那個（現在是虛無界風茄 12h）。 */
+  function cheapFiller() {
+    var c = ROWS.filter(function (p) { return p.seed.sources.length || p.seed.marketable; })
+      .sort(function (a, b) { return a.duration - b.duration; })[0];
+    return c ? c.seedName : '任何便宜的種子';
+  }
+
+  /** 一款園圃的格位圖：編號 + 本株／鄰株交替。 */
+  function patchDiagram(x) {
+    var cells = [];
+    for (var i = 1; i <= x.beds; i++) {
+      var isBase = i % 2 === 1;
+      cells.push('<div class="pbed ' + (isBase ? 'base' : 'adj') + '">' +
+        '<b class="num">' + i + '</b><span>' + (isBase ? '本株' : '鄰株') + '</span></div>');
+    }
+    return '<div class="patch">' +
+      '<div class="patch-head"><span class="patch-name">' + esc(x.name) + '</span>' +
+      '<span class="patch-note num">' + x.beds + ' 格 · 一輪可跑 ' + (x.beds / 2) + ' 組配種</span></div>' +
+      '<div class="patch-beds" style="grid-template-columns:repeat(' + x.beds + ',minmax(0,1fr));' +
+      'max-width:' + (x.beds * 3.4) + 'rem" role="img" aria-label="' +
+      esc(x.name + ' 共 ' + x.beds + ' 格，奇數格種本株、偶數格種鄰株，交替排列') + '">' +
+      cells.join('') + '</div></div>';
+  }
+
   function renderRules() {
     var r = DB.rules;
     // 土壤除了名字，還要寫「去哪弄」——3 級要採集、1～2 級 NPC 就有，差很多
@@ -790,10 +815,25 @@
       '<div class="beds" aria-hidden="true">' + bedMap.map(function (t, i) {
         return '<div class="bed' + (t.indexOf('種') >= 0 ? ' here' : (t ? ' p1' : '')) + '">' + t + '</div>';
       }).join('') + '</div>' +
-      '<p class="note" style="margin-top:0.4rem">鄰接檢查順序示意（1 號優先）。</p>' +
-      '<div class="plant-meta" style="margin-top:0.7rem">' + r.crossbreed.patches.map(function (x) {
-        return '<span class="chip">' + esc(x.name) + ' · ' + x.beds + ' 格</span>';
-      }).join('') + '</div></div>' +
+      '<p class="note" style="margin-top:0.4rem">鄰接檢查順序示意（1 號優先）。</p></div>' +
+
+      '<h2>園圃與種植順序</h2>' +
+      '<div class="card">' +
+        '<p class="note">三款園圃差在格數。<b>交替種下兩種種子</b>，每一格都會跟隔壁配一次——' +
+        '所以 N 格的園圃一輪能同時跑 <b>N ÷ 2</b> 組配種。</p>' +
+        r.crossbreed.patches.map(patchDiagram).join('') +
+        '<p class="note" style="margin-top:0.9rem"><b>種下去的順序才是重點</b>（配種在種下的瞬間判定）：</p>' +
+        '<ol class="note" style="padding-left:1.2rem;display:flex;flex-direction:column;gap:0.3rem;margin-top:0.35rem">' +
+          '<li>先在 <b>1 號格</b>種一株不要的作物（例如' + esc(cheapFiller()) + '）＋' + esc(r.plainSoil.name) +
+            '，把整塊田清乾淨。第一株旁邊沒東西，本來就配不出任何結果。</li>' +
+          '<li><b>2 號格之後交替種</b>本株、鄰株、本株、鄰株……每種下一格就配一次。</li>' +
+          '<li>最後把 1 號格那株不要的換掉，補上真正要配的那一株。</li>' +
+          '<li>收成時<b>一格一格換</b>，不要整塊清空——空床不會配種，清空了要重來一次。</li>' +
+        '</ol>' +
+        '<p class="note" style="margin-top:0.6rem">⚠ 上圖只表示<b>格子編號與交替樣式</b>，不是園圃的實體形狀。' +
+        '各款園圃長得不一樣，判定只看鄰接方向的優先序（' + r.crossbreed.adjacencyOrder.join('→') + '）。' +
+        '進遊戲點任一格，對話框會告訴你那是第幾號格。</p>' +
+      '</div>' +
 
       '<h2>土壤</h2>' +
       '<div class="tbl-wrap"><table><caption>配種一律用薩納蘭土壤，等級越高效果越強。</caption>' +
