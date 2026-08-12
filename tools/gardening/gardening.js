@@ -767,20 +767,43 @@
     return c ? c.seedName : '任何便宜的種子';
   }
 
-  /** 一款園圃的格位圖：編號 + 本株／鄰株交替。 */
+  /** 外圈格位的順時針座標：左上角起 → 上排向右 → 右排向下 → 下排向左 → 左排向上。 */
+  function ringCells(cols, rows) {
+    var out = [], c, r;
+    for (c = 0; c < cols; c++) out.push([0, c]);                       // 上排 →
+    for (r = 1; r < rows; r++) out.push([r, cols - 1]);                // 右排 ↓
+    for (c = cols - 2; c >= 0; c--) out.push([rows - 1, c]);           // 下排 ←
+    for (r = rows - 2; r >= 1; r--) out.push([r, 0]);                  // 左排 ↑
+    return out;
+  }
+
+  /** 一款園圃的格位圖：真實外圈排列 ＋ 編號 ＋ 本株／鄰株交替。 */
   function patchDiagram(x) {
+    var ring = ringCells(x.cols, x.rows);
+    var grid = {};
+    ring.forEach(function (rc, i) { grid[rc[0] + ',' + rc[1]] = i + 1; });
+
     var cells = [];
-    for (var i = 1; i <= x.beds; i++) {
-      var isBase = i % 2 === 1;
-      cells.push('<div class="pbed ' + (isBase ? 'base' : 'adj') + '">' +
-        '<b class="num">' + i + '</b><span>' + (isBase ? '本株' : '鄰株') + '</span></div>');
+    for (var r = 0; r < x.rows; r++) {
+      for (var c = 0; c < x.cols; c++) {
+        var n = grid[r + ',' + c];
+        if (!n) { cells.push('<div class="pbed hole" aria-hidden="true">·</div>'); continue; }
+        var isBase = n % 2 === 1;
+        cells.push('<div class="pbed ' + (isBase ? 'base' : 'adj') + '">' +
+          '<b class="num">' + n + '</b><span>' + (isBase ? '本株' : '鄰株') + '</span></div>');
+      }
     }
+    var size = Math.min(x.cols * 4.2, 13);
     return '<div class="patch">' +
       '<div class="patch-head"><span class="patch-name">' + esc(x.name) + '</span>' +
-      '<span class="patch-note num">' + x.beds + ' 格 · 一輪可跑 ' + (x.beds / 2) + ' 組配種</span></div>' +
-      '<div class="patch-beds" style="grid-template-columns:repeat(' + x.beds + ',minmax(0,1fr));' +
-      'max-width:' + (x.beds * 3.4) + 'rem" role="img" aria-label="' +
-      esc(x.name + ' 共 ' + x.beds + ' 格，奇數格種本株、偶數格種鄰株，交替排列') + '">' +
+      '<span class="patch-note num">' + x.beds + ' 格 · 一輪可跑 ' + (x.beds / 2) + ' 組配種</span>' +
+      (x.verified ? '' : '<span class="chip warn">排列為推定</span>') +
+      '</div>' +
+      '<div class="patch-beds" style="grid-template-columns:repeat(' + x.cols + ',minmax(0,1fr));' +
+      'max-width:' + size + 'rem" role="img" aria-label="' +
+      esc(x.name + '：' + x.rows + ' 列 × ' + x.cols + ' 行的外圈共 ' + x.beds + ' 格，' +
+          '編號從左上角順時針；奇數格種本株、偶數格種鄰株' +
+          (x.cols === 3 && x.rows === 3 ? '，中央沒有格子' : '')) + '">' +
       cells.join('') + '</div></div>';
   }
 
@@ -819,7 +842,8 @@
 
       '<h2>園圃與種植順序</h2>' +
       '<div class="card">' +
-        '<p class="note">三款園圃差在格數。<b>交替種下兩種種子</b>，每一格都會跟隔壁配一次——' +
+        '<p class="note">三款園圃都是「<b>一個矩形的外圈</b>」，編號從左上角<b>順時針</b>繞。' +
+        '<b>高級園圃是 3×3 的外圈，正中央沒有格子</b>。交替種下兩種種子，每一格都會跟隔壁配一次——' +
         '所以 N 格的園圃一輪能同時跑 <b>N ÷ 2</b> 組配種。</p>' +
         r.crossbreed.patches.map(patchDiagram).join('') +
         '<p class="note" style="margin-top:0.9rem"><b>種下去的順序才是重點</b>（配種在種下的瞬間判定）：</p>' +
@@ -830,9 +854,11 @@
           '<li>最後把 1 號格那株不要的換掉，補上真正要配的那一株。</li>' +
           '<li>收成時<b>一格一格換</b>，不要整塊清空——空床不會配種，清空了要重來一次。</li>' +
         '</ol>' +
-        '<p class="note" style="margin-top:0.6rem">⚠ 上圖只表示<b>格子編號與交替樣式</b>，不是園圃的實體形狀。' +
-        '各款園圃長得不一樣，判定只看鄰接方向的優先序（' + r.crossbreed.adjacencyOrder.join('→') + '）。' +
-        '進遊戲點任一格，對話框會告訴你那是第幾號格。</p>' +
+        '<p class="note" style="margin-top:0.6rem">⚠ <b>高級園圃</b>的排列與編號有示意圖可考' +
+        '（<a href="https://www.ffxivgardening.com/cross-diagrams" target="_blank" rel="noopener">ffxivgardening 的配種圖</a>：' +
+        '圖上就是 3×3 而中央那格拿來放步驟標籤，步驟文字寫「1 號格相鄰的是 2 號與 8 號」「6 號在兩個下角中間」）。' +
+        '<b>圓形與方形園圃找不到圖</b>，這裡是依同一條規律推得（2×2 與 3×2 的外圈剛好就是 4 格與 6 格），' +
+        '已標「排列為推定」。進遊戲點任一格，對話框會告訴你那是第幾號格。</p>' +
       '</div>' +
 
       '<h2>土壤</h2>' +

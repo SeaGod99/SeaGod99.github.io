@@ -94,11 +94,24 @@ const SOILS = [
 ];
 const PLAIN_SOIL = 16026; // 園藝土壤：無任何加成
 
-/* ── 花圃／花盆 ─────────────────────────────────────────────────────────── */
+/* ── 花圃／花盆 ───────────────────────────────────────────────────────────
+   格位排列：**所有園圃都是一個 R×C 矩形的「外圈」**，編號從左上角開始順時針繞。
+
+   高級園圃（8 格）＝ 3×3 的外圈、**中央沒有格子**——這點有圖可考：
+   ffxivgardening 的 5x3-poor-man.png 標題直接寫「Empty Deluxe Garden Patch (8 bed patch)」，
+   圖上就是 3×3 而中央那格拿來放 STEP 標籤。編號可從 diagram-minion-party.png 的步驟文字反推：
+     「plant two Mandrake seeds in the beds **adjacent to** the Coerthan Tea plant; in beds **#2 and #8**」
+       → #1 左上，它的鄰居是 #2（上中）與 #8（左中）
+     「Plant the Krakka Root seeds adjacent to both Mandrake plants - beds **#5 and #7**」→ 兩個下角
+     「Sow ... in the empty bed, **between** the Krakka Root plants; bed **#6**」→ #6 在兩下角中間＝下中
+   三處互相吻合 ⇒ 1 2 3 ／ 8 · 4 ／ 7 6 5。
+
+   圓形（4）與方形（6）**沒有找到圖**，但 2×2 與 3×2 的外圈剛好就是 4 格與 6 格
+   （這兩種矩形沒有內部格，外圈＝全部），與已證實的 3×3 是同一條規律。前端會標明這件事。 */
 const PATCHES = [
-  { id: 7128, beds: 4 },
-  { id: 7129, beds: 6 },
-  { id: 7130, beds: 8 },
+  { id: 7128, beds: 4, cols: 2, rows: 2, verified: false },
+  { id: 7129, beds: 6, cols: 3, rows: 2, verified: false },
+  { id: 7130, beds: 8, cols: 3, rows: 3, verified: true },
 ];
 const POTS = [6488, 6489, 14055, 14056, 14057];
 
@@ -363,7 +376,10 @@ const rules = {
     yields: "seed",                 // 收成時額外掉「目標種子」，本株田仍長本株自己的作物
     needsNonEmptyNeighbour: true,   // 旁邊是空床就不會配種
     potsCanCross: false,            // 花盆不能配種
-    patches: PATCHES.map((p) => ({ id: p.id, name: nameOf(p.id), beds: p.beds })),
+    // cols/rows ＝ 外圈所在的矩形；編號自左上角順時針。verified ＝ 排列有圖可考
+    patches: PATCHES.map((p) => ({
+      id: p.id, name: nameOf(p.id), beds: p.beds, cols: p.cols, rows: p.rows, verified: p.verified,
+    })),
     pots: POTS.map((id) => ({ id, name: nameOf(id) })),
   },
   // 照料
