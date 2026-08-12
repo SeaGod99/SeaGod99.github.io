@@ -56,6 +56,7 @@ FF14時尚配裝/
 │   ├── compress_mirapri.py # 壓縮 mirapri 原圖（長邊1100/q76，防重複壓縮）
 │   ├── verify_data.py    # curated 資料正確性檢查（名稱/等級/職業/取得方式 vs DB），輸出 data/驗證報告.md
 │   ├── pipeline.py       # Mirapri 抓取 + enrich 流程
+│   ├── build_dye_names.py # ★ 由主庫產生染色三份對照（白名單／日繁／英文別名）——**改版後必跑**
 │   ├── ocr_check.py      # ★ 用 Ollama 視覺模型對圖做 OCR（v2 逐件 item↔dye），比對現有資料（見「OCR 檢查流程」）
 │   ├── apply_dyes.py     # OCR 結果 → 逐件染色 mirapri_piece_dyes.json + 整套 fallback + 可見裝備
 │   ├── itemdb.py         # FF14 道具資料庫索引（norm(日文)→id→繁中/英/日；resolve 解析 OCR 字串，
@@ -68,8 +69,9 @@ FF14時尚配裝/
 ├── data/
 │   ├── curated_outfits.json       # ★ 精選套裝唯一資料來源（直接編輯這份）
 │   ├── all_outfits_enriched.json  # pipeline 產出，build_site.py 的社群資料來源
-│   ├── dye_names_ja.json          # 官方染色日文名白名單（ocr_check.py 降噪用）
-│   ├── dye_ja_to_zh.json          # 日文染色官方名 → 繁中名對照（apply_dyes.py 用）
+│   ├── dye_names_ja.json          # 官方染色日文名白名單（ocr_check.py 降噪用）★由 build_dye_names.py 產生
+│   ├── dye_ja_to_zh.json          # 日文染色官方名 → 繁中名對照（apply_dyes.py 用）★同上
+│   ├── dye_aliases.json           # 英文色名 → 日文色名（英文投稿用）★同上
 │   ├── mirapri_piece_dyes.json    # apply_dyes.py 產出：{outfit_id: {裝備日文名: [繁中染色]}}（v2 逐件，彈窗逐列顯示）
 │   ├── mirapri_dyes.json          # apply_dyes.py 產出：{outfit_id: [繁中染色]}（整套 fallback，未有逐件時用）
 │   ├── mirapri_visible.json       # apply_dyes.py 產出：{outfit_id: [圖上可見裝備]}，build_site.py 用來濾掉替代裝備
@@ -602,8 +604,14 @@ py scripts\ocr_check.py --target mirapri  --id <outfit_id>  --force
 - 「資料有但 OCR 沒讀到」依相似度分兩類：`not_shown`（圖上多半沒擺，耳飾／武器常見，低優先）
   與 `maybe_wrong`（名稱可能有出入，需確認）。純 not_shown 不算需確認
 
-> `data/dye_names_ja.json` 由 items.json（categoryId 55 染料）+ ja-items.msgpack 產生，
-> 缺檔時腳本照樣可跑，只是不過濾染色。
+> 染色三份對照檔（`dye_names_ja.json`／`dye_ja_to_zh.json`／`dye_aliases.json`）由
+> **`py scripts\build_dye_names.py --apply`** 從主庫產生（categoryId 55 染料，且日文名須以
+> `カララント:` 開頭——分類裡還混著色素／生漆，那些不是可染的顏色）。缺檔時腳本照樣可跑，
+> 只是不過濾染色。
+>
+> ⚠ **台服改版後必跑這支**。2026-08-12 前它是手工維護的，凍在 146 色，結果 7.21 的 11 個新色
+> 不是留白而是被 `snap_dye()` 的模糊比對**指派成最像的舊色**（メタリックルビーレッド 顯示成
+> 寶石紅，58 件）。細節見 [知識庫 §4.24](../../docs/專案慣例與記憶.md)。
 
 ### 輸出（給人看 + 給 Claude 確認）
 

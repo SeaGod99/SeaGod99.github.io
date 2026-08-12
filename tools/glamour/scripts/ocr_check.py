@@ -67,6 +67,7 @@ CACHE_JSON = os.path.join(DATA, "ocr_cache.json")
 REPORT_MD = os.path.join(DATA, "OCR檢查報告.md")
 RESULT_JSON = os.path.join(DATA, "ocr_check_result.json")
 DYE_JSON = os.path.join(DATA, "dye_names_ja.json")
+DYE_ALIAS_JSON = os.path.join(DATA, "dye_aliases.json")   # {正規化英文名: 日文色名}
 MIRAPRI_IMG_DIR = os.path.join(ROOT, "配裝圖片", "mirapri")
 
 OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://localhost:11434")
@@ -128,16 +129,75 @@ def load_dye_whitelist():
     return load_json(DYE_JSON, [])  # list[str]；缺檔回 []（= 不過濾）
 
 
+_DYE_ALIAS = None
+
+
+def load_dye_aliases():
+    """{正規化英文色名: 日文色名}，由 build_dye_names.py 產生；缺檔回 {}。"""
+    global _DYE_ALIAS
+    if _DYE_ALIAS is None:
+        _DYE_ALIAS = load_json(DYE_ALIAS_JSON, {})
+    return _DYE_ALIAS
+
+
+def _norm_alias(s):
+    """英文色名正規化，規則需與 build_dye_names.norm_alias 一致。"""
+    s = re.sub(r"\bdye\b", " ", s.lower())
+    s = re.sub(r"\bgray\b", "grey", s)
+    return re.sub(r"[\s_\-]+", " ", s).strip()
+
+
+ALIAS_PREFIX_MIN = 4   # 整詞前綴比對的最短長度；再短就會亂配（"RE" 命中一堆）
+FRAGMENT_RATIO = 0.6   # 子字串命中時，token 至少要有色名這麼長才算數（擋純色系殘字）
+
+
+def _alias_lookup(token):
+    """英文色名 → 日文色名。只用兩條窄規則，刻意不做模糊比對。
+
+    模糊比對過別名表實測會製造誤配（RE→アダマンタスグリーン、RB→モルボルグリーン、
+    Purple→カラントパープル），那正是本次要修掉的「靜默給錯答案」，寧可不救。
+    """
+    alias = load_dye_aliases()
+    if not alias:
+        return None
+    key = _norm_alias(token)
+    if not key:
+        return None
+    if key in alias:                      # 1. 精確（含 gray/grey 正規化）
+        return alias[key]
+    if len(key) >= ALIAS_PREFIX_MIN:      # 2. 唯一的整詞前綴（Gunmetal ⊂ Gunmetal Black）
+        hits = {v for k, v in alias.items() if k.startswith(key + " ")}
+        if len(hits) == 1:
+            return hits.pop()
+    return None
+
+
 def snap_dye(token, dye_names):
-    """把 OCR 染色 token 校正到官方名；對不到就回 None（白名單為空時原樣保留）。"""
+    """把 OCR 染色 token 校正到官方日文名；對不到就回 None（白名單為空時原樣保留）。
+
+    先查英文別名表，再退回日文模糊比對。順序不能反：英文投稿的「Pure White」
+    對日文名做模糊比對永遠低於門檻，先查表才救得回來。
+    """
     token = token.strip()
     if not token:
         return None
     if not dye_names:
         return token
+    hit = _alias_lookup(token)
+    if hit and hit in dye_names:
+        return hit
     idx, score = best_match(token, dye_names)
     if idx >= 0 and score >= DYE_THRESHOLD:
-        return dye_names[idx]
+        cand = dye_names[idx]
+        a, b = norm(token), norm(cand)
+        # similar() 對「一方是另一方的子字串」一律給 0.95，所以純色系殘字
+        # （「グリーン」「レッド」「ホワイト」…）會被硬指派成某個具體色名
+        # ——綠色染劑有十幾種，挑到アダマンタスグリーン純屬偶然。這種「靜默給
+        # 錯答案」比留白糟，短到不成比例就判定不可信。完整色名不受影響：
+        # 它在白名單裡有精確命中（score 1.0），走不到這裡。
+        if a != b and (a in b or b in a) and len(a) < FRAGMENT_RATIO * len(b):
+            return None
+        return cand
     return None
 
 
