@@ -1,375 +1,273 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="FF14 園藝配種計算機 — 正查兩株配種結果，反查目標植物的配種路徑">
-  <title>園藝配種計算 | 水神的工具箱</title>
-  <link rel="stylesheet" href="../../assets/css/tokens.css">
-  <link rel="stylesheet" href="../../assets/css/theme.css">
-  <link rel="stylesheet" href="../../assets/css/tool-header.css">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="FF14 園藝配種計算 — 選一個目標作物就算出完整配種路徑、總工期與收成時刻；花卉查油粕配色；含土壤、鄰接順序等機制速查">
+<title>園藝配種計算 | 水神的工具箱</title>
+<link rel="stylesheet" href="../../assets/css/tokens.css">
+<link rel="stylesheet" href="../../assets/css/theme.css">
+<link rel="stylesheet" href="../../assets/css/tool-header.css">
+<style>
+  /* 本頁識別色＝綠。指向 token（不是寫死字面值），亮/暗兩套自動跟著走——
+     見 tokens.css 的「強調色 --accent 的規則」。 */
+  :root { --accent: var(--green); --accent-dim: var(--green-dim); }
 
-    /* 109.375% = 16 × 1.09375 = 17.5px。預設瀏覽器下渲染尺寸與原本的 17.5px 完全相同，
-       但用 px 寫死 root font-size 會**蓋掉使用者在瀏覽器設定的字級**（放大字體對本頁無效），
-       用 % 才會跟著放大。2026-08-03 七頁一起改。 */
-    html { font-size: 109.375%; }
-    body { background: var(--bg-base); color: var(--text); font-family: var(--font-sans); min-height: 100vh; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+  /* 109.375% = 16 × 1.09375 = 17.5px。用 % 而非 px，使用者在瀏覽器放大字級時本頁才會跟著放大。 */
+  html { font-size: 109.375%; }
+  body { background: var(--bg-base); color: var(--text); font-family: var(--font-sans); min-height: 100vh; }
 
+  .main { max-width: var(--w-content); margin: 0 auto; padding: 0 1.25rem 3.5rem; }
 
-    .main { max-width: var(--w-content); margin: 0 auto; padding: 1.5rem; }
+  /* 時數、天數、時刻一律等寬數字，換算時不會左右跳動；數字本身不斷行 */
+  .num { font-variant-numeric: tabular-nums; white-space: nowrap; }
 
-    /* TABS */
-    .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; }
-    .tab-btn {
-      padding: 0.6rem 1.4rem; font-size: 0.88rem; cursor: pointer;
-      border: none; background: none; color: var(--text-dim);
-      border-bottom: 2px solid transparent; margin-bottom: -1px;
-      transition: all 0.15s; font-weight: 500;
-    }
-    .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
-    .tab-btn:hover { color: var(--text); }
+  /* ── 頁籤 ───────────────────────────────────────────────────────── */
+  .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 1.25rem; overflow-x: auto; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    flex: 0 0 auto; padding: 0.6rem 1.15rem; font-size: 0.88rem; font-weight: 500;
+    cursor: pointer; border: none; background: none; color: var(--text-dim);
+    border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color var(--transition), border-color var(--transition);
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn[aria-selected="true"] { color: var(--accent); border-bottom-color: var(--accent); }
+  .panel[hidden] { display: none; }
 
-    .tab-panel { display: none; }
-    .tab-panel.active { display: block; }
+  /* ── 通用區塊 ───────────────────────────────────────────────────── */
+  h2 { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; color: var(--accent);
+       margin: 1.5rem 0 0.6rem; display: flex; align-items: center; gap: 0.55rem; }
+  /* 只有「面板最上緣」的小標不留上距。結果區（#planResult／#flowerResult）是另一個容器，
+     它裡面的第一個 h2 仍需要間距，否則會黏在上一區的卡片上。 */
+  .panel > h2:first-child { margin-top: 0; }
+  h2::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  h3 { font-size: 0.95rem; font-weight: 700; }
 
-    /* SECTION */
-    .section-title {
-      font-size: 0.8rem; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 0.08em; color: var(--gold); margin-bottom: 0.75rem;
-      display: flex; align-items: center; gap: 0.5rem;
-    }
-    .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.9rem 1.05rem; }
+  .note { font-size: 0.8rem; color: var(--text-dim); line-height: 1.65; }
+  .note strong { color: var(--text); }
+  /* 整段說明文限寬，1440px 下不會拉成一條 130 字的長行 */
+  p.note { max-width: 72ch; }
+  .empty { color: var(--text-muted); text-align: center; padding: 2.25rem 1rem; font-size: 0.88rem; line-height: 1.7; }
 
-    /* SEED SELECT */
-    .seed-row { display: flex; gap: 1rem; align-items: flex-start; flex-wrap: wrap; margin-bottom: 1.25rem; }
-    .seed-select-wrap { flex: 1; min-width: 200px; max-width: 340px; }
-    .seed-select-wrap label { display: block; font-size: 0.78rem; color: var(--text-dim); margin-bottom: 0.4rem; }
-    .seed-select-wrap select {
-      width: 100%; background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius); color: var(--text); padding: 0.5rem 0.6rem;
-      font-size: 0.85rem; outline: none; transition: border-color 0.2s; cursor: pointer;
-    }
-    .seed-select-wrap select:focus { border-color: var(--gold); }
+  /* 物品圖示。固定尺寸避免載入時版面位移（CLS）。 */
+  .ico { width: 28px; height: 28px; flex: 0 0 28px; border-radius: 4px; background: var(--raise); object-fit: contain; }
+  .ico.sm { width: 20px; height: 20px; flex-basis: 20px; }
+  .ico.lg { width: 40px; height: 40px; flex-basis: 40px; }
 
-    .cross-symbol {
-      font-size: 1.4rem; color: var(--gold); padding-top: 1.5rem; flex-shrink: 0; align-self: center;
-    }
+  /* 籌碼：一律「圖示＋文字」，不靠顏色單獨表意。
+     **不可以設 white-space: nowrap**——取得方式那顆會塞進「塔妮（格里達尼亞新街 X:11.07 Y:11.2）」，
+     375px 下不斷行就整頁水平溢出 56px（2026-08-12 量到）。要不斷行的只有 .num。 */
+  .chip { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.16rem 0.5rem;
+          border-radius: 999px; font-size: 0.72rem; line-height: 1.5; border: 1px solid var(--border);
+          background: var(--raise); color: var(--text-dim); max-width: 100%; overflow-wrap: anywhere; }
+  .chip.ok   { color: var(--green);  background: var(--green-dim);  border-color: var(--green-dim); }
+  .chip.warn { color: var(--orange); background: var(--orange-dim); border-color: var(--orange-dim); }
+  .chip.info { color: var(--blue);   background: var(--blue-dim);   border-color: var(--blue-dim); }
+  .chip.gold { color: var(--gold);   background: var(--gold-dim);   border-color: var(--gold-dim); }
 
-    .btn-calc {
-      background: var(--gold-dim); border: 1px solid var(--gold); color: var(--gold);
-      padding: 0.55rem 1.4rem; border-radius: var(--radius); cursor: pointer; font-size: 0.88rem;
-      font-weight: 600; transition: all 0.15s; align-self: flex-end;
-    }
-    .btn-calc:hover { background: rgba(200,169,110,0.25); }
+  /* ── 目標選擇 ───────────────────────────────────────────────────── */
+  .picker { display: flex; flex-wrap: wrap; gap: 0.75rem 1rem; align-items: flex-end; margin-bottom: 0.9rem; }
+  .field { display: flex; flex-direction: column; gap: 0.35rem; min-width: 0; }
+  .field.grow { flex: 1 1 18rem; }
+  .field label { font-size: 0.76rem; color: var(--text-dim); }
+  .field input, .field select {
+    width: 100%; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+    color: var(--text); padding: 0.5rem 0.65rem; font-size: 0.88rem; font-family: inherit;
+    outline: none; transition: border-color var(--transition);
+  }
+  .field input:focus, .field select:focus { border-color: var(--accent); }
+  .field .hint { font-size: 0.72rem; color: var(--text-muted); }
 
-    /* RESULT CARD */
-    .result-area { margin-top: 0.5rem; }
-    .result-card {
-      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
-      padding: 1rem 1.25rem; margin-bottom: 0.5rem;
-    }
-    .result-empty { color: var(--text-muted); text-align: center; padding: 2rem; font-size: 0.88rem; }
-    .result-product { font-size: 1rem; font-weight: 700; color: var(--green); margin-bottom: 0.4rem; }
-    .result-detail { font-size: 0.8rem; color: var(--text-dim); display: flex; gap: 1rem; flex-wrap: wrap; }
-    .result-formula { margin-top: 0.5rem; font-size: 0.82rem; color: var(--text-dim); }
-    .result-formula .formula-line { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.3rem; }
-    .seed-chip {
-      background: var(--bg-surface); border: 1px solid var(--border); border-radius: 4px;
-      padding: 0.15rem 0.5rem; font-size: 0.75rem; color: var(--text);
-    }
-    .seed-chip.base { border-color: rgba(79,195,247,0.3); color: var(--blue); background: var(--blue-dim); }
-    .seed-chip.adj  { border-color: rgba(167,139,250,0.3); color: var(--purple); background: var(--purple-dim); }
+  .quick { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.1rem; }
+  .quick-btn {
+    display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.3rem 0.65rem;
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 999px;
+    color: var(--text-dim); font-size: 0.78rem; font-family: inherit; cursor: pointer;
+    transition: color var(--transition), border-color var(--transition);
+  }
+  .quick-btn:hover { color: var(--text); border-color: var(--border-hover); }
 
-    /* REVERSE LOOKUP */
-    .reverse-search { margin-bottom: 1.25rem; }
-    .reverse-search label { display: block; font-size: 0.78rem; color: var(--text-dim); margin-bottom: 0.4rem; }
-    .reverse-search select {
-      width: 100%; max-width: 400px; background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius); color: var(--text); padding: 0.5rem 0.6rem;
-      font-size: 0.85rem; outline: none; transition: border-color 0.2s; cursor: pointer;
-    }
-    .reverse-search select:focus { border-color: var(--gold); }
+  /* ── 計畫摘要 ───────────────────────────────────────────────────── */
+  .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(11rem, 100%), 1fr)); gap: 1px;
+             background: var(--border); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .summary > div { background: var(--bg-card); padding: 0.8rem 1rem; }
+  .summary dt { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.2rem; }
+  .summary dd { font-size: 1.15rem; font-weight: 700; color: var(--text); line-height: 1.25; }
+  .summary dd small { font-size: 0.75rem; font-weight: 400; color: var(--text-dim); }
+  .summary dd.hl { color: var(--accent); }
 
-    .path-card {
-      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
-      padding: 0.9rem 1.1rem; margin-bottom: 0.6rem;
-    }
-    .path-target { font-size: 0.95rem; font-weight: 700; color: var(--gold); margin-bottom: 0.6rem; }
-    .path-step { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; font-size: 0.83rem; }
-    .path-arrow { color: var(--text-muted); }
-    .path-label { color: var(--text-muted); font-size: 0.72rem; width: 2rem; }
+  /* ── 步驟時間軸 ─────────────────────────────────────────────────── */
+  .stage { margin-top: 0.75rem; }
+  .stage-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.5rem; margin-bottom: 0.4rem; }
+  .stage-no { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; color: var(--accent); }
+  .stage-time { font-size: 0.72rem; color: var(--text-muted); }
 
-    /* SEED BROWSER */
-    .plant-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 0.5rem;
-    }
-    .plant-card {
-      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
-      padding: 0.75rem 1rem;
-    }
-    .plant-name { font-size: 0.88rem; font-weight: 600; }
-    .plant-seed { font-size: 0.75rem; color: var(--text-dim); margin-top: 0.2rem; }
-    .plant-dur  { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.15rem; }
-    .plant-cb   { font-size: 0.72rem; color: var(--green); margin-top: 0.2rem; }
+  .step { display: flex; gap: 0.75rem; padding: 0.75rem 0.9rem; background: var(--bg-card);
+          border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 0.4rem; }
+  .step-body { flex: 1; min-width: 0; }
+  .step-line { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem 0.4rem; font-size: 0.85rem; line-height: 1.6; }
+  .step-meta { margin-top: 0.35rem; display: flex; flex-wrap: wrap; gap: 0.3rem 0.45rem; }
+  .seed-ref { display: inline-flex; align-items: center; gap: 0.28rem; padding: 0.1rem 0.4rem 0.1rem 0.16rem;
+              border-radius: 5px; background: var(--raise); border: 1px solid var(--border); font-size: 0.8rem; }
+  .seed-ref.base { border-color: var(--accent-dim); }
+  .seed-ref.adj  { border-color: var(--purple-dim); }
+  .role { font-size: 0.68rem; color: var(--text-muted); }
+  .arrow { color: var(--text-muted); }
 
-    /* SEARCH BAR (ALL TAB) */
-    .search-wrap { position: relative; margin-bottom: 1rem; }
-    .search-wrap input {
-      width: 100%; background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius); color: var(--text); padding: 0.5rem 0.5rem 0.5rem 2.2rem;
-      font-size: 0.85rem; outline: none; transition: border-color 0.2s;
-    }
-    .search-wrap input:focus { border-color: var(--gold); }
-    .search-wrap .si { position: absolute; left: 0.65rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
+  details.alts { margin-top: 0.45rem; }
+  details.alts > summary { font-size: 0.74rem; color: var(--text-dim); cursor: pointer; list-style: none; display: inline-flex; align-items: center; gap: 0.3rem; }
+  details.alts > summary::-webkit-details-marker { display: none; }
+  details.alts > summary::before { content: '▸'; font-size: 0.7rem; transition: transform var(--transition); }
+  details.alts[open] > summary::before { transform: rotate(90deg); }
+  .alt-list { display: flex; flex-direction: column; gap: 0.3rem; margin-top: 0.45rem; list-style: none; }
+  .alt-btn { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem 0.4rem; width: 100%; text-align: left;
+             padding: 0.4rem 0.55rem; background: var(--bg-surface); border: 1px solid var(--border);
+             border-radius: var(--radius-sm); color: var(--text-dim); font-size: 0.78rem; font-family: inherit; cursor: pointer; }
+  .alt-btn:hover { border-color: var(--border-hover); color: var(--text); }
+  .alt-btn[aria-pressed="true"] { border-color: var(--accent); color: var(--text); }
 
-    .tip {
-      font-size: 0.78rem; color: var(--text-dim); background: var(--bg-card);
-      border: 1px solid var(--border); border-radius: var(--radius);
-      padding: 0.75rem 1rem; margin-bottom: 1rem; line-height: 1.6;
-    }
-    .tip strong { color: var(--gold); }
-  </style>
-  <script src="../../assets/js/theme.js"></script>
+  /* ── 花色 ───────────────────────────────────────────────────────── */
+  .species-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(9.5rem, 100%), 1fr)); gap: 0.45rem; }
+  .species-btn { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0.6rem; background: var(--bg-card);
+                 border: 1px solid var(--border); border-radius: var(--radius); color: var(--text);
+                 font-size: 0.83rem; font-family: inherit; cursor: pointer; text-align: left;
+                 transition: border-color var(--transition); }
+  .species-btn:hover { border-color: var(--border-hover); }
+  .species-btn[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-dim); }
+
+  .color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(11.5rem, 100%), 1fr)); gap: 0.5rem; }
+  .color-card { display: flex; gap: 0.6rem; padding: 0.6rem 0.7rem; background: var(--bg-card);
+                border: 1px solid var(--border); border-radius: var(--radius); }
+  /* 色塊只是輔助——顏色名稱與油粕配方一律以文字呈現，不靠顏色本身表意。
+     內描邊讓白色在亮底、黑色在暗底都還看得出邊界。 */
+  .swatch { width: 30px; height: 30px; flex: 0 0 30px; border-radius: 6px;
+            box-shadow: inset 0 0 0 1px rgba(128,128,128,0.55); }
+  .color-name { font-size: 0.84rem; font-weight: 600; }
+  .pomace-row { display: flex; flex-wrap: wrap; gap: 0.25rem; margin-top: 0.3rem; }
+  .pom { display: inline-flex; align-items: center; gap: 0.22rem; padding: 0.1rem 0.4rem; border-radius: 999px;
+         font-size: 0.7rem; border: 1px solid var(--border); background: var(--raise); color: var(--text-dim); }
+  .pom i { width: 9px; height: 9px; border-radius: 50%; display: inline-block; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.25); }
+
+  /* ── 全部作物 ───────────────────────────────────────────────────── */
+  .toolbar { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: flex-end; margin-bottom: 0.9rem; }
+  .filters { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .filter-btn { padding: 0.32rem 0.7rem; background: var(--bg-card); border: 1px solid var(--border);
+                border-radius: 999px; color: var(--text-dim); font-size: 0.78rem; font-family: inherit; cursor: pointer;
+                transition: color var(--transition), border-color var(--transition); }
+  .filter-btn:hover { color: var(--text); }
+  .filter-btn[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); background: var(--accent-dim); }
+
+  .plant-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr)); gap: 0.5rem; }
+  .plant-card { display: flex; gap: 0.6rem; padding: 0.7rem 0.85rem; background: var(--bg-card);
+                border: 1px solid var(--border); border-radius: var(--radius); }
+  .plant-name { font-size: 0.88rem; font-weight: 600; }
+  .plant-meta { margin-top: 0.25rem; display: flex; flex-wrap: wrap; gap: 0.25rem 0.4rem; }
+  .plant-link { margin-top: 0.4rem; background: none; border: none; padding: 0; color: var(--accent);
+                font-size: 0.76rem; font-family: inherit; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+
+  /* ── 機制速查 ───────────────────────────────────────────────────── */
+  .tbl-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  caption { caption-side: top; text-align: left; padding: 0.6rem 0.85rem 0; font-size: 0.76rem; color: var(--text-muted); }
+  th, td { padding: 0.5rem 0.85rem; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+  thead th { background: var(--bg-surface); color: var(--text-dim); font-weight: 600; white-space: nowrap; }
+  tbody tr:last-child th, tbody tr:last-child td { border-bottom: none; }
+
+  .beds { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.3rem; max-width: 15rem; margin-top: 0.6rem; }
+  .bed { aspect-ratio: 1; display: grid; place-items: center; border: 1px dashed var(--border);
+         border-radius: var(--radius-sm); font-size: 0.72rem; color: var(--text-muted); }
+  .bed.here { border-style: solid; border-color: var(--accent); color: var(--accent); font-weight: 700; }
+  .bed.p1 { border-style: solid; border-color: var(--gold); color: var(--gold); }
+
+  .srcs { font-size: 0.76rem; color: var(--text-muted); line-height: 1.8; margin-top: 0.6rem; }
+  .srcs a { color: var(--text-dim); }
+
+  /* 375px 下四個頁籤原本要橫向捲才看得到第四個「機制速查」。收窄左右內距讓它們一次排得下。 */
+  @media (max-width: 420px) {
+    .tab-btn { padding: 0.6rem 0.55rem; font-size: 0.84rem; }
+  }
+
+  @media (max-width: 640px) {
+    .main { padding: 0 0.9rem 3rem; }
+    .summary dd { font-size: 1rem; }
+    .step { padding: 0.65rem 0.7rem; }
+  }
+</style>
+<script src="../../assets/js/theme.js"></script>
 </head>
 <body>
+
 <div class="tool-header">
   <h1 class="tool-title">🌱 園藝配種計算</h1>
-  <p class="tool-subtitle">正查：選兩株種子 → 配出什麼；反查：選目標植物 → 需要什麼種子</p>
+  <p class="tool-subtitle">選一個目標作物，直接算出完整配種路徑、總工期與收成時刻。花卉另查油粕配色。</p>
   <div class="header-divider"></div>
 </div>
 
-<div class="main">
-  <div class="tabs">
-    <button class="tab-btn active" onclick="showTab('forward')">🔀 正查（兩株→結果）</button>
-    <button class="tab-btn" onclick="showTab('reverse')">🔍 反查（目標→路徑）</button>
-    <button class="tab-btn" onclick="showTab('all')">📋 全部植物</button>
+<main class="main" id="main">
+  <div class="tabs" role="tablist" aria-label="檢視切換">
+    <button class="tab-btn" role="tab" id="t-plan"   aria-controls="p-plan"   aria-selected="true"  data-tab="plan">配種路徑</button>
+    <button class="tab-btn" role="tab" id="t-flower" aria-controls="p-flower" aria-selected="false" data-tab="flower" tabindex="-1">花色配方</button>
+    <button class="tab-btn" role="tab" id="t-all"    aria-controls="p-all"    aria-selected="false" data-tab="all"    tabindex="-1">全部作物</button>
+    <button class="tab-btn" role="tab" id="t-rules"  aria-controls="p-rules"  aria-selected="false" data-tab="rules"  tabindex="-1">機制速查</button>
   </div>
 
-  <!-- ── 正查 ── -->
-  <div class="tab-panel active" id="tab-forward">
-    <div class="tip">
-      <strong>配種規則</strong>：選「本株種子」（baseSeed）種在你的土地，「鄰株種子」（adjacentSeed）種在鄰近土地，收穫時有機率得到配種結果。
-    </div>
-
-    <div class="section-title">選擇兩株種子</div>
-    <div class="seed-row">
-      <div class="seed-select-wrap">
-        <label>🟦 本株（你的土地）</label>
-        <select id="baseSelect" onchange="calcForward()">
-          <option value="">— 選擇種子 —</option>
-        </select>
+  <!-- ── 配種路徑 ─────────────────────────────────────────────── -->
+  <section class="panel" id="p-plan" role="tabpanel" aria-labelledby="t-plan" tabindex="0">
+    <div class="picker">
+      <div class="field grow" style="max-width:26rem">
+        <label for="planTarget">目標作物</label>
+        <input id="planTarget" list="planList" autocomplete="off" placeholder="輸入或選擇作物，例如「薩維奈圓蔥」">
+        <datalist id="planList"></datalist>
       </div>
-      <div class="cross-symbol">×</div>
-      <div class="seed-select-wrap">
-        <label>🟪 鄰株（鄰近土地）</label>
-        <select id="adjSelect" onchange="calcForward()">
-          <option value="">— 選擇種子 —</option>
-        </select>
+      <div class="field">
+        <label for="startAt">開始種的時間</label>
+        <input id="startAt" type="datetime-local">
+        <span class="hint">用來推算每一階段的收成時刻</span>
       </div>
     </div>
+    <div class="quick" id="planQuick"></div>
+    <div id="planResult"><p class="empty">選一個目標作物，這裡會算出要先配哪些父本、每階段等多久、總共幾天，以及至少要幾格園圃。</p></div>
+  </section>
 
-    <div class="section-title">配種結果</div>
-    <div class="result-area" id="forwardResult">
-      <div class="result-empty">選擇兩株種子後顯示結果</div>
-    </div>
-  </div>
+  <!-- ── 花色配方 ─────────────────────────────────────────────── -->
+  <section class="panel" id="p-flower" role="tabpanel" aria-labelledby="t-flower" tabindex="0" hidden>
+    <p class="note" id="flowerIntro"></p>
+    <h2>選擇花種</h2>
+    <div class="species-grid" id="speciesGrid"></div>
+    <div id="flowerResult"></div>
+  </section>
 
-  <!-- ── 反查 ── -->
-  <div class="tab-panel" id="tab-reverse">
-    <div class="tip">
-      <strong>反查</strong>：選你想要的植物，顯示所有已知的配種組合（可能不只一種）。
+  <!-- ── 全部作物 ─────────────────────────────────────────────── -->
+  <section class="panel" id="p-all" role="tabpanel" aria-labelledby="t-all" tabindex="0" hidden>
+    <div class="toolbar">
+      <div class="field grow">
+        <label for="allSearch">搜尋</label>
+        <input id="allSearch" type="search" autocomplete="off" placeholder="作物、種子或英文名…">
+      </div>
+      <div class="field">
+        <label for="allSort">排序</label>
+        <select id="allSort">
+          <option value="name">依名稱</option>
+          <option value="duration">依培育時數</option>
+          <option value="effort">依取得難度（總工期）</option>
+        </select>
+      </div>
     </div>
-
-    <div class="reverse-search">
-      <label>目標植物</label>
-      <select id="reverseSelect" onchange="calcReverse()">
-        <option value="">— 選擇目標植物 —</option>
-      </select>
-    </div>
-
-    <div id="reverseResult">
-      <div class="result-empty">選擇目標植物後顯示配方</div>
-    </div>
-  </div>
-
-  <!-- ── 全部 ── -->
-  <div class="tab-panel" id="tab-all">
-    <div class="search-wrap">
-      <span class="si">🔍</span>
-      <input type="text" id="allSearch" placeholder="搜尋植物或種子名稱…" oninput="renderAll()">
-    </div>
+    <div class="filters" id="allFilters" role="group" aria-label="類別篩選"></div>
+    <p class="note" id="allCount" style="margin:0.75rem 0 0.6rem"></p>
     <div class="plant-grid" id="allGrid"></div>
-  </div>
-</div>
+  </section>
 
-<script>
-const DATA_URL = '../../data/gardening.json';
-let gardenData = [];
-let seedOptions = []; // all unique seeds { id, name }
+  <!-- ── 機制速查 ─────────────────────────────────────────────── -->
+  <section class="panel" id="p-rules" role="tabpanel" aria-labelledby="t-rules" tabindex="0" hidden>
+    <div id="rulesBody"></div>
+  </section>
+</main>
 
-fetch(DATA_URL).then(r => r.json()).then(d => {
-  gardenData = d.data;
-  buildSeedOptions();
-  populateSelects();
-  renderAll();
-});
-
-function buildSeedOptions() {
-  const seen = new Set();
-  gardenData.forEach(p => {
-    if (!seen.has(p.seedId)) {
-      seen.add(p.seedId);
-      seedOptions.push({ id: p.seedId, name: p.seedName });
-    }
-    p.crossBreeds.forEach(c => {
-      [c.baseSeedId, c.adjacentSeedId].forEach(sid => {
-        if (!seen.has(sid)) {
-          seen.add(sid);
-          seedOptions.push({ id: sid, name: c.baseSeedId === sid ? c.baseSeedName : c.adjacentSeedName });
-        }
-      });
-    });
-  });
-  seedOptions.sort((a, b) => a.name.localeCompare(b.name, 'zh-TW'));
-}
-
-function populateSelects() {
-  const opts = seedOptions.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
-
-  ['baseSelect','adjSelect'].forEach(id => {
-    const el = document.getElementById(id);
-    el.innerHTML = '<option value="">— 選擇種子 —</option>' + opts;
-  });
-
-  // reverse: products only
-  const prodOpts = gardenData
-    .filter(p => p.crossBreeds.length > 0)
-    .sort((a, b) => a.name.localeCompare(b.name, 'zh-TW'))
-    .map(p => `<option value="${p.productId}">${p.name}</option>`)
-    .join('');
-  document.getElementById('reverseSelect').innerHTML =
-    '<option value="">— 選擇目標植物 —</option>' + prodOpts;
-}
-
-// ── FORWARD ──────────────────────────────────────────────────────────────────
-function calcForward() {
-  const baseId = +document.getElementById('baseSelect').value;
-  const adjId  = +document.getElementById('adjSelect').value;
-  const area   = document.getElementById('forwardResult');
-
-  if (!baseId || !adjId) {
-    area.innerHTML = '<div class="result-empty">選擇兩株種子後顯示結果</div>';
-    return;
-  }
-
-  // find products where any crossBreed matches (base=baseId, adj=adjId) OR (base=adjId, adj=baseId)
-  const results = [];
-  gardenData.forEach(p => {
-    p.crossBreeds.forEach(c => {
-      if ((c.baseSeedId === baseId && c.adjacentSeedId === adjId) ||
-          (c.baseSeedId === adjId  && c.adjacentSeedId === baseId)) {
-        results.push({ product: p, crossBreed: c });
-      }
-    });
-  });
-
-  if (results.length === 0) {
-    area.innerHTML = '<div class="result-empty">這兩株種子沒有已知的配種結果</div>';
-    return;
-  }
-
-  area.innerHTML = results.map(({ product: p, crossBreed: c }) => `
-    <div class="result-card">
-      <div class="result-product">🌿 ${p.name}</div>
-      <div class="result-detail">
-        <span>種子：${p.seedName}</span>
-        <span>培育時間：${p.duration}h</span>
-      </div>
-      <div class="result-formula">
-        <div class="formula-line">
-          <span style="color:var(--text-muted);font-size:0.72rem">本株</span>
-          <span class="seed-chip base">${c.baseSeedName}</span>
-          <span style="color:var(--text-muted)">×</span>
-          <span style="color:var(--text-muted);font-size:0.72rem">鄰株</span>
-          <span class="seed-chip adj">${c.adjacentSeedName}</span>
-        </div>
-      </div>
-    </div>
-  `).join('');
-}
-
-// ── REVERSE ───────────────────────────────────────────────────────────────────
-function calcReverse() {
-  const prodId = +document.getElementById('reverseSelect').value;
-  const area   = document.getElementById('reverseResult');
-
-  if (!prodId) {
-    area.innerHTML = '<div class="result-empty">選擇目標植物後顯示配方</div>';
-    return;
-  }
-
-  const product = gardenData.find(p => p.productId === prodId);
-  if (!product || product.crossBreeds.length === 0) {
-    area.innerHTML = '<div class="result-empty">此植物無已知配種配方（需直接種植種子）</div>';
-    return;
-  }
-
-  area.innerHTML = `
-    <div class="path-card">
-      <div class="path-target">目標：${product.name}</div>
-      <div style="font-size:0.8rem;color:var(--text-dim);margin-bottom:0.75rem">
-        種子：${product.seedName}　培育：${product.duration}h
-      </div>
-      <div class="section-title" style="font-size:0.72rem">已知配種組合（${product.crossBreeds.length} 種）</div>
-      ${product.crossBreeds.map((c, i) => `
-        <div class="path-step">
-          <span style="color:var(--text-muted);min-width:1.2rem;font-size:0.72rem">${i+1}.</span>
-          <span class="seed-chip base">${c.baseSeedName}</span>
-          <span style="color:var(--text-muted);font-size:0.8rem">（本株）</span>
-          <span style="color:var(--text-muted)">×</span>
-          <span class="seed-chip adj">${c.adjacentSeedName}</span>
-          <span style="color:var(--text-muted);font-size:0.8rem">（鄰株）</span>
-        </div>
-      `).join('')}
-    </div>
-  `;
-}
-
-// ── ALL ───────────────────────────────────────────────────────────────────────
-function renderAll() {
-  const q = (document.getElementById('allSearch')?.value || '').trim().toLowerCase();
-  let data = gardenData;
-  if (q) {
-    data = data.filter(p => {
-      return p.name.toLowerCase().includes(q)
-          || p.seedName.toLowerCase().includes(q)
-          || p.nameEn.toLowerCase().includes(q);
-    });
-  }
-  data = [...data].sort((a, b) => a.name.localeCompare(b.name, 'zh-TW'));
-
-  document.getElementById('allGrid').innerHTML = data.map(p => `
-    <div class="plant-card">
-      <div class="plant-name">${p.name}</div>
-      <div class="plant-seed">🌱 ${p.seedName}</div>
-      <div class="plant-dur">⏱ 培育 ${p.duration}h</div>
-      ${p.crossBreeds.length > 0
-        ? `<div class="plant-cb">配種：${p.crossBreeds.length} 種配方</div>`
-        : ''}
-    </div>
-  `).join('');
-}
-
-// ── TABS ──────────────────────────────────────────────────────────────────────
-function showTab(id) {
-  document.querySelectorAll('.tab-panel').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-  document.getElementById('tab-' + id).classList.add('active');
-  event.target.classList.add('active');
-}
-</script>
+<script src="../../assets/js/patch-gate.js"></script>
+<script src="gardening.js" defer></script>
 </body>
 </html>

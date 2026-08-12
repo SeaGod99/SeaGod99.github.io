@@ -744,6 +744,66 @@ ARR 2.x / HW 3.x / SB 4.x / ShB 5.x / EW 6.x / DT 7.x
 **建置**：`node scripts/build-treasure-maps.mjs`（沙箱擋外網時 `--local <treasures.json路徑>`）。
 **台服未開放規則**：名稱對不到 items.json（如國際服較新的圖）→ 整個等級不列出（見 2.5 同規則）。座標所在地圖若無 maps.json 對應則跳過該座標。
 
+### 2.18 gardening（園藝配種）
+
+**以「作物」為單位**（`productId` = 收成物的 itemId）。信封多帶一個 `rules` 區塊放遊戲機制常數，
+供頁面的「機制速查」直接渲染——機制的**文字出處與查證記錄在 [`docs/gardening-rules.md`](../docs/gardening-rules.md)**，
+改任一邊要同步另一邊。
+
+```json
+{
+  "productId": 8166,
+  "name": "薩維奈圓蔥",
+  "nameEn": "Thavnairian Onion",
+  "icon": "/i/025000/025203.png",
+  "kind": "crop",
+  "category": "雜貨",
+  "seedId": 8183,
+  "seedName": "薩維奈圓蔥種子",
+  "seedNameEn": "Thavnairian Onion Seeds",
+  "seedIcon": "/i/027000/027453.png",
+  "seed": {
+    "sources": [{ "type": "gather", "text": "園藝工 Lv.24（草場）", "gate": null, "npc": null }],
+    "marketable": true,
+    "crossOnly": true
+  },
+  "duration": 240,
+  "crossBreeds": [
+    { "baseSeedId": 8169, "baseSeedName": "克里耶蘿蔔種子",
+      "adjacentSeedId": 7750, "adjacentSeedName": "皇家可可豆種子",
+      "alsoYields": [{ "id": 4836, "name": "生薑" }] }
+  ],
+  "flower": null,
+  "usedIn": { "count": 12, "top": [{ "id": 4593, "name": "…" }] },
+  "patch": "2.3"
+}
+```
+
+| 欄位 | 說明 |
+|------|------|
+| `productId` / `name` / `nameEn` / `icon` / `category` | 收成物。名稱與圖示取自 items.json（台服官方物品表） |
+| `kind` | `crop`（作物）／`flower`（花卉，另有 `flower` 欄）／`crystal`（碎晶） |
+| `seedId` / `seedName` / `seedIcon` | 種下去的那個道具（栽培用品） |
+| `seed.sources` | 種子的**非市場板**取得管道（NPC 商店／採集／任務…），由 `lib/game-sources.mjs` 解析，最多 3 筆 |
+| `seed.marketable` | 市場板買不買得到 |
+| `seed.crossOnly` | `true` ＝除了市場板與配種之外沒有別的管道（**＝真的得自己配**）。頁面的成本模型就是以此為葉節點判準 |
+| `duration` | 培育時數（小時） |
+| `crossBreeds[]` | 配出**這個作物的種子**要用的組合：`baseSeed` 種在本株那格、`adjacentSeed` 種在鄰格 |
+| `crossBreeds[].alsoYields` | 同一組合也可能配出的其他結果（隨機）。選填；全庫 14 組有此欄 |
+| `flower` | 花卉才有：`{ species, defaultColor, colors[9] }`；每色帶 `id`／`name`／`icon`／`hex`／`pomace[]`／`rng`／`isDefault` |
+| `usedIn` | 這個作物被幾個配方吃掉（由 recipes.json 推），`top` 最多 4 筆。選填 |
+| `patch` | 物品版本（前端 `PatchGate` 用） |
+
+信封的 `rules`：`pomace`（三種油粕）、`colorOrder`／`colorHex`、`soils`／`plainSoil`、
+`crossbreed`（判定時機、鄰接順序、產出是種子、園圃格數）、`care`（枯萎／施肥）。
+
+**資料來源**：Teamcraft `seeds.json`（配方與時數）＋ items.json（名稱／圖示／分類）＋
+`out_data/en-items.msgpack`（英文名）＋ `lib/game-sources.mjs`（種子管道）＋ recipes.json（用途）。
+**建置**：`node scripts/build-gardening.mjs --apply`（`--offline` 用快取；**直接寫 minified**，
+`minify-data.mjs` 對它是 no-op，要看改了什麼請看腳本印出的摘要）。
+**台服未開放規則**：無台服名者保留 `#<id>` 佔位（`patch-tw-names.mjs` 靠它在升版後補名），
+**前端負責過濾**（`name` 非 `#\d+` 佔位 ＋ `PatchGate.released`）。
+
 ---
 
 ## 3. 前端載入慣例
