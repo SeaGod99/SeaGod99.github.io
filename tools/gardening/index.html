@@ -201,12 +201,6 @@
   thead th { background: var(--bg-surface); color: var(--text-dim); font-weight: 600; white-space: nowrap; }
   tbody tr:last-child th, tbody tr:last-child td { border-bottom: none; }
 
-  .beds { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.3rem; max-width: 15rem; margin-top: 0.6rem; }
-  .bed { aspect-ratio: 1; display: grid; place-items: center; border: 1px dashed var(--border);
-         border-radius: var(--radius-sm); font-size: 0.72rem; color: var(--text-muted); }
-  .bed.here { border-style: solid; border-color: var(--accent); color: var(--accent); font-weight: 700; }
-  .bed.p1 { border-style: solid; border-color: var(--gold); color: var(--gold); }
-
   /* ── 園圃格位 ─────────────────────────────────────────────────────
      所有園圃都是一個矩形的「外圈」，編號自左上角順時針。高級園圃＝3×3 的外圈，
      **中央那格不是田**（`.hole`）。出處與推定範圍見 build-gardening.mjs 的 PATCHES 註解。 */
@@ -228,6 +222,16 @@
   .pbed span { font-size: 0.66rem; opacity: 0.85; }
   /* 3×3 正中央：不是田，畫成虛線空格才看得出「那裡種不了東西」 */
   .pbed.hole { border-style: dashed; background: none; color: var(--text-muted); opacity: 0.55; }
+
+  /* 鄰接示意：格子可點，選中的是「剛種下」，會被檢查的鄰居標第幾順位。
+     順位一律用數字＋方向字，不靠顏色表意。 */
+  .patch-beds.demo { margin-top: 0.6rem; }
+  .patch-beds.demo .pbed { font-family: inherit; cursor: pointer; color: var(--text-dim);
+                           background: var(--bg-surface); transition: border-color var(--transition); }
+  .patch-beds.demo .pbed:hover { border-color: var(--border-hover); color: var(--text); }
+  .patch-beds.demo .pbed.hole { cursor: default; }
+  .patch-beds.demo .pbed.sel { border-color: var(--accent); background: var(--accent-dim); color: var(--accent); }
+  .patch-beds.demo .pbed.nb  { border-color: var(--gold); background: var(--gold-dim); color: var(--gold); }
 
   .srcs { font-size: 0.76rem; color: var(--text-muted); line-height: 1.8; margin-top: 0.6rem; }
   .srcs a { color: var(--text-dim); }

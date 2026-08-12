@@ -777,6 +777,68 @@
     return out;
   }
 
+  /** 座標 ↔ 格號雙向表。 */
+  function patchGrid(x) {
+    var ring = ringCells(x.cols, x.rows), at = {}, pos = {};
+    ring.forEach(function (rc, i) { at[rc[0] + ',' + rc[1]] = i + 1; pos[i + 1] = rc; });
+    return { at: at, pos: pos };
+  }
+
+  /* ── 配種怎麼運作：在真實格位上跑一次鄰接檢查 ──────────────────────────
+     舊版畫的是抽象的「種在正中央、四周標 1右 2下 3上 4左」。那張圖有兩個問題：
+     ① 它長得跟高級園圃一模一樣（3×3），但**真實的 3×3 正中央不是田**，看了會以為中間能種。
+     ② 鄰接順序的答案**每一格都不一樣**——角落只有兩個鄰居、上中那格的「下」是中央空洞。
+     改成可點的實例：選一格，就在真的格位上標出它會依序檢查哪幾格。 */
+  var DIR = [['右', 0, 1], ['下', 1, 0], ['上', -1, 0], ['左', 0, -1]];
+
+  /** 在 patch 上，於 bed 號格種下時的鄰接檢查順序。回傳 [{no, dir}]。 */
+  function checkOrder(x, bed) {
+    var g = patchGrid(x), p = g.pos[bed], out = [];
+    if (!p) return out;
+    DIR.forEach(function (d) {
+      var n = g.at[(p[0] + d[1]) + ',' + (p[1] + d[2])];
+      if (n) out.push({ no: n, dir: d[0] });
+    });
+    return out;
+  }
+
+  function adjacencyDemo(bed) {
+    var x = DB.rules.crossbreed.patches.filter(function (p) { return p.verified; })[0]
+         || DB.rules.crossbreed.patches[DB.rules.crossbreed.patches.length - 1];
+    var g = patchGrid(x);
+    var order = checkOrder(x, bed);
+    var rank = {};
+    order.forEach(function (o, i) { rank[o.no] = { i: i + 1, dir: o.dir }; });
+
+    var cells = [];
+    for (var r = 0; r < x.rows; r++) {
+      for (var c = 0; c < x.cols; c++) {
+        var n = g.at[r + ',' + c];
+        if (!n) { cells.push('<div class="pbed hole" aria-hidden="true">·</div>'); continue; }
+        var k = rank[n];
+        var cls = n === bed ? 'sel' : (k ? 'nb' : '');
+        cells.push('<button type="button" class="pbed ' + cls + '" data-bed="' + n + '"' +
+          ' aria-pressed="' + (n === bed ? 'true' : 'false') + '">' +
+          '<b class="num">' + n + '</b>' +
+          '<span>' + (n === bed ? '種下' : (k ? '第 ' + k.i + '（' + k.dir + '）' : '　')) + '</span>' +
+          '</button>');
+      }
+    }
+
+    var sentence = order.length
+      ? '在 <b class="num">' + bed + '</b> 號格種下 → 依序檢查 ' +
+        order.map(function (o, i) {
+          return '<b class="num">' + o.no + '</b> 號（' + o.dir + '）';
+        }).join(' → ') + '，<b>停在第一個配得起來的</b>。'
+      : '';
+
+    return '<div class="patch-beds demo" style="grid-template-columns:repeat(' + x.cols +
+      ',minmax(0,1fr));max-width:' + Math.min(x.cols * 4.6, 14) + 'rem" role="group" aria-label="' +
+      esc(x.name + ' 鄰接檢查示意，目前選 ' + bed + ' 號格') + '">' + cells.join('') + '</div>' +
+      '<p class="note" style="margin-top:0.5rem">' + sentence +
+      '　<span class="patch-note">（點其他格看那一格的順序）</span></p>';
+  }
+
   /** 一款園圃的格位圖：真實外圈排列 ＋ 編號 ＋ 本株／鄰株交替。 */
   function patchDiagram(x) {
     var ring = ringCells(x.cols, x.rows);
@@ -819,10 +881,7 @@
     '<tr><th scope="row">' + esc(r.plainSoil.name) + '</th><td>' + esc(r.plainSoil.effect) + '</td><td>' +
       (r.plainSoil.buy ? '<span class="note">' + esc(r.plainSoil.buy) + '</span>' : '—') + '</td></tr>';
 
-    // 鄰接檢查順序：新種下的那格會依「右→下→上→左」找第一個配得起來的鄰居（3×3 示意）
-    var bedMap = ['', '3<br><small>上</small>', '',
-                  '4<br><small>左</small>', '<b>種</b>', '1<br><small>右</small>',
-                  '', '2<br><small>下</small>', ''];
+    var demoBed = 2; // 預設挑上中那格：它的「下」剛好是中央空洞，最能說明「不是每格都有四個鄰居」
 
     $('rulesBody').innerHTML =
       '<h2>配種怎麼運作</h2>' +
@@ -835,10 +894,11 @@
           '</strong>，取第一個配得起來的鄰居。要配的對象請放在優先順序前面的方向。</li>' +
         '<li><strong>花盆不能配種</strong>（沒有相鄰的格子），一定要用園圃。</li>' +
       '</ul>' +
-      '<div class="beds" aria-hidden="true">' + bedMap.map(function (t, i) {
-        return '<div class="bed' + (t.indexOf('種') >= 0 ? ' here' : (t ? ' p1' : '')) + '">' + t + '</div>';
-      }).join('') + '</div>' +
-      '<p class="note" style="margin-top:0.4rem">鄰接檢查順序示意（1 號優先）。</p></div>' +
+      '<p class="note" style="margin-top:0.8rem"><b>實際跑一次</b>（以高級園圃為例）：' +
+      '它是一圈，所以<b>每一格都剛好只有兩個鄰居</b>，只是方向不同——' +
+      '例如 2 號格的「下」是中央的空洞，於是只會檢查 3 號和 1 號。' +
+      '兩邊都配得起來時，就由優先序決定是哪一邊。</p>' +
+      '<div id="adjDemo">' + adjacencyDemo(demoBed) + '</div></div>' +
 
       '<h2>園圃與種植順序</h2>' +
       '<div class="card">' +
@@ -896,5 +956,12 @@
       '<a href="https://www.ffxivgardening.com/flowerpot-colors" target="_blank" rel="noopener">FFXIV Gardening — Flowerpot Colors</a>、' +
       '<a href="https://ff14.17173.com/content/2021-08-02/20210802165309100.shtml" target="_blank" rel="noopener">栽培与杂交入门手册（17173）</a>。' +
       '配方與時數來自 ffxiv-teamcraft，物品名與圖示取自台服官方物品表。</p>';
+
+    // 點格子換示意（只重畫示意圖本身，不重畫整個分頁）
+    $('adjDemo').addEventListener('click', function (e) {
+      var b = e.target.closest('[data-bed]');
+      if (!b) return;
+      $('adjDemo').innerHTML = adjacencyDemo(Number(b.dataset.bed));
+    });
   }
 })();
