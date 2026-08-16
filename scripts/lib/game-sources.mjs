@@ -95,9 +95,17 @@ export const SLOT_OF_CATEGORY = {
   9: "ears", 10: "neck", 11: "wrists", 12: "finger", 13: "weapon",
 };
 
+/* 部位代碼→繁中名。**鍵名一律照來源站 fashionreportxiv 的字彙**，別自己想當然耳：
+   實際字彙是 ['weapon','head','body','hands','legs','feet','ear','neck','wrist','ring','left_ring']
+   （從該站首頁 inline script 讀出來的）。
+   week 446 踩過雷：本站原本寫 ears／wrists／finger（英文複數習慣），結果該週出現 wrist 飾品提示時
+   認不出是飾品 → 基礎分用成 68（應為 70）→ 計分驗算失敗。443～445 全是防具週所以一直沒暴露。
+   舊的複數鍵留著當別名，避免其他地方還在用時靜默變成 undefined。 */
 export const SLOT_TC = {
   weapon: "武器", offhand: "副手", head: "頭部", body: "身體", hands: "手部",
-  legs: "腿部", feet: "腳部", ears: "耳飾", neck: "項鍊", wrists: "手鐲", finger: "戒指",
+  legs: "腿部", feet: "腳部",
+  ear: "耳飾", neck: "項鍊", wrist: "手鐲", ring: "戒指", left_ring: "左手戒指",
+  ears: "耳飾", wrists: "手鐲", finger: "戒指", // 舊鍵別名，勿新增用途
 };
 
 export function loadIndexes() {

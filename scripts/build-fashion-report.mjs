@@ -54,14 +54,28 @@ const weekAt = (t) => 440 + Math.floor((t - ANCHOR) / WEEK);
 const SCORING = {
   baseNoAcc: 68, baseWithAcc: 70, armorHint: 8, accHint: 6, dyeExact: 2, dyeFamily: 1, max: 100,
 };
-const ACCESSORY_SLOTS = new Set(["ears", "neck", "wrists", "finger"]);
+/* 飾品部位（提示 +6、且不吃染色分）。鍵名照來源站字彙，見 SLOT_TC 的註解。 */
+const ACCESSORY_SLOTS = new Set(["ear", "neck", "wrist", "ring", "left_ring"]);
 /** 版型固定的部位順序——每週都照這個順序列，缺的補「不影響分數」。 */
-const ROW_ORDER = ["weapon", "head", "body", "hands", "legs", "feet", "ears", "neck", "wrists", "finger"];
-/** 門檻嚴重度：排序時先比這個總和，數字越大越難。 */
-/* 門檻的「難受程度」權重（越大越不想要）。推薦器先比這個總和，再比金幣。
-   tome/grind/content 屬於「肯花時間就一定拿得到」，raid/event/rng 則是
-   「可能根本拿不到」——所以後者遠貴於前者，不是差一點點。 */
-const GATE_WEIGHT = { tome: 2, grind: 2, content: 2, currency: 3, tribe: 3, craft: 3, pvp: 3, event: 4, raid: 5, rng: 5, once: 5 };
+const ROW_ORDER = ["weapon", "head", "body", "hands", "legs", "feet", "ear", "neck", "wrist", "ring", "left_ring"];
+/** 來源站可能出現的所有部位。出現表外的值＝對方改了字彙，**寧可中止也不要猜**
+    （猜錯就是把飾品當防具算，基礎分與提示分兩邊都會錯，而且不會有任何錯誤訊息）。 */
+const KNOWN_SLOTS = new Set(ROW_ORDER);
+/* 門檻折算成「金幣當量」，和實際花費加在一起比。
+   為什麼不是純粹的優先序（week 446 踩到）：原本門檻嚴重度**絕對優先**於金幣，
+   結果為了躲掉「去金碟兌換寶石紅染劑」這種小門檻，推薦器選了 94,000 金幣的
+   煤玉黑染劑，總價衝到 96,332。門檻要能跟錢換算才比得出來，不能字典序輾壓。
+
+   數字是**本站訂的估值、不是遊戲數據**，意思是「你大概願意花多少錢換掉這個麻煩」：
+     5,000  肯花時間就一定拿得到（詩學／軍票／金碟／振興票）
+    20,000  要先養別的東西（部族聲望／製作職業／PvP／不明貨幣）
+   200,000  可能根本拿不到（零式戰利品／限時活動／隨機掉落／一次性任務）
+   要調整就改這裡，別去動比較器。 */
+const GATE_GIL = {
+  tome: 5000, grind: 5000, content: 5000,
+  currency: 20000, tribe: 20000, craft: 20000, pvp: 20000,
+  event: 200000, raid: 200000, rng: 200000, once: 200000,
+};
 
 async function getJson(url, cacheName) {
   const cachePath = join(CACHE_DIR, cacheName);
@@ -143,6 +157,16 @@ function hintTc(en) {
 
 /* ── 3. 抓四個部位的接受裝備清單 ──────────────────────────────── */
 const hints = state.lastOptions.hints;
+// 未知部位一律中止：認不出是防具還是飾品，基礎分（68/70）與提示分（+8/+6）會一起錯，
+// 而且算得出一個看似正常的數字、不會有任何警告。week 446 就是這樣被計分驗算抓到的。
+const badSlots = hints.map((h) => h.slot).filter((s) => !KNOWN_SLOTS.has(s));
+if (badSlots.length) {
+  throw new Error(
+    `來源站出現未知部位代碼：${badSlots.join("、")}。\n` +
+      `已知字彙＝${[...KNOWN_SLOTS].join("、")}。請先確認該部位是防具還是飾品，` +
+      `再更新 SLOT_TC／ACCESSORY_SLOTS／ROW_ORDER，不要讓它用預設值跑過去。`
+  );
+}
 const hintLists = [];
 for (const h of hints) {
   const url = `https://fashionreportxiv.com/api/hint?hint=${encodeURIComponent(h.hint)}&slot=${h.slot}`;
@@ -350,7 +374,7 @@ for (const s of slotsOut) {
 }
 
 const gateKey = (g) => (g ? `${g.kind}:${g.label}` : null);
-const gateCost = (g) => (g ? (GATE_WEIGHT[g.kind] ?? 3) : 0);
+const gateCost = (g) => (g ? (GATE_GIL[g.kind] ?? 20000) : 0);
 
 /**
  * 列舉「要湊哪幾件提示裝 × 要染哪幾格」的所有組合（最多 2^10 = 1024 種），
@@ -389,13 +413,16 @@ function solve(target, { openOnly = false } = {}) {
       useDyes.push(d);
     }
     if (!ok || Math.min(score, SCORING.max) < target) continue;
+    // 門檻折成金幣當量後與實際花費相加，得到可比較的「總代價」。同一種門檻
+    // （例如兩件都要詩學）只算一次——跑一趟就順手換完，不該罰兩次。
     const gateScore = [...gates.values()].reduce((s, g) => s + gateCost(g), 0);
-    const cand = { score: Math.min(score, SCORING.max), gil, pieces, unknown, market, gates: [...gates.values()], gateScore, useHints, useDyes };
-    // 依序比：門檻嚴重度 → 金幣總額 → 完全查不到價的件數 → 件數。
+    const effort = gil + gateScore;
+    const cand = { score: Math.min(score, SCORING.max), gil, pieces, unknown, market, gates: [...gates.values()], gateScore, effort, useHints, useDyes };
+    // 依序比：總代價（金幣＋門檻當量）→ 純金幣 → 完全查不到價的件數 → 件數。
     // 金幣要排在「價格不明」前面：市場板參考價已經補進 gil，剩下的 unknown 是真的
     // 查不到價（無人上架），拿它當第一順位會像 week 444 那樣選出貴兩個數量級的解。
     const better = (a, b) =>
-      a.gateScore !== b.gateScore ? a.gateScore < b.gateScore :
+      a.effort !== b.effort ? a.effort < b.effort :
       a.gil !== b.gil ? a.gil < b.gil :
       a.unknown !== b.unknown ? a.unknown < b.unknown : a.pieces < b.pieces;
     if (!bestPlan || better(cand, bestPlan)) bestPlan = cand;
