@@ -61,6 +61,8 @@ const ROW_ORDER = ["weapon", "head", "body", "hands", "legs", "feet", "ear", "ne
 /** 來源站可能出現的所有部位。出現表外的值＝對方改了字彙，**寧可中止也不要猜**
     （猜錯就是把飾品當防具算，基礎分與提示分兩邊都會錯，而且不會有任何錯誤訊息）。 */
 const KNOWN_SLOTS = new Set(ROW_ORDER);
+/** 吃染色分的六個部位（飾品不能染）。版型的固定骨架就是這六列＋被提示點到的飾品列。 */
+const DYEABLE_SLOTS = ["weapon", "head", "body", "hands", "legs", "feet"];
 /* 門檻折算成「金幣當量」，和實際花費加在一起比。
    為什麼不是純粹的優先序（week 446 踩到）：原本門檻嚴重度**絕對優先**於金幣，
    結果為了躲掉「去金碟兌換寶石紅染劑」這種小門檻，推薦器選了 94,000 金幣的
@@ -96,7 +98,15 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const state = await getJson("https://fashionreportxiv.com/api/report-state", "frx-report-state.json");
 const apiWeek = Number(state.lastOptions.week);
 const nowWeek = weekAt(Date.now());
-const fresh = !!(state.dyesFresh && state.easy80Fresh && state.easy100Fresh);
+/* 三個新鮮度旗標要分開看，不能併成一個 fresh。
+   準備期（週二 16:00 提示揭曉 ～ 週五 16:00 評分開放）來源站只會更新 hints，
+   dyeData 與 easy80/easy100 都還是**上一週的殘值**，而且 API 不會另外告訴你——
+   week 447 實測：hints 已是 447，但六個顏色與 easy 解原封不動還是 446 的。
+   照單全收就會把上週的顏色當本週發佈，而且計分驗算會拿上週的解驗本週的公式、
+   剛好通過，把問題蓋掉。 */
+const dyesFresh = !!state.dyesFresh;
+const solutionsFresh = !!(state.easy80Fresh && state.easy100Fresh);
+const fresh = dyesFresh && solutionsFresh;
 
 if (apiWeek !== nowWeek) {
   // 來源自己還沒換週（週二 16:00 換週後站方要一段時間才更新）。硬寫下去會蓋掉正確資料。
@@ -298,7 +308,8 @@ for (const s of slotsOut) {
 
 /* ── 7. 染色資料（接上 dyes.json 的取得方式與成本）──────────────── */
 const dyes = {};
-for (const [slot, d] of Object.entries(state.dyeData)) {
+// 染色未公布時一格都不要收——寧可頁面說「本週染色尚未公布」，也不要顯示上週的顏色
+for (const [slot, d] of Object.entries(dyesFresh ? state.dyeData : {})) {
   if (slot.startsWith("_")) continue;
   const db = dyeDb.get(String(d.plus2).toLowerCase());
   if (!db) throw new Error(`染劑對不到 data/dyes.json：「${d.plus2}」（可能是台服未實裝的新染劑，需人工確認）`);
@@ -323,6 +334,12 @@ const needPrice = [
   ...Object.values(dyes).filter((d) => d.gil == null && d.marketable),
 ];
 let priceAt = null;
+if (needPrice.length && offline) {
+  // 離線時沒有市價，市場板的件在成本模型裡會變成 0 元，最佳解會被帶偏
+  // （week 447 實測：86 分方案從 180 金幣「變便宜」成 100，其實只是把沒查到價的件當免費）。
+  // --offline 只該用來改邏輯時反覆測，**不要拿它的輸出當正式週更結果**。
+  console.warn(`   ⚠️ --offline 略過 Universalis 查價：${needPrice.length} 件市場板物品會以「價格不明」參與排序，推薦結果不可作準`);
+}
 if (needPrice.length && !offline) {
   const ids = [...new Set(needPrice.map((x) => x.id))];
   for (let i = 0; i < ids.length; i += 100) {
@@ -439,8 +456,11 @@ function toPlan(id, title, target, sol, subtitle) {
   let fillerGil = 0;
   for (const slot of ROW_ORDER) {
     const isHintSlot = hintSlots.includes(slot);
-    const isDyeSlot = dyeSlots.includes(slot);
-    if (!isHintSlot && !isDyeSlot) continue; // 完全不影響分數的部位不佔版面
+    const isDyeSlot = DYEABLE_SLOTS.includes(slot);
+    // 版型固定的重點：**六個吃染色的部位永遠有一列**，就算本週染色還沒公布也一樣，
+    // 否則準備期的表會從 6～7 列塌成 4 列——那正是改版要消滅的「每週長得不一樣」。
+    // 飾品部位只有被提示點到才佔版面（飾品不吃染色分）。
+    if (!isHintSlot && !isDyeSlot) continue;
     const item = hintBySlot.get(slot) ?? null;
     const dye = dyeBySlot.get(slot) ?? null;
     let gear;
@@ -496,7 +516,8 @@ for (const [id, title, target] of [["mgp80", "拿滿 MGP", 80], ["perfect100", "
 
 /* ── 9. 拿來源自家的 easy80／easy100 回頭驗算計分公式 ─────────────── */
 const audit = [];
-for (const [key, want] of [["easy80", 80], ["easy100", 100]]) {
+// 社群解未出時 state.easy* 是上週殘值，拿它驗本週公式沒有意義（且多半會剛好通過）
+for (const [key, want] of (solutionsFresh ? [["easy80", 80], ["easy100", 100]] : [])) {
   const blk = state[key];
   if (!blk?.itemPairs?.length) continue;
   const nDye = Object.values(blk.dyes || {}).filter(Boolean).length;
@@ -519,6 +540,10 @@ const out = {
   schema: 2,
   week: apiWeek,
   status,
+  /* 準備期（提示已揭曉、評分尚未開放）來源站只有 hints 是本週的。這兩個旗標讓前端
+     能誠實說「本週染色尚未公布」，而不是拿上週的顏色充數或整頁空白。 */
+  dyesPending: !dyesFresh,
+  solutionsPending: !solutionsFresh,
   source: "fashionreportxiv.com",
   updated: new Date().toISOString().slice(0, 10),
   generatedBy: "scripts/build-fashion-report.mjs",

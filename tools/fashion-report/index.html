@@ -304,8 +304,14 @@ function gearCell(row) {
   return `<span class="r-none">穿什麼都行，不影響分數</span>`;
 }
 
-function dyeCell(dye) {
-  if (!dye) return `<span class="r-none">不用染</span>`;
+/* 只有左側六格吃染色分，飾品在遊戲裡根本不能染——別對飾品列說「染色未公布」。 */
+const DYEABLE = new Set(['weapon', 'head', 'body', 'hands', 'legs', 'feet']);
+function dyeCell(dye, pending, slot) {
+  // 「還沒公布」和「不用染」是兩回事，混在一起講會讓人以為本週不必準備染劑
+  if (!dye) {
+    if (!DYEABLE.has(slot)) return `<span class="r-none">飾品不可染</span>`;
+    return `<span class="r-none">${pending ? '染色未公布' : '不用染'}</span>`;
+  }
   return `
     <span class="swatch" style="background:${esc(dye.color)}"></span>
     <span class="nm">${esc(dye.name)}</span>
@@ -314,13 +320,13 @@ function dyeCell(dye) {
     ${whereBtn(dye.vendor)}`;
 }
 
-function planCard(p) {
+function planCard(p, dyesPending) {
   const c = p.cost;
   const rows = p.rows.map(r => `
     <div class="row${r.points ? '' : ' dim'}">
       <div class="r-slot"><b>${esc(r.slotName)}</b>${r.hint ? `<span class="r-hint">提示：${esc(r.hint)}</span>` : ''}</div>
       <div class="r-gear">${gearCell(r)}</div>
-      <div class="r-dye">${dyeCell(r.dye)}</div>
+      <div class="r-dye">${dyeCell(r.dye, dyesPending, r.slot)}</div>
       <div class="r-pts${r.points ? '' : ' zero'}">${r.points ? '+' + r.points : '—'}</div>
     </div>`).join('');
 
@@ -347,7 +353,7 @@ function planCard(p) {
         <div class="row${r.points ? '' : ' dim'}">
           <div class="r-slot"><b>${esc(r.slotName)}</b></div>
           <div class="r-gear">${gearCell(r)}</div>
-          <div class="r-dye">${dyeCell(r.dye)}</div>
+          <div class="r-dye">${dyeCell(r.dye, dyesPending, r.slot)}</div>
           <div class="r-pts${r.points ? '' : ' zero'}">${r.points ? '+' + r.points : '—'}</div>
         </div>`).join('')}</div>
     </details>` : p.openAlternativeNote ? `<div class="state-say">🔒 ${esc(p.openAlternativeNote)}。</div>` : '';
@@ -391,6 +397,18 @@ function dyeSection(d) {
         ${whereBtn(v.vendor)}
       </div>
     </div>`).join('');
+  if (!cells) {
+    // 準備期（週二提示揭曉～週五評分開放）來源站只有提示是本週的，染色還是上週殘值，
+    // 本站刻意不收。這裡要講清楚是「還沒公布」，不能只留一個空區塊。
+    return `
+      <details open>
+        <summary>🎨 <b>本週指定染色</b>（尚未公布）</summary>
+        <div class="fl-legend">
+          時尚品鑑的六個指定色要等<b>週五 16:00 評分開放</b>、社群實測後才會確定，通常開放後 1～3 小時內就有。
+          上方配裝表已改用<b>不靠染色</b>的組合，先照著備裝不會白費；染色公布後本頁會更新，屆時可能有更省的作法。
+        </div>
+      </details>`;
+  }
   return `
     <details open>
       <summary>🎨 <b>本週指定染色</b>（六個部位・染上指定色各 +2 分）</summary>
@@ -521,7 +539,7 @@ function render(d, themes) {
     ${stateBar}
     ${st.stale ? '<div class="state-say" style="margin:-6px 0 14px">↓ 以下是存檔內容</div>' : ''}
     <div class="tabs">${tabs}</div>
-    <div id="planBox">${d.plans.length ? planCard(d.plans[0]) : '<div class="plan">本週沒有可行方案，請看外部來源。</div>'}</div>
+    <div id="planBox">${d.plans.length ? planCard(d.plans[0], !!d.dyesPending) : '<div class="plan">本週沒有可行方案，請看外部來源。</div>'}</div>
     ${dyeSection(d)}
     ${listSection(d)}
     <div class="src-line">
@@ -538,7 +556,7 @@ function render(d, themes) {
   // 方案切換
   $app.querySelectorAll('.tab').forEach(btn => btn.addEventListener('click', () => {
     $app.querySelectorAll('.tab').forEach(b => b.classList.toggle('on', b === btn));
-    document.getElementById('planBox').innerHTML = planCard(d.plans[Number(btn.dataset.plan)]);
+    document.getElementById('planBox').innerHTML = planCard(d.plans[Number(btn.dataset.plan)], !!d.dyesPending);
   }));
 
   // 清單控制項
