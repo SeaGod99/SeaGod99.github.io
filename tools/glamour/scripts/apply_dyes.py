@@ -36,7 +36,9 @@ VIS_OUT = os.path.join(oc.DATA, "mirapri_visible.json")
 
 
 def _zh(dyes, ja2zh):
-    """日文官方染色名 → 繁中名（查無對照則原樣保留），去重。"""
+    """日文官方染色名 → 繁中名（查無對照則原樣保留），去重。
+    **只給整套 fallback 用**——那是一份「這套用到哪些顏色」的色票清單，去重是對的。
+    逐件染色請用 oc.dyes_to_zh()：那裡兩槽同色是有效資料，不能去重。"""
     return list(dict.fromkeys(ja2zh.get(d, d) for d in dyes))
 
 
@@ -79,12 +81,12 @@ def main():
                 ename = equip_names[idx]
                 visible.append(ename)
                 if cp["dyes"]:
-                    zh = _zh(cp["dyes"], ja2zh)
+                    zh = oc.dyes_to_zh(cp["dyes"], ja2zh)
                     all_dyes.extend(zh)
-                    cur = per_piece.setdefault(ename, [])
-                    for z in zh:
-                        if z not in cur:
-                            cur.append(z)
+                    # 同一件裝備被兩個 OCR 條目對到時「先到先贏」，不合併（全庫 13 次）：
+                    # 多半是面板重覆列同一件，另有 best_match 錯配（ヨルハ五三式軍装:医
+                    # 貼到 軍帽:医），合併會把別件的顏色混進來。
+                    per_piece.setdefault(ename, zh)
             if per_piece:
                 piece_map[oid] = per_piece
             if all_dyes:

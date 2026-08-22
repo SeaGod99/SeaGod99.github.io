@@ -154,7 +154,7 @@ def main():
         for src_p, cp in zip(ovp, cps):
             slot = src_p.get("slot", "")
             hit = resolve(cp["item"])
-            zhd = list(dict.fromkeys(ja2zh.get(d, d) for d in cp["dyes"]))
+            zhd = oc.dyes_to_zh(cp["dyes"], ja2zh)
             if hit:
                 patch, lv, job, source, st = enrich_meta(hit["id"], pdb)
                 name, zh = hit["ja"] or cp["item"], hit["zh"]
@@ -206,7 +206,7 @@ def main():
                 # 繁中 DB 未收錄（多為 7.x）→ 查多語系備選庫；庫裡是裝備就採用其部位/patch，否則才丟。
                 fb = fb_data.get(str(hit["id"]))
                 if fb and fb.get("slot"):
-                    zhd = list(dict.fromkeys(ja2zh.get(d, d) for d in cp["dyes"]))
+                    zhd = oc.dyes_to_zh(cp["dyes"], ja2zh)
                     equips.append({
                         "name": hit["ja"], "zh": hit["zh"], "slot": fb["slot"],
                         "patch": fb.get("patch", ""),
@@ -219,7 +219,7 @@ def main():
                     n_fallback += 1
                     continue
                 skipped.append((cp["item"], "非裝備")); n_nonequip += 1; continue
-            zhd = list(dict.fromkeys(ja2zh.get(d, d) for d in cp["dyes"]))
+            zhd = oc.dyes_to_zh(cp["dyes"], ja2zh)
             patch, lv, job, src, st = enrich_meta(hit["id"], pdb)
             if src:
                 n_src += 1

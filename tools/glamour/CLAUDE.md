@@ -639,8 +639,12 @@ py scripts\ocr_check.py --target mirapri  --id <outfit_id>  --force
 1. `data/mirapri_piece_dyes.json` — **逐件染色** `{outfit_id: {裝備日文名: [繁中染色]}}`：
    OCR v2 的 pieces 已把「裝備名↔它下面的染色」配對好，apply_dyes 再用 best_match 把每件
    染色掛到該套記錄裝備上 → 彈窗**逐列顯示** dye1/dye2（比照精選套裝）。
+   ⚠ **這份不可以去重**：兩個染色槽染同一色是有效資料，去重會讓第二槽變成「—」，
+   照著配的人不會知道第二槽也要染（2026-08-23 補回 250 件，見知識庫 §4.28）。
+   逐件轉繁中一律走 `ocr_check.dyes_to_zh()`，別自己寫 `dict.fromkeys()`。
 2. `data/mirapri_dyes.json` — 整套繁中染色 `{outfit_id: [繁中染色]}`，當 **fallback**：
    尚未重跑成 v2（無逐件資料）的套，彈窗底部仍顯示「使用染色」整套清單。
+   這份**是色票清單、該去重**——與上面那份形狀不同，別套用同一套邏輯。
 3. `data/mirapri_visible.json` — 每套「圖上實際畫出來」的裝備（= OCR 有讀到的）。
    build_site.py 用它**濾掉替代裝備**：Mirapri 投稿常在同配方附替代款，原始清單會比圖片多；
    過濾後彈窗清單只剩圖上實際穿的。

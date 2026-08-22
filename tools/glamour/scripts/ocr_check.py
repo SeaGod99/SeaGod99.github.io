@@ -253,21 +253,39 @@ def clean_ocr(items, dyes, dye_names):
 def clean_pieces(pieces, dye_names):
     """逐件清理：切掉黏在裝備名後的染色、染色經官方白名單過濾/校正、每件最多 2 色。
     過濾掉 OCR 讀到的數字佔位（例 dye:"0"/"1"/"2"，對不到白名單即丟）。
-    回傳 [{"item": 乾淨裝備名, "dyes": [官方染色,...]}]。"""
+    回傳 [{"item": 乾淨裝備名, "dyes": [官方染色,...]}]。
+
+    **dyes 清單內同色不去重**：兩個染色槽染成同一色是有效資料，去重會讓第二槽
+    變成「—」，照著配的人不會知道第二槽也要染（全庫 205 件）。但「黏在裝備名
+    後面抽出來的」那份仍要與既有清單去重——同一個色常常兩邊都出現（全庫 655
+    處），不濾掉就會憑空造出假的雙槽。
+    """
     out = []
     for p in pieces:
         item, extracted = _split_item_dye(p.get("item", ""), dye_names)
         dyes = []
-        for d in list(p.get("dyes", [])) + extracted:
+        for d in list(p.get("dyes", [])):
             cand = _snap_dye_str(d, dye_names)
             if cand:
                 dyes.append(cand)
             elif not dye_names:
                 dyes.append(d)
-        dyes = list(dict.fromkeys(dyes))[:2]
+        for d in extracted:
+            cand = _snap_dye_str(d, dye_names)
+            if not cand and not dye_names:
+                cand = d
+            if cand and cand not in dyes:
+                dyes.append(cand)
+        dyes = dyes[:2]
         if item:
             out.append({"item": item, "dyes": dyes})
     return out
+
+
+def dyes_to_zh(dyes, ja2zh):
+    """逐件染色：日文官方色名 → 繁中（查無對照則原樣保留）。**刻意不去重**，
+    理由同 clean_pieces。整套 fallback 那份是色票清單，去重是對的，走各自的路徑。"""
+    return [ja2zh.get(d, d) for d in dyes]
 
 
 # ===================== OCR（Ollama） =====================
