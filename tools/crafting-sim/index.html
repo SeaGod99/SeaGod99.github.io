@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="FF14 製作模擬器 — 選配方、填作業／加工精度與 CP，排一串製作技能，逐步算出作業進度、品質、耐久、CP 與 HQ 機率，並產生遊戲內巨集">
+<title>製作模擬器 | 水神的工具箱</title>
+<link rel="stylesheet" href="../../assets/css/tokens.css">
+<link rel="stylesheet" href="../../assets/css/theme.css">
+<link rel="stylesheet" href="../../assets/css/tool-header.css">
+<script src="../../assets/js/theme.js"></script>
+<style>
+  /* 本頁識別色＝青。指向 token（不是寫死字面值），亮/暗兩套自動跟著走——
+     見 tokens.css 的「強調色 --accent 的規則」。 */
+  :root { --accent: var(--cyan); --accent-dim: var(--cyan-dim); }
+
+  /* 四種資料軸各自固定一個顏色，全頁一致：技能分類、進度條、逐步表的欄位都用同一組，
+     使用者只要學一次「藍＝作業、綠＝品質、橘＝耐久、紫＝CP」。 */
+  :root {
+    --c-progress: var(--blue);
+    --c-quality:  var(--green);
+    --c-dur:      var(--orange);
+    --c-cp:       var(--purple);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* 109.375% = 16 × 1.09375 = 17.5px。用 % 而非 px，使用者放大瀏覽器字級時本頁才會跟著放大。 */
+  html { font-size: 109.375%; }
+  body { background: var(--bg-base); color: var(--text); font-family: var(--font-sans); min-height: 100vh; line-height: 1.6; }
+
+  .main { max-width: var(--w-wide); margin: 0 auto; padding: 0 1.25rem 3.5rem; }
+
+  /* 數值一律等寬數字：模擬每改一步整排數字都會變，不等寬會左右跳動 */
+  .num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+    overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0;
+  }
+
+  /* ── 版面 ────────────────────────────────────────────────────────
+     依「使用時機」分頁：① 準備（選配方＋工匠數值，設定完就不用再看）
+     ② 排循環（技能面板｜目前循環 左右並排）③ 說明。
+     結果不佔版面，改成下緣的固定摘要條＋點開的彈窗。 */
+
+  .context-bar {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.4rem 1rem;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 0.5rem 0.85rem; margin-bottom: 0.75rem;
+    font-size: 0.82rem;
+  }
+  .context-bar .cb-name { font-weight: 700; }
+  .context-bar .cb-meta { color: var(--text-dim); font-variant-numeric: tabular-nums; }
+  .context-bar .cb-empty { color: var(--text-muted); }
+
+  .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 1rem; overflow-x: auto; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    flex: 0 0 auto; padding: 0.6rem 1.15rem; font-size: 0.88rem; font-weight: 500;
+    cursor: pointer; border: none; background: none; color: var(--text-dim);
+    border-bottom: 2px solid transparent; margin-bottom: -1px; font-family: inherit;
+    transition: color var(--transition), border-color var(--transition);
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn[aria-selected="true"] { color: var(--accent); border-bottom-color: var(--accent); }
+  .panel[hidden] { display: none; }
+  @media (pointer: coarse) { .tab-btn { min-height: var(--tap-min); } }
+
+  /* 技能面板與目前循環左右並排；窄螢幕自動疊起來 */
+  .craft-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; align-items: start; }
+  @media (min-width: 1000px) {
+    .craft-grid { grid-template-columns: minmax(0, 1.25fr) minmax(320px, 1fr); }
+    .craft-grid > .card { position: sticky; top: 0.75rem; }
+  }
+
+  .next-step { display: flex; justify-content: flex-end; margin-bottom: 1rem; }
+
+  .card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 0.9rem 1.05rem; margin-bottom: 1rem;
+  }
+
+  h2 {
+    font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; color: var(--accent);
+    margin: 0 0 0.7rem; display: flex; align-items: center; gap: 0.55rem;
+  }
+  h2::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  h3 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.4rem; }
+
+  .note { font-size: 0.8rem; color: var(--text-dim); line-height: 1.7; }
+  .note strong { color: var(--text); }
+  p.note { max-width: 72ch; }
+  .muted-sm { font-size: 0.75rem; color: var(--text-muted); }
+
+  /* ── 表單 ──────────────────────────────────────────────────────── */
+  .field { display: flex; flex-direction: column; gap: 0.28rem; min-width: 0; }
+  .field label { font-size: 0.74rem; color: var(--text-dim); font-weight: 600; letter-spacing: 0.02em; }
+  input[type="text"], input[type="search"], input[type="number"], select {
+    background: var(--bg-surface); color: var(--text); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 0.42rem 0.6rem; font-size: 0.88rem;
+    font-family: inherit; width: 100%; min-height: 2.2rem;
+  }
+  input[type="number"] { font-variant-numeric: tabular-nums; }
+  input:focus-visible, select:focus-visible, button:focus-visible, [tabindex]:focus-visible {
+    outline: 2px solid var(--focus-ring); outline-offset: 2px;
+  }
+  @media (pointer: coarse) {
+    input[type="text"], input[type="search"], input[type="number"], select { min-height: var(--tap-min); }
+  }
+
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr)); gap: 0.6rem; }
+  .toggles { display: flex; flex-wrap: wrap; gap: 0.9rem; margin-top: 0.7rem; }
+  .toggle { display: flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; cursor: pointer; }
+  .toggle input { width: 1.05rem; height: 1.05rem; accent-color: var(--accent); }
+
+  .btn {
+    background: var(--bg-surface); color: var(--text); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 0.4rem 0.75rem; font-size: 0.82rem;
+    font-family: inherit; cursor: pointer; transition: background var(--transition), border-color var(--transition);
+  }
+  .btn:hover { background: var(--bg-card-hover); border-color: var(--border-hover); }
+  .btn-primary { background: var(--accent-dim); border-color: var(--accent); color: var(--text); font-weight: 600; }
+  .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  @media (pointer: coarse) { .btn { min-height: var(--tap-min); } }
+
+  .row { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: flex-end; }
+
+  /* ── 配方搜尋 ──────────────────────────────────────────────────── */
+  .job-filters { display: flex; flex-wrap: wrap; gap: 0.3rem; margin: 0.6rem 0; }
+  .job-btn {
+    font-size: 0.76rem; padding: 0.28rem 0.55rem; border-radius: 999px;
+    border: 1px solid var(--border); background: transparent; color: var(--text-dim);
+    cursor: pointer; font-family: inherit;
+  }
+  .job-btn[aria-pressed="true"] { background: var(--accent-dim); border-color: var(--accent); color: var(--text); }
+  @media (pointer: coarse) { .job-btn { min-height: var(--tap-min); padding-inline: 0.8rem; } }
+
+  .results { list-style: none; max-height: 15rem; overflow-y: auto; border: 1px solid var(--border);
+             border-radius: var(--radius-sm); margin-top: 0.5rem; }
+  .results:empty { display: none; }
+  .results li + li { border-top: 1px solid var(--border); }
+  .result-btn {
+    width: 100%; text-align: left; background: none; border: none; color: var(--text);
+    padding: 0.45rem 0.6rem; font-size: 0.85rem; font-family: inherit; cursor: pointer;
+    display: flex; justify-content: space-between; gap: 0.6rem; align-items: baseline;
+  }
+  .result-btn:hover, .result-btn:focus-visible { background: var(--bg-card-hover); }
+  .result-meta { font-size: 0.74rem; color: var(--text-muted); flex: 0 0 auto; }
+
+  .recipe-head { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; align-items: baseline; }
+  .recipe-name { font-size: 1.05rem; font-weight: 700; }
+  .tag {
+    font-size: 0.72rem; padding: 0.1rem 0.45rem; border-radius: 999px;
+    border: 1px solid var(--border); color: var(--text-dim); white-space: nowrap;
+  }
+  .tag-warn { border-color: var(--orange); color: var(--orange); }
+  .recipe-stats { display: flex; flex-wrap: wrap; gap: 0.9rem; margin-top: 0.6rem; font-size: 0.82rem; }
+  .recipe-stats div { display: flex; gap: 0.35rem; align-items: baseline; }
+  .recipe-stats span:first-child { color: var(--text-muted); font-size: 0.75rem; }
+
+  /* ── HQ 材料 ──────────────────────────────────────────────────── */
+  .hq-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 0.5rem; margin-top: 0.5rem; }
+  /* 每列自己有框：不然三欄並排時「/ 1」會緊貼下一個材料名，讀起來像同一格 */
+  .hq-row {
+    display: flex; align-items: center; gap: 0.5rem; font-size: 0.82rem;
+    background: var(--bg-surface); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 0.3rem 0.5rem;
+  }
+  .hq-row .grow { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .hq-row input { width: 4.2rem; }
+
+  /* ── 技能面板 ─────────────────────────────────────────────────── */
+  .palette-group + .palette-group { margin-top: 0.75rem; }
+  .palette-group h3 { font-size: 0.76rem; color: var(--text-dim); letter-spacing: 0.05em; }
+  .skills { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .skill {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 0.05rem;
+    background: var(--bg-surface); border: 1px solid var(--border); border-left: 3px solid var(--type-color, var(--border));
+    border-radius: var(--radius-sm); padding: 0.32rem 0.55rem; cursor: pointer;
+    font-family: inherit; color: var(--text); text-align: left; min-width: 5.6rem;
+    transition: background var(--transition), border-color var(--transition), transform var(--transition);
+  }
+  .skill:hover { background: var(--bg-card-hover); border-color: var(--border-hover); }
+  .skill:active { transform: scale(0.97); }
+  .skill[data-type="progress"] { --type-color: var(--c-progress); }
+  .skill[data-type="quality"]  { --type-color: var(--c-quality); }
+  .skill[data-type="buff"]     { --type-color: var(--c-cp); }
+  .skill[data-type="repair"]   { --type-color: var(--c-dur); }
+  .skill[data-type="cp"], .skill[data-type="other"] { --type-color: var(--gold); }
+  /* 不可用的技能：虛線框＋降階文字色。刻意**不用 opacity** 變淡——
+     透明度會讓實際對比低於 AA，而量測工具讀 computed color 還會誤判成通過。 */
+  .skill.locked, .skill.unusable { border-style: dashed; }
+  .skill.locked .skill-name, .skill.unusable .skill-name,
+  .skill.locked .skill-meta, .skill.unusable .skill-meta { color: var(--text-muted); }
+  .skill.combo-ready { background: var(--accent-dim); border-color: var(--accent); }
+  .skill-name { font-size: 0.82rem; font-weight: 600; }
+  .skill-meta { font-size: 0.68rem; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+  .skill-flag { font-size: 0.66rem; line-height: 1.35; color: var(--orange); }
+  .skill.combo-ready .skill-flag { color: var(--accent); font-weight: 600; }
+  @media (pointer: coarse) { .skill { min-height: var(--tap-min); justify-content: center; } }
+
+  /* ── 循環 ─────────────────────────────────────────────────────── */
+  .rot-toolbar { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.6rem; align-items: center; }
+  .rot-count { font-size: 0.78rem; color: var(--text-muted); margin-left: auto; }
+
+  /* ── 循環＝逐步明細 ─────────────────────────────────────────────
+     循環的每一列就是那一步：左邊是技能，右邊是**做到這一步當下**的作業／品質／
+     耐久／CP，跟下緣結果條同一套讀法。刻意不另外開一張逐步表——
+     那會逼使用者在兩個地方對照「第幾步」。 */
+  .rotation { list-style: none; display: flex; flex-direction: column; gap: 0.25rem; min-height: 3.2rem;
+              padding: 0.4rem; border: 1px dashed var(--border); border-radius: var(--radius-sm); }
+  .rotation.empty-hint { align-items: center; justify-content: center; color: var(--text-muted); font-size: 0.83rem; }
+
+  .rot-row {
+    display: grid; align-items: center; gap: 0.3rem;
+    grid-template-columns: 1.5rem minmax(4rem, 1fr) auto auto auto auto auto auto;
+    background: var(--bg-surface); border: 1px solid var(--border);
+    border-left: 3px solid var(--type-color, var(--border));
+    border-radius: var(--radius-sm); padding: 0.22rem 0.35rem 0.22rem 0.45rem;
+    cursor: grab; font-size: 0.76rem;
+  }
+  .rot-row[data-type="progress"] { --type-color: var(--c-progress); }
+  .rot-row[data-type="quality"]  { --type-color: var(--c-quality); }
+  .rot-row[data-type="buff"]     { --type-color: var(--c-cp); }
+  .rot-row[data-type="repair"]   { --type-color: var(--c-dur); }
+  .rot-row[data-type="cp"], .rot-row[data-type="other"] { --type-color: var(--gold); }
+  .rot-row.dragging { opacity: 0.4; }
+  .rot-row.drop-before { box-shadow: 0 -3px 0 var(--accent); }
+  .rot-row.invalid { border-color: var(--red); background: var(--red-dim); }
+
+  /* 欄位標題列：跟資料列同一套 grid 才對得齊；不可拖曳、不算在步數裡 */
+  .rot-head { background: none; border: none; border-left: 3px solid transparent; cursor: default;
+              color: var(--text-muted); font-size: 0.66rem; padding-bottom: 0; }
+  .rot-head .rot-cell small { display: block; }
+
+  .rot-idx { color: var(--text-muted); font-variant-numeric: tabular-nums; font-size: 0.68rem; }
+  .rot-name { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .rot-cell { font-variant-numeric: tabular-nums; white-space: nowrap; text-align: right; min-width: 3.1rem; }
+  .rot-cell small { color: var(--text-muted); font-size: 0.62rem; }
+  .rot-delta-p { color: var(--c-progress); }
+  .rot-delta-q { color: var(--c-quality); }
+  .rot-why { color: var(--red); font-size: 0.68rem; white-space: nowrap; }
+  .rot-ctl { display: flex; gap: 0.1rem; }
+  .rot-ctl button {
+    background: none; border: none; color: var(--text-muted); cursor: pointer;
+    font-size: 0.75rem; line-height: 1; padding: 0.25rem; border-radius: 4px; font-family: inherit;
+  }
+  .rot-ctl button:hover { color: var(--text); background: var(--bg-card-hover); }
+
+  /* 欄位多，窄螢幕改成兩行：第一行技能與操作，第二行數值 */
+  @media (max-width: 640px) {
+    .rot-row { grid-template-columns: 1.5rem minmax(4rem, 1fr) auto; }
+    .rot-cells { grid-column: 1 / -1; display: flex; gap: 0.75rem; justify-content: flex-end; }
+  }
+  @media (min-width: 641px) { .rot-cells { display: contents; } }
+
+  /* 手指操作時把命中區撐到 44px，但不撐高列本身（會把整串推開） */
+  @media (pointer: coarse) {
+    .rot-ctl button { position: relative; }
+    .rot-ctl button::after {
+      content: ''; position: absolute; inset: 50% 50% 50% 50%;
+      width: var(--tap-min); height: var(--tap-min); transform: translate(-50%, -50%);
+    }
+  }
+
+  /* ── 結果 ─────────────────────────────────────────────────────── */
+  .verdict { display: flex; align-items: center; gap: 0.7rem; padding: 0.6rem 0.75rem;
+             border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-surface); }
+  .verdict.ok { border-color: var(--green); background: var(--green-dim); }
+  .verdict.bad { border-color: var(--red); background: var(--red-dim); }
+  .verdict-icon { font-size: 1.3rem; line-height: 1; }
+  .verdict-text { font-weight: 700; font-size: 0.95rem; }
+  .verdict-sub { font-size: 0.76rem; color: var(--text-dim); }
+  .hq-big { margin-left: auto; text-align: right; }
+  .hq-big b { font-size: 1.5rem; font-variant-numeric: tabular-nums; line-height: 1; }
+  .hq-big span { display: block; font-size: 0.68rem; color: var(--text-muted); }
+
+  .bars { display: grid; gap: 0.55rem; margin-top: 0.8rem; }
+  .bar-row { display: grid; grid-template-columns: 3.4rem 1fr auto; gap: 0.5rem; align-items: center; font-size: 0.78rem; }
+  .bar-label { color: var(--text-dim); }
+  /* display:block 兩行都不能少——這兩層本來是 <span>，非替換型 inline 元素不吃 width/height，
+     填色會畫成寬 0（量過才發現，畫面上只是「看起來像空的進度條」）。 */
+  .bar-track { display: block; height: 0.55rem; background: var(--bg-surface); border-radius: 999px; overflow: hidden; border: 1px solid var(--border); }
+  .bar-fill { display: block; height: 100%; border-radius: 999px; background: var(--bar-color, var(--accent)); transition: width var(--transition); }
+  .bar-val { font-variant-numeric: tabular-nums; font-size: 0.78rem; color: var(--text); min-width: 6.5rem; text-align: right; }
+  @media (prefers-reduced-motion: reduce) { .bar-fill { transition: none; } }
+
+  .reliability { margin-top: 0.8rem; padding-top: 0.7rem; border-top: 1px solid var(--border); }
+  .rel-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(5.5rem, 1fr)); gap: 0.5rem; margin-top: 0.5rem; }
+  .rel-cell { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.4rem 0.5rem; }
+  .rel-cell b { display: block; font-size: 1rem; font-variant-numeric: tabular-nums; }
+  .rel-cell span { font-size: 0.68rem; color: var(--text-muted); }
+
+  /* ── 逐步表 ───────────────────────────────────────────────────── */
+  .table-wrap { overflow-x: auto; margin-top: 0.6rem; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.78rem; }
+  th, td { padding: 0.3rem 0.45rem; text-align: right; white-space: nowrap; border-bottom: 1px solid var(--border); }
+  th { color: var(--text-muted); font-weight: 600; font-size: 0.7rem; letter-spacing: 0.03em; position: sticky; top: 0; background: var(--bg-card); }
+  th:nth-child(1), th:nth-child(2), th:nth-child(3),
+  td:nth-child(1), td:nth-child(2), td:nth-child(3) { text-align: left; }
+  td.n { font-variant-numeric: tabular-nums; }
+  tr.step-skip td { color: var(--text-muted); }
+  tr.step-fail td { color: var(--red); }
+  .steps-scroll { max-height: 24rem; overflow-y: auto; }
+
+  .cond {
+    font-size: 0.7rem; padding: 0.05rem 0.35rem; border-radius: 999px;
+    border: 1px solid currentColor; white-space: nowrap;
+  }
+  .cond-normal { color: var(--text-muted); }
+  .cond-good   { color: var(--yellow); }
+  .cond-great  { color: var(--purple); }
+  .cond-bad    { color: var(--red); }
+
+  .delta-p { color: var(--c-progress); }
+  .delta-q { color: var(--c-quality); }
+
+  /* ── 巨集 ─────────────────────────────────────────────────────── */
+  details { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.5rem 0.7rem; margin-top: 0.7rem; }
+  details + details { margin-top: 0.5rem; }
+  summary { cursor: pointer; font-size: 0.84rem; font-weight: 600; }
+  summary::marker { color: var(--accent); }
+  textarea {
+    width: 100%; min-height: 9rem; margin-top: 0.5rem; background: var(--bg-surface);
+    color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    font-family: var(--font-mono); font-size: 0.76rem; padding: 0.5rem; resize: vertical; line-height: 1.55;
+  }
+
+  /* 巨集分段：一段一框一鈕。textarea 高度依行數自動貼合，不必捲動就能全選確認 */
+  .macro-seg + .macro-seg { margin-top: 0.9rem; padding-top: 0.9rem; border-top: 1px solid var(--border); }
+  .macro-seg-head { display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; }
+  .macro-seg-head h3 { font-size: 0.82rem; }
+  .macro-seg-head .muted-sm { margin-right: auto; }
+  .macro-seg textarea { min-height: 0; }
+
+  .kbd {
+    font-family: var(--font-mono); font-size: 0.72rem; background: var(--bg-surface);
+    border: 1px solid var(--border); border-radius: 4px; padding: 0.05rem 0.3rem;
+  }
+
+  .loading { color: var(--text-muted); text-align: center; padding: 2rem 1rem; font-size: 0.88rem; }
+
+  /* ── 結果摘要條 ─────────────────────────────────────────────────
+     結果本體移進彈窗後，排技能時還是要有即時回饋，否則每點一次都要開窗確認。
+     這條固定在畫面下緣，只在「排循環」分頁出現。
+     bottom 給 64px 是為了讓開全站的主題鈕與搜尋鈕（fixed，bottom:10px、高 44px）。 */
+  .result-bar {
+    position: fixed; left: 0.75rem; right: 0.75rem; bottom: 64px; z-index: 9998;
+    background: var(--bg-card); border: 1px solid var(--border-hover);
+    border-radius: var(--radius); box-shadow: var(--shadow-card);
+  }
+  .result-bar[hidden] { display: none; }
+  body.has-result-bar { padding-bottom: 8.5rem; }
+  .rb-inner {
+    max-width: var(--w-wide); margin: 0 auto;
+    display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0.85rem;
+  }
+  .rb-icon { font-size: 1.15rem; line-height: 1; flex: 0 0 auto; }
+  .rb-bars { display: grid; grid-template-columns: repeat(4, minmax(4.5rem, 1fr)); gap: 0.35rem 0.9rem; flex: 1 1 auto; min-width: 0; }
+  .rb-item { display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; }
+  .rb-item .rb-label { font-size: 0.68rem; color: var(--text-muted); display: flex; justify-content: space-between; gap: 0.3rem; }
+  .rb-item .rb-label b { color: var(--text); font-variant-numeric: tabular-nums; font-weight: 600; }
+  .rb-hq { flex: 0 0 auto; font-size: 0.95rem; font-weight: 700; }
+  .rb-hq small { display: block; font-size: 0.62rem; color: var(--text-muted); font-weight: 400; text-align: right; }
+  @media (max-width: 720px) {
+    .rb-bars { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .rb-inner { flex-wrap: wrap; }
+  }
+
+  /* ── 結果彈窗 ─────────────────────────────────────────────────── */
+  .modal-mask {
+    position: fixed; inset: 0; z-index: 10000; background: rgba(0,0,0,0.55);
+    display: flex; align-items: center; justify-content: center; padding: 1rem;
+  }
+  .modal-mask[hidden] { display: none; }
+  .modal {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); box-shadow: var(--shadow-card);
+    width: 100%; max-width: 46rem; max-height: 88vh; display: flex; flex-direction: column;
+  }
+  .modal-head {
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    padding: 0.75rem 1rem; border-bottom: 1px solid var(--border);
+  }
+  .modal-head h2 { margin: 0; }
+  .modal-head h2::after { content: none; }
+  .modal-body { padding: 0.9rem 1rem 1.1rem; overflow-y: auto; }
+
+  /* ── 技能說明浮層 ─────────────────────────────────────────────── */
+  .tip {
+    position: fixed; z-index: 10001; max-width: 22rem;
+    background: var(--bg-card); border: 1px solid var(--border-hover);
+    border-radius: var(--radius-sm); box-shadow: var(--shadow-card);
+    padding: 0.55rem 0.7rem; font-size: 0.78rem; line-height: 1.6;
+    pointer-events: none;
+  }
+  .tip[hidden] { display: none; }
+  .tip .tip-name { font-weight: 700; font-size: 0.85rem; }
+  .tip .tip-meta { color: var(--text-muted); font-size: 0.72rem; font-variant-numeric: tabular-nums; margin-bottom: 0.3rem; }
+  .tip .tip-desc { white-space: pre-line; color: var(--text-dim); }
+  .tip .tip-live {
+    margin-top: 0.45rem; padding-top: 0.4rem; border-top: 1px solid var(--border);
+    font-variant-numeric: tabular-nums;
+  }
+  .tip .tip-live .ok { color: var(--green); }
+  .tip .tip-live .no { color: var(--red); }
+  .tip .tip-live .combo { color: var(--accent); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="tool-header">
+  <h1 class="tool-title">🔨 製作模擬器</h1>
+  <p class="tool-subtitle">填入你的作業精度、加工精度與 CP，排一串製作技能，逐步算出進度、品質、耐久與 HQ 機率，並直接產生遊戲內巨集。</p>
+  <div class="header-divider"></div>
+</div>
+
+<main class="main" id="main">
+
+  <p class="loading" id="loading">載入配方庫中…</p>
+
+  <div id="app" hidden>
+
+    <!-- 不論在哪個分頁都看得到「現在在模擬什麼」 -->
+    <div class="context-bar" id="contextBar"></div>
+
+    <div class="tabs" role="tablist" aria-label="檢視切換">
+      <button class="tab-btn" role="tab" id="t-setup" aria-controls="p-setup" aria-selected="true" data-tab="setup">① 準備</button>
+      <button class="tab-btn" role="tab" id="t-craft" aria-controls="p-craft" aria-selected="false" data-tab="craft" tabindex="-1">② 排循環</button>
+      <button class="tab-btn" role="tab" id="t-about" aria-controls="p-about" aria-selected="false" data-tab="about" tabindex="-1">說明</button>
+    </div>
+
+    <!-- ── ① 準備：選配方與工匠數值（跟製作過程無關，做完就不用再看）── -->
+    <section class="panel" id="p-setup" role="tabpanel" aria-labelledby="t-setup" tabindex="0">
+
+      <section class="card">
+        <h2>① 選配方</h2>
+        <div class="row">
+          <div class="field" style="flex:1 1 16rem">
+            <label for="recipeSearch">搜尋成品名稱</label>
+            <input id="recipeSearch" type="search" autocomplete="off" placeholder="例如「王候的鎧甲」「亞馬遜牛排」…">
+          </div>
+          <div class="field" style="flex:0 0 7rem">
+            <label for="levelMin">最低等級</label>
+            <input id="levelMin" type="number" min="1" max="100" step="1" placeholder="不限" inputmode="numeric">
+          </div>
+        </div>
+        <div class="job-filters" id="jobFilters" role="group" aria-label="製作職業篩選"></div>
+        <ul class="results" id="searchResults" aria-label="搜尋結果"></ul>
+        <p class="muted-sm" id="searchHint" style="margin-top:0.4rem"></p>
+
+        <div id="recipeDetail" hidden style="margin-top:0.8rem;padding-top:0.8rem;border-top:1px solid var(--border)"></div>
+        <div id="hqPanel" hidden></div>
+      </section>
+
+      <section class="card">
+        <h2>② 工匠數值</h2>
+        <p class="muted-sm" style="margin-bottom:0.6rem">
+          遊戲內「人物屬性」查得到。<strong>八個職業各存一組</strong>，選配方時會自動切到該配方的職業。數值存在本機。
+        </p>
+        <div class="row" style="margin-bottom:0.6rem">
+          <div class="field" style="flex:0 0 9rem">
+            <label for="statsJob">這組數值屬於</label>
+            <select id="statsJob"></select>
+          </div>
+          <button class="btn" type="button" id="copyStatsAll" title="把目前這組數值複製到其他七個職業">套用到所有職業</button>
+          <span class="muted-sm" id="statsJobHint" role="status" aria-live="polite"></span>
+        </div>
+        <div class="stats-grid">
+          <div class="field">
+            <label for="statLevel">等級</label>
+            <input id="statLevel" type="number" min="1" max="100" step="1" value="100" inputmode="numeric">
+          </div>
+          <div class="field">
+            <label for="statCraftsmanship">作業精度</label>
+            <input id="statCraftsmanship" type="number" min="1" max="20000" step="1" value="4200" inputmode="numeric">
+          </div>
+          <div class="field">
+            <label for="statControl">加工精度</label>
+            <input id="statControl" type="number" min="1" max="20000" step="1" value="4000" inputmode="numeric">
+          </div>
+          <div class="field">
+            <label for="statCp">製作力 CP</label>
+            <input id="statCp" type="number" min="1" max="2000" step="1" value="600" inputmode="numeric">
+          </div>
+        </div>
+        <div class="toggles">
+          <label class="toggle"><input type="checkbox" id="statSpecialist"> 專家（可用專心致志、設計變動、快速改革）</label>
+          <label class="toggle"><input type="checkbox" id="statRelic"> 特殊工具：高品質時品質 ×1.75</label>
+        </div>
+      </section>
+
+      <div class="next-step">
+        <button class="btn btn-primary" type="button" id="goCraft">準備好了，去排循環 →</button>
+      </div>
+    </section>
+
+    <!-- ── ② 排循環：技能面板（左）與目前循環（右）───────────────── -->
+    <section class="panel" id="p-craft" role="tabpanel" aria-labelledby="t-craft" tabindex="0" hidden>
+      <div class="craft-grid">
+
+      <section class="card">
+        <h2>技能</h2>
+        <p class="muted-sm" style="margin-bottom:0.6rem">
+          點一下加到循環尾端。<strong>滑過或用鍵盤選到會顯示官方說明</strong>，並即時算出「接在目前循環後」的效果。
+        </p>
+        <p class="note" id="paletteNote" hidden style="margin-bottom:0.6rem;color:var(--orange)"></p>
+        <div id="palette"></div>
+      </section>
+
+      <section class="card">
+        <h2>目前循環</h2>
+        <div class="rot-toolbar">
+          <button class="btn" type="button" id="undoBtn" title="復原上一步編輯">↶ 復原</button>
+          <button class="btn" type="button" id="clearBtn">清空</button>
+          <label class="field" style="flex-direction:row;align-items:center;gap:0.4rem">
+            <span class="muted-sm">範本</span>
+            <select id="templateSelect" aria-label="套用範本循環" style="width:auto;min-width:11rem"></select>
+          </label>
+          <button class="btn" type="button" id="applyTemplate">套用</button>
+          <button class="btn" type="button" id="shareBtn" title="複製可分享的網址">🔗 複製連結</button>
+          <span class="rot-count num" id="rotCount"></span>
+        </div>
+        <ol class="rotation" id="rotation" aria-label="製作技能循環"></ol>
+
+        <details id="macroBox">
+          <summary>遊戲內巨集</summary>
+          <p class="muted-sm" style="margin-top:0.4rem">
+            遊戲一個巨集上限 15 行，超過會自動切段，<strong>每一段各自一個框、各自一顆複製鈕</strong>，
+            照順序貼到不同的巨集格。技能名為台服官方用字。
+            <label class="toggle" style="display:inline-flex;margin-left:0.5rem">
+              <input type="checkbox" id="macroNotify" checked> 加音效／提示
+            </label>
+          </p>
+          <div id="macroBoxes"></div>
+        </details>
+
+      </section>
+
+      </div>
+    </section>
+
+    <!-- ── 說明 ─────────────────────────────────────────────────── -->
+    <section class="panel" id="p-about" role="tabpanel" aria-labelledby="t-about" tabindex="0" hidden>
+      <section class="card">
+        <h2>這個模擬器怎麼算的</h2>
+        <div class="note" id="notesBody"></div>
+      </section>
+    </section>
+  </div>
+</main>
+
+<p class="sr-only" id="resultAnnounce" role="status" aria-live="polite"></p>
+
+<!-- 結果摘要條：排循環時固定在畫面下緣，點開才看完整結果 -->
+<div class="result-bar" id="resultBar" hidden>
+  <div class="rb-inner">
+    <span class="rb-icon" id="rbIcon" aria-hidden="true"></span>
+    <div class="rb-bars" id="rbBars"></div>
+    <span class="rb-hq num" id="rbHq"></span>
+    <button class="btn btn-primary" type="button" id="openResult">完整結果 ↗</button>
+  </div>
+</div>
+
+<!-- 模擬結果彈窗 -->
+<div class="modal-mask" id="resultModal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="resultModalTitle">
+    <div class="modal-head">
+      <h2 id="resultModalTitle">完整結果與隨機模擬</h2>
+      <button class="btn" type="button" id="closeResult" aria-label="關閉">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="verdict"></div>
+      <div class="bars" id="bars"></div>
+
+      <div class="reliability">
+        <div class="row" style="align-items:center;justify-content:space-between">
+          <div>
+            <h3 style="margin:0">隨機模擬</h3>
+            <p class="muted-sm">理想模式假設技能必成功、作業狀態恆為一般。這裡改成擲骰跑 200 次。</p>
+          </div>
+          <button class="btn btn-primary" type="button" id="relBtn">跑 200 次</button>
+        </div>
+        <div class="rel-grid" id="relGrid" hidden></div>
+      </div>
+
+      <p class="muted-sm" style="margin-top:0.9rem">
+        逐步數值直接顯示在「目前循環」的每一列上，不必來這裡對照。
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- 技能說明浮層（滑過／鍵盤選到時顯示） -->
+<div class="tip" id="skillTip" role="tooltip" hidden></div>
+
+<script src="../../assets/js/patch-gate.js"></script>
+<script src="craft-engine.js"></script>
+<script src="crafting-sim.js" defer></script>
+</body>
+</html>

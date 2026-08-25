@@ -809,6 +809,72 @@ ARR 2.x / HW 3.x / SB 4.x / ShB 5.x / EW 6.x / DT 7.x
 **台服未開放規則**：無台服名者保留 `#<id>` 佔位（`patch-tw-names.mjs` 靠它在升版後補名），
 **前端負責過濾**（`name` 非 `#\d+` 佔位 ＋ `PatchGate.released`）。
 
+### 2.19 craft-actions / craft-recipes（製作模擬器）
+
+製作模擬器（`tools/crafting-sim/`）專用的兩份表，由 `scripts/build-craft-sim.mjs` 一起產生。
+**刻意不擴充 `recipes.json`**：那份的 `patch` 欄是 `patch-backfill-all.mjs` 事後補的，
+重跑 `build-recipes.mjs` 會把它洗掉（§4.19 的反例），所以模擬需要的欄位另開一份。
+
+#### craft-actions.json
+
+```json
+{
+  "schema": "craft-actions", "count": 36,
+  "levelTable": { "51": 120, "…": 0, "100": 690 },
+  "hqTable": [1, 1, "…", 100],
+  "data": [
+    { "key": "basicSynthesis", "name": "製作", "nameEn": "Basic Synthesis",
+      "ids": [100001, 100015, "…"], "nameSrc": "craft", "type": "progress",
+      "level": 1, "cp": 0, "dur": 10, "eff": { "base": 100, "at": 31, "up": 120 } }
+  ]
+}
+```
+
+| 欄位 | 說明 |
+|------|------|
+| `key` | 引擎用的穩定識別字（`craft-engine.js` 的規則以此為鍵，**不要改**） |
+| `name` | **台服官方名**，取自 Teamcraft `tw/tw-craft-actions.json`／`tw/tw-actions.json`。不可簡轉繁 |
+| `ids` | 八個製作職各自的 action id（順序＝ jobId 8→15），用來查繁中名 |
+| `type` | `progress`／`quality`／`buff`／`repair`／`cp`／`other`（決定 UI 分組與配色） |
+| `level`/`cp` | 解鎖等級與基礎 CP，**由 XIVAPI CraftAction／Action sheet 校驗**（建置時不符會印警告） |
+| `eff`／`effProgress` | 效率；`{base, at, up}` 表示 `at` 級後升為 `up`。**遊戲 sheet 沒有效率**，來源為 Teamcraft 模擬器（MIT） |
+| `dur`／`duration`／`succ`／`comboCp`／`flags` | 耐久消耗／增益持續步數／成功率／連段折扣 CP／特殊規則旗標 |
+| `desc` | **台服官方說明文**（`tw/tw-craft-descriptions`／`tw-action-descriptions`），已清掉客戶端排版標籤與條件值標記；保留換行，前端以 `white-space: pre-line` 呈現在技能浮層 |
+| `levelTable` | 工匠等級 → rlvl（判斷「等級低於配方」的懲罰）；社群模擬器共用常數 |
+| `hqTable` | 品質% → HQ 機率%，索引 0–100 |
+
+#### craft-recipes.json
+
+欄位名放在 `columns`，資料列為**陣列**（13,835 筆全展開成物件太肥）；
+`rlvlTable` 是 rlvl → `[progressDivider, qualityDivider, progressModifier, qualityModifier]`。
+
+```json
+{
+  "schema": "craft-recipes", "count": 13835,
+  "columns": ["id", "itemId", "jobId", "lvl", "rlvl", "stars", "durability", "quality",
+              "progress", "hq", "expert", "conditionsFlag", "requiredQuality",
+              "craftsmanshipReq", "controlReq", "patch", "hqIngredients"],
+  "rlvlTable": { "690": [170, 150, 90, 75] },
+  "data": [[5618, 44104, 15, 100, 690, 0, 80, 12000, 6600, 1, 0, 15, 0, 0, 0, "7.0",
+            [[36077, 1, 6000]]]]
+}
+```
+
+| 欄位 | 說明 |
+|------|------|
+| `hq` / `expert` | 可否 HQ（0/1）／是否為「高難度配方」（官方用字） |
+| `conditionsFlag` | 位元遮罩，決定這份配方會出現哪些作業狀態（一般配方＝15） |
+| `requiredQuality` | 收藏品的品質門檻，0＝不是收藏品 |
+| `craftsmanshipReq`／`controlReq` | 配方本身的數值門檻，未達成遊戲不讓你做 |
+| `hqIngredients` | `[[itemId, 最大數量, 每個的品質貢獻], …]`，只收可 HQ 的材料 |
+
+**只收八大製作職（jobId 8–15）**：工會工坊（`fc*`）與無人島配方不是用製作技能做的，沒有 rlvl 與除數。
+**版本閘門不在建置期做**：`patch` 照樣輸出，前端用 `patch-gate.js` 依 `_meta.json` 的 gamePatch 過濾，
+再加上「成品在 items-lite 查無繁中名就不顯示」。
+**建置**：`node scripts/build-craft-sim.mjs`（`--offline` 用 `out_data/cache/craft-sim/` 快取，
+`--refresh` 強制重抓）。**改完引擎或這兩份表要跑 `node scripts/validate-craft-sim.mjs`**——
+它拿 Teamcraft 模擬器的官方測試案例回歸公式，並確認頁面的四套內建範本仍然做得完。
+
 ---
 
 ## 3. 前端載入慣例

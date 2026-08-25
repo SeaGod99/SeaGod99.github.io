@@ -76,6 +76,8 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 幻化配裝圖鑑的主庫健檢 | `py tools\glamour\scripts\check_maindb.py`（不改檔；msgpack 解不開會直接報出來） |
 | 重建物品分類對照表（改完 items.json） | `node scripts/build-item-categories.mjs`（`--offline` 只驗證） |
 | 重建園藝配種庫（含 216 件花色與種子取得管道） | `node scripts/build-gardening.mjs`（dry-run 預設／`--apply`／`--offline`；**直寫 minified**，看差異請看腳本摘要，別看 git diff） |
+| 重建製作模擬器資料（技能表＋模擬用配方） | `node scripts/build-craft-sim.mjs`（`--offline` 用 `out_data/cache/craft-sim` 快取／`--refresh` 強制重抓；會用 XIVAPI 校驗每個技能的 CP 與等級） |
+| 製作模擬引擎回歸驗證（**改引擎或技能表必跑**） | `node scripts/validate-craft-sim.mjs`（Teamcraft 官方測試案例 ＋ 頁面內建範本是否仍做得完） |
 | 看頁面 | 直接開檔或 `/browse`；無 dev server |
 
 **一次性／低頻腳本**（不在上表，但 repo 裡有；2026-07-29 盤點補登記，免得換機後不知道它們幹嘛）：
@@ -217,6 +219,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 - **看到收藏頁某筆「沒有取得方式」** → 先確認**它在遊戲裡是不是真的存在**。坐騎有 4 筆是 `Mount.Order === -1` 的內部列（玩家拿不到、其中 3 筆還是重複），補 sources 是補錯方向（知識庫 §4.11）。
 - **要重跑任何 `build-*.mjs` 之前** → 先確認那份 JSON 裡**每個 `kind`／區塊都有腳本會產生**。`squadron.json` 的 60 筆隊員曾經只存在於 JSON、沒有腳本產它，重跑會安靜洗掉（知識庫 §4.19）。最快的檢查＝跑完跟舊檔 diff 一次。
 - **新頁要存 localStorage** → key 一律 `ffxiv_` 開頭，否則首頁全站備份掃不到、使用者的資料備份不出去也不會有提示（知識庫 §2.3）。市場頁 2026-08-10 才從 `sgt-market-*` 補救回來，**改名要留一次性遷移、且不要刪舊 key**。
+- **改了製作模擬器（`tools/crafting-sim/`）** → 改完 `craft-engine.js` 或 `data/craft-actions.json` **必跑 `node scripts/validate-craft-sim.mjs`**（Teamcraft 官方測試案例＋內建範本，76 項）。製作公式的取整點很多，差一個 `Math.floor` 在高階配方上差幾百品質、**畫面上完全看不出來**。規則出處、兩處刻意與 Teamcraft 不同的地方、範本怎麼解出來的，見 [docs/crafting-sim.md](docs/crafting-sim.md)。
 - **要算「買 N 個多少錢」** → 一律用 `Universalis.fillQuote()` 逐筆吃掉掛單，**絕不可用「最低價 × N」**。最便宜那筆常常只有 1～3 個，乘法會系統性低估、且低估幅度隨數量放大（知識庫 §3.14）。
 - **做「幾步才做得到」的東西（園藝配種、長鏈製作）** → **要算最短路徑，不要列配方**。列一層等於把問題丟回給使用者。園藝的成本模型＝`cost(種子)=0 若可直接買／採；否則 min over 配方 of max(cost(本),cost(鄰)) + 本株作物時數`，**用定點迭代不要用遞迴 memo**（配種關係有環，遞迴會把 `Infinity` 記進 memo 害整條鏈變無解）。另外「直接可得」**不能認市場板**——它對每個種子都成立，認了整棵樹會縮成一層。機制與出處見 [docs/gardening-rules.md](docs/gardening-rules.md)。
 - **做「會一邊操作一邊看」的清單** → **排序鍵不可以是會變的值**。市場頁的製作計畫原本依金額排，重新查價／改數量／按一次「✓ 已有」就整份洗牌，剛在看的那列跑掉了；改成依**物品 ID 遞增**（順序永遠一樣，且 FFXIV 的 id 大致依資料片遞增、同階材料自然聚在一起）。**不要為此開排序選單**，但要用表頭 `title` 說明依據；欄位不可點就**不要掛 `aria-sort`**（知識庫 §3.19）。

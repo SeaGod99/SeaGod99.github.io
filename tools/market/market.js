@@ -394,6 +394,26 @@
     var txt = craftJobsText(id);
     return txt ? ' · 🔨 製作：' + esc(txt) : '';
   }
+
+  /* 「用製作模擬器試做」按鈕。
+     模擬器只收八大製作職（jobId 8–15）——工會工坊（jobId 0）與無人島（-10）不是用製作技能做的，
+     那邊沒有 rlvl 與除數，開過去只會是空畫面，所以這兩類不給按鈕。
+     配方 id 與 data/craft-recipes.json 同一個 id 空間（兩者都源自 data/recipes.json）。 */
+  function simUrl(id) {
+    if (!recipesByItem) return null;
+    var r = recipesByItem.get(id);
+    if (!r || !(r.jobId >= 8 && r.jobId <= 15)) return null;
+    if (window.PatchGate && !PatchGate.released(r.patch, gamePatch)) return null;
+    return '../crafting-sim/#r=' + r.id;
+  }
+
+  function simBtnHtml(id) {
+    var u = simUrl(id);
+    if (!u) return '';
+    return '<div class="detail-actions"><a class="btn" href="' + u + '" target="_blank" rel="noopener"' +
+      ' title="用製作模擬器試做這個配方（另開分頁）"' +
+      ' aria-label="用製作模擬器試做這個配方，另開分頁">🔨 試做 ↗</a></div>';
+  }
   // 搜尋卡用（配方載入完成前回空字串，載入後由 init 補渲染）
   function craftJobsLine(id) {
     var txt = craftJobsText(id);
@@ -784,7 +804,8 @@
       '<div class="detail-head">' +
       '<img class="item-icon" src="' + iconUrl(it) + '" alt="" onerror="this.style.visibility=\'hidden\'">' +
       '<div><div class="detail-title">' + esc(it.name) + '</div>' +
-      '<div class="detail-sub">' + esc(it.category || '') + ' · 物品 #' + it.id + ' · 採購範圍：' + esc(scopeLabel()) + '</div></div></div>';
+      '<div class="detail-sub">' + esc(it.category || '') + ' · 物品 #' + it.id + ' · 採購範圍：' + esc(scopeLabel()) + '</div></div></div>' +
+      simBtnHtml(id);
 
     if (!it.marketable) {
       box.innerHTML += '<div class="error">此物品無法在市場交易（不可上架）。</div>' + qtyAddHtml(id);
@@ -2136,6 +2157,7 @@
       '<div class="t">' + esc(it.name) + '</div>' +
       '<button class="modal-close" data-nm="close" title="關閉">✕</button></div>' +
       '<div class="detail-sub" style="margin-bottom:10px">' + esc(it.category || '') + ' · 物品 #' + it.id + ' · 採購範圍：' + esc(scopeLabel()) + (isCrystal(id) ? ' · 水晶' : '') + craftJobsHtml(id) + '</div>' +
+      simBtnHtml(id) +
       '<div id="nmMarket">' + (it.marketable ? '<div class="loading">查詢市場資料中…</div>' : '<div class="note">此物品無法在市場交易。</div>') + '</div>' +
       nmRecipeSection(id) +
       '<div class="qty-add"><span class="note">加入製作清單：</span><input type="number" id="nmQty" min="1" value="1"><button class="btn primary" data-nm="add" data-id="' + id + '">＋ 加入</button></div>';

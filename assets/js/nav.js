@@ -39,6 +39,7 @@
     { e: '🛡️', n: '配裝規劃器（外部）', u: 'https://gearing.ffsusu.com/', c: 'battle', k: 'gearing 配裝 規劃', ext: true },
     // 生活職（c:'life'）
     { e: '📊', n: '市場查價 + 比價', p: 'tools/market/', c: 'life', k: 'market 市場 查價 universalis 比價' },
+    { e: '🔨', n: '製作模擬器', p: 'tools/crafting-sim/', c: 'life', k: 'crafting sim 製作 模擬 巨集 macro 循環 rotation 手法 hq' },
     { e: '🎖️', n: '軍票變現排行', p: 'tools/gc-exchange/', c: 'life', k: 'gc seals 軍票 grand company 變現' },
     { e: '🗺️', n: '藏寶圖採集點查詢', p: 'tools/treasure-maps/', c: 'life', k: 'treasure map 藏寶圖 挖寶' },
     { e: '🌱', n: '園藝配種計算', p: 'tools/gardening/', c: 'life', k: 'gardening 園藝 配種 種植' },

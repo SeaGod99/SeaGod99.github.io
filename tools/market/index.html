@@ -48,6 +48,11 @@
     .btn.primary:hover { background: rgba(200,169,110,0.25); }
     .btn.danger:hover { color: var(--red); border-color: rgba(248,113,113,0.4); }
     .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    /* 連結型按鈕（另開分頁的「試做」）。tokens.css 的觸控保底只涵蓋 button／input，
+       不含 <a>，所以這裡自己補 min-height；語意上它是連結，不要塞 role="button"。 */
+    a.btn { display: inline-flex; align-items: center; gap: 4px; text-decoration: none; }
+    @media (pointer: coarse) { a.btn { min-height: var(--tap-min); } }
+    .detail-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: -6px 0 12px; }
     .update-time { font-size: 0.74rem; color: var(--text-muted); margin-left: auto; }
     /* 表頭的第二行小字（單位／是否含稅），避免把說明塞進儲存格 */
     .th-sub { display: block; font-weight: 400; font-size: 0.66rem; color: var(--text-muted); }

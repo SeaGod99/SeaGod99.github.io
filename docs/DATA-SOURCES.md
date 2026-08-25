@@ -18,6 +18,9 @@
 | **Teamcraft treasures** | `raw.githubusercontent.com/…/libs/data/src/lib/json/treasures.json` | 藏寶圖（陳舊的地圖）挖寶座標：`{ item, map(Map row id), coords{x,y}, partySize }` | 建 `treasure-maps.json`；名稱/圖示反查 items.json、地區/資料片反查 maps.json。腳本 [`scripts/build-treasure-maps.mjs`](../scripts/build-treasure-maps.mjs) |
 | **Teamcraft seeds** | `raw.githubusercontent.com/…/libs/data/src/lib/json/seeds.json` | 園藝：`{productId:{seedItemId, duration, crossBreeds[{baseSeed, adjacentSeed}]}}` | 建 `gardening.json`。腳本 [`scripts/build-gardening.mjs`](../scripts/build-gardening.mjs)（`--offline` 用 `out_data/cache/tc-seeds.json`）。**上游有一處錯**：紅色向日葵的種子指到 `4817 葵花籽`（食材、2.0），正解 `43962 向日葵種子`（英文同名 Sunflower Seeds）→ 腳本內 `SEED_OVERRIDE` 修正。**遊戲機制（配種判定、土壤、油粕花色）不在任何 datamine 裡**，出處見 [`docs/gardening-rules.md`](gardening-rules.md) |
 | **XIVAPI v2** | `https://v2.xivapi.com` | 物品/NPC/副本等 sheet（**row 不含 patch 欄**） | patch 一律走 Teamcraft，不靠 XIVAPI |
+| **Teamcraft 台服技能名** | `raw.githubusercontent.com/…/libs/data/src/lib/json/tw/tw-craft-actions.json`（433 筆）與 `tw/tw-actions.json` | 製作技能的台服官方名（製作、加工、比爾格的祝福、崇敬、闊步、改革、掌握…） | 建 [`data/craft-actions.json`](../data/craft-actions.json)。**id 要照 Teamcraft 模擬器的技能 id 取**——同一份表裡混著 7.0 已移除的舊技能（注視製作／專精絕技…），照名稱猜會取到廢技能。腳本 [`scripts/build-craft-sim.mjs`](../scripts/build-craft-sim.mjs) |
+| **Teamcraft 台服說明文** | `…/tw/tw-craft-descriptions.json`、`…/tw/tw-action-descriptions.json`、`…/tw/tw-item-descriptions.json` | 技能／道具的台服說明全文 | **挖官方術語的地方**：作業狀態「高品質／最高品質」在秘訣與集中加工的說明裡，「結實／安定／高效／長持續／大進展」在素材奇跡的道具說明裡，「內靜」「工匠的良機」「高難度配方」也是這樣確認的。查不到的詞就是台服沒有對應字串，**不要自己翻** |
+| **XIVAPI CraftAction／Action** | `v2.xivapi.com/api/sheet/CraftAction`、`/sheet/Action` | 製作技能的 `Cost`（CP）、`ClassJobLevel`、英文名 | 校驗用：`build-craft-sim.mjs` 逐項比對硬寫的 CP／等級，不符會印警告（目前 36/36 相符）。**效率不在 sheet 裡**，只能用社群常數 |
 | out_data/cfc-content.json | 本機 | ContentFinderCondition id → InstanceContent id | dungeons patch 橋接（dungeons.id 是 CFC，Teamcraft instancecontent 是 InstanceContent）。**幻化配裝圖鑑也靠它**把取得方式裡的副本 id 解成台服官方名（裝備類 99.95% 解得出來） |
 | **Teamcraft 台服分類名** | `raw.githubusercontent.com/…/libs/data/src/lib/json/tw/tw-item-ui-categories.json` | ItemUICategory id → 台服繁中分類名 | 建 [`data/item-categories.json`](../data/item-categories.json)（112 筆）。與 `build-items.mjs` 寫進 `items.json` 的 `category` 同源，所以「分類名 → id」保證對得起來。腳本 [`scripts/build-item-categories.mjs`](../scripts/build-item-categories.mjs) |
 | **ffxiv.consolegameswiki.com** | `/wiki/Contemporary_Warfare:_{Defense,Offense,Magicks}` | 小隊隊員轉職：哪本教材能換成哪些職業、售價與軍銜門檻 | 人工查證，非 API。三本各 3000 軍票、需一等軍銜；守勢→劍術師/斧術師、攻勢→格鬥家/槍術師/弓箭手/雙劍師、魔法→幻術師/咒術師/秘術師。**道具繁中名一律查 `data/items.json`（15772–15774），不要簡轉繁**。寫進 `squadron.json` 的 `kind:"classChangeBook"` |
@@ -77,7 +80,8 @@ ffxivcollect 的 source `text` 是英文，無簡中可 OpenCC，故 detail 採�
 3. 補取得來源 → 重跑 `backfill-sources.mjs`（只補新空缺）。青魔特殊來源 → 改 `patch-blue-magic-totems.mjs` 的 `FIX` 表。
 4. 補新開放條目的繁中名 → `node scripts/patch-tw-names.mjs --apply`（魚／園藝／鳥鞍／隨從，來源＝items.json）。
 5. 重建衍生檔（`build-items-lite`／`build-items-market`／`build-item-categories`／`build-market-sources`）→ `minify-data --apply` → `sync-meta --apply`。
-6. 跑 `node scripts/validate-data.mjs` 驗證（count 一致、無粗略 patch、覆蓋率），改過 `assets/` 再跑 `bump-sw-version.mjs`，commit。
+6. 製作模擬器的兩份表跟著 `recipes.json` 走 → `node scripts/build-craft-sim.mjs` → **`node scripts/validate-craft-sim.mjs`**（它會順便用 XIVAPI 校驗技能 CP／等級，官方調過技能就會在這裡報出來）。
+7. 跑 `node scripts/validate-data.mjs` 驗證（count 一致、無粗略 patch、覆蓋率），改過 `assets/` 再跑 `bump-sw-version.mjs`，commit。
 
 ---
 
