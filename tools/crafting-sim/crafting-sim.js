@@ -1,12 +1,16 @@
-/* 製作模擬器 — 畫面與互動（規則在 craft-engine.js）
+/* 製作模擬器 — 畫面與互動（規則在 craft-engine.js，自動求解在 craft-solver.js）
  *
  * 資料：
- *   data/craft-actions.json   技能表（繁中名／CP／等級／效率）＋等級對照＋HQ 對照
- *   data/craft-recipes.json   配方（欄位名在 columns，數值壓成陣列列）＋ rlvl 除數表
- *   data/items-lite.json      id → 繁中名（成品與材料名稱）
- *   data/_meta.json           gamePatch（台服版本閘門，走共用的 patch-gate.js）
+ *   data/craft-actions.json      技能表（繁中名／CP／等級／效率）＋等級對照＋HQ 對照
+ *   data/craft-recipes.json      配方（欄位名在 columns，數值壓成陣列列）＋ rlvl 除數表
+ *   data/craft-consumables.json  料理／藥品的加成（百分比＋上限）
+ *   data/items-lite.json         id → 繁中名（成品與材料名稱）
+ *   data/_meta.json              gamePatch（台服版本閘門，走共用的 patch-gate.js）
  *
  * 台服未開放的配方一律不顯示：patch > gamePatch，或成品在 items-lite 查無繁中名。
+ *
+ * ⚠ 引擎吃的是「吃補後」的數值 S.eff，不是使用者填的 S.stats。凡是要交給
+ *   CraftEngine／CraftSolver 的地方一律傳 S.eff，混用會讓面板與模擬各說各話。
  */
 (function () {
   "use strict";
@@ -17,6 +21,8 @@
 
   var LS_STATS = "ffxiv_craftsim_stats";
   var LS_LAST = "ffxiv_craftsim_last";
+  var LS_ROTS = "ffxiv_craftsim_rotations";   // 我的循環（具名儲存）
+  var ROTS_MAX = 60;
 
   /* 內建範本。每一套都用 craft-engine 在「驗證條件」那組數值與配方上實跑過，
      結果記在 note 裡；套到別的配方當然可能做不完，模擬結果會直接告訴使用者。
@@ -64,8 +70,14 @@
     tab: "setup",         // setup（準備）｜craft（排循環）｜about（說明）
     job: 0,               // 配方搜尋的職業篩選，0 = 全部
     statsJob: 15,         // 目前這組數值屬於哪一職（選配方時會自動跟著換）
-    jobStats: {},         // jobId → 數值
-    stats: null,          // ＝ jobStats[statsJob]，引擎直接吃這個參考
+    jobStats: {},         // jobId → 數值（**沒吃補的原始值**）
+    stats: null,          // ＝ jobStats[statsJob]
+    eff: null,            // 吃補後的數值＝交給引擎的那份（見檔頭警告）
+    food: null,           // 料理的 itemId，null＝沒吃
+    foodHq: true,
+    medicine: null,
+    medHq: true,
+    rots: [],             // 我的循環 [{name, recipeId, recipeName, rotation, at}]
   };
 
   /* ── 載入 ─────────────────────────────────────────────────────── */
@@ -82,11 +94,14 @@
     loadJson("../../data/craft-recipes.json"),
     loadJson("../../data/items-lite.json"),
     window.PatchGate ? PatchGate.loadGamePatch("../../data/_meta.json") : Promise.resolve("7.21"),
+    // 料理／藥品缺了不該讓整頁掛掉——它是加分項，不是必要資料
+    loadJson("../../data/craft-consumables.json").catch(function () { return { data: [] }; }),
   ]).then(function (res) {
     DB.actions = res[0];
     DB.recipes = res[1];
     DB.names = new Map(res[2].data);
     DB.gamePatch = res[3];
+    DB.consumables = res[4].data || [];
     CraftEngine.init(DB.actions);
 
     DB.actionList = DB.actions.data;
@@ -131,6 +146,8 @@
     restoreStats();
     renderStatsJob();
     fillStatsInputs();
+    renderConsumables();
+    restoreRotations();
     renderJobFilters();
     renderPalette();
     renderTemplates();
@@ -174,6 +191,23 @@
     });
   }
 
+  /* 兩欄各自捲動時，欄位高度＝視窗高扣掉頁首。頁首高度會隨視窗寬度換行而變，
+     所以量出來寫進 CSS 變數，不寫死。窄螢幕的 CSS 不吃這個值，設了也無害。 */
+  function sizeCraftPanes() {
+    var g = document.querySelector(".craft-grid");
+    if (!g || g.offsetParent === null) return;
+    // 先拿掉上次算的值再量：要量的是「沒有被限制高度時」的自然版面，
+    // 否則會拿上一輪的結果當基準，收斂不到（實測會留 56px 捲動）
+    g.style.removeProperty("--craft-top");
+    g.style.removeProperty("--craft-reserve");
+    var top = Math.round(g.getBoundingClientRect().top + window.pageYOffset);
+    g.style.setProperty("--craft-top", top + "px");
+    /* 只留一點邊，**不替頁尾留位**。原本把頁尾（約 220px）也算進去，結果整頁雖然不捲，
+       兩欄卻只剩一百多 px、看得到一兩列——本末倒置。頁尾捲下去就看得到，
+       工作區才是這個分頁的主體。 */
+    g.style.setProperty("--craft-reserve", "14px");
+  }
+
   function showTab(tab) {
     S.tab = tab;
     document.querySelectorAll(".tab-btn").forEach(function (b) {
@@ -186,6 +220,9 @@
     });
     hideTip();
     showResultBar(tab === "craft" && !!S.recipe);
+    // 工作分頁把頁首收窄，高度讓給兩欄（見 index.html 的 .craft-focus）
+    document.body.classList.toggle("craft-focus", tab === "craft");
+    sizeCraftPanes();
     writeHash();
   }
 
@@ -205,10 +242,16 @@
         if (raw.jobs[id]) Object.assign(S.jobStats[id], raw.jobs[id]);
       });
       if (JOB_IDS.indexOf(raw.lastJob) >= 0) S.statsJob = raw.lastJob;
+      // v3 起多存料理／藥品。八職共用一組——同一個人不會為了換職業換料理。
+      if (raw.food != null) S.food = raw.food;
+      if (raw.medicine != null) S.medicine = raw.medicine;
+      if (raw.foodHq != null) S.foodHq = !!raw.foodHq;
+      if (raw.medHq != null) S.medHq = !!raw.medHq;
     } else if (raw && raw.level != null) {
       JOB_IDS.forEach(function (id) { Object.assign(S.jobStats[id], raw); });
     }
     S.stats = S.jobStats[S.statsJob];
+    S.eff = S.stats;
   }
 
   function renderStatsJob() {
@@ -232,6 +275,9 @@
     $("statSpecialist").checked = !!s.specialist;
     $("statRelic").checked = !!s.relicTool;
     $("statsJob").value = String(S.statsJob);
+    // HQ 勾選會影響下拉的文字（加成數字不同），所以要在 renderConsumables 之前設好
+    $("foodHq").checked = !!S.foodHq;
+    $("medHq").checked = !!S.medHq;
   }
 
   // auto=true 代表是「選了配方所以自動切」，要講出來——數值整排跳掉卻沒說明會像 bug
@@ -259,13 +305,120 @@
     S.stats.cp = n("statCp", 1, 2000, 180);
     S.stats.specialist = $("statSpecialist").checked;
     S.stats.relicTool = $("statRelic").checked;
+    S.food = $("foodSelect").value ? parseInt($("foodSelect").value, 10) : null;
+    S.medicine = $("medSelect").value ? parseInt($("medSelect").value, 10) : null;
+    S.foodHq = $("foodHq").checked;
+    S.medHq = $("medHq").checked;
+    S.eff = effStats();
     saveStats();
   }
 
   function saveStats() {
     try {
-      localStorage.setItem(LS_STATS, JSON.stringify({ v: 2, lastJob: S.statsJob, jobs: S.jobStats }));
+      localStorage.setItem(LS_STATS, JSON.stringify({
+        v: 3, lastJob: S.statsJob, jobs: S.jobStats,
+        food: S.food, foodHq: S.foodHq, medicine: S.medicine, medHq: S.medHq,
+      }));
     } catch (e) { /* 私密視窗等：僅本次有效 */ }
+  }
+
+  /* ── 料理／藥品 ───────────────────────────────────────────────────
+     加成是「基礎值 × 百分比，但不超過上限」，而且**料理與藥品各自從基礎值算**再相加
+     （不是疊加後再算），跟遊戲一致。上限那一段最容易被忽略：作業 4200 吃 +5%／上限 150
+     只會加 150 而不是 210。 */
+
+  function consumById(id) {
+    for (var i = 0; i < DB.consumables.length; i++) if (DB.consumables[i].id === id) return DB.consumables[i];
+    return null;
+  }
+
+  // b＝[是否百分比, NQ 值, NQ 上限, HQ 值, HQ 上限]
+  function bonusValue(b, hq, baseStat) {
+    if (!b) return 0;
+    var val = hq ? b[3] : b[1], max = hq ? b[4] : b[2];
+    var raw = b[0] ? Math.floor(baseStat * val / 100) : val;
+    return Math.min(raw, max);
+  }
+
+  function effStats() {
+    var s = S.stats;
+    var out = {
+      level: s.level, craftsmanship: s.craftsmanship, control: s.control, cp: s.cp,
+      specialist: s.specialist, relicTool: s.relicTool,
+    };
+    [[consumById(S.food), S.foodHq], [consumById(S.medicine), S.medHq]].forEach(function (pair) {
+      var c = pair[0];
+      if (!c) return;
+      out.craftsmanship += bonusValue(c.bonuses.cms, pair[1], s.craftsmanship);
+      out.control += bonusValue(c.bonuses.ctl, pair[1], s.control);
+      out.cp += bonusValue(c.bonuses.cp, pair[1], s.cp);
+    });
+    return out;
+  }
+
+  // 下拉的字要看得出「這個東西加什麼、加多少」，否則等於要人先去查一次
+  function consumLabel(c, hq) {
+    var parts = [];
+    [["cms", "作業"], ["ctl", "加工"], ["cp", "CP"]].forEach(function (p) {
+      var b = c.bonuses[p[0]];
+      if (!b) return;
+      var val = hq ? b[3] : b[1], max = hq ? b[4] : b[2];
+      parts.push(p[1] + (b[0] ? " +" + val + "%（上限 " + max + "）" : " +" + val));
+    });
+    return c.name + " — " + parts.join("、");
+  }
+
+  function renderConsumables() {
+    [["foodSelect", "food", "foodHq", "沒吃料理"], ["medSelect", "medicine", "medHq", "沒吃藥品"]]
+      .forEach(function (spec) {
+        var sel = $(spec[0]);
+        var kind = spec[1] === "food" ? "food" : "medicine";
+        var hq = $(spec[2]).checked;
+        var keep = S[spec[1]];
+        sel.innerHTML = "";
+        var none = document.createElement("option");
+        none.value = "";
+        none.textContent = spec[3];
+        sel.appendChild(none);
+        DB.consumables.forEach(function (c) {
+          if (c.kind !== kind) return;
+          if (window.PatchGate && !PatchGate.released(c.patch, DB.gamePatch)) return;
+          var o = document.createElement("option");
+          o.value = String(c.id);
+          o.textContent = consumLabel(c, hq);
+          sel.appendChild(o);
+        });
+        sel.value = keep != null ? String(keep) : "";
+        if (sel.value === "" && keep != null) S[spec[1]] = null;   // 台服還沒開放的就當沒選
+      });
+    if (!DB.consumables.length) {
+      $("effLine").textContent = "（載不到料理／藥品資料，這次先當作沒吃補）";
+    }
+    syncHqToggles();
+  }
+
+  // 沒選東西時 HQ 勾選框不該還能按——看起來可按卻沒作用是最容易誤導人的狀態
+  function syncHqToggles() {
+    [["foodSelect", "foodHq"], ["medSelect", "medHq"]].forEach(function (p) {
+      var off = !$(p[0]).value;
+      $(p[1]).disabled = off;
+      $(p[1]).closest(".toggle").style.opacity = off ? "0.5" : "";
+    });
+  }
+
+  /* 加成後的實際數值。只列有變的那幾項——沒變的也印一次會讓人以為加成沒生效。
+     刻意不掛 aria-live：上面四格是邊打邊算的，掛了會每按一鍵就念一次。 */
+  function renderEffLine() {
+    if (!DB.consumables.length) return;
+    var s = S.stats, e = S.eff, parts = [];
+    [["craftsmanship", "作業"], ["control", "加工"], ["cp", "CP"]].forEach(function (p) {
+      if (e[p[0]] !== s[p[0]]) {
+        parts.push(p[1] + " " + s[p[0]] + " → <b>" + e[p[0]] + "</b>（+" + (e[p[0]] - s[p[0]]) + "）");
+      }
+    });
+    $("effLine").innerHTML = parts.length
+      ? "吃補後：" + parts.join("　／　")
+      : "沒吃補，模擬用的就是上面填的數值。";
   }
 
   function sameStats(a, b) {
@@ -431,10 +584,10 @@
     if (r.expert) tags.push('<span class="tag tag-warn">高難度配方</span>');
     if (!r.hq) tags.push('<span class="tag">不可 HQ</span>');
     if (r.requiredQuality) tags.push('<span class="tag num">收藏品門檻 ' + r.requiredQuality + "</span>");
-    if (r.craftsmanshipReq && S.stats.craftsmanship < r.craftsmanshipReq) {
+    if (r.craftsmanshipReq && S.eff.craftsmanship < r.craftsmanshipReq) {
       tags.push('<span class="tag tag-warn num">需作業精度 ' + r.craftsmanshipReq + "</span>");
     }
-    if (r.controlReq && S.stats.control < r.controlReq) {
+    if (r.controlReq && S.eff.control < r.controlReq) {
       tags.push('<span class="tag tag-warn num">需加工精度 ' + r.controlReq + "</span>");
     }
 
@@ -486,18 +639,34 @@
 
   /* ── 技能面板 ─────────────────────────────────────────────────── */
 
+  var firstStepOnly = function (a) { return (a.flags || []).indexOf("firstStep") >= 0; };
+
+  /* 「只能第一步用」自成一組排在最上面：這三招（堅信／閒靜／工匠的神速技巧）
+     一旦動了第二步就再也用不到，是排循環時第一個要決定的事。
+     混在作業／加工組裡的話，等使用者滑到它們時通常已經來不及了。
+     其餘各組都要把它們排除，否則同一招會出現兩次。 */
   var GROUPS = [
-    { title: "作業（推進度）", match: function (a) { return a.type === "progress"; } },
-    { title: "加工（提品質）", match: function (a) { return a.type === "quality"; } },
-    { title: "增益與修復", match: function (a) { return a.type === "buff" || a.type === "repair"; } },
-    { title: "其他", match: function (a) { return a.type === "other" || a.type === "cp"; } },
+    { title: "開場（只能第一步用）", match: firstStepOnly },
+    { title: "作業（推進度）", match: function (a) { return a.type === "progress" && !firstStepOnly(a); } },
+    { title: "加工（提品質）", match: function (a) { return a.type === "quality" && !firstStepOnly(a); } },
+    { title: "增益與修復", match: function (a) { return (a.type === "buff" || a.type === "repair") && !firstStepOnly(a); } },
+    { title: "其他", match: function (a) { return (a.type === "other" || a.type === "cp") && !firstStepOnly(a); } },
   ];
+
+  /* 冒進**不進技能面板**：遊戲裡它是直接取代倉促那顆按鈕的升級技，玩家不會、
+     也不能分別按它們。循環裡只放倉促，引擎會在「工匠的良機」生效時自動換成冒進
+     （見 craft-engine.js 檔頭第 3 點）——連放兩個倉促、第一個成功了，
+     第二個就發動冒進，跟遊戲一致。列成兩顆只會讓人以為要自己安排順序。 */
+  var HIDDEN_IN_PALETTE = ["daringTouch"];
+  var UPGRADES = { hastyTouch: "daringTouch" };   // 誰會被升級成誰（顯示用）
 
   function renderPalette() {
     var wrap = $("palette");
     wrap.innerHTML = "";
     GROUPS.forEach(function (g) {
-      var list = DB.actionList.filter(g.match).sort(function (a, b) { return a.level - b.level; });
+      var list = DB.actionList
+        .filter(function (a) { return g.match(a) && HIDDEN_IN_PALETTE.indexOf(a.key) < 0; })
+        .sort(function (a, b) { return a.level - b.level; });
       if (!list.length) return;
       var box = document.createElement("div");
       box.className = "palette-group";
@@ -519,6 +688,10 @@
     if (a.duration) meta.push(a.duration + " 步");
     if (a.dur) meta.push("耐久 " + a.dur);
     if (a.succ != null && a.succ < 100) meta.push("成功 " + a.succ + "%");
+    // 升級技不另外列一顆，改在原技能上寫清楚它會變成什麼
+    if (UPGRADES[a.key] && DB.byKey[UPGRADES[a.key]]) {
+      meta.push("成功後下一發自動升級為" + DB.byKey[UPGRADES[a.key]].name);
+    }
     return meta.join(" · ");
   }
 
@@ -546,25 +719,30 @@
      儉約衝突、一次限用、首步限定都算進去，原因直接寫在按鈕上。
      仍然可點：使用者常會先排完再回頭補 CP 或調順序，直接 disabled 會讓他們卡住，
      而且 disabled 的按鈕在觸控裝置上連原因都看不到。 */
+  /* ended＝製作已經有結果（做完或失敗）。此時**整排技能直接停用**：
+     遊戲裡製作結束後也按不了技能，留著能點只會讓人排出一串不會發生的步驟。
+     停用的原因寫在卡片上方那一句，不逐顆重複標（那只是噪音）。 */
   function refreshPalette(preview, ended) {
-    // 製作已經結束時，每顆按鈕都標「不可用」只是噪音——改成整張卡一句話
     $("paletteNote").textContent = ended
-      ? "這串循環已經有結果了，再接技能不會生效。要繼續試就先刪掉後面幾步。"
+      ? "這串製作已經結束了，技能已停用。要繼續試就先刪掉後面幾步。"
       : "";
     $("paletteNote").hidden = !ended;
 
     document.querySelectorAll(".skill").forEach(function (b) {
       var a = DB.byKey[b.dataset.key];
       var p = preview && preview[a.key];
+      b.disabled = !!ended;
 
       var lockedFor = null;
-      if (a.level > S.stats.level) lockedFor = "🔒 Lv" + a.level;
-      else if ((a.flags || []).indexOf("specialist") >= 0 && !S.stats.specialist) lockedFor = "🔒 需專家";
+      if (a.level > S.eff.level) lockedFor = "🔒 Lv" + a.level;
+      else if ((a.flags || []).indexOf("specialist") >= 0 && !S.eff.specialist) lockedFor = "🔒 需專家";
 
       var blocked = !ended && !!(p && !p.usable);
+      var upgraded = !ended && !!(p && p.usable && p.key && p.key !== a.key);
       var flag = "";
       if (lockedFor) flag = lockedFor;
       else if (blocked) flag = "⚠ " + p.reason;
+      else if (upgraded) flag = "⤴ 這一發會是" + p.name;
       else if (!ended && p && p.combo) flag = "▶ 連段中 " + p.cpCost + "CP";
 
       b.classList.toggle("locked", !!lockedFor);
@@ -585,15 +763,20 @@
     var live = "";
     if (!S.recipe) {
       live = '<span class="no">先選一個配方才能試算</span>';
-    } else if (a.level > S.stats.level) {
+    } else if (a.level > S.eff.level) {
       live = '<span class="no">等級不足，需 ' + a.level + " 級</span>";
     } else if (p && !p.usable) {
       live = '<span class="no">接在目前循環後：不可用（' + esc(p.reason) + "）</span>";
     } else if (p) {
+      // 增量同樣封頂：超出上限的部分在遊戲裡不會進條，寫出來只會讓人以為多賺了
+      var base = lastResult || { progress: 0, quality: 0 };
+      var dp = capP(base.progress + p.addedProgress) - capP(base.progress);
+      var dq = capQ(base.quality + p.addedQuality) - capQ(base.quality);
       var bits = [];
+      if (p.key && p.key !== a.key) bits.push('<span class="combo">這一發會是' + esc(p.name) + "</span>");
       if (p.combo) bits.push('<span class="combo">連段成立</span>');
-      if (p.addedProgress) bits.push('作業 <span class="ok">+' + p.addedProgress + "</span>");
-      if (p.addedQuality) bits.push('品質 <span class="ok">+' + p.addedQuality + "</span>");
+      if (dp) bits.push('作業 <span class="ok">+' + dp + "</span>");
+      if (dq) bits.push('品質 <span class="ok">+' + dq + "</span>");
       bits.push("CP −" + p.cpCost);
       bits.push("耐久 −" + p.durabilityCost);
       if (p.finishes) bits.push('<span class="ok">這一招就做完了</span>');
@@ -669,6 +852,13 @@
   var lastResult = null;
   var lastPreview = null;   // 技能 key → 接在目前循環後的試算（引擎的 previewNext）
 
+  /* 畫面上的作業／品質**封頂在配方的上限**，跟遊戲一致：進度條滿了就是滿了，
+     不會出現「作業 1483 / 750」。封頂刻意做在這裡而不是引擎裡——引擎要跟
+     Teamcraft 的官方測試案例逐值對得上，那些期望值是未封頂的原始數字
+     （見 craft-engine.js 檔頭）。 */
+  function capP(v) { return S.recipe ? Math.min(v, S.recipe.progress) : v; }
+  function capQ(v) { return S.recipe ? Math.min(v, S.recipe.quality) : v; }
+
   /* 循環清單＝逐步明細。每一列就是那一步，右邊是**做到這一步當下**的數值，
      跟下緣結果條同一套讀法；不另外開一張逐步表，免得使用者要在兩處對「第幾步」。 */
   function renderRotation(res) {
@@ -691,12 +881,14 @@
         '<span class="rot-cell">品質<br><small>累計</small></span>' +
         '<span class="rot-cell">耐久</span><span class="rot-cell">CP</span>' +
       "</span>" +
-      "<span>狀態</span><span class=\"rot-ctl\"></span>";
+      '<span class="rot-ctl"></span>';
     ol.appendChild(head);
 
     S.rotation.forEach(function (key, i) {
-      var a = DB.byKey[key];
       var step = res && res.steps[i];
+      // 倉促會在工匠的良機下解析成冒進——列出實際發動的那一個，不是使用者點的那一個
+      var a = DB.byKey[(step && step.key) || key];
+      var upgraded = !!(step && step.key && step.key !== key);
       var li = document.createElement("li");
       li.className = "rot-row" + (step && step.skipped ? " invalid" : "");
       li.dataset.type = a.type;
@@ -709,21 +901,28 @@
       } else if (step.skipped) {
         cells = '<span class="rot-cells"><span class="rot-why">' + esc(step.failCause) + "</span></span>";
       } else {
-        var cond = CraftEngine.CONDITIONS[step.state] || CraftEngine.CONDITIONS[1];
+        // 累計與增量一起封頂，兩邊才對得起來（最後一招常常超出上限一大截）
+        var dp = capP(step.after.progress) - capP(step.after.progress - step.addedProgress);
+        var dq = capQ(step.after.quality) - capQ(step.after.quality - step.addedQuality);
         cells = '<span class="rot-cells">' +
-          '<span class="rot-cell rot-delta-p">' + (step.addedProgress ? "+" + step.addedProgress : "—") +
-            "<br><small>" + step.after.progress + "</small></span>" +
-          '<span class="rot-cell rot-delta-q">' + (step.addedQuality ? "+" + step.addedQuality : "—") +
-            "<br><small>" + step.after.quality + "</small></span>" +
+          '<span class="rot-cell rot-delta-p">' + (dp ? "+" + dp : "—") +
+            "<br><small>" + capP(step.after.progress) + "</small></span>" +
+          '<span class="rot-cell rot-delta-q">' + (dq ? "+" + dq : "—") +
+            "<br><small>" + capQ(step.after.quality) + "</small></span>" +
           '<span class="rot-cell">' + step.after.durability + "</span>" +
           '<span class="rot-cell">' + step.after.cp + "</span>" +
-          "</span>" +
-          '<span class="cond cond-' + cond.tone + '" title="' + esc(cond.desc) + '">' + esc(cond.name) + "</span>";
+          "</span>";
+        /* 刻意不列「作業狀態」欄：這份逐步明細一律用理想模式算（linear），
+           每一列的狀態必定是「一般」——一整欄相同的值只是佔位置。
+           會擲球色的是彈窗裡的隨機模擬，那裡才有意義。假設寫在清單下方一句話。 */
       }
 
       li.innerHTML =
         '<span class="rot-idx">' + (i + 1) + "</span>" +
-        '<span class="rot-name">' + esc(a.name) + (step && step.combo ? " ▶" : "") + "</span>" +
+        '<span class="rot-name"' + (upgraded ? ' title="' + esc(DB.byKey[key].name) + '成功了，這一發自動升級為' + esc(a.name) + '"' : "") + ">" +
+          (upgraded ? '<span class="rot-up" aria-hidden="true">⤴</span>' : "") +
+          // 升級那一發已經有 ⤴，再標一個連段 ▶ 是同一件事講兩次
+          esc(a.name) + (!upgraded && step && step.combo ? " ▶" : "") + "</span>" +
         cells +
         '<span class="rot-ctl">' +
           '<button type="button" class="mv-left" aria-label="把第 ' + (i + 1) + " 步的" + esc(a.name) + '往前移">←</button>' +
@@ -779,6 +978,7 @@
 
   function simulate() {
     readStats();
+    renderEffLine();
     updateHqSum();
     renderRecipeDetail();
     renderContextBar();
@@ -796,7 +996,7 @@
 
     var cfg = {
       recipe: S.recipe,
-      stats: S.stats,
+      stats: S.eff,
       rotation: S.rotation,
       linear: true,
       startingQuality: CraftEngine.startingQualityFrom(S.recipe, S.hqCounts),
@@ -816,8 +1016,8 @@
     var skipped = res.steps.filter(function (s) { return s.skipped; }).length;
     $("resultAnnounce").textContent = S.rotation.length
       ? STATUS[res.status].label + "。" + (res.failCause ? res.failCause + "。" : "") +
-        "作業 " + res.progress + " / " + S.recipe.progress +
-        "，品質 " + res.quality + "，HQ 機率 " + res.hqPercent + "%，共 " + res.usedSteps + " 步。" +
+        "作業 " + capP(res.progress) + " / " + S.recipe.progress +
+        "，品質 " + capQ(res.quality) + "，HQ 機率 " + res.hqPercent + "%，共 " + res.usedSteps + " 步。" +
         (skipped ? "有 " + skipped + " 步沒用到。" : "")
       : "";
   }
@@ -874,10 +1074,10 @@
 
     $("rbIcon").textContent = S.rotation.length ? (STATUS[res.status] || STATUS.ongoing).icon : "🔨";
     $("rbBars").innerHTML = [
-      mini("作業", res.progress, S.recipe.progress, "var(--c-progress)"),
-      mini("品質", res.quality, S.recipe.quality, "var(--c-quality)"),
+      mini("作業", capP(res.progress), S.recipe.progress, "var(--c-progress)"),
+      mini("品質", capQ(res.quality), S.recipe.quality, "var(--c-quality)"),
       mini("耐久", res.durability, S.recipe.durability, "var(--c-dur)"),
-      mini("CP", res.cp, S.stats.cp, "var(--c-cp)"),
+      mini("CP", res.cp, S.eff.cp, "var(--c-cp)"),
     ].join("");
     $("rbHq").innerHTML = S.recipe.hq
       ? res.hqPercent + "%<small>HQ 機率</small>"
@@ -899,22 +1099,25 @@
       el.innerHTML = '<span class="cb-empty">尚未選配方——到「① 準備」搜尋成品名稱。</span>';
       return;
     }
-    var r = S.recipe, s = S.stats;
+    // 這裡列的是**實際拿去模擬的數值**（吃補後），否則使用者會拿情境列的數字去對結果卻對不上
+    var r = S.recipe, s = S.eff, boosted = s.craftsmanship !== S.stats.craftsmanship ||
+      s.control !== S.stats.control || s.cp !== S.stats.cp;
     el.innerHTML =
       '<span class="cb-name">' + esc(r.name) + "</span>" +
       '<span class="cb-meta">' + esc(r.jobName) + " Lv" + r.lvl + (r.stars ? " " + "★".repeat(r.stars) : "") + "</span>" +
       '<span class="cb-meta">作業 ' + r.progress + " ／ 品質 " + r.quality + " ／ 耐久 " + r.durability + "</span>" +
       '<span class="cb-meta">你的' + esc(JOBS[S.statsJob]) + "：" + s.level + " 級 · 作業 " + s.craftsmanship +
-        " · 加工 " + s.control + " · CP " + s.cp + (s.specialist ? " · 專家" : "") + "</span>";
+        " · 加工 " + s.control + " · CP " + s.cp + (s.specialist ? " · 專家" : "") +
+        (boosted ? " · 已含料理／藥品" : "") + "</span>";
   }
 
   function renderBars(res) {
     var r = S.recipe;
     $("bars").innerHTML = [
-      bar("作業", res.progress, r.progress, "var(--c-progress)"),
-      bar("品質", res.quality, r.quality, "var(--c-quality)"),
+      bar("作業", capP(res.progress), r.progress, "var(--c-progress)"),
+      bar("品質", capQ(res.quality), r.quality, "var(--c-quality)"),
       bar("耐久", res.durability, r.durability, "var(--c-dur)"),
-      bar("CP", res.cp, S.stats.cp, "var(--c-cp)"),
+      bar("CP", res.cp, S.eff.cp, "var(--c-cp)"),
     ].join("");
 
     function bar(label, v, max, color) {
@@ -932,23 +1135,99 @@
   function runReliability() {
     if (!S.recipe || !S.rotation.length) return;
     var rel = CraftEngine.reliability({
-      recipe: S.recipe, stats: S.stats, rotation: S.rotation,
+      recipe: S.recipe, stats: S.eff, rotation: S.rotation,
       startingQuality: CraftEngine.startingQualityFrom(S.recipe, S.hqCounts),
     }, 200);
     var g = $("relGrid");
     g.hidden = false;
+    /* 「完成率」很容易被讀成「成功率」或「HQ 率」，所以標籤直接寫成一句話，
+       下面再補一行說明它什麼時候會低於 100%。 */
     g.innerHTML = [
-      cell(rel.successPercent + "%", "完成率"),
+      cell(rel.successPercent + "%", "200 次裡做完的比例"),
       cell(rel.hqAverage + "%", "HQ 平均"),
       cell(rel.hqMedian + "%", "HQ 中位"),
       cell(rel.hqMin + "–" + rel.hqMax + "%", "HQ 範圍"),
-    ].join("");
-    $("resultAnnounce").textContent = "隨機模擬 200 次：完成率 " + rel.successPercent +
+    ].join("") +
+      '<p class="muted-sm rel-note">「做完」＝耐久歸零前作業填滿' +
+      (S.recipe.requiredQuality ? "，收藏品還要過品質門檻 " + S.recipe.requiredQuality : "") +
+      "。低於 100% 只有兩個原因：循環裡有會失敗的技能（高速製作／倉促／冒進），" +
+      "或球色改變了耐久／CP 消耗而中途卡住。</p>";
+    $("resultAnnounce").textContent = "隨機模擬 200 次：做完的比例 " + rel.successPercent +
       "%，HQ 平均 " + rel.hqAverage + "%。";
 
     function cell(v, label) {
       return '<div class="rel-cell"><b class="num">' + v + "</b><span>" + label + "</span></div>";
     }
+  }
+
+  /* ── 自動求解 ─────────────────────────────────────────────────────
+     搜尋在 craft-solver.js。這裡只負責：開始／取消、進度回饋、把結果放進循環。
+     **刻意不用 Web Worker**——本站要能用 file:// 直接開檔驗收，而 file:// 下
+     Worker 會被瀏覽器擋掉。求解器改成一層一層讓出主執行緒，畫面不會凍住。 */
+
+  var solveHandle = null;
+
+  function setSolveProgress(pct, label, tried) {
+    $("solveFill").style.width = pct + "%";
+    $("solveBar").setAttribute("aria-valuenow", String(pct));
+    $("solveMsg").textContent = label + (tried ? "　已試 " + tried.toLocaleString("zh-TW") + " 種組合" : "");
+  }
+
+  function endSolveUi() {
+    solveHandle = null;
+    $("solveBtn").disabled = false;
+    $("solveCancel").hidden = true;
+  }
+
+  function startSolve() {
+    if (solveHandle) return;
+    if (!S.recipe) {
+      $("resultAnnounce").textContent = "還沒選配方，無法求解。";
+      showTab("setup");
+      return;
+    }
+    readStats();
+    $("solveBtn").disabled = true;
+    $("solveCancel").hidden = false;
+    $("solverProg").hidden = false;
+    setSolveProgress(0, "開始求解…");
+
+    solveHandle = CraftSolver.solve({
+      recipe: S.recipe,
+      stats: S.eff,
+      actions: DB.actionList,
+      startingQuality: CraftEngine.startingQualityFrom(S.recipe, S.hqCounts),
+    }, { onProgress: setSolveProgress, onDone: onSolved });
+  }
+
+  function cancelSolve() {
+    if (solveHandle) solveHandle.cancel();
+  }
+
+  function onSolved(out) {
+    endSolveUi();
+    var secs = (out.ms / 1000).toFixed(1);
+
+    if (!out.rotation) {
+      $("solveMsg").textContent = "找不到做得完的循環（試了 " +
+        out.tried.toLocaleString("zh-TW") + " 種組合，" + secs + " 秒）。";
+      $("resultAnnounce").textContent =
+        "求解失敗：這個配方用目前的數值排不出做得完的循環。可以先提高作業精度，或吃料理／藥品補 CP。";
+      return;
+    }
+
+    S.undo.push(S.rotation.slice());
+    S.rotation = out.rotation.slice();
+    afterChange();
+
+    var res = out.result;
+    // 取消也會回傳「到目前為止最好的一組」——那仍然是可用的答案，只是還沒搜完
+    var partial = out.reason === "cancelled" ? "（中途取消，這是當下最好的一組）" :
+                  out.reason === "timeout" ? "（時間到，這是當下最好的一組）" : "";
+    var msg = "解出 " + out.steps + " 步：品質 " + capQ(res.quality) + " / " + S.recipe.quality +
+              "、HQ " + res.hqPercent + "%，用了 " + secs + " 秒" + partial + "。";
+    setSolveProgress(100, msg);
+    $("resultAnnounce").textContent = msg + "循環已換成求解結果，按「↶ 復原」可以還原。";
   }
 
   /* ── 巨集 ─────────────────────────────────────────────────────── */
@@ -972,9 +1251,13 @@
 
     var notify = $("macroNotify").checked;
     var perMacro = notify ? 14 : 15;      // 開提示時留一行給 /echo
-    var lines = S.rotation.map(function (k) {
-      var a = DB.byKey[k];
-      return '/ac "' + a.name + '" <wait.' + waitOf(a) + ">";
+    /* 技能名**不加雙引號**：那是英文客戶端為了處理名稱裡的空白才需要的，
+       台服的技能名沒有空白，加了引號反而不是遊戲內的寫法。
+       名稱取**實際發動的那一招**（倉促在工匠的良機下會變冒進）——巨集寫得愈明確愈不會出事。 */
+    var lines = S.rotation.map(function (k, i) {
+      var step = lastResult && lastResult.steps[i];
+      var a = DB.byKey[(step && step.key) || k];
+      return "/ac " + a.name + " <wait." + waitOf(a) + ">";
     });
 
     var segs = [];
@@ -1025,27 +1308,163 @@
     });
   }
 
-  /* ── 範本 ─────────────────────────────────────────────────────── */
+  /* ── 循環庫：內建範本 ＋ 我的循環 ────────────────────────────────
+     兩者合併成同一個下拉（分兩個 optgroup），因為使用者要做的事是同一件：
+     「把某一份現成的循環拿來用」。分成兩個選單只會讓工具列更擠。
+     值的格式：範本＝"t<index>"、我的循環＝"r<index>"。 */
+
+  function restoreRotations() {
+    try {
+      var raw = JSON.parse(localStorage.getItem(LS_ROTS) || "null");
+      if (raw && Array.isArray(raw.list)) S.rots = raw.list;
+    } catch (e) { S.rots = []; }
+  }
+
+  function saveRotations() {
+    try {
+      localStorage.setItem(LS_ROTS, JSON.stringify({ v: 1, list: S.rots }));
+    } catch (e) {
+      setRotHint("存不進本機儲存空間（可能是私密視窗或空間已滿），這次的循環只在本頁有效。");
+    }
+  }
 
   function renderTemplates() {
     var sel = $("templateSelect");
+    var keep = sel.value;
     sel.innerHTML = "";
+
+    var g1 = document.createElement("optgroup");
+    g1.label = "內建範本";
     TEMPLATES.forEach(function (t, i) {
       var o = document.createElement("option");
-      o.value = String(i);
+      o.value = "t" + i;
       o.textContent = t.name;
       o.title = t.note;
-      sel.appendChild(o);
+      g1.appendChild(o);
     });
+    sel.appendChild(g1);
+
+    if (S.rots.length) {
+      var g2 = document.createElement("optgroup");
+      g2.label = "我的循環（" + S.rots.length + "）";
+      S.rots.forEach(function (r, i) {
+        var o = document.createElement("option");
+        o.value = "r" + i;
+        o.textContent = r.name + "（" + r.rotation.length + " 步）";
+        o.title = (r.recipeName ? "存的時候是：" + r.recipeName + "\n" : "") + r.at;
+        g2.appendChild(o);
+      });
+      sel.appendChild(g2);
+    }
+    if (keep) sel.value = keep;
+    if (!sel.value) sel.selectedIndex = 0;
+    syncLibButtons();
+  }
+
+  // 刪除鈕只在選到「我的循環」時才出現——內建範本刪不得，長期擺一顆按不了的鈕是噪音
+  function syncLibButtons() {
+    var v = $("templateSelect").value;
+    $("deleteRotation").hidden = v.charAt(0) !== "r";
+  }
+
+  function setRotHint(text, undoLabel) {
+    var el = $("rotLibHint");
+    el.innerHTML = esc(text || "");
+    if (!undoLabel) return;
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "btn";
+    b.style.marginLeft = "0.4rem";
+    b.textContent = undoLabel;
+    b.addEventListener("click", undoRotDelete);
+    el.appendChild(b);
   }
 
   function applyTemplate() {
-    var t = TEMPLATES[+$("templateSelect").value];
-    if (!t) return;
+    var v = $("templateSelect").value;
+    var isMine = v.charAt(0) === "r";
+    var item = isMine ? S.rots[+v.slice(1)] : TEMPLATES[+v.slice(1)];
+    if (!item) return;
+
     S.undo.push(S.rotation.slice());
-    S.rotation = t.rotation.slice();
+    S.rotation = item.rotation.slice();
+
+    // 存的時候是哪個配方就切回哪個——不然套進來的循環會對著另一個配方算，數字全錯
+    var switched = "";
+    if (isMine && item.recipeId && (!S.recipe || S.recipe.id !== item.recipeId)) {
+      var hit = DB.index.find(function (r) { return r.id === item.recipeId; });
+      if (hit) {
+        selectRecipe(hit.i, true);
+        switched = "，並切回配方「" + S.recipe.name + "」";
+      } else {
+        switched = "，但存檔裡的配方已經找不到了（可能是版本閘門擋掉），請自己重選";
+      }
+    }
     afterChange();
-    $("resultAnnounce").textContent = "已套用範本：" + t.name + "。" + t.note;
+    var msg = (isMine ? "已套用「" + item.name + "」" : "已套用範本：" + item.name) + switched + "。";
+    setRotHint(msg);
+    $("resultAnnounce").textContent = msg + (isMine ? "" : item.note);
+  }
+
+  function saveRotation() {
+    if (!S.rotation.length) { setRotHint("目前循環是空的，沒有東西可以存。"); return; }
+    var dflt = (S.recipe ? S.recipe.name : "循環") + "（" + S.rotation.length + " 步）";
+    var name = window.prompt("這份循環要叫什麼名字？", dflt);
+    if (name === null) return;                       // 取消
+    name = name.trim() || dflt;
+
+    var idx = -1;
+    for (var i = 0; i < S.rots.length; i++) if (S.rots[i].name === name) { idx = i; break; }
+    if (idx >= 0 && !window.confirm("「" + name + "」已經存在，要覆蓋嗎？")) return;
+
+    var entry = {
+      name: name,
+      recipeId: S.recipe ? S.recipe.id : null,
+      recipeName: S.recipe ? S.recipe.name : null,
+      rotation: S.rotation.slice(),
+      at: new Date().toISOString().slice(0, 10),
+    };
+    if (idx >= 0) S.rots[idx] = entry;
+    else {
+      S.rots.unshift(entry);
+      if (S.rots.length > ROTS_MAX) S.rots.length = ROTS_MAX;
+    }
+    saveRotations();
+    renderTemplates();
+    $("templateSelect").value = "r" + (idx >= 0 ? idx : 0);
+    syncLibButtons();
+    setRotHint("已存成「" + name + "」。存在這台電腦的瀏覽器裡，首頁的「全站備份」會一起帶走。");
+    $("resultAnnounce").textContent = "已儲存循環「" + name + "」。";
+  }
+
+  /* 刪除是不可逆的，所以照全站慣例：先 confirm（訊息裡講清楚刪的是哪一份），
+     刪完再留一顆復原鈕。 */
+  var rotUndo = null;
+
+  function deleteRotation() {
+    var v = $("templateSelect").value;
+    if (v.charAt(0) !== "r") return;
+    var i = +v.slice(1), item = S.rots[i];
+    if (!item) return;
+    if (!window.confirm("要刪掉「" + item.name + "」嗎？\n\n" +
+        (item.recipeName ? "配方：" + item.recipeName + "\n" : "") +
+        "步數：" + item.rotation.length + "　存檔日：" + item.at + "\n\n刪除後可以按「復原刪除」救回來。")) return;
+
+    rotUndo = { index: i, item: item };
+    S.rots.splice(i, 1);
+    saveRotations();
+    renderTemplates();
+    setRotHint("已刪除「" + item.name + "」。", "↶ 復原刪除");
+    $("resultAnnounce").textContent = "已刪除循環「" + item.name + "」。";
+  }
+
+  function undoRotDelete() {
+    if (!rotUndo) return;
+    S.rots.splice(Math.min(rotUndo.index, S.rots.length), 0, rotUndo.item);
+    saveRotations();
+    renderTemplates();
+    setRotHint("已復原「" + rotUndo.item.name + "」。");
+    rotUndo = null;
   }
 
   /* ── 結果彈窗 ─────────────────────────────────────────────────── */
@@ -1166,7 +1585,18 @@
       esc(DB.gamePatch), "），成品查不到繁中名的也不列。工會工坊與無人島的配方不是用製作技能做的，不在此列。</p>",
 
       "<p><strong>內建範本</strong>都是先用引擎在指定數值下實跑過、確定做得完才收進來（滑到選單上可看驗證條件）。",
-      "套到你自己的配方後成不成立，直接看右邊的模擬結果。</p>",
+      "套到你自己的配方後成不成立，直接看右邊的模擬結果。",
+      "自己排出來的循環可以按「💾 儲存」收進<strong>我的循環</strong>，跟範本在同一個下拉裡；",
+      "存的是這台電腦的瀏覽器（<code>ffxiv_craftsim_rotations</code>），首頁的「全站備份」會一起帶走。</p>",
+
+      "<p><strong>自動求解</strong>會照你目前的數值排一串做得完、品質盡量高的循環。它<strong>只用必定成功、",
+      "不吃球色的技能</strong>——高速製作／倉促／冒進（成功率不到 100%）與集中製作／集中加工／秘訣（要高品質球）",
+      "一律不排，因為解出來的東西是要貼進遊戲照跑的，靠運氣的循環等於沒解。",
+      "求解分兩階段（先把作業推到差一招、再堆品質），中途可以取消，取消也會拿到當下最好的那一組。</p>",
+
+      "<p><strong>料理／藥品</strong>的加成是「基礎值 × 百分比，但不超過上限」，而且料理與藥品<strong>各自從基礎值算</strong>再相加。",
+      "所以工匠數值那四格請填<strong>沒吃補</strong>的原始值，選了料理之後看下面那行實際數值。",
+      "清單只列台服已開放、且查得到繁中名的品項。</p>",
     ].join("");
   }
 
@@ -1203,6 +1633,28 @@
       writeHash();
     });
     $("applyTemplate").addEventListener("click", applyTemplate);
+    $("templateSelect").addEventListener("change", syncLibButtons);
+    $("saveRotation").addEventListener("click", saveRotation);
+    $("deleteRotation").addEventListener("click", deleteRotation);
+    $("solveBtn").addEventListener("click", startSolve);
+    $("solveCancel").addEventListener("click", cancelSolve);
+
+    // 換料理／藥品要重算加成；勾 HQ 還會改下拉裡的數字，所以要整個重畫一次
+    ["foodSelect", "medSelect"].forEach(function (id) {
+      $(id).addEventListener("change", function () {
+        simulate();
+        syncHqToggles();
+        $("resultAnnounce").textContent = $("effLine").textContent;
+      });
+    });
+    ["foodHq", "medHq"].forEach(function (id) {
+      $(id).addEventListener("change", function () {
+        readStats();
+        renderConsumables();
+        simulate();
+      });
+    });
+
     $("relBtn").addEventListener("click", runReliability);
     $("macroNotify").addEventListener("change", renderMacro);
     $("statsJob").addEventListener("change", function () { setStatsJob(+this.value, false); simulate(); });
@@ -1223,6 +1675,7 @@
     });
     // 捲動時浮層會跟不上按鈕，直接收掉
     window.addEventListener("scroll", hideTip, true);
+    window.addEventListener("resize", sizeCraftPanes);
   }
 
   function esc(s) {

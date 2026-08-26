@@ -10,7 +10,14 @@
  * （MIT License, Copyright (c) 2019 Flavien Normand，github.com/ffxiv-teamcraft/simulator），
  * 技能的 CP／解鎖等級另以 XIVAPI 校驗（見 scripts/build-craft-sim.mjs）。
  *
- * ── 刻意與 Teamcraft 不同的兩處（都寫在這裡，別當成 bug 修掉）─────────────
+ * ── 為什麼引擎不把作業／品質封頂在配方上限 ─────────────────────────────
+ * 遊戲的進度條滿了就停在上限，但**封頂要在畫面上做，不能在這裡做**：
+ * Teamcraft 的官方測試案例斷言的是未封頂的原始值（它們的測試配方上限很小），
+ * 在引擎裡封頂會讓 12 個案例對不上，等於自己把回歸驗證弄壞。
+ * 畫面上的封頂在 crafting-sim.js 的 capP()／capQ()，累計與每一步的增量一起封，
+ * 兩邊才對得起來。
+ *
+ * ── 刻意與 Teamcraft 不同的三處（都寫在這裡，別當成 bug 修掉）─────────────
  * 1. 隨機模式會真的擲作業狀態。Teamcraft 的 run() 每步都把狀態重設成「一般」，
  *    除非呼叫端逐步指定；那對「重播一場已發生的製作」是對的，對「預估這套循環
  *    會不會成功」則會讓高品質／最高品質永遠不出現。本引擎在 linear=false 時
@@ -18,6 +25,9 @@
  * 2. 不消耗作業時間的三個技能（最終確認、專心致志、快速改革——官方說明都寫
  *    「使用本技能不會消耗一次作業時間」）不推進作業狀態。Teamcraft 只排除了
  *    最終確認。設計變動照樣推進，因為它的效果就是「變更一次作業狀態」。
+ * 3. 倉促在「工匠的良機」生效時自動解析成冒進（見 run() 內的註解）。
+ *    遊戲裡冒進是取代倉促那顆按鈕的升級技，玩家不會分別按；Teamcraft 讓使用者
+ *    自己選，本引擎自動換。明確寫 daringTouch 的循環行為不變。
  */
 (function (root, factory) {
   var api = factory();
@@ -423,6 +433,16 @@
       var a = actionsByKey[key];
       if (!a) return;
 
+      /* 倉促在「工匠的良機」生效時**自動變成冒進**——遊戲裡冒進本來就是直接取代
+         倉促那顆按鈕，玩家不會、也不能分別按它們。所以循環裡只會有倉促，
+         連放兩個倉促、第一個成功了，第二個就發動冒進。
+         （Teamcraft 是讓使用者自己選冒進，本引擎改成自動解析；
+           明確指定 daringTouch 的循環照樣可用，行為不變。） */
+      if (key === "hastyTouch" && actionsByKey.daringTouch && hasBuff(S, "expedience")) {
+        a = actionsByKey.daringTouch;
+        key = a.key;
+      }
+
       if (stepStates[index] != null) S.state = stepStates[index];
       else if (linear) S.state = ST.NORMAL;
 
@@ -563,6 +583,9 @@
       if (!last) { out[key] = null; return; }
       out[key] = {
         usable: !last.skipped,
+        // 實際會發動的技能：倉促在工匠的良機下會解析成冒進，前端要照這個顯示
+        key: last.key,
+        name: last.name,
         reason: last.skipped ? last.failCause : null,
         combo: !!last.combo,
         addedProgress: last.addedProgress,

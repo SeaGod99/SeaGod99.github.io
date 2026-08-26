@@ -2,7 +2,7 @@
   "project": "水神的工具箱 統一資料庫",
   "schemaDoc": "/data/SCHEMA.md",
   "gamePatch": "7.21",
-  "updated": "2026-08-25",
+  "updated": "2026-08-26",
   "idConventions": {
     "mapId": "遊戲 Map sheet row id（XIVAPI v2 /sheet/Map 的 row_id），全站統一；2026-06-11 起 maps.json 主鍵即此 id",
     "territoryId": "TerritoryType row id，僅輔助欄位（fishing-spots、gathering.coords.zoneId），顯示/連結一律用 mapId"
@@ -361,7 +361,7 @@
       "name": "製作技能（繁中名／CP／等級／效率）",
       "source": "teamcraft tw-craft-actions+tw-actions ＋ XIVAPI CraftAction/Action（scripts/build-craft-sim.mjs）",
       "status": "used",
-      "updated": "2026-08-25",
+      "updated": "2026-08-26",
       "count": 36
     },
     {
@@ -370,8 +370,17 @@
       "name": "製作模擬用配方（除數／修正／HQ 材料）",
       "source": "data/recipes.json × teamcraft recipes.json（scripts/build-craft-sim.mjs）",
       "status": "used",
-      "updated": "2026-08-25",
+      "updated": "2026-08-26",
       "count": 13835
+    },
+    {
+      "schema": "craft-consumables",
+      "file": "craft-consumables.json",
+      "name": "製作用料理／藥品的加成（百分比＋上限）",
+      "source": "teamcraft foods/medicines（ItemFood）× data/items.json 繁中名（scripts/build-craft-sim.mjs）",
+      "status": "used",
+      "updated": "2026-08-26",
+      "count": 61
     }
   ]
 }

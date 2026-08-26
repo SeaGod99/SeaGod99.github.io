@@ -18,7 +18,9 @@ const REPO = join(__dirname, "..");
 const require = createRequire(import.meta.url);
 
 const Engine = require(join(REPO, "tools", "crafting-sim", "craft-engine.js"));
-Engine.init(JSON.parse(readFileSync(join(REPO, "data", "craft-actions.json"), "utf8")));
+const Solver = require(join(REPO, "tools", "crafting-sim", "craft-solver.js"));
+const actions = JSON.parse(readFileSync(join(REPO, "data", "craft-actions.json"), "utf8"));
+Engine.init(actions);
 
 const ST = Engine.ST;
 
@@ -403,6 +405,42 @@ function buffOf(res, key) {
     check(`範本「${t.name}」完成`, res.success, true);
     check(`範本「${t.name}」無跳過的步驟`, res.steps.filter((s) => s.skipped).length, 0);
   }
+
+  /* ── 自動求解器（craft-solver.js）────────────────────────────────────
+     判準是「不能輸給手解的範本」：同一組配方與數值下，求解器必須做得完，
+     而且品質不低於範本。這條同時擋住兩種退化——搜尋壞掉（解不出來）
+     與評分壞掉（解得出來但品質變差）。
+     另外逐項確認產出的循環沒有靠運氣的技能：那是求解器的核心承諾，
+     引擎在理想模式下**不會**幫忙擋（見 craft-solver.js 檔頭）。 */
+  const actionByKey = Object.fromEntries(actions.data.map((a) => [a.key, a]));
+  const RNG_FREE = (key) => {
+    const a = actionByKey[key];
+    const f = a.flags || [];
+    return !(a.succ != null && a.succ < 100) &&
+           f.indexOf("requiresGood") < 0 && f.indexOf("needsExpedience") < 0 && key !== "heartAndSoul";
+  };
+
+  for (const t of templates) {
+    const r = pick(t.rlvl, t.dur, t.prog);
+    const tRes = sim(r, t.rot, t.s);
+    const out = Solver.solve({ recipe: r, stats: t.s, actions: actions.data, startingQuality: 0 }, {});
+    check(`求解「${t.name}」有解`, !!out.rotation, true);
+    if (!out.rotation) continue;
+    const res = Engine.run({ recipe: r, stats: t.s, rotation: out.rotation, linear: true });
+    check(`求解「${t.name}」做得完`, res.status, "done");
+    check(`求解「${t.name}」無跳過的步驟`, res.steps.filter((s) => s.skipped).length, 0);
+    // 比的是**封頂後**的品質：超過配方上限的品質在遊戲裡沒有用（HQ 就是封頂在那），
+    // 求解器會拿它換更短的循環，所以拿原始品質去比會誤判成退步
+    const cap = (q) => Math.min(q, r.quality);
+    check(`求解「${t.name}」品質不輸範本（封頂後 ${cap(res.quality)} ≥ ${cap(tRes.quality)}）`,
+      cap(res.quality) >= cap(tRes.quality), true);
+    check(`求解「${t.name}」HQ 不輸範本（${res.hqPercent}% ≥ ${tRes.hqPercent}%）`,
+      res.hqPercent >= tRes.hqPercent, true);
+    const risky = out.rotation.filter((k) => !RNG_FREE(k));
+    check(`求解「${t.name}」不含靠運氣的技能${risky.length ? "（" + risky.join("、") + "）" : ""}`,
+      risky.length, 0);
+    check(`求解「${t.name}」步數在巨集塞得下的範圍`, out.rotation.length <= 30, true);
+  }
 }
 
 /* ── 額外自檢：不在 Teamcraft 案例內，但關係到本站前端的行為 ────────────── */
@@ -427,4 +465,5 @@ if (failures.length) {
   failures.forEach((f) => console.log("  ❌ " + f));
   process.exit(1);
 }
-console.log("✓ 公式與 Teamcraft 官方測試案例一致，內建範本在宣稱的條件下都做得完");
+console.log("✓ 公式與 Teamcraft 官方測試案例一致，內建範本在宣稱的條件下都做得完，" +
+            "自動求解在四套情境都解得出且不輸範本");

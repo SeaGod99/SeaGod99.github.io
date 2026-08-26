@@ -289,6 +289,76 @@ async function main() {
   writeFileSync(join(DATA, "craft-recipes.json"), JSON.stringify(recipesOut));
   const kb = (JSON.stringify(recipesOut).length / 1024) | 0;
   console.log(`✓ data/craft-recipes.json — ${rows.length} 筆配方（${kb}KB）`);
+
+  await buildConsumables(gamePatch, today);
+}
+
+/* ── 料理／藥品 ──────────────────────────────────────────────────────────
+   為什麼要這份：實際玩家一定是吃補在做，而料理加成是「百分比 ＋ 上限」兩段，
+   心算很容易錯。沒有這份，使用者只能自己把吃補後的數值填進工匠數值，等於把
+   算術丟回給使用者。
+
+   來源分工：
+     · 加成數值 ← Teamcraft foods.json／medicines.json（源自 ItemFood sheet：
+                  Relative＝是否為百分比、Value/ValueHQ＝%、Max/MaxHQ＝上限）
+     · 繁中名   ← data/items.json（＝tw-items 快照；查不到就是台服未開放，
+                  依專案鐵則直接不收，不用英文補）
+     · patch    ← 同上，交給前端 patch-gate.js 過濾
+
+   只收含 Craftsmanship／Control／CP 任一加成的（製作用），採集用的 GP／獲得力不收。 */
+async function buildConsumables(gamePatch, today) {
+  const foods = await grab("foods.json", TC + "foods.json");
+  const meds = await grab("medicines.json", TC + "medicines.json");
+  const items = new Map(
+    JSON.parse(readFileSync(join(DATA, "items.json"), "utf8")).data.map((x) => [x.id, x])
+  );
+
+  // Teamcraft 的 Bonuses 是以屬性名為 key 的物件；只取這三個並縮成短鍵
+  const KEYS = { Craftsmanship: "cms", Control: "ctl", CP: "cp" };
+
+  const out = [];
+  let noTw = 0;
+  for (const [kind, list] of [["food", foods], ["medicine", meds]]) {
+    for (const row of list) {
+      const b = row.Bonuses || {};
+      const picked = {};
+      for (const [src, dst] of Object.entries(KEYS)) {
+        const v = b[src];
+        if (!v) continue;
+        // [是否百分比, NQ 值, NQ 上限, HQ 值, HQ 上限]
+        picked[dst] = [v.Relative ? 1 : 0, v.Value ?? 0, v.Max ?? 0,
+                       v.ValueHQ ?? v.Value ?? 0, v.MaxHQ ?? v.Max ?? 0];
+      }
+      if (!Object.keys(picked).length) continue;
+
+      const item = items.get(row.ID);
+      if (!item) { noTw++; continue; }   // 台服未開放：不收，不用英文名補
+
+      out.push({
+        id: row.ID,
+        name: item.name,
+        kind,
+        ilvl: row.LevelItem || item.ilvl || 0,
+        patch: item.patch || null,
+        bonuses: picked,
+      });
+    }
+  }
+  out.sort((a, b) => (b.ilvl - a.ilvl) || (a.id - b.id));
+
+  if (noTw) console.log(`  · 排除 ${noTw} 個查無台服繁中名的料理／藥品（未開放）`);
+
+  const consumOut = {
+    schema: "craft-consumables",
+    patch: gamePatch,
+    updated: today,
+    source: "teamcraft foods/medicines（加成數值，源自 ItemFood）× data/items.json（台服繁中名、patch）",
+    count: out.length,
+    data: out,
+  };
+  writeFileSync(join(DATA, "craft-consumables.json"), JSON.stringify(consumOut));
+  const nf = out.filter((x) => x.kind === "food").length;
+  console.log(`✓ data/craft-consumables.json — 料理 ${nf}、藥品 ${out.length - nf}`);
 }
 
 main().catch((e) => { console.error(e); process.exit(1); });

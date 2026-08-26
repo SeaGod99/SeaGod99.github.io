@@ -67,14 +67,39 @@
   .panel[hidden] { display: none; }
   @media (pointer: coarse) { .tab-btn { min-height: var(--tap-min); } }
 
-  /* 技能面板與目前循環左右並排；窄螢幕自動疊起來 */
+  /* 技能面板與目前循環左右並排；窄螢幕自動疊起來。
+     ⚠ 斷點是 1180 不是 1000：循環列有七欄，1024 寬時右欄只剩約 400px，量出來循環列
+     會超出容器（要橫捲才看得完）。1180 時右欄約 500px 才塞得下。動這個斷點或加回欄位前，
+     請在 1024／1180 各量一次，不要只看寬螢幕。`.rotation` 另有 overflow-x 當最後保險。 */
   .craft-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; align-items: start; }
-  @media (min-width: 1000px) {
-    .craft-grid { grid-template-columns: minmax(0, 1.25fr) minmax(320px, 1fr); }
-    .craft-grid > .card { position: sticky; top: 0.75rem; }
+  /* 視窗太矮就不要鎖高度（鎖了每一欄只剩幾行，比整頁捲還難用），退回一般頁面捲動 */
+  @media (min-width: 1180px) and (min-height: 640px) {
+    /* 兩欄各自捲動：技能面板很長，循環也很長，共用一條頁面捲軸的話
+       想對照「上面點的技能」與「下面的循環」就得一直來回捲。
+       各給一條捲軸後，兩邊可以獨立停在自己要看的位置。 */
+    .craft-grid {
+      grid-template-columns: minmax(0, 1.25fr) minmax(340px, 1fr);
+      align-items: stretch;
+      /* --craft-top 由 crafting-sim.js 量出來（頁首高度會隨視窗寬度換行而變，寫死一定不準） */
+      height: calc(100dvh - var(--craft-top, 12rem) - var(--craft-reserve, 2rem)); min-height: 20rem;
+    }
+    .craft-grid > .card {
+      display: flex; flex-direction: column; min-height: 0; margin-bottom: 0; overflow: hidden;
+    }
+    .craft-grid > .card > .pane { flex: 1 1 auto; min-height: 0; overflow-y: auto; }
   }
 
   .next-step { display: flex; justify-content: flex-end; margin-bottom: 1rem; }
+
+  /* 「② 排循環」是工作分頁：副標與分隔線在這裡沒有作用，卻吃掉約 90px。
+     兩欄鎖高度時那 90px 直接等於少看四五列，所以進工作分頁就收起來。
+     標題保留——頁面身分不能沒有。切分頁時才變，不會邊捲邊跳。 */
+  @media (min-width: 1180px) and (min-height: 640px) {
+    body.craft-focus .tool-subtitle, body.craft-focus .header-divider { display: none; }
+    body.craft-focus .tool-header { padding-bottom: 6px; }
+    body.craft-focus .context-bar { margin-bottom: 0.5rem; }
+    body.craft-focus .tabs { margin-bottom: 0.6rem; }
+  }
 
   .card {
     background: var(--bg-card); border: 1px solid var(--border);
@@ -114,6 +139,23 @@
   .toggle { display: flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; cursor: pointer; }
   .toggle input { width: 1.05rem; height: 1.05rem; accent-color: var(--accent); }
 
+  /* ── 料理／藥品 ────────────────────────────────────────────────
+     跟工匠數值同一張卡但獨立成一區：上面填的是「沒吃補」的原始值，
+     這裡是加成，兩者混在一起會讓人不知道該填哪個。 */
+  .consum { margin-top: 0.9rem; padding-top: 0.8rem; border-top: 1px solid var(--border); }
+  .consum h3 { font-size: 0.9rem; margin-bottom: 0.25rem; }
+  .consum .row { margin-top: 0.5rem; align-items: flex-end; }
+  /* 下拉拉滿整張卡會又長又難掃；限寬到讀得完一個品項就好。
+     ⚠ 別在 HTML 上寫 inline 的 flex——inline style 會蓋掉這裡（踩過一次）。 */
+  .consum .field { flex: 0 1 28rem; max-width: 100%; }
+  .consum .toggle { padding-bottom: 0.45rem; }
+  .eff-line {
+    margin-top: 0.7rem; padding: 0.5rem 0.6rem; border-radius: var(--radius-sm);
+    background: var(--bg-surface); border: 1px solid var(--border);
+    font-size: 0.8rem; font-variant-numeric: tabular-nums; color: var(--text-dim);
+  }
+  .eff-line b { color: var(--green); font-weight: 600; }
+
   .btn {
     background: var(--bg-surface); color: var(--text); border: 1px solid var(--border);
     border-radius: var(--radius-sm); padding: 0.4rem 0.75rem; font-size: 0.82rem;
@@ -121,6 +163,9 @@
   }
   .btn:hover { background: var(--bg-card-hover); border-color: var(--border-hover); }
   .btn-primary { background: var(--accent-dim); border-color: var(--accent); color: var(--text); font-weight: 600; }
+  /* 破壞性動作（刪除、取消）：用語意色而不是只靠文字，且與旁邊的一般按鈕分得開 */
+  .btn-danger { border-color: var(--red); color: var(--red); }
+  .btn-danger:hover { background: var(--red-dim); border-color: var(--red); }
   .btn:disabled { opacity: 0.45; cursor: not-allowed; }
   @media (pointer: coarse) { .btn { min-height: var(--tap-min); } }
 
@@ -193,6 +238,11 @@
   .skill.locked, .skill.unusable { border-style: dashed; }
   .skill.locked .skill-name, .skill.unusable .skill-name,
   .skill.locked .skill-meta, .skill.unusable .skill-meta { color: var(--text-muted); }
+  /* 製作結束後整排停用。同樣不用 opacity（見上），改成虛線框＋游標提示；
+     原因寫在卡片上方那一句，不逐顆重複標。 */
+  .skill:disabled { border-style: dashed; cursor: not-allowed; }
+  .skill:disabled:hover { background: var(--bg-surface); border-color: var(--border); }
+  .skill:disabled:active { transform: none; }
   .skill.combo-ready { background: var(--accent-dim); border-color: var(--accent); }
   .skill-name { font-size: 0.82rem; font-weight: 600; }
   .skill-meta { font-size: 0.68rem; color: var(--text-muted); font-variant-numeric: tabular-nums; }
@@ -201,20 +251,59 @@
   @media (pointer: coarse) { .skill { min-height: var(--tap-min); justify-content: center; } }
 
   /* ── 循環 ─────────────────────────────────────────────────────── */
+  /* ── 自動求解 ──────────────────────────────────────────────────
+     放在技能面板最上面：它是「不想自己排」的那條路，看到技能之前就該看到它。 */
+  .solver {
+    margin-bottom: 0.8rem; padding: 0.7rem; border: 1px solid var(--accent);
+    background: var(--accent-dim); border-radius: var(--radius-sm);
+  }
+  .solver-head { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+  .solver-head .muted-sm { flex: 1 1 12rem; }
+  /* 這張卡的底是 --accent-dim（淡青）。--text-muted 疊上去只有 3.67:1，
+     換 --text-dim 也只到 4.50:1（剛好卡在門檻上），所以直接用 --text。
+     典型的「同色字疊同色淡底」：顏色要跟著實際的底一起量，不能只用頁面底色驗。 */
+  .solver .muted-sm, .solver .solver-msg { color: var(--text); }
+  .solver-prog { margin-top: 0.6rem; }
+  .solver-prog .bar-track { height: 0.4rem; }
+  /* 訊息是整句話不是數字，不能吃 .num 的 nowrap（375 寬會頂出卡片外緣），
+     但裡面的數字仍要等寬——求解時每一秒都在跳，不等寬會左右抖。 */
+  .solver-msg { margin-top: 0.3rem; font-variant-numeric: tabular-nums; }
+
   .rot-toolbar { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.6rem; align-items: center; }
+  .rot-hint { margin: -0.2rem 0 0.6rem; }
+  .rot-hint:empty { display: none; }
+  .rot-assume { margin-top: 0.45rem; }
   .rot-count { font-size: 0.78rem; color: var(--text-muted); margin-left: auto; }
 
   /* ── 循環＝逐步明細 ─────────────────────────────────────────────
      循環的每一列就是那一步：左邊是技能，右邊是**做到這一步當下**的作業／品質／
      耐久／CP，跟下緣結果條同一套讀法。刻意不另外開一張逐步表——
      那會逼使用者在兩個地方對照「第幾步」。 */
+  /* overflow-x 是保險：真的擠不下時讓清單自己橫捲，不要把整頁推出去 */
   .rotation { list-style: none; display: flex; flex-direction: column; gap: 0.25rem; min-height: 3.2rem;
-              padding: 0.4rem; border: 1px dashed var(--border); border-radius: var(--radius-sm); }
+              padding: 0.4rem; border: 1px dashed var(--border); border-radius: var(--radius-sm);
+              overflow-x: auto; }
   .rotation.empty-hint { align-items: center; justify-content: center; color: var(--text-muted); font-size: 0.83rem; }
+
+  /* ⚠ 每一列各自是一個 grid，欄寬就各算各的——標題列的「作業／品質／耐久／CP」
+     只有兩個字，資料列是「+2088」，兩邊的 auto 欄寬不一樣，標題就會整排錯位
+     （標題列右邊那格是空的操作欄，更是直接差掉一顆按鈕的寬度）。
+     解法是讓所有列共用同一組欄：清單本身開一個 grid，每列用 subgrid 對進去。
+     不支援 subgrid 的瀏覽器會落回上面 .rot-row 自己的 grid-template-columns。 */
+  @supports (grid-template-columns: subgrid) {
+    @media (min-width: 641px) {
+      .rotation:not(.empty-hint) {
+        display: grid; row-gap: 0.25rem;
+        grid-template-columns: 1.5rem minmax(4rem, 1fr) auto auto auto auto auto;
+        align-content: start;
+      }
+      .rotation:not(.empty-hint) .rot-row { grid-column: 1 / -1; grid-template-columns: subgrid; }
+    }
+  }
 
   .rot-row {
     display: grid; align-items: center; gap: 0.3rem;
-    grid-template-columns: 1.5rem minmax(4rem, 1fr) auto auto auto auto auto auto;
+    grid-template-columns: 1.5rem minmax(4rem, 1fr) auto auto auto auto auto;
     background: var(--bg-surface); border: 1px solid var(--border);
     border-left: 3px solid var(--type-color, var(--border));
     border-radius: var(--radius-sm); padding: 0.22rem 0.35rem 0.22rem 0.45rem;
@@ -236,6 +325,8 @@
 
   .rot-idx { color: var(--text-muted); font-variant-numeric: tabular-nums; font-size: 0.68rem; }
   .rot-name { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  /* 自動升級的那一發（倉促→冒進）：標一個小箭頭，滑過去有說明 */
+  .rot-up { color: var(--accent); margin-right: 0.2rem; font-weight: 400; }
   .rot-cell { font-variant-numeric: tabular-nums; white-space: nowrap; text-align: right; min-width: 3.1rem; }
   .rot-cell small { color: var(--text-muted); font-size: 0.62rem; }
   .rot-delta-p { color: var(--c-progress); }
@@ -252,6 +343,8 @@
   @media (max-width: 640px) {
     .rot-row { grid-template-columns: 1.5rem minmax(4rem, 1fr) auto; }
     .rot-cells { grid-column: 1 / -1; display: flex; gap: 0.75rem; justify-content: flex-end; }
+    /* 這一行是 flex 不是 grid，欄寬得自己釘死，標題那一列才會落在數字正上方 */
+    .rot-cells .rot-cell { flex: none; width: 3.4rem; min-width: 0; }
   }
   @media (min-width: 641px) { .rot-cells { display: contents; } }
 
@@ -291,6 +384,8 @@
   .rel-cell { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.4rem 0.5rem; }
   .rel-cell b { display: block; font-size: 1rem; font-variant-numeric: tabular-nums; }
   .rel-cell span { font-size: 0.68rem; color: var(--text-muted); }
+  /* 說明佔滿整列，不要被擠成第五格 */
+  .rel-note { grid-column: 1 / -1; margin-top: 0.1rem; }
 
   /* ── 逐步表 ───────────────────────────────────────────────────── */
   .table-wrap { overflow-x: auto; margin-top: 0.6rem; }
@@ -304,14 +399,6 @@
   tr.step-fail td { color: var(--red); }
   .steps-scroll { max-height: 24rem; overflow-y: auto; }
 
-  .cond {
-    font-size: 0.7rem; padding: 0.05rem 0.35rem; border-radius: 999px;
-    border: 1px solid currentColor; white-space: nowrap;
-  }
-  .cond-normal { color: var(--text-muted); }
-  .cond-good   { color: var(--yellow); }
-  .cond-great  { color: var(--purple); }
-  .cond-bad    { color: var(--red); }
 
   .delta-p { color: var(--c-progress); }
   .delta-q { color: var(--c-quality); }
@@ -345,13 +432,26 @@
      結果本體移進彈窗後，排技能時還是要有即時回饋，否則每點一次都要開窗確認。
      這條固定在畫面下緣，只在「排循環」分頁出現。
      bottom 給 64px 是為了讓開全站的主題鈕與搜尋鈕（fixed，bottom:10px、高 44px）。 */
+  /* 結果摘要條：**寬螢幕是「目前循環」卡片底部的一條**（收在版面裡，不擋技能面板），
+     窄螢幕才浮在畫面下緣。⚠ 分寬度的規則要寫在這裡，不要放到前面的媒體查詢裡——
+     同特異度時後面的規則勝，寫在前面會被這段蓋掉（踩過一次）。 */
   .result-bar {
-    position: fixed; left: 0.75rem; right: 0.75rem; bottom: 64px; z-index: 9998;
     background: var(--bg-card); border: 1px solid var(--border-hover);
-    border-radius: var(--radius); box-shadow: var(--shadow-card);
+    border-radius: var(--radius);
   }
   .result-bar[hidden] { display: none; }
-  body.has-result-bar { padding-bottom: 8.5rem; }
+  @media (max-width: 1179px) {
+    .result-bar { position: fixed; left: 0.75rem; right: 0.75rem; bottom: 64px; z-index: 9998;
+                  box-shadow: var(--shadow-card); }
+    body.has-result-bar { padding-bottom: 8.5rem; }
+  }
+  @media (min-width: 1180px) {
+    /* 收在卡片裡時要盡量矮：它每高 10px，循環就少看半列 */
+    .result-bar { margin-top: 0.5rem; flex: 0 0 auto; }
+    .rb-inner { flex-wrap: wrap; gap: 0.4rem 0.6rem; padding: 0.4rem 0.6rem; }
+    .rb-bars { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.2rem 0.7rem; }
+    .rb-inner .btn { padding: 0.3rem 0.6rem; }
+  }
   .rb-inner {
     max-width: var(--w-wide); margin: 0 auto;
     display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0.85rem;
@@ -412,7 +512,7 @@
 
 <div class="tool-header">
   <h1 class="tool-title">🔨 製作模擬器</h1>
-  <p class="tool-subtitle">填入你的作業精度、加工精度與 CP，排一串製作技能，逐步算出進度、品質、耐久與 HQ 機率，並直接產生遊戲內巨集。</p>
+  <p class="tool-subtitle">排一串製作技能，逐步算出進度、品質、耐久與 HQ 機率，並產生遊戲內巨集。</p>
   <div class="header-divider"></div>
 </div>
 
@@ -456,9 +556,7 @@
 
       <section class="card">
         <h2>② 工匠數值</h2>
-        <p class="muted-sm" style="margin-bottom:0.6rem">
-          遊戲內「人物屬性」查得到。<strong>八個職業各存一組</strong>，選配方時會自動切到該配方的職業。數值存在本機。
-        </p>
+        <p class="muted-sm" style="margin-bottom:0.6rem">遊戲內「人物屬性」查得到。<strong>八職各存一組</strong>，選配方時自動切換。</p>
         <div class="row" style="margin-bottom:0.6rem">
           <div class="field" style="flex:0 0 9rem">
             <label for="statsJob">這組數值屬於</label>
@@ -489,6 +587,26 @@
           <label class="toggle"><input type="checkbox" id="statSpecialist"> 專家（可用專心致志、設計變動、快速改革）</label>
           <label class="toggle"><input type="checkbox" id="statRelic"> 特殊工具：高品質時品質 ×1.75</label>
         </div>
+
+        <div class="consum">
+          <h3>料理／藥品</h3>
+          <p class="muted-sm">上面四格填<strong>沒吃補</strong>的原始數值，加成疊在上面。</p>
+          <div class="row">
+            <div class="field">
+              <label for="foodSelect">料理</label>
+              <select id="foodSelect"></select>
+            </div>
+            <label class="toggle"><input type="checkbox" id="foodHq" checked> HQ</label>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label for="medSelect">藥品</label>
+              <select id="medSelect"></select>
+            </div>
+            <label class="toggle"><input type="checkbox" id="medHq" checked> HQ</label>
+          </div>
+          <p class="eff-line" id="effLine"></p>
+        </div>
       </section>
 
       <div class="next-step">
@@ -502,11 +620,27 @@
 
       <section class="card">
         <h2>技能</h2>
-        <p class="muted-sm" style="margin-bottom:0.6rem">
-          點一下加到循環尾端。<strong>滑過或用鍵盤選到會顯示官方說明</strong>，並即時算出「接在目前循環後」的效果。
-        </p>
-        <p class="note" id="paletteNote" hidden style="margin-bottom:0.6rem;color:var(--orange)"></p>
-        <div id="palette"></div>
+
+        <div class="solver">
+          <div class="solver-head">
+            <button class="btn btn-primary" type="button" id="solveBtn">⚡ 自動求解</button>
+            <button class="btn btn-danger" type="button" id="solveCancel" hidden>取消求解</button>
+            <p class="muted-sm">排一串做得完、品質最高的循環。<strong>只用必定成功、不吃球色的技能</strong>。</p>
+          </div>
+          <div class="solver-prog" id="solverProg" hidden>
+            <div class="bar-track" role="progressbar" aria-labelledby="solveMsg"
+                 aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="solveBar">
+              <span class="bar-fill" id="solveFill" style="width:0%"></span>
+            </div>
+            <p class="muted-sm solver-msg" id="solveMsg"></p>
+          </div>
+        </div>
+
+        <div class="pane">
+          <p class="muted-sm" style="margin-bottom:0.6rem">點一下加到循環尾端；滑過看官方說明與即時試算。</p>
+          <p class="note" id="paletteNote" hidden style="margin-bottom:0.6rem;color:var(--orange)"></p>
+          <div id="palette"></div>
+        </div>
       </section>
 
       <section class="card">
@@ -515,27 +649,41 @@
           <button class="btn" type="button" id="undoBtn" title="復原上一步編輯">↶ 復原</button>
           <button class="btn" type="button" id="clearBtn">清空</button>
           <label class="field" style="flex-direction:row;align-items:center;gap:0.4rem">
-            <span class="muted-sm">範本</span>
-            <select id="templateSelect" aria-label="套用範本循環" style="width:auto;min-width:11rem"></select>
+            <span class="muted-sm">循環庫</span>
+            <select id="templateSelect" aria-label="內建範本與我的循環" style="width:auto;min-width:12rem"></select>
           </label>
           <button class="btn" type="button" id="applyTemplate">套用</button>
+          <button class="btn" type="button" id="saveRotation" title="把目前循環存進「我的循環」（存在本機）">💾 儲存</button>
+          <button class="btn btn-danger" type="button" id="deleteRotation" hidden>🗑 刪除</button>
           <button class="btn" type="button" id="shareBtn" title="複製可分享的網址">🔗 複製連結</button>
           <span class="rot-count num" id="rotCount"></span>
         </div>
+        <p class="muted-sm rot-hint" id="rotLibHint" role="status" aria-live="polite"></p>
+        <div class="pane">
         <ol class="rotation" id="rotation" aria-label="製作技能循環"></ol>
+        <p class="muted-sm rot-assume">逐步數值為<strong>理想模式</strong>（技能必成功、狀態恆為「一般」）。擲骰結果看「完整結果」。</p>
 
         <details id="macroBox">
           <summary>遊戲內巨集</summary>
           <p class="muted-sm" style="margin-top:0.4rem">
-            遊戲一個巨集上限 15 行，超過會自動切段，<strong>每一段各自一個框、各自一顆複製鈕</strong>，
-            照順序貼到不同的巨集格。技能名為台服官方用字。
+            超過 15 行自動切段，照順序貼到不同巨集格。
             <label class="toggle" style="display:inline-flex;margin-left:0.5rem">
               <input type="checkbox" id="macroNotify" checked> 加音效／提示
             </label>
           </p>
           <div id="macroBoxes"></div>
         </details>
+        </div>
 
+        <!-- 結果摘要條：寬螢幕是卡片底部的一條，窄螢幕改成浮在畫面下緣 -->
+        <div class="result-bar" id="resultBar" hidden>
+          <div class="rb-inner">
+            <span class="rb-icon" id="rbIcon" aria-hidden="true"></span>
+            <div class="rb-bars" id="rbBars"></div>
+            <span class="rb-hq num" id="rbHq"></span>
+            <button class="btn btn-primary" type="button" id="openResult">完整結果 ↗</button>
+          </div>
+        </div>
       </section>
 
       </div>
@@ -553,16 +701,6 @@
 
 <p class="sr-only" id="resultAnnounce" role="status" aria-live="polite"></p>
 
-<!-- 結果摘要條：排循環時固定在畫面下緣，點開才看完整結果 -->
-<div class="result-bar" id="resultBar" hidden>
-  <div class="rb-inner">
-    <span class="rb-icon" id="rbIcon" aria-hidden="true"></span>
-    <div class="rb-bars" id="rbBars"></div>
-    <span class="rb-hq num" id="rbHq"></span>
-    <button class="btn btn-primary" type="button" id="openResult">完整結果 ↗</button>
-  </div>
-</div>
-
 <!-- 模擬結果彈窗 -->
 <div class="modal-mask" id="resultModal" hidden>
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="resultModalTitle">
@@ -578,16 +716,13 @@
         <div class="row" style="align-items:center;justify-content:space-between">
           <div>
             <h3 style="margin:0">隨機模擬</h3>
-            <p class="muted-sm">理想模式假設技能必成功、作業狀態恆為一般。這裡改成擲骰跑 200 次。</p>
+            <p class="muted-sm">每一步都擲骰（一般配方 25% 高品質、4% 最高品質），低成功率的技能也會失敗。</p>
           </div>
           <button class="btn btn-primary" type="button" id="relBtn">跑 200 次</button>
         </div>
         <div class="rel-grid" id="relGrid" hidden></div>
       </div>
 
-      <p class="muted-sm" style="margin-top:0.9rem">
-        逐步數值直接顯示在「目前循環」的每一列上，不必來這裡對照。
-      </p>
     </div>
   </div>
 </div>
@@ -597,6 +732,7 @@
 
 <script src="../../assets/js/patch-gate.js"></script>
 <script src="craft-engine.js"></script>
+<script src="craft-solver.js"></script>
 <script src="crafting-sim.js" defer></script>
 </body>
 </html>

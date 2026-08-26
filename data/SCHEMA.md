@@ -809,9 +809,9 @@ ARR 2.x / HW 3.x / SB 4.x / ShB 5.x / EW 6.x / DT 7.x
 **台服未開放規則**：無台服名者保留 `#<id>` 佔位（`patch-tw-names.mjs` 靠它在升版後補名），
 **前端負責過濾**（`name` 非 `#\d+` 佔位 ＋ `PatchGate.released`）。
 
-### 2.19 craft-actions / craft-recipes（製作模擬器）
+### 2.19 craft-actions / craft-recipes / craft-consumables（製作模擬器）
 
-製作模擬器（`tools/crafting-sim/`）專用的兩份表，由 `scripts/build-craft-sim.mjs` 一起產生。
+製作模擬器（`tools/crafting-sim/`）專用的三份表，由 `scripts/build-craft-sim.mjs` 一起產生。
 **刻意不擴充 `recipes.json`**：那份的 `patch` 欄是 `patch-backfill-all.mjs` 事後補的，
 重跑 `build-recipes.mjs` 會把它洗掉（§4.19 的反例），所以模擬需要的欄位另開一份。
 
@@ -871,9 +871,34 @@ ARR 2.x / HW 3.x / SB 4.x / ShB 5.x / EW 6.x / DT 7.x
 **只收八大製作職（jobId 8–15）**：工會工坊（`fc*`）與無人島配方不是用製作技能做的，沒有 rlvl 與除數。
 **版本閘門不在建置期做**：`patch` 照樣輸出，前端用 `patch-gate.js` 依 `_meta.json` 的 gamePatch 過濾，
 再加上「成品在 items-lite 查無繁中名就不顯示」。
+#### craft-consumables.json
+
+料理與藥品的加成。**加成是「百分比 ＋ 上限」兩段**，而且料理與藥品**各自從基礎值算**再相加
+（不是疊加後再算），跟遊戲一致。
+
+```json
+{
+  "schema": "craft-consumables", "count": 61,
+  "data": [
+    { "id": 44088, "name": "酸檸檬醃魚", "kind": "food", "ilvl": 720, "patch": "7.1",
+      "bonuses": { "cms": [1, 4, 120, 5, 150], "cp": [1, 21, 76, 26, 96] } }
+  ]
+}
+```
+
+| 欄位 | 說明 |
+|------|------|
+| `kind` | `food`（料理）／`medicine`（藥品） |
+| `bonuses` | 只收 `cms`（作業精度）／`ctl`（加工精度）／`cp` 三種；採集用的 GP／獲得力不收 |
+| `bonuses.*` | `[是否百分比, NQ 值, NQ 上限, HQ 值, HQ 上限]`。百分比＝1 時值是 %，`floor(基礎值 × 值 / 100)` 後取 `min(…, 上限)` |
+
+**查無台服繁中名的不收**（依鐵則不用英文補），`patch` 交給前端 `patch-gate.js` 過濾。
+來源：Teamcraft `foods.json`／`medicines.json`（源自 `ItemFood` sheet）× `data/items.json` 的繁中名與 patch。
+
 **建置**：`node scripts/build-craft-sim.mjs`（`--offline` 用 `out_data/cache/craft-sim/` 快取，
-`--refresh` 強制重抓）。**改完引擎或這兩份表要跑 `node scripts/validate-craft-sim.mjs`**——
-它拿 Teamcraft 模擬器的官方測試案例回歸公式，並確認頁面的四套內建範本仍然做得完。
+`--refresh` 強制重抓；三份一起產）。**改完引擎、求解器或這三份表要跑 `node scripts/validate-craft-sim.mjs`**——
+它拿 Teamcraft 模擬器的官方測試案例回歸公式，確認頁面的四套內建範本仍然做得完，
+並確認自動求解在同樣四組情境下解得出來、品質不輸範本、且沒排進任何靠運氣的技能。
 
 ---
 
