@@ -74,6 +74,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 收藏頁補空 sources（由 obtainable-methods 推） | `node scripts/patch-sources-from-om.mjs`（`--apply`） |
 | 幻化配裝圖鑑重建 | `py tools\glamour\scripts\update_all.py local`（離線）／不帶 `local`＝完整抓取 |
 | 幻化配裝圖鑑的主庫健檢 | `py tools\glamour\scripts\check_maindb.py`（不改檔；msgpack 解不開會直接報出來） |
+| 幻化配裝圖鑑查重複投稿 | `py tools\glamour\scripts\check_duplicates.py`（只稽核／`--report` 出清單／`--apply` 標記移除，之後要跑 `build_site.py` 才生效） |
 | 重建物品分類對照表（改完 items.json） | `node scripts/build-item-categories.mjs`（`--offline` 只驗證） |
 | 重建園藝配種庫（含 216 件花色與種子取得管道） | `node scripts/build-gardening.mjs`（dry-run 預設／`--apply`／`--offline`；**直寫 minified**，看差異請看腳本摘要，別看 git diff） |
 | 重建製作模擬器資料（技能表＋模擬用配方＋料理／藥品） | `node scripts/build-craft-sim.mjs`（`--offline` 用 `out_data/cache/craft-sim` 快取／`--refresh` 強制重抓；會用 XIVAPI 校驗每個技能的 CP 與等級） |

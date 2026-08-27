@@ -42,6 +42,8 @@ FF14時尚配裝/
 │   ├── maindb.py         # ★★ 唯一資料入口：讀 repo 主庫 data/ 與 out_data/，
 │   │                     #    轉成本專案舊格式回傳。要查物品/取得方式/配方一律經由它
 │   ├── check_maindb.py   # ★ 主庫健檢（取代舊的 update_db.py，不改檔）
+│   ├── check_duplicates.py # 重複投稿稽核（裝備簽章 × md5/dHash）。預設只稽核，
+│   │                     #   --report 出 data/重複稽核.md、--apply 標記類型 1 落選者
 │   ├── patch_curated_sources.py # 精選「待確認／空白」取得方式補成 DB 答案（dry-run／--apply）
 │   ├── update_all.py     # ★ 一鍵更新總控（full / local 兩種模式）
 │   ├── build_site.py     # data/curated_outfits.json → curated/mirapri_outfits.js + official_sets.js
