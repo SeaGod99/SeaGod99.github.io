@@ -39,6 +39,9 @@ import re
 import sys
 from collections import defaultdict
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import mira_codec  # noqa: E402
+
 for _s in (sys.stdout, sys.stderr):
     try:
         _s.reconfigure(encoding="utf-8", errors="replace")
@@ -56,6 +59,10 @@ MIN_PIECES = 2    # 只有一件的不算「同一套」
 
 
 def load_js(fn):
+    """社群配裝自 2026-08-28 起是「item_db.js 共用字典 ＋ 緊湊編碼」，
+    解碼統一走 mira_codec（格式只有那一份定義）。"""
+    if fn == "mirapri_outfits.js":
+        return mira_codec.load_mirapri(ROOT)
     raw = open(os.path.join(ROOT, fn), encoding="utf-8").read()
     m = re.search(r"=\s*(\[.*\])\s*;?\s*$", raw, re.S)
     if not m:

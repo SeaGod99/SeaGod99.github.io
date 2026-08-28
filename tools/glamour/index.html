@@ -119,9 +119,99 @@ body::before{ content:''; position:fixed; inset:0; pointer-events:none; z-index:
 .fav-filter.active{ background:#b45309; border-color:#b45309; color:#fff; }
 .search-input{ width:240px; border-radius:20px; }
 .sort-select{ width:auto; border-radius:20px; }
-/* max-width 原本寫死 22rem＝385px（本頁 root 是 17.5px），比 375px 手機還寬，
-   加上容器左緣 18px 之後整頁橫向溢出 30px。min() 讓它在窄螢幕退回容器寬。 */
-.src-detail-select{ width:auto; max-width:min(22rem, 100%); border-radius:20px; }
+/* ── 篩選條件的收合（窄螢幕）──
+   條件用寬度不用 pointer：這裡的問題是**垂直空間**（375px 實測篩選列 764px、
+   視窗才 812px），不是手指粗細——觸控筆電有 1920px 高度，不需要收。
+   767.98px ＝ Bootstrap md 斷點，也正是卡片網格掉到 2 欄的那一階。
+   桌機端 summary 整個隱藏、details 保持 open，版面與收合前完全相同；
+   HTML 預設就帶 open，所以 JS 沒跑到也不會把篩選鎖住。 */
+#filter-more > summary{ display:none; }
+@media (max-width: 767.98px){
+  #filter-more > summary{
+    display:flex; align-items:center; gap:.5rem; cursor:pointer; list-style:none;
+    min-height:var(--tap-min, 44px); margin-bottom:.35rem;
+    font-size:.85rem; color:var(--text-secondary);
+  }
+  #filter-more > summary::-webkit-details-marker{ display:none; }
+  #filter-more > summary::after{ content:"▾"; margin-left:auto; transition:transform .18s; }
+  #filter-more[open] > summary::after{ transform:rotate(180deg); }
+}
+.filter-active-count{
+  background:var(--accent2); color:var(--bg-base); border-radius:20px;
+  padding:1px 8px; font-size:.75rem; font-weight:600;
+}
+
+/* ── 取得方式細項挑選器 ──
+   原本是 828 個 <option> 的原生 <select>。選項只在展開時才建 DOM。
+   max-width 不能寫死 22rem＝385px（本頁 root 是 17.5px），那比 375px 手機還寬，
+   加上容器左緣 18px 會整頁橫向溢出 30px；min() 讓它在窄螢幕退回容器寬。 */
+.srcpick{ position:relative; max-width:min(22rem, 100%); }
+.srcpick-btn{
+  display:flex; align-items:center; gap:.5rem; width:100%;
+  background:var(--raise); color:var(--text); border:1px solid var(--border);
+  border-radius:20px; padding:.28rem .85rem; font-size:.875rem; text-align:left;
+}
+.srcpick-btn:hover{ border-color:var(--accent2); }
+.srcpick-btn.on{ background:var(--accent2); border-color:var(--accent2); color:var(--bg-base); }
+.srcpick-btn > span:first-child{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.srcpick-caret{ margin-left:auto; flex:none; }
+.srcpick-pop{
+  position:absolute; z-index:1030; top:calc(100% + 4px); left:0;
+  width:min(24rem, calc(100vw - 2rem));
+  background:var(--card-bg); border:1px solid var(--border); border-radius:10px;
+  box-shadow:0 12px 32px rgba(0,0,0,.35); padding:.5rem;
+}
+.srcpick-q{
+  width:100%; background:var(--raise); color:var(--text);
+  border:1px solid var(--border); border-radius:8px; padding:.35rem .6rem; font-size:.875rem;
+}
+.srcpick-list{ max-height:min(50vh, 22rem); overflow-y:auto; margin-top:.4rem; }
+.srcpick-group{ font-size:.75rem; color:var(--muted); padding:.35rem .5rem .15rem; position:sticky; top:0;
+  background:var(--card-bg); }
+.srcpick-opt{
+  display:flex; align-items:center; gap:.5rem; width:100%; text-align:left;
+  background:none; border:0; color:var(--text); border-radius:6px;
+  padding:.35rem .5rem; font-size:.875rem; min-height:var(--tap-min, 44px);
+}
+.srcpick-opt:hover,.srcpick-opt.cursor{ background:var(--raise); }
+.srcpick-opt[aria-selected="true"]{ color:var(--accent2); font-weight:600; }
+.srcpick-opt .n{ margin-left:auto; color:var(--muted); font-size:.78rem; flex:none; }
+.srcpick-more{ color:var(--muted); font-size:.78rem; padding:.4rem .5rem; }
+/* 色系鈕：選中時直接用該色系的代表色當底，比文字更快辨認 */
+.dye-btn.active{ color:var(--bg-base); }
+.dye-btn[data-dye="white"].active { background:#ECECE8; border-color:#ECECE8; color:#1a1a1a; }
+.dye-btn[data-dye="black"].active { background:#2B2B2B; border-color:#2B2B2B; color:#f2f2f2; }
+.dye-btn[data-dye="grey"].active  { background:#9aa0a6; border-color:#9aa0a6; }
+.dye-btn[data-dye="red"].active   { background:#a01e32; border-color:#a01e32; color:#fff; }
+.dye-btn[data-dye="pink"].active  { background:#e8a2ad; border-color:#e8a2ad; color:#1a1a1a; }
+.dye-btn[data-dye="orange"].active{ background:#d2762e; border-color:#d2762e; color:#1a1a1a; }
+.dye-btn[data-dye="yellow"].active{ background:#c8a84b; border-color:#c8a84b; color:#1a1a1a; }
+.dye-btn[data-dye="green"].active { background:#4f7d3c; border-color:#4f7d3c; color:#fff; }
+.dye-btn[data-dye="blue"].active  { background:#2e6e8e; border-color:#2e6e8e; color:#fff; }
+.dye-btn[data-dye="purple"].active{ background:#6e4a8e; border-color:#6e4a8e; color:#fff; }
+.dye-btn[data-dye="brown"].active { background:#5c4f42; border-color:#5c4f42; color:#fff; }
+/* 「來自某官方套裝」的結果狀態：可點掉的 chip */
+.item-filter-chip{ background:var(--accent); border-color:var(--accent); color:var(--bg-base); }
+.item-filter-chip::after{ content:" ✕"; }
+
+/* 熱門單品清單 */
+.hot-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(15rem, 1fr)); gap:.4rem; }
+.hot-row{ display:flex; align-items:center; gap:.6rem; width:100%; text-align:left;
+  background:var(--raise); border:1px solid var(--border); border-radius:8px;
+  color:var(--text); padding:.4rem .6rem; min-height:var(--tap-min, 44px); }
+.hot-row:hover{ border-color:var(--accent2); }
+.hot-row img{ width:32px; height:32px; flex:none; image-rendering:auto; }
+.hot-row .nm{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:.875rem; }
+.hot-row .ct{ margin-left:auto; flex:none; color:var(--muted); font-size:.78rem; }
+.hot-rank{ flex:none; width:1.6rem; text-align:right; color:var(--muted); font-size:.78rem; }
+
+/* 窄螢幕：挑選器自己佔一整列，彈出層貼齊左右兩邊。
+   不這樣做的話彈出層（24rem＝420px）會從按鈕左緣往右長出容器外，
+   整頁跟著多出橫向捲軸。 */
+@media (max-width: 767.98px){
+  .srcpick{ width:100%; max-width:100%; }
+  .srcpick-pop{ left:0; right:0; width:auto; }
+}
 
 /* ── Cards ── */
 .outfit-card{ cursor:pointer; overflow:hidden; background:var(--card-bg);
@@ -217,6 +307,8 @@ body::before{ content:''; position:fixed; inset:0; pointer-events:none; z-index:
 .src-ov-n{ font-size:.72rem; color:var(--muted); margin-left:4px; }
 .unconfirmed{ color:var(--orange); }
 .item-link{ cursor:pointer; border-bottom:1px dotted var(--muted); }
+.link-user{ cursor:pointer; color:var(--accent2); border-bottom:1px dotted var(--accent2); }
+.wearers-btn{ margin-top:.6rem; }
 .item-link:hover{ color:var(--accent2); border-bottom-color:var(--accent2); }
 .dye-cell{ white-space:nowrap; }
 .dye-dash{ color:var(--muted); }
@@ -333,6 +425,14 @@ body::before{ content:''; position:fixed; inset:0; pointer-events:none; z-index:
 
 <!-- ── 統一篩選列 ── -->
 <div class="filter-bar px-3 px-md-4 py-3" id="filter-bar">
+  <!-- 觸控裝置上這四列（性別／種族／取得方式／職業）預設收起：375px 實測整條篩選列
+       高 764px，加上 navbar 等於第一張卡在 966px、而視窗只有 812px——不滑一下看不到
+       任何一套配裝。桌機（pointer: fine）維持全開，summary 由 CSS 隱藏。 -->
+  <details id="filter-more" open>
+    <summary id="filter-more-summary">
+      <span>⚙ 篩選條件</span>
+      <span class="filter-active-count d-none" id="filter-active-count"></span>
+    </summary>
   <div class="d-flex flex-wrap align-items-center gap-2 mb-2" id="row-gender">
     <span class="filter-group-label">性別</span>
     <button class="btn btn-sm btn-outline-secondary filter-btn filter-reset active" data-mf="gender" data-val="">全部</button>
@@ -368,10 +468,22 @@ body::before{ content:''; position:fixed; inset:0; pointer-events:none; z-index:
             title="伊修加德重建、無人島開拓、宇宙探索、友好部族">🏝️ 特殊玩法</button>
     <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="other"   data-group="src" data-zh="🎁 其他"     data-en="🎁 Other"
             title="成就獎勵、寶圖，以及來源尚未確認的套裝">🎁 其他</button>
-    <select class="form-select form-select-sm src-detail-select" id="src-detail-select"
-            title="細分到單一取得方式（副本名、商人、兌換貨幣…）；隨上方分類與檢視自動更新">
-      <option value="">取得方式細項：全部</option>
-    </select>
+    <!-- 取得方式細項：828 個選項的原生 <select> 在手機上等於不能用（只能一路捲），
+         改成「按鈕 → 可打字過濾的清單」。選項只在展開時才進 DOM，且一次最多算 120 筆。 -->
+    <div class="srcpick" id="src-detail">
+      <button type="button" class="srcpick-btn" id="src-detail-btn"
+              aria-haspopup="listbox" aria-expanded="false" aria-controls="src-detail-pop"
+              title="細分到單一取得方式（副本名、商人、兌換貨幣…）；隨上方分類與檢視自動更新">
+        <span id="src-detail-label">取得方式細項：全部</span>
+        <span class="srcpick-caret" aria-hidden="true">▾</span>
+      </button>
+      <div class="srcpick-pop" id="src-detail-pop" hidden>
+        <input type="search" class="srcpick-q" id="src-detail-q" autocomplete="off"
+               placeholder="輸入副本／商人／貨幣名…" aria-label="搜尋取得方式細項"
+               data-zh-placeholder="輸入副本／商人／貨幣名…" data-en-placeholder="Filter duty / vendor / currency…">
+        <div class="srcpick-list" id="src-detail-list" role="listbox" aria-label="取得方式細項"></div>
+      </div>
+    </div>
   </div>
   <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
     <span class="filter-group-label" data-zh="職業" data-en="Job">職業</span>
@@ -384,6 +496,24 @@ body::before{ content:''; position:fixed; inset:0; pointer-events:none; z-index:
     <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="alljob"  data-group="job" data-zh="👥 全職業" data-en="👥 All Jobs"
             title="整套沒有職業限制，任何職業都能穿">👥 全職業</button>
   </div>
+  <!-- 色系：找幻化最常見的需求是「我想要一套白的／黑的」，但站上 150 種染色名
+       （煤煙黑、素雪白、羅蘭莓…）沒有任何歸類入口。這裡把染色名歸成 11 個色系，
+       整套只要用到該色系的任一染色就算命中。官方套裝沒有染色資料 → 該檢視隱藏此列。 -->
+  <div class="d-flex flex-wrap align-items-center gap-2 mb-2" id="row-dye">
+    <span class="filter-group-label" data-zh="色系" data-en="Colour">色系</span>
+    <button class="btn btn-sm btn-outline-secondary filter-btn dye-btn" data-dye="white"  data-zh="白"   data-en="White">白</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn dye-btn" data-dye="black"  data-zh="黑"   data-en="Black">黑</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn dye-btn" data-dye="grey"   data-zh="灰銀" data-en="Grey">灰銀</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn dye-btn" data-dye="red"    data-zh="紅"   data-en="Red">紅</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn dye-btn" data-dye="pink"   data-zh="粉"   data-en="Pink">粉</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn dye-btn" data-dye="orange" data-zh="橙"   data-en="Orange">橙</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn dye-btn" data-dye="yellow" data-zh="黃金" data-en="Yellow">黃金</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn dye-btn" data-dye="green"  data-zh="綠"   data-en="Green">綠</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn dye-btn" data-dye="blue"   data-zh="藍"   data-en="Blue">藍</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn dye-btn" data-dye="purple" data-zh="紫"   data-en="Purple">紫</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn dye-btn" data-dye="brown"  data-zh="棕"   data-en="Brown">棕</button>
+  </div>
+  </details>
   <div class="d-flex flex-wrap align-items-center gap-2">
     <input class="form-control form-control-sm search-input" type="text" placeholder="🔍 搜尋名稱、裝備或使用者…" id="search-input"
            data-zh-placeholder="🔍 搜尋名稱、裝備或使用者…" data-en-placeholder="🔍 Search name, item or user…">
@@ -391,8 +521,16 @@ body::before{ content:''; position:fixed; inset:0; pointer-events:none; z-index:
             data-zh="⭐ 我的收藏" data-en="⭐ Favorites">⭐ 我的收藏</button>
     <button class="btn btn-sm btn-outline-secondary filter-btn tw-btn" id="tw-btn" title="只顯示每件裝備都有繁中名稱、且可由單一職業同時穿戴的套裝（繁中版尚無跨職業幻化，混職裝備無法實際套用）"
             data-zh="🇹🇼 繁中版可幻化" data-en="🇹🇼 On TW server">🇹🇼 繁中版可幻化</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" id="hot-items-btn"
+            title="最常被玩家用到的單品；點一件即以它反查所有配裝"
+            data-zh="🔥 熱門單品" data-en="🔥 Popular items">🔥 熱門單品</button>
+    <!-- 「這套官方套裝有哪些玩家配法」的結果狀態，只有生效時才出現 -->
+    <button class="btn btn-sm filter-btn item-filter-chip d-none" id="item-filter-chip"
+            title="點一下清除這個條件"></button>
     <select class="form-select form-select-sm sort-select" id="sort-select">
-      <option value="default">排序：預設（精選優先）</option>
+      <option value="new">排序：投稿新 → 舊</option>
+      <option value="old">排序：投稿舊 → 新</option>
+      <option value="default">排序：⭐ 精選優先</option>
       <option value="patch-desc">排序：版本新 → 舊</option>
       <option value="patch-asc">排序：版本舊 → 新</option>
       <option value="name">排序：名稱</option>
@@ -444,6 +582,22 @@ body::before{ content:''; position:fixed; inset:0; pointer-events:none; z-index:
   </div>
 </div>
 
+<!-- ── 熱門單品 ── -->
+<div class="modal fade" id="hot-modal" tabindex="-1" aria-labelledby="hot-modal-title" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <h5 class="modal-title" id="hot-modal-title">🔥 熱門單品</h5>
+          <div class="modal-subtitle" id="hot-modal-sub"></div>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="關閉"></button>
+      </div>
+      <div class="modal-body" id="hot-modal-body"></div>
+    </div>
+  </div>
+</div>
+
 <!-- 圖片放大 lightbox -->
 <div id="img-lightbox" class="img-lightbox" onclick="lbBackdrop(event)">
   <div class="lb-toolbar">
@@ -486,19 +640,55 @@ function dyeHtml(name) {
   return `<span class="dye-cell">${dot}${esc(name)}</span>`;
 }
 
-// 縮圖路徑（配裝圖片/x.jpe → 配裝圖片/縮圖/x.jpe.jpg）
-// 官方套裝 wiki 照本身就是 640px 縮圖，直接用原檔
+// ── 圖片的兩層 ────────────────────────────────────────────────
+// 以前卡片與彈窗共用同一份 619×1100／平均 90.6KB 的 JPEG，等於用彈窗規格去餵
+// 桌機只有 230 CSS px 寬的格子——一頁 60 張卡要載 5.3MB 圖，比整份社群資料還重。
+// 現在分兩層（產生方式見 scripts/build_image_tiers.py）：
+//   卡片層 配裝圖片/卡片/…  .webp  寬 320px　約 23KB　→ 一頁 60 張只剩 1.4MB
+//   彈窗層 配裝圖片/縮圖/…  .avif  原尺寸　　約 43KB　（同畫質比 WebP 再小三成）
+// 官方套裝的 wiki 照本身就是 640px／32KB，沒有多做一層的價值，兩個函式都原檔直出。
+function _thumbRel(img) {
+  const rest = img.slice("配裝圖片/".length);
+  return rest.toLowerCase().endsWith(".jpg") ? rest : rest + ".jpg";
+}
 function thumbOf(img) {
   if (!img || !img.startsWith("配裝圖片/")) return img;
   if (img.startsWith("配裝圖片/官方套裝/")) return img;
-  const rest = img.slice("配裝圖片/".length);
-  return "配裝圖片/縮圖/" + (rest.toLowerCase().endsWith(".jpg") ? rest : rest + ".jpg");
+  return "配裝圖片/縮圖/" + _thumbRel(img).replace(/\.jpg$/i, ".avif");
+}
+function cardOf(img) {
+  if (!img || !img.startsWith("配裝圖片/")) return img;
+  if (img.startsWith("配裝圖片/官方套裝/")) return img;
+  return "配裝圖片/卡片/" + _thumbRel(img).replace(/\.jpg$/i, ".webp");
 }
 
-// 彈窗圖片：原圖優先，404 時自動改用縮圖
+// 卡片圖的退路鏈：卡片層 → 彈窗層 → 原圖 → No Image
+function cardImgError(el, orig) {
+  const s = el.getAttribute("src") || "";
+  if (s.indexOf("配裝圖片/卡片/") === 0) { el.src = thumbOf(orig); return; }
+  if (s.indexOf("配裝圖片/縮圖/") === 0) { el.src = orig; return; }
+  const wrap = el.closest(".set-card-imgwrap");
+  if (wrap) wrap.innerHTML = '<div class="card-noimg">No Image</div>';
+  else el.outerHTML = '<div class="card-noimg">No Image</div>';
+}
+
+// 彈窗圖的退路鏈：原圖 → 彈窗層(AVIF) → 卡片層(WebP) → No Image
+// mirapri 原圖 693MB 不進版控（會破 Pages 1GB 上限），線上一定走第二層；
+// 第三層是給不支援 AVIF 的舊瀏覽器的——比較糊但看得到，總比破圖好。
+function modalImgError(el, orig) {
+  const s = el.getAttribute("src") || "";
+  if (s.indexOf("配裝圖片/縮圖/") === -1 && s.indexOf("配裝圖片/卡片/") === -1) {
+    el.src = thumbOf(orig); return;
+  }
+  if (s.indexOf("配裝圖片/縮圖/") === 0) { el.src = cardOf(orig); return; }
+  el.parentElement.innerHTML = '<div class="no-img">No Image</div>';
+}
+
 function modalImg(img, alt) {
   if (!img) return '<div class="no-img">No Image</div>';
-  return `<img class="modal-zoom-img" src="${esc(img)}" alt="${esc(alt)}" title="點擊放大" onclick="openLightbox(this.src)" style="width:100%;border-radius:8px;display:block" onerror="if(this.src.indexOf('縮圖')===-1){this.src='${esc(thumbOf(img))}';}else{this.parentElement.innerHTML='<div class=\\'no-img\\'>No Image</div>';}">`;
+  return `<img class="modal-zoom-img" src="${esc(img)}" alt="${esc(alt)}" title="點擊放大"
+    onclick="openLightbox(this.src)" style="width:100%;border-radius:8px;display:block"
+    onerror="modalImgError(this,'${esc(img).replace(/'/g, "\\'")}')">`;
 }
 
 // 圖片放大（lightbox）＋ 縮放／平移
@@ -528,9 +718,13 @@ function lbBackdrop(ev) {
   if (ev.target === document.getElementById("img-lightbox")) closeLightbox();
 }
 
-// 裝備反查：以裝備名搜尋所有套裝
+// 裝備反查：以裝備名搜尋所有套裝（熱門單品清單與投稿者名也走這條）
 function searchItem(name) {
   closeModal();
+  const hot = document.getElementById("hot-modal");
+  if (hot && hot.classList.contains("show")) bootstrap.Modal.getInstance(hot).hide();
+  // 這是「換個東西重新找」的動作：留著上一個「有穿某套裝」的條件只會安靜地砍掉結果
+  if (itemFilter) { itemFilter = null; syncItemFilterChip(); }
   const input = document.getElementById("search-input");
   input.value = name;
   q = name;
@@ -548,8 +742,9 @@ let currentIdx  = 0;
 let srcTags     = new Set();   // 取得方式（可複選）
 let srcDetail   = "";          // 取得方式細項（單選；完整來源字串，如「🗡️副本掉落：水妖幻園多恩美格禁園」）
 let jobTags     = new Set();   // 職業（可複選）
+let dyeTags     = new Set();   // 色系（可複選，僅配裝檢視；官方套裝沒有染色資料）
 let twOnly      = false;       // 只顯示繁中版可幻化
-let sortMode    = "default";
+let sortMode    = "new";       // 預設＝投稿新→舊（見 sortFiltered）
 let currentLang = "zh";
 let q           = "";
 let miraFilters = { gender:"", race:"" };
@@ -563,26 +758,48 @@ let favOnly     = false;
 // mirage:{row_id} 是遊戲原生 id，1078 套完全不受影響。
 const FAV_ID_MIGRATION = {"src:29eff038:76:750":"src:5b112c4d:76:750","src:29eff038:66:750":"src:5b112c4d:66:750","src:29eff038:65:750":"src:5b112c4d:65:750","src:29eff038:64:750":"src:5b112c4d:64:750","src:29eff038:63:750":"src:5b112c4d:63:750","src:29eff038:59:750":"src:5b112c4d:59:750","src:29eff038:103:750":"src:5b112c4d:103:750","src:8a3917ed:76:720":"src:385a929c:76:720","src:8a3917ed:66:720":"src:385a929c:66:720","src:8a3917ed:65:720":"src:385a929c:65:720","src:8a3917ed:64:720":"src:385a929c:64:720","src:8a3917ed:63:720":"src:385a929c:63:720","src:8a3917ed:59:720":"src:385a929c:59:720","src:8a3917ed:103:720":"src:385a929c:103:720","src:ba615170:197:515":"src:15a92042:197:515","src:ba615170:196:515":"src:15a92042:196:515","src:79fd22c9:33:670":"src:028a305f:33:670","src:79fd22c9:32:670":"src:028a305f:32:670","src:1174a8e2:33:650":"src:f3cdd85f:33:650","src:1174a8e2:33:610":"src:f3cdd85f:33:610","src:1174a8e2:32:650":"src:f3cdd85f:32:650","src:1174a8e2:32:610":"src:f3cdd85f:32:610","src:e3a2c6c1:33:560":"src:a98441dd:33:560","src:e3a2c6c1:32:560":"src:a98441dd:32:560","src:ba615170:181:385":"src:15a92042:181:385","src:ba615170:180:385":"src:15a92042:180:385","src:9d74961d:76:515":"src:e42a4dd6:76:515","src:9d74961d:66:515":"src:e42a4dd6:66:515","src:9d74961d:65:515":"src:e42a4dd6:65:515","src:9d74961d:103:515":"src:e42a4dd6:103:515","src:1174a8e2:33:540":"src:a26720a5:33:540","src:1174a8e2:33:520":"src:a26720a5:33:520","src:1174a8e2:33:480":"src:a26720a5:33:480","src:1174a8e2:32:540":"src:876ab160:32:540","src:1174a8e2:32:520":"src:876ab160:32:520","src:1174a8e2:32:480":"src:876ab160:32:480","src:fd4bcc07:76:385":"src:067dbc85:76:385","src:fd4bcc07:66:385":"src:067dbc85:66:385","src:fd4bcc07:65:385":"src:067dbc85:65:385","src:fd4bcc07:64:385":"src:067dbc85:64:385","src:fd4bcc07:63:385":"src:067dbc85:63:385","src:fd4bcc07:59:385":"src:067dbc85:59:385","src:fd4bcc07:103:385":"src:067dbc85:103:385","src:e460ee7b:33:400":"src:a9c50c63:33:400","src:c78137c0:33:430":"src:90fff17b:33:430","src:c78137c0:32:430":"src:90fff17b:32:430","src:ba615170:150:255":"src:15a92042:150:255","src:ba615170:149:255":"src:15a92042:149:255","src:823b389b:33:330":"src:875867f6:33:330","src:823b389b:32:330":"src:5dcbbfb1:32:330","src:1174a8e2:33:370":"src:a9c50c63:33:370","src:1174a8e2:32:370":"src:ac09573b:32:370","src:ba615170:129:1":"src:15a92042:129:1","src:ec9b0abe:76:279":"src:e7952254:76:279","src:ec9b0abe:66:279":"src:e7952254:66:279","src:ec9b0abe:65:279":"src:e7952254:65:279","src:ec9b0abe:64:279":"src:e7952254:64:279","src:ec9b0abe:63:279":"src:e7952254:63:279","src:ec9b0abe:59:279":"src:e7952254:59:279","src:ec9b0abe:103:279":"src:e7952254:103:279","src:bf70447d:76:265":"src:716dfbf9:76:265","src:bf70447d:66:265":"src:716dfbf9:66:265","src:bf70447d:65:265":"src:716dfbf9:65:265","src:bf70447d:103:265":"src:716dfbf9:103:265","src:ba615170:99:290":"src:15a92042:99:290","src:ba615170:98:290":"src:15a92042:98:290","src:ba615170:96:290":"src:15a92042:96:290","src:ba615170:92:290":"src:15a92042:92:290","src:ba615170:29:290":"src:15a92042:29:290","src:ba615170:28:290":"src:15a92042:28:290","src:ba615170:26:290":"src:15a92042:26:290","src:ba615170:25:290":"src:15a92042:25:290","src:ba615170:24:290":"src:15a92042:24:290","src:ba615170:23:290":"src:15a92042:23:290","src:ba615170:22:290":"src:15a92042:22:290","src:ba615170:21:290":"src:15a92042:21:290","src:ba615170:20:290":"src:15a92042:20:290","src:ba615170:112:290":"src:15a92042:112:290","src:ba615170:112:115":"src:15a92042:112:115","src:ba615170:111:290":"src:15a92042:111:290","src:ba615170:111:115":"src:15a92042:111:115","src:3d0b1398:33:220":"src:48f87dd6:33:220","src:3d0b1398:33:200":"src:484fe534:33:200","src:3d0b1398:32:220":"src:48f87dd6:32:220","src:3d0b1398:32:200":"src:484fe534:32:200","src:1174a8e2:76:285":"src:3d0b1398:76:285","src:1174a8e2:66:285":"src:3d0b1398:66:285","src:1174a8e2:65:285":"src:3d0b1398:65:285","src:1174a8e2:103:285":"src:3d0b1398:103:285","src:06ce325b:76:273":"src:ac425b11:76:273","src:06ce325b:66:273":"src:ac425b11:66:273","src:06ce325b:65:273":"src:ac425b11:65:273","src:06ce325b:103:273":"src:ac425b11:103:273","src:1174a8e2:76:115":"src:b53bf08c:76:115","src:1174a8e2:66:115":"src:b53bf08c:66:115","src:1174a8e2:65:115":"src:b53bf08c:65:115","src:1174a8e2:64:115":"src:b53bf08c:64:115","src:1174a8e2:63:115":"src:b53bf08c:63:115","src:1174a8e2:59:115":"src:b53bf08c:59:115","src:1174a8e2:103:115":"src:b53bf08c:103:115","src:f068211f:59:40":"src:3238a406:59:40","src:f068211f:30:40":"src:3238a406:30:40","src:f068211f:1:1":"src:d876f78e:1:1","src:9f3b44d1:1:50":"src:4abac582:1:50","src:9a266340:1:48":"src:e89df262:1:48","src:89d8868c:30:35":"src:2d97f882:30:35","src:89d8868c:1:31":"src:2d97f882:1:31","src:624b3aad:60:28":"src:55740f77:60:28","src:624b3aad:59:25":"src:55740f77:59:25","src:624b3aad:30:25":"src:55740f77:30:25","src:624b3aad:1:26":"src:55740f77:1:26","src:58e0a052:60:8":"src:55740f77:60:8","src:58e0a052:60:23":"src:ccc05891:60:23","src:58e0a052:59:20":"src:ccc05891:59:20","src:58e0a052:30:8":"src:55740f77:30:8","src:58e0a052:30:5":"src:55740f77:30:5","src:58e0a052:30:23":"src:ccc05891:30:23","src:58e0a052:1:8":"src:55740f77:1:8","src:58e0a052:1:24":"src:ccc05891:1:24","src:43059ba2:60:32":"src:e0f60d7d:60:32","src:43059ba2:59:35":"src:e0f60d7d:59:35","src:43059ba2:59:30":"src:e0f60d7d:59:30","src:43059ba2:59:15":"src:13665e6c:59:15","src:43059ba2:30:30":"src:e0f60d7d:30:30","src:43059ba2:30:18":"src:13665e6c:30:18","src:43059ba2:30:16":"src:13665e6c:30:16","src:1174a8e2:60:46":"src:3238a406:60:46","src:1174a8e2:30:43":"src:3238a406:30:43","src:1174a8e2:30:14":"src:ccc05891:30:14","src:1174a8e2:30:12":"src:ccc05891:30:12","src:1174a8e2:30:10":"src:ccc05891:30:10","src:1174a8e2:1:44":"src:3238a406:1:44","src:1174a8e2:1:10":"src:ccc05891:1:10","src:9d74961d:64:515":"src:e42a4dd6:64:515","src:9d74961d:63:515":"src:e42a4dd6:63:515","src:9d74961d:59:515":"src:e42a4dd6:59:515","src:bf70447d:64:265":"src:716dfbf9:64:265","src:bf70447d:63:265":"src:716dfbf9:63:265","src:bf70447d:59:265":"src:716dfbf9:59:265","src:1174a8e2:64:285":"src:3d0b1398:64:285","src:1174a8e2:63:285":"src:3d0b1398:63:285","src:1174a8e2:59:285":"src:3d0b1398:59:285","src:06ce325b:64:273":"src:ac425b11:64:273","src:06ce325b:63:273":"src:ac425b11:63:273","src:06ce325b:59:273":"src:ac425b11:59:273"};
 const FAV_MIGRATION_TAG = "2026-07-29-srcid";
-(function migrateFavIds() {
+
+// ── localStorage key（全站慣例：一律 ffxiv_ 開頭）────────────────
+// 首頁的「全站進度備份」只打包 ffxiv_* 開頭的 key（見根 index.html 的 exportAll）。
+// 本頁原本用 ff14_favs，等於使用者按了匯出、收藏卻整包沒被帶走，而且不會有任何提示。
+// 2026-08-28 改名並補一次性搬遷，做法比照市場頁 tools/market/market.js 的 migrateLegacyKeys()：
+// **只搬一次、舊 key 不刪**（使用者可能還開著舊分頁，刪了會兩邊互相蓋掉）。
+const LS_FAVS = "ffxiv_favs";
+const LS_FAVS_MIGRATED = "ffxiv_favs_migrated";
+const LS_FAVS_LEGACY = "ff14_favs";
+
+(function migrateFavStorage() {
   try {
-    if (localStorage.getItem("ff14_favs_migrated") === FAV_MIGRATION_TAG) return;
-    const raw = JSON.parse(localStorage.getItem("ff14_favs") || "[]");
-    let moved = 0;
-    const next = raw.map(id => {
-      const to = FAV_ID_MIGRATION[id];
-      if (to) { moved++; return to; }
-      return id;
-    });
-    if (moved) localStorage.setItem("ff14_favs", JSON.stringify([...new Set(next)]));
-    localStorage.setItem("ff14_favs_migrated", FAV_MIGRATION_TAG);
+    // ① 舊 key → 新 key（只在新 key 還沒有東西時搬，避免蓋掉新資料）
+    if (localStorage.getItem(LS_FAVS) === null) {
+      const legacy = localStorage.getItem(LS_FAVS_LEGACY);
+      if (legacy !== null) localStorage.setItem(LS_FAVS, legacy);
+    }
+    // ② 官方套裝 id 改版的一次性換 id（原本記在 ff14_favs_migrated，沿用該旗標免得重跑）
+    if (localStorage.getItem(LS_FAVS_MIGRATED) !== FAV_MIGRATION_TAG &&
+        localStorage.getItem("ff14_favs_migrated") !== FAV_MIGRATION_TAG) {
+      const raw = JSON.parse(localStorage.getItem(LS_FAVS) || "[]");
+      let moved = 0;
+      const next = raw.map(id => {
+        const to = FAV_ID_MIGRATION[id];
+        if (to) { moved++; return to; }
+        return id;
+      });
+      if (moved) localStorage.setItem(LS_FAVS, JSON.stringify([...new Set(next)]));
+    }
+    localStorage.setItem(LS_FAVS_MIGRATED, FAV_MIGRATION_TAG);
   } catch (e) { /* localStorage 不可用就跳過，不影響其他功能 */ }
 })();
 
 let favs = new Set();
-try { favs = new Set(JSON.parse(localStorage.getItem("ff14_favs") || "[]")); } catch (e) {}
+try { favs = new Set(JSON.parse(localStorage.getItem(LS_FAVS) || "[]")); } catch (e) {}
 
 function saveFavs() {
-  try { localStorage.setItem("ff14_favs", JSON.stringify([...favs])); } catch (e) {}
+  const val = JSON.stringify([...favs]);
+  try { localStorage.setItem(LS_FAVS, val); } catch (e) {}
+  // 舊 key 一併寫，讓還停在舊版快取（SW）的分頁不會看到收藏倒退。
+  // 下一次改版可以拿掉這行，屆時舊快取早已過期。
+  try { localStorage.setItem(LS_FAVS_LEGACY, val); } catch (e) {}
 }
 
 // ── 官方套裝 / 收藏追蹤 ──
@@ -752,23 +969,129 @@ function annotate(e) {
   return e;
 }
 
-function loadMirapri() {
+// ── 延遲載入的三份資料檔 ───────────────────────────────────────
+// 順序由「使用者現在在看哪個檢視」決定，不是寫死的。深連結 ?v=sets 進來時，
+// 先載 3.7MB 的官方套裝，別讓使用者乾等他根本沒要看的 11.9MB 社群資料。
+// item_sources 永遠排最後——篩選與彈窗都吃它，但沒有它時前端會退回單一來源，
+// 不會壞掉，所以它可以最後到。
+function startLoading() {
+  const chain = viewMode === "sets"
+    ? () => loadSets(() => loadItemDb(() => loadMirapri(() => loadItemSources())))
+    : () => loadItemDb(() => loadMirapri(() => loadSets(() => loadItemSources())));
+  chain();
+}
+
+// ── 社群配裝的裝備字典（item_db.js）───────────────────────────
+// 6,860 套用到的 35,249 件裝備其實只有 6,347 個不重複道具，而 zh／日文名／部位／
+// 版本／等級／職業／取得方式／可染／可交易全都是**道具的屬性、不是這一套的屬性**。
+// 以前每件抄一份，mirapri_outfits.js 因此有 11.9MB（gzip 1.95MB）、光編譯就 235ms。
+// 現在共通屬性放這份字典，配裝那份只留 [iid, 染色1, 染色2, 旗標, 例外]。
+// 格式與編碼端的定義在 scripts/mira_codec.py，**欄位順序兩邊必須一致**。
+let ITEM_DB = null;
+function loadItemDb(next) {
+  if (ITEM_DB) { next && next(); return; }
+  if (_inflight.has("db")) return;
+  _inflight.add("db");
+  const s = document.createElement("script");
+  s.src = "item_db.js";
+  s.onload = () => {
+    if (typeof _ITEM_DB !== "undefined") ITEM_DB = _ITEM_DB;
+    next && next();
+  };
+  s.onerror = () => { next && next(); };   // 沒有字典時 rehydrate 會退回只有 iid 的資料
+  document.head.appendChild(s);
+}
+
+const _DB_POOLED = new Set(["slot", "patch", "lv", "job", "source", "st"]);
+
+// 把 item_db.js ＋ 緊湊編碼解回原本每件一個完整物件的形狀。
+// 刻意還原成**和以前一模一樣的結構**，這樣渲染、篩選、搜尋那 1,400 行完全不用動。
+// 解碼規則必須與 scripts/mira_codec.py 的 rehydrate_mirapri() 一致。
+function rehydrateMirapri(compact, db) {
+  const fields = (db && db.f) || [];
+  const pools = (db && db.p) || {};
+  const dyes = compact.dy || [];
+  const decDye = i => (i ? dyes[i - 1] : "—");
+
+  const items = new Map();
+  for (const iid in (db && db.d) || {}) {
+    const row = db.d[iid], rec = {};
+    for (let k = 0; k < fields.length; k++) {
+      const f = fields[k], v = row[k];
+      rec[f] = _DB_POOLED.has(f) ? (v ? pools[f][v - 1] : "")
+             : f === "mb" ? !!v : v;
+    }
+    items.set(Number(iid), rec);
+  }
+
+  return (compact.o || []).map(row => {
+    const m = row.m || "";
+    const equips = (row.q || []).map(p => {
+      if (!Array.isArray(p)) return p;          // 極少數是純字串，原樣保留
+      const iid = p[0] || 0;
+      const base = iid ? items.get(iid) : null;
+      const e = base ? Object.assign({}, base) : {};
+      const ovr = (p.length > 4 && p[4] && typeof p[4] === "object") ? p[4] : null;
+      if (ovr) for (const k in ovr) {
+        if (ovr[k] === null) delete e[k];       // null ＝ 這件沒有這個欄位
+        else e[k] = ovr[k];
+      }
+      e.dye1 = decDye(p.length > 1 ? p[1] : 0);
+      e.dye2 = decDye(p.length > 2 ? p[2] : 0);
+      if (p.length > 3 && ((p[3] || 0) & 1)) e.recon = true;
+      if (iid) e.iid = iid;
+      return e;
+    });
+    return {
+      type: "mirapri", id: row.i || "", name: row.n || "", color: row.c || "",
+      gender: row.g || "", race: row.r || "",
+      image: (m.indexOf("/") >= 0 || !m) ? m : "配裝圖片/mirapri/" + m,
+      tags: [], note: "", timestamp: row.t || "",
+      equipments: equips,
+      dyes: (row.d || []).map(decDye),
+      hasPieceDyes: !!row.h,
+    };
+  });
+}
+
+// 已經在飛的請求不要再送一次（切檢視時會插隊要求優先載入，見 setView）
+const _inflight = new Set();
+
+function loadMirapri(next) {
+  if (miraLoaded) { next && next(); return; }
+  if (_inflight.has("mira")) return;
+  _inflight.add("mira");
   const s = document.createElement("script");
   s.src = "mirapri_outfits.js";
   s.onload = () => {
     miraLoaded = true;
-    if (typeof _MIRAPRI_RAW !== "undefined")
-      ALL_OUTFITS = ALL_OUTFITS.concat(_MIRAPRI_RAW.map(annotate));
+    if (typeof _MIRAPRI_RAW !== "undefined") {
+      // v2＝item_db.js 共用字典＋緊湊編碼（見 rehydrateMirapri）；
+      // 陣列＝舊格式，直接用（讓還沒重跑 build_site.py 的環境不會突然壞掉）
+      const raw = Array.isArray(_MIRAPRI_RAW)
+        ? _MIRAPRI_RAW : rehydrateMirapri(_MIRAPRI_RAW, ITEM_DB);
+      // ALL_OUTFITS 的排法＝精選在前、社群**新→舊**，這是「⭐ 精選優先」那個
+      // 排序模式直接用的順序（sortFiltered 對它不做任何 sort）。
+      // 資料檔本身是投稿時間遞增（最舊的在最前面），不先排一次的話「精選優先」
+      // 會變成「精選 → 2024 年的舊投稿」。排序鍵是 timestamp 字串
+      //（YYYY-MM-DD hh:mm:ss，定長可直接字串比大小），不會因為重新篩選而變動。
+      const mira = raw.map(annotate);
+      mira.sort((a, b) => (b.timestamp || "").localeCompare(a.timestamp || ""));
+      ALL_OUTFITS = ALL_OUTFITS.concat(mira);
+    }
     populateSrcDetail();
     applyFilters();
     restorePage();          // 網址指定的頁碼／套裝（資料延遲載入，載完才回得去）
-    loadSets();   // 社群載完再載官方套裝（彈窗「所屬套裝」反查也靠這份）
+    next && next();
   };
-  s.onerror = () => { miraLoaded = true; updateSubtitle(); loadSets(); };
+  s.onerror = () => { miraLoaded = true; updateSubtitle(); next && next(); };
   document.head.appendChild(s);
 }
 
-function loadSets() {
+function loadSets(next) {
+  if (setsLoaded) { next && next(); return; }
+  if (_inflight.has("sets")) return;
+  _inflight.add("sets");
   const s = document.createElement("script");
   s.src = "official_sets.js";
   s.onload = () => {
@@ -794,9 +1117,9 @@ function loadSets() {
       }
     }
     if (viewMode === "sets") { populateSrcDetail(); applyFilters(); restorePage(); }
-    loadItemSources();   // 最後載完整來源表（191KB），到齊後細項選單重建
+    next && next();
   };
-  s.onerror = () => { setsLoaded = true; loadItemSources(); };
+  s.onerror = () => { setsLoaded = true; next && next(); };
   document.head.appendChild(s);
 }
 
@@ -829,7 +1152,10 @@ function viewSet(setId) {
 let ITEM_SRC = null;   // Map<裝備ID, string[]>
 let SK_GEN   = 0;      // item_sources 載入後 +1，讓已快取的 _sk 重算
 
-function loadItemSources() {
+function loadItemSources(next) {
+  if (ITEM_SRC) { next && next(); return; }
+  if (_inflight.has("src")) return;
+  _inflight.add("src");
   const s = document.createElement("script");
   s.src = "item_sources.js";
   s.onload = () => {
@@ -843,7 +1169,9 @@ function loadItemSources() {
     populateSrcDetail();
     applyFilters();       // 分類與細項都依賴這份表，載入後一律重算
     restorePage();
+    next && next();
   };
+  s.onerror = () => { next && next(); };
   document.head.appendChild(s);
 }
 
@@ -944,36 +1272,302 @@ function collectSources() {
   return cnt;
 }
 
+// ── 取得方式細項挑選器 ────────────────────────────────────────
+// 資料放在 SRC_OPTIONS，**選項只有展開時才進 DOM**（原本 828 個 <option> 常駐，
+// 而且原生 select 在手機上只能一路捲，等於找不到東西）。
+let SRC_OPTIONS = [];          // [{key, n, st}]，已依 ST_ORDER 分組、組內依套數排序
+const SRC_PICK_LIMIT = 120;    // 一次最多畫這麼多列，其餘請使用者再打關鍵字
+let srcPickCursor = -1;        // 鍵盤選取位置（對應目前畫出來的列）
+
 function populateSrcDetail() {
-  const sel = document.getElementById("src-detail-select");
   const groups = new Map();
   for (const [src, rec] of collectSources()) {
     if (srcTags.size && !srcTags.has(rec.st)) continue;
     if (!groups.has(rec.st)) groups.set(rec.st, []);
     groups.get(rec.st).push([src, rec.n]);
   }
-  const allLabel = currentLang === "en" ? "Source detail: all" : "取得方式細項：全部";
-  let html = `<option value="">${allLabel}</option>`;
+  SRC_OPTIONS = [];
   for (const st of ST_ORDER) {
     const items = groups.get(st);
     if (!items) continue;
     items.sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "zh-Hant"));
-    html += `<optgroup label="${esc(ST_GROUP_LABEL[st] || st)}">`
-      + items.map(([src, n]) => `<option value="${esc(src)}">${esc(src)}（${n}）</option>`).join("")
-      + `</optgroup>`;
+    for (const [key, n] of items) SRC_OPTIONS.push({ key, n, st });
   }
-  // 選中的細項不在清單裡（換了檢視／分類，或資料還在載入）→ 補一個臨時選項撐著，
+  // 選中的細項不在清單裡（換了檢視／分類，或資料還在載入）→ 補一筆撐著，
   // 不要把 srcDetail 清掉：分享連結進站時資料尚未載完，清掉就還原不回來了
-  if (srcDetail && ![...groups.values()].flat().some(([k]) => k === srcDetail)) {
-    html += `<optgroup label="${currentLang === "en" ? "current" : "目前選擇"}">`
-      + `<option value="${esc(srcDetail)}">${esc(srcDetail)}</option></optgroup>`;
+  if (srcDetail && !SRC_OPTIONS.some(o => o.key === srcDetail))
+    SRC_OPTIONS.unshift({ key: srcDetail, n: 0, st: "_cur" });
+  renderSrcPickBtn();
+  if (!document.getElementById("src-detail-pop").hidden) renderSrcPickList();
+}
+
+function renderSrcPickBtn() {
+  const btn = document.getElementById("src-detail-btn");
+  const label = document.getElementById("src-detail-label");
+  label.textContent = srcDetail ||
+    (currentLang === "en" ? "Source detail: all" : "取得方式細項：全部");
+  btn.classList.toggle("on", !!srcDetail);
+  btn.title = srcDetail
+    ? (currentLang === "en" ? "Source detail: " : "取得方式細項：") + srcDetail
+    : "細分到單一取得方式（副本名、商人、兌換貨幣…）；隨上方分類與檢視自動更新";
+}
+
+function renderSrcPickList() {
+  const list = document.getElementById("src-detail-list");
+  const kw = document.getElementById("src-detail-q").value.trim().toLowerCase();
+  const hits = kw ? SRC_OPTIONS.filter(o => o.key.toLowerCase().indexOf(kw) >= 0) : SRC_OPTIONS;
+  const shown = hits.slice(0, SRC_PICK_LIMIT);
+  let html = `<button type="button" class="srcpick-opt" role="option" data-key=""
+    aria-selected="${srcDetail ? "false" : "true"}">${currentLang === "en" ? "All sources" : "全部取得方式"}</button>`;
+  let lastSt = null;
+  for (const o of shown) {
+    if (o.st !== lastSt) {
+      lastSt = o.st;
+      const gl = o.st === "_cur"
+        ? (currentLang === "en" ? "current" : "目前選擇")
+        : (ST_GROUP_LABEL[o.st] || o.st);
+      html += `<div class="srcpick-group">${esc(gl)}</div>`;
+    }
+    html += `<button type="button" class="srcpick-opt" role="option" data-key="${esc(o.key)}"
+      aria-selected="${o.key === srcDetail ? "true" : "false"}">${esc(o.key)}${
+      o.n ? `<span class="n">${o.n}</span>` : ""}</button>`;
   }
-  sel.innerHTML = html;
-  sel.value = srcDetail;
+  if (hits.length > shown.length)
+    html += `<div class="srcpick-more">${currentLang === "en"
+      ? `+${hits.length - shown.length} more — type to narrow`
+      : `還有 ${hits.length - shown.length} 項，再打幾個字縮小範圍`}</div>`;
+  if (!hits.length)
+    html += `<div class="srcpick-more">${currentLang === "en" ? "no match" : "沒有符合的取得方式"}</div>`;
+  list.innerHTML = html;
+  srcPickCursor = -1;
+}
+
+function openSrcPick() {
+  const pop = document.getElementById("src-detail-pop");
+  if (!pop.hidden) return;
+  pop.hidden = false;
+  document.getElementById("src-detail-btn").setAttribute("aria-expanded", "true");
+  document.getElementById("src-detail-q").value = "";
+  renderSrcPickList();
+  document.getElementById("src-detail-q").focus();
+}
+
+function closeSrcPick(refocus) {
+  const pop = document.getElementById("src-detail-pop");
+  if (pop.hidden) return;
+  pop.hidden = true;
+  document.getElementById("src-detail-btn").setAttribute("aria-expanded", "false");
+  if (refocus) document.getElementById("src-detail-btn").focus();
+}
+
+function pickSrcDetail(key) {
+  srcDetail = key;
+  closeSrcPick(true);
+  renderSrcPickBtn();
+  applyFilters();
+  syncURL(true);
+}
+
+function moveSrcPickCursor(d) {
+  const opts = [...document.querySelectorAll("#src-detail-list .srcpick-opt")];
+  if (!opts.length) return;
+  if (srcPickCursor >= 0) opts[srcPickCursor].classList.remove("cursor");
+  srcPickCursor = (srcPickCursor + d + opts.length) % opts.length;
+  opts[srcPickCursor].classList.add("cursor");
+  opts[srcPickCursor].scrollIntoView({ block: "nearest" });
 }
 
 function matchSrcDetail(e) {
   return !srcDetail || entrySrcKeys(e).includes(srcDetail);
+}
+
+// ── 色系 ───────────────────────────────────────────────────────
+// 站上實際用到 150 種染色名。繁中染色名是有規律的複合詞（{修飾}{色}），
+// **用最後一個字判色系**就能對上絕大多數；對不上的列在 DYE_FAMILY_FIX。
+// 這張表只用來分類，不是顯示用的權威名稱——顯示一律用原本的染色名。
+const DYE_TAIL_FAMILY = {
+  白:"white", 黑:"black", 灰:"grey", 銀:"grey",
+  紅:"red", 粉:"pink", 橙:"orange", 黃:"yellow", 金:"yellow",
+  綠:"green", 藍:"blue", 紫:"purple", 莓:"purple",
+  棕:"brown", 銅:"brown", 褐:"brown",
+};
+const DYE_FAMILY_FIX = {
+  "哥布林":"green", "薰衣草":"purple", "巧克力":"brown", "仙人掌怪":"green",
+  "仙子梅":"purple", "金屬靛":"blue", "金屬紅寶石":"red", "金屬寶石紅":"red",
+};
+const DYE_FAMILY_LABEL = {
+  white:"白", black:"黑", grey:"灰銀", red:"紅", pink:"粉", orange:"橙",
+  yellow:"黃金", green:"綠", blue:"藍", purple:"紫", brown:"棕",
+};
+function dyeFamily(name) {
+  if (!name || name === "—") return "";
+  if (DYE_FAMILY_FIX[name]) return DYE_FAMILY_FIX[name];
+  return DYE_TAIL_FAMILY[name.slice(-1)] || "";
+}
+// 一套用到的色系（逐件 dye1/dye2 ＋ 整套 dyes fallback）。官方套裝沒有染色資料。
+function entryDyeFamilies(e) {
+  if (e._df) return e._df;
+  const fam = new Set();
+  for (const p of outfitPieces(e)) {
+    if (!p || typeof p !== "object") continue;
+    for (const d of [p.dye1, p.dye2]) { const f = dyeFamily(d); if (f) fam.add(f); }
+  }
+  for (const d of (e.dyes || [])) { const f = dyeFamily(d); if (f) fam.add(f); }
+  e._df = fam;
+  return fam;
+}
+
+// ── 「這套官方套裝有哪些玩家配法」──────────────────────────────
+// 官方套裝的每件裝備 id ↔ 社群/精選配裝的 iid 是同一個鍵空間（62% 的社群用件
+// 屬於某個官方套裝）。反查就是「這套配裝有沒有用到該套裝的任一件」。
+let itemFilter = null;   // {label, setId, ids:Set<number>}
+function matchItemFilter(e) {
+  if (!itemFilter) return true;
+  for (const p of outfitPieces(e)) {
+    if (!p || typeof p !== "object") continue;
+    const id = p.iid !== undefined ? p.iid : p.id;
+    if (id !== undefined && itemFilter.ids.has(Number(id))) return true;
+  }
+  return false;
+}
+function syncItemFilterChip() {
+  const chip = document.getElementById("item-filter-chip");
+  chip.classList.toggle("d-none", !itemFilter);
+  if (itemFilter) chip.textContent = itemFilter.label;
+}
+// 從官方套裝彈窗跳去看玩家配法
+function viewWearers(setId) {
+  const st = SETS.find(s => s.id === setId);
+  if (!st) return;
+  const open = () => {
+    itemFilter = {
+      setId,
+      label: (currentLang === "en" ? "wearing: " : "有穿：") + setDisplayName(st),
+      ids: new Set(st.pieces.map(p => Number(p.id))),
+    };
+    setView("outfits");   // 已在配裝檢視時它會提早返回，下面自己補一次即可
+    syncItemFilterChip();
+    applyFilters();
+    syncURL(true);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+  const modalEl = document.getElementById("modal");
+  if (modalEl.classList.contains("show")) {
+    modalEl.addEventListener("hidden.bs.modal", open, { once: true });
+    closeModal();
+  } else open();
+}
+function clearItemFilter() {
+  itemFilter = null;
+  syncItemFilterChip();
+  applyFilters();
+  syncURL(true);
+}
+
+// 裝備 id → 用到它的配裝索引（建一次）。給「幾套用到」的計數用，
+// 直接掃 6,955 套也不會慢，但這個數字每開一次官方套裝彈窗就要算一遍。
+let ITEM_TO_OUTFITS = null;
+function itemOutfitIndex() {
+  if (ITEM_TO_OUTFITS && ITEM_TO_OUTFITS._gen === ALL_OUTFITS.length) return ITEM_TO_OUTFITS;
+  const idx = new Map();
+  ALL_OUTFITS.forEach((e, i) => {
+    const seen = new Set();
+    for (const p of outfitPieces(e)) {
+      if (!p || typeof p !== "object") continue;
+      const id = Number(p.iid !== undefined ? p.iid : p.id);
+      if (!id || seen.has(id)) continue;
+      seen.add(id);
+      let arr = idx.get(id);
+      if (!arr) { arr = []; idx.set(id, arr); }
+      arr.push(i);
+    }
+  });
+  idx._gen = ALL_OUTFITS.length;
+  ITEM_TO_OUTFITS = idx;
+  return idx;
+}
+function countWearers(st) {
+  if (!st || !st.pieces) return 0;
+  const idx = itemOutfitIndex();
+  const seen = new Set();
+  for (const p of st.pieces) for (const i of (idx.get(Number(p.id)) || [])) seen.add(i);
+  return seen.size;
+}
+
+// ── 熱門單品 ───────────────────────────────────────────────────
+// 6,347 件不重複裝備裡有 44% 只被 1 套用過，長尾極長；反過來說前幾十件就代表了
+// 「大家都在用什麼」。這是進站沒有目標時最好用的入口，資料現成、算一次即可。
+let HOT_ITEMS = null;
+function computeHotItems() {
+  const cnt = new Map();   // iid → {n, zh, ja, icon}
+  for (const e of ALL_OUTFITS) {
+    const seen = new Set();          // 同一套用到同一件只算一次
+    for (const p of outfitPieces(e)) {
+      if (!p || typeof p !== "object") continue;
+      const id = p.iid !== undefined ? p.iid : p.id;
+      if (id === undefined || seen.has(id)) continue;
+      seen.add(id);
+      const rec = cnt.get(id) || { n: 0, zh: "", ja: "", id: Number(id) };
+      rec.n++;
+      if (!rec.zh && p.zh) rec.zh = p.zh;
+      if (!rec.ja && (p.ja || p.name)) rec.ja = p.ja || p.name;
+      cnt.set(id, rec);
+    }
+  }
+  // icon 只有官方套裝那份帶得到；載完才補得齊，所以在這裡查而不是預先存
+  for (const rec of cnt.values()) {
+    const st = ITEM_SETS_BY_ID.get(rec.id);
+    if (st) { const p = st.pieces.find(x => Number(x.id) === rec.id); if (p && p.icon) rec.icon = p.icon; }
+  }
+  return [...cnt.values()].sort((a, b) => b.n - a.n).slice(0, 60);
+}
+function openHotItems() {
+  if (!HOT_ITEMS || HOT_ITEMS._gen !== ALL_OUTFITS.length) {
+    HOT_ITEMS = computeHotItems();
+    HOT_ITEMS._gen = ALL_OUTFITS.length;
+  }
+  const total = ALL_OUTFITS.length;
+  document.getElementById("hot-modal-sub").textContent = currentLang === "en"
+    ? `Most-used pieces across ${total} outfits — click one to find every outfit using it`
+    : `${total} 套配裝裡最常被用到的單品，點一件即以它反查所有配裝`;
+  document.getElementById("hot-modal-body").innerHTML =
+    `<div class="hot-grid">` + HOT_ITEMS.map((r, i) => {
+      const nm = currentLang === "en" ? (r.ja || r.zh) : (r.zh || r.ja);
+      const icon = r.icon
+        ? `<img src="配裝圖片/icons/${r.icon}.png" alt="" loading="lazy" onerror="this.style.display='none'">`
+        : "";
+      return `<button type="button" class="hot-row" onclick="searchItem('${esc(nm).replace(/'/g, "\\'")}')">
+        <span class="hot-rank">${i + 1}</span>${icon}
+        <span class="nm">${esc(nm)}</span><span class="ct">${r.n}</span></button>`;
+    }).join("") + `</div>`;
+  bootstrap.Modal.getOrCreateInstance(document.getElementById("hot-modal")).show();
+}
+
+// ── 搜尋比對 ───────────────────────────────────────────────────
+// haystack 只算一次並快取在該筆上。原本每個按鍵都對 6,860 套重新組一次小寫字串
+// （含 35,249 件裝備名），實測 18ms／鍵；快取後 1.3ms／鍵。
+// 取得方式那半段依賴延遲載入的 item_sources.js，所以跟著 SK_GEN 走，載完會重算。
+function hayMatch(e, qLow) {
+  if (e._hay === undefined) {
+    let parts;
+    if (e.type === "set") {
+      parts = [e.name_zh, e.name_ja, e.name_en, e.source,
+               ...(e.pieces || []).map(p => (p.zh || "") + " " + (p.ja || "") + " " + (p.en || ""))];
+    } else if (e.type === "mirapri") {
+      parts = [e.name, e.color,
+               ...(e.equipments || []).map(x => typeof x === "string" ? x : ((x.zh || "") + " " + (x.name || "")))];
+    } else {
+      // 精選：日文名也納入，與社群檢視一致（社群的 x.name 就是日文名）
+      parts = [e.name, e.color,
+               ...(e.pieces || []).map(p => (p.zh || "") + " " + (p.en || "") + " " + (p.ja || ""))];
+    }
+    e._hay = parts.filter(Boolean).join(" ").toLowerCase();
+  }
+  if (e._haySrcGen !== SK_GEN) {
+    e._haySrc = entrySrcKeys(e).join(" ").toLowerCase();
+    e._haySrcGen = SK_GEN;
+  }
+  return e._hay.indexOf(qLow) >= 0 || e._haySrc.indexOf(qLow) >= 0;
 }
 
 function applyFilters() {
@@ -985,12 +1579,7 @@ function applyFilters() {
       if (!matchSrcTags(e)) return false;
       if (!matchSrcDetail(e)) return false;
       if (jobTags.size && ![...jobTags].some(t => (e.tags || []).includes(t))) return false;
-      if (qLow) {
-        const hay = [e.name_zh, e.name_ja, e.name_en, e.source, ...entrySrcKeys(e),
-          ...e.pieces.map(p => (p.zh || "") + " " + (p.ja || "") + " " + (p.en || ""))]
-          .join(" ").toLowerCase();
-        if (!hay.includes(qLow)) return false;
-      }
+      if (qLow && !hayMatch(e, qLow)) return false;
       return true;
     });
     sortFiltered();
@@ -1018,22 +1607,19 @@ function applyFilters() {
     if (favOnly && !favs.has(e.id)) return false;
     // 繁中版可幻化
     if (twOnly && !e.tw) return false;
+    // 色系（群組內 OR）
+    if (dyeTags.size) {
+      const fam = entryDyeFamilies(e);
+      if (![...dyeTags].some(f => fam.has(f))) return false;
+    }
+    // 「有穿某官方套裝的件」
+    if (!matchItemFilter(e)) return false;
     // 取得方式／職業（可複選；群組內 OR、群組間 AND，精選＋社群都適用）
     if (!matchSrcTags(e)) return false;
     if (!matchSrcDetail(e)) return false;
     if (jobTags.size && ![...jobTags].some(t => e.tags.includes(t))) return false;
-    // Search (all)
-    if (qLow) {
-      const name = (e.name || "").toLowerCase();
-      const user = (e.color || "").toLowerCase();
-      const equips = e.type === "mirapri"
-        ? (e.equipments || []).map(eq => typeof eq === "string" ? eq : ((eq.zh || "") + " " + (eq.name || ""))).join(" ").toLowerCase()
-        : (e.pieces || []).map(p => (p.zh + " " + p.en).toLowerCase()).join(" ");
-      // 取得方式（含全部副本名，不只顯示的那一種）也可被搜到
-      const srcs = entrySrcKeys(e).join(" ").toLowerCase();
-      if (!name.includes(qLow) && !user.includes(qLow)
-          && !equips.includes(qLow) && !srcs.includes(qLow)) return false;
-    }
+    // Search（名稱／投稿者／裝備名／取得方式，含全部副本名不只顯示的那一種）
+    if (qLow && !hayMatch(e, qLow)) return false;
     return true;
   });
   sortFiltered();
@@ -1044,10 +1630,31 @@ function applyFilters() {
 
 function sortFiltered() {
   const nameOf = e => e.type === "set" ? setDisplayName(e) : (e.name || "");
+  // 時間排序鍵。三種資料的來源不同：
+  //   社群 timestamp（"YYYY-MM-DD hh:mm:ss"）＞ 精選 added（只到日，見下）＞ 官方套裝（無）
+  // 精選沒有投稿時間（它們不是投稿、是站方自選），改用 data/curated_outfits.json 的
+  // `added`＝收錄日期，補上 " 00:00:00" 之後就能跟社群的時間戳直接比字串大小，
+  // 於是精選會**排進社群的時間軸**而不是整批堆在某一端。
+  // 同一天內再用編號分先後（`#0091`），排序才穩定；⚠ 只補**開頭的數字**——
+  // 有 33a–33f 這種子套裝編號，整串 padStart 會把「33f」變成「033f」而排到
+  // 「0091」之上（3 > 0），變成 33f 比 91 新。
+  // 沒有 added 的精選（新增時忘了填）→ 退回「0000-」＝最舊，排在最後面；
+  // 這是刻意讓它顯眼的，health_check.py 也會把缺值報出來。
+  // 官方套裝檢視全部無鍵＝值相同，sort 是穩定的，會維持資料檔的版本新→舊。
+  const idKey = e => String(e.id).replace(/^\d+/, m => m.padStart(4, "0"));
+  const tsOf = e => {
+    if (e.timestamp) return e.timestamp;
+    if (e.added) return e.added + " 00:00:00#" + idKey(e);
+    if (e.type === "curated") return "0000-" + idKey(e);
+    return "";
+  };
   if (sortMode === "patch-desc")      filtered.sort((a,b) => (b.maxPatch||0) - (a.maxPatch||0));
   else if (sortMode === "patch-asc")  filtered.sort((a,b) => (a.maxPatch||0) - (b.maxPatch||0));
   else if (sortMode === "name")       filtered.sort((a,b) => nameOf(a).localeCompare(nameOf(b), "zh-Hant"));
-  // default：維持原順序（精選在前／官方套裝依版本新→舊）
+  else if (sortMode === "old")        filtered.sort((a,b) => tsOf(a).localeCompare(tsOf(b)));
+  else if (sortMode === "default")    { /* ⭐ 精選優先：維持 ALL_OUTFITS 的原順序 */ }
+  // 其餘（含未指定）＝預設的「投稿新→舊」
+  else                                filtered.sort((a,b) => tsOf(b).localeCompare(tsOf(a)));
 }
 
 // ════════════════════════════════════════════════════════
@@ -1090,8 +1697,8 @@ function buildSetCard(e, idx) {
       ? (currentLang === "en" ? "official look" : "官方外觀")
       : (currentLang === "en" ? "community look" : (e.imgLabel || "示意"));
     iconsHtml = `<div class="set-card-imgwrap">
-      <img class="card-img-top" src="${thumbOf(e.img)}" alt="${esc(setDisplayName(e))}" loading="lazy"
-        onerror="if(this.src.indexOf('縮圖')>-1){this.src='${esc(e.img)}'}else{this.closest('.set-card-imgwrap').innerHTML='<div class=\\'card-noimg\\'>No Image</div>'}">
+      <img class="card-img-top" src="${cardOf(e.img)}" alt="${esc(setDisplayName(e))}" loading="lazy"
+        onerror="cardImgError(this,'${esc(e.img).replace(/'/g, "\\'")}')">
       <div class="set-photo-note">${isWiki ? "📖" : "👤"} ${esc(note)}</div>
     </div>`;
   }
@@ -1123,7 +1730,8 @@ function buildCard(e, idx) {
   const isCurated = e.type === "curated";
 
   const imgHtml = e.image
-    ? `<img class="card-img-top" src="${thumbOf(e.image)}" alt="${esc(e.name)}" loading="lazy" onerror="if(this.src.indexOf('縮圖')>-1){this.src='${e.image}'}else{this.outerHTML='<div class=\\'card-noimg\\'>No Image</div>'}">`
+    ? `<img class="card-img-top" src="${cardOf(e.image)}" alt="${esc(e.name)}" loading="lazy"
+        onerror="cardImgError(this,'${esc(e.image).replace(/'/g, "\\'")}')">`
     : `<div class="card-noimg">No Image</div>`;
 
   // 第一行 meta（精選顯示編號，社群顯示性別種族）
@@ -1225,18 +1833,21 @@ const URL_KEYS = [
   ["p",   () => currentPage,       1],
   ["src", () => [...srcTags].sort().join(","), ""],
   ["job", () => [...jobTags].sort().join(","), ""],
+  ["dye", () => [...dyeTags].sort().join(","), ""],
+  ["set", () => (itemFilter ? itemFilter.setId : ""), ""],
   ["d",   () => srcDetail,         ""],
   ["q",   () => q,                 ""],
   ["g",   () => miraFilters.gender, ""],
   ["r",   () => miraFilters.race,  ""],
   ["fav", () => (favOnly ? "1" : ""), ""],
   ["tw",  () => (twOnly ? "1" : ""),  ""],
-  ["s",   () => sortMode,          "default"],
+  ["s",   () => sortMode,          "new"],      // 預設值不入網址；改預設要一起改
   ["lang", () => currentLang,      "zh"],
 ];
 let restoring = false;        // 正在套用網址狀態：期間一律不寫歷史
 let silentClose = false;      // 這次關彈窗是還原造成的，不要寫歷史
 let pendingModalId = null;    // 網址指定的套裝還沒載入（社群/官方套裝延遲載入）
+let pendingSetId = null;      // 網址 ?set= 指定的官方套裝還沒載入（同上）
 let openModalId = null;       // 目前開著的套裝 id（Bootstrap 的 .show class 是非同步加的，不能用來判斷）
 let modalShowing = false;     // 開啟動畫進行中——Bootstrap 此時會忽略 hide()
 let closeAfterShown = false;  // 動畫還沒跑完就被要求關（點開後馬上按上一頁）→ 等 shown 再關
@@ -1268,12 +1879,25 @@ function applyURLState() {
     viewMode = u.get("v") === "sets" ? "sets" : "outfits";
     srcTags = new Set((u.get("src") || "").split(",").filter(Boolean));
     jobTags = new Set((u.get("job") || "").split(",").filter(Boolean));
+    dyeTags = new Set((u.get("dye") || "").split(",").filter(Boolean));
     srcDetail = u.get("d") || "";
+    // ?set= 的套裝要等 official_sets.js 載完才查得到件；載完由 restorePage() 補上
+    const setId = u.get("set") || "";
+    itemFilter = null;
+    if (setId) {
+      const st = SETS.find(s => s.id === setId);
+      if (st) itemFilter = {
+        setId,
+        label: (currentLang === "en" ? "wearing: " : "有穿：") + setDisplayName(st),
+        ids: new Set(st.pieces.map(p => Number(p.id))),
+      };
+      else pendingSetId = setId;
+    }
     q = u.get("q") || "";
     miraFilters = { gender: u.get("g") || "", race: u.get("r") || "" };
     favOnly = u.get("fav") === "1";
     twOnly = u.get("tw") === "1";
-    sortMode = u.get("s") || "default";
+    sortMode = u.get("s") || "new";
     const lang = u.get("lang") === "en" ? "en" : "zh";
     if (lang !== currentLang) setLang(lang);
 
@@ -1302,6 +1926,7 @@ function applyURLState() {
 // 社群／官方套裝資料是延遲載入的，載完 applyFilters() 會把頁碼歸 1，
 // 這裡依網址把頁碼與待開的套裝補回來。
 function restorePage() {
+  retryPendingSet();
   const p = parseInt(new URLSearchParams(location.search).get("p"), 10) || 1;
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const want = Math.min(Math.max(1, p), totalPages);
@@ -1310,6 +1935,21 @@ function restorePage() {
 }
 
 // 資料延遲載入完成後，補開網址指定的套裝
+// ?set= 進站時官方套裝還沒載完 → 載完後把「有穿這套」的條件補上
+function retryPendingSet() {
+  if (!pendingSetId || !setsLoaded) return;
+  const st = SETS.find(s => s.id === pendingSetId);
+  pendingSetId = null;
+  if (!st) return;
+  itemFilter = {
+    setId: st.id,
+    label: (currentLang === "en" ? "wearing: " : "有穿：") + setDisplayName(st),
+    ids: new Set(st.pieces.map(p => Number(p.id))),
+  };
+  syncItemFilterChip();
+  applyFilters();
+}
+
 function retryPendingModal() {
   if (!pendingModalId) return;
   const idx = filtered.findIndex(e => String(e.id) === pendingModalId);
@@ -1330,6 +1970,7 @@ function syncControls() {
     const b = document.querySelector(`.filter-btn[data-mf="${f}"][data-val="${miraFilters[f]}"]`);
     if (b) b.classList.add("active");
   }
+  document.querySelectorAll(".dye-btn").forEach(b => b.classList.toggle("active", dyeTags.has(b.dataset.dye)));
   document.getElementById("fav-filter-btn").classList.toggle("active", favOnly);
   document.getElementById("tw-btn").classList.toggle("active", twOnly);
   document.getElementById("search-input").value = q;
@@ -1339,6 +1980,9 @@ function syncControls() {
   const isSets = viewMode === "sets";
   document.getElementById("row-gender").classList.toggle("d-none", isSets);
   document.getElementById("row-race").classList.toggle("d-none", isSets);
+  // 官方套裝沒有染色資料，色系列在該檢視沒有意義
+  document.getElementById("row-dye").classList.toggle("d-none", isSets);
+  syncItemFilterChip();
 }
 
 // ════════════════════════════════════════════════════════
@@ -1422,6 +2066,9 @@ function renderSetModal(e, idx) {
     `<span class="source-tag ${SRC_CLASS[e.st] || "src-other"}">${esc(e.source || "")}</span>` +
     (e.patch ? ` <span class="patch-tag">${esc(e.patch)}</span>` : "") +
     (e.job && e.job !== "全職業" ? ` <span class="restrict-job">${esc(e.job)}</span>` : "");
+  // 「這套官方套裝有哪些玩家配法」——社群用到的裝備有 62% 屬於某個官方套裝，
+  // 但這個方向的反查原本只能一件一件手動搜尋裝備名。
+  const nWear = countWearers(e);
 
   // 左欄：示意照（wiki 官方模特照優先，其次站內配裝照），icon 陣列殿後
   const imgCol = document.getElementById("modal-img-col");
@@ -1475,11 +2122,17 @@ function renderSetModal(e, idx) {
       <td class="patch-cell" data-label="${hPatch}">${p.patch ? `<span class="patch-tag">${esc(p.patch)}</span>` : ""}</td>
     </tr>`;
   }).join("");
+  const wearBtn = nWear
+    ? `<button type="button" class="btn btn-sm btn-outline-info wearers-btn"
+         onclick="viewWearers('${String(e.id).replace(/'/g, "\\'")}')">👗 ${lang === "en"
+           ? `See ${nWear} player outfits using these pieces`
+           : `看玩家怎麼配這套（${nWear} 套用到）`}</button>`
+    : "";
   document.getElementById("modal-info-col").innerHTML =
     `<table class="equip-table">
       <thead><tr><th>${hSlot}</th><th>${hItem}</th><th>${hInfo}</th><th>${hPatch}</th></tr></thead>
       <tbody>${rows}</tbody>
-    </table>` + sourceOverview(e);
+    </table>` + wearBtn + sourceOverview(e);
 
   const counter = document.getElementById("nav-counter");
   counter.textContent = (idx + 1) + " / " + filtered.length;
@@ -1566,7 +2219,12 @@ function renderMiraModal(e, idx) {
     ? (isNaN(e.timestamp) ? String(e.timestamp).split(" ")[0]
                           : new Date(e.timestamp * 1000).toLocaleDateString("zh-TW"))
     : "";
-  const byUser = e.color ? `by ${esc(e.color)}` : "";
+  // 投稿者可點：1,335 位投稿者的作品原本只能靠手打名字才找得到同一人的其他配裝
+  const byUser = e.color
+    ? `by <span class="link-user" role="button" tabindex="0"
+         title="${currentLang === "en" ? "See this user's other outfits" : "看這位投稿者的其他配裝"}"
+         onclick="searchItem('${esc(e.color).replace(/'/g, "\\'")}')">${esc(e.color)}</span>`
+    : "";
   const parts = [ts, byUser].filter(Boolean).join("  ·  ");
   document.getElementById("modal-subtitle").innerHTML =
     `<span class="${gCls}">${genderText}</span> · <span class="tag-race">${raceText}</span>` +
@@ -1774,9 +2432,17 @@ function updateSubtitle() {
   document.getElementById("result-count").textContent =
     currentLang === "en" ? filtered.length + " results" : filtered.length + " 件";
   // 有任何篩選啟用時才顯示「清除篩選」
-  const anyFilter = srcTags.size || srcDetail || jobTags.size || favOnly || twOnly || q ||
-                    miraFilters.gender || miraFilters.race;
+  const anyFilter = srcTags.size || srcDetail || jobTags.size || dyeTags.size || favOnly ||
+                    twOnly || q || itemFilter || miraFilters.gender || miraFilters.race;
   document.getElementById("clear-filters-btn").classList.toggle("d-none", !anyFilter);
+  // 收合狀態下也要看得出「現在有幾個條件生效」，否則使用者會以為篩選沒套用。
+  // 搜尋字不算——搜尋框本來就一直看得見。
+  const nCond = srcTags.size + jobTags.size + dyeTags.size + (srcDetail ? 1 : 0) +
+                (favOnly ? 1 : 0) + (twOnly ? 1 : 0) + (itemFilter ? 1 : 0) +
+                (miraFilters.gender ? 1 : 0) + (miraFilters.race ? 1 : 0);
+  const badge = document.getElementById("filter-active-count");
+  badge.textContent = nCond;
+  badge.classList.toggle("d-none", nCond === 0);
 }
 
 // ── 檢視切換（配裝 / 官方套裝）──
@@ -1789,6 +2455,10 @@ function setView(mode) {
   // 官方套裝沒有性別/種族欄位 → 隱藏該兩列
   document.getElementById("row-gender").classList.toggle("d-none", isSets);
   document.getElementById("row-race").classList.toggle("d-none", isSets);
+  document.getElementById("row-dye").classList.toggle("d-none", isSets);
+  // 切到還沒載完的檢視時插隊：別讓使用者等另一份他現在不看的資料載完
+  if (isSets) loadSets(() => loadItemSources());
+  else loadMirapri(() => loadItemSources());
   populateSrcDetail();   // 兩個檢視的來源字串不同（整套 vs 逐件）→ 重建選項
   applyFilters();
   syncURL(true);
@@ -1796,10 +2466,12 @@ function setView(mode) {
 }
 
 function resetFilters() {
-  srcTags.clear(); jobTags.clear();
+  srcTags.clear(); jobTags.clear(); dyeTags.clear();
   srcDetail = "";
   favOnly = twOnly = false;
   q = "";
+  itemFilter = null; pendingSetId = null;
+  syncItemFilterChip();
   miraFilters = { gender: "", race: "" };
   document.getElementById("search-input").value = "";
   document.querySelectorAll(".filter-btn.active").forEach(b => b.classList.remove("active"));
@@ -1835,7 +2507,8 @@ document.addEventListener("DOMContentLoaded", () => {
   populateSrcDetail();
   renderGrid();
   updateSubtitle();
-  loadMirapri();   // 社群配裝（8MB）背景載入，完成後自動併入
+  // 延遲載入在 applyURLState() 之後才開始——載入順序要看使用者要的是哪個檢視，
+  // 而 viewMode 是在那裡才從網址讀出來的（見 startLoading）。
 
   // Filter buttons (source/job，可複選)
   document.querySelectorAll(".filter-btn[data-filter]").forEach(btn => {
@@ -1866,12 +2539,51 @@ document.addEventListener("DOMContentLoaded", () => {
     syncURL(true);
   });
 
-  // 取得方式細項
-  document.getElementById("src-detail-select").addEventListener("change", function () {
-    srcDetail = this.value;
-    applyFilters();
-    syncURL(true);
+  // 色系（可複選）
+  document.querySelectorAll(".dye-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const f = btn.dataset.dye;
+      if (dyeTags.has(f)) { dyeTags.delete(f); btn.classList.remove("active"); }
+      else                { dyeTags.add(f);    btn.classList.add("active"); }
+      applyFilters();
+      syncURL(true);
+    });
   });
+
+  // 熱門單品
+  document.getElementById("hot-items-btn").addEventListener("click", openHotItems);
+
+  // 「有穿某官方套裝」的 chip：點掉即清除
+  document.getElementById("item-filter-chip").addEventListener("click", clearItemFilter);
+
+  // 取得方式細項（可打字過濾的挑選器）
+  document.getElementById("src-detail-btn").addEventListener("click", () => {
+    if (document.getElementById("src-detail-pop").hidden) openSrcPick();
+    else closeSrcPick(true);
+  });
+  document.getElementById("src-detail-q").addEventListener("input", renderSrcPickList);
+  document.getElementById("src-detail-list").addEventListener("click", ev => {
+    const opt = ev.target.closest(".srcpick-opt");
+    if (opt) pickSrcDetail(opt.dataset.key || "");
+  });
+  document.getElementById("src-detail").addEventListener("keydown", ev => {
+    if (ev.key === "Escape") { ev.stopPropagation(); closeSrcPick(true); }
+    else if (ev.key === "ArrowDown") { ev.preventDefault(); moveSrcPickCursor(1); }
+    else if (ev.key === "ArrowUp")   { ev.preventDefault(); moveSrcPickCursor(-1); }
+    else if (ev.key === "Enter" && srcPickCursor >= 0) {
+      ev.preventDefault();
+      const opts = document.querySelectorAll("#src-detail-list .srcpick-opt");
+      if (opts[srcPickCursor]) pickSrcDetail(opts[srcPickCursor].dataset.key || "");
+    }
+  });
+  document.addEventListener("click", ev => {
+    if (!ev.target.closest("#src-detail")) closeSrcPick(false);
+  });
+
+  // 窄螢幕預設收起篩選條件（桌機的 summary 由 CSS 隱藏，維持全開）。
+  // 斷點要與上面 CSS 的 767.98px 一致，否則會出現「收起來了但沒有把手可以打開」。
+  if (window.matchMedia && window.matchMedia("(max-width: 767.98px)").matches)
+    document.getElementById("filter-more").open = false;
 
   // 排序
   document.getElementById("sort-select").addEventListener("change", function () {
@@ -1898,10 +2610,18 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Search
+  // 打字不要每一鍵都重跑全表：連打時只在停手 160ms 後算一次。
+  // 160ms 是「打完一個中文字」的空檔，體感仍是即時的。
+  let searchTimer = null;
   document.getElementById("search-input").addEventListener("input", ev => {
-    q = ev.target.value.trim();
-    applyFilters();
-    syncURL(false);   // 打字用 replace，否則每按一鍵就多一筆歷史
+    const val = ev.target.value.trim();
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => {
+      if (val === q) return;
+      q = val;
+      applyFilters();
+      syncURL(false);   // 打字用 replace，否則每按一鍵就多一筆歷史
+    }, 160);
   });
 
   // 上一頁／下一頁：把網址狀態套回來
@@ -1922,6 +2642,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 進站先套用網址狀態（分享連結／重新整理都能回到原畫面）
   applyURLState();
+
+  // 網址狀態套完（viewMode 已定）才開始背景載入，順序才會對
+  startLoading();
 
   // Lightbox 開啟時，Esc 先關放大圖（攔截，避免一起把彈窗也關掉）
   document.addEventListener("keydown", ev => {

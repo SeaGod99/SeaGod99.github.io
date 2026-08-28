@@ -28,7 +28,8 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import ocr_check as oc
+import mira_codec  # noqa: E402
+import ocr_check as oc  # noqa: E402
 
 ROOT = oc.ROOT
 OUT_JS = os.path.join(ROOT, "review_data.js")
@@ -52,20 +53,21 @@ def recon_confident(pieces):
     return (bool(pieces) and len(pieces) >= RECON_MIN_PIECES and all(_ok(p) for p in pieces))
 
 
-def _load_js_array(path):
-    txt = open(path, encoding="utf-8").read()
-    return json.loads(txt.split("=", 1)[1].rsplit(";", 1)[0])
+# 社群配裝資料檔自 2026-08-28 起是「item_db.js 共用字典 ＋ 緊湊編碼」，
+# 解碼統一走 mira_codec（格式只有那一份定義）。
 
 
 def _thumb(img):
     if not img or not img.startswith("配裝圖片/"):
         return img
     rest = img[len("配裝圖片/"):]
-    return "配裝圖片/縮圖/" + (rest if rest.lower().endswith(".jpg") else rest + ".jpg")
+    # 彈窗層 2026-08-28 起是 AVIF（見 build_image_tiers.py）
+    base = rest if rest.lower().endswith(".jpg") else rest + ".jpg"
+    return "配裝圖片/縮圖/" + base[:base.rfind(".")] + ".avif"
 
 
 def main():
-    built = _load_js_array(os.path.join(ROOT, "mirapri_outfits.js"))
+    built = mira_codec.load_mirapri(ROOT)
     enr = {o["id"]: o for o in oc.load_json(os.path.join(oc.DATA, "all_outfits_enriched.json"), [])
            if o.get("type") == "mirapri"}
     vis = oc.load_json(os.path.join(oc.DATA, "mirapri_visible.json"), {})

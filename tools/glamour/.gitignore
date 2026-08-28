@@ -12,8 +12,9 @@
 資料來源/
 
 # ───────── 大型衍生檔（可由 scripts 重建，不進版控） ─────────
-# 註：mirapri_outfits.js、official_sets.js、item_sources.js 為前端動態載入的資料檔，
-#     線上版需要 → 已進版控（每次重建後記得 commit）。
+# 註：item_db.js、mirapri_outfits.js、official_sets.js、item_sources.js 為前端動態載入的
+#     資料檔，線上版需要 → 已進版控（每次重建後記得 commit）。
+#     配裝圖片/卡片/（320px WebP）與 配裝圖片/縮圖/（AVIF）同理，兩層都要 commit。
 mirapri_data.js
 data/item_fallback_multilang.json
 data/all_outfits_enriched.json

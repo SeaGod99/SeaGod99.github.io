@@ -27,12 +27,15 @@ for _s in (sys.stdout, sys.stderr):
 
 sys.path.insert(0, str(Path(__file__).parent))
 import maindb  # noqa: E402
+# 社群配裝前端資料檔的編解碼（格式定義只有這一份，見該檔檔頭）
+from mira_codec import build_item_db, compact_mirapri, rehydrate_mirapri  # noqa: E402
 
 ROOT = Path(__file__).parent.parent
 CURATED_JSON = ROOT / "data" / "curated_outfits.json"
 ENRICHED_PATH = ROOT / "data" / "all_outfits_enriched.json"
 CURATED_JS = ROOT / "curated_outfits.js"
 MIRAPRI_JS = ROOT / "mirapri_outfits.js"
+ITEM_DB_JS = ROOT / "item_db.js"      # 社群配裝共用的裝備字典（見 compact_mirapri）
 OFFICIAL_SETS_JSON = ROOT / "data" / "official_sets.json"   # build_sets.py 產出
 OFFICIAL_SETS_JS = ROOT / "official_sets.js"                # 官方套裝分頁（延遲載入）
 ITEM_FALLBACK = ROOT / "data" / "item_fallback_multilang.json"  # 徽章資料（dye/mb/iid）來源
@@ -320,7 +323,10 @@ def normalize_curated(curated):
             print(f"⚠️  編號重複：{oid}")
         seen.add(oid)
         o.setdefault("type", "curated")
-        for k in ("name", "color", "image", "note", "gender", "race"):
+        # added＝這套大約在哪天收進圖鑑（只到「日」）。精選沒有投稿時間，前端的
+        # 「投稿新→舊」排序靠它才排得進社群的時間軸；缺值會被當成最舊排到最後，
+        # health_check.py 會報出來。回填來源與精度見 scripts/backfill_curated_added.py。
+        for k in ("name", "color", "image", "note", "gender", "race", "added"):
             o.setdefault(k, "")
         if not o.get("gender") or not o.get("race"):
             print(f"ℹ️  {oid} 未填性別／種族（篩選時會被歸入「未指定」）")
@@ -728,11 +734,33 @@ def main():
     CURATED_JS.write_text(
         "const _CURATED_RAW = " + json.dumps(curated, ensure_ascii=False) + ";\n",
         encoding="utf-8")
+    # ── 社群配裝：抽共用字典後緊湊編碼（見上方 compact_mirapri 的說明）──
+    itemdb = build_item_db(mirapri)
+    compact, itemdb_js = compact_mirapri(mirapri, itemdb)
+    back = rehydrate_mirapri(compact, itemdb_js)
+    if (json.dumps(back, ensure_ascii=False, sort_keys=True)
+            != json.dumps(mirapri, ensure_ascii=False, sort_keys=True)):
+        # 這裡失敗代表編碼掉了東西。**不要放行**——少一個欄位在畫面上看不出來，
+        # 只會變成某一欄空白，而且會一路傳到線上。
+        for a, b in zip(mirapri, back):
+            if json.dumps(a, ensure_ascii=False, sort_keys=True) != \
+               json.dumps(b, ensure_ascii=False, sort_keys=True):
+                print(f"  ⚠️  第一個對不上的套裝：{a.get('id')}")
+                print(f"      原始：{json.dumps(a, ensure_ascii=False)[:400]}")
+                print(f"      還原：{json.dumps(b, ensure_ascii=False)[:400]}")
+                break
+        raise SystemExit("❌ mirapri 緊湊編碼不是無損的，建置中止")
+
+    ITEM_DB_JS.write_text(
+        "const _ITEM_DB = " + json.dumps(itemdb_js, ensure_ascii=False) + ";\n",
+        encoding="utf-8")
     MIRAPRI_JS.write_text(
-        "const _MIRAPRI_RAW = " + json.dumps(mirapri, ensure_ascii=False) + ";\n",
+        "const _MIRAPRI_RAW = " + json.dumps(compact, ensure_ascii=False) + ";\n",
         encoding="utf-8")
     print(f"curated_outfits.js: {len(curated)} outfits ({CURATED_JS.stat().st_size//1024} KB)")
-    print(f"mirapri_outfits.js: {len(mirapri)} outfits ({MIRAPRI_JS.stat().st_size//1024//1024} MB)")
+    print(f"item_db.js: {len(itemdb_js['d'])} 件裝備 ({ITEM_DB_JS.stat().st_size//1024} KB)")
+    print(f"mirapri_outfits.js: {len(mirapri)} outfits ({MIRAPRI_JS.stat().st_size//1024} KB)"
+          f"　※ 無損還原驗證通過")
 
     sets = transform_sets()
     if sets is not None:

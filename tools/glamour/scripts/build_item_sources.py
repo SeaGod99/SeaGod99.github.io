@@ -53,30 +53,42 @@ EQUIP_CATEGORY_MAX = 49       # categoryId 1–49 = 貨幣其實是裝備 → �
 MAX_MOBS = 3                  # 掉落怪太多時只取前幾隻，避免鍵爆炸
 
 
-def load_js_array(path):
-    """讀 `const _X = [...]` 這種前端資料檔的陣列部分"""
+def load_js_value(path):
+    """讀 `const _X = <JSON>;` 這種前端資料檔的值部分（陣列或物件都吃）"""
     t = path.read_text(encoding="utf-8")
-    return json.loads(t[t.index("["):].rstrip().rstrip(";"))
+    i = t.index("=") + 1
+    return json.loads(t[i:].strip().rstrip(";"))
 
 
 def collect_item_ids():
-    """三份前端資料檔用到的所有裝備 ID"""
+    """前端資料檔用到的所有裝備 ID。
+
+    ⚠ 這支必須排在 build_site.py 之後跑，而且**任何一份讀不到就直接失敗**——
+    漏掉一份不會讓畫面壞掉，只會讓那些裝備安靜地退回單一取得方式
+    （見 tools/glamour/CLAUDE.md「完整取得方式」一節）。
+
+    社群配裝自 2026-08-28 起改成 item_db.js（共用字典）＋ 緊湊編碼的
+    mirapri_outfits.js。字典的 key 就是社群用到的全部裝備 ID，直接讀它即可。
+    """
     ids = set()
-    for name in ("curated_outfits.js", "mirapri_outfits.js", "official_sets.js"):
+    for name in ("curated_outfits.js", "item_db.js", "official_sets.js"):
         p = ROOT / name
         if not p.exists():
-            print(f"  跳過（不存在）：{name}")
-            continue
+            raise SystemExit(f"❌ 找不到 {name}——請先跑 build_site.py")
         n0 = len(ids)
-        for o in load_js_array(p):
-            for p2 in o.get("pieces", []) or []:
-                iid = p2.get("iid") or p2.get("id")
-                if iid:
-                    ids.add(int(iid))
-            for eq in o.get("equipments", []) or []:
-                if isinstance(eq, dict) and eq.get("iid"):
-                    ids.add(int(eq["iid"]))
-        print(f"  {name}：累計 {len(ids):,} 件（+{len(ids) - n0:,}）")
+        data = load_js_value(p)
+        if name == "item_db.js":
+            ids |= {int(k) for k in data.get("d", {})}
+        else:
+            for o in data:
+                for p2 in o.get("pieces", []) or []:
+                    iid = p2.get("iid") or p2.get("id")
+                    if iid:
+                        ids.add(int(iid))
+        got = len(ids) - n0
+        print(f"  {name}：累計 {len(ids):,} 件（+{got:,}）")
+        if got == 0 and n0 == 0:
+            raise SystemExit(f"❌ {name} 解析不出任何裝備 ID——格式可能變了，先修這裡再跑")
     return ids
 
 

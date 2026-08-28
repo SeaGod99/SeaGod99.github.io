@@ -28,7 +28,12 @@ FULL_STEPS = [
     ("check_maindb.py",      "檢查主庫",     "確認 repo 主庫（data/ 與 out_data/）齊全可讀；資料本身由主庫的 node 腳本更新", []),
     ("pipeline.py",          "取圖＋配裝",   "從 Mirapri 抓新投稿、下載圖片，補繁中名稱／部位／取得方式（視新資料量約 1～10 分鐘）", ["all"]),
     ("compress_mirapri.py",  "圖片壓縮",     "壓縮新下載的圖片（之前壓過的會自動跳過）", []),
-    ("make_thumbs.py",       "卡片縮圖",     "為新圖片產生縮圖（已有的會自動跳過）", []),
+    ("make_thumbs.py",       "卡片縮圖",     "為新圖片產生 640px 縮圖（已有 .avif 的會自動跳過）", []),
+    # 縮圖 → 兩層：卡片層 320px WebP ＋ 彈窗層 AVIF，接著把中間產物 .jpg 刪掉。
+    # 漏跑不會壞掉（前端 onerror 會退回上一層），但一頁 60 張卡的圖片流量
+    # 會從 1.4MB 變回 5.3MB，而且 .jpg 留著會多佔 611MB 的 Pages 額度。
+    ("build_image_tiers.py", "圖片兩層化",   "卡片層 320px WebP ＋ 彈窗層 AVIF（已有的自動跳過）", []),
+    ("build_image_tiers.py", "清中間產物",   "兩層齊備後刪掉 make_thumbs 的 .jpg 中間檔", ["--drop-jpg"]),
     ("ocr_check.py",         "OCR 辨識",     "對新圖 OCR 讀裝備名＋染色（需 Ollama；已 OCR 過的吃快取跳過）", ["--target", "mirapri", "--mode", "all"]),
     ("apply_dyes.py",        "逐件染色",     "OCR 結果 → 逐件染色 + 整套 fallback + 可見裝備", []),
     ("reconstruct_empty.py", "重建空殼裝備", "空殼套裝用 OCR+DB 重建裝備（部位／繁中／染色／取得方式）", []),

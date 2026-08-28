@@ -51,8 +51,18 @@ def main():
 
     print("── 2. 圖片檔 ──")
     def thumb_of(img):
+        """彈窗層的路徑。2026-08-28 起是 AVIF（見 build_image_tiers.py）；
+        還沒轉檔的環境仍有 .jpg，兩個都認。"""
         rest = img[len("配裝圖片/"):]
-        return ROOT / "配裝圖片" / "縮圖" / (rest if rest.lower().endswith(".jpg") else rest + ".jpg")
+        base = rest if rest.lower().endswith(".jpg") else rest + ".jpg"
+        d = ROOT / "配裝圖片" / "縮圖"
+        avif = (d / base).with_suffix(".avif")
+        return avif if avif.exists() else d / base
+
+    def card_of(img):
+        rest = img[len("配裝圖片/"):]
+        base = rest if rest.lower().endswith(".jpg") else rest + ".jpg"
+        return (ROOT / "配裝圖片" / "卡片" / base).with_suffix(".webp")
     only_thumb = 0
     for o in curated:
         if not o["image"]:
@@ -66,13 +76,35 @@ def main():
     if only_thumb:
         print(f"  ℹ️  {only_thumb} 套僅有縮圖（原圖已刪除，彈窗會自動改用縮圖）")
     thumb_dir = ROOT / "配裝圖片" / "縮圖"
-    # icons（40px）與官方套裝示意照（640px）本身就是小圖，不需縮圖
-    no_thumb_dirs = [thumb_dir, ROOT / "配裝圖片" / "icons", ROOT / "配裝圖片" / "官方套裝"]
+    # 這些目錄不算「需要縮圖的來源圖」：
+    #   icons（40px）／官方套裝示意照（640px）本身就是小圖
+    #   卡片 ── build_image_tiers.py 的產出（320px WebP），是縮圖的下游不是來源；
+    #          漏排除的話分母會多算 7,060 張，覆蓋率永遠顯示只有一半
+    no_thumb_dirs = [thumb_dir, ROOT / "配裝圖片" / "icons",
+                     ROOT / "配裝圖片" / "官方套裝", ROOT / "配裝圖片" / "卡片"]
     n_src = sum(1 for p in (ROOT / "配裝圖片").rglob("*")
                 if p.is_file() and not any(d in p.parents for d in no_thumb_dirs)
                 and p.suffix.lower() in (".jpe", ".jpg", ".jpeg", ".png", ".webp"))
-    n_thumb = sum(1 for p in thumb_dir.rglob("*") if p.is_file()) if thumb_dir.exists() else 0
+    n_thumb = sum(1 for p in thumb_dir.rglob("*")
+                  if p.is_file() and p.suffix.lower() in (".jpg", ".avif")) if thumb_dir.exists() else 0
     print(f"  縮圖覆蓋：{n_thumb}/{n_src}" + ("（請跑 scripts/make_thumbs.py）" if n_thumb < n_src else " ✓"))
+    # 卡片層（寬 320px WebP）——缺了不會壞掉（前端 onerror 會退到彈窗層），
+    # 但整頁圖片流量會從 1.4MB 變回 5.3MB，所以要報出來。
+    card_dir = ROOT / "配裝圖片" / "卡片"
+    n_card = sum(1 for p in card_dir.rglob("*.webp") if p.is_file()) if card_dir.exists() else 0
+    n_avif = sum(1 for p in thumb_dir.rglob("*.avif")) if thumb_dir.exists() else 0
+    print(f"  卡片層覆蓋：{n_card}/{n_avif}"
+          + ("（請跑 scripts/build_image_tiers.py）" if n_card < n_avif else " ✓"))
+
+    # added＝收錄日期，前端的「投稿新→舊」排序靠它把精選排進社群的時間軸。
+    # 缺值不會壞掉，但那套會被當成最舊、掉到最後一頁——所以要報出來。
+    no_added = [o["id"] for o in curated if not (o.get("added") or "").strip()]
+    if no_added:
+        w(f"{len(no_added)} 套缺 added（收錄日期）：{', '.join(no_added[:12])}"
+          + ("…" if len(no_added) > 12 else "")
+          + " ← 新增套裝時請填當天日期（YYYY-MM-DD），否則排序會把它當最舊")
+    else:
+        print(f"  收錄日期 added：{len(curated)}/{len(curated)} 已填 ✓")
 
     print("── 3. 裝備欄位完整度 ──")
     n_zh = n_src_unconfirmed = n_patch = 0

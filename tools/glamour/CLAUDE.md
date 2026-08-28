@@ -31,11 +31,13 @@
 ```
 FF14時尚配裝/
 ├── index.html            # 主要展示頁面（「配裝｜官方套裝」雙檢視 + 卡片列表 + 彈出視窗）
-├── curated_outfits.js    # 精選套裝資料（由 build_site.py 從 MD 產生，頁面立即載入）
-├── mirapri_outfits.js    # 社群套裝資料（由 build_site.py 產生，頁面延遲載入）
+├── curated_outfits.js    # 精選套裝資料（由 build_site.py 產生，頁面立即載入）
+├── item_db.js            # ★ 社群配裝共用的裝備字典（格式見 scripts/mira_codec.py；先於 mirapri 載入）
+├── mirapri_outfits.js    # 社群套裝資料（緊湊編碼 v2，需搭配 item_db.js 才解得開）
 ├── official_sets.js      # 官方套裝資料（由 build_site.py 產生，社群載完後延遲載入）
 ├── 配裝圖片/             # 套裝圖片，命名格式：{編號}-{套裝名}.jpe
-│   ├── 縮圖/             # 卡片縮圖（make_thumbs.py 產生，寬 640px／q78）
+│   ├── 縮圖/             # ★ 彈窗層：原尺寸 AVIF（build_image_tiers.py 產生）
+│   ├── 卡片/             # ★ 卡片層：寬 320px WebP（同上；卡片格子只需要這個尺寸）
 │   ├── icons/            # 官方套裝裝備 icon（fetch_icons.py 下載，40px PNG）
 │   └── 官方套裝/         # 官方套裝示意照（fetch_set_photos.py 從 consolegameswiki 抓，640px JPG）
 ├── scripts/
@@ -51,10 +53,14 @@ FF14時尚配裝/
 │   ├── build_sets.py     # ★ 官方套裝資料（見「官方套裝圖鑑」一節）→ data/official_sets.json
 │   ├── build_item_sources.py # ★ 裝備ID → 完整取得方式清單 → item_sources.js（見「完整取得方式」）
 │   ├── backfill_curated_iid.py # 精選套裝道具 ID 回填（名稱唯一才填；--apply 才寫入）
+│   ├── backfill_curated_added.py # 精選 added（收錄日期）一次性回填（dry-run／--apply；已跑過）
 │   ├── fetch_icons.py    # 官方套裝所需裝備 icon 批次下載（可續傳、已有跳過、失敗清單重試）
 │   ├── fetch_set_photos.py # ★ 官方套裝示意照：consolegameswiki 模特照下載（見「官方示意照」）
 │   ├── health_check.py   # 資料健檢（缺圖、缺繁中、重複編號、官方套裝 ID/icon/收錄準則…）
-│   ├── make_thumbs.py    # 產生縮圖（可給秒數上限分批跑）
+│   ├── make_thumbs.py    # 產生 640px 中間縮圖（已有同名 .avif 就跳過）
+│   ├── build_image_tiers.py # ★ 縮圖 → 兩層（卡片 320px WebP ＋ 彈窗 AVIF），--drop-jpg 清中間檔
+│   ├── mira_codec.py     # ★★ 社群配裝前端資料檔的編解碼（item_db.js ＋ mirapri v2）——
+│   │                     #    **格式唯一定義處**，build_site 寫、build_review/check_duplicates 讀
 │   ├── compress_mirapri.py # 壓縮 mirapri 原圖（長邊1100/q76，防重複壓縮）
 │   ├── verify_data.py    # curated 資料正確性檢查（名稱/等級/職業/取得方式 vs DB），輸出 data/驗證報告.md
 │   ├── pipeline.py       # Mirapri 抓取 + enrich 流程
@@ -141,6 +147,7 @@ FF14時尚配裝/
 {
   "type": "curated",
   "id": "42",
+  "added": "2026-08-28",
   "name": "套裝名稱",
   "color": "主色 × 配色",
   "image": "配裝圖片/42-套裝名稱.jpe",
@@ -159,6 +166,13 @@ FF14時尚配裝/
 ```
 
 `st` 與 `tags` 不必填——build_site.py 會從 `source` 的 emoji 與 `job` 自動推導。
+
+**`added`（收錄日期，`YYYY-MM-DD`）要填**：新增套裝時填當天日期即可。精選沒有投稿時間
+（它們不是投稿、是站方自選），前端預設的「投稿新→舊」就是靠這欄把精選排進社群的時間軸；
+**缺值會被當成最舊、掉到最後一頁**，`health_check.py` 會報出來。
+既有 95 套的值由 [`scripts/backfill_curated_added.py`](scripts/backfill_curated_added.py)
+一次性回填——**精度只到「日」，而且是批次時間不是逐套時間**（那支的檔頭寫了為什麼
+只剩這個來源可用：git 歷史全部同一個 commit、EXIF 0/95、mtime 不進版控）。
 
 **`iid`（道具 ID）要填**：這是每件裝備的權威識別，徽章（可染／可交易）與
 `item_sources.js` 的完整取得方式都靠它外連。以前不填、由 build_site.py 每次用
@@ -367,7 +381,8 @@ INST_TYPE = {
 2. 用 `maindb.load_items()` 搜尋繁中名稱
 3. 透過道具 ID 在 `out_data/en-items.msgpack` 取得英文名稱
 4. 透過道具 ID 在 `out_data/ja-items.msgpack` 取得日文名稱
-5. **把道具 ID 填進 `iid` 欄**（查名稱時本來就會拿到）。不想手填就先留空，
+5. **填 `added`**（收錄日期，`YYYY-MM-DD`，就填當天）——缺了排序會把它當最舊。
+6. **把道具 ID 填進 `iid` 欄**（查名稱時本來就會拿到）。不想手填就先留空，
    之後跑 `py scripts\backfill_curated_iid.py --apply` 用名稱回填——但**名稱撞名或
    官方改譯名時它會拒填並列進報告**，屆時仍要人工補。`health_check.py` 會擋缺 id 的件。
 
@@ -399,8 +414,22 @@ python scripts/update_all.py
 
 ### 前端功能備註
 
-- **延遲載入**：index.html 先載 157KB 的精選資料立即顯示，8MB 社群資料背景載入
-- **縮圖**：卡片優先載 `配裝圖片/縮圖/`，失敗自動回退原圖
+- **延遲載入**：index.html 先載精選資料立即顯示，其餘背景載入。**順序由 `viewMode` 決定**
+  （`startLoading()`）——`?v=sets` 的分享連結會先載官方套裝，不讓使用者乾等他不看的社群資料。
+- **社群資料是緊湊編碼**：`item_db.js`（共用裝備字典）＋ `mirapri_outfits.js`（每件只留
+  `[iid, 染色1, 染色2, 旗標, 例外]`），前端 `rehydrateMirapri()` 解回原本的物件形狀。
+  gzip 1,948KB → 660＋179KB、解析 235ms → 17ms。**改欄位順序要兩邊一起改**（見 mira_codec.py）。
+- **圖片兩層**：卡片載 `配裝圖片/卡片/*.webp`（320px），彈窗載原圖 → `配裝圖片/縮圖/*.avif`
+  → 卡片層，退路鏈在 `cardImgError()`／`modalImgError()`。一頁 60 張卡 5.3MB → 1.4MB。
+- **色系篩選**：150 種染色名依尾字歸成 11 色系（`DYE_TAIL_FAMILY` ＋ `DYE_FAMILY_FIX` 例外表）。
+  新增染色名時若尾字不在表內會落到「無色系」——加新色記得順手檢查。
+- **發現入口**：🔥 熱門單品（前 60 名，點了以該件反查）、彈窗投稿者可點（看同一人的其他配裝）、
+  官方套裝彈窗的「👗 看玩家怎麼配這套」（`?set=` 可分享）。
+- **排序**：預設是**投稿新→舊**（`sortMode` 初值 `"new"`，也是網址 `?s=` 的省略值——改預設要同時改 `let sortMode`、`URL_KEYS` 的第三欄、`applyURLState()` 的 fallback 三處）。
+  排序鍵：社群用 `timestamp`、精選用 `added + " 00:00:00#編號"`（所以精選會**排進社群的時間軸**，
+  實測落在第 454–915 筆／第 8–16 頁），官方套裝無鍵＝值全同、`Array.sort` 穩定所以維持版本新→舊。
+  ⚠ 編號補零只補**開頭的數字**——有 33a–33f 這種子套裝編號，整串 `padStart` 會讓「033f」排到「0091」之上。
+  要把精選拉回最前面請選「⭐ 精選優先」（`?s=default`，直接用 `ALL_OUTFITS` 的原順序）。
 - **繁中版可幻化**：套裝全部裝備都有繁中名稱才算（zh 欄空白 = 繁中版未實裝）
 - **多選篩選**：取得方式／職業可複選，群組內 OR、群組間 AND，社群套裝也適用
 - **裝備反查**：彈窗中點裝備名 = 以該裝備名搜尋全部套裝
@@ -490,7 +519,8 @@ py scripts\fetch_set_photos.py     # 單獨補官方示意照（可續傳；--re
 改版後順序：**先更新主庫**（repo 根：`node scripts/build-items.mjs` → `build-item-categories.mjs` →
 `validate-data.mjs`）→ `check_maindb.py`（確認齊全）→ `build_item_fallback.py`（新裝備＋徽章）→
 `build_sets.py --fetch` → `fetch_icons.py` → `fetch_set_photos.py` → `build_site.py` →
-**`build_item_sources.py`**（吃三份前端 js，必須最後跑）。
+**`build_item_sources.py`**（吃 `curated_outfits.js`／`item_db.js`／`official_sets.js`，必須最後跑；
+讀不到就直接失敗，不會安靜地少收裝備）。
 
 ### 完整取得方式（item_sources.js）
 
@@ -520,8 +550,11 @@ const _ITEM_SOURCES = { k: [來源字串…], i: { 裝備ID: [k 的索引…] } 
 ### 前端（index.html）
 
 - navbar「👗 配裝｜📖 官方套裝」切換；官方套裝檢視隱藏性別/種族篩選列。
-- 「擁有」勾選追蹤（含備份/匯入工具列）已整組移除；星號收藏 favs（localStorage
-  `ff14_favs`）保留。舊的 `ff14_owned_items` localStorage 資料留著不動、無 UI 讀取。
+- 「擁有」勾選追蹤（含備份/匯入工具列）已整組移除；星號收藏 favs 保留。
+  **localStorage key 是 `ffxiv_favs`**（2026-08-28 由 `ff14_favs` 改名——舊名不符全站的
+  `ffxiv_` 前綴慣例，首頁的「全站進度備份」掃不到它，使用者匯出時收藏會整包漏掉且沒有提示）。
+  遷移是一次性的，**舊 key 不刪、`saveFavs()` 兩邊一起寫**，免得還開著舊快取的分頁互相蓋掉。
+  舊的 `ff14_owned_items` 留著不動、無 UI 讀取。
 - 彈窗「染色／交易」欄：dye 無資料留空（不誤標「不可染」）、可染 🎨×n／不可染、
   可交易／不可交易兩態都明示。
 - 配裝彈窗每件裝備的「📖所屬套裝」chip 可跳到官方套裝彈窗（等 Bootstrap hide 動畫完再開，

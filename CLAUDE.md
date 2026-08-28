@@ -75,6 +75,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 幻化配裝圖鑑重建 | `py tools\glamour\scripts\update_all.py local`（離線）／不帶 `local`＝完整抓取 |
 | 幻化配裝圖鑑的主庫健檢 | `py tools\glamour\scripts\check_maindb.py`（不改檔；msgpack 解不開會直接報出來） |
 | 幻化配裝圖鑑查重複投稿 | `py tools\glamour\scripts\check_duplicates.py`（只稽核／`--report` 出清單／`--apply` 標記移除，之後要跑 `build_site.py` 才生效） |
+| 幻化配裝圖鑑圖片兩層化（新增圖片後） | `py tools\glamour\scripts\build_image_tiers.py`（卡片 320px WebP ＋ 彈窗 AVIF，已有的跳過）→ 兩層齊了再加 `--drop-jpg` 清中間檔。`update_all.py` full 模式已含這兩步 |
 | 重建物品分類對照表（改完 items.json） | `node scripts/build-item-categories.mjs`（`--offline` 只驗證） |
 | 重建園藝配種庫（含 216 件花色與種子取得管道） | `node scripts/build-gardening.mjs`（dry-run 預設／`--apply`／`--offline`；**直寫 minified**，看差異請看腳本摘要，別看 git diff） |
 | 重建製作模擬器資料（技能表＋模擬用配方＋料理／藥品） | `node scripts/build-craft-sim.mjs`（`--offline` 用 `out_data/cache/craft-sim` 快取／`--refresh` 強制重抓；會用 XIVAPI 校驗每個技能的 CP 與等級） |
@@ -92,6 +93,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | `build-obtainable.mjs` | 重建取得方式摘要表（前端篩選用；**詳細版在 `out_data/obtainable-methods.msgpack`**） | `data/obtainable-methods.json` |
 | `build-mounts-desc.mjs` | `build-mounts` 跑完補 description（那支跑完會是 null） | 就地改 `data/mounts.json` |
 | `patch-aether-coords.mjs` | 補風脈座標（303 筆，已補完） | 就地改 `data/aether-currents.json` |
+| `tools/glamour/scripts/backfill_curated_added.py` | 補精選套裝的 `added`（收錄日期，95 筆已補完）。資料來源只剩檔案 mtime——git 歷史全是同一個 commit、EXIF 0/95，細節見該檔檔頭與知識庫 §4.37 | 就地改 `tools/glamour/data/curated_outfits.json` |
 | `patch-fishing-common.mjs` | 補常駐普通魚（已補完） | 就地改 `data/fishes.json` |
 | `download-emotes-icons.mjs` | 新表情出現時 | `assets/emotes/`（前端用本地路徑） |
 | `download-barding-icons.mjs` | 新鳥鞍出現時 | `assets/barding/` |
@@ -212,6 +214,8 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 - **新增工具頁** → `/spec` 釐清需求 → 實作 → `/qa` → `/ship`。
 - **要更新外部來源資料** → `/scrape` 抓取 → 跑 `/scripts` 產生 → `node scripts/validate-data.mjs` → `/verify`。
 - **改了幻化配裝圖鑑** → 先讀 [tools/glamour/CLAUDE.md](tools/glamour/CLAUDE.md) → 改碼／改 `data/curated_outfits.json` → `py tools\glamour\scripts\update_all.py local` 重建＋健檢 → `/browse` 驗收。**重建任何一份前端 js 後都會連帶重跑 `build_item_sources.py`**，漏跑不會報錯、只會安靜地退回單一來源。
+- **改了社群配裝的前端資料格式** → 那份是「`item_db.js` 共用裝備字典 ＋ 緊湊編碼」，**格式定義只有 `tools/glamour/scripts/mira_codec.py` 一份**（`build_site.py` 寫，`build_review.py`／`check_duplicates.py`／前端 `rehydrateMirapri()` 讀）。`build_site.py` 每次建置都會把編碼解回來與原始結構完整比對，對不上直接中止——**不要為了讓建置過而拿掉這個閘門**，掉欄位在畫面上完全看不出來（知識庫 §4.35）。
+- **在 `tools/glamour/配裝圖片/` 下新增產出目錄** → 先把所有會 `rglob` 圖片的腳本掃一遍。新增卡片層時 `make_thumbs.py`（`EXTS` 含 `.webp`）把它當來源圖、生了 237MB 的「縮圖的縮圖」，`health_check.py` 的覆蓋率分母也多算了 7,060 張，兩邊都不報錯（知識庫 §4.36）。
 - **改了主庫 `data/items.json`（或跑了 `build-items.mjs`）** → 除了 `build-items-lite`／`build-items-market`，**幻化配裝圖鑑也吃這份**：跑 `py tools\glamour\scripts\update_all.py local` 讓它跟上。社群套裝的裝備名另外吃 `all_outfits_enriched.json` 快取，要一併更新得跑 `py tools\glamour\scripts\pipeline.py enrich`；精選／官方套裝的名稱則來自 `item_fallback_multilang.json`，需 `py tools\glamour\scripts\build_item_fallback.py`（連網約 3 分鐘）。**染色對照也吃主庫**：`py tools\glamour\scripts\build_dye_names.py --apply`（白名單／日繁／英文別名三份）——**漏跑不會報錯，新色會被模糊比對指派成最像的舊色**（知識庫 §4.24）。
 - **時尚品鑑週更** → `node scripts/build-fashion-report.mjs` → `node scripts/validate-data.mjs` → 開頁驗收。**別再手工挑推薦裝**，推薦標準與換週狀態機是程式定的，規格見 [docs/fashion-report-spec.md](docs/fashion-report-spec.md)、操作見 [docs/fashion-report-update-sop.md](docs/fashion-report-update-sop.md)。腳本報「來源尚未換週」是**正常的換週真空期，什麼都不用做**。
 - **重建釣魚資料** → `node scripts/build-fishing.mjs` → **必接** `patch-fishing-multispot.mjs` 與 `patch-fish-legendary.mjs --apply`。後者漏跑不會報錯，只會安靜地把 30 隻魚皇（釣場之皇）降級成普通魚王——上游沒有這個旗標，名單是我們自己維護的（見知識庫 §4.8）。
