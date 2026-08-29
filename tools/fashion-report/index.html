@@ -391,7 +391,10 @@ function dyeSection(d) {
         </div>
       </div>
       <div class="dye-how">
-        <span class="chip ${v.gil != null && !v.gate ? 'gil' : ''}">${v.gil != null ? gil(v.gil) + ' 金幣' : esc(v.how)}</span>
+        <span class="chip ${v.gil != null && !v.gate ? 'gil' : ''}">${
+          v.gil != null ? gil(v.gil) + ' 金幣'
+          : v.access === 'none' ? '取得方式未收錄'   /* 不是「免費」，是本站還沒有這支染劑的來源資料 */
+          : esc(v.how)}</span>
         ${v.marketable ? '<span class="chip mk">可上市場板</span>' : '<span class="chip">不可交易</span>'}
         ${gateChip(v.gate)}
         ${whereBtn(v.vendor)}

@@ -214,7 +214,13 @@ function toItemId(nameEn) {
     }
   }
   const withTw = ids.filter((i) => ix.byId.get(i)?.name);
-  return { id: withTw[0] ?? ids[0] ?? null, ambiguous: withTw.length > 1, hasTw: withTw.length > 0 };
+  // 同一個英文名對到多個 id 時，**優先選真的能穿的那件**。
+  // week 448 遇到 4 組：「Southern Seas Vest」既是 3.07 的南海男式坎肩（裝備），
+  // 也是 7.1 的「南海男式坎肩組合」（包裹道具）。時尚品鑑算的是身上穿的東西，
+  // 選到包裹就會顯示錯的名稱與取得方式。當時是靠 id 由小到大剛好挑對，不是規則。
+  const equippable = withTw.filter((i) => ix.equipment[i]);
+  const pick = equippable.length ? equippable : withTw;
+  return { id: pick[0] ?? ids[0] ?? null, ambiguous: withTw.length > 1, hasTw: withTw.length > 0 };
 }
 
 const mapFail = [], ambiguous = [], noTw = [];
@@ -344,19 +350,39 @@ if (needPrice.length && !offline) {
   const ids = [...new Set(needPrice.map((x) => x.id))];
   for (let i = 0; i < ids.length; i += 100) {
     const chunk = ids.slice(i, i + 100);
-    try {
-      const j = await getJson(
-        `https://universalis.app/api/v2/${encodeURIComponent("陸行鳥")}/${chunk.join(",")}?listings=1&entries=0`,
-        `universalis-${i}.json`
-      );
-      const map = j.items ?? (j.itemID ? { [j.itemID]: j } : {});
-      for (const [id, v] of Object.entries(map)) {
-        const p = v?.minPriceNQ || v?.minPrice || v?.listings?.[0]?.pricePerUnit || null;
-        if (p) for (const x of needPrice) if (x.id === Number(id)) x.marketGil = Math.round(p);
+    // 查價失敗不能「警告一下就算了」——那批件會變成 0 元參與排序，直接生出
+    // 假的最省解。week 448 實跑遇到 Universalis 504，當下產出的是
+    // 「拿滿 MGP：80 分・0 金幣」，其實只是三件不知道價。重試仍失敗就中止，
+    // 寧可叫人晚點再跑，也不要把低估的成本寫進檔案。
+    let ok = false, lastErr = null;
+    for (let attempt = 1; attempt <= 3 && !ok; attempt++) {
+      try {
+        const j = await getJson(
+          `https://universalis.app/api/v2/${encodeURIComponent("陸行鳥")}/${chunk.join(",")}?listings=1&entries=0`,
+          `universalis-${i}.json`
+        );
+        const map = j.items ?? (j.itemID ? { [j.itemID]: j } : {});
+        for (const [id, v] of Object.entries(map)) {
+          const p = v?.minPriceNQ || v?.minPrice || v?.listings?.[0]?.pricePerUnit || null;
+          if (p) for (const x of needPrice) if (x.id === Number(id)) x.marketGil = Math.round(p);
+        }
+        priceAt = new Date().toISOString();
+        ok = true;
+      } catch (e) {
+        lastErr = e;
+        if (attempt < 3) {
+          console.warn(`   ⚠️ Universalis 查價失敗（${e.message}），${attempt * 5} 秒後重試（${attempt}/3）`);
+          await sleep(attempt * 5000);
+        }
       }
-      priceAt = new Date().toISOString();
-    } catch (e) {
-      console.warn(`   ⚠️ Universalis 查價失敗（${e.message}），這批件只能以「價格不明」參與排序`);
+    }
+    if (!ok) {
+      throw new Error(
+        `Universalis 查價連續 3 次失敗（${lastErr?.message}）。
+` +
+          `這批有 ${chunk.length} 件只能靠市場板定價，沒有價格就會被當成 0 元參與排序、` +
+          `產出「更便宜」的假最省解，所以中止不出檔。請稍後重跑。`
+      );
     }
   }
 }

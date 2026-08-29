@@ -50,7 +50,8 @@ node scripts/validate-data.mjs               # 資料驗收（必跑）
 | `來源尚未換週：API week=443，本站時鐘 week=444` | 正常的換週真空期 | **什麼都不用做**，晚點再跑。前端已自動處理 |
 | `英文名對不到物品 N 件` | 來源站出現本站 `en-items.msgpack` 沒有的新裝 | 重建 `en-items.msgpack`；急用可先人工確認該件是否台服未開放 |
 | `⚠️ 來源品名少了所有格、以寬鬆比對救回 N 件` | **不是錯誤，是要你看一眼**。來源站的品名偶爾會掉所有格 | 核對印出的「來源名 → 遊戲名（台服名・id）」對得沒錯就好。詳見下方 |
-| `染劑對不到 data/dyes.json：「X」` | 出現新染劑或台服未實裝的色 | 跑 `node scripts/build-dyes.mjs` 更新；仍對不到＝台服未實裝，需人工判斷 |
+| `染劑對不到 data/dyes.json：「X」` | **多半是台服升版後沒重跑染劑庫**（`dyes.json` 是 `items.json` 的衍生檔） | 先比對 `dyes.json` 與 `items.json` 的 `patch` 欄，不一致就跑 `node scripts/build-dyes.mjs`；重跑後仍對不到才是台服未實裝 |
+| `Universalis 查價連續 3 次失敗` | 市場板查價掛了 | **稍後重跑**。不能放行——沒有價格的件會被當 0 元排序，產出「更便宜」的假最省解 |
 | `計分公式驗算失敗：easy100 依公式只有 N 分` | 本週有公式沒涵蓋的規則（例如罕見的 +9 提示） | **不要硬改資料**，先人工確認實際規則，再更新腳本的 `SCORING` 常數 |
 
 ### 2.1 來源站品名掉所有格（week 444 首見）
@@ -102,7 +103,7 @@ week 446 是本站第一個飾品週（手鐲＝浴衣）。當時本站把飾�
 這三份跑一次就好，只有在遊戲改版或發現錯誤時才重建：
 
 ```bash
-node scripts/build-dyes.mjs             # data/dyes.json     全 114 支染劑的顏色／取得／價格／門檻
+node scripts/build-dyes.mjs             # data/dyes.json     全 125 支染劑的顏色／取得／價格／門檻（**台服每次升版必跑**，新版本會加新染劑）
 node scripts/build-fashion-fillers.mjs  # data/fashion-fillers.json  每部位最便宜的可染填充裝
 node scripts/build-fashion-themes.mjs   # data/fashion-themes.json   主題預查表（目前到 week 525）
 ```
@@ -127,4 +128,4 @@ node scripts/validate-data.mjs          # 必跑
 舊流程還有兩個實質錯誤，已由新標準修正：
 
 - **染劑成本完全沒算**。week 443 舊頁寫「省事 80 分・全程 116 金幣」，實際上它要染的萄乾棕只有南薩納蘭的蜥蜴人族雜用商人賣（**需部族聲望**）；100 分方案要的東洲藍是**刻木匠製作限定且不可交易**。新標準把兩者都算進去後，同一週的最省解變成 **146 金幣、0 支染劑、0 門檻**（80 分線）與 **472 金幣、0 支染劑、0 門檻**（100 分線）。
-- **取得方式改用站內離線資料，不再逐件打 Garland Tools**。國際服 7.5 已把單色染劑整併下架，Garland／XIVAPI／英文 wiki 現在都查不到那些染劑的取得方式，對停在 7.15 的台服而言等於失效來源（詳見 `scripts/lib/game-sources.mjs` 檔頭）。
+- **取得方式改用站內離線資料，不再逐件打 Garland Tools**。國際服 7.5 已把單色染劑整併下架，Garland／XIVAPI／英文 wiki 現在都查不到那些染劑的取得方式，對台服（目前 7.21，仍是舊染劑系統）而言等於失效來源（詳見 `scripts/lib/game-sources.mjs` 檔頭）。
