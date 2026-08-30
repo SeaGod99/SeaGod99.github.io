@@ -66,6 +66,8 @@ FF14時尚配裝/
 │   ├── pipeline.py       # Mirapri 抓取 + enrich 流程
 │   ├── build_dye_names.py # ★ 由主庫產生染色三份對照（白名單／日繁／英文別名）——**改版後必跑**
 │   ├── ocr_check.py      # ★ 用 Ollama 視覺模型對圖做 OCR（v2 逐件 item↔dye），比對現有資料（見「OCR 檢查流程」）
+│   ├── inject_claude_ocr.py # ★★ Claude 親讀結果 → ocr_cache.json（src:"claude"）。**每輪新投稿的正規寫回路徑**；
+│   │                     #    判讀為空會「刪除」既有假紀錄而非跳過，名稱不在道具庫就整批中止
 │   ├── apply_dyes.py     # OCR 結果 → 逐件染色 mirapri_piece_dyes.json + 整套 fallback + 可見裝備
 │   ├── itemdb.py         # FF14 道具資料庫索引（norm(日文)→id→繁中/英/日；resolve 解析 OCR 字串，
 │   │                     #   本機 DB 對不到時自動查 item_fallback_multilang.json 救回 7.x 新裝備）
@@ -694,6 +696,26 @@ py scripts\apply_dyes.py    # 2. 快取 → mirapri_piece_dyes.json + mirapri_dy
 py scripts\build_site.py    # 3. 填逐件染色、濾掉替代裝備，重建 mirapri_outfits.js
 py scripts\resolve_ocr.py   # （選用）OCR 字串對回 DB 正式值 → data/OCR解析建議.md（人工審後再套）
 ```
+
+### Claude 親讀的寫回路徑（每輪新投稿走這條，不是上面那條）
+
+上面第 1 步是 Ollama。**新投稿的逐字轉錄一律由 Claude 親讀**（準度 99% vs 58%），讀完用
+`inject_claude_ocr.py` 寫回快取，再接第 2 步：
+
+```
+py scripts\inject_claude_ocr.py 判讀.json                                   # dry-run
+py scripts\inject_claude_ocr.py 判讀.json --apply                           # 寫入（自動備份）
+py scripts\inject_claude_ocr.py 判讀.json --apply --allow-unknown "某裝備名"  # 具名放行道具庫缺口
+```
+
+判讀檔格式、兩個非做不可的行為（空判讀要**刪**不是跳過、名稱查無要**整批中止**）寫在該腳本檔頭。
+**別再寫成 `scripts/_tmp_*.py`**——那個路徑被 `.gitignore` 擋著，之前每輪都得重寫一次。
+
+**英文介面投稿的染色要特別小心**：裝備名是官方英文名（照 `item_fallback_multilang.json` 的 `en` 查得到），
+但**染色名是片假名讀回來的英文詞、不是官方英文染劑名**。和製英語那幾個對不上——
+`Shine Gold` 的官方英文是 Metallic Gold、`Gunmetal` 官方是 Gunmetal Black。
+直接查 `dye_aliases.json` 會查無，而 `snap_dye()` 的模糊比對會**指派成最像的舊色**。
+遇到查無先回查白名單確認，不要讓它猜（見[知識庫 §4.38](../../docs/專案慣例與記憶.md)）。
 
 注意：過濾只對「有 OCR 過且至少認出 1 件」的套生效，沒 OCR 的套原樣保留以免誤刪；
 另外若某件其實有穿但 OCR 沒讀到（例如耳飾太小），會被一起隱藏——這是「直接隱藏」策略的已知取捨。

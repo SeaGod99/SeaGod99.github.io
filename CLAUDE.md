@@ -75,6 +75,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 幻化配裝圖鑑重建 | `py tools\glamour\scripts\update_all.py local`（離線）／不帶 `local`＝完整抓取 |
 | 幻化配裝圖鑑的主庫健檢 | `py tools\glamour\scripts\check_maindb.py`（不改檔；msgpack 解不開會直接報出來） |
 | 幻化配裝圖鑑查重複投稿 | `py tools\glamour\scripts\check_duplicates.py`（只稽核／`--report` 出清單／`--apply` 標記移除，之後要跑 `build_site.py` 才生效） |
+| 幻化配裝圖鑑：把 Claude 親讀的判讀寫回快取 | `py tools\glamour\scripts\inject_claude_ocr.py 判讀.json`（dry-run 預設／`--apply`；名稱查無會整批中止，確認過的缺口用 `--allow-unknown "名稱"` 具名放行）→ 接 `apply_dyes`→`reconstruct_empty`→`build_site`→`build_item_sources`→`health_check` |
 | 幻化配裝圖鑑圖片兩層化（新增圖片後） | `py tools\glamour\scripts\build_image_tiers.py`（卡片 320px WebP ＋ 彈窗 AVIF，已有的跳過）→ 兩層齊了再加 `--drop-jpg` 清中間檔。`update_all.py` full 模式已含這兩步 |
 | 重建物品分類對照表（改完 items.json） | `node scripts/build-item-categories.mjs`（`--offline` 只驗證） |
 | 重建園藝配種庫（含 216 件花色與種子取得管道） | `node scripts/build-gardening.mjs`（dry-run 預設／`--apply`／`--offline`；**直寫 minified**，看差異請看腳本摘要，別看 git diff） |
@@ -214,6 +215,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 - **新增工具頁** → `/spec` 釐清需求 → 實作 → `/qa` → `/ship`。
 - **要更新外部來源資料** → `/scrape` 抓取 → 跑 `/scripts` 產生 → `node scripts/validate-data.mjs` → `/verify`。
 - **改了幻化配裝圖鑑** → 先讀 [tools/glamour/CLAUDE.md](tools/glamour/CLAUDE.md) → 改碼／改 `data/curated_outfits.json` → `py tools\glamour\scripts\update_all.py local` 重建＋健檢 → `/browse` 驗收。**重建任何一份前端 js 後都會連帶重跑 `build_item_sources.py`**，漏跑不會報錯、只會安靜地退回單一來源。
+- **幻化配裝圖鑑抓新投稿（「更新名單」那一輪）** → `py tools\glamour\scripts\pipeline.py all` → `compress_mirapri` → `make_thumbs` → `build_image_tiers`（＋`--drop-jpg`）→ **新圖由 Claude 逐張親讀**（不要跑 ollama 的 `ocr_check` 當真值，準度 58% vs 99%）→ `inject_claude_ocr.py --apply` → `apply_dyes` → `reconstruct_empty` → `build_site` → `build_item_sources` → `health_check` → 開頁驗收。**每件裝備名一律回查 `ja-items.msgpack`＋`item_fallback_multilang.json`、每個染色對 `dye_names_ja.json`**——`inject_claude_ocr.py` 會強制這件事。英文介面投稿的**染色名是片假名讀回來的英文詞、不是官方英文染劑名**，別直接查 `dye_aliases.json`（知識庫 §4.38）。
 - **改了社群配裝的前端資料格式** → 那份是「`item_db.js` 共用裝備字典 ＋ 緊湊編碼」，**格式定義只有 `tools/glamour/scripts/mira_codec.py` 一份**（`build_site.py` 寫，`build_review.py`／`check_duplicates.py`／前端 `rehydrateMirapri()` 讀）。`build_site.py` 每次建置都會把編碼解回來與原始結構完整比對，對不上直接中止——**不要為了讓建置過而拿掉這個閘門**，掉欄位在畫面上完全看不出來（知識庫 §4.35）。
 - **在 `tools/glamour/配裝圖片/` 下新增產出目錄** → 先把所有會 `rglob` 圖片的腳本掃一遍。新增卡片層時 `make_thumbs.py`（`EXTS` 含 `.webp`）把它當來源圖、生了 237MB 的「縮圖的縮圖」，`health_check.py` 的覆蓋率分母也多算了 7,060 張，兩邊都不報錯（知識庫 §4.36）。
 - **改了主庫 `data/items.json`（或跑了 `build-items.mjs`）** → 除了 `build-items-lite`／`build-items-market`／**`build-dyes.mjs`（染劑庫，新版本會加新染劑，漏跑會讓時尚品鑑週更直接中止）**，**幻化配裝圖鑑也吃這份**：跑 `py tools\glamour\scripts\update_all.py local` 讓它跟上。社群套裝的裝備名另外吃 `all_outfits_enriched.json` 快取，要一併更新得跑 `py tools\glamour\scripts\pipeline.py enrich`；精選／官方套裝的名稱則來自 `item_fallback_multilang.json`，需 `py tools\glamour\scripts\build_item_fallback.py`（連網約 3 分鐘）。**染色對照也吃主庫**：`py tools\glamour\scripts\build_dye_names.py --apply`（白名單／日繁／英文別名三份）——**漏跑不會報錯，新色會被模糊比對指派成最像的舊色**（知識庫 §4.24）。
