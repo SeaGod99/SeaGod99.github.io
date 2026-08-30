@@ -16,6 +16,14 @@
  *
  * 「直接可得」只認 NPC 商店／採集／任務等固定管道，**不認市場板**：市場板對每個種子都成立，
  * 認了它整棵樹會縮成一層，等於沒算。市場板另外標在節點上當捷徑提示。
+ *
+ * ⚠ 成本相同時**優先挑不會隨機失敗的配方**（2026-08-29 補）。137 組配方裡有 28 組帶 `alsoYields`
+ *   ＝配下去可能得到另一種東西（等於這輪沒配到）。原本的 `h < cur` 是嚴格小於，同成本時保留先找到
+ *   的那組，於是克里耶蘿蔔三組配方都是 120h，卻挑到會隨機的那組——而薩維奈圓蔥的最省路徑正好
+ *   經過它，旗艦範例白白夾了一個可以零成本避開的隨機步驟。全庫有 3 種作物踩到這個平手。
+ *
+ * ⚠ 總工期是「最快」不是「保證」：路徑上若有隨機步驟，沒配到就得把該株重種一輪。頁面不猜機率
+ *   （沒有可靠的機率資料，猜了會變成假精確），只誠實標出「重來一輪要多久」。
  */
 (function () {
   'use strict';
@@ -24,6 +32,11 @@
   var META_URL = '../../data/_meta.json';
   var ICON_BASE = 'https://xivapi.com/i/';
 
+  /* localStorage：key 一律 `ffxiv_` 開頭，否則首頁的「匯出全站進度」掃不到（知識庫 §2.3）。
+     這頁本來是全站唯一沒有任何 ffxiv_ key 的工具頁——算得出 28 天的計畫，關掉分頁就全沒了。 */
+  var LS_PLAN = 'ffxiv_gardening_plan';   // { target, startAt, overrides:{seedId:idx}, done:{key:1} }
+  var LS_VIEW = 'ffxiv_gardening_view';   // { tab, species, kind, q, sort }
+
   var DB = null;          // 完整信封（含 rules）
   var ROWS = [];          // 已過版本閘門的作物
   var BY_SEED = new Map();
@@ -31,7 +44,39 @@
   var COST = new Map();   // 種子 id → 取得該種子的最短時數（0＝可直接取得）
   var BEST = new Map();   // 種子 id → 最省的配方 index
   var OVERRIDE = new Map(); // 使用者手動挑的配方：種子 id → 配方 index
+  /* 已完成的步驟／照料點。**依目標分開存**：步驟的 key 是種子 id，換目標後同一顆種子
+     可能出現在別的計畫裡，共用一份會把新計畫誤標成已完成；分開存則是切走再切回來進度還在。 */
+  var DONE_ALL = Object.create(null);  // 目標 productId → { key: 1 }
+  var DONE = Object.create(null);      // 目前目標的那一份（見 useDone）
   var STATE = { tab: 'plan', target: null, species: null, kind: 'all', q: '', sort: 'name' };
+
+  // ── localStorage ──────────────────────────────────────────────────────
+  // 全部包 try/catch：私密視窗與「封鎖網站資料」下 localStorage 會直接 throw，
+  // 不能讓存檔失敗把整頁帶下去。
+  function lsGet(key) {
+    try { return JSON.parse(localStorage.getItem(key) || '{}') || {}; } catch (e) { return {}; }
+  }
+  function lsSet(key, val) {
+    try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) { /* 存不了就算了，功能不依賴它 */ }
+  }
+  function savePlan() {
+    var ov = {};
+    OVERRIDE.forEach(function (v, k) { ov[k] = v; });
+    lsSet(LS_PLAN, {
+      target: STATE.target,
+      startAt: $('startAt') ? $('startAt').value : '',
+      overrides: ov,
+      doneByTarget: DONE_ALL
+    });
+  }
+  /** 把 DONE 指向目前目標的那一份進度（沒有就開一份空的）。 */
+  function useDone(productId) {
+    if (!DONE_ALL[productId]) DONE_ALL[productId] = Object.create(null);
+    DONE = DONE_ALL[productId];
+  }
+  function saveView() {
+    lsSet(LS_VIEW, { tab: STATE.tab, species: STATE.species, kind: STATE.kind, q: STATE.q, sort: STATE.sort });
+  }
 
   // ── 小工具 ────────────────────────────────────────────────────────────
   function esc(s) {
@@ -98,6 +143,18 @@
     return !p || (p.seed && p.seed.sources && p.seed.sources.length > 0);
   }
 
+  /** 這組配方會不會隨機配出別的東西（＝這輪可能沒配到，要重種一輪）。 */
+  function rngRecipe(c) { return !!(c && c.alsoYields && c.alsoYields.length); }
+
+  /** 用某一組配方取得該種子要多少時數（子節點沿用各自的 BEST）。 */
+  function recipeCost(c) {
+    var baseCrop = BY_SEED.get(c.baseSeedId);
+    if (!baseCrop) return Infinity;
+    var cb = COST.has(c.baseSeedId) ? COST.get(c.baseSeedId) : 0;
+    var ca = COST.has(c.adjacentSeedId) ? COST.get(c.adjacentSeedId) : 0;
+    return Math.max(cb, ca) + baseCrop.duration;
+  }
+
   /** 定點迭代求每個種子的最短取得時數與最省配方。 */
   function solveCosts() {
     ROWS.forEach(function (p) { COST.set(p.seedId, directOK(p.seedId) ? 0 : Infinity); });
@@ -105,14 +162,21 @@
       var changed = false;
       ROWS.forEach(function (p) {
         if (directOK(p.seedId)) return;
+        var cur = COST.has(p.seedId) ? COST.get(p.seedId) : Infinity;
+        var bi = BEST.has(p.seedId) ? BEST.get(p.seedId) : -1;
+        // 還沒選過任何配方時，把「目前這組是隨機的」設為 true，好讓第一組非隨機的配方能勝出
+        var curRng = bi >= 0 ? rngRecipe(p.crossBreeds[bi]) : true;
         p.crossBreeds.forEach(function (c, i) {
           var baseCrop = BY_SEED.get(c.baseSeedId);
           if (!baseCrop) return;
           var cb = COST.has(c.baseSeedId) ? COST.get(c.baseSeedId) : 0;
           var ca = COST.has(c.adjacentSeedId) ? COST.get(c.adjacentSeedId) : 0;
           var h = Math.max(cb, ca) + baseCrop.duration;
-          if (h < (COST.has(p.seedId) ? COST.get(p.seedId) : Infinity)) {
-            COST.set(p.seedId, h); BEST.set(p.seedId, i); changed = true;
+          // 成本更低 → 換；成本一樣但目前這組會隨機、新的不會 → 也換（見檔頭）。
+          // 平手只會換一次（換完 curRng 就是 false），不會讓迭代永遠 changed=true。
+          if (h < cur || (h === cur && curRng && !rngRecipe(c))) {
+            COST.set(p.seedId, h); BEST.set(p.seedId, i);
+            cur = h; curRng = rngRecipe(c); changed = true;
           }
         });
       });
@@ -145,7 +209,11 @@
     window.addEventListener('hashchange', applyHash);
   }
 
-  function showTab(tab, skipHash) {
+  /* focusPanel＝這次切換是「從內容裡的按鈕」觸發的（看配種路徑／看 9 色配方／父本連結）。
+     那顆按鈕切完就被 hidden 了，焦點會掉回 <body>：鍵盤使用者下一個 Tab 從整頁最上面重來，
+     手機上則是畫面完全沒動、內容卻整個換掉，看到的是新結果的中段。
+     由頁籤鈕本身觸發時不要做這件事——ARIA APG 的頁籤行為維持原樣才對。 */
+  function showTab(tab, skipHash, focusPanel) {
     STATE.tab = tab;
     document.querySelectorAll('.tab-btn').forEach(function (b) {
       var on = b.dataset.tab === tab;
@@ -155,90 +223,311 @@
     document.querySelectorAll('.panel').forEach(function (p) {
       p.hidden = p.id !== 'p-' + tab;
     });
+    if (focusPanel) {
+      var panel = $('p-' + tab);
+      if (panel) {
+        panel.focus({ preventScroll: true });
+        panel.scrollIntoView({ block: 'start', behavior: 'smooth' });
+      }
+    }
     if (!skipHash) writeHash();
+    saveView();
   }
 
   /* 深層連結：#/plan/8166、#/flower/21876、#/rules，
      以及 #/all?kind=flower&q=鬱&sort=duration——「全部作物」的篩選／搜尋／排序也要能分享與重整，
-     否則調了半天的條件一重整就沒了（其他三個檢視都有，就它沒有）。 */
+     否則調了半天的條件一重整就沒了（其他三個檢視都有，就它沒有）。
+
+     配種路徑另帶 `?t=` 開始時間與 `?r=` 換過的配方（`種子id:配方index,…`）。
+     **開始時間不進網址的話，同一個連結今天開跟後天開算出來的收成時刻不一樣卻沒有任何提示**，
+     分享給朋友更是各看各的（朋友看到的是「他自己的現在 + 480 小時」）。 */
   function writeHash() {
     var h = '#/' + STATE.tab;
-    if (STATE.tab === 'plan' && STATE.target) h += '/' + STATE.target;
+    var qs = [];
+    if (STATE.tab === 'plan') {
+      if (STATE.target) h += '/' + STATE.target;
+      var t = $('startAt') ? $('startAt').value : '';
+      if (t) qs.push('t=' + encodeURIComponent(t));
+      var ov = [];
+      OVERRIDE.forEach(function (v, k) { ov.push(k + ':' + v); });
+      if (ov.length) qs.push('r=' + ov.join(','));
+    }
     if (STATE.tab === 'flower' && STATE.species) h += '/' + STATE.species;
     if (STATE.tab === 'all') {
-      var qs = [];
       if (STATE.kind !== 'all') qs.push('kind=' + STATE.kind);
       if (STATE.q) qs.push('q=' + encodeURIComponent(STATE.q));
       if (STATE.sort !== 'name') qs.push('sort=' + STATE.sort);
-      if (qs.length) h += '?' + qs.join('&');
     }
+    if (qs.length) h += '?' + qs.join('&');
     if (location.hash !== h) history.replaceState(null, '', h);
   }
+
+  function hashParams(raw) {
+    var qi = raw.indexOf('?');
+    return new URLSearchParams(qi >= 0 ? raw.slice(qi + 1) : '');
+  }
+
   function applyHash() {
     var raw = location.hash || '';
     var m = raw.match(/^#\/(plan|flower|all|rules)(?:\/(\d+))?/);
-    if (!m) { showTab('plan', true); return; }
+    // 沒有 hash＝直接開頁：還原上次存的狀態（分享來的連結才有 hash，優先序 hash > localStorage）
+    if (!m) { restoreSaved(); return; }
+    var params = hashParams(raw);
     showTab(m[1], true);
-    if (m[1] === 'plan' && m[2]) selectTarget(Number(m[2]), true);
-    if (m[1] === 'flower' && m[2]) selectSpecies(Number(m[2]), true);
+    if (m[1] === 'plan') {
+      var t = params.get('t');
+      if (t && $('startAt')) $('startAt').value = t;
+      OVERRIDE.clear();
+      (params.get('r') || '').split(',').forEach(function (pair) {
+        var kv = pair.split(':');
+        if (kv.length === 2 && kv[0] && kv[1]) OVERRIDE.set(Number(kv[0]), Number(kv[1]));
+      });
+      if (m[2]) selectTarget(Number(m[2]), { skipHash: true, keepOverride: true });
+    }
+    if (m[1] === 'flower' && m[2]) selectSpecies(Number(m[2]), { skipHash: true });
     if (m[1] === 'all') {
-      var qi = raw.indexOf('?');
-      var params = new URLSearchParams(qi >= 0 ? raw.slice(qi + 1) : '');
       STATE.kind = params.get('kind') || 'all';
       STATE.q = (params.get('q') || '').toLowerCase();
       STATE.sort = params.get('sort') || 'name';
-      var si = $('allSearch'), so = $('allSort');
-      if (si) si.value = params.get('q') || '';
-      if (so) so.value = STATE.sort;
-      document.querySelectorAll('#allFilters [data-kind]').forEach(function (x) {
-        x.setAttribute('aria-pressed', x.dataset.kind === STATE.kind ? 'true' : 'false');
-      });
+      syncAllControls(params.get('q') || '');
       renderAll();
     }
   }
 
+  /** 把「全部作物」的搜尋框／排序／篩選鈕同步成 STATE 的值。 */
+  function syncAllControls(rawQ) {
+    var si = $('allSearch'), so = $('allSort');
+    if (si) si.value = rawQ != null ? rawQ : STATE.q;
+    if (so) so.value = STATE.sort;
+    document.querySelectorAll('#allFilters [data-kind]').forEach(function (x) {
+      x.setAttribute('aria-pressed', x.dataset.kind === STATE.kind ? 'true' : 'false');
+    });
+  }
+
+  /** 直接開頁（網址沒有 hash）時，還原上次離開的狀態。 */
+  function restoreSaved() {
+    var v = lsGet(LS_VIEW), pl = lsGet(LS_PLAN);
+
+    if (v.kind) STATE.kind = v.kind;
+    if (v.q) STATE.q = String(v.q).toLowerCase();
+    if (v.sort) STATE.sort = v.sort;
+    syncAllControls(v.q || '');
+    renderAll();
+
+    // 目標先還原（會強制切到 plan 分頁），最後再切回上次待著的分頁
+    if (pl.target && BY_PRODUCT.has(pl.target)) {
+      OVERRIDE.clear();
+      Object.keys(pl.overrides || {}).forEach(function (k) { OVERRIDE.set(Number(k), pl.overrides[k]); });
+      selectTarget(pl.target, { skipHash: true, keepOverride: true });
+    }
+    if (v.species && BY_PRODUCT.has(v.species)) selectSpecies(v.species, { skipHash: true });
+
+    showTab(v.tab && document.getElementById('p-' + v.tab) ? v.tab : 'plan', true);
+  }
+
   // ── 配種路徑 ──────────────────────────────────────────────────────────
+  /** 現在時刻的 datetime-local 字串（本地時區，不是 UTC）。 */
+  function nowLocal() {
+    return new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+  }
+
   function initPlan() {
-    var now = new Date(Date.now() - new Date().getTimezoneOffset() * 60000);
-    $('startAt').value = now.toISOString().slice(0, 16);
-    $('startAt').addEventListener('change', function () { if (STATE.target) renderPlan(); });
-
-    $('planList').innerHTML = ROWS.slice()
-      .sort(function (a, b) { return a.name.localeCompare(b.name, 'zh-TW'); })
-      .map(function (p) { return '<option value="' + esc(p.name) + '"></option>'; }).join('');
-
-    var input = $('planTarget');
-    input.addEventListener('input', function () {
-      var hit = ROWS.filter(function (p) { return p.name === input.value; })[0];
-      if (hit) selectTarget(hit.productId);
+    /* 開始時間的優先序是 hash > localStorage > 現在（hash 在 applyHash 覆蓋）。
+       原本是無條件寫成「現在」，於是同一份計畫每次重整收成時刻都不一樣、又分享不出去。 */
+    var saved = lsGet(LS_PLAN);
+    if (saved.doneByTarget && typeof saved.doneByTarget === 'object') {
+      Object.keys(saved.doneByTarget).forEach(function (k) { DONE_ALL[k] = saved.doneByTarget[k] || {}; });
+    }
+    $('startAt').value = saved.startAt || nowLocal();
+    $('startAt').addEventListener('change', function () {
+      savePlan(); writeHash();
+      if (STATE.target) renderPlan();
+    });
+    // 「現在」改成明確動作，而不是每次載入的隱形副作用
+    $('startNow').addEventListener('click', function () {
+      $('startAt').value = nowLocal();
+      savePlan(); writeHash();
+      if (STATE.target) renderPlan();
     });
 
-    /* 捷徑：真正需要配種、而且最花時間的幾個——會來查這頁的十之八九就是為了它們。 */
-    var hot = ROWS.filter(function (p) { return p.seed.crossOnly && p.crossBreeds.length; })
-      .sort(function (a, b) { return totalEffort(b) - totalEffort(a); }).slice(0, 6);
-    $('planQuick').innerHTML = '<span class="note" style="align-self:center">最花時間的目標：</span>' +
-      hot.map(function (p) {
-        return '<button class="quick-btn" type="button" data-id="' + p.productId + '">' +
-               icon(p.icon, 'sm') + esc(p.name) + ' <span class="num">' + Math.round(totalEffort(p) / 24) + ' 天</span></button>';
-      }).join('');
+    initCombo();
+    renderQuick();
+
     $('planQuick').addEventListener('click', function (e) {
       var b = e.target.closest('[data-id]');
-      if (b) selectTarget(Number(b.dataset.id));
+      if (b) { selectTarget(Number(b.dataset.id)); return; }
+      var t = e.target.closest('[data-tab]');
+      if (t) showTab(t.dataset.tab, false, true);
     });
 
     $('planResult').addEventListener('click', function (e) {
       var alt = e.target.closest('[data-alt-seed]');
       if (alt) {
         OVERRIDE.set(Number(alt.dataset.altSeed), Number(alt.dataset.altIdx));
-        renderPlan();
+        savePlan(); writeHash(); rerenderPlan();
         return;
       }
+      var chk = e.target.closest('[data-done]');
+      if (chk) {
+        var k = chk.dataset.done;
+        if (DONE[k]) delete DONE[k]; else DONE[k] = 1;
+        savePlan(); rerenderPlan();
+        return;
+      }
+      var ics = e.target.closest('[data-ics]');
+      if (ics) { downloadIcs(); return; }
+      var cc = e.target.closest('[data-copy-care]');
+      if (cc) { copyText(cc, careText()); return; }
       var jump = e.target.closest('[data-goto]');
-      if (jump) { selectTarget(Number(jump.dataset.goto)); return; }
+      if (jump) { selectTarget(Number(jump.dataset.goto), { focus: true }); return; }
       var fl = e.target.closest('[data-flower]');
-      if (fl) { selectSpecies(Number(fl.dataset.flower)); return; }
+      if (fl) { selectSpecies(Number(fl.dataset.flower), { focus: true }); return; }
       var cp = e.target.closest('[data-copy]');
       if (cp) copyText(cp, cp.dataset.copy);
+    });
+  }
+
+  /** 重畫但留住捲動位置——勾一格進度不該把正在看的那一列捲跑掉（同 market.js 的處置）。 */
+  function rerenderPlan() {
+    var y = window.scrollY;
+    renderPlan();
+    window.scrollTo(0, y);
+  }
+
+  /* ── 捷徑：依「你想要什麼」分組 ────────────────────────────────────────
+     原本是單一列的「最花時間的目標」，排序鍵是總工期。結果 4 隻**只能靠園藝取得**的寵物
+     （茄子騎士 12d／番茄國王 13d／曼德拉王后 17d／亞拉戈西瓜 7d）因為工期短，一隻都排不進去
+     ——而「寵物圖鑑差那 4 隻」正是最多人來這頁的原因。工期排行留成最後一組。 */
+  function renderQuick() {
+    function btn(p) {
+      return '<button class="quick-btn" type="button" data-id="' + p.productId + '">' +
+        icon(p.icon, 'sm') + esc(p.name) + ' <span class="num">' + Math.round(totalEffort(p) / 24) + ' 天</span></button>';
+    }
+    var byEffort = function (a, b) { return totalEffort(b) - totalEffort(a); };
+    var groups = [];
+
+    var pets = ROWS.filter(function (p) { return p.minion && p.minion.gardeningOnly; }).sort(byEffort);
+    if (pets.length) groups.push({ label: '🐾 只能靠園藝的寵物', html: pets.map(btn).join('') });
+
+    var choco = ROWS.filter(function (p) { return p.useNote; }).sort(byEffort);
+    if (choco.length) groups.push({ label: '🐦 陸行鳥夥伴', html: choco.map(btn).join('') });
+
+    var flowers = ROWS.filter(function (p) { return p.flower; });
+    if (flowers.length) {
+      groups.push({
+        label: '🌸 花色',
+        html: '<button class="quick-btn" type="button" data-tab="flower">' + flowers.length +
+              ' 種花 × 9 色的油粕配方 →</button>'
+      });
+    }
+
+    var hot = ROWS.filter(function (p) { return p.seed.crossOnly && p.crossBreeds.length; })
+      .sort(byEffort).slice(0, 4);
+    if (hot.length) groups.push({ label: '⏳ 最硬的挑戰', html: hot.map(btn).join('') });
+
+    $('planQuick').innerHTML = groups.map(function (g) {
+      return '<div class="quick-group"><span class="quick-label">' + g.label + '</span>' + g.html + '</div>';
+    }).join('');
+  }
+
+  /* ── 目標輸入：自製 combobox ──────────────────────────────────────────
+     原本是 <input list="planList"> ＋ `p.name === input.value` 的完全相等比對：
+     貼「薩維奈圓蔥種子」、打「Thavnairian」、打錯一個字，一律靜默無反應，看起來像頁面壞了；
+     iOS Safari 的 datalist 下拉幾乎不能用，等於變成必須一字不差手打的輸入框。
+     這裡比照「全部作物」分頁的比對範圍（作物名／種子名／英文名），並補上找不到時的指路。 */
+  var comboHits = [], comboActive = -1;
+
+  function matchRows(q) {
+    if (!q) return [];
+    var s = q.toLowerCase();
+    var scored = [];
+    ROWS.forEach(function (p) {
+      var name = p.name.toLowerCase();
+      if (searchHay(p).indexOf(s) < 0) return;
+      // 作物名開頭命中最相關，其次作物名內含，最後才是靠種子名／英文名撈到的
+      scored.push({ p: p, rank: name.indexOf(s) === 0 ? 0 : (name.indexOf(s) >= 0 ? 1 : 2) });
+    });
+    scored.sort(function (a, b) {
+      return a.rank - b.rank || totalEffort(b.p) - totalEffort(a.p) || a.p.name.localeCompare(b.p.name, 'zh-TW');
+    });
+    return scored.slice(0, 12).map(function (x) { return x.p; });
+  }
+
+  function closeCombo() {
+    comboHits = []; comboActive = -1;
+    var list = $('planSuggest');
+    list.hidden = true; list.innerHTML = '';
+    $('planTarget').setAttribute('aria-expanded', 'false');
+    $('planTarget').removeAttribute('aria-activedescendant');
+  }
+
+  function renderCombo(q) {
+    var input = $('planTarget'), list = $('planSuggest'), hint = $('planHint');
+    comboHits = matchRows(q);
+    comboActive = -1;
+    if (!q) { closeCombo(); hint.textContent = ''; return; }
+    if (!comboHits.length) {
+      closeCombo();
+      // 打了字卻沒有結果一定要說話——這是原本最容易讓人以為頁面壞掉的地方
+      hint.innerHTML = '找不到「' + esc(q) + '」　' +
+        '<button type="button" class="plant-link" style="min-height:auto" id="planToAll">到「全部作物」找找看 →</button>';
+      var toAll = $('planToAll');
+      if (toAll) toAll.addEventListener('click', function () {
+        STATE.q = q.toLowerCase();
+        syncAllControls(q);
+        renderAll();
+        showTab('all', false, true);
+      });
+      return;
+    }
+    hint.textContent = '';
+    list.innerHTML = comboHits.map(function (p, i) {
+      return '<li role="option" id="sg-' + i + '" aria-selected="false" data-id="' + p.productId + '">' +
+        icon(p.icon, 'sm') + '<span>' + esc(p.name) + '</span>' +
+        '<span class="sg-sub">' + esc(p.seedName) + '</span>' +
+        '<span class="sg-eff num">約 ' + Math.round(totalEffort(p) / 24) + ' 天</span></li>';
+    }).join('');
+    list.hidden = false;
+    input.setAttribute('aria-expanded', 'true');
+  }
+
+  function moveCombo(delta) {
+    if (!comboHits.length) return;
+    comboActive = (comboActive + delta + comboHits.length) % comboHits.length;
+    var list = $('planSuggest');
+    Array.prototype.forEach.call(list.children, function (li, i) {
+      li.setAttribute('aria-selected', i === comboActive ? 'true' : 'false');
+      if (i === comboActive) li.scrollIntoView({ block: 'nearest' });
+    });
+    $('planTarget').setAttribute('aria-activedescendant', 'sg-' + comboActive);
+  }
+
+  function initCombo() {
+    var input = $('planTarget'), list = $('planSuggest');
+
+    input.addEventListener('input', function () { renderCombo(input.value.trim()); });
+    input.addEventListener('focus', function () { if (input.value.trim()) renderCombo(input.value.trim()); });
+    // 用 mousedown 而不是 click：blur 會先關掉清單，click 就永遠打不到了
+    list.addEventListener('mousedown', function (e) {
+      var li = e.target.closest('[data-id]');
+      if (!li) return;
+      e.preventDefault();
+      selectTarget(Number(li.dataset.id));
+      closeCombo();
+    });
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowDown') { e.preventDefault(); if (list.hidden) renderCombo(input.value.trim()); moveCombo(1); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); moveCombo(-1); }
+      else if (e.key === 'Escape') { closeCombo(); }
+      else if (e.key === 'Enter') {
+        e.preventDefault();
+        var pick = comboHits[comboActive >= 0 ? comboActive : 0];
+        if (pick) { selectTarget(pick.productId); closeCombo(); }
+      }
+    });
+    input.addEventListener('blur', function () {
+      // 延遲關閉，讓清單上的 mousedown 先跑完
+      setTimeout(closeCombo, 120);
     });
   }
 
@@ -254,15 +543,19 @@
     }
   }
 
-  function selectTarget(productId, skipHash) {
+  function selectTarget(productId, opts) {
+    opts = opts || {};
     var p = BY_PRODUCT.get(productId);
     if (!p) return;
     STATE.target = productId;
-    OVERRIDE.clear();
+    if (!opts.keepOverride) OVERRIDE.clear();
+    useDone(productId);
     $('planTarget').value = p.name;
-    showTab('plan', true);
+    closeCombo();
+    showTab('plan', true, opts.focus);
     renderPlan();
-    if (!skipHash) writeHash();
+    savePlan();
+    if (!opts.skipHash) writeHash();
   }
 
   /** 依目前的（可覆寫的）配方選擇，展開整棵配種樹。 */
@@ -312,6 +605,19 @@
     return max;
   }
 
+  /* ── 進度勾選 ─────────────────────────────────────────────────────────
+     這頁算出來的是一份要跨三到四週執行的清單（魔蕨菜 28 天／5 步／13 個照料點），
+     原本卻只負責「算」不負責「追」——種到第 12 天打開頁面，13 列時間點裡前 6 列早就過了，
+     沒有任何「你在這裡」的標示。key 依目標分開存，見 DONE_ALL。 */
+  var FINAL_KEY = 'final';
+  function stepKey(s) { return 's' + s.seedId; }
+  function careKey(h) { return 'c' + h; }
+  function chkBtn(key, label) {
+    var on = !!DONE[key];
+    return '<button type="button" class="chk" data-done="' + esc(key) + '" aria-pressed="' + (on ? 'true' : 'false') +
+      '" aria-label="' + esc(label) + (on ? '（已完成）' : '') + '" title="' + esc(label) + '">' + (on ? '✓' : '') + '</button>';
+  }
+
   function seedRef(p, role) {
     var name = p.p ? p.p.seedName : ('#' + p.seedId);
     var ic = p.p ? p.p.seedIcon : null;
@@ -339,7 +645,9 @@
       rows.push('<div class="use-row"><span class="use-tag">寵物</span><span>' +
         '收成後可登錄成寵物「' + esc(p.name) + '」' +
         (p.minion.gardeningOnly ? '，<b>只有園藝這條路</b>' : '') +
-        '　<a href="../../minions/">到寵物圖鑑看 →</a></span></div>');
+        // 帶 ?q= 直接落在那一隻上。寵物圖鑑有 500 多筆，落到首頁還要再搜尋一次
+        // （collection-tracker.js 的 applyURL() 直接吃這個參數）
+        '　<a href="../../minions/?q=' + encodeURIComponent(p.name) + '">到寵物圖鑑看 →</a></span></div>');
     }
     if (p.useNote) rows.push('<div class="use-row"><span class="use-tag">用途</span><span>' + esc(p.useNote) + '</span></div>');
     if (p.usedIn) {
@@ -363,6 +671,37 @@
     }
     if (!rows.length) return '';
     return '<h2>拿來幹嘛</h2><div class="card"><div class="use-list">' + rows.join('') + '</div></div>';
+  }
+
+  /* ── 隨機步驟的警告 ───────────────────────────────────────────────────
+     137 組配方裡有 28 組帶 alsoYields＝配下去可能得到另一種東西（等於這輪沒配到）。
+     步驟卡本來就有一顆警告籌碼，但**總覽的「20 天」被當成確定值**，而它其實是最快的情況。
+     這裡不猜機率（沒有可靠的機率資料，猜了會變成假精確），只講「重來一輪要多久」，
+     並在有非隨機替代配方時把代價一起標出來，讓使用者自己決定要賭還是要穩。 */
+  function rngBlock(rngSteps) {
+    if (!rngSteps.length) return '';
+    var rows = rngSteps.map(function (s) {
+      var alt = null;
+      s.p.crossBreeds.forEach(function (c, i) {
+        if (i === s.idx || rngRecipe(c)) return;
+        var h = recipeCost(c);
+        if (isFinite(h) && (!alt || h < alt.h)) alt = { h: h, c: c };
+      });
+      var extra = alt ? Math.max(0, alt.h - recipeCost(s.recipe)) : 0;
+      return '<li>配 <b>' + esc(s.p.seedName) + '</b> 時也可能配出 ' +
+        s.recipe.alsoYields.map(function (a) { return esc(a.name); }).join('、') +
+        '（＝這輪沒配到）→ 重種一輪 <b class="num">+' + s.wait + '</b> 小時' +
+        (alt
+          ? '。<span class="note">這顆種子有不會隨機的配方，改用要多花 <b class="num">' + dur(extra) +
+            '</b>——在下面的步驟卡按「換一組配方」。</span>'
+          : '。<span class="note">這顆種子沒有不會隨機的配方。</span>') +
+        '</li>';
+    }).join('');
+    return '<div class="card" style="margin-top:0.5rem">' +
+      '<div class="step-line">🎲 <b>這條路徑有 ' + rngSteps.length + ' 步是隨機的</b>' +
+      '<span class="chip warn">總工期是最快值，不是保證</span></div>' +
+      '<ul class="note" style="padding-left:1.1rem;margin-top:0.4rem;display:flex;flex-direction:column;gap:0.3rem">' +
+      rows + '</ul></div>';
   }
 
   /** 收成物自己就買得到／採得到 → 先講，不然使用者白種好幾天。 */
@@ -433,16 +772,22 @@
       return;
     }
 
+    // 路徑上會隨機失敗的步驟。求解器已經在成本相同時避開它們了（見 solveCosts），
+    // 剩下的是「非走不可、或走了比較快」的——那就要誠實講重試代價。
+    var rngSteps = steps.filter(function (s) { return rngRecipe(s.recipe); });
+    var doneSteps = steps.filter(function (s) { return DONE[stepKey(s)]; }).length + (DONE[FINAL_KEY] ? 1 : 0);
+
     // 摘要
     html += '<h2>總覽</h2><dl class="summary">' +
-      '<div><dt>總工期</dt><dd class="hl num">' + dur(total) + '</dd></div>' +
+      '<div><dt>總工期' + (rngSteps.length ? '（最快）' : '') + '</dt><dd class="hl num">' + dur(total) + '</dd></div>' +
       '<div><dt>其中「湊出種子」</dt><dd class="num">' + dur(seedReady) + '</dd></div>' +
-      '<div><dt>配種步驟</dt><dd class="num">' + steps.length + ' 步</dd></div>' +
+      '<div><dt>目前進度</dt><dd class="num">' + doneSteps + ' / ' + (steps.length + 1) + ' 步</dd></div>' +
       '<div><dt>至少需要</dt><dd class="num">' + peakBeds(steps) + ' 格 <small>同時佔用</small></dd></div>' +
       (t0 ? '<div><dt>預計收成</dt><dd style="font-size:0.95rem">' + at(t0, total) + '</dd></div>' : '') +
       '</dl>' +
       '<p class="note" style="margin-top:0.6rem">配種一律鋪 <b>' + esc(DB.rules.soils[0].grades[2].name) +
-      '</b>（' + esc(DB.rules.soils[0].effect) + '）。同一階段的步驟可以並行，時間不疊加。</p>';
+      '</b>（' + esc(DB.rules.soils[0].effect) + '）。同一階段的步驟可以並行，時間不疊加。</p>' +
+      rngBlock(rngSteps);
 
     // 步驟（依可開始的時間分階段；同階段可並行）
     html += '<h2>步驟</h2>';
@@ -453,11 +798,18 @@
       else stages.push({ start: s.start, items: [s] });
     });
 
+    // 「進行中」＝第一個還有步驟沒勾的階段。除了 accent 邊框，標題也會多一顆籌碼，不靠顏色表意。
+    var curStage = -1;
     stages.forEach(function (st, i) {
-      html += '<div class="stage"><div class="stage-head">' +
+      if (curStage < 0 && st.items.some(function (s) { return !DONE[stepKey(s)]; })) curStage = i;
+    });
+
+    stages.forEach(function (st, i) {
+      html += '<div class="stage' + (i === curStage ? ' current' : '') + '"><div class="stage-head">' +
         '<span class="stage-no">第 ' + (i + 1) + ' 階段</span>' +
         '<span class="stage-time num">' + (st.start ? '從第 ' + dur(st.start) + ' 起' : '立刻開始') +
         (t0 ? ' · ' + at(t0, st.start) : '') + '</span>' +
+        (i === curStage ? '<span class="chip ok">進行中</span>' : '') +
         (st.items.length > 1 ? '<span class="chip">' + st.items.length + ' 步可並行</span>' : '') +
         '</div>';
       st.items.forEach(function (s) { html += stepCard(s, t0); });
@@ -465,10 +817,14 @@
     });
 
     // 最後一步：把配到的種子種下去
-    html += '<div class="stage"><div class="stage-head">' +
+    var finDone = !!DONE[FINAL_KEY];
+    html += '<div class="stage' + (curStage < 0 && !finDone ? ' current' : '') + '"><div class="stage-head">' +
       '<span class="stage-no">最後一步</span>' +
-      '<span class="stage-time num">從第 ' + dur(seedReady) + ' 起' + (t0 ? ' · ' + at(t0, seedReady) : '') + '</span></div>' +
-      '<div class="step">' + icon(p.icon) + '<div class="step-body"><div class="step-line">' +
+      '<span class="stage-time num">從第 ' + dur(seedReady) + ' 起' + (t0 ? ' · ' + at(t0, seedReady) : '') + '</span>' +
+      (curStage < 0 && !finDone ? '<span class="chip ok">進行中</span>' : '') + '</div>' +
+      '<div class="step' + (finDone ? ' done' : '') + '">' +
+      chkBtn(FINAL_KEY, '把 ' + p.seedName + ' 種下去') +
+      icon(p.icon) + '<div class="step-body"><div class="step-line">' +
         '種下 ' + seedRef({ p: p }, 'base') + '<span class="arrow">→</span>等 <b class="num">' + p.duration +
         '</b> 小時 <span class="arrow">→</span>收成 <b>' + esc(p.name) + '</b>' +
       '</div><div class="step-meta">' +
@@ -496,22 +852,38 @@
     }
 
     setHTML('planResult', html);
-    say('planStatus', p.name + '：總工期 ' + dur(total) + '，' + steps.length + ' 個配種步驟，至少需要 ' +
-      peakBeds(steps) + ' 格園圃' + (t0 ? '，預計 ' + at(t0, total) + ' 收成' : ''));
+    say('planStatus', p.name + '：總工期' + (rngSteps.length ? '最快 ' : ' ') + dur(total) + '，' +
+      steps.length + ' 個配種步驟，至少需要 ' + peakBeds(steps) + ' 格園圃' +
+      (rngSteps.length ? '；其中 ' + rngSteps.length + ' 步是隨機的，沒配到要重種一輪' : '') +
+      '；已完成 ' + doneSteps + ' / ' + (steps.length + 1) + ' 步' +
+      (t0 ? '，預計 ' + at(t0, total) + ' 收成' : ''));
   }
 
   /* ── 照料時程 ──────────────────────────────────────────────────────────
      規則在 rules.care：多數作物 48h 沒照料會枯萎、再 24h 枯死；可收成後就不會枯死。
      所以每一段「種下 → 收成」中間，每 48 小時要回來一次。這裡把時刻直接算出來。 */
+  // 最後一次算出來的照料時程。匯出 .ics／複製時程都讀這份，不必重算。
+  var CARE = { groups: [], t0: null, target: '', harvestH: 0 };
+
+  function uniq(arr) { return arr.filter(function (v, i) { return arr.indexOf(v) === i; }); }
+
   function careBlock(steps, seedReady, product, t0) {
     var W = DB.rules.care.wiltHours;
-    var jobs = steps.map(function (s) { return { at: s.start, till: s.end, what: s.p.crossBreeds[s.idx] ? s.baseCrop.name : s.p.name }; });
+    var jobs = steps.map(function (s) {
+      /* baseCrop 查不到就退回配方裡記的名字。父本被版本閘門擋掉時 BY_SEED 撈不到它，
+         原本這裡直接讀 .name 會 TypeError 讓整頁白掉——stepCard 早有同樣的護欄，只有這裡漏了。
+         （目前的資料閘門只擋掉 2 筆佔位、沒有配方參照到它們，所以是潛在而非現行的破口。） */
+      return { at: s.start, till: s.end, what: s.baseCrop ? s.baseCrop.name : s.recipe.baseSeedName };
+    });
     jobs.push({ at: seedReady, till: seedReady + product.duration, what: product.name });
 
     var marks = [];
     jobs.forEach(function (j) {
       for (var h = j.at + W; h < j.till; h += W) marks.push({ h: h, what: j.what });
     });
+
+    CARE = { groups: [], t0: t0, target: product.name, harvestH: seedReady + product.duration };
+
     if (!marks.length) {
       return '<h2>照料時程</h2><div class="card"><p class="note">' +
         '每一段的培育時間都不到 <b class="num">' + W + '</b> 小時，種下去之後不必回來照料就能直接收。</p></div>';
@@ -524,17 +896,116 @@
       if (last && last.h === m.h) last.what.push(m.what);
       else groups.push({ h: m.h, what: [m.what] });
     });
+    CARE.groups = groups;
+
+    // 「現在」在時程上的位置。已經過了時間卻還沒勾＝作物可能正在枯萎，要看得出來。
+    var nowH = t0 ? (Date.now() - t0) / 3600000 : null;
 
     return '<h2>照料時程</h2><div class="card">' +
       '<p class="note">作物 <b class="num">' + W + '</b> 小時沒照料就枯萎、再 <b class="num">' +
       DB.rules.care.witherHours + '</b> 小時枯死。以下是<b>最晚</b>要回來的時間點（提早照料只會更安全，' +
       '長到可收成之後就不會再枯死）。</p>' +
       '<div class="care-list">' + groups.map(function (g) {
-        return '<div class="care-row"><span class="care-when num">' +
-          (t0 ? at(t0, g.h) : '第 ' + dur(g.h)) + '</span>' +
-          '<span class="care-what">照料 ' + [...new Set(g.what)].map(esc).join('、') +
-          (t0 ? '（第 ' + dur(g.h) + '）' : '') + '</span></div>';
-      }).join('') + '</div></div>';
+        var k = careKey(g.h);
+        var done = !!DONE[k];
+        var overdue = !done && nowH != null && g.h < nowH;
+        var names = uniq(g.what);
+        return '<div class="care-row' + (done ? ' done' : '') + (overdue ? ' overdue' : '') + '">' +
+          chkBtn(k, '照料 ' + names.join('、')) +
+          '<span class="care-when num">' + (t0 ? at(t0, g.h) : '第 ' + dur(g.h)) + '</span>' +
+          '<span class="care-what">照料 ' + names.map(esc).join('、') +
+          (t0 ? '（第 ' + dur(g.h) + '）' : '') + '</span>' +
+          (overdue ? '<span class="care-tag">已逾時</span>' : '') +
+          '</div>';
+      }).join('') + '</div>' +
+      /* 算得出 13 個跨 28 天的時刻，卻帶不走等於沒算：關掉分頁就沒了，只能手抄 13 筆進手機。
+         站上 fishing／gathering 那套「分頁開著才會響」的鈴聲對 48 小時間隔沒有用，
+         真正需要的是丟進手機行事曆。 */
+      '<div class="care-actions">' +
+        (t0
+          ? '<button type="button" class="copy-btn" data-ics="1">📅 匯出照料行事曆（.ics）</button>' +
+            '<button type="button" class="copy-btn" data-copy-care="1">複製時程</button>'
+          : '<span class="note">填上「開始種的時間」才算得出實際時刻，也才能匯出行事曆。</span>') +
+      '</div></div>';
+  }
+
+  /* ── 匯出 .ics ────────────────────────────────────────────────────────
+     純前端產檔（Blob + a.download），做法同 collection-tracker.js 的進度匯出。
+     每筆 15 分鐘、預設提前 2 小時提醒；最後再加一筆收成。 */
+  function icsTime(ms) {
+    return new Date(ms).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+  }
+  function icsEsc(s) {
+    return String(s).replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
+  }
+  /* RFC 5545 的 75 octet 折行。中文一字 3 bytes，一行 20 個字就超了。
+     依 UTF-8 位元組數計算，且**不從字元中間切**，否則中文會變亂碼。
+     內容一律不放 emoji：代理對是 4 bytes、切在中間會直接壞掉。 */
+  function icsFold(line) {
+    var out = [], cur = '', len = 0;
+    for (var i = 0; i < line.length; i++) {
+      var code = line.charCodeAt(i);
+      var b = code < 0x80 ? 1 : (code < 0x800 ? 2 : 3);
+      if (len + b > 73) { out.push(cur); cur = ' '; len = 1; }
+      cur += line[i]; len += b;
+    }
+    out.push(cur);
+    return out.join('\r\n');
+  }
+  function downloadIcs() {
+    if (!CARE.t0 || !CARE.groups.length) return;
+    var W = DB.rules.care.wiltHours, WH = DB.rules.care.witherHours;
+    var stamp = icsTime(Date.now());
+    var L = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//SeaGod Toolbox//Gardening//ZH-TW',
+             'CALSCALE:GREGORIAN', 'METHOD:PUBLISH'];
+
+    function event(uid, startMsAbs, minutes, summary, desc) {
+      L.push('BEGIN:VEVENT', 'UID:' + uid, 'DTSTAMP:' + stamp,
+             'DTSTART:' + icsTime(startMsAbs), 'DTEND:' + icsTime(startMsAbs + minutes * 60000));
+      L.push(icsFold('SUMMARY:' + icsEsc(summary)));
+      L.push(icsFold('DESCRIPTION:' + icsEsc(desc)));
+      L.push('BEGIN:VALARM', 'TRIGGER:-PT2H', 'ACTION:DISPLAY',
+             icsFold('DESCRIPTION:' + icsEsc(summary)), 'END:VALARM');
+      L.push('END:VEVENT');
+    }
+
+    CARE.groups.forEach(function (g) {
+      var names = uniq(g.what).join('、');
+      event('garden-' + STATE.target + '-c' + g.h + '@seagod99.github.io',
+        CARE.t0 + g.h * 3600000, 15,
+        'FF14 園藝：照料 ' + names,
+        '目標：' + CARE.target + '\n這是最晚要回來的時間——' + W + ' 小時沒照料會枯萎，再 ' + WH +
+        ' 小時就枯死。\n水神的工具箱 · 園藝配種計算');
+    });
+    event('garden-' + STATE.target + '-harvest@seagod99.github.io',
+      CARE.t0 + CARE.harvestH * 3600000, 15,
+      'FF14 園藝：收成 ' + CARE.target,
+      '長到可收成之後就不會再枯死，可以放著慢慢收。\n水神的工具箱 · 園藝配種計算');
+
+    L.push('END:VCALENDAR');
+
+    var blob = new Blob([L.join('\r\n') + '\r\n'], { type: 'text/calendar;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = '園藝照料-' + CARE.target + '.ics';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    say('planStatus', '已匯出 ' + (CARE.groups.length + 1) + ' 筆行事曆事件。');
+  }
+
+  /** 給「複製時程」用的純文字版（貼進 Discord 或記事本）。 */
+  function careText() {
+    if (!CARE.groups.length) return '';
+    var lines = ['【' + CARE.target + '】園藝照料時程'];
+    CARE.groups.forEach(function (g) {
+      lines.push((CARE.t0 ? at(CARE.t0, g.h) : '第 ' + dur(g.h)) + '　照料 ' + uniq(g.what).join('、'));
+    });
+    lines.push((CARE.t0 ? at(CARE.t0, CARE.harvestH) : '第 ' + dur(CARE.harvestH)) + '　收成 ' + CARE.target);
+    lines.push('— 水神的工具箱 · 園藝配種計算');
+    return lines.join('\n');
   }
 
   /* ── A5：重繪會把展開的 <details> 關掉 ─────────────────────────────────
@@ -559,25 +1030,40 @@
     return '<span class="role">本株</span>' + esc(c.baseSeedName) +
            '<span class="arrow">×</span><span class="role">鄰株</span>' + esc(c.adjacentSeedName) + also;
   }
-  /** 可點的配方列。目前採用的那組標 aria-pressed="true"（不是只靠顏色）。 */
-  function recipeButton(c, active, seedId, idx) {
+  /* 可點的配方列。目前採用的那組標 aria-pressed="true"（不是只靠顏色）。
+     **一定要標時數**：COST／BEST 早就算好了，但原本三行只印種子名，使用者看到的是三行幾乎一樣的
+     字，點下去整塊重畫、總覽的天數變了，得自己記住上一個數字再心算差額；想比第三組要再點一次。
+     這裡直接標「最省」與相對差額，三行一眼可比。 */
+  function recipeButton(c, active, seedId, idx, best) {
+    var h = recipeCost(c);
+    var tag;
+    if (!isFinite(h)) tag = '—';
+    else if (h === best) tag = '最省 · ' + dur(h);
+    else tag = '+' + dur(h - best);
     return '<button type="button" class="alt-btn" data-alt-seed="' + seedId + '" data-alt-idx="' + idx +
       '" aria-pressed="' + (active ? 'true' : 'false') + '">' +
-      (active ? '<span class="chip ok">目前採用</span>' : '') + recipeBody(c) + '</button>';
+      (active ? '<span class="chip ok">目前採用</span>' : '') + recipeBody(c) +
+      '<span class="alt-cost num">' + tag + '</span></button>';
   }
 
   function stepCard(s, t0) {
     var c = s.recipe;
+    var done = !!DONE[stepKey(s)];
     var also = c.alsoYields && c.alsoYields.length
-      ? '<span class="chip warn">⚠ 這組也可能配出 ' + c.alsoYields.map(function (a) { return esc(a.name); }).join('、') + '（隨機）</span>'
+      ? '<span class="chip warn">⚠ 這組也可能配出 ' + c.alsoYields.map(function (a) { return esc(a.name); }).join('、') +
+        '（隨機）· 沒配到重來一輪 +' + s.wait + ' 小時</span>'
       : '';
+    var costs = s.p.crossBreeds.map(recipeCost).filter(isFinite);
+    var best = costs.length ? Math.min.apply(null, costs) : 0;
     var alts = s.p.crossBreeds.length > 1
       ? '<details class="alts" data-alts-key="' + s.seedId + '"><summary>換一組配方（共 ' +
         s.p.crossBreeds.length + ' 組）</summary><div class="alt-list">' +
-        s.p.crossBreeds.map(function (cc, i) { return recipeButton(cc, i === s.idx, s.seedId, i); }).join('') +
+        s.p.crossBreeds.map(function (cc, i) { return recipeButton(cc, i === s.idx, s.seedId, i, best); }).join('') +
         '</div></details>' : '';
 
-    return '<div class="step">' + icon(s.p.seedIcon) + '<div class="step-body">' +
+    return '<div class="step' + (done ? ' done' : '') + '">' +
+      chkBtn(stepKey(s), '配出 ' + s.p.seedName) +
+      icon(s.p.seedIcon) + '<div class="step-body">' +
       '<div class="step-line">' +
         '先種 ' + seedRef(s.adj, 'adj') + '<span class="role">（鄰株）</span>' +
         '，旁邊種 ' + seedRef(s.base, 'base') + '<span class="role">（本株）</span>' +
@@ -619,16 +1105,18 @@
     if (flowers.length) $('flowerResult').innerHTML = '<p class="empty">選一種花，看它 9 個顏色各要施哪些油粕。</p>';
   }
 
-  function selectSpecies(productId, skipHash) {
+  function selectSpecies(productId, opts) {
+    opts = opts || {};
     var p = BY_PRODUCT.get(productId);
     if (!p || !p.flower) return;
     STATE.species = productId;
-    showTab('flower', true);
+    showTab('flower', true, opts.focus);
     document.querySelectorAll('#speciesGrid [data-id]').forEach(function (b) {
       b.setAttribute('aria-pressed', Number(b.dataset.id) === productId ? 'true' : 'false');
     });
     renderFlower(p);
-    if (!skipHash) writeHash();
+    saveView();
+    if (!opts.skipHash) writeHash();
   }
 
   function pomChip(key) {
@@ -702,15 +1190,30 @@
       document.querySelectorAll('#allFilters [data-kind]').forEach(function (x) {
         x.setAttribute('aria-pressed', x.dataset.kind === STATE.kind ? 'true' : 'false');
       });
-      renderAll(); writeHash();
+      renderAll(); writeHash(); saveView();
     });
-    $('allSearch').addEventListener('input', function () { STATE.q = this.value.trim().toLowerCase(); renderAll(); writeHash(); });
-    $('allSort').addEventListener('change', function () { STATE.sort = this.value; renderAll(); writeHash(); });
+    $('allSearch').addEventListener('input', function () { STATE.q = this.value.trim().toLowerCase(); renderAll(); writeHash(); saveView(); });
+    $('allSort').addEventListener('change', function () { STATE.sort = this.value; renderAll(); writeHash(); saveView(); });
+    // 兩顆鈕都走同一個委派，不要在每次重繪後逐個 addEventListener（原本 [data-flower] 是那樣綁的）
     $('allGrid').addEventListener('click', function (e) {
       var b = e.target.closest('[data-goto]');
-      if (b) selectTarget(Number(b.dataset.goto));
+      if (b) { selectTarget(Number(b.dataset.goto), { focus: true }); return; }
+      var f = e.target.closest('[data-flower]');
+      if (f) selectSpecies(Number(f.dataset.flower), { focus: true });
     });
     renderAll();
+  }
+
+  /* 搜尋字串：作物名／種子名／英文名，**外加 9 個花色的完整道具名**。
+     花色（紅色三色堇…）在遊戲裡是獨立道具，市場頁的「園藝」管道標的就是它們；
+     不收進來的話，從市場頁帶著花色名連過來會落在一片空白上。 */
+  var HAY = new Map();
+  function searchHay(p) {
+    if (!HAY.has(p.productId)) {
+      HAY.set(p.productId, (p.name + ' ' + p.seedName + ' ' + (p.nameEn || '') + ' ' + (p.seedNameEn || '') +
+        (p.flower ? ' ' + p.flower.colors.map(function (c) { return c.name; }).join(' ') : '')).toLowerCase());
+    }
+    return HAY.get(p.productId);
   }
 
   function renderAll() {
@@ -719,8 +1222,7 @@
       else if (STATE.kind === 'minion') { if (!p.minion) return false; }
       else if (STATE.kind !== 'all' && p.kind !== STATE.kind) return false;
       if (!STATE.q) return true;
-      return (p.name + ' ' + p.seedName + ' ' + (p.nameEn || '') + ' ' + (p.seedNameEn || ''))
-        .toLowerCase().indexOf(STATE.q) >= 0;
+      return searchHay(p).indexOf(STATE.q) >= 0;
     });
     list.sort(function (a, b) {
       if (STATE.sort === 'duration') return a.duration - b.duration || a.name.localeCompare(b.name, 'zh-TW');
@@ -752,10 +1254,6 @@
         (p.flower ? '<button type="button" class="plant-link" data-flower="' + p.productId + '">看 9 色配方</button>' : '') +
         '</div></div>';
     }).join('');
-
-    $('allGrid').querySelectorAll('[data-flower]').forEach(function (b) {
-      b.addEventListener('click', function () { selectSpecies(Number(b.dataset.flower)); });
-    });
   }
 
   // ── 機制速查 ──────────────────────────────────────────────────────────

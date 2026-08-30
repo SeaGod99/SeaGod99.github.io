@@ -519,6 +519,9 @@
       border-radius: var(--radius-sm); padding: 6px 10px; font-size: 0.82rem;
     }
     .src-tag { font-size: 0.7rem; font-weight: 600; border-radius: 3px; padding: 1px 7px; border: 1px solid; white-space: nowrap; }
+    /* 「園藝」那顆是連結（連到園藝配種計算）。外觀與其他標籤一致，只在 hover 時亮起來。 */
+    a.src-tag { text-decoration: none; cursor: pointer; }
+    a.src-tag:hover { filter: brightness(1.25); text-decoration: underline; }
     .src-gather { color: var(--green);  background: var(--green-dim);  border-color: rgba(74,222,128,0.3); }
     .src-seal   { color: var(--yellow); background: var(--yellow-dim); border-color: rgba(251,191,36,0.3); }
     .src-shop   { color: var(--blue);   background: var(--blue-dim);   border-color: rgba(79,195,247,0.3); }

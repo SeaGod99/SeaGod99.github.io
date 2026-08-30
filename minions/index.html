@@ -208,9 +208,16 @@
     }
     // 跨工具連結：可上市寵物連到市場查價（本頁卡片是小方格，放不下，故收進提示框；
     // 提示框只有「釘住」時 pointer-events 才開啟，所以此連結需按 ⓘ 後點擊）
-    $('ttMarket').innerHTML = m.itemId
+    /* 園藝取得的 6 隻另外指路到園藝配種計算——其中 4 隻沒有第二條路（只能種），
+       原本使用者在這裡看到「園藝獲得」就是死路，得自己去 Google 怎麼配。
+       這 6 隻的 itemId 與園藝頁的 productId 完全一致（已逐一比對）。 */
+    var isGardening = (m.sources || []).some(function (s) { return s.type === '園藝獲得'; });
+    $('ttMarket').innerHTML = (m.itemId
       ? '<a class="ct-market" href="../tools/market/#item=' + esc(m.itemId) + '" title="到市場查價工具查此物品行情">💰 市場行情</a>'
-      : '';
+      : '') +
+      (m.itemId && isGardening
+        ? '<a class="ct-market" href="../tools/gardening/#/plan/' + esc(m.itemId) + '" title="到園藝配種計算看完整種植路徑與工期">🌱 看配種路徑</a>'
+        : '');
   }
   function showTooltip(e, m) { if (pinnedCard) return; fillTooltip(m); $('tooltip').classList.add('show'); moveTooltip(e); }
   function hideTooltip() { if (pinnedCard) return; $('tooltip').classList.remove('show'); }

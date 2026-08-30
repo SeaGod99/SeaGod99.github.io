@@ -285,8 +285,14 @@
     // 不可交易的物品，這一區就是答案，預設展開；可交易的只是補充，跟隨使用者偏好。
     var body =
       (main.length ? '<div class="src-list">' + main.map(function (s) {
-        return '<div class="src-row">' +
-          '<span class="src-tag ' + (SRC_TAG_CLASS[s.t] || 'src-other') + '">' + esc(s.t) + '</span>' +
+        /* 「園藝」標籤做成連結：站內就有一頁會算出完整配種路徑與工期，本來卻是死路。
+           帶物品名而不是 id——273 個標園藝的物品裡只有 88 個是園藝頁的「作物」，
+           其餘是花色與種子（在那頁的搜尋涵蓋範圍內，實測名稱命中率 100%）。 */
+        var tag = (s.t === '園藝' && it && it.name)
+          ? '<a class="src-tag src-gather" href="../gardening/#/all?q=' + encodeURIComponent(it.name) +
+            '" title="到園藝配種計算看種植方式">' + esc(s.t) + ' →</a>'
+          : '<span class="src-tag ' + (SRC_TAG_CLASS[s.t] || 'src-other') + '">' + esc(s.t) + '</span>';
+        return '<div class="src-row">' + tag +
           '<span class="src-d">' + esc(s.d) + '</span>' +
           (s.w ? '<span class="src-where">' + esc(s.w) + '</span>' : '') +
           '</div>';

@@ -87,7 +87,38 @@
   .field input:focus, .field select:focus { border-color: var(--accent); }
   .field .hint { font-size: 0.72rem; color: var(--text-muted); }
 
-  .quick { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.1rem; }
+  /* 開始時間 ＋「現在」鈕並排 */
+  .field-row { display: flex; gap: 0.35rem; align-items: stretch; }
+  .field-row input { flex: 1 1 auto; min-width: 0; }
+  .field-row .copy-btn { flex: 0 0 auto; padding-inline: 0.6rem; }
+
+  /* ── 目標建議清單（自製 combobox） ─────────────────────────────────
+     絕對定位疊在下方內容上，所以要 z-index；.combo 是它的定位容器。 */
+  .combo { position: relative; }
+  .suggest {
+    position: absolute; top: 100%; left: 0; right: 0; z-index: 20; margin-top: 0.25rem;
+    max-height: 17rem; overflow-y: auto; list-style: none;
+    background: var(--bg-card); border: 1px solid var(--border-hover);
+    border-radius: var(--radius); box-shadow: var(--shadow-card, 0 8px 24px rgba(0,0,0,0.35));
+  }
+  .suggest[hidden] { display: none; }
+  .suggest li {
+    display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0.6rem;
+    font-size: 0.83rem; cursor: pointer; border-bottom: 1px solid var(--border);
+  }
+  .suggest li:last-child { border-bottom: none; }
+  .suggest li:hover, .suggest li[aria-selected="true"] { background: var(--raise); }
+  .suggest li[aria-selected="true"] { outline: 1px solid var(--accent); outline-offset: -1px; }
+  .suggest .sg-sub { color: var(--text-muted); font-size: 0.74rem; }
+  .suggest .sg-eff { margin-left: auto; color: var(--text-dim); font-size: 0.74rem; }
+
+  /* ── 捷徑：依「你想要什麼」分組 ─────────────────────────────────────
+     原本只排「最花時間的目標」，結果 4 隻只能靠園藝取得的寵物因為工期短，一隻都排不進去
+     ——而那正是最多人來這頁的原因。 */
+  .quick-group { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; }
+  .quick-label { font-size: 0.76rem; color: var(--text-dim); flex: 0 0 auto; min-width: 7.5rem; }
+  /* 捷徑改成一組一列（原本是單一列的工期排行），所以外層是欄向 */
+  .quick { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1.1rem; }
   .quick-btn {
     display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.3rem 0.65rem;
     background: var(--bg-card); border: 1px solid var(--border); border-radius: 999px;
@@ -111,8 +142,26 @@
   .stage-no { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; color: var(--accent); }
   .stage-time { font-size: 0.72rem; color: var(--text-muted); }
 
+  /* 目前進行中的階段。除了邊框，標題也會多一顆「進行中」籌碼——不靠顏色單獨表意。 */
+  .stage.current > .step, .stage.current > .stage-head { border-left-color: var(--accent); }
+  .stage.current > .step { border-left-width: 2px; }
+
   .step { display: flex; gap: 0.75rem; padding: 0.75rem 0.9rem; background: var(--bg-card);
           border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 0.4rem; }
+  /* 做完的步驟降對比但不隱藏——使用者還是會想回去看自己配了什麼 */
+  .step.done { opacity: 0.55; }
+  .step.done .step-line { text-decoration: line-through; text-decoration-color: var(--text-muted); }
+
+  /* 勾選鈕：全站收藏一律是「卡片角落的 ✓ 鈕」，這裡沿用同一套語彙。 */
+  .chk {
+    flex: 0 0 auto; width: 26px; height: 26px; align-self: flex-start;
+    display: grid; place-items: center; padding: 0; cursor: pointer;
+    background: none; border: 1px solid var(--border); border-radius: 50%;
+    color: var(--text-muted); font-size: 0.8rem; line-height: 1; font-family: inherit;
+    transition: color var(--transition), border-color var(--transition), background var(--transition);
+  }
+  .chk:hover { color: var(--text); border-color: var(--border-hover); }
+  .chk[aria-pressed="true"] { color: var(--green); border-color: var(--green); background: var(--green-dim); }
   .step-body { flex: 1; min-width: 0; }
   .step-line { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem 0.4rem; font-size: 0.85rem; line-height: 1.6; }
   .step-meta { margin-top: 0.35rem; display: flex; flex-wrap: wrap; gap: 0.3rem 0.45rem; }
@@ -134,6 +183,8 @@
              border-radius: var(--radius-sm); color: var(--text-dim); font-size: 0.78rem; font-family: inherit; cursor: pointer; }
   .alt-btn:hover { border-color: var(--border-hover); color: var(--text); }
   .alt-btn[aria-pressed="true"] { border-color: var(--accent); color: var(--text); }
+  /* 每組配方要多花多久，靠右對齊成一欄才比得動——原本三行只有種子名，等於盲選 */
+  .alt-cost { margin-left: auto; font-size: 0.74rem; color: var(--text-dim); }
 
   /* ── 用途 / 照料時程 ─────────────────────────────────────────────── */
   .use-list { display: flex; flex-direction: column; gap: 0.45rem; }
@@ -143,9 +194,16 @@
 
   /* 照料時程：時刻是重點，用等寬數字排成一欄才掃得快 */
   .care-list { display: flex; flex-direction: column; gap: 0.3rem; margin-top: 0.5rem; }
-  .care-row { display: flex; flex-wrap: wrap; gap: 0.3rem 0.6rem; align-items: baseline; font-size: 0.8rem; }
+  .care-row { display: flex; flex-wrap: wrap; gap: 0.3rem 0.6rem; align-items: center; font-size: 0.8rem; }
+  .care-row .chk { width: 22px; height: 22px; font-size: 0.72rem; align-self: center; }
   .care-when { color: var(--orange); font-weight: 600; }
   .care-what { color: var(--text-dim); }
+  .care-row.done { opacity: 0.5; }
+  .care-row.done .care-when { color: var(--text-muted); text-decoration: line-through; }
+  /* 已經過了時間卻還沒勾——作物可能正在枯萎。文字也會標「已逾時」，不只靠顏色。 */
+  .care-row.overdue .care-when { color: var(--red); }
+  .care-row.overdue .care-tag { color: var(--red); font-weight: 600; }
+  .care-actions { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.7rem; }
 
   .copy-btn {
     background: none; border: 1px solid var(--border); border-radius: var(--radius-sm);
@@ -245,8 +303,14 @@
      44px 高的鈕彼此只隔 5–7px 會變成一片按鈕牆，更容易按錯（HIG touch-spacing 要 8px）。
      common.css 對收藏頁的 .filter-tags 已有同樣處置，這裡比照。 */
   @media (pointer: coarse) {
-    .quick, .filters, .alt-list, .species-grid, .color-grid { gap: 8px; }
+    /* .patch-beds.demo 一開始漏掉了：那裡的格子是 <button>，被 tokens.css 撐到 44px 高，
+       卻只隔 0.3rem(5.25px)——正是這條規則要避免的按鈕牆。 */
+    .quick, .quick-group, .filters, .alt-list, .species-grid, .color-grid,
+    .patch-beds.demo, .care-actions, .suggest li { gap: 8px; }
     .plant-link { min-height: var(--tap-min, 44px); }
+    /* .chk 是圓形勾選鈕，撐高會變成膠囊。比照 tokens.css 對 .ct-check 的處置，改放大本體。 */
+    .chk { min-height: 0; width: 34px; height: 34px; }
+    .care-row .chk { min-height: 0; width: 30px; height: 30px; }
   }
 
   @media (max-width: 640px) {
@@ -276,20 +340,29 @@
   <!-- ── 配種路徑 ─────────────────────────────────────────────── -->
   <section class="panel" id="p-plan" role="tabpanel" aria-labelledby="t-plan" tabindex="0">
     <div class="picker">
-      <div class="field grow" style="max-width:26rem">
+      <!-- 自己畫的建議清單，不用 <datalist>：datalist 只吃完全相等的字串（貼「薩維奈圓蔥種子」
+           或打英文名都是靜默無反應），而且 iOS Safari 的下拉幾乎不能用。 -->
+      <div class="field grow combo" style="max-width:26rem">
         <label for="planTarget">目標作物</label>
-        <input id="planTarget" list="planList" autocomplete="off" placeholder="輸入或選擇作物，例如「薩維奈圓蔥」">
-        <datalist id="planList"></datalist>
+        <input id="planTarget" autocomplete="off" role="combobox" aria-expanded="false"
+               aria-controls="planSuggest" aria-autocomplete="list"
+               placeholder="作物、種子或英文名，例如「薩維奈圓蔥」">
+        <ul class="suggest" id="planSuggest" role="listbox" aria-label="作物建議" hidden></ul>
+        <span class="hint" id="planHint"></span>
       </div>
       <div class="field">
         <label for="startAt">開始種的時間</label>
-        <input id="startAt" type="datetime-local">
-        <span class="hint">用來推算每一階段的收成時刻</span>
+        <span class="field-row">
+          <input id="startAt" type="datetime-local">
+          <button type="button" class="copy-btn" id="startNow" title="把開始時間設為現在">現在</button>
+        </span>
+        <span class="hint">推算收成與照料時刻；存在這台電腦</span>
       </div>
     </div>
     <div class="quick" id="planQuick"></div>
     <p class="sr-only" id="planStatus" role="status" aria-live="polite"></p>
-    <div id="planResult"><p class="empty">選一個目標作物，這裡會算出要先配哪些父本、每階段等多久、總共幾天，以及至少要幾格園圃。</p></div>
+    <div id="planResult"><p class="empty">選一個目標作物，這裡會算出要先配哪些父本、每階段等多久、總共幾天，以及至少要幾格園圃。<br>
+      不知道要什麼？上面的捷徑是最常見的幾種目的，或到「全部作物」瀏覽全部 107 種。</p></div>
   </section>
 
   <!-- ── 花色配方 ─────────────────────────────────────────────── -->
