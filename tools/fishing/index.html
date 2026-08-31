@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="FF14 釣魚紀錄追蹤 — 1414 種台服已開放的魚，查詢釣場/餌/時間/天氣，可釣倒數、目標魚開窗鬧鐘提醒與地圖標點，追蹤已釣紀錄">
+  <meta name="description" content="FF14 釣魚紀錄追蹤 — 1422 種台服已開放的魚（含銛槍捕魚），查詢釣場/餌/時間/天氣，開窗看板與倒數、目標魚鬧鐘提醒、地圖標點、收藏品與料理用途，追蹤已釣紀錄">
   <title>釣魚紀錄追蹤 | 水神的工具箱</title>
   <link rel="stylesheet" href="../../assets/css/tokens.css">
   <link rel="stylesheet" href="../../assets/css/theme.css">
@@ -98,8 +98,69 @@
     .tug-chip.heavy  { color: var(--red);   border-color: rgba(248,113,113,0.35); }
     .chain-arrow { color: var(--gold); font-weight: 700; }
     .tag-int { color: #f0abfc; border-color: rgba(240,171,252,0.3); background: rgba(240,171,252,0.1); }
+    /* 銛槍捕魚（水下）與收藏品。其餘新欄位（水族箱／擬餌／銛槍尺寸）只放詳情彈窗，
+       卡片上再加標籤會把 8 個標籤擠成兩行。 */
+    .tag-spear  { color: #5eead4; border-color: rgba(94,234,212,0.35); background: rgba(94,234,212,0.1); }
+    .tag-coll   { color: var(--green); border-color: rgba(74,222,128,0.35); background: rgba(74,222,128,0.1); }
+
+    /* 魚圖示：items.json 的 icon 接 xivapi CDN。釣魚頁原本是全站唯一一個沒有任何 <img> 的圖鑑頁。
+       離屏卡片本來就靠 content-visibility 跳過排版，圖再掛 loading=lazy，捲動才會實際請求。 */
+    .fish-ic { width: 40px; height: 40px; flex: none; border-radius: 4px; background: var(--bg-surface); }
     /* right 往左讓開 24px 的 .ct-check 收藏鈕（本頁 1rem=17.5px，故約 1.4rem＋間距） */
     .fish-patch { position: absolute; top: 0.5rem; right: 2.3rem; font-size: 0.65rem; color: var(--text-muted); }
+
+    /* ── 開窗看板（⏰ 開窗中）──
+       原本只有「設成目標魚」才看得到倒數，想知道此刻哪些魚正在開窗得一張張翻卡片。
+       這個檢視把限時／限天氣的魚攤平成兩組：可釣中、即將開窗。吃同一組篩選條件。 */
+    body.fi-nowmode #ct-grid,
+    body.fi-nowmode #ct-pagination { display: none !important; }
+
+    .now-view { padding: 0 0 2rem; }
+    .nb-head { display: flex; gap: 0.6rem; align-items: baseline; flex-wrap: wrap; margin-bottom: 0.7rem; }
+    .nb-title { font-size: 0.95rem; font-weight: 600; }
+    .nb-sub { font-size: 0.72rem; color: var(--text-muted); }
+    .nb-group { margin-bottom: 1.4rem; }
+    .nb-gh { font-size: 0.8rem; font-weight: 600; margin-bottom: 0.45rem; color: var(--text-dim); }
+    .nb-gh.open { color: var(--green); }
+    .nb-gh.soon { color: var(--gold); }
+    .nb-rows { display: grid; gap: 0.3rem; }
+    .nb-row {
+      display: grid; grid-template-columns: 28px minmax(7em, 1.2fr) auto minmax(6em, 1fr) minmax(6em, 1.3fr) auto auto;
+      gap: 0.5rem; align-items: center;
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 0.35rem 0.6rem; font-size: 0.76rem; cursor: pointer;
+      content-visibility: auto; contain-intrinsic-size: auto 34px;
+    }
+    .nb-row:hover { border-color: var(--border-hover); background: var(--bg-card-hover); }
+    .nb-row.owned { border-color: rgba(74,222,128,0.28); background: rgba(74,222,128,0.04); }
+    .nb-ic { width: 26px; height: 26px; border-radius: 3px; background: var(--bg-surface); }
+    .nb-name { font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .nb-spot, .nb-bait { color: var(--text-dim); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .nb-cd { font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .nb-cd.open { color: var(--green); }
+    .nb-cd.soon { color: var(--gold); }
+    .nb-empty { color: var(--text-muted); font-size: 0.78rem; padding: 0.6rem 0; }
+    @media (max-width: 720px) {
+      /* 窄螢幕排三行：①圖示｜魚名｜稀有度｜倒數｜🎯　②釣場　③餌／魚影。
+         圖示與 🎯 直接跨滿三行，否則七個格子塞進四欄會各自亂折成 126px 高。 */
+      .nb-row { grid-template-columns: 28px 1fr auto auto auto; row-gap: 0.1rem; align-items: start; }
+      .nb-ic { grid-column: 1; grid-row: 1 / span 3; align-self: center; }
+      .nb-name { grid-column: 2; grid-row: 1; }
+      .nb-tags { grid-column: 3; grid-row: 1; }
+      .nb-cd   { grid-column: 4; grid-row: 1; }
+      .nb-row > .tgt-btn { grid-column: 5; grid-row: 1 / span 3; align-self: center; }
+      .nb-spot { grid-column: 2 / 5; grid-row: 2; }
+      .nb-bait { grid-column: 2 / 5; grid-row: 3; }
+      .nb-row { contain-intrinsic-size: auto 68px; }
+    }
+
+    /* 詳情彈窗的「用途」區（收藏品／市場板／料理配方）*/
+    .fd-uses { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+    .fd-use { font-size: 0.7rem; padding: 0.1rem 0.45rem; border-radius: 3px;
+      border: 1px solid var(--border); color: var(--text-dim); background: var(--bg-surface); }
+    .fd-use.on { color: var(--green); border-color: rgba(74,222,128,0.35); }
+    .fd-use-link { color: var(--blue); text-decoration: none; border-color: rgba(79,195,247,0.35); }
+    .fd-use-link:hover { text-decoration: underline; }
 
     /* VIEW TOGGLE */
     .view-toggle { display: flex; gap: 0; border: 1px solid var(--border); border-radius: 5px; overflow: hidden; }
@@ -278,6 +339,7 @@
     <div class="view-toggle">
       <button type="button" id="vList" class="active">☰ 清單</button>
       <button type="button" id="vMap">🗺️ 地圖</button>
+      <button type="button" id="vNow">⏰ 開窗中</button>
     </div>
   </div>
 
@@ -286,6 +348,9 @@
 
 <!-- 地圖檢視：內容由共用元件 map-explorer.js 掛載（左底圖標點、右搜尋＋釣場清單） -->
 <div class="map-view" id="mapView" style="display:none"></div>
+
+<!-- 開窗看板：此刻正在開窗／即將開窗的限時魚（吃同一組篩選條件）-->
+<div class="now-view" id="nowView" style="display:none"></div>
 
 </div><!-- /container -->
 
@@ -324,6 +389,7 @@ let allFish = [];
 let FISH_BY_ID = new Map();  // itemId -> 魚（釣場反查用，避免每次重畫都掃 1449 筆）
 let SPOTS = new Map();   // spotId -> 釣場（座標、mapId）
 let MAPS  = new Map();   // mapId  -> 地圖資料
+let USES  = new Map();   // itemId -> { ic, nm?, col?, use? }（data/fish-uses.json：圖示與用途）
 let tracker = null;                 // collection-tracker 實例（進度／工具列／篩選／分頁／格線）
 let filtered = [];                  // 引擎最近一次的篩選結果（地圖檢視與目標面板吃它）
 let owned   = new Set(JSON.parse(localStorage.getItem(LS_KEY) || '[]'));  // 交給引擎後改指向 tracker.owned
@@ -459,6 +525,16 @@ function rarityTag(f) {
   return '';
 }
 
+/* 銛槍捕魚（水下）：釣場帶 spearfishing 旗標。這 203 條魚沒有釣餌，靠魚叉射魚影，
+   竿型／提鉤／餌鏈那幾欄對它們沒有意義，卡片與詳情要換句話說。 */
+function isSpear(f) { return fishSpotIds(f).some(sid => SPOTS.get(sid)?.spearfishing); }
+
+/* 魚影大小（上游 gig 欄）。這是「瞄準哪種大小的魚影」，不是遊戲技能名，故用一般尺寸詞。 */
+const GIG_TC = { Small: '小型', Normal: '中型', Large: '大型', UNKNOWN: '不明' };
+
+/* 物品圖示 CDN，與市場頁的 ICON_CDN 一致 */
+const ICON_CDN = 'https://xivapi.com';
+
 /* 魚餌篩選用：一段餌可能是「A 或 B 皆可」（bait[].alts），兩個都要能篩到 */
 function baitIdsOf(step) { return step.alts ? step.alts.map(a => a.itemId) : [step.itemId]; }
 
@@ -477,10 +553,14 @@ function setView(mode) {
   viewMode = mode;
   document.getElementById('vList').classList.toggle('active', mode === 'list');
   document.getElementById('vMap').classList.toggle('active', mode === 'map');
+  document.getElementById('vNow').classList.toggle('active', mode === 'now');
   // 清單的收合走 body class（見 map-explorer.js 的 .mx-mapmode 規則）：
-  // 引擎每次 renderGrid 都會把 #ct-grid 的 inline display 設回 ''，設 inline style 會被洗掉
+  // 引擎每次 renderGrid 都會把 #ct-grid 的 inline display 設回 ''，設 inline style 會被洗掉。
+  // 開窗看板同理，用本頁自己的 .fi-nowmode（規則寫在上面的 <style>，不動 common.css）。
   document.body.classList.toggle('mx-mapmode', mode === 'map');
+  document.body.classList.toggle('fi-nowmode', mode === 'now');
   document.getElementById('mapView').style.display = mode === 'map' ? '' : 'none';
+  document.getElementById('nowView').style.display = mode === 'now' ? '' : 'none';
   renderCurrent();
 }
 
@@ -500,6 +580,7 @@ function fishingPoints() {
         p = {
           id: spot.id, mapId: mid, x: spot.coords.x, y: spot.coords.y,
           name: spot.name || spot.nameEn || `釣場 ${spot.id}`,
+          spear: !!spot.spearfishing,
           state: 'done', meta: '', search: '', fish: [],
         };
         bySpot.set(sid, p);
@@ -509,8 +590,9 @@ function fishingPoints() {
   }
   for (const p of bySpot.values()) {
     p.state = p.fish.every(f => owned.has(f.itemId)) ? 'done' : 'todo';
-    p.meta = `${p.fish.length} 種`;
-    p.search = p.fish.map(f => `${f.name || ''} ${f.nameEn || ''}`).join(' ');
+    // 銛槍點在清單裡要一眼分得出來——玩法不同（潛水射魚影，沒有餌也沒有提鉤）
+    p.meta = `${p.spear ? '🔱 ' : ''}${p.fish.length} 種`;
+    p.search = [p.spear ? '銛槍 捕魚 水下' : '', ...p.fish.map(f => `${f.name || ''} ${f.nameEn || ''}`)].join(' ');
   }
   return [...bySpot.values()];
 }
@@ -520,7 +602,7 @@ function spotDetailHTML(p) {
   const flag = `/coord ${p.x.toFixed(1)} ${p.y.toFixed(1)} ${m ? m.name : ''}`.trim();
   return `
     <div class="spot-head">
-      <span class="spot-loc">X:${p.x.toFixed(1)} Y:${p.y.toFixed(1)} · ${p.fish.length} 種魚</span>
+      <span class="spot-loc">X:${p.x.toFixed(1)} Y:${p.y.toFixed(1)} · ${p.fish.length} 種魚${p.spear ? ' · 🔱 銛槍捕魚（需潛水）' : ''}</span>
       <button class="spot-copy" data-flag="${esc(flag)}">📋 ${esc(flag)}</button>
     </div>
     <div class="spot-fishes">
@@ -545,6 +627,75 @@ function onSpotAction(e) {
 }
 
 function renderFishMap() { if (mapExplorer) mapExplorer.render(); }
+
+/* ─────────────────────────────────────────────
+   開窗看板（⏰ 開窗中）
+   原本只有「設成目標魚」才看得到倒數，想知道此刻哪些魚正在開窗得一張張翻卡片。
+   這裡把目前篩選結果裡「限時／限天氣」的魚攤平成兩組，依剩餘時間排序。
+   隨時可釣的魚不列——它們永遠成立，列出來只是雜訊。
+   ───────────────────────────────────────────── */
+const NOW_SOON_SECS = 3600;   // 「即將開窗」的門檻：1 小時內
+
+function nowBoardRows(now) {
+  const open = [], soon = [];
+  for (const f of filtered) {
+    const timed = f.startHour > 0 || f.endHour < 24;
+    if (!timed && !f.weatherSet?.length && !f.previousWeatherSet?.length) continue;
+    const st = fishStatus(f, now);
+    if (st.state === 'open') open.push({ f, st });
+    else if (st.state === 'wait' && st.secsLeft <= NOW_SOON_SECS) soon.push({ f, st });
+  }
+  const bySecs = (a, b) => (a.st.secsLeft ?? Infinity) - (b.st.secsLeft ?? Infinity);
+  // 可釣中：剩越少越急，排前面；即將開窗：越快開窗排前面
+  return { open: open.sort(bySecs), soon: soon.sort(bySecs) };
+}
+
+function nowRowHTML({ f, st }, kind) {
+  const ic = USES.get(f.itemId)?.ic;
+  const sz = spotZone(f);
+  const loc = f.spotName
+    ? `${f.spotName}${sz?.mapName && sz.mapName !== f.spotName ? ` · ${sz.mapName}` : ''}`
+    : '無固定釣場資料';
+  const bait = isSpear(f)
+    ? `魚影 ${GIG_TC[f.gig] || '不明'}`
+    : (f.bait?.length ? f.bait.map(b => b.name || b.nameEn).join(' → ') : '—');
+  const cd = kind === 'open'
+    ? `<span class="nb-cd open">● 剩 ${fmtCd(st.secsLeft)}</span>`
+    : `<span class="nb-cd soon">⏳ ${fmtCd(st.secsLeft)}後</span>`;
+  return `<div class="nb-row${owned.has(f.itemId) ? ' owned' : ''}" data-nbfish="${f.itemId}" title="點開詳情">
+    ${ic ? `<img class="nb-ic" src="${ICON_CDN}${ic}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">` : '<span class="nb-ic"></span>'}
+    <span class="nb-name">${esc(f.name || f.nameEn)}</span>
+    <span class="nb-tags">${rarityTag(f)}</span>
+    <span class="nb-spot" title="${esc(loc)}">${esc(loc)}</span>
+    <span class="nb-bait" title="${esc(bait)}">${esc(bait)}</span>
+    ${cd}
+    <button class="tgt-btn${targets.has(f.itemId) ? ' on' : ''}" data-target="${f.itemId}" title="${targets.has(f.itemId) ? '移出目標魚' : '設為目標魚'}">🎯</button>
+  </div>`;
+}
+
+function renderNowBoard() {
+  const box = document.getElementById('nowView');
+  if (!box) return;
+  const now = Date.now();
+  const { open, soon } = nowBoardRows(now);
+  box.innerHTML = `
+    <div class="nb-head">
+      <span class="nb-title">⏰ 現在開窗中</span>
+      <span class="nb-sub">吃同一組篩選條件 · 只列限時／限天氣的魚（其餘隨時可釣，不佔版面）· 每 10 秒更新</span>
+    </div>
+    <div class="nb-group">
+      <div class="nb-gh open">● 可釣中（${open.length}）</div>
+      ${open.length
+        ? `<div class="nb-rows">${open.map(r => nowRowHTML(r, 'open')).join('')}</div>`
+        : '<div class="nb-empty">目前篩選範圍內沒有正在開窗的限時魚。</div>'}
+    </div>
+    <div class="nb-group">
+      <div class="nb-gh soon">⏳ 1 小時內開窗（${soon.length}）</div>
+      ${soon.length
+        ? `<div class="nb-rows">${soon.map(r => nowRowHTML(r, 'soon')).join('')}</div>`
+        : '<div class="nb-empty">1 小時內沒有新的開窗。</div>'}
+    </div>`;
+}
 
 /* 剪貼簿：clipboard API 失敗時退回 execCommand（非安全環境／遊戲內瀏覽器） */
 function copyText(text) {
@@ -596,6 +747,7 @@ function fishCardHTML(f) {
       ? fishStatus(f, now) : { state: 'anytime' };
 
     const sz = spotZone(f);
+    const spear = isSpear(f);
     const locBtn = sz
       ? `<button class="loc-btn" data-map="${f.itemId}" title="開地圖看釣場位置">📍</button>` : '';
     const extraSpots = (f.spots?.length || 0) > 1 ? ` <span style="color:var(--text-muted)">等 ${f.spots.length} 處</span>` : '';
@@ -604,11 +756,14 @@ function fishCardHTML(f) {
       : `<span class="fi-none">—（無固定釣場資料）</span>`;
 
     // 釣餌鏈（以小釣大以箭頭串接）＋竿型／提鉤章（參考魚糕的 ! !! !!! 標示）
-    const baitCell = f.bait?.length
-      ? f.bait.map(b => b.name || b.nameEn).join(' <span class="chain-arrow">→</span> ')
-      : `<span class="fi-none">—</span>`;
-    const tugChip  = f.tug ? `<span class="tug-chip ${f.tug}" title="魚上鉤時的杆型">${TUG_SHORT[f.tug]} ${TUG_NAME[f.tug]}</span>` : '';
-    const hookChip = f.hookset ? `<span class="tug-chip" title="建議提鉤技能">${HOOKSET_TC[f.hookset] || f.hookset}</span>` : '';
+    // 銛槍魚沒有餌，改印魚影大小（gig）——印「—」會讓人以為是資料缺漏。
+    const baitCell = spear
+      ? `<span title="用魚叉瞄準的魚影大小">魚影 ${GIG_TC[f.gig] || '不明'}</span>`
+      : (f.bait?.length
+        ? f.bait.map(b => b.name || b.nameEn).join(' <span class="chain-arrow">→</span> ')
+        : `<span class="fi-none">—</span>`);
+    const tugChip  = (!spear && f.tug) ? `<span class="tug-chip ${f.tug}" title="魚上鉤時的杆型">${TUG_SHORT[f.tug]} ${TUG_NAME[f.tug]}</span>` : '';
+    const hookChip = (!spear && f.hookset) ? `<span class="tug-chip" title="建議提鉤技能">${HOOKSET_TC[f.hookset] || f.hookset}</span>` : '';
 
     // 時間／天氣：固定顯示（無限制時明示「全天／不限」，可一眼確認條件）
     const timeCell = timed
@@ -619,13 +774,17 @@ function fishCardHTML(f) {
       : `<span class="fi-none">不限</span>`;
 
     // 外層 .fish-card 由引擎產生（cardClass），這裡只回傳卡片內容
+    const ic = USES.get(f.itemId)?.ic;
     return `
+  ${ic ? `<img class="fish-ic" src="${ICON_CDN}${ic}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">` : '<span class="fish-ic"></span>'}
   <div class="fish-body">
     <div class="fish-name">${f.name||f.nameEn}</div>
     <div class="fish-name-en">${f.nameEn}</div>
     <div class="fish-tags">
       ${statusPill(st)}
       ${rarityTag(f)}
+      ${spear       ? '<span class="tag tag-spear" title="銛槍捕魚：潛水後用魚叉射魚影，沒有釣餌與提鉤">🔱銛槍</span>' : ''}
+      ${USES.get(f.itemId)?.col ? '<span class="tag tag-coll" title="可當收藏品交付">📦收藏品</span>' : ''}
       ${timed       ? '<span class="tag tag-time">⏰限時</span>' : ''}
       ${(f.weatherSet?.length) ? '<span class="tag tag-wx">🌦限天氣</span>' : ''}
       ${f.folklore  ? '<span class="tag tag-folk">📖傳承錄</span>' : ''}
@@ -635,7 +794,7 @@ function fishCardHTML(f) {
     </div>
     <div class="fish-detail">
       <span class="detail-label">釣場</span><span class="fi-v">${spotCell}</span>
-      <span class="detail-label">釣餌</span><span class="fi-v">${baitCell}${tugChip}${hookChip}</span>
+      <span class="detail-label">${spear ? '魚影' : '釣餌'}</span><span class="fi-v">${baitCell}${tugChip}${hookChip}</span>
       <span class="detail-label">時間</span><span class="fi-v">${timeCell}</span>
       <span class="detail-label">天氣</span><span class="fi-v">${wxCell}</span>
     </div>
@@ -716,6 +875,8 @@ function openFishDetail(id, keepSpot) {
 
   document.getElementById('fdTags').innerHTML = [
     rarityTag(f),
+    isSpear(f) ? '<span class="tag tag-spear">🔱銛槍</span>' : '',
+    USES.get(f.itemId)?.col ? '<span class="tag tag-coll">📦收藏品</span>' : '',
     timed ? '<span class="tag tag-time">⏰限時</span>' : '',
     (f.weatherSet?.length) ? '<span class="tag tag-wx">🌦限天氣</span>' : '',
     f.folklore ? '<span class="tag tag-folk">📖傳承錄</span>' : '',
@@ -750,17 +911,49 @@ function openFishDetail(id, keepSpot) {
       return `<span class="fd-spot-chip${sid === fdSpotId ? ' active' : ''}" data-fdspot="${sid}" title="切換釣場（窗口依該地圖天氣重算）">${sp.name}${mn && mn !== sp.name ? `（${mn}）` : ''}</span>`;
     }).join('')}</div>`;
   }
-  const rows = [
-    ['釣場' + (spotList.length > 1 ? `（${spotList.length} 處）` : ''), spotCell],
-    ['竿型', TUG_TC[f.tug] || '—'],
-    ['提鉤', HOOKSET_TC[f.hookset] || '—'],
-    ['釣餌鏈', `<b>${baitChain}</b>${f.bait?.length > 1 ? '（以小釣大）' : ''}`],
-    ['時間限制', timeStr],
-    ['天氣限制', prevStr ? `${prevStr} → ${wxStr}（前一時段 → 當前）` : wxStr],
-  ];
+  const spear = isSpear(f);
+  const spotRow = ['釣場' + (spotList.length > 1 ? `（${spotList.length} 處）` : ''), spotCell];
+  const rows = spear
+    // 銛槍魚沒有竿型／提鉤／餌鏈，列出來只會是三行「—」
+    ? [
+        spotRow,
+        ['魚影大小', `<b>${GIG_TC[f.gig] || '不明'}</b>（潛水後用魚叉瞄準對應大小的魚影）`],
+        ['時間限制', timeStr],
+        ['天氣限制', prevStr ? `${prevStr} → ${wxStr}（前一時段 → 當前）` : wxStr],
+      ]
+    : [
+        spotRow,
+        ['竿型', TUG_TC[f.tug] || '—'],
+        ['提鉤', HOOKSET_TC[f.hookset] || '—'],
+        ['釣餌鏈', `<b>${baitChain}</b>${f.bait?.length > 1 ? '（以小釣大）' : ''}`],
+        ['時間限制', timeStr],
+        ['天氣限制', prevStr ? `${prevStr} → ${wxStr}（前一時段 → 當前）` : wxStr],
+      ];
   if (preds.length) rows.push(['魚識', `${preds.join('、')}${f.intuitionLength ? `（持續 ${f.intuitionLength} 秒）` : ''}`]);
   if (f.snagging) rows.push(['釣組', '需要鉤足（Snagging）']);
-  if (f.folklore) rows.push(['傳承錄', '需購買該地區釣魚傳承錄']);
+  // 傳承錄：原本只寫「需購買該地區釣魚傳承錄」，現在直接講是哪一本
+  //（folklore 是 GatheringSubCategory row id，folkloreBook 由 build-fishing 對到實體書）
+  if (f.folkloreBook) rows.push(['傳承錄', `需要《${esc(f.folkloreBook.name)}》`]);
+  else if (f.folklore) rows.push(['傳承錄', '需購買該地區釣魚傳承錄']);
+  if (f.aquarium) {
+    rows.push(['水族箱', `${f.aquarium.water === 'Saltwater' ? '海水' : '淡水'}${f.aquarium.size ? ` · 需 ${f.aquarium.size} 級以上水族箱` : ''}`]);
+  }
+  // 上游的 lure（Ambitious／Modest）刻意不顯示：那兩個 7.0 擬餌技能的**台服官方譯名**
+  // 目前沒有任何可查的來源，依鐵則「對不到就不顯示」，寧缺勿用英文／簡中頂替。資料仍留在 fishes.json。
+
+  // 「這條魚有什麼用」——原本詳情只回答「怎麼釣」，不回答「釣來幹嘛」
+  const use = USES.get(f.itemId);
+  if (use) {
+    const chips = [];
+    if (use.col) chips.push('<span class="fd-use on" title="可交付收藏品">📦 可當收藏品交付</span>');
+    if (!use.nm) chips.push(`<a class="fd-use fd-use-link" href="../market/#item=${f.itemId}" target="_blank" rel="noopener" title="到市場行情頁查即時價">💰 查市場行情</a>`);
+    if (use.use?.length) {
+      for (const u of use.use) {
+        chips.push(`<a class="fd-use fd-use-link" href="../market/#item=${u.i}" target="_blank" rel="noopener" title="${esc(u.j || '')}配方素材">🍳 ${esc(u.n)}</a>`);
+      }
+    }
+    if (chips.length) rows.push(['用途', `<div class="fd-uses">${chips.join('')}</div>`]);
+  }
   document.getElementById('fdTable').innerHTML =
     rows.map(([k, v]) => `<div class="fd-row"><div class="fd-k">${k}</div><div class="fd-v">${v}</div></div>`).join('');
 
@@ -1011,11 +1204,21 @@ document.getElementById('targetsPanel').addEventListener('click', e => {
 
 /* 地圖檢視的選圖、選釣場、搜尋都由 map-explorer 元件自理，這裡不需再綁事件。 */
 
+/* 開窗看板：🎯 切目標，其餘點擊開詳情 */
+document.getElementById('nowView').addEventListener('click', e => {
+  const tgt = e.target.closest('[data-target]');
+  if (tgt) { toggleTarget(Number(tgt.dataset.target)); renderNowBoard(); return; }
+  const row = e.target.closest('[data-nbfish]');
+  if (row) openFishDetail(Number(row.dataset.nbfish));
+});
+
 /* ── 啟動 ── */
 (async function init() {
-  const [fishes, spots] = await Promise.all([
+  const [fishes, spots, uses] = await Promise.all([
     fetch('../../data/fishes.json').then(r => r.json()),
     fetch('../../data/fishing-spots.json').then(r => r.json()),
+    // 圖示與用途（收藏品／市場板／料理配方）；載不到就退化成沒有圖、沒有用途區，不擋頁面
+    fetch('../../data/fish-uses.json').then(r => r.json()).catch(() => ({ data: {} })),
     initWeatherTables('../../data/maps.json'),
   ]);
   // allFish 供詳情彈窗／目標面板／地圖檢視反查；引擎另有自己的一份篩選後清單
@@ -1023,6 +1226,7 @@ document.getElementById('targetsPanel').addEventListener('click', e => {
   FISH_BY_ID = new Map(allFish.map(f => [f.itemId, f]));
   SPOTS = new Map(spots.data.map(s => [s.id, s]));
   MAPS  = new Map(getMapsData().map(m => [m.id, m]));
+  USES  = new Map(Object.entries(uses.data || {}).map(([k, v]) => [Number(k), v]));
   initMapModal({ mapsData: getMapsData(), base: '../..' });
 
   // 地圖檢視（左底圖標點、右搜尋＋釣場清單，兩邊連動）
@@ -1106,17 +1310,24 @@ document.getElementById('targetsPanel').addEventListener('click', e => {
         match: (f, v) => rarityOf(f) === v,
       },
       {
+        // 併進既有的「種類」組，不另開篩選群——這頁已經 6 組，橫向流排才塞得下
         id: 'type', label: '種類',
         options: () => [
           { value: 'timed', label: '限時' },
           { value: 'weather', label: '限天氣' },
           { value: 'folklore', label: '傳承錄' },
           { value: 'intuition', label: '🧠魚識' },
+          { value: 'spear', label: '🔱銛槍' },
+          { value: 'collectable', label: '📦收藏品' },
+          { value: 'aquarium', label: '🐠水族箱' },
         ],
         match: (f, v) => {
           if (v === 'timed') return f.startHour > 0 || f.endHour < 24;
           if (v === 'weather') return !!f.weatherSet?.length;
           if (v === 'intuition') return !!f.predators?.length;
+          if (v === 'spear') return isSpear(f);
+          if (v === 'collectable') return !!USES.get(f.itemId)?.col;
+          if (v === 'aquarium') return !!f.aquarium;
           return !!f.folklore;
         },
       },
@@ -1163,11 +1374,13 @@ document.getElementById('targetsPanel').addEventListener('click', e => {
       filtered = list;          // 地圖檢視與目標面板吃同一份篩選結果
       renderTargets();
       if (viewMode === 'map') renderFishMap();
+      else if (viewMode === 'now') renderNowBoard();
     },
   });
 
   document.getElementById('vList').addEventListener('click', () => setView('list'));
   document.getElementById('vMap').addEventListener('click', () => setView('map'));
+  document.getElementById('vNow').addEventListener('click', () => setView('now'));
 
   // 開頁預設地圖檢視：「這條魚在哪裡釣」才是這頁的主要用途，清單隨時可切回去
   setView('map');
@@ -1176,7 +1389,10 @@ document.getElementById('targetsPanel').addEventListener('click', e => {
   syncAlarmUI();
   if (alarmCfg.on) checkAlarms(Date.now(), true); // 開頁先登記當前窗，只對之後的新窗響鈴
   // 每 10 秒更新可釣狀態與倒數（清單重畫；地圖檢視只需更新目標面板）
-  setInterval(() => { if (viewMode === 'list') tracker.renderGrid(); else renderTargets(); }, 10000);
+  setInterval(() => {
+    if (viewMode === 'list') tracker.renderGrid();
+    else { renderTargets(); if (viewMode === 'now') renderNowBoard(); }
+  }, 10000);
   setInterval(() => checkAlarms(Date.now()), 5000); // 鬧鐘每 5 秒檢查（天氣快取使重算成本極低）
 })();
 </script>

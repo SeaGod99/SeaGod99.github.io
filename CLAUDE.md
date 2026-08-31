@@ -57,6 +57,8 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 副本庫補收漏掉的副本 | `node scripts/patch-dungeon-add-missing.mjs`（`--apply`／`--offline`） |
 | 幻卡英文散文來源結構化 | `node scripts/patch-triple-triad-prose-sources.mjs`（`--apply`） |
 | 連結檢查 | `node scripts/validate-links.mjs` |
+| 重建魚的圖示與用途（改完 items／recipes／collectable-items 後） | `node scripts/build-fish-uses.mjs`（dry-run 預設／`--apply`；產 `data/fish-uses.json`，釣魚頁的圖示、收藏品旗標與料理用途） |
+| 釣魚資料缺角一次性補正（已跑完，留著備查） | `node scripts/patch-fishing-upstream-gaps.mjs`（dry-run 預設／`--apply`／`--offline`，冪等；銛槍釣場＋官方地名＋5 個上游欄位＋傳承錄書。`build-fishing.mjs` 已同步修好，重建不需再跑） |
 | 壓縮前端會載入的 data/*.json（改完資料後） | `node scripts/minify-data.mjs`（dry-run 預設／`--apply` 寫入；`_meta.json` 刻意保留可讀） |
 | 刷新台服物品繁中名快照（**升台服版本的第一步**） | `node scripts/build-tw-items-msgpack.mjs`（dry-run 預設／`--apply`；跑完必接 `build-items.mjs`） |
 | 補新開放條目的繁中名（魚／園藝／鳥鞍／隨從） | `node scripts/patch-tw-names.mjs`（dry-run 預設／`--apply`，來源＝items.json，只補不覆蓋） |
@@ -220,7 +222,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 - **在 `tools/glamour/配裝圖片/` 下新增產出目錄** → 先把所有會 `rglob` 圖片的腳本掃一遍。新增卡片層時 `make_thumbs.py`（`EXTS` 含 `.webp`）把它當來源圖、生了 237MB 的「縮圖的縮圖」，`health_check.py` 的覆蓋率分母也多算了 7,060 張，兩邊都不報錯（知識庫 §4.36）。
 - **改了主庫 `data/items.json`（或跑了 `build-items.mjs`）** → 除了 `build-items-lite`／`build-items-market`／**`build-dyes.mjs`（染劑庫，新版本會加新染劑，漏跑會讓時尚品鑑週更直接中止）**，**幻化配裝圖鑑也吃這份**：跑 `py tools\glamour\scripts\update_all.py local` 讓它跟上。社群套裝的裝備名另外吃 `all_outfits_enriched.json` 快取，要一併更新得跑 `py tools\glamour\scripts\pipeline.py enrich`；精選／官方套裝的名稱則來自 `item_fallback_multilang.json`，需 `py tools\glamour\scripts\build_item_fallback.py`（連網約 3 分鐘）。**染色對照也吃主庫**：`py tools\glamour\scripts\build_dye_names.py --apply`（白名單／日繁／英文別名三份）——**漏跑不會報錯，新色會被模糊比對指派成最像的舊色**（知識庫 §4.24）。
 - **時尚品鑑週更** → `node scripts/build-fashion-report.mjs` → `node scripts/validate-data.mjs` → 開頁驗收。**別再手工挑推薦裝**，推薦標準與換週狀態機是程式定的，規格見 [docs/fashion-report-spec.md](docs/fashion-report-spec.md)、操作見 [docs/fashion-report-update-sop.md](docs/fashion-report-update-sop.md)。腳本報「來源尚未換週」是**正常的換週真空期，什麼都不用做**。
-- **重建釣魚資料** → `node scripts/build-fishing.mjs` → **必接** `patch-fishing-multispot.mjs` 與 `patch-fish-legendary.mjs --apply`。後者漏跑不會報錯，只會安靜地把 30 隻魚皇（釣場之皇）降級成普通魚王——上游沒有這個旗標，名單是我們自己維護的（見知識庫 §4.8）。
+- **重建釣魚資料** → `node scripts/build-fishing.mjs` → **必接** `patch-fishing-common.mjs`（補回 ~339 條常駐普通魚，build 只產得出上游的 1110 條）、`patch-fishing-multispot.mjs` 與 `patch-fish-legendary.mjs --apply`。跑完 `validate-links` 的「fishes.spotId → fishing-spots」要是 **0 斷鏈**；**釣場名一律走 `twPlaces` 不可用 OpenCC**（舊版簡轉繁，307 個裡 25 個是錯的，而釣場詳情的 `/coord` 會把錯地名複製進遊戲）。後者漏跑不會報錯，只會安靜地把 30 隻魚皇（釣場之皇）降級成普通魚王——上游沒有這個旗標，名單是我們自己維護的（見知識庫 §4.8）。
 - **幻卡少了新卡** → `node scripts/patch-triple-triad-new-cards.mjs`（dry-run 看要補什麼）→ 加 `--apply` → `node scripts/download-triple-triad-images.mjs` 補卡面圖 → `node scripts/patch-triple-triad-source-names.mjs --apply`（補取得方式的繁中名）→ `node scripts/validate-data.mjs`。**張數不要相信 build 腳本裡的常數**（`build-triple-triad-all.mjs` 寫死 425，7.1 的 10 張新卡就這樣安靜漏掉）；真實張數＝`items.json` 裡 category「九宮幻卡」的道具數。7.1 以後的 sheet 只有 XIVAPI **v2** 有（v1 已停更）。
 - **接外部工具站的 id 之前** → **先用名稱對一次再接**。幻卡舊資料的 `instanceId` 是 Garland 自家 id，182 個裡 64 個「剛好」也是 `dungeons.json` 的有效 key，但其中 **151 個對到的是錯的副本**（知識庫 §4.10）。同一個坑在 mapId 已經踩過一次。
 - **看到收藏頁某筆「沒有取得方式」** → 先確認**它在遊戲裡是不是真的存在**。坐騎有 4 筆是 `Mount.Order === -1` 的內部列（玩家拿不到、其中 3 筆還是重複），補 sources 是補錯方向（知識庫 §4.11）。

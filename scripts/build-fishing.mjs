@@ -2,9 +2,17 @@
 // 建立釣魚資料庫：data/fishing-spots.json + data/fishes.json
 //
 // 來源：
-//   Fish Tracker App data.js    FISH / FISHING_SPOTS / ITEMS / WEATHER_TYPES / ZONES
-//   thewakingsands PlaceName.csv placeNameId → 簡中地名 → OpenCC 繁中
-//   data/items.json              itemId → 繁中名（魚名 + 餌料名）
+//   Fish Tracker App data.js    FISH / FISHING_SPOTS / SPEARFISHING_SPOTS / ITEMS / WEATHER_TYPES
+//   thewakingsands FishingSpot.csv  spotId → PlaceName row id（第 24 欄）
+//   out_data/places.msgpack      PlaceName row id → 台服官方繁中地名（twPlaces）
+//   XIVAPI v2 SpearfishingNotebook  銛槍捕魚釣場的 PlaceName / TerritoryType / X / Y / 等級
+//   XIVAPI v2 GatheringSubCategory  folklore id → 傳承錄實體書 itemId
+//   data/items.json              itemId → 繁中名（魚名 + 餌料名 + 傳承錄書名）
+//
+// ⚠️ 地名一律走 twPlaces，**不可用 OpenCC 簡轉繁**（專案鐵則）。
+//    舊版走「簡中 PlaceName.csv → OpenCC」，307 個釣場裡 25 個是錯的：
+//    女巫崖被翻成「落魔崖」、風之節點被翻成「地場節點·風」、白銀市集被翻成「白銀集市」…
+//    釣場詳情那顆「📋 /coord X Y 地名」會把錯地名複製進遊戲，不只是顯示問題。
 //
 // 輸出：
 //   data/fishing-spots.json
@@ -14,6 +22,9 @@
 //     itemId, name(繁中), nameEn
 //     spotId, spotName(繁中)          （主釣場；代表性釣點）
 //     spots[]                      （所有可釣釣場 id，主釣場排最前；由 patch-fishing-multispot.mjs 補）
+//     gig / aquarium / collectable / lure / dataMissing / folkloreBook
+//                                  （值為 null 就不寫這個 key——多數魚都是 null，
+//                                    一律寫會讓前端載的 fishes.json 多出約 120KB）
 //     startHour, endHour          （0-24，startHour===0 && endHour===24 表示全時段）
 //     weatherSet[]                （天氣繁中名陣列，空=無限制）
 //     previousWeatherSet[]        （前置天氣）
@@ -30,18 +41,22 @@
 //
 // 注意：Cowork 沙箱擋外網，需在本機執行。
 // 執行（repo 根目錄）：node scripts/build-fishing.mjs
-// ⚠️ 重建後務必接著跑這兩支，否則資料會缺一角：
-//    node scripts/patch-fishing-multispot.mjs   （補多釣場 spots[] 與回填無主釣場的魚，否則一魚只剩單一釣點）
+// ⚠️ 本腳本只產得出上游 FISH 收錄的 1110 條魚；現行 fishes.json 是 1449 條。
+//    重建後務必接著跑這三支，否則資料會缺一大角：
+//    node scripts/patch-fishing-common.mjs      （補回 ~339 條常駐普通魚，上游 fish-tracker 不收）
+//    node scripts/patch-fishing-multispot.mjs   （補多釣場 spots[]；並回填 31 條上游 location=null 的魚的主釣場）
 //    node scripts/patch-fish-legendary.mjs --apply （標回 30 隻釣場之皇，上游沒有這個旗標）
+//    跑完 validate-links 的「fishes.spotId → fishing-spots」應為 0 斷鏈。
 // 需求：Node 18+（內建 fetch）
 
 import { readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import * as OpenCC from "opencc-js";
+import { decode } from "@msgpack/msgpack";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = join(__dirname, "..", "data");
+const OUT_DATA = join(__dirname, "..", "out_data");
 const ITEMS_FILE = join(DATA_DIR, "items.json");
 const OUT_SPOTS = join(DATA_DIR, "fishing-spots.json");
 const OUT_FISHES = join(DATA_DIR, "fishes.json");
@@ -51,7 +66,7 @@ const FISH_TRACKER_URL =
 const CN_BASE =
   "https://raw.githubusercontent.com/thewakingsands/ffxiv-datamining-cn/master";
 
-const converter = OpenCC.Converter({ from: "cn", to: "tw" });
+const XIVAPI = "https://v2.xivapi.com/api/sheet";
 
 // ---------- 工具 ----------
 
@@ -107,18 +122,64 @@ function parseCSVLine(line) {
   return fields;
 }
 
-async function fetchCnPlaceNames() {
-  const csv = await fetchText(`${CN_BASE}/PlaceName.csv`, "PlaceName.csv(cn)");
+// 台服官方繁中地名：out_data/places.msgpack 的 twPlaces（key = PlaceName row id）
+// ⚠️ 不要改回簡轉繁。這張表是全站地名的唯一權威來源（見 CLAUDE.md 鐵則）。
+async function loadTwPlaceNames() {
+  const buf = await readFile(join(OUT_DATA, "places.msgpack"));
+  const twPlaces = decode(buf).twPlaces || {};
   const map = new Map();
-  for (const line of csv.split("\n").slice(3)) {
-    const f = parseCSVLine(line.trim());
-    const rowId = parseInt(f[0]);
-    const cn = f[1] || "";
-    if (!cn || isNaN(rowId)) continue;
-    map.set(rowId, converter(cn));
+  for (const [id, v] of Object.entries(twPlaces)) {
+    if (v && v.tw) map.set(Number(id), v.tw);
   }
-  console.log(`  PlaceName(cn→tw) 共 ${map.size} 筆`);
+  console.log(`  twPlaces（台服官方地名）共 ${map.size} 筆`);
   return map;
+}
+
+// 銛槍捕魚釣場：XIVAPI v2 SpearfishingNotebook。
+// 上游 SPEARFISHING_SPOTS 的 _id ＝遊戲 GatheringPointBase 的 row id，用它 join。
+// X/Y 已經是 0–2048 的地圖空間（非世界座標），換算只需 X/2048*41/c + 1。
+async function fetchSpearfishingNotebook() {
+  process.stdout.write("  抓取 SpearfishingNotebook…");
+  const res = await fetch(
+    `${XIVAPI}/SpearfishingNotebook?limit=200&fields=GatheringPointBase,PlaceName,TerritoryType,X,Y,GatheringLevel`,
+  );
+  if (!res.ok) throw new Error(`SpearfishingNotebook HTTP ${res.status}`);
+  const j = await res.json();
+  const map = new Map();
+  for (const r of j.rows || []) {
+    const f = r.fields || {};
+    const gpb = f.GatheringPointBase?.row_id ?? f.GatheringPointBase?.value;
+    if (!gpb) continue;
+    map.set(gpb, {
+      placeNameId: f.PlaceName?.row_id ?? f.PlaceName?.value ?? null,
+      territoryId: f.TerritoryType?.row_id ?? f.TerritoryType?.value ?? null,
+      x: f.X, y: f.Y,
+      level: f.GatheringLevel ?? null,
+    });
+  }
+  console.log(` OK（${map.size} 筆）`);
+  return map;
+}
+
+// 傳承錄：fishes.folklore 是 GatheringSubCategory 的 row id → 該冊實體書的 itemId
+async function fetchFolkloreBooks(ids) {
+  process.stdout.write(`  抓取 GatheringSubCategory ×${ids.length}…`);
+  const out = new Map();
+  for (const id of ids) {
+    const res = await fetch(`${XIVAPI}/GatheringSubCategory/${id}?fields=Item`);
+    if (!res.ok) throw new Error(`GatheringSubCategory/${id} HTTP ${res.status}`);
+    const j = await res.json();
+    const itemId = j.fields?.Item?.row_id ?? j.fields?.Item?.value ?? null;
+    if (itemId) out.set(id, itemId);
+  }
+  console.log(` OK（${out.size} 本）`);
+  return out;
+}
+
+// 0–2048 地圖空間 → 遊戲座標（與 build-island.mjs 的 frac→gameCoord 同式）
+function toGameCoord(v, sizeFactor) {
+  const c = (sizeFactor || 100) / 100;
+  return Math.round(((v / 2048) * 41 / c + 1) * 10) / 10;
 }
 
 // FishingSpot.csv：spotId → placeNameId（欄位 24 = PlaceName 欄）
@@ -152,10 +213,11 @@ async function main() {
 
   // 2. 抓遠端資料
   console.log("抓取遠端資料…");
-  const [dataJs, placeNames, fishingSpotPlaceIds] = await Promise.all([
+  const [dataJs, placeNames, fishingSpotPlaceIds, spearNotebook] = await Promise.all([
     fetchText(FISH_TRACKER_URL, "Fish Tracker data.js"),
-    fetchCnPlaceNames(),
+    loadTwPlaceNames(),
     fetchFishingSpotPlaceIds(),
+    fetchSpearfishingNotebook(),
   ]);
   console.log();
 
@@ -163,10 +225,12 @@ async function main() {
   console.log("解析 data.js…");
   const FISH_DATA = extractSection(dataJs, "FISH");
   const SPOTS_DATA = extractSection(dataJs, "FISHING_SPOTS");
+  const SPEAR_DATA = extractSection(dataJs, "SPEARFISHING_SPOTS");
   const ITEMS_DATA = extractSection(dataJs, "ITEMS");
   const WEATHER_DATA = extractSection(dataJs, "WEATHER_TYPES");
   console.log(`  FISH: ${Object.keys(FISH_DATA).length} 筆`);
   console.log(`  FISHING_SPOTS: ${Object.keys(SPOTS_DATA).length} 筆`);
+  console.log(`  SPEARFISHING_SPOTS: ${Object.keys(SPEAR_DATA).length} 筆`);
   console.log(`  ITEMS: ${Object.keys(ITEMS_DATA).length} 筆`);
   console.log(`  WEATHER_TYPES: ${Object.keys(WEATHER_DATA).length} 筆\n`);
 
@@ -183,16 +247,14 @@ async function main() {
     return itemMap.get(id) || ITEMS_DATA[id]?.name_en || String(id);
   };
 
-  // 釣點繁中名：優先用 FishingSpot.csv PlaceName → PlaceName.csv 簡中轉繁中
-  // fallback 用 name_ja 套 OpenCC（純假名時轉換無效但至少有日文）
-  const spotName = (spotId, ja) => {
+  // 釣點繁中名：FishingSpot.csv 的 PlaceName row id → twPlaces 官方繁中名。
+  // 查不到就回 null（＝台服未開放或名稱不明），**不用日文／英文頂替**。
+  // 實測 307 個釣場 100% 查得到，所以正常情況不會有 null。
+  const spotName = (spotId) => {
     const placeId = fishingSpotPlaceIds.get(spotId);
-    if (placeId) {
-      const tw = placeNames.get(placeId);
-      if (tw) return tw;
-    }
-    return ja ? converter(ja) : null;
+    return placeId ? placeNames.get(placeId) ?? null : null;
   };
+  const placeNameOf = (placeId) => (placeId != null ? placeNames.get(placeId) ?? null : null);
 
   // ---------- territoryId → mapId 對應（遊戲 Map sheet row id，全站統一 ID 空間） ----------
   // 優先讀本機 out_data/territory-map.json（{territoryId: mapId}）；沒有就打 XIVAPI TerritoryType sheet
@@ -223,6 +285,16 @@ async function main() {
 
   // ---------- 建立釣點資料 ----------
   console.log("建立釣點資料…");
+  // 既有釣場的 patch 沒有任何上游來源（不像 items/recipes 有 datamined patch，
+  // patch-backfill-all.mjs 也明列 fishing-spots 為「無來源」）——
+  // 重建時從舊檔帶過來，否則會安靜地洗掉 307 筆現有值。
+  let prevSpotPatch = new Map();
+  try {
+    const prev = JSON.parse(await readFile(OUT_SPOTS, "utf8"));
+    prevSpotPatch = new Map((prev.data || []).map((s) => [s.id, s.patch ?? null]));
+    console.log(`  帶回舊檔 patch ${prevSpotPatch.size} 筆`);
+  } catch { /* 首次建置：沒舊檔就算了 */ }
+
   const spotsOut = [];
 
   for (const [idStr, spot] of Object.entries(SPOTS_DATA)) {
@@ -235,7 +307,7 @@ async function main() {
     const mapId = territoryMap[spot.territory_id] ?? null;
     spotsOut.push({
       id: spotId,
-      name: spotName(spotId, spot.name_ja),
+      name: spotName(spotId),
       nameEn: spot.name_en || "",
       nameJa: spot.name_ja || "",
       territoryId: spot.territory_id ?? null,
@@ -243,11 +315,54 @@ async function main() {
         ? { mapId, x: spot.map_coords[0], y: spot.map_coords[1] }
         : null,
       fishes,
+      patch: prevSpotPatch.get(spotId) ?? null,
     });
   }
 
+  // ---------- 銛槍捕魚（水下）釣場 ----------
+  // 上游把這 64 個點放在另一個 section，舊版沒讀 → 203 條銛槍魚 spotName=null，
+  // 卡片印「—（無固定釣場資料）」、地圖檢視看不到、地區篩選也篩不到。
+  const mapsForSpear = JSON.parse(await readFile(join(DATA_DIR, "maps.json"), "utf8"));
+  const MAP_BY_ID = new Map((mapsForSpear.data || mapsForSpear).map((m) => [m.id, m]));
+  let spearAdded = 0, spearSkipped = 0;
+  for (const [idStr, sp] of Object.entries(SPEAR_DATA)) {
+    const spotId = Number(idStr);
+    const fishes = Object.values(FISH_DATA).filter((f) => f.location === spotId).map((f) => f._id);
+    // 既有 307 個釣場沒有任何一個 fishes 是空的，沿用這個慣例：上游未收錄任何魚的 16 個點不收
+    //（map-explorer 的點是由魚反推的，空釣場本來就永遠不會出現在圖上）。
+    if (!fishes.length) { spearSkipped++; continue; }
+    const info = spearNotebook.get(spotId);
+    const name = placeNameOf(info?.placeNameId);
+    if (!name) { spearSkipped++; continue; }   // 鐵則：對不到官方繁中名就不收
+    const territoryId = info?.territoryId ?? sp.territory_id ?? null;
+    const mapId = territoryMap[territoryId] ?? null;
+    if (mapId == null || info?.x == null) { spearSkipped++; continue; }
+    const sf = MAP_BY_ID.get(mapId)?.sizeFactor ?? 100;
+    const ps = fishes.map((i) => FISH_DATA[i]?.patch).filter((v) => v != null).map(Number);
+    spotsOut.push({
+      id: spotId,
+      name,
+      nameEn: sp.name_en || "",
+      nameJa: sp.name_ja || "",
+      territoryId,
+      coords: { mapId, x: toGameCoord(info.x, sf), y: toGameCoord(info.y, sf) },
+      fishes,
+      spearfishing: true,                       // 銛槍捕魚（水下），前端要與一般垂釣區隔
+      level: info.level ?? null,                // 捕魚人需求等級
+      patch: prevSpotPatch.get(spotId) ?? (ps.length ? Math.min(...ps) : null),
+    });
+    spearAdded++;
+  }
+  console.log(`  銛槍釣場：收 ${spearAdded} 個／跳過 ${spearSkipped} 個`);
+
   spotsOut.sort((a, b) => a.id - b.id);
   console.log(`  釣點共 ${spotsOut.length} 筆`);
+
+  const SPOT_OUT_BY_ID = new Map(spotsOut.map((s) => [s.id, s]));
+
+  // 傳承錄：folklore（GatheringSubCategory row id）→ 實體書 itemId
+  const folkloreIds = [...new Set(Object.values(FISH_DATA).map((f) => f.folklore).filter((v) => v != null))].sort((a, b) => a - b);
+  const folkloreBooks = folkloreIds.length ? await fetchFolkloreBooks(folkloreIds) : new Map();
 
   // ---------- 建立魚的資料 ----------
   console.log("建立魚的資料…");
@@ -280,16 +395,17 @@ async function main() {
     }));
 
     const spotId = fish.location ?? null;
-    const spot = spotId != null ? SPOTS_DATA[spotId] : null;
+    // 釣場名要同時吃一般釣場與銛槍釣場，所以回查已組好的 spotsOut。
+    const spot = spotId != null ? SPOT_OUT_BY_ID.get(spotId) : null;
 
-    fishesOut.push({
+    const row = {
       itemId,
       name: nameTw,
       nameEn,
       spotId,
-      spotName: spotName(spotId, spot?.name_ja ?? null),
-      spotNameEn: spot?.name_en ?? null,
-      spotNameJa: spot?.name_ja ?? null,
+      spotName: spot?.name ?? null,
+      spotNameEn: spot?.nameEn || null,
+      spotNameJa: spot?.nameJa || null,
       startHour: fish.startHour ?? 0,
       endHour: fish.endHour ?? 24,
       weatherSet: (fish.weatherSet || []).map((id) => ({
@@ -311,7 +427,24 @@ async function main() {
       folklore: fish.folklore ?? null,
       legendary: false,       // 釣場之皇；上游無此旗標，由 patch-fish-legendary.mjs 依名單標記
       patch: fish.patch ?? null,
-    });
+    };
+
+    // 上游有、舊版沒抓的五欄。**null 就不寫這個 key**——
+    // 大多數魚都是 null，一律寫會讓前端要載的 fishes.json 多出約 120KB（+18%）。
+    if (fish.gig != null) row.gig = fish.gig;                         // 銛槍尺寸 Small/Normal/Large/UNKNOWN
+    if (fish.aquarium != null) row.aquarium = fish.aquarium;          // {water:'Freshwater'|'Saltwater', size:1-4}
+    if (fish.collectable != null) row.collectable = fish.collectable; // 收藏品門檻值
+    if (fish.lure != null) row.lure = fish.lure;                      // 'Ambitious' | 'Modest'（7.0 擬餌）
+    if (fish.dataMissing != null) row.dataMissing = fish.dataMissing;
+
+    // 傳承錄 → 實體書（itemId ＋ 繁中書名），讓前端能直接講「要哪一本」
+    if (fish.folklore != null) {
+      const bookId = folkloreBooks.get(fish.folklore);
+      const bookName = bookId != null ? itemMap.get(bookId) : null;
+      if (bookId && bookName) row.folkloreBook = { itemId: bookId, name: bookName };
+    }
+
+    fishesOut.push(row);
   }
 
   fishesOut.sort((a, b) => a.itemId - b.itemId);
@@ -329,7 +462,7 @@ async function main() {
         schema: "fishing-spots",
         patch: "7.2",
         updated: now,
-        source: "fish-tracker+items",
+        source: "fish-tracker+items+FishingSpot.csv+SpearfishingNotebook+twPlaces",
         count: spotsOut.length,
         data: spotsOut,
       },
@@ -345,7 +478,7 @@ async function main() {
         schema: "fishes",
         patch: "7.2",
         updated: now,
-        source: "fish-tracker+items",
+        source: "fish-tracker+items+FishingSpot.csv+SpearfishingNotebook",
         count: fishesOut.length,
         data: fishesOut,
       },

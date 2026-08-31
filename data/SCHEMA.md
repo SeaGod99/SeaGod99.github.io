@@ -705,8 +705,31 @@ ARR 2.x / HW 3.x / SB 4.x / ShB 5.x / EW 6.x / DT 7.x
 | `tug` / `hookset` | 咬鉤力道（`light`/`medium`/`heavy`）／建議提鉤技能 |
 | `bigFish` | **魚王＝釣場之王**（日文ヌシ、英文 Big Fish），綠色品質稀有魚。上游有旗標 |
 | `legendary` | **魚皇＝釣場之皇**（日文オオヌシ、英文 Living Legend），魚王中條件最嚴苛的一階，每個資料片版本末期只追加 6 隻。**遊戲資料與上游都沒有這個旗標**（XIVAPI `FishParameter` 的 `AchievementCredit`／`IsHidden` 在魚王與魚皇之間完全相同），由 `scripts/patch-fish-legendary.mjs` 依中文維基名單標記，目前 30 隻（2.4／3.5／4.55／5.55／6.55 各 6）。`legendary ⊂ bigFish` |
+| `gig` | **銛槍尺寸**（`Small`／`Normal`／`Large`／`UNKNOWN`），203 條。只有銛槍捕魚（水下）的魚有；一般垂釣的魚沒有這個 key |
+| `aquarium` | 可養進**水族箱**：`{ water: "Freshwater"｜"Saltwater", size: 1–4 }`，197 條 |
+| `collectable` | **收藏品門檻值**（1–1181），147 條。有值＝這條魚可以當收藏品交付 |
+| `lure` | **擬餌**（7.0 新機制）`Ambitious`（大膽擬餌）／`Modest`（謹慎擬餌），13 條 |
+| `dataMissing` | 上游自標的資料缺漏，有值代表該筆條件不完整 |
+| `folkloreBook` | `folklore` 對應的**傳承錄實體書**：`{ itemId, name }`，293 條。`folklore` 本身是 `GatheringSubCategory` 的 row id（12 個值），書名回查 `items.json` |
 
-**建置**：`node scripts/build-fishing.mjs` → 接著必跑 `patch-fishing-multispot.mjs` 與 `patch-fish-legendary.mjs --apply`（後者漏跑不會報錯，只會安靜地把 30 隻魚皇降級成魚王）。
+> ⚠️ **`gig`／`aquarium`／`collectable`／`lure`／`dataMissing`／`folkloreBook` 六欄「值為 null 就不寫這個 key」**。
+> 多數魚這幾欄都是 null，照其他欄位那樣一律寫會讓前端要載的 `fishes.json` 多出約 120KB（+18%）。
+> 前端一律用 `f.gig`／`f.aquarium` 這種存在性判斷，缺 key 與 null 等價。
+
+**釣場（`fishing-spots.json`，355 個）**：
+
+| 欄位 | 說明 |
+|------|------|
+| `name` | **台服官方繁中地名**——`FishingSpot.csv` 第 24 欄的 PlaceName row id → `out_data/places.msgpack` 的 `twPlaces`。**不可用 OpenCC 簡轉繁**（舊版這樣做，307 個裡 25 個是錯的：女巫崖→「落魔崖」、風之節點→「地場節點·風」、白銀市集→「白銀集市」…，而釣場詳情的 `/coord X Y 地名` 會把錯地名複製進遊戲） |
+| `spearfishing` | `true`＝**銛槍捕魚（水下）釣場**，48 個。來源是上游 data.js 的 `SPEARFISHING_SPOTS`（另一個 section，與 `FISHING_SPOTS` 分開）＋ XIVAPI v2 `SpearfishingNotebook`（用 `GatheringPointBase` row id ＝上游 `_id` 來 join，取 PlaceName／TerritoryType／X／Y／等級）。一般垂釣釣場沒有這個 key |
+| `level` | 捕魚人需求等級，目前只有銛槍釣場有（來自 `SpearfishingNotebook.GatheringLevel`） |
+| `coords` | 銛槍釣場的 X/Y 是 `SpearfishingNotebook` 的 0–2048 地圖空間值，換算 `X/2048*41/c + 1`（`c = sizeFactor/100`），與 `build-island.mjs` 的 `frac→gameCoord` 同式 |
+| `patch` | **沒有任何上游來源**（`patch-backfill-all.mjs` 明列 `fishing-spots` 為「無來源」）。`build-fishing.mjs` 重建時會從舊檔帶過來，否則會安靜洗掉 307 筆現有值 |
+
+**建置**：`node scripts/build-fishing.mjs` → 接著必跑 `patch-fishing-common.mjs`（補回 ~339 條常駐普通魚，上游只有 1110 條）、`patch-fishing-multispot.mjs`（多釣場 `spots[]`＋回填 31 條上游 `location=null` 的魚）與 `patch-fish-legendary.mjs --apply`（後者漏跑不會報錯，只會安靜地把 30 隻魚皇降級成魚王）。
+跑完 `validate-links.mjs` 的「fishes.spotId → fishing-spots」應為 **0 斷鏈**。
+
+**既有資料的一次性補正**：`scripts/patch-fishing-upstream-gaps.mjs`（dry-run 預設／`--apply`／`--offline`，冪等）——2026-08-31 用它把上面這些缺角補進既有資料（48 個銛槍釣場、25 個官方地名、5 個上游欄位、傳承錄書）。`build-fishing.mjs` 已同步修好，之後重建不需要再跑它。
 
 ### 2.17 treasure-maps（藏寶圖採集點）
 
