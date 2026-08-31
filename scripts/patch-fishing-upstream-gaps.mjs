@@ -2,9 +2,9 @@
 // 把「上游／台服官方來源早就有、但 data/fishes.json + data/fishing-spots.json 沒抓進來」的東西補回去。
 // 四件事（都是既有資料的缺角，不是新玩法）：
 //
-//   ① 銛槍捕魚（水下捕魚）的釣場整批補進來
+//   ① 魚叉捕魚（水下捕魚）的釣場整批補進來
 //      build-fishing.mjs 只讀上游 data.js 的 FISHING_SPOTS（307 筆），
-//      沒讀 SPEARFISHING_SPOTS（64 筆）。結果 203 條銛槍魚 spotName=null：
+//      沒讀 SPEARFISHING_SPOTS（64 筆）。結果 203 條魚叉魚 spotName=null：
 //      卡片印「—（無固定釣場資料）」、地圖檢視完全看不到、地區篩選永遠篩不到
 //      （regionOfSpot() 回 undefined），而釣魚頁預設就是地圖檢視 → 一開頁就是隱形的。
 //      上游的 spearfishing spot `_id` ＝ 遊戲 GatheringPointBase 的 row id，
@@ -18,7 +18,7 @@
 //      「📋 /coord X Y 地名」會把錯地名複製進遊戲。
 //
 //   ③ 上游 FISH 有、我們沒抓的 5 個欄位
-//      gig（銛槍尺寸 Small/Normal/Large）／aquarium（水族箱水質＋尺寸）／
+//      gig（魚叉尺寸 Small/Normal/Large）／aquarium（水族箱水質＋尺寸）／
 //      collectable（收藏品門檻值）／lure（7.0 擬餌）／dataMissing（上游自標的資料缺漏）。
 //
 //   ④ 傳承錄講清楚是哪一本
@@ -196,7 +196,7 @@ async function main() {
   renamed.forEach(([id, o, n]) => console.log(`   ${String(id).padStart(4)} 「${o}」→「${n}」`));
   if (noOfficial) console.log(`   （${noOfficial} 個查不到官方名，保留原值）`);
 
-  // ── ① 補進 64 個銛槍捕魚釣場 ────────────────────────────────
+  // ── ① 補進 64 個魚叉捕魚釣場 ────────────────────────────────
   const existingIds = new Set(spotsJson.data.map((s) => s.id));
   const fishBySpot = new Map();   // spotId → [itemId]
   for (const [idStr, f] of Object.entries(UP_FISH)) {
@@ -219,7 +219,7 @@ async function main() {
     const mapId = territoryMap[territoryId] ?? null;
     if (mapId == null || info?.x == null) { skippedSpots.push([id, name, "無地圖或座標"]); continue; }
     // 既有 307 個釣場沒有任何一個 fishes 是空的——沿用這個慣例，
-    // 上游沒有收錄任何魚的 16 個銛槍點不收（收了也只是在地圖清單上多出「0 種」的雜訊，
+    // 上游沒有收錄任何魚的 16 個魚叉點不收（收了也只是在地圖清單上多出「0 種」的雜訊，
     // 且 map-explorer 的點是由魚反推的，空釣場本來就永遠不會出現在圖上）。
     const spotFishes = fishBySpot.get(id) || [];
     if (!spotFishes.length) { skippedSpots.push([id, name, "上游未收錄任何魚"]); continue; }
@@ -232,7 +232,7 @@ async function main() {
       territoryId,
       coords: { mapId, x: toGameCoord(info.x, sf), y: toGameCoord(info.y, sf) },
       fishes: spotFishes,
-      spearfishing: true,                          // 銛槍捕魚（水下），前端要與一般垂釣區隔
+      spearfishing: true,                          // 魚叉捕魚（水下），前端要與一般垂釣區隔
       level: info.level ?? null,                   // 捕魚人需求等級
       patch: null,
     });
@@ -244,7 +244,7 @@ async function main() {
     s.patch = ps.length ? Math.min(...ps.map(Number)) : null;
   }
 
-  console.log(`\n① 銛槍捕魚釣場：新增 ${addedSpots.length} 個（上游 ${Object.keys(UP_SPEAR).length} 個）`);
+  console.log(`\n① 魚叉捕魚釣場：新增 ${addedSpots.length} 個（上游 ${Object.keys(UP_SPEAR).length} 個）`);
   addedSpots.slice(0, 8).forEach((s) => console.log(`   ${s.id} ${s.name}（${s.nameEn}）map${s.coords.mapId} X${s.coords.x} Y${s.coords.y} Lv${s.level} ${s.fishes.length} 種`));
   if (addedSpots.length > 8) console.log(`   …其餘 ${addedSpots.length - 8} 個`);
   if (skippedSpots.length) {
@@ -266,7 +266,7 @@ async function main() {
   for (const f of fishesJson.data) {
     const up = UP_FISH[f.itemId];
 
-    // 釣場欄位：銛槍魚原本三個名稱欄全 null；改名的釣場也要跟著同步
+    // 釣場欄位：魚叉魚原本三個名稱欄全 null；改名的釣場也要跟著同步
     const sp = f.spotId != null ? SPOT_BY_ID.get(f.spotId) : null;
     if (sp) {
       if (!f.spotName) stat.spotFilled++;
@@ -287,7 +287,7 @@ async function main() {
       if (f[key] == null) stat[counter]++;
       f[key] = val;
     };
-    setIf("gig", up.gig ?? null, "gig");                      // 銛槍尺寸 Small/Normal/Large/UNKNOWN
+    setIf("gig", up.gig ?? null, "gig");                      // 魚叉尺寸 Small/Normal/Large/UNKNOWN
     setIf("aquarium", up.aquarium ?? null, "aquarium");       // {water:'Freshwater'|'Saltwater', size:1-4}
     setIf("collectable", up.collectable ?? null, "collectable"); // 收藏品門檻值
     setIf("lure", up.lure ?? null, "lure");                   // 'Ambitious' | 'Modest'（7.0 擬餌）

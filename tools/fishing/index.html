@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="FF14 釣魚紀錄追蹤 — 1422 種台服已開放的魚（含銛槍捕魚），查詢釣場/餌/時間/天氣，開窗看板與倒數、目標魚鬧鐘提醒、地圖標點、收藏品與料理用途，追蹤已釣紀錄">
+  <meta name="description" content="FF14 釣魚紀錄追蹤 — 1422 種台服已開放的魚（含魚叉捕魚），查詢釣場/餌/時間/天氣，開窗看板與倒數、目標魚鬧鐘提醒、地圖標點、收藏品與料理用途，追蹤已釣紀錄">
   <title>釣魚紀錄追蹤 | 水神的工具箱</title>
   <link rel="stylesheet" href="../../assets/css/tokens.css">
   <link rel="stylesheet" href="../../assets/css/theme.css">
@@ -98,7 +98,7 @@
     .tug-chip.heavy  { color: var(--red);   border-color: rgba(248,113,113,0.35); }
     .chain-arrow { color: var(--gold); font-weight: 700; }
     .tag-int { color: #f0abfc; border-color: rgba(240,171,252,0.3); background: rgba(240,171,252,0.1); }
-    /* 銛槍捕魚（水下）與收藏品。其餘新欄位（水族箱／擬餌／銛槍尺寸）只放詳情彈窗，
+    /* 魚叉捕魚（水下）與收藏品。其餘新欄位（水族箱／擬餌／魚叉尺寸）只放詳情彈窗，
        卡片上再加標籤會把 8 個標籤擠成兩行。 */
     .tag-spear  { color: #5eead4; border-color: rgba(94,234,212,0.35); background: rgba(94,234,212,0.1); }
     .tag-coll   { color: var(--green); border-color: rgba(74,222,128,0.35); background: rgba(74,222,128,0.1); }
@@ -525,7 +525,7 @@ function rarityTag(f) {
   return '';
 }
 
-/* 銛槍捕魚（水下）：釣場帶 spearfishing 旗標。這 203 條魚沒有釣餌，靠魚叉射魚影，
+/* 魚叉捕魚（水下）：釣場帶 spearfishing 旗標。這 203 條魚沒有釣餌，靠瞄準魚影射擊，
    竿型／提鉤／餌鏈那幾欄對它們沒有意義，卡片與詳情要換句話說。 */
 function isSpear(f) { return fishSpotIds(f).some(sid => SPOTS.get(sid)?.spearfishing); }
 
@@ -537,6 +537,53 @@ const ICON_CDN = 'https://xivapi.com';
 
 /* 魚餌篩選用：一段餌可能是「A 或 B 皆可」（bait[].alts），兩個都要能篩到 */
 function baitIdsOf(step) { return step.alts ? step.alts.map(a => a.itemId) : [step.itemId]; }
+
+/* ── 魚餌 → 用得到它的魚 ──
+   下拉的標籤要即時顯示「這個餌還有幾條沒釣到」，讓人在遊戲裡掛著某個餌時
+   一眼知道還值不值得留在這裡。索引只建一次，順序固定。 */
+let BAIT_INDEX = [];          // [{ itemId, name, fishIds:[] }]，依使用數遞減固定排序
+
+function buildBaitIndex(list) {
+  const use = new Map();      // itemId -> { name, fishIds:[] }
+  for (const f of list) {
+    if (!f.bait?.length) continue;
+    for (const b of (f.bait[0].alts || [f.bait[0]])) {
+      let cur = use.get(b.itemId);
+      if (!cur) use.set(b.itemId, (cur = { itemId: b.itemId, name: b.name, fishIds: [] }));
+      cur.fishIds.push(f.itemId);
+    }
+  }
+  // **順序固定、不隨已釣進度變動**——這份清單是「一邊操作一邊看」的，
+  // 依剩餘數排序會在每次勾選後整份洗牌，剛在看的那個餌就跑掉了（知識庫 §3.19）。
+  BAIT_INDEX = [...use.values()].sort(
+    (a, b) => b.fishIds.length - a.fishIds.length || a.name.localeCompare(b.name, 'zh-Hant'));
+  return BAIT_INDEX;
+}
+
+function baitLabel(b) {
+  const left = b.fishIds.reduce((n, id) => n + (owned.has(id) ? 0 : 1), 0);
+  return left === 0
+    ? `${b.name}（✓ ${b.fishIds.length} 種全釣完）`
+    : `${b.name}（未釣 ${left} / ${b.fishIds.length}）`;
+}
+
+/* 勾了「已釣」之後把下拉標籤與分組標題就地改掉。
+   不能改走 tracker.renderFilters()——那會重畫整個篩選區，使用者的下拉焦點與捲動位置都會掉
+   （引擎自己的註解也是這樣寫的）。 */
+function syncBaitLabels() {
+  const sel = document.querySelector('#ct-filters select.filter-select');
+  if (!sel) return;
+  const byId = new Map(BAIT_INDEX.map(b => [String(b.itemId), b]));
+  for (const opt of sel.options) {
+    const b = byId.get(opt.value);
+    if (b) opt.textContent = baitLabel(b);
+  }
+  const lab = sel.closest('.filter-section')?.querySelector('.filter-label');
+  if (lab) {
+    const left = BAIT_INDEX.filter(b => b.fishIds.some(id => !owned.has(id))).length;
+    lab.textContent = `魚餌（起始餌）· 還有未釣的 ${left} / ${BAIT_INDEX.length} 種`;
+  }
+}
 
 /* ── 渲染 ── */
 function spotZone(f, spotIdOv) {
@@ -590,9 +637,9 @@ function fishingPoints() {
   }
   for (const p of bySpot.values()) {
     p.state = p.fish.every(f => owned.has(f.itemId)) ? 'done' : 'todo';
-    // 銛槍點在清單裡要一眼分得出來——玩法不同（潛水射魚影，沒有餌也沒有提鉤）
+    // 魚叉點在清單裡要一眼分得出來——玩法不同（潛水射魚影，沒有餌也沒有提鉤）
     p.meta = `${p.spear ? '🔱 ' : ''}${p.fish.length} 種`;
-    p.search = [p.spear ? '銛槍 捕魚 水下' : '', ...p.fish.map(f => `${f.name || ''} ${f.nameEn || ''}`)].join(' ');
+    p.search = [p.spear ? '魚叉 捕魚 水下' : '', ...p.fish.map(f => `${f.name || ''} ${f.nameEn || ''}`)].join(' ');
   }
   return [...bySpot.values()];
 }
@@ -602,7 +649,7 @@ function spotDetailHTML(p) {
   const flag = `/coord ${p.x.toFixed(1)} ${p.y.toFixed(1)} ${m ? m.name : ''}`.trim();
   return `
     <div class="spot-head">
-      <span class="spot-loc">X:${p.x.toFixed(1)} Y:${p.y.toFixed(1)} · ${p.fish.length} 種魚${p.spear ? ' · 🔱 銛槍捕魚（需潛水）' : ''}</span>
+      <span class="spot-loc">X:${p.x.toFixed(1)} Y:${p.y.toFixed(1)} · ${p.fish.length} 種魚${p.spear ? ' · 🔱 魚叉捕魚（需潛水）' : ''}</span>
       <button class="spot-copy" data-flag="${esc(flag)}">📋 ${esc(flag)}</button>
     </div>
     <div class="spot-fishes">
@@ -650,6 +697,10 @@ function nowBoardRows(now) {
   return { open: open.sort(bySecs), soon: soon.sort(bySecs) };
 }
 
+function nowCdText(st, kind) {
+  return kind === 'open' ? `● 剩 ${fmtCd(st.secsLeft)}` : `⏳ ${fmtCd(st.secsLeft)}後`;
+}
+
 function nowRowHTML({ f, st }, kind) {
   const ic = USES.get(f.itemId)?.ic;
   const sz = spotZone(f);
@@ -659,9 +710,7 @@ function nowRowHTML({ f, st }, kind) {
   const bait = isSpear(f)
     ? `魚影 ${GIG_TC[f.gig] || '不明'}`
     : (f.bait?.length ? f.bait.map(b => b.name || b.nameEn).join(' → ') : '—');
-  const cd = kind === 'open'
-    ? `<span class="nb-cd open">● 剩 ${fmtCd(st.secsLeft)}</span>`
-    : `<span class="nb-cd soon">⏳ ${fmtCd(st.secsLeft)}後</span>`;
+  const cd = `<span class="nb-cd ${kind}">${nowCdText(st, kind)}</span>`;
   return `<div class="nb-row${owned.has(f.itemId) ? ' owned' : ''}" data-nbfish="${f.itemId}" title="點開詳情">
     ${ic ? `<img class="nb-ic" src="${ICON_CDN}${ic}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">` : '<span class="nb-ic"></span>'}
     <span class="nb-name">${esc(f.name || f.nameEn)}</span>
@@ -673,15 +722,38 @@ function nowRowHTML({ f, st }, kind) {
   </div>`;
 }
 
+/* 目前畫在畫面上的「組成」＝兩組各自的魚與順序。變了才值得整塊重畫。 */
+let nbSig = '';
+const nowSig = (open, soon) =>
+  open.map(r => r.f.itemId).join(',') + '|' + soon.map(r => r.f.itemId).join(',');
+
+/* 每秒只改倒數文字。整塊 innerHTML 重畫會弄掉 hover、文字選取與捲動位置，
+   而且 230 列每秒重建一棵子樹只為了改幾個數字。
+   組內排序不會因為時間流逝而改變（同一組裡每個倒數都以相同速率遞減），
+   所以只有魚進出開窗（＝簽章變了）才需要重畫。 */
+function tickNowBoard() {
+  const box = document.getElementById('nowView');
+  if (!box || viewMode !== 'now') return;
+  const { open, soon } = nowBoardRows(Date.now());
+  if (nowSig(open, soon) !== nbSig) { renderNowBoard(); return; }
+  for (const [kind, list] of [['open', open], ['soon', soon]]) {
+    for (const r of list) {
+      const el = box.querySelector(`.nb-row[data-nbfish="${r.f.itemId}"] .nb-cd`);
+      if (el) el.textContent = nowCdText(r.st, kind);
+    }
+  }
+}
+
 function renderNowBoard() {
   const box = document.getElementById('nowView');
   if (!box) return;
   const now = Date.now();
   const { open, soon } = nowBoardRows(now);
+  nbSig = nowSig(open, soon);
   box.innerHTML = `
     <div class="nb-head">
       <span class="nb-title">⏰ 現在開窗中</span>
-      <span class="nb-sub">吃同一組篩選條件 · 只列限時／限天氣的魚（其餘隨時可釣，不佔版面）· 每 10 秒更新</span>
+      <span class="nb-sub">吃同一組篩選條件 · 只列限時／限天氣的魚（其餘隨時可釣，不佔版面）· 每秒更新</span>
     </div>
     <div class="nb-group">
       <div class="nb-gh open">● 可釣中（${open.length}）</div>
@@ -756,7 +828,7 @@ function fishCardHTML(f) {
       : `<span class="fi-none">—（無固定釣場資料）</span>`;
 
     // 釣餌鏈（以小釣大以箭頭串接）＋竿型／提鉤章（參考魚糕的 ! !! !!! 標示）
-    // 銛槍魚沒有餌，改印魚影大小（gig）——印「—」會讓人以為是資料缺漏。
+    // 魚叉魚沒有餌，改印魚影大小（gig）——印「—」會讓人以為是資料缺漏。
     const baitCell = spear
       ? `<span title="用魚叉瞄準的魚影大小">魚影 ${GIG_TC[f.gig] || '不明'}</span>`
       : (f.bait?.length
@@ -783,7 +855,7 @@ function fishCardHTML(f) {
     <div class="fish-tags">
       ${statusPill(st)}
       ${rarityTag(f)}
-      ${spear       ? '<span class="tag tag-spear" title="銛槍捕魚：潛水後用魚叉射魚影，沒有釣餌與提鉤">🔱銛槍</span>' : ''}
+      ${spear       ? '<span class="tag tag-spear" title="魚叉捕魚：潛水後瞄準魚影射擊，沒有釣餌與提鉤">🔱魚叉</span>' : ''}
       ${USES.get(f.itemId)?.col ? '<span class="tag tag-coll" title="可當收藏品交付">📦收藏品</span>' : ''}
       ${timed       ? '<span class="tag tag-time">⏰限時</span>' : ''}
       ${(f.weatherSet?.length) ? '<span class="tag tag-wx">🌦限天氣</span>' : ''}
@@ -875,7 +947,7 @@ function openFishDetail(id, keepSpot) {
 
   document.getElementById('fdTags').innerHTML = [
     rarityTag(f),
-    isSpear(f) ? '<span class="tag tag-spear">🔱銛槍</span>' : '',
+    isSpear(f) ? '<span class="tag tag-spear">🔱魚叉</span>' : '',
     USES.get(f.itemId)?.col ? '<span class="tag tag-coll">📦收藏品</span>' : '',
     timed ? '<span class="tag tag-time">⏰限時</span>' : '',
     (f.weatherSet?.length) ? '<span class="tag tag-wx">🌦限天氣</span>' : '',
@@ -914,7 +986,7 @@ function openFishDetail(id, keepSpot) {
   const spear = isSpear(f);
   const spotRow = ['釣場' + (spotList.length > 1 ? `（${spotList.length} 處）` : ''), spotCell];
   const rows = spear
-    // 銛槍魚沒有竿型／提鉤／餌鏈，列出來只會是三行「—」
+    // 魚叉魚沒有竿型／提鉤／餌鏈，列出來只會是三行「—」
     ? [
         spotRow,
         ['魚影大小', `<b>${GIG_TC[f.gig] || '不明'}</b>（潛水後用魚叉瞄準對應大小的魚影）`],
@@ -1280,7 +1352,12 @@ document.getElementById('nowView').addEventListener('click', e => {
     // 它們的 itemId 不在 items.json、`name` 全是 null，原本會以英文名露出來（違反繁中名鐵則）。
     // 兩條規則在這裡剛好完全重合（35 筆＝同一批），1449 → 1414 種。
     nameOf: f => f.name || f.nameEn || '',
-    searchText: f => [f.name, f.nameEn, f.spotName, f.spotNameEn].filter(Boolean).join(' ').toLowerCase(),
+    // 搜尋也吃**釣餌名**（含 A/B 皆可的兩個選項）——85 個餌的下拉用眼睛找太慢，
+    // 直接打「蜜蜂餌」就能列出所有用得到它的魚。
+    searchText: f => [
+      f.name, f.nameEn, f.spotName, f.spotNameEn,
+      ...(f.bait || []).flatMap(b => [b.name, ...(b.alts || []).map(a => a.name)]),
+    ].filter(Boolean).join(' ').toLowerCase(),
     // 預設版本新→舊（2026-07-26 使用者指定）；「開窗時間」仍在選單裡可切
     defaultSort: 'patch-desc',
     sorts: [
@@ -1317,7 +1394,7 @@ document.getElementById('nowView').addEventListener('click', e => {
           { value: 'weather', label: '限天氣' },
           { value: 'folklore', label: '傳承錄' },
           { value: 'intuition', label: '🧠魚識' },
-          { value: 'spear', label: '🔱銛槍' },
+          { value: 'spear', label: '🔱魚叉' },
           { value: 'collectable', label: '📦收藏品' },
           { value: 'aquarium', label: '🐠水族箱' },
         ],
@@ -1335,20 +1412,8 @@ document.getElementById('nowView').addEventListener('click', e => {
         // 選項有 90 幾種，標籤排不下 → 用下拉。只列「掛在鉤上的起始餌」，
         // 以小釣大後面那幾段是要現釣的魚、不是能買的餌，列出來只會誤導。
         id: 'bait', label: '魚餌（起始餌）', render: 'select', allLabel: '全部魚餌',
-        options: list => {
-          const use = new Map();   // itemId -> { name, n }
-          for (const f of list) {
-            if (!f.bait?.length) continue;
-            for (const b of (f.bait[0].alts || [f.bait[0]])) {
-              const cur = use.get(b.itemId);
-              if (cur) cur.n++;
-              else use.set(b.itemId, { name: b.name, n: 1 });
-            }
-          }
-          return [...use.entries()]
-            .sort((a, b) => b[1].n - a[1].n || a[1].name.localeCompare(b[1].name, 'zh-Hant'))
-            .map(([id, v]) => ({ value: String(id), label: `${v.name}（${v.n}）` }));
-        },
+        options: list => buildBaitIndex(list)
+          .map(b => ({ value: String(b.itemId), label: baitLabel(b) })),
         match: (f, v) => !!f.bait?.length && baitIdsOf(f.bait[0]).includes(Number(v)),
       },
       {
@@ -1373,6 +1438,7 @@ document.getElementById('nowView').addEventListener('click', e => {
       owned = tracker.owned;    // 匯入會換掉 Set 實體，這裡重新對齊
       filtered = list;          // 地圖檢視與目標面板吃同一份篩選結果
       renderTargets();
+      syncBaitLabels();          // 勾了已釣 → 下拉的「未釣 n / m」要跟著動
       if (viewMode === 'map') renderFishMap();
       else if (viewMode === 'now') renderNowBoard();
     },
@@ -1391,8 +1457,9 @@ document.getElementById('nowView').addEventListener('click', e => {
   // 每 10 秒更新可釣狀態與倒數（清單重畫；地圖檢視只需更新目標面板）
   setInterval(() => {
     if (viewMode === 'list') tracker.renderGrid();
-    else { renderTargets(); if (viewMode === 'now') renderNowBoard(); }
+    else renderTargets();     // 看板走下面的每秒 tick，這裡不重複畫
   }, 10000);
+  setInterval(tickNowBoard, 1000);   // 開窗看板的倒數要跳秒（非 now 檢視時直接 return）
   setInterval(() => checkAlarms(Date.now()), 5000); // 鬧鐘每 5 秒檢查（天氣快取使重算成本極低）
 })();
 </script>

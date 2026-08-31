@@ -57,7 +57,7 @@
 | 4.4 | 藏寶圖採集點查詢 | `/tools/treasure-maps/` | 完成（G1–G17 挖寶點，地圖標點＋座標） |
 | 4.9 | 幻巧戰助手 | `/tools/faux-hollows/` | 完成（16 盤形×252 擺法，自動辨識、機率計算） |
 | 4.5 | 園藝配種計算 | `/tools/gardening/` | 完成（107種作物／216件花色，06-17新增；**08-12 重做**：目標導向多層配種路徑＋總工期＋收成時刻試算、花色油粕配方、機制速查，新增 `scripts/build-gardening.mjs`，機制查證見 [gardening-rules.md](gardening-rules.md)；**08-29 二輪**：修掉求解器的隨機配方平手、總工期標「最快」並列重試代價、`ffxiv_gardening_*` 狀態保存、步驟／照料勾選進度與逾時提醒、`.ics` 匯出、自製 combobox、意圖分組捷徑、與寵物圖鑑／市場頁雙向連結） |
-| 4.7 | 釣魚紀錄追蹤 | `/tools/fishing/` | 完成（fishes.json 1449 筆 → **頁面顯示 1414**（07-26 補上版本閘門，擋掉 35 筆 7.2–7.5），大魚/限時/天氣篩選，追蹤進度，06-17新增；07-16 參考魚糕重做卡片——固定欄位釣場/釣餌/時間/天氣、ET 24h 時間窗 bar、竿型 !/!!/!!! 與提鉤章、天氣鏈前→今、魚識標籤，加「地區」篩選對應遊戲內釣魚手帳分頁；07-23 遷入共用引擎——分頁 60、預設依開窗時間排序、可分享網址、批次標記；ET 時鐘/目標魚面板+鬧鐘/地圖檢視/詳情彈窗皆保留；**07-25 地圖檢視重做**——原本切過去魚卡清單不會收起、地圖被推到頁尾看不到（引擎重畫會洗掉 inline display），改用共用元件 `map-explorer.js` 並以 body class 收合清單；**07-26 篩選擴充**——新增「稀有度」三選一（一般魚 1117／魚王 267／👑魚皇 30，互斥）與「魚餌（起始餌）」下拉（85 種，引擎新增 `render:'select'`），原「種類」組移除重複的「大魚」、補上「🧠魚識」；**08-31 補齊資料缺角＋三個新功能**——銛槍捕魚 48 個釣場入庫（203 條魚不再是「無固定釣場資料」）、25 個簡轉繁的錯釣場名改吃台服官方地名表、上游 5 個欄位補抓（gig／aquarium／collectable／lure／dataMissing）、傳承錄直接寫出是哪一本、新增魚圖示與「用途」（收藏品／市場行情／料理配方）、新增「⏰ 開窗中」看板檢視，「種類」篩選補上 🔱銛槍／📦收藏品／🐠水族箱） |
+| 4.7 | 釣魚紀錄追蹤 | `/tools/fishing/` | 完成（fishes.json 1449 筆 → **頁面顯示 1414**（07-26 補上版本閘門，擋掉 35 筆 7.2–7.5），大魚/限時/天氣篩選，追蹤進度，06-17新增；07-16 參考魚糕重做卡片——固定欄位釣場/釣餌/時間/天氣、ET 24h 時間窗 bar、竿型 !/!!/!!! 與提鉤章、天氣鏈前→今、魚識標籤，加「地區」篩選對應遊戲內釣魚手帳分頁；07-23 遷入共用引擎——分頁 60、預設依開窗時間排序、可分享網址、批次標記；ET 時鐘/目標魚面板+鬧鐘/地圖檢視/詳情彈窗皆保留；**07-25 地圖檢視重做**——原本切過去魚卡清單不會收起、地圖被推到頁尾看不到（引擎重畫會洗掉 inline display），改用共用元件 `map-explorer.js` 並以 body class 收合清單；**07-26 篩選擴充**——新增「稀有度」三選一（一般魚 1117／魚王 267／👑魚皇 30，互斥）與「魚餌（起始餌）」下拉（85 種，引擎新增 `render:'select'`），原「種類」組移除重複的「大魚」、補上「🧠魚識」；**08-31 補齊資料缺角＋三個新功能**——魚叉捕魚 48 個釣場入庫（203 條魚不再是「無固定釣場資料」）、25 個簡轉繁的錯釣場名改吃台服官方地名表、上游 5 個欄位補抓（gig／aquarium／collectable／lure／dataMissing）、傳承錄直接寫出是哪一本、新增魚圖示與「用途」（收藏品／市場行情／料理配方）、新增「⏰ 開窗中」看板檢視，「種類」篩選補上 🔱魚叉／📦收藏品／🐠水族箱） |
 | 4.8 | 採集紀錄追蹤 | `/tools/gathering-log/` | 完成（gathering.json 670 可顯示節點/1243 件產物，採礦工/園藝工，物品勾選追蹤，06-17新增；07-23 遷入共用引擎的**子項目模式**＋分頁 40，地圖檢視保留；物品名改讀 `items-lite.json`；07-25 地圖檢視改用共用元件 `map-explorer.js`，並修掉「在地圖檢視下改篩選會讓卡片清單跑回來」的同源潛在雷） |
 | 4.10 | 無人島開拓查詢 | `/tools/island/` | 完成（07-23 第一期／07-24 第二＋三期）：四分頁——**工坊生產** 81 筆（時數／價值／每小時／製作類型／工房等級，可依時數與製作類型篩選、四種排序；卡片上的**類型標籤可點直接篩選**）／**採集地圖／素材**（合併頁）左邊島嶼底圖＋**26 個採集區域**圓圈、右邊 109 素材依取得方式分組，兩邊連動：點素材在地圖標出採集區域、點圓圈列出該區素材，每種素材標**所需採集工具**（可依工具篩選）、列出**重疊區域**與「站這裡實際可採幾種」（最多 17 種）／**動物時鐘** 43 種動物的出現 ET 時段與天氣，放大的 ET 時鐘（時:分:秒即時走動）＋島上天氣／下次天氣倒數；每隻標**體型與捕捉道具**（小＝捕獸網／中＝捕獸繩／大＝捕獸用睡眠球）、可依體型／產出素材／狀態篩選；天氣為純計算不連 API／**開拓等級** 1–20 級的經驗門檻與解鎖內容。全站圖示改用本機 `assets/island/icons/`（271 張）。分頁與篩選同步網址可分享 |
 
@@ -85,7 +85,7 @@
 | blue-magic | 124 | XIVAPI | 06-09 |
 | monsters | 14361 | datamining-cn + Teamcraft + XIVAPI | 06-09 |
 | obtainable-methods | 36336 | mixed | 06-08 |
-| fishes / fishing-spots | 1449 / **355** | fish-tracker + items + FishingSpot.csv + SpearfishingNotebook + twPlaces（08-31 補進 48 個銛槍釣場） | 08-31 |
+| fishes / fishing-spots | 1449 / **355** | fish-tracker + items + FishingSpot.csv + SpearfishingNotebook + twPlaces（08-31 補進 48 個魚叉釣場） | 08-31 |
 | fish-uses | 1422 | items + collectable-items + recipes（釣魚頁的圖示與用途） | 08-31 |
 | items-lite | **45548** | items.json 精簡（只留 id→繁中名，1.3MB；`scripts/build-items-lite.mjs`） | 08-11 |
 | items-market | **45548** | items.json 精簡（市場頁用的六欄，2.1MB；`scripts/build-items-market.mjs`）。**改完 items.json 這支與 items-lite 都要重跑** | 08-11 |
@@ -358,23 +358,25 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 
 - **2026-08-31（釣魚：補齊資料缺角，並補上圖示／用途／開窗看板）**：使用者問「跟釣魚相關的功能，有什麼可以新增」。盤點後發現該加的不是篩選，而是**頁面上已經在留白或說謊的地方**，七項一次做完。
 
-  **① 銛槍捕魚（水下）整批漏掉——203 條魚在頁面上是隱形的。**`fishes.json` 有 203 條魚 `spotName=null`（占前端顯示 1422 條的 14%）：卡片印「—（無固定釣場資料）」、地圖檢視完全看不到、地區篩選**永遠**篩不到（`regionOfSpot()` 回 `undefined`），而這頁**預設就是地圖檢視**。根因是 [`build-fishing.mjs`](../scripts/build-fishing.mjs) 只讀上游 data.js 的 `FISHING_SPOTS`（307 筆），沒讀 **`SPEARFISHING_SPOTS`（64 筆）**——那 203 條魚用到的 48 個 spotId **一個都不在** `FISHING_SPOTS`。**join 的鑰匙是 `GatheringPointBase`**：上游 spearfishing spot 的 `_id` 就是遊戲 `GatheringPointBase` 的 row id，拿它對 XIVAPI v2 `SpearfishingNotebook` 即可取得 PlaceName／TerritoryType／X／Y／等級。收 48 個（**上游沒收錄任何魚的 16 個點不收**——既有 307 個釣場沒有一個 `fishes` 是空的，且 `map-explorer` 的點是由魚反推的，空釣場永遠不會上圖）。`validate-links` 的 `fishes.spotId → fishing-spots` 斷鏈 **203 → 0**。
+  **① 魚叉捕魚（水下）整批漏掉——203 條魚在頁面上是隱形的。**`fishes.json` 有 203 條魚 `spotName=null`（占前端顯示 1422 條的 14%）：卡片印「—（無固定釣場資料）」、地圖檢視完全看不到、地區篩選**永遠**篩不到（`regionOfSpot()` 回 `undefined`），而這頁**預設就是地圖檢視**。根因是 [`build-fishing.mjs`](../scripts/build-fishing.mjs) 只讀上游 data.js 的 `FISHING_SPOTS`（307 筆），沒讀 **`SPEARFISHING_SPOTS`（64 筆）**——那 203 條魚用到的 48 個 spotId **一個都不在** `FISHING_SPOTS`。**join 的鑰匙是 `GatheringPointBase`**：上游 spearfishing spot 的 `_id` 就是遊戲 `GatheringPointBase` 的 row id，拿它對 XIVAPI v2 `SpearfishingNotebook` 即可取得 PlaceName／TerritoryType／X／Y／等級。收 48 個（**上游沒收錄任何魚的 16 個點不收**——既有 307 個釣場沒有一個 `fishes` 是空的，且 `map-explorer` 的點是由魚反推的，空釣場永遠不會上圖）。`validate-links` 的 `fishes.spotId → fishing-spots` 斷鏈 **203 → 0**。
 
   **② 25 個釣場名是 OpenCC 簡轉繁的產物。**`build-fishing.mjs` 第 41 行還在 `import * as OpenCC`，釣場名走「簡中 PlaceName.csv → 硬翻」，違反鐵則。改吃 `FishingSpot.csv` 第 24 欄的 PlaceName row id → `out_data/places.msgpack` 的 `twPlaces`：**307 個釣場 100% 查得到官方名**，25 個對不上——**女巫崖**被翻成「落魔崖」、**風之節點**被翻成「地場節點·風」、**奧修昂燈塔**被翻成「奧修昂火炬」、**白銀市集**→「白銀集市」、**糾纏濕地林**→「糾纏沼澤林」、**沖之岩近海**→「衝之巖近海」…。這不只是顯示問題：釣場詳情那顆 `📋 /coord X Y 地名` **會把錯地名複製進遊戲**。（`patch-fishing-multispot` 讓 107 條魚的 `spotName` 跟著同步。）
 
-  **③ 上游 `FISH` 有五個欄位從來沒抓**：`gig`（銛槍尺寸，203）／`aquarium`（水族箱水質＋尺寸，197）／`collectable`（收藏品門檻值，147）／`lure`（7.0 擬餌，13）／`dataMissing`。**這六個新欄位（含 `folkloreBook`）值為 null 就不寫 key**——大多數魚都是 null，照既有 schema 一律寫會讓前端載的 `fishes.json` 多出約 120KB（+18%）。
+  **③ 上游 `FISH` 有五個欄位從來沒抓**：`gig`（魚叉尺寸，203）／`aquarium`（水族箱水質＋尺寸，197）／`collectable`（收藏品門檻值，147）／`lure`（7.0 擬餌，13）／`dataMissing`。**這六個新欄位（含 `folkloreBook`）值為 null 就不寫 key**——大多數魚都是 null，照既有 schema 一律寫會讓前端載的 `fishes.json` 多出約 120KB（+18%）。
 
   **④ 傳承錄現在講得出是哪一本。**`folklore` 是 `GatheringSubCategory` 的 row id（12 個值），查 XIVAPI 拿到 12 本實體書的 itemId，回查 `items.json` 取繁中書名（`12701 魚類傳承錄·庫爾札斯篇` … `43886 亞歷山德里亞篇`），287 條魚的詳情從「需購買該地區釣魚傳承錄」改成「需要《魚類傳承錄·星外天域篇》」。
 
   **⑤ 魚圖示——釣魚頁本來是全站唯一一個 `<img>` 數為 0 的圖鑑頁**（1422/1449 條魚在 `items.json` 都有 icon）。新增 [`scripts/build-fish-uses.mjs`](../scripts/build-fish-uses.mjs) → `data/fish-uses.json`（61KB），同時帶出**⑥「這條魚有什麼用」**：197 條可當收藏品交付、1377 條可上市場板（詳情直接連 `../market/#item=<id>`，沿用收藏頁既有的深連結格式）、**145 個配方用到 96 種魚**（`data/recipes.json`，`craft-recipes.json` 只有 `hqIngredients` 查不到）。
 
-  **⑦ 新增「⏰ 開窗中」看板檢視。**原本只有「設成目標魚」才看得到倒數，想知道此刻哪些魚正在開窗得一張張翻卡片。看板吃同一組篩選、只列限時／限天氣的魚（其餘隨時可釣，列出來是雜訊），分「可釣中」與「1 小時內開窗」兩組依剩餘時間排序。清單的收合用**本頁自己的 `body.fi-nowmode`**，不動 `common.css`（同 §2.6 那顆雷：`renderGrid()` 每次重畫都會把 `#ct-grid` 的 inline display 洗回 `''`）。
+  **⑦ 新增「⏰ 開窗中」看板檢視。**原本只有「設成目標魚」才看得到倒數，想知道此刻哪些魚正在開窗得一張張翻卡片。看板吃同一組篩選、只列限時／限天氣的魚（其餘隨時可釣，列出來是雜訊），分「可釣中」與「1 小時內開窗」兩組依剩餘時間排序。清單的收合用**本頁自己的 `body.fi-nowmode`**，不動 `common.css`（同 §2.6 那顆雷：`renderGrid()` 每次重畫都會把 `#ct-grid` 的 inline display 洗回 `''`）。**倒數每秒跳**（使用者指定）：267 列每秒整塊 `innerHTML` 重畫會弄掉 hover、文字選取與捲動位置，所以每秒只改 `.nb-cd` 的文字；**組內排序不會因時間流逝而改變**（同組每個倒數以相同速率遞減），只有魚進出開窗（＝組成簽章變了）才整塊重畫。
+
+  **⑧ 魚餌下拉改成「未釣 n / m」**（使用者指定：要能看出當前掛的餌還有沒有沒釣到的魚）。分組標題也帶總覽「魚餌（起始餌）· 還有未釣的 85 / 85 種」。**選項順序固定依使用數遞減、不隨進度變動**——這是「一邊操作一邊看」的清單，依剩餘數排序會在每次勾選後整份洗牌（知識庫 §3.19）。更新走**就地改 `<option>` 文字**，不能走 `tracker.renderFilters()`（那會 `innerHTML=''` 重畫整個篩選區，下拉焦點與捲動位置全掉，引擎自己的註解也是這樣寫的）。另把**釣餌名併進搜尋框**——85 個餌的下拉用眼睛找太慢，直接打「蜜蜂餌」就列出 61 條。
 
   **刻意不做的一件事：`lure` 不顯示。**上游只給 `Ambitious`／`Modest`，這兩個 7.0 擬餌技能的**台服官方譯名沒有任何可查來源**，依鐵則「對不到就不顯示」，寧缺勿用英文／簡中頂替。資料仍留在 `fishes.json` 裡等台服名稱可查時再開。
 
-  **順手治本**：`build-fishing.mjs` 已同步改好（官方地名、銛槍釣場、五個欄位、傳承錄書），並補上兩件會安靜掉資料的事——**釣場 `patch` 沒有任何上游來源**（`patch-backfill-all.mjs` 明列 `fishing-spots` 為「無來源」），重建時改從舊檔帶過來，否則會洗掉 307 筆現有值；檔頭的「重建後必跑」清單補上 `patch-fishing-common.mjs`（本腳本只產得出上游的 1110 條魚，現行是 1449 條）。實跑驗證：輸出導到暫存區與現行資料逐欄比對，**釣場 355/355 零差異**，魚只有 31 筆 `spotName` 差異且全是 `patch-fishing-multispot` 負責回填的已知情形。
+  **順手治本**：`build-fishing.mjs` 已同步改好（官方地名、魚叉釣場、五個欄位、傳承錄書），並補上兩件會安靜掉資料的事——**釣場 `patch` 沒有任何上游來源**（`patch-backfill-all.mjs` 明列 `fishing-spots` 為「無來源」），重建時改從舊檔帶過來，否則會洗掉 307 筆現有值；檔頭的「重建後必跑」清單補上 `patch-fishing-common.mjs`（本腳本只產得出上游的 1110 條魚，現行是 1449 條）。實跑驗證：輸出導到暫存區與現行資料逐欄比對，**釣場 355/355 零差異**，魚只有 31 筆 `spotName` 差異且全是 `patch-fishing-multispot` 負責回填的已知情形。
 
-  **驗收**：`validate-data.mjs` **60 檔 0 error 0 warning**；`validate-links.mjs` 的 `fishes.spotId → fishing-spots` **0/1449**、`fishing-spots.coords.mapId → maps` **0/355**。headless Edge 實測 1440／390 × 深淺兩主題、**0 console error**、無水平溢出；篩選數字與資料完全對得上（🔱銛槍 **203**、📦收藏品 **197**、🐠水族箱 **193**）；開窗看板 71 開窗中／151 即將；地圖檢視搜「紅玉海底東部」→ 1 張地圖 1 個釣場 3 種魚。**手機 390 的看板列原本 126px**（七個格子塞四欄各自亂折），改成明確的三行五欄後 **78px**。SW 不需 bump（`bump-sw-version.mjs` 只雜湊 `assets/`＋`manifest`＋`sw.js`，本次沒動）——但 `sw.js` 對 json 是 stale-while-revalidate，**回訪使用者第一次載入仍會吃到舊的 `fishes.json`，第二次才更新**，這是站上資料更新一貫的行為。
+  **驗收**：`validate-data.mjs` **60 檔 0 error 0 warning**；`validate-links.mjs` 的 `fishes.spotId → fishing-spots` **0/1449**、`fishing-spots.coords.mapId → maps` **0/355**。headless Edge 實測 1440／390 × 深淺兩主題、**0 console error**、無水平溢出；篩選數字與資料完全對得上（🔱魚叉 **203**、📦收藏品 **197**、🐠水族箱 **193**）；開窗看板倒數逐秒遞減且 DOM 節點未重建、28 秒觀察 0 殘留列（標題數與實際列數恆一致）；魚餌下拉勾一條魚後標籤即時 61→60、取消後還原，搜尋「蜜蜂餌」得 61 條；地圖檢視搜「紅玉海底東部」→ 1 張地圖 1 個釣場 3 種魚。**手機 390 的看板列原本 126px**（七個格子塞四欄各自亂折），改成明確的三行五欄後 **78px**。SW 不需 bump（`bump-sw-version.mjs` 只雜湊 `assets/`＋`manifest`＋`sw.js`，本次沒動）——但 `sw.js` 對 json 是 stale-while-revalidate，**回訪使用者第一次載入仍會吃到舊的 `fishes.json`，第二次才更新**，這是站上資料更新一貫的行為。
 
 - **2026-08-11（台服版本閘門 7.15 → 7.21）**：`validate-data` 56 檔 **0 error 0 warning**；`validate-links` 的 `fishes.itemId → items` 由 35 降到 27、`recipes.itemId → items` 由 2308 降到 1590。動到 `assets/js/patch-gate.js`，已 bump `CACHE_VERSION`（`sgt-213828ee98` → `sgt-0558ff1cf5`）。
 

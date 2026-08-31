@@ -5,7 +5,7 @@
 //   Fish Tracker App data.js    FISH / FISHING_SPOTS / SPEARFISHING_SPOTS / ITEMS / WEATHER_TYPES
 //   thewakingsands FishingSpot.csv  spotId → PlaceName row id（第 24 欄）
 //   out_data/places.msgpack      PlaceName row id → 台服官方繁中地名（twPlaces）
-//   XIVAPI v2 SpearfishingNotebook  銛槍捕魚釣場的 PlaceName / TerritoryType / X / Y / 等級
+//   XIVAPI v2 SpearfishingNotebook  魚叉捕魚釣場的 PlaceName / TerritoryType / X / Y / 等級
 //   XIVAPI v2 GatheringSubCategory  folklore id → 傳承錄實體書 itemId
 //   data/items.json              itemId → 繁中名（魚名 + 餌料名 + 傳承錄書名）
 //
@@ -135,7 +135,7 @@ async function loadTwPlaceNames() {
   return map;
 }
 
-// 銛槍捕魚釣場：XIVAPI v2 SpearfishingNotebook。
+// 魚叉捕魚釣場：XIVAPI v2 SpearfishingNotebook。
 // 上游 SPEARFISHING_SPOTS 的 _id ＝遊戲 GatheringPointBase 的 row id，用它 join。
 // X/Y 已經是 0–2048 的地圖空間（非世界座標），換算只需 X/2048*41/c + 1。
 async function fetchSpearfishingNotebook() {
@@ -319,8 +319,8 @@ async function main() {
     });
   }
 
-  // ---------- 銛槍捕魚（水下）釣場 ----------
-  // 上游把這 64 個點放在另一個 section，舊版沒讀 → 203 條銛槍魚 spotName=null，
+  // ---------- 魚叉捕魚（水下）釣場 ----------
+  // 上游把這 64 個點放在另一個 section，舊版沒讀 → 203 條魚叉魚 spotName=null，
   // 卡片印「—（無固定釣場資料）」、地圖檢視看不到、地區篩選也篩不到。
   const mapsForSpear = JSON.parse(await readFile(join(DATA_DIR, "maps.json"), "utf8"));
   const MAP_BY_ID = new Map((mapsForSpear.data || mapsForSpear).map((m) => [m.id, m]));
@@ -347,13 +347,13 @@ async function main() {
       territoryId,
       coords: { mapId, x: toGameCoord(info.x, sf), y: toGameCoord(info.y, sf) },
       fishes,
-      spearfishing: true,                       // 銛槍捕魚（水下），前端要與一般垂釣區隔
+      spearfishing: true,                       // 魚叉捕魚（水下），前端要與一般垂釣區隔
       level: info.level ?? null,                // 捕魚人需求等級
       patch: prevSpotPatch.get(spotId) ?? (ps.length ? Math.min(...ps) : null),
     });
     spearAdded++;
   }
-  console.log(`  銛槍釣場：收 ${spearAdded} 個／跳過 ${spearSkipped} 個`);
+  console.log(`  魚叉釣場：收 ${spearAdded} 個／跳過 ${spearSkipped} 個`);
 
   spotsOut.sort((a, b) => a.id - b.id);
   console.log(`  釣點共 ${spotsOut.length} 筆`);
@@ -395,7 +395,7 @@ async function main() {
     }));
 
     const spotId = fish.location ?? null;
-    // 釣場名要同時吃一般釣場與銛槍釣場，所以回查已組好的 spotsOut。
+    // 釣場名要同時吃一般釣場與魚叉釣場，所以回查已組好的 spotsOut。
     const spot = spotId != null ? SPOT_OUT_BY_ID.get(spotId) : null;
 
     const row = {
@@ -431,7 +431,7 @@ async function main() {
 
     // 上游有、舊版沒抓的五欄。**null 就不寫這個 key**——
     // 大多數魚都是 null，一律寫會讓前端要載的 fishes.json 多出約 120KB（+18%）。
-    if (fish.gig != null) row.gig = fish.gig;                         // 銛槍尺寸 Small/Normal/Large/UNKNOWN
+    if (fish.gig != null) row.gig = fish.gig;                         // 魚叉尺寸 Small/Normal/Large/UNKNOWN
     if (fish.aquarium != null) row.aquarium = fish.aquarium;          // {water:'Freshwater'|'Saltwater', size:1-4}
     if (fish.collectable != null) row.collectable = fish.collectable; // 收藏品門檻值
     if (fish.lure != null) row.lure = fish.lure;                      // 'Ambitious' | 'Modest'（7.0 擬餌）

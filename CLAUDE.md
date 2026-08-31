@@ -58,7 +58,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 幻卡英文散文來源結構化 | `node scripts/patch-triple-triad-prose-sources.mjs`（`--apply`） |
 | 連結檢查 | `node scripts/validate-links.mjs` |
 | 重建魚的圖示與用途（改完 items／recipes／collectable-items 後） | `node scripts/build-fish-uses.mjs`（dry-run 預設／`--apply`；產 `data/fish-uses.json`，釣魚頁的圖示、收藏品旗標與料理用途） |
-| 釣魚資料缺角一次性補正（已跑完，留著備查） | `node scripts/patch-fishing-upstream-gaps.mjs`（dry-run 預設／`--apply`／`--offline`，冪等；銛槍釣場＋官方地名＋5 個上游欄位＋傳承錄書。`build-fishing.mjs` 已同步修好，重建不需再跑） |
+| 釣魚資料缺角一次性補正（已跑完，留著備查） | `node scripts/patch-fishing-upstream-gaps.mjs`（dry-run 預設／`--apply`／`--offline`，冪等；魚叉釣場＋官方地名＋5 個上游欄位＋傳承錄書。`build-fishing.mjs` 已同步修好，重建不需再跑） |
 | 壓縮前端會載入的 data/*.json（改完資料後） | `node scripts/minify-data.mjs`（dry-run 預設／`--apply` 寫入；`_meta.json` 刻意保留可讀） |
 | 刷新台服物品繁中名快照（**升台服版本的第一步**） | `node scripts/build-tw-items-msgpack.mjs`（dry-run 預設／`--apply`；跑完必接 `build-items.mjs`） |
 | 補新開放條目的繁中名（魚／園藝／鳥鞍／隨從） | `node scripts/patch-tw-names.mjs`（dry-run 預設／`--apply`，來源＝items.json，只補不覆蓋） |
