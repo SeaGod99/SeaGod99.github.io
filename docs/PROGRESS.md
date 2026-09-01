@@ -356,6 +356,16 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 
   **⑦ 量測**：headless Edge ＋ CDP，375／768／1440 × 亮暗兩主題 → 水平溢出 0、WCAG AA 未達標 0、console error 0。修掉的兩個真問題：`.chip` 的 `white-space: nowrap` 撞上「塔妮（格里達尼亞新街 X:11.07 Y:11.2）」，375px 下整頁溢出 56px；`h2:first-child { margin-top: 0 }` 因為結果區是另一個容器而誤命中，害小標黏在上一區的卡片上。**量測腳本自己也有雷**：把 `rgba(...,0.05)` 當成不透明色，於是 `--raise`／`--*-dim` 這類半透明底全被算成「純白底」「純綠底」，一次報 108 類假失敗；要保留 alpha 逐層合成，並跳過收合 `<details>` 內 0×0 的元素。
 
+- **2026-09-01（首頁移除收藏進度，該區塊改為純「進度備份」）**：使用者指定「首頁不用收藏進度」。
+  原本 `#progressDash` 是「我的收藏進度」，讀 12 個追蹤頁寫入的 `ffxiv_snap_*` 快照算出「合計 n / m（x%）」加一條總進度條。
+  **移除進度顯示，但保留匯出／匯入全站進度**——那兩顆鈕剛好也放在同一個區塊裡，卻是換裝置時**唯一**的備份途徑，
+  跟「顯示進度」是兩回事，整塊砍掉會連帶弄丟一個沒人要求移除的功能。
+  改動：區塊改名「💾 進度備份」、拿掉進度條／百分比／空狀態訊息與相關 CSS、說明文字改成講備份時機，
+  區塊**恆常顯示**（原本沒逛過追蹤頁時要靠 JS 才打開）。JS 端刪掉 `REG` 表與加總邏輯，不再讀 `ffxiv_snap_*`。
+  **`collection-tracker.js` 仍會寫那些快照（`snapKey`），刻意留著不動**——動共用引擎要連帶回歸 12 個追蹤頁，
+  而那幾筆快照很小、又會被備份一起帶走，留著無害。
+  驗收：首頁 0 console error、無水平溢出，區塊只剩標題／說明／兩顆鈕，匯出鈕實測仍會產生備份檔。
+
 - **2026-08-31（釣魚：補齊資料缺角，並補上圖示／用途／開窗看板）**：使用者問「跟釣魚相關的功能，有什麼可以新增」。盤點後發現該加的不是篩選，而是**頁面上已經在留白或說謊的地方**，七項一次做完。
 
   **① 魚叉捕魚（水下）整批漏掉——203 條魚在頁面上是隱形的。**`fishes.json` 有 203 條魚 `spotName=null`（占前端顯示 1422 條的 14%）：卡片印「—（無固定釣場資料）」、地圖檢視完全看不到、地區篩選**永遠**篩不到（`regionOfSpot()` 回 `undefined`），而這頁**預設就是地圖檢視**。根因是 [`build-fishing.mjs`](../scripts/build-fishing.mjs) 只讀上游 data.js 的 `FISHING_SPOTS`（307 筆），沒讀 **`SPEARFISHING_SPOTS`（64 筆）**——那 203 條魚用到的 48 個 spotId **一個都不在** `FISHING_SPOTS`。**join 的鑰匙是 `GatheringPointBase`**：上游 spearfishing spot 的 `_id` 就是遊戲 `GatheringPointBase` 的 row id，拿它對 XIVAPI v2 `SpearfishingNotebook` 即可取得 PlaceName／TerritoryType／X／Y／等級。收 48 個（**上游沒收錄任何魚的 16 個點不收**——既有 307 個釣場沒有一個 `fishes` 是空的，且 `map-explorer` 的點是由魚反推的，空釣場永遠不會上圖）。`validate-links` 的 `fishes.spotId → fishing-spots` 斷鏈 **203 → 0**。

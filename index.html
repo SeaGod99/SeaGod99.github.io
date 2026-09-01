@@ -302,12 +302,10 @@
     .section-life    .tool-card:hover { border-color: rgba(74,222,128,0.4); }
     .section-life    .tool-card:hover::before { background: linear-gradient(90deg, var(--green), transparent); }
 
-    /* ── 收藏進度儀表板 ── */
-    /* 進度只呈現「合計一行」（2026-07-28 使用者指定）：12 條個別進度條資訊量太大，
-       首頁要的是一眼看到總進度，細節到各追蹤頁看就好。 */
-    .pd-bar { height: 8px; background: var(--bg-surface); border-radius: 4px; overflow: hidden; }
-    .pd-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--purple), var(--blue)); transition: width 0.4s; }
-    .pd-bar.done .pd-fill { background: linear-gradient(90deg, var(--gold), var(--gold-light)); }
+    /* ── 進度備份 ── */
+    /* 2026-09-01 使用者指定：首頁不放收藏進度。原本這裡有一條「合計 n / m」的總進度條，
+       已移除（各追蹤頁自己都有進度條，首頁重複呈現沒有增益）。
+       **匯出／匯入全站進度留著**——那是換裝置時唯一的備份途徑，與進度顯示是兩回事。 */
     /* 最近使用：26 個工具的卡片牆要捲很久，常用的那幾個放最上面一排直接點 */
     .recent-bar {
       display: flex; align-items: center; flex-wrap: wrap; gap: 10px;
@@ -341,7 +339,6 @@
       white-space: nowrap;
     }
     .pd-btn:hover { color: var(--text-primary); border-color: var(--border-hover); }
-    .pd-empty { font-size: 12.5px; color: var(--text-muted); padding: 4px 0; }
 
     /* ── WIP Banner ── */
     .wip-banner {
@@ -423,16 +420,13 @@
     <div class="recent-chips" id="recentChips"></div>
   </div>
 
-  <!-- ── 我的收藏進度（取自各追蹤頁寫入的本機快照）── -->
-  <section class="section section-collect" id="progressDash" style="display:none">
+  <!-- ── 進度備份（各追蹤頁的進度都存在這個瀏覽器裡，換裝置要靠這裡搬）── -->
+  <section class="section" id="progressDash">
     <div class="section-header">
-      <span class="section-icon">📈</span>
-      <h2 class="section-title">我的收藏進度</h2>
-      <span class="section-count" id="pdTotal"></span>
+      <span class="section-icon">💾</span>
+      <h2 class="section-title">進度備份</h2>
     </div>
-    <div class="pd-bar" id="pdBar" style="display:none"><div class="pd-fill" id="pdFill" style="width:0"></div></div>
-    <p class="pd-empty" id="pdEmpty" style="display:none">尚無進度紀錄——開啟任一追蹤頁後會自動出現在這裡；換裝置時可用下方「匯入全站進度」還原備份。</p>
-    <p class="pd-hint">進度為此瀏覽器的本機紀錄——各追蹤頁開啟過一次後就會自動計入合計；個別項目的進度請到各追蹤頁查看。</p>
+    <p class="pd-hint">所有追蹤頁的進度都只存在這個瀏覽器裡。換裝置、換瀏覽器或清快取之前，先匯出備份；到新環境再匯入還原。各頁的進度請到該追蹤頁查看。</p>
     <div class="pd-actions">
       <button class="pd-btn" id="pdExportBtn" title="將所有追蹤頁的進度打包成單一備份檔">💾 匯出全站進度</button>
       <button class="pd-btn" id="pdImportBtn" title="還原「匯出全站進度」產生的備份檔">📥 匯入全站進度</button>
@@ -898,48 +892,11 @@
   }
 })();
 
-/* 收藏進度儀表板：讀各追蹤頁寫入的 ffxiv_snap_* 快照（無需載入資料檔） */
+/* 進度備份：把所有追蹤頁的本機進度打包／還原。
+   2026-09-01 起首頁**不再呈現收藏進度**（使用者指定），所以這裡不再讀 ffxiv_snap_* 快照。
+   `collection-tracker.js` 仍會寫那些快照（snapKey），留著不動——動共用引擎要連帶回歸 12 個追蹤頁，
+   而那幾筆快照很小且會被下面的備份一起帶走，留著無害。 */
 (function () {
-  // 只用來加總，不再逐項渲染（2026-07-28 使用者指定只留合計一行）。
-  // name 保留當作「這個 key 是哪一頁」的說明，別刪。
-  var REG = [
-    { key: 'mounts',      name: '坐騎' },
-    { key: 'minions',     name: '寵物' },
-    { key: 'orchestrion', name: '樂譜' },
-    { key: 'emotes',      name: '表情' },
-    { key: 'hairstyles',  name: '髮型' },
-    { key: 'barding',     name: '鳥鞍' },
-    { key: 'triad',       name: '幻卡' },
-    { key: 'bluemagic',   name: '青魔法術' },
-    { key: 'explog',      name: '探索筆記' },
-    { key: 'aether',      name: '風脈泉' },
-    { key: 'fishing',     name: '釣魚紀錄' },
-    { key: 'gatherlog',   name: '採集紀錄' },
-  ];
-  var rows = [];
-  REG.forEach(function (r) {
-    try {
-      var s = JSON.parse(localStorage.getItem('ffxiv_snap_' + r.key) || 'null');
-      if (s && typeof s.c === 'number' && typeof s.t === 'number' && s.t > 0) rows.push({ r: r, c: s.c, t: s.t });
-    } catch (e) {}
-  });
-
-  if (rows.length) {
-    // 只呈現合計：一行數字＋一條總進度條。各項細節到該追蹤頁看。
-    var sumC = 0, sumT = 0;
-    rows.forEach(function (x) { sumC += x.c; sumT += x.t; });
-    var pct = Math.round(sumC / sumT * 100);
-    document.getElementById('pdTotal').textContent =
-      '合計 ' + sumC + ' / ' + sumT + '（' + pct + '%）';
-    var bar = document.getElementById('pdBar');
-    bar.style.display = '';
-    bar.classList.toggle('done', sumC >= sumT);
-    document.getElementById('pdFill').style.width = pct + '%';
-  } else {
-    // 沒逛過任何追蹤頁：仍顯示區塊，讓「匯入全站進度」可用（換裝置還原用）
-    document.getElementById('pdEmpty').style.display = '';
-  }
-  document.getElementById('progressDash').style.display = '';
 
   /* ── 全站進度備份：打包所有 ffxiv_* localStorage key 成單一 JSON ── */
   var BACKUP_SCHEMA = 'seagod-toolbox-backup';

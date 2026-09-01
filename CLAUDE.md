@@ -36,7 +36,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 純靜態站，**沒有建置步驟、沒有測試框架**——HTML 直接開就是成品。`package.json` 只有資料腳本用的三個依賴（msgpack／opencc-js／sharp），沒有 npm scripts。
 
 ```
-index.html              # 入口頁（含全站進度儀表板與備份匯出入）
+index.html              # 入口頁（含進度備份匯出入；2026-09-01 起不再呈現收藏進度）
 tools/<name>/           # 各工具頁，一頁一目錄，index.html 自帶樣式與邏輯
                         #（邏輯長到難維護就抽成同目錄的 .js，如 tools/market/market.js；
                         #  別放 assets/js/——那裡是跨頁共用的東西）
