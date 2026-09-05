@@ -71,12 +71,27 @@ const DYEABLE_SLOTS = ["weapon", "head", "body", "hands", "legs", "feet"];
    數字是**本站訂的估值、不是遊戲數據**，意思是「你大概願意花多少錢換掉這個麻煩」：
      5,000  肯花時間就一定拿得到（詩學／軍票／金碟／振興票）
     20,000  要先養別的東西（部族聲望／製作職業／PvP／不明貨幣）
+   100,000  本站查不到取得方式（多半是剛開放、離線資料還沒收錄的新道具）
    200,000  可能根本拿不到（零式戰利品／限時活動／隨機掉落／一次性任務）
-   要調整就改這裡，別去動比較器。 */
+   要調整就改這裡，別去動比較器。
+
+   unknown 為什麼要這麼貴（week 449 踩到）：「取得方式未收錄」的件在資料裡是
+   gil=null、gate=null，等於**免費又沒門檻**，比較器只在第三順位的 unknown 數
+   才看得到它。結果 80 分方案選了取得方式不明的羅蘭紫染劑，標題卻寫「42 金幣・
+   無門檻」——正是這套改版要消滅的自信假答案。查不到怎麼拿的東西必須排在所有
+   說得出作法的門檻後面：使用者至少能照著「去打零式」行動，卻無法照著「不知道」行動。 */
 const GATE_GIL = {
   tome: 5000, grind: 5000, content: 5000,
   currency: 20000, tribe: 20000, craft: 20000, pvp: 20000,
+  unknown: 100000,
   event: 200000, raid: 200000, rng: 200000, once: 200000,
+};
+
+/** 取得方式未收錄 ＝ 使用者沒辦法照著做，一律當門檻，不能當免費。 */
+const UNKNOWN_GATE = {
+  kind: "unknown",
+  label: "取得方式未收錄",
+  note: "本站的離線資料查不到這件怎麼拿（多半是剛開放的新道具），沒辦法保證拿得到、也估不出花費",
 };
 
 async function getJson(url, cacheName) {
@@ -294,7 +309,7 @@ function enrich(id, slot) {
     how: describeSource(best),
     gil,
     access: accessOf(best),
-    gate: best?.gate ?? null,
+    gate: best?.gate ?? (accessOf(best) === "none" ? UNKNOWN_GATE : null),
     vendor: best?.npcs?.[0] ?? null,
     currency: best?.currency ?? null,
     // 其他管道只留一行摘要（不帶 NPC 物件）——84 件 × 完整來源會讓資料檔膨脹三倍，
@@ -323,7 +338,8 @@ for (const [slot, d] of Object.entries(dyesFresh ? state.dyeData : {})) {
     slot, slotName: SLOT_TC[slot],
     id: db.id, name: db.short, fullName: db.name, nameEn: db.nameEn,
     color: db.color, family: d.plus1, marketable: db.marketable,
-    access: db.access, gil: db.gil, gate: db.bestGate,
+    access: db.access, gil: db.gil,
+    gate: db.bestGate ?? (db.access === "none" ? UNKNOWN_GATE : null),
     how: describeSource(db.best), vendor: db.best?.npcs?.[0] ?? null, currency: db.best?.currency ?? null,
   };
 }
@@ -439,7 +455,7 @@ function solve(target, { openOnly = false } = {}) {
       const c = effGil(item);
       if (c == null) unknown++;
       else gil += c;
-      if (item.gil == null) market.push({ slot: p.slot, id: item.id, name: item.name, how: item.how, marketGil: item.marketGil ?? null });
+      if (item.gil == null) market.push({ slot: p.slot, id: item.id, name: item.name, how: item.how, marketGil: item.marketGil ?? null, marketable: item.marketable, access: item.access });
       if (item.gate) gates.set(gateKey(item.gate), { ...item.gate, where: `${SLOT_TC[p.slot]}裝備` });
       useHints.push({ slot: p.slot, item });
     }
@@ -451,7 +467,7 @@ function solve(target, { openOnly = false } = {}) {
       const c = effGil(d);
       if (c == null) unknown++;
       else gil += c;
-      if (d.gil == null) market.push({ slot: d.slot, id: d.id, name: d.fullName, how: d.how, marketGil: d.marketGil ?? null });
+      if (d.gil == null) market.push({ slot: d.slot, id: d.id, name: d.fullName, how: d.how, marketGil: d.marketGil ?? null, marketable: d.marketable, access: d.access });
       if (d.gate) gates.set(gateKey(d.gate), { ...d.gate, where: `${d.slotName}染劑` });
       useDyes.push(d);
     }
@@ -592,6 +608,12 @@ const out = {
     noTwName: [...new Set(noTw)],
     looseMatched: [...new Set(loose)], // 靠所有格容錯救回來的，每次都要人看一眼
     marketRefAt: priceAt, // 市場板參考價的抓取時間（只用於排序，顯示以前端即時查價為準）
+    // 離線來源查不到取得方式的件。已當門檻處理（UNKNOWN_GATE），列出來是為了知道
+    // 資料缺口有多大——數字一直長就代表 obtainable-methods／shops 的 dump 太舊了。
+    unknownSource: [
+      ...slotsOut.flatMap((sl) => sl.items.filter((i) => i.access === "none").map((i) => `${sl.slotName}／${i.name}`)),
+      ...Object.values(dyes).filter((d) => d.access === "none").map((d) => `${d.slotName}染劑／${d.fullName}`),
+    ],
   },
 };
 
@@ -607,11 +629,14 @@ if (out.quality.looseMatched.length) {
   console.log(`   ⚠️ 來源品名少了所有格、以寬鬆比對救回 ${out.quality.looseMatched.length} 件（請確認對得沒錯）：`);
   for (const l of out.quality.looseMatched) console.log(`      ${l}`);
 }
+if (out.quality.unknownSource.length) {
+  console.log(`   ⚠️ 有 ${out.quality.unknownSource.length} 件取得方式未收錄，已當門檻處理：${out.quality.unknownSource.join("、")}`);
+}
 for (const p of plans) {
   const g = p.cost.gates.map((x) => x.label).join("、") || "無門檻";
   console.log(`   ${p.title}：${p.score} 分・${p.cost.gil.toLocaleString("en-US")} 金幣・${p.cost.itemCount} 件裝備 + ${p.cost.dyeCount} 支染劑・門檻＝${g}`);
   if (p.openAlternative) console.log(`     └ 無門檻版：${p.openAlternative.cost.gil.toLocaleString("en-US")} 金幣`);
-  if (p.cost.market.length) console.log(`     └ 另有 ${p.cost.market.length} 件需製作／市場板：${p.cost.market.map((m) => m.name).join("、")}`);
+  if (p.cost.market.length) console.log(`     └ 另有 ${p.cost.market.length} 件沒有 NPC 固定價：${p.cost.market.map((m) => m.name).join("、")}`);
   if (p.openAlternativeNote) console.log(`     └ ${p.openAlternativeNote}`);
 }
 console.log(`   計分驗算：${out.scoring.audit.map((a) => `${a.key} ${a.calc}分`).join("／")}`);

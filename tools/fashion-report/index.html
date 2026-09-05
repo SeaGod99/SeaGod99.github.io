@@ -284,6 +284,13 @@ const whereBtn = v => !v ? ''
 
 const gateChip = g => g ? `<span class="chip gate" title="${esc(g.note ?? '')}">⚠ ${esc(g.label)}</span>` : '';
 
+/* 「取得方式未收錄」＝ 本站離線資料查不到這件怎麼拿，**不是免費**。腳本會給它一個
+   unknown 門檻（見 build-fashion-report.mjs 的 UNKNOWN_GATE），所以這裡印一顆門檻樣式
+   的 chip 就夠；照原本的寫法會變成「—」加一顆一模一樣的 gateChip。 */
+const howChip = (v, cls, text) => v.access === 'none'
+  ? `<span class="chip gate" title="${esc(v.gate?.note ?? '')}">⚠ 取得方式未收錄</span>`
+  : `<span class="chip ${cls}">${text}</span>${gateChip(v.gate)}`;
+
 /* ── 方案卡 ─────────────────────────────────────────────────── */
 function gearCell(row) {
   const g = row.gear;
@@ -291,8 +298,7 @@ function gearCell(row) {
     return `
       <img class="ico" src="${ICON(g.icon)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">
       <span class="nm fl-name" data-copy="${esc(g.name)}" title="點擊複製名稱">${esc(g.name)}</span>
-      <span class="chip ${g.srcType === 'npc-gil' ? 'gil' : g.srcType === 'craft' ? 'craft' : g.marketable ? 'mk' : ''}">${esc(g.how)}</span>
-      ${gateChip(g.gate)}
+      ${howChip(g, g.srcType === 'npc-gil' ? 'gil' : g.srcType === 'craft' ? 'craft' : g.marketable ? 'mk' : '', esc(g.how))}
       ${whereBtn(g.vendor)}`;
   }
   if (g.kind === 'own') {
@@ -315,8 +321,7 @@ function dyeCell(dye, pending, slot) {
   return `
     <span class="swatch" style="background:${esc(dye.color)}"></span>
     <span class="nm">${esc(dye.name)}</span>
-    <span class="chip ${dye.gil != null && !dye.gate ? 'gil' : ''}">${dye.gil != null ? gil(dye.gil) + ' 金幣' : esc(dye.how)}</span>
-    ${gateChip(dye.gate)}
+    ${howChip(dye, dye.gil != null && !dye.gate ? 'gil' : '', dye.gil != null ? gil(dye.gil) + ' 金幣' : esc(dye.how))}
     ${whereBtn(dye.vendor)}`;
 }
 
@@ -336,14 +341,23 @@ function planCard(p, dyesPending) {
       <ul>${c.gates.map(g => `<li><b>${esc(g.label)}</b>（${esc(g.where)}）${g.note ? '——' + esc(g.note) : ''}</li>`).join('')}</ul>
     </div>` : '';
 
+  /* 「沒有 NPC 固定價」有四種不同的情形，混成同一句會誤導（week 449：一支取得方式
+     未收錄、且不可交易的染劑，被講成「市場板沒人上架」）。 */
+  const marketWhy = m =>
+    m.marketGil != null
+      ? `，上面的金幣總額已用<b style="color:var(--blue)">參考價 ${gil(m.marketGil)} 金幣</b>估算，實際成交價會浮動`
+    : m.access === 'none'
+      ? `，<b style="color:var(--blue)">本站查不到它的取得方式與價格</b>，總額<b style="color:var(--blue)">沒有</b>把它算進去`
+    : m.marketable
+      ? `，<b style="color:var(--blue)">目前市場板查不到報價</b>（多半是沒人上架），總額<b style="color:var(--blue)">沒有</b>把它算進去`
+      : `，<b style="color:var(--blue)">沒有金幣標價</b>，總額<b style="color:var(--blue)">沒有</b>把它算進去`;
+
   const market = c.market?.length ? `
     <div class="gates" style="border-color:rgba(127,182,232,.35);background:rgba(127,182,232,.06)">
       <div class="g-title" style="color:var(--blue)">💠 有 ${c.market.length} 件沒有 NPC 固定價</div>
-      <ul>${c.market.map(m => `<li><b style="color:var(--blue)">${esc(m.name)}</b>——${esc(m.how)}${
-        m.marketGil != null
-          ? `，上面的金幣總額已用<b style="color:var(--blue)">參考價 ${gil(m.marketGil)} 金幣</b>估算，實際成交價會浮動`
-          : `，<b style="color:var(--blue)">目前市場板查不到報價</b>（多半是沒人上架），總額<b style="color:var(--blue)">沒有</b>把它算進去`
-      }</li>`).join('')}</ul>
+      <ul>${c.market.map(m => `<li><b style="color:var(--blue)">${esc(m.name)}</b>${
+        m.access === 'none' ? '' : '——' + esc(m.how)
+      }${marketWhy(m)}</li>`).join('')}</ul>
     </div>` : '';
 
   const alt = p.openAlternative ? `
@@ -391,12 +405,8 @@ function dyeSection(d) {
         </div>
       </div>
       <div class="dye-how">
-        <span class="chip ${v.gil != null && !v.gate ? 'gil' : ''}">${
-          v.gil != null ? gil(v.gil) + ' 金幣'
-          : v.access === 'none' ? '取得方式未收錄'   /* 不是「免費」，是本站還沒有這支染劑的來源資料 */
-          : esc(v.how)}</span>
+        ${howChip(v, v.gil != null && !v.gate ? 'gil' : '', v.gil != null ? gil(v.gil) + ' 金幣' : esc(v.how))}
         ${v.marketable ? '<span class="chip mk">可上市場板</span>' : '<span class="chip">不可交易</span>'}
-        ${gateChip(v.gate)}
         ${whereBtn(v.vendor)}
       </div>
     </div>`).join('');
@@ -436,13 +446,13 @@ function itemRow(i) {
         <span class="fl-name" data-copy="${esc(i.name)}" title="點擊複製名稱">${esc(i.name)}</span>
         ${i.restrict ? `<span class="chip gate">${esc(i.restrict)}</span>` : ''}
       </div>
-      <div class="fl-how ${i.gil != null ? 'gil' : ''}">${esc(i.how)}</div>
+      <div class="fl-how ${i.gil != null ? 'gil' : ''}">${i.access === 'none' ? '取得方式未收錄' : esc(i.how)}</div>
       <div class="fl-l2">
         <span class="chip">Lv${i.equipLevel ?? '?'}・裝等 ${i.ilvl ?? '?'}</span>
         <span class="chip">${esc(i.jobLabel ?? '全職業')}</span>
         <span class="chip ${i.dyeCount ? '' : 'gate'}">${i.dyeCount ? '可染色' : '不可染色'}</span>
         ${i.marketable ? `<a class="chip mk" href="../market/#item=${i.id}" target="_blank" rel="noopener">市場板查價 ↗</a>` : ''}
-        ${gateChip(i.gate)}
+        ${i.access === 'none' ? '' : gateChip(i.gate)}
         ${whereBtn(i.vendor)}
         <span class="chip">${esc(i.patch ?? '')}</span>
         <span class="chip" style="cursor:pointer" data-copy="${esc(i.nameEn ?? i.name)}" title="複製英文名，查國際服攻略用">EN</span>
