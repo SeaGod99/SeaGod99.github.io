@@ -687,10 +687,19 @@ def main():
     led = json.loads(data_led.read_text(encoding="utf-8")) if data_led.exists() else {"decisions": []}
     by_id = {d["id"]: d for d in led.get("decisions", []) if d.get("id")}
     root_led = ROOT / "review_decisions.json"
+    # ⚠ 「同 id 以最新為準」沒有逐筆時間戳，只能拿檔案 mtime 判斷誰新。root 是 review.html 的
+    # 匯出檔（gitignored、只在本機），匯出後會一直留著；若它比帳本舊，代表帳本後來又被
+    # check_duplicates --apply 之類寫過——這時無條件讓 root 蓋帳本，會把新決定每次建置都
+    # 蓋回舊值（2026-09-15 db73a0d9 的 remove 就是這樣被 6 月的 claude 蓋掉的，見知識庫 §4.44）。
     if root_led.exists():
-        for d in json.loads(root_led.read_text(encoding="utf-8")).get("decisions", []):
-            if d.get("id"):
-                by_id[d["id"]] = d
+        root_newer = (not data_led.exists()) or root_led.stat().st_mtime > data_led.stat().st_mtime
+        if root_newer:
+            for d in json.loads(root_led.read_text(encoding="utf-8")).get("decisions", []):
+                if d.get("id"):
+                    by_id[d["id"]] = d
+        else:
+            print(f"  ⚠ root review_decisions.json 比 data/ 帳本舊，視為已合併過、本次不套用"
+                  f"（要重新匯入請重新從 review.html 匯出）")
     merged = sorted(by_id.values(), key=lambda d: d["id"])
     new_txt = json.dumps({"_note": "決定帳本：累積所有 review.html 決定（同 id 取最新）。"
                           "root 檔每次匯出只含當前佇列，移除/確認須落地此處才不復活。",

@@ -1,6 +1,6 @@
 {
 "_meta": {
-"generated": "2026-09-07 19:32:10"
+"generated": "2026-09-17 19:46:30"
 },
 "mirage": [
 {
@@ -12129,11 +12129,23 @@
 },
 {
 "row_id": 52601,
-"pieces": {}
+"pieces": {
+"Head": 52428,
+"Body": 52429,
+"Hands": 52430,
+"Legs": 52431,
+"Feet": 52432
+}
 },
 {
 "row_id": 52602,
-"pieces": {}
+"pieces": {
+"Head": 50744,
+"Body": 50745,
+"Hands": 50746,
+"Legs": 50747,
+"Feet": 50748
+}
 },
 {
 "row_id": 52603,
@@ -12368,7 +12380,7 @@
 "200": "PLD MNK WAR DRG BRD WHM BLM SMN SCH NIN MCH DRK AST SAM RDM GNB DNC RPR SGE VPR PCT",
 "201": "PLD MNK WAR DRG BRD WHM BLM SMN SCH NIN MCH DRK AST SAM RDM GNB DNC RPR SGE VPR PCT",
 "202": "MIN BTN",
-"203": "",
+"203": "BST",
 "204": "",
 "205": ""
 },
@@ -17030,12 +17042,12 @@
 "ja": "コスモオペレーター・アタイア"
 },
 "52601": {
-"en": "",
-"ja": ""
+"en": "Successor's Attire",
+"ja": "サクセサー・アタイア"
 },
 "52602": {
-"en": "",
-"ja": ""
+"en": "Beastmaster's Attire",
+"ja": "ビーストマスターアタイア"
 },
 "52603": {
 "en": "Cosmic Explorer's Attire [F]",
