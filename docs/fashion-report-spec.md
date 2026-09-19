@@ -193,7 +193,7 @@
 node scripts/validate-data.mjs
 ```
 
-前端回歸在本機沒有 headless Chromium，改用 **DOM stub 跑 render()**（不需要 jsdom）：塞一份假的 `document`／`fetch`／`setInterval`，import 頁面的 module script，然後檢查產出的 HTML 有沒有各區塊、有沒有洩漏 `undefined`／`NaN`／`[object Object]`。狀態機要**七個狀態各跑一次**（六個正常狀態＋資料超前防呆），做法是把 `Date.now` 換成各狀態對應的時刻。
+前端回歸在本機沒有 headless Chromium，改用 **DOM stub 跑 render()**（不需要 jsdom）——已收成 `scripts/validate-fashion-render.mjs`：塞一份假的 `document`／`fetch`／`setInterval`，import 頁面的 module script，然後檢查產出的 HTML 有沒有各區塊、有沒有洩漏 `undefined`／`NaN`／`[object Object]`。狀態機要**七個狀態各跑一次**（六個正常狀態＋資料超前防呆），做法是把 `Date.now` 換成各狀態對應的時刻；另外多跑一輪把兩套方案對調，讓分頁裡「點了才畫」的第二張卡（門檻與「沒有 NPC 固定價」區塊只在那張卡上）也經過真正的 render。
 
 ---
 

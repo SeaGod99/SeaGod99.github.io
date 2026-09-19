@@ -25,6 +25,7 @@
 ```bash
 node scripts/build-fashion-report.mjs        # 產出 data/fashion-report.json
 node scripts/validate-data.mjs               # 資料驗收（必跑）
+node scripts/validate-fashion-render.mjs     # 頁面 render 回歸（必跑，七個週狀態）
 ```
 
 腳本會自己做完這些事，全部有驗收門檻，過不了就中止不出檔：
@@ -122,12 +123,15 @@ node scripts/build-fashion-themes.mjs   # data/fashion-themes.json   主題預�
 ## 4. 驗收
 
 ```bash
-node scripts/validate-data.mjs          # 必跑
+node scripts/validate-data.mjs              # 必跑
+node scripts/validate-fashion-render.mjs    # 必跑：DOM stub 把頁面跑過七個週狀態（含第二張方案卡）
 ```
 
-再開 `tools/fashion-report/index.html` 確認：週狀態列、兩套方案的成本摘要與門檻警示、染色表色票與取得方式、完整清單的篩選排序都正常，無 console error。
+`validate-fashion-render.mjs` 不需要瀏覽器，直接 import 頁面的 module script、換掉 `Date.now` 逐一渲染六個正常狀態＋資料超前防呆＋方案對調（讓分頁裡的第二張卡也畫一次），檢查沒有洩漏 `undefined`／`NaN`。產出的 HTML 放在 `out_data/cache/fashion-render/`（不進 git），有疑問可以打開看。
 
-> 沒有瀏覽器可用時，可用 DOM stub 跑一次 render 回歸（做法見 spec §5「驗收」）。
+> 這支以前放在 scratchpad，被系統清掉三次、每次都要重寫，2026-09-19 起收進 repo。
+
+有瀏覽器時再開 `tools/fashion-report/index.html` 確認：週狀態列、兩套方案的成本摘要與門檻警示、染色表色票與取得方式、完整清單的篩選排序都正常，無 console error。
 
 ---
 
