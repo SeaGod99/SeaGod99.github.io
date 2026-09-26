@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FF14 副本圖鑑 — 520 個副本、討伐戰與大型任務，依資料片與類型分組，列出等級需求、同步等級、人數、時限與解鎖任務">
+  <title>副本圖鑑 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <link rel="stylesheet" href="../../assets/css/tool-header.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 109.375%; }
+    body { background: var(--bg-base); color: var(--text); font-family: var(--font-sans); min-height: 100vh; }
+
+    .controls { max-width: var(--w-content); margin: 0 auto; padding: 1rem 1.5rem 0.5rem; display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; }
+    select.sel, input.search {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px;
+      color: var(--text-dim); padding: 0.38rem 0.6rem; font-size: 0.8rem; outline: none; font-family: inherit;
+    }
+    select.sel { cursor: pointer; max-width: 15rem; }
+    input.search { flex: 1; min-width: 9rem; }
+    input.search:focus, select.sel:focus { border-color: var(--gold); color: var(--text); }
+
+    .status { max-width: var(--w-content); margin: 0 auto; padding: 0 1.5rem 0.5rem; font-size: 0.75rem; color: var(--text-muted); }
+    .note { max-width: var(--w-content); margin: 0 auto; padding: 0 1.5rem 0.8rem; font-size: 0.73rem; color: var(--text-muted); line-height: 1.7; }
+    .note b { color: var(--text-dim); font-weight: 600; }
+
+    .body-wrap { max-width: var(--w-content); margin: 0 auto; padding: 0 1.5rem 2.5rem; }
+
+    .exp-head {
+      display: flex; align-items: baseline; gap: 0.55rem;
+      margin: 1.3rem 0 0.6rem; padding-bottom: 0.35rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .exp-head:first-child { margin-top: 0.2rem; }
+    .exp-name { font-size: 0.95rem; font-weight: 700; color: var(--gold); }
+    .exp-count { font-size: 0.74rem; color: var(--text-muted); }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(15.5rem, 1fr)); gap: 0.7rem; }
+
+    .duty {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md);
+      overflow: hidden; display: flex; flex-direction: column;
+    }
+    .duty:hover { border-color: var(--border-hover); }
+
+    /* 圖是 1:0.42 的橫幅（遊戲內副本選單用圖），先用 aspect-ratio 佔位避免載入時跳版 */
+    .duty-img { position: relative; width: 100%; aspect-ratio: 1 / 0.42; background: var(--bg-base); overflow: hidden; }
+    .duty-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .duty-img.no-img { display: flex; align-items: center; justify-content: center; }
+    .duty-img.no-img::after {
+      content: '⚔'; font-size: 1.6rem; color: var(--text-muted); opacity: 0.35;
+    }
+    .duty-lv {
+      position: absolute; left: 0; bottom: 0;
+      background: color-mix(in srgb, var(--bg-base) 82%, transparent);
+      color: var(--gold-light); font-size: 0.72rem; font-weight: 700;
+      padding: 0.15rem 0.45rem; border-top-right-radius: 6px;
+    }
+
+    .duty-body { padding: 0.55rem 0.7rem 0.65rem; display: flex; flex-direction: column; gap: 0.35rem; flex: 1; }
+    .duty-name { font-size: 0.86rem; font-weight: 700; color: var(--text); line-height: 1.4; }
+
+    .tags { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+    .tag {
+      font-size: 0.68rem; padding: 0.1rem 0.36rem; border-radius: 4px;
+      background: var(--bg-base); border: 1px solid var(--border); color: var(--text-muted);
+    }
+    .tag.kind { color: var(--text-dim); }
+    .tag.high { color: var(--orange); border-color: color-mix(in srgb, var(--orange) 35%, transparent); }
+
+    .facts { font-size: 0.73rem; color: var(--text-muted); line-height: 1.65; }
+    .facts b { color: var(--text-dim); font-weight: 600; }
+    .unlock {
+      font-size: 0.73rem; color: var(--text-muted); line-height: 1.6;
+      border-top: 1px dashed var(--border); padding-top: 0.35rem; margin-top: auto;
+    }
+    .unlock b { color: var(--green); font-weight: 600; }
+
+    .empty { text-align: center; color: var(--text-muted); padding: 3rem 1rem; font-size: 0.85rem; }
+
+    @media (max-width: 600px) {
+      .controls { padding: 0.8rem 1rem 0.5rem; }
+      .status, .note { padding-left: 1rem; padding-right: 1rem; }
+      .body-wrap { padding: 0 1rem 2rem; }
+      .grid { grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); }
+    }
+    @media (pointer: coarse) { select.sel, input.search { min-height: 44px; } }
+  </style>
+  <script src="../../assets/js/patch-gate.js"></script>
+  <script src="../../assets/js/theme.js"></script>
+</head>
+<body>
+<div class="tool-header">
+  <h1 class="tool-title">&#x2694;&#xFE0F; 副本圖鑑</h1>
+  <p class="tool-subtitle">520 個副本、討伐戰與大型任務，依資料片分組——等級需求、同步等級、人數與時限一次看完</p>
+</div>
+
+<div class="controls">
+  <input class="search" id="q" type="search" placeholder="搜尋副本名稱…" autocomplete="off" aria-label="搜尋副本名稱">
+  <select class="sel" id="typeSel" aria-label="依類型篩選"><option value="">全部類型</option></select>
+  <select class="sel" id="expSel" aria-label="依資料片篩選"><option value="">全部資料片</option></select>
+  <select class="sel" id="lvSel" aria-label="依等級篩選">
+    <option value="">全部等級</option>
+    <option value="1-49">Lv1–49</option>
+    <option value="50-59">Lv50–59</option>
+    <option value="60-69">Lv60–69</option>
+    <option value="70-79">Lv70–79</option>
+    <option value="80-89">Lv80–89</option>
+    <option value="90-99">Lv90–99</option>
+    <option value="100-999">Lv100</option>
+  </select>
+</div>
+
+<div class="status" id="status">載入中…</div>
+<p class="note">
+  類型名稱取自遊戲內官方分類（<b>迷宮挑戰</b>／<b>討伐殲滅戰</b>／<b>大型任務</b>／<b>絕殲滅戰</b>…）；
+  「極」「零式」是台服副本名本身就帶的字，不是本站另外分的難度。
+  <b>時限</b>與<b>同步等級</b>來自遊戲資料；<b>解鎖任務</b>只有遊戲資料直接記錄的那些查得到，
+  多數副本由主線解鎖、關聯不在資料表裡，所以查不到的就不顯示——<b>沒寫不代表不用解鎖</b>。
+</p>
+
+<div class="body-wrap" id="wrap"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* 類型標籤取自 tw-locales 的 contentTypes（遊戲內官方分類名）。
+     「・極」「・零式」不是我們發明的難度分級——台服副本名本身就叫「極 迦樓羅殲滅戰」
+     「巴哈姆特零式大迷宮」，這裡只是把同一個字拿來當篩選標籤。
+     24 人那條寫人數而不寫「多人任務」：人數是資料裡的事實，譯名不是。 */
+  var TYPES = [
+    ['dungeon',         '迷宮挑戰'],
+    ['guildhest',       '行會令'],
+    ['trial_hard',      '討伐殲滅戰'],
+    ['trial_ex',        '討伐殲滅戰・極'],
+    ['raid_normal',     '大型任務'],
+    ['raid_savage',     '大型任務・零式'],
+    ['alliance_raid',   '大型任務・24 人'],
+    ['ultimate',        '絕殲滅戰'],
+    ['deep_dungeon',    '深層迷宮'],
+    ['variant_dungeon', '特殊迷宮探索'],
+    ['eureka',          '優雷卡'],
+    ['quest_battle',    '任務戰鬥']
+  ];
+  var TYPE_LABEL = {}, TYPE_ORDER = {};
+  TYPES.forEach(function (t, i) { TYPE_LABEL[t[0]] = t[1]; TYPE_ORDER[t[0]] = i; });
+
+  var LIST = [];
+  var els = {
+    q: document.getElementById('q'),
+    type: document.getElementById('typeSel'),
+    exp: document.getElementById('expSel'),
+    lv: document.getElementById('lvSel'),
+    status: document.getElementById('status'),
+    wrap: document.getElementById('wrap')
+  };
+
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  // "/i/112000/112513_hr1.png" → assets/dungeons/112513_hr1.png（本地檔，沒有的就留白）
+  function imgOf(d) {
+    if (!d.image) return null;
+    var base = String(d.image).split('/').pop();
+    return base ? '../../assets/dungeons/' + base : null;
+  }
+
+  function cardHtml(d) {
+    var src = imgOf(d);
+    var lv = d.levelReq > 0 ? 'Lv' + d.levelReq : '';
+    var tags = [];
+    tags.push('<span class="tag kind">' + esc(TYPE_LABEL[d.type] || d.type) + '</span>');
+    if (d.partySize) tags.push('<span class="tag">' + d.partySize + ' 人</span>');
+    if (d.timeLimit) tags.push('<span class="tag">' + d.timeLimit + ' 分</span>');
+    if (d.highEndDuty) tags.push('<span class="tag high">高難度</span>');
+
+    var facts = [];
+    if (d.levelSync) facts.push('等級同步 <b>Lv' + d.levelSync + '</b>');
+    if (d.ilvlSync) facts.push('品級同步 <b>' + d.ilvlSync + '</b>');
+    else if (d.ilvlReq) facts.push('品級需求 <b>' + d.ilvlReq + '</b>');
+    if (d.clearExp) facts.push('通關經驗 <b>' + d.clearExp.toLocaleString() + '</b>');
+
+    var unlock = '';
+    if (d.unlock && d.unlock.questName) {
+      unlock = '<div class="unlock">解鎖任務 <b>' + esc(d.unlock.questName) + '</b>' +
+        (d.unlock.questLevel ? '（Lv' + d.unlock.questLevel + '）' : '') + '</div>';
+    }
+
+    return '<div class="duty">' +
+      '<div class="duty-img' + (src ? '' : ' no-img') + '">' +
+        // ⚠ 先抓 parentNode 再 remove()——反過來寫的話 remove() 之後 parentNode 已經是 null
+        (src ? '<img src="' + esc(src) + '" alt="" loading="lazy" decoding="async" onerror="var p=this.parentNode;this.remove();if(p)p.classList.add(\'no-img\')">' : '') +
+        (lv ? '<span class="duty-lv">' + lv + '</span>' : '') +
+      '</div>' +
+      '<div class="duty-body">' +
+        '<div class="duty-name">' + esc(d.name) + '</div>' +
+        '<div class="tags">' + tags.join('') + '</div>' +
+        (facts.length ? '<div class="facts">' + facts.join('　') + '</div>' : '') +
+        unlock +
+      '</div>' +
+    '</div>';
+  }
+
+  function filtered() {
+    var q = els.q.value.trim().toLowerCase();
+    var t = els.type.value, e = els.exp.value, lvR = els.lv.value;
+    var lo = 0, hi = 9999;
+    if (lvR) { var p = lvR.split('-'); lo = +p[0]; hi = +p[1]; }
+    return LIST.filter(function (d) {
+      if (t && d.type !== t) return false;
+      if (e && d.expansion !== e) return false;
+      if (lvR) { var l = d.levelReq || 0; if (l < lo || l > hi) return false; }
+      if (q) {
+        var hay = (d.name + ' ' + (d.nameEn || '') + ' ' + (TYPE_LABEL[d.type] || '') +
+          ' ' + ((d.unlock && d.unlock.questName) || '')).toLowerCase();
+        if (hay.indexOf(q) < 0) return false;
+      }
+      return true;
+    });
+  }
+
+  function render() {
+    var list = filtered();
+    els.status.textContent = list.length + ' 個副本' +
+      (list.length !== LIST.length ? '（共 ' + LIST.length + '）' : '');
+    if (!list.length) {
+      els.wrap.innerHTML = '<div class="empty">找不到符合條件的副本</div>';
+      syncURL();
+      return;
+    }
+    // 依資料片分組，組內照遊戲的 sortKey（等於副本選單的順序）
+    var order = [], groups = {};
+    list.forEach(function (d) {
+      var k = d.expansion || '其他';
+      if (!groups[k]) { groups[k] = []; order.push(k); }
+      groups[k].push(d);
+    });
+    var html = order.map(function (k) {
+      /* 組內排序刻意**不用 `sortKey`**：那是遊戲副本搜尋器的順序，但資料裡 125/520 是 0
+         （原初之地 101 個只有 40 個相異值），排出來會像亂序——深層迷宮跟任務戰鬥卡在最前面。
+         改成「類型（TYPES 的順序）→ 等級 → 名稱」，每個資料片讀起來就是
+         迷宮挑戰由低到高、接著行會令、討伐戰…，而且每次重整順序都一樣。 */
+      var g = groups[k].slice().sort(function (a, b) {
+        return (TYPE_ORDER[a.type] - TYPE_ORDER[b.type])
+          || ((a.levelReq || 0) - (b.levelReq || 0))
+          || a.name.localeCompare(b.name, 'zh-Hant');
+      });
+      return '<div class="exp-head"><span class="exp-name">' + esc(k) + '</span>' +
+        '<span class="exp-count">' + g.length + ' 個</span></div>' +
+        '<div class="grid">' + g.map(cardHtml).join('') + '</div>';
+    }).join('');
+    els.wrap.innerHTML = html;
+    syncURL();
+  }
+
+  /* 網址狀態。⚠ 必須在模組載入時就把 location.search 存起來——
+     `syncURL()` 會改寫網址，之後再讀就讀到自己剛寫的值（知識庫 §3.17／§4.60）。 */
+  var INITIAL_QUERY = location.search;
+  var applyingURL = false;
+
+  function syncURL() {
+    if (applyingURL) return;
+    var p = new URLSearchParams();
+    if (els.q.value.trim()) p.set('q', els.q.value.trim());
+    if (els.type.value) p.set('t', els.type.value);
+    if (els.exp.value) p.set('e', els.exp.value);
+    if (els.lv.value) p.set('lv', els.lv.value);
+    var qs = p.toString();
+    history.replaceState(null, '', qs ? '?' + qs : location.pathname);
+  }
+
+  function applyURL() {
+    applyingURL = true;
+    var p = new URLSearchParams(INITIAL_QUERY);
+    if (p.get('q')) els.q.value = p.get('q');
+    if (p.get('t')) els.type.value = p.get('t');
+    if (p.get('e')) els.exp.value = p.get('e');
+    if (p.get('lv')) els.lv.value = p.get('lv');
+    /* `?id=duty:<名稱>` ——命令面板搜到某個副本時用這條進來。
+       語意與解鎖索引的 `sys:`／`job:` 一致（docs/deep-links.md §2.1）：
+       這頁不像追蹤頁那樣捲到某張卡，520 張卡捲過去不如直接篩到只剩那一個。
+       同時把類型／資料片／等級清空，否則從面板點進來常常被既有篩選擋掉而看到空白。 */
+    var id = p.get('id');
+    if (id && id.indexOf('duty:') === 0) {
+      els.q.value = id.slice(5);
+      els.type.value = ''; els.exp.value = ''; els.lv.value = '';
+    }
+    applyingURL = false;
+  }
+
+  ['input', 'change'].forEach(function (ev) {
+    els.q.addEventListener(ev, render);
+  });
+  [els.type, els.exp, els.lv].forEach(function (s) { s.addEventListener('change', render); });
+
+  fetch('../../data/dungeons.json')
+    .then(function (r) { if (!r.ok) throw new Error('無法載入副本資料 (' + r.status + ')'); return r.json(); })
+    .then(function (db) {
+      return PatchGate.loadGamePatch('../../data/_meta.json').then(function (gp) {
+        /* 台服未開放的版本一律不顯示。目前 0 筆會被擋掉，但重建資料時若抓到
+           國際服領先的內容，這道就是唯一的閘門。 */
+        LIST = (db.data || []).filter(function (d) { return PatchGate.released(d.patch, gp); });
+
+        var types = {}, exps = [];
+        LIST.forEach(function (d) {
+          types[d.type] = (types[d.type] || 0) + 1;
+          if (d.expansion && exps.indexOf(d.expansion) < 0) exps.push(d.expansion);
+        });
+        // 類型選單照 TYPES 的順序（由淺到深），只列真的有資料的
+        TYPES.forEach(function (t) {
+          if (!types[t[0]]) return;
+          var o = document.createElement('option');
+          o.value = t[0];
+          o.textContent = t[1] + '（' + types[t[0]] + '）';
+          els.type.appendChild(o);
+        });
+        // 資料片照 expansionId 由舊到新
+        var expOrder = {};
+        LIST.forEach(function (d) { if (d.expansion) expOrder[d.expansion] = d.expansionId || 0; });
+        exps.sort(function (a, b) { return expOrder[a] - expOrder[b]; });
+        exps.forEach(function (e) {
+          var o = document.createElement('option');
+          o.value = e; o.textContent = e;
+          els.exp.appendChild(o);
+        });
+
+        applyURL();
+        render();
+      });
+    })
+    .catch(function (err) {
+      els.status.textContent = '';
+      els.wrap.innerHTML = '<div class="empty">' + esc(err.message) + '</div>';
+    });
+
+  // 頁內快捷鍵（登記制見知識庫 §4.73；nav.js 是 defer 載的，所以走待辦佇列）
+  var keys = [
+    { keys: 's', label: '聚焦搜尋框', run: function () { els.q.focus(); els.q.select(); } },
+    { keys: 'c', label: '清掉所有篩選', run: function () {
+      els.q.value = ''; els.type.value = ''; els.exp.value = ''; els.lv.value = '';
+      render();
+    } }
+  ];
+  if (window.SGT_SHORTCUTS) window.SGT_SHORTCUTS.register(keys);
+  else (window.SGT_SHORTCUTS_PENDING = window.SGT_SHORTCUTS_PENDING || []).push(keys);
+})();
+</script>
+</body>
+</html>
