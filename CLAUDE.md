@@ -97,6 +97,8 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 收益排行接製作數值的回歸（**改完 `market.js` 的 `gateOf`／`applyMyStats` 必跑**） | `node scripts/validate-profit-stats.mjs`（18 項：沒存數值的人要完全不受影響、門檻欄位靠 `columns` 對位）|
 | 重建製作理符（改版時才跑） | `node scripts/build-craft-leves.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/craft-leves.json`（1,120 張）|
 | 製作理符回歸（**改完 `tools/leves/` 或 `craft-leves.json` 必跑**） | `node scripts/validate-leves.mjs`（24 項；最重要的是「頁面不得宣稱 HQ 加成倍率」）|
+| 重建練級裝備路線（改完 items.json 後） | `node scripts/build-leveling-gear.mjs`（dry-run 預設／`--apply`）→ `data/leveling-gear/`（43 個職業檔＋`_index.json`）；**刻意不進 `minify-data.mjs`** |
+| 練級裝備回歸（**改完 `tools/leveling-gear/` 或該目錄資料必跑**） | `node scripts/validate-leveling-gear.mjs`（25 項：槽位眾數比對、前緣單調性、取得管道真的有填上）|
 | 時尚品鑑週更（每週二／週五各一次） | `node scripts/build-fashion-report.mjs`（`--dry-run` 只印／`--offline` 用快取）→ `node scripts/validate-fashion-render.mjs`（頁面 render 回歸，七個週狀態，不需瀏覽器） |
 | 時尚品鑑跨週不變資料（改版時才跑） | `node scripts/build-dyes.mjs`／`build-fashion-fillers.mjs`／`build-fashion-themes.mjs` |
 | 重建無人島資料層 | `node scripts/build-island.mjs`（`--offline` 用快取／`--refresh` 強制重抓） |
@@ -263,6 +265,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 - **要讀商店表** → 用 `scripts/lib/shops.mjs` 的 `loadShops()`，別直接讀 `out_data/shops.msgpack`（舊 dump，7.21 後的兌換品不在裡面）或自己抓 Teamcraft `shops.json`。台服店名走 `tw-locales` 的 `shops`（1,875 間，完全涵蓋 msgpack 的 1,815 間）。
 - **要「依取得方式篩選」而不是「查單一物品的取得方式」** → 那是兩件事：分片層（`data/item-sources/`）按需載入、答得了「這一件哪來的」，但答不了「哪些家具是 NPC 直接買得到的」——後者要把 36,335 件掃一遍。用 `data/item-source-types.json`（類型位元遮罩，差分陣列 gzip 15KB）。**選項名單要從那份檔案自己長出來**，寫死的話新增一種管道會從篩選裡安靜消失。
 - **要判斷「這個字串能不能印在畫面上」** → 用 `scripts/lib/tw-text.mjs` 的 `isTw()`，**不要再手寫 `/[一-鿿]/`**（站內曾有 19 份，每一份都有同一個洞：只要字串裡任何一處有漢字就整串放行，所以「コメンデーションクリスタルの取引」這種日文原文會直接上畫面）。`twName()` 用的是寬鬆版 `isTranslated()`——它只擋假名與遊戲內部佔位列，不要求漢字，因為台服真的會顯示 HP／PvP／F.A.T.E. 這類拉丁字串。**`twName()` 回傳有值不等於那是台服名**：上游語系檔的 `shops` 10 筆、`mobs` 89 筆、`statuses` 77 筆是未翻譯的日文。
+- **`ItemSources.getMany()` 回的是 `Map` 不是物件，而且鍵是數字** → 寫成 `map[id]` 會永遠拿到 `undefined`，**而且完全不報錯**——那一欄只是留白，看起來像「本站資料沒收」。正確寫法是 `map.get(+id)`。練級裝備路線第一版就是這樣，分片明明載進來了（log 看得到 `item-sources/18.json`）畫面上卻全空。回歸要驗「取得管道有填上」而不只是「有去載分片」。
 - **要把取得管道翻成畫面上的字** → 用 `scripts/lib/obtainable.mjs` 的 `convertOm()`＋`normalizeEntries()`。**兩種 skip 集合不要混用**：`SKIP_MARKET`（市場頁湊材料，濾掉製作／秘籍／商城）與 `SKIP_CATALOG`（分片層，製作與商城**是**有效答案）。上游的 `shopName`／NPC 名有 2,444 處是英文，`twOnly` 會擋掉，補得回來的走 `twShop` 解析器。
 - **做「下次什麼時候開」的功能** → 用 `assets/js/window-calc.js` 的 `nextWindows()`＋`statusOf()`，鬧鐘用 `assets/js/et-alarm.js`。**不要再寫第三份視窗演算法**——釣魚與限時採集兩頁已經收斂成薄包裝。改完必跑 `node scripts/validate-window-calc.mjs`（鬧鐘的錯誤是該響沒響，畫面上看不出來）。
 - **新增或改了「某個系統要先解鎖」的資訊** → 改 `scripts/lib/system-unlock-map.mjs` → `node scripts/build-system-unlocks.mjs`（先 dry-run 看閘門過不過）→ `--apply` → **`node scripts/build-site-index.mjs --apply`**（命令面板吃這份，漏跑會搜不到新系統）→ `validate-data` → `sync-meta --apply`。工具頁的橫幅**不必改頁面**——`assets/js/unlock-banner.js` 認的是 `system-unlocks.json` 的 `tool` 欄位對上網址路徑；新工具頁只要在 `<head>` 加一行 `<script src="../../assets/js/unlock-banner.js"></script>`。
