@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FF14 禁忌鑲嵌花費試算 — 依遊戲內的成功率算期望顆數與累積機率，用台服實際掛單價報總花費">
+  <title>禁忌鑲嵌花費試算 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <link rel="stylesheet" href="../../assets/css/tool-header.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 109.375%; }
+    body { background: var(--bg-base); color: var(--text); font-family: var(--font-sans); min-height: 100vh; }
+
+    .wrap { max-width: var(--w-content); margin: 0 auto; padding: 0.6rem 1.5rem 2.5rem; }
+
+    .panel {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 0.9rem 1rem; margin-bottom: 1rem;
+    }
+    .fields { display: flex; gap: 0.7rem; flex-wrap: wrap; align-items: flex-end; }
+    .f { display: flex; flex-direction: column; gap: 0.25rem; }
+    .f label { font-size: 0.73rem; color: var(--text-muted); }
+    .f select, .f input {
+      background: var(--bg-base); border: 1px solid var(--border); border-radius: 6px;
+      color: var(--text-dim); padding: 0.4rem 0.55rem; font: inherit; font-size: 0.82rem;
+      min-height: 40px; outline: none;
+    }
+    .f select:focus, .f input:focus { border-color: var(--gold); color: var(--text); }
+    .f select { cursor: pointer; }
+    .f .num { width: 5.5rem; text-align: right; font-variant-numeric: tabular-nums; }
+
+    .btn {
+      background: var(--gold-dim); border: 1px solid var(--border-hover); border-radius: 8px;
+      color: var(--gold-light); font: 600 0.82rem/1 inherit; padding: 0 0.9rem;
+      min-height: 40px; cursor: pointer;
+    }
+    .btn:hover { background: color-mix(in srgb, var(--gold) 26%, transparent); }
+    .btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+    .btn.ghost { background: transparent; color: var(--text-dim); border-color: var(--border); }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    thead th {
+      text-align: right; padding: 0.4rem 0.55rem; color: var(--text-muted);
+      font-size: 0.73rem; font-weight: 600; border-bottom: 1px solid var(--border); white-space: nowrap;
+    }
+    thead th:first-child, tbody td:first-child { text-align: left; }
+    tbody td {
+      padding: 0.45rem 0.55rem; border-bottom: 1px solid var(--border);
+      text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap;
+    }
+    tbody tr:hover { background: var(--bg-card-hover); }
+    tbody tr.off td { color: var(--text-muted); }
+    .slot { color: var(--text-dim); }
+    .pct { color: var(--gold-light); font-weight: 700; }
+    .gil { color: var(--green); }
+    .dim { color: var(--text-muted); font-size: 0.76rem; }
+
+    .sum {
+      margin-top: 1rem; background: var(--bg-card); border: 1px solid var(--border-hover);
+      border-radius: var(--radius-md); padding: 0.9rem 1rem; font-size: 0.86rem; line-height: 1.9;
+    }
+    .sum b { color: var(--gold-light); }
+    .sum .big { font-size: 1.15rem; font-weight: 700; color: var(--green); }
+
+    .note { font-size: 0.74rem; color: var(--text-muted); line-height: 1.8; margin-top: 1rem; }
+    .note b { color: var(--text-dim); font-weight: 600; }
+    .warn { color: var(--orange); }
+
+    @media (max-width: 600px) {
+      .wrap { padding: 0.6rem 1rem 2rem; }
+      .table-wrap { overflow-x: auto; }
+    }
+    @media (pointer: coarse) { .btn, .f select, .f input { min-height: 44px; } }
+  </style>
+  <script src="../../assets/js/patch-gate.js"></script>
+  <script src="../../assets/js/universalis.js"></script>
+  <script src="../../assets/js/theme.js"></script>
+</head>
+<body>
+<div class="tool-header">
+  <h1 class="tool-title">&#x1F48E; 禁忌鑲嵌花費試算</h1>
+  <p class="tool-subtitle">成功率取自遊戲資料——算出每個孔位的期望顆數、累積機率，再用台服實際掛單價報總花費</p>
+</div>
+
+<div class="wrap">
+  <div class="panel">
+    <div class="fields">
+      <div class="f">
+        <label for="statSel">屬性</label>
+        <select id="statSel"></select>
+      </div>
+      <div class="f">
+        <label for="gradeSel">階級</label>
+        <select id="gradeSel"></select>
+      </div>
+      <div class="f">
+        <label for="hqSel">裝備品質</label>
+        <select id="hqSel">
+          <option value="hq">HQ（成功率較高）</option>
+          <option value="nq">NQ</option>
+        </select>
+      </div>
+      <div class="f">
+        <label for="slotsSel">要鑲到第幾個禁忌孔</label>
+        <select id="slotsSel">
+          <option value="1">第 1 孔</option>
+          <option value="2">第 1–2 孔</option>
+          <option value="3">第 1–3 孔</option>
+          <option value="4" selected>第 1–4 孔（全滿）</option>
+        </select>
+      </div>
+      <div class="f">
+        <label for="piecesIn">件數</label>
+        <input class="num" id="piecesIn" type="number" min="1" max="20" step="1" value="1">
+      </div>
+      <div class="f">
+        <label for="worldSel">伺服器</label>
+        <select id="worldSel"></select>
+      </div>
+      <button class="btn" id="calcBtn" type="button">&#x1F4B0; 查價並試算</button>
+      <button class="btn ghost" id="toMarketBtn" type="button" title="把期望顆數帶到市場頁的製作計畫">帶去市場頁 →</button>
+    </div>
+  </div>
+
+  <div class="table-wrap"><table id="tbl">
+    <thead><tr>
+      <th>禁忌孔</th><th>成功率</th><th>期望顆數</th><th>90% 機率所需</th><th>平均單顆價</th><th>魔晶石花費</th><th>鑲嵌費</th>
+    </tr></thead>
+    <tbody id="tbody"><tr><td colspan="7" class="dim">選好條件後按「查價並試算」</td></tr></tbody>
+  </table></div>
+
+  <div class="sum" id="sum" style="display:none"></div>
+
+  <p class="note" id="note">
+    <b>成功率來自遊戲資料</b>（`MateriaGrade` 的 `OvermeldHQPercent`／`OvermeldNQPercent`），不是社群估值。
+    <b>雙數階（6／8／10／12）只能鑲第一個禁忌孔</b>，其餘孔位遊戲資料本身就是 0。<br>
+    <b>期望顆數 ＝ 1 ÷ 成功率</b>，是長期平均；「90% 機率所需」是指備這麼多顆時，
+    有九成機率至少成功一次（<code>ceil(log(0.1) / log(1-p))</code>）。
+    <b>失敗會消耗魔晶石</b>，所以這兩個數字都是「要準備幾顆」而不是「會用掉幾顆」。<br>
+    價格用<b>逐筆吃掉掛單</b>的方式算（不是最低價 × 數量）——最便宜那筆常常只有一兩顆，
+    乘法會系統性低估。查無掛單的會標出來。
+  </p>
+</div>
+
+<footer class="page-footer">
+  <div class="container">
+    <p class="footer-text"><a href="../../">水神的工具箱</a> · 價格資料：<a href="https://universalis.app" target="_blank">Universalis</a></p>
+    <p class="footer-text" style="margin-top:4px">FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  var DB = null;
+  var lastPlan = null;      // 給「帶去市場頁」用
+
+  function $(id) { return document.getElementById(id); }
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+  var fmt = function (n) { return Math.round(n).toLocaleString(); };
+
+  /* 期望顆數 ＝ 1/p（幾何分布的期望值）。
+     「90% 機率所需」＝ 備幾顆才有九成機率至少成功一次：n ≥ log(0.1)/log(1-p)。
+     兩個都是「要準備幾顆」——**失敗會消耗魔晶石**，所以不是「會用掉幾顆」。 */
+  function expected(p) { return p > 0 ? 1 / p : Infinity; }
+  function need90(p) {
+    if (p <= 0) return Infinity;
+    if (p >= 1) return 1;
+    return Math.ceil(Math.log(0.1) / Math.log(1 - p));
+  }
+
+  function currentGrade() {
+    var s = DB.data.find(function (x) { return String(x.baseParam) === $('statSel').value; });
+    if (!s) return null;
+    var g = s.grades.find(function (x) { return String(x.g) === $('gradeSel').value; });
+    return g ? { stat: s, g: g } : null;
+  }
+
+  function fillGrades() {
+    var s = DB.data.find(function (x) { return String(x.baseParam) === $('statSel').value; });
+    var sel = $('gradeSel');
+    sel.innerHTML = '';
+    if (!s) return;
+    s.grades.slice().sort(function (a, b) { return b.g - a.g; }).forEach(function (g) {
+      var o = document.createElement('option');
+      o.value = String(g.g);
+      o.textContent = g.name + '（+' + g.value + '）' + (g.marketable ? '' : '・不可交易');
+      sel.appendChild(o);
+    });
+  }
+
+  function tierOf(grade) {
+    return DB.tiers.find(function (t) { return t.grade === grade; });
+  }
+
+  /* 選了只能鑲第一孔的階（6／8／10／12）時，把用不到的孔位選項直接停用。
+     只留事後警告的話，預設組合（12 階 × 全滿）本身就是矛盾的——
+     **讓選單反映資料，比讓使用者選完才被糾正好**。
+     判斷依據是 `tier.hq[i] === 0`，不是寫死的階級清單。 */
+  function syncSlots() {
+    var pick = currentGrade();
+    if (!pick) return;
+    var tier = tierOf(pick.g.g);
+    var rates = $('hqSel').value === 'hq' ? tier.hq : tier.nq;
+    var sel = $('slotsSel'), maxSlot = 0;
+    for (var i = 0; i < 4; i++) { if ((rates[i] || 0) > 0) maxSlot = i + 1; else break; }
+    Array.prototype.forEach.call(sel.options, function (o) {
+      var n = parseInt(o.value, 10);
+      o.disabled = n > maxSlot;
+    });
+    if (parseInt(sel.value, 10) > maxSlot) sel.value = String(maxSlot || 1);
+  }
+
+  async function calc() {
+    var pick = currentGrade();
+    if (!pick) return;
+    var tier = tierOf(pick.g.g);
+    var rates = $('hqSel').value === 'hq' ? tier.hq : tier.nq;
+    var upTo = parseInt($('slotsSel').value, 10);
+    var pieces = Math.max(1, parseInt($('piecesIn').value, 10) || 1);
+
+    var tbody = $('tbody');
+    tbody.innerHTML = '<tr><td colspan="7" class="dim">查價中…</td></tr>';
+    $('sum').style.display = 'none';
+
+    // 需要多少顆（期望值）：把要鑲的孔位加總，再乘件數
+    var totalExpected = 0;
+    for (var i = 0; i < upTo; i++) {
+      var p = (rates[i] || 0) / 100;
+      if (p > 0) totalExpected += expected(p);
+    }
+    totalExpected *= pieces;
+
+    var quote = null, unit = null;
+    if (pick.g.marketable && totalExpected > 0 && isFinite(totalExpected)) {
+      try {
+        var world = $('worldSel').value;
+        var data = await Universalis.fetchListings(world, [pick.g.itemId], { listings: 30 });
+        /* ⚠ **一律用 fillQuote 逐筆吃掉掛單，不可用「最低價 × 顆數」**：
+           最便宜那筆常常只有一兩顆，乘法會系統性低估，而且低估幅度隨數量放大（知識庫 §3.14）。
+           回傳的 `unit` 是「吃到這個數量的平均單價」，比 `minUnit` 誠實。 */
+        quote = Universalis.fillQuote(data && data.items && data.items[pick.g.itemId], Math.ceil(totalExpected));
+        unit = quote && quote.unit ? quote.unit : null;
+      } catch (e) { quote = null; }
+    }
+
+    var rows = [], sumMateria = 0, sumFee = 0, anyBlocked = false;
+    for (var s = 0; s < 4; s++) {
+      var pr = (rates[s] || 0) / 100;
+      var inScope = s < upTo;
+      if (pr <= 0) {
+        if (inScope) anyBlocked = true;
+        rows.push('<tr class="off"><td class="slot">第 ' + (s + 1) + ' 孔</td>' +
+          '<td colspan="6" class="dim">這個階級不能鑲這個孔（遊戲資料為 0）</td></tr>');
+        continue;
+      }
+      if (!inScope) continue;
+      var exp = expected(pr) * pieces;
+      var n90 = need90(pr) * pieces;
+      var costMateria = unit != null ? unit * exp : null;
+      var fee = tier.fee * exp;      // 每次嘗試都要付鑲嵌費，所以乘的是嘗試次數＝期望顆數
+      sumMateria += costMateria || 0;
+      sumFee += fee;
+      rows.push('<tr>' +
+        '<td class="slot">第 ' + (s + 1) + ' 孔</td>' +
+        '<td class="pct">' + (pr * 100).toFixed(0) + '%</td>' +
+        '<td>' + exp.toFixed(1) + ' 顆</td>' +
+        '<td>' + (isFinite(n90) ? n90 + ' 顆' : '—') + '</td>' +
+        '<td>' + (unit != null ? fmt(unit) + ' G' : '<span class="dim">—</span>') + '</td>' +
+        '<td class="gil">' + (costMateria != null ? fmt(costMateria) + ' G' : '<span class="dim">查無掛單</span>') + '</td>' +
+        '<td>' + fmt(fee) + ' G</td>' +
+      '</tr>');
+    }
+    tbody.innerHTML = rows.join('') || '<tr><td colspan="7" class="dim">沒有可鑲的孔位</td></tr>';
+
+    var total = sumMateria + sumFee;
+    lastPlan = { itemId: pick.g.itemId, qty: Math.ceil(totalExpected), name: pick.g.name };
+    $('sum').style.display = '';
+    $('sum').innerHTML =
+      '<div><b>' + esc(pick.g.name) + '</b>　鑲到第 ' + upTo + ' 孔 × ' + pieces + ' 件</div>' +
+      '<div>期望備料 <b>' + totalExpected.toFixed(1) + ' 顆</b>' +
+        (unit != null ? '　魔晶石 <span class="gil">' + fmt(sumMateria) + ' G</span>' : '') +
+        '　鑲嵌費 <span class="gil">' + fmt(sumFee) + ' G</span></div>' +
+      (unit != null
+        ? '<div class="big">合計約 ' + fmt(total) + ' G</div>'
+        : '<div class="warn">查無掛單，只能算鑲嵌費 ' + fmt(sumFee) + ' G</div>') +
+      (anyBlocked ? '<div class="warn">⚠ 這個階級只能鑲第一個禁忌孔，上面選的孔位有一部分鑲不了。</div>' : '') +
+      (!pick.g.marketable ? '<div class="warn">⚠ 這顆魔晶石不可交易，買不到——只能自己精製。</div>' : '') +
+      '<div class="dim">期望值是長期平均，單次結果的波動很大；「90% 機率所需」那欄比較適合用來備料。</div>';
+  }
+
+  $('calcBtn').addEventListener('click', function () { calc(); });
+  $('statSel').addEventListener('change', function () { fillGrades(); syncSlots(); });
+  $('gradeSel').addEventListener('change', syncSlots);
+  $('hqSel').addEventListener('change', syncSlots);
+  $('toMarketBtn').addEventListener('click', function () {
+    if (!lastPlan) { alert('請先按「查價並試算」'); return; }
+    // 市場頁的材料清單深連結（見 CLAUDE.md 的工作流）
+    location.href = '../../tools/market/#craft=' + lastPlan.itemId + ':' + lastPlan.qty;
+  });
+
+  fetch('../../data/materia.json')
+    .then(function (r) { return r.json(); })
+    .then(function (db) {
+      DB = db;
+      var sel = $('statSel');
+      DB.data.forEach(function (s) {
+        var o = document.createElement('option');
+        o.value = String(s.baseParam);
+        o.textContent = s.stat;
+        sel.appendChild(o);
+      });
+      // 預設挑「暴擊」——那是最常做禁忌鑲嵌的屬性
+      var crit = DB.data.find(function (s) { return s.stat === '暴擊'; });
+      if (crit) sel.value = String(crit.baseParam);
+      fillGrades();
+      syncSlots();
+
+      var w = $('worldSel');
+      // 預設整個資料中心：魔晶石常常要幾十顆，單一伺服器的掛單量往往不夠吃
+      var dcOpt = document.createElement('option');
+      dcOpt.value = 'dc'; dcOpt.textContent = '全資料中心';
+      w.appendChild(dcOpt);
+      Object.keys(Universalis.WORLDS).forEach(function (id) {
+        var o = document.createElement('option');
+        o.value = Universalis.WORLDS[id]; o.textContent = Universalis.WORLDS[id];
+        w.appendChild(o);
+      });
+    })
+    .catch(function (e) {
+      $('tbody').innerHTML = '<tr><td colspan="7" class="dim">載入失敗：' + esc(e.message) + '</td></tr>';
+    });
+
+  // 頁內快捷鍵（登記制見知識庫 §4.73）
+  var keys = [{ keys: 'c', label: '查價並試算', run: function () { calc(); } }];
+  if (window.SGT_SHORTCUTS) window.SGT_SHORTCUTS.register(keys);
+  else (window.SGT_SHORTCUTS_PENDING = window.SGT_SHORTCUTS_PENDING || []).push(keys);
+})();
+</script>
+</body>
+</html>

@@ -48,6 +48,7 @@
     // 生活職（c:'life'）
     { e: '📊', n: '市場查價 + 比價', p: 'tools/market/', c: 'life', k: 'market 市場 查價 universalis 比價' },
     { e: '🏪', n: 'NPC 商店目錄', p: 'tools/npc-shops/', c: 'life', k: 'npc shop vendor 商店 雜貨 販售 目錄 這張圖有什麼店 買東西' },
+    { e: '💎', n: '禁忌鑲嵌花費試算', p: 'tools/melding/', c: 'life', k: 'melding materia 鑲嵌 禁忌 魔晶石 成功率 期望值 花費' },
     { e: '🔨', n: '製作模擬器', p: 'tools/crafting-sim/', c: 'life', k: 'crafting sim 製作 模擬 巨集 macro 循環 rotation 手法 hq' },
     { e: '🎖️', n: '貨幣變現排行', p: 'tools/gc-exchange/', c: 'life', k: 'gc seals 軍票 詩學 神典石 工票 紫票 橙票 狼印 戰績 雙色寶石 grand company tomestone scrip 變現' },
     { e: '🧳', n: '雇員探險收益排行', p: 'tools/ventures/', c: 'life', k: 'retainer venture 雇員 探險 收益 識別力' },
