@@ -33,6 +33,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { isTw } from "./lib/tw-text.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
@@ -94,7 +95,7 @@ function main() {
     if (!card) { console.log(`  ✗ 找不到編號 ${rw.cardId} 的卡，略過`); continue; }
     const idx = (card.sources || []).findIndex((s) => s.detail && rw.matchEn.test(s.detail));
     if (idx < 0) {
-      const done = (card.sources || []).some((s) => s.detail && /[一-鿿]/.test(s.detail));
+      const done = (card.sources || []).some((s) => s.detail && isTw(s.detail));
       console.log(`  ・編號 ${rw.cardId} ${card.name}：${done ? '已是繁中，不動' : '找不到要改的英文句子'}`);
       continue;
     }
@@ -108,7 +109,7 @@ function main() {
   }
 
   const leftEn = db.data.reduce((n, c) =>
-    n + (c.sources || []).filter((s) => s.detail && !/[一-鿿]/.test(s.detail)).length, 0);
+    n + (c.sources || []).filter((s) => s.detail && !isTw(s.detail)).length, 0);
   console.log(`\n可改寫 ${changed} 筆；改完後仍為純英文的 detail：${APPLY ? leftEn : leftEn - changed} 筆`
     + `（＝14 個成就名，Title/Achievement 非物品、tw-items 不涵蓋，全站對成就譯名的立場是擱置）`);
 

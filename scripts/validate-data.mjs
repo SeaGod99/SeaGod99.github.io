@@ -14,6 +14,7 @@
 import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import { isTranslated, mayContainUntranslated } from "./lib/tw-text.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DATA = join(__dirname, "..", "data");
@@ -88,6 +89,68 @@ for (const f of files) {
     console.log("_meta.json");
     W(`${stale.length} 個資料庫的 updated/count 與實際檔案不符 → 跑 node scripts/sync-meta.mjs --apply`
       + `（${stale.slice(0, 5).join("、")}${stale.length > 5 ? "…" : ""}）`);
+  }
+}
+
+
+/* ── 日文原文／內部佔位列有沒有漏到前端資料裡 ─────────────────────────────
+   站內的台服名守門以前是 **19 份各自手寫的 `/[一-鿿]/`**，語意是「有漢字就當台服名」。
+   那個判斷只要字串裡任何一處有漢字就整串放行，所以混了假名的日文原文會直接上畫面：
+   「シーズナルイベント報酬の交換」（有 報酬／交換）、「コメンデーションクリスタルの取引」（有 取引）。
+   實測漏了 7 個日文店名到 NPC 商店目錄、25 條日文取得方式到市場頁、834 個日文技能名到巨集轉譯。
+   守門已收斂到 `scripts/lib/tw-text.mjs` 一份；這裡是**產出面**的防回歸——
+   守門再被繞過（或哪個腳本又自己寫一份）時，這支會直接把字串指出來。 */
+{
+  /* 白名單：每條都要講得出「為什麼這份可以有日文」。
+     欄名以 Ja／_ja 結尾的一律放行——那是**刻意**的日文欄（對照上游用），已確認前端不 render。 */
+  const ALLOW = [
+    ["monsters.json", "建置用檔，前端不載；日文的是遊戲內部佔位列（ラベル削除予定、（仮）…）"],
+    ["npcs.json", "建置用檔，前端不載；消費端一律過 isTw()"],
+    ["bluemage-sources-tc.json", "抓取中繼檔，spell_ja 是刻意的日文欄"],
+    ["obtainable-methods.json", "上游 dump 原樣保存；顯示端一律過 lib/obtainable.mjs 的 convertOm()"],
+    ["mounts.json", "只有 id 419（patch 7.5，台服未開放），_noTwName + patch-gate 雙重隱藏"],
+  ];
+  const allowOf = (rel) => ALLOW.find(([f]) => rel === f || rel.endsWith("/" + f));
+
+  const leaks = [];
+  const walk = (dir, rel) => {
+    for (const d of readdirSync(dir, { withFileTypes: true })) {
+      if (d.isDirectory()) { walk(join(dir, d.name), rel + d.name + "/"); continue; }
+      if (!d.name.endsWith(".json")) continue;
+      const relPath = rel + d.name;
+      if (allowOf(relPath)) continue;
+      let raw;
+      try { raw = readFileSync(join(dir, d.name), "utf8"); } catch { continue; }
+      if (!mayContainUntranslated(raw)) continue;                 // 便宜的前置篩
+      let j;
+      try { j = JSON.parse(raw); } catch { continue; }
+      const seen = new Map();
+      const rec = (v, path) => {
+        if (typeof v === "string") {
+          if (/(?:Ja|_ja)$/.test(path.split(".").pop() || "")) return;   // 刻意的日文欄
+          if (!isTranslated(v)) seen.set(path, v);
+        } else if (Array.isArray(v)) v.forEach((x) => rec(x, path + "[]"));
+        else if (v && typeof v === "object") {
+          for (const [k, x] of Object.entries(v)) rec(x, path ? path + "." + (/^\d+$/.test(k) ? "*" : k) : k);
+        }
+      };
+      rec(j, "");
+      for (const [p, sample] of seen) leaks.push([relPath, p, sample]);
+    }
+  };
+  walk(DATA, "");
+
+  if (leaks.length) {
+    // 同一份檔的同一個欄位只報一次（分片目錄會有 256 份長一樣的）
+    const uniq = new Map();
+    for (const [f, p, s] of leaks) {
+      const key = f.replace(/\/\d+\.json$/, "/*.json") + "  " + p;
+      if (!uniq.has(key)) uniq.set(key, s);
+    }
+    console.log("台服名守門");
+    for (const [key, s] of [...uniq].slice(0, 8)) E(`日文原文漏到前端資料：${key} 例「${s}」`);
+    if (uniq.size > 8) E(`…另有 ${uniq.size - 8} 處（跑 node scripts/validate-data.mjs 看完整清單）`);
+    E("守門在 scripts/lib/tw-text.mjs 的 isTw()／isTranslated()，別在各腳本自己寫一份");
   }
 }
 

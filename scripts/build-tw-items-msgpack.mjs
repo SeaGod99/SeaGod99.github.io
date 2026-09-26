@@ -21,6 +21,7 @@ import { readFile, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { decode, encode } from "@msgpack/msgpack";
+import { isTw } from "./lib/tw-text.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
@@ -30,7 +31,7 @@ const APPLY = process.argv.includes("--apply");
 const URL_TW_ITEMS =
   "https://raw.githubusercontent.com/ffxiv-teamcraft/ffxiv-teamcraft/staging/libs/data/src/lib/json/tw/tw-items.json";
 
-const hasCJK = (s) => /[一-鿿]/.test(s || "");
+const hasCJK = (s) => isTw(s || "");
 
 async function main() {
   let old = {};

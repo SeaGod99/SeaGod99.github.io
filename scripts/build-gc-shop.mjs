@@ -14,6 +14,7 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import { isTw } from "./lib/tw-text.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const API = "https://v2.xivapi.com/api";
@@ -59,7 +60,7 @@ const items = JSON.parse(await readFile(join(ROOT, "data/items.json"), "utf8")).
 const byId = new Map(items.map((x) => [x.id, x]));
 const usable = (id) => {
   const it = byId.get(id);
-  return it && it.marketable && it.name && /[一-鿿]/.test(it.name) ? it : null;
+  return it && it.marketable && it.name && isTw(it.name) ? it : null;
 };
 
 /* ── 軍票商店 ── */
