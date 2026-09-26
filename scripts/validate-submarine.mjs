@@ -124,6 +124,117 @@ const byId = new Map(ITEMS.map((i) => [i.id, i]));
   push('  無 console error', errs.length === 0, errs.slice(0, 1).join('') || '乾淨');
 }
 
+/* ── 四艘存檔 ────────────────────────────────────────────
+   一個部隊最多四艘，玩家真的會分別配索敵艇／回收艇。三個會安靜出錯的地方：
+     ① **切艇前沒先存**，剛改的那一艘就丟了（而且看不出來，因為畫面已經換掉了）。
+     ② **存選單的索引而不是 itemId**，改版一加部件就整份錯位——
+        選到的還是個有效部件，只是不是你選的那個。
+     ③ **本機存檔蓋掉網址參數**，那別人分享的配置連結就等於沒用。 */
+{
+  const vc = new VirtualConsole();
+  const errs = [];
+  vc.on('jsdomError', (e) => errs.push(e.message));
+  const dom = new JSDOM(HTML, {
+    runScripts: 'outside-only',
+    url: 'https://seagod99.github.io/tools/submarine/',
+    virtualConsole: vc,
+  });
+  const { window } = dom, doc = window.document;
+  const store = {};
+  Object.defineProperty(window, 'localStorage', {
+    configurable: true,
+    value: { getItem: (k) => (k in store ? store[k] : null), setItem: (k, v) => { store[k] = String(v); },
+      removeItem: (k) => { delete store[k]; }, key: () => null, get length() { return 0; } },
+  });
+  window.fetch = async (u) => {
+    const rel = String(u).replace(/^.*\/(data|assets)\//, '$1/');
+    return { ok: true, status: 200, json: async () => JSON.parse(readFileSync(join(ROOT, rel), 'utf8')) };
+  };
+  window.matchMedia = () => ({ matches: false, addEventListener() {}, addListener() {} });
+  window.eval([...doc.querySelectorAll('script:not([src])')].map((s) => s.textContent).join(';\n'));
+  await new Promise((r) => setTimeout(r, 700));
+
+  const boats = () => [...doc.querySelectorAll('.boat')];
+  push('四艘固定存在（遊戲裡就是四格，不是可增刪的清單）', boats().length === 4, boats().length + ' 個');
+  push('  只有一艘是選取狀態',
+    boats().filter((b) => b.getAttribute('aria-pressed') === 'true').length === 1, '');
+  push('  每個頁籤都顯示那一艇的階級',
+    boats().every((b) => /階級 \d+/.test(b.textContent)), boats()[0].textContent.trim());
+
+  // 在 1 號艇改階級與一個部件
+  const rank = doc.getElementById('rankIn');
+  const sel0 = doc.querySelector('#partFields select');
+  rank.value = '77';
+  rank.dispatchEvent(new window.Event('input', { bubbles: true }));
+  const pick = sel0.options[2].value;
+  sel0.value = pick;
+  sel0.dispatchEvent(new window.Event('change', { bubbles: true }));
+  await new Promise((r) => setTimeout(r, 200));
+  push('改動即時存起來', !!store.ffxiv_submarine_boats, '');
+  push('  key 是 ffxiv_ 開頭（否則首頁備份掃不到）',
+    Object.keys(store).every((k) => k.indexOf('ffxiv_') === 0), Object.keys(store).join('、'));
+  const saved = JSON.parse(store.ffxiv_submarine_boats);
+  push('  存的是 itemId 不是選單索引（改版加部件才不會錯位）',
+    Object.values(saved.boats[0].parts).every((v) => Number(v) > 100),
+    JSON.stringify(saved.boats[0].parts));
+  push('  頁籤上的階級跟著更新', /階級 77/.test(boats()[0].textContent), boats()[0].textContent.trim());
+
+  // 切到 2 號艇：應該是預設值，且 1 號的不能被覆蓋
+  boats()[1].dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
+  await new Promise((r) => setTimeout(r, 200));
+  push('切到 2 號艇時階級回到預設（各艇獨立）', rank.value === '1', 'rank=' + rank.value);
+  push('  aria-pressed 跟著移過去',
+    boats()[1].getAttribute('aria-pressed') === 'true' && boats()[0].getAttribute('aria-pressed') === 'false', '');
+  const s2 = JSON.parse(store.ffxiv_submarine_boats);
+  push('  1 號艇的設定還在（切艇前先存了）', s2.boats[0].rank === 77, 's2.boats[0].rank=' + s2.boats[0].rank);
+  push('  active 記下來了', s2.active === 1, 'active=' + s2.active);
+
+  // 切回 1 號艇：值要回來
+  boats()[0].dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
+  await new Promise((r) => setTimeout(r, 200));
+  push('切回 1 號艇值回得來', rank.value === '77' && sel0.value === pick,
+    'rank=' + rank.value + '／part=' + (sel0.value === pick ? '相同' : '不同'));
+
+  push('  無 console error', errs.length === 0, errs.slice(0, 1).join('') || '乾淨');
+}
+
+/* 網址參數優先於本機存檔 */
+{
+  const dom = new JSDOM(HTML, {
+    runScripts: 'outside-only',
+    url: 'https://seagod99.github.io/tools/submarine/?rank=120',
+    virtualConsole: new VirtualConsole(),
+  });
+  const { window } = dom, doc = window.document;
+  const store = { ffxiv_submarine_boats: JSON.stringify({ active: 0, boats: [{ parts: {}, rank: 33 }, {}, {}, {}] }) };
+  Object.defineProperty(window, 'localStorage', {
+    configurable: true,
+    value: { getItem: (k) => (k in store ? store[k] : null), setItem: (k, v) => { store[k] = String(v); },
+      removeItem: () => {}, key: () => null, get length() { return 0; } },
+  });
+  window.fetch = async (u) => {
+    const rel = String(u).replace(/^.*\/(data|assets)\//, '$1/');
+    return { ok: true, status: 200, json: async () => JSON.parse(readFileSync(join(ROOT, rel), 'utf8')) };
+  };
+  window.matchMedia = () => ({ matches: false, addEventListener() {}, addListener() {} });
+  window.eval([...doc.querySelectorAll('script:not([src])')].map((s) => s.textContent).join(';\n'));
+  await new Promise((r) => setTimeout(r, 700));
+  push('網址參數優先於本機存檔（不然分享連結等於沒用）',
+    doc.getElementById('rankIn').value === '120',
+    '存檔是 33、網址是 120 → ' + doc.getElementById('rankIn').value);
+  push('  套用後寫回當前那一艘', JSON.parse(store.ffxiv_submarine_boats).boats[0].rank === 120,
+    'boats[0].rank=' + JSON.parse(store.ffxiv_submarine_boats).boats[0].rank);
+}
+
+/* 掉落物：資料裡沒有，所以頁面要講明不做（同 §4.71 的優雷卡 NM 天氣） */
+{
+  push('頁面講明不提供「哪個航點掉什麼」', /不提供「哪個航點掉什麼」/.test(HTML), '');
+  push('  並寫出理由（資料表裡沒有掉落欄位）',
+    /SubmarineExplorationLog/.test(HTML) && /只有名稱與地點/.test(HTML), '');
+  push('  資料檔裡沒有 drops 欄位（對不到就不放）',
+    !JSON.stringify(DB).includes('"drops"'), '');
+}
+
 push('data/submarine.json 有進 _meta', (() => {
   const meta = JSON.parse(readFileSync(join(ROOT, 'data/_meta.json'), 'utf8'));
   return (meta.databases || []).some((d) => d.file === 'submarine.json');

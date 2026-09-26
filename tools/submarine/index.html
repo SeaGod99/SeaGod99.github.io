@@ -59,6 +59,23 @@
     .note { font-size: 0.74rem; color: var(--text-muted); line-height: 1.8; margin-top: 1rem; }
     .note b { color: var(--text-dim); font-weight: 600; }
 
+    /* 四艘的頁籤。色票取自 tokens.css（§3.6），不在這裡另開 :root */
+    .boats { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.8rem; }
+    .boat {
+      display: flex; align-items: center; gap: 0.35rem;
+      background: var(--bg-base); border: 1px solid var(--border); border-radius: var(--radius-md);
+      color: var(--text-dim); font: inherit; font-size: 0.8rem;
+      padding: 0.4rem 0.7rem; min-height: 44px; cursor: pointer;
+      transition: border-color var(--transition), color var(--transition);
+    }
+    .boat:hover { border-color: var(--border-hover); color: var(--text); }
+    .boat[aria-pressed="true"] {
+      border-color: var(--gold); color: var(--gold-light);
+      background: color-mix(in srgb, var(--gold) 12%, var(--bg-base));
+    }
+    .boat .rk { font-size: 0.72rem; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+    .boat[aria-pressed="true"] .rk { color: var(--gold); }
+
     @media (max-width: 700px) { .table-wrap { overflow-x: auto; } table { min-width: 40rem; } }
     @media (pointer: coarse) { .f select, .f input { min-height: 44px; } }
   </style>
@@ -74,6 +91,9 @@
 <div class="wrap">
   <div class="panel">
     <h2>我的潛水艇</h2>
+    <!-- 一個部隊最多四艘，所以四個位子固定存在（不是「新增」的清單）。
+         按一下切過去，改動即時存回那一艘。 -->
+    <div class="boats" id="boats" role="group" aria-label="選擇潛水艇"></div>
     <div class="fields" id="partFields"></div>
     <div class="fields" style="margin-top:0.7rem">
       <div class="f">
@@ -99,8 +119,12 @@
     那個編號與道具順序不一致，照順序猜會四個部位全錯。<br>
     <b>本站不提供「勾幾個點跑一趟要幾桶」的試算。</b> 那個公式不在遊戲資料裡（牽涉點與點之間的距離與航行規則），
     憑印象算出來的桶數會讓你把艇派出去回不來。表上的<b>桶</b>與<b>時間</b>是各航點自己的數值。<br>
-    灰掉的是<b>階級還不夠</b>的航點。航點名來自台服語系檔，查不到的（20 個）不顯示。
-  </p>
+    灰掉的是<b>階級還不夠</b>的航點。航點名來自台服語系檔，查不到的（20 個）不顯示。<br>
+    <b>四艘的配置各自記住</b>（一個部隊最多四艘）。改動即時存在瀏覽器裡（<code>ffxiv_submarine_boats</code>），
+    帶 <code>?rank=&amp;…</code> 參數的分享連結<b>優先於本機存檔</b>，套用後會寫進你當前選的那一艘。<br>
+    <b>不提供「哪個航點掉什麼」。</b> 那份資料不在遊戲的資料表裡——<code>SubmarineExplorationLog</code>
+    只有一個未知欄位、<code>SubmarineExploration</code> 沒有任何掉落欄位，Teamcraft 的航點表也只有名稱與地點。
+    那是社群整理出來的知識，本站不憑印象寫。</p>
 </div>
 
 <footer class="page-footer">
@@ -128,6 +152,78 @@
   }
   var fmt = function (n) { return Math.round(n).toLocaleString(); };
 
+  /* ── 四艘存檔 ────────────────────────────────────────────────────────
+     一個部隊最多四艘，而玩家真的會分別配不同的組合（索敵艇／回收艇）。
+     四個位子**固定存在**，不是「新增／刪除」的清單——遊戲裡就是四格。
+
+     存 `ffxiv_submarine_boats`（key 一律 ffxiv_ 前綴，首頁全站備份才掃得到，§2.3）：
+       `{ active: 0..3, boats: [ { parts: {部位: itemId}, rank: N } × 4 ] }`
+     ⚠ **存 itemId 不存選單的索引**。部件表會隨改版增加，存索引的話新版一加部件
+     就整份錯位，而且錯得看不出來（選到的還是個有效部件，只是不是你選的那個）。 */
+  var LS = 'ffxiv_submarine_boats';
+  var BOATS = 4;
+  var state = { active: 0, boats: [] };
+
+  function loadState() {
+    for (var i = 0; i < BOATS; i++) state.boats.push({ parts: {}, rank: 1 });
+    try {
+      var raw = JSON.parse(localStorage.getItem(LS) || 'null');
+      if (!raw || !Array.isArray(raw.boats)) return;
+      state.active = Math.max(0, Math.min(BOATS - 1, Number(raw.active) || 0));
+      for (var j = 0; j < BOATS; j++) {
+        var b = raw.boats[j];
+        if (!b || typeof b !== 'object') continue;
+        state.boats[j].rank = Math.max(1, Math.min(145, Number(b.rank) || 1));
+        if (b.parts && typeof b.parts === 'object') state.boats[j].parts = b.parts;
+      }
+    } catch (e) { /* 壞掉的存檔就當沒有，不要讓整頁掛掉 */ }
+  }
+  function saveState() {
+    try { localStorage.setItem(LS, JSON.stringify(state)); } catch (e) {}
+  }
+  function cur() { return state.boats[state.active]; }
+
+  /** 把目前選單的值寫回 state。每次改動都要叫，不然切艇會丟掉剛改的。 */
+  function captureBoat() {
+    var b = cur();
+    SLOT_ORDER.forEach(function (slot) {
+      var sel = $('sl-' + slot);
+      if (sel) b.parts[slot] = +sel.value;
+    });
+    b.rank = Math.max(1, Math.min(145, parseInt($('rankIn').value, 10) || 1));
+  }
+
+  /** 把 state 套回選單。查不到的 itemId 就留在原本的預設值（不要清成空的）。 */
+  function applyBoat() {
+    var b = cur();
+    SLOT_ORDER.forEach(function (slot) {
+      var sel = $('sl-' + slot);
+      if (!sel) return;
+      var want = b.parts[slot];
+      if (want && [].some.call(sel.options, function (o) { return +o.value === want; })) {
+        sel.value = String(want);
+      }
+    });
+    $('rankIn').value = String(b.rank || 1);
+  }
+
+  function renderBoats() {
+    $('boats').innerHTML = state.boats.map(function (b, i) {
+      return '<button type="button" class="boat" aria-pressed="' + (i === state.active) + '" data-i="' + i + '">' +
+        '<span>' + (i + 1) + ' 號艇</span><span class="rk">階級 ' + (b.rank || 1) + '</span></button>';
+    }).join('');
+  }
+
+  function switchBoat(i) {
+    if (i === state.active) return;
+    captureBoat();                 // **先存再切**，不然剛改的那一艇會丟掉
+    state.active = i;
+    applyBoat();
+    saveState();
+    renderBoats();
+    render();
+  }
+
   function buildPartPickers() {
     var host = $('partFields');
     host.innerHTML = SLOT_ORDER.map(function (slot) {
@@ -139,7 +235,7 @@
         '<select id="sl-' + esc(slot) + '" data-slot="' + esc(slot) + '">' + opts + '</select></div>';
     }).join('');
     host.querySelectorAll('select').forEach(function (s) {
-      s.addEventListener('change', render);
+      s.addEventListener('change', function () { captureBoat(); saveState(); renderBoats(); render(); });
     });
   }
 
@@ -223,21 +319,33 @@
     history.replaceState(null, '', '?' + p.toString());
   }
 
-  $('rankIn').addEventListener('input', render);
+  $('rankIn').addEventListener('input', function () { captureBoat(); saveState(); renderBoats(); render(); });
+
+  $('boats').addEventListener('click', function (e) {
+    var b = e.target.closest('.boat');
+    if (b) switchBoat(+b.dataset.i);
+  });
 
   fetch('../../data/submarine.json')
     .then(function (r) { return r.json(); })
     .then(function (db) {
       DB = db;
       buildPartPickers();
+      loadState();
       applying = true;
+      applyBoat();                         // 先套存檔
+      /* 網址參數**優先於存檔**：帶著 ?rank=&船首=… 進來的是別人分享的配置，
+         被本機存檔蓋掉的話那條連結就等於沒用。套完之後寫回當前那一艘。 */
       var p = new URLSearchParams(INITIAL_QUERY);
-      if (p.get('rank')) $('rankIn').value = p.get('rank');
+      var fromUrl = false;
+      if (p.get('rank')) { $('rankIn').value = p.get('rank'); fromUrl = true; }
       SLOT_ORDER.forEach(function (slot) {
         var v = p.get(slot), sel = $('sl-' + slot);
-        if (v && sel && [].some.call(sel.options, function (o) { return o.value === v; })) sel.value = v;
+        if (v && sel && [].some.call(sel.options, function (o) { return o.value === v; })) { sel.value = v; fromUrl = true; }
       });
+      if (fromUrl) { captureBoat(); saveState(); }
       applying = false;
+      renderBoats();
       render();
     })
     .catch(function (e) { $('status').textContent = '載入失敗：' + e.message; });
