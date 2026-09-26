@@ -180,6 +180,8 @@
     table.listings { width: 100%; border-collapse: collapse; font-size: 0.84rem; margin-top: 6px; }
     table.listings th, table.listings td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--border); }
     table.listings th { color: var(--text-muted); font-weight: 600; font-size: 0.74rem; }
+    /* 補收藏：沒人在賣的那幾列壓暗，但仍要看得見（使用者要知道「缺這件但買不到」）*/
+    table.listings tr.cg-noprice td { opacity: 0.5; }
     table.listings td.num, table.listings th.num { text-align: right; font-variant-numeric: tabular-nums; }
     table.listings tr:hover td { background: var(--bg-card-hover); }
 
@@ -527,6 +529,11 @@
     .src-shop   { color: var(--blue);   background: var(--blue-dim);   border-color: rgba(79,195,247,0.3); }
     .src-duty   { color: var(--purple); background: var(--purple-dim); border-color: rgba(167,139,250,0.3); }
     .src-island { color: var(--cyan);   background: var(--cyan-dim);   border-color: rgba(34,211,238,0.3); }
+    /* 分片層才有的類型（market-sources 刻意不收，見 scripts/lib/obtainable.mjs） */
+    .src-craft  { color: var(--orange); background: var(--orange-dim); border-color: rgba(251,146,60,0.3); }
+    /* NPC 直購封頂的註記：它是「這個數字為什麼比市場板低」的解釋，
+       不是警告也不是錯誤，所以用中性的 cyan 而不是紅／黃。 */
+    .vendor-tip { color: var(--cyan); }
     .src-other  { color: var(--text-dim); background: var(--bg-card);  border-color: var(--border); }
     .src-d { flex: 1; min-width: 0; }
     .src-where { color: var(--text-muted); font-size: 0.76rem; font-variant-numeric: tabular-nums; }
@@ -661,6 +668,7 @@
       <button class="tab active" data-tab="search">🔍 物品查詢</button>
       <button class="tab" data-tab="craft">🧱 製作清單 <span class="pill" id="craftCount">0</span></button>
       <button class="tab" data-tab="profit">💰 賺錢排行</button>
+      <button class="tab" data-tab="collect">🎁 補收藏</button>
       <button class="tab" data-tab="lists">📁 我的清單</button>
     </nav>
 
@@ -710,6 +718,10 @@
             <span class="jf-group">
               <span class="jf-label">🏷 分類</span>
               <select id="catSel" aria-label="物品分類"><option value="">全部分類</option></select>
+            </span>
+            <span class="jf-group">
+              <span class="jf-label">🎁 取得方式</span>
+              <select id="srcSel" aria-label="取得方式"><option value="">不限</option></select>
             </span>
             <span class="jf-group">
               <label class="switch"><input type="checkbox" id="onlyMarket"><span class="track"></span>只顯示可上市場板</label>
@@ -782,6 +794,27 @@
     </section>
 
     <!-- 我的清單 -->
+    <!-- 補收藏：把站內收藏頁「還沒取得」且「買得到」的項目湊成一份採買清單。
+         進度讀的是各收藏頁自己的 localStorage（ffxiv_*_owned），本頁不寫入那些 key。 -->
+    <section class="tab-panel" id="tab-collect">
+      <div class="filter-panel">
+        <div class="job-filter" id="cgRow">
+          <span class="jf-group">
+            <span class="jf-label">🎁 收藏類別</span>
+            <button class="job-chip" data-cg="mounts">坐騎</button>
+            <button class="job-chip" data-cg="minions">寵物</button>
+            <button class="job-chip" data-cg="orchestrion">樂譜</button>
+            <button class="job-chip" data-cg="barding">鳥鞍</button>
+            <button class="job-chip" data-cg="emotes">表情</button>
+          </span>
+          <span class="jf-group">
+            <button class="btn primary" id="cgRunBtn" type="button">🔍 查缺口與價格</button>
+          </span>
+        </div>
+      </div>
+      <div id="collectBody"></div>
+    </section>
+
     <section class="tab-panel" id="tab-lists">
       <div id="listsBody"></div>
       <div class="list-actions">
@@ -806,6 +839,7 @@
 
   <script src="../../assets/js/patch-gate.js"></script>
   <script src="../../assets/js/universalis.js"></script>
+  <script src="../../assets/js/item-sources.js"></script>
   <script src="market.js"></script>
 </body>
 </html>

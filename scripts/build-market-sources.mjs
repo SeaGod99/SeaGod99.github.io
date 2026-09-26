@@ -24,6 +24,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { convertOm, normalizeEntries } from './lib/obtainable.mjs';
+import { loadTwLocales, twName } from './lib/tw-locales.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (f) => JSON.parse(fs.readFileSync(path.join(ROOT, 'data', f), 'utf8'));
@@ -33,12 +35,18 @@ const items = read('items.json');
 const om = read('obtainable-methods.json');
 const gathering = read('gathering.json');
 const gcShop = read('gc-shop.json');
+// NPC 販售者：om 的 vendor 型幾乎都沒有可用的 NPC 名，補這份才講得出「跟誰買」
+const vendorPrices = read('vendor-prices.json').data;
 const maps = read('maps.json');
 
 // ── 索引 ────────────────────────────────────────────────────────────────
 const itemName = new Map();
 const itemMarketable = new Map();
 for (const it of items.data) { itemName.set(it.id, it.name); itemMarketable.set(it.id, !!it.marketable); }
+
+// 店名解析器（同 build-item-sources.mjs）：om 的 shopName 有英文殘留，用 tw-locales 補
+const twLocales = await loadTwLocales();
+const twShop = (id) => twName(twLocales.shops, id);
 
 const mapName = new Map();
 for (const m of maps.data) mapName.set(m.id, m.name);
@@ -67,71 +75,10 @@ for (const row of (gcShop.data?.seals || [])) {
   if (wanted.has(row.id)) sealByItem.set(row.id, row);
 }
 
-// ── 轉換 ────────────────────────────────────────────────────────────────
-// 顯示優先序：能自己去拿的排前面，靠運氣或已淘汰的排後面。
-const ORDER = ['採集', '軍票兌換', '兌換', 'NPC商店', '無人島', '園藝', '副本', '危命任務',
-  '任務獎勵', '雇員探險', '遠航探索', '寶箱/容器', '怪物掉落', '精製獲得', '分解獲得', '成就獎勵'];
-
-// 這幾種對「我現在要湊材料」沒有行動意義，或前端本來就知道：
-//   craft      前端自己有 recipes.json，會畫成配方樹
-//   masterbook 秘籍是製作的前置，不是取得管道
-//   mogstation 商城，與素材無關
-//   requirement/alarm 語意含糊（前者是「被什麼需要」，後者無座標）
-const SKIP = new Set(['craft', 'masterbook', 'mogstation', 'requirement', 'alarm']);
-
-function npcNames(m) {
-  if (!Array.isArray(m.npcs) || !m.npcs.length) return null;
-  const uniq = [...new Set(m.npcs.map((n) => n?.name).filter(Boolean))];
-  return uniq.length ? uniq.slice(0, 3).join('、') : null;
-}
-
-function convertOm(m) {
-  if (SKIP.has(m.type)) return null;
-  switch (m.type) {
-    case 'specialshop': {
-      const cur = m.currency ? `${m.currency.name} ×${m.currency.amount}` : null;
-      // 商店名常常就是貨幣名（「白鋼刀幣」的商店也叫「白鋼刀幣」），別印兩次
-      const parts = [];
-      if (m.shopName) parts.push(m.shopName);
-      if (cur && m.currency.name !== m.shopName) parts.push(cur);
-      else if (cur && m.currency.amount) parts.push(`×${m.currency.amount}`);
-      return { t: '兌換', d: parts.join(' · ') || '特殊商店', w: npcNames(m) };
-    }
-    case 'vendor':
-      return { t: 'NPC商店', d: npcNames(m) ? 'NPC 販售' : 'NPC 販售（未記錄販售者）', w: npcNames(m) };
-    case 'instance':
-      return { t: '副本', d: `${m.totalInstances || 1} 個副本可產出` };
-    case 'quest':
-      return { t: '任務獎勵', d: m.questName || '任務獎勵' };
-    case 'gathering':
-      // 詳細座標另外由 gathering.json 補；這裡只當「確實是採集品」的佐證
-      return { t: '採集', d: m.level ? `採集 Lv.${m.level}` : '採集獲得' };
-    case 'venture':
-      return { t: '雇員探險', d: '派遣雇員可帶回' };
-    case 'voyage':
-      return { t: '遠航探索', d: `${m.totalVoyages || 1} 條航線可產出` };
-    case 'treasure':
-      return { t: '寶箱/容器', d: `${m.count || 1} 種寶箱／容器開得到` };
-    case 'drop':
-      return { t: '怪物掉落', d: '怪物掉落' };
-    case 'desynth':
-      return { t: '精製獲得', d: `${m.count || 1} 種物品精製得到` };
-    case 'reduction':
-      return { t: '分解獲得', d: `${m.count || 1} 種靈砂分解得到` };
-    case 'gardening':
-      return { t: '園藝', d: m.seedName ? `種 ${m.seedName}（${m.duration || '?'} 小時）` : '園藝栽培' };
-    case 'islandcrop':
-      return { t: '無人島', d: m.seedName ? `無人島農作：${m.seedName}` : '無人島農作' };
-    case 'islandpasture':
-      return { t: '無人島', d: '無人島牧場產出' };
-    case 'fate':
-      return { t: '危命任務', d: m.fateName ? `${m.fateName}（Lv.${m.level || '?'}）` : `危命任務 Lv.${m.level || '?'}` };
-    case 'achievement':
-      return { t: '成就獎勵', d: '成就獎勵' };
-    default:
-      return { t: m.typeName || m.type, d: m.typeName || m.type };
-  }
-}
+// ── 轉換 ──────────────────────────────────────────────────────────────
+// 轉換規則（類型翻譯、優先序、要略過哪幾種、去重與上限）抽在 scripts/lib/obtainable.mjs，
+// 與分片層 build-item-sources.mjs 共用同一份——七個提案都要這層，
+// 各抄一份就會長出七種「兌換」的寫法與七種優先序。
 
 function gatherEntries(id) {
   const nodes = gatherByItem.get(id) || [];
@@ -177,36 +124,18 @@ for (const id of wanted) {
   const oms = om.data[String(id)] || [];
   const hasGatherDetail = list.some((x) => x.t === '採集' && x.w);
   for (const m of oms) {
-    const c = convertOm(m);
+    const c = convertOm(m, { twShop, vendor: vendorPrices[id] || null });
     if (!c) continue;
     // 已經有帶座標的採集資料，就不要再塞一筆沒座標的「採集獲得」
     if (c.t === '採集' && hasGatherDetail) continue;
     list.push(c);
   }
 
-  // 去重（同類同說明）
-  const uniq = [];
-  const seen = new Set();
-  for (const e of list) {
-    const k = `${e.t}|${e.d}|${e.w || ''}`;
-    if (seen.has(k)) continue;
-    seen.add(k);
-    uniq.push(e);
-  }
-  uniq.sort((a, b) => {
-    const ia = ORDER.indexOf(a.t), ib = ORDER.indexOf(b.t);
-    return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
-  });
+  // 去重、排序、砍到 8 筆上限——規則在共用層，市場頁與分片層完全一致
+  const entries = normalizeEntries(list, { max: 8 });
+  if (!entries.length) continue;
+  data[id] = entries;
 
-  if (!uniq.length) continue;
-  // 一個物品最多留 8 筆，避免熱門素材塞爆（前端也顯示不下）；
-  // 順手拿掉空的 w／map，前端本來就用 falsy 判斷，留著只是佔體積
-  data[id] = uniq.slice(0, 8).map((e) => {
-    const o = { t: e.t, d: e.d };
-    if (e.w) o.w = e.w;
-    if (e.map != null) o.map = e.map;
-    return o;
-  });
   nItems++;
   nEntries += data[id].length;
 }

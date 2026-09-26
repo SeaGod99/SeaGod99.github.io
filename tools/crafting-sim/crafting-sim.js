@@ -614,10 +614,20 @@
         'data-item="' + g[0] + '" aria-label="' + esc(name) + ' 的 HQ 數量（最多 ' + g[1] + '）"> ' +
         '<span class="muted-sm num">/ ' + g[1] + "</span></div>";
     }).join("");
+    /* 「帶材料去查價」：這頁算得出要哪些材料、各幾個，但湊不湊得起、要花多少錢
+       在市場頁。原本使用者得一件一件搜過去，現在一鍵帶整份清單（見 docs/deep-links.md §2.2）。
+       數量用 hqIngredients 的總需求量（g[1]），**不是** HQ 欄位的輸入值——
+       要查的是「做這一個總共要買幾個」，跟其中幾個要 HQ 無關。 */
+    var craftLink = r.hqIngredients.length
+      ? '../market/#craft=' + r.hqIngredients.map(function (g) { return g[0] + ':' + g[1]; }).join(',')
+      : null;
     el.innerHTML = '<h3 style="margin-top:0.8rem">HQ 材料</h3>' +
       '<p class="muted-sm">投入 HQ 材料會給初期品質。</p>' +
       '<div class="hq-list">' + rows + "</div>" +
-      '<p class="muted-sm" id="hqSum" style="margin-top:0.4rem"></p>';
+      '<p class="muted-sm" id="hqSum" style="margin-top:0.4rem"></p>' +
+      (craftLink
+        ? '<p style="margin-top:0.5rem"><a class="mat-cost-link" href="' + craftLink + '">&#x1F4B0; 帶這些材料去市場頁算成本 →</a></p>'
+        : '');
 
     el.querySelectorAll("input").forEach(function (inp) {
       inp.addEventListener("input", function () {

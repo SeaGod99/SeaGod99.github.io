@@ -14,6 +14,15 @@
 (function () {
   'use strict';
 
+  // 提示與確認走共用的 toast.js（由 theme.js 全站載入）。原生 alert 會凍住整個分頁——
+  // 這頁背景有查價與倒數在跑，卡住特別有感。Toast 沒載好就退回原生。
+  // ⚠ askConfirm 回傳 Promise，改寫呼叫端時整條流程都要進 .then（見 assets/js/toast.js 檔頭）。
+  function notify(msg, kind) { if (window.Toast) Toast.show(msg, kind); else window.alert(msg); }
+  function askConfirm(msg, danger) {
+    if (window.Toast) return Toast.confirm(msg, { danger: !!danger });
+    return Promise.resolve(window.confirm(msg));
+  }
+
   var ICON_CDN = 'https://xivapi.com';
   // localStorage key 一律 `ffxiv_` 開頭，否則首頁的「匯出全站進度」掃不到
   // （它只收 ffxiv_* 前綴）。本頁原本用 sgt-market-*，使用者的清單與草稿
@@ -239,6 +248,46 @@
   // 詳情才抓，不影響首屏。
   var sourcesDb = null;
   var loadSourcesRaw = lazyJson('../../data/market-sources.json');
+
+  /* ---- NPC 金幣直購價（vendor-prices.json：{ id: {p:價, n:NPC, m:地圖, x, y} }）----
+     4,641 種可交易物品是 NPC 就直接賣金幣的。市場板上那些東西常常比 NPC 貴
+     （有人掛高價等新手），本頁原本只看市場板，於是成本被系統性高估，
+     「買 vs 做」的結論跟著錯。這份拿來對材料成本**封頂**。
+
+     ⚠ 只收「賣家沒有已知門檻」的，但門檻表只涵蓋 5 個部族 NPC，
+     其他形式（軍階、主線進度、城市解鎖）沒有建模。所以封頂之後**一定要把
+     價錢與賣家顯示出來**讓使用者自己判斷，不能偷偷把數字換掉。*/
+  /* ---- 取得方式索引（item-source-types.json：itemId → 類型位元遮罩）----
+     分片層回答「這一件哪來的」，但答不了「哪些家具是 NPC 直接買得到的」——
+     那要把 36,335 件掃一遍，而分片是按需載入的。這份是專門給**篩選**用的輕量索引
+     （差分陣列，gzip 15KB），與分片層由同一支腳本產生，保證同步。 */
+  var srcTypes = null;          // { types:[…], mask: Map<id, bits> }
+  var loadSrcTypesRaw = lazyJson('../../data/item-source-types.json');
+  function ensureSrcTypes() {
+    if (srcTypes) return Promise.resolve(srcTypes);
+    return loadSrcTypesRaw().then(function (d) {
+      var mask = new Map();
+      var id = 0;
+      for (var i = 0; i < d.d.length; i += 2) { id += d.d[i]; mask.set(id, d.d[i + 1]); }
+      srcTypes = { types: d.types, mask: mask };
+      return srcTypes;
+    });
+  }
+  function hasSrcType(itemId, typeName) {
+    if (!srcTypes) return true;                       // 還沒載完就不篩（別把東西藏起來）
+    var idx = srcTypes.types.indexOf(typeName);
+    if (idx < 0) return false;
+    return ((srcTypes.mask.get(itemId) || 0) & (1 << idx)) !== 0;
+  }
+
+  var vendorDb = null;
+  lazyJson('../../data/vendor-prices.json')().then(function (d) {
+    vendorDb = d.data || {};
+    // 載入完成前算過的成本不含 NPC 價；載到之後把畫面重畫一次才會一致
+    if (typeof renderCraft === 'function' && craft.length) { quoteCache.clear(); renderCraft(); }
+  }).catch(function () { vendorDb = {}; });
+
+  function vendorOf(id) { return (vendorDb && vendorDb[id]) || null; }
   function ensureSources() {
     return loadSourcesRaw().then(function (d) { sourcesDb = d.data || {}; return sourcesDb; });
   }
@@ -246,7 +295,9 @@
   var SRC_TAG_CLASS = {
     '採集': 'src-gather', '軍票兌換': 'src-seal', '兌換': 'src-shop', 'NPC商店': 'src-shop',
     '無人島': 'src-island', '園藝': 'src-gather', '副本': 'src-duty', '危命任務': 'src-duty',
-    '任務獎勵': 'src-duty'
+    '任務獎勵': 'src-duty',
+    // 分片層才有的兩種（market-sources 刻意不收，見 scripts/lib/obtainable.mjs 的兩組 SKIP）
+    '可製作': 'src-craft', '商城購買': 'src-shop'
   };
   // 「照著做得出來」的管道：有座標、有貨幣價、有 NPC，看完就知道下一步。
   // 其餘（遠航探索／寶箱／精製／分解／雇員／副本…）上游資料只有一個數量，
@@ -262,6 +313,13 @@
       return;
     }
     var list = sourcesDb[id];
+    /* market-sources.json 只收「配方會用到的物品」（7,558 件），但本頁搜得到 45,548 件——
+       家具、練級裝、季節裝備查進來都是一片空白。查無時退到取得管道分片層
+       （data/item-sources/，36,335 件，依 itemId >> 10 分片，只抓需要的那一片）。
+       那層沒有採集座標與軍票價（那是 market-sources 額外接的），所以**不能反過來用它當主來源**。*/
+    if ((!list || !list.length) && window.ItemSources) {
+      try { list = await ItemSources.get(id); } catch (e) { list = null; }
+    }
     if (!list || !list.length) {
       el.innerHTML = untradable
         ? '<div class="note">不可交易，站內也查不到取得管道。</div>'
@@ -528,10 +586,11 @@
     var ej = $('#equipJob').value;
     var sort = $('#sortSel').value;
     var cat = $('#catSel').value;
+    var srcType = $('#srcSel') ? $('#srcSel').value : '';
     var onlyMk = $('#onlyMarket').checked;
     searchOut = []; searchPage = 1;
 
-    var hasCond = jobFilter.size || cr.active || er.active || ej !== '' || cat !== '' || onlyMk;
+    var hasCond = jobFilter.size || cr.active || er.active || ej !== '' || cat !== '' || srcType !== '' || onlyMk;
     if (!q && !hasCond) {
       box.innerHTML = '<div class="search-note">請輸入關鍵字或設定篩選條件。</div>';
       $('#searchBtn').classList.remove('dirty');
@@ -541,6 +600,7 @@
 
     // 需要的資料平行載入；失敗明確報錯，絕不靜默顯示查無（ENG-1）
     var needs = [ensureRecipes()];   // 卡片職業列與製作排序皆用（init 已背景預載，多半即時）
+    if (srcType !== '') needs.push(ensureSrcTypes());
     if (er.active || ej !== '' || sort.indexOf('equip') === 0) needs.push(ensureEquip());
     var t = ++searchToken;
     box.innerHTML = '<div class="search-note">查詢中…</div>';
@@ -559,6 +619,7 @@
       if (!it.name || !PatchGate.released(it.patch, gamePatch)) continue;
       if (onlyMk && !it.marketable) continue;
       if (cat !== '' && it.category !== cat) continue;
+      if (srcType !== '' && !hasSrcType(it.id, srcType)) continue;
       if (!matchesJobFilter(it)) continue;
       if (!matchesCraftLv(it, cr)) continue;
       if (!matchesEquip(it, er, ejSet)) continue;
@@ -1119,7 +1180,7 @@
     if (ex) { ex.qty += qty; }
     else {
       if (craft.length >= MAX_CRAFT_ITEMS) {
-        alert('製作清單最多 ' + MAX_CRAFT_ITEMS + ' 件物品（避免樹狀圖過大）。\n請先移除部分項目，或另存後清空再加入。');
+        notify('製作清單最多 ' + MAX_CRAFT_ITEMS + ' 件物品（避免樹狀圖過大）。\n請先移除部分項目，或另存後清空再加入。', 'err');
         return;
       }
       craft.push({ itemId: id, qty: qty });
@@ -1233,7 +1294,21 @@
     var it = itemById.get(id);
     if (!it || !it.marketable) return Infinity;
     var q = quote(id, need);
-    return q ? q.total : Infinity;
+    var market = q ? q.total : Infinity;
+    // NPC 直購封頂：買得到的話，成本不該超過「NPC 單價 × 數量」。
+    // NPC 的庫存是無限的，所以這裡就是單純乘法（與市場板的 fillQuote 不同，§3.14）。
+    var v = vendorOf(id);
+    if (v && v.p * need < market) return v.p * need;
+    return market;
+  }
+  /** 這筆成本是不是走 NPC 直購來的（給畫面標示用；封頂不能是隱形的）。 */
+  function costViaVendor(id, need) {
+    var v = vendorOf(id);
+    if (!v) return null;
+    var it = itemById.get(id);
+    if (!it || !it.marketable) return null;
+    var q = quote(id, need);
+    return (v.p * need < (q ? q.total : Infinity)) ? v : null;
   }
   // 顯示用的市場最低單價（單買 1 個的價）。成本計算一律走 quote/costOf，不要用這個乘。
   function unitBuy(id) { var q = quote(id, 1); return q ? q.minUnit : null; }
@@ -1900,10 +1975,21 @@
       var bq = n.mode === 'buy' && n.need > 0 ? quote(n.id, n.need) : null;
       if (bq) { var fh = flagsHtml(bq, n.id, true); if (fh) sub += ' ' + fh; }   // flagsHtml 自帶 .flag-run
 
+      /* NPC 直購封頂：成本走的是 NPC 而不是市場板時，一定要講出來。
+         門檻表（VENDOR_GATES）只涵蓋 5 個部族 NPC，軍階／主線／城市解鎖那些沒建模，
+         所以把「跟誰買、在哪、單價多少」攤開讓使用者自己判斷，不偷偷換數字。 */
+      var vend = n.mode === 'buy' && n.need > 0 ? costViaVendor(n.id, n.need) : null;
+      if (vend) {
+        sub += ' <span class="vendor-tip">🧍 NPC 直購 ' + fmt(vend.p) + ' G/個' +
+          (vend.n ? '（' + esc(vend.n) + (vend.m ? ' ＠' + esc(vend.m) + (vend.x != null ? ' ' + vend.x + ', ' + vend.y : '') : '') + '）' : '') +
+          (bq ? '，比市場板便宜' : '') + '</span>';
+      }
+
       var qtyCell = n.mode === 'have' ? '0' : ('<b>' + n.need + '</b>' + (n.have > 0 ? ' <span class="plan-of">/ ' + n.qty + '</span>' : ''));
       // 「做」的列也填單價／小計（自製的單位成本與總成本），欄位不再一邊有數字一邊空著。
       // 買的單價是**吃掉掛單後的加權均價**（跟 n.buy／n.need 一致），不是最便宜那筆。
-      var unitVal = n.mode === 'buy' ? (bq ? bq.unit : null)
+      // 走 NPC 直購時單價就是 NPC 單價——否則單價顯示市場均價、小計卻是 NPC 價，兩欄對不起來
+      var unitVal = n.mode === 'buy' ? (vend ? vend.p : (bq ? bq.unit : null))
         : (n.mode === 'craft' && n.need > 0 && n.craft !== Infinity) ? n.craft / n.need
         : null;
       var totalVal = n.mode === 'buy' ? n.buy : n.mode === 'craft' ? n.craft : null;
@@ -2490,13 +2576,13 @@
     var now = Date.now();
     lists.push({ id: 'L' + now + Math.floor(Math.random() * 1000), name: name, createdAt: now, updatedAt: now, items: craft.map(function (c) { return { itemId: c.itemId, qty: c.qty }; }) });
     saveLists(); renderLists();
-    alert('已儲存清單「' + name + '」');
+    notify('已儲存清單「' + name + '」', 'ok');
   }
   function loadList(id) {
     var l = lists.find(function (x) { return x.id === id; });
     if (!l) return;
     craft = l.items.slice(0, MAX_CRAFT_ITEMS).map(function (c) { return { itemId: c.itemId, qty: c.qty }; });
-    if (l.items.length > MAX_CRAFT_ITEMS) alert('此清單有 ' + l.items.length + ' 件，超過上限，已載入前 ' + MAX_CRAFT_ITEMS + ' 件。');
+    if (l.items.length > MAX_CRAFT_ITEMS) notify('此清單有 ' + l.items.length + ' 件，超過上限，已載入前 ' + MAX_CRAFT_ITEMS + ' 件。', 'err');
     saveDraft(); updateCraftCount(); switchTab('craft'); renderCraft();
   }
   function renameList(id) {
@@ -2509,8 +2595,11 @@
   function deleteList(id) {
     var l = lists.find(function (x) { return x.id === id; });
     if (!l) return;
-    if (!confirm('刪除清單「' + l.name + '」？')) return;
-    lists = lists.filter(function (x) { return x.id !== id; }); saveLists(); renderLists();
+    askConfirm('刪除清單「' + l.name + '」？', true).then(function (ok) {
+      if (!ok) return;
+      lists = lists.filter(function (x) { return x.id !== id; }); saveLists(); renderLists();
+      notify('已刪除清單「' + l.name + '」', 'ok');
+    });
   }
   // 展開狀態只記在記憶體：改名／刪除後整區會重繪，不希望使用者剛展開的卡被收回去。
   // 不寫進 localStorage——清單會增減，存了反而留下一堆已刪清單的殘留鍵。
@@ -2586,7 +2675,7 @@
       try {
         var obj = JSON.parse(fr.result);
         var incoming = Array.isArray(obj) ? obj : (obj.lists || []);
-        if (!Array.isArray(incoming) || !incoming.length) { alert('檔案內沒有清單資料。'); return; }
+        if (!Array.isArray(incoming) || !incoming.length) { notify('檔案內沒有清單資料。', 'err'); return; }
         var ok = 0;
         incoming.forEach(function (l) {
           if (l && Array.isArray(l.items)) {
@@ -2595,10 +2684,154 @@
           }
         });
         saveLists(); renderLists();
-        alert('已匯入 ' + ok + ' 份清單。');
-      } catch (e) { alert('匯入失敗：檔案格式錯誤。'); }
+        notify('已匯入 ' + ok + ' 份清單。', 'ok');
+      } catch (e) { notify('匯入失敗：檔案格式錯誤。', 'err'); }
     };
     fr.readAsText(file);
+  }
+
+  /* ===================== 補收藏（收藏缺口採買清單）=====================
+     把站內收藏頁「還沒取得」且「買得到」的項目湊成一份採買清單。
+
+     進度來自各收藏頁自己的 localStorage（`ffxiv_*_owned`），本頁**只讀不寫**——
+     使用者的收藏進度是那幾頁的資產，這裡動它會很難追。
+
+     ⚠ 已取得與否的判定要**沿用各頁的 keyOf**，不能一律當成數字 id：
+     引擎預設的 key 是 `'id:' + e.id`，但寵物頁沿用舊存檔格式、存的是純數字。
+     搞錯的後果是「整份收藏都顯示成未取得」，而畫面上看起來很正常。
+
+     髮型頁不在這裡：`hairstyles.json` 的 39 筆**全部沒有 itemId**，查不了價。 */
+  var CG_SOURCES = [
+    { key: 'mounts', name: '坐騎', file: '../../data/mounts.json', ls: 'ffxiv_mounts_owned', numeric: false },
+    { key: 'minions', name: '寵物', file: '../../data/minions.json', ls: 'ffxiv_minions_owned', numeric: true },
+    { key: 'orchestrion', name: '樂譜', file: '../../data/orchestrion.json', ls: 'ffxiv_orchestrion_owned', numeric: false },
+    { key: 'barding', name: '鳥鞍', file: '../../data/barding.json', ls: 'ffxiv_barding_owned', numeric: false },
+    { key: 'emotes', name: '表情', file: '../../data/emotes.json', ls: 'ffxiv_emotes_owned', numeric: false }
+  ];
+  var cgPicked = new Set(CG_SOURCES.map(function (s) { return s.key; }));
+  var cgCache = {};        // key -> 該收藏的完整 data（只載一次）
+  var cgRows = null;       // 上次算出的結果
+  var cgBusy = false;
+
+  function cgOwnedSet(src) {
+    try { return new Set(JSON.parse(localStorage.getItem(src.ls) || '[]')); }
+    catch (e) { return new Set(); }
+  }
+  function cgKeyOf(src, e) {
+    // 與各收藏頁的 keyOf 對齊（見上方註解）
+    if (src.numeric) return e.id;
+    return e.id != null ? 'id:' + e.id : 'name:' + e.name;
+  }
+
+  async function cgLoad(src) {
+    if (cgCache[src.key]) return cgCache[src.key];
+    var j = await fetch(src.file).then(function (r) { return r.json(); });
+    cgCache[src.key] = j.data || [];
+    return cgCache[src.key];
+  }
+
+  async function cgCompute() {
+    if (cgBusy) return;
+    cgBusy = true;
+    var body = $('#collectBody');
+    body.innerHTML = '<div class="search-note">讀取收藏進度…</div>';
+    try {
+      var picked = CG_SOURCES.filter(function (s) { return cgPicked.has(s.key); });
+      if (!picked.length) { body.innerHTML = '<div class="empty-state">先選至少一種收藏類別。</div>'; cgBusy = false; return; }
+
+      var missing = [];
+      for (var i = 0; i < picked.length; i++) {
+        var src = picked[i];
+        var list = await cgLoad(src);
+        var owned = cgOwnedSet(src);
+        for (var j2 = 0; j2 < list.length; j2++) {
+          var e = list[j2];
+          if (owned.has(cgKeyOf(src, e))) continue;         // 已取得
+          if (!e.itemId) continue;                           // 沒有對應道具＝買不到
+          var it = itemById.get(e.itemId);
+          if (!it || !it.marketable) continue;               // 不可交易
+          if (!PatchGate.released(it.patch, gamePatch)) continue;
+          missing.push({ src: src, entry: e, item: it });
+        }
+      }
+      if (!missing.length) {
+        body.innerHTML = '<div class="search-note">選到的類別裡，沒有「未取得且買得到」的項目——可能已經收齊，或這些收藏都不在市場板上流通。</div>';
+        cgBusy = false; return;
+      }
+
+      body.innerHTML = '<div class="search-note">查詢 ' + missing.length + ' 件的市價…</div>';
+      var agg = await Universalis.fetchAggregated(scope, missing.map(function (m) { return m.item.id; }));
+      if (!agg) {
+        body.innerHTML = '<div class="search-note err">查價失敗，請按上方「↻ 重新整理」再試。</div>';
+        cgBusy = false; return;
+      }
+      cgRows = missing.map(function (m) {
+        var a = agg.items[m.item.id];
+        var nq = (a && a.nq) || {};
+        var minL = nq.minListing && (nq.minListing.dc || nq.minListing.world);
+        var avg = nq.averageSalePrice && (nq.averageSalePrice.dc || nq.averageSalePrice.world);
+        var vel = nq.dailySaleVelocity && (nq.dailySaleVelocity.dc || nq.dailySaleVelocity.world);
+        return {
+          srcName: m.src.name, srcKey: m.src.key,
+          id: m.item.id, name: m.item.name, icon: m.item.icon,
+          collName: m.entry.name || m.item.name,
+          price: minL ? minL.price : null,
+          world: minL && minL.worldId ? Universalis.worldName(minL.worldId) : null,
+          avg: avg ? avg.price : null,
+          vel: vel ? vel.quantity : 0
+        };
+      });
+      cgRender();
+    } catch (e) {
+      $('#collectBody').innerHTML = '<div class="search-note err">讀取失敗：' + esc(e.message) + '</div>';
+    }
+    cgBusy = false;
+  }
+
+  function cgRender() {
+    var body = $('#collectBody');
+    if (!cgRows) { body.innerHTML = '<div class="empty-state">選好收藏類別，按「🔍 查缺口與價格」。</div>'; return; }
+    // 買得到的排前面、便宜的排前面；買不到的沉底。排序鍵是價格（這份清單不會邊看邊變，
+    // 與製作計畫那種「邊操作邊看」的清單不同，依價格排是使用者要的）
+    var rows = cgRows.slice().sort(function (a, b) {
+      var ap = a.price == null ? Infinity : a.price, bp = b.price == null ? Infinity : b.price;
+      return ap - bp || a.id - b.id;
+    });
+    var buyable = rows.filter(function (r) { return r.price != null; });
+    var total = buyable.reduce(function (s, r) { return s + r.price; }, 0);
+
+    var byCat = {};
+    rows.forEach(function (r) { byCat[r.srcName] = (byCat[r.srcName] || 0) + 1; });
+    var summary = Object.keys(byCat).map(function (k) { return k + ' ' + byCat[k]; }).join('、');
+
+    var html = '<div class="search-note">還沒取得且買得到的共 <b>' + rows.length + '</b> 件（' + esc(summary) + '）；' +
+      '其中 <b>' + buyable.length + '</b> 件目前有人在賣，全買齊約需 <b>' + fmt(total) + '</b>' +
+      '<span class="dim">（各取最低在架價，未計 ' + Math.round(Universalis.TAX_RATE * 100) + '% 交易稅；同一件只算一個）</span></div>';
+
+    html += '<table class="listings"><thead><tr>' +
+      '<th>類別</th><th>收藏名</th><th>道具</th><th class="num">最低在架</th><th class="num">近期均價</th><th class="num">日銷量</th><th></th>' +
+      '</tr></thead><tbody>';
+    rows.forEach(function (r) {
+      html += '<tr' + (r.price == null ? ' class="cg-noprice"' : '') + '>' +
+        '<td>' + esc(r.srcName) + '</td>' +
+        '<td>' + esc(r.collName) + '</td>' +
+        '<td>' + (r.icon ? '<img class="ic" src="' + esc(ICON_CDN + r.icon) + '" alt="" loading="lazy">' : '') +
+          '<a href="#item=' + r.id + '" data-cgitem="' + r.id + '">' + esc(r.name) + '</a></td>' +
+        '<td class="num">' + (r.price != null ? fmt(r.price) + (r.world ? ' <span class="dim">' + esc(r.world) + '</span>' : '') : '<span class="dim">無人在賣</span>') + '</td>' +
+        '<td class="num">' + (r.avg != null ? fmt(r.avg) : '<span class="dim">—</span>') + '</td>' +
+        '<td class="num dim">' + (Math.round(r.vel * 10) / 10) + '</td>' +
+        '<td><button class="btn" data-cgadd="' + r.id + '">＋ 加入清單</button></td>' +
+        '</tr>';
+    });
+    html += '</tbody></table>';
+    body.innerHTML = html;
+  }
+
+  function renderCollectTab() {
+    document.querySelectorAll('#cgRow [data-cg]').forEach(function (b) {
+      b.classList.toggle('active', cgPicked.has(b.getAttribute('data-cg')));
+    });
+    cgRender();
   }
 
   // ===================== 分頁 / 瀏覽歷史（上一頁/下一頁）=====================
@@ -2613,6 +2846,7 @@
     if (name === 'craft') renderCraft();
     if (name === 'lists') renderLists();
     if (name === 'profit') renderProfitTab();
+    if (name === 'collect') renderCollectTab();
   }
 
   // 套用某個歷史狀態到畫面（不再寫入歷史）
@@ -2703,7 +2937,34 @@
       var mNode = h.match(/^#node=(\d+)/);
       if (mItem) return { tab: 'search', detail: Number(mItem[1]), node: null };
       if (mNode) return { node: Number(mNode[1]) };
-      if (h === '#craft' || h === '#lists' || h === '#profit') return { tab: h.slice(1), node: null };
+      if (h === '#craft' || h === '#lists' || h === '#profit' || h === '#collect') return { tab: h.slice(1), node: null };
+      /* `#craft=<id>:<數量>,<id>:<數量>…`：從別的頁面帶一份材料清單過來。
+         園藝頁與製作模擬器算得出「要做這個得先湊哪些東西」，但使用者拿到清單之後
+         還得一件一件搜進來，這條就是把那一步接起來。
+         逐件走既有的 addToCraft()（含 MAX_CRAFT_ITEMS 上限與合併同物品），
+         **不另外寫一套**——上限與去重的規則只能有一份。 */
+      var mCraft = h.match(/^#craft=(.+)$/) || [null, new URLSearchParams(location.search).get('craft')];
+      if (mCraft[1]) {
+        var add = String(mCraft[1]).split(',').map(function (pair) {
+          var kv = pair.split(':');
+          var cid = parseInt(kv[0], 10);
+          var cq = kv.length > 1 ? parseInt(kv[1], 10) : 1;
+          return (cid > 0 && cq > 0) ? { itemId: cid, qty: Math.min(cq, 9999) } : null;
+        }).filter(Boolean);
+        if (add.length) return { tab: 'craft', node: null, craftAdd: add };
+      }
+      // 查詢字串別名：`?item=<id>` / `?tab=<分頁>` 等同 `#item=` / `#<分頁>`。
+      // 站上其他頁一律用查詢字串（見 docs/deep-links.md），本頁因為歷史因素用 hash，
+      // 兩種都收才不會讓連進來的人要記「這頁比較特別」。內部導覽仍產生 hash。
+      var qp = new URLSearchParams(location.search);
+      var qItem = parseInt(qp.get('item'), 10);
+      if (qItem > 0) return { tab: 'search', detail: qItem, node: null };
+      var qTab = qp.get('tab');
+      if (['search', 'craft', 'profit', 'lists', 'collect'].indexOf(qTab) >= 0) return { tab: qTab, node: null };
+      // `?q=<關鍵字>`：全站搜尋面板的「到市場查價搜…」保底連結走這條
+      // （索引不收一般物品，打不到的一律導來這裡實搜）
+      var qs = qp.get('q');
+      if (qs) return { tab: 'search', detail: null, node: null, q: qs };
       return null;
     })();
 
@@ -2719,6 +2980,24 @@
       if (pfJobs.has(j)) pfJobs.delete(j); else pfJobs.add(j);
       chip.classList.toggle('active', pfJobs.has(j));
     });
+    // 補收藏：類別複選、執行、點物品名開詳情、加入製作清單
+    $('#cgRow').addEventListener('click', function (e) {
+      var chip = e.target.closest('.job-chip');
+      if (chip) {
+        var k = chip.getAttribute('data-cg');
+        if (cgPicked.has(k)) cgPicked.delete(k); else cgPicked.add(k);
+        chip.classList.toggle('active', cgPicked.has(k));
+        return;
+      }
+      if (e.target.closest('#cgRunBtn')) cgCompute();
+    });
+    $('#collectBody').addEventListener('click', function (e) {
+      var add = e.target.closest('[data-cgadd]');
+      if (add) { addToCraft(Number(add.getAttribute('data-cgadd')), 1); notify('已加入製作清單', 'ok'); return; }
+      var link = e.target.closest('[data-cgitem]');
+      if (link) { e.preventDefault(); navTo({ tab: 'search', detail: Number(link.getAttribute('data-cgitem')), node: null }); }
+    });
+
     $('#pfHqSeg').addEventListener('click', function (e) {
       var b = e.target.closest('[data-pfhq]');
       if (!b) return;
@@ -2775,6 +3054,7 @@
     $('#equipJob').addEventListener('change', markDirty);
     $('#sortSel').addEventListener('change', markDirty);
     $('#catSel').addEventListener('change', markDirty);
+    if ($('#srcSel')) $('#srcSel').addEventListener('change', markDirty);
     $('#onlyMarket').addEventListener('change', markDirty);
     $('#searchResults').addEventListener('click', function (e) {
       var pb = e.target.closest('.page-btn[data-page]');
@@ -2854,7 +3134,12 @@
         else if (a === 'del') removeFromCraft(id);
         else if (a === 'worldcmp') computeWorldCompare();
         else if (a === 'saveAs') saveAsList();
-        else if (a === 'clear') { if (confirm('確定清空目前的製作清單？（已儲存的清單不受影響，「已有」的標記將一併重設）')) { craft = []; gotMap = {}; planOpen = new Map(); saveGot(); saveDraft(); updateCraftCount(); renderCraft(); } }
+        else if (a === 'clear') {
+          askConfirm('確定清空目前的製作清單？（已儲存的清單不受影響，「已有」的標記將一併重設）', true).then(function (ok) {
+            if (!ok) return;
+            craft = []; gotMap = {}; planOpen = new Map(); saveGot(); saveDraft(); updateCraftCount(); renderCraft();
+          });
+        }
         return;
       }
       var srow = e.target.closest('[data-simple]');
@@ -2917,8 +3202,33 @@
       var cats = (db.categories || []).filter(Boolean).slice().sort(function (a, b) { return a.localeCompare(b, 'zh-Hant'); });
       $('#catSel').innerHTML = '<option value="">全部分類</option>' +
         cats.map(function (c) { return '<option value="' + esc(c) + '">' + esc(c) + '</option>'; }).join('');
+      /* 取得方式選單：選項名單來自 item-source-types.json 本身（17 種），不寫死——
+         寫死的話新增一種管道就會從篩選裡消失，而畫面上完全看不出來。
+         這份 gzip 只有 15KB，開頁就背景載，按下選單時已經在了。 */
+      ensureSrcTypes().then(function (st) {
+        var sel = $('#srcSel');
+        if (!sel) return;
+        sel.innerHTML = '<option value="">不限</option>' +
+          st.types.slice().sort(function (x, y) { return x.localeCompare(y, 'zh-Hant'); })
+            .map(function (t) { return '<option value="' + esc(t) + '">' + esc(t) + '</option>'; }).join('');
+      }).catch(function () { /* 載不到就維持「不限」，不影響其他篩選 */ });
       // 物品庫到位了，這時才套用深連結（見上面 pendingHash 的說明）
-      if (pendingHash) { navTo(pendingHash); pendingHash = null; }
+      if (pendingHash) {
+        // `?q=` 另外帶關鍵字：填進搜尋框並實際執行一次搜尋
+        var pq = pendingHash.q;
+        // 先加進清單再切分頁：navTo 會 render，順序顛倒的話第一次畫出來是空的
+        if (pendingHash.craftAdd) {
+          var skipped = 0;
+          pendingHash.craftAdd.forEach(function (x) {
+            if (!itemById.get(x.itemId)) { skipped++; return; }   // 台服未開放或 id 打錯，安靜略過
+            addToCraft(x.itemId, x.qty);
+          });
+          if (skipped) notify('帶進來的清單有 ' + skipped + ' 件在本站查不到（台服未開放或 id 有誤），已略過。', 'warn');
+        }
+        navTo({ tab: pendingHash.tab, detail: pendingHash.detail, node: pendingHash.node });
+        pendingHash = null;
+        if (pq) { $("#searchInput").value = pq; executeSearch(); }
+      }
       // 背景預載：配方（卡片職業列／製作清單零等待）＋裝備限制（填職業下拉）
       ensureRecipes().then(function () {
         if (searchOut.length) renderResultsPage(false);   // 補上卡片的製作職業列

@@ -214,6 +214,14 @@
   }
   .hq-row .grow { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .hq-row input { width: 4.2rem; }
+  /* 「帶材料去市場頁」：它是這一區唯一的跨頁出口，給它 gold 讓人看得到；
+     觸控用透明擴張層補到 44px（同站內其他小連結的做法）。 */
+  .mat-cost-link { color: var(--gold); text-decoration: none; font-size: 0.8rem; }
+  .mat-cost-link:hover { text-decoration: underline; }
+  @media (pointer: coarse) {
+    .mat-cost-link { position: relative; display: inline-block; }
+    .mat-cost-link::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 44px; transform: translateY(-50%); }
+  }
 
   /* ── 技能面板 ─────────────────────────────────────────────────── */
   .palette-group + .palette-group { margin-top: 0.75rem; }
