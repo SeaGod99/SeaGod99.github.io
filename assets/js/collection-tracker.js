@@ -855,7 +855,10 @@
   function sourceWhere(s) {
     if (!s || !s.issuer || !s.issuer.name) return '';
     var at = s.at;
-    var html = '<div class="ct-where">&#x1F9CD; 接取：' + esc(s.issuer.name) +
+    /* 動詞可由資料指定。任務來源是「接取」（預設），NPC 商店是「販售」——
+       版面與座標鈕完全共用，**各頁不要自己排一份**（CLAUDE.md 的工作流）。 */
+    var verb = (s.issuer.verb || '接取');
+    var html = '<div class="ct-where">&#x1F9CD; ' + esc(verb) + '：' + esc(s.issuer.name) +
       (at ? '　&#x1F4CD; ' + esc(at.mapName) + (at.x == null ? '' : ' (' + at.x + ', ' + at.y + ')') : '');
     // 座標鈕只在算得出座標時給（副本／室內的實例地圖沒有座標，只有地名）
     if (at && at.x != null) {

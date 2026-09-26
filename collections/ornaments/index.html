@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FF14 時尚配飾收藏追蹤 — 陽傘、背包、火炬等配飾的取得來源與擁有進度">
+  <title>時尚配飾收藏追蹤 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <link rel="stylesheet" href="../../assets/css/common.css">
+  <link rel="stylesheet" href="../../assets/css/tool-header.css">
+  <style>
+    /* 時尚配飾頁專屬樣式；通用版面與 .col-* 卡片系統見 assets/css/common.css，
+       控制面由 assets/js/collection-tracker.js 渲染 */
+    :root {
+      --accent:    var(--pink);                  /* 粉：與其他收藏頁區隔 */
+      --accent-2:  var(--purple);                /* 進度條尾色 */
+      --glow-1:    rgba(244,114,182,0.06);
+      --glow-2:    rgba(167,139,250,0.04);
+    }
+    .col-grid { grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
+    .col-card { padding: 18px; gap: 8px; }
+    .col-name { padding-right: 16px; }
+
+    .or-meta { font-size: 10px; color: var(--text-muted); }
+    /* 來源標籤（中性灰，非通用紫色 src-tag）*/
+    .tag.src-tag { background: var(--raise); color: var(--text-secondary); border-color: var(--border); }
+
+    .col-detail .detail-line { margin-top: 2px; }
+    .col-detail .detail-line b { color: var(--text-secondary); font-weight: 500; }
+
+    @media (max-width: 600px) { .col-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 380px) { .col-grid { grid-template-columns: 1fr; } }
+  </style>
+  <script src="../../assets/js/patch-gate.js"></script>
+  <script src="../../assets/js/collection-tracker.js"></script>
+  <script src="../../assets/js/theme.js"></script>
+  <script src="../../assets/js/unlock-banner.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="tool-header">
+    <h1 class="tool-title">&#x1F302; 時尚配飾收藏追蹤</h1>
+    <p class="tool-subtitle">陽傘、背包、火炬等配飾（遊戲內「時尚配飾」收藏櫃）——點卡片右上角的 ✓ 標記已取得，進度自動儲存於瀏覽器</p>
+    <div class="header-divider"></div>
+  </div>
+
+  <!-- 控制面（進度／工具列／篩選／格線）由 collection-tracker.js 渲染 -->
+  <div id="ct-root"></div>
+
+</div>
+
+<!-- Footer -->
+<footer class="page-footer">
+  <div class="container">
+    <p class="footer-text">
+      <a href="../../">水神的工具箱</a> · 資料來源：遊戲本體、<a href="https://xivapi.com" target="_blank">XIVAPI</a>
+    </p>
+    <p class="footer-text" style="margin-top:4px">
+      FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具
+    </p>
+  </div>
+</footer>
+
+<script>
+CollectionTracker.init({
+  dataUrl: '../../data/ornaments.json',
+  metaUrl: '../../data/_meta.json',
+  storageKey: 'ffxiv_ornaments_owned',
+  snapKey: 'ornaments',
+  verb: '取得',
+  unit: '件',
+  noun: '時尚配飾',
+  searchPlaceholder: '搜尋配飾名稱、取得方式…',
+  /* 資料層已經把台服未開放的整筆濾掉了（build-ornaments.mjs 走 isTw），
+     這裡仍留一道 patch-gate：重建資料時若抓到國際服領先的內容，這是唯一的閘門。 */
+  include: function (o, gp) { return o.name && o.name !== o.nameEn && PatchGate.released(o.patch, gp); },
+  prepare: function (list) { return list.slice().sort(function (a, b) { return (a.id || 0) - (b.id || 0); }); },
+  sorts: ['patch-desc', 'patch-asc', 'name'],
+  filters: [
+    {
+      id: 'source', label: '取得方式',
+      options: function (list) {
+        var set = new Set();
+        list.forEach(function (o) { (o.sources || []).forEach(function (s) { if (s.type) set.add(s.type); }); });
+        return Array.from(set).sort().map(function (t) { return { value: t, label: t }; })
+          .concat([{ value: '__none__', label: '待補充' }]);
+      },
+      match: function (o, v) {
+        var srcs = o.sources || [];
+        if (v === '__none__') return srcs.length === 0;
+        return srcs.some(function (s) { return s.type === v; });
+      }
+    },
+    { kind: 'patch' }
+  ],
+  onCardClick: function (o, ev) { return !!ev.target.closest('.ct-market'); },
+  card: function (o) {
+    var esc = CollectionTracker.esc;
+    var srcs = o.sources || [];
+    var sourceTags = srcs.length
+      ? Array.from(new Set(srcs.map(function (s) { return s.type; }))).slice(0, 2)
+          .map(function (t) { return '<span class="tag src-tag">' + esc(t) + '</span>'; }).join('')
+      : '<span class="tag placeholder">待補充</span>';
+    /* 圖示用解鎖道具的（Ornament sheet 的 008xxx 圖示沒有對應的本地檔）。
+       `items.json` 只存路徑不存完整網址，前綴同市場頁的 ICON_CDN。 */
+    var iconHtml = o.icon
+      ? '<img class="col-icon" src="https://xivapi.com' + esc(o.icon) + '" alt="" loading="lazy" decoding="async"' +
+        ' onerror="var p=this.parentNode;this.remove();">'
+      : '<div class="col-icon placeholder">&#x1F302;</div>';
+    var detailLines = srcs.length
+      ? srcs.map(function (s) {
+          return '<div class="detail-line"><b>' + esc(s.type) + '：</b>' + esc(s.detail || '') +
+            CollectionTracker.sourceCondition(s) + CollectionTracker.sourceWhere(s) + '</div>';
+        }).join('')
+      : '<div class="detail-line">取得方式：待補充</div>';
+    return '' +
+      iconHtml +
+      '<div class="col-name">' + esc(o.name) + '</div>' +
+      '<div class="or-meta">No.' + esc(o.id) + (o.patch ? ' · ver ' + esc(o.patch) : '') + '</div>' +
+      '<div class="col-tags">' + sourceTags + '</div>' +
+      '<div class="col-detail">' + detailLines + '</div>' +
+      (o.itemId ? '<a class="ct-market" href="../../tools/market/#item=' + esc(o.itemId) + '" title="到市場查價工具查此物品行情">&#x1F4B0; 市場行情</a>' : '');
+  }
+});
+</script>
+</body>
+</html>

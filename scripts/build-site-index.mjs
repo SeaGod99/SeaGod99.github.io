@@ -37,6 +37,7 @@ const SOURCES = [
   ["寵物", "minions", "minions/", (x) => [String(x.id), x.name]],            // 純數字：沿用舊存檔格式
   ["樂譜", "orchestrion", "collections/orchestrion/", (x) => ["id:" + x.id, x.name]],
   ["鳥鞍", "barding", "collections/barding/", (x) => ["id:" + x.id, x.name]],
+  ["時尚配飾", "ornaments", "collections/ornaments/", (x) => ["id:" + x.id, x.name]],
   ["髮型", "hairstyles", "collections/hairstyles/", (x) => ["id:" + x.id, x.name]],
   ["表情", "emotes", "collections/emotes/", (x) => ["id:" + x.id, x.name]],
   ["幻卡", "triple-triad", "collections/triple-triad/", (x) => ["id:" + x.id, x.name]],

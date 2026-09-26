@@ -34,6 +34,7 @@
     { e: '🎵', n: '樂譜收藏追蹤', p: 'collections/orchestrion/', c: 'collect', k: 'orchestrion 樂譜 演奏團' },
     { e: '💃', n: '表情收藏追蹤', p: 'collections/emotes/', c: 'collect', k: 'emote 表情 動作' },
     { e: '💇', n: '髮型收藏追蹤', p: 'collections/hairstyles/', c: 'collect', k: 'hairstyle 髮型 樣式書' },
+    { e: '🌂', n: '時尚配飾收藏追蹤', p: 'collections/ornaments/', c: 'collect', k: 'ornament fashion accessory 配飾 時尚配飾 陽傘 洋傘 背包 火炬' },
     { e: '🦜', n: '鳥鞍收藏追蹤', p: 'collections/barding/', c: 'collect', k: 'barding 鳥鞍 陸行鳥' },
     { e: '👁️', n: '探索筆記追蹤器', p: 'collections/exploration-log/', c: 'collect', k: 'sightseeing 探索筆記 景觀' },
     { e: '🗡️', n: '討伐筆記追蹤', p: 'collections/hunting-log/', c: 'collect', k: 'hunting log 討伐筆記 怪物 monster note 經驗' },
