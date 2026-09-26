@@ -97,6 +97,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 副本補資料片欄位（改完 dungeons.json） | `node scripts/patch-dungeon-expansion.mjs`（`--apply`／`--offline`） |
 | 副本補時限／通關經驗／解鎖任務（改完 dungeons.json） | `node scripts/patch-dungeon-details.mjs`（dry-run 預設／`--apply`／`--offline`）；補 `timeLimit`（516/520）、`clearExp`、`clearGil`、`unlock`（32/520），並把 `image` 的 `000000` 佔位改成 null |
 | 副本圖鑑回歸（**改完 `tools/duty-codex/` 或 `dungeons.json` 必跑**） | `node scripts/validate-duty-codex.mjs`（jsdom，29 項：類型標籤、篩選、`?id=duty:` 深連結、圖檔存在率）|
+| 幻卡缺卡跑圖回歸（**改完 `collections/triple-triad/` 或 `triple-triad.json` 必跑**） | `node scripts/validate-triad-route.mjs`（jsdom，31 項：只認 `NPC對戰` 不認 `NPC牌組`、地圖篩選、**標記取得不會讓清單重排**）|
 | 坐騎／寵物補手冊排序（重建後必跑，用來擋幻影條目） | `node scripts/patch-collection-order.mjs`（`--apply`／`--offline`） |
 | 青魔補副本／地區連結 | `node scripts/patch-blue-magic-content-ids.mjs`（`--apply`） |
 | 收藏頁補空 sources（由 obtainable-methods 推） | `node scripts/patch-sources-from-om.mjs`（`--apply`） |
@@ -277,6 +278,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 - **改了製作模擬器（`tools/crafting-sim/`）** → 改完 `craft-engine.js`、`craft-solver.js` 或 `data/craft-actions.json` **必跑 `node scripts/validate-craft-sim.mjs`**（Teamcraft 官方測試案例＋內建範本＋自動求解，104 項）。製作公式的取整點很多，差一個 `Math.floor` 在高階配方上差幾百品質、**畫面上完全看不出來**。規則出處、兩處刻意與 Teamcraft 不同的地方、範本怎麼解出來的、求解器為什麼只用「不靠運氣」的技能，見 [docs/crafting-sim.md](docs/crafting-sim.md)。**作業／品質的封頂只做在畫面上**（引擎要跟 Teamcraft 的期望值逐值對得上）。
 - **要算「買 N 個多少錢」** → 一律用 `Universalis.fillQuote()` 逐筆吃掉掛單，**絕不可用「最低價 × N」**。最便宜那筆常常只有 1～3 個，乘法會系統性低估、且低估幅度隨數量放大（知識庫 §3.14）。
 - **做「幾步才做得到」的東西（園藝配種、長鏈製作）** → **要算最短路徑，不要列配方**。列一層等於把問題丟回給使用者。園藝的成本模型＝`cost(種子)=0 若可直接買／採；否則 min over 配方 of max(cost(本),cost(鄰)) + 本株作物時數`，**用定點迭代不要用遞迴 memo**（配種關係有環，遞迴會把 `Infinity` 記進 memo 害整條鏈變無解）。另外「直接可得」**不能認市場板**——它對每個種子都成立，認了整棵樹會縮成一層。機制與出處見 [docs/gardening-rules.md](docs/gardening-rules.md)。
+- **幻卡的 `NPC牌組` 不是取得管道** → 「對局時對手手上會有這張卡」≠「打贏就拿得到」。真正的取得管道是 `NPC對戰`（`ItemPossibleReward`），258 筆／233 張卡；`NPC牌組` 有 944 筆。兩者 2026-09-23 才拆開，**先前 938 筆「NPC對戰」有 99.6% 其實是牌組**。做任何「我缺的卡去哪拿」的功能都只能認 `NPC對戰`，混進牌組會叫使用者跑一堆白跑的路。判別：牌組有 `slot`（固定／隨機），對戰有 `fee` 與 `rules`。
 - **做「會一邊操作一邊看」的清單** → **排序鍵不可以是會變的值**。市場頁的製作計畫原本依金額排，重新查價／改數量／按一次「✓ 已有」就整份洗牌，剛在看的那列跑掉了；改成依**物品 ID 遞增**（順序永遠一樣，且 FFXIV 的 id 大致依資料片遞增、同階材料自然聚在一起）。**不要為此開排序選單**，但要用表頭 `title` 說明依據；欄位不可點就**不要掛 `aria-sort`**（知識庫 §3.19）。
 - **要量版面／水平溢出／console error** → 用 headless **Edge** ＋ CDP（本機 Chromium 起不來，Node 24 有原生 WebSocket 故不必裝 puppeteer）。**`setDeviceMetricsOverride` 要 `mobile:false`**，傳路徑參數要 `MSYS_NO_PATHCONV=1`（知識庫 §3.5）。jsdom 只驗得了 DOM 結構，量不了版面。
 - **升台服版本** → **先確認台服真的在哪一版**（拿 Teamcraft `tw/tw-items.json` 的 id 對 `patch-content`→`patch-names`，取最高版本；台服會把國際服的小改版併進同一次更新，2026-08-11 就是 7.2＋7.21 一起到）→ `build-tw-items-msgpack.mjs --apply` → `build-items.mjs` → 改 `patch-backfill.mjs` 的 `TW_PATCH`（它會寫 `_meta.json` 的 gamePatch）→ `patch-backfill` 三支（`--apply`）→ `backfill-sources.mjs --apply` → `patch-tw-names.mjs --apply` → 衍生檔四支＋**`build-dyes.mjs`**＋`minify-data --apply`＋`sync-meta --apply` → `validate-data.mjs` → 動過 `assets/` 再 `bump-sw-version.mjs` → commit。**版本號改了但沒刷新繁中名快照＝把英文名放行到前端**（知識庫 §4.5）。
