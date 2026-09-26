@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FF14 巨集轉譯 — 貼上攻略裡的英文或日文巨集，就地換成台服繁中技能名，指令與等待時間原樣保留；查不到的標出來不亂猜">
+  <title>巨集轉譯 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <link rel="stylesheet" href="../../assets/css/tool-header.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 109.375%; }
+    body { background: var(--bg-base); color: var(--text); font-family: var(--font-sans); min-height: 100vh; }
+
+    .wrap { max-width: var(--w-content); margin: 0 auto; padding: 1rem 1.5rem 2rem; }
+    .io { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; align-items: start; }
+    @media (max-width: 800px) { .io { grid-template-columns: 1fr; } }
+
+    .pane-head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; flex-wrap: wrap; }
+    .pane-title { font-size: 0.8rem; font-weight: 700; color: var(--text-dim); }
+    .pane-hint { font-size: 0.72rem; color: var(--text-muted); }
+    .btn {
+      font-family: inherit; font-size: 0.78rem; padding: 0.35rem 0.8rem; border-radius: 6px; cursor: pointer;
+      border: 1px solid var(--border); background: var(--bg-surface); color: var(--text-dim); transition: all 0.15s;
+    }
+    .btn:hover { border-color: var(--gold); color: var(--gold); }
+    .btn.primary { background: var(--gold-dim); border-color: var(--gold-dim); color: var(--gold); font-weight: 600; }
+    .btn.copied { border-color: var(--green); color: var(--green); }
+    .btn:disabled { opacity: 0.45; cursor: default; }
+
+    textarea, .out {
+      width: 100%; min-height: 16rem;
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md);
+      color: var(--text); padding: 0.7rem 0.8rem;
+      font-family: var(--font-mono); font-size: 0.82rem; line-height: 1.85;
+      white-space: pre-wrap; word-break: break-word;
+    }
+    textarea { resize: vertical; outline: none; }
+    textarea:focus { border-color: var(--gold); }
+    .out { overflow-x: auto; }
+    .o-cmd { color: var(--cyan); }
+    .o-tw { color: var(--gold); font-weight: 600; }
+    .o-miss { color: var(--red); text-decoration: underline wavy var(--red); }
+    .o-rest { color: var(--text-dim); }
+    .o-line { display: block; }
+    .o-warn { display: block; color: var(--text-muted); font-size: 0.72rem; font-family: var(--font-sans); }
+
+    .summary { margin-top: 0.6rem; font-size: 0.78rem; color: var(--text-muted); line-height: 1.8; }
+    .summary b { color: var(--gold); }
+    .summary .bad { color: var(--red); }
+    .actions { display: flex; gap: 0.45rem; flex-wrap: wrap; margin-top: 0.6rem; }
+
+    /* 說明段裡的 <code> 預設不斷行，`/macroicon` 這種在 360px 下會撐破版面
+       （體檢抓到水平溢出 351 > 345）。允許它在任意處斷。 */
+    .info-note code { overflow-wrap: anywhere; word-break: break-all; }
+    .info-note { max-width: var(--w-content); margin: 0 auto; padding: 0 1.5rem 2rem; font-size: 0.72rem; color: var(--text-muted); line-height: 1.8; }
+    .site-footer { border-top: 1px solid var(--border); padding: 24px 0; text-align: center; }
+    .site-footer p { font-size: 12px; color: var(--text-muted); }
+    .site-footer a { color: var(--text-dim); }
+    @media (pointer: coarse) { .btn, textarea { min-height: 44px; } }
+  </style>
+  <script src="../../assets/js/patch-gate.js"></script>
+  <script src="../../assets/js/theme.js"></script>
+</head>
+<body>
+<div class="tool-header">
+  <h1 class="tool-title">&#x1F4DC; 巨集轉譯</h1>
+  <p class="tool-subtitle">攻略與國際服影片貼的巨集是英文或日文技能名，複製進台服整段失效。貼進來，就地換成台服官方名</p>
+  <div class="header-divider"></div>
+</div>
+
+<div class="wrap">
+  <div class="io">
+    <div>
+      <div class="pane-head">
+        <span class="pane-title">貼上巨集</span>
+        <span class="pane-hint">英文／日文都可以，指令與等待時間會原樣保留</span>
+      </div>
+      <textarea id="input" spellcheck="false" placeholder='/ac "Raging Strikes" &lt;me&gt;
+/ac "Barrage" &lt;me&gt;
+/wait 1
+/ac "Refulgent Arrow" &lt;t&gt;
+/micon "Raging Strikes"'></textarea>
+      <div class="actions">
+        <button class="btn primary" id="goBtn">轉譯</button>
+        <button class="btn" id="sampleBtn">放入範例</button>
+        <button class="btn" id="clearBtn">清空</button>
+      </div>
+    </div>
+    <div>
+      <div class="pane-head">
+        <span class="pane-title">台服巨集</span>
+        <span class="pane-hint" id="statusLine"></span>
+      </div>
+      <div class="out" id="out">左邊貼上巨集後按「轉譯」</div>
+      <div class="actions">
+        <button class="btn" id="copyBtn" disabled>&#x1F4CB; 複製轉譯結果</button>
+      </div>
+      <div class="summary" id="summary"></div>
+    </div>
+  </div>
+</div>
+
+<p class="info-note">
+  只動<b>引號裡的名字</b>：<code>/ac</code>、<code>/action</code>、<code>/statusoff</code>、<code>/micon</code>、<code>/macroicon</code> 後面的技能／狀態名。指令、<code>&lt;t&gt;</code> 這類目標記號、<code>/wait</code> 秒數、<code>/p</code> 的自由文字<b>一律原樣保留</b>——那些換了反而會壞。<br>
+  技能名取自遊戲本體的台服語系檔。<b>查不到的會標紅並保留原文</b>，不會用英文硬湊也不會亂猜——那種情況多半是台服尚未開放該技能，或那行本來就不是技能名。<br>
+  同一個英文名同時是兩個技能時（實測有 4 組，如 <code>Fan Dance</code>），<b>優先給玩家技能</b>；敵人技能同名的一律讓位。簡體中文名上游沒有提供，只支援英文與日文。<br>
+  遊戲內巨集<b>一行上限 15 行、每行 180 位元組</b>，轉成繁中後位元組數會變（中文一字 3 位元組），本頁會提醒超出的行。
+</p>
+
+<footer class="site-footer">
+  <p>水神的工具箱 · <a href="../../">回首頁</a> · FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具</p>
+</footer>
+
+<script src="../../assets/js/item-names.js"></script>
+<script>
+(function () {
+  /* 會帶技能／狀態名的指令。其餘（/p、/e、/wait、/target…）一律不動——
+     那些的引號內容是自由文字或目標名，換掉只會壞。 */
+  var CMD_KINDS = {
+    '/ac': ['a'], '/action': ['a'], '/aaction': ['a'],
+    '/statusoff': ['s'],
+    '/micon': ['a', 's'], '/macroicon': ['a', 's'],
+  };
+  var MAX_LINES = 15;
+  var MAX_BYTES = 180;
+  var SAMPLE = [
+    '/ac "Raging Strikes" <me>',
+    '/ac "Barrage" <me>',
+    '/wait 1',
+    '/ac "Refulgent Arrow" <t>',
+    '/statusoff "Army\'s Paeon"',
+    '/micon "Raging Strikes"',
+    '/p 起手！ <se.1>',
+    '/ac "NotARealSkill" <t>',
+  ].join('\n');
+
+  var last = null;      // { lines:[{raw, parts:[…], bytes}], miss:[], hit:0 }
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function $(id) { return document.getElementById(id); }
+  // 遊戲的行長限制是位元組不是字數；中文一字 3 位元組，轉譯後常常變長
+  function byteLen(s) { return new TextEncoder().encode(s).length; }
+
+  /* 把一行拆成 [指令, 引號內容, 其餘]。
+     引號用直引號與全形引號都收——從網頁複製常常變成全形。 */
+  // 全形引號的**開合是不同字元**（“…”、「…」），不能用反向參照配對。
+  // 從網頁複製巨集時全形引號很常見，配不到的話整行會被當成純文字、完全不轉譯。
+  var QUOTE_PAIRS = { '"': '"', "'": "'", "“": "”", "「": "」", "‘": "’" };
+  function parseLine(line) {
+    var m = line.match(/^(\s*)(\/[a-zA-Z]+)(\s+)(["'“「‘])(.*?)(["'”」’])(.*)$/);
+    if (!m) return null;
+    if (QUOTE_PAIRS[m[4]] !== m[6]) return null;          // 開合對不上就不動這一行
+    return { indent: m[1], cmd: m[2].toLowerCase(), sp: m[3], q: m[4], name: m[5], rest: m[7] };
+  }
+
+  async function translate() {
+    var src = $('input').value.replace(/\r/g, '');
+    if (!src.trim()) { render(null); return; }
+    $('statusLine').textContent = '轉譯中…';
+    $('goBtn').disabled = true;
+    try {
+      var rawLines = src.split('\n');
+      // 先把所有要查的名字收齊，一次查完（同片只抓一次）
+      var jobs = [];
+      rawLines.forEach(function (l) {
+        var p = parseLine(l);
+        if (p && CMD_KINDS[p.cmd]) jobs.push(p);
+      });
+      var results = new Map();
+      for (var i = 0; i < jobs.length; i++) {
+        var hit = await ActionNames.lookup(jobs[i].name, { kinds: CMD_KINDS[jobs[i].cmd] });
+        results.set(jobs[i].cmd + '\u0000' + jobs[i].name, hit);
+      }
+
+      var miss = [], hitN = 0;
+      var out = rawLines.map(function (l) {
+        var p = parseLine(l);
+        if (!p || !CMD_KINDS[p.cmd]) return { raw: l, plain: l, html: '<span class="o-rest">' + esc(l) + '</span>' };
+        var r = results.get(p.cmd + '\u0000' + p.name);
+        var tw = r && r.tw;
+        if (!tw && p.name.trim()) miss.push(p.name); else if (tw) hitN++;
+        var name = tw || p.name;
+        var plain = p.indent + p.cmd + p.sp + '"' + name + '"' + p.rest;
+        return {
+          raw: l, plain: plain,
+          html: '<span class="o-cmd">' + esc(p.indent + p.cmd + p.sp) + '</span>' +
+            '"<span class="' + (tw ? 'o-tw' : 'o-miss') + '">' + esc(name) + '</span>"' +
+            '<span class="o-rest">' + esc(p.rest) + '</span>',
+        };
+      });
+      last = { lines: out, miss: miss, hit: hitN };
+      render(last);
+      $('statusLine').textContent = '';
+    } catch (e) {
+      $('statusLine').textContent = '轉譯失敗：' + e.message;
+    } finally {
+      $('goBtn').disabled = false;
+    }
+  }
+
+  function render(data) {
+    var el = $('out');
+    if (!data) {
+      el.textContent = '左邊貼上巨集後按「轉譯」';
+      $('summary').textContent = '';
+      $('copyBtn').disabled = true;
+      return;
+    }
+    el.innerHTML = data.lines.map(function (l) {
+      var over = byteLen(l.plain) > MAX_BYTES;
+      return '<span class="o-line">' + l.html + '</span>' +
+        (over ? '<span class="o-warn">⚠ 這一行 ' + byteLen(l.plain) + ' 位元組，超過遊戲上限 ' + MAX_BYTES + '</span>' : '');
+    }).join('');
+
+    var n = data.lines.length;
+    var parts = ['共 ' + n + ' 行，換掉 <b>' + data.hit + '</b> 個名字'];
+    if (data.miss.length) {
+      var uniq = data.miss.filter(function (x, i, a) { return a.indexOf(x) === i; });
+      parts.push('<span class="bad">查不到 ' + uniq.length + ' 個：' + esc(uniq.slice(0, 5).join('、')) +
+        (uniq.length > 5 ? ' 等' : '') + '</span>（已保留原文）');
+    }
+    if (n > MAX_LINES) parts.push('<span class="bad">超過遊戲的 ' + MAX_LINES + ' 行上限</span>');
+    $('summary').innerHTML = parts.join('　·　');
+    $('copyBtn').disabled = false;
+  }
+
+  $('goBtn').addEventListener('click', translate);
+  $('sampleBtn').addEventListener('click', function () { $('input').value = SAMPLE; translate(); });
+  $('clearBtn').addEventListener('click', function () { $('input').value = ''; render(null); $('input').focus(); });
+  $('input').addEventListener('keydown', function (e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); translate(); }
+  });
+  $('copyBtn').addEventListener('click', function () {
+    var btn = this;
+    if (!last || !navigator.clipboard) return;
+    navigator.clipboard.writeText(last.lines.map(function (l) { return l.plain; }).join('\n')).then(function () {
+      var old = btn.textContent;
+      btn.textContent = '✓ 已複製';
+      btn.classList.add('copied');
+      setTimeout(function () { btn.textContent = old; btn.classList.remove('copied'); }, 1400);
+    });
+  });
+})();
+</script>
+</body>
+</html>

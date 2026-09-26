@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FF14 物品名稱翻譯 — 貼上英文、日文或簡體中文的物品名，一次查出台服官方繁中名；支援整份清單貼上、反向查詢，並可直接帶進市場查價">
+  <title>物品名稱翻譯 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <link rel="stylesheet" href="../../assets/css/tool-header.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 109.375%; }
+    body { background: var(--bg-base); color: var(--text); font-family: var(--font-sans); min-height: 100vh; }
+
+    .wrap { max-width: var(--w-content); margin: 0 auto; padding: 1rem 1.5rem 2rem; }
+    .io { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; align-items: start; }
+    @media (max-width: 760px) { .io { grid-template-columns: 1fr; } }
+
+    .pane-head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; flex-wrap: wrap; }
+    .pane-title { font-size: 0.8rem; font-weight: 700; color: var(--text-dim); }
+    .pane-hint { font-size: 0.72rem; color: var(--text-muted); }
+    .btn {
+      font-family: inherit; font-size: 0.78rem; padding: 0.35rem 0.8rem; border-radius: 6px; cursor: pointer;
+      border: 1px solid var(--border); background: var(--bg-surface); color: var(--text-dim); transition: all 0.15s;
+    }
+    .btn:hover { border-color: var(--gold); color: var(--gold); }
+    .btn.primary { background: var(--gold-dim); border-color: var(--gold-dim); color: var(--gold); font-weight: 600; }
+    .btn.copied { border-color: var(--green); color: var(--green); }
+    .btn:disabled { opacity: 0.45; cursor: default; }
+
+    textarea {
+      width: 100%; min-height: 15rem; resize: vertical;
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md);
+      color: var(--text); padding: 0.7rem 0.8rem; font-family: var(--font-sans); font-size: 0.86rem;
+      line-height: 1.8; outline: none;
+    }
+    textarea:focus { border-color: var(--gold); }
+
+    .out { min-height: 15rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 0.5rem 0; }
+    .r-row {
+      display: flex; align-items: baseline; gap: 0.5rem; padding: 0.3rem 0.8rem;
+      font-size: 0.86rem; line-height: 1.7; border-bottom: 1px solid var(--border);
+    }
+    .r-row:last-child { border-bottom: 0; }
+    .r-in { color: var(--text-muted); font-size: 0.76rem; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .r-arrow { color: var(--text-muted); font-size: 0.72rem; flex: none; }
+    .r-tw { font-weight: 600; color: var(--text); flex: 1.2; min-width: 0; }
+    .r-tw a { color: inherit; text-decoration: none; }
+    .r-tw a:hover { color: var(--gold); text-decoration: underline; }
+    .r-lang {
+      flex: none; font-size: 0.66rem; padding: 0.05rem 0.34rem; border-radius: 4px;
+      background: var(--bg-surface); border: 1px solid var(--border); color: var(--text-muted);
+    }
+    .r-row.miss .r-tw { color: var(--text-muted); font-weight: 400; font-style: normal; }
+    .r-row.miss { background: color-mix(in srgb, var(--red-dim) 30%, transparent); }
+    .r-empty { padding: 3rem 0; text-align: center; color: var(--text-dim); font-size: 0.88rem; }
+
+    .summary { margin-top: 0.6rem; font-size: 0.78rem; color: var(--text-muted); line-height: 1.8; }
+    .summary b { color: var(--gold); }
+    .actions { display: flex; gap: 0.45rem; flex-wrap: wrap; margin-top: 0.6rem; }
+
+    .info-note { max-width: var(--w-content); margin: 0 auto; padding: 0 1.5rem 2rem; font-size: 0.72rem; color: var(--text-muted); line-height: 1.8; }
+    .site-footer { border-top: 1px solid var(--border); padding: 24px 0; text-align: center; }
+    .site-footer p { font-size: 12px; color: var(--text-muted); }
+    .site-footer a { color: var(--text-dim); }
+    @media (pointer: coarse) { .btn, textarea { min-height: 44px; } }
+  </style>
+  <script src="../../assets/js/patch-gate.js"></script>
+  <script src="../../assets/js/theme.js"></script>
+</head>
+<body>
+<div class="tool-header">
+  <h1 class="tool-title">&#x1F524; 物品名稱翻譯</h1>
+  <p class="tool-subtitle">攻略與國際服影片講的是英文／日文／簡中名，站內與遊戲裡是台服繁中名。貼上一份清單，一次全部對照出來</p>
+  <div class="header-divider"></div>
+</div>
+
+<div class="wrap">
+  <div class="io">
+    <div>
+      <div class="pane-head">
+        <span class="pane-title">貼上名稱</span>
+        <span class="pane-hint">一行一個，英／日／簡中／繁中都可以混著貼</span>
+      </div>
+      <textarea id="input" spellcheck="false" placeholder="Iron Ingot&#10;アイアンインゴット&#10;Soul of the Paladin&#10;黑鐵錠"></textarea>
+      <div class="actions">
+        <button class="btn primary" id="goBtn">翻譯</button>
+        <button class="btn" id="sampleBtn">放入範例</button>
+        <button class="btn" id="clearBtn">清空</button>
+      </div>
+    </div>
+    <div>
+      <div class="pane-head">
+        <span class="pane-title">台服繁中名</span>
+        <span class="pane-hint" id="statusLine"></span>
+      </div>
+      <div class="out" id="out"><div class="r-empty">左邊貼上名稱後按「翻譯」</div></div>
+      <div class="actions">
+        <button class="btn" id="copyBtn" disabled>&#x1F4CB; 複製結果</button>
+        <button class="btn" id="marketBtn" disabled>&#x1F4B0; 全部帶去市場查價</button>
+      </div>
+      <div class="summary" id="summary"></div>
+    </div>
+  </div>
+</div>
+
+<p class="info-note">
+  四語名稱取自本站的物品名快照（台服繁中、日文、英文、簡體中文各一份，皆為遊戲本體資料）。<b>只收得到台服繁中名的 45,546 件</b>——查不到就是台服尚未開放該物品，這時會標紅並原樣保留你貼的字，<b>不會用英文或簡中頂替</b>。<br>
+  比對會忽略大小寫、空白、連字號與 <code>(HQ)</code> 標記，所以直接從遊戲或網頁複製貼上通常就查得到。<br>
+  有 32 組名稱在某個語言底下是重複的（例如英文 <code>quicksilver</code> 同時是「水銀」與「流銀」），這種只會給先收錄的那一個；遇到明顯不對的請直接用<a href="../market/" style="color:var(--text-dim)">市場查價</a>搜繁中名確認。<br>
+  資料依查詢鍵切成 256 片，<b>只會下載你查到的那幾片</b>（每片約 15KB），不是整份載入。
+</p>
+
+<footer class="site-footer">
+  <p>水神的工具箱 · <a href="../../">回首頁</a> · FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具</p>
+</footer>
+
+<script src="../../assets/js/item-names.js"></script>
+<script>
+(function () {
+  var LANG_TW = { en: '英文', ja: '日文', cn: '簡中', tw: '繁中' };
+  var SAMPLE = ['Iron Ingot', 'アイアンインゴット', 'Soul of the Paladin', 'Rowena\'s Token (Blue Crafters\' Scrip)', '黑鐵錠', 'Definitely Not An Item'].join('\n');
+  var last = [];      // [{ in, tw, lang }]
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function $(id) { return document.getElementById(id); }
+
+  function lines() {
+    return $('input').value.split(/\r?\n/).map(function (s) { return s.trim(); }).filter(Boolean);
+  }
+
+  function render(rows) {
+    last = rows;
+    var out = $('out');
+    if (!rows.length) {
+      out.innerHTML = '<div class="r-empty">左邊貼上名稱後按「翻譯」</div>';
+      $('summary').textContent = '';
+      $('copyBtn').disabled = true; $('marketBtn').disabled = true;
+      return;
+    }
+    out.innerHTML = rows.map(function (r) {
+      if (!r.tw) {
+        return '<div class="r-row miss"><span class="r-in">' + esc(r.in) + '</span>' +
+          '<span class="r-arrow">→</span><span class="r-tw">查無（台服未開放或名稱有誤）</span></div>';
+      }
+      // 繁中名直接連到市場查價：翻完名字下一步幾乎都是「那這個多少錢」
+      return '<div class="r-row"><span class="r-in">' + esc(r.in) + '</span>' +
+        '<span class="r-arrow">→</span>' +
+        '<span class="r-tw"><a href="../market/?q=' + encodeURIComponent(r.tw) + '">' + esc(r.tw) + '</a></span>' +
+        '<span class="r-lang">' + esc(LANG_TW[r.lang] || r.lang) + '</span></div>';
+    }).join('');
+
+    var hit = rows.filter(function (r) { return r.tw; });
+    var byLang = {};
+    hit.forEach(function (r) { byLang[r.lang] = (byLang[r.lang] || 0) + 1; });
+    $('summary').innerHTML = '共 ' + rows.length + ' 筆，查到 <b>' + hit.length + '</b> 筆' +
+      (hit.length < rows.length ? '，查無 ' + (rows.length - hit.length) + ' 筆' : '') +
+      (Object.keys(byLang).length
+        ? '　（來源：' + Object.keys(byLang).map(function (k) { return (LANG_TW[k] || k) + ' ' + byLang[k]; }).join('、') + '）'
+        : '');
+    $('copyBtn').disabled = !hit.length;
+    $('marketBtn').disabled = !hit.length;
+  }
+
+  async function translate() {
+    var names = lines();
+    if (!names.length) { render([]); return; }
+    $('statusLine').textContent = '查詢中…';
+    $('goBtn').disabled = true;
+    try {
+      var map = await ItemNames.lookupMany(names);
+      render(names.map(function (n) {
+        var r = map.get(n);
+        return { in: n, tw: r && r.tw, lang: r && r.lang };
+      }));
+      $('statusLine').textContent = '';
+    } catch (e) {
+      $('statusLine').textContent = '查詢失敗：' + e.message;
+    } finally {
+      $('goBtn').disabled = false;
+    }
+  }
+
+  $('goBtn').addEventListener('click', translate);
+  $('sampleBtn').addEventListener('click', function () { $('input').value = SAMPLE; translate(); });
+  $('clearBtn').addEventListener('click', function () { $('input').value = ''; render([]); $('input').focus(); });
+  // Ctrl/⌘+Enter 直接翻譯——貼完清單的下一個動作幾乎一定是它
+  $('input').addEventListener('keydown', function (e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); translate(); }
+  });
+
+  $('copyBtn').addEventListener('click', function () {
+    var btn = this;
+    var txt = last.filter(function (r) { return r.tw; }).map(function (r) { return r.tw; }).join('\n');
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(txt).then(function () {
+      var old = btn.textContent;
+      btn.textContent = '✓ 已複製';
+      btn.classList.add('copied');
+      setTimeout(function () { btn.textContent = old; btn.classList.remove('copied'); }, 1400);
+    });
+  });
+
+  /* 「全部帶去市場查價」：市場頁的搜尋一次只吃一個關鍵字，所以這裡帶第一筆進去，
+     其餘留在剪貼簿。**不用 #craft=**——那條要的是物品 id 與數量，這頁只有名字，
+     硬湊的話得先把名字反查成 id，而同名衝突會讓它安靜地帶錯東西。 */
+  $('marketBtn').addEventListener('click', function () {
+    var hits = last.filter(function (r) { return r.tw; });
+    if (!hits.length) return;
+    var rest = hits.map(function (r) { return r.tw; }).join('\n');
+    if (navigator.clipboard) { try { navigator.clipboard.writeText(rest); } catch (e) {} }
+    location.href = '../market/?q=' + encodeURIComponent(hits[0].tw);
+  });
+})();
+</script>
+</body>
+</html>

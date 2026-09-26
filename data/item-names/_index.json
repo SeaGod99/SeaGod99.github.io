@@ -1,0 +1,1 @@
+{"schema":"item-names-index","updated":"2026-09-25","source":"out_data/{tw,ja,en,cn}-items.msgpack（四語物品名快照）","note":"片號 = FNV-1a(正規化鍵) % 256。正規化與雜湊規則必須與 assets/js/item-names.js 一致。","shards":256,"items":45546,"keys":178162}

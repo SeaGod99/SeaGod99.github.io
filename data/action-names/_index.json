@@ -1,0 +1,1 @@
+{"schema":"action-names-index","updated":"2026-09-26","source":"Teamcraft tw/tw-{actions,statuses,traits}.json ＋ {actions,statuses,traits}.json（多語）","note":"片號 = FNV-1a(正規化鍵) % 256，與 data/item-names/ 同一套規則（共用 scripts/build-item-names.mjs 的 shardOf）。k 分 a=技能／s=狀態／t=特性。","shards":256,"kinds":{"a":37518,"s":4052,"t":668},"keys":44212}
