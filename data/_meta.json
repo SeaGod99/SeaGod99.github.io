@@ -2,7 +2,7 @@
   "project": "水神的工具箱 統一資料庫",
   "schemaDoc": "/data/SCHEMA.md",
   "gamePatch": "7.21",
-  "updated": "2026-09-19",
+  "updated": "2026-09-26",
   "idConventions": {
     "mapId": "遊戲 Map sheet row id（XIVAPI v2 /sheet/Map 的 row_id），全站統一；2026-06-11 起 maps.json 主鍵即此 id",
     "territoryId": "TerritoryType row id，僅輔助欄位（fishing-spots、gathering.coords.zoneId），顯示/連結一律用 mapId"
@@ -157,7 +157,7 @@
       "name": "副本",
       "source": "xivapi+tw-instances",
       "status": "filled",
-      "updated": "2026-08-11",
+      "updated": "2026-09-26",
       "count": 520
     },
     {
@@ -166,8 +166,8 @@
       "name": "幻卡",
       "source": "xivapi+items+npcs+maps+dungeons",
       "status": "used",
-      "updated": "2026-07-28",
-      "count": 435
+      "updated": "2026-09-25",
+      "count": 439
     },
     {
       "schema": "blue-magic",
@@ -184,7 +184,7 @@
       "name": "探索筆記",
       "source": "xivapi+maps",
       "status": "used",
-      "updated": "2026-06-22",
+      "updated": "2026-09-23",
       "count": 340
     },
     {
@@ -193,7 +193,7 @@
       "name": "表情",
       "source": "xivapi+tw-items",
       "status": "used",
-      "updated": "2026-08-11",
+      "updated": "2026-09-24",
       "count": 292
     },
     {
@@ -202,7 +202,7 @@
       "name": "樂譜",
       "source": "xivapi+tw-items",
       "status": "used",
-      "updated": "2026-07-28",
+      "updated": "2026-09-24",
       "count": 724
     },
     {
@@ -211,7 +211,7 @@
       "name": "寵物",
       "source": "xivapi+items",
       "status": "populated",
-      "updated": "2026-08-11",
+      "updated": "2026-09-24",
       "count": 581
     },
     {
@@ -220,7 +220,7 @@
       "name": "坐騎",
       "source": "xivapi+tw-items+cn-opencc+manual",
       "status": "filled",
-      "updated": "2026-08-11",
+      "updated": "2026-09-24",
       "count": 362
     },
     {
@@ -229,7 +229,7 @@
       "name": "鳥鞍",
       "source": "xivapi+tw-items+obtainable-methods",
       "status": "used",
-      "updated": "2026-08-11",
+      "updated": "2026-09-24",
       "count": 106
     },
     {
@@ -301,7 +301,7 @@
       "name": "取得管道精簡表（市場頁）",
       "source": "obtainable-methods/gathering/gc-shop/maps（scripts/build-market-sources.mjs 精簡）",
       "status": "used",
-      "updated": "2026-08-11",
+      "updated": "2026-09-26",
       "count": 7558
     },
     {
@@ -310,7 +310,7 @@
       "name": "物品精簡表（採集頁）",
       "source": "data/items.json（scripts/build-items-lite.mjs 精簡）",
       "status": "used",
-      "updated": "2026-08-11",
+      "updated": "2026-09-23",
       "count": 45548
     },
     {
@@ -326,8 +326,72 @@
       "file": "gc-shop.json",
       "name": "軍票／雙色寶石兌換品",
       "source": "xivapi+items",
-      "status": "used",
+      "status": "superseded-by-currency-shop",
+      "note": "2026-09-23 起 /tools/gc-exchange/ 改吃 currency-shop.json（涵蓋 45 種貨幣，含本檔的軍票與雙色寶石）。保留備查，前端已不載入。",
       "updated": "2026-07-13"
+    },
+    {
+      "schema": "currency-shop",
+      "file": "currency-shop.json",
+      "name": "多幣種兌換品（變現排行）",
+      "source": "teamcraft-shops+xivapi+items",
+      "status": "used",
+      "count": 45,
+      "updated": "2026-09-25"
+    },
+    {
+      "schema": "ventures",
+      "file": "ventures.json",
+      "name": "雇員探險（目標型 969 個）",
+      "source": "obtainable-methods(venture)+tw-ventures+tw-job-categories+items",
+      "status": "used",
+      "count": 969,
+      "updated": "2026-09-24"
+    },
+    {
+      "schema": "seasonal-shop",
+      "file": "seasonal-shop.json",
+      "name": "季節活動商店（報酬管理人＋活動貨幣）",
+      "source": "teamcraft-shops+tw-shops+items",
+      "status": "used",
+      "count": 8,
+      "updated": "2026-09-25"
+    },
+    {
+      "schema": "site-index",
+      "file": "site-index.json",
+      "name": "全站搜尋索引（命令面板用）",
+      "source": "各收藏／工具資料檔；key 為該頁 keyOf",
+      "status": "used",
+      "count": 5125,
+      "updated": "2026-09-26"
+    },
+    {
+      "schema": "gc-supply",
+      "file": "gc-supply.json",
+      "name": "軍需品調達＋專家交納（軍票怎麼賺）",
+      "source": "teamcraft-gc-supply+xivapi GCSupplyDutyReward+items+equip.names",
+      "status": "used",
+      "count": 11,
+      "updated": "2026-09-24"
+    },
+    {
+      "schema": "hunting-log",
+      "file": "hunting-log.json",
+      "name": "討伐筆記（9 職業＋3 大國防聯軍）",
+      "source": "xivapi MonsterNote/MonsterNoteTarget + monsters(baseId) + tw-mobs + twPlaces + equip.names",
+      "status": "used",
+      "count": 12,
+      "updated": "2026-09-24"
+    },
+    {
+      "schema": "system-unlocks",
+      "file": "system-unlocks.json",
+      "name": "系統解鎖索引（哪個任務開哪個系統）",
+      "source": "xivapi-quest+tw-quests+npcs+maps；對照表 scripts/lib/system-unlock-map.mjs",
+      "status": "script-ready",
+      "count": 26,
+      "updated": "2026-09-25"
     },
     {
       "schema": "fashion-report",
