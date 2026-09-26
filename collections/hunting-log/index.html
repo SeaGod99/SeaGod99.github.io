@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FF14 討伐筆記追蹤 — 9 個職業與 3 個大國防聯軍的討伐目標、出沒地點與座標，記錄已討伐進度">
+  <title>討伐筆記追蹤 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <link rel="stylesheet" href="../../assets/css/common.css">
+  <link rel="stylesheet" href="../../assets/css/tool-header.css">
+  <style>
+    /* 討伐筆記頁專屬樣式；通用版面與控制面見 assets/css/common.css ＋ collection-tracker.js。
+       這頁是**子項目模式**：一張卡＝一條討伐項目，真正要勾的是卡片裡的討伐目標
+       （同一隻怪會被多個職業的筆記引用，引擎依 keyOf 去重後才算進度）。 */
+    :root {
+      --accent:    var(--red);
+      --accent-2:  var(--gold);
+      --glow-1:    rgba(248,113,113,0.06);
+      --glow-2:    rgba(200,169,110,0.04);
+    }
+    .hl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; margin-bottom: 40px; }
+    .hl-card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md);
+      padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; position: relative;
+    }
+    /* 整條都打完的項目：外框帶色，一眼看得出哪幾條還沒清 */
+    .hl-card.owned { border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
+
+    .hl-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; padding-right: 30px; }
+    .hl-no { font-size: 12px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+    .hl-exp { font-size: 11.5px; color: var(--text-muted); margin-left: auto; }
+
+    /* 一列＝一個討伐目標（就是要勾的單位） */
+    .hl-target {
+      display: flex; align-items: flex-start; gap: 8px;
+      padding: 7px 8px; border-radius: var(--radius-sm);
+      background: var(--raise); cursor: pointer; user-select: none;
+      border: 1px solid transparent;
+    }
+    .hl-target:hover { border-color: var(--border); }
+    .hl-target:focus-visible { outline: 2px solid color-mix(in srgb, var(--accent) 60%, transparent); outline-offset: 1px; }
+    .hl-target.done { background: color-mix(in srgb, var(--accent) 10%, var(--raise)); }
+    .hl-target.done .hl-name { text-decoration: line-through; color: var(--text-muted); }
+    .hl-box {
+      flex-shrink: 0; width: 17px; height: 17px; margin-top: 1px; border-radius: 4px;
+      border: 1px solid var(--border); display: grid; place-items: center;
+      font-size: 11px; color: var(--accent); background: var(--bg-card);
+    }
+    .hl-target.done .hl-box { background: var(--accent); border-color: var(--accent); color: var(--bg-base); }
+    .hl-body { flex: 1; min-width: 0; }
+    .hl-name { font-size: 13.5px; font-weight: 600; }
+    .hl-count { font-size: 12px; color: var(--accent); margin-left: 5px; font-variant-numeric: tabular-nums; }
+    .hl-where { font-size: 11.5px; color: var(--text-muted); line-height: 1.55; margin-top: 2px; }
+    .hl-btns { display: flex; gap: 5px; margin-top: 4px; flex-wrap: wrap; }
+    .hl-btn {
+      background: none; border: 1px solid var(--border); border-radius: var(--radius-sm);
+      color: var(--blue); font-size: 11.5px; padding: 3px 8px; cursor: pointer;
+    }
+    .hl-btn:hover { border-color: var(--blue); background: rgba(79,195,247,0.1); }
+    .hl-btn.copied { color: var(--green); border-color: var(--green); }
+    @media (pointer: coarse) { .hl-target { min-height: 44px; } .hl-btn { min-height: 44px; } }
+    @media (max-width: 600px) { .hl-grid { grid-template-columns: 1fr; } }
+  </style>
+  <script src="../../assets/js/patch-gate.js"></script>
+  <script src="../../assets/js/collection-tracker.js"></script>
+  <script src="../../assets/js/theme.js"></script>
+</head>
+<body>
+
+<div class="container">
+  <div class="tool-header">
+    <h1 class="tool-title">&#x1F5E1;&#xFE0F; 討伐筆記追蹤</h1>
+    <p class="tool-subtitle">點目標列標記已討伐，進度自動儲存於瀏覽器</p>
+    <div class="header-divider"></div>
+  </div>
+  <div id="ct-root"></div>
+</div>
+
+<footer class="page-footer">
+  <div class="container">
+    <p class="footer-text">
+      <a href="../../">水神的工具箱</a> &middot; 資料來源：遊戲本體（MonsterNote）、<a href="https://xivapi.com" target="_blank" rel="noopener">XIVAPI</a>
+    </p>
+    <p class="footer-text" style="margin-top:4px">
+      FINAL FANTASY XIV &copy; SQUARE ENIX　此為玩家自製非官方工具
+    </p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var esc = CollectionTracker.esc;
+  var tracker = null;
+
+  var RANK_LABEL = ['', '第一階', '第二階', '第三階', '第四階', '第五階'];
+
+  // 一張卡＝一條討伐項目；追蹤單位＝卡片裡的討伐目標。
+  // keyOf 收到的是目標物件，回傳 baseId：**同一隻怪被不同職業的筆記引用時算同一個單位**
+  // （遊戲裡也是打一次就三邊都算），引擎會依這個 key 去重後才算進度分母。
+  function targetsOf(e) { return e.targets || []; }
+
+  function whereText(t) {
+    if (!t.zones || !t.zones.length) return '';
+    return t.zones.map(function (z) {
+      return esc(z.zone) + (z.spot ? '・' + esc(z.spot) : '');
+    }).join('／');
+  }
+
+  // init() 回傳引擎實體。資料是非同步載入的，所以 card() 第一次被呼叫時
+  // tracker 已經指派完畢（與採集紀錄頁同一個寫法）。
+  tracker = CollectionTracker.init({
+    dataUrl: '../../data/hunting-log.json',
+    metaUrl: '../../data/_meta.json',
+    storageKey: 'ffxiv_hunting_log_done',
+    snapKey: 'huntinglog',
+    schema: 'hunting-log-progress',
+    fileBase: 'hunting-log',
+    verb: '討伐',
+    unit: '種怪',
+    noun: '討伐目標',
+    gridClass: 'hl-grid',
+    cardClass: 'hl-card',
+    pageSize: 60,
+    searchPlaceholder: '搜尋怪物名稱、地區、職業…',
+
+    // 資料是「12 組 × 每組 N 條」，攤平成一條一張卡；組名（職業／團名）帶進每一條
+    rowsOf: function (json) {
+      var out = [];
+      (json.data || []).forEach(function (g) {
+        (g.entries || []).forEach(function (e) {
+          out.push({
+            id: e.id, no: e.no, rank: e.rank, targets: e.targets, exp: e.exp,
+            group: g.name, groupKey: g.key, kind: g.kind
+          });
+        });
+      });
+      return out;
+    },
+    subsOf: targetsOf,
+    keyOf: function (t) { return t.baseId; },
+    include: function () { return true; },   // 無台服名的怪在建置階段就濾掉了
+    prepare: function (list) {
+      return list.slice().sort(function (a, b) {
+        return (a.groupKey < b.groupKey ? -1 : a.groupKey > b.groupKey ? 1 : 0) || a.no - b.no;
+      });
+    },
+    searchText: function (e) {
+      var parts = [e.group];
+      targetsOf(e).forEach(function (t) {
+        parts.push(t.name);
+        (t.zones || []).forEach(function (z) { parts.push(z.zone); if (z.spot) parts.push(z.spot); });
+      });
+      return parts.filter(Boolean).join(' ').toLowerCase();
+    },
+    nameOf: function (e) { return e.group + ' ' + e.no; },
+    sorts: ['name'],
+    filters: [
+      {
+        id: 'group', label: '職業／部隊',
+        options: function (list) {
+          var seen = new Set(), out = [];
+          list.forEach(function (e) {
+            if (seen.has(e.group)) return;
+            seen.add(e.group);
+            out.push({ value: e.group, label: (e.kind === 'gc' ? '⚔ ' : '') + e.group });
+          });
+          return out;
+        },
+        match: function (e, v) { return e.group === v; }
+      },
+      {
+        id: 'rank', label: '階級',
+        options: function (list) {
+          var set = new Set(list.map(function (e) { return e.rank; }));
+          return Array.from(set).sort(function (a, b) { return a - b; })
+            .map(function (r) { return { value: String(r), label: RANK_LABEL[r] || ('第 ' + r + ' 階') }; });
+        },
+        match: function (e, v) { return e.rank === Number(v); }
+      }
+    ],
+
+    card: function (e) {
+      var rows = targetsOf(e).map(function (t) {
+        var done = tracker.owned.has(t.baseId);
+        var where = whereText(t);
+        var btns = '';
+        if (t.at) {
+          btns =
+            '<div class="hl-btns">' +
+              '<button class="hl-btn hl-map" data-mapid="' + t.at.mapId + '" data-x="' + t.at.x + '" data-y="' + t.at.y + '"' +
+                ' data-mapname="' + esc(t.at.mapName) + '" data-title="' + esc(t.name) + '">&#x1F5FA; 地圖</button>' +
+              '<button class="hl-btn hl-flag" data-flag="/coord ' + esc(t.at.x.toFixed(1)) + ' ' + esc(t.at.y.toFixed(1)) + ' ' + esc(t.at.mapName) + '">&#x1F4CB; 座標</button>' +
+            '</div>';
+        }
+        return '' +
+          '<div class="hl-target' + (done ? ' done' : '') + '" data-base="' + t.baseId + '" tabindex="0" role="checkbox" aria-checked="' + (done ? 'true' : 'false') + '">' +
+            '<span class="hl-box">' + (done ? '✓' : '') + '</span>' +
+            '<div class="hl-body">' +
+              '<div><span class="hl-name">' + esc(t.name) + '</span><span class="hl-count">×' + esc(t.count) + '</span></div>' +
+              (where ? '<div class="hl-where">' + where + '</div>' : '') +
+              btns +
+            '</div>' +
+          '</div>';
+      }).join('');
+
+      return '' +
+        '<div class="hl-head">' +
+          '<span class="tag">' + esc(e.group) + '</span>' +
+          '<span class="tag">' + esc(RANK_LABEL[e.rank] || ('第 ' + e.rank + ' 階')) + '</span>' +
+          '<span class="hl-no">No.' + esc(e.no) + '</span>' +
+          (e.exp ? '<span class="hl-exp">經驗 ' + esc(e.exp.toLocaleString()) + '</span>' : '') +
+        '</div>' + rows;
+    },
+
+    // 子項目模式：引擎不綁卡片層級的點擊，由各頁自己綁目標列
+    onCardCreate: function (e, card) {
+      Array.prototype.forEach.call(card.querySelectorAll('.hl-target'), function (row) {
+        function fire(ev) {
+          // 地圖／座標鈕有自己的行為，別連帶切換討伐狀態
+          if (ev.target.closest('.hl-btn')) return;
+          tracker.toggleKey(+row.dataset.base);
+        }
+        row.addEventListener('click', fire);
+        row.addEventListener('keydown', function (ev) {
+          if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); fire(ev); }
+        });
+      });
+    }
+  });
+
+  // 地圖／座標鈕（事件委派：引擎每次篩選換頁都會重建卡片）
+  document.addEventListener('click', function (ev) {
+    var flag = ev.target.closest('.hl-flag');
+    if (flag) {
+      navigator.clipboard.writeText(flag.dataset.flag).then(function () {
+        var old = flag.innerHTML;
+        flag.innerHTML = '✓ 已複製';
+        flag.classList.add('copied');
+        setTimeout(function () { flag.innerHTML = old; flag.classList.remove('copied'); }, 1400);
+      });
+      return;
+    }
+    var map = ev.target.closest('.hl-map');
+    if (map && window.hlOpenMap) {
+      var x = +map.dataset.x, y = +map.dataset.y;
+      window.hlOpenMap({
+        mapId: +map.dataset.mapid, x: x, y: y,
+        title: '⚔️ ' + map.dataset.title,
+        sub: map.dataset.mapname,
+        flagText: ('/coord ' + x.toFixed(1) + ' ' + y.toFixed(1) + ' ' + map.dataset.mapname).trim()
+      });
+    }
+  });
+})();
+</script>
+<script type="module">
+/* 怪物出沒點：共用迷你地圖彈窗，maps.json 首次點擊才載入 */
+import { initMapModal, openMapModal } from '../../assets/js/map-modal.js';
+let ready = null;
+window.hlOpenMap = async function (opts) {
+  if (!ready) {
+    ready = fetch('../../data/maps.json').then(r => r.json()).then(j => initMapModal({ mapsData: j.data, base: '../..' }));
+  }
+  try { await ready; } catch (e) { ready = null; return; }
+  openMapModal(opts);
+};
+</script>
+</body>
+</html>
