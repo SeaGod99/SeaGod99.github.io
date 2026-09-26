@@ -99,6 +99,8 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 製作理符回歸（**改完 `tools/leves/` 或 `craft-leves.json` 必跑**） | `node scripts/validate-leves.mjs`（24 項；最重要的是「頁面不得宣稱 HQ 加成倍率」）|
 | 重建練級裝備路線（改完 items.json 後） | `node scripts/build-leveling-gear.mjs`（dry-run 預設／`--apply`）→ `data/leveling-gear/`（43 個職業檔＋`_index.json`）；**刻意不進 `minify-data.mjs`** |
 | 練級裝備回歸（**改完 `tools/leveling-gear/` 或該目錄資料必跑**） | `node scripts/validate-leveling-gear.mjs`（25 項：槽位眾數比對、前緣單調性、取得管道真的有填上）|
+| 重建潛水艇資料（改版時才跑） | `node scripts/build-submarine.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/submarine.json`（部件 40／航點 123／階級 145）|
+| 潛水艇回歸（**改完 `tools/submarine/` 或 `data/submarine.json` 必跑**） | `node scripts/validate-submarine.mjs`（26 項；最重要的是「部位名不可從 Slot 編號推」與「不提供多點航程試算」）|
 | 時尚品鑑週更（每週二／週五各一次） | `node scripts/build-fashion-report.mjs`（`--dry-run` 只印／`--offline` 用快取）→ `node scripts/validate-fashion-render.mjs`（頁面 render 回歸，七個週狀態，不需瀏覽器） |
 | 時尚品鑑跨週不變資料（改版時才跑） | `node scripts/build-dyes.mjs`／`build-fashion-fillers.mjs`／`build-fashion-themes.mjs` |
 | 重建無人島資料層 | `node scripts/build-island.mjs`（`--offline` 用快取／`--refresh` 強制重抓） |
@@ -281,6 +283,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 - **時尚品鑑週更** → `node scripts/build-fashion-report.mjs` → `node scripts/validate-data.mjs` → `node scripts/validate-fashion-render.mjs` → 開頁驗收。**別再手工挑推薦裝**，推薦標準與換週狀態機是程式定的，規格見 [docs/fashion-report-spec.md](docs/fashion-report-spec.md)、操作見 [docs/fashion-report-update-sop.md](docs/fashion-report-update-sop.md)。腳本報「來源尚未換週」是**正常的換週真空期，什麼都不用做**。
 - **重建釣魚資料** → `node scripts/build-fishing.mjs` → **必接** `patch-fishing-common.mjs`（補回 ~339 條常駐普通魚，build 只產得出上游的 1110 條）、`patch-fishing-multispot.mjs` 與 `patch-fish-legendary.mjs --apply`。跑完 `validate-links` 的「fishes.spotId → fishing-spots」要是 **0 斷鏈**；**釣場名一律走 `twPlaces` 不可用 OpenCC**（舊版簡轉繁，307 個裡 25 個是錯的，而釣場詳情的 `/coord` 會把錯地名複製進遊戲）。後者漏跑不會報錯，只會安靜地把 30 隻魚皇（釣場之皇）降級成普通魚王——上游沒有這個旗標，名單是我們自己維護的（見知識庫 §4.8）。
 - **幻卡少了新卡** → `node scripts/patch-triple-triad-new-cards.mjs`（dry-run 看要補什麼）→ 加 `--apply` → `node scripts/download-triple-triad-images.mjs` 補卡面圖 → `node scripts/patch-triple-triad-source-names.mjs --apply`（補取得方式的繁中名）→ `node scripts/validate-data.mjs`。**張數不要相信 build 腳本裡的常數**（`build-triple-triad-all.mjs` 寫死 425，7.1 的 10 張新卡就這樣安靜漏掉）；真實張數＝`items.json` 裡 category「九宮幻卡」的道具數。7.1 以後的 sheet 只有 XIVAPI **v2** 有（v1 已停更）。
+- **潛水艇的部位名不可以從 `SubmarinePart.Slot` 編號推** → 那個編號與道具順序**完全不一致**，照順序猜會四個部位全錯（船首→Slot 2、艦橋→Slot 3、船體→Slot 0、船尾→Slot 1）。正確關聯是 **`Item.AdditionalData` = SubmarinePart 的 row id**（同幻卡那條，§4.10）；部位名一律取自**道具分類**（`潛水艇組件（船首）`）。**另外不要提供「勾幾個點跑一趟要幾桶」的試算**——那個公式不在遊戲資料裡，算錯會讓人把艇派出去回不來。
 - **接外部工具站的 id 之前** → **先用名稱對一次再接**。幻卡舊資料的 `instanceId` 是 Garland 自家 id，182 個裡 64 個「剛好」也是 `dungeons.json` 的有效 key，但其中 **151 個對到的是錯的副本**（知識庫 §4.10）。同一個坑在 mapId 已經踩過一次。
 - **看到收藏頁某筆「沒有取得方式」** → 先確認**它在遊戲裡是不是真的存在**。坐騎有 4 筆是 `Mount.Order === -1` 的內部列（玩家拿不到、其中 3 筆還是重複），補 sources 是補錯方向（知識庫 §4.11）。
 - **要重跑任何 `build-*.mjs` 之前** → 先確認那份 JSON 裡**每個 `kind`／區塊都有腳本會產生**。`squadron.json` 的 60 筆隊員曾經只存在於 JSON、沒有腳本產它，重跑會安靜洗掉（知識庫 §4.19）。最快的檢查＝跑完跟舊檔 diff 一次。
