@@ -93,6 +93,14 @@
     .tug-chip { display: inline-block; font-size: 0.65rem; padding: 0 0.4rem; border-radius: 3px;
       border: 1px solid var(--border); color: var(--text-dim); background: var(--bg-surface);
       margin-left: 0.35rem; white-space: nowrap; font-weight: 600; }
+    /* 「下次什麼時候」：詳情裡唯一的跨頁出口，給它 gold 讓人看得到。
+       觸控用透明擴張層補到 44px（同站內其他小連結的做法）。 */
+    .wx-when { color: var(--gold); text-decoration: none; font-size: 0.78rem; white-space: nowrap; }
+    .wx-when:hover { text-decoration: underline; }
+    @media (pointer: coarse) {
+      .wx-when { position: relative; display: inline-block; }
+      .wx-when::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 44px; transform: translateY(-50%); }
+    }
     .tug-chip.light  { color: var(--green); border-color: rgba(74,222,128,0.35); }
     .tug-chip.medium { color: var(--gold);  border-color: rgba(200,169,110,0.35); }
     .tug-chip.heavy  { color: var(--red);   border-color: rgba(248,113,113,0.35); }
@@ -378,6 +386,7 @@ import {
 import { initMapModal, openMapModal } from '../../assets/js/map-modal.js';
 import { createMapExplorer } from '../../assets/js/map-explorer.js';
 import { mountEtBar } from '../../assets/js/et-bar.js';
+import { nextWindows as wcNextWindows } from '../../assets/js/window-calc.js';
 
 const esc = CollectionTracker.esc;
 const LS_KEY     = 'ffxiv_fishing_owned';
@@ -882,44 +891,18 @@ let fdCurrentId = null;
 let fdSpotId = null;   // 詳情彈窗目前選中的釣場（多釣場魚可切換）
 
 // 未來可釣窗口（合併跨天氣期的相鄰段），回傳 [{ws, we, active}]
+/* 視窗計算本體在 assets/js/window-calc.js（與限時採集頁共用）。
+   這裡只把魚的資料翻成共用模組的 spec：ET 時段直接給、天氣條件先用 wxKeys()
+   把上游的英文天氣名換成模組認得的 key，地圖由釣場反查。
+   等價性由 scripts/validate-window-calc.mjs 逐筆驗（307 種魚＋36 組天氣案例）。 */
 function nextWindows(f, now, maxN = 3, spotIdOv) {
-  const timed = f.startHour > 0 || f.endHour < 24;
   const wk = wxKeys(f.weatherSet), pk = wxKeys(f.previousWeatherSet);
-  const needWx = wk.length > 0 || pk.length > 0;
-  if (!timed && !needWx) return [];
-  let mapId = null;
-  if (needWx) {
+  let weather = null;
+  if (wk.length || pk.length) {
     const spot = (spotIdOv ?? f.spotId) != null ? SPOTS.get(spotIdOv ?? f.spotId) : null;
-    mapId = spot?.coords?.mapId;
-    if (mapId == null || !getWeatherTable(mapId)) return [];
+    weather = { mapId: spot?.coords?.mapId ?? null, keys: wk, prevKeys: pk };
   }
-  const wins = [];
-  const pi0 = Math.floor(now / WEATHER_PERIOD);
-  for (let i = 0; i < 700 && wins.length < maxN + 1; i++) {
-    const pi = pi0 + i;
-    if (needWx) {
-      if (wk.length && !wk.includes(weatherOf(mapId, pi))) continue;
-      if (pk.length && !pk.includes(weatherOf(mapId, pi - 1))) continue;
-    }
-    const pStart = pi * WEATHER_PERIOD;
-    const pEtH = etHourOf(pStart);
-    let segs;
-    if (!timed) segs = [[pEtH, pEtH + 8]];
-    else {
-      const raw = f.startHour < f.endHour ? [[f.startHour, f.endHour]] : [[0, f.endHour], [f.startHour, 24]];
-      segs = raw.map(([a, b]) => [Math.max(a, pEtH), Math.min(b, pEtH + 8)]).filter(([a, b]) => b > a);
-    }
-    for (const [a, b] of segs) {
-      const ws = pStart + (a - pEtH) * ET_HOUR_MS;
-      const we = pStart + (b - pEtH) * ET_HOUR_MS;
-      if (now >= we) continue;
-      const last = wins[wins.length - 1];
-      if (last && Math.abs(last.we - ws) < 1000) last.we = we; // 相鄰段合併
-      else wins.push({ ws, we });
-    }
-  }
-  wins.forEach(w => { w.active = now >= w.ws; });
-  return wins.slice(0, maxN);
+  return wcNextWindows({ startHour: f.startHour, endHour: f.endHour, weather }, now, { max: maxN });
 }
 
 function fmtRT(ms) {
@@ -961,6 +944,15 @@ function openFishDetail(id, keepSpot) {
     : '全天';
   const wxStr = wxLabel(f.weatherSet) || '無限制';
   const prevStr = wxLabel(f.previousWeatherSet);
+  /* 「去天氣頁看下次什麼時候」：本頁答得出要什麼天氣，答不出「那張圖下次什麼時候是這個天氣」。
+     帶 ?zone=<釣場地圖>&w=<天氣鍵>（深連結規約 §2 的通用參數）。
+     只在**同時有地圖與天氣條件**時才給——缺任一個那頁就只是預設畫面，給了等於騙人點。 */
+  const wxLinkKeys = wxKeys(f.weatherSet);
+  const wxLinkSpot = f.spotId != null ? SPOTS.get(f.spotId) : null;
+  const wxLinkMap = wxLinkSpot?.coords?.mapId ?? null;
+  const wxLink = (wxLinkKeys.length && wxLinkMap != null)
+    ? `<a class="wx-when" href="../weather/?zone=${wxLinkMap}&w=${wxLinkKeys.join(',')}">🔭 下次什麼時候 →</a>`
+    : '';
   const baitChain = f.bait?.length ? f.bait.map(b => b.name || b.nameEn).join(' → ') : '—';
   const preds = (f.predators || []).map(pd => {
     const pid = Array.isArray(pd.itemId) ? pd.itemId[0] : pd.itemId;
@@ -991,7 +983,7 @@ function openFishDetail(id, keepSpot) {
         spotRow,
         ['魚影大小', `<b>${GIG_TC[f.gig] || '不明'}</b>（潛水後用魚叉瞄準對應大小的魚影）`],
         ['時間限制', timeStr],
-        ['天氣限制', prevStr ? `${prevStr} → ${wxStr}（前一時段 → 當前）` : wxStr],
+        ['天氣限制', (prevStr ? `${prevStr} → ${wxStr}（前一時段 → 當前）` : wxStr) + (wxLink ? ' ' + wxLink : '')],
       ]
     : [
         spotRow,
@@ -999,7 +991,7 @@ function openFishDetail(id, keepSpot) {
         ['提鉤', HOOKSET_TC[f.hookset] || '—'],
         ['釣餌鏈', `<b>${baitChain}</b>${f.bait?.length > 1 ? '（以小釣大）' : ''}`],
         ['時間限制', timeStr],
-        ['天氣限制', prevStr ? `${prevStr} → ${wxStr}（前一時段 → 當前）` : wxStr],
+        ['天氣限制', (prevStr ? `${prevStr} → ${wxStr}（前一時段 → 當前）` : wxStr) + (wxLink ? ' ' + wxLink : '')],
       ];
   if (preds.length) rows.push(['魚識', `${preds.join('、')}${f.intuitionLength ? `（持續 ${f.intuitionLength} 秒）` : ''}`]);
   if (f.snagging) rows.push(['釣組', '需要鉤足（Snagging）']);

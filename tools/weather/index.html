@@ -205,7 +205,7 @@
 
 <script type="module">
 import {
-  WEATHER_PERIOD, periodStart, wi,
+  WEATHER_PERIOD, periodStart, wi, WEATHER_INFO,
   initWeatherTables, getWeatherAt, getWeatherTable,
   fmtET, fmtRT, fmtCountdown
 } from '../../assets/js/eorzea-weather.js';
@@ -343,6 +343,12 @@ let curZone  = 11;
 let selWeathers = new Set();
 let curMGroup = 'lanoscea';
 
+/* ⚠ **模組一載入就先把原始 query 抓下來**（§3.17）。init 裡的 setGroup('lanoscea')
+   會呼叫 syncURL()，那一行當場把網址改寫成 ?zone=11——晚一步讀 location.search
+   的人永遠只看得到被洗過的值。2026-09-25 這裡踩過一次：?zone=141 完全沒有作用，
+   而畫面正常、主控台乾淨，看起來就像是連結本身壞了。 */
+const INITIAL_QUERY = location.search;
+
 // ============================================================
 // Single zone tab
 // ============================================================
@@ -366,11 +372,53 @@ function setGroup(g) {
   const notice = document.getElementById('unverified-notice');
   if (notice) notice.style.display = GROUPS[g]?.unverified ? 'block' : 'none';
   renderForecast(); renderChips(); renderSearch();
+  // applyURL 會先呼叫 setGroup 再設 zone／w，這時不能寫網址——會把還沒套上的 w 洗掉
+  if (!applyingURL) syncURL();
 }
+let applyingURL = false;
+// 網址帶進來的天氣鍵要驗過才用——wi() 查不到會回一個 fallback，
+// 直接塞進 selWeathers 的話使用者亂打也會「成功」選到一個不存在的天氣。
+const WEATHER_KEYS = new Set(Object.keys(WEATHER_INFO));
 
 function onZoneChange() {
   curZone = Number(document.getElementById('zone-sel').value);
   selWeathers.clear();
+  renderForecast(); renderChips(); renderSearch(); syncURL();
+}
+
+/* 網址狀態：?zone=<mapId>&w=<天氣鍵,…>（規約見 docs/deep-links.md）。
+   「這張圖什麼時候下雨」本來就是會想丟給別人的東西，而釣魚頁的天氣籌碼
+   （以及之後的優雷卡 NM、海釣班表）都要能連進來指定圖與天氣。
+   **只寫兩件事**：看哪張圖、找哪些天氣。分頁與捲動位置不寫——那是瀏覽狀態不是意圖。 */
+function syncURL() {
+  try {
+    const p = new URLSearchParams();
+    if (curZone) p.set('zone', String(curZone));
+    if (selWeathers.size) p.set('w', [...selWeathers].join(','));
+    const q = p.toString();
+    history.replaceState(null, '', q ? '?' + q : location.pathname);
+  } catch (e) { /* 無痕視窗等寫不了網址：不影響查詢本身 */ }
+}
+
+/* 開頁時把網址帶的狀態套上去。zone 要先找出它屬於哪一組再切過去，
+   否則 setGroup 會把 zone-sel 整個重建、剛設好的值當場被蓋掉。 */
+function applyURL() {
+  const p = new URLSearchParams(INITIAL_QUERY);
+  const zone = Number(p.get('zone'));
+  if (zone) {
+    const grp = Object.keys(GROUPS).find(k => GROUPS[k].zones.some(z => z.mapId === zone));
+    if (grp) {
+      if (grp !== curGroup) setGroup(grp);
+      const sel = document.getElementById('zone-sel');
+      if ([...sel.options].some(o => Number(o.value) === zone)) {
+        sel.value = String(zone);
+        curZone = zone;
+      }
+    }
+  }
+  // 只收認得的天氣鍵——網址是使用者可以亂改的，塞進 selWeathers 之前要驗過
+  const w = (p.get('w') || '').split(',').map(x => x.trim()).filter(Boolean);
+  for (const k of w) if (WEATHER_KEYS.has(k)) selWeathers.add(k);
   renderForecast(); renderChips(); renderSearch();
 }
 
@@ -402,7 +450,7 @@ function renderChips() {
 
 function toggleW(w) {
   selWeathers.has(w) ? selWeathers.delete(w) : selWeathers.add(w);
-  renderChips(); renderSearch();
+  renderChips(); renderSearch(); syncURL();
 }
 
 function renderSearch() {
@@ -547,6 +595,10 @@ window.toggleW = toggleW;
     btn.textContent = GROUPS[k].label || k;
   });
   setGroup('lanoscea');
+  // 先讀網址再套用（§3.17：順序顛倒的話 setGroup 裡的 syncURL 會把 query 當場洗掉）
+  applyingURL = true;
+  try { applyURL(); } finally { applyingURL = false; }
+  syncURL();                       // 套用期間 setGroup 不寫網址，這裡補寫一次正確的
   initChain();
   mountEtBar('#etBar', { metric: 'weather' });
   setInterval(() => {
