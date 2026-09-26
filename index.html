@@ -431,7 +431,9 @@
       <button class="pd-btn" id="pdExportBtn" title="將所有追蹤頁的進度打包成單一備份檔">💾 匯出全站進度</button>
       <button class="pd-btn" id="pdImportBtn" title="還原「匯出全站進度」產生的備份檔">📥 匯入全站進度</button>
       <input type="file" id="pdImportFile" accept="application/json" style="display:none">
+      <button class="pd-btn" id="pdProfileBtn" title="同一台瀏覽器分開記錄兩隻以上角色的進度">👤 多角色設定檔</button>
     </div>
+    <p class="pd-hint" id="pdProfileHint" style="display:none"></p>
   </section>
 
   <!-- ── 日常工具 ── -->
@@ -971,6 +973,64 @@
     return Promise.resolve(window.confirm(msg));
   }
 
+
+  /* 多角色設定檔的入口。晶片只長給「已經建過第二個設定檔」的人看——
+     單角色的人不該在頂列多一個看不懂的按鈕，所以開通的入口放在這裡。 */
+  // 設定檔名稱是使用者自己打的字，要轉義才能放進 innerHTML
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  (function profileEntry() {
+    var btn = document.getElementById('pdProfileBtn');
+    var hint = document.getElementById('pdProfileHint');
+    if (!btn) return;
+
+    function refresh() {
+      var P = window.SGT_PROFILES;
+      if (!P) return;
+      var names = P.list();
+      if (names.length > 1) {
+        hint.style.display = '';
+        hint.innerHTML = '目前有 <b>' + names.length + '</b> 個設定檔（' +
+          names.map(function (n) {
+            return n === P.active() ? '<b>' + esc(n) + '</b>（使用中）' : esc(n);
+          }).join('、') + '）。切換的晶片在頁面最上方那一列。';
+        btn.textContent = '👤 管理設定檔';
+      } else {
+        hint.style.display = '';
+        hint.innerHTML = '同一台瀏覽器要分開記錄兩隻角色的進度時用得到。' +
+          '建了第二個之後，頂列會出現切換用的晶片。' +
+          '<b>切換時會先把目前的進度整份存起來</b>，而且只覆蓋、不刪除目標設定檔沒有的資料。';
+      }
+    }
+
+    btn.addEventListener('click', function () {
+      var P = window.SGT_PROFILES;
+      if (!P) { alert('設定檔模組還沒載入，請稍後再試'); return; }
+      var names = P.list();
+      if (names.length > 1) {
+        alert('目前的設定檔：' + names.join('、') + '\n使用中：' + P.active() +
+          '\n\n切換請用頁面最上方那一列的 👤 晶片。');
+        return;
+      }
+      var name = (prompt('要新增的設定檔名稱（通常填角色名）：') || '').trim();
+      if (!name) return;
+      if (P.enable(name)) {
+        refresh();
+        if (window.Toast) Toast.show('已建立「' + name + '」。頂列出現 👤 晶片後即可切換。', 'ok');
+        else alert('已建立「' + name + '」。頂列出現 👤 晶片後即可切換。');
+      } else {
+        if (window.Toast) Toast.show('這個名稱不能用（空白或重複）', 'warn');
+      }
+    });
+
+    // profiles.js 是 defer 載的，這段 inline script 可能比它早跑
+    if (window.SGT_PROFILES) refresh();
+    else setTimeout(refresh, 400);
+  })();
   document.getElementById('pdExportBtn').addEventListener('click', function () {
     var keys = {};
     var n = 0;

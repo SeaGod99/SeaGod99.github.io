@@ -152,6 +152,12 @@
       t.defer = true;
       (document.head || document.documentElement).appendChild(t);
 
+      // 7) 多角色設定檔（只有建過第二個設定檔的人才會看到晶片，見該檔說明）
+      var pf = document.createElement('script');
+      pf.src = (root || '') + 'assets/js/profiles.js';
+      pf.defer = true;
+      (document.head || document.documentElement).appendChild(pf);
+
     } catch (e) { /* 忽略：切換器載入失敗不影響頁面 */ }
   })();
 })();

@@ -103,6 +103,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 潛水艇回歸（**改完 `tools/submarine/` 或 `data/submarine.json` 必跑**） | `node scripts/validate-submarine.mjs`（26 項；最重要的是「部位名不可從 Slot 編號推」與「不提供多點航程試算」）|
 | 重建技能辭典（換台服版本後） | `node scripts/build-action-codex.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/action-codex/`（技能 1,326／特性 668／狀態 4,052）|
 | 技能辭典回歸（**改完 `tools/action-codex/` 或該目錄資料必跑**） | `node scripts/validate-action-codex.mjs`（21 項：UI 標記洗乾淨、條件式收斂、PvP／PvE 分得開）|
+| 多角色設定檔回歸（**改完 `assets/js/profiles.js` 必跑**） | `node scripts/validate-profiles.mjs`（28 項：白名單反轉、只覆蓋不刪、存不進去就不切）|
 | 時尚品鑑週更（每週二／週五各一次） | `node scripts/build-fashion-report.mjs`（`--dry-run` 只印／`--offline` 用快取）→ `node scripts/validate-fashion-render.mjs`（頁面 render 回歸，七個週狀態，不需瀏覽器） |
 | 時尚品鑑跨週不變資料（改版時才跑） | `node scripts/build-dyes.mjs`／`build-fashion-fillers.mjs`／`build-fashion-themes.mjs` |
 | 重建無人島資料層 | `node scripts/build-island.mjs`（`--offline` 用快取／`--refresh` 強制重抓） |
@@ -294,6 +295,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 - **要加頁內快捷鍵** → 登記到 `window.SGT_SHORTCUTS`（在 `assets/js/nav.js`，全站都載得到），**不要自己掛 `document.keydown`**——那會繞過「輸入框裡不攔」「彈窗開著不攔」「修飾鍵不攔」三道守門，而且 `?` 說明浮層列不出你的鍵。**時序陷阱**：nav.js 是 `defer` 載的，追蹤頁的 `init()` 是 inline 同步跑的，登記時 `SGT_SHORTCUTS` 常常還不存在 → 推進 `window.SGT_SHORTCUTS_PENDING`，nav.js 自己會吸乾。改完跑 `node scripts/validate-shortcuts.mjs`。
 - **跑 `download-dungeon-images.mjs` 之後一定要接 `minify-data.mjs --apply`** → 那支會**把 `dungeons.json` 整份改寫成 pretty JSON**（303KB → 426KB），而且會把 `image` 改寫成本地 `.webp` 路徑。它不會提醒你，`validate-data` 也不會報——只有檔案大小看得出來。順序：`patch-dungeon-details.mjs --apply` → `download-dungeon-images.mjs` → `minify-data.mjs --apply` → `sync-meta.mjs --apply`。
 - **新頁要存 localStorage** → key 一律 `ffxiv_` 開頭，否則首頁全站備份掃不到、使用者的資料備份不出去也不會有提示（知識庫 §2.3）。市場頁 2026-08-10 才從 `sgt-market-*` 補救回來，**改名要留一次性遷移、且不要刪舊 key**。
+- **多角色設定檔的 key 分類是「白名單反轉」** → `assets/js/profiles.js` 預設把**每個 `ffxiv_*` key 都當成角色態**，只有明列在 `SHARED` 裡的才算共用偏好。**不要反過來做**——反過來的話，日後新增一個忘了登記的進度 key，兩隻角色會共用同一份進度，那是**靜默的資料損壞**。這樣做的話分類錯的代價只是「某個偏好不跟著角色走」，看得見也改得回來。切換時**只覆蓋不刪**（目標設定檔沒有的 key 保持原樣），而且**存不進去就不切**（配額爆了硬切會遺失資料）。
 - **改了製作模擬器（`tools/crafting-sim/`）** → 改完 `craft-engine.js`、`craft-solver.js` 或 `data/craft-actions.json` **必跑 `node scripts/validate-craft-sim.mjs`**（Teamcraft 官方測試案例＋內建範本＋自動求解，104 項）。製作公式的取整點很多，差一個 `Math.floor` 在高階配方上差幾百品質、**畫面上完全看不出來**。規則出處、兩處刻意與 Teamcraft 不同的地方、範本怎麼解出來的、求解器為什麼只用「不靠運氣」的技能，見 [docs/crafting-sim.md](docs/crafting-sim.md)。**作業／品質的封頂只做在畫面上**（引擎要跟 Teamcraft 的期望值逐值對得上）。
 - **要算「買 N 個多少錢」** → 一律用 `Universalis.fillQuote()` 逐筆吃掉掛單，**絕不可用「最低價 × N」**。最便宜那筆常常只有 1～3 個，乘法會系統性低估、且低估幅度隨數量放大（知識庫 §3.14）。
 - **做「幾步才做得到」的東西（園藝配種、長鏈製作）** → **要算最短路徑，不要列配方**。列一層等於把問題丟回給使用者。園藝的成本模型＝`cost(種子)=0 若可直接買／採；否則 min over 配方 of max(cost(本),cost(鄰)) + 本株作物時數`，**用定點迭代不要用遞迴 memo**（配種關係有環，遞迴會把 `Infinity` 記進 memo 害整條鏈變無解）。另外「直接可得」**不能認市場板**——它對每個種子都成立，認了整棵樹會縮成一層。機制與出處見 [docs/gardening-rules.md](docs/gardening-rules.md)。
