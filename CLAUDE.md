@@ -107,6 +107,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 潛水艇回歸（**改完 `tools/submarine/` 或 `data/submarine.json` 必跑**） | `node scripts/validate-submarine.mjs`（44 項；最重要的是「部位名不可從 Slot 編號推」「不提供多點航程試算」「四艘存檔切艇前要先存、存 itemId 不存索引、網址參數優先」）|
 | 重建技能辭典（換台服版本後） | `node scripts/build-action-codex.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/action-codex/`（技能 1,326／特性 668／狀態 4,052）|
 | 技能辭典回歸（**改完 `tools/action-codex/` 或該目錄資料必跑**） | `node scripts/validate-action-codex.mjs`（39 項：UI 標記洗乾淨、條件式收斂、PvP／PvE 分得開、連擊樹不畫半截也不混 PvP、解鎖時程沒選職業時不畫）|
+| 貼清單匯入回歸（**改完 `market.js` 的 `parsePasteLines`／`importPasted` 必跑**） | `node scripts/validate-paste-import.mjs`（35 項：數量解析的 11 種貼法、查不到的要逐行列出、不解析外站連結這個決定）|
 | 綁定備份檔回歸（**改完首頁的進度備份區必跑**） | `node scripts/validate-backup-file.mjs`（32 項：不支援的瀏覽器不長鈕、`requestPermission` 只能在使用者手勢裡要、handle 只能放 IndexedDB、被拒時不可靜默失敗）|
 | 多角色設定檔回歸（**改完 `assets/js/profiles.js` 必跑**） | `node scripts/validate-profiles.mjs`（28 項：白名單反轉、只覆蓋不刪、存不進去就不切）|
 | 重建主線任務（換台服版本後） | `node scripts/build-msq.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/msq.json`（14 章／1,012 個）|
@@ -280,6 +281,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 - **技能的 PvP 版與 PvE 版同名但威力差幾十倍** → 火焰 PvE 180、PvP 6000。而且 **PvP 版的 `ClassJob` 掛在進階職（黑魔道士）、PvE 版掛在基礎職（咒術士）**，所以依職業篩選時 PvP 版會排在前面——黑魔點進來第一個看到的就是 6000。用 `Action.IsPvP` 分開（159 個），**預設只看 PvE**。
 - **要用「名字」查東西（跨語言）** → 前端用 `assets/js/item-names.js` 的 `ItemNames.lookup()`／`lookupMany()`。**它的 `normalizeName()` 與 `shardOf()` 必須與 `scripts/build-item-names.mjs` 逐字一致**——不一致的徵狀是「明明收錄了的東西查不到」，兩邊都不會報錯。`validate-item-names.mjs` 會拿 12,000 個真實名稱逐筆比對兩邊的輸出。
 - **分片層要依「查詢鍵」切時，別套用 id 分片的經驗** → `item-sources` 依 `id >> 10` 切，因為它用 id 查；`item-names` 用名字查，所以依 `FNV-1a(正規化鍵) % 256` 切。**試過「片內共用名稱陣列」去重，結果反而更大**（3.4MB → 3.76MB）：雜湊分片會把同一件物品的四個鍵打散到四個不同的片，片內根本沒有重複可去。真正有效的是把片切小。
+- **要把一整段物品名變成清單** → 市場頁製作分頁的「📋 貼一份物品清單」：走 `assets/js/item-names.js` 的四語查名，一行一件、可帶數量。**不解析 xivgear／Etro 的連結**——兩邊的 API 都回 `ACAO: *`（技術上讀得到），但**拿不到真的 gearset 去驗證回傳的欄位結構**（兩邊的列表 API 未登入都回空、repo 的檔案樹也讀不到），照猜寫的解析器會在對方改格式時**安靜地匯入錯的裝備**。**數量前面一定要有分隔符**（空白或 ×／x／*）——少了這個要求的話「物品 12345」會被拆成名稱「物品 12」＋數量 345（數量的樣式只吃得下三位數，剩下兩位黏回名稱裡），而且畫面上看不出來。查不到的要**逐行列出來**，只報數量的話使用者不知道是哪幾行。
 - **要在頁面之間傳一份材料清單** → 市場頁的 `#craft=<id>:<數量>,…`（也收 `?craft=`）。它逐件走既有的 `addToCraft()`，上限與去重的規則只有那一份；查無的 id 安靜略過並提示件數。製作模擬器的「💰 帶這些材料去市場頁算成本」就是走這條。
 - **要打 XIVAPI** → 用 `scripts/lib/xivapi.mjs` 的 `xiv.sheet/rows/row`，**不要再手寫一份 `getJson`＋分頁迴圈**（站內曾有 13 份副本）。三個內建的雷：`?rows=` 不指名 `fields` 只回預設欄位、`?rows=` 有一個 id 不存在會整批 404、**v1（`xivapi.com/<Sheet>`）已停更但仍回 200**（TripleTriadCard 在 v1 是 425 筆、v2 是 475 筆）。注意 `xivapi.com/i/...` 是圖示 CDN，不是 v1 API。
 - **要讀商店表** → 用 `scripts/lib/shops.mjs` 的 `loadShops()`，別直接讀 `out_data/shops.msgpack`（舊 dump，7.21 後的兌換品不在裡面）或自己抓 Teamcraft `shops.json`。台服店名走 `tw-locales` 的 `shops`（1,875 間，完全涵蓋 msgpack 的 1,815 間）。

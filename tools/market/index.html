@@ -197,6 +197,17 @@
     /* craft list */
     .empty-state { text-align: center; color: var(--text-muted); padding: 48px 16px; font-size: 0.9rem; }
 
+    /* 貼清單匯入。色票一律取自 tokens.css（§3.6） */
+    .paste-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); margin-bottom: 14px; }
+    .paste-box > summary { cursor: pointer; padding: 10px 14px; font-size: 0.84rem; color: var(--text-dim); min-height: 44px; display: flex; align-items: center; }
+    .paste-box > summary:hover { color: var(--text); }
+    .paste-box[open] > summary { border-bottom: 1px solid var(--border); }
+    .paste-inner { padding: 12px 14px; }
+    .paste-inner textarea { width: 100%; background: var(--bg-base); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font: inherit; font-size: 0.82rem; line-height: 1.7; padding: 8px 10px; resize: vertical; }
+    .paste-inner textarea:focus { border-color: var(--gold); outline: none; }
+    .paste-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+    .paste-bad { color: var(--orange); }
+
     /* craft 子分頁（簡易 / 樹狀）*/
     .craft-subtabs { margin-bottom: 12px; }
 
@@ -744,6 +755,24 @@
 
     <!-- 製作清單 -->
     <section class="tab-panel" id="tab-craft">
+      <!-- 貼一份清單：把別處（配裝網站、攻略、朋友給的名單）的物品名整段貼進來。
+           走站內的四語查名（assets/js/item-names.js），不依賴任何外站 API。 -->
+      <details class="paste-box" id="pasteBox">
+        <summary>📋 貼一份物品清單（一行一件，支援繁中／英／日／簡中名）</summary>
+        <div class="paste-inner">
+          <textarea id="pasteText" rows="6" spellcheck="false"
+            placeholder="一行一件，可在名稱後面加空白與數量，例如：&#10;紫水晶 3&#10;Chondrite Ingot 2&#10;オリハルコン合金"></textarea>
+          <div class="paste-row">
+            <button class="btn primary" id="pasteBtn">查名並加入清單</button>
+            <span class="note" id="pasteHint"></span>
+          </div>
+          <p class="note">
+            <b>不解析配裝網站的連結。</b> xivgear 與 Etro 的 API 雖然都允許跨站讀取，
+            但本站沒有後端、也無法驗證它們回傳的欄位結構——照猜寫出來的解析器會在對方改格式時
+            <b>安靜地匯入錯的裝備</b>。改成貼名稱：從哪裡複製來的都能用，而且查不到的會逐行列給你看。
+          </p>
+        </div>
+      </details>
       <div id="craftBody"></div>
     </section>
 
@@ -843,6 +872,8 @@
   <script src="../../assets/js/patch-gate.js"></script>
   <script src="../../assets/js/universalis.js"></script>
   <script src="../../assets/js/item-sources.js"></script>
+  <!-- 四語查名（256 片按需載入）。貼清單匯入用它，不依賴任何外站 API。 -->
+  <script src="../../assets/js/item-names.js"></script>
   <script src="market.js"></script>
 </body>
 </html>

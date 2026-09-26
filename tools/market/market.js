@@ -1187,6 +1187,88 @@
     }
     saveDraft(); updateCraftCount(); renderCraft();
   }
+  /* ── 貼一份清單 ──────────────────────────────────────────────────────
+     使用者從別處（配裝網站、攻略、朋友給的名單）複製一整段物品名貼進來。
+
+     **為什麼不解析 xivgear／Etro 的連結**（`gearset-import-shopping` 原案）：
+     兩邊的 API 都回 `Access-Control-Allow-Origin: *`，技術上讀得到；
+     但本站沒有後端，而且**拿不到真的 gearset 去驗證回傳的欄位結構**
+     （兩邊的列表 API 未登入都回空、repo 的檔案樹也讀不到）。
+     照猜寫出來的解析器會在對方改格式時**安靜地匯入錯的裝備**——
+     那比沒有這個功能糟。貼名稱反而通用：從哪裡複製來的都能用。
+
+     查名走 `assets/js/item-names.js`（四語、256 片按需載入），
+     **不要在這裡重寫 normalizeName／shardOf**（知識庫 §4.63）。
+     ⚠ `lookupMany()` 回的是 `Map<原字串, {tw,lang}|null>`，給的是**台服名不是 id**，
+     所以還要用本頁的 `items` 表把名字換成 itemId。 */
+  function parsePasteLines(text) {
+    var out = [];
+    String(text || '').split(/\r?\n/).forEach(function (raw) {
+      var line = raw.trim();
+      if (!line) return;
+      /* 常見貼法：「名稱 3」「名稱 ×3」「名稱 x3」「名稱×3」「3 名稱」。
+         ⚠ **數量前面一定要有分隔符**（空白或 ×／x／*）。
+         寫成 `[\s　]*(\d{1,3})$` 的話「物品 12345」會被拆成名稱「物品 12」＋數量 345——
+         因為 `\d{1,3}` 只吃得下三位數，剩下的就黏回名稱裡了，而且畫面上看不出來。 */
+      var qty = 1;
+      var m = line.match(/(?:[\s　]+(?:[x×*][\s　]*)?|[x×*][\s　]*)(\d{1,3})[\s　]*$/);
+      if (m && line.length > m[0].length) { qty = Math.max(1, +m[1]); line = line.slice(0, -m[0].length).trim(); }
+      else {
+        var m2 = line.match(/^(\d{1,3})[\s　]*[x×*]?[\s　]+/);
+        if (m2) { qty = Math.max(1, +m2[1]); line = line.slice(m2[0].length).trim(); }
+      }
+      // 常見前綴：條列符號、HQ 標記
+      line = line.replace(/^[-–—•*・]\s*/, '').replace(/\s*\(hq\)\s*$/i, '').trim();
+      if (line) out.push({ name: line, qty: qty });
+    });
+    return out;
+  }
+
+  function importPasted() {
+    var hint = $('#pasteHint');
+    var rows = parsePasteLines($('#pasteText').value);
+    if (!rows.length) { hint.textContent = '沒有可辨識的行。'; return; }
+    if (!window.ItemNames) { hint.textContent = '查名模組沒載到，請重新整理頁面。'; return; }
+    hint.textContent = '查名中…（' + rows.length + ' 行）';
+
+    /* 名字 → itemId。先試四語查名拿到台服名，再用台服名對本頁的物品表。
+       直接貼繁中名的人也走同一條路（查名表裡 tw 也是鍵），不必分兩套。 */
+    var byName = new Map();
+    for (var i = 0; i < items.length; i++) {
+      var nm = ItemNames.normalizeName(items[i].name);
+      if (nm && !byName.has(nm)) byName.set(nm, items[i].id);
+    }
+
+    ItemNames.lookupMany(rows.map(function (r) { return r.name; })).then(function (map) {
+      var added = 0, merged = 0, bad = [], full = false;
+      var before = craft.length;
+      rows.forEach(function (r) {
+        var hit = map.get(r.name);
+        // 查名表沒中時，直接拿原字串對本頁物品表（繁中名本來就對得上）
+        var id = null;
+        if (hit && hit.tw) id = byName.get(ItemNames.normalizeName(hit.tw)) || null;
+        if (id == null) id = byName.get(ItemNames.normalizeName(r.name)) || null;
+        if (id == null) { bad.push(r.name); return; }
+        var existed = craft.some(function (c) { return c.itemId === id; });
+        if (!existed && craft.length >= MAX_CRAFT_ITEMS) { full = true; return; }
+        addToCraft(id, r.qty);
+        if (existed) merged++; else added++;
+      });
+      var msg = [];
+      if (added) msg.push('加入 ' + added + ' 件');
+      if (merged) msg.push('併入既有 ' + merged + ' 件');
+      if (full) msg.push('清單已滿（上限 ' + MAX_CRAFT_ITEMS + ' 件），其餘沒加');
+      /* **查不到的要逐行列出來。** 只說「有 N 件查不到」的話使用者不知道是哪幾行，
+         也無從判斷是打錯字、台服未開放、還是本站沒收。 */
+      if (bad.length) msg.push('<span class="paste-bad">查不到 ' + bad.length + ' 行：' +
+        esc(bad.slice(0, 8).join('、')) + (bad.length > 8 ? ' 等' : '') + '</span>');
+      hint.innerHTML = msg.join('　·　') || '沒有任何變化。';
+      if (craft.length !== before || merged) { notify('已加入製作清單', 'ok'); }
+    }).catch(function (e) {
+      hint.textContent = '查名失敗：' + (e && e.message ? e.message : '不明錯誤');
+    });
+  }
+
   function removeFromCraft(id) {
     craft = craft.filter(function (c) { return c.itemId !== id; });
     saveDraft(); updateCraftCount(); renderCraft();
@@ -3182,6 +3264,16 @@
       if ($('#tab-craft').classList.contains('active')) renderCraft();
       if ($('#nodeModal').classList.contains('open') && nmCurrentId) openNodeDetail(nmCurrentId);
     });
+
+    // 貼一份清單（製作分頁）
+    var pb = $('#pasteBtn');
+    if (pb) {
+      pb.addEventListener('click', importPasted);
+      // Ctrl/Cmd+Enter 直接送出——貼完一大段之後手還在輸入框裡
+      $('#pasteText').addEventListener('keydown', function (e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); importPasted(); }
+      });
+    }
 
     // 匯出 / 匯入
     $('#exportBtn').addEventListener('click', exportLists);
