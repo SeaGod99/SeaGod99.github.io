@@ -16,6 +16,7 @@
   // 工具清單（對應首頁卡片）。ext:true = 外部連結。
   var TOOLS = [
     // 日常工具（c:'daily'）
+    { e: '⏱️', n: '現在能做什麼', p: 'tools/now/', c: 'daily', k: 'now todo 現在 時間窗 限時 目標魚 追蹤節點 探索筆記 倒數 開窗' },
     { e: '⛅', n: '艾歐澤亞天氣預報', p: 'tools/weather/', c: 'daily', k: 'weather tianqi 天氣 預報 天氣鏈' },
     { e: '📖', n: '天書奇談計算器', p: 'tools/wondrous-tails/', c: 'daily', k: 'wondrous tails 天書 奇談 連線' },
     { e: '🎰', n: '仙人微彩計算機', p: 'tools/cactpot/', c: 'daily', k: 'cactpot 仙人 微彩 金碟' },

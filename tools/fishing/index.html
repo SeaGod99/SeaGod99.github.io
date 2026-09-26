@@ -380,7 +380,7 @@
 
 <script type="module">
 import {
-  initWeatherTables, getMapsData, getWeatherTable, lookupWeather, calcSeed,
+  initWeatherTables, getMapsData, getWeatherTable, lookupWeather, calcSeed, EN_TO_KEY,
   WEATHER_PERIOD, WEATHER_INFO, ET_HOUR_MS,
 } from '../../assets/js/eorzea-weather.js';
 import { initMapModal, openMapModal } from '../../assets/js/map-modal.js';
@@ -407,13 +407,7 @@ let viewMode = 'list';
 let mapExplorer = null;             // 共用地圖元件（assets/js/map-explorer.js）
 
 /* ── 天氣：魚資料的英文名 → 天氣引擎 key、繁中顯示 ── */
-const EN_TO_KEY = {
-  'Clear Skies':'clearSkies','Fair Skies':'fairSkies','Clouds':'clouds','Fog':'fog',
-  'Wind':'wind','Gales':'gales','Rain':'rain','Showers':'showers','Thunder':'thunder',
-  'Thunderstorms':'thunderstorms','Dust Storms':'dustStorms','Heat Waves':'heatWaves',
-  'Snow':'snow','Blizzards':'blizzards','Gloom':'gloom','Umbral Wind':'umbralWind',
-  'Umbral Static':'umbralStatic','Moon Dust':'moonDust','Astromagnetic Storms':'astromagneticStorms',
-};
+// EN_TO_KEY 已收進 assets/js/eorzea-weather.js（見那裡的註解），這裡只 import
 const WX_INFO = Object.assign({ moonDust: { name: '月塵', icon: '🌘' } }, WEATHER_INFO);
 function wxKeys(set) { return (set || []).map(w => EN_TO_KEY[w.name]).filter(Boolean); }
 function wxLabel(set) {

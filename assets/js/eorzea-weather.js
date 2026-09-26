@@ -63,6 +63,22 @@ const NAME_TO_KEY = Object.fromEntries(
  * 取得天氣顯示資訊 { name, icon }
  * @param {string} key
  */
+/* 上游（Teamcraft／XIVAPI）的天氣是**英文名**，本檔其餘地方一律用 key。
+   這張對照表原本只存在 `tools/fishing/index.html` 裡，`/tools/now/` 也要用——
+   與其抄第二份，放在這裡當唯一一份（同 §4.4 的教訓：譯名表分兩邊放就會漂）。 */
+export const EN_TO_KEY = {
+  'Clear Skies': 'clearSkies', 'Fair Skies': 'fairSkies', 'Clouds': 'clouds', 'Fog': 'fog',
+  'Wind': 'wind', 'Gales': 'gales', 'Rain': 'rain', 'Showers': 'showers', 'Thunder': 'thunder',
+  'Thunderstorms': 'thunderstorms', 'Dust Storms': 'dustStorms', 'Heat Waves': 'heatWaves',
+  'Snow': 'snow', 'Blizzards': 'blizzards', 'Gloom': 'gloom', 'Umbral Wind': 'umbralWind',
+  'Umbral Static': 'umbralStatic', 'Moon Dust': 'moonDust', 'Astromagnetic Storms': 'astromagneticStorms',
+};
+
+/** `fishes.json` 的 weatherSet 是 `[{name:'Fog'},…]`，轉成本檔用的 key 陣列。 */
+export function weatherKeys(set) {
+  return (set || []).map((w) => EN_TO_KEY[w && w.name]).filter(Boolean);
+}
+
 export function wi(key) {
   return WEATHER_INFO[key] || { name: key, icon: '❓' };
 }

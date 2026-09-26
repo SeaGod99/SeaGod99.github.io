@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FF14 現在能做什麼 — 把你標記的目標魚、追蹤節點與未完成的限時探索筆記放在同一頁，依開窗中／快開了／稍後排序">
+  <title>現在能做什麼 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <link rel="stylesheet" href="../../assets/css/et-bar.css">
+  <link rel="stylesheet" href="../../assets/css/tool-header.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 109.375%; }
+    body { background: var(--bg-base); color: var(--text); font-family: var(--font-sans); min-height: 100vh; }
+
+    .wrap { max-width: var(--w-content); margin: 0 auto; padding: 0.4rem 1.5rem 2.5rem; }
+
+    .note { font-size: 0.75rem; color: var(--text-muted); line-height: 1.75; margin-bottom: 1rem; }
+    .note b { color: var(--text-dim); font-weight: 600; }
+
+    .band { margin-top: 1.4rem; }
+    .band:first-of-type { margin-top: 0.6rem; }
+    .band-head {
+      display: flex; align-items: baseline; gap: 0.5rem;
+      padding-bottom: 0.35rem; margin-bottom: 0.6rem; border-bottom: 1px solid var(--border);
+    }
+    .band-name { font-size: 0.95rem; font-weight: 700; }
+    .band-n { font-size: 0.74rem; color: var(--text-muted); }
+    .band.open  .band-name { color: var(--green); }
+    .band.soon  .band-name { color: var(--orange); }
+    .band.later .band-name { color: var(--text-dim); }
+
+    .rows { display: grid; gap: 0.45rem; }
+    .row {
+      display: flex; align-items: center; gap: 0.7rem; flex-wrap: wrap;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-left: 3px solid var(--border); border-radius: var(--radius-md);
+      padding: 0.55rem 0.75rem;
+    }
+    .band.open  .row { border-left-color: var(--green); }
+    .band.soon  .row { border-left-color: var(--orange); }
+
+    .kind {
+      font-size: 0.7rem; padding: 0.1rem 0.4rem; border-radius: 4px; flex: none;
+      background: var(--bg-base); border: 1px solid var(--border); color: var(--text-muted);
+    }
+    .nm { font-size: 0.88rem; font-weight: 600; color: var(--text); }
+    .at { font-size: 0.75rem; color: var(--text-muted); }
+    .cond { font-size: 0.73rem; color: var(--text-muted); }
+    .cd {
+      margin-left: auto; font-size: 0.8rem; font-weight: 700; white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+    .band.open  .cd { color: var(--green); }
+    .band.soon  .cd { color: var(--orange); }
+    .band.later .cd { color: var(--text-dim); }
+    .go {
+      font-size: 0.73rem; color: var(--text-muted); text-decoration: none;
+      border: 1px solid var(--border); border-radius: 6px; padding: 0.3rem 0.5rem;
+      min-height: 32px; display: inline-flex; align-items: center;
+    }
+    .go:hover { border-color: var(--border-hover); color: var(--text-dim); }
+
+    .empty {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 1.6rem 1.4rem; line-height: 1.9;
+      font-size: 0.85rem; color: var(--text-dim);
+    }
+    .empty h2 { font-size: 0.95rem; color: var(--gold-light); margin-bottom: 0.6rem; }
+    .empty ul { margin: 0.5rem 0 0 1.1rem; }
+    .empty a { color: var(--gold); }
+
+    @media (max-width: 600px) {
+      .wrap { padding: 0.4rem 1rem 2rem; }
+      .cd { margin-left: 0; width: 100%; }
+    }
+    @media (pointer: coarse) { .go { min-height: 44px; } }
+  </style>
+  <script src="../../assets/js/patch-gate.js"></script>
+  <script src="../../assets/js/theme.js"></script>
+</head>
+<body>
+<div class="tool-header">
+  <h1 class="tool-title">&#x23F1;&#xFE0F; 現在能做什麼</h1>
+  <p class="tool-subtitle">把你在各頁標記的限時目標放在同一頁——開窗中的排最上面，其餘依還要等多久排</p>
+</div>
+
+<div class="wrap">
+
+  <!-- ET 時鐘列（共用元件 assets/js/et-bar.js；改用 import 掛，不能用 <script src>）-->
+  <div id="etBar"></div>
+
+  <p class="note">
+    只列<b>你自己標記過</b>的東西：釣魚頁的 ⭐ 目標魚、限時採集頁的追蹤節點，
+    外加<b>未完成且限時</b>的探索筆記。沒有時間窗的（全天開放的魚、隨時可做的探索筆記）不會出現在這裡。
+    <b>不是鬧鐘</b>——這頁只在你打開它的時候算；要響鈴請在釣魚／採集頁開鬧鐘。
+  </p>
+  <div id="body"><p class="note">載入中…</p></div>
+</div>
+
+<footer class="page-footer">
+  <div class="container">
+    <p class="footer-text"><a href="../../">水神的工具箱</a> · 資料來源：遊戲本體、<a href="https://xivapi.com" target="_blank">XIVAPI</a></p>
+    <p class="footer-text" style="margin-top:4px">FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具</p>
+  </div>
+</footer>
+
+<script type="module">
+/* 現在能做什麼 —— 時間窗的聯集頁。
+   **視窗計算一律走 `assets/js/window-calc.js`**，這頁只是把三個來源的 spec 轉成它吃的形狀。
+   絕不在這裡自己寫第四份視窗演算法（釣魚與限時採集兩頁已經收斂成薄包裝了）。
+
+   ── 刻意沒收的第四類：園藝下次收成 ───────────────────────────────
+   路線圖原本列了四類，園藝那一類這版沒做。`ffxiv_gardening_plan` 存的是
+   `{ target, startAt, overrides, done }`——**是一份計畫的起算時刻，不是各畦的種植時間**，
+   要算出「下次該收成」得把 `tools/gardening/gardening.js` 裡的配種鏈與時數邏輯搬過來。
+   那等於再開一份會漂的實作（正是 window-calc 當初要消滅的東西）。
+   要做的話得先把那段抽成共用模組，那比這頁本身大。 */
+import { nextWindows, statusOf, EORZEA_MULT } from '../../assets/js/window-calc.js';
+/* 天氣窗要算得出來，必須先載地圖的天氣表；`weatherKeys()` 把 `fishes.json` 的
+   `[{name:'Fog'}]` 轉成本站用的 key（那張對照表是共用的，不要在這裡再抄一份）。 */
+import { initWeatherTables, weatherKeys, WEATHER_INFO } from '../../assets/js/eorzea-weather.js';
+import { mountEtBar } from '../../assets/js/et-bar.js';
+
+mountEtBar('#etBar', { metric: 'weather' });
+
+const SOON_SECS = 15 * 60;          // 「快開了」的門檻：15 分鐘（現實時間）
+const TICK_MS = 1000;
+
+const KEYS = {
+  fish: 'ffxiv_fishing_targets',
+  node: 'ffxiv_gathering_tracked',
+  explog: 'ffxiv_exploration_log_done',
+};
+
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+function readSet(key) {
+  try { return new Set(JSON.parse(localStorage.getItem(key) || '[]')); } catch (e) { return new Set(); }
+}
+function readObj(key) {
+  try { return JSON.parse(localStorage.getItem(key) || '{}') || {}; } catch (e) { return {}; }
+}
+
+function fmtWait(secs) {
+  if (!isFinite(secs)) return '—';
+  if (secs < 60) return secs + ' 秒';
+  const m = Math.floor(secs / 60), h = Math.floor(m / 60);
+  if (h > 0) return h + ' 小時 ' + (m % 60) + ' 分';
+  return m + ' 分 ' + (secs % 60) + ' 秒';
+}
+const etHour = (ms) => Math.floor(ms * EORZEA_MULT / 3600000) % 24;
+
+let ITEMS = [];   // { kind, name, at, cond, spec, href }
+
+async function load() {
+  const wantFish = readSet(KEYS.fish);
+  const wantNode = readSet(KEYS.node);
+  const doneLog = readObj(KEYS.explog);
+
+  const [fishes, spots, nodes, explog, meta] = await Promise.all([
+    // ⚠ 天氣表沒先載的話，所有看天氣的魚都會落到「算不出時間窗」
+    initWeatherTables('../../data/maps.json').then(() => null),
+    fetch('../../data/fishes.json').then((r) => r.json()),
+    fetch('../../data/fishing-spots.json').then((r) => r.json()),
+    fetch('../../data/gathering.json').then((r) => r.json()),
+    fetch('../../data/exploration-log.json').then((r) => r.json()),
+    fetch('../../data/_meta.json').then((r) => r.json()),
+  ]).then((a) => a.slice(1));
+  const gp = meta.gamePatch;
+  const spotById = new Map((spots.data || []).map((s) => [s.id, s]));
+
+  // ── 目標魚 ──────────────────────────────────────────
+  for (const f of fishes.data || []) {
+    if (!wantFish.has(f.itemId)) continue;
+    if (!PatchGate.released(f.patch, gp)) continue;
+    const timed = f.startHour > 0 || f.endHour < 24;
+    const wk = weatherKeys(f.weatherSet);
+    const pk = weatherKeys(f.previousWeatherSet);
+    if (!timed && !wk.length && !pk.length) continue;        // 全天開放＝不必等，不列
+    const spot = spotById.get(f.spotId);
+    const mapId = spot && spot.coords ? spot.coords.mapId : null;
+    const cond = [];
+    if (timed) cond.push('ET ' + f.startHour + ':00–' + f.endHour + ':00');
+    const wxName = (k) => (WEATHER_INFO[k] ? WEATHER_INFO[k].name : k);
+    if (wk.length) cond.push('天氣 ' + wk.map(wxName).join('／'));
+    if (pk.length) cond.push('前一時段 ' + pk.map(wxName).join('／'));
+    ITEMS.push({
+      kind: '🎣 目標魚', name: f.name, at: f.spotName || '',
+      cond: cond.join('　'),
+      spec: { startHour: f.startHour, endHour: f.endHour,
+        weather: { mapId, keys: wk, prevKeys: pk } },
+      href: '../../tools/fishing/?id=' + encodeURIComponent(f.itemId),
+    });
+  }
+
+  // ── 追蹤的限時採集節點 ──────────────────────────────
+  for (const n of nodes.data || []) {
+    if (!wantNode.has(n.id)) continue;
+    if (!n.spawns || !n.spawns.length) continue;
+    ITEMS.push({
+      kind: '⛏️ 追蹤節點',
+      name: (n.typeName || '節點') + ' Lv' + (n.level || '?'),
+      at: (n.coords && n.coords.mapName) || '',
+      // ⚠ `duration` 的單位是 **ET 分鐘**（120／180／240），不是小時
+      cond: 'ET ' + n.spawns.map((h) => h + ':00').join('／') + ' 開，持續 ' +
+        ((n.duration || 0) / 60) + ' 小時',
+      spec: { spawns: n.spawns, duration: n.duration },
+      href: '../../tools/gathering/',
+    });
+  }
+
+  // ── 未完成且限時的探索筆記 ──────────────────────────
+  /* 這一類與前兩類的語意不同：探索筆記沒有「標記為目標」的概念，只有完成／未完成。
+     所以列的是「還沒完成 ＋ 有時間窗」的，並在標籤上寫明，不要讓人以為是自己標的。 */
+  /* ⚠ **同一個時窗的探索筆記要合併成一列。** 全新的瀏覽器有 82 條未完成且限時的，
+     而且絕大多數共用 ET 8:00–11:00 這個窗——逐條列會變成 20 幾列長得一樣的東西，
+     把使用者真正標記的魚與節點壓到畫面外（實測第一版就是這樣）。
+     合併之後每個窗只有一列，而且更貼近實際玩法：時間到了一次去做好幾個。 */
+  const logByWindow = new Map();
+  for (const e of explog.data || []) {
+    if (doneLog[e.id] || doneLog[String(e.id)]) continue;
+    if (e.timeStart == null || e.timeEnd == null) continue;
+    if (!PatchGate.released(e.patch, gp)) continue;
+    const k = e.timeStart + '-' + e.timeEnd;
+    if (!logByWindow.has(k)) logByWindow.set(k, { s: e.timeStart, e: e.timeEnd, list: [] });
+    logByWindow.get(k).list.push(e);
+  }
+  for (const g of logByWindow.values()) {
+    const zones = [...new Set(g.list.map((x) => x.zone).filter(Boolean))];
+    ITEMS.push({
+      kind: '🔭 未完成探索筆記', prio: 1,
+      name: g.list.length + ' 處未完成',
+      at: zones.slice(0, 3).join('、') + (zones.length > 3 ? ' 等 ' + zones.length + ' 區' : ''),
+      cond: 'ET ' + g.s + ':00–' + (g.e % 24) + ':59',
+      /* ⚠ **`timeEnd` 是「含該小時」**：探索筆記頁把 17–17 顯示成 `ET 17:00–17:59`
+         （見 `collections/exploration-log/index.html` 的 `fmtTime()`）。
+         window-calc 的 `endHour` 是開區間，所以要 +1——
+         直接傳 `timeEnd` 的話：17–17 變成零長度視窗（算出來是「開著但剩 272 小時」這種鬼東西），
+         8–11 則每次都少算一小時。兩種都不會報錯。 */
+      spec: { startHour: g.s, endHour: g.e + 1, weather: { mapId: null, keys: [], prevKeys: [] } },
+      href: '../../collections/exploration-log/',
+    });
+  }
+}
+
+function render() {
+  const host = document.getElementById('body');
+  if (!ITEMS.length) {
+    host.innerHTML =
+      '<div class="empty"><h2>還沒有標記任何限時目標</h2>' +
+      '這頁不會自己挑東西給你看——它只把你標記過的限時目標收在一起。先去這幾頁標記：' +
+      '<ul>' +
+        '<li><a href="../../tools/fishing/">釣魚紀錄追蹤</a>：在魚的卡片上按 ⭐ 設為目標魚</li>' +
+        '<li><a href="../../tools/gathering/">限時採集節點查詢</a>：在節點上按追蹤</li>' +
+        '<li><a href="../../collections/exploration-log/">探索筆記追蹤器</a>：未完成且限時的會自動出現</li>' +
+      '</ul>' +
+      '全天開放的魚與隨時可做的探索筆記不會出現在這裡——它們不需要等。</div>';
+    return;
+  }
+
+  const now = Date.now();
+  const rows = ITEMS.map((it) => {
+    const wins = nextWindows(it.spec, now, { max: 1 });
+    const st = statusOf(wins, now, SOON_SECS);
+    return { it, st };
+  });
+
+  const bands = [
+    { id: 'open', label: '🟢 現在開著', pick: (r) => r.st.state === 'open' },
+    { id: 'soon', label: '🟠 15 分鐘內', pick: (r) => r.st.state === 'soon' },
+    { id: 'later', label: '⚪ 稍後', pick: (r) => r.st.state === 'closed' },
+  ];
+  // 算不出視窗的（例如天氣表查不到的釣場）單獨一段，不要混進「稍後」裝作知道
+  const unknown = rows.filter((r) => r.st.state === 'none');
+
+  let html = '';
+  for (const b of bands) {
+    /* 同一段內：**自己標記的（prio 0）排在自動帶出的探索筆記（prio 1）前面**，
+       再依還要等多久。不然「我標的目標」會被一堆沒標過的東西擠下去。 */
+    const list = rows.filter(b.pick).sort((a, z) =>
+      ((a.it.prio || 0) - (z.it.prio || 0)) || (a.st.secsLeft - z.st.secsLeft));
+    if (!list.length) continue;
+    html += '<div class="band ' + b.id + '"><div class="band-head">' +
+      '<span class="band-name">' + b.label + '</span>' +
+      '<span class="band-n">' + list.length + ' 項</span></div><div class="rows">' +
+      list.map(function (r) {
+        const openAt = r.st.window ? etHour(r.st.window.ws) : null;
+        const cd = r.st.state === 'open'
+          ? '剩 ' + fmtWait(r.st.secsLeft)
+          : fmtWait(r.st.secsLeft) + '後' + (openAt != null ? '（ET ' + openAt + ':00）' : '');
+        return '<div class="row">' +
+          '<span class="kind">' + esc(r.it.kind) + '</span>' +
+          '<span class="nm">' + esc(r.it.name) + '</span>' +
+          (r.it.at ? '<span class="at">' + esc(r.it.at) + '</span>' : '') +
+          (r.it.cond ? '<span class="cond">' + esc(r.it.cond) + '</span>' : '') +
+          '<span class="cd">' + esc(cd) + '</span>' +
+          '<a class="go" href="' + esc(r.it.href) + '">前往 →</a>' +
+        '</div>';
+      }).join('') + '</div></div>';
+  }
+  if (unknown.length) {
+    html += '<div class="band later"><div class="band-head">' +
+      '<span class="band-name">⚠ 算不出時間窗</span><span class="band-n">' + unknown.length + ' 項</span></div>' +
+      '<p class="note">這些的釣場查不到所在地圖的天氣表，所以算不出下次開窗。' +
+      '<b>不是「不會開」</b>，只是本站算不出來——請到該頁確認。</p>' +
+      '<div class="rows">' + unknown.map(function (r) {
+        return '<div class="row"><span class="kind">' + esc(r.it.kind) + '</span>' +
+          '<span class="nm">' + esc(r.it.name) + '</span>' +
+          (r.it.at ? '<span class="at">' + esc(r.it.at) + '</span>' : '') +
+          '<a class="go" href="' + esc(r.it.href) + '">前往 →</a></div>';
+      }).join('') + '</div></div>';
+  }
+  host.innerHTML = html;
+}
+
+load().then(function () {
+  render();
+  // 每秒重算：倒數要動，而且跨過開窗邊界時分段要跟著換
+  setInterval(render, TICK_MS);
+}).catch(function (err) {
+  document.getElementById('body').innerHTML =
+    '<div class="empty">載入失敗：' + esc(err.message) + '</div>';
+});
+
+// 頁內快捷鍵（登記制見知識庫 §4.73）
+{
+  const keys = [{ keys: 'r', label: '立即重算', run: () => render() }];
+  if (window.SGT_SHORTCUTS) window.SGT_SHORTCUTS.register(keys);
+  else (window.SGT_SHORTCUTS_PENDING = window.SGT_SHORTCUTS_PENDING || []).push(keys);
+}
+</script>
+</body>
+</html>
