@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FF14 金碟獎品價目表 — 金碟幣（MGP）與金碟聲譽能換到的 439 件獎品、各在哪間店向誰換，並依你在本站的收藏進度算出「還缺的那幾件總共要多少 MGP」">
+  <title>金碟獎品價目表 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <link rel="stylesheet" href="../../assets/css/tool-header.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 109.375%; }
+    body { background: var(--bg-base); color: var(--text); font-family: var(--font-sans); min-height: 100vh; }
+
+    .controls { max-width: var(--w-content); margin: 0 auto; padding: 1rem 1.5rem 0.5rem; display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; }
+    .tabs { display: flex; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+    .tabs button {
+      background: var(--bg-card); border: 0; color: var(--text-dim); cursor: pointer;
+      font-family: inherit; font-size: 0.8rem; padding: 0.4rem 0.9rem; transition: all 0.15s;
+    }
+    .tabs button + button { border-left: 1px solid var(--border); }
+    .tabs button.active { background: var(--gold-dim); color: var(--gold); font-weight: 600; }
+    select.sel, input.search {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px;
+      color: var(--text-dim); padding: 0.38rem 0.6rem; font-size: 0.8rem; outline: none; font-family: inherit;
+    }
+    select.sel { cursor: pointer; }
+    input.search { flex: 1; min-width: 9rem; }
+    input.search:focus, select.sel:focus { border-color: var(--gold); color: var(--text); }
+    .chk { font-size: 0.78rem; color: var(--text-dim); display: inline-flex; align-items: center; gap: 0.3rem; cursor: pointer; user-select: none; }
+
+    .status { max-width: var(--w-content); margin: 0 auto; padding: 0 1.5rem 0.4rem; font-size: 0.75rem; color: var(--text-muted); }
+
+    /* ── 缺口預算：本頁唯一「只有站內做得到」的東西，放最上面 ── */
+    .budget { max-width: var(--w-content); margin: 0 auto 0.8rem; padding: 0 1.5rem; }
+    .budget-box {
+      background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--gold);
+      border-radius: var(--radius-md); padding: 0.8rem 0.95rem;
+    }
+    .budget-head { font-size: 0.85rem; font-weight: 700; color: var(--text); margin-bottom: 0.5rem; }
+    .budget-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr)); gap: 0.5rem 0.9rem; }
+    .b-row { font-size: 0.78rem; line-height: 1.6; }
+    .b-row a { color: var(--text-dim); text-decoration: none; }
+    .b-row a:hover { color: var(--gold); text-decoration: underline; }
+    .b-num { font-variant-numeric: tabular-nums; color: var(--gold); font-weight: 600; }
+    .b-done { color: var(--green); }
+    .budget-total { margin-top: 0.6rem; padding-top: 0.55rem; border-top: 1px solid var(--border); font-size: 0.82rem; color: var(--text-dim); }
+    .budget-total b { color: var(--gold); font-variant-numeric: tabular-nums; font-size: 0.95rem; }
+    .budget-note { margin-top: 0.4rem; font-size: 0.72rem; color: var(--text-muted); line-height: 1.7; }
+
+    .table-wrap { max-width: var(--w-content); margin: 0 auto; padding: 0 1.5rem 2rem; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    thead th {
+      text-align: right; font-size: 0.72rem; color: var(--text-muted); font-weight: 600;
+      padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--border); white-space: nowrap;
+      position: sticky; top: 46px; background: var(--bg-base); z-index: 2;
+    }
+    thead th:first-child, thead th:nth-child(2), thead th:nth-child(4) { text-align: left; }
+    tbody td { padding: 0.42rem 0.6rem; border-bottom: 1px solid var(--border); text-align: right; font-variant-numeric: tabular-nums; }
+    tbody td:first-child, tbody td:nth-child(2), tbody td:nth-child(4) { text-align: left; }
+    tbody tr:hover { background: var(--bg-card-hover); }
+    .i-icon { width: 26px; height: 26px; vertical-align: middle; border-radius: 4px; }
+    .i-name { font-weight: 600; }
+    .i-cat { color: var(--text-muted); font-size: 0.72rem; }
+    .cost { color: var(--gold); font-weight: 700; white-space: nowrap; }
+    .where { color: var(--text-muted); font-size: 0.75rem; }
+    .own-tag {
+      font-size: 0.68rem; padding: 0.08rem 0.36rem; border-radius: 4px; white-space: nowrap;
+      background: var(--bg-surface); border: 1px solid var(--border); color: var(--text-muted); text-decoration: none;
+    }
+    .own-tag:hover { border-color: var(--gold); color: var(--gold); }
+    .own-tag.have { color: var(--green); border-color: var(--green-dim); }
+    tr.have td { opacity: 0.5; }
+    .coord-btn {
+      font: inherit; font-size: 0.7rem; padding: 0.1rem 0.32rem; margin-left: 0.25rem;
+      border: 1px solid var(--border); border-radius: 4px; background: var(--bg-surface);
+      color: var(--text-dim); cursor: pointer; transition: border-color .15s, color .15s;
+    }
+    .coord-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .coord-btn.copied { border-color: var(--green); color: var(--green); }
+
+    .loading { text-align: center; padding: 3rem 0; color: var(--text-dim); font-size: 0.9rem; }
+    .loading.err { color: var(--red); }
+    .info-note { max-width: var(--w-content); margin: 0 auto; padding: 0 1.5rem 2rem; font-size: 0.72rem; color: var(--text-muted); line-height: 1.8; }
+    .site-footer { border-top: 1px solid var(--border); padding: 24px 0; text-align: center; }
+    .site-footer p { font-size: 12px; color: var(--text-muted); }
+    .site-footer a { color: var(--text-dim); }
+    @media (pointer: coarse) {
+      .tabs button, select.sel, input.search, .coord-btn { min-height: 44px; }
+      .own-tag { position: relative; display: inline-block; }
+      .own-tag::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 44px; transform: translateY(-50%); }
+      /* 預算格的連結一格挨著一格，**不能用透明擴張層**——44px 高的 ::after 會蓋到鄰居，
+         探點探到的是隔壁那條。這裡用真實 padding 把自己的盒子撐到 44px，排版跟著變高但不重疊。 */
+      .b-row { line-height: 1; }
+      .b-row a { display: inline-block; padding: 0.7rem 0; }
+    }
+    @media (max-width: 560px) { .where { display: none; } }
+  </style>
+  <script src="../../assets/js/patch-gate.js"></script>
+  <script src="../../assets/js/theme.js"></script>
+</head>
+<body>
+<div class="tool-header">
+  <h1 class="tool-title">&#x1F3B0; 金碟獎品價目表</h1>
+  <p class="tool-subtitle">金碟幣（MGP）與金碟聲譽能換到的 439 件獎品、各在哪間店向誰換；並依你在本站的收藏進度算出還缺的那幾件總共要多少</p>
+  <div class="header-divider"></div>
+</div>
+
+<div class="controls">
+  <div class="tabs">
+    <button id="tabMgp" class="active">&#x1FA99; 金碟幣</button>
+    <button id="tabRep">&#x1F3C6; 金碟聲譽</button>
+  </div>
+  <select class="sel" id="catSel"></select>
+  <label class="chk"><input type="checkbox" id="onlyCollect"> 只看圖鑑收藏品</label>
+  <label class="chk"><input type="checkbox" id="hideHave"> 隱藏已擁有</label>
+  <input class="search" id="searchInput" type="search" placeholder="搜尋獎品名稱…" autocomplete="off">
+</div>
+
+<div class="budget" id="budget"></div>
+<div class="status" id="statusLine"></div>
+<div class="table-wrap" id="tableWrap"><div class="loading">載入資料中…</div></div>
+
+<p class="info-note">
+  價目取自遊戲本體的商店資料（經本站商店共用層），店名為台服官方名。同一件獎品常常在好幾間店都換得到，<b>表上顯示的是最便宜的那一筆</b>。查不到台服名的 39 件不列——那代表台服尚未開放。<br>
+  <b>缺口預算</b>讀的是<b>你在本站各收藏追蹤頁勾選的進度</b>（存在這台裝置的瀏覽器裡，不會上傳）。沒用過那些頁面的話，這裡會把全部算成「還沒有」。要讓它準，先去對應的收藏頁把已有的勾起來。<br>
+  <b>刻意不做「每 MGP 值多少 gil」的變現排行</b>：金碟獎品幾乎都不能掛市場板，排出來只有零星幾件，是個看起來有用但實際沒有的數字。<br>
+  金碟幣上限 999,999、金碟聲譽另計。本表不含幻卡對局／仙人微彩的期望值計算，那在 <a href="../cactpot/" style="color:var(--text-dim)">仙人微彩計算機</a> 與 <a href="../faux-hollows/" style="color:var(--text-dim)">幻巧戰助手</a>。
+</p>
+
+<footer class="site-footer">
+  <p>水神的工具箱 · <a href="../../">回首頁</a> · FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具</p>
+</footer>
+
+<script src="../../assets/js/unlock-banner.js"></script>
+<script>
+(function () {
+  var ICON_CDN = 'https://xivapi.com';
+  var DB = [];              // [{key,id,name,items:[…]}]
+  var cur = 'mgp';
+  var cat = '__all__';
+  var q = '';
+  var onlyCollect = false, hideHave = false;
+  var ownedCache = {};      // storageKey → Set（各收藏頁的進度，只讀不寫）
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function num(n) { return Number(n || 0).toLocaleString('en-US'); }
+
+  /* 讀某個收藏頁的進度。各頁的 keyOf 格式不同（多數 'id:<id>'，寵物是純數字），
+     所以資料裡直接帶著該頁算好的 key，這裡只做集合查詢，不自己拼格式——
+     拼錯的話會安靜地把「已有」算成「還沒有」，而畫面上看不出來。 */
+  function ownedSet(storageKey) {
+    if (!(storageKey in ownedCache)) {
+      var s = new Set();
+      try { JSON.parse(localStorage.getItem(storageKey) || '[]').forEach(function (k) { s.add(String(k)); }); } catch (e) {}
+      ownedCache[storageKey] = s;
+    }
+    return ownedCache[storageKey];
+  }
+  function isOwned(it) {
+    return !!(it.own && ownedSet(it.own.sk).has(String(it.own.k)));
+  }
+
+  function curDb() { return DB.find(function (c) { return c.key === cur; }) || { items: [] }; }
+
+  function visible() {
+    return curDb().items.filter(function (it) {
+      if (onlyCollect && !it.own) return false;
+      if (hideHave && isOwned(it)) return false;
+      if (cat !== '__all__' && (it.category || '（未分類）') !== cat) return false;
+      if (q && (it.name || '').toLowerCase().indexOf(q) < 0 &&
+          (it.shop || '').toLowerCase().indexOf(q) < 0 &&
+          (it.npc && it.npc.name || '').toLowerCase().indexOf(q) < 0) return false;
+      return true;
+    });
+  }
+
+  // ── 缺口預算 ──────────────────────────────────────────────
+  function renderBudget() {
+    var el = document.getElementById('budget');
+    var byCol = {};
+    curDb().items.forEach(function (it) {
+      if (!it.own) return;
+      var g = byCol[it.own.label] || (byCol[it.own.label] = { label: it.own.label, path: it.own.path, total: 0, have: 0, need: 0, cost: 0 });
+      g.total++;
+      if (isOwned(it)) g.have++;
+      else { g.need++; g.cost += it.cost; }
+    });
+    var groups = Object.values(byCol).sort(function (a, b) { return b.cost - a.cost; });
+    if (!groups.length) { el.innerHTML = ''; return; }
+
+    var sumNeed = groups.reduce(function (a, g) { return a + g.need; }, 0);
+    var sumCost = groups.reduce(function (a, g) { return a + g.cost; }, 0);
+    var sumTotal = groups.reduce(function (a, g) { return a + g.total; }, 0);
+    var anyProgress = groups.some(function (g) { return g.have > 0; });
+
+    el.innerHTML =
+      '<div class="budget-box">' +
+        '<div class="budget-head">&#x1F4CB; 我還缺的：' + curDb().name + ' 可換的圖鑑收藏品</div>' +
+        '<div class="budget-grid">' + groups.map(function (g) {
+          return '<div class="b-row"><a href="../../' + esc(g.path) + '">' + esc(g.label) + '</a>　' +
+            (g.need === 0
+              ? '<span class="b-done">✓ 已收齊 ' + g.total + ' 件</span>'
+              : '還缺 <span class="b-num">' + g.need + '</span>/' + g.total + ' 件　<span class="b-num">' + num(g.cost) + '</span>') +
+            '</div>';
+        }).join('') + '</div>' +
+        '<div class="budget-total">共 ' + sumTotal + ' 件，還缺 <b>' + sumNeed + '</b> 件，需要 <b>' + num(sumCost) + '</b> ' + esc(curDb().name) + '</div>' +
+        (anyProgress ? '' :
+          '<div class="budget-note">⚠ 本站沒有讀到任何收藏進度，上面是<b>全部當成還沒有</b>算的。' +
+          '先去各收藏追蹤頁把已擁有的勾起來，這個數字才是你真正還要湊的量。</div>') +
+      '</div>';
+  }
+
+  // ── 價目表 ──────────────────────────────────────────────
+  function render() {
+    var list = visible();
+    var status = document.getElementById('statusLine');
+    var wrap = document.getElementById('tableWrap');
+    status.textContent = list.length + ' 件' + (q ? '（符合「' + q + '」）' : '') +
+      (list.length ? '　最低 ' + num(list[0].cost) + '　最高 ' + num(list[list.length - 1].cost) : '');
+
+    if (!list.length) { wrap.innerHTML = '<div class="loading">沒有符合的獎品</div>'; return; }
+
+    var rows = list.map(function (it) {
+      var have = isOwned(it);
+      var where = [it.shop, it.npc && it.npc.name].filter(Boolean).join(' · ');
+      var at = it.npc && it.npc.at;
+      var coord = (at && at.x != null)
+        ? '<button class="coord-btn" data-flag="/coord ' + esc(at.x.toFixed(1)) + ' ' + esc(at.y.toFixed(1)) + ' ' + esc(at.mapName || '') + '" aria-label="複製座標指令">&#x1F4CB;</button>'
+        : '';
+      return '<tr class="' + (have ? 'have' : '') + '">' +
+        '<td>' + (it.icon ? '<img class="i-icon" src="' + ICON_CDN + esc(it.icon) + '" alt="" loading="lazy">' : '') + '</td>' +
+        '<td><span class="i-name">' + esc(it.name) + '</span>' +
+          (it.own ? ' <a class="own-tag' + (have ? ' have' : '') + '" href="../../' + esc(it.own.path) + '?id=' + encodeURIComponent(it.own.k) + '">' +
+            (have ? '✓ ' : '') + esc(it.own.label) + '</a>' : '') +
+          '<div class="i-cat">' + esc(it.category || '—') + '</div></td>' +
+        '<td class="cost">' + num(it.cost) + '</td>' +
+        '<td class="where">' + esc(where || '—') + (at && at.mapName ? '　' + esc(at.mapName) + (at.x != null ? ' (' + at.x + ', ' + at.y + ')' : '') : '') + coord + '</td>' +
+        '</tr>';
+    }).join('');
+
+    wrap.innerHTML =
+      '<table><thead><tr>' +
+        '<th style="width:34px"></th><th>獎品</th>' +
+        '<th title="同一件常常好幾間店都有，這裡顯示最便宜的那一筆">' + esc(curDb().name) + '</th>' +
+        '<th>在哪換</th>' +
+      '</tr></thead><tbody>' + rows + '</tbody></table>';
+  }
+
+  function fillCat() {
+    var counts = {};
+    curDb().items.forEach(function (it) { var k = it.category || '（未分類）'; counts[k] = (counts[k] || 0) + 1; });
+    var opts = [['__all__', '全部分類']].concat(
+      Object.entries(counts).sort(function (a, b) { return b[1] - a[1]; })
+        .map(function (e) { return [e[0], e[0] + '（' + e[1] + '）']; }));
+    var sel = document.getElementById('catSel');
+    sel.innerHTML = opts.map(function (o) { return '<option value="' + esc(o[0]) + '">' + esc(o[1]) + '</option>'; }).join('');
+    if (!opts.some(function (o) { return o[0] === cat; })) cat = '__all__';
+    sel.value = cat;
+  }
+
+  // 網址狀態：?c=mgp|reputation&cat=&q=&only=1&hide=1（見 docs/deep-links.md）
+  function syncURL() {
+    var p = new URLSearchParams();
+    if (cur !== 'mgp') p.set('c', cur);
+    if (cat !== '__all__') p.set('cat', cat);
+    if (q) p.set('q', q);
+    if (onlyCollect) p.set('only', '1');
+    if (hideHave) p.set('hide', '1');
+    var s = p.toString();
+    try { history.replaceState(null, '', s ? '?' + s : location.pathname); } catch (e) {}
+  }
+
+  function setCur(k) {
+    cur = k;
+    document.getElementById('tabMgp').classList.toggle('active', k === 'mgp');
+    document.getElementById('tabRep').classList.toggle('active', k === 'reputation');
+    cat = '__all__';
+    fillCat(); renderBudget(); render(); syncURL();
+  }
+
+  document.getElementById('tabMgp').addEventListener('click', function () { setCur('mgp'); });
+  document.getElementById('tabRep').addEventListener('click', function () { setCur('reputation'); });
+  document.getElementById('catSel').addEventListener('change', function () { cat = this.value; render(); syncURL(); });
+  document.getElementById('onlyCollect').addEventListener('change', function () { onlyCollect = this.checked; render(); syncURL(); });
+  document.getElementById('hideHave').addEventListener('change', function () { hideHave = this.checked; render(); syncURL(); });
+  var deb;
+  document.getElementById('searchInput').addEventListener('input', function () {
+    var v = this.value.trim().toLowerCase();
+    clearTimeout(deb);
+    deb = setTimeout(function () { q = v; render(); syncURL(); }, 160);
+  });
+
+  // 座標鈕（事件委派：每次篩選都重建表格）
+  document.addEventListener('click', function (ev) {
+    var btn = ev.target.closest && ev.target.closest('.coord-btn');
+    if (!btn || !navigator.clipboard) return;
+    navigator.clipboard.writeText(btn.dataset.flag).then(function () {
+      var old = btn.innerHTML;
+      btn.innerHTML = '✓';
+      btn.classList.add('copied');
+      setTimeout(function () { btn.innerHTML = old; btn.classList.remove('copied'); }, 1400);
+    });
+  });
+
+  (function boot() {
+    // ⚠ 先讀網址再做任何 replaceState（§3.17／§4.60）
+    var P = new URLSearchParams(location.search);
+    fetch('../../data/gold-saucer.json').then(function (r) { return r.json(); }).then(function (j) {
+      DB = j.data || [];
+      if (P.get('c') === 'reputation') cur = 'reputation';
+      q = (P.get('q') || '').trim().toLowerCase();
+      onlyCollect = P.get('only') === '1';
+      hideHave = P.get('hide') === '1';
+      document.getElementById('searchInput').value = P.get('q') || '';
+      document.getElementById('onlyCollect').checked = onlyCollect;
+      document.getElementById('hideHave').checked = hideHave;
+      document.getElementById('tabMgp').classList.toggle('active', cur === 'mgp');
+      document.getElementById('tabRep').classList.toggle('active', cur === 'reputation');
+      fillCat();
+      var wc = P.get('cat');
+      if (wc) { document.getElementById('catSel').value = wc; if (document.getElementById('catSel').value === wc) cat = wc; }
+      renderBudget(); render(); syncURL();
+    }).catch(function (e) {
+      document.getElementById('tableWrap').innerHTML = '<div class="loading err">資料載入失敗：' + esc(e.message) + '</div>';
+    });
+  })();
+})();
+</script>
+</body>
+</html>

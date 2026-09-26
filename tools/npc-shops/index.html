@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FF14 NPC 商店目錄 — 依地圖列出有開店的 NPC、各自賣什麼、多少錢，附座標可一鍵複製 /coord">
+  <title>NPC 商店目錄 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <link rel="stylesheet" href="../../assets/css/tool-header.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 109.375%; }
+    body { background: var(--bg-base); color: var(--text); font-family: var(--font-sans); min-height: 100vh; }
+
+    .controls { max-width: var(--w-content); margin: 0 auto; padding: 1rem 1.5rem 0.5rem; display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; }
+    select.sel, input.search {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px;
+      color: var(--text-dim); padding: 0.38rem 0.6rem; font-size: 0.8rem; outline: none; font-family: inherit;
+    }
+    select.sel { cursor: pointer; max-width: 16rem; }
+    input.search { flex: 1; min-width: 9rem; }
+    input.search:focus, select.sel:focus { border-color: var(--gold); color: var(--text); }
+
+    .status { max-width: var(--w-content); margin: 0 auto; padding: 0 1.5rem 0.4rem; font-size: 0.75rem; color: var(--text-muted); }
+
+    .body-wrap { max-width: var(--w-content); margin: 0 auto; padding: 0 1.5rem 2rem; }
+
+    .npc-card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md);
+      margin-bottom: 0.7rem; overflow: hidden;
+    }
+    .npc-head {
+      display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap;
+      padding: 0.6rem 0.8rem; cursor: pointer; user-select: none;
+    }
+    .npc-head:hover { background: var(--bg-card-hover); }
+    .npc-name { font-size: 0.95rem; font-weight: 700; color: var(--text); }
+    .npc-at { font-size: 0.76rem; color: var(--text-muted); }
+    .npc-count { margin-left: auto; font-size: 0.74rem; color: var(--text-muted); }
+    .coord-btn {
+      font: inherit; font-size: 0.7rem; padding: 0.12rem 0.36rem;
+      border: 1px solid var(--border); border-radius: 4px; background: var(--bg-surface);
+      color: var(--text-dim); cursor: pointer; transition: border-color .15s, color .15s;
+    }
+    .coord-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .coord-btn.copied { border-color: var(--green); color: var(--green); }
+
+    .npc-body { border-top: 1px solid var(--border); padding: 0.1rem 0.8rem 0.6rem; }
+    .shop-h {
+      font-size: 0.78rem; font-weight: 600; color: var(--gold); margin-top: 0.55rem; margin-bottom: 0.2rem;
+    }
+    .shop-h .cnt { color: var(--text-muted); font-weight: 400; font-size: 0.72rem; }
+    .tr-row {
+      display: flex; align-items: baseline; gap: 0.4rem; flex-wrap: wrap;
+      font-size: 0.8rem; line-height: 1.75; padding: 0.06rem 0;
+    }
+    .tr-cost { color: var(--gold); font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .tr-arrow { color: var(--text-muted); font-size: 0.7rem; }
+    .tr-get { color: var(--text-dim); }
+    .tr-get a { color: inherit; text-decoration: none; }
+    .tr-get a:hover { color: var(--gold); text-decoration: underline; }
+    .tr-rank { font-size: 0.68rem; color: var(--text-muted); border: 1px solid var(--border); border-radius: 4px; padding: 0 0.3rem; }
+    .more-btn {
+      font: inherit; font-size: 0.74rem; margin-top: 0.3rem; padding: 0.2rem 0.5rem;
+      border: 1px solid var(--border); border-radius: 5px; background: var(--bg-surface);
+      color: var(--text-dim); cursor: pointer;
+    }
+    .more-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+    .loading { text-align: center; padding: 3rem 0; color: var(--text-dim); font-size: 0.9rem; }
+    .loading.err { color: var(--red); }
+    .info-note { max-width: var(--w-content); margin: 0 auto; padding: 0 1.5rem 2rem; font-size: 0.72rem; color: var(--text-muted); line-height: 1.8; }
+    .site-footer { border-top: 1px solid var(--border); padding: 24px 0; text-align: center; }
+    .site-footer p { font-size: 12px; color: var(--text-muted); }
+    .site-footer a { color: var(--text-dim); }
+    @media (pointer: coarse) {
+      select.sel, input.search, .coord-btn, .more-btn { min-height: 44px; }
+      .npc-head { min-height: 44px; }
+      /* 交易列一行接一行，**不能用透明擴張層**——44px 高的 ::after 會蓋到上下兩列
+         （同金碟頁的預算格，知識庫 §4.59）。改用真實行高把每列撐到 44px。 */
+      .tr-row { min-height: 44px; align-items: center; }
+      .tr-get a { display: inline-block; padding: 0.55rem 0; }
+    }
+  </style>
+  <script src="../../assets/js/patch-gate.js"></script>
+  <script src="../../assets/js/theme.js"></script>
+</head>
+<body>
+<div class="tool-header">
+  <h1 class="tool-title">&#x1F3EA; NPC 商店目錄</h1>
+  <p class="tool-subtitle">我人在這張圖，附近有哪些店、賣什麼、多少錢——89 張地圖、454 個店家 NPC，附座標一鍵複製</p>
+  <div class="header-divider"></div>
+</div>
+
+<div class="controls">
+  <select class="sel" id="mapSel"></select>
+  <input class="search" id="searchInput" type="search" placeholder="搜尋 NPC、店名或商品…" autocomplete="off">
+</div>
+
+<div class="status" id="statusLine"></div>
+<div class="body-wrap" id="bodyWrap"><div class="loading">載入資料中…</div></div>
+
+<p class="info-note">
+  店名與 NPC 名皆為台服官方名，座標取自本站的 NPC 資料庫。只收「查得到台服店名、且 NPC 有繁中名與座標」的商店——查不到的不列，<b>不代表遊戲裡沒有</b>。<br>
+  每張地圖的資料<b>分開存放，選了才下載</b>（多數不到 10KB），不是整份載入。<br>
+  價目為遊戲內固定價，不含市場板。要比較「NPC 買 vs 市場買」哪個划算，市場查價頁的製作計畫已經會自動取兩者較低者並標出 NPC 來源。<br>
+  <b>刻意不做「NPC 套利掃描」</b>（哪間店的東西拿去市場板轉賣有利可圖）：那會鼓勵洗版式掛單，而且價差幾乎都被交易稅吃掉。
+</p>
+
+<footer class="site-footer">
+  <p>水神的工具箱 · <a href="../../">回首頁</a> · FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具</p>
+</footer>
+
+<script>
+(function () {
+  var GIL = 1;                 // items.json 裡它叫 "Gil"，畫面上一律顯示「金幣」
+  var PER_SHOP = 12;           // 一間店先顯示幾筆，其餘按「顯示全部」才展開
+  var IDX = null;              // _index.json
+  var NAMES = null;            // itemId → 名稱（items-market.json，延遲載）
+  var cache = {};              // mapId → Promise<資料>
+  var curMap = null;
+  var q = '';
+  var expanded = {};           // "npcId:shopId" → true
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function num(n) { return Number(n || 0).toLocaleString('en-US'); }
+  function nameOf(id) {
+    if (id === GIL) return '金幣';
+    var n = NAMES && NAMES[id];
+    return n || ('#' + id);
+  }
+
+  function loadMap(mid) {
+    if (!cache[mid]) {
+      cache[mid] = fetch('../../data/npc-shops/' + mid + '.json')
+        .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+        .catch(function () { delete cache[mid]; return null; });
+    }
+    return cache[mid];
+  }
+
+  /* 物品名用市場頁那份（45,548 筆 id→名）。它是陣列形式 [id, name, …]，
+     這裡只取前兩欄建 map——不另外做一份名稱檔，多一份就會有兩份會漂的資料。 */
+  function loadNames() {
+    if (NAMES) return Promise.resolve(NAMES);
+    return fetch('../../data/items-market.json').then(function (r) { return r.json(); }).then(function (j) {
+      NAMES = {};
+      (j.data || j).forEach(function (row) { NAMES[row[0]] = row[1]; });
+      return NAMES;
+    }).catch(function () { NAMES = {}; return NAMES; });
+  }
+
+  function tradeHtml(t) {
+    var cost = t.c.map(function (p) { return num(p[1]) + ' ' + esc(nameOf(p[0])); }).join(' ＋ ');
+    var get = t.g.map(function (p) {
+      var nm = esc(nameOf(p[0]));
+      var qty = p[1] > 1 ? ' ×' + p[1] : '';
+      // 物品名連到市場查價：看到「這間店賣這個」之後最常問的就是「市場上多少」
+      return '<a href="../market/?item=' + p[0] + '">' + nm + '</a>' + qty;
+    }).join(' ＋ ');
+    return '<div class="tr-row"><span class="tr-cost">' + cost + '</span>' +
+      '<span class="tr-arrow">→</span><span class="tr-get">' + get + '</span>' +
+      (t.r ? '<span class="tr-rank">需軍階 ' + t.r + '</span>' : '') + '</div>';
+  }
+
+  function matches(npc, shop, trades) {
+    if (!q) return true;
+    if (npc.n.toLowerCase().indexOf(q) >= 0) return true;
+    if ((shop.n || '').toLowerCase().indexOf(q) >= 0) return true;
+    return trades.some(function (t) {
+      return t.g.concat(t.c).some(function (p) { return String(nameOf(p[0])).toLowerCase().indexOf(q) >= 0; });
+    });
+  }
+
+  function render(data) {
+    var wrap = document.getElementById('bodyWrap');
+    var status = document.getElementById('statusLine');
+    if (!data) { wrap.innerHTML = '<div class="loading err">這張地圖的資料載入失敗</div>'; return; }
+
+    var html = [];
+    var nShown = 0, nShops = 0;
+    data.npcs.forEach(function (npc) {
+      var shops = npc.s.filter(function (sh) { return matches(npc, sh, sh.tr); });
+      if (!shops.length) return;
+      nShown++; nShops += shops.length;
+      var flag = '/coord ' + npc.x.toFixed(1) + ' ' + npc.y.toFixed(1) + ' ' + data.map;
+      html.push('<div class="npc-card">' +
+        '<div class="npc-head" data-npc="' + npc.id + '">' +
+          '<span class="npc-name">' + esc(npc.n) + '</span>' +
+          '<span class="npc-at">' + esc(data.map) + ' (' + npc.x + ', ' + npc.y + ')</span>' +
+          '<button class="coord-btn" data-flag="' + esc(flag) + '" aria-label="複製座標指令">&#x1F4CB;</button>' +
+          '<span class="npc-count">' + shops.length + ' 間店</span>' +
+        '</div>' +
+        '<div class="npc-body">' + shops.map(function (sh) {
+          var key = npc.id + ':' + sh.id;
+          var all = expanded[key];
+          var list = all ? sh.tr : sh.tr.slice(0, PER_SHOP);
+          return '<div class="shop-h">' + esc(sh.n) +
+              ' <span class="cnt">' + sh.tr.length + ' 項</span></div>' +
+            list.map(tradeHtml).join('') +
+            (sh.tr.length > PER_SHOP
+              ? '<button class="more-btn" data-more="' + esc(key) + '">' +
+                (all ? '收合' : '顯示全部 ' + sh.tr.length + ' 項') + '</button>'
+              : '');
+        }).join('') + '</div>' +
+      '</div>');
+    });
+
+    status.textContent = nShown + ' 個店家 NPC、' + nShops + ' 間店' + (q ? '（符合「' + q + '」）' : '');
+    wrap.innerHTML = html.length ? html.join('') : '<div class="loading">這張地圖沒有符合的店家</div>';
+  }
+
+  function show(mid) {
+    curMap = mid;
+    document.getElementById('bodyWrap').innerHTML = '<div class="loading">載入這張地圖…</div>';
+    Promise.all([loadMap(mid), loadNames()]).then(function (r) { render(r[0]); syncURL(); });
+  }
+
+  // 網址狀態：?m=<mapId>&q=<搜尋>（見 docs/deep-links.md）
+  function syncURL() {
+    var p = new URLSearchParams();
+    if (curMap != null) p.set('m', String(curMap));
+    if (q) p.set('q', q);
+    var s = p.toString();
+    try { history.replaceState(null, '', s ? '?' + s : location.pathname); } catch (e) {}
+  }
+
+  document.getElementById('mapSel').addEventListener('change', function () {
+    expanded = {};
+    show(Number(this.value));
+  });
+  var deb;
+  document.getElementById('searchInput').addEventListener('input', function () {
+    var v = this.value.trim().toLowerCase();
+    clearTimeout(deb);
+    deb = setTimeout(function () {
+      q = v;
+      if (curMap != null) loadMap(curMap).then(render).then(syncURL);
+    }, 160);
+  });
+
+  document.addEventListener('click', function (ev) {
+    var btn = ev.target.closest && ev.target.closest('.coord-btn');
+    if (btn) {
+      ev.stopPropagation();
+      if (!navigator.clipboard) return;
+      navigator.clipboard.writeText(btn.dataset.flag).then(function () {
+        var old = btn.innerHTML;
+        btn.innerHTML = '✓';
+        btn.classList.add('copied');
+        setTimeout(function () { btn.innerHTML = old; btn.classList.remove('copied'); }, 1400);
+      });
+      return;
+    }
+    var more = ev.target.closest && ev.target.closest('.more-btn');
+    if (more && curMap != null) {
+      expanded[more.dataset.more] = !expanded[more.dataset.more];
+      loadMap(curMap).then(render);
+    }
+  });
+
+  (function boot() {
+    // ⚠ 先讀網址再做任何 replaceState（§3.17／§4.60）
+    var P = new URLSearchParams(location.search);
+    fetch('../../data/npc-shops/_index.json').then(function (r) { return r.json(); }).then(function (j) {
+      IDX = j;
+      var sel = document.getElementById('mapSel');
+      sel.innerHTML = IDX.maps.map(function (m) {
+        return '<option value="' + m.mapId + '">' + esc(m.map) + '（' + m.npcCount + ' 人／' + m.shopCount + ' 店）</option>';
+      }).join('');
+      q = (P.get('q') || '').trim().toLowerCase();
+      document.getElementById('searchInput').value = P.get('q') || '';
+      var want = Number(P.get('m'));
+      var pick = IDX.maps.some(function (m) { return m.mapId === want; }) ? want : IDX.maps[0].mapId;
+      sel.value = String(pick);
+      show(pick);
+    }).catch(function (e) {
+      document.getElementById('bodyWrap').innerHTML = '<div class="loading err">資料載入失敗：' + esc(e.message) + '</div>';
+    });
+  })();
+})();
+</script>
+</body>
+</html>
