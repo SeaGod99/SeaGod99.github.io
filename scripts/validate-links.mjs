@@ -39,6 +39,7 @@ const fishingSpots = await loadDB("fishing-spots");
 const fishes = await loadDB("fishes");
 const recipes = await loadDB("recipes");
 const tripleTriad = await loadDB("triple-triad");
+const explorationLog = await loadDB("exploration-log");
 const omData = await loadDB("obtainable-methods"); // data 是 { itemId: [methods] } 物件
 
 const mapIds = new Set(maps.map((m) => m.id));
@@ -79,6 +80,54 @@ const fishItemIds = new Set(fishes.map((f) => f.itemId));
     if (!mapIds.has(id)) broken++;
   }
   report("fishing-spots.coords.mapId → maps", broken, fishingSpots.length, missing ? `另 ${missing} 筆完全沒有 mapId 欄位` : "");
+}
+{
+  // 探索筆記座標（2026-09-23 由 patch-exploration-coords.mjs 補；
+  // coords=null 的是 maps.json 沒收的室內子地圖，不計斷鏈）
+  let broken = 0, missing = 0;
+  for (const e of explorationLog) {
+    if (!e.coords) { missing++; continue; }
+    if (!mapIds.has(e.coords.mapId)) broken++;
+  }
+  report("exploration-log.coords.mapId → maps", broken, explorationLog.length, missing ? `另 ${missing} 筆無座標（室內子地圖，maps.json 無底圖）` : "");
+}
+{
+  // 收藏頁任務來源的接取點（patch-collection-quest-npc.mjs 補的）
+  let broken = 0, total = 0;
+  for (const f of ["mounts", "minions", "orchestrion", "barding", "emotes"]) {
+    for (const e of await loadDB(f)) for (const s of e.sources || []) {
+      if (!s.at) continue;
+      total++;
+      if (!mapIds.has(s.at.mapId)) broken++;
+    }
+  }
+  report("收藏頁 sources[].at.mapId → maps", broken, total);
+}
+{
+  // 系統解鎖與職業行會的任務接取點（mapId=null 是副本／室內的實例地圖，只有地名沒有座標）
+  const su = JSON.parse(await readFile(join(DATA, "system-unlocks.json"), "utf8"));
+  let broken = 0, total = 0, inst = 0;
+  const check = (q) => {
+    if (!q || !q.at) return;
+    if (q.at.mapId == null) { inst++; return; }
+    total++;
+    if (!mapIds.has(q.at.mapId)) broken++;
+  };
+  for (const s of su.data) for (const q of s.quests) check(q);
+  for (const j of su.jobs) check(j.quest);
+  report("system-unlocks 任務 at.mapId → maps", broken, total, inst ? `另 ${inst} 筆是實例地圖（只有地名）` : "");
+}
+{
+  // NPC 金幣直購價的賣家位置（build-vendor-prices.mjs 產）。
+  // 這條斷了的話「去哪買」會指向不存在的地圖，而畫面上只會少一個地名。
+  const vp = JSON.parse(await readFile(join(DATA, "vendor-prices.json"), "utf8")).data;
+  let broken = 0, total = 0;
+  for (const x of Object.values(vp)) {
+    if (x.mi == null) continue;
+    total++;
+    if (!mapIds.has(x.mi)) broken++;
+  }
+  report("vendor-prices 賣家 mapId → maps", broken, total);
 }
 
 // ---------- itemId 類 ----------
