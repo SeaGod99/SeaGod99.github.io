@@ -2363,6 +2363,99 @@
     return { items: out };
   }
 
+
+  /* ── 自己的製作數值：把硬門檻標出來 ─────────────────────────────────
+     收益排行原本只看「賺多少」，但清單裡常常混著**你根本做不了**的配方——
+     等級不夠、作業精度或加工精度不到配方的硬門檻。那不是「利潤低」，是「按不下去」。
+
+     數值取自製作模擬器存的 `ffxiv_craftsim_stats`（`{v, lastJob, jobs:{jobId:{level,craftsmanship,control,cp}}}`）。
+     **沒存過就完全靜默**——不提示、不預填、不標記，維持原本的行為。
+
+     門檻欄位在 `data/craft-recipes.json`（`craftsmanshipReq`／`controlReq`／`lvl`），
+     市場頁平常載的 `recipes.json` 沒有這些欄位，所以**延遲載**：只有在使用者存過數值、
+     而且真的跑了一次收益掃描時才抓（那份 13,835 列不小）。 */
+  var CRAFT_JOBS = { 8: '刻木匠', 9: '鍛鐵匠', 10: '鑄甲匠', 11: '雕金匠', 12: '製革匠', 13: '裁衣匠', 14: '煉金術士', 15: '烹調師' };
+  var loadCraftRecipesRaw = lazyJson('../../data/craft-recipes.json');
+  var myStats = null;          // { byJobName: { 煉金術士: {level, craftsmanship, control} }, lastJob }
+  var reqByItem = null;        // itemId -> { c, ct, lvl, job }（取門檻最低的那個職業）
+  var reqPromise = null;
+
+  function readMyStats() {
+    var raw = null;
+    try { raw = JSON.parse(localStorage.getItem('ffxiv_craftsim_stats') || 'null'); } catch (e) { return null; }
+    if (!raw || !raw.jobs) return null;
+    var by = {};
+    Object.keys(raw.jobs).forEach(function (id) {
+      var n = CRAFT_JOBS[id];
+      var s = raw.jobs[id];
+      if (n && s && s.craftsmanship) by[n] = { level: s.level || 0, craftsmanship: s.craftsmanship || 0, control: s.control || 0 };
+    });
+    if (!Object.keys(by).length) return null;
+    return { byJobName: by, lastJob: CRAFT_JOBS[raw.lastJob] || null };
+  }
+
+  function ensureReqs() {
+    if (reqByItem) return Promise.resolve(reqByItem);
+    if (reqPromise) return reqPromise;
+    reqPromise = loadCraftRecipesRaw()
+      .then(function (db) {
+        var c = db.columns, ix = {};
+        c.forEach(function (k, i) { ix[k] = i; });
+        reqByItem = new Map();
+        for (var i = 0; i < db.data.length; i++) {
+          var row = db.data[i];
+          var itemId = row[ix.itemId];
+          var rec = {
+            c: row[ix.craftsmanshipReq] || 0,
+            ct: row[ix.controlReq] || 0,
+            lvl: row[ix.lvl] || 0,
+            job: CRAFT_JOBS[row[ix.jobId]] || null,
+          };
+          var cur = reqByItem.get(itemId);
+          // 同一件可能有多個職業的配方，取「最好做的」那個當代表
+          if (!cur || (rec.lvl < cur.lvl) || (rec.lvl === cur.lvl && rec.c < cur.c)) reqByItem.set(itemId, rec);
+        }
+        return reqByItem;
+      })
+      .catch(function () { reqByItem = new Map(); return reqByItem; });   // 抓不到就當作沒有，不擋掃描
+    return reqPromise;
+  }
+
+  /* 「套用我的數值」——**刻意做成按鈕而不是自動預填**。
+     提案原本寫「有存數值就預填職業／等級」，但那樣使用者一打開分頁就會看到自己沒設過的篩選，
+     而且不知道東西為什麼變少。做成一鍵、可反悔，效果一樣但不會嚇到人。
+     沒存過數值時這顆鈕根本不顯示（提案要求的「完全靜默」）。 */
+  function applyMyStats() {
+    var st = readMyStats();
+    if (!st) return;
+    var jobs = Object.keys(st.byJobName);
+    // 只挑有練到的職業（等級 > 1），全都是預設值時就不挑職業、只設等級
+    var real = jobs.filter(function (n) { return st.byJobName[n].level > 1; });
+    pfJobs.clear();
+    real.forEach(function (n) { pfJobs.add(n); });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-pfjob]'), function (chip) {
+      chip.classList.toggle('active', pfJobs.has(chip.dataset.pfjob));
+    });
+    var top = 0;
+    real.forEach(function (n) { top = Math.max(top, st.byJobName[n].level); });
+    if (top > 0) { $('#pfMax').value = top; $('#pfMin').value = Math.max(1, top - 10); }
+    notify('已套用製作模擬器存的數值：' + (real.length ? real.join('、') : '（未設定職業）') +
+      (top ? '　等級 ' + Math.max(1, top - 10) + '–' + top : ''), 'ok');
+  }
+
+  /** 這一列以使用者的數值做不做得了？回 null＝沒存數值或查無門檻（不標記）。 */
+  function gateOf(row) {
+    if (!myStats || !reqByItem) return null;
+    var req = reqByItem.get(row.id);
+    if (!req) return null;
+    var s = myStats.byJobName[row.job];
+    if (!s) return null;
+    var why = [];
+    if (req.lvl && s.level && s.level < req.lvl) why.push('等級 ' + s.level + ' < ' + req.lvl);
+    if (req.c && s.craftsmanship < req.c) why.push('作業精度 ' + s.craftsmanship + ' < ' + req.c);
+    if (req.ct && s.control < req.ct) why.push('加工精度 ' + s.control + ' < ' + req.ct);
+    return why.length ? why.join('、') : null;
+  }
   function pfCandidates(min, max, limit) {
     var out = [];
     recipesByItem.forEach(function (r, id) {
@@ -2407,6 +2500,11 @@
     var max = $('#pfMax').value === '' ? null : Math.max(1, parseInt($('#pfMax').value, 10) || 1);
     if (min != null && max != null && min > max) { var t = min; min = max; max = t; $('#pfMin').value = min; $('#pfMax').value = max; }
     var limit = parseInt($('#pfLimit').value, 10) || 60;
+
+    /* 有存過製作數值才載門檻表（13,835 列不小）。沒存過完全靜默，行為與以前一樣。 */
+    myStats = readMyStats();
+    if (myStats) { try { await ensureReqs(); } catch (e) { /* 抓不到就不標記，不擋掃描 */ } }
+    if (token !== pfToken) { pfBusy = false; return; }
 
     var cand = pfCandidates(min, max, limit);
     var cands = cand.list;
@@ -2550,6 +2648,13 @@
             '<img class="pf-ic" src="' + iconUrl(it) + '" alt="" loading="lazy" onerror="this.style.visibility=\'hidden\'">' +
             '<div class="pf-nm"><span class="plan-node" data-node="' + r.id + '" role="button" tabindex="0" title="查看行情與配方">' + esc(r.name) + '</span>' +
             (r.yield > 1 ? ' <span class="plan-of">×' + r.yield + '/輪</span>' : '') +
+            (function () {
+              /* **做不了 ≠ 利潤低**。等級或精度不到配方的硬門檻時，這一列按下去也做不出來，
+                 所以獨立標出來而不是讓它混在利潤排序裡。沒存數值時 gateOf 回 null，什麼都不畫。 */
+              var g = gateOf(r);
+              return g ? '<span class="flag-run"><span class="flag bad" title="你目前的製作數值做不了這個配方：' +
+                esc(g) + '">✗ 做不了</span></span>' : '';
+            })() +
             ((r.na || r.stale || r.basis === 'avg') ? '<span class="flag-run">' +
               (r.na ? '<span class="flag warn" title="有 ' + r.na + ' 種材料查不到市價，成本被低估">△ 缺 ' + r.na + ' 項材料價</span>' : '') +
               (r.stale ? '<span class="flag warn" title="售價資料可能已過期">△ 舊價</span>' : '') +
@@ -3009,6 +3114,11 @@
       });
     });
     $('#pfRun').addEventListener('click', runProfitScan);
+  // 有存過製作數值才長出「套用我的數值」（沒存過完全靜默）
+  if (readMyStats()) {
+    var mineBtn = $('#pfMine');
+    if (mineBtn) { mineBtn.style.display = ''; mineBtn.addEventListener('click', applyMyStats); }
+  }
     $('#profitBody').addEventListener('click', function (e) {
       var s = e.target.closest('[data-pfsort]');
       if (s) {
@@ -3257,4 +3367,4 @@
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
-})();
+})();
