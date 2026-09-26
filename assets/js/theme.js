@@ -123,6 +123,27 @@
       window.addEventListener('load', function () {
         navigator.serviceWorker.register('/sw.js').catch(function () { /* 忽略 */ });
       });
+
+      /* 「資料已更新 ↻」。`data/*.json` 走 stale-while-revalidate，代價是
+         **這一次的畫面用的是快取裡的舊資料**，而且使用者完全看不出來——
+         要等下一次進站才會看到新的。SW 在背景比對出新版時會 postMessage 過來。
+         做成一則常駐提示而不是自動重整：正在填表／正在看清單的人被重整會很惱人。 */
+      var notified = false;
+      navigator.serviceWorker.addEventListener('message', function (e) {
+        var d = e && e.data;
+        if (!d || d.type !== 'sgt-data-updated') return;
+        if (notified) return;                 // 一次進站只講一次，不要一份檔案喊一次
+        notified = true;
+        var msg = '資料已更新，這一頁顯示的是上次的版本。';
+        if (window.Toast && window.Toast.action) {
+          window.Toast.action(msg, {
+            label: '↻ 重新整理', key: 'sgt-data-updated',
+            onClick: function () { location.reload(); },
+          });
+        }
+        /* Toast 還沒載好就**什麼都不做**。這則提示不是必要資訊——
+           退回 alert() 會把整個分頁凍住（ET 時鐘、鬧鐘倒數全停），代價比不提示高。 */
+      });
     }
   })();
 

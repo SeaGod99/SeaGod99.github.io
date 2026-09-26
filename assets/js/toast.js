@@ -52,7 +52,11 @@
       '.sgt-btn.primary{border-color:var(--accent,#c8a96e);color:var(--accent,#c8a96e)}',
       '.sgt-btn.danger{border-color:var(--red,#f87171);color:var(--red,#f87171)}',
       '.sgt-btn:focus-visible{outline:2px solid var(--accent,#c8a96e);outline-offset:1px}',
-      '@media (pointer: coarse){.sgt-btn{min-height:44px}}'
+      '@media (pointer: coarse){.sgt-btn{min-height:44px}}',
+      /* 常駐提示：訊息 ＋ 動作鈕 ＋ ✕ 排一列。窄畫面換行，不要讓鈕被推出畫面外 */
+      '.sgt-sticky{display:flex;align-items:center;gap:10px;flex-wrap:wrap}',
+      '.sgt-sticky-msg{flex:1 1 auto;min-width:0}',
+      '.sgt-sticky .sgt-btn{flex:none;padding:6px 12px}'
     ].join('');
     document.head.appendChild(s);
   }
@@ -85,6 +89,53 @@
       el.classList.add('out');
       setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 200);
     }, life);
+    return el;
+  }
+
+  /**
+   * 常駐提示 ＋ 一顆動作鈕。**不會自動消失**——只在使用者按動作鈕或 ✕ 時關閉。
+   * 用於「非做不可但不急」的事，例如資料已更新、要不要重新整理。
+   *
+   * 為什麼不另做一個浮層元件：位置、z-index、動效、`prefers-reduced-motion`、
+   * `role="status"` 這些在 Toast 這裡已經處理好了，再開一份就會有第四種飄浮物。
+   *
+   * @param {string} msg
+   * @param {{ label:string, onClick:Function, kind?:'info'|'ok'|'err', key?:string }} opts
+   *        `key` 有值時同一個 key 只會存在一則（重複呼叫不會疊出一整排）。
+   * @returns {HTMLElement|null} null＝同 key 的已經在畫面上
+   */
+  var stickyByKey = {};
+  function action(msg, opts) {
+    opts = opts || {};
+    if (opts.key && stickyByKey[opts.key] && document.body.contains(stickyByKey[opts.key])) return null;
+    injectStyle();
+    var el = document.createElement('div');
+    el.className = 'sgt-toast sgt-sticky' + (opts.kind && opts.kind !== 'info' ? ' ' + opts.kind : '');
+    el.setAttribute('role', 'status');
+    var txt = document.createElement('span');
+    txt.className = 'sgt-sticky-msg';
+    txt.textContent = msg;
+    var btn = document.createElement('button');
+    btn.className = 'sgt-btn primary';
+    btn.type = 'button';
+    btn.textContent = opts.label || '確定';
+    var close = function () {
+      el.classList.add('out');
+      setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 200);
+    };
+    btn.addEventListener('click', function () {
+      close();
+      try { if (opts.onClick) opts.onClick(); } catch (e) {}
+    });
+    var x = document.createElement('button');
+    x.className = 'sgt-btn';
+    x.type = 'button';
+    x.textContent = '✕';
+    x.setAttribute('aria-label', '關閉提示');
+    x.addEventListener('click', close);
+    el.appendChild(txt); el.appendChild(btn); el.appendChild(x);
+    ensureHost().appendChild(el);
+    if (opts.key) stickyByKey[opts.key] = el;
     return el;
   }
 
@@ -143,5 +194,5 @@
     });
   }
 
-  window.Toast = { show: show, confirm: confirm };
+  window.Toast = { show: show, action: action, confirm: confirm };
 })();

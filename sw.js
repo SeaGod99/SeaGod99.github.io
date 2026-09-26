@@ -9,6 +9,10 @@
  *    離線時回退快取。
  *  - 其餘同源靜態資源（.json 資料庫、圖示、底圖）：stale-while-revalidate。
  *    先回快取讓畫面秒開，背景再更新快取供下次使用。
+ *    ⚠ 代價是**這一次的畫面用的是舊資料**，所以背景比對出新版時會 postMessage
+ *    `{type:'sgt-data-updated'}` 給開著的頁面，由 theme.js 長一條「資料已更新 ↻」。
+ *    只比對 `/data/` 底下的東西（圖示與底圖換了不影響任何數字），
+ *    版本依序看 ETag → Last-Modified → Content-Length，三個都拿不到就不通報。
  *  - 跨源請求（XIVAPI / Universalis / 外部圖床）：完全不介入，直接走網路，
  *    確保市價等即時資料不被快取污染。
  *  - 大檔（> MAX_CACHE_BYTES，如 glamour 的 10MB js）：不寫入快取，避免撐爆配額。
@@ -18,7 +22,7 @@
  *
  * 注意：本站為 GitHub Pages 使用者頁（根網域託管），故 scope／start_url 皆為 "/"。
  */
-const CACHE_VERSION = 'sgt-de24916516'; /* AUTO-BUMP */
+const CACHE_VERSION = 'sgt-456a34d315'; /* AUTO-BUMP */
 const MAX_CACHE_BYTES = 5 * 1024 * 1024;
 
 // 安裝時預先快取的最小殼層（全站共用資源 + 首頁）
@@ -105,6 +109,11 @@ self.addEventListener('fetch', (event) => {
           if (res && res.ok && res.type === 'basic' && !tooBig(res)) {
             const copy = res.clone();
             caches.open(CACHE_VERSION).then((c) => c.put(req, copy)).catch(() => {});
+            /* 資料更新通報。SWR 的代價是**這一次的畫面用的是舊資料**，
+               而且使用者完全看不出來——要等下一次進站才會看到新的。
+               所以拿到的新版與快取裡的不同時，通知開著的頁面長一條「資料已更新 ↻」。
+               只管 /data/ 底下的東西：圖示與底圖換了不影響任何數字。 */
+            if (cached && /^\/data\//.test(url.pathname)) notifyIfChanged(cached, res, url.pathname);
           }
           return res;
         })
@@ -113,3 +122,22 @@ self.addEventListener('fetch', (event) => {
     })
   );
 });
+
+/** 兩個回應是不是同一份內容。依序看 ETag → Last-Modified → Content-Length；
+ *  三個都拿不到就**當成沒變**——寧可不通報，也不要每次進站都喊一次狼來了。 */
+function sameVersion(a, b) {
+  for (const h of ['etag', 'last-modified', 'content-length']) {
+    const va = a.headers.get(h), vb = b.headers.get(h);
+    if (va && vb) return va === vb;
+  }
+  return true;
+}
+
+function notifyIfChanged(cached, fresh, path) {
+  if (sameVersion(cached, fresh)) return;
+  self.clients.matchAll({ type: 'window' }).then((cs) => {
+    for (const c of cs) {
+      try { c.postMessage({ type: 'sgt-data-updated', path }); } catch (e) { /* 關掉的頁面：忽略 */ }
+    }
+  }).catch(() => {});
+}
