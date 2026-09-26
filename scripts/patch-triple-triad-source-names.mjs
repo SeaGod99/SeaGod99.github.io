@@ -40,6 +40,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { isTw } from "./lib/tw-text.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
@@ -310,7 +311,7 @@ async function main() {
   const stillEmpty = cards.reduce((n, c) =>
     n + (c.sources || []).filter((s) => !s.detail && s.type !== 'NPC對戰').length, 0);
   const stillEn = cards.reduce((n, c) =>
-    n + (c.sources || []).filter((s) => s.detail && !/[一-鿿]/.test(s.detail)).length, 0);
+    n + (c.sources || []).filter((s) => s.detail && !isTw(s.detail)).length, 0);
   console.log('\n━━ 結算 ━━');
   console.log(`  補上名稱的來源筆數：${filled}`);
   console.log(`  英文 NPC 名換成繁中：${enFilled}`);
@@ -361,7 +362,7 @@ async function englishNpcNames(cards) {
   const wanted = new Set();
   for (const c of cards) {
     for (const s of c.sources || []) {
-      if (s.detail && !/[一-鿿]/.test(s.detail)) wanted.add(s.detail.trim());
+      if (s.detail && !isTw(s.detail)) wanted.add(s.detail.trim());
     }
   }
   for (const d of wanted) {

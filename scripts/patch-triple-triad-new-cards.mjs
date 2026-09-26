@@ -45,6 +45,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { loadCardMap, describeCardMap } from './lib/triple-triad-map.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
@@ -78,47 +79,57 @@ async function v2(pathAndQuery, tries = 3) {
 }
 
 // ── 台服卡片道具（＝張數與繁中名的真實來源）──────────────────────────────
-function twCardItems() {
+// 回傳 Map<卡片 row id, { itemId, name, patch, icon }>。
+// 對應由 Item.AdditionalData 解出（可證），**不是**「第 N 個道具＝編號 N」的序位推測。
+async function twCardItems() {
+  const map = await loadCardMap({ root: ROOT, cache: path.join(ROOT, 'out_data/cache/tt-card-items.json') });
+  console.log('  ' + describeCardMap(map));
   const items = readJson('data/items.json');
-  return (items.data || items)
-    .filter((it) => it.category === '九宮幻卡')
-    .sort((a, b) => a.id - b.id)
-    .map((it) => ({
-      itemId: it.id,
-      name: it.name.replace('九宮幻卡：', ''),
-      patch: it.patch ?? null,
-      icon: Number((String(it.icon).match(/(\d+)\.png/) || [])[1]) || null,
-    }));
+  const byId = new Map((items.data || items).map((it) => [it.id, it]));
+  const out = new Map();
+  for (const [card, itemId] of map.cardToItem) {
+    const it = byId.get(itemId);
+    out.set(card, {
+      itemId,
+      name: map.cardToTwName.get(card),
+      patch: it?.patch ?? null,
+      icon: Number((String(it?.icon).match(/(\d+)\.png/) || [])[1]) || null,
+    });
+  }
+  return out;
 }
 
 async function main() {
   const triad = readJson('data/triple-triad.json');
   const cards = triad.data;
-  const items = twCardItems();
+  console.log(`目前 triple-triad.json：${cards.length} 張（編號 1–${Math.max(...cards.map((c) => c.id))}）`);
+  const items = await twCardItems();
   const npcs = new Map((readJson('data/npcs.json').data || []).map((n) => [n.id, n]));
   const maps = new Map((readJson('data/maps.json').data || []).map((m) => [m.id, m]));
   const dungeons = new Map((readJson('data/dungeons.json').data || []).map((d) => [d.id, d]));
 
-  console.log(`目前 triple-triad.json：${cards.length} 張（編號 1–${Math.max(...cards.map((c) => c.id))}）`);
-  console.log(`台服 items.json 的九宮幻卡卡片道具：${items.length} 張`);
-
-  // 位置對應驗證：第 N 個卡片道具必須對上編號 N 的名稱，否則後面全錯
-  const mismatch = cards.filter((c) => items[c.id - 1] && c.name !== items[c.id - 1].name);
-  if (mismatch.length) {
-    console.error(`✗ 位置對應驗證失敗（${mismatch.length} 筆名稱不符），中止：`);
-    mismatch.slice(0, 5).forEach((c) => console.error(`   編號 ${c.id}：資料「${c.name}」vs 道具「${items[c.id - 1].name}」`));
-    process.exit(1);
+  // 繁中名校正：以可證對照為準。原本這裡是「序位對不上就中止」，但序位法本身才是錯的
+  // ——真正該做的是把被序位法寫歪的名字改回來，不是讓腳本停在那裡。
+  const nameFixes = [];
+  for (const c of cards) {
+    const it = items.get(c.id);
+    if (it && it.name && c.name !== it.name) nameFixes.push([c, it.name]);
   }
-  console.log(`✓ 位置對應驗證通過（${cards.length} 張名稱全對）`);
+  if (nameFixes.length) {
+    console.log(`\n⚠ 繁中名與可證對照不符 ${nameFixes.length} 張（序位法寫歪的，將改為可證值）：`);
+    nameFixes.forEach(([c, nm]) => console.log(`    編號 ${c.id}（${c.nameEn}）：「${c.name}」→「${nm}」`));
+  } else {
+    console.log(`✓ 繁中名與可證對照全數相符（${cards.length} 張）`);
+  }
 
   const have = new Set(cards.map((c) => c.id));
-  const missing = items.map((_, i) => i + 1).filter((id) => !have.has(id));
+  const missing = [...items.keys()].filter((id) => !have.has(id)).sort((a, b) => a - b);
   console.log(`\n缺的卡：${missing.length ? missing.join(', ') : '（無）'}`);
 
   // ── 補新卡 ──────────────────────────────────────────────────────────────
   const added = [];
   for (const id of missing) {
-    const it = items[id - 1];
+    const it = items.get(id);
     const [card, res] = await Promise.all([
       v2(`TripleTriadCard/${id}?fields=Name`),
       v2(`TripleTriadCardResident/${id}?fields=Top,Right,Bottom,Left,TripleTriadCardRarity,TripleTriadCardType,Acquisition`),
@@ -151,7 +162,7 @@ async function main() {
   //   3.55b、174 是 3.5），編號並非嚴格按上線時間發配。
   const fixes = [];
   for (const c of cards) {
-    const it = items[c.id - 1];
+    const it = items.get(c.id);
     if (it?.patch && c.patch !== it.patch) fixes.push([c, it.patch]);
   }
   const nulls = fixes.filter(([c]) => c.patch == null).length;
@@ -185,6 +196,7 @@ async function main() {
     return;
   }
 
+  nameFixes.forEach(([c, nm]) => { c.name = nm; });
   fixes.forEach(([c, p]) => { c.patch = p; });
   all.forEach((c) => {
     const f = orderOf.get(c.id);
@@ -198,7 +210,7 @@ async function main() {
   triad.updated = new Date().toISOString().slice(0, 10);
   triad.source = 'xivapi+items+npcs+maps+dungeons';
   fs.writeFileSync(path.join(ROOT, 'data/triple-triad.json'), JSON.stringify(triad, null, 2) + '\n', 'utf8');
-  console.log(`\n✓ 已寫入 data/triple-triad.json：${triad.count} 張（新增 ${added.length}、校正 patch ${fixes.length}、更新排序 ${orderFixes.length}）`);
+  console.log(`\n✓ 已寫入 data/triple-triad.json：${triad.count} 張（新增 ${added.length}、校正繁中名 ${nameFixes.length}、校正 patch ${fixes.length}、更新排序 ${orderFixes.length}）`);
   console.log('  接著跑：node scripts/download-triple-triad-images.mjs（補卡面圖）→ node scripts/validate-data.mjs');
 }
 

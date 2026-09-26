@@ -4,30 +4,45 @@
  *
  * 步驟：
  *   1. 基礎資料  — XIVAPI TripleTriadCard + TripleTriadCardResident + items.json 繁中名
- *   2. NPC 來源  — Teamcraft tw-npcs + XIVAPI v2 ENpcBase 掃描
+ *   2. NPC 牌組  — Teamcraft tw-npcs + XIVAPI v2 ENpcBase 掃描（**是牌組不是獎勵**，見下）
  *   3. 其他來源  — Garland Tools（副本/任務/藏寶圖）
  *   4. Wiki 補齊 — FFXIV Wiki 補齊仍缺 sources 的卡
  *   5. 正規化    — 統一 type 中文名、清理 Wiki markup
  *
  * 執行：node scripts/build-triple-triad-all.mjs
  * 耗時約 60~90 分鐘（主要是步驟 2 掃描 28529 個 NPC）
+ *
+ * ⚠ **跑完必接** `node scripts/patch-triple-triad-sources.mjs --apply`
+ *   本腳本的步驟 2 只產得出「NPC 的牌組」；真正的「打贏可得」來源、入場費與對局規則
+ *   在 TripleTriad.ItemPossibleReward／Fee／TripleTriadRule，由那支 patch 負責。
+ *   漏跑不會報錯，只會讓 258 筆真獎勵與 20 筆台服成就名安靜消失。
+ *
+ * ⚠ **張數不寫死**（2026-09-25 改）：以 v2 的 TripleTriadCard 全表為準。
+ *   舊版寫死 TOTAL_CARDS = 425，而 v1 的同一張表也凍結在 425 筆、v2 有 475 筆——
+ *   7.1 的 10 張新卡就是這樣安靜漏掉的。台服實際有幾張則看 items.json 的「九宮幻卡」道具數。
+ *
+ * ⚠ 卡片↔道具走 `Item.AdditionalData`（可證），對照抽在 lib/triple-triad-map.mjs，
+ *   三支幻卡腳本共用。舊版用「第 n 個道具＝編號 n」的序位法，實測從編號 81 起整串偏移。
+ *
+ * ⚠ 全腳本已無 XIVAPI v1 呼叫（2026-09-25）。注意 `xivapi.com/i/...` 是圖示 CDN，不是 v1 API。
  */
 
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+import { xiv } from './lib/xivapi.mjs';
+import { loadCardMap, describeCardMap } from './lib/triple-triad-map.mjs';
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 
 // ─── 常數 ─────────────────────────────────────────────────────────────────
 
-const XIVAPI_V1   = 'https://xivapi.com';
 const XIVAPI_V2   = 'https://v2.xivapi.com/api/sheet';
 const TC_BASE     = 'https://raw.githubusercontent.com/ffxiv-teamcraft/ffxiv-teamcraft/staging/libs/data/src/lib/json';
 const GARLAND     = 'https://garlandtools.org/db/doc/item/en/3';
 const WIKI        = 'https://ffxiv.consolegameswiki.com/mediawiki/api.php';
-const TOTAL_CARDS = 425;
 const CONCURRENCY = 30;
 const DELAY_MS    = 50;
 
@@ -62,6 +77,7 @@ const NAME_OVERRIDE = {
 // source type 中文化
 const TYPE_MAP = {
   'NPC對戰':                'NPC對戰',
+  'NPC牌組':                'NPC牌組',
   'NPC對戰_wiki':           'NPC對戰',
   '任務':                   '任務',
   '副本':                   '副本',
@@ -99,17 +115,6 @@ async function fetchJson(url, retries = 3) {
   }
 }
 
-async function fetchAllPages(endpoint, columns, total = TOTAL_CARDS) {
-  const results = [];
-  const perPage = 100;
-  for (let page = 1; page <= Math.ceil(total / perPage); page++) {
-    const url = `${XIVAPI_V1}/${endpoint}?limit=${perPage}&page=${page}&columns=${columns}`;
-    const json = await fetchJson(url);
-    results.push(...json.Results);
-    if (page < Math.ceil(total / perPage)) await sleep(300);
-  }
-  return results;
-}
 
 async function batchRun(items, fn, concurrency = CONCURRENCY) {
   for (let i = 0; i < items.length; i += concurrency) {
@@ -124,56 +129,48 @@ async function batchRun(items, fn, concurrency = CONCURRENCY) {
 
 // ─── 步驟 1：基礎卡牌資料 ─────────────────────────────────────────────────
 
-function buildCardIdToItemId() {
-  const itemsRaw = fs.readFileSync(path.join(ROOT, 'data/items.json'), 'utf-8');
-  const re = /\{"id":(\d+),"name":"[^"]+","icon":"[^"]+","category":"九宮幻卡"[^}]*\}/g;
-  const ids = [];
-  let m;
-  while ((m = re.exec(itemsRaw)) !== null) ids.push(parseInt(m[1]));
-  ids.sort((a, b) => a - b);
-  const map = {};
-  ids.slice(0, TOTAL_CARDS).forEach((itemId, idx) => { map[idx + 1] = itemId; });
-  return map;
-}
-
-function buildCardIdToTwName() {
-  const itemsRaw = fs.readFileSync(path.join(ROOT, 'data/items.json'), 'utf-8');
-  const re = /\{"id":(\d+),"name":"([^"]+)","icon":"[^"]+","category":"九宮幻卡"[^}]*\}/g;
-  const pairs = [];
-  let m;
-  while ((m = re.exec(itemsRaw)) !== null)
-    pairs.push([parseInt(m[1]), m[2].replace('九宮幻卡：', '')]);
-  pairs.sort((a, b) => a[0] - b[0]);
-  const map = new Map();
-  pairs.forEach(([, name], idx) => map.set(idx + 1, name));
-  return map;
+// 卡片↔道具、卡片→台服卡名，全部走 lib/triple-triad-map.mjs 的可證對照
+// （Item.AdditionalData）。原本這裡是「九宮幻卡道具照 id 排序、第 n 個＝編號 n」的
+// 序位推測，2026-09-25 實測從編號 81 起整串偏移、20 張卡掛了別張卡的名字。
+let CARD_MAP = null;
+async function cardMap() {
+  if (!CARD_MAP) {
+    CARD_MAP = await loadCardMap({ root: ROOT, cache: path.join(ROOT, 'out_data/cache/tt-card-items.json') });
+    console.log('  ' + describeCardMap(CARD_MAP));
+  }
+  return CARD_MAP;
 }
 
 async function stepBaseData() {
   console.log('\n━━ 步驟 1：基礎卡牌資料 ━━');
-  console.log('  [1a] 讀取 items.json...');
-  const twNameMap = buildCardIdToTwName();
+  console.log('  [1a] 建立卡片↔道具對照（Item.AdditionalData）...');
+  const m = await cardMap();
 
-  console.log('  [1b] 抓取 TripleTriadCard...');
-  const cards = await fetchAllPages('TripleTriadCard', 'ID,Name,GamePatch', TOTAL_CARDS);
+  // 張數**不寫死**：以 v2 的 TripleTriadCard 全表為準。
+  // v1 的同一張表凍結在 425 筆而 v2 有 475 筆，寫死 425 就是 7.1 那 10 張新卡
+  // 安靜消失的原因；這支腳本以前也是那樣寫的。
+  console.log('  [1b] 抓取 TripleTriadCard（v2 全表）...');
+  const cards = (await xiv.sheet('TripleTriadCard', 'Name', { limit: 500 })).filter((c) => c.id > 0);
 
-  console.log('  [1c] 抓取 TripleTriadCardResident...');
-  const residents = await fetchAllPages(
+  console.log('  [1c] 抓取 TripleTriadCardResident（v2 全表）...');
+  const residents = await xiv.sheet(
     'TripleTriadCardResident',
-    'ID,Top,Right,Bottom,Left,TripleTriadCardRarity,TripleTriadCardType',
-    TOTAL_CARDS
+    'Top,Right,Bottom,Left,TripleTriadCardRarity@as(raw),TripleTriadCardType@as(raw),Order,UIPriority',
+    { limit: 500 }
   );
-  const resMap = new Map(residents.map(r => [r.ID, r]));
+  const resMap = new Map(residents.map((r) => [r.id, r.f]));
 
-  const data = cards.map(card => {
-    const id  = card.ID;
+  const data = cards.map((card) => {
+    const id = card.id;
     const res = resMap.get(id);
-    const typeId = res?.TripleTriadCardType?.ID ?? null;
+    const typeId = res?.['TripleTriadCardType@as(raw)'] ?? 0;
     return {
       id,
-      name:    twNameMap.get(id) ?? null,
-      nameEn:  card.Name,
-      stars:   res?.TripleTriadCardRarity?.Stars ?? null,
+      // 台服卡名與 patch 一律取自卡片道具（台服客戶端資料）；台服沒有這張卡就是 null，
+      // 不拿英文名頂替——前端的版本閘門會擋掉，這是鐵則。
+      name:    m.cardToTwName.get(id) ?? null,
+      nameEn:  card.f.Name,
+      stars:   res?.['TripleTriadCardRarity@as(raw)'] ?? null,   // rarity row id ＝星數
       type:    typeId ? (TYPE_TW[typeId] ?? null) : null,
       numbers: {
         top:    res?.Top    ?? null,
@@ -182,11 +179,14 @@ async function stepBaseData() {
         left:   res?.Left   ?? null,
       },
       sources: [],
-      patch:   card.GamePatch?.Version ?? null,
+      patch:   m.cardToPatch.get(id) ?? null,
+      order:      res?.Order ?? null,
+      uiPriority: res?.UIPriority ?? null,
     };
   }).sort((a, b) => a.id - b.id);
 
-  console.log(`  ✓ ${data.length} 筆`);
+  const withTw = data.filter((c) => c.name).length;
+  console.log(`  ✓ ${data.length} 張（台服有繁中名 ${withTw} 張，其餘為台服未開放）`);
   return data;
 }
 
@@ -195,23 +195,21 @@ async function stepBaseData() {
 async function stepNpcSources() {
   console.log('\n━━ 步驟 2：NPC 來源 ━━');
 
-  console.log('  [2a] 抓取 TripleTriad 卡組清單...');
-  const cols = ['ID',
-    'TripleTriadCardFixed0TargetID','TripleTriadCardFixed1TargetID',
-    'TripleTriadCardFixed2TargetID','TripleTriadCardFixed3TargetID',
-    'TripleTriadCardFixed4TargetID',
-    'TripleTriadCardVariable0TargetID','TripleTriadCardVariable1TargetID',
-    'TripleTriadCardVariable2TargetID','TripleTriadCardVariable3TargetID',
-    'TripleTriadCardVariable4TargetID',
-  ].join(',');
-  const [p1, p2] = await Promise.all([
-    fetchJson(`${XIVAPI_V1}/TripleTriad?columns=${cols}&limit=100&page=1`),
-    fetchJson(`${XIVAPI_V1}/TripleTriad?columns=${cols}&limit=100&page=2`),
-  ]);
-  const ttRows = [...p1.Results, ...p2.Results].filter(r =>
-    r.TripleTriadCardVariable0TargetID > 0 || r.TripleTriadCardFixed0TargetID > 0
+  // ⚠ id 空間：v1 的 TripleTriad row id 是 0 起算，**v2 是 2293760 起算**。
+  //   2026-09-25 之前這裡抓的是 v1 的 row id，卻拿去對 v2 ENpcBase 回傳的 ENpcData row_id，
+  //   兩邊永遠對不上 → 這一步實際上產不出任何 NPC 牌組，而且不會報錯。
+  //   現在兩邊都走 v2，id 空間一致。
+  console.log('  [2a] 抓取 TripleTriad 卡組清單（v2）...');
+  const ttAll = await xiv.sheet(
+    'TripleTriad',
+    'TripleTriadCardFixed@as(raw),TripleTriadCardVariable@as(raw)',
+    { limit: 500 }
   );
-  console.log(`  ${ttRows.length} 筆有卡組`);
+  const ttRows = ttAll.filter((r) =>
+    (r.f['TripleTriadCardFixed@as(raw)'] || []).some(Boolean) ||
+    (r.f['TripleTriadCardVariable@as(raw)'] || []).some(Boolean)
+  );
+  console.log(`  ${ttRows.length} 筆有卡組（共 ${ttAll.length} 場對局）`);
 
   console.log('  [2b] 抓取 tw-npcs 清單...');
   const [twNpcs, twTitles] = await Promise.all([
@@ -235,7 +233,7 @@ async function stepNpcSources() {
 
   const cardToNpcs = {};
   for (const row of ttRows) {
-    const npcId = rowToNpc[row.ID];
+    const npcId = rowToNpc[row.id];
     if (!npcId) continue;
     const npcName  = twNpcs[String(npcId)]?.tw || null;
     const npcTitle = twTitles[String(npcId)]?.tw || null;
@@ -244,10 +242,14 @@ async function stepNpcSources() {
       if (!cardToNpcs[cardId]) cardToNpcs[cardId] = [];
       cardToNpcs[cardId].push({ npcId, npcName, npcTitle, dropType });
     };
-    [0,1,2,3,4].forEach(i => add(row[`TripleTriadCardFixed${i}TargetID`], '固定'));
-    [0,1,2,3,4].forEach(i => add(row[`TripleTriadCardVariable${i}TargetID`], '隨機'));
+    (row.f['TripleTriadCardFixed@as(raw)'] || []).forEach((c) => add(c, '固定'));
+    (row.f['TripleTriadCardVariable@as(raw)'] || []).forEach((c) => add(c, '隨機'));
   }
   console.log(`  ✓ ${Object.keys(cardToNpcs).length} 張卡有 NPC 來源`);
+  if (!Object.keys(cardToNpcs).length) {
+    // 這一步靜靜產出 0 筆過一次（v1/v2 的 id 空間不同），所以現在明講出來
+    throw new Error('步驟 2 解出 0 張卡的 NPC 牌組 —— TripleTriad 與 ENpcData 的 id 空間可能又對不上了');
+  }
   return cardToNpcs;
 }
 
@@ -438,7 +440,8 @@ function normalizeSource(src) {
   if (src.instanceId != null || src.questId != null || src.treasureId != null)
     return { ...src, type: newType };
   if (src.npcId != null)
-    return { type: 'NPC對戰', npcId: src.npcId, npcName: src.npcName, npcTitle: src.npcTitle, dropType: src.dropType };
+    // 同上：由步驟 2 來的 NPC 列一律是牌組，不是獎勵（見合併段的註解）
+    return { type: src.type === 'NPC牌組' ? 'NPC牌組' : src.type, npcId: src.npcId, npcName: src.npcName, npcTitle: src.npcTitle, ...(src.slot ? { slot: src.slot } : {}) };
   const detail = summarizeDetail(newType, src.detail);
   return detail ? { type: newType, detail } : { type: newType };
 }
@@ -473,8 +476,34 @@ async function main() {
   // 1. 基礎資料
   const data = await stepBaseData();
 
+  // `--check-base`：只跑步驟 1 並與現有資料對照後結束（約 10 秒）。
+  // 整支跑完要 60–90 分鐘（步驟 2 要掃 28,529 個 NPC），沒有這個開關的話
+  // 「步驟 1 有沒有壞」得等一個半小時才知道——2026-09-25 就是這樣才發現
+  // 它整整兩年都在產 425 張而不是 439 張。
+  if (process.argv.includes('--check-base')) {
+    const cur = JSON.parse(fs.readFileSync(ttPath, 'utf-8')).data;
+    const curById = new Map(cur.map((c) => [c.id, c]));
+    const tw = data.filter((c) => c.name);
+    const diffName = tw.filter((c) => curById.has(c.id) && curById.get(c.id).name !== c.name);
+    const diffNum = tw.filter((c) => {
+      const o = curById.get(c.id); if (!o) return false;
+      return ['top', 'right', 'bottom', 'left'].some((k) => o.numbers?.[k] !== c.numbers[k]);
+    });
+    const missing = tw.filter((c) => !curById.has(c.id));
+    console.log('\n━━ --check-base：只驗步驟 1 ━━');
+    console.log(`  v2 全表 ${data.length} 張，其中台服有繁中名 ${tw.length} 張；現有資料 ${cur.length} 張`);
+    console.log(`  繁中名不符 ${diffName.length}｜四向數值不符 ${diffNum.length}｜現有資料缺的 ${missing.length}`);
+    for (const c of [...diffName, ...diffNum, ...missing].slice(0, 10)) {
+      console.log(`    ${c.id} ${c.nameEn}：本次「${c.name}」${JSON.stringify(c.numbers)}` +
+        ` vs 現有「${curById.get(c.id)?.name ?? '（缺）'}」${JSON.stringify(curById.get(c.id)?.numbers ?? null)}`);
+    }
+    const ok = !diffName.length && !diffNum.length && !missing.length;
+    console.log(ok ? '  ✓ 步驟 1 與現有資料一致' : '  ✗ 有差異（上面列出前 10 筆）');
+    process.exit(ok ? 0 : 1);
+  }
+
   // 2. NPC 來源
-  const cardIdToItemId = buildCardIdToItemId();
+  const cardIdToItemId = Object.fromEntries((await cardMap()).cardToItem);
   const npcSources = await stepNpcSources();
 
   // 3. Garland 來源
@@ -483,9 +512,15 @@ async function main() {
   // 合併 2+3
   console.log('\n  合併 NPC + Garland 來源...');
   for (const card of data) {
+    // ⚠ 步驟 2 抓的是 TripleTriadCardFixed/Variable ＝ **NPC 的牌組**，不是獎勵。
+    //   真正的獎勵欄位是 TripleTriad.ItemPossibleReward（道具 id），本腳本沒有抓。
+    //   2026-09-23 之前這裡寫成 type:'NPC對戰'，等於把「對手手上有這張卡」講成
+    //   「打贏可以拿到這張卡」——938 筆裡 934 筆是錯的（見 docs/專案慣例與記憶.md §4.45）。
+    //   所以這裡只寫 NPC牌組；**重跑本腳本後必須接**
+    //   `node scripts/patch-triple-triad-sources.mjs --apply` 才會有真獎勵、入場費與規則。
     const npcs = npcSources[card.id] || [];
     npcs.forEach(({ npcId, npcName, npcTitle, dropType }) =>
-      card.sources.push({ type: 'NPC對戰', npcId, npcName, npcTitle, dropType })
+      card.sources.push({ type: 'NPC牌組', npcId, npcName, npcTitle, slot: dropType })
     );
     const g = garlandData[card.id] || {};
     (g.instances || []).forEach(instanceId => card.sources.push({ type: '副本', instanceId }));

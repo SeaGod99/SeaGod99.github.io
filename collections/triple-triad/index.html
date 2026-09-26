@@ -225,6 +225,13 @@
 
     /* 來源標籤配色：common.css 只定義了通用類別，這頁的幻卡專屬來源在此補齊 */
     .tt-srcs .src-tag.type-NPC對戰 { background: rgba(248,113,113,0.1); color: var(--red); border-color: rgba(248,113,113,0.25); }
+    /* 「NPC牌組」不是取得管道（只是對手手上有這張卡），刻意做得比取得方式弱 */
+    .tt-srcs .src-tag.type-NPC牌組 { background: var(--raise); color: var(--text-muted); border-color: var(--border); }
+    .tt-src-group.is-deck .detail-line { color: var(--text-muted); }
+    .tt-npc-title { color: var(--text-muted); }
+    .tt-deck-slot { font-size: 11px; color: var(--text-muted); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0 5px; margin-left: 4px; }
+    .tt-src-meta { display: block; font-size: 11.5px; color: var(--text-muted); margin-top: 1px; }
+    .tt-deck-note { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
     .tt-srcs .src-tag.type-副本,
     .tt-srcs .src-tag.type-多人副本,
     .tt-srcs .src-tag.type-討伐戰 { background: rgba(79,195,247,0.1); color: var(--blue); border-color: rgba(79,195,247,0.25); }
@@ -257,6 +264,7 @@
   <script src="../../assets/js/patch-gate.js"></script>
   <script src="../../assets/js/collection-tracker.js"></script>
   <script src="../../assets/js/theme.js"></script>
+<script src="../../assets/js/unlock-banner.js"></script>
 </head>
 <body>
 
@@ -326,20 +334,34 @@ var TTFmt = (function () {
       if (!loc || loc.mapId == null) return '';
       return '<button class="tt-loc" title="開地圖看 NPC 位置"' +
         ' data-mapid="' + esc(loc.mapId) + '" data-x="' + esc(loc.x) + '" data-y="' + esc(loc.y) + '"' +
-        ' data-npc="' + esc(s.npcName) + '" data-mapname="' + esc(loc.mapName) + '">📍</button>';
+        ' data-npc="' + esc(s.npcName) + '" data-mapname="' + esc(loc.mapName) + '"' +
+        ' data-kind="' + esc(s.type === 'NPC牌組' ? '牌組中有此卡' : 'NPC 對戰') + '">📍</button>';
     },
     // 一行來源說明。回空字串＝上游只給 id 沒給名稱（副本／藏寶圖），由呼叫端改標筆數
     srcLine: function (s) {
-      if (s.type === 'NPC對戰' && s.npcName) {
+      // NPC對戰＝打贏可得（ItemPossibleReward）；NPC牌組＝這個 NPC 手上有這張卡（Fixed/Variable）。
+      // 兩者是不同語意，2026-09-23 才拆開——先前 938 筆「NPC對戰」有 99.6% 其實是牌組。
+      if ((s.type === 'NPC對戰' || s.type === 'NPC牌組') && s.npcName) {
         var line = esc(s.npcName);
+        if (s.npcTitle) line += ' <span class="tt-npc-title">（' + esc(s.npcTitle) + '）</span>';
         if (s.location && s.location.mapName) {
           line += ' @ ' + esc(s.location.mapName) +
             ' (' + esc(s.location.x) + ', ' + esc(s.location.y) + ')' + this.locBtn(s);
         }
-        if (s.dropType) line += ' [' + esc(s.dropType) + ']';
+        if (s.type === 'NPC牌組' && s.slot) line += ' <span class="tt-deck-slot">' + esc(s.slot) + '</span>';
+        var meta = [];
+        if (s.fee) meta.push('入場費 ' + esc(s.fee) + ' MGP');
+        if (s.rules && s.rules.length) meta.push('規則：' + esc(s.rules.join('、')));
+        if (s.regionalRules) meta.push('含地區規則');
+        if (meta.length) line += '<span class="tt-src-meta">' + meta.join('　') + '</span>';
         return line;
       }
-      if (s.detail) return esc(s.detail);
+      if (s.detail) {
+        var d = esc(s.detail);
+        // 成就的達成條件（台服官方說明文，2026-09-23 由 tw-locales 補）
+        if (s.condition) d += '<span class="tt-src-meta">' + esc(s.condition) + '</span>';
+        return d;
+      }
       if (s.questId) return '任務 ID ' + esc(s.questId);
       return '';
     },
@@ -349,7 +371,7 @@ var TTFmt = (function () {
       window.ttOpenMap({
         mapId: Number(btn.dataset.mapid), x: x, y: y,
         title: '🃏 ' + cardName,
-        sub: 'NPC 對戰：' + btn.dataset.npc + ' · ' + btn.dataset.mapname,
+        sub: (btn.dataset.kind || 'NPC 對戰') + '：' + btn.dataset.npc + ' · ' + btn.dataset.mapname,
         flagText: '/coord ' + x.toFixed(1) + ' ' + y.toFixed(1) + ' ' + btn.dataset.mapname
       });
     }
@@ -476,10 +498,13 @@ var TTAlbum = (function () {
     });
     return order.map(function (t) {
       var items = byType[t];
+      var isDeck = t === 'NPC牌組';
       var lines = items.map(function (s) { return TTFmt.srcLine(s); }).filter(Boolean);
-      return '<div class="tt-src-group">' +
+      return '<div class="tt-src-group' + (isDeck ? ' is-deck' : '') + '">' +
         '<span class="src-tag type-' + esc(t) + '">' + esc(t) + '</span>' +
         (lines.length < items.length ? '<span class="tt-src-n">×' + items.length + '</span>' : '') +
+        // 這組不是取得管道，講清楚免得又被當成「打他就能拿」
+        (isDeck ? '<div class="tt-deck-note">對局時對手手上會有這張卡，不代表打贏能拿到</div>' : '') +
         lines.map(function (l) { return '<div class="detail-line">' + l + '</div>'; }).join('') +
       '</div>';
     }).join('');
@@ -700,6 +725,8 @@ CollectionTracker.init({
       options: function (list) {
         var set = new Set();
         list.forEach(function (c) { (c.sources || []).forEach(function (s) { if (s.type) set.add(s.type); }); });
+        // 「NPC牌組」不是取得方式（只是對手手上有這張卡），不列進這組篩選
+        set.delete('NPC牌組');
         return Array.from(set).sort().map(function (t) { return { value: t, label: t }; });
       },
       match: function (c, v) { return (c.sources || []).some(function (s) { return s.type === v; }); }
