@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="FF14 軍票變現排行 — 軍票交易所與雙色寶石兌換品即時市價，計算每軍票/每寶石可換多少 gil，陸行鳥 DC 全服比價">
-  <title>軍票變現排行 | 水神的工具箱</title>
+  <meta name="description" content="FF14 貨幣變現排行 — 軍票／詩學神典石／各色工票／狼印戰績／雙色寶石等 45 種貨幣的兌換品即時市價，計算每單位可換多少 gil，陸行鳥 DC 全服比價">
+  <title>貨幣變現排行 | 水神的工具箱</title>
   <link rel="stylesheet" href="../../assets/css/tokens.css">
   <link rel="stylesheet" href="../../assets/css/theme.css">
   <link rel="stylesheet" href="../../assets/css/tool-header.css">
@@ -20,12 +20,22 @@
 
 
     .controls { max-width: var(--w-content); margin: 0 auto; padding: 1rem 1.5rem 0.5rem; display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; }
-    .tab-toggle { display: flex; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
-    .tab-toggle button {
+    .tabs { display: flex; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+    .tabs button {
       font-size: 0.85rem; padding: 0.4rem 1rem; cursor: pointer; border: none;
-      background: var(--bg-surface); color: var(--text-dim); transition: all 0.15s;
+      background: var(--bg-card); color: var(--text-dim); font-family: inherit;
     }
-    .tab-toggle button.active { background: var(--gold-dim); color: var(--gold); font-weight: 600; }
+    .tabs button.active { background: var(--gold-dim); color: var(--gold); font-weight: 600; }
+    /* 專家交納：一小張對照表，不需要排行 */
+    .expert-note { max-width: var(--w-content); margin: 0 auto 1rem; padding: 0 1.5rem; }
+    .expert-box {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 12px 16px; font-size: 0.8rem; color: var(--text-dim); line-height: 1.8;
+    }
+    .expert-box b { color: var(--gold); }
+    .expert-in { display: flex; gap: 0.4rem; align-items: center; flex-wrap: wrap; margin-top: 6px; }
+    .expert-in input { width: 6rem; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 6px; color: var(--text); padding: 0.35rem 0.6rem; font-size: 0.82rem; font-family: inherit; text-align: right; }
+    @media (pointer: coarse) { .tabs button, .expert-in input { min-height: 44px; } }
 
     select.sel {
       background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px;
@@ -74,31 +84,36 @@
   </style>
   <script src="../../assets/js/patch-gate.js"></script>
   <script src="../../assets/js/theme.js"></script>
+<script src="../../assets/js/unlock-banner.js"></script>
 </head>
 <body>
 <div class="tool-header">
-  <h1 class="tool-title">🎖️ 軍票變現排行</h1>
-  <p class="tool-subtitle">軍票交易所與雙色寶石兌換品的即時市價，換算「每 100 軍票／每 1 寶石可變現多少 gil」——軍票滿了不知道換什麼就看這裡</p>
+  <h1 class="tool-title">🎖️ 貨幣變現排行</h1>
+  <p class="tool-subtitle">貨幣換得到什麼、值多少 gil；軍票另附「怎麼賺」——軍需品調達與專家交納的成本對照</p>
   <div class="header-divider"></div>
 </div>
 
 <div class="controls">
-  <div class="tab-toggle">
-    <button id="tabSeals" class="active">🎖️ 軍票</button>
-    <button id="tabGems">💎 雙色寶石</button>
+  <div class="tabs" id="modeTabs">
+    <button id="tabSpend" class="active">💱 換什麼</button>
+    <button id="tabEarn">🪖 軍票怎麼賺</button>
   </div>
+  <select class="sel" id="curSel"></select>
+  <select class="sel" id="jobSel" style="display:none"></select>
   <select class="sel" id="scopeSel"></select>
   <label class="chk"><input type="checkbox" id="hideNoPrice" checked> 隱藏查無市價</label>
   <button class="refresh-btn" id="refreshBtn">🔄 重新查價</button>
 </div>
 
 <div class="status" id="statusLine"></div>
+<div class="expert-note" id="expertNote" style="display:none"></div>
 <div class="table-wrap" id="tableWrap"><div class="loading">載入資料中…</div></div>
 
 <p class="info-note">
-  變現值 ＝ 參考價 ×（兌換數量 ÷ 成本）；軍票頁以「每 100 軍票」計，寶石頁以「每 1 寶石」計。參考價優先採「近期成交均價」，無成交紀錄時退回「最低在架價」；實際入手金額另受 5% 市場稅與價格波動影響。<br>
+  變現值 ＝ 參考價 ×（兌換數量 ÷ 成本）。成本動輒數百的貨幣（軍票、詩學神典石）以「每 100」計，一次只花幾點的（雙色寶石）以「每 1」計。參考價優先採「近期成交均價」，無成交紀錄時退回「最低在架價」；實際入手金額另受 5% 市場稅與價格波動影響。<br>
   日銷量低的物品可能久掛不出，建議優先挑「變現值高且日銷量 ≥ 1」的品項；日銷量不足 1 件／日的品項已自動沉到清單底部。大量拋售同一物品會壓低行情。<br>
-  品項清單來源：XIVAPI（GCScripShopItem／SpecialShop），僅列出台服已開放且可上市集板的物品；部分品項需較高軍階才可兌換。市價由 <a href="https://universalis.app" target="_blank" rel="noopener" style="color:var(--text-dim)">Universalis</a> 提供，10 分鐘快取。
+  <b>軍票怎麼賺</b>分頁：軍需品調達任務依職業列出所有可能的交納品（2,516 件，全部有台服名），「每千 gil 軍票」＝買材料交納時的效率——自己採／自己做的話成本另計。<b>刻意不顯示「今天輪到哪一組」</b>：輪替與現實日期的對應沒有可靠來源，猜錯會整頁講錯東西，請對照遊戲內當天的指定。專家交納的軍票值只看裝備等級，與市價無關。<br>
+  品項清單來源：Teamcraft 商店表（已解開 SpecialShop 的 CostType 索引）＋ XIVAPI，僅列出台服已開放、有台服官方名、且<b>掛得上市場板</b>（<code>ItemSearchCategory &gt; 0</code>）的物品。只收「成本為單一貨幣」的兌換項，複合成本（同時要兩種貨幣）換算不成單一幣值故不列。本頁不處理解鎖條件，清單以「該商店已解鎖」為前提。市價由 <a href="https://universalis.app" target="_blank" rel="noopener" style="color:var(--text-dim)">Universalis</a> 提供，10 分鐘快取。
 </p>
 
 <footer class="site-footer">
@@ -108,10 +123,27 @@
 <script src="../../assets/js/universalis.js"></script>
 <script>
 (function () {
-  var DATA = { seals: [], bicolor: [] };
-  var tab = 'seals';        // seals | bicolor
+  var CURRENCIES = [];      // [{id, name, items:[{id,name,category,patch,cost,count,rank?}], event?}]
+  var curId = null;         // 目前選的貨幣 id
   var scope = 'dc';
-  var priceCache = {};      // tab:scope -> {id: agg result}
+  var priceCache = {};      // curId:scope -> {id: agg result}
+
+  /* 「軍票怎麼賺」模式：與「換什麼」共用整套查價與表格設施，只是換一份清單、
+     換一個算式——前者算「每單位貨幣變現多少 gil」，後者算「每 gil 換到多少軍票」。 */
+  var mode = 'spend';       // spend | earn
+  var SUPPLY = null;        // data/gc-supply.json
+  var jobIdx = 0;           // 目前選的職業
+
+  function current() {
+    return CURRENCIES.find(function (c) { return c.id === curId; }) || CURRENCIES[0] || { name: '', items: [] };
+  }
+  // 顯示單位：成本動輒幾百的貨幣（軍票、詩學）用「每 100」才讀得出差別，
+  // 一次只花幾點的（雙色寶石）用「每 1」。取中位數而非平均，免得被少數高價品拉走。
+  function unitOf(c) {
+    var costs = c.items.map(function (x) { return x.cost / (x.count || 1); }).sort(function (a, b) { return a - b; });
+    if (!costs.length) return 1;
+    return costs[Math.floor(costs.length / 2)] >= 50 ? 100 : 1;
+  }
 
   var fmt = Universalis.fmtGil;
 
@@ -137,9 +169,11 @@
     return { ref: ref, avg: avg, minL: minL, minW: minW, vel: vel || 0 };
   }
 
+  function earnJob() { return (SUPPLY && SUPPLY.jobs[jobIdx]) || { name: '', items: [] }; }
+
   async function loadPrices() {
-    var list = DATA[tab];
-    var key = tab + ':' + scope;
+    var list = mode === 'earn' ? earnJob().items : current().items;
+    var key = (mode === 'earn' ? 'earn:' + jobIdx : curId) + ':' + scope;
     if (priceCache[key]) return priceCache[key];
     setStatus('查詢 Universalis 市價中…（' + list.length + ' 項）');
     var agg = await Universalis.fetchAggregated(scope === 'dc' ? 'dc' : Number(scope), list.map(function (x) { return x.id; }));
@@ -155,8 +189,10 @@
   }
 
   async function render() {
+    if (mode === 'earn') return renderEarn();
     var wrap = document.getElementById('tableWrap');
-    var list = DATA[tab];
+    var cur = current();
+    var list = cur.items;
     if (!list.length) { wrap.innerHTML = '<div class="loading">無資料</div>'; return; }
     wrap.innerHTML = '<div class="loading">查價中…</div>';
 
@@ -168,15 +204,15 @@
     }
     var prices = priceData.items;
 
-    var isSeals = tab === 'seals';
+    var unit = unitOf(cur);
+    var hasRank = list.some(function (x) { return x.rank; });
     var hideNP = document.getElementById('hideNoPrice').checked;
     var rows = list.map(function (x) {
       var p = pick(prices[x.id]);
-      var cost = isSeals ? x.seals : x.gems;
       var cnt = x.count || 1;
       return {
         x: x, p: p,
-        per: p ? p.ref * cnt / cost : -1,
+        per: p ? p.ref * cnt / x.cost : -1,
       };
     }).filter(function (r) { return !hideNP || r.p; });
 
@@ -187,12 +223,12 @@
       return d !== 0 ? d : b.per - a.per;
     });
 
-    var costHead = isSeals ? '軍票' : '寶石';
-    var perHead = isSeals ? '每100軍票變現' : '每寶石變現';
-    var nCols = isSeals ? 7 : 8;
+    var costHead = cur.name;
+    var perHead = '每' + (unit === 1 ? '' : unit) + cur.name + '變現';
+    var nCols = 7 + (hasRank ? 1 : 0);
     var html = '<table><thead><tr>' +
-      '<th class="rank-num">#</th><th>物品</th><th>' + costHead + '</th>' +
-      (isSeals ? '' : '<th>數量</th>') +
+      '<th class="rank-num">#</th><th>物品</th><th>' + costHead + '</th><th>數量</th>' +
+      (hasRank ? '<th title="兌換所需的軍銜">軍銜</th>' : '') +
       '<th>參考價</th><th>最低在架</th><th>' + perHead + '</th><th>日銷量</th>' +
       '</tr></thead><tbody>';
 
@@ -212,34 +248,150 @@
       html += '<tr class="' + cls.join(' ') + '">' +
         '<td class="rank-num">' + (i + 1) + '</td>' +
         '<td><span class="iname">' + x.name + '</span> <span class="icat">' + (x.category || '') + '</span></td>' +
-        '<td>' + fmt(isSeals ? x.seals : x.gems) + '</td>' +
-        (isSeals ? '' : '<td class="dimtxt">×' + (x.count || 1) + '</td>') +
+        '<td>' + fmt(x.cost) + '</td>' +
+        '<td class="dimtxt">×' + (x.count || 1) + '</td>' +
+        (hasRank ? '<td class="dimtxt">' + (x.rank || '—') + '</td>' : '') +
         '<td>' + (p ? fmt(p.ref) : '<span class="dimtxt">查無</span>') + '</td>' +
         '<td>' + (p && p.minL != null
             ? fmt(p.minL) + (p.minW ? ' <span class="wname">' + Universalis.worldName(p.minW) + '</span>' : '')
             : '<span class="dimtxt">—</span>') + '</td>' +
-        '<td class="per">' + (p ? fmt(isSeals ? r.per * 100 : r.per) : '—') + '</td>' +
+        '<td class="per">' + (p ? fmt(r.per * unit) : '—') + '</td>' +
         '<td class="vel">' + (p ? (Math.round(p.vel * 10) / 10) : '—') + '</td>' +
         '</tr>';
     });
     html += '</tbody></table>';
     wrap.innerHTML = html;
-    setStatus('共 ' + rows.length + ' 項' + (hideNP ? '（已隱藏查無市價品項）' : '') +
+    setStatus(cur.name + '：共 ' + rows.length + ' 項' + (hideNP ? '（已隱藏查無市價品項）' : '') +
+      (cur.event ? ' · ⚠ 季節活動貨幣，目前無法取得' : '') +
+      (cur.note ? ' · ' + cur.note : '') +
       ' · 排序：' + perHead + '由高到低 · 範圍：' +
       (scope === 'dc' ? '全 DC（陸行鳥）' : Universalis.worldName(Number(scope))) +
       ' · 市價查詢於 ' + Universalis.fmtAge(priceData.fetched));
   }
 
-  /* ── 事件 ── */
-  document.getElementById('tabSeals').addEventListener('click', function () { setTab('seals'); });
-  document.getElementById('tabGems').addEventListener('click', function () { setTab('bicolor'); });
-  function setTab(t) {
-    tab = t;
-    document.getElementById('tabSeals').classList.toggle('active', t === 'seals');
-    document.getElementById('tabGems').classList.toggle('active', t === 'bicolor');
-    render();
+  /* ── 「軍票怎麼賺」：軍需品調達 ── */
+  async function renderEarn() {
+    var wrap = document.getElementById('tableWrap');
+    var job = earnJob();
+    if (!job.items.length) { wrap.innerHTML = '<div class="loading">無資料</div>'; return; }
+    wrap.innerHTML = '<div class="loading">查價中…</div>';
+
+    var priceData = await loadPrices();
+    if (!priceData) {
+      wrap.innerHTML = '<div class="loading err">暫時無法連線 Universalis。請按上方「🔄 重新查價」。</div>';
+      setStatus('查價失敗', true);
+      return;
+    }
+    var prices = priceData.items;
+    var hideNP = document.getElementById('hideNoPrice').checked;
+
+    var rows = job.items.map(function (x) {
+      var p = pick(prices[x.id]);
+      // 交納要 count 個，成本＝參考價 × 數量。每 1000 gil 能換到幾軍票才讀得出差別
+      var cost = p ? p.ref * (x.count || 1) : null;
+      return { x: x, p: p, cost: cost, per: cost ? (x.seals / cost) * 1000 : -1 };
+    }).filter(function (r) { return !hideNP || r.p; });
+
+    var liquid = function (r) { return r.p && r.p.vel >= 1 ? 1 : 0; };
+    rows.sort(function (a, b) {
+      var d = liquid(b) - liquid(a);
+      return d !== 0 ? d : b.per - a.per;
+    });
+
+    var html = '<table><thead><tr>' +
+      '<th class="rank-num">#</th><th>交納品</th><th>數量</th><th>軍票</th><th>經驗</th>' +
+      '<th>參考價</th><th>買齊成本</th><th title="買材料交納時，每花 1000 gil 換得到多少軍票">每千 gil 軍票</th><th>日銷量</th>' +
+      '</tr></thead><tbody>';
+    var dividerShown = false;
+    rows.forEach(function (r, i) {
+      var x = r.x, p = r.p;
+      var cls = [];
+      if (!p) cls.push('noprice');
+      if (!liquid(r)) {
+        cls.push('lowvel');
+        if (!dividerShown) {
+          html += '<tr class="divider-row"><td colspan="9">▼ 以下品項日銷量不足 1 件／日（或查無市價），市價參考價值低——自己做材料的話不受影響</td></tr>';
+          dividerShown = true;
+        }
+      }
+      if (p && i < 3 && liquid(r)) cls.push('top3');
+      html += '<tr class="' + cls.join(' ') + '">' +
+        '<td class="rank-num">' + (i + 1) + '</td>' +
+        '<td><span class="iname">' + x.name + '</span> <span class="icat">' + (x.category || '') + '</span></td>' +
+        '<td class="dimtxt">×' + (x.count || 1) + '</td>' +
+        '<td>' + fmt(x.seals) + '</td>' +
+        '<td class="dimtxt">' + (x.xp ? x.xp.toLocaleString() : '—') + '</td>' +
+        '<td>' + (p ? fmt(p.ref) : '<span class="dimtxt">查無</span>') + '</td>' +
+        '<td>' + (r.cost ? fmt(r.cost) : '—') + '</td>' +
+        '<td class="per">' + (r.cost ? (Math.round(r.per * 10) / 10) : '—') + '</td>' +
+        '<td class="vel">' + (p ? (Math.round(p.vel * 10) / 10) : '—') + '</td>' +
+        '</tr>';
+    });
+    html += '</tbody></table>';
+    wrap.innerHTML = html;
+
+    setStatus(job.name + ' 軍需品調達：共 ' + rows.length + ' 件' + (hideNP ? '（已隱藏查無市價）' : '') +
+      ' · 排序：每千 gil 換到的軍票由高到低 · 範圍：' +
+      (scope === 'dc' ? '全 DC（陸行鳥）' : Universalis.worldName(Number(scope))) +
+      ' · 市價查詢於 ' + Universalis.fmtAge(priceData.fetched));
   }
-  document.getElementById('scopeSel').addEventListener('change', function (e) { scope = e.target.value; render(); });
+
+  /* 專家交納：ilvl → 軍票的對照表（不必查價，是固定值） */
+  function renderExpert() {
+    var box = document.getElementById('expertNote');
+    if (mode !== 'earn' || !SUPPLY) { box.style.display = 'none'; return; }
+    var e = SUPPLY.expert;
+    var lo = e[0], hi = e[e.length - 1];
+    box.style.display = '';
+    box.innerHTML =
+      '<div class="expert-box">' +
+        '<b>專家交納</b>：把不要的裝備交給軍需官，依<b>裝備等級</b>換軍票（固定值，與市價無關）。' +
+        '目前資料涵蓋 ilvl ' + lo[0] + '–' + hi[0] + '，軍票 ' + lo[1] + '–' + hi[1] + '。' +
+        '<div class="expert-in"><label for="ilvlIn">查裝等</label>' +
+          '<input id="ilvlIn" type="number" min="' + lo[0] + '" max="' + hi[0] + '" placeholder="例 640">' +
+          '<span id="ilvlOut" class="dimtxt">輸入裝等看可換多少軍票</span></div>' +
+      '</div>';
+    var input = document.getElementById('ilvlIn');
+    var out = document.getElementById('ilvlOut');
+    input.addEventListener('input', function () {
+      var v = parseInt(input.value, 10);
+      var hit = null;
+      for (var i = 0; i < e.length; i++) if (e[i][0] === v) { hit = e[i]; break; }
+      out.textContent = hit ? ('ilvl ' + hit[0] + ' → ' + hit[1] + ' 軍票／件')
+        : (v > 0 ? 'ilvl ' + v + '：資料中沒有這一階' : '輸入裝等看可換多少軍票');
+      out.className = hit ? 'per' : 'dimtxt';
+    });
+  }
+
+  /* ── 事件 ── */
+  // 網址帶 ?c=<貨幣 id>&scope=，可分享／加書籤（先讀 hash/query 再 replaceState，§3.17）
+  function pushURL() {
+    var q = new URLSearchParams();
+    if (mode !== 'spend') q.set('m', mode);
+    if (mode === 'earn') { if (jobIdx) q.set('job', jobIdx); }
+    else if (curId) q.set('c', curId);
+    if (scope !== 'dc') q.set('scope', scope);
+    var s = q.toString();
+    history.replaceState(null, '', s ? '?' + s : location.pathname);
+  }
+  function setMode(m) {
+    mode = m;
+    document.getElementById('tabSpend').classList.toggle('active', m === 'spend');
+    document.getElementById('tabEarn').classList.toggle('active', m === 'earn');
+    document.getElementById('curSel').style.display = m === 'spend' ? '' : 'none';
+    document.getElementById('jobSel').style.display = m === 'earn' ? '' : 'none';
+    renderExpert();
+    pushURL(); render();
+  }
+  document.getElementById('tabSpend').addEventListener('click', function () { setMode('spend'); });
+  document.getElementById('tabEarn').addEventListener('click', function () { setMode('earn'); });
+  document.getElementById('jobSel').addEventListener('change', function (e) {
+    jobIdx = Number(e.target.value); pushURL(); render();
+  });
+  document.getElementById('curSel').addEventListener('change', function (e) {
+    curId = Number(e.target.value); pushURL(); render();
+  });
+  document.getElementById('scopeSel').addEventListener('change', function (e) { scope = e.target.value; pushURL(); render(); });
   document.getElementById('hideNoPrice').addEventListener('change', render);
   document.getElementById('refreshBtn').addEventListener('click', function () {
     Universalis.clearCache(); priceCache = {}; render();
@@ -249,11 +401,54 @@
   (async function init() {
     scopeOptions();
     try {
-      var json = await fetch('../../data/gc-shop.json').then(function (r) { return r.json(); });
+      var json = await fetch('../../data/currency-shop.json').then(function (r) { return r.json(); });
       var gp = await PatchGate.loadGamePatch('../../data/_meta.json');
       var gate = function (x) { return PatchGate.released(x.patch, gp); };
-      DATA.seals = (json.data.seals || []).filter(gate);
-      DATA.bicolor = (json.data.bicolor || []).filter(gate);
+      CURRENCIES = (json.data || [])
+        .map(function (c) { return Object.assign({}, c, { items: (c.items || []).filter(gate) }); })
+        // 貨幣本身台服未開放、或過閘後沒剩幾件的，不要出現在選單裡
+        .filter(function (c) { return PatchGate.released(c.patch, gp) && c.items.length >= 3; });
+
+      // 選單分兩組：常態貨幣 ／ 季節活動貨幣（後者現在拿不到，但手上有存貨的人仍用得到）
+      var normal = CURRENCIES.filter(function (c) { return !c.event; });
+      var evt = CURRENCIES.filter(function (c) { return c.event; });
+      var opt = function (c) { return '<option value="' + c.id + '">' + c.name + '（' + c.items.length + ' 項）</option>'; };
+      document.getElementById('curSel').innerHTML =
+        '<optgroup label="貨幣">' + normal.map(opt).join('') + '</optgroup>' +
+        (evt.length ? '<optgroup label="季節活動（目前無法取得）">' + evt.map(opt).join('') + '</optgroup>' : '');
+
+      // 軍需品：這份不大（2,516 件）且只有「軍票怎麼賺」用得到，與貨幣表一起載即可
+      try {
+        var sup = await fetch('../../data/gc-supply.json').then(function (r) { return r.json(); });
+        SUPPLY = {
+          jobs: (sup.data.jobs || []).map(function (j) {
+            return { name: j.name, items: (j.items || []).filter(gate) };
+          }).filter(function (j) { return j.items.length; }),
+          expert: sup.data.expert || []
+        };
+        document.getElementById('jobSel').innerHTML = SUPPLY.jobs.map(function (j, i) {
+          return '<option value="' + i + '">' + j.name + '（' + j.items.length + ' 件）</option>';
+        }).join('');
+      } catch (e) {
+        // 軍需品載不到不該讓整頁掛掉——「換什麼」那半仍可用
+        SUPPLY = null;
+        document.getElementById('tabEarn').disabled = true;
+      }
+
+      var q = new URLSearchParams(location.search);
+      var want = Number(q.get('c'));
+      curId = CURRENCIES.some(function (c) { return c.id === want; }) ? want : (CURRENCIES[0] && CURRENCIES[0].id);
+      var ws = q.get('scope');
+      if (ws && (ws === 'dc' || Universalis.WORLDS[ws])) scope = ws;
+      document.getElementById('curSel').value = String(curId);
+      document.getElementById('scopeSel').value = scope;
+
+      if (SUPPLY) {
+        var wj = parseInt(q.get('job'), 10);
+        if (wj >= 0 && wj < SUPPLY.jobs.length) jobIdx = wj;
+        document.getElementById('jobSel').value = String(jobIdx);
+      }
+      if (q.get('m') === 'earn' && SUPPLY) { setMode('earn'); return; }
       render();
     } catch (e) {
       document.getElementById('tableWrap').innerHTML = '<div class="loading err">資料載入失敗：' + e.message + '</div>';

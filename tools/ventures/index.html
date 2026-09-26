@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FF14 雇員探險收益排行 — 填入雇員等級與識別力，列出可派的探險、帶回數量、即時市價與每趟可賺多少 gil，並標出再加幾點識別力會跳下一個數量檔">
+  <title>雇員探險收益排行 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <link rel="stylesheet" href="../../assets/css/tool-header.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 109.375%; }
+    body { background: var(--bg-base); color: var(--text); font-family: var(--font-sans); min-height: 100vh; }
+
+    .controls { max-width: var(--w-content); margin: 0 auto; padding: 1rem 1.5rem 0.5rem; display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; }
+    .fieldset { display: flex; align-items: center; gap: 0.35rem; }
+    .fieldset label { font-size: 0.78rem; color: var(--text-muted); white-space: nowrap; }
+    select.sel, input.num {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px;
+      color: var(--text-dim); padding: 0.38rem 0.6rem; font-size: 0.8rem; outline: none; font-family: inherit;
+    }
+    select.sel { cursor: pointer; }
+    input.num { width: 5.2rem; text-align: right; font-variant-numeric: tabular-nums; }
+    input.num:focus, select.sel:focus { border-color: var(--gold); color: var(--text); }
+    .chk { font-size: 0.78rem; color: var(--text-dim); display: inline-flex; align-items: center; gap: 0.3rem; cursor: pointer; user-select: none; }
+    .refresh-btn {
+      font-size: 0.78rem; padding: 0.38rem 0.8rem; border-radius: 6px; cursor: pointer; margin-left: auto;
+      border: 1px solid var(--border); background: var(--bg-surface); color: var(--text-dim); transition: all 0.15s;
+    }
+    .refresh-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+    .status { max-width: var(--w-content); margin: 0 auto; padding: 0 1.5rem 0.4rem; font-size: 0.75rem; color: var(--text-muted); }
+    .status.err { color: var(--red); }
+
+    .table-wrap { max-width: var(--w-content); margin: 0 auto; padding: 0 1.5rem 2rem; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    thead th {
+      text-align: right; font-size: 0.72rem; color: var(--text-muted); font-weight: 600;
+      padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--border); white-space: nowrap;
+      position: sticky; top: 46px; background: var(--bg-base); z-index: 2;
+    }
+    thead th:first-child, thead th:nth-child(2) { text-align: left; }
+    tbody td { padding: 0.45rem 0.6rem; border-bottom: 1px solid var(--border); text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    tbody td:first-child, tbody td:nth-child(2) { text-align: left; }
+    tbody tr:hover { background: var(--bg-card-hover); }
+    .rank-num { color: var(--text-muted); font-size: 0.75rem; width: 2.2em; }
+    .iname { font-weight: 600; }
+    .isub { color: var(--text-muted); font-size: 0.72rem; }
+    .per { font-weight: 700; color: var(--gold); }
+    .top3 .per { color: var(--green); }
+    .dimtxt { color: var(--text-muted); }
+    .vel { color: var(--text-dim); }
+    .qty { color: var(--blue); font-weight: 600; }
+    /* 「再加 N 點就跳檔」：這是本頁最有行動價值的一欄，給它顏色 */
+    .next { color: var(--purple); font-size: 0.75rem; }
+    .noprice td { opacity: 0.45; }
+    .lowvel td { opacity: 0.55; }
+    .divider-row td { text-align: left; color: var(--text-muted); font-size: 0.75rem; padding: 0.7rem 0.6rem 0.4rem; background: var(--bg-card); }
+    .loading { text-align: center; padding: 3rem 0; color: var(--text-dim); font-size: 0.9rem; }
+    .err { color: var(--red); }
+    .info-note { max-width: var(--w-content); margin: 0 auto; padding: 0 1.5rem 2rem; font-size: 0.72rem; color: var(--text-muted); line-height: 1.8; }
+    .site-footer { border-top: 1px solid var(--border); padding: 24px 0; text-align: center; }
+    .site-footer p { font-size: 12px; color: var(--text-muted); }
+    .site-footer a { color: var(--text-dim); }
+    @media (pointer: coarse) { input.num, select.sel, .refresh-btn { min-height: 44px; } }
+  </style>
+  <script src="../../assets/js/patch-gate.js"></script>
+  <script src="../../assets/js/theme.js"></script>
+</head>
+<body>
+<div class="tool-header">
+  <h1 class="tool-title">&#x1F9F3; 雇員探險收益排行</h1>
+  <p class="tool-subtitle">填入雇員的職業、等級與識別力（戰鬥職填裝等），排出每趟探險帶回來值多少 gil，並標出再加幾點就跳下一個數量檔</p>
+  <div class="header-divider"></div>
+</div>
+
+<div class="controls">
+  <div class="fieldset"><label for="catSel">職業</label><select class="sel" id="catSel"></select></div>
+  <div class="fieldset"><label for="lvInput">等級</label><input class="num" id="lvInput" type="number" min="1" max="100" step="1" value="100"></div>
+  <div class="fieldset"><label for="statInput" id="statLabel">識別力</label><input class="num" id="statInput" type="number" min="0" step="1" value="0"></div>
+  <select class="sel" id="scopeSel"></select>
+  <label class="chk"><input type="checkbox" id="hideNoPrice" checked> 隱藏查無市價</label>
+  <button class="refresh-btn" id="refreshBtn">&#x1F504; 重新查價</button>
+</div>
+
+<div class="status" id="statusLine"></div>
+<div class="table-wrap" id="tableWrap"><div class="loading">載入資料中…</div></div>
+
+<p class="info-note">
+  每趟收益 ＝ 參考價 × 帶回數量。帶回數量取決於雇員的<b>識別力</b>（採集職）或<b>裝備等級</b>（戰鬥職）：各探險有最多 5 個數量檔，填入數值後本頁自動判定落在哪一檔，並在「下一檔」欄標出還差幾點。參考價優先採「近期成交均價」，無成交紀錄時退回「最低在架價」；實際入手另受 5% 市場稅影響，大量拋售同一物品會壓低行情。<br>
+  清單只列出<b>雇員等級 ≧ 探險等級</b>且採集力／裝等達到門檻的探險（未達門檻者本來就派不了）。日銷量不足 1 件／日的品項會沉到清單底部——那些久掛難出，排行數字參考價值低。<br>
+  資料來源：遊戲本體的雇員探險表（經 <code>obtainable-methods</code>）＋ Teamcraft 台服探險名。只收「一趟帶回單一物品」的目標型探險共 969 個；舊式探索委託與「自由尋寶委託」一趟帶回的物品不固定，排不出每趟收益故不列。市價由 <a href="https://universalis.app" target="_blank" rel="noopener" style="color:var(--text-dim)">Universalis</a> 提供，10 分鐘快取。
+</p>
+
+<footer class="site-footer">
+  <p>水神的工具箱 · <a href="../../">回首頁</a> · FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具</p>
+</footer>
+
+<script src="../../assets/js/universalis.js"></script>
+<script>
+(function () {
+  var ALL = [];             // ventures.json 的 data（已過版本閘門）
+  var CATS = [];            // [{id, name}]
+  var cat = null, lv = 100, statVal = 0, scope = 'dc';
+  var priceCache = {};      // cat:scope -> {items, fetched}
+  var fmt = Universalis.fmtGil;
+  var LS = 'ffxiv_ventures_input';   // key 一律 ffxiv_ 前綴，首頁的全站備份才掃得到
+
+  // 戰鬥職看裝等，採集職看識別力。tiers 的 stat 欄位就直接說明是哪一種，
+  // 不要靠 category 猜（資料裡兩種都有，以資料為準）。
+  function statKindOf(v) { return (v.tiers[0] && v.tiers[0].stat) || 'perception'; }
+  function statLabel(kind) { return kind === 'ilvl' ? '裝備等級' : '識別力'; }
+
+  // 落在第幾檔：tiers 已依門檻由低到高排序，取「門檻 ≦ 目前數值」的最後一筆
+  function tierOf(v, val) {
+    var cur = null, next = null;
+    for (var i = 0; i < v.tiers.length; i++) {
+      if (v.tiers[i].need <= val) cur = v.tiers[i];
+      else { next = v.tiers[i]; break; }
+    }
+    return { cur: cur || v.tiers[0], next: next };
+  }
+
+  // 派得出去嗎：等級與採集力/裝等門檻都要過（reqGathering 是採集力，與識別力是不同數值，
+  // 本頁只問識別力，故採集力門檻僅在「等級足夠」時視為可達成，不另外要求輸入）
+  function canRun(v) { return (v.level || 0) <= lv; }
+
+  function pick(agg) {
+    if (!agg) return null;
+    var side = scope === 'dc' ? 'dc' : 'world';
+    var nq = agg.nq || {};
+    var avg = nq.averageSalePrice && nq.averageSalePrice[side] && nq.averageSalePrice[side].price;
+    var minL = nq.minListing && nq.minListing[side] && nq.minListing[side].price;
+    var minW = scope === 'dc' && nq.minListing && nq.minListing.dc ? nq.minListing.dc.worldId : null;
+    var vel = nq.dailySaleVelocity && nq.dailySaleVelocity[side] && nq.dailySaleVelocity[side].quantity;
+    var ref = avg != null ? avg : minL;
+    if (ref == null) return null;
+    return { ref: ref, minL: minL, minW: minW, vel: vel || 0 };
+  }
+
+  function setStatus(msg, isErr) {
+    var el = document.getElementById('statusLine');
+    el.textContent = msg || '';
+    el.className = 'status' + (isErr ? ' err' : '');
+  }
+
+  function listOf() { return ALL.filter(function (v) { return v.category === cat; }); }
+
+  async function loadPrices() {
+    var list = listOf();
+    var key = cat + ':' + scope;
+    if (priceCache[key]) return priceCache[key];
+    setStatus('查詢 Universalis 市價中…（' + list.length + ' 項）');
+    var agg = await Universalis.fetchAggregated(scope === 'dc' ? 'dc' : Number(scope), list.map(function (v) { return v.itemId; }));
+    if (!agg) return null;
+    priceCache[key] = { items: agg.items || {}, fetched: agg.fetched || Date.now() };
+    return priceCache[key];
+  }
+
+  function saveInput() {
+    try { localStorage.setItem(LS, JSON.stringify({ cat: cat, lv: lv, stat: statVal, scope: scope })); } catch (e) {}
+  }
+
+  async function render() {
+    var wrap = document.getElementById('tableWrap');
+    var list = listOf();
+    if (!list.length) { wrap.innerHTML = '<div class="loading">無資料</div>'; return; }
+    wrap.innerHTML = '<div class="loading">查價中…</div>';
+
+    var priceData = await loadPrices();
+    if (!priceData) {
+      wrap.innerHTML = '<div class="loading err">暫時無法連線 Universalis（已自動重試數次）。請檢查網路後按上方「🔄 重新查價」。</div>';
+      setStatus('查價失敗', true);
+      return;
+    }
+    var prices = priceData.items;
+    var hideNP = document.getElementById('hideNoPrice').checked;
+
+    var runnable = list.filter(canRun);
+    var rows = runnable.map(function (v) {
+      var t = tierOf(v, statVal);
+      var p = pick(prices[v.itemId]);
+      return { v: v, t: t, p: p, total: p ? p.ref * t.cur.qty : -1 };
+    }).filter(function (r) { return !hideNP || r.p; });
+
+    // 日銷量 <1 的沉到底部，各組內再依每趟收益排序
+    var liquid = function (r) { return r.p && r.p.vel >= 1 ? 1 : 0; };
+    rows.sort(function (a, b) {
+      var d = liquid(b) - liquid(a);
+      return d !== 0 ? d : b.total - a.total;
+    });
+
+    var kind = list.length ? statKindOf(list[0]) : 'perception';
+    var html = '<table><thead><tr>' +
+      '<th class="rank-num">#</th><th>探險</th><th>Lv</th><th>帶回</th>' +
+      '<th>下一檔</th><th>參考價</th><th>每趟收益</th><th>經驗</th><th>日銷量</th>' +
+      '</tr></thead><tbody>';
+
+    var dividerShown = false;
+    rows.forEach(function (r, i) {
+      var v = r.v, p = r.p, t = r.t;
+      var cls = [];
+      if (!p) cls.push('noprice');
+      if (!liquid(r)) {
+        cls.push('lowvel');
+        if (!dividerShown) {
+          html += '<tr class="divider-row"><td colspan="9">▼ 以下品項日銷量不足 1 件／日（或查無市價），久掛難出、行情參考價值低</td></tr>';
+          dividerShown = true;
+        }
+      }
+      if (p && i < 3 && liquid(r)) cls.push('top3');
+      var nextTxt = t.next
+        ? '再 +' + (t.next.need - statVal) + ' → ' + t.next.qty + ' 個'
+        : '<span class="dimtxt">已滿檔</span>';
+      html += '<tr class="' + cls.join(' ') + '">' +
+        '<td class="rank-num">' + (i + 1) + '</td>' +
+        '<td><span class="iname">' + v.name + '</span>' +
+          (v.name !== v.itemName ? ' <span class="isub">' + v.itemName + '</span>' : '') + '</td>' +
+        '<td class="dimtxt">' + (v.level || '—') + '</td>' +
+        '<td class="qty">' + t.cur.qty + '</td>' +
+        '<td class="next">' + nextTxt + '</td>' +
+        '<td>' + (p ? fmt(p.ref) : '<span class="dimtxt">查無</span>') + '</td>' +
+        '<td class="per">' + (p ? fmt(r.total) : '—') + '</td>' +
+        '<td class="dimtxt">' + (v.exp ? v.exp.toLocaleString() : '—') + '</td>' +
+        '<td class="vel">' + (p ? (Math.round(p.vel * 10) / 10) : '—') + '</td>' +
+        '</tr>';
+    });
+    html += '</tbody></table>';
+    wrap.innerHTML = html;
+
+    var catName = (CATS.find(function (c) { return c.id === cat; }) || {}).name || '';
+    setStatus(catName + ' Lv' + lv + '／' + statLabel(kind) + ' ' + statVal +
+      '：可派 ' + runnable.length + '／' + list.length + ' 個探險，顯示 ' + rows.length +
+      (hideNP ? '（已隱藏查無市價）' : '') +
+      ' · 排序：每趟收益由高到低 · 範圍：' +
+      (scope === 'dc' ? '全 DC（陸行鳥）' : Universalis.worldName(Number(scope))) +
+      ' · 市價查詢於 ' + Universalis.fmtAge(priceData.fetched));
+  }
+
+  /* ── 事件 ── */
+  function pushURL() {
+    var q = new URLSearchParams();
+    if (cat != null) q.set('c', cat);
+    if (lv !== 100) q.set('lv', lv);
+    if (statVal) q.set('s', statVal);
+    if (scope !== 'dc') q.set('scope', scope);
+    var s = q.toString();
+    history.replaceState(null, '', s ? '?' + s : location.pathname);
+  }
+  function onCat() {
+    cat = Number(document.getElementById('catSel').value);
+    var l = listOf();
+    document.getElementById('statLabel').textContent = statLabel(l.length ? statKindOf(l[0]) : 'perception');
+    saveInput(); pushURL(); render();
+  }
+  document.getElementById('catSel').addEventListener('change', onCat);
+  document.getElementById('lvInput').addEventListener('change', function (e) {
+    lv = Math.max(1, Math.min(100, Number(e.target.value) || 1));
+    e.target.value = lv; saveInput(); pushURL(); render();
+  });
+  document.getElementById('statInput').addEventListener('change', function (e) {
+    statVal = Math.max(0, Number(e.target.value) || 0);
+    e.target.value = statVal; saveInput(); pushURL(); render();
+  });
+  document.getElementById('scopeSel').addEventListener('change', function (e) { scope = e.target.value; saveInput(); pushURL(); render(); });
+  document.getElementById('hideNoPrice').addEventListener('change', render);
+  document.getElementById('refreshBtn').addEventListener('click', function () {
+    Universalis.clearCache(); priceCache = {}; render();
+  });
+
+  /* ── 啟動 ── */
+  (async function init() {
+    var s = '<option value="dc">全 DC（陸行鳥）</option>';
+    Object.keys(Universalis.WORLDS).forEach(function (id) {
+      s += '<option value="' + id + '">' + Universalis.WORLDS[id] + '</option>';
+    });
+    document.getElementById('scopeSel').innerHTML = s;
+
+    try {
+      var json = await fetch('../../data/ventures.json').then(function (r) { return r.json(); });
+      var gp = await PatchGate.loadGamePatch('../../data/_meta.json');
+      ALL = (json.data || []).filter(function (v) { return PatchGate.released(v.patch, gp); });
+
+      var seen = new Set();
+      ALL.forEach(function (v) {
+        if (seen.has(v.category)) return;
+        seen.add(v.category);
+        CATS.push({ id: v.category, name: v.categoryName });
+      });
+      document.getElementById('catSel').innerHTML = CATS.map(function (c) {
+        return '<option value="' + c.id + '">' + c.name + '</option>';
+      }).join('');
+
+      // 先讀網址，沒有才讀上次輸入（§3.17：先讀 hash/query 再 replaceState）
+      var q = new URLSearchParams(location.search);
+      var saved = {};
+      try { saved = JSON.parse(localStorage.getItem(LS) || '{}'); } catch (e) {}
+      var wantCat = Number(q.get('c') || saved.cat);
+      cat = CATS.some(function (c) { return c.id === wantCat; }) ? wantCat : CATS[0].id;
+      lv = Math.max(1, Math.min(100, Number(q.get('lv') || saved.lv) || 100));
+      statVal = Math.max(0, Number(q.get('s') || saved.stat) || 0);
+      var ws = q.get('scope') || saved.scope;
+      if (ws && (ws === 'dc' || Universalis.WORLDS[ws])) scope = ws;
+
+      document.getElementById('catSel').value = String(cat);
+      document.getElementById('lvInput').value = lv;
+      document.getElementById('statInput').value = statVal;
+      document.getElementById('scopeSel').value = scope;
+      document.getElementById('statLabel').textContent = statLabel(statKindOf(listOf()[0] || { tiers: [{}] }));
+      render();
+    } catch (e) {
+      document.getElementById('tableWrap').innerHTML = '<div class="loading err">資料載入失敗：' + e.message + '</div>';
+    }
+  })();
+})();
+</script>
+</body>
+</html>

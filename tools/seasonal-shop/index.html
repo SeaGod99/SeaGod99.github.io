@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FF14 季節活動商店查詢 — 報酬管理人可用金幣買回的過往活動裝備 307 件，以及 47 種活動貨幣能換什麼">
+  <title>季節活動商店 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <link rel="stylesheet" href="../../assets/css/tool-header.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 109.375%; }
+    body { background: var(--bg-base); color: var(--text); font-family: var(--font-sans); min-height: 100vh; }
+
+    .controls { max-width: var(--w-content); margin: 0 auto; padding: 1rem 1.5rem 0.5rem; display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; }
+    .tabs { display: flex; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+    .tabs button {
+      font-size: 0.85rem; padding: 0.4rem 1rem; cursor: pointer; border: none;
+      background: var(--bg-card); color: var(--text-dim); font-family: inherit;
+    }
+    .tabs button.active { background: var(--gold-dim); color: var(--gold); font-weight: 600; }
+    select.sel, input.search {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px;
+      color: var(--text-dim); padding: 0.38rem 0.6rem; font-size: 0.8rem; outline: none; font-family: inherit;
+    }
+    select.sel { cursor: pointer; }
+    input.search { min-width: 13rem; }
+    input.search:focus, select.sel:focus { border-color: var(--gold); color: var(--text); }
+
+    .status { max-width: var(--w-content); margin: 0 auto; padding: 0 1.5rem 0.6rem; font-size: 0.75rem; color: var(--text-muted); }
+    .body-wrap { max-width: var(--w-content); margin: 0 auto; padding: 0 1.5rem 2rem; }
+
+    .group { margin-bottom: 1.6rem; }
+    .group-head {
+      display: flex; align-items: baseline; gap: 0.6rem; flex-wrap: wrap;
+      padding: 0.5rem 0; border-bottom: 1px solid var(--border); margin-bottom: 0.7rem;
+      position: sticky; top: 46px; background: var(--bg-base); z-index: 2;
+    }
+    .group-name { font-size: 0.95rem; font-weight: 700; color: var(--gold); }
+    .group-n { font-size: 0.75rem; color: var(--text-muted); }
+    .group-src { font-size: 0.72rem; color: var(--text-muted); margin-left: auto; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 8px; }
+    .cell {
+      display: flex; align-items: center; gap: 9px;
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px;
+    }
+    .cell img { width: 34px; height: 34px; flex-shrink: 0; image-rendering: auto; }
+    .cell-body { min-width: 0; flex: 1; }
+    .cell-name { font-size: 0.82rem; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .cell-sub { font-size: 0.7rem; color: var(--text-muted); }
+    .cell-cost { font-size: 0.78rem; color: var(--gold); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+    .loading { text-align: center; padding: 3rem 0; color: var(--text-dim); font-size: 0.9rem; }
+    .err { color: var(--red); }
+    .info-note { max-width: var(--w-content); margin: 0 auto; padding: 0 1.5rem 2rem; font-size: 0.72rem; color: var(--text-muted); line-height: 1.8; }
+    .site-footer { border-top: 1px solid var(--border); padding: 24px 0; text-align: center; }
+    .site-footer p { font-size: 12px; color: var(--text-muted); }
+    .site-footer a { color: var(--text-dim); }
+    @media (pointer: coarse) { .tabs button, select.sel, input.search { min-height: 44px; } }
+  </style>
+  <script src="../../assets/js/patch-gate.js"></script>
+  <script src="../../assets/js/theme.js"></script>
+</head>
+<body>
+<div class="tool-header">
+  <h1 class="tool-title">&#x1F383; 季節活動商店</h1>
+  <p class="tool-subtitle">錯過的季節活動裝備，多數可在報酬管理人處用金幣買回；手上的活動票券也能查能換什麼</p>
+  <div class="header-divider"></div>
+</div>
+
+<div class="controls">
+  <div class="tabs">
+    <button id="tabSalvager" class="active">&#x1F45A; 報酬管理人</button>
+    <button id="tabCurrency">&#x1F39F;&#xFE0F; 活動貨幣</button>
+  </div>
+  <select class="sel" id="groupSel"></select>
+  <input class="search" id="searchInput" type="search" placeholder="搜尋物品名稱…" autocomplete="off">
+</div>
+
+<div class="status" id="statusLine"></div>
+<div class="body-wrap" id="bodyWrap"><div class="loading">載入資料中…</div></div>
+
+<p class="info-note">
+  <b>報酬管理人</b>（各主城的 Calamity Salvager）提供「再次購買季節活動報酬」，過往季節活動的裝備多數可用<b>金幣</b>買回，價格通常只要 39–59 gil。這裡列的是遊戲資料裡 9 間該類商店的完整品項。<br>
+  <b>活動貨幣</b>分頁列的是「這張票券能換什麼」。多數活動貨幣只在活動期間取得，活動結束後手上的餘額仍可兌換；本頁不判斷哪個活動正在舉辦。<br>
+  活動名稱取自台服官方店名（如「再次購買季節活動報酬（紅蓮祭1）」括號內的字串），非自行翻譯。無台服物品名者不列（5 件）。本站資料未收錄的商店與品項不會出現在這裡——查不到不代表遊戲裡沒有。
+</p>
+
+<footer class="site-footer">
+  <p>水神的工具箱 · <a href="../../">回首頁</a> · FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具</p>
+</footer>
+
+<script>
+(function () {
+  var ICON_CDN = 'https://xivapi.com';
+  var DB = { events: [], currencies: [] };
+  var tab = 'salvager';     // salvager | currency
+  var group = '__all__';
+  var q = '';
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function icon(p) { return p ? ICON_CDN + p : ''; }
+
+  function groups() { return tab === 'salvager' ? DB.events : DB.currencies; }
+
+  function renderGroupSel() {
+    var gs = groups();
+    var s = '<option value="__all__">全部（' + gs.length + (tab === 'salvager' ? ' 個活動' : ' 種貨幣') + '）</option>';
+    gs.forEach(function (g) { s += '<option value="' + esc(g.name) + '">' + esc(g.name) + '（' + g.items.length + '）</option>'; });
+    document.getElementById('groupSel').innerHTML = s;
+    document.getElementById('groupSel').value = group;
+  }
+
+  function render() {
+    var wrap = document.getElementById('bodyWrap');
+    var gs = groups().filter(function (g) { return group === '__all__' || g.name === group; });
+    var needle = q.trim().toLowerCase();
+    var shown = 0, total = 0;
+
+    var html = gs.map(function (g) {
+      total += g.items.length;
+      var list = g.items.filter(function (i) {
+        return !needle || i.name.toLowerCase().indexOf(needle) >= 0 || (i.category || '').toLowerCase().indexOf(needle) >= 0;
+      });
+      if (!list.length) return '';
+      shown += list.length;
+      var cells = list.map(function (i) {
+        // 成本：報酬管理人是金幣，活動貨幣分頁是「N 張換 M 個」
+        var cost = tab === 'salvager'
+          ? (i.gil != null ? esc(i.gil.toLocaleString()) + ' gil' : '—')
+          : esc(i.cost) + ' 張' + (i.count > 1 ? ' → ' + esc(i.count) + ' 個' : '');
+        return '' +
+          '<div class="cell">' +
+            (i.icon ? '<img src="' + esc(icon(i.icon)) + '" alt="" loading="lazy">' : '') +
+            '<div class="cell-body">' +
+              '<div class="cell-name" title="' + esc(i.name) + '">' + esc(i.name) + '</div>' +
+              '<div class="cell-sub">' + esc(i.category || '') + '</div>' +
+            '</div>' +
+            '<div class="cell-cost">' + cost + '</div>' +
+          '</div>';
+      }).join('');
+      var src = tab === 'salvager' && g.shops
+        ? g.shops.map(function (s) { return esc(s.name); }).join('、')
+        : '';
+      return '' +
+        '<div class="group">' +
+          '<div class="group-head">' +
+            '<span class="group-name">' + esc(g.name) + '</span>' +
+            '<span class="group-n">' + list.length + ' 件' + (list.length !== g.items.length ? '／共 ' + g.items.length : '') + '</span>' +
+            (src ? '<span class="group-src">' + src + '</span>' : '') +
+          '</div>' +
+          '<div class="grid">' + cells + '</div>' +
+        '</div>';
+    }).join('');
+
+    wrap.innerHTML = html || '<div class="loading">找不到符合的物品</div>';
+    document.getElementById('statusLine').textContent =
+      (tab === 'salvager' ? '報酬管理人：' : '活動貨幣：') +
+      '顯示 ' + shown + '／' + total + ' 件' + (needle ? '（搜尋「' + q + '」）' : '');
+  }
+
+  function pushURL() {
+    var p = new URLSearchParams();
+    if (tab !== 'salvager') p.set('t', tab);
+    if (group !== '__all__') p.set('g', group);
+    if (q) p.set('q', q);
+    var s = p.toString();
+    history.replaceState(null, '', s ? '?' + s : location.pathname);
+  }
+  function setTab(t) {
+    tab = t; group = '__all__';
+    document.getElementById('tabSalvager').classList.toggle('active', t === 'salvager');
+    document.getElementById('tabCurrency').classList.toggle('active', t === 'currency');
+    renderGroupSel(); pushURL(); render();
+  }
+  document.getElementById('tabSalvager').addEventListener('click', function () { setTab('salvager'); });
+  document.getElementById('tabCurrency').addEventListener('click', function () { setTab('currency'); });
+  document.getElementById('groupSel').addEventListener('change', function (e) { group = e.target.value; pushURL(); render(); });
+  var t = null;
+  document.getElementById('searchInput').addEventListener('input', function (e) {
+    q = e.target.value;
+    clearTimeout(t);
+    t = setTimeout(function () { pushURL(); render(); }, 160);   // debounce：每按一鍵重畫整頁很卡
+  });
+
+  (async function init() {
+    try {
+      var json = await fetch('../../data/seasonal-shop.json').then(function (r) { return r.json(); });
+      var gp = await PatchGate.loadGamePatch('../../data/_meta.json');
+      var gate = function (i) { return PatchGate.released(i.patch, gp); };
+      DB.events = (json.data.events || []).map(function (e) {
+        return { name: e.name, shops: e.shops, items: (e.items || []).filter(gate) };
+      }).filter(function (e) { return e.items.length; });
+      DB.currencies = (json.data.currencies || []).filter(gate).map(function (c) {
+        return { name: c.name, icon: c.icon, items: (c.items || []).filter(gate) };
+      }).filter(function (c) { return c.items.length; });
+
+      var p = new URLSearchParams(location.search);
+      if (p.get('t') === 'currency') tab = 'currency';
+      q = p.get('q') || '';
+      document.getElementById('searchInput').value = q;
+      document.getElementById('tabSalvager').classList.toggle('active', tab === 'salvager');
+      document.getElementById('tabCurrency').classList.toggle('active', tab === 'currency');
+      renderGroupSel();
+      var wantG = p.get('g');
+      if (wantG && groups().some(function (g) { return g.name === wantG; })) {
+        group = wantG;
+        document.getElementById('groupSel').value = group;
+      }
+      render();
+    } catch (e) {
+      document.getElementById('bodyWrap').innerHTML = '<div class="loading err">資料載入失敗：' + esc(e.message) + '</div>';
+    }
+  })();
+})();
+</script>
+</body>
+</html>
