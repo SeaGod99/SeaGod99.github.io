@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FF14 主線進度 — 搜尋目前做到的主線任務，算出本章還剩幾個、各資料片還剩幾個">
+  <title>主線進度 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <link rel="stylesheet" href="../../assets/css/tool-header.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 109.375%; }
+    body { background: var(--bg-base); color: var(--text); font-family: var(--font-sans); min-height: 100vh; }
+
+    .wrap { max-width: var(--w-content); margin: 0 auto; padding: 0.6rem 1.5rem 2.5rem; }
+
+    .panel {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 0.9rem 1rem; margin-bottom: 0.9rem;
+    }
+    input[type="search"] {
+      width: 100%; background: var(--bg-base); border: 1px solid var(--border);
+      border-radius: 6px; color: var(--text-dim); padding: 0.5rem 0.7rem;
+      font: inherit; font-size: 0.9rem; min-height: 44px; outline: none;
+    }
+    input:focus { border-color: var(--gold); color: var(--text); }
+
+    .hits { margin-top: 0.6rem; display: grid; gap: 0.3rem; max-height: 17rem; overflow-y: auto; }
+    .hit {
+      display: flex; align-items: baseline; gap: 0.55rem; text-align: left; width: 100%;
+      background: var(--bg-base); border: 1px solid var(--border); border-radius: 6px;
+      color: var(--text-dim); font: inherit; font-size: 0.82rem;
+      padding: 0.45rem 0.6rem; min-height: 40px; cursor: pointer;
+    }
+    .hit:hover { border-color: var(--border-hover); color: var(--text); }
+    .hit .lv { color: var(--text-muted); font-size: 0.74rem; font-variant-numeric: tabular-nums; }
+    .hit .ch { color: var(--gold); font-size: 0.74rem; margin-left: auto; }
+
+    .cur {
+      background: color-mix(in srgb, var(--gold) 10%, var(--bg-card));
+      border: 1px solid var(--border-hover); border-radius: var(--radius-md);
+      padding: 0.9rem 1rem; margin-bottom: 0.9rem; font-size: 0.86rem; line-height: 1.9;
+    }
+    .cur b { color: var(--gold-light); }
+    .cur .big { font-size: 1.15rem; font-weight: 700; color: var(--green); }
+
+    .ch-row {
+      display: flex; align-items: center; gap: 0.7rem; flex-wrap: wrap;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 0.5rem 0.75rem; margin-bottom: 0.4rem;
+    }
+    .ch-row.done { opacity: 0.55; }
+    .ch-row.now { border-color: var(--border-hover); background: color-mix(in srgb, var(--gold) 6%, var(--bg-card)); }
+    .ch-name { font-size: 0.86rem; font-weight: 600; color: var(--text); min-width: 9rem; }
+    .bar { flex: 1; min-width: 7rem; height: 7px; background: var(--bg-base); border-radius: 4px; overflow: hidden; }
+    .bar i { display: block; height: 100%; background: var(--gold); }
+    .ch-n { font-size: 0.78rem; color: var(--text-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+    .note { font-size: 0.74rem; color: var(--text-muted); line-height: 1.8; margin-top: 1rem; }
+    .note b { color: var(--text-dim); font-weight: 600; }
+
+    @media (pointer: coarse) { .hit { min-height: 44px; } }
+  </style>
+  <script src="../../assets/js/patch-gate.js"></script>
+  <script src="../../assets/js/theme.js"></script>
+</head>
+<body>
+<div class="tool-header">
+  <h1 class="tool-title">&#x1F5FA;&#xFE0F; 主線進度</h1>
+  <p class="tool-subtitle">搜尋你目前做到的主線任務，算出本章還剩幾個、後面各章還有多少</p>
+</div>
+
+<div class="wrap">
+  <div class="panel">
+    <label for="q" style="display:block;font-size:0.76rem;color:var(--text-muted);margin-bottom:0.35rem">
+      你剛完成（或正在做）的主線任務叫什麼？
+    </label>
+    <input type="search" id="q" placeholder="輸入任務名稱的一部分，例如「光之戰士」" autocomplete="off">
+    <div class="hits" id="hits"></div>
+  </div>
+
+  <div class="cur" id="cur" style="display:none"></div>
+  <div id="chapters"></div>
+
+  <p class="note">
+    <b>不提供「每天 N 個估完成日」。</b> 每個人的速度差太多，估出來的日期只會讓人覺得被騙。
+    這頁只回答「還剩幾個」。<br>
+    <b>也不列「沿途解鎖哪些副本」</b>——那個關聯在任務腳本裡、不在遊戲的資料表上
+    （實測 `unlock.questId` 與主線任務交集為 0），憑印象列會害人白跑。<br>
+    章節內依遊戲手帳的順序排。<b>同名任務不去重</b>（開場的三個城市各有一份），
+    去重的話「本章剩幾個」會跟遊戲裡對不上。進度存在瀏覽器裡（<code>ffxiv_msq_at</code>）。
+  </p>
+</div>
+
+<footer class="page-footer">
+  <div class="container">
+    <p class="footer-text"><a href="../../">水神的工具箱</a> · 資料來源：遊戲本體、<a href="https://xivapi.com" target="_blank">XIVAPI</a></p>
+    <p class="footer-text" style="margin-top:4px">FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  var LS = 'ffxiv_msq_at';
+  var DB = null, at = null;      // at = 目前所在任務的 id
+
+  function $(id) { return document.getElementById(id); }
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+  function chName(gid) {
+    var c = DB.chapters.find(function (x) { return x.id === gid; });
+    return c ? c.name : '';
+  }
+
+  function search() {
+    var q = $('q').value.trim().toLowerCase();
+    if (!q) { $('hits').innerHTML = ''; return; }
+    var hit = DB.data.filter(function (x) { return x.name.toLowerCase().indexOf(q) >= 0; }).slice(0, 40);
+    $('hits').innerHTML = hit.length
+      ? hit.map(function (x) {
+          return '<button type="button" class="hit" data-id="' + x.id + '">' +
+            '<span>' + esc(x.name) + '</span>' +
+            '<span class="lv">Lv' + x.lv + '</span>' +
+            '<span class="ch">' + esc(chName(x.genre)) + '</span></button>';
+        }).join('')
+      : '<div class="ch-n" style="padding:.4rem">找不到這個主線任務。它可能是支線，或台服還沒開放。</div>';
+  }
+
+  function setAt(id) {
+    at = id;
+    try { localStorage.setItem(LS, String(id)); } catch (e) {}
+    $('q').value = '';
+    $('hits').innerHTML = '';
+    render();
+  }
+
+  function render() {
+    if (!DB) return;
+    var idx = at == null ? -1 : DB.data.findIndex(function (x) { return x.id === at; });
+    var cur = idx >= 0 ? DB.data[idx] : null;
+
+    if (cur) {
+      /* 「做到這裡」＝這個任務以前（含）都完成了。剩下的就是它後面的全部。
+         資料本身已依「章節 → 手帳順序」排好，所以用索引就算得出來。 */
+      var left = DB.data.length - (idx + 1);
+      var inCh = DB.data.filter(function (x) { return x.genre === cur.genre; });
+      var posInCh = inCh.findIndex(function (x) { return x.id === cur.id; });
+      var leftCh = inCh.length - (posInCh + 1);
+      $('cur').style.display = '';
+      $('cur').innerHTML =
+        '目前在 <b>' + esc(chName(cur.genre)) + '</b> 的「<b>' + esc(cur.name) + '</b>」（Lv' + cur.lv + '）<br>' +
+        '本章還剩 <b>' + leftCh + '</b> 個　·　到最新主線還剩 <span class="big">' + left + '</span> 個' +
+        (left === 0 ? '　🎉 已經追完了' : '');
+    } else {
+      $('cur').style.display = 'none';
+    }
+
+    $('chapters').innerHTML = DB.chapters.map(function (c) {
+      var inCh = DB.data.filter(function (x) { return x.genre === c.id; });
+      var done = 0, state = '';
+      if (cur) {
+        var ci = DB.chapters.findIndex(function (x) { return x.id === c.id; });
+        var cj = DB.chapters.findIndex(function (x) { return x.id === cur.genre; });
+        if (ci < cj) { done = inCh.length; state = 'done'; }
+        else if (ci === cj) { done = inCh.findIndex(function (x) { return x.id === cur.id; }) + 1; state = 'now'; }
+      }
+      var pct = inCh.length ? Math.round(done / inCh.length * 100) : 0;
+      return '<div class="ch-row ' + state + '">' +
+        '<span class="ch-name">' + esc(c.name) + '</span>' +
+        '<span class="bar"><i style="width:' + pct + '%"></i></span>' +
+        '<span class="ch-n">' + done + ' / ' + inCh.length + '</span></div>';
+    }).join('');
+  }
+
+  $('q').addEventListener('input', search);
+  $('hits').addEventListener('click', function (e) {
+    var b = e.target.closest('.hit');
+    if (b) setAt(+b.dataset.id);
+  });
+
+  fetch('../../data/msq.json')
+    .then(function (r) { return r.json(); })
+    .then(function (db) {
+      DB = db;
+      try {
+        var saved = localStorage.getItem(LS);
+        if (saved && DB.data.some(function (x) { return x.id === +saved; })) at = +saved;
+      } catch (e) {}
+      render();
+    })
+    .catch(function (e) { $('chapters').innerHTML = '<div class="ch-n">載入失敗：' + esc(e.message) + '</div>'; });
+
+  // 頁內快捷鍵（登記制見知識庫 §4.73）
+  var keys = [{ keys: 's', label: '聚焦搜尋框', run: function () { $('q').focus(); $('q').select(); } }];
+  if (window.SGT_SHORTCUTS) window.SGT_SHORTCUTS.register(keys);
+  else (window.SGT_SHORTCUTS_PENDING = window.SGT_SHORTCUTS_PENDING || []).push(keys);
+})();
+</script>
+</body>
+</html>

@@ -104,6 +104,8 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 重建技能辭典（換台服版本後） | `node scripts/build-action-codex.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/action-codex/`（技能 1,326／特性 668／狀態 4,052）|
 | 技能辭典回歸（**改完 `tools/action-codex/` 或該目錄資料必跑**） | `node scripts/validate-action-codex.mjs`（21 項：UI 標記洗乾淨、條件式收斂、PvP／PvE 分得開）|
 | 多角色設定檔回歸（**改完 `assets/js/profiles.js` 必跑**） | `node scripts/validate-profiles.mjs`（28 項：白名單反轉、只覆蓋不刪、存不進去就不切）|
+| 重建主線任務（換台服版本後） | `node scripts/build-msq.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/msq.json`（14 章／1,012 個）|
+| 主線進度回歸（**改完 `tools/msq/` 或 `msq.json` 必跑**） | `node scripts/validate-msq.mjs`（26 項；最重要的是章節順序＝`JournalGenre` 的 row id）|
 | 時尚品鑑週更（每週二／週五各一次） | `node scripts/build-fashion-report.mjs`（`--dry-run` 只印／`--offline` 用快取）→ `node scripts/validate-fashion-render.mjs`（頁面 render 回歸，七個週狀態，不需瀏覽器） |
 | 時尚品鑑跨週不變資料（改版時才跑） | `node scripts/build-dyes.mjs`／`build-fashion-fillers.mjs`／`build-fashion-themes.mjs` |
 | 重建無人島資料層 | `node scripts/build-island.mjs`（`--offline` 用快取／`--refresh` 強制重抓） |
@@ -299,6 +301,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 - **改了製作模擬器（`tools/crafting-sim/`）** → 改完 `craft-engine.js`、`craft-solver.js` 或 `data/craft-actions.json` **必跑 `node scripts/validate-craft-sim.mjs`**（Teamcraft 官方測試案例＋內建範本＋自動求解，104 項）。製作公式的取整點很多，差一個 `Math.floor` 在高階配方上差幾百品質、**畫面上完全看不出來**。規則出處、兩處刻意與 Teamcraft 不同的地方、範本怎麼解出來的、求解器為什麼只用「不靠運氣」的技能，見 [docs/crafting-sim.md](docs/crafting-sim.md)。**作業／品質的封頂只做在畫面上**（引擎要跟 Teamcraft 的期望值逐值對得上）。
 - **要算「買 N 個多少錢」** → 一律用 `Universalis.fillQuote()` 逐筆吃掉掛單，**絕不可用「最低價 × N」**。最便宜那筆常常只有 1～3 個，乘法會系統性低估、且低估幅度隨數量放大（知識庫 §3.14）。
 - **做「幾步才做得到」的東西（園藝配種、長鏈製作）** → **要算最短路徑，不要列配方**。列一層等於把問題丟回給使用者。園藝的成本模型＝`cost(種子)=0 若可直接買／採；否則 min over 配方 of max(cost(本),cost(鄰)) + 本株作物時數`，**用定點迭代不要用遞迴 memo**（配種關係有環，遞迴會把 `Infinity` 記進 memo 害整條鏈變無解）。另外「直接可得」**不能認市場板**——它對每個種子都成立，認了整棵樹會縮成一層。機制與出處見 [docs/gardening-rules.md](docs/gardening-rules.md)。
+- **主線章節的順序是 `JournalGenre` 的 row id，不是 `SortKey`** → `SortKey` **只在章節內有意義**，拿來跨章排會排出「第七星曆在新生艾奧傑亞前面」（新生第一個任務的 SortKey 是 2、其餘章節都是 1）。row id 剛好就是劇情順序：1 新生 → 2 第七星曆 → 3 蒼天 → … → 14 黃金終章。**判斷「哪些算主線」也不要用 genre id 白名單**——用 `JournalSection` 的名稱以 `Main Scenario` 開頭，不然改版新增章節會安靜漏掉。
 - **要查一張 XIVAPI sheet 存不存在** → 打 **`/api/sheet` 拿全表清單**，**不要用取某一列（`/api/sheet/<name>/1`）來試**——很多表的 row id 不從 1 開始（`CraftLeve` 從 917504、`CollectablesShop` 從 3866624），取 row 1 會 404 而讓你誤判成「這張表不存在」。這個誤判差點讓 `leve-calculator` 與 `collectables-scrip-table` 兩案一起被錯誤放棄（知識庫 §4.81）。
 - **要拿禁忌鑲嵌的成功率** → 用 `data/materia.json` 的 `tiers`（來源 XIVAPI `MateriaGrade`，**12 列正好一階一列**）。⚠ XIVAPI 另有一張 `MateriaJoinRate`，欄位名幾乎一樣但**只有 10 列**，與 12 階對不起來——**別用那張**。「雙數階只能鑲第一個禁忌孔」這條規則**不要自己寫**：資料裡第 2–4 孔本來就是 0，讓 0 自己說話。`MateriaGrade.ReturnRate`（100／80／40）意義查不出來，**刻意不收也不顯示**。
 - **要拿 `exploration-log.json` 的時間窗** → **`timeEnd` 是「含該小時」**：`17–17` 代表 17:00–17:59（見 `collections/exploration-log/index.html` 的 `fmtTime()`）。`window-calc` 的 `endHour` 是開區間，所以要 **+1** 再傳。直接傳的話 `17–17` 變成零長度視窗（會算出「開著但剩 272 小時」這種鬼東西）、`8–11` 每次少算一小時，**兩種都不報錯**。同理 `gathering.json` 的 `duration` 單位是 **ET 分鐘**（120／180／240），不是小時。
