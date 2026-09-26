@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FF14 技能辭典 — 1,326 個玩家技能、668 個特性、4,052 個狀態的台服官方名稱與說明，可依職業與等級篩選">
+  <title>技能辭典 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <link rel="stylesheet" href="../../assets/css/tool-header.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 109.375%; }
+    body { background: var(--bg-base); color: var(--text); font-family: var(--font-sans); min-height: 100vh; }
+
+    .wrap { max-width: var(--w-content); margin: 0 auto; padding: 0.6rem 1.5rem 2.5rem; }
+
+    .controls { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; margin-bottom: 0.8rem; }
+    .seg { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+    .seg button {
+      background: var(--bg-card); color: var(--text-muted); border: 0;
+      padding: 0 0.85rem; min-height: 40px; font: inherit; font-size: 0.8rem; cursor: pointer;
+    }
+    .seg button + button { border-left: 1px solid var(--border); }
+    .seg button.on { background: var(--gold-dim); color: var(--gold-light); font-weight: 600; }
+    .seg button:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
+
+    select, input[type="search"] {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px;
+      color: var(--text-dim); padding: 0.4rem 0.6rem; font: inherit; font-size: 0.82rem;
+      min-height: 40px; outline: none;
+    }
+    select:focus, input:focus { border-color: var(--gold); color: var(--text); }
+    select { cursor: pointer; max-width: 11rem; }
+    input[type="search"] { flex: 1; min-width: 10rem; }
+
+    .status { font-size: 0.76rem; color: var(--text-muted); margin-bottom: 0.7rem; }
+    .status b { color: var(--gold-light); }
+
+    .rows { display: grid; gap: 0.45rem; }
+    .row {
+      display: flex; gap: 0.7rem; align-items: flex-start;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 0.55rem 0.75rem;
+    }
+    .ic { width: 34px; height: 34px; flex: none; border-radius: 6px; background: var(--bg-base); }
+    .body { min-width: 0; flex: 1; }
+    .hd { display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; }
+    .nm { font-size: 0.9rem; font-weight: 700; color: var(--text); }
+    .tag {
+      font-size: 0.68rem; padding: 0.08rem 0.36rem; border-radius: 4px;
+      background: var(--bg-base); border: 1px solid var(--border); color: var(--text-muted);
+    }
+    .tag.job { color: var(--gold); border-color: color-mix(in srgb, var(--gold) 35%, transparent); }
+    .tag.pvp { color: var(--red); border-color: color-mix(in srgb, var(--red) 35%, transparent); }
+    .desc { font-size: 0.79rem; color: var(--text-dim); line-height: 1.75; margin-top: 0.25rem; white-space: pre-wrap; }
+    .nodesc { color: var(--text-muted); font-style: italic; }
+
+    .more {
+      display: block; width: 100%; margin-top: 0.7rem; min-height: 44px;
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;
+      color: var(--text-dim); font: inherit; font-size: 0.82rem; cursor: pointer;
+    }
+    .more:hover { border-color: var(--border-hover); }
+
+    .note { font-size: 0.74rem; color: var(--text-muted); line-height: 1.8; margin-top: 1rem; }
+    .note b { color: var(--text-dim); font-weight: 600; }
+
+    @media (pointer: coarse) { select, input[type="search"], .seg button { min-height: 44px; } }
+  </style>
+  <script src="../../assets/js/patch-gate.js"></script>
+  <script src="../../assets/js/theme.js"></script>
+</head>
+<body>
+<div class="tool-header">
+  <h1 class="tool-title">&#x1F4D8; 技能辭典</h1>
+  <p class="tool-subtitle">玩家技能、特性與狀態的台服官方名稱與說明——可依職業與等級篩選，也能貼英文／日文名反查</p>
+</div>
+
+<div class="wrap">
+  <div class="controls">
+    <div class="seg" id="kindSeg" role="group" aria-label="種類">
+      <button data-kind="actions" class="on" aria-pressed="true">技能</button>
+      <button data-kind="traits" aria-pressed="false">特性</button>
+      <button data-kind="statuses" aria-pressed="false">狀態</button>
+    </div>
+    <select id="jobSel" aria-label="依職業篩選"><option value="">全部職業</option></select>
+    <select id="lvSel" aria-label="依等級篩選">
+      <option value="">全部等級</option>
+      <option value="1-50">Lv1–50</option>
+      <option value="51-60">Lv51–60</option>
+      <option value="61-70">Lv61–70</option>
+      <option value="71-80">Lv71–80</option>
+      <option value="81-90">Lv81–90</option>
+      <option value="91-100">Lv91–100</option>
+    </select>
+    <select id="pvpSel" aria-label="PvE／PvP">
+      <option value="pve" selected>只看 PvE</option>
+      <option value="pvp">只看 PvP</option>
+      <option value="">兩者都看</option>
+    </select>
+    <input type="search" id="q" placeholder="搜尋名稱或說明…也可貼英文／日文名反查" aria-label="搜尋">
+  </div>
+
+  <div class="status" id="status">載入中…</div>
+  <div class="rows" id="rows"></div>
+  <button class="more" id="more" style="display:none"></button>
+
+  <p class="note">
+    <b>只收玩家技能</b>：上游的 38,490 筆裡只有約 1,300 個是玩家技能，其餘是敵人／NPC 技能。
+    收進來的話「黑魔道士有哪些技能」這種篩選會變成垃圾。<br>
+    <b>說明是台服官方原文</b>，已洗掉遊戲內的顏色標記（<code>&lt;UIForeground&gt;</code> 那類）但保留數值。
+    上游有少數條目名字翻了、說明還是日文——<b>那些說明不顯示</b>，不會把日文放行到畫面上。<br>
+    <b>PvP 版與 PvE 版同名但威力差幾十倍</b>（火焰：PvE 180、PvP 6000），而且 PvP 版掛在進階職、
+    PvE 版掛在基礎職——所以預設<b>只看 PvE</b>，PvP 的另外標紅。<br>
+    要<b>跨語言反查</b>（貼英文或日文技能名找台服名）可直接在搜尋框貼，或用
+    <a href="../macro-translator/">巨集轉譯</a>整段換。
+  </p>
+</div>
+
+<footer class="page-footer">
+  <div class="container">
+    <p class="footer-text"><a href="../../">水神的工具箱</a> · 資料來源：遊戲本體、<a href="https://xivapi.com" target="_blank">XIVAPI</a>、Teamcraft</p>
+    <p class="footer-text" style="margin-top:4px">FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  var PAGE = 60;                // 一次畫 60 列——4,052 個狀態全畫會卡住
+  var IDX = null, cache = {}, kind = 'actions', shown = PAGE;
+  var ICON_CDN = 'https://xivapi.com/i/';
+
+  function $(id) { return document.getElementById(id); }
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  function load(k) {
+    if (cache[k]) return Promise.resolve(cache[k]);
+    return fetch('../../data/action-codex/' + k + '.json')
+      .then(function (r) { return r.json(); })
+      .then(function (j) { cache[k] = j.data; return j.data; });
+  }
+
+  /* 跨語言反查：站內已經有 `ActionNames`（256 片、45,046 個鍵）。
+     這頁不自己再做一份索引——貼英日名時先問它拿台服名，再用台服名在本頁搜。
+     **不要在這裡重寫 normalizeName／shardOf**（知識庫 §4.63）。 */
+  var xlate = null;
+  function ensureXlate() {
+    if (xlate !== null) return Promise.resolve(xlate);
+    if (!window.ActionNames) { xlate = false; return Promise.resolve(false); }
+    xlate = true;
+    return Promise.resolve(true);
+  }
+
+  function filtered(list) {
+    var q = $('q').value.trim().toLowerCase();
+    var job = $('jobSel').value;
+    var lvR = $('lvSel').value;
+    var lo = 0, hi = 999;
+    if (lvR) { var p = lvR.split('-'); lo = +p[0]; hi = +p[1]; }
+    var pv = $('pvpSel') ? $('pvpSel').value : '';
+    return list.filter(function (x) {
+      /* ⚠ **PvP 版與 PvE 版同名但威力差幾十倍**（火焰：PvE 180 / PvP 6000），
+         而且 PvP 版掛在進階職、PvE 版掛在基礎職，依職業篩時 PvP 會排前面。
+         預設只看 PvE——不預設的話黑魔道士點進來第一個看到的就是 PvP 的 6000。 */
+      if (kind === 'actions' && pv === 'pve' && x.pvp) return false;
+      if (kind === 'actions' && pv === 'pvp' && !x.pvp) return false;
+      /* ⚠ 特性與狀態沒有職業／等級欄位。選單已經收起來，**但判斷式也要跟著收**——
+         只把選單藏起來的話，帶著職業篩選切到「狀態」會得到 0 筆（實測就是這樣）。 */
+      if (kind === 'actions' && job && x.job !== job) return false;
+      if (lvR && kind === 'actions') { var l = x.lv || 0; if (l < lo || l > hi) return false; }
+      if (q) {
+        var hay = (x.name + ' ' + (x.desc || '') + ' ' + (x.job || '') + ' ' + (x.cat || '')).toLowerCase();
+        if (hay.indexOf(q) < 0) return false;
+      }
+      return true;
+    });
+  }
+
+  function iconUrl(p) {
+    if (!p) return null;
+    // Action.Icon.path 形如 "ui/icon/000000/000101.tex" → 去掉前綴與副檔名後補回 CDN
+    return ICON_CDN + p + '.png';
+  }
+
+  function render() {
+    load(kind).then(function (list) {
+      var rows = filtered(list);
+      $('status').innerHTML = '共 <b>' + rows.length + '</b> 筆' +
+        (rows.length > shown ? '（顯示前 ' + Math.min(shown, rows.length) + '）' : '');
+      $('rows').innerHTML = rows.slice(0, shown).map(function (x) {
+        var tags = [];
+        if (x.job) tags.push('<span class="tag job">' + esc(x.job) + '</span>');
+        if (x.lv) tags.push('<span class="tag">Lv' + x.lv + '</span>');
+        if (x.cat) tags.push('<span class="tag">' + esc(x.cat) + '</span>');
+        if (x.pvp) tags.push('<span class="tag pvp">PvP</span>');
+        var ic = iconUrl(x.icon);
+        return '<div class="row">' +
+          (ic ? '<img class="ic" src="' + esc(ic) + '" alt="" loading="lazy" decoding="async" onerror="this.remove()">' : '') +
+          '<div class="body"><div class="hd"><span class="nm">' + esc(x.name) + '</span>' + tags.join('') + '</div>' +
+          (x.desc
+            ? '<div class="desc">' + esc(x.desc) + '</div>'
+            : '<div class="desc nodesc">本站沒有這一條的台服說明</div>') +
+          '</div></div>';
+      }).join('');
+      var m = $('more');
+      if (rows.length > shown) {
+        m.style.display = '';
+        m.textContent = '再顯示 ' + Math.min(PAGE, rows.length - shown) + ' 筆（還有 ' + (rows.length - shown) + '）';
+      } else m.style.display = 'none';
+      syncURL();
+    });
+  }
+
+  function reset() { shown = PAGE; render(); }
+
+  $('more').addEventListener('click', function () { shown += PAGE; render(); });
+  $('q').addEventListener('input', reset);
+  $('jobSel').addEventListener('change', reset);
+  $('lvSel').addEventListener('change', reset);
+  $('pvpSel').addEventListener('change', reset);
+  document.querySelectorAll('#kindSeg button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      kind = b.dataset.kind;
+      document.querySelectorAll('#kindSeg button').forEach(function (x) {
+        x.classList.toggle('on', x === b);
+        x.setAttribute('aria-pressed', String(x === b));
+      });
+      // 特性與狀態沒有職業／等級，把那兩個選單收起來比留著不能用好
+      var hasJob = kind === 'actions';
+      $('jobSel').style.display = hasJob ? '' : 'none';
+      $('lvSel').style.display = hasJob ? '' : 'none';
+      $('pvpSel').style.display = hasJob ? '' : 'none';
+      reset();
+    });
+  });
+
+  /* 網址狀態。⚠ 進站參數要在模組載入時就存（§3.17／§4.60）。 */
+  var INITIAL_QUERY = location.search;
+  var applying = false;
+  function syncURL() {
+    if (applying) return;
+    var p = new URLSearchParams();
+    if (kind !== 'actions') p.set('k', kind);
+    if ($('q').value.trim()) p.set('q', $('q').value.trim());
+    if ($('jobSel').value) p.set('job', $('jobSel').value);
+    if ($('lvSel').value) p.set('lv', $('lvSel').value);
+    if ($('pvpSel').value !== 'pve') p.set('pvp', $('pvpSel').value || 'all');
+    var qs = p.toString();
+    history.replaceState(null, '', qs ? '?' + qs : location.pathname);
+  }
+
+  fetch('../../data/action-codex/_index.json')
+    .then(function (r) { return r.json(); })
+    .then(function (idx) {
+      IDX = idx;
+      (idx.jobs || []).forEach(function (j) {
+        if (j.name === '（無職業）') return;
+        var o = document.createElement('option');
+        o.value = j.name; o.textContent = j.name + '（' + j.n + '）';
+        $('jobSel').appendChild(o);
+      });
+      applying = true;
+      var p = new URLSearchParams(INITIAL_QUERY);
+      if (p.get('k')) {
+        var btn = document.querySelector('#kindSeg button[data-kind="' + p.get('k') + '"]');
+        if (btn) {
+          kind = p.get('k');
+          document.querySelectorAll('#kindSeg button').forEach(function (x) {
+            x.classList.toggle('on', x === btn);
+            x.setAttribute('aria-pressed', String(x === btn));
+          });
+          $('jobSel').style.display = kind === 'actions' ? '' : 'none';
+          $('lvSel').style.display = kind === 'actions' ? '' : 'none';
+        }
+      }
+      if (p.get('q')) $('q').value = p.get('q');
+      if (p.get('job')) $('jobSel').value = p.get('job');
+      if (p.get('lv')) $('lvSel').value = p.get('lv');
+      if (p.get('pvp')) $('pvpSel').value = p.get('pvp') === 'all' ? '' : p.get('pvp');
+      applying = false;
+      render();
+    })
+    .catch(function (e) { $('status').textContent = '載入失敗：' + e.message; });
+
+  // 頁內快捷鍵（登記制見知識庫 §4.73）
+  var keys = [{ keys: 's', label: '聚焦搜尋框', run: function () { $('q').focus(); $('q').select(); } }];
+  if (window.SGT_SHORTCUTS) window.SGT_SHORTCUTS.register(keys);
+  else (window.SGT_SHORTCUTS_PENDING = window.SGT_SHORTCUTS_PENDING || []).push(keys);
+})();
+</script>
+</body>
+</html>

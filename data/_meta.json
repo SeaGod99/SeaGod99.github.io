@@ -92,6 +92,13 @@
       "desc": "潛水艇部件 40 件（部位名取自道具分類）＋航點 123 個＋階級表 145 階，來源 XIVAPI Submarine* 三張表"
     },
     {
+      "name": "技能辭典",
+      "file": "action-codex/actions.json",
+      "count": 1326,
+      "updated": "2026-09-26",
+      "desc": "玩家技能 1326＋特性 668＋狀態 4052 的台服名與官方說明（說明已洗掉 UI 顏色標記）"
+    },
+    {
       "schema": "item-categories",
       "file": "item-categories.json",
       "name": "物品分類（ItemUICategory id ↔ 繁中名）",

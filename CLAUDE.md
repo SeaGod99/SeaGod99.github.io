@@ -101,6 +101,8 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 練級裝備回歸（**改完 `tools/leveling-gear/` 或該目錄資料必跑**） | `node scripts/validate-leveling-gear.mjs`（25 項：槽位眾數比對、前緣單調性、取得管道真的有填上）|
 | 重建潛水艇資料（改版時才跑） | `node scripts/build-submarine.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/submarine.json`（部件 40／航點 123／階級 145）|
 | 潛水艇回歸（**改完 `tools/submarine/` 或 `data/submarine.json` 必跑**） | `node scripts/validate-submarine.mjs`（26 項；最重要的是「部位名不可從 Slot 編號推」與「不提供多點航程試算」）|
+| 重建技能辭典（換台服版本後） | `node scripts/build-action-codex.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/action-codex/`（技能 1,326／特性 668／狀態 4,052）|
+| 技能辭典回歸（**改完 `tools/action-codex/` 或該目錄資料必跑**） | `node scripts/validate-action-codex.mjs`（21 項：UI 標記洗乾淨、條件式收斂、PvP／PvE 分得開）|
 | 時尚品鑑週更（每週二／週五各一次） | `node scripts/build-fashion-report.mjs`（`--dry-run` 只印／`--offline` 用快取）→ `node scripts/validate-fashion-render.mjs`（頁面 render 回歸，七個週狀態，不需瀏覽器） |
 | 時尚品鑑跨週不變資料（改版時才跑） | `node scripts/build-dyes.mjs`／`build-fashion-fillers.mjs`／`build-fashion-themes.mjs` |
 | 重建無人島資料層 | `node scripts/build-island.mjs`（`--offline` 用快取／`--refresh` 強制重抓） |
@@ -260,6 +262,8 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 - **一行接一行的連結不能用 `::after` 透明擴張層補命中區** → 44px 高的擴張層會蓋到上下兩列，`elementFromPoint` 探到的是鄰居，體檢會報「點擊目標太小」而你怎麼加都沒用。**改用真實 padding／`min-height` 把自己的盒子撐大**（金碟頁的預算格、NPC 商店目錄的交易列都是這樣修的）。擴張層只適合**孤立**的小圖示鈕（頂列站名、橫幅連結）。
 - **算材料成本時不要只看市場板** → 有 4,641 種可交易物品是 NPC 直接賣金幣的（配方材料裡佔 13%），市場板上常常更貴（有人掛高價等新手）。市場頁的 `costOf()` 會用 `data/vendor-prices.json` **對成本封頂**。但 `VENDOR_GATES` 只涵蓋 5 個部族 NPC，**軍階／主線／城市解鎖那些門檻沒有建模**，所以封頂之後一定要把「跟誰買、在哪、單價多少」顯示出來讓使用者判斷——**不可以偷偷把數字換掉**。NPC 庫存視為無限，所以是單純乘法、不走 `fillQuote`（那是市場板掛單才需要的，§3.14）。
 - **技能名有「玩家技能」與「敵人技能」之分，一定要優先玩家技能** → `tw-actions.json` 的 38,490 筆裡只有 **1,373 個是玩家技能**（XIVAPI v2 的 `Action.IsPlayerAction`），其餘是敵人／NPC 技能。全部一起收會撞出 3,113 個同名衝突：英文 `Infuriate` 同時是戰士的「戰嚎」與某敵人的「勃然大怒」、`Attack` 同時是「攻擊」與「防衛反應」。先到先贏的話巨集翻譯會把玩家技能翻成敵人技能的名字，**而且完全看不出來**。`build-action-names.mjs` 分兩輪寫（玩家先佔位），並把剩下的 4 組「玩家技能互撞」單獨報出來。
+- **台服技能說明有三層要洗，每一層洗錯都會直接印到畫面上** → ①`<UIForeground>F201F8</UIForeground>` 包的是**顏色碼**，要連內容一起刪，只刪標籤會印出 `F201F8F201F9威力：0101180` ②`<If(…)>A<Else/>B</If>` 條件式有 **359/1326** 個技能在用，多數分支文字相同，拆行後去重就對了，不處理會看到七八行一樣的句子 ③**說明也要各自過守門**——名字翻了不代表說明也翻了（實測 16 條狀態的說明仍是日文），`validate-data` 的掃描會抓到。
+- **技能的 PvP 版與 PvE 版同名但威力差幾十倍** → 火焰 PvE 180、PvP 6000。而且 **PvP 版的 `ClassJob` 掛在進階職（黑魔道士）、PvE 版掛在基礎職（咒術士）**，所以依職業篩選時 PvP 版會排在前面——黑魔點進來第一個看到的就是 6000。用 `Action.IsPvP` 分開（159 個），**預設只看 PvE**。
 - **要用「名字」查東西（跨語言）** → 前端用 `assets/js/item-names.js` 的 `ItemNames.lookup()`／`lookupMany()`。**它的 `normalizeName()` 與 `shardOf()` 必須與 `scripts/build-item-names.mjs` 逐字一致**——不一致的徵狀是「明明收錄了的東西查不到」，兩邊都不會報錯。`validate-item-names.mjs` 會拿 12,000 個真實名稱逐筆比對兩邊的輸出。
 - **分片層要依「查詢鍵」切時，別套用 id 分片的經驗** → `item-sources` 依 `id >> 10` 切，因為它用 id 查；`item-names` 用名字查，所以依 `FNV-1a(正規化鍵) % 256` 切。**試過「片內共用名稱陣列」去重，結果反而更大**（3.4MB → 3.76MB）：雜湊分片會把同一件物品的四個鍵打散到四個不同的片，片內根本沒有重複可去。真正有效的是把片切小。
 - **要在頁面之間傳一份材料清單** → 市場頁的 `#craft=<id>:<數量>,…`（也收 `?craft=`）。它逐件走既有的 `addToCraft()`，上限與去重的規則只有那一份；查無的 id 安靜略過並提示件數。製作模擬器的「💰 帶這些材料去市場頁算成本」就是走這條。
