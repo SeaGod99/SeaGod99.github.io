@@ -68,7 +68,8 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 收藏頁任務來源補接取點（改完上述任一或 tw-quests 後） | `node scripts/patch-collection-quest-npc.mjs`（dry-run 預設／`--apply`／`--offline`；**寫的是 pretty JSON，必接 `minify-data.mjs --apply`**）|
 | 重建取得管道分片層（改完 obtainable-methods 或 items 後） | `node scripts/build-item-sources.mjs`（dry-run 預設／`--apply`）→ `data/item-sources/`（45 片＋`_index.json`）；前端走 `assets/js/item-sources.js`，**刻意不進 `minify-data.mjs`** |
 | ↑ 上面那支同時產 `data/item-source-types.json` | itemId → 取得管道位元遮罩（差分陣列，gzip 15KB），市場頁的「🎁 取得方式」篩選吃這份。**與分片層由同一支保證同步**，不要另外寫一支 |
-| 視窗計算／鬧鐘回歸（**改完 `window-calc.js`、`et-alarm.js` 或釣魚／限時採集的時間窗邏輯必跑**） | `node scripts/validate-window-calc.mjs`（差分測：把重構前兩頁的實作抄一份當參照，307 種魚＋36 組天氣案例＋225 個節點逐筆比對）|
+| 視窗計算回歸（**改完 `window-calc.js` 或釣魚／限時採集的時間窗邏輯必跑**） | `node scripts/validate-window-calc.mjs`（差分測：把重構前兩頁的實作抄一份當參照，307 種魚＋36 組天氣案例＋225 個節點逐筆比對）|
+| 鬧鐘回歸（**改完 `et-alarm.js` 或釣魚／限時採集／天氣任一頁的鬧鐘接線必跑**） | `node scripts/validate-et-alarm.mjs`（45 項：三頁真的載了引擎且沒有人自己再寫一份、同一窗只響一次、primeOnly、提前量、舊 key 遷移、天氣訂閱）|
 | 全站頁面體檢（**改完任何版面、共用 CSS／JS 或新增頁面必跑**） | `MSYS_NO_PATHCONV=1 node scripts/validate-pages.mjs`（真瀏覽器：36 頁 × 360／768／1280 三寬度，驗 console error／水平溢出／重複 id／缺 alt／點擊目標）；`--page <關鍵字>` 只驗某頁、`--shot <目錄>` 存截圖 |
 | 重建金碟獎品價目表（改完 items 或商店表後） | `node scripts/build-gold-saucer.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/gold-saucer.json`（金碟幣＋金碟聲譽，附六本圖鑑的收藏對應）|
 | 重建物品四語名稱查詢分片（換台服版本或四語快照後） | `node scripts/build-item-names.mjs`（dry-run 預設／`--apply`）→ `data/item-names/`（256 片＋`_index.json`）；**跑完必接 `node scripts/validate-item-names.mjs`**（驗前後端的正規化與雜湊一致）|
@@ -281,6 +282,8 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 - **`ItemSources.getMany()` 回的是 `Map` 不是物件，而且鍵是數字** → 寫成 `map[id]` 會永遠拿到 `undefined`，**而且完全不報錯**——那一欄只是留白，看起來像「本站資料沒收」。正確寫法是 `map.get(+id)`。練級裝備路線第一版就是這樣，分片明明載進來了（log 看得到 `item-sources/18.json`）畫面上卻全空。回歸要驗「取得管道有填上」而不只是「有去載分片」。
 - **要把取得管道翻成畫面上的字** → 用 `scripts/lib/obtainable.mjs` 的 `convertOm()`＋`normalizeEntries()`。**兩種 skip 集合不要混用**：`SKIP_MARKET`（市場頁湊材料，濾掉製作／秘籍／商城）與 `SKIP_CATALOG`（分片層，製作與商城**是**有效答案）。上游的 `shopName`／NPC 名有 2,444 處是英文，`twOnly` 會擋掉，補得回來的走 `twShop` 解析器。
 - **做「下次什麼時候開」的功能** → 用 `assets/js/window-calc.js` 的 `nextWindows()`＋`statusOf()`，鬧鐘用 `assets/js/et-alarm.js`。**不要再寫第三份視窗演算法**——釣魚與限時採集兩頁已經收斂成薄包裝。改完必跑 `node scripts/validate-window-calc.mjs`（鬧鐘的錯誤是該響沒響，畫面上看不出來）。
+  **鬧鐘 2026-09-27 才真的接上**：`et-alarm.js` 先前是寫好卻沒有任何頁面載它的死碼，兩頁各自留著自己的實作，而本檔與知識庫都宣稱「已收斂」。現在釣魚／限時採集／天氣三頁都走 `ETAlarm.create()`，改完跑 `node scripts/validate-et-alarm.mjs`——那支的第一組斷言就是「檔案真的被載了，而且沒有人自己再寫一份」。
+- **天氣的時間窗不要拿 window-calc 算**（單獨查「下次下雨」時）→ 天氣是 8 ET 小時一段、由雜湊決定，權威是 `assets/js/eorzea-weather.js` 的 `getWeatherAt()`；天氣頁的 `scanWeather()` 是目標搜尋／天氣鏈／我的天氣目標三處共用的那一份。**但把天氣當成條件掛在別的視窗上時走 window-calc**（`spec.weather = {mapId, keys, prevKeys}`，`startHour 0`／`endHour 24` 等於不限時段）。
 - **新增或改了「某個系統要先解鎖」的資訊** → 改 `scripts/lib/system-unlock-map.mjs` → `node scripts/build-system-unlocks.mjs`（先 dry-run 看閘門過不過）→ `--apply` → **`node scripts/build-site-index.mjs --apply`**（命令面板吃這份，漏跑會搜不到新系統）→ `validate-data` → `sync-meta --apply`。工具頁的橫幅**不必改頁面**——`assets/js/unlock-banner.js` 認的是 `system-unlocks.json` 的 `tool` 欄位對上網址路徑；新工具頁只要在 `<head>` 加一行 `<script src="../../assets/js/unlock-banner.js"></script>`。
 - **改了收藏頁的 `sources`（尤其 `type: "任務"`）** → `node scripts/patch-collection-quest-npc.mjs`（dry-run 看認出幾筆）→ `--apply` → **`node scripts/minify-data.mjs --apply`**（那支寫 pretty JSON）→ `validate-links`（`收藏頁 sources[].at.mapId → maps` 要 0 斷鏈）→ `validate-tracker-pages`。接取點的畫面層是共用的 `CollectionTracker.sourceWhere()`，**各頁不要自己排版**。
 - **改了追蹤頁／共用引擎（`assets/js/collection-tracker.js`）** → 12 個追蹤頁全部吃這支，改完務必跑一次 jsdom 回歸（見 [docs/專案慣例與記憶.md](docs/專案慣例與記憶.md) §2.5；本機 headless Chromium 在此環境跑不起來）。

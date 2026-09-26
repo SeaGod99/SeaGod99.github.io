@@ -233,6 +233,8 @@
     .gnp-meta { opacity:.75; }
     .gnp .windows { width:100%; margin-top:2px; }
   </style>
+  <!-- 鬧鐘引擎（classic script，掛 window.ETAlarm）。下面的 type="module" 是延後執行的，順序天然成立。 -->
+  <script src="../../assets/js/et-alarm.js"></script>
   <script src="../../assets/js/theme.js"></script>
 </head>
 <body>
@@ -578,61 +580,37 @@ function renderTrackStrip(now){
    鬧鐘提醒：追蹤節點於開放前（可設提前量）以
    系統通知＋音效＋分頁標題提醒。需保持分頁開啟。
    ───────────────────────────────────────────── */
-const ALARM_KEY = 'ffxiv_gathering_alarm';
-const BASE_TITLE = document.title;
-let alarmCfg = { on:false, lead:60, sound:true };
-try { Object.assign(alarmCfg, JSON.parse(localStorage.getItem(ALARM_KEY) || '{}')); } catch(e) {}
-function saveAlarm(){ localStorage.setItem(ALARM_KEY, JSON.stringify(alarmCfg)); }
-
-const alarmFired = new Map(); // nodeId -> 該次開窗實際時間戳（同一窗只響一次）
-
-function alarmChime(){
-  if (!alarmCfg.sound) return;
-  try {
-    const ctx = alarmChime.ctx || (alarmChime.ctx = new (window.AudioContext || window.webkitAudioContext)());
-    if (ctx.state === 'suspended') ctx.resume();
-    const t0 = ctx.currentTime;
-    [880, 1174.66].forEach((f, i)=>{   // 上行兩音，柔和不刺耳
-      const o = ctx.createOscillator(), g = ctx.createGain();
-      o.type = 'sine'; o.frequency.value = f;
-      g.gain.setValueAtTime(0.0001, t0 + i*0.18);
-      g.gain.exponentialRampToValueAtTime(0.22, t0 + i*0.18 + 0.02);
-      g.gain.exponentialRampToValueAtTime(0.0001, t0 + i*0.18 + 0.5);
-      o.connect(g).connect(ctx.destination);
-      o.start(t0 + i*0.18); o.stop(t0 + i*0.18 + 0.55);
-    });
-  } catch(e) {}
-}
-
-function fireAlarm(n, st, untilOpen){
-  alarmChime();
-  const when = untilOpen <= 5 ? '已開放！' : `約 ${Math.ceil(untilOpen/60)} 分鐘後開放`;
-  const title = `${jobEmoji(n.job)} ${n.itemNames.join('、')} ${when}`;
-  const body = n.mapMissing ? '' :
-    `${n.mapName} X:${n.x.toFixed(1)} Y:${n.y.toFixed(1)}・開放 ${fmtEtWindow(st.startH ?? n.spawns[0], n.duration)} ET`;
-  if ('Notification' in window && Notification.permission === 'granted'){
-    try { new Notification(title, { body, tag: 'gather-' + n.id }); } catch(e) {}
-  }
-  document.title = '🔔 ' + title;
-  setTimeout(()=>{ document.title = BASE_TITLE; }, 30000);
-}
+/* 鬧鐘引擎在 assets/js/et-alarm.js（與釣魚頁、天氣頁共用）——
+   這裡只負責「哪些節點要算進去」與「通知上要寫什麼」。
+   設定存 `ffxiv_alarm` 的 `gathering` 欄，舊 key `ffxiv_gathering_alarm`
+   由引擎自動讀進來、也會同步寫回去（不刪，見引擎檔頭）。 */
+const alarm = window.ETAlarm.create({
+  scope: 'gathering',
+  baseTitle: document.title,
+  onFire: ({ n, st }, untilOpen) => ({
+    title: `${jobEmoji(n.job)} ${n.itemNames.join('、')} ` +
+      (untilOpen <= 5 ? '已開放！' : `約 ${Math.ceil(untilOpen / 60)} 分鐘後開放`),
+    body: n.mapMissing ? '' :
+      `${n.mapName} X:${n.x.toFixed(1)} Y:${n.y.toFixed(1)}・開放 ${fmtEtWindow(st.startH ?? n.spawns[0], n.duration)} ET`,
+    tag: 'gather-' + n.id,
+  }),
+});
+const alarmCfg = alarm.cfg;
+function saveAlarm(){ alarm.save(); }
+function alarmChime(){ alarm.chime(); }
 
 /* primeOnly=true：只登記當前已在門檻內的窗（不響），
    用於剛開啟提醒／剛加追蹤／改提前量時，避免對眼前已看得到的狀態突然響鈴 */
 function checkAlarms(now, primeOnly){
-  if (!alarmCfg.on || !trackedIds.size) return;
+  if (!trackedIds.size) return;
+  const list = [];
   for (const id of trackedIds){
     const n = NODE_BY_ID.get(id);
     if (!n) continue;
     const st = nodeStatus(n, now);
-    const untilOpen = st.state === 'open' ? 0 : st.secsLeft;
-    if (untilOpen > alarmCfg.lead) continue;
-    const openTs = now + untilOpen * 1000;
-    const prev = alarmFired.get(id);
-    if (prev && Math.abs(openTs - prev) < 120000) continue;
-    alarmFired.set(id, openTs);
-    if (!primeOnly) fireAlarm(n, st, untilOpen);
+    list.push({ key: id, item: { n, st }, secsUntilOpen: st.state === 'open' ? 0 : st.secsLeft });
   }
+  alarm.check(now, list, primeOnly);
 }
 
 function syncAlarmUI(){
@@ -982,7 +960,7 @@ document.getElementById('alarmLead').addEventListener('change', e=>{
   checkAlarms(Date.now(), true);
 });
 document.getElementById('alarmTest').addEventListener('click', ()=>{
-  const sav = alarmCfg.sound; alarmCfg.sound = true; alarmChime(); alarmCfg.sound = sav;
+  alarm.chime();                       // 引擎的 chime() 不看 sound 設定，試響一定出聲
   if ('Notification' in window && Notification.permission === 'granted'){
     try { new Notification('🔔 測試提醒', { body: '提醒功能運作正常。', tag: 'gather-test' }); } catch(e) {}
   }

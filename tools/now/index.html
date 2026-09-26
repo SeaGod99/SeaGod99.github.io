@@ -120,7 +120,7 @@
 import { nextWindows, statusOf, EORZEA_MULT } from '../../assets/js/window-calc.js';
 /* 天氣窗要算得出來，必須先載地圖的天氣表；`weatherKeys()` 把 `fishes.json` 的
    `[{name:'Fog'}]` 轉成本站用的 key（那張對照表是共用的，不要在這裡再抄一份）。 */
-import { initWeatherTables, weatherKeys, WEATHER_INFO } from '../../assets/js/eorzea-weather.js';
+import { initWeatherTables, weatherKeys, WEATHER_INFO, getMapsData } from '../../assets/js/eorzea-weather.js';
 import { mountEtBar } from '../../assets/js/et-bar.js';
 
 mountEtBar('#etBar', { metric: 'weather' });
@@ -132,6 +132,7 @@ const KEYS = {
   fish: 'ffxiv_fishing_targets',
   node: 'ffxiv_gathering_tracked',
   explog: 'ffxiv_exploration_log_done',
+  weather: 'ffxiv_weather_watch',
 };
 
 function esc(s) {
@@ -230,6 +231,37 @@ async function load() {
     if (!logByWindow.has(k)) logByWindow.set(k, { s: e.timeStart, e: e.timeEnd, list: [] });
     logByWindow.get(k).list.push(e);
   }
+  // ── 訂閱的天氣目標 ──────────────────────────────────
+  /* 天氣頁的 ⭐ 訂閱。**存的是天氣鍵不是顯示字串**，所以這裡用 WEATHER_INFO 轉名字；
+     地圖名靠 maps.json（天氣表已經載過了）。純天氣的 spec——不限時段，
+     `window-calc` 本來就支援（`startHour/endHour` 給 0/24 等於不限時）。 */
+  {
+    let list = [];
+    try {
+      const raw = JSON.parse(localStorage.getItem(KEYS.weather) || '[]');
+      if (Array.isArray(raw)) list = raw;
+    } catch (e) {}
+    // 地圖名取自 initWeatherTables 已經載好的那份（getMapsData），不要為了名字再抓一次 maps.json
+    const mapsData = getMapsData() || {};
+    const mapName = new Map(((mapsData.data) || []).map((m) => [m.id, m.name]));
+    for (const w of list) {
+      const zone = Number(w && w.zone);
+      const keys = (w && Array.isArray(w.w) ? w.w : []).filter(Boolean);
+      if (!zone || !keys.length) continue;
+      const prevKeys = w.prev ? [w.prev] : [];
+      const wxName = (k) => (WEATHER_INFO[k] ? WEATHER_INFO[k].name : k);
+      ITEMS.push({
+        kind: '🌦️ 天氣目標',
+        name: keys.map(wxName).join('／'),
+        at: mapName.get(zone) || ('地圖 ' + zone),
+        cond: prevKeys.length ? '前一時段 ' + prevKeys.map(wxName).join('／') : '',
+        spec: { startHour: 0, endHour: 24, weather: { mapId: zone, keys, prevKeys } },
+        href: '../../tools/weather/?zone=' + zone + '&w=' + encodeURIComponent(keys.join(',')) +
+          (w.prev ? '&prev=' + encodeURIComponent(w.prev) : ''),
+      });
+    }
+  }
+
   for (const g of logByWindow.values()) {
     const zones = [...new Set(g.list.map((x) => x.zone).filter(Boolean))];
     ITEMS.push({
@@ -257,6 +289,7 @@ function render() {
       '<ul>' +
         '<li><a href="../../tools/fishing/">釣魚紀錄追蹤</a>：在魚的卡片上按 ⭐ 設為目標魚</li>' +
         '<li><a href="../../tools/gathering/">限時採集節點查詢</a>：在節點上按追蹤</li>' +
+        '<li><a href="../../tools/weather/">天氣查詢</a>：選好地圖與天氣後按 ⭐ 加入提醒</li>' +
         '<li><a href="../../collections/exploration-log/">探索筆記追蹤器</a>：未完成且限時的會自動出現</li>' +
       '</ul>' +
       '全天開放的魚與隨時可做的探索筆記不會出現在這裡——它們不需要等。</div>';

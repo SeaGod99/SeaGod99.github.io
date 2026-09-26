@@ -79,6 +79,26 @@
   .r-rt { color: var(--text-dim); font-size: 14px; font-variant-numeric: tabular-nums; }
   .empty { color: var(--text-dim); font-size: 15px; padding: 8px 0; }
 
+  /* 我的天氣目標。色票一律取自 tokens.css，這裡不開 :root（§3.6） */
+  .watch-panel { background: var(--bg-card); border: 1px solid var(--border-hover); border-radius: 10px; padding: 14px 18px; margin-bottom: 20px; }
+  .wp-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+  .wp-title { font-size: 15px; font-weight: 600; color: var(--text); }
+  .wp-hint { font-size: 13px; color: var(--text-dim); }
+  .wp-alarm { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .wp-alarm .chip { padding: 4px 11px; font-size: 13px; }
+  .wp-alarm select { padding: 4px 8px; font-size: 13px; }
+  .chip.active { background: rgba(200,169,110,.2); border-color: var(--gold); color: var(--gold); }
+  .w-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 8px 0; border-top: 1px solid var(--border); font-size: 14px; }
+  .w-row:first-child { border-top: none; }
+  .w-zone { color: var(--text); font-weight: 600; }
+  .w-what { color: var(--gold); }
+  .w-next { color: var(--text-dim); margin-left: auto; font-variant-numeric: tabular-nums; }
+  .w-next.soon { color: var(--green); font-weight: 600; }
+  /* 移除鈕：孤立的小圖示鈕，用真實 min-height 撐到 44（不用 ::after 擴張層，會蓋到上下列） */
+  .w-del { background: none; border: 1px solid var(--border); border-radius: 6px; color: var(--text-dim);
+           font: inherit; font-size: 13px; padding: 4px 10px; min-height: var(--tap-min); cursor: pointer; }
+  .w-del:hover { border-color: var(--red); color: var(--red); }
+
   /* Multi-zone */
   .mz-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
   .mz-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 17px 19px; }
@@ -119,6 +139,8 @@
     .grp-btn, .chip { display: inline-flex; align-items: center; }
   }
 </style>
+  <!-- 鬧鐘引擎（classic script，掛 window.ETAlarm）。下面的 type="module" 是延後執行的，順序天然成立。 -->
+  <script src="../../assets/js/et-alarm.js"></script>
   <script src="../../assets/js/theme.js"></script>
 </head>
 <body>
@@ -133,6 +155,28 @@
 
   <!-- ET 時鐘列（共用元件 assets/js/et-bar.js） -->
   <div id="etBar"></div>
+
+  <!-- 我的天氣目標：跨分頁的清單，沒有訂閱時整塊不顯示（不要留一塊空框佔位） -->
+  <div class="watch-panel" id="watch-panel" style="display:none">
+    <div class="wp-head">
+      <span class="wp-title">🔔 我的天氣目標</span>
+      <span class="wp-hint" id="watch-count"></span>
+      <span class="wp-alarm">
+        <span class="chip" id="alarmToggle" title="目標天氣出現前提醒">🔔 出現提醒</span>
+        <select id="alarmLead" title="提前多久提醒（現實時間）">
+          <option value="0">出現時提醒</option>
+          <option value="60">提前 1 分鐘</option>
+          <option value="180">提前 3 分鐘</option>
+          <option value="300">提前 5 分鐘</option>
+          <option value="600">提前 10 分鐘</option>
+        </select>
+        <span class="chip" id="alarmSound" title="提醒音效">🔊 音效</span>
+        <button class="chip" id="alarmTest" title="試聽提醒效果">試響</button>
+      </span>
+    </div>
+    <div class="wp-hint" id="alarmHint" style="display:none"></div>
+    <div id="watch-list"></div>
+  </div>
 
   <!-- Tabs -->
   <div class="tabs">
@@ -161,7 +205,10 @@
     <div class="sec-title">未來 24 個天氣時段</div>
     <div class="forecast-grid" id="forecast-grid"></div>
     <div class="search-panel">
-      <div class="sec-title" style="margin-bottom:8px;">🔍 目標天氣搜尋</div>
+      <div class="sec-title" style="margin-bottom:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <span>🔍 目標天氣搜尋</span>
+        <button class="chip" id="watch-add" style="display:none" title="加進「我的天氣目標」，可開啟出現提醒">⭐ 加入提醒</button>
+      </div>
       <div class="chips" id="weather-chips"></div>
       <div class="results" id="search-results"><div class="empty">點選上方天氣標籤以搜尋下次出現時間</div></div>
     </div>
@@ -186,7 +233,10 @@
   <!-- Tab: Chain -->
   <div class="tab-content" id="tab-chain">
     <div class="chain-panel">
-      <div class="sec-title" style="margin-bottom:6px;">⛓ 天氣鏈搜尋</div>
+      <div class="sec-title" style="margin-bottom:6px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <span>⛓ 天氣鏈搜尋</span>
+        <button class="chip" id="chain-watch-add" style="display:none" title="加進「我的天氣目標」，可開啟出現提醒">⭐ 加入提醒</button>
+      </div>
       <div class="chain-desc">搜尋「前一天氣 → 目標天氣」連續出現的時間點，適合釣魚王、農場活動。</div>
       <div class="chain-row">
         <span style="font-size:13px;color:var(--text-dim);">地圖：</span>
@@ -395,6 +445,11 @@ function syncURL() {
     const p = new URLSearchParams();
     if (curZone) p.set('zone', String(curZone));
     if (selWeathers.size) p.set('w', [...selWeathers].join(','));
+    /* `prev` 只在天氣鏈那一邊有意義，而它有自己的地圖選單。
+       **只有在兩邊的地圖相同時才寫進網址**——不然收到連結的人會拿 zone 去查
+       另一張圖的鏈，而畫面上看不出來哪裡錯了。 */
+    const chainPrev = document.getElementById('chain-prev');
+    if (chainPrev && chainPrev.value && chainZone === curZone) p.set('prev', chainPrev.value);
     const q = p.toString();
     history.replaceState(null, '', q ? '?' + q : location.pathname);
   } catch (e) { /* 無痕視窗等寫不了網址：不影響查詢本身 */ }
@@ -420,6 +475,27 @@ function applyURL() {
   const w = (p.get('w') || '').split(',').map(x => x.trim()).filter(Boolean);
   for (const k of w) if (WEATHER_KEYS.has(k)) selWeathers.add(k);
   renderForecast(); renderChips(); renderSearch();
+  /* `?prev=` ——帶著前天氣進來就是要看天氣鏈，所以直接切到那個分頁。
+     必須在 initChain() 之後才有選單可填，所以真正套用放在 applyChainURL()。 */
+  pendingPrev = WEATHER_KEYS.has(p.get('prev') || '') ? p.get('prev') : null;
+}
+
+let pendingPrev = null;
+
+/* initChain() 建好選單之後才呼叫。`w` 的第一個天氣當成鏈的目標天氣——
+   單地圖那邊可以多選，鏈只吃一個，取第一個並在畫面上如實反映（選單看得到）。 */
+function applyChainURL() {
+  if (!pendingPrev) return;
+  const sel = document.getElementById('chain-zone');
+  if (curZone && [...sel.options].some(o => Number(o.value) === curZone)) {
+    sel.value = String(curZone);
+    onChainZoneChange();                     // 會重建 prev／next 選單
+  }
+  document.getElementById('chain-prev').value = pendingPrev;
+  const first = [...selWeathers][0];
+  if (first) document.getElementById('chain-next').value = first;
+  renderChain();
+  switchTab('chain');
 }
 
 function renderForecast() {
@@ -453,27 +529,50 @@ function toggleW(w) {
   renderChips(); renderSearch(); syncURL();
 }
 
+/* 掃描「下次符合條件的天氣時段」——目標搜尋、天氣鏈、我的天氣目標三處共用。
+   `keys` 空＝任意天氣；`prev` 有值時要求**前一個時段**是它（天氣鏈就是這個意思）。
+   回傳每一筆的 `{ t, w, wPrev }`，t 是該時段的開始時刻。
+   ⚠ 天氣的視窗機制與釣魚／採集不同（8 ET 小時一段、由雜湊決定），
+   **不要拿 window-calc 來算**——那支算的是「每天第幾小時到第幾小時」。
+   這裡的權威是 eorzea-weather.js 的 getWeatherAt()。 */
+function scanWeather(zone, keys, prev, now, limit) {
+  const cur = periodStart(now);
+  const out = [];
+  // prev 有值時從 i=1 起跳（i=0 沒有前一段可比）
+  for (let i = prev ? 1 : 0; i < 480 && out.length < limit; i++) {
+    const t = cur + i * WEATHER_PERIOD;
+    const w = getWeatherAt(zone, t);
+    if (keys && keys.length && keys.indexOf(w) < 0) continue;
+    const wPrev = prev ? getWeatherAt(zone, t - WEATHER_PERIOD) : null;
+    if (prev && wPrev !== prev) continue;
+    out.push({ t, w, wPrev });
+  }
+  return out;
+}
+
 function renderSearch() {
   const el = document.getElementById('search-results');
-  if (!selWeathers.size) { el.innerHTML = '<div class="empty">點選上方天氣標籤以搜尋下次出現時間</div>'; return; }
+  const addBtn = document.getElementById('watch-add');
+  if (!selWeathers.size) {
+    el.innerHTML = '<div class="empty">點選上方天氣標籤以搜尋下次出現時間</div>';
+    addBtn.style.display = 'none';
+    return;
+  }
   const now = Date.now();
-  const cur = periodStart(now);
-  const rows = [];
-  for (let i = 0; i < 480 && rows.length < 12; i++) {
-    const t = cur + i * WEATHER_PERIOD;
-    const w = getWeatherAt(curZone, t);
-    if (selWeathers.has(w)) {
-      const info = wi(w);
-      const diff = t - now;
-      rows.push(`<div class="result-row">
-        <span class="r-idx">#${rows.length+1}</span>
+  const hits = scanWeather(curZone, [...selWeathers], null, now, 12);
+  el.innerHTML = hits.length
+    ? hits.map(({ t, w }, i) => {
+        const info = wi(w), diff = t - now;
+        return `<div class="result-row">
+        <span class="r-idx">#${i+1}</span>
         <span class="r-et">${fmtET(t)}</span>
         <span>${info.icon} ${info.name}</span>
         <span class="r-rt">${fmtRT(t)} ${diff>0?`（${fmtCountdown(diff)}）`:'（現在）'}</span>
-      </div>`);
-    }
-  }
-  el.innerHTML = rows.length ? rows.join('') : '<div class="empty">未來 480 個時段內未找到。</div>';
+      </div>`;
+      }).join('')
+    : '<div class="empty">未來 480 個時段內未找到。</div>';
+  // 已經訂閱過同一組就不再提供加入（避免一模一樣的兩列）
+  addBtn.style.display = hasWatch(curZone, [...selWeathers], null) ? 'none' : '';
 }
 
 // ============================================================
@@ -540,27 +639,181 @@ function renderChain() {
   const prev = document.getElementById('chain-prev').value;
   const next = document.getElementById('chain-next').value;
   const el   = document.getElementById('chain-results');
-  if (!prev && !next) { el.innerHTML = '<div class="empty">請選擇前天氣或目標天氣</div>'; return; }
-  const now = Date.now();
-  const cur = periodStart(now);
-  const rows = [];
-  for (let i = 1; i < 480 && rows.length < 12; i++) {
-    const tPrev = cur + (i-1)*WEATHER_PERIOD;
-    const tNext = cur + i*WEATHER_PERIOD;
-    const wPrev = getWeatherAt(chainZone, tPrev);
-    const wNext = getWeatherAt(chainZone, tNext);
-    if ((!prev||wPrev===prev) && (!next||wNext===next)) {
-      const iP=wi(wPrev), iN=wi(wNext);
-      const diff = tNext - now;
-      rows.push(`<div class="result-row">
-        <span class="r-idx">#${rows.length+1}</span>
-        <span class="r-et">${fmtET(tNext)}</span>
-        <span>${iP.icon}${iP.name} → ${iN.icon}${iN.name}</span>
-        <span class="r-rt">${fmtRT(tNext)} ${diff>0?`（${fmtCountdown(diff)}）`:'（現在）'}</span>
-      </div>`);
-    }
+  const addBtn = document.getElementById('chain-watch-add');
+  if (!prev && !next) {
+    el.innerHTML = '<div class="empty">請選擇前天氣或目標天氣</div>';
+    addBtn.style.display = 'none';
+    return;
   }
-  el.innerHTML = rows.length ? rows.join('') : '<div class="empty">未來 480 個時段內未找到。</div>';
+  const now = Date.now();
+  const hits = scanWeather(chainZone, next ? [next] : null, prev || null, now, 12);
+  el.innerHTML = hits.length
+    ? hits.map(({ t, w, wPrev }, i) => {
+        const iN = wi(w), diff = t - now;
+        const iP = wPrev ? wi(wPrev) : wi(getWeatherAt(chainZone, t - WEATHER_PERIOD));
+        return `<div class="result-row">
+        <span class="r-idx">#${i+1}</span>
+        <span class="r-et">${fmtET(t)}</span>
+        <span>${iP.icon}${iP.name} → ${iN.icon}${iN.name}</span>
+        <span class="r-rt">${fmtRT(t)} ${diff>0?`（${fmtCountdown(diff)}）`:'（現在）'}</span>
+      </div>`;
+      }).join('')
+    : '<div class="empty">未來 480 個時段內未找到。</div>';
+  /* 「任意 → 任意」訂閱不起來（每一段都符合），所以目標天氣是必填才給訂閱。
+     只選了前天氣的話這頁仍然查得到，只是不讓你訂閱一個永遠在響的東西。 */
+  addBtn.style.display = next && !hasWatch(chainZone, [next], prev || null) ? '' : 'none';
+}
+
+/* ============================================================
+   我的天氣目標（⭐ 訂閱）＋出現提醒
+   存 `ffxiv_weather_watch`（key 一律 ffxiv_ 前綴，首頁全站備份才掃得到，§2.3）。
+   **存天氣鍵不存顯示字串**——譯名表改過的話存字串會變成查不到的死資料。
+   ============================================================ */
+const WATCH_KEY = 'ffxiv_weather_watch';
+let watches = [];
+try {
+  const raw = JSON.parse(localStorage.getItem(WATCH_KEY) || '[]');
+  if (Array.isArray(raw)) {
+    watches = raw.filter(x => x && Number(x.zone) && Array.isArray(x.w) && x.w.length)
+      .map(x => ({
+        zone: Number(x.zone),
+        // 只收認得的天氣鍵：localStorage 是使用者可以亂改的
+        w: x.w.filter(k => WEATHER_KEYS.has(k)),
+        prev: x.prev && WEATHER_KEYS.has(x.prev) ? x.prev : null,
+      }))
+      .filter(x => x.w.length);
+  }
+} catch (e) { /* 壞掉的資料就當沒有，不要讓整頁掛掉 */ }
+
+function saveWatches() {
+  try { localStorage.setItem(WATCH_KEY, JSON.stringify(watches)); } catch (e) {}
+}
+function watchKey(w) { return w.zone + '|' + [...w.w].sort().join(',') + '|' + (w.prev || ''); }
+function hasWatch(zone, keys, prev) {
+  const k = watchKey({ zone, w: keys, prev });
+  return watches.some(x => watchKey(x) === k);
+}
+function zoneName(mapId) {
+  for (const g of Object.values(GROUPS)) {
+    const z = g.zones.find(x => x.mapId === mapId);
+    if (z) return z.name;
+  }
+  return '地圖 ' + mapId;           // 訂閱過後才被拿掉的圖：顯示 id 也比整列消失好
+}
+
+const alarm = window.ETAlarm.create({
+  scope: 'weather',
+  baseTitle: document.title,
+  onFire: (w, secs) => ({
+    title: `${wi(w.w[0]).icon} ${zoneName(w.zone)}：${w.w.map(k => wi(k).name).join('／')} ` +
+      (secs <= 5 ? '出現了！' : `約 ${Math.ceil(secs / 60)} 分鐘後出現`),
+    body: w.prev ? `前一段天氣：${wi(w.prev).name}` : '',
+    tag: 'weather-' + watchKey(w),
+  }),
+});
+
+function renderWatches() {
+  const panel = document.getElementById('watch-panel');
+  if (!watches.length) { panel.style.display = 'none'; return; }
+  panel.style.display = '';
+  const now = Date.now();
+  document.getElementById('watch-count').textContent = watches.length + ' 個目標';
+  document.getElementById('watch-list').innerHTML = watches.map((w, i) => {
+    const hit = scanWeather(w.zone, w.w, w.prev, now, 1)[0];
+    const diff = hit ? hit.t - now : null;
+    const what = (w.prev ? wi(w.prev).icon + wi(w.prev).name + ' → ' : '') +
+      w.w.map(k => wi(k).icon + wi(k).name).join('／');
+    const next = !hit ? '未來 480 段內沒有'
+      : diff <= 0 ? '現在就是'
+      : `${fmtET(hit.t)}（${fmtCountdown(diff)}）`;
+    return `<div class="w-row">
+      <span class="w-zone">${zoneName(w.zone)}</span>
+      <span class="w-what">${what}</span>
+      <span class="w-next${diff != null && diff <= 0 ? ' soon' : ''}">${next}</span>
+      <button class="w-del" data-i="${i}" aria-label="移除這個天氣目標">✕ 移除</button>
+    </div>`;
+  }).join('');
+  checkAlarms(now);
+}
+
+/* primeOnly=true：只登記目前已在門檻內的窗（不響），
+   用於剛開啟提醒／剛加目標／改提前量時，避免對眼前已看得到的狀態突然響鈴 */
+function checkAlarms(now, primeOnly) {
+  if (!watches.length) return;
+  const list = watches.map(w => {
+    const hit = scanWeather(w.zone, w.w, w.prev, now, 1)[0];
+    if (!hit) return null;
+    return { key: watchKey(w), item: w, secsUntilOpen: Math.max(0, Math.round((hit.t - now) / 1000)) };
+  }).filter(Boolean);
+  alarm.check(now, list, primeOnly);
+}
+
+function addWatch(zone, keys, prev) {
+  if (hasWatch(zone, keys, prev)) return;
+  watches.push({ zone, w: [...keys], prev: prev || null });
+  saveWatches();
+  checkAlarms(Date.now(), true);    // 新目標先登記當前窗，不立即響鈴
+  renderWatches(); renderSearch(); renderChain();
+}
+function removeWatch(i) {
+  const w = watches[i];
+  if (!w) return;
+  alarm.forget(watchKey(w));        // 不清掉去重表的話，再加回來會被當成同一窗而不響
+  watches.splice(i, 1);
+  saveWatches();
+  renderWatches(); renderSearch(); renderChain();
+}
+
+function syncAlarmUI() {
+  document.getElementById('alarmToggle').classList.toggle('active', alarm.cfg.on);
+  document.getElementById('alarmSound').classList.toggle('active', alarm.cfg.sound);
+  document.getElementById('alarmLead').value = String(alarm.cfg.lead);
+  const hint = document.getElementById('alarmHint');
+  if (!alarm.cfg.on) { hint.style.display = 'none'; return; }
+  const noNotif = !('Notification' in window) || Notification.permission !== 'granted';
+  hint.style.display = '';
+  hint.textContent = '🔔 提醒運作中——需保持此分頁開啟' +
+    (noNotif ? '；瀏覽器通知未允許，僅以音效與分頁標題提醒' : '，將以系統通知＋音效提醒');
+}
+
+function wireWatchUI() {
+  document.getElementById('watch-add').addEventListener('click', () => {
+    addWatch(curZone, [...selWeathers], null);
+  });
+  document.getElementById('chain-watch-add').addEventListener('click', () => {
+    const prev = document.getElementById('chain-prev').value;
+    const next = document.getElementById('chain-next').value;
+    if (next) addWatch(chainZone, [next], prev || null);
+  });
+  document.getElementById('watch-list').addEventListener('click', e => {
+    const b = e.target.closest('.w-del');
+    if (b) removeWatch(Number(b.dataset.i));
+  });
+  document.getElementById('alarmToggle').addEventListener('click', () => {
+    alarm.cfg.on = !alarm.cfg.on; alarm.save();
+    if (alarm.cfg.on) {
+      if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission().finally(syncAlarmUI);
+      }
+      checkAlarms(Date.now(), true);
+    }
+    syncAlarmUI();
+  });
+  document.getElementById('alarmSound').addEventListener('click', () => {
+    alarm.cfg.sound = !alarm.cfg.sound; alarm.save(); syncAlarmUI();
+  });
+  document.getElementById('alarmLead').addEventListener('change', e => {
+    alarm.cfg.lead = Number(e.target.value) || 0; alarm.save();
+    checkAlarms(Date.now(), true);
+  });
+  document.getElementById('alarmTest').addEventListener('click', () => {
+    alarm.chime();                  // 引擎的 chime() 不看 sound 設定，試響一定出聲
+    if ('Notification' in window && Notification.permission === 'granted') {
+      try { new Notification('🔔 測試提醒', { body: '提醒功能運作正常。', tag: 'weather-test' }); } catch (e) {}
+    }
+  });
+  syncAlarmUI();
+  renderWatches();
 }
 
 // ============================================================
@@ -600,11 +853,18 @@ window.toggleW = toggleW;
   try { applyURL(); } finally { applyingURL = false; }
   syncURL();                       // 套用期間 setGroup 不寫網址，這裡補寫一次正確的
   initChain();
+  applyChainURL();                 // ?prev= 要等選單建好才套得上
+  wireWatchUI();
   mountEtBar('#etBar', { metric: 'weather' });
   setInterval(() => {
     renderForecast(); renderSearch(); renderChain();
+    renderWatches();               // 倒數要跟著走
     if (document.getElementById('tab-multi').classList.contains('active')) renderMulti();
   }, 20000);
+  /* 鬧鐘另開一個更密的 timer。畫面每 20 秒重畫就夠了（天氣一段 23 分鐘），
+     但提前量選「出現時提醒」的人會晚最多 20 秒才收到通知——
+     **鬧鐘的錯誤是該響沒響／響太晚，畫面上看不出來**，所以不跟著畫面的節奏走。 */
+  setInterval(() => checkAlarms(Date.now()), 5000);
 })();
 </script>
 </body>

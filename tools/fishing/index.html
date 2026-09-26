@@ -308,6 +308,9 @@
   </style>
   <script src="../../assets/js/patch-gate.js"></script>
   <script src="../../assets/js/collection-tracker.js"></script>
+  <!-- 鬧鐘引擎（classic script，掛 window.ETAlarm）。**必須在下面的 module 之前載**——
+       module 是延後執行的，所以順序天然成立，但別改成 type="module"。 -->
+  <script src="../../assets/js/et-alarm.js"></script>
   <script src="../../assets/js/theme.js"></script>
 </head>
 <body>
@@ -1103,67 +1106,45 @@ function renderTargets() {
 
 /* ─────────────────────────────────────────────
    鬧鐘提醒：目標魚於開窗前（可設提前量）以
-   系統通知＋音效＋分頁標題提醒（同限時採集頁）。
+   系統通知＋音效＋分頁標題提醒。
+   **引擎在 assets/js/et-alarm.js**（與限時採集頁、天氣頁共用）——
+   這裡只負責「哪些魚要算進去」與「通知上要寫什麼」。
+   設定存 `ffxiv_alarm` 的 `fishing` 欄，舊 key `ffxiv_fishing_alarm`
+   由引擎自動讀進來、也會同步寫回去（不刪，見引擎檔頭）。
    ───────────────────────────────────────────── */
-const ALARM_KEY = 'ffxiv_fishing_alarm';
-const BASE_TITLE = document.title;
-let alarmCfg = { on: false, lead: 60, sound: true };
-try { Object.assign(alarmCfg, JSON.parse(localStorage.getItem(ALARM_KEY) || '{}')); } catch (e) {}
-function saveAlarm() { localStorage.setItem(ALARM_KEY, JSON.stringify(alarmCfg)); }
-
-const alarmFired = new Map(); // itemId -> 該次開窗時間戳（同一窗只響一次）
-
-function alarmChime() {
-  if (!alarmCfg.sound) return;
-  try {
-    const ctx = alarmChime.ctx || (alarmChime.ctx = new (window.AudioContext || window.webkitAudioContext)());
-    if (ctx.state === 'suspended') ctx.resume();
-    const t0 = ctx.currentTime;
-    [880, 1174.66].forEach((f, i) => {   // 上行兩音，柔和不刺耳
-      const o = ctx.createOscillator(), g = ctx.createGain();
-      o.type = 'sine'; o.frequency.value = f;
-      g.gain.setValueAtTime(0.0001, t0 + i * 0.18);
-      g.gain.exponentialRampToValueAtTime(0.22, t0 + i * 0.18 + 0.02);
-      g.gain.exponentialRampToValueAtTime(0.0001, t0 + i * 0.18 + 0.5);
-      o.connect(g).connect(ctx.destination);
-      o.start(t0 + i * 0.18); o.stop(t0 + i * 0.18 + 0.55);
-    });
-  } catch (e) {}
-}
-
-function fireAlarm(f, st, untilOpen) {
-  alarmChime();
-  const when = untilOpen <= 5 ? '開窗了！' : `約 ${Math.ceil(untilOpen / 60)} 分鐘後開窗`;
-  const title = `🎣 ${f.name || f.nameEn} ${when}`;
-  const sz = spotZone(f);
-  const body = [
-    f.spotName ? `釣場：${f.spotName}${sz?.mapName && sz.mapName !== f.spotName ? `（${sz.mapName}）` : ''}` : '',
-    f.bait?.length ? `餌：${f.bait.map(b => b.name || b.nameEn).join(' → ')}` : '',
-  ].filter(Boolean).join('・');
-  if ('Notification' in window && Notification.permission === 'granted') {
-    try { new Notification(title, { body, tag: 'fish-' + f.itemId }); } catch (e) {}
-  }
-  document.title = '🔔 ' + title;
-  setTimeout(() => { document.title = BASE_TITLE; }, 30000);
-}
+const alarm = window.ETAlarm.create({
+  scope: 'fishing',
+  baseTitle: document.title,
+  onFire: ({ f, st }, untilOpen) => {
+    const when = untilOpen <= 5 ? '開窗了！' : `約 ${Math.ceil(untilOpen / 60)} 分鐘後開窗`;
+    const sz = spotZone(f);
+    return {
+      title: `🎣 ${f.name || f.nameEn} ${when}`,
+      body: [
+        f.spotName ? `釣場：${f.spotName}${sz?.mapName && sz.mapName !== f.spotName ? `（${sz.mapName}）` : ''}` : '',
+        f.bait?.length ? `餌：${f.bait.map(b => b.name || b.nameEn).join(' → ')}` : '',
+      ].filter(Boolean).join('・'),
+      tag: 'fish-' + f.itemId,
+    };
+  },
+});
+const alarmCfg = alarm.cfg;
+function saveAlarm() { alarm.save(); }
+function alarmChime() { alarm.chime(); }
 
 /* primeOnly=true：只登記當前已在門檻內的窗（不響），
    用於剛開啟提醒／剛加目標／改提前量時，避免對眼前已看得到的狀態突然響鈴 */
 function checkAlarms(now, primeOnly) {
-  if (!alarmCfg.on || !targets.size) return;
+  if (!targets.size) return;
+  const list = [];
   for (const id of targets) {
     const f = allFish.find(x => x.itemId === id);
     if (!f) continue;
     const st = fishStatus(f, now);
     if (st.state !== 'open' && st.state !== 'wait') continue; // 隨時可釣／近期無窗不提醒
-    const untilOpen = st.state === 'open' ? 0 : st.secsLeft;
-    if (untilOpen > alarmCfg.lead) continue;
-    const openTs = now + untilOpen * 1000;
-    const prev = alarmFired.get(id);
-    if (prev && Math.abs(openTs - prev) < 120000) continue;
-    alarmFired.set(id, openTs);
-    if (!primeOnly) fireAlarm(f, st, untilOpen);
+    list.push({ key: id, item: { f, st }, secsUntilOpen: st.state === 'open' ? 0 : st.secsLeft });
   }
+  alarm.check(now, list, primeOnly);
 }
 
 function syncAlarmUI() {
@@ -1196,7 +1177,7 @@ document.getElementById('alarmLead').addEventListener('change', e => {
   checkAlarms(Date.now(), true);
 });
 document.getElementById('alarmTest').addEventListener('click', () => {
-  const sav = alarmCfg.sound; alarmCfg.sound = true; alarmChime(); alarmCfg.sound = sav;
+  alarm.chime();                        // 引擎的 chime() 不看 sound 設定，試響一定出聲
   if ('Notification' in window && Notification.permission === 'granted') {
     try { new Notification('🔔 測試提醒', { body: '提醒功能運作正常。', tag: 'fish-test' }); } catch (e) {}
   }
