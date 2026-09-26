@@ -109,7 +109,7 @@ async function main() {
   // 玩家技能的 id、職業與等級
   const acts = await xiv.sheet(
     "Action",
-    "IsPlayerAction,IsPvP,ClassJob@as(raw),ClassJobLevel,ActionCategory.Name,Icon",
+    "IsPlayerAction,IsPvP,ClassJob@as(raw),ClassJobLevel,ActionCategory.Name,Icon,ActionCombo@as(raw)",
     { limit: 500, cache: "out_data/cache/action-meta.json", offline, label: "  Action：" }
   );
   const jobs = await xiv.sheet(
@@ -152,6 +152,10 @@ async function main() {
          所以依職業篩選時 PvP 版會排在前面。不標出來的話黑魔會把 PvP 數值當成 PvE 的。
          Action.IsPvP 分得開（實測 29649=true、141=false）。 */
       pvp: !!a.f.IsPvP,
+      /* 連擊前置：`ActionCombo` 是「要先用哪一招，這一招才有連擊效果」。
+         實測玩家技能裡只有 53 筆有值，而且前置技能 53/53 都在辭典裡（不會產生死連結）。
+         0 代表沒有連擊前置——**不要寫成 0，前端用 falsy 判斷，寫 0 會被當成 id 0 那筆**。 */
+      combo: a.f["ActionCombo@as(raw)"] || null,
       icon,
     });
   }

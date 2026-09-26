@@ -124,6 +124,83 @@ const HTML = readFileSync(join(ROOT, 'tools/action-codex/index.html'), 'utf8');
     doc.getElementById('jobSel').style.display === 'none' &&
     doc.getElementById('pvpSel').style.display === 'none', '');
 
+  /* ── ⛓ 連擊 ────────────────────────────────────────────
+     全遊戲只有 53 招有連擊前置，而且前置全都在辭典裡。
+     兩個會安靜出錯的地方：①前置被篩掉時不可以畫出半截樹
+     ②PvE／PvP 不分開會把同名不同威力的兩招混進同一棵樹。 */
+  {
+    const combo = doc.querySelector('#kindSeg button[data-kind="combo"]');
+    push('有「連擊」檢視', !!combo, '');
+    // 先把職業清掉，看全部
+    doc.getElementById('jobSel').value = '';
+    combo.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
+    await new Promise((r) => setTimeout(r, 500));
+    const nodes = doc.querySelectorAll('.cb-node');
+    push('  畫出連擊樹', nodes.length > 0, nodes.length + ' 個節點');
+    push('  有後續招式（縮排 > 0 的節點）',
+      [...nodes].some((n) => n.querySelector('.cb-arrow')),
+      [...nodes].filter((n) => n.querySelector('.cb-arrow')).length + ' 個後續');
+    push('  每棵樹都標了職業', doc.querySelectorAll('.row.cb .tag.job').length === doc.querySelectorAll('.row.cb').length,
+      doc.querySelectorAll('.row.cb').length + ' 棵');
+    /* 預設只看 PvE，所以樹裡不該出現 PvP 標記。
+       混進去的話同名兩招長得一樣，畫面上完全看不出來。 */
+    push('  預設不混進 PvP 版（同名但威力差幾十倍）',
+      doc.querySelectorAll('.row.cb .tag.pvp').length === 0,
+      doc.querySelectorAll('.row.cb .tag.pvp').length + ' 個 PvP 標記');
+    push('  不會出現半截樹（前置被篩掉就不畫）',
+      /if \(!x\.combo \|\| !byId\[x\.combo\]\) return;/.test(HTML), '');
+    push('  畫樹有防環（一筆壞資料不該讓頁面無限遞迴）', /if \(seen\[x\.id\]\) return '';/.test(HTML), '');
+
+    // 篩到一個沒有連擊的職業 → 要講清楚，不要留白
+    doc.getElementById('jobSel').value = '白魔道士';
+    doc.getElementById('jobSel').dispatchEvent(new window.Event('change', { bubbles: true }));
+    await new Promise((r) => setTimeout(r, 400));
+    push('  沒有連擊關係的職業會講明（不留白）',
+      /沒有連擊關係/.test(doc.getElementById('status').textContent) &&
+      /只有 53 招有連擊前置/.test(doc.getElementById('rows').textContent),
+      doc.getElementById('status').textContent.trim());
+  }
+
+  /* ── 📈 解鎖時程 ───────────────────────────────────────
+     沒選職業時**不可以畫**——910 個技能混在一起沒有意義，而且會被當成壞掉。 */
+  {
+    const path = doc.querySelector('#kindSeg button[data-kind="path"]');
+    push('有「解鎖時程」檢視', !!path, '');
+    doc.getElementById('jobSel').value = '';
+    path.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
+    await new Promise((r) => setTimeout(r, 500));
+    push('  沒選職業時要求先選（不畫 910 個混在一起的時間軸）',
+      /請先選一個職業/.test(doc.getElementById('status').textContent) &&
+      doc.querySelectorAll('.pathrow').length === 0,
+      doc.getElementById('status').textContent.trim());
+
+    doc.getElementById('jobSel').value = '白魔道士';
+    doc.getElementById('jobSel').dispatchEvent(new window.Event('change', { bubbles: true }));
+    await new Promise((r) => setTimeout(r, 400));
+    const prs = [...doc.querySelectorAll('.pathrow')];
+    push('  選了職業就畫出時間軸', prs.length > 0, prs.length + ' 個等級');
+    const lvs = prs.map((r) => Number((r.querySelector('.pl').textContent || '').replace('Lv', '')));
+    push('  等級是遞增的（時間軸的意義就在順序）',
+      lvs.every((v, i) => i === 0 || v > lvs[i - 1]), lvs.slice(0, 6).join('→'));
+    push('  每個等級都至少一個技能籌碼',
+      prs.every((r) => r.querySelectorAll('.pchip').length > 0), '');
+    push('  標題講出職業與技能數',
+      /白魔道士/.test(doc.getElementById('status').textContent) &&
+      /個技能/.test(doc.getElementById('status').textContent),
+      doc.getElementById('status').textContent.trim().slice(0, 40));
+  }
+
+  /* 兩個新檢視都是由 actions.json 推出來的，**不可以另外產一份資料**。 */
+  push('新檢視不另外產資料檔（由 actions.json 推）',
+    /var DERIVED = \{ combo: 'actions', path: 'actions' \}/.test(HTML), '');
+  push('  combo 欄位在資料裡（沒有的話兩個檢視都是空的）',
+    ACT.some((a) => a.combo), ACT.filter((a) => a.combo).length + ' 筆有 combo');
+  push('  combo 的前置都在辭典裡（不會有死連結）',
+    (() => { const ids = new Set(ACT.map((a) => a.id));
+      return ACT.filter((a) => a.combo).every((a) => ids.has(a.combo)); })(), '');
+  push('  沒有 combo 的寫 null 不是 0（前端用 falsy 判斷，0 會被當成 id 0）',
+    !ACT.some((a) => a.combo === 0), '');
+
   push('  無 console error', errs.length === 0, errs.slice(0, 1).join('') || '乾淨');
 }
 

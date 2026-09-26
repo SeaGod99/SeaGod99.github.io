@@ -54,6 +54,31 @@
     .tag.job { color: var(--gold); border-color: color-mix(in srgb, var(--gold) 35%, transparent); }
     .tag.pvp { color: var(--red); border-color: color-mix(in srgb, var(--red) 35%, transparent); }
     .desc { font-size: 0.79rem; color: var(--text-dim); line-height: 1.75; margin-top: 0.25rem; white-space: pre-wrap; }
+
+    /* ⛓ 連擊樹。縮排表示「接在誰後面」，色票一律取自 tokens.css（§3.6） */
+    .ic.sm { width: 22px; height: 22px; border-radius: 4px; }
+    .cb-node {
+      display: flex; align-items: center; gap: 0.4rem;
+      padding: 0.25rem 0; min-height: 2rem;
+    }
+    .cb-arrow { color: var(--text-muted); font-size: 0.8rem; flex: none; }
+    .cb-node .nm { font-size: 0.85rem; }
+    .row.cb { align-items: flex-start; }
+    .row.cb .hd { margin-bottom: 0.2rem; }
+
+    /* 📈 解鎖時程。等級靠左成一欄，技能名在右邊排成籌碼 */
+    .row.pathrow { align-items: flex-start; gap: 0.7rem; }
+    .pl {
+      flex: none; min-width: 3.4rem; font-family: var(--font-mono); font-size: 0.82rem;
+      font-weight: 700; color: var(--gold); font-variant-numeric: tabular-nums;
+      padding-top: 0.15rem;
+    }
+    .row.pathrow .body { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+    .pchip {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      background: var(--bg-base); border: 1px solid var(--border); border-radius: 6px;
+      font-size: 0.8rem; color: var(--text-dim); padding: 0.2rem 0.45rem; min-height: 1.9rem;
+    }
     .nodesc { color: var(--text-muted); font-style: italic; }
 
     .more {
@@ -83,6 +108,8 @@
       <button data-kind="actions" class="on" aria-pressed="true">技能</button>
       <button data-kind="traits" aria-pressed="false">特性</button>
       <button data-kind="statuses" aria-pressed="false">狀態</button>
+      <button data-kind="combo" aria-pressed="false">&#x26D3;&#xFE0F; 連擊</button>
+      <button data-kind="path" aria-pressed="false">&#x1F4C8; 解鎖時程</button>
     </div>
     <select id="jobSel" aria-label="依職業篩選"><option value="">全部職業</option></select>
     <select id="lvSel" aria-label="依等級篩選">
@@ -114,7 +141,11 @@
     <b>PvP 版與 PvE 版同名但威力差幾十倍</b>（火焰：PvE 180、PvP 6000），而且 PvP 版掛在進階職、
     PvE 版掛在基礎職——所以預設<b>只看 PvE</b>，PvP 的另外標紅。<br>
     要<b>跨語言反查</b>（貼英文或日文技能名找台服名）可直接在搜尋框貼，或用
-    <a href="../macro-translator/">巨集轉譯</a>整段換。
+    <a href="../macro-translator/">巨集轉譯</a>整段換。<br>
+    <b>⛓ 連擊</b>只列真的有連擊前置的招（遊戲資料裡全部只有 <b>53 招</b>，多集中在近戰與槍刃這類職業）。
+    縮排表示「接在誰後面」。<b>沒有連擊的職業不會硬畫一張圖</b>。<br>
+    <b>📈 解鎖時程</b>要先選職業——42 個職業混在一起的時間軸看不出任何東西。
+    <b>不提供「練到幾級要多少經驗」</b>：那是另一件事，而且本站沒有經驗表。
   </p>
 </div>
 
@@ -140,11 +171,16 @@
       .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
 
+  /* 「連擊」與「解鎖時程」不是新的資料檔——兩者都由 `actions.json` 推出來，
+     所以載的還是同一份。**不要為這兩個檢視另外產一份資料**，那就是兩份會漂的東西。 */
+  var DERIVED = { combo: 'actions', path: 'actions' };
+
   function load(k) {
-    if (cache[k]) return Promise.resolve(cache[k]);
-    return fetch('../../data/action-codex/' + k + '.json')
+    var file = DERIVED[k] || k;
+    if (cache[file]) return Promise.resolve(cache[file]);
+    return fetch('../../data/action-codex/' + file + '.json')
       .then(function (r) { return r.json(); })
-      .then(function (j) { cache[k] = j.data; return j.data; });
+      .then(function (j) { cache[file] = j.data; return j.data; });
   }
 
   /* 跨語言反查：站內已經有 `ActionNames`（256 片、45,046 個鍵）。
@@ -169,12 +205,16 @@
       /* ⚠ **PvP 版與 PvE 版同名但威力差幾十倍**（火焰：PvE 180 / PvP 6000），
          而且 PvP 版掛在進階職、PvE 版掛在基礎職，依職業篩時 PvP 會排前面。
          預設只看 PvE——不預設的話黑魔道士點進來第一個看到的就是 PvP 的 6000。 */
-      if (kind === 'actions' && pv === 'pve' && x.pvp) return false;
-      if (kind === 'actions' && pv === 'pvp' && !x.pvp) return false;
+      /* 連擊與解鎖時程也是技能，PvE／PvP 與職業／等級的判斷一樣要套用——
+         不套的話「連擊」會把 PvP 版混進同一棵樹（同名不同威力，看不出來）。 */
+      var isAct = kind === 'actions' || kind === 'combo' || kind === 'path';
+      if (isAct && pv === 'pve' && x.pvp) return false;
+      if (isAct && pv === 'pvp' && !x.pvp) return false;
+      if (isAct && job && x.job !== job) return false;
       /* ⚠ 特性與狀態沒有職業／等級欄位。選單已經收起來，**但判斷式也要跟著收**——
-         只把選單藏起來的話，帶著職業篩選切到「狀態」會得到 0 筆（實測就是這樣）。 */
-      if (kind === 'actions' && job && x.job !== job) return false;
-      if (lvR && kind === 'actions') { var l = x.lv || 0; if (l < lo || l > hi) return false; }
+         只把選單藏起來的話，帶著職業篩選切到「狀態」會得到 0 筆（實測就是這樣）。
+         所以上面三條全部掛在 `isAct` 上，不是無條件套用。 */
+      if (lvR && isAct) { var ll = x.lv || 0; if (ll < lo || ll > hi) return false; }
       if (q) {
         var hay = (x.name + ' ' + (x.desc || '') + ' ' + (x.job || '') + ' ' + (x.cat || '')).toLowerCase();
         if (hay.indexOf(q) < 0) return false;
@@ -189,8 +229,107 @@
     return ICON_CDN + p + '.png';
   }
 
+  /* ── ⛓ 連擊 ────────────────────────────────────────────────────────
+     `combo` 是「要先用哪一招，這一招才有連擊效果」（`Action.ActionCombo`）。
+     實測玩家技能裡只有 53 筆有值，前置技能 53/53 都在辭典裡。
+     **由前置往後畫成樹**：根＝自己不是別人的後續、但有人以它為前置的那些招。
+     ⚠ 只列真的有連擊關係的招——把整個職業的技能都畫進來會變成一張沒有資訊的圖。 */
+  function renderCombo(list) {
+    var byId = {};
+    list.forEach(function (x) { byId[x.id] = x; });
+    var kids = {};                       // 前置 id → [後續]
+    var hasCombo = 0;
+    list.forEach(function (x) {
+      if (!x.combo || !byId[x.combo]) return;   // 前置被篩掉了就不畫（不要留半截）
+      (kids[x.combo] = kids[x.combo] || []).push(x);
+      hasCombo++;
+    });
+    var isChild = {};
+    Object.keys(kids).forEach(function (p) { kids[p].forEach(function (c) { isChild[c.id] = true; }); });
+    var roots = list.filter(function (x) { return kids[x.id] && !isChild[x.id]; });
+    // 依職業 → 等級排，順序永遠一樣（不要留給引擎的不定行為）
+    roots.sort(function (a, b) {
+      return (a.job || '').localeCompare(b.job || '', 'zh-Hant') || (a.lv - b.lv) || (a.id - b.id);
+    });
+
+    if (!roots.length) {
+      $('status').innerHTML = '這個篩選範圍內沒有連擊關係。';
+      $('rows').innerHTML = '<div class="desc nodesc">全遊戲只有 53 招有連擊前置（多數集中在近戰與槍刃這類職業）。' +
+        '試著把職業篩選清掉，或選龍騎士／武士／機工士看看。</div>';
+      $('more').style.display = 'none';
+      return;
+    }
+    $('status').innerHTML = '共 <b>' + roots.length + '</b> 條連擊起手、<b>' + hasCombo + '</b> 個後續招式';
+
+    function chip(x, depth) {
+      var ic = iconUrl(x.icon);
+      return '<div class="cb-node" style="margin-left:' + (depth * 1.4) + 'rem">' +
+        (depth ? '<span class="cb-arrow" aria-hidden="true">↳</span>' : '') +
+        (ic ? '<img class="ic sm" src="' + esc(ic) + '" alt="" loading="lazy" decoding="async" onerror="var p=this.parentNode;this.remove()">' : '') +
+        '<span class="nm">' + esc(x.name) + '</span>' +
+        (x.lv ? '<span class="tag">Lv' + x.lv + '</span>' : '') +
+        (x.pvp ? '<span class="tag pvp">PvP</span>' : '') +
+        '</div>';
+    }
+    function walk(x, depth, seen) {
+      // 防環：資料理論上不該有環，但畫圖的程式不該因為一筆壞資料就無限遞迴
+      if (seen[x.id]) return '';
+      seen[x.id] = true;
+      var html = chip(x, depth);
+      (kids[x.id] || []).sort(function (a, b) { return a.lv - b.lv || a.id - b.id; })
+        .forEach(function (c) { html += walk(c, depth + 1, seen); });
+      return html;
+    }
+    $('rows').innerHTML = roots.map(function (r) {
+      return '<div class="row cb"><div class="body">' +
+        '<div class="hd"><span class="tag job">' + esc(r.job || '（無職業）') + '</span></div>' +
+        walk(r, 0, {}) + '</div></div>';
+    }).join('');
+    $('more').style.display = 'none';
+  }
+
+  /* ── 📈 解鎖時程 ───────────────────────────────────────────────────
+     「這個職業幾級學到什麼」。**沒選職業時不畫**——910 個技能混在一起的時間軸
+     沒有任何意義，而且會讓人以為頁面壞了。 */
+  function renderPath(list) {
+    var job = $('jobSel').value;
+    if (!job) {
+      $('status').innerHTML = '請先選一個職業。';
+      $('rows').innerHTML = '<div class="desc nodesc">解鎖時程是「這個職業幾級學到什麼」，' +
+        '把 42 個職業混在一起看不出任何東西，所以要先選職業。</div>';
+      $('more').style.display = 'none';
+      return;
+    }
+    var have = list.filter(function (x) { return x.lv > 0; });
+    if (!have.length) {
+      $('status').innerHTML = '這個範圍內沒有帶等級的技能。';
+      $('rows').innerHTML = '';
+      $('more').style.display = 'none';
+      return;
+    }
+    var byLv = {};
+    have.forEach(function (x) { (byLv[x.lv] = byLv[x.lv] || []).push(x); });
+    var lvs = Object.keys(byLv).map(Number).sort(function (a, b) { return a - b; });
+    $('status').innerHTML = esc(job) + '：<b>' + have.length + '</b> 個技能，分布在 <b>' +
+      lvs.length + '</b> 個等級（Lv' + lvs[0] + '–' + lvs[lvs.length - 1] + '）';
+    $('rows').innerHTML = lvs.map(function (lv) {
+      var g = byLv[lv].slice().sort(function (a, b) { return a.id - b.id; });
+      return '<div class="row pathrow"><div class="pl">Lv' + lv + '</div><div class="body">' +
+        g.map(function (x) {
+          var ic = iconUrl(x.icon);
+          return '<span class="pchip">' +
+            (ic ? '<img class="ic sm" src="' + esc(ic) + '" alt="" loading="lazy" decoding="async" onerror="this.remove()">' : '') +
+            esc(x.name) + (x.pvp ? '<span class="tag pvp">PvP</span>' : '') + '</span>';
+        }).join('') +
+        '</div></div>';
+    }).join('');
+    $('more').style.display = 'none';
+  }
+
   function render() {
     load(kind).then(function (list) {
+      if (kind === 'combo') { renderCombo(filtered(list)); syncURL(); return; }
+      if (kind === 'path') { renderPath(filtered(list)); syncURL(); return; }
       var rows = filtered(list);
       $('status').innerHTML = '共 <b>' + rows.length + '</b> 筆' +
         (rows.length > shown ? '（顯示前 ' + Math.min(shown, rows.length) + '）' : '');
@@ -233,7 +372,7 @@
         x.setAttribute('aria-pressed', String(x === b));
       });
       // 特性與狀態沒有職業／等級，把那兩個選單收起來比留著不能用好
-      var hasJob = kind === 'actions';
+      var hasJob = kind === 'actions' || kind === 'combo' || kind === 'path';
       $('jobSel').style.display = hasJob ? '' : 'none';
       $('lvSel').style.display = hasJob ? '' : 'none';
       $('pvpSel').style.display = hasJob ? '' : 'none';
@@ -276,8 +415,10 @@
             x.classList.toggle('on', x === btn);
             x.setAttribute('aria-pressed', String(x === btn));
           });
-          $('jobSel').style.display = kind === 'actions' ? '' : 'none';
-          $('lvSel').style.display = kind === 'actions' ? '' : 'none';
+          var isAct2 = kind === 'actions' || kind === 'combo' || kind === 'path';
+          $('jobSel').style.display = isAct2 ? '' : 'none';
+          $('lvSel').style.display = isAct2 ? '' : 'none';
+          $('pvpSel').style.display = isAct2 ? '' : 'none';
         }
       }
       if (p.get('q')) $('q').value = p.get('q');
