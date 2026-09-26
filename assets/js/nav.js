@@ -48,6 +48,7 @@
     // 生活職（c:'life'）
     { e: '📊', n: '市場查價 + 比價', p: 'tools/market/', c: 'life', k: 'market 市場 查價 universalis 比價' },
     { e: '🏪', n: 'NPC 商店目錄', p: 'tools/npc-shops/', c: 'life', k: 'npc shop vendor 商店 雜貨 販售 目錄 這張圖有什麼店 買東西' },
+    { e: '🛡️', n: '練級裝備路線', p: 'tools/leveling-gear/', c: 'battle', k: 'leveling gear 練級 裝備 品級 ilvl 部位 換裝' },
     { e: '📜', n: '製作理符試算', p: 'tools/leves/', c: 'life', k: 'leve levequest 理符 製作理符 委託 配額 經驗 練級' },
     { e: '💎', n: '禁忌鑲嵌花費試算', p: 'tools/melding/', c: 'life', k: 'melding materia 鑲嵌 禁忌 魔晶石 成功率 期望值 花費' },
     { e: '🔨', n: '製作模擬器', p: 'tools/crafting-sim/', c: 'life', k: 'crafting sim 製作 模擬 巨集 macro 循環 rotation 手法 hq' },

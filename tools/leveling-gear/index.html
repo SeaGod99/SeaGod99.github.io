@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FF14 練級裝備路線 — 選職業與等級，列出每個部位現在穿得起的最高品級裝備與取得管道">
+  <title>練級裝備路線 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <link rel="stylesheet" href="../../assets/css/tool-header.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 109.375%; }
+    body { background: var(--bg-base); color: var(--text); font-family: var(--font-sans); min-height: 100vh; }
+
+    .wrap { max-width: var(--w-content); margin: 0 auto; padding: 0.6rem 1.5rem 2.5rem; }
+
+    .panel {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 0.9rem 1rem; margin-bottom: 0.9rem;
+    }
+    .fields { display: flex; gap: 0.7rem; flex-wrap: wrap; align-items: flex-end; }
+    .f { display: flex; flex-direction: column; gap: 0.25rem; }
+    .f label { font-size: 0.73rem; color: var(--text-muted); }
+    .f select, .f input {
+      background: var(--bg-base); border: 1px solid var(--border); border-radius: 6px;
+      color: var(--text-dim); padding: 0.4rem 0.55rem; font: inherit; font-size: 0.82rem;
+      min-height: 40px; outline: none;
+    }
+    .f select:focus, .f input:focus { border-color: var(--gold); color: var(--text); }
+    .f select { cursor: pointer; }
+    .f .num { width: 5.5rem; text-align: right; font-variant-numeric: tabular-nums; }
+
+    .status { font-size: 0.76rem; color: var(--text-muted); margin-bottom: 0.8rem; }
+    .status b { color: var(--gold-light); }
+
+    .slot {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-md); margin-bottom: 0.6rem; overflow: hidden;
+    }
+    .slot-head {
+      display: flex; align-items: baseline; gap: 0.6rem;
+      padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);
+    }
+    .slot-name { font-size: 0.88rem; font-weight: 700; color: var(--gold); }
+    .slot-n { font-size: 0.72rem; color: var(--text-muted); }
+
+    .cand {
+      display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;
+      padding: 0.45rem 0.75rem; border-top: 1px solid var(--border);
+    }
+    .cand:first-of-type { border-top: 0; }
+    .cand.best { background: color-mix(in srgb, var(--gold) 7%, transparent); }
+    .ic { width: 28px; height: 28px; flex: none; border-radius: 4px; }
+    .nm { font-size: 0.85rem; color: var(--text); font-weight: 600; }
+    .meta { font-size: 0.74rem; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+    .ilvl { color: var(--gold-light); font-weight: 700; }
+    .src { font-size: 0.74rem; color: var(--text-muted); margin-left: auto; text-align: right; max-width: 26rem; }
+    .src em { font-style: normal; color: var(--text-dim); }
+    .mk {
+      font-size: 0.7rem; color: var(--green); text-decoration: none;
+      border: 1px solid var(--border); border-radius: 6px; padding: 0.22rem 0.4rem;
+      min-height: 30px; display: inline-flex; align-items: center; white-space: nowrap;
+    }
+    .mk:hover { border-color: var(--border-hover); }
+
+    .note { font-size: 0.74rem; color: var(--text-muted); line-height: 1.8; margin-top: 1rem; }
+    .note b { color: var(--text-dim); font-weight: 600; }
+
+    @media (max-width: 700px) { .src { margin-left: 0; width: 100%; text-align: left; max-width: none; } }
+    @media (pointer: coarse) { .f select, .f input, .mk { min-height: 44px; } }
+  </style>
+  <script src="../../assets/js/patch-gate.js"></script>
+  <script src="../../assets/js/item-sources.js"></script>
+  <script src="../../assets/js/theme.js"></script>
+</head>
+<body>
+<div class="tool-header">
+  <h1 class="tool-title">&#x1F6E1;&#xFE0F; 練級裝備路線</h1>
+  <p class="tool-subtitle">選職業與等級，列出每個部位現在穿得起的最高品級裝備，以及它們從哪來</p>
+</div>
+
+<div class="wrap">
+  <div class="panel">
+    <div class="fields">
+      <div class="f">
+        <label for="jobSel">職業</label>
+        <select id="jobSel"></select>
+      </div>
+      <div class="f">
+        <label for="lvIn">目前等級</label>
+        <input class="num" id="lvIn" type="number" min="1" max="100" step="1" value="70">
+      </div>
+      <div class="f">
+        <label for="nSel">每個部位列幾個</label>
+        <select id="nSel">
+          <option value="1">只列最高的</option>
+          <option value="3" selected>列前 3 個</option>
+          <option value="5">列前 5 個</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="status" id="status">載入中…</div>
+  <div id="body"></div>
+
+  <p class="note">
+    <b>只依品級（ilvl）排，不算副屬性。</b> 同品級的暴擊版與信念版哪件好，取決於職業與循環——
+    那是配裝規劃器的事（首頁有外連）。這頁只回答「現在穿得起的最高品級是哪件」。<br>
+    <b>每個部位列多個候選是刻意的</b>：有極少數配件（例如 6.58 的一件耳飾）<b>Lv1 就能裝備但品級很高</b>，
+    只列第一名的話那一欄從 Lv1 到 Lv8x 都是同一件。列多個，你看得到它的等級自己判斷。<br>
+    取得管道來自站內的取得管道分片層，<b>查不到就留白</b>——沒寫不代表拿不到。
+  </p>
+</div>
+
+<footer class="page-footer">
+  <div class="container">
+    <p class="footer-text"><a href="../../">水神的工具箱</a> · 資料來源：遊戲本體、<a href="https://xivapi.com" target="_blank">XIVAPI</a></p>
+    <p class="footer-text" style="margin-top:4px">FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  var IDX = null, JOB = null, jobCache = {};
+  var ICON_CDN = 'https://xivapi.com';
+
+  function $(id) { return document.getElementById(id); }
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  function loadJob(code) {
+    if (jobCache[code]) return Promise.resolve(jobCache[code]);
+    return fetch('../../data/leveling-gear/' + code + '.json')
+      .then(function (r) { return r.json(); })
+      .then(function (j) { jobCache[code] = j; return j; });
+  }
+
+  /* 每個部位取「等級門檻 ≤ 我的等級」的前緣尾端往回數 N 個。
+     前緣本身是依等級遞增、ilvl 遞增排好的，所以往回數就是由高到低。 */
+  function pick(list, lv, n) {
+    var ok = list.filter(function (x) { return x.lv <= lv; });
+    return ok.slice(-n).reverse();
+  }
+
+  function render() {
+    if (!JOB) return;
+    var lv = Math.max(1, Math.min(100, parseInt($('lvIn').value, 10) || 1));
+    var n = parseInt($('nSel').value, 10) || 3;
+    var slotNames = JOB.slotNames || IDX.slotNames;
+
+    // 顯示順序：武器 → 防具 → 首飾（同遊戲內裝備欄的順序）
+    var order = [1, 13, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12];
+    var html = '', shown = 0, ids = [];
+
+    order.forEach(function (sl) {
+      var list = JOB.slots[sl];
+      if (!list || !list.length) return;
+      var cands = pick(list, lv, n);
+      if (!cands.length) return;
+      shown++;
+      html += '<div class="slot"><div class="slot-head">' +
+        '<span class="slot-name">' + esc(slotNames[sl]) + '</span>' +
+        '<span class="slot-n">共 ' + list.filter(function (x) { return x.lv <= lv; }).length + ' 階可穿</span>' +
+        '</div>' +
+        cands.map(function (x, i) {
+          ids.push(x.id);
+          return '<div class="cand' + (i === 0 ? ' best' : '') + '" data-id="' + x.id + '">' +
+            '<img class="ic" src="" alt="" loading="lazy" data-icon="' + x.id + '">' +
+            '<span class="nm">' + esc(x.name) + '</span>' +
+            '<span class="meta">Lv' + x.lv + '　<span class="ilvl">i' + x.ilvl + '</span>' +
+              (x.patch ? '　' + esc(x.patch) : '') + '</span>' +
+            (x.marketable
+              ? '<a class="mk" href="../../tools/market/#item=' + x.id + '" title="到市場頁查行情">💰</a>'
+              : '<span class="meta">不可交易</span>') +
+            '<span class="src" data-src="' + x.id + '"></span>' +
+          '</div>';
+        }).join('') +
+      '</div>';
+    });
+
+    $('status').innerHTML = JOB.jobName + '　Lv<b>' + lv + '</b>　' + shown + ' 個部位';
+    $('body').innerHTML = html || '<div class="status">這個等級還沒有可裝備的東西。</div>';
+    syncURL();
+    fillIcons();
+    fillSources(ids);
+  }
+
+  // 圖示走 items.json 太重；改用 XIVAPI 的圖示 CDN，路徑由 id 反查不到，所以從 item-sources 之外另抓
+  function fillIcons() {
+    // 這頁的資料沒帶 icon 路徑（省空間），改用市場頁那份精簡表
+    if (!fillIcons._p) {
+      fillIcons._p = fetch('../../data/items-market.json')
+        .then(function (r) { return r.json(); })
+        .then(function (db) {
+          var m = new Map();
+          // 列格式見 build-items-market.mjs：[id, name, categoryIndex, iconNo, marketable, patch]
+          db.data.forEach(function (r) { m.set(r[0], r[3]); });
+          return m;
+        })
+        .catch(function () { return new Map(); });
+    }
+    fillIcons._p.then(function (m) {
+      document.querySelectorAll('img[data-icon]').forEach(function (img) {
+        var no = m.get(+img.dataset.icon);
+        if (no == null) { img.remove(); return; }
+        var folder = String(Math.floor(no / 1000) * 1000).padStart(6, '0');
+        img.src = ICON_CDN + '/i/' + folder + '/' + String(no).padStart(6, '0') + '.png';
+        img.onerror = function () { img.remove(); };
+      });
+    });
+  }
+
+  /* 取得管道走站內的分片層（`assets/js/item-sources.js`），按需載入。
+     查不到就留白——**沒寫不代表拿不到**，頁面下方有講。 */
+  function fillSources(ids) {
+    if (!window.ItemSources || !ids.length) return;
+    ItemSources.getMany(ids).then(function (map) {
+      document.querySelectorAll('[data-src]').forEach(function (el) {
+        // ⚠ `getMany` 回的是 **Map**（不是物件），而且鍵是**數字**——
+        // 寫成 `map[el.dataset.src]` 會永遠拿到 undefined，而且完全不報錯（那一欄只是留白）。
+        var rows = map.get(+el.dataset.src);
+        if (!rows || !rows.length) return;
+        el.innerHTML = rows.slice(0, 2).map(function (r) {
+          return '<em>' + esc(r.t) + '</em>' + (r.d ? '：' + esc(r.d) : '');
+        }).join('　');
+      });
+    }).catch(function () { /* 分片載不到就留白 */ });
+  }
+
+  /* 網址狀態。⚠ 進站參數要在模組載入時就存起來——`syncURL()` 會改寫網址（§3.17／§4.60）。 */
+  var INITIAL_QUERY = location.search;
+  var applying = false;
+  function syncURL() {
+    if (applying) return;
+    var p = new URLSearchParams();
+    p.set('job', $('jobSel').value);
+    p.set('lv', $('lvIn').value);
+    if ($('nSel').value !== '3') p.set('n', $('nSel').value);
+    history.replaceState(null, '', '?' + p.toString());
+  }
+
+  function switchJob() {
+    loadJob($('jobSel').value).then(function (j) { JOB = j; render(); });
+  }
+  $('jobSel').addEventListener('change', switchJob);
+  ['input', 'change'].forEach(function (ev) {
+    $('lvIn').addEventListener(ev, render);
+    $('nSel').addEventListener(ev, render);
+  });
+
+  fetch('../../data/leveling-gear/_index.json')
+    .then(function (r) { return r.json(); })
+    .then(function (idx) {
+      IDX = idx;
+      idx.jobs.forEach(function (j) {
+        var o = document.createElement('option');
+        o.value = j.job; o.textContent = j.name;
+        $('jobSel').appendChild(o);
+      });
+      applying = true;
+      var p = new URLSearchParams(INITIAL_QUERY);
+      if (p.get('job') && idx.jobs.some(function (j) { return j.job === p.get('job'); })) $('jobSel').value = p.get('job');
+      if (p.get('lv')) $('lvIn').value = p.get('lv');
+      if (p.get('n')) $('nSel').value = p.get('n');
+      applying = false;
+      switchJob();
+    })
+    .catch(function (e) { $('status').textContent = '載入失敗：' + e.message; });
+
+  // 頁內快捷鍵（登記制見知識庫 §4.73）
+  var keys = [{ keys: 'j', label: '切到下一個職業', run: function () {
+    var s = $('jobSel');
+    s.selectedIndex = (s.selectedIndex + 1) % s.options.length;
+    switchJob();
+  } }];
+  if (window.SGT_SHORTCUTS) window.SGT_SHORTCUTS.register(keys);
+  else (window.SGT_SHORTCUTS_PENDING = window.SGT_SHORTCUTS_PENDING || []).push(keys);
+})();
+</script>
+</body>
+</html>
