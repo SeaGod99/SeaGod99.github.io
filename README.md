@@ -19,6 +19,7 @@
 | 🐎 坐騎收藏追蹤 | `/collections/mounts/` | 297 隻台服已開放坐騎，取得來源查詢、版本篩選、追蹤擁有進度 |
 | 🐣 寵物收藏追蹤 | `/minions/` | 取得來源查詢、篩選搜尋、追蹤擁有進度 |
 | 🦜 鳥鞍收藏追蹤 | `/collections/barding/` | 陸行鳥鞍具來源查詢，追蹤擁有進度 |
+| 🌂 時尚配飾收藏追蹤 | `/collections/ornaments/` | 陽傘、背包、火炬等配飾的取得來源與擁有進度 |
 | 🌬️ 風脈泉追蹤器 | `/tools/aether-currents/` | 31 地區 303 個風脈泉，任務型/野外型標示，追蹤解鎖進度 |
 | 💙 青魔法術收藏 | `/collections/blue-magic/` | 法術來源追蹤與習得路線建議 |
 | 🃏 幻卡追蹤 | `/collections/triple-triad/` | 幻卡取得來源與對戰策略查詢 |
