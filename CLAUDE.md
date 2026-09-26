@@ -106,6 +106,8 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 多角色設定檔回歸（**改完 `assets/js/profiles.js` 必跑**） | `node scripts/validate-profiles.mjs`（28 項：白名單反轉、只覆蓋不刪、存不進去就不切）|
 | 重建主線任務（換台服版本後） | `node scripts/build-msq.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/msq.json`（14 章／1,012 個）|
 | 主線進度回歸（**改完 `tools/msq/` 或 `msq.json` 必跑**） | `node scripts/validate-msq.mjs`（26 項；最重要的是章節順序＝`JournalGenre` 的 row id）|
+| 重建文書討伐目標（改版時才跑） | `node scripts/build-relic-note.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/relic-note.json`（9 本 × 19 個目標）|
+| 文書跑圖回歸（**改完 `tools/relic-note/` 或 `relic-note.json` 必跑**） | `node scripts/validate-relic-note.mjs`（43 項；最重要的是「打勾的鍵要含書的 id」與「同名副本不給連結」）|
 | 時尚品鑑週更（每週二／週五各一次） | `node scripts/build-fashion-report.mjs`（`--dry-run` 只印／`--offline` 用快取）→ `node scripts/validate-fashion-render.mjs`（頁面 render 回歸，七個週狀態，不需瀏覽器） |
 | 時尚品鑑跨週不變資料（改版時才跑） | `node scripts/build-dyes.mjs`／`build-fashion-fillers.mjs`／`build-fashion-themes.mjs` |
 | 重建無人島資料層 | `node scripts/build-island.mjs`（`--offline` 用快取／`--refresh` 強制重抓） |
@@ -260,6 +262,8 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 - **改了共用資料或腳本（`/data`、`/scripts`、`/assets/js`）** → `node scripts/validate-data.mjs` → `/verify` 確認受影響頁面行為正常 → `/code-review`。改到 `assets/` 的 css/js 還要跑 `node scripts/bump-sw-version.mjs`（否則使用者會被舊 SW 快取黏住）。
 - **改了版面／共用樣式／新增頁面** → `MSYS_NO_PATHCONV=1 node scripts/validate-pages.mjs`。頁面清單**直接讀 `nav.js` 的 TOOLS**，新頁只要登記在那裡就會自動納入。點擊目標分兩級：低於 24×24 違反 WCAG AA（擋），24–44 只是沒達到 AAA 建議（警告）。**站內好幾處用 `::after` 透明擴張層把小圖示的命中區推到 44px**，所以這支量的是 `elementFromPoint` 的實際命中區而不是盒子尺寸——新做小圖示鈕請沿用那個做法，不要改字級。
 - **新增工具頁時記得在首頁卡片補 `data-added="YYYY-MM-DD"`** → 首頁的「新」徽章 2026-09-26 起改由日期決定（30 天內才標），**HTML 裡不再寫死**。沒有 `data-added` 的卡一天都不會被標成新的。改的原因：寫死的徽章沒有人會回來拿掉——盤點時 30 張卡裡有 23 張掛著「新」，其中 13 張是六～八月加的。
+- **登記在 `nav.js` 不等於首頁有入口** → 兩者各自維護。2026-09-27 盤點時首頁**少了 9 張卡**（now／action-codex／msq／duty-codex／submarine／leveling-gear／ornaments／leves／melding），全都只在 `nav.js` 裡、首頁點不進去，累積九輪沒人發現。**新頁兩邊都要登記**，並在該頁回歸裡寫一條斷言。分類計數（`section-count`）已改成由實際卡片數算——寫死的數字會飄（曾經三個分類全錯）。
+- **`sync-meta.mjs` 只同步既有登記** → 它報「✓ 全部已同步」的同時可以有 29 個檔沒進 `databases[]`（它會在下面列出來，**別只看第一行**）。新資料庫要自己補一筆 `{name,file,count,updated,desc,source}`。
 - **追蹤頁的「✨ 本次新增」不必各頁實作** → `collection-tracker.js` 的 `addWhatsNewFilter()` 會自動掛，13 頁一次受惠。它比對的是 `ffxiv_seen_patch`（使用者上次看到的版本）與 `_meta.json` 的 `gamePatch`。三條規則寫在那支的註解裡：**第一次來的人不掛**（沒有比較基準時全部都算新）、**該頁沒有新條目就不掛**、**數量由該頁過濾後的 LIST 算**（不是資料庫總數——同一版新增的東西不見得每頁都收）。
 - **寫「查不到台服名就不收」的過濾時，記得金幣（id 1）是例外** → `items.json` 與 `tw-items.msgpack` 裡它的名字都是 **"Gil"**，沒有中日韓字。NPC 商店目錄第一版因此丟掉 **16,237 筆**交易（佔被濾掉的 46% 裡絕大多數）——金幣是全遊戲最常見的成本。前端顯示成「金幣」。這不是破例：鐵則要擋的是「把英文名放行到畫面上」，金幣的顯示字串是我們自己給的 UI 標籤。
 - **一行接一行的連結不能用 `::after` 透明擴張層補命中區** → 44px 高的擴張層會蓋到上下兩列，`elementFromPoint` 探到的是鄰居，體檢會報「點擊目標太小」而你怎麼加都沒用。**改用真實 padding／`min-height` 把自己的盒子撐大**（金碟頁的預算格、NPC 商店目錄的交易列都是這樣修的）。擴張層只適合**孤立**的小圖示鈕（頂列站名、橫幅連結）。

@@ -82,6 +82,17 @@ async function main() {
     report.push(`討伐目標 ${seen.size}`);
   }
 
+  /* 文書（relic-note.json）。使用者想搜的是「火天文書」——那是道具名，
+     所以名稱就是索引鍵。key 用 `book:<書名>`，語意同副本圖鑑的 `duty:`：
+     不捲到某一列，而是把頁面切到那一本。 */
+  {
+    const db = JSON.parse(await readFile(join(DATA, "relic-note.json"), "utf8"));
+    const ti = types.length;
+    types.push({ label: "文書", path: "tools/relic-note/" });
+    for (const b of db.data) rows.push([b.name, ti, "book:" + b.name]);
+    report.push(`文書 ${db.data.length}`);
+  }
+
   // 系統解鎖與職業行會（system-unlocks.json 的兩個陣列）
   // 使用者想搜的是「金碟怎麼開」「機工士在哪轉職」，而不是工具名，所以名稱才是索引鍵。
   // key 用 sys:<key> / job:<縮寫>，對應 tools/unlock-index/ 的 data-key。

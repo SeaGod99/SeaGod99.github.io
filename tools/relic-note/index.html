@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FF14 文書跑圖 — 九本文書各 19 個討伐目標的地名、座標與逐項打勾進度">
+  <title>文書跑圖 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <link rel="stylesheet" href="../../assets/css/tool-header.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 109.375%; }
+    body { background: var(--bg-base); color: var(--text); font-family: var(--font-sans); min-height: 100vh; }
+    .wrap { max-width: var(--w-content); margin: 0 auto; padding: 0.6rem 1rem 2.5rem; }
+
+    /* ── 總進度 ───────────────────────────────────────── */
+    .total {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 0.75rem 1rem; margin-bottom: 0.8rem;
+      display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap;
+    }
+    .total-n { font-size: 1.1rem; font-weight: 700; color: var(--gold-light); font-variant-numeric: tabular-nums; }
+    .total-bar { flex: 1; min-width: 8rem; height: 8px; background: var(--bg-base); border-radius: 4px; overflow: hidden; }
+    .total-bar i { display: block; height: 100%; background: var(--gold); transition: width var(--transition); }
+
+    /* ── 書籤（一次只展開一本：逐步揭露，144 列一次攤開沒人讀得完） ── */
+    .books { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.9rem; }
+    .book {
+      display: flex; align-items: center; gap: 0.4rem;
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md);
+      color: var(--text-dim); font: inherit; font-size: 0.8rem;
+      padding: 0.45rem 0.7rem; min-height: 44px; cursor: pointer;
+      transition: border-color var(--transition), color var(--transition);
+    }
+    .book:hover { border-color: var(--border-hover); color: var(--text); }
+    .book[aria-pressed="true"] { border-color: var(--gold); color: var(--gold-light); background: color-mix(in srgb, var(--gold) 12%, var(--bg-card)); }
+    .book .n { font-size: 0.72rem; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+    .book.full .n { color: var(--green); }
+    .book.full::before { content: "✓"; color: var(--green); font-weight: 700; }
+
+    /* ── 分類區塊 ─────────────────────────────────────── */
+    .sec { margin-bottom: 0.9rem; }
+    .sec-head {
+      display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap;
+      padding: 0.3rem 0.1rem 0.45rem; border-bottom: 1px solid var(--border);
+      margin-bottom: 0.45rem;
+    }
+    .sec-title { font-size: 0.88rem; font-weight: 600; color: var(--text); }
+    .sec-n { font-size: 0.74rem; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+    .sec-hint { font-size: 0.72rem; color: var(--text-muted); margin-left: auto; }
+
+    /* 一列＝一個目標。整列是 <label>，所以命中區天生就是整條（不必靠 ::after 擴張層）。 */
+    .row {
+      display: flex; align-items: center; gap: 0.6rem;
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md);
+      padding: 0.45rem 0.7rem; min-height: 44px; margin-bottom: 0.3rem;
+      cursor: pointer; transition: border-color var(--transition), opacity var(--transition);
+    }
+    .row:hover { border-color: var(--border-hover); }
+    .row:focus-within { border-color: var(--gold); }
+    .row.done { opacity: 0.5; }
+    .row.done .r-name { text-decoration: line-through; }
+    .row input { width: 20px; height: 20px; flex: none; accent-color: var(--gold); cursor: pointer; }
+    .r-main { flex: 1; min-width: 0; }
+    .r-name { font-size: 0.84rem; color: var(--text); }
+    .r-name .cnt { color: var(--gold-light); font-weight: 600; font-variant-numeric: tabular-nums; }
+    .r-name .lv { color: var(--text-muted); font-size: 0.74rem; margin-left: 0.3rem; }
+    .r-where { font-size: 0.74rem; color: var(--text-muted); line-height: 1.7; }
+    .r-where a { color: var(--blue); text-decoration: none; }
+    .r-where a:hover { text-decoration: underline; }
+    .r-where .alt { color: var(--text-muted); opacity: 0.8; }
+
+    /* 座標鈕：獨立的小圖示鈕，這裡直接給足 44px（不用透明擴張層，它旁邊就是可點的列） */
+    .coord {
+      flex: none; background: var(--bg-base); border: 1px solid var(--border);
+      border-radius: 6px; color: var(--text-dim); font: inherit; font-size: 0.72rem;
+      font-family: var(--font-mono); padding: 0.3rem 0.5rem; min-height: 44px; cursor: pointer;
+      white-space: nowrap;
+    }
+    .coord:hover { border-color: var(--gold); color: var(--gold-light); }
+
+    .tools-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.9rem; }
+    .btn {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md);
+      color: var(--text-dim); font: inherit; font-size: 0.78rem;
+      padding: 0.4rem 0.75rem; min-height: 44px; cursor: pointer;
+    }
+    .btn:hover { border-color: var(--border-hover); color: var(--text); }
+
+    .note { font-size: 0.74rem; color: var(--text-muted); line-height: 1.85; margin-top: 1.2rem; }
+    .note b { color: var(--text-dim); font-weight: 600; }
+    .note code { font-family: var(--font-mono); font-size: 0.92em; color: var(--text-dim); }
+
+    @media (max-width: 560px) {
+      .row { flex-wrap: wrap; }
+      .coord { width: 100%; text-align: left; }
+    }
+  </style>
+  <script src="../../assets/js/patch-gate.js"></script>
+  <script src="../../assets/js/theme.js"></script>
+</head>
+<body>
+<div class="tool-header">
+  <h1 class="tool-title">&#x1F4D6; 文書跑圖</h1>
+  <p class="tool-subtitle">九本文書各 19 個討伐目標的地名、座標與進度——一本一本打勾，不用開兩個視窗對照</p>
+</div>
+
+<div class="wrap">
+  <div class="total">
+    <span class="total-n" id="totalN">0 / 0</span>
+    <span class="total-bar"><i id="totalBar" style="width:0%"></i></span>
+    <span class="sec-n" id="bookN"></span>
+  </div>
+
+  <div class="books" id="books" role="group" aria-label="選擇文書"></div>
+
+  <div class="tools-row">
+    <button type="button" class="btn" id="btnAll">全部打勾（這一本）</button>
+    <button type="button" class="btn" id="btnClear">清除這一本</button>
+  </div>
+
+  <div id="body"></div>
+
+  <p class="note">
+    <b>這頁只涵蓋「文書」這一段。</b> 遺產武器的階段鏈不在遊戲的資料表裡——
+    <code>Relic</code>／<code>RelicItem</code> 兩張表是空殼、九本書的 <code>EventItem.Quest</code> 全是 0，
+    所以「哪把武器要幾本書」「書從哪個 NPC 拿」「下一階段要什麼」查不到依據，一律不寫，
+    免得憑印象寫錯害人白跑。<br>
+    <b>三個首領沒有副本連結</b>，因為那三個副本名一般版與高難度版同名，
+    而資料分不出首領在哪一個（<code>dungeons.json</code> 的 <code>bosses</code> 是空的）。
+    寧可少一個連結，不要送人去打錯副本。<br>
+    <b>一般怪只有 30% 查得到座標</b>（<code>monsters.json</code> 就只有這些有 positions），
+    其餘只顯示出沒地名，不臆造座標。FATE 的座標齊全。<br>
+    進度存在這台瀏覽器裡（<code>ffxiv_relic_note</code>），可從首頁「進度備份」匯出。
+  </p>
+</div>
+
+<footer class="page-footer">
+  <div class="container">
+    <p class="footer-text"><a href="../../">水神的工具箱</a> · 資料來源：遊戲本體、<a href="https://xivapi.com" target="_blank">XIVAPI</a>、<a href="https://ffxivteamcraft.com" target="_blank">Teamcraft</a></p>
+    <p class="footer-text" style="margin-top:4px">FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具</p>
+  </div>
+</footer>
+
+<script src="../../assets/js/toast.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var LS = 'ffxiv_relic_note';
+  var DB = null, cur = 0, done = Object.create(null);
+
+  function $(id) { return document.getElementById(id); }
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  function load() {
+    try {
+      var raw = localStorage.getItem(LS);
+      if (!raw) return;
+      var arr = JSON.parse(raw);
+      if (Array.isArray(arr)) arr.forEach(function (k) { done[k] = 1; });
+    } catch (e) {}
+  }
+  function save() {
+    try { localStorage.setItem(LS, JSON.stringify(Object.keys(done))); } catch (e) {}
+  }
+
+  /* 目標鍵一定要含書的 id——同一隻怪會出現在不同本書裡，
+     只用 baseId 當鍵的話打勾一本會連動另一本。 */
+  function keysOf(book) {
+    var ks = [];
+    book.mobs.forEach(function (m) { ks.push(book.id + ':m' + m.baseId); });
+    book.nms.forEach(function (m) { ks.push(book.id + ':n' + m.baseId); });
+    book.fates.forEach(function (f) { ks.push(book.id + ':f' + f.id); });
+    book.leves.forEach(function (l) { ks.push(book.id + ':l' + l.id); });
+    return ks;
+  }
+  function countOf(book) {
+    var ks = keysOf(book), n = 0;
+    for (var i = 0; i < ks.length; i++) if (done[ks[i]]) n++;
+    return { n: n, all: ks.length };
+  }
+
+  function zoneText(zones) {
+    if (!zones || !zones.length) return '';
+    return zones.map(function (z) {
+      return esc(z.zone) + (z.spot ? ' · ' + esc(z.spot) : '');
+    }).join('<span class="alt"> ／ </span>');
+  }
+  function coordBtn(at) {
+    if (!at) return '';
+    var flag = '/coord ' + at.x.toFixed(1) + ' ' + at.y.toFixed(1) + ' ' + at.mapName;
+    return '<button type="button" class="coord" data-flag="' + esc(flag) + '" title="複製到剪貼簿，貼進遊戲聊天欄會標在地圖上">📋 ' + esc(flag) + '</button>';
+  }
+
+  function row(key, name, where, at) {
+    var on = !!done[key];
+    return '<label class="row' + (on ? ' done' : '') + '" data-key="' + esc(key) + '">' +
+      '<input type="checkbox"' + (on ? ' checked' : '') + '>' +
+      '<span class="r-main"><span class="r-name">' + name + '</span>' +
+      (where ? '<span class="r-where">' + where + '</span>' : '') + '</span>' +
+      coordBtn(at) + '</label>';
+  }
+
+  function section(title, hint, rows) {
+    return '<div class="sec"><div class="sec-head">' +
+      '<span class="sec-title">' + title + '</span>' +
+      '<span class="sec-n">' + rows.length + ' 項</span>' +
+      (hint ? '<span class="sec-hint">' + hint + '</span>' : '') +
+      '</div>' + rows.join('') + '</div>';
+  }
+
+  function render() {
+    if (!DB) return;
+
+    // 總進度
+    var tn = 0, ta = 0;
+    DB.data.forEach(function (b) { var c = countOf(b); tn += c.n; ta += c.all; });
+    $('totalN').textContent = tn + ' / ' + ta;
+    $('totalBar').style.width = (ta ? Math.round(tn / ta * 100) : 0) + '%';
+
+    // 書籤
+    $('books').innerHTML = DB.data.map(function (b, i) {
+      var c = countOf(b);
+      return '<button type="button" class="book' + (c.n === c.all ? ' full' : '') + '"' +
+        ' aria-pressed="' + (i === cur ? 'true' : 'false') + '" data-i="' + i + '">' +
+        '<span>' + esc(b.name) + '</span><span class="n">' + c.n + '/' + c.all + '</span></button>';
+    }).join('');
+
+    var book = DB.data[cur];
+    var c = countOf(book);
+    $('bookN').textContent = book.name + ' ' + c.n + '/' + c.all;
+
+    var mobs = book.mobs.map(function (m) {
+      return row(book.id + ':m' + m.baseId,
+        esc(m.name) + ' <span class="cnt">×' + m.count + '</span>',
+        zoneText(m.zones), m.at);
+    });
+    var nms = book.nms.map(function (m) {
+      var spot = m.zones[0] && m.zones[0].spot;
+      var where = m.duty
+        ? '<a href="../duty-codex/?id=duty:' + encodeURIComponent(m.duty) + '">' + esc(m.duty) + '</a>' +
+          (m.zones[0] ? '<span class="alt"> · ' + esc(m.zones[0].zone) + '</span>' : '')
+        : zoneText(m.zones) + '<span class="alt">（一般／高難度同名，資料分不出是哪一本，不給連結）</span>';
+      return row(book.id + ':n' + m.baseId, esc(m.name), where, m.at);
+    });
+    var fates = book.fates.map(function (f) {
+      var where = (f.at ? esc(f.at.mapName) : '') + (f.zone ? ' · ' + esc(f.zone) : '');
+      return row(book.id + ':f' + f.id,
+        esc(f.name) + (f.lv ? '<span class="lv">Lv' + f.lv + '</span>' : ''), where, f.at);
+    });
+    var leves = book.leves.map(function (l) {
+      var where = (l.issued ? '發布：' + esc(l.issued) : '') +
+        (l.zone ? '<span class="alt"> · ' + esc(l.zone) + '</span>' : '');
+      return row(book.id + ':l' + l.id,
+        esc(l.name) + (l.lv ? '<span class="lv">Lv' + l.lv + '</span>' : ''), where, null);
+    });
+
+    $('body').innerHTML =
+      section('🗡️ 討伐', '數字是要打幾隻', mobs) +
+      section('👑 首領', '副本裡的頭目', nms) +
+      section('⚔️ FATE', '', fates) +
+      section('📜 理符', '到發布地的理符板接', leves);
+  }
+
+  function toggle(key, on) {
+    if (on) done[key] = 1; else delete done[key];
+    save();
+    render();
+  }
+
+  // ── 事件 ──────────────────────────────────────────────
+  $('books').addEventListener('click', function (e) {
+    var b = e.target.closest('.book');
+    if (!b) return;
+    cur = +b.dataset.i;
+    render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  $('body').addEventListener('click', function (e) {
+    var cb = e.target.closest('.coord');
+    if (cb) {
+      // 座標鈕在 <label> 裡面，不擋掉的話按它會順手把那一列打勾
+      e.preventDefault();
+      e.stopPropagation();
+      var flag = cb.dataset.flag;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(flag).then(function () {
+          if (window.Toast) Toast.show('已複製：' + flag);
+        }).catch(function () {
+          if (window.Toast) Toast.show('複製失敗，請手動選取', 'err');
+        });
+      } else if (window.Toast) {
+        Toast.show('這個瀏覽器不支援自動複製：' + flag, 'err');
+      }
+      return;
+    }
+  });
+
+  $('body').addEventListener('change', function (e) {
+    if (e.target.type !== 'checkbox') return;
+    var lab = e.target.closest('.row');
+    if (lab) toggle(lab.dataset.key, e.target.checked);
+  });
+
+  $('btnAll').addEventListener('click', function () {
+    keysOf(DB.data[cur]).forEach(function (k) { done[k] = 1; });
+    save(); render();
+  });
+
+  $('btnClear').addEventListener('click', function () {
+    var book = DB.data[cur];
+    var run = function (ok) {
+      if (!ok) return;                       // 取消＝進度一個都不能動
+      keysOf(book).forEach(function (k) { delete done[k]; });
+      save(); render();
+    };
+    if (window.Toast && Toast.confirm) {
+      Toast.confirm('要清除「' + book.name + '」的進度嗎？', { danger: true }).then(run);
+    } else {
+      run(window.confirm('要清除「' + book.name + '」的進度嗎？'));
+    }
+  });
+
+  // ── 載入 ──────────────────────────────────────────────
+  /* `?id=book:<書名>` ——命令面板搜到某本文書時用這條進來。
+     語意同副本圖鑑的 `duty:`（docs/deep-links.md §2.1）：不捲到某一列，而是切到那一本。 */
+  function fromUrl() {
+    var id = new URLSearchParams(location.search).get('id');
+    if (!id || id.indexOf('book:') !== 0) return;
+    var i = DB.data.findIndex(function (b) { return b.name === id.slice(5); });
+    if (i >= 0) cur = i;
+  }
+
+  load();
+  fetch('../../data/relic-note.json')
+    .then(function (r) { return r.json(); })
+    .then(function (db) { DB = db; fromUrl(); render(); })
+    .catch(function (e) {
+      $('body').innerHTML = '<div class="sec-n">載入失敗：' + esc(e.message) + '</div>';
+    });
+
+  // 頁內快捷鍵（登記制見知識庫 §4.73；[ ] 與追蹤頁的「上／下一頁」同義）
+  var keys = [
+    { keys: '[', label: '上一本', run: function () { if (DB && cur > 0) { cur--; render(); } } },
+    { keys: ']', label: '下一本', run: function () { if (DB && cur < DB.data.length - 1) { cur++; render(); } } }
+  ];
+  if (window.SGT_SHORTCUTS) window.SGT_SHORTCUTS.register(keys);
+  else (window.SGT_SHORTCUTS_PENDING = window.SGT_SHORTCUTS_PENDING || []).push(keys);
+})();
+</script>
+</body>
+</html>
