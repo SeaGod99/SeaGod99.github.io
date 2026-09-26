@@ -78,6 +78,13 @@
       "desc": "31 種屬性的魔晶石（229 件）＋ 12 階的禁忌鑲嵌成功率與鑲嵌費（來源 XIVAPI MateriaGrade）"
     },
     {
+      "name": "製作理符",
+      "file": "craft-leves.json",
+      "count": 1120,
+      "updated": "2026-09-26",
+      "desc": "八大製作職的製作理符 1,120 張（交付物、經驗、gil、配額、可否三倍），來源 XIVAPI Leve + CraftLeve"
+    },
+    {
       "schema": "item-categories",
       "file": "item-categories.json",
       "name": "物品分類（ItemUICategory id ↔ 繁中名）",

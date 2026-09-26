@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FF14 製作理符試算 — 依職業與等級列出可接理符、交付物、EXP 與每點配額效率，一鍵帶材料去市場頁算成本或帶配方進模擬器">
+  <title>製作理符試算 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <link rel="stylesheet" href="../../assets/css/tool-header.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 109.375%; }
+    body { background: var(--bg-base); color: var(--text); font-family: var(--font-sans); min-height: 100vh; }
+
+    .wrap { max-width: var(--w-content); margin: 0 auto; padding: 0.6rem 1.5rem 2.5rem; }
+
+    .panel {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 0.9rem 1rem; margin-bottom: 0.9rem;
+    }
+    .fields { display: flex; gap: 0.7rem; flex-wrap: wrap; align-items: flex-end; }
+    .f { display: flex; flex-direction: column; gap: 0.25rem; }
+    .f label { font-size: 0.73rem; color: var(--text-muted); }
+    .f select, .f input {
+      background: var(--bg-base); border: 1px solid var(--border); border-radius: 6px;
+      color: var(--text-dim); padding: 0.4rem 0.55rem; font: inherit; font-size: 0.82rem;
+      min-height: 40px; outline: none;
+    }
+    .f select:focus, .f input:focus { border-color: var(--gold); color: var(--text); }
+    .f select { cursor: pointer; }
+    .f .num { width: 5.5rem; text-align: right; font-variant-numeric: tabular-nums; }
+
+    .status { font-size: 0.76rem; color: var(--text-muted); margin-bottom: 0.7rem; }
+    .status b { color: var(--gold-light); }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    thead th {
+      text-align: right; padding: 0.4rem 0.55rem; color: var(--text-muted);
+      font-size: 0.73rem; font-weight: 600; border-bottom: 1px solid var(--border); white-space: nowrap;
+    }
+    thead th:first-child, thead th:nth-child(2), tbody td:first-child, tbody td:nth-child(2) { text-align: left; }
+    tbody td {
+      padding: 0.45rem 0.55rem; border-bottom: 1px solid var(--border);
+      text-align: right; font-variant-numeric: tabular-nums;
+    }
+    tbody tr:hover { background: var(--bg-card-hover); }
+    .lv-name { font-weight: 600; color: var(--text); }
+    .turn { color: var(--text-dim); font-size: 0.78rem; }
+    .exp { color: var(--gold-light); font-weight: 700; }
+    .per { color: var(--green); font-weight: 700; }
+    .x3 { font-size: 0.68rem; padding: 0.05rem 0.3rem; border-radius: 4px;
+          background: var(--purple-dim); color: var(--purple); border: 1px solid transparent; }
+    .acts { display: flex; gap: 0.3rem; justify-content: flex-end; flex-wrap: wrap; }
+    .acts a {
+      font-size: 0.72rem; color: var(--text-muted); text-decoration: none;
+      border: 1px solid var(--border); border-radius: 6px; padding: 0.25rem 0.45rem;
+      min-height: 32px; display: inline-flex; align-items: center; white-space: nowrap;
+    }
+    .acts a:hover { border-color: var(--border-hover); color: var(--text-dim); }
+
+    .note { font-size: 0.74rem; color: var(--text-muted); line-height: 1.8; margin-top: 1rem; }
+    .note b { color: var(--text-dim); font-weight: 600; }
+
+    @media (max-width: 700px) { .table-wrap { overflow-x: auto; } table { min-width: 44rem; } }
+    @media (pointer: coarse) { .f select, .f input, .acts a { min-height: 44px; } }
+  </style>
+  <script src="../../assets/js/patch-gate.js"></script>
+  <script src="../../assets/js/theme.js"></script>
+</head>
+<body>
+<div class="tool-header">
+  <h1 class="tool-title">&#x1F4DC; 製作理符試算</h1>
+  <p class="tool-subtitle">依職業與等級列出可接的製作理符——交付什麼、給多少經驗、每點配額換多少，一鍵帶去算成本或開模擬器</p>
+</div>
+
+<div class="wrap">
+  <div class="panel">
+    <div class="fields">
+      <div class="f">
+        <label for="jobSel">職業</label>
+        <select id="jobSel"></select>
+      </div>
+      <div class="f">
+        <label for="lvIn">目前等級</label>
+        <input class="num" id="lvIn" type="number" min="1" max="100" step="1" value="50">
+      </div>
+      <div class="f">
+        <label for="modeSel">顯示</label>
+        <select id="modeSel">
+          <option value="now" selected>目前接得到的（等級最接近的那批）</option>
+          <option value="all">這個職業全部</option>
+        </select>
+      </div>
+      <div class="f">
+        <label for="sortSel">排序</label>
+        <select id="sortSel">
+          <option value="per" selected>每點配額經驗（高→低）</option>
+          <option value="exp">單張經驗（高→低）</option>
+          <option value="level">等級（低→高）</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="status" id="status">載入中…</div>
+
+  <div class="table-wrap"><table>
+    <thead><tr>
+      <th>Lv</th><th>理符</th><th>交付</th><th>經驗</th><th>gil</th><th>配額</th>
+      <th title="單張經驗 ÷ 配額點數——理符配額是有限資源，這欄才是真正的效率">經驗／配額</th><th></th>
+    </tr></thead>
+    <tbody id="tbody"></tbody>
+  </table></div>
+
+  <p class="note">
+    <b>經驗與 gil 是遊戲資料的原值。</b>
+    <b>本站不提供 HQ 交付的加成倍率</b>——那個倍率不在遊戲資料裡（`Leve.ExpFactor` 恆為 1），
+    憑印象寫的話你會照著算錯整條練級規劃。<br>
+    <b>「經驗／配額」才是效率</b>：理符配額是有限資源（每 12 小時回 3 點、上限 100），
+    單張經驗高但吃三點配額的，不一定比較划算。<br>
+    <b>三倍</b>標記代表那張可以一次交三份（經驗與 gil 跟著乘，配額只扣一次）——
+    標記來自資料的 <code>Repeats</code> 欄位。
+  </p>
+</div>
+
+<footer class="page-footer">
+  <div class="container">
+    <p class="footer-text"><a href="../../">水神的工具箱</a> · 資料來源：遊戲本體、<a href="https://xivapi.com" target="_blank">XIVAPI</a></p>
+    <p class="footer-text" style="margin-top:4px">FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  var DB = null;
+  function $(id) { return document.getElementById(id); }
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+  var fmt = function (n) { return Math.round(n).toLocaleString(); };
+
+  function rows() {
+    var job = $('jobSel').value;
+    var lv = Math.max(1, parseInt($('lvIn').value, 10) || 1);
+    var all = DB.data.filter(function (l) { return l.job === job; });
+
+    if ($('modeSel').value === 'now') {
+      /* 「目前接得到的」＝等級不超過你、而且**等級最高的那一檔**。
+         理符是一檔一檔開的（1／5／10…），列出所有低等級的沒有意義——
+         那些經驗早就不值得跑了。 */
+      var okLv = all.filter(function (l) { return l.level <= lv; }).map(function (l) { return l.level; });
+      if (!okLv.length) return [];
+      var top = Math.max.apply(null, okLv);
+      all = all.filter(function (l) { return l.level === top; });
+    }
+
+    var key = $('sortSel').value;
+    return all.slice().sort(function (a, b) {
+      if (key === 'level') return a.level - b.level || a.id - b.id;
+      if (key === 'exp') return b.exp - a.exp || a.id - b.id;
+      return (b.exp / b.allowance) - (a.exp / a.allowance) || a.id - b.id;
+    });
+  }
+
+  function render() {
+    if (!DB) return;
+    var list = rows();
+    var job = $('jobSel').value;
+    var total = DB.data.filter(function (l) { return l.job === job; }).length;
+
+    if (!list.length) {
+      $('status').textContent = '這個等級還接不到 ' + job + ' 的製作理符（最低要 Lv' +
+        Math.min.apply(null, DB.data.filter(function (l) { return l.job === job; }).map(function (l) { return l.level; })) + '）。';
+      $('tbody').innerHTML = '';
+      return;
+    }
+    var lvs = [...new Set(list.map(function (l) { return l.level; }))];
+    $('status').innerHTML = job + '：顯示 <b>' + list.length + '</b> 張' +
+      ($('modeSel').value === 'now' ? '（Lv' + lvs[0] + ' 這一檔）' : '（全部 ' + total + ' 張）') +
+      '　最高每點配額 <b>' + fmt(Math.max.apply(null, list.map(function (l) { return l.exp / l.allowance; }))) + '</b> 經驗';
+
+    $('tbody').innerHTML = list.map(function (l) {
+      var turn = l.turnIn.map(function (t) { return esc(t.name) + ' ×' + t.count; }).join('、');
+      // 帶去市場頁算成本：走既有的 #craft= 深連結（見 CLAUDE.md 的工作流）
+      var craftHref = '../../tools/market/#craft=' +
+        l.turnIn.map(function (t) { return t.itemId + ':' + t.count * (l.repeats > 0 ? 3 : 1); }).join(',');
+      var simHref = l.turnIn[0] && l.turnIn[0].recipeId
+        ? '../../tools/crafting-sim/#r=' + l.turnIn[0].recipeId : null;
+      return '<tr>' +
+        '<td>' + l.level + '</td>' +
+        '<td><span class="lv-name">' + esc(l.name) + '</span>' +
+          (l.repeats > 0 ? ' <span class="x3">三倍</span>' : '') + '</td>' +
+        '<td class="turn">' + turn + '</td>' +
+        '<td class="exp">' + fmt(l.exp) + '</td>' +
+        '<td>' + fmt(l.gil) + '</td>' +
+        '<td>' + l.allowance + '</td>' +
+        '<td class="per">' + fmt(l.exp / l.allowance) + '</td>' +
+        '<td><div class="acts">' +
+          '<a href="' + craftHref + '" title="把交付物帶到市場頁的製作計畫算成本">&#x1F4B0; 算成本</a>' +
+          (simHref ? '<a href="' + simHref + '" title="在製作模擬器開這個配方">&#x1F528; 模擬</a>' : '') +
+        '</div></td>' +
+      '</tr>';
+    }).join('');
+    syncURL();
+  }
+
+  /* 網址狀態。⚠ 進站參數要在模組載入時就存起來——`syncURL()` 會改寫網址，
+     之後再讀 `location.search` 就讀到自己剛寫的值（知識庫 §3.17／§4.60）。 */
+  var INITIAL_QUERY = location.search;
+  var applying = false;
+  function syncURL() {
+    if (applying) return;
+    var p = new URLSearchParams();
+    p.set('job', $('jobSel').value);
+    p.set('lv', $('lvIn').value);
+    if ($('modeSel').value !== 'now') p.set('m', $('modeSel').value);
+    if ($('sortSel').value !== 'per') p.set('s', $('sortSel').value);
+    history.replaceState(null, '', '?' + p.toString());
+  }
+
+  ['change', 'input'].forEach(function (ev) {
+    ['jobSel', 'lvIn', 'modeSel', 'sortSel'].forEach(function (id) {
+      $(id).addEventListener(ev, render);
+    });
+  });
+
+  fetch('../../data/craft-leves.json')
+    .then(function (r) { return r.json(); })
+    .then(function (db) {
+      DB = db;
+      var jobs = [...new Set(db.data.map(function (l) { return l.job; }))];
+      jobs.forEach(function (j) {
+        var o = document.createElement('option');
+        o.value = j; o.textContent = j;
+        $('jobSel').appendChild(o);
+      });
+      applying = true;
+      var p = new URLSearchParams(INITIAL_QUERY);
+      if (p.get('job') && jobs.indexOf(p.get('job')) >= 0) $('jobSel').value = p.get('job');
+      if (p.get('lv')) $('lvIn').value = p.get('lv');
+      if (p.get('m')) $('modeSel').value = p.get('m');
+      if (p.get('s')) $('sortSel').value = p.get('s');
+      applying = false;
+      render();
+    })
+    .catch(function (e) {
+      $('status').textContent = '載入失敗：' + e.message;
+    });
+
+  // 頁內快捷鍵（登記制見知識庫 §4.73）
+  var keys = [{ keys: 'j', label: '切到下一個職業', run: function () {
+    var s = $('jobSel');
+    s.selectedIndex = (s.selectedIndex + 1) % s.options.length;
+    render();
+  } }];
+  if (window.SGT_SHORTCUTS) window.SGT_SHORTCUTS.register(keys);
+  else (window.SGT_SHORTCUTS_PENDING = window.SGT_SHORTCUTS_PENDING || []).push(keys);
+})();
+</script>
+</body>
+</html>
