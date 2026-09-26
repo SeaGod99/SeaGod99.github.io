@@ -42,5 +42,36 @@
     return _gamePatch;
   }
 
-  window.PatchGate = { loadGamePatch, released, pnum };
+  /* ── 「上次來過之後新增了什麼」────────────────────────────────────────
+     記住使用者上次看到的是哪一版（`ffxiv_seen_patch`，key 一律 ffxiv_ 前綴才進得了
+     首頁的全站備份，§2.3），之後就能標出「這一版新加的」。
+
+     幾個刻意的決定：
+     · **第一次來的人什麼都不標**。沒有 seen 值時全部條目都會算「新」，
+       那等於整頁閃光，反而看不出重點——這時只把當前版本記下來，下次改版才有比較基準。
+     · **不自動把 seen 推進到最新**。使用者看過之後才推（頁面呼叫 markSeen），
+       否則開一次頁面就再也看不到那些標記了。
+     · 比較用 pnum 的數值語意（7.21 > 7.2 > 7.15），不是字串比大小。 */
+  const SEEN_KEY = 'ffxiv_seen_patch';
+
+  function seenPatch() {
+    try { return localStorage.getItem(SEEN_KEY) || null; } catch (e) { return null; }
+  }
+  function markSeen(gamePatch) {
+    try { if (gamePatch) localStorage.setItem(SEEN_KEY, String(gamePatch)); } catch (e) {}
+  }
+  /** 這個條目是不是「上次來過之後才開放的」。第一次來（沒有 seen）一律回 false。 */
+  function isNewSince(patch, gamePatch, seen) {
+    const v = pnum(patch), g = pnum(gamePatch), s = pnum(seen);
+    if (v == null || g == null || s == null) return false;
+    return v > s && v <= g;
+  }
+  /** 第一次造訪就先把當前版本記下來，並回報「這次有沒有東西可標」。 */
+  function initSeen(gamePatch) {
+    const s = seenPatch();
+    if (!s) { markSeen(gamePatch); return { seen: null, hasNew: false }; }
+    return { seen: s, hasNew: pnum(gamePatch) > pnum(s) };
+  }
+
+  window.PatchGate = { loadGamePatch, released, pnum, seenPatch, markSeen, isNewSince, initSeen, SEEN_KEY };
 })();

@@ -154,7 +154,8 @@
         '<div class="col-icon-wrap">' + iconHtml + '</div>' +
         nameHtml + cmdHtml +
         '<div class="col-tags">' + sourceTags + '</div>' +
-        '<div class="col-detail">' + detailText + '</div>' +
+        '<div class="col-detail">' + detailText + CollectionTracker.sourceConditions(sources) +
+        CollectionTracker.sourceWheres(sources) + '</div>' +
         '<div class="col-tags">' + catHtml + patchHtml + '</div>';
     }
   });

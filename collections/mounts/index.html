@@ -117,7 +117,8 @@ CollectionTracker.init({
         '</div>' +
       '</div>' +
       '<div class="col-tags">' + sourceTags + '</div>' +
-      '<div class="col-detail">' + detailText + '</div>' +
+      '<div class="col-detail">' + detailText + CollectionTracker.sourceConditions(sources) +
+        CollectionTracker.sourceWheres(sources) + '</div>' +
       (m.itemId ? '<a class="ct-market" href="../../tools/market/#item=' + esc(m.itemId) + '" title="到市場查價工具查此物品行情">💰 市場行情</a>' : '');
   }
 });

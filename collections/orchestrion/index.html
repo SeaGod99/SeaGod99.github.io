@@ -146,7 +146,7 @@
       var lines = [];
       if (r.number) lines.push('<div class="detail-line"><b>編號：</b>No.' + esc(r.number) + '</div>');
       if (r.nameEn) lines.push('<div class="detail-line"><b>英文名：</b>' + esc(r.nameEn) + '</div>');
-      if (srcs.length) srcs.forEach(function (s) { lines.push('<div class="detail-line"><b>' + esc(s.type) + '：</b>' + esc(s.detail || '') + '</div>'); });
+      if (srcs.length) srcs.forEach(function (s) { lines.push('<div class="detail-line"><b>' + esc(s.type) + '：</b>' + esc(s.detail || '') + CollectionTracker.sourceCondition(s) + CollectionTracker.sourceWhere(s) + '</div>'); });
       else lines.push('<div class="detail-line">取得方式：待補充</div>');
       return '' +
         '<div class="oc-icon-wrap"><div class="oc-icon-placeholder">🎵</div></div>' +

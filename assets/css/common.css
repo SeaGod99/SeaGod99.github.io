@@ -249,6 +249,9 @@ a { color: inherit; text-decoration: none; }
   transition: var(--transition);
 }
 .filter-tag:hover { color: var(--text-primary); border-color: rgba(255,255,255,0.2); }
+/* 觸控：兩字以內的籌碼（「全部」「1★」）只有 41×44，差 3px 就達標。
+   補 min-width 而不是加 padding——加 padding 會連帶把長標籤也撐寬一圈。 */
+@media (pointer: coarse) { .filter-tag { min-width: 44px; min-height: 44px; } }
 .filter-tag.active {
   background: color-mix(in srgb, var(--accent) 14%, transparent);
   border-color: color-mix(in srgb, var(--accent) 40%, transparent);
@@ -433,6 +436,80 @@ a { color: inherit; text-decoration: none; }
   word-break: break-word;
 }
 .col-detail:empty { display: none; }
+
+/* `?id=` 深連結捲到的那一筆：閃兩秒讓使用者知道「就是這個」。
+   用 outline 而不是 border，才不會把卡片撐大一圈造成版面跳動。 */
+.ct-focus {
+  outline: 2px solid var(--accent, var(--gold));
+  outline-offset: 2px;
+  animation: ct-focus-pulse 2.2s ease-out;
+}
+@keyframes ct-focus-pulse {
+  0%, 60% { box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent, var(--gold)) 30%, transparent); }
+  100%    { box-shadow: 0 0 0 0 transparent; }
+}
+@media (prefers-reduced-motion: reduce) { .ct-focus { animation: none; } }
+
+/* 成就的達成條件（CollectionTracker.sourceCondition 產生）。
+   「成就『見多識廣的探索者』」本身答不出要做什麼，條件那句才是使用者要的；
+   但它是補充說明不是主要資訊，所以壓小壓淡，不跟來源名搶。 */
+.ct-cond {
+  margin-top: 2px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+/* 取得管道列（ItemSources.render 產生，assets/js/item-sources.js）。
+   類型當標籤、說明當主體、地點壓淡——三欄的層級差要看得出來，
+   否則一整串「兌換 白鋼刀幣 ×4 某某NPC」會糊成一團。 */
+.is-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.is-type {
+  flex: none;
+  font-size: 10.5px;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.is-desc { color: var(--text-dim); }
+.is-where { color: var(--text-muted); font-size: 11.5px; }
+
+/* 任務來源的接取點（CollectionTracker.sourceWhere 產生）。
+   「取得方式：任務」等於沒說，NPC 與座標才是玩家接下來要做的動作，
+   所以比條件那行亮一階；座標鈕是行動點，再亮一階。 */
+.ct-where {
+  margin-top: 3px;
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+.ct-flag {
+  font: inherit;
+  font-size: 11px;
+  line-height: 1;
+  padding: 2px 5px;
+  margin-left: 2px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg-surface);
+  color: var(--text-dim);
+  cursor: pointer;
+  vertical-align: baseline;
+  transition: border-color .15s, color .15s;
+}
+.ct-flag:hover { border-color: var(--gold); color: var(--gold); }
+.ct-flag.copied { border-color: var(--green); color: var(--green); }
+@media (pointer: coarse) { .ct-flag { min-width: var(--tap-min, 44px); min-height: var(--tap-min, 44px); } }
 .col-detail::before {
   content: "取得方式";
   display: block;

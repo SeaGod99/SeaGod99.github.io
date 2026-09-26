@@ -54,6 +54,18 @@
 (function () {
   'use strict';
 
+  // 提示與確認：優先用共用的 toast.js（由 theme.js 全站載入），
+  // 它若還沒載好（或載入失敗）就退回原生對話框——寧可醜，也不能讓
+  // 「確定要清除進度嗎」這種問句安靜消失。
+  function ctNotify(msg, kind) {
+    if (window.Toast) Toast.show(msg, kind);
+    else window.alert(msg);
+  }
+  function ctConfirm(msg, danger) {
+    if (window.Toast) return Toast.confirm(msg, { danger: !!danger });
+    return Promise.resolve(window.confirm(msg));
+  }
+
   var PATCH_BANDS = [
     { label: '2.x 原初之地',   min: '2.0', max: '2.9' },
     { label: '3.x 蒼天之禁地', min: '3.0', max: '3.9' },
@@ -204,6 +216,34 @@
     var html = '<option value="default">預設排序</option>';
     this.sorts.forEach(function (s) { html += '<option value="' + esc(s.value) + '">' + esc(s.label) + '</option>'; });
     sel.innerHTML = html;
+  };
+
+  /* 「✨ 本次新增」篩選：上次來過之後才開放的條目。
+     掛在引擎而不是各頁，13 個追蹤頁一次受惠、規則也只有一份。
+
+     三個刻意的決定：
+     · **第一次來的人不掛**（PatchGate.initSeen 會回 hasNew:false）——沒有比較基準時
+       全部條目都算新，等於整頁閃光。這時只把當前版本記下來，下次改版才有東西可標。
+     · **這一頁真的沒有新東西就不掛**。掛一個永遠是 0 的篩選只會佔位置。
+     · **數量由各頁自己過濾後的 LIST 算**，不是資料庫總數——同一版新增的東西不見得
+       每一頁都收，寫死總數會讓使用者點進去發現是空的。 */
+  CollectionTracker.prototype.addWhatsNewFilter = function (gp) {
+    if (this.filters.some(function (f) { return f.id === 'new'; })) return;   // 頁面自己定義過就尊重它
+    var info = PatchGate.initSeen(gp);
+    if (!info.hasNew) return;
+    var seen = info.seen;
+    var hit = this.LIST.filter(function (e) { return PatchGate.isNewSince(e.patch, gp, seen); });
+    if (!hit.length) return;
+    this.whatsNew = { seen: seen, gamePatch: gp, count: hit.length };
+    this.filters.unshift({
+      id: 'new',
+      label: '更新',
+      options: [{ value: 'y', label: '✨ ' + seen + ' 之後新增（' + hit.length + '）' }],
+      match: function (e, value) {
+        return value !== 'y' || PatchGate.isNewSince(e.patch, gp, seen);
+      }
+    });
+    this.filterState.new = null;
   };
 
   CollectionTracker.prototype.buildFilterOptions = function () {
@@ -430,8 +470,54 @@
     grid.appendChild(frag);
 
     if (this.pageSize) this.renderPagination(list.length);
+    if (this.focusKey != null) this.focusCard(list);
     // 讓各頁同步自己的附加檢視（地圖標點、目標清單…）
     if (this.cfg.onRender) this.cfg.onRender(list, pageSlice, this);
+  };
+
+  /* `?id=` 深連結：捲到那一筆並閃一下。
+     ── 為什麼要自己翻頁 ──
+     分頁頁面（釣魚 60／採集 40／幻卡 30）從別處連過來時，目標多半不在第 1 頁，
+     不翻頁的話使用者會看到一個「什麼事都沒發生」的頁面。所以先算它在第幾頁，
+     不對就換頁重畫，**只重試一次**（避免 focusKey 對不到任何一筆時無限重畫）。
+     捲完就把 focusKey 清掉並從網址移除——它是一次性的導覽意圖，不是頁面狀態，
+     留在網址上會讓使用者之後每次換篩選都被拉回那一筆。 */
+  CollectionTracker.prototype.focusCard = function (list) {
+    var self = this;
+    var key = String(this.focusKey);
+    var idx = -1;
+    for (var i = 0; i < list.length; i++) {
+      var units = this.unitsOf(list[i]);
+      for (var j = 0; j < units.length; j++) {
+        if (String(this.keyOf(units[j])) === key) { idx = i; break; }
+      }
+      if (idx >= 0) break;
+    }
+    var done = function () {
+      self.focusKey = null;
+      self.replaceURL();
+    };
+    if (idx < 0) { done(); return; }         // 對不到（已被篩掉或不存在）＝安靜放棄
+
+    if (this.pageSize) {
+      var want = Math.floor(idx / this.pageSize);
+      if (want !== this.page && !this._focusRetried) {
+        this._focusRetried = true;
+        this.page = want;
+        this.renderGrid();                    // 重畫後會再進來一次，這次頁碼對了
+        return;
+      }
+    }
+    this._focusRetried = false;
+    var cards = this.$('ct-grid').children;
+    var pos = this.pageSize ? idx - this.page * this.pageSize : idx;
+    var card = cards[pos];
+    if (card) {
+      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      card.classList.add('ct-focus');
+      setTimeout(function () { card.classList.remove('ct-focus'); }, 2200);
+    }
+    done();
   };
 
   // ── 分頁列 ──
@@ -450,13 +536,7 @@
       b.textContent = label;
       if (opts && opts.disabled) { b.disabled = true; return b; }
       if (opts && opts.active) b.setAttribute('aria-current', 'page');
-      b.addEventListener('click', function () {
-        self.page = page;
-        self.pushURL();
-        self.renderGrid();
-        var grid = self.$('ct-grid');
-        if (grid && grid.scrollIntoView) grid.scrollIntoView({ block: 'start' });
-      });
+      b.addEventListener('click', function () { self.setPage(page); });
       return b;
     }
 
@@ -503,17 +583,22 @@
       try {
         var data = JSON.parse(ev.target.result);
         if (!Array.isArray(data) && data.schema !== self.schema) {
-          alert('匯入失敗：這不是「' + self.noun + '收藏」的進度檔'); return;
+          ctNotify('匯入失敗：這不是「' + self.noun + '收藏」的進度檔', 'err'); return;
         }
         // 舊版各頁的鍵名不一致（owned／unlocked／done），一律接受，避免舊備份檔匯不回來
         var list = Array.isArray(data) ? data : (data.owned || data.unlocked || data.done);
         if (!Array.isArray(list)) throw new Error('格式錯誤');
-        if (self.owned.size && !confirm('匯入將以檔案內容（' + list.length + ' 筆）取代目前的 ' + self.owned.size + ' 筆記錄，確定嗎？')) return;
-        self.owned = new Set(list);
-        if (self.cfg.onImport) self.cfg.onImport(data);   // 還原頁面自有的額外進度
-        self.save(); self.updateProgress(); self.renderGrid();
-        alert('匯入成功，共 ' + self.owned.size + ' 筆已' + self.verb + '記錄');
-      } catch (err) { alert('匯入失敗：檔案格式不正確'); }
+        var applyImport = function () {
+          self.owned = new Set(list);
+          if (self.cfg.onImport) self.cfg.onImport(data);   // 還原頁面自有的額外進度
+          self.save(); self.updateProgress(); self.renderGrid();
+          ctNotify('匯入成功，共 ' + self.owned.size + ' 筆已' + self.verb + '記錄', 'ok');
+        };
+        // 目前沒有任何記錄就不必問；有記錄才確認（覆蓋是不可逆的）
+        if (!self.owned.size) { applyImport(); return; }
+        ctConfirm('匯入將以檔案內容（' + list.length + ' 筆）取代目前的 ' + self.owned.size + ' 筆記錄，確定嗎？', true)
+          .then(function (ok) { if (ok) applyImport(); });
+      } catch (err) { ctNotify('匯入失敗：檔案格式不正確', 'err'); }
     };
     reader.readAsText(file);
   };
@@ -529,6 +614,11 @@
       if (self.filterState[f.id] != null) p.set('f_' + f.id, self.filterState[f.id]);
     });
     if (this.pageSize && this.page > 0) p.set('p', String(this.page + 1));   // 網址用 1-based
+    // `?id=` 是「連到特定一筆」的深連結（見 docs/deep-links.md）。
+    // 值就是本頁 keyOf 的輸出——**各頁格式不同**（多數是 'id:123'，寵物頁是純數字），
+    // 刻意不統一成純 id，因為那是各頁存檔用的鍵，改它會動到使用者進度（§2.5）。
+    // 它只負責「開啟時捲到那一筆並高亮」，不參與篩選，所以捲過之後就從網址移除。
+    if (this.focusKey != null) p.set('id', String(this.focusKey));
     var s = p.toString();
     return s ? '?' + s : location.pathname;
   };
@@ -558,6 +648,7 @@
       var pg = parseInt(p.get('p'), 10);
       this.page = pg > 0 ? pg - 1 : 0;      // 超出範圍由 renderGrid 夾回
     }
+    this.focusKey = p.get('id');            // 由 renderGrid 捲過去並高亮一次
     // 同步 UI 控件
     var si = this.$('ct-search'); if (si) si.value = q;
     var ss = this.$('ct-sort'); if (ss) ss.value = this.sortBy;
@@ -566,18 +657,86 @@
     });
   };
 
+  /* ── 狀態切換的單一入口 ─────────────────────────────────────────────
+     滑鼠與快捷鍵走同一條路。分開寫的話兩邊會漂——鍵盤那條很容易漏掉
+     「回第一頁」或「同步 active 樣式」，而畫面上看起來只是「按鍵有時沒反應」。 */
+  CollectionTracker.prototype.setOwn = function (v) {
+    if (v !== 'all' && v !== 'owned' && v !== 'missing') return;
+    this.filterOwn = v;
+    Array.prototype.forEach.call(this.root.querySelectorAll('#ct-own .own-btn'), function (b) {
+      b.classList.toggle('active', b.dataset.own === v);
+    });
+    this.page = 0;
+    this.pushURL();
+    this.renderGrid();
+  };
+
+  CollectionTracker.prototype.setPage = function (n, opts) {
+    if (!this.pageSize) return false;
+    var pages = Math.max(1, Math.ceil(this.filtered().length / this.pageSize));
+    var want = Math.min(Math.max(0, n), pages - 1);
+    if (want === this.page) return false;
+    this.page = want;
+    this.pushURL();
+    this.renderGrid();
+    if (!opts || opts.scroll !== false) {
+      var grid = this.$('ct-grid');
+      if (grid && grid.scrollIntoView) grid.scrollIntoView({ block: 'start' });
+    }
+    return true;
+  };
+
+  /* ── 頁內快捷鍵 ─────────────────────────────────────────────────────
+     登記給 nav.js 的 SGT_SHORTCUTS（`?` 會列出來）。12 個追蹤頁一次受惠。
+     鍵位挑選：s=search、o=owned、`[`／`]`＝翻頁（與瀏覽器既有鍵不衝突）。
+     **沒有登記 Esc**——Esc 在站內已經是「關閉彈窗」，搶過來會讓詳情彈窗關不掉。
+     搜尋框裡的 Esc 改在 input 自己身上處理（清空＋失焦），不進全域登記。 */
+  CollectionTracker.prototype.wireShortcuts = function () {
+    var self = this;
+    var ownLabel = '已' + this.verb;
+    var keys = [
+      { keys: 's', label: '聚焦搜尋框', run: function () {
+        var i = self.$('ct-search'); if (!i) return;
+        i.focus(); if (i.select) i.select();
+      } },
+      { keys: 'o', label: '切換全部 → ' + ownLabel + ' → 未' + this.verb, run: function () {
+        var order = ['all', 'owned', 'missing'];
+        var at = order.indexOf(self.filterOwn);
+        self.setOwn(order[(at + 1) % order.length]);
+      } }
+    ];
+    if (this.pageSize) {
+      keys.push({ keys: '[', label: '上一頁', run: function () { self.setPage(self.page - 1); } });
+      keys.push({ keys: ']', label: '下一頁', run: function () { self.setPage(self.page + 1); } });
+    }
+    /* nav.js 是 defer 載的、這支是 inline 同步跑的，所以 SGT_SHORTCUTS 常常還不存在。
+       丟進待辦佇列讓 nav.js 自己吸乾——不要改成等 DOMContentLoaded，
+       那在 init 比 DOMContentLoaded 晚的頁面會整個失效且不報錯。 */
+    if (window.SGT_SHORTCUTS) window.SGT_SHORTCUTS.register(keys);
+    else (window.SGT_SHORTCUTS_PENDING = window.SGT_SHORTCUTS_PENDING || []).push(keys);
+  };
+
   // ── 事件綁定 ──
   CollectionTracker.prototype.wire = function () {
     var self = this;
     Array.prototype.forEach.call(this.root.querySelectorAll('#ct-own .own-btn'), function (btn) {
-      btn.addEventListener('click', function () {
-        self.filterOwn = btn.dataset.own;
-        Array.prototype.forEach.call(self.root.querySelectorAll('#ct-own .own-btn'), function (b) { b.classList.remove('active'); });
-        btn.classList.add('active');
+      btn.addEventListener('click', function () { self.setOwn(btn.dataset.own); });
+    });
+    this.$('ct-search').addEventListener('keydown', function (e) {
+      // Esc 在搜尋框裡＝清空並失焦。**不要登記成全域快捷鍵**——
+      // 站內的詳情彈窗都用 Esc 關，搶過去會讓彈窗關不掉。
+      if (e.key !== 'Escape') return;
+      e.stopPropagation();
+      if (e.target.value) {
+        e.target.value = '';
+        self.cfg._rawSearch = '';
+        self.searchQ = '';
         self.page = 0;
-        self.pushURL();
+        self.replaceURL();
         self.renderGrid();
-      });
+      } else {
+        e.target.blur();
+      }
     });
     this.$('ct-search').addEventListener('input', function (e) {
       self.cfg._rawSearch = e.target.value;
@@ -597,26 +756,41 @@
     this.$('ct-importFile').addEventListener('change', function (e) {
       var file = e.target.files[0]; if (file) self.importProgress(file); e.target.value = '';
     });
+    // ⚠ 以下三個都改用 Toast.confirm（回傳 Promise），流程必須寫成 .then。
+    //   原生 confirm 是同步布林，直接把函式名換掉會讓 `if (!Toast.confirm(...))` 恆為 false
+    //   ——使用者按「取消」也照樣執行。清除進度那條尤其致命（備份是在確認之後才下載的）。
     this.$('ct-clear').addEventListener('click', function () {
-      if (!self.owned.size) { alert('目前沒有已' + self.verb + '記錄'); return; }
-      if (!confirm('確定要清除全部 ' + self.owned.size + ' 筆' + self.verb + '記錄嗎？\n將先自動下載一份備份檔以防誤刪。')) return;
-      self.exportProgress();
-      self.owned.clear(); self.save(); self.updateProgress(); self.renderGrid();
+      if (!self.owned.size) { ctNotify('目前沒有已' + self.verb + '記錄'); return; }
+      ctConfirm('確定要清除全部 ' + self.owned.size + ' 筆' + self.verb + '記錄嗎？\n將先自動下載一份備份檔以防誤刪。', true)
+        .then(function (ok) {
+          if (!ok) return;
+          self.exportProgress();
+          self.owned.clear(); self.save(); self.updateProgress(); self.renderGrid();
+          ctNotify('已清除，備份檔已下載', 'ok');
+        });
     });
     // 批次標記作用於「篩選結果的所有追蹤單位」（子項目模式下即卡片內的子項目）
     this.$('ct-markAll').addEventListener('click', function () {
       var toAdd = self.unitsIn(self.filtered()).filter(function (u) { return !self.unitOwned(u); });
-      if (!toAdd.length) { alert('目前篩選結果都已標記'); return; }
-      if (!confirm('將目前篩選結果中未標記的 ' + toAdd.length + ' 筆標記為已' + self.verb + '？')) return;
-      toAdd.forEach(function (u) { if (!self.alwaysOwned(u)) self.owned.add(self.keyOf(u)); });
-      self.save(); self.updateProgress(); self.renderGrid();
+      if (!toAdd.length) { ctNotify('目前篩選結果都已標記'); return; }
+      ctConfirm('將目前篩選結果中未標記的 ' + toAdd.length + ' 筆標記為已' + self.verb + '？')
+        .then(function (ok) {
+          if (!ok) return;
+          toAdd.forEach(function (u) { if (!self.alwaysOwned(u)) self.owned.add(self.keyOf(u)); });
+          self.save(); self.updateProgress(); self.renderGrid();
+          ctNotify('已標記 ' + toAdd.length + ' 筆', 'ok');
+        });
     });
     this.$('ct-unmarkAll').addEventListener('click', function () {
       var toDel = self.unitsIn(self.filtered()).filter(function (u) { return self.owned.has(self.keyOf(u)); });
-      if (!toDel.length) { alert('目前篩選結果沒有可取消的標記'); return; }
-      if (!confirm('取消目前篩選結果中 ' + toDel.length + ' 筆的已' + self.verb + '標記？')) return;
-      toDel.forEach(function (u) { self.owned.delete(self.keyOf(u)); });
-      self.save(); self.updateProgress(); self.renderGrid();
+      if (!toDel.length) { ctNotify('目前篩選結果沒有可取消的標記'); return; }
+      ctConfirm('取消目前篩選結果中 ' + toDel.length + ' 筆的已' + self.verb + '標記？')
+        .then(function (ok) {
+          if (!ok) return;
+          toDel.forEach(function (u) { self.owned.delete(self.keyOf(u)); });
+          self.save(); self.updateProgress(); self.renderGrid();
+          ctNotify('已取消 ' + toDel.length + ' 筆標記', 'ok');
+        });
     });
     window.addEventListener('popstate', function () {
       self.applyURL(); self.renderFilters(); self.renderGrid();
@@ -628,6 +802,7 @@
     this.renderShell();
     this.buildSortOptions();
     this.wire();
+    this.wireShortcuts();
     fetch(this.cfg.dataUrl)
       .then(function (res) { if (!res.ok) throw new Error('無法載入資料 (' + res.status + ')'); return res.json(); })
       .then(function (json) {
@@ -637,6 +812,8 @@
         return PatchGate.loadGamePatch(self.cfg.metaUrl).then(function (gp) {
           self.LIST = raw.filter(function (e) { return self.include(e, gp); });
           if (self.cfg.prepare) self.LIST = self.cfg.prepare(self.LIST) || self.LIST;
+          self.gamePatch = gp;
+          self.addWhatsNewFilter(gp);
           self.buildFilterOptions();
           self.applyURL();          // 依網址還原狀態（需在選項建好後）
           self.renderFilters();
@@ -653,9 +830,64 @@
     return this;
   };
 
+  /**
+   * 來源的「達成條件」小字（目前只有成就來源有 `condition`，2026-09-25 由
+   * patch-achievement-sources.mjs 補上）。
+   *
+   * 為什麼要有這個共用函式：五個收藏頁畫 sources 的寫法各不相同（有的 join 成一行、
+   * 有的一行一個 <div>），條件那行若各頁各寫一次，遲早會長出四種樣式與四種措辭。
+   * 各頁只要在自己的來源後面接上這一段即可。
+   *
+   * 回傳空字串代表「這筆沒有條件」——呼叫端直接串接就好，不必判斷。
+   */
+  CollectionTracker.prototype.constructor = CollectionTracker;
+  function sourceCondition(s) {
+    return s && s.condition ? '<div class="ct-cond">' + esc(s.condition) + '</div>' : '';
+  }
+  /** 把一組 sources 的條件全部列出（給「detail 是 join 成一行」的頁面用） */
+  function sourceConditions(sources) {
+    return (sources || []).map(sourceCondition).join('');
+  }
+
+  /* 任務來源的接取點（patch-collection-quest-npc.mjs 補的 issuer／at）。
+     「取得方式：任務」對玩家來說等於沒說——真正要的是去哪接。
+     沒有 issuer 就整段不出現：寧可不顯示，也不要顯示猜的。 */
+  function sourceWhere(s) {
+    if (!s || !s.issuer || !s.issuer.name) return '';
+    var at = s.at;
+    var html = '<div class="ct-where">&#x1F9CD; 接取：' + esc(s.issuer.name) +
+      (at ? '　&#x1F4CD; ' + esc(at.mapName) + (at.x == null ? '' : ' (' + at.x + ', ' + at.y + ')') : '');
+    // 座標鈕只在算得出座標時給（副本／室內的實例地圖沒有座標，只有地名）
+    if (at && at.x != null) {
+      html += ' <button type="button" class="ct-flag" data-flag="/coord ' + esc(at.x.toFixed(1)) + ' ' +
+        esc(at.y.toFixed(1)) + ' ' + esc(at.mapName) + '" aria-label="複製座標指令">&#x1F4CB;</button>';
+    }
+    return html + '</div>';
+  }
+  /** 把一組 sources 的接取點全部列出 */
+  function sourceWheres(sources) {
+    return (sources || []).map(sourceWhere).join('');
+  }
+
+  // 座標鈕：事件委派掛一次，所有吃這支引擎的頁面都拿得到（卡片每次篩選都會重建）
+  document.addEventListener('click', function (ev) {
+    var btn = ev.target.closest && ev.target.closest('.ct-flag');
+    if (!btn || !navigator.clipboard) return;
+    navigator.clipboard.writeText(btn.dataset.flag).then(function () {
+      var old = btn.innerHTML;
+      btn.innerHTML = '✓';
+      btn.classList.add('copied');
+      setTimeout(function () { btn.innerHTML = old; btn.classList.remove('copied'); }, 1400);
+    });
+  });
+
   window.CollectionTracker = {
     init: function (cfg) { return new CollectionTracker(cfg).start(); },
     PATCH_BANDS: PATCH_BANDS,
-    esc: esc
+    esc: esc,
+    sourceCondition: sourceCondition,
+    sourceConditions: sourceConditions,
+    sourceWhere: sourceWhere,
+    sourceWheres: sourceWheres
   };
 })();

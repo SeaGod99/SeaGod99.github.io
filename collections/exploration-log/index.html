@@ -39,6 +39,24 @@
     .col-detail .detail-line { margin-top: 2px; }
     .col-detail .detail-line b { color: var(--text-secondary); font-weight: 500; }
 
+    /* 座標列：🗺 開迷你地圖、📋 複製 /coord（座標由 patch-exploration-coords.mjs 補齊） */
+    .el-coord-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+    .el-coord {
+      font-size: 12px; font-variant-numeric: tabular-nums;
+      color: var(--text-secondary);
+    }
+    .el-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--blue);
+      font-size: 12px;
+      padding: 4px 9px;
+      cursor: pointer;
+    }
+    .el-btn:hover { border-color: var(--blue); background: rgba(79,195,247,0.1); }
+    .el-btn.copied { color: var(--green); border-color: var(--green); }
+
     @media (max-width: 600px) { .col-grid { grid-template-columns: 1fr; } }
   </style>
   <script src="../../assets/js/patch-gate.js"></script>
@@ -133,15 +151,68 @@
                   (timeStr ? '<div class="detail-line"><b>時間：</b>' + esc(timeStr) + '</div>' : '') +
                   (b.weather ? '<div class="detail-line"><b>天氣：</b>' + esc(b.weather) + '</div>' : '') +
                   '<div class="detail-line"><b>觸發：</b>' + esc(b.trigger || '') + '</div>';
+      // 座標列：338/340 筆有座標（缺的 2 筆是游末邦室內子地圖，maps.json 無底圖）
+      var coordRow = '';
+      if (b.coords) {
+        var c = b.coords, mapName = c.mapName || '';
+        coordRow =
+          '<div class="el-coord-row">' +
+            '<span class="el-coord">' + esc(mapName) + ' X:' + c.x.toFixed(1) + ' Y:' + c.y.toFixed(1) + '</span>' +
+            '<button class="el-btn el-map" data-mapid="' + c.mapId + '" data-x="' + c.x + '" data-y="' + c.y + '"' +
+              ' data-mapname="' + esc(mapName) + '" data-title="' + esc(b.name) + '"' +
+              ' data-sub="' + esc(mapName) + (timeStr ? ' &middot; ' + esc(timeStr) : '') + '">&#x1F5FA; 地圖</button>' +
+            '<button class="el-btn el-flag" data-flag="/coord ' + esc(c.x.toFixed(1)) + ' ' + esc(c.y.toFixed(1)) + ' ' + esc(mapName) + '">&#x1F4CB; 座標</button>' +
+          '</div>';
+      }
       return '' +
         '<div class="el-icon">&#x1F441;&#xFE0F;</div>' +
         '<div class="col-name">' + esc(b.name) + '</div>' +
         '<div class="el-meta">No.' + esc(b.id) + ' &middot; ' + esc(b.zone || '') + '</div>' +
         '<div class="col-tags">' + tags + '</div>' +
-        '<div class="col-detail">' + lines + '</div>';
+        '<div class="col-detail">' + lines + '</div>' +
+        coordRow;
+    }
+  });
+
+  // 座標列的兩顆鈕（事件委派：引擎每次篩選／換頁都會重建卡片）
+  document.addEventListener('click', function (ev) {
+    var flag = ev.target.closest('.el-flag');
+    if (flag) {
+      navigator.clipboard.writeText(flag.dataset.flag).then(function () {
+        var old = flag.innerHTML;
+        flag.innerHTML = '✓ 已複製';
+        flag.classList.add('copied');
+        setTimeout(function () { flag.innerHTML = old; flag.classList.remove('copied'); }, 1400);
+      });
+      return;
+    }
+    var map = ev.target.closest('.el-map');
+    if (map && window.elOpenMap) {
+      window.elOpenMap({
+        mapId: +map.dataset.mapid,
+        x: +map.dataset.x,
+        y: +map.dataset.y,
+        title: map.dataset.title,
+        sub: map.dataset.sub,
+        flagText: ('/coord ' + (+map.dataset.x).toFixed(1) + ' ' + (+map.dataset.y).toFixed(1) + ' ' + map.dataset.mapname).trim()
+      });
     }
   });
 })();
+</script>
+<script type="module">
+/* 眺望點位置：共用迷你地圖彈窗，maps.json 首次點擊才載入（平時這頁不需要它） */
+import { initMapModal, openMapModal } from '../../assets/js/map-modal.js';
+let ready = null;
+window.elOpenMap = async function (opts) {
+  if (!ready) {
+    ready = fetch('../../data/maps.json')
+      .then(r => r.json())
+      .then(j => initMapModal({ mapsData: j.data, base: '../..' }));
+  }
+  try { await ready; } catch (e) { ready = null; return; }
+  openMapModal(opts);
+};
 </script>
 </body>
 </html>

@@ -140,6 +140,15 @@
       el.src = (root || '') + 'assets/js/nav.js';
       el.defer = true;
       (document.head || document.documentElement).appendChild(el);
+
+      // 6) 共用提示元件 toast.js（取代原生 alert／confirm）。
+      //    從這裡載而不是每頁加一行 <script>：用到它的是 collection-tracker.js（12 頁）
+      //    與首頁、市場頁，散在各處，漏加一頁就會退回原生對話框而沒人發現。
+      //    **呼叫端一律要能在 Toast 還沒載好時退回原生**（見各處的 fallback）。
+      var t = document.createElement('script');
+      t.src = (root || '') + 'assets/js/toast.js';
+      t.defer = true;
+      (document.head || document.documentElement).appendChild(t);
     } catch (e) { /* 忽略：切換器載入失敗不影響頁面 */ }
   })();
 })();

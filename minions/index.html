@@ -201,7 +201,8 @@
     var srcWrap = $('ttSources');
     if (m.sources && m.sources.length > 0) {
       srcWrap.innerHTML = m.sources.map(function (s) {
-        return '<span class="tt-source">' + esc(s.type) + (s.detail ? '：' + esc(s.detail) : '') + '</span>';
+        return '<span class="tt-source">' + esc(s.type) + (s.detail ? '：' + esc(s.detail) : '') + '</span>' +
+          CollectionTracker.sourceCondition(s) + CollectionTracker.sourceWhere(s);
       }).join('');
     } else {
       srcWrap.innerHTML = '<div class="tt-placeholder">取得方式：待補充</div>';

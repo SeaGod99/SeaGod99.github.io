@@ -43,6 +43,7 @@
   <script src="../../assets/js/patch-gate.js"></script>
   <script src="../../assets/js/collection-tracker.js"></script>
   <script src="../../assets/js/theme.js"></script>
+<script src="../../assets/js/unlock-banner.js"></script>
 </head>
 <body>
 
@@ -124,7 +125,7 @@ CollectionTracker.init({
       ? iconPaths.slice(0, 3).map(function (p) { return '<img class="col-icon" src="' + ICON_BASE + esc(p.split('/').pop()) + '" alt="" loading="lazy">'; }).join('')
       : '<div class="col-icon placeholder">🐤</div>';
     var detailLines = srcs.length
-      ? srcs.map(function (s) { return '<div class="detail-line"><b>' + esc(s.type) + '：</b>' + esc(s.detail || '') + '</div>'; }).join('')
+      ? srcs.map(function (s) { return '<div class="detail-line"><b>' + esc(s.type) + '：</b>' + esc(s.detail || '') + CollectionTracker.sourceCondition(s) + CollectionTracker.sourceWhere(s) + '</div>'; }).join('')
       : '<div class="detail-line">取得方式：待補充</div>';
     return '' +
       '<div class="bd-icons">' + iconsHtml + '</div>' +
