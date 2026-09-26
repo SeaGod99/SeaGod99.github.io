@@ -24,6 +24,10 @@
     { e: '🦊', n: '幻巧戰助手', p: 'tools/faux-hollows/', c: 'daily', k: 'faux hollows 幻巧戰 狐狸' },
     { e: '👗', n: '時尚品鑑推薦', p: 'tools/fashion-report/', c: 'daily', k: 'fashion report 時尚 品鑑 染色' },
     { e: '👘', n: '幻化配裝圖鑑', p: 'tools/glamour/', c: 'daily', k: 'glamour 幻化 配裝 mirapri 套裝' },
+    { e: '🗝️', n: '系統解鎖索引', p: 'tools/unlock-index/', c: 'daily', k: 'unlock 解鎖 開放 前置 任務 行會 職業 轉職 靈魂水晶 quest guild job class 怎麼開 開不了' },
+    { e: '🎰', n: '金碟獎品價目表', p: 'tools/gold-saucer/', c: 'daily', k: 'gold saucer mgp 金碟 獎品 價目 兌換 金碟幣 金碟聲譽 仙人微彩 幻卡 缺口 預算' },
+    { e: '🔤', n: '物品名稱翻譯', p: 'tools/name-translator/', c: 'daily', k: 'translate 翻譯 物品名 英文 日文 簡中 繁中 對照 name 查名字 攻略' },
+    { e: '📜', n: '巨集轉譯', p: 'tools/macro-translator/', c: 'daily', k: 'macro 巨集 轉譯 技能名 英文 日文 攻略 /ac 複製 貼上' },
     // 收藏 / 成就（c:'collect'）
     { e: '🐎', n: '坐騎收藏追蹤', p: 'collections/mounts/', c: 'collect', k: 'mount 坐騎 收藏' },
     { e: '🐣', n: '寵物收藏追蹤', p: 'minions/', c: 'collect', k: 'minion 寵物 收藏' },
@@ -32,15 +36,20 @@
     { e: '💇', n: '髮型收藏追蹤', p: 'collections/hairstyles/', c: 'collect', k: 'hairstyle 髮型 樣式書' },
     { e: '🦜', n: '鳥鞍收藏追蹤', p: 'collections/barding/', c: 'collect', k: 'barding 鳥鞍 陸行鳥' },
     { e: '👁️', n: '探索筆記追蹤器', p: 'collections/exploration-log/', c: 'collect', k: 'sightseeing 探索筆記 景觀' },
+    { e: '🗡️', n: '討伐筆記追蹤', p: 'collections/hunting-log/', c: 'collect', k: 'hunting log 討伐筆記 怪物 monster note 經驗' },
     { e: '💙', n: '青魔法術收藏', p: 'collections/blue-magic/', c: 'collect', k: 'blue magic 青魔 法術' },
     { e: '🃏', n: '幻卡追蹤', p: 'collections/triple-triad/', c: 'collect', k: 'triple triad 幻卡' },
     // 戰鬥 / 副本（c:'battle'）
+    { e: '⚔️', n: '副本圖鑑', p: 'tools/duty-codex/', c: 'battle', k: 'duty dungeon raid trial 副本 迷宮挑戰 討伐殲滅戰 大型任務 零式 極 絕 深層迷宮 時限 同步 解鎖' },
     { e: '🏰', n: '冒險者小隊計算機', p: 'tools/squadron/', c: 'battle', k: 'squadron 小隊 派遣' },
     { e: '🛡️', n: '配裝規劃器（外部）', u: 'https://gearing.ffsusu.com/', c: 'battle', k: 'gearing 配裝 規劃', ext: true },
     // 生活職（c:'life'）
     { e: '📊', n: '市場查價 + 比價', p: 'tools/market/', c: 'life', k: 'market 市場 查價 universalis 比價' },
+    { e: '🏪', n: 'NPC 商店目錄', p: 'tools/npc-shops/', c: 'life', k: 'npc shop vendor 商店 雜貨 販售 目錄 這張圖有什麼店 買東西' },
     { e: '🔨', n: '製作模擬器', p: 'tools/crafting-sim/', c: 'life', k: 'crafting sim 製作 模擬 巨集 macro 循環 rotation 手法 hq' },
-    { e: '🎖️', n: '軍票變現排行', p: 'tools/gc-exchange/', c: 'life', k: 'gc seals 軍票 grand company 變現' },
+    { e: '🎖️', n: '貨幣變現排行', p: 'tools/gc-exchange/', c: 'life', k: 'gc seals 軍票 詩學 神典石 工票 紫票 橙票 狼印 戰績 雙色寶石 grand company tomestone scrip 變現' },
+    { e: '🧳', n: '雇員探險收益排行', p: 'tools/ventures/', c: 'life', k: 'retainer venture 雇員 探險 收益 識別力' },
+    { e: '🎃', n: '季節活動商店', p: 'tools/seasonal-shop/', c: 'life', k: 'seasonal event 季節 活動 報酬管理人 票據 紅蓮祭 星芒祭 萬靈節' },
     { e: '🗺️', n: '藏寶圖採集點查詢', p: 'tools/treasure-maps/', c: 'life', k: 'treasure map 藏寶圖 挖寶' },
     { e: '🌱', n: '園藝配種計算', p: 'tools/gardening/', c: 'life', k: 'gardening 園藝 配種 種植' },
     { e: '🎣', n: '釣魚紀錄追蹤', p: 'tools/fishing/', c: 'life', k: 'fishing 釣魚 大魚' },
@@ -57,11 +66,12 @@
     { k: 'life',    label: '🌿 生活職（採集 / 製作 / 市場）' }
   ];
   function catLabel(k) {
+    if (k === '__content__') return '🔎 站內內容';
     for (var i = 0; i < CATS.length; i++) if (CATS[i].k === k) return CATS[i].label;
     return '其他';
   }
 
-  function hrefOf(t) { return t.ext ? t.u : (ROOT + t.p); }
+  function hrefOf(t) { return t.ext ? t.u : (t.p ? ROOT + t.p : 'javascript:void 0'); }
   function searchStr(t) { return (t.n + ' ' + (t.k || '')).toLowerCase(); }
 
   var overlay, input, listEl, items = [], sel = 0, filtered = TOOLS.slice();
@@ -103,6 +113,7 @@
       '#sgt-footer a{color:var(--text-secondary,#8892a4);text-decoration:none;}' +
       '#sgt-footer a:hover{color:var(--gold,#c8a96e);}' +
       '@media print{#sgt-footer{display:none;}}' +
+
       '#sgt-nav-overlay{position:fixed;inset:0;z-index:10000;display:none;background:rgba(0,0,0,.5);' +
       '-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);}' +
       '#sgt-nav-overlay.open{display:block;}' +
@@ -125,6 +136,40 @@
       '#sgt-nav-empty{padding:22px 18px;color:var(--text-muted,#717c91);font-size:14px;text-align:center;display:none;}' +
       '#sgt-nav-foot{padding:8px 14px;border-top:1px solid var(--border,rgba(255,255,255,.08));' +
       'font-size:11px;color:var(--text-muted,#717c91);display:flex;gap:14px;flex-wrap:wrap;}' +
+      // ── ? 快捷鍵說明浮層（色票一律取 tokens.css，別在這裡自己開值）──
+      '#sgt-kb-overlay{position:fixed;inset:0;z-index:9999;display:none;' +
+      'background:rgba(0,0,0,.55);backdrop-filter:blur(3px);}' +
+      '#sgt-kb-overlay.open{display:block;}' +
+      '#sgt-kb-panel{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);' +
+      'width:min(460px,92vw);max-height:80vh;overflow-y:auto;box-sizing:border-box;' +
+      'background:var(--bg-card,#14181f);border:1px solid var(--border-hover,rgba(200,169,110,.4));' +
+      'border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.5);padding:18px 20px 16px;}' +
+      '.sgt-kb-head{display:flex;align-items:center;gap:12px;margin:0 0 14px;}' +
+      '.sgt-kb-head h2{margin:0;font-size:16px;color:var(--gold-light,#e2c98a);}' +
+      // 44px 命中區靠 padding 撐，不用 ::after——那招在相鄰連結旁會蓋到鄰居（知識庫 §4.68）
+      '.sgt-kb-x{margin-left:auto;background:transparent;border:0;cursor:pointer;' +
+      'color:var(--text-muted,#717c91);font-size:15px;line-height:1;padding:12px;min-width:44px;min-height:44px;border-radius:8px;}' +
+      '.sgt-kb-x:hover{background:var(--bg-card-hover,#1a1f2b);color:var(--text-primary,#e8eaf0);}' +
+      // 焦點環一定要看得見（唯一的可聚焦元素，看不見就等於卡死）
+      '.sgt-kb-x:focus-visible{outline:2px solid var(--gold,#c8a96e);outline-offset:2px;}' +
+      '.sgt-kb-sec{margin-bottom:14px;}' +
+      '.sgt-kb-sec h3{margin:0 0 7px;font-size:11px;font-weight:700;letter-spacing:.05em;' +
+      'color:var(--text-muted,#717c91);}' +
+      '.sgt-kb-sec dl{margin:0;}' +
+      '.sgt-kb-row{display:flex;align-items:baseline;gap:12px;padding:5px 0;}' +
+      '.sgt-kb-row dt{flex:none;min-width:92px;display:flex;align-items:center;gap:4px;flex-wrap:wrap;}' +
+      '.sgt-kb-row dd{margin:0;font-size:13.5px;color:var(--text-secondary,#8892a4);}' +
+      '#sgt-kb-panel kbd{font:600 11.5px/1 ui-monospace,Consolas,monospace;' +
+      'color:var(--text-primary,#e8eaf0);background:var(--bg-base,#0a0c10);' +
+      'border:1px solid var(--border,rgba(255,255,255,.08));border-bottom-width:2px;' +
+      'border-radius:5px;padding:4px 6px;white-space:nowrap;}' +
+      '.sgt-kb-or{font-size:10.5px;color:var(--text-muted,#717c91);}' +
+      // 小字刻意用 --text-secondary 而非 --text-muted：後者在 --bg-card 上只有約 4.1:1，未達 4.5:1
+      '.sgt-kb-note{margin:10px 0 0;font-size:12px;color:var(--text-secondary,#8892a4);}' +
+      // 窄螢幕：鍵位欄不再固定寬度，改成上下排，並把說明字放大到好讀
+      '@media (max-width:420px){#sgt-kb-panel{padding:16px;}' +
+      '.sgt-kb-row{flex-direction:column;align-items:flex-start;gap:3px;padding:7px 0;}' +
+      '.sgt-kb-row dt{min-width:0;}.sgt-kb-row dd{font-size:14.5px;}}' +
       '@media print{#sgt-nav-launch{display:none;}}';
     var st = document.createElement('style');
     st.id = 'sgt-nav-style';
@@ -141,10 +186,10 @@
     overlay.setAttribute('aria-label', '快速切換工具');
     overlay.innerHTML =
       '<div id="sgt-nav-panel">' +
-        '<input id="sgt-nav-input" type="text" autocomplete="off" placeholder="前往工具…（打字過濾，↑↓ 選擇，Enter 前往）" aria-label="搜尋工具">' +
+        '<input id="sgt-nav-input" type="text" autocomplete="off" placeholder="搜尋工具或站內內容…（坐騎／寵物／幻卡／魚／副本…）" aria-label="搜尋工具">' +
         '<div id="sgt-nav-list" role="listbox"></div>' +
-        '<div id="sgt-nav-empty">找不到符合的工具</div>' +
-        '<div id="sgt-nav-foot"><span>↑↓ 選擇</span><span>↵ 前往</span><span>Esc 關閉</span><span>/ 或 Ctrl/⌘K 開啟</span></div>' +
+        '<div id="sgt-nav-empty">找不到符合的項目</div>' +
+        '<div id="sgt-nav-foot"><span>↑↓ 選擇</span><span>↵ 前往</span><span>Esc 關閉</span><span>/ 或 Ctrl/⌘K 開啟</span><span>? 快捷鍵</span></div>' +
       '</div>';
     document.body.appendChild(overlay);
     input = overlay.querySelector('#sgt-nav-input');
@@ -175,8 +220,12 @@
       row.href = hrefOf(t);
       if (t.ext) { row.target = '_blank'; row.rel = 'noopener'; }
       row.setAttribute('role', 'option');
-      row.innerHTML = '<span class="ico">' + t.e + '</span><span class="nm"></span>' + (t.ext ? '<span class="ext">↗ 外部</span>' : '');
+      row.innerHTML = '<span class="ico">' + t.e + '</span><span class="nm"></span>' +
+        (t.sub || t.ext ? '<span class="ext"></span>' : '');
       row.querySelector('.nm').textContent = t.n;
+      // 內容結果右側標它是什麼（坐騎／幻卡／魚…），不然一長串名字看不出差別
+      if (t.sub) row.querySelector('.ext').textContent = t.sub + (t.p ? '' : '（尚無專屬頁）');
+      else if (t.ext) row.querySelector('.ext').textContent = '↗ 外部';
       row.addEventListener('mouseenter', function () { sel = i; markSel(); });
       row.addEventListener('click', function (e) { e.preventDefault(); go(t); });
       listEl.appendChild(row);
@@ -189,15 +238,67 @@
     if (items[sel] && items[sel].scrollIntoView) items[sel].scrollIntoView({ block: 'nearest' });
   }
 
+  /* ── 全站內容索引（data/site-index.json）──────────────────────────────
+     面板原本只搜得到「工具名稱」，但使用者要找的常常是一個東西
+     （「那隻寵物叫什麼」「這張卡在哪」），而他不知道那屬於哪個工具頁。
+
+     索引**打字時才載**（5,053 筆／gzip 51KB）：面板是全站注入的，
+     開頁就載等於每頁都付這個成本，而多數瀏覽根本不會用到搜尋。
+     載入失敗就安靜退回只搜工具——搜不到東西比整個面板壞掉好。
+
+     每筆是 [名稱, 類型 index, keyOf 值?]，走 ?id= 深連結（見 docs/deep-links.md）。 */
+  var idx = null, idxState = 'idle';   // idle | loading | ready | failed
+  function loadIndex() {
+    if (idxState !== 'idle') return;
+    idxState = 'loading';
+    fetch(ROOT + 'data/site-index.json')
+      .then(function (r) { return r.json(); })
+      .then(function (j) { idx = j; idxState = 'ready'; if (input && input.value) filter(input.value); })
+      .catch(function () { idxState = 'failed'; });
+  }
+
+  // 索引裡的一筆 → 面板列（形狀比照 TOOLS，render() 才不用分兩套）
+  function entryToRow(name, typeIdx, key) {
+    var t = idx.types[typeIdx] || {};
+    return {
+      e: '🔎', n: name, c: '__content__',
+      sub: t.label,
+      // 沒有 path 的類別（目前只有副本，站內還沒有副本頁）只顯示不跳轉
+      p: t.path ? t.path + (key != null ? '?id=' + encodeURIComponent(key) : '') : null
+    };
+  }
+
   function filter(q) {
     q = (q || '').trim().toLowerCase();
-    filtered = q ? TOOLS.filter(function (t) { return searchStr(t).indexOf(q) >= 0; }) : TOOLS.slice();
+    if (!q) { filtered = TOOLS.slice(); sel = 0; render(); return; }
+
+    var tools = TOOLS.filter(function (t) { return searchStr(t).indexOf(q) >= 0; });
+    var content = [];
+    if (idxState === 'idle') loadIndex();
+    if (idxState === 'ready' && q.length >= 1) {
+      var seen = {};
+      for (var i = 0; i < idx.data.length && content.length < 40; i++) {
+        var r = idx.data[i];
+        if (r[0].toLowerCase().indexOf(q) < 0) continue;
+        var k = r[0] + '|' + r[1];
+        if (seen[k]) continue;
+        seen[k] = 1;
+        content.push(entryToRow(r[0], r[1], r[2]));
+      }
+    }
+    // 市場保底：索引不收一般物品（45,548 筆太大），但使用者打的很可能就是道具名
+    var fallback = {
+      e: '💰', n: '到市場查價搜「' + q + '」', c: '__content__', sub: '物品',
+      p: 'tools/market/?q=' + encodeURIComponent(q)
+    };
+    filtered = tools.concat(content, [fallback]);
     sel = 0;
     render();
   }
 
   function go(t) {
     if (t.ext) { window.open(t.u, '_blank', 'noopener'); close(); return; }
+    if (!t.p) return;            // 站內還沒有該類別的頁面（目前只有副本），只顯示不跳
     window.location.href = hrefOf(t);
   }
 
@@ -217,6 +318,123 @@
   }
   function close() { if (overlay) overlay.classList.remove('open'); }
 
+
+  /* ── 頁內快捷鍵：登記表 ＋ ? 說明浮層 ──────────────────────────────────
+     為什麼放在 nav.js 而不是新開一支：nav.js 已經在每一頁載入，放這裡**31 頁零改動**。
+     另開檔要在每頁加一行 <script>，而那正是 unlock-banner 付過的代價。
+
+     頁面自己登記想要的鍵：
+       SGT_SHORTCUTS.register([{ keys: 's', label: '聚焦搜尋框', run: fn }]);
+     `keys` 可以是字串或字串陣列（`['[', 'ArrowLeft']`）。比對用 `e.key` 原值，
+     所以大小寫要一致——登記 's' 時按 Shift+S 不會觸發（那是刻意的，避免打字誤觸）。 */
+  var SHORTCUTS = [];        // 頁面登記的
+  var GLOBAL_KEYS = [        // nav.js 自己提供的，只用來顯示在說明浮層
+    { keys: ['/', 'Ctrl/⌘K'], label: '搜尋所有工具與站內內容' },
+    { keys: '?', label: '這份快捷鍵說明' },
+    { keys: 'Esc', label: '關閉浮層' }
+  ];
+
+  function asArray(k) { return Object.prototype.toString.call(k) === '[object Array]' ? k : [k]; }
+
+  // nav.js 其餘部分一律走 textContent，所以本來沒有轉義函式。
+  // 說明浮層要一次組出整張表，用 innerHTML 比較短，但那就得自己轉義。
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  window.SGT_SHORTCUTS = {
+    register: function (list) {
+      if (!list || !list.length) return;
+      for (var i = 0; i < list.length; i++) {
+        var s = list[i];
+        if (!s || !s.keys || typeof s.run !== 'function') continue;
+        SHORTCUTS.push({ keys: asArray(s.keys), label: s.label || '', run: s.run });
+      }
+    },
+    /** 清掉頁面登記（單頁應用沒有這種需求，留給測試用）。 */
+    reset: function () { SHORTCUTS = []; },
+    list: function () { return SHORTCUTS.slice(); },
+    open: openHelp
+  };
+
+  /* ⚠ **時序**：nav.js 是 theme.js 用 `defer` 載進來的，而追蹤頁的 `CollectionTracker.init()`
+     是頁面裡的 inline script **同步**跑的——那時候 `window.SGT_SHORTCUTS` 還不存在。
+     所以登記端可以先把要登記的東西丟進 `SGT_SHORTCUTS_PENDING`，這裡一次吸乾。
+     用佇列而不是「等 DOMContentLoaded 再試」：後者在 init 比 DOMContentLoaded 晚的頁面會整個失效，
+     而且失效的樣子是「按鍵沒反應」，沒有任何錯誤訊息。 */
+  (function drainPending() {
+    var q = window.SGT_SHORTCUTS_PENDING;
+    if (!q || !q.length) return;
+    for (var i = 0; i < q.length; i++) window.SGT_SHORTCUTS.register(q[i]);
+    q.length = 0;
+  })();
+
+  var helpEl = null, helpReturnFocus = null;
+
+  function keyHtml(keys) {
+    return asArray(keys).map(function (k) { return '<kbd>' + esc(k) + '</kbd>'; }).join('<span class="sgt-kb-or">或</span>');
+  }
+
+  function buildHelp() {
+    if (helpEl) return;
+    injectStyle();
+    helpEl = document.createElement('div');
+    helpEl.id = 'sgt-kb-overlay';
+    helpEl.setAttribute('role', 'dialog');
+    helpEl.setAttribute('aria-modal', 'true');
+    helpEl.setAttribute('aria-label', '鍵盤快捷鍵');
+    helpEl.addEventListener('click', function (e) { if (e.target === helpEl) closeHelp(); });
+    document.body.appendChild(helpEl);
+  }
+
+  function openHelp() {
+    buildHelp();
+    var sections = [['全站', GLOBAL_KEYS]];
+    if (SHORTCUTS.length) sections.push(['本頁', SHORTCUTS]);
+    helpEl.innerHTML =
+      '<div id="sgt-kb-panel">' +
+        '<div class="sgt-kb-head"><h2>鍵盤快捷鍵</h2>' +
+          '<button type="button" class="sgt-kb-x" aria-label="關閉">✕</button></div>' +
+        sections.map(function (sec) {
+          return '<div class="sgt-kb-sec"><h3>' + esc(sec[0]) + '</h3><dl>' +
+            sec[1].map(function (s) {
+              return '<div class="sgt-kb-row"><dt>' + keyHtml(s.keys) + '</dt><dd>' + esc(s.label) + '</dd></div>';
+            }).join('') + '</dl></div>';
+        }).join('') +
+        (SHORTCUTS.length ? '' : '<p class="sgt-kb-note">這一頁沒有頁內快捷鍵。</p>') +
+        '<p class="sgt-kb-note">在輸入框裡打字時快捷鍵不會觸發。</p>' +
+      '</div>';
+    helpEl.querySelector('.sgt-kb-x').addEventListener('click', closeHelp);
+    helpReturnFocus = document.activeElement;
+    helpEl.classList.add('open');
+    helpEl.querySelector('.sgt-kb-x').focus();
+  }
+
+  function closeHelp() {
+    if (!helpEl) return;
+    helpEl.classList.remove('open');
+    // 焦點還回原處——不還的話按 Esc 之後 Tab 會從頁首重來
+    if (helpReturnFocus && helpReturnFocus.focus) { try { helpReturnFocus.focus(); } catch (err) {} }
+    helpReturnFocus = null;
+  }
+
+  function helpOpen() { return !!(helpEl && helpEl.classList.contains('open')); }
+
+  /* 宣告了 `aria-modal="true"` 就必須把焦點關在浮層裡。沒做的話：
+     螢幕閱讀器被告知「這是模態」，但按 Tab 焦點會跑到底下那一頁的連結上，
+     使用者聽到的內容與看到的畫面不一致，而且不知道怎麼回到浮層。 */
+  function trapTab(e) {
+    if (!helpOpen() || e.key !== 'Tab') return;
+    var focusables = helpEl.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    if (!focusables.length) { e.preventDefault(); return; }
+    var first = focusables[0], last = focusables[focusables.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    else if (helpEl.contains(document.activeElement) === false) { e.preventDefault(); first.focus(); }
+  }
+
   // 全域快捷鍵
   function inField(el) {
     if (!el) return false;
@@ -225,9 +443,32 @@
   }
   document.addEventListener('keydown', function (e) {
     if ((e.key === 'k' || e.key === 'K') && (e.metaKey || e.ctrlKey)) { e.preventDefault(); open(); return; }
-    if (e.key === '/' && !e.metaKey && !e.ctrlKey && !e.altKey && !inField(document.activeElement)) {
-      var isOpen = overlay && overlay.classList.contains('open');
-      if (!isOpen) { e.preventDefault(); open(); }
+
+    // 說明浮層開著時只認 Esc（否則會一邊看說明一邊誤觸底下的頁面）
+    if (helpOpen()) {
+      if (e.key === 'Escape') { e.preventDefault(); closeHelp(); }
+      else trapTab(e);
+      return;
+    }
+    var paletteOpen = !!(overlay && overlay.classList.contains('open'));
+    if (paletteOpen) return;                       // 命令面板有自己的 onKey
+
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (inField(document.activeElement)) return;   // 在輸入框裡打字時一律不攔
+
+    /* ⚠ 有 <dialog open> 時也不攔。站內的詳情彈窗都是 <dialog>，
+       在彈窗裡按 s 應該什麼都不做，而不是去聚焦底下那張表的搜尋框。 */
+    if (document.querySelector('dialog[open]')) return;
+
+    if (e.key === '/') { e.preventDefault(); open(); return; }
+    if (e.key === '?') { e.preventDefault(); openHelp(); return; }
+
+    for (var i = 0; i < SHORTCUTS.length; i++) {
+      if (SHORTCUTS[i].keys.indexOf(e.key) >= 0) {
+        e.preventDefault();
+        try { SHORTCUTS[i].run(e); } catch (err) { if (window.console) console.warn('[快捷鍵] ' + e.key, err); }
+        return;
+      }
     }
   });
 
