@@ -207,6 +207,18 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 
 ## 五、更新紀錄
 
+- **2026-09-27 第二十五輪（理符報酬＋收藏品交納——`market-source-enrichment` 補完）**：兩條 obtainable-methods 完全沒有的取得管道。
+  - **量測先行**：`obtainable-methods` 的 21 種 type 裡**沒有 `leve` 也沒有 `collectable`**。實測理符報酬涉及 1,155 件相異物品、**其中 1,114 件出現在配方裡**（市場頁湊材料很可能就是答案）；收藏品交納 127 件、只有 16 件在配方裡，但裡面全是「工具改良用零件」「輝煌／卓越工具加工組件」這類最常被問「這哪來的」的東西。
+  - **`scripts/build-extra-sources.mjs` → `data/extra-sources.json`（1,157 件）**。獨立一支是因為兩個消費端（`build-market-sources.mjs`、`build-item-sources.mjs`）都要用——各自抓一次就是兩份會漂的規則。
+  - **理符報酬的鏈**：`Leve.LeveRewardItem` → `LeveRewardItem.LeveRewardItemGroup[]` → `Group.{Item[9], Count[9]}`。⚠ **`?limit=` 不指名 `fields` 時後兩張表回的是空物件**，會讓人以為表是空殼（跟 `Relic` 那次的誤判長得一樣）；逐列取就看得到欄位。
+  - **措辭不可承諾**：報酬是**池子裡隨機給一項**，所以每一條都寫「隨機報酬之一」，絕不寫「可獲得」。收藏品交納**講不出要交哪一件**——`collectable` 欄位整份都是 1，是旗標不是物品 id，所以只寫等級與收藏價值門檻。
+  - **雜訊過濾**：出現在超過 20 張理符池子裡的**整條不收**（79 件）。「火之碎晶」有 520 張理符可能給、「冰之碎晶」400 張——講了等於沒講，而且會把「去採」「去買」從 `normalizeEntries` 的 8 筆額度裡擠掉。兩型在 `ORDER` 裡排在確定的管道之後、`可製作` 之前。
+  - **分片層要走 om ∪ extra 的聯集**：收藏品交納那 127 件裡多數在 om 裡沒有任何條目（所以先前顯示成「查無取得方式」），只跑 om 的 key 的話永遠補不進來、也不報錯。分片層從 36,335 → **36,343 件**。
+  - **前端零改動**：市場頁的「🎁 取得方式」篩選選項是從 `item-source-types.json` 自己長出來的，所以新增兩型自動出現（19 種類型）。這正是當初不寫死選項清單的回報。
+  - 修掉三個第一版的毛病：同一張理符列兩行一樣的字（一張理符可指到多個 group，要以理符 id 去重）、`Lvundefined`（184 筆 `levelMin` 是空的）、「收藏品 收藏品」重複拼接。
+  - 回歸新增 `scripts/validate-extra-sources.mjs` 29 項。寫的時候踩到兩次：斷言「沒有承諾字眼」掃整條字串，被上游理符名「用於**保證**精密品質的藥水」誤判；讀分片檔忘了它有 `{schema,shard,count,data}` 信封，`shard[id]` 永遠 undefined 而不報錯（0/12 看起來像資料沒寫進去）。
+  - `validate-data` 0 error、`validate-profit-stats` 18 項、`validate-leveling-gear` 25 項、市場頁 × 3 寬度全過。
+
 - **2026-09-27 第二十四輪（「資料已更新 ↻」——PWA 第二批）**：補上 stale-while-revalidate 的唯一代價。
   - **問題**：`data/*.json` 走 SWR，所以資料更新後**第一次進站看到的是快取裡的舊版**，要等下一次才會看到新的，而畫面上完全看不出來。使用者會拿舊數字做決定（價格、缺口、時間窗）。
   - **`sw.js`**：SWR 那條路徑在寫回快取時比對新舊版本，不同就 `postMessage({type:'sgt-data-updated'})` 給開著的視窗。只比對 `/data/` 底下的（圖示與底圖換了不影響任何數字）、**沒有舊快取時不通報**（第一次載入本來就是最新的）。版本依序看 **ETag → Last-Modified → Content-Length**；ETag 優先是因為 Last-Modified 只有秒級解析度，同一秒內的兩次部署會被當成沒變。**三個都拿不到時當成「沒變」**——反過來做的話每次進站都喊一次狼來了，兩三次之後就再也沒人看了。

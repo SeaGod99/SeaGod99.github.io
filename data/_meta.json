@@ -183,6 +183,14 @@
       "count": 340
     },
     {
+      "name": "額外取得管道（理符／收藏品）",
+      "file": "extra-sources.json",
+      "count": 1157,
+      "updated": "2026-09-26",
+      "desc": "obtainable-methods 沒有的兩型：理符報酬（1,030 件，池子裡隨機給一項）與收藏品交納（127 件，含工具改良用零件）。由 market-sources 與 item-sources 兩個消費端合併",
+      "source": "XIVAPI v2 Leve→LeveRewardItem→LeveRewardItemGroup ＋ Teamcraft collectables.json ＋ tw-locales(leves) ＋ places.msgpack(twPlaces)"
+    },
+    {
       "schema": "fashion-report",
       "file": "fashion-report.json",
       "name": "時尚品鑑",
@@ -340,7 +348,7 @@
       "source": "obtainable-methods/gathering/gc-shop/maps（scripts/build-market-sources.mjs 精簡）",
       "status": "used",
       "updated": "2026-09-26",
-      "count": 7558
+      "count": 7591
     },
     {
       "name": "魔晶石與禁忌鑲嵌",

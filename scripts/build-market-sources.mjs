@@ -37,6 +37,8 @@ const gathering = read('gathering.json');
 const gcShop = read('gc-shop.json');
 // NPC 販售者：om 的 vendor 型幾乎都沒有可用的 NPC 名，補這份才講得出「跟誰買」
 const vendorPrices = read('vendor-prices.json').data;
+// 理符報酬與收藏品交納：obtainable-methods 沒有這兩型，由 build-extra-sources.mjs 補
+const extra = read('extra-sources.json').data;
 const maps = read('maps.json');
 
 // ── 索引 ────────────────────────────────────────────────────────────────
@@ -131,6 +133,10 @@ for (const id of wanted) {
     list.push(c);
   }
 
+  /* 理符報酬／收藏品交納。這兩型在 ORDER 裡排在後面，所以「去採」「去買」
+     這些確定的管道會先佔掉 max 的額度——是刻意的，見 obtainable.mjs 的註解。 */
+  for (const e of extra[String(id)] || []) list.push(e);
+
   // 去重、排序、砍到 8 筆上限——規則在共用層，市場頁與分片層完全一致
   const entries = normalizeEntries(list, { max: 8 });
   if (!entries.length) continue;
@@ -144,7 +150,7 @@ const out = {
   schema: 'market-sources',
   patch: recipes.patch || null,
   updated: new Date().toISOString().slice(0, 10),
-  source: 'obtainable-methods.json + gathering.json + gc-shop.json + maps.json（皆為本庫既有資料）',
+  source: 'obtainable-methods.json + gathering.json + gc-shop.json + maps.json + extra-sources.json（皆為本庫既有資料）',
   note: '只收配方會用到的物品（材料 ∪ 成品）。供市場查價頁回答「不可交易的素材要去哪弄」。',
   count: nItems,
   data

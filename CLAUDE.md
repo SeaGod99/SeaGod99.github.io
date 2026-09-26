@@ -66,7 +66,9 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 多幣種變現排行重建（45 種貨幣） | `node scripts/build-currency-shop.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/currency-shop.json` |
 | 系統解鎖＋職業行會重建 | `node scripts/build-system-unlocks.mjs`（dry-run／`--apply`／`--offline`／`--find <關鍵字>` 查候選任務）→ `data/system-unlocks.json` 的 `data[]`＋`jobs[]`；對照表人工維護在 `scripts/lib/system-unlock-map.mjs`（`SYSTEMS` 26 條、`GUILD_QUESTS` 20 條；**24 個進階職不用維護，走 `ClassJob.UnlockQuest`**）|
 | 收藏頁任務來源補接取點（改完上述任一或 tw-quests 後） | `node scripts/patch-collection-quest-npc.mjs`（dry-run 預設／`--apply`／`--offline`；**寫的是 pretty JSON，必接 `minify-data.mjs --apply`**）|
-| 重建取得管道分片層（改完 obtainable-methods 或 items 後） | `node scripts/build-item-sources.mjs`（dry-run 預設／`--apply`）→ `data/item-sources/`（45 片＋`_index.json`）；前端走 `assets/js/item-sources.js`，**刻意不進 `minify-data.mjs`** |
+| 重建理符報酬＋收藏品交納（改版時才跑；**兩個消費端的上游**） | `node scripts/build-extra-sources.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/extra-sources.json`（理符 1,030 件＋收藏品 127 件）；**跑完必接 `build-market-sources.mjs` 與 `build-item-sources.mjs --apply`** |
+| ↑ 那兩型的回歸（**改完上面那支或兩個消費端的合併處必跑**） | `node scripts/validate-extra-sources.mjs`（29 項；最重要的是「措辭不可承諾」與「分片層要走 om ∪ extra 的聯集」）|
+| 重建取得管道分片層（改完 obtainable-methods、items 或 extra-sources 後） | `node scripts/build-item-sources.mjs`（dry-run 預設／`--apply`）→ `data/item-sources/`（45 片＋`_index.json`）；前端走 `assets/js/item-sources.js`，**刻意不進 `minify-data.mjs`** |
 | ↑ 上面那支同時產 `data/item-source-types.json` | itemId → 取得管道位元遮罩（差分陣列，gzip 15KB），市場頁的「🎁 取得方式」篩選吃這份。**與分片層由同一支保證同步**，不要另外寫一支 |
 | 視窗計算回歸（**改完 `window-calc.js` 或釣魚／限時採集的時間窗邏輯必跑**） | `node scripts/validate-window-calc.mjs`（差分測：把重構前兩頁的實作抄一份當參照，307 種魚＋36 組天氣案例＋225 個節點逐筆比對）|
 | 鬧鐘回歸（**改完 `et-alarm.js` 或釣魚／限時採集／天氣任一頁的鬧鐘接線必跑**） | `node scripts/validate-et-alarm.mjs`（45 項：三頁真的載了引擎且沒有人自己再寫一份、同一窗只響一次、primeOnly、提前量、舊 key 遷移、天氣訂閱）|

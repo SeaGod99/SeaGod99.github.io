@@ -46,6 +46,8 @@ async function main() {
   const om = JSON.parse(await readFile(join(DATA, "obtainable-methods.json"), "utf8")).data;
   // NPC 販售者：om 的 vendor 型幾乎都沒有可用的 NPC 名，補這份才講得出「跟誰買」
   const vendors = JSON.parse(await readFile(join(DATA, "vendor-prices.json"), "utf8")).data;
+  // 理符報酬與收藏品交納：om 沒有這兩型，由 build-extra-sources.mjs 補
+  const extra = JSON.parse(await readFile(join(DATA, "extra-sources.json"), "utf8")).data;
   const byId = new Map(items.map((i) => [i.id, i]));
   // 店名解析器：om 自帶的 shopName 有 2,062 處是英文（Immortal Flames…），
   // 用 tw-locales 的台服官方店名補；補不到就整個不印（鐵則：不落英文）
@@ -61,12 +63,19 @@ async function main() {
   const shards = new Map();            // 片號 → { id: entries }
   const stat = { items: 0, entries: 0, noTw: 0, empty: 0, byType: {} };
 
-  for (const key of Object.keys(om)) {
+  /* **要走 om 與 extra 的聯集**，不能只走 om 的 key。
+     收藏品交納那 127 件裡多數在 om 裡根本沒有任何條目（所以先前顯示成「查無取得方式」），
+     只跑 om 的話它們永遠補不進來，而且不會報錯。 */
+  const allKeys = new Set([...Object.keys(om), ...Object.keys(extra)]);
+  for (const key of allKeys) {
     const id = Number(key);
     if (!hasTw(id)) { stat.noTw++; continue; }
     // 這一層用 SKIP_CATALOG：製作與商城**是**有效答案（房屋家具有 701 件只能製作、
     // 154 件只在商城，濾掉的話那些物品會顯示成「查無取得方式」，那是錯的）。
-    const entries = normalizeEntries((om[key] || []).map((m) => convertOm(m, { skip: SKIP_CATALOG, twShop, vendor: vendors[key] || null })), { max: 8 });
+    const entries = normalizeEntries([
+      ...(om[key] || []).map((m) => convertOm(m, { skip: SKIP_CATALOG, twShop, vendor: vendors[key] || null })),
+      ...(extra[key] || []),
+    ], { max: 8 });
     if (!entries.length) { stat.empty++; continue; }   // 只有 requirement／alarm 這種無行動意義的
     const s = shardOf(id);
     if (!shards.has(s)) shards.set(s, {});
@@ -164,7 +173,7 @@ async function main() {
   await writeFile(join(OUT, "_index.json"), JSON.stringify({
     schema: "item-sources-index",
     updated: new Date().toISOString().slice(0, 10),
-    source: "data/obtainable-methods.json（轉換規則 scripts/lib/obtainable.mjs）",
+    source: "data/obtainable-methods.json ＋ data/extra-sources.json（轉換規則 scripts/lib/obtainable.mjs）",
     note: `片號 = itemId >> ${SHARD_BITS}；檔名 <片號>.json。片號可由 id 直接算出，查詢不需要先載這份索引。`,
     shardBits: SHARD_BITS,
     count: stat.items,
