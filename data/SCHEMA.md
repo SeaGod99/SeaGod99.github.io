@@ -93,6 +93,16 @@
 | `detail` | ✅ | 具體說明（副本名、成就名、商店與幣值…） |
 | `patch` | | 該來源開放的版本（選填） |
 | `itemId` | | 若需道具兌換，兌換道具的物品 id（選填） |
+| `condition` | | 成就的達成條件（`patch-achievement-sources.mjs` 補；只有 `type: "成就"` 才有）|
+| `questId` | | `type: "任務"` 時的任務 id（`patch-collection-quest-npc.mjs` 補）|
+| `via` | | 上面那個 `questId` 是怎麼認定的：`"reward"`＝任務獎勵裡有這個物品（可證）、`"name"`＝任務名唯一命中 |
+| `level` | | 任務的接取等級 |
+| `issuer` | | 接取 NPC `{ id, name }`；查不到台服名就整個不給 |
+| `at` | | 接取地點 `{ mapId, mapName, x, y }`，座標慣例同 §1.7 |
+
+> `questId` 以下五欄由 `node scripts/patch-collection-quest-npc.mjs --apply` 補，涵蓋坐騎／寵物／樂譜／鳥鞍／表情。
+> 認不出來的（多為季節活動任務，台服任務表裡沒有）**原樣不動**——寧可不顯示，也不要顯示猜的。
+> 畫面層走 `CollectionTracker.sourceWhere(s)`，各頁不要自己排版。
 
 ### 1.5 取得方式分類字典（`SOURCE_TYPES`）
 
@@ -174,6 +184,23 @@ ARR 2.x / HW 3.x / SB 4.x / ShB 5.x / EW 6.x / DT 7.x
 **注意**：採集點（gathering）庫的 `job` 一律用「採礦工 / 園藝工」（不可寫「礦工 / 漁夫」）；釣魚用「捕魚人」。
 
 ---
+
+
+### 1.9 台服名守門
+
+**「有中日韓漢字」不等於「是台服名」。** 判斷一律走 `scripts/lib/tw-text.mjs`：
+
+| 函式 | 規則 | 用在哪 |
+|------|------|--------|
+| `isTw(s)` | 要有漢字、沒有假名、不是遊戲內部佔位列 | 物品名／NPC 名／地名／店名（上游缺口是英文原文，所以必須要求漢字）|
+| `isTranslated(s)` | 只擋假名與佔位列，**不要求漢字** | `twName()`——台服客端真的會顯示 HP／MP／GP／CP／PvP／F.A.T.E./2P |
+
+擋掉的內部佔位列長這樣：`_rsv_4389_…`、`（仮）空島中ボス1名稱`、`ラベル削除予定`、`●未使用アクション`、`×泥まりも`。
+
+**欄名以 `Ja`／`_ja` 結尾是刻意的日文對照欄**（`fishes.spotNameJa`、`monsters.nameJa`、
+`bluemage-sources-tc.spell_ja`），不受守門管，但**前端不得 render**。
+
+`validate-data.mjs` 會掃整個 `data/`（含分片目錄）擋回歸，白名單在那支裡面。細節與踩過的雷見知識庫 §4.72。
 
 ## 2. 各資料庫 schema
 
@@ -547,13 +574,32 @@ ARR 2.x / HW 3.x / SB 4.x / ShB 5.x / EW 6.x / DT 7.x
 ```json
 {
   "id": 1,
-  "name": "某景點名稱",
-  "zone": "格里達尼亞新街",
-  "coords": { "mapId": 132, "x": 12.0, "y": 13.0 },
+  "name": "海雀棧道",
+  "nameEn": "Barracuda Piers",
+  "zone": "利姆薩·羅敏薩",
+  "zoneEn": "Limsa Lominsa",
+  "coords": { "mapId": 11, "mapName": "利姆薩·羅敏薩上層甲板", "x": 9.6, "y": 7.8 },
   "trigger": "情緒動作「眺望」",
+  "weather": null,
+  "timeStart": 8,
+  "timeEnd": 11,
   "patch": "2.0"
 }
 ```
+
+`coords`：2026-09-23 由 [`scripts/patch-exploration-coords.mjs`](../scripts/patch-exploration-coords.mjs) 補齊 **338/340**。
+來源＝XIVAPI v2 `Adventure`（row id 由 2162688 起連號，`adventureId = 2162688 + id - 1`）→ `Level` 的 X／Z／Map，
+再用 `maps.json` 的 sizeFactor／offset 換算（公式同 `patch-aether-coords.mjs`）。
+缺的 2 筆（#212 遊末邦軍總司令部、#213 蜂箱夜總會）是 Map row 554／555 的室內子地圖，`maps.json` 只收主地圖。
+
+`coords.mapName` 刻意與 mapId 並存（同 `triple-triad.json` 的 `location`）：頁面的座標列與 `/coord X Y 地名`
+都要地名，而這頁只載 `exploration-log.json`，為了一個名字多載 80KB 的 `maps.json` 不划算。
+
+`weather` 全 340 筆為 null 且**刻意不補**：`Adventure` sheet 沒有天氣欄位，該資訊只存在英文 `Description`
+散文裡，依鐵則「對不到台服官方來源就不顯示」。
+
+`timeStart`／`timeEnd`：ET 時段（`Adventure.MinTime`／`MaxTime` 的小時部分）。這兩欄同時是 id 映射的驗證器——
+補座標時逐筆比對，不符就跳過不寫（實測 0 筆不符）。
 
 ### 2.10 emotes（表情）
 
@@ -924,6 +970,244 @@ ARR 2.x / HW 3.x / SB 4.x / ShB 5.x / EW 6.x / DT 7.x
 並確認自動求解在同樣四組情境下解得出來、品質不輸範本、且沒排進任何靠運氣的技能。
 
 ---
+
+### 2.20 system-unlocks（系統解鎖索引／職業與行會）
+
+一個檔兩份清單，前端 `/tools/unlock-index/` 一次載完。
+
+```json
+{
+  "schema": "system-unlocks", "count": 26, "jobCount": 42,
+  "data": [{
+    "key": "gold-saucer", "name": "金碟遊樂園", "tool": "/tools/cactpot/",
+    "basis": "金碟入場任務；仙人微彩／幻巧戰／幻卡皆在金碟內",
+    "gcVariants": true,
+    "quests": [{ "id": 65970, "name": "…", "nameEn": "…", "level": 15,
+                 "genre": "…", "issuer": { "id": 0, "name": "…" },
+                 "at": { "mapId": 0, "mapName": "…", "x": 0, "y": 0 },
+                 "prev": [{ "id": 0, "name": "…", "level": 0 }] }]
+  }],
+  "jobs": [{
+    "id": 19, "abbr": "PLD", "name": "騎士", "nameEn": "Paladin", "kind": "job",
+    "role": { "id": 186, "name": "防護職業" },
+    "parent": { "id": 1, "abbr": "GLA", "name": "劍術士" },
+    "requires": { "id": 1, "abbr": "GLA", "name": "劍術士", "level": 30 },
+    "soulCrystal": { "id": 4542, "name": "騎士之證", "icon": "/i/026000/026003.png" },
+    "quest": { "…同上" }
+  }]
+}
+```
+
+| 欄位 | 說明 |
+|------|------|
+| `data[].key` | 系統代號；也是 `?id=sys:<key>` 與 site-index 用的鍵 |
+| `data[].tool` | 本站對應工具頁的站內路徑，沒有對應頁就是 `null`。`unlock-banner.js` 認的就是這欄 |
+| `data[].basis` | **當初憑遊戲資料裡的什麼訊號認定它是解鎖任務**，日後複查用；頁面收在可展開的「依據」裡 |
+| `data[].gcVariants` | 該系統的解鎖任務依大國防聯軍分三條（內容相同、接取地點不同），`quests` 會有 3 筆 |
+| `jobs[].kind` | `"class"`＝20 個基礎職（行會任務）／`"job"`＝進階職業（`ClassJob.UnlockQuest`）|
+| `jobs[].requires` | 接取條件。ARR 進階職的 `name` 是指定的基礎職；2.0 之後的職業 `name` 為 `null`＝任一戰鬥職達該等級 |
+| `jobs[].parent` | 前置職業（`ClassJobParent`），指向自己時視為無前置 → `null` |
+| `jobs[].soulCrystal` | 只有 `kind: "job"` 才有。生產職的「名匠之證」是另一套特職系統，**刻意不放在這裡**，放了會被誤讀成職業解鎖條件 |
+| `at.mapId` | 可能是 `null`——副本／室內的實例地圖不在 `maps.json`，這時只有 `mapName`（走 `twPlaces`），座標為 `null` |
+
+**建置**：`node scripts/build-system-unlocks.mjs --apply`。系統那半的「哪個任務解鎖哪個系統」
+是人工對照表（`scripts/lib/system-unlock-map.mjs`，遊戲資料沒有這個欄位）；
+職業那半的 24 個進階職**完全不靠對照表**，只有 20 個基礎職的行會任務要維護。
+新增條目先用 `--find <關鍵字>` 查候選與其 `QuestParams` 訊號，確認唯一命中再寫進去。
+
+---
+
+### 2.21 item-sources（取得管道分片層）
+
+`data/item-sources/` 是一個**目錄**不是單檔：36,335 件物品的取得管道依 `itemId >> 10`
+切成 45 片（每片 1,024 個 id），加一份 `_index.json`。
+
+```json
+// data/item-sources/5.json
+{ "schema": "item-sources", "shard": 5, "count": 610,
+  "data": { "5594": [{ "t": "兌換", "d": "雜貨 · 狼印戰績 ×100", "w": "露露茨" }] } }
+```
+
+| 欄位 | 說明 |
+|------|------|
+| `t` | 管道類型（兌換／NPC商店／副本／採集／可製作／商城購買…）|
+| `d` | 說明 |
+| `w` | 地點或 NPC（可選，沒有就不寫這個欄位）|
+| `map` | mapId（可選）|
+
+欄位名刻意用單字母——整份是前端會載的，欄位名佔的位元組不比值少。
+**片號由 id 直接算出**，查詢不必先載 `_index.json`；索引只給維運看（有哪些片、各片多大）。
+
+**建置**：`node scripts/build-item-sources.mjs --apply`。
+轉換規則在 `scripts/lib/obtainable.mjs`，與 `build-market-sources.mjs` 共用。
+前端走 `assets/js/item-sources.js`（`ItemSources.get(id)` / `getMany(ids)` / `render(rows)`）。
+
+**這個目錄刻意不進 `minify-data.mjs`**——它本來就是壓過的形狀。
+
+**與 `market-sources.json` 的分工（不要合併）**：前者是「湊材料」的視角
+（只收配方相關物品，但額外接了採集點座標與軍票價，市場頁整份載入）；
+後者是「這是什麼、哪來的」的視角（全部物品，只有管道摘要，按片載入）。
+
+---
+
+### 2.22 gold-saucer（金碟獎品價目表）
+
+```json
+{ "schema": "gold-saucer", "count": 2,
+  "data": [{ "key": "mgp", "id": 29, "name": "金碟幣", "count": 410,
+    "items": [{ "itemId": 0, "name": "…", "icon": "/i/…", "category": "…", "patch": "…",
+                "cost": 20000, "shop": "…", "npc": { "id": 0, "name": "…", "at": {…} },
+                "own": { "c": "mounts", "label": "坐騎", "path": "collections/mounts/",
+                         "sk": "ffxiv_mounts_owned", "k": "id:123" } }] }] }
+```
+
+| 欄位 | 說明 |
+|------|------|
+| `cost` | **同一件獎品在所有商店裡的最低單價**（同一件常常好幾間店都有）|
+| `own` | 這件在哪本圖鑑。`sk`＝該收藏頁的 localStorage key、`k`＝該頁 `keyOf` 的輸出值 |
+
+`own.k` **必須照各收藏頁的 `keyOf` 產生**（多數 `id:<id>`，寵物是純數字），
+自己拼格式的話缺口預算會把「已有」算成「還沒有」，而畫面上看不出來。
+幻卡沒有 `itemId` 欄位，走 `scripts/lib/triple-triad-map.mjs` 的可證對照。
+
+**建置**：`node scripts/build-gold-saucer.mjs --apply`。
+刻意不做變現排行——兌換品幾乎不能上市場板，見腳本檔頭。
+
+---
+
+### 2.23 item-names（物品四語名稱查詢分片）
+
+`data/item-names/` 是一個**目錄**：45,546 件物品的四語名稱共 178,162 個查詢鍵，
+依 `FNV-1a(正規化鍵) % 256` 切成 256 片（單片 gzip 約 15KB）＋一份 `_index.json`。
+
+```json
+// data/item-names/7.json
+{ "schema": "item-names", "shard": 7, "count": 694,
+  "k": { "en": { "ironingot": "黑鐵錠" }, "ja": {…}, "cn": {…}, "tw": {…} } }
+```
+
+語言分成四個子物件而不是每筆帶語言碼——178,162 個鍵各付一次欄位成本太貴。
+
+**依「查詢鍵」分片而不是依 id**：這份是用名字查的，查之前不知道 id。
+（試過片內共用名稱陣列去重，**反而更大**——雜湊分片會把同一件物品的四個鍵打散到四片，
+片內沒有重複可去。詳見知識庫 §4.62。）
+
+**建置**：`node scripts/build-item-names.mjs --apply`，
+**跑完必接 `node scripts/validate-item-names.mjs`**——前端 `assets/js/item-names.js` 有一份
+同樣的 `normalizeName()` 與 `shardOf()`，不一致的話「明明收錄了的東西查不到」且兩邊都不報錯（§4.63）。
+
+這個目錄刻意不進 `minify-data.mjs`。
+
+---
+
+### 2.24 vendor-prices（NPC 金幣直購價）
+
+```json
+{ "schema": "vendor-prices", "count": 4641,
+  "data": { "5111": { "p": 18, "n": "斯姆爾維布", "m": "利姆薩·羅敏薩上層甲板", "x": 10.66, "y": 15.21, "mi": 11 } } }
+```
+
+| 欄位 | 說明 |
+|------|------|
+| `p` | 單價（金幣）。同一件在多間店有賣時取**最低價** |
+| `n` | 賣家 NPC 的台服名（查不到繁中名的整筆不收）|
+| `m` `x` `y` `mi` | 賣家位置與 mapId（4,641 筆全都有）|
+
+**收錄條件**：商店只收金幣、賣家至少一個沒有已知門檻（`lib/game-sources.mjs` 的 `VENDOR_GATES`）、
+該 NPC 有台服名、物品可交易且有台服名。
+
+**用途**：市場頁的 `costOf()` 拿它對材料成本封頂。
+**⚠ `VENDOR_GATES` 只涵蓋 5 個部族 NPC**，軍階／主線／城市解鎖那些門檻沒有建模，
+所以前端一律把價錢與賣家顯示出來讓使用者判斷，**不偷偷換數字**（知識庫 §4.64）。
+
+**建置**：`node scripts/build-vendor-prices.mjs --apply`。
+
+---
+
+### 2.25 npc-shops（NPC 商店目錄，依地圖分片）
+
+`data/npc-shops/<mapId>.json` ＋ `_index.json`。回答「我人在這張圖，附近有哪些店、賣什麼」。
+
+```json
+// _index.json
+{ "schema": "npc-shops-index", "count": 89,
+  "maps": [ { "mapId": 3, "map": "格里達尼亞舊街", "npcCount": 22, "shopCount": 159 } ] }
+
+// 3.json
+{ "schema": "npc-shops", "mapId": 3, "map": "格里達尼亞舊街",
+  "npcs": [ { "id": 1000199, "n": "商人", "x": 10.2, "y": 11.4,
+    "s": [ { "id": 262151, "n": "雜貨商人", "t": "GilShop",
+            "tr": [ { "c": [[1, 16]], "g": [[4680, 1]] } ] } ] } ] }
+```
+
+| 欄位 | 說明 |
+|------|------|
+| `npcs[].n` `x` `y` | NPC 台服名與座標（缺任一就不收）|
+| `s[].n` | 台服官方店名（`tw-locales` 的 `shops`）|
+| `s[].t` | `GilShop`（金幣店）或 `SpecialShop`（兌換店）|
+| `tr[].c` / `tr[].g` | 付出／獲得，各為 `[itemId, 數量]` 陣列 |
+| `tr[].r` | 需要的軍階（只有軍需品店有）|
+
+**品項只存 id，不存名字**——39,000 筆交易每筆都帶名字檔案會爆，前端查既有的 `items-market.json`。
+**金幣（id 1）刻意豁免台服名鐵則**：`items.json` 與 `tw-items.msgpack` 裡它都叫 `"Gil"`，
+擋掉會丟掉 16,237 筆交易（知識庫 §4.67），前端顯示「金幣」——那是我們自己的 UI 標籤，不是放行英文。
+
+**建置**：`node scripts/build-npc-shops.mjs --apply`。
+
+---
+
+### 2.26 action-names（技能／狀態／特性四語查詢分片）
+
+`data/action-names/<shard>.json`，256 片，45,046 個查詢鍵。結構與 §2.23 `item-names` **完全相同**，
+分片規則（`normalizeName`＋FNV-1a `shardOf`）也共用——前端由 `assets/js/item-names.js` 的
+`NameLookup.create()` 同時產出 `ItemNames` 與 `ActionNames`，兩邊的規則只有一份。
+
+```json
+{ "schema": "action-names", "shard": 0, "count": 169,
+  "k": { "a": { "en": { "stoneii": "中巨岩" }, "ja": { "ストンラ": "中巨岩" } },
+         "s": { "en": {} }, "t": { "en": {} } } }
+```
+
+| 分類鍵 | 內容 |
+|--------|------|
+| `a` | 技能（Action）。**玩家技能優先佔位**，敵人技能只補空的 |
+| `s` | 狀態（Status）|
+| `t` | 特性（Trait）|
+
+**只有 en / ja 兩種語言**——Teamcraft 的 `actions.json` 沒有簡中欄位。
+**玩家技能只佔 1,373/38,490**，混在一起會撞出 3,113 個同名衝突且產出看不出錯（知識庫 §4.70）。
+
+**建置**：`node scripts/build-action-names.mjs --apply` → 必接 `node scripts/validate-item-names.mjs`。
+
+---
+
+### 2.27 item-source-types（取得管道位元遮罩索引）
+
+`data/item-source-types.json`。§2.21 的分片層答得了「這一件哪來的」，但答不了
+「哪些家具是 NPC 直接買得到的」——後者要把 36,335 件一次掃過，所以另存一份整表索引。
+
+```json
+{ "schema": "item-source-types",
+  "types": ["採集", "兌換", "園藝", "副本", "雇員探險", "遠航探索", "寶箱/容器", "怪物掉落",
+            "任務獎勵", "分解獲得", "精製獲得", "NPC商店", "可製作", "成就獎勵", "商城購買",
+            "危命任務", "無人島"],
+  "count": 36335,
+  "d": [2, 127, 1, 127, 1, 255] }
+```
+
+| 欄位 | 說明 |
+|------|------|
+| `types` | 管道名稱表，**遮罩的第 n 個位元對應 `types[n]`** |
+| `d` | 差分陣列 `[id 差值, 遮罩, id 差值, 遮罩…]`，長度 = `count × 2` |
+
+**為什麼是差分陣列**：物件形式 `{ "id": mask }` gzip 後 96KB，差分陣列 **15KB**，差六倍多。
+**`types` 是權威名單**，前端的篩選選項要從它長出來——寫死的話新增一種管道會從篩選裡安靜消失。
+由 `build-item-sources.mjs` **同一支**產生，與分片層保證同步。
+
+**用途**：市場頁的「🎁 取得方式」篩選。
+
+---
+
 
 ## 3. 前端載入慣例
 

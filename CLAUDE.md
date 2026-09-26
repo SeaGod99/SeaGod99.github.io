@@ -53,6 +53,30 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 重建某份資料 | `node scripts/build-<名稱>.mjs` |
 | 校正既有資料（patch 系列） | `node scripts/patch-<名稱>.mjs`（多數 dry-run 預設，`--apply` 才寫入） |
 | 資料驗收（改完資料必跑） | `node scripts/validate-data.mjs`（會順便報 `_meta.json` 不同步） |
+| ↑ 那支同時掃「日文原文有沒有漏到前端資料」 | 走 `scripts/lib/tw-text.mjs` 的守門掃整個 `data/`（含分片目錄）；白名單在 `validate-data.mjs` 裡，每條都要寫得出為什麼。守門本身跑 `node scripts/lib/tw-text.mjs`（21 項自我測試）|
+| 重建全站搜尋索引（改完任一收藏／工具資料後） | `node scripts/build-site-index.mjs`（dry-run 預設／`--apply`；gzip 超過 200KB 會中止） |
+| 重建軍需品調達＋專家交納 | `node scripts/build-gc-supply.mjs`（dry-run 預設／`--apply`／`--offline`） |
+| 補成就的達成條件與官方名 | `node scripts/patch-achievement-sources.mjs`（dry-run 預設／`--apply`／`--offline`） |
+| 重建討伐筆記 | `node scripts/build-hunting-log.mjs`（dry-run 預設／`--apply`／`--offline`） |
+| 重建雇員探險 | `node scripts/build-ventures.mjs`（dry-run 預設／`--apply`；吃 obtainable-methods，不連網） |
+| 重建季節活動商店 | `node scripts/build-seasonal-shop.mjs`（dry-run 預設／`--apply`；吃 out_data/cache/tc-shops.json） |
+| 追蹤頁回歸（**改完 `collection-tracker.js` 或 `toast.js` 必跑**） | `node scripts/validate-tracker-pages.mjs`（jsdom，需先 `npm i jsdom --no-save`；驗 12 頁控制面＋「按清除→取消，進度不能動」） |
+| 頁內快捷鍵回歸（**改完 `nav.js` 的快捷鍵區或 `collection-tracker.js` 的 `wireShortcuts` 必跑**） | `node scripts/validate-shortcuts.mjs`（jsdom，37 項：登記佇列、s／o／`[`／`]`、`?` 浮層、焦點不外逃、輸入框與 `<dialog open>` 時不攔）|
+| 刷新 Teamcraft 台服語系檔（成就／FATE／理符／怪物／探險／商店／幻卡規則…） | `node scripts/fetch-tw-locales.mjs`（dry-run 預設／`--apply`／`--list` 看內容）→ `out_data/tw-locales.msgpack`，讀取走 `scripts/lib/tw-locales.mjs` |
+| 多幣種變現排行重建（45 種貨幣） | `node scripts/build-currency-shop.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/currency-shop.json` |
+| 系統解鎖＋職業行會重建 | `node scripts/build-system-unlocks.mjs`（dry-run／`--apply`／`--offline`／`--find <關鍵字>` 查候選任務）→ `data/system-unlocks.json` 的 `data[]`＋`jobs[]`；對照表人工維護在 `scripts/lib/system-unlock-map.mjs`（`SYSTEMS` 26 條、`GUILD_QUESTS` 20 條；**24 個進階職不用維護，走 `ClassJob.UnlockQuest`**）|
+| 收藏頁任務來源補接取點（改完上述任一或 tw-quests 後） | `node scripts/patch-collection-quest-npc.mjs`（dry-run 預設／`--apply`／`--offline`；**寫的是 pretty JSON，必接 `minify-data.mjs --apply`**）|
+| 重建取得管道分片層（改完 obtainable-methods 或 items 後） | `node scripts/build-item-sources.mjs`（dry-run 預設／`--apply`）→ `data/item-sources/`（45 片＋`_index.json`）；前端走 `assets/js/item-sources.js`，**刻意不進 `minify-data.mjs`** |
+| ↑ 上面那支同時產 `data/item-source-types.json` | itemId → 取得管道位元遮罩（差分陣列，gzip 15KB），市場頁的「🎁 取得方式」篩選吃這份。**與分片層由同一支保證同步**，不要另外寫一支 |
+| 視窗計算／鬧鐘回歸（**改完 `window-calc.js`、`et-alarm.js` 或釣魚／限時採集的時間窗邏輯必跑**） | `node scripts/validate-window-calc.mjs`（差分測：把重構前兩頁的實作抄一份當參照，307 種魚＋36 組天氣案例＋225 個節點逐筆比對）|
+| 全站頁面體檢（**改完任何版面、共用 CSS／JS 或新增頁面必跑**） | `MSYS_NO_PATHCONV=1 node scripts/validate-pages.mjs`（真瀏覽器：36 頁 × 360／768／1280 三寬度，驗 console error／水平溢出／重複 id／缺 alt／點擊目標）；`--page <關鍵字>` 只驗某頁、`--shot <目錄>` 存截圖 |
+| 重建金碟獎品價目表（改完 items 或商店表後） | `node scripts/build-gold-saucer.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/gold-saucer.json`（金碟幣＋金碟聲譽，附六本圖鑑的收藏對應）|
+| 重建物品四語名稱查詢分片（換台服版本或四語快照後） | `node scripts/build-item-names.mjs`（dry-run 預設／`--apply`）→ `data/item-names/`（256 片＋`_index.json`）；**跑完必接 `node scripts/validate-item-names.mjs`**（驗前後端的正規化與雜湊一致）|
+| 重建技能／狀態四語查詢分片（換台服版本後） | `node scripts/build-action-names.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/action-names/`（256 片）；**與 `build-item-names.mjs` 共用 `shardOf`，SHARDS 要一起改**；跑完必接 `validate-item-names.mjs` |
+| 重建 NPC 金幣直購價（改完 items 或商店表後） | `node scripts/build-vendor-prices.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/vendor-prices.json`（4,641 種，市場頁用它對材料成本封頂）|
+| 重建 NPC 商店目錄（改完 items／npcs／商店表後） | `node scripts/build-npc-shops.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/npc-shops/`（89 張圖＋`_index.json`，依 mapId 分片）；**刻意不進 `minify-data.mjs`** |
+| 幻卡來源語意修正（**跑完 `build-triple-triad-all.mjs` 必接**） | `node scripts/patch-triple-triad-sources.mjs`（dry-run 預設／`--apply`／`--offline`） |
+| 探索筆記補座標（已補完 338/340，留著備查） | `node scripts/patch-exploration-coords.mjs`（dry-run 預設／`--apply`／`--offline`） |
 | `_meta.json` 與資料檔同步（validate 報不同步時跑） | `node scripts/sync-meta.mjs`（`--apply`） |
 | 副本庫補收漏掉的副本 | `node scripts/patch-dungeon-add-missing.mjs`（`--apply`／`--offline`） |
 | 幻卡英文散文來源結構化 | `node scripts/patch-triple-triad-prose-sources.mjs`（`--apply`） |
@@ -71,6 +95,8 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 幻卡補新卡（台服開新卡時） | `node scripts/patch-triple-triad-new-cards.mjs`（dry-run／`--apply` 寫入）→ `node scripts/download-triple-triad-images.mjs` |
 | 幻卡取得方式補繁中名（補完新卡後） | `node scripts/patch-triple-triad-source-names.mjs`（`--apply`／`--offline`，冪等） |
 | 副本補資料片欄位（改完 dungeons.json） | `node scripts/patch-dungeon-expansion.mjs`（`--apply`／`--offline`） |
+| 副本補時限／通關經驗／解鎖任務（改完 dungeons.json） | `node scripts/patch-dungeon-details.mjs`（dry-run 預設／`--apply`／`--offline`）；補 `timeLimit`（516/520）、`clearExp`、`clearGil`、`unlock`（32/520），並把 `image` 的 `000000` 佔位改成 null |
+| 副本圖鑑回歸（**改完 `tools/duty-codex/` 或 `dungeons.json` 必跑**） | `node scripts/validate-duty-codex.mjs`（jsdom，29 項：類型標籤、篩選、`?id=duty:` 深連結、圖檔存在率）|
 | 坐騎／寵物補手冊排序（重建後必跑，用來擋幻影條目） | `node scripts/patch-collection-order.mjs`（`--apply`／`--offline`） |
 | 青魔補副本／地區連結 | `node scripts/patch-blue-magic-content-ids.mjs`（`--apply`） |
 | 收藏頁補空 sources（由 obtainable-methods 推） | `node scripts/patch-sources-from-om.mjs`（`--apply`） |
@@ -101,7 +127,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | `download-emotes-icons.mjs` | 新表情出現時 | `assets/emotes/`（前端用本地路徑） |
 | `download-barding-icons.mjs` | 新鳥鞍出現時 | `assets/barding/` |
 | `download-blue-magic-icons.mjs` | 新青魔法出現時 | `assets/blue-magic/` |
-| `download-dungeon-images.mjs` | **目前沒有頁面用**——`assets/dungeons/`（379 檔 11MB）是為未來副本頁備的素材，`dungeons.json` 的 `image` 欄有 386 筆指向它，但沒有任何頁面顯示副本圖 | `assets/dungeons/`＋改 `dungeons.json.image` |
+| `download-dungeon-images.mjs` | 副本圖鑑（`/tools/duty-codex/`）用的圖，`assets/dungeons/` 目前 433 檔 13MB。**跑完會把 `dungeons.json` 整份寫成 pretty JSON**（303KB → 426KB）且不會提醒你——必接 `minify-data.mjs --apply`＋`sync-meta.mjs --apply` | `assets/dungeons/`＋改 `dungeons.json.image` |
 
 **環境注意**：
 - 本機 `python` 指令是 Microsoft Store 假捷徑（執行會靜默結束），**Python 一律用 `py`**。
@@ -111,7 +137,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 **repo 很大（約 860MB／2.8 萬檔，主要是 glamour 的圖）**：
 - `git clone`／`git pull`／`git checkout` 動輒數分鐘，**下 git 指令請把 timeout 拉到 5 分鐘以上**。曾因 2 分鐘超時中斷 checkout，留下 index.lock ＋ 5 千個沒寫完的檔案。
 - 還原檔案時**先確認範圍**：`git restore .` 會連同你正在編輯的檔案一起還原（曾因此洗掉未 commit 的文件修改），只想補回某目錄就寫 `git restore tools/glamour`。
-- 距 **GitHub Pages 1GB 發佈上限**只剩約 140MB 餘裕，新增大批圖片前先估增量。
+- **GitHub Pages 1GB 發佈上限**：2026-09-26 實測 git 追蹤總計 **758MB**，餘裕約 266MB（磁碟上的 1.8G 含 `out_data/`、`node_modules/` 與 glamour 的中間檔，那些都不進 git）。新增大批圖片前先估增量，量法：`git ls-files -z | xargs -0 du -cb | awk '/total$/{s+=$1} END{print s/1048576}'`。
 - 跑完 `update_all` 後，衍生的 js 與新縮圖**記得 commit**（`.gitignore` 已不擋）。
 
 **另外三條鐵則**（違反過、代價高，細節見「專案慣例與記憶」）：
@@ -213,6 +239,24 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 
 - **改了收藏頁版面 / 樣式** → 改碼 → `/browse` 開該頁截圖 → `/design-review` 視覺把關。
 - **改了共用資料或腳本（`/data`、`/scripts`、`/assets/js`）** → `node scripts/validate-data.mjs` → `/verify` 確認受影響頁面行為正常 → `/code-review`。改到 `assets/` 的 css/js 還要跑 `node scripts/bump-sw-version.mjs`（否則使用者會被舊 SW 快取黏住）。
+- **改了版面／共用樣式／新增頁面** → `MSYS_NO_PATHCONV=1 node scripts/validate-pages.mjs`。頁面清單**直接讀 `nav.js` 的 TOOLS**，新頁只要登記在那裡就會自動納入。點擊目標分兩級：低於 24×24 違反 WCAG AA（擋），24–44 只是沒達到 AAA 建議（警告）。**站內好幾處用 `::after` 透明擴張層把小圖示的命中區推到 44px**，所以這支量的是 `elementFromPoint` 的實際命中區而不是盒子尺寸——新做小圖示鈕請沿用那個做法，不要改字級。
+- **新增工具頁時記得在首頁卡片補 `data-added="YYYY-MM-DD"`** → 首頁的「新」徽章 2026-09-26 起改由日期決定（30 天內才標），**HTML 裡不再寫死**。沒有 `data-added` 的卡一天都不會被標成新的。改的原因：寫死的徽章沒有人會回來拿掉——盤點時 30 張卡裡有 23 張掛著「新」，其中 13 張是六～八月加的。
+- **追蹤頁的「✨ 本次新增」不必各頁實作** → `collection-tracker.js` 的 `addWhatsNewFilter()` 會自動掛，13 頁一次受惠。它比對的是 `ffxiv_seen_patch`（使用者上次看到的版本）與 `_meta.json` 的 `gamePatch`。三條規則寫在那支的註解裡：**第一次來的人不掛**（沒有比較基準時全部都算新）、**該頁沒有新條目就不掛**、**數量由該頁過濾後的 LIST 算**（不是資料庫總數——同一版新增的東西不見得每頁都收）。
+- **寫「查不到台服名就不收」的過濾時，記得金幣（id 1）是例外** → `items.json` 與 `tw-items.msgpack` 裡它的名字都是 **"Gil"**，沒有中日韓字。NPC 商店目錄第一版因此丟掉 **16,237 筆**交易（佔被濾掉的 46% 裡絕大多數）——金幣是全遊戲最常見的成本。前端顯示成「金幣」。這不是破例：鐵則要擋的是「把英文名放行到畫面上」，金幣的顯示字串是我們自己給的 UI 標籤。
+- **一行接一行的連結不能用 `::after` 透明擴張層補命中區** → 44px 高的擴張層會蓋到上下兩列，`elementFromPoint` 探到的是鄰居，體檢會報「點擊目標太小」而你怎麼加都沒用。**改用真實 padding／`min-height` 把自己的盒子撐大**（金碟頁的預算格、NPC 商店目錄的交易列都是這樣修的）。擴張層只適合**孤立**的小圖示鈕（頂列站名、橫幅連結）。
+- **算材料成本時不要只看市場板** → 有 4,641 種可交易物品是 NPC 直接賣金幣的（配方材料裡佔 13%），市場板上常常更貴（有人掛高價等新手）。市場頁的 `costOf()` 會用 `data/vendor-prices.json` **對成本封頂**。但 `VENDOR_GATES` 只涵蓋 5 個部族 NPC，**軍階／主線／城市解鎖那些門檻沒有建模**，所以封頂之後一定要把「跟誰買、在哪、單價多少」顯示出來讓使用者判斷——**不可以偷偷把數字換掉**。NPC 庫存視為無限，所以是單純乘法、不走 `fillQuote`（那是市場板掛單才需要的，§3.14）。
+- **技能名有「玩家技能」與「敵人技能」之分，一定要優先玩家技能** → `tw-actions.json` 的 38,490 筆裡只有 **1,373 個是玩家技能**（XIVAPI v2 的 `Action.IsPlayerAction`），其餘是敵人／NPC 技能。全部一起收會撞出 3,113 個同名衝突：英文 `Infuriate` 同時是戰士的「戰嚎」與某敵人的「勃然大怒」、`Attack` 同時是「攻擊」與「防衛反應」。先到先贏的話巨集翻譯會把玩家技能翻成敵人技能的名字，**而且完全看不出來**。`build-action-names.mjs` 分兩輪寫（玩家先佔位），並把剩下的 4 組「玩家技能互撞」單獨報出來。
+- **要用「名字」查東西（跨語言）** → 前端用 `assets/js/item-names.js` 的 `ItemNames.lookup()`／`lookupMany()`。**它的 `normalizeName()` 與 `shardOf()` 必須與 `scripts/build-item-names.mjs` 逐字一致**——不一致的徵狀是「明明收錄了的東西查不到」，兩邊都不會報錯。`validate-item-names.mjs` 會拿 12,000 個真實名稱逐筆比對兩邊的輸出。
+- **分片層要依「查詢鍵」切時，別套用 id 分片的經驗** → `item-sources` 依 `id >> 10` 切，因為它用 id 查；`item-names` 用名字查，所以依 `FNV-1a(正規化鍵) % 256` 切。**試過「片內共用名稱陣列」去重，結果反而更大**（3.4MB → 3.76MB）：雜湊分片會把同一件物品的四個鍵打散到四個不同的片，片內根本沒有重複可去。真正有效的是把片切小。
+- **要在頁面之間傳一份材料清單** → 市場頁的 `#craft=<id>:<數量>,…`（也收 `?craft=`）。它逐件走既有的 `addToCraft()`，上限與去重的規則只有那一份；查無的 id 安靜略過並提示件數。製作模擬器的「💰 帶這些材料去市場頁算成本」就是走這條。
+- **要打 XIVAPI** → 用 `scripts/lib/xivapi.mjs` 的 `xiv.sheet/rows/row`，**不要再手寫一份 `getJson`＋分頁迴圈**（站內曾有 13 份副本）。三個內建的雷：`?rows=` 不指名 `fields` 只回預設欄位、`?rows=` 有一個 id 不存在會整批 404、**v1（`xivapi.com/<Sheet>`）已停更但仍回 200**（TripleTriadCard 在 v1 是 425 筆、v2 是 475 筆）。注意 `xivapi.com/i/...` 是圖示 CDN，不是 v1 API。
+- **要讀商店表** → 用 `scripts/lib/shops.mjs` 的 `loadShops()`，別直接讀 `out_data/shops.msgpack`（舊 dump，7.21 後的兌換品不在裡面）或自己抓 Teamcraft `shops.json`。台服店名走 `tw-locales` 的 `shops`（1,875 間，完全涵蓋 msgpack 的 1,815 間）。
+- **要「依取得方式篩選」而不是「查單一物品的取得方式」** → 那是兩件事：分片層（`data/item-sources/`）按需載入、答得了「這一件哪來的」，但答不了「哪些家具是 NPC 直接買得到的」——後者要把 36,335 件掃一遍。用 `data/item-source-types.json`（類型位元遮罩，差分陣列 gzip 15KB）。**選項名單要從那份檔案自己長出來**，寫死的話新增一種管道會從篩選裡安靜消失。
+- **要判斷「這個字串能不能印在畫面上」** → 用 `scripts/lib/tw-text.mjs` 的 `isTw()`，**不要再手寫 `/[一-鿿]/`**（站內曾有 19 份，每一份都有同一個洞：只要字串裡任何一處有漢字就整串放行，所以「コメンデーションクリスタルの取引」這種日文原文會直接上畫面）。`twName()` 用的是寬鬆版 `isTranslated()`——它只擋假名與遊戲內部佔位列，不要求漢字，因為台服真的會顯示 HP／PvP／F.A.T.E. 這類拉丁字串。**`twName()` 回傳有值不等於那是台服名**：上游語系檔的 `shops` 10 筆、`mobs` 89 筆、`statuses` 77 筆是未翻譯的日文。
+- **要把取得管道翻成畫面上的字** → 用 `scripts/lib/obtainable.mjs` 的 `convertOm()`＋`normalizeEntries()`。**兩種 skip 集合不要混用**：`SKIP_MARKET`（市場頁湊材料，濾掉製作／秘籍／商城）與 `SKIP_CATALOG`（分片層，製作與商城**是**有效答案）。上游的 `shopName`／NPC 名有 2,444 處是英文，`twOnly` 會擋掉，補得回來的走 `twShop` 解析器。
+- **做「下次什麼時候開」的功能** → 用 `assets/js/window-calc.js` 的 `nextWindows()`＋`statusOf()`，鬧鐘用 `assets/js/et-alarm.js`。**不要再寫第三份視窗演算法**——釣魚與限時採集兩頁已經收斂成薄包裝。改完必跑 `node scripts/validate-window-calc.mjs`（鬧鐘的錯誤是該響沒響，畫面上看不出來）。
+- **新增或改了「某個系統要先解鎖」的資訊** → 改 `scripts/lib/system-unlock-map.mjs` → `node scripts/build-system-unlocks.mjs`（先 dry-run 看閘門過不過）→ `--apply` → **`node scripts/build-site-index.mjs --apply`**（命令面板吃這份，漏跑會搜不到新系統）→ `validate-data` → `sync-meta --apply`。工具頁的橫幅**不必改頁面**——`assets/js/unlock-banner.js` 認的是 `system-unlocks.json` 的 `tool` 欄位對上網址路徑；新工具頁只要在 `<head>` 加一行 `<script src="../../assets/js/unlock-banner.js"></script>`。
+- **改了收藏頁的 `sources`（尤其 `type: "任務"`）** → `node scripts/patch-collection-quest-npc.mjs`（dry-run 看認出幾筆）→ `--apply` → **`node scripts/minify-data.mjs --apply`**（那支寫 pretty JSON）→ `validate-links`（`收藏頁 sources[].at.mapId → maps` 要 0 斷鏈）→ `validate-tracker-pages`。接取點的畫面層是共用的 `CollectionTracker.sourceWhere()`，**各頁不要自己排版**。
 - **改了追蹤頁／共用引擎（`assets/js/collection-tracker.js`）** → 12 個追蹤頁全部吃這支，改完務必跑一次 jsdom 回歸（見 [docs/專案慣例與記憶.md](docs/專案慣例與記憶.md) §2.5；本機 headless Chromium 在此環境跑不起來）。
 - **新增工具頁** → `/spec` 釐清需求 → 實作 → `/qa` → `/ship`。
 - **要更新外部來源資料** → `/scrape` 抓取 → 跑 `/scripts` 產生 → `node scripts/validate-data.mjs` → `/verify`。
@@ -227,6 +271,8 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 - **接外部工具站的 id 之前** → **先用名稱對一次再接**。幻卡舊資料的 `instanceId` 是 Garland 自家 id，182 個裡 64 個「剛好」也是 `dungeons.json` 的有效 key，但其中 **151 個對到的是錯的副本**（知識庫 §4.10）。同一個坑在 mapId 已經踩過一次。
 - **看到收藏頁某筆「沒有取得方式」** → 先確認**它在遊戲裡是不是真的存在**。坐騎有 4 筆是 `Mount.Order === -1` 的內部列（玩家拿不到、其中 3 筆還是重複），補 sources 是補錯方向（知識庫 §4.11）。
 - **要重跑任何 `build-*.mjs` 之前** → 先確認那份 JSON 裡**每個 `kind`／區塊都有腳本會產生**。`squadron.json` 的 60 筆隊員曾經只存在於 JSON、沒有腳本產它，重跑會安靜洗掉（知識庫 §4.19）。最快的檢查＝跑完跟舊檔 diff 一次。
+- **要加頁內快捷鍵** → 登記到 `window.SGT_SHORTCUTS`（在 `assets/js/nav.js`，全站都載得到），**不要自己掛 `document.keydown`**——那會繞過「輸入框裡不攔」「彈窗開著不攔」「修飾鍵不攔」三道守門，而且 `?` 說明浮層列不出你的鍵。**時序陷阱**：nav.js 是 `defer` 載的，追蹤頁的 `init()` 是 inline 同步跑的，登記時 `SGT_SHORTCUTS` 常常還不存在 → 推進 `window.SGT_SHORTCUTS_PENDING`，nav.js 自己會吸乾。改完跑 `node scripts/validate-shortcuts.mjs`。
+- **跑 `download-dungeon-images.mjs` 之後一定要接 `minify-data.mjs --apply`** → 那支會**把 `dungeons.json` 整份改寫成 pretty JSON**（303KB → 426KB），而且會把 `image` 改寫成本地 `.webp` 路徑。它不會提醒你，`validate-data` 也不會報——只有檔案大小看得出來。順序：`patch-dungeon-details.mjs --apply` → `download-dungeon-images.mjs` → `minify-data.mjs --apply` → `sync-meta.mjs --apply`。
 - **新頁要存 localStorage** → key 一律 `ffxiv_` 開頭，否則首頁全站備份掃不到、使用者的資料備份不出去也不會有提示（知識庫 §2.3）。市場頁 2026-08-10 才從 `sgt-market-*` 補救回來，**改名要留一次性遷移、且不要刪舊 key**。
 - **改了製作模擬器（`tools/crafting-sim/`）** → 改完 `craft-engine.js`、`craft-solver.js` 或 `data/craft-actions.json` **必跑 `node scripts/validate-craft-sim.mjs`**（Teamcraft 官方測試案例＋內建範本＋自動求解，104 項）。製作公式的取整點很多，差一個 `Math.floor` 在高階配方上差幾百品質、**畫面上完全看不出來**。規則出處、兩處刻意與 Teamcraft 不同的地方、範本怎麼解出來的、求解器為什麼只用「不靠運氣」的技能，見 [docs/crafting-sim.md](docs/crafting-sim.md)。**作業／品質的封頂只做在畫面上**（引擎要跟 Teamcraft 的期望值逐值對得上）。
 - **要算「買 N 個多少錢」** → 一律用 `Universalis.fillQuote()` 逐筆吃掉掛單，**絕不可用「最低價 × N」**。最便宜那筆常常只有 1～3 個，乘法會系統性低估、且低估幅度隨數量放大（知識庫 §3.14）。
