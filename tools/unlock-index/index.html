@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FF14 系統解鎖索引 — 金碟、幻卡、無人島、幻化、雇員、小隊等系統各要解哪個任務才會開，任務在哪接、幾級、前面卡著什麼；另附 42 個職業的行會位置與解鎖條件">
+  <title>系統解鎖索引 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <link rel="stylesheet" href="../../assets/css/tool-header.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 109.375%; }
+    body { background: var(--bg-base); color: var(--text); font-family: var(--font-sans); min-height: 100vh; }
+
+    .controls { max-width: var(--w-content); margin: 0 auto; padding: 1rem 1.5rem 0.5rem; display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; }
+    .tabs { display: flex; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+    .tabs button {
+      background: var(--bg-card); border: 0; color: var(--text-dim); cursor: pointer;
+      font-family: inherit; font-size: 0.8rem; padding: 0.4rem 0.9rem; transition: all 0.15s;
+    }
+    .tabs button + button { border-left: 1px solid var(--border); }
+    .tabs button.active { background: var(--gold-dim); color: var(--gold); font-weight: 600; }
+    select.sel, input.search {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px;
+      color: var(--text-dim); padding: 0.38rem 0.6rem; font-size: 0.8rem; outline: none; font-family: inherit;
+    }
+    select.sel { cursor: pointer; }
+    input.search { flex: 1; min-width: 10rem; }
+    input.search:focus, select.sel:focus { border-color: var(--gold); color: var(--text); }
+
+    .status { max-width: var(--w-content); margin: 0 auto; padding: 0 1.5rem 0.4rem; font-size: 0.75rem; color: var(--text-muted); }
+
+    .body-wrap { max-width: var(--w-content); margin: 0 auto; padding: 0 1.5rem 2rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(21rem, 1fr)); gap: 0.7rem; }
+    .sec-head {
+      font-size: 0.78rem; color: var(--text-muted); font-weight: 600; letter-spacing: 0.04em;
+      padding: 1.1rem 0 0.5rem; border-bottom: 1px solid var(--border); margin-bottom: 0.7rem;
+    }
+    .sec-head:first-child { padding-top: 0.2rem; }
+
+    .u-card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md);
+      padding: 0.75rem 0.85rem; display: flex; flex-direction: column; gap: 0.42rem; transition: border-color 0.15s;
+    }
+    .u-card:hover { border-color: var(--border-hover); }
+    .u-top { display: flex; align-items: baseline; gap: 0.45rem; flex-wrap: wrap; }
+    .u-name { font-size: 0.97rem; font-weight: 700; color: var(--text); }
+    .u-tool {
+      margin-left: auto; font-size: 0.72rem; color: var(--gold); text-decoration: none;
+      border: 1px solid var(--gold-dim); border-radius: 5px; padding: 0.12rem 0.45rem; white-space: nowrap;
+    }
+    .u-tool:hover { background: var(--gold-dim); }
+    .tag {
+      font-size: 0.68rem; padding: 0.1rem 0.4rem; border-radius: 4px;
+      background: var(--bg-surface); color: var(--text-muted); border: 1px solid var(--border); white-space: nowrap;
+    }
+    .tag.lv { color: var(--blue); border-color: var(--blue-dim); }
+    .tag.role { color: var(--purple); border-color: var(--purple-dim); }
+    .tag.kind-job { color: var(--gold); border-color: var(--gold-dim); }
+
+    .u-quest { font-size: 0.85rem; color: var(--text-dim); line-height: 1.5; }
+    .u-quest b { color: var(--text); font-weight: 600; }
+    .u-where { font-size: 0.78rem; color: var(--text-muted); line-height: 1.6; }
+    .u-where .npc { color: var(--text-dim); }
+    .u-line { font-size: 0.75rem; color: var(--text-muted); line-height: 1.6; }
+    .u-line b { color: var(--text-dim); font-weight: 600; }
+    .u-soul { display: inline-flex; align-items: center; gap: 0.25rem; }
+    .u-soul img { width: 18px; height: 18px; vertical-align: middle; }
+
+    .u-btns { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+    .u-btn {
+      font-size: 0.72rem; padding: 0.2rem 0.5rem; border-radius: 5px; cursor: pointer;
+      border: 1px solid var(--border); background: var(--bg-surface); color: var(--text-dim);
+      font-family: inherit; transition: all 0.15s;
+    }
+    .u-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .u-btn.copied { border-color: var(--green); color: var(--green); }
+    /* 依據：資料是怎麼認定的，平常收著不礙眼，想查證時展得開 */
+    .u-basis { font-size: 0.7rem; color: var(--text-muted); }
+    .u-basis summary { cursor: pointer; list-style: none; opacity: 0.75; }
+    .u-basis summary::-webkit-details-marker { display: none; }
+    .u-basis summary::before { content: '▸ '; }
+    .u-basis[open] summary::before { content: '▾ '; }
+    .u-basis p { padding: 0.25rem 0 0 0.8rem; line-height: 1.6; }
+
+    /* 命令面板／深連結跳過來時，把那張卡標出來——否則使用者得自己在一整片卡裡找 */
+    .u-card.focus { border-color: var(--gold); animation: u-pulse 2.2s ease-out; }
+    @keyframes u-pulse { 0%, 60% { box-shadow: 0 0 0 2px var(--gold-dim); } 100% { box-shadow: 0 0 0 0 transparent; } }
+    @media (prefers-reduced-motion: reduce) { .u-card.focus { animation: none; } }
+    .loading { text-align: center; padding: 3rem 0; color: var(--text-dim); font-size: 0.9rem; }
+    .loading.err { color: var(--red); }
+    .info-note { max-width: var(--w-content); margin: 0 auto; padding: 0 1.5rem 2rem; font-size: 0.72rem; color: var(--text-muted); line-height: 1.8; }
+    .site-footer { border-top: 1px solid var(--border); padding: 24px 0; text-align: center; }
+    .site-footer p { font-size: 12px; color: var(--text-muted); }
+    .site-footer a { color: var(--text-dim); }
+    @media (pointer: coarse) {
+      .tabs button, select.sel, input.search, .u-btn { min-height: 44px; }
+      /* 「開啟工具」只有 25px 高，放大它會把卡片標題那行撐開；改用透明擴張層
+         把命中區推到 44px（同 nav.js 頂列站名的做法）。 */
+      .u-tool { position: relative; }
+      .u-tool::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 44px; transform: translateY(-50%); }
+    }
+    @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
+  </style>
+  <script src="../../assets/js/patch-gate.js"></script>
+  <script src="../../assets/js/theme.js"></script>
+</head>
+<body>
+<div class="tool-header">
+  <h1 class="tool-title">&#x1F5DD;&#xFE0F; 系統解鎖索引</h1>
+  <p class="tool-subtitle">金碟、幻卡、無人島、幻化、雇員、小隊…各要先解哪個任務才會開？任務在哪接、幾級、前面還卡著什麼，一頁查完</p>
+  <div class="header-divider"></div>
+</div>
+
+<div class="controls">
+  <div class="tabs">
+    <button id="tabSys" class="active">&#x2699;&#xFE0F; 系統與工具</button>
+    <button id="tabJob">&#x2694;&#xFE0F; 職業與行會</button>
+  </div>
+  <select class="sel" id="filterSel"></select>
+  <input class="search" id="searchInput" type="search" placeholder="搜尋系統、職業、任務或 NPC…" autocomplete="off">
+</div>
+
+<div class="status" id="statusLine"></div>
+<div class="body-wrap" id="bodyWrap"><div class="loading">載入資料中…</div></div>
+
+<p class="info-note">
+  每條的任務名、接取 NPC、地點座標與手帳章節都取自台服官方字串（遊戲本體的任務表 ＋ 本站的 NPC／地圖／職業名資料庫），不做翻譯。查不到台服來源的欄位一律留白，不以英文或簡中補。<br>
+  <b>系統與工具</b>：「哪個任務解鎖哪個系統」這層對應遊戲資料裡沒有欄位可抓，是人工維護的對照表，每條都附認定依據（點卡片裡的「依據」展開）。少數系統查不到單一解鎖任務（管弦樂琴樂譜綁房屋、風脈泉每區各自解鎖、市場板隨主線開放…），不會出現在這裡——<b>查不到不代表沒有</b>。<br>
+  <b>職業與行會</b>：24 個進階職業的解鎖任務由遊戲資料的 <code>ClassJob.UnlockQuest</code> 直接指定；20 個基礎職沒有這個欄位，行會任務靠對照表，其中 9 個戰鬥職另有 <code>Quest.ClassJobUnlock</code> 可交叉驗證。職業繁中名取自本站職業資料庫，行會任務標題沿用台服原文（部分生產職的任務名仍是舊譯，如「木工師行會」＝刻木匠）。台服未開放的職業不列。<br>
+  等級寫的是<b>接取任務所需等級</b>；ARR 的進階職業另需指定基礎職達到該等級，2.0 之後的職業則是任一戰鬥職達標即可。
+</p>
+
+<footer class="site-footer">
+  <p>水神的工具箱 · <a href="../../">回首頁</a> · FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具</p>
+</footer>
+
+<script>
+(function () {
+  var ICON_CDN = 'https://xivapi.com';
+  var DB = { data: [], jobs: [] };
+  var tab = 'sys';          // sys | job
+  var filter = '__all__';
+  var q = '';
+  var focusKey = null;      // ?id=sys:<key> / ?id=job:<縮寫>，命令面板跳進來用
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  // ── 共用片段 ───────────────────────────────────────────────
+  // Lv1 不印徽章：遊戲裡沒有低於 1 級，「Lv1」等於沒說；而「無人島開拓」這種
+  // 任務本身 Lv1 但要先破完主線的，印 Lv1 反而讓人以為 1 級就能開——門檻在「前置任務」那行。
+  function lvTag(lv) {
+    return lv > 1 ? '<span class="tag lv">Lv' + lv + '</span>' : '';
+  }
+
+  // 地點：有座標就給地圖與 /coord 兩個鈕；只有地名（副本／室內的實例地圖算不出座標）就只印地名
+  function whereBlock(at, npc, title) {
+    if (!at && !npc) return '';
+    var line = '<div class="u-where">' +
+      (npc ? '<span class="npc">&#x1F9CD; ' + esc(npc) + '</span>' : '') +
+      (at ? (npc ? '　' : '') + '&#x1F4CD; ' + esc(at.mapName) +
+        (at.x == null ? '' : ' (' + at.x + ', ' + at.y + ')') : '') +
+      '</div>';
+    if (!at || at.x == null || at.mapId == null) return line;
+    var flag = '/coord ' + at.x.toFixed(1) + ' ' + at.y.toFixed(1) + ' ' + at.mapName;
+    return line +
+      '<div class="u-btns">' +
+        '<button class="u-btn u-map" data-mapid="' + at.mapId + '" data-x="' + at.x + '" data-y="' + at.y +
+          '" data-mapname="' + esc(at.mapName) + '" data-title="' + esc(title) + '">&#x1F5FA; 地圖</button>' +
+        '<button class="u-btn u-flag" data-flag="' + esc(flag) + '">&#x1F4CB; 座標</button>' +
+      '</div>';
+  }
+
+  function questBlock(qq) {
+    var prev = (qq.prev || []).map(function (p) {
+      return '「' + esc(p.name) + '」' + (p.level ? 'Lv' + p.level : '');
+    }).join('、');
+    return '' +
+      '<div class="u-quest">&#x1F4DC; <b>「' + esc(qq.name) + '」</b></div>' +
+      whereBlock(qq.at, qq.issuer && qq.issuer.name, qq.name) +
+      (qq.genre ? '<div class="u-line"><b>手帳章節</b>　' + esc(qq.genre) + '</div>' : '') +
+      (prev ? '<div class="u-line"><b>前置任務</b>　' + prev + '</div>' : '');
+  }
+
+  // ── 系統卡 ───────────────────────────────────────────────
+  function sysCard(s) {
+    var head = '<div class="u-top">' +
+      '<span class="u-name">' + esc(s.name) + '</span>' +
+      lvTag(s.quests[0].level) +
+      (s.gcVariants ? '<span class="tag">三團各一</span>' : '') +
+      (s.tool ? '<a class="u-tool" href="../..' + esc(s.tool) + '">開啟工具 →</a>' : '') +
+      '</div>';
+    // 三團版本的三條任務內容相同，只有接取地點不同，全部列出來才問得出「我這團去哪接」
+    var body = s.quests.map(questBlock).join('<div class="u-line" style="opacity:.45">—</div>');
+    return '<div class="u-card" data-key="sys:' + esc(s.key) + '">' + head + body +
+      '<details class="u-basis"><summary>依據</summary><p>' + esc(s.basis) + '</p></details></div>';
+  }
+
+  // ── 職業卡 ───────────────────────────────────────────────
+  function jobCard(j) {
+    var req = j.requires
+      ? (j.requires.name
+        ? '<b>接取條件</b>　' + esc(j.requires.name) + ' Lv' + j.requires.level
+        : '<b>接取條件</b>　任一戰鬥職 Lv' + j.requires.level)
+      : '';
+    var head = '<div class="u-top">' +
+      '<span class="u-name">' + esc(j.name) + '</span>' +
+      '<span class="tag ' + (j.kind === 'job' ? 'kind-job' : '') + '">' + (j.kind === 'job' ? '進階職業' : '基礎職業') + '</span>' +
+      (j.role ? '<span class="tag role">' + esc(j.role.name) + '</span>' : '') +
+      lvTag(j.quest.level) +
+      '</div>';
+    return '<div class="u-card" data-key="job:' + esc(j.abbr) + '">' + head +
+      questBlock(j.quest) +
+      (j.parent ? '<div class="u-line"><b>前置職業</b>　' + esc(j.parent.name) + '</div>' : '') +
+      (req ? '<div class="u-line">' + req + '</div>' : '') +
+      (j.soulCrystal
+        ? '<div class="u-line u-soul"><b>靈魂水晶</b>　' +
+          (j.soulCrystal.icon ? '<img src="' + ICON_CDN + esc(j.soulCrystal.icon) + '" alt="" loading="lazy">' : '') +
+          esc(j.soulCrystal.name) + '</div>'
+        : '') +
+      '</div>';
+  }
+
+  // ── 篩選 ───────────────────────────────────────────────
+  function hay(o) {
+    var qq = o.quest || (o.quests && o.quests[0]) || {};
+    var all = [o.name, o.nameEn, o.abbr, o.role && o.role.name, o.parent && o.parent.name,
+      o.soulCrystal && o.soulCrystal.name];
+    (o.quests || [o.quest]).forEach(function (x) {
+      if (!x) return;
+      all.push(x.name, x.nameEn, x.genre, x.issuer && x.issuer.name, x.at && x.at.mapName);
+      (x.prev || []).forEach(function (p) { all.push(p.name); });
+    });
+    return all.filter(Boolean).join(' ').toLowerCase();
+  }
+
+  function visibleSys() {
+    return DB.data.filter(function (s) {
+      if (filter === '__tool__' && !s.tool) return false;
+      return !q || hay(s).indexOf(q) >= 0;
+    });
+  }
+  function visibleJobs() {
+    return DB.jobs.filter(function (j) {
+      if (filter === 'class' && j.kind !== 'class') return false;
+      if (filter === 'job' && j.kind !== 'job') return false;
+      if (filter.indexOf('role:') === 0 && (!j.role || j.role.name !== filter.slice(5))) return false;
+      return !q || hay(j).indexOf(q) >= 0;
+    });
+  }
+
+  function fillFilter() {
+    var opts;
+    if (tab === 'sys') {
+      opts = [['__all__', '全部系統'], ['__tool__', '本站有對應工具']];
+    } else {
+      var roles = [];
+      DB.jobs.forEach(function (j) { if (j.role && roles.indexOf(j.role.name) < 0) roles.push(j.role.name); });
+      opts = [['__all__', '全部職業'], ['class', '基礎職業'], ['job', '進階職業']]
+        .concat(roles.map(function (r) { return ['role:' + r, r]; }));
+    }
+    var sel = document.getElementById('filterSel');
+    sel.innerHTML = opts.map(function (o) { return '<option value="' + esc(o[0]) + '">' + esc(o[1]) + '</option>'; }).join('');
+    if (!opts.some(function (o) { return o[0] === filter; })) filter = '__all__';
+    sel.value = filter;
+  }
+
+  function render() {
+    var wrap = document.getElementById('bodyWrap');
+    var status = document.getElementById('statusLine');
+    if (tab === 'sys') {
+      var list = visibleSys();
+      status.textContent = list.length + ' 個系統' + (q ? '（符合「' + q + '」）' : '');
+      wrap.innerHTML = list.length
+        ? '<div class="grid">' + list.map(sysCard).join('') + '</div>'
+        : '<div class="loading">沒有符合的系統</div>';
+    } else {
+      var jl = visibleJobs();
+      status.textContent = jl.length + ' 個職業' + (q ? '（符合「' + q + '」）' : '');
+      if (!jl.length) { wrap.innerHTML = '<div class="loading">沒有符合的職業</div>'; return; }
+      // 分組只在「沒下篩選也沒搜尋」時才擺出來，否則結果被切碎反而難看
+      if (filter === '__all__' && !q) {
+        var base = jl.filter(function (j) { return j.kind === 'class'; });
+        var adv = jl.filter(function (j) { return j.kind === 'job'; });
+        wrap.innerHTML =
+          '<div class="sec-head">基礎職業 ' + base.length + ' 個　·　到該行會接「如何加入…行會」即可轉職</div>' +
+          '<div class="grid">' + base.map(jobCard).join('') + '</div>' +
+          '<div class="sec-head">進階職業 ' + adv.length + ' 個　·　完成解鎖任務後取得靈魂水晶</div>' +
+          '<div class="grid">' + adv.map(jobCard).join('') + '</div>';
+      } else {
+        wrap.innerHTML = '<div class="grid">' + jl.map(jobCard).join('') + '</div>';
+      }
+    }
+    focusCard();
+  }
+
+  // 深連結進來的那張卡：捲到、標亮 2.2 秒，然後把 id 從網址拿掉（重新整理不該再跳一次）
+  function focusCard() {
+    if (!focusKey) return;
+    var key = focusKey;
+    focusKey = null;
+    syncURL();                       // 用過就把 id 拿掉，重整不該再跳一次
+    var card = document.querySelector('.u-card[data-key="' + key.replace(/"/g, '') + '"]');
+    if (!card) return;
+    card.classList.add('focus');
+    if (card.scrollIntoView) card.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    setTimeout(function () { card.classList.remove('focus'); }, 2200);
+  }
+
+  // 網址狀態：?t=sys|job&f=<篩選>&q=<搜尋>
+  function syncURL() {
+    var p = new URLSearchParams();
+    if (tab !== 'sys') p.set('t', tab);
+    if (filter !== '__all__') p.set('f', filter);
+    if (q) p.set('q', q);
+    if (focusKey) p.set('id', focusKey);
+    var s = p.toString();
+    history.replaceState(null, '', s ? '?' + s : location.pathname);
+  }
+
+  function setTab(t) {
+    tab = t;
+    document.getElementById('tabSys').classList.toggle('active', t === 'sys');
+    document.getElementById('tabJob').classList.toggle('active', t === 'job');
+    filter = '__all__';
+    fillFilter();
+    render();
+    syncURL();
+  }
+
+  document.getElementById('tabSys').addEventListener('click', function () { setTab('sys'); });
+  document.getElementById('tabJob').addEventListener('click', function () { setTab('job'); });
+  document.getElementById('filterSel').addEventListener('change', function () {
+    filter = this.value; render(); syncURL();
+  });
+  var deb;
+  document.getElementById('searchInput').addEventListener('input', function () {
+    var v = this.value.trim().toLowerCase();
+    clearTimeout(deb);
+    deb = setTimeout(function () { q = v; render(); syncURL(); }, 160);
+  });
+
+  // 地圖／座標鈕（事件委派：每次篩選都重建卡片）
+  document.addEventListener('click', function (ev) {
+    var flag = ev.target.closest('.u-flag');
+    if (flag) {
+      navigator.clipboard.writeText(flag.dataset.flag).then(function () {
+        var old = flag.innerHTML;
+        flag.innerHTML = '✓ 已複製';
+        flag.classList.add('copied');
+        setTimeout(function () { flag.innerHTML = old; flag.classList.remove('copied'); }, 1400);
+      });
+      return;
+    }
+    var map = ev.target.closest('.u-map');
+    if (map && window.uiOpenMap) {
+      var x = +map.dataset.x, y = +map.dataset.y;
+      window.uiOpenMap({
+        mapId: +map.dataset.mapid, x: x, y: y,
+        title: '📜 ' + map.dataset.title,
+        sub: map.dataset.mapname,
+        flagText: ('/coord ' + x.toFixed(1) + ' ' + y.toFixed(1) + ' ' + map.dataset.mapname).trim()
+      });
+    }
+  });
+
+  (async function boot() {
+    try {
+      var j = await (await fetch('../../data/system-unlocks.json')).json();
+      DB.data = j.data || [];
+      DB.jobs = j.jobs || [];
+
+      var p = new URLSearchParams(location.search);
+      focusKey = p.get('id');
+      // ?id= 自己說得出屬於哪個分頁，不必再帶 t=
+      if (focusKey && focusKey.indexOf('job:') === 0) tab = 'job';
+      else if (focusKey && focusKey.indexOf('sys:') === 0) tab = 'sys';
+      else if (p.get('t') === 'job') tab = 'job';
+      q = (p.get('q') || '').trim().toLowerCase();
+      document.getElementById('searchInput').value = p.get('q') || '';
+      document.getElementById('tabSys').classList.toggle('active', tab === 'sys');
+      document.getElementById('tabJob').classList.toggle('active', tab === 'job');
+      fillFilter();
+      var wf = p.get('f');
+      if (wf) {
+        document.getElementById('filterSel').value = wf;
+        if (document.getElementById('filterSel').value === wf) filter = wf;
+      }
+      render();
+    } catch (e) {
+      document.getElementById('bodyWrap').innerHTML = '<div class="loading err">資料載入失敗：' + esc(e.message) + '</div>';
+    }
+  })();
+})();
+</script>
+<script type="module">
+/* 任務接取點：共用迷你地圖彈窗，maps.json 首次點擊才載入 */
+import { initMapModal, openMapModal } from '../../assets/js/map-modal.js';
+let ready = null;
+window.uiOpenMap = async function (opts) {
+  if (!ready) {
+    ready = fetch('../../data/maps.json').then(r => r.json()).then(j => initMapModal({ mapsData: j.data, base: '../..' }));
+  }
+  try { await ready; } catch (e) { ready = null; return; }
+  openMapModal(opts);
+};
+</script>
+</body>
+</html>

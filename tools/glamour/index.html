@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="../../assets/css/theme.css">
 <link rel="stylesheet" href="vendor/bootstrap/bootstrap.min.css">
 <script src="../../assets/js/theme.js"></script>
+<script src="../../assets/js/unlock-banner.js"></script>
 <script src="curated_outfits.js"></script>
 <style>
 /* ===== 站內共用設計語彙 → 映射到 Bootstrap 5 變數 =====
@@ -229,6 +230,12 @@ body::before{ content:''; position:fixed; inset:0; pointer-events:none; z-index:
   background:color-mix(in srgb, var(--bg-base) 55%, transparent); border:1px solid var(--border); color:var(--text-muted); line-height:1;
   display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .2s; }
 .fav-btn:hover{ color:var(--yellow); border-color:var(--yellow); }
+/* 觸控：星號鈕是 30px 的圓形，直接放大會蓋住卡片縮圖。
+   用透明擴張層把命中區推到 44×44，視覺尺寸不變（同站內其他小圖示的做法）。 */
+@media (pointer:coarse){
+  .fav-btn::after{ content:""; position:absolute; left:50%; top:50%;
+    width:44px; height:44px; transform:translate(-50%,-50%); }
+}
 .fav-btn.faved{ color:var(--yellow); border-color:color-mix(in srgb, var(--yellow) 50%, transparent); background:var(--yellow-dim); }
 
 /* card meta / tags */
