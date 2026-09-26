@@ -94,6 +94,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 「現在能做什麼」回歸（**改完 `tools/now/` 或它吃的四份資料必跑**） | `node scripts/validate-now.mjs`（24 項，重點在兩個單位：探索筆記 `timeEnd` 含該小時、節點 `duration` 是 ET 分鐘）|
 | 重建魔晶石與禁忌鑲嵌資料（改版時才跑） | `node scripts/build-materia.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/materia.json`（31 種屬性／229 件／12 階成功率）|
 | 禁忌鑲嵌試算回歸（**改完 `tools/melding/` 或 `data/materia.json` 必跑**） | `node scripts/validate-melding.mjs`（35 項：成功率不可寫死、期望值與 90% 累積機率的算式、孔位選單要反映資料）|
+| 收益排行接製作數值的回歸（**改完 `market.js` 的 `gateOf`／`applyMyStats` 必跑**） | `node scripts/validate-profit-stats.mjs`（18 項：沒存數值的人要完全不受影響、門檻欄位靠 `columns` 對位）|
 | 時尚品鑑週更（每週二／週五各一次） | `node scripts/build-fashion-report.mjs`（`--dry-run` 只印／`--offline` 用快取）→ `node scripts/validate-fashion-render.mjs`（頁面 render 回歸，七個週狀態，不需瀏覽器） |
 | 時尚品鑑跨週不變資料（改版時才跑） | `node scripts/build-dyes.mjs`／`build-fashion-fillers.mjs`／`build-fashion-themes.mjs` |
 | 重建無人島資料層 | `node scripts/build-island.mjs`（`--offline` 用快取／`--refresh` 強制重抓） |
