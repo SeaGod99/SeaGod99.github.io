@@ -107,6 +107,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 潛水艇回歸（**改完 `tools/submarine/` 或 `data/submarine.json` 必跑**） | `node scripts/validate-submarine.mjs`（26 項；最重要的是「部位名不可從 Slot 編號推」與「不提供多點航程試算」）|
 | 重建技能辭典（換台服版本後） | `node scripts/build-action-codex.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/action-codex/`（技能 1,326／特性 668／狀態 4,052）|
 | 技能辭典回歸（**改完 `tools/action-codex/` 或該目錄資料必跑**） | `node scripts/validate-action-codex.mjs`（21 項：UI 標記洗乾淨、條件式收斂、PvP／PvE 分得開）|
+| 綁定備份檔回歸（**改完首頁的進度備份區必跑**） | `node scripts/validate-backup-file.mjs`（32 項：不支援的瀏覽器不長鈕、`requestPermission` 只能在使用者手勢裡要、handle 只能放 IndexedDB、被拒時不可靜默失敗）|
 | 多角色設定檔回歸（**改完 `assets/js/profiles.js` 必跑**） | `node scripts/validate-profiles.mjs`（28 項：白名單反轉、只覆蓋不刪、存不進去就不切）|
 | 重建主線任務（換台服版本後） | `node scripts/build-msq.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/msq.json`（14 章／1,012 個）|
 | 主線進度回歸（**改完 `tools/msq/` 或 `msq.json` 必跑**） | `node scripts/validate-msq.mjs`（26 項；最重要的是章節順序＝`JournalGenre` 的 row id）|
@@ -306,6 +307,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 - **要重跑任何 `build-*.mjs` 之前** → 先確認那份 JSON 裡**每個 `kind`／區塊都有腳本會產生**。`squadron.json` 的 60 筆隊員曾經只存在於 JSON、沒有腳本產它，重跑會安靜洗掉（知識庫 §4.19）。最快的檢查＝跑完跟舊檔 diff 一次。
 - **要加頁內快捷鍵** → 登記到 `window.SGT_SHORTCUTS`（在 `assets/js/nav.js`，全站都載得到），**不要自己掛 `document.keydown`**——那會繞過「輸入框裡不攔」「彈窗開著不攔」「修飾鍵不攔」三道守門，而且 `?` 說明浮層列不出你的鍵。**時序陷阱**：nav.js 是 `defer` 載的，追蹤頁的 `init()` 是 inline 同步跑的，登記時 `SGT_SHORTCUTS` 常常還不存在 → 推進 `window.SGT_SHORTCUTS_PENDING`，nav.js 自己會吸乾。改完跑 `node scripts/validate-shortcuts.mjs`。
 - **跑 `download-dungeon-images.mjs` 之後一定要接 `minify-data.mjs --apply`** → 那支會**把 `dungeons.json` 整份改寫成 pretty JSON**（303KB → 426KB），而且會把 `image` 改寫成本地 `.webp` 路徑。它不會提醒你，`validate-data` 也不會報——只有檔案大小看得出來。順序：`patch-dungeon-details.mjs --apply` → `download-dungeon-images.mjs` → `minify-data.mjs --apply` → `sync-meta.mjs --apply`。
+- **要讓使用者「一鍵覆寫同一個備份檔」** → File System Access 的 `FileSystemFileHandle` 可以結構化複製，**存 IndexedDB**（`localStorage` 只吃字串，`JSON.stringify(handle)` 得到 `{}`，下次讀回來是個沒有 `createWritable` 的空物件，**執行到寫入那一刻才爆**）。三條：①**`requestPermission()` 必須在使用者手勢裡呼叫**，開頁時只能 `queryPermission`，放錯位置會被瀏覽器擋掉而且不報錯 ②**不支援的瀏覽器整顆鈕不要長出來**（Firefox／Safari 都沒有這個 API）③沒取得權限時要講出來，不可以靜默失敗。首頁的實作見「進度備份」區，回歸 `validate-backup-file.mjs`。
 - **新頁要存 localStorage** → key 一律 `ffxiv_` 開頭，否則首頁全站備份掃不到、使用者的資料備份不出去也不會有提示（知識庫 §2.3）。市場頁 2026-08-10 才從 `sgt-market-*` 補救回來，**改名要留一次性遷移、且不要刪舊 key**。
 - **多角色設定檔的 key 分類是「白名單反轉」** → `assets/js/profiles.js` 預設把**每個 `ffxiv_*` key 都當成角色態**，只有明列在 `SHARED` 裡的才算共用偏好。**不要反過來做**——反過來的話，日後新增一個忘了登記的進度 key，兩隻角色會共用同一份進度，那是**靜默的資料損壞**。這樣做的話分類錯的代價只是「某個偏好不跟著角色走」，看得見也改得回來。切換時**只覆蓋不刪**（目標設定檔沒有的 key 保持原樣），而且**存不進去就不切**（配額爆了硬切會遺失資料）。
 - **改了製作模擬器（`tools/crafting-sim/`）** → 改完 `craft-engine.js`、`craft-solver.js` 或 `data/craft-actions.json` **必跑 `node scripts/validate-craft-sim.mjs`**（Teamcraft 官方測試案例＋內建範本＋自動求解，104 項）。製作公式的取整點很多，差一個 `Math.floor` 在高階配方上差幾百品質、**畫面上完全看不出來**。規則出處、兩處刻意與 Teamcraft 不同的地方、範本怎麼解出來的、求解器為什麼只用「不靠運氣」的技能，見 [docs/crafting-sim.md](docs/crafting-sim.md)。**作業／品質的封頂只做在畫面上**（引擎要跟 Teamcraft 的期望值逐值對得上）。

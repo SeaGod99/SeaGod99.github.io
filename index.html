@@ -432,7 +432,12 @@
       <button class="pd-btn" id="pdImportBtn" title="還原「匯出全站進度」產生的備份檔">📥 匯入全站進度</button>
       <input type="file" id="pdImportFile" accept="application/json" style="display:none">
       <button class="pd-btn" id="pdProfileBtn" title="同一台瀏覽器分開記錄兩隻以上角色的進度">👤 多角色設定檔</button>
+      <!-- 綁定備份檔：只在支援 File System Access API 的瀏覽器上長出來（Chrome／Edge），
+           不支援的瀏覽器完全不顯示——長一顆按不動的鈕比沒有更糟 -->
+      <button class="pd-btn" id="pdBindBtn" style="display:none"></button>
+      <button class="pd-btn" id="pdUnbindBtn" style="display:none" title="解除綁定（不會刪除那個檔案）">✕ 解除綁定</button>
     </div>
+    <p class="pd-hint" id="pdBindHint" style="display:none"></p>
     <p class="pd-hint" id="pdProfileHint" style="display:none"></p>
   </section>
 
@@ -1186,6 +1191,152 @@
     };
     reader.readAsText(file);
   });
+
+  /* ── 綁定備份檔：一鍵覆寫同一個檔案 ─────────────────────────────────
+     「匯出全站進度」每次都會在下載夾裡多一個檔，久了是一疊
+     `seagod-toolbox-backup-2026-09-*.json`，而使用者只想要「最新的那一份」。
+     File System Access API 的 `FileSystemFileHandle` 可以**結構化複製**，
+     所以存進 IndexedDB 之後下次進站還認得同一個檔，不必再挑一次。
+
+     三個實作上的要點：
+     ① **handle 的授權不跟著 session 走**。下次進站要 `queryPermission()`，
+        沒有就 `requestPermission()`——而那**必須在使用者手勢裡**呼叫，
+        所以只在按鈕的 click 處理器裡做，不可以在載入時就要。
+     ② **不支援的瀏覽器整顆鈕不顯示**（Firefox／Safari 都沒有這個 API）。
+        長一顆按不動的鈕比沒有更糟。
+     ③ **localStorage 存不了 handle**（它只吃字串），所以一定得用 IndexedDB。
+        檔名另外存一份在 localStorage 只是為了畫面上顯示，不是真值來源。 */
+  (function bindFile() {
+    var supported = typeof window.showSaveFilePicker === 'function';
+    var bindBtn = document.getElementById('pdBindBtn');
+    var unbindBtn = document.getElementById('pdUnbindBtn');
+    var hint = document.getElementById('pdBindHint');
+    if (!supported) return;                       // 整顆鈕維持 display:none
+
+    var DB = 'sgt-backup', STORE = 'handles', KEY = 'file';
+    var NAME_KEY = 'ffxiv_backup_filename';       // 只為顯示；key 一律 ffxiv_ 前綴（§2.3）
+
+    function idb() {
+      return new Promise(function (res, rej) {
+        var r = indexedDB.open(DB, 1);
+        r.onupgradeneeded = function () { r.result.createObjectStore(STORE); };
+        r.onsuccess = function () { res(r.result); };
+        r.onerror = function () { rej(r.error); };
+      });
+    }
+    function idbGet() {
+      return idb().then(function (db) {
+        return new Promise(function (res) {
+          var q = db.transaction(STORE, 'readonly').objectStore(STORE).get(KEY);
+          q.onsuccess = function () { res(q.result || null); };
+          q.onerror = function () { res(null); };
+        });
+      }).catch(function () { return null; });
+    }
+    function idbPut(v) {
+      return idb().then(function (db) {
+        return new Promise(function (res) {
+          var t = db.transaction(STORE, 'readwrite');
+          t.objectStore(STORE).put(v, KEY);
+          t.oncomplete = function () { res(true); };
+          t.onerror = function () { res(false); };
+        });
+      }).catch(function () { return false; });
+    }
+    function idbDel() {
+      return idb().then(function (db) {
+        return new Promise(function (res) {
+          var t = db.transaction(STORE, 'readwrite');
+          t.objectStore(STORE).delete(KEY);
+          t.oncomplete = function () { res(true); };
+          t.onerror = function () { res(false); };
+        });
+      }).catch(function () { return false; });
+    }
+
+    var handle = null;
+
+    function savedName() {
+      try { return localStorage.getItem(NAME_KEY) || ''; } catch (e) { return ''; }
+    }
+    function sync() {
+      bindBtn.style.display = '';
+      if (handle) {
+        var nm = handle.name || savedName() || '備份檔';
+        bindBtn.textContent = '💾 存回「' + nm + '」';
+        bindBtn.title = '直接覆寫這個檔案，不會在下載夾多一份';
+        unbindBtn.style.display = '';
+        hint.style.display = '';
+        hint.textContent = '已綁定 ' + nm + '——按「存回」就覆寫它。' +
+          '第一次存回時瀏覽器會再問一次寫入權限，那是正常的。';
+      } else {
+        bindBtn.textContent = '🔗 綁定備份檔（一鍵覆寫）';
+        bindBtn.title = '挑一個檔案當固定的備份，之後一鍵覆寫，不會在下載夾一直多檔';
+        unbindBtn.style.display = 'none';
+        hint.style.display = 'none';
+      }
+    }
+
+    function payload() {
+      var keys = {}, n = 0;
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (k && k.indexOf('ffxiv_') === 0) { keys[k] = localStorage.getItem(k); n++; }
+      }
+      return n ? { schema: BACKUP_SCHEMA, exported: new Date().toISOString(), keys: keys } : null;
+    }
+
+    /* 授權：`requestPermission()` 必須在使用者手勢裡呼叫，
+       所以這支只在 click 處理器裡被叫到。回 false 的話**不要靜默失敗**。 */
+    function ensurePerm(h) {
+      return h.queryPermission({ mode: 'readwrite' }).then(function (p) {
+        if (p === 'granted') return true;
+        return h.requestPermission({ mode: 'readwrite' }).then(function (q) { return q === 'granted'; });
+      }).catch(function () { return false; });
+    }
+
+    function writeTo(h) {
+      var data = payload();
+      if (!data) { notify('目前沒有任何進度可備份，請先到各追蹤頁記錄進度。'); return; }
+      ensurePerm(h).then(function (ok) {
+        if (!ok) { notify('沒有取得寫入權限，這次沒有存到檔案。', 'err'); return; }
+        return h.createWritable().then(function (w) {
+          return w.write(JSON.stringify(data, null, 2)).then(function () { return w.close(); });
+        }).then(function () {
+          notify('已存回「' + (h.name || '備份檔') + '」，共 ' + Object.keys(data.keys).length + ' 項進度。', 'ok');
+        });
+      }).catch(function (e) {
+        notify('存回失敗：' + (e && e.message ? e.message : '不明錯誤'), 'err');
+      });
+    }
+
+    bindBtn.addEventListener('click', function () {
+      if (handle) { writeTo(handle); return; }
+      window.showSaveFilePicker({
+        suggestedName: 'seagod-toolbox-backup.json',
+        types: [{ description: '水神的工具箱備份', accept: { 'application/json': ['.json'] } }],
+      }).then(function (h) {
+        handle = h;
+        try { localStorage.setItem(NAME_KEY, h.name || ''); } catch (e) {}
+        return idbPut(h).then(function () { sync(); writeTo(h); });
+      }).catch(function () { /* 使用者取消挑檔：什麼都不做 */ });
+    });
+
+    unbindBtn.addEventListener('click', function () {
+      askConfirm('解除綁定？那個檔案不會被刪除，只是之後不再一鍵覆寫它。', false).then(function (ok) {
+        if (!ok) return;
+        handle = null;
+        try { localStorage.removeItem(NAME_KEY); } catch (e) {}
+        idbDel().then(function () { sync(); notify('已解除綁定。', 'ok'); });
+      });
+    });
+
+    // 開頁時把上次綁的檔認回來。**這裡只 query 不 request**（沒有使用者手勢）
+    idbGet().then(function (h) {
+      handle = h || null;
+      sync();
+    });
+  })();
 })();
 </script>
 

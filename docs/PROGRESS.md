@@ -207,6 +207,17 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 
 ## 五、更新紀錄
 
+- **2026-09-27 第二十六輪（綁定備份檔——`progress-transfer-code` 補完）**：首頁的進度備份多一條「一鍵覆寫同一個檔」。
+  - **問題**：「匯出全站進度」每次都在下載夾多一個檔，久了是一疊 `seagod-toolbox-backup-2026-09-*.json`，而使用者只想要「最新的那一份」。
+  - **做法**：File System Access 的 `FileSystemFileHandle` 可以結構化複製，所以第一次挑好檔就**存進 IndexedDB**，下次進站還認得同一個檔，按一下直接覆寫。鈕的文字會變成「💾 存回「<檔名>」」，另有「✕ 解除綁定」（會先問，並說明不會刪檔）。
+  - **三個實作上的要點，全都是「錯了不報錯」的類型**：
+    - **`requestPermission()` 必須在使用者手勢裡呼叫**。放在載入時會被瀏覽器擋掉而且不報錯，徵狀是「每次都說沒有權限」。開頁時只 `queryPermission`。
+    - **handle 只能放 IndexedDB**。`localStorage` 只吃字串，`JSON.stringify(handle)` 得到 `{}`，下次讀回來是個沒有 `createWritable` 的空物件——**執行到寫入那一刻才爆**。檔名另存 `ffxiv_backup_filename` 只為顯示，不是真值來源。
+    - **不支援的瀏覽器整顆鈕不長出來**（Firefox／Safari 都沒有這個 API）。長一顆按不動的鈕比沒有更糟。
+  - **沒取得權限時一定要講出來**（「沒有取得寫入權限，這次沒有存到檔案。」）——靜默失敗會讓人以為存好了。
+  - 回歸新增 `scripts/validate-backup-file.mjs` 32 項（jsdom ＋ 一份最小的假 IndexedDB 與假 handle，走完「挑檔→存→再按一次直接覆寫→權限被拒」整條路）。又踩了一次 §4.90 的「掃程式碼要先拿掉註解」——`requestPermission` 被自己的說明文字算成第二次呼叫。
+  - `validate-profiles` 28 項、45 頁 × 3 寬度體檢全過；`assets/` 未動故不需 bump SW。
+
 - **2026-09-27 第二十五輪（理符報酬＋收藏品交納——`market-source-enrichment` 補完）**：兩條 obtainable-methods 完全沒有的取得管道。
   - **量測先行**：`obtainable-methods` 的 21 種 type 裡**沒有 `leve` 也沒有 `collectable`**。實測理符報酬涉及 1,155 件相異物品、**其中 1,114 件出現在配方裡**（市場頁湊材料很可能就是答案）；收藏品交納 127 件、只有 16 件在配方裡，但裡面全是「工具改良用零件」「輝煌／卓越工具加工組件」這類最常被問「這哪來的」的東西。
   - **`scripts/build-extra-sources.mjs` → `data/extra-sources.json`（1,157 件）**。獨立一支是因為兩個消費端（`build-market-sources.mjs`、`build-item-sources.mjs`）都要用——各自抓一次就是兩份會漂的規則。
