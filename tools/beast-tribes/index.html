@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FF14 部族聲望試算 — 各階門檻、每個任務給多少聲望，算出到目標階級還要幾天">
+  <title>部族聲望試算 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <link rel="stylesheet" href="../../assets/css/tool-header.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 109.375%; }
+    body { background: var(--bg-base); color: var(--text); font-family: var(--font-sans); min-height: 100vh; }
+    .wrap { max-width: var(--w-content); margin: 0 auto; padding: 0.6rem 1rem 2.5rem; }
+
+    .panel {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 0.9rem 1rem; margin-bottom: 0.9rem;
+    }
+    .panel h2 { font-size: 0.9rem; font-weight: 600; color: var(--text); margin-bottom: 0.6rem; }
+
+    .fields { display: flex; gap: 0.7rem; flex-wrap: wrap; align-items: flex-end; }
+    .f { display: flex; flex-direction: column; gap: 0.25rem; }
+    .f label { font-size: 0.73rem; color: var(--text-muted); }
+    .f select, .f input {
+      background: var(--bg-base); border: 1px solid var(--border); border-radius: 6px;
+      color: var(--text); font: inherit; font-size: 0.84rem; padding: 0.35rem 0.5rem;
+    }
+    .f input.num { width: 6.5rem; font-variant-numeric: tabular-nums; }
+    .f select:focus, .f input:focus { border-color: var(--gold); outline: none; }
+
+    .result {
+      background: color-mix(in srgb, var(--gold) 10%, var(--bg-card));
+      border: 1px solid var(--border-hover); border-radius: var(--radius-md);
+      padding: 0.9rem 1rem; margin-bottom: 0.9rem; font-size: 0.86rem; line-height: 1.95;
+    }
+    .result b { color: var(--gold-light); }
+    .result .big { font-size: 1.2rem; font-weight: 700; color: var(--green); }
+    .result .warn { color: var(--orange); }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    th, td { padding: 0.4rem 0.5rem; text-align: left; border-bottom: 1px solid var(--border); }
+    th { color: var(--text-muted); font-weight: 600; font-size: 0.74rem; white-space: nowrap; }
+    td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
+    tr.now { background: color-mix(in srgb, var(--gold) 8%, transparent); }
+    tr.now td { color: var(--gold-light); font-weight: 600; }
+    tr.done td { color: var(--text-muted); }
+    .est { color: var(--orange); font-size: 0.72rem; }
+
+    .xlink {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      color: var(--blue); text-decoration: none; font-size: 0.8rem;
+      min-height: 44px; padding: 0 0.2rem;
+    }
+    .xlink:hover { text-decoration: underline; }
+
+    .note { font-size: 0.74rem; color: var(--text-muted); line-height: 1.85; margin-top: 1.1rem; }
+    .note b { color: var(--text-dim); font-weight: 600; }
+    .note code { font-family: var(--font-mono); font-size: 0.92em; color: var(--text-dim); }
+
+    @media (pointer: coarse) { .f select, .f input { min-height: 44px; } }
+    @media (max-width: 620px) { .table-wrap { overflow-x: auto; } table { min-width: 24rem; } }
+  </style>
+  <script src="../../assets/js/patch-gate.js"></script>
+  <script src="../../assets/js/theme.js"></script>
+</head>
+<body>
+<div class="tool-header">
+  <h1 class="tool-title">&#x1F91D; 部族聲望試算</h1>
+  <p class="tool-subtitle">各階門檻與每個任務給多少聲望，算出到目標階級最少還要幾天</p>
+</div>
+
+<div class="wrap">
+  <div class="panel">
+    <h2>選部族</h2>
+    <div class="fields">
+      <div class="f">
+        <label for="tribeSel">部族（以貨幣道具名標示）</label>
+        <select id="tribeSel"></select>
+      </div>
+      <div class="f">
+        <label for="curRank">目前階級</label>
+        <select id="curRank"></select>
+      </div>
+      <div class="f">
+        <label for="curRep">本階已累積聲望</label>
+        <input class="num" id="curRep" type="number" min="0" step="1" value="0">
+      </div>
+      <div class="f">
+        <label for="tgtRank">目標階級</label>
+        <select id="tgtRank"></select>
+      </div>
+      <div class="f">
+        <label for="perDay" title="遊戲的每日配額規則，不在資料表裡，所以做成可改的欄位">每天接幾個任務</label>
+        <input class="num" id="perDay" type="number" min="1" max="12" step="1" value="3">
+      </div>
+    </div>
+  </div>
+
+  <div class="result" id="result"></div>
+
+  <div class="panel">
+    <h2>階級門檻與每個任務的聲望</h2>
+    <div class="table-wrap"><table>
+      <thead><tr>
+        <th>階級</th><th class="n">本階門檻</th><th class="n">每個任務</th>
+        <th class="n">本階要幾個</th><th class="n">本階要幾天</th>
+      </tr></thead>
+      <tbody id="tbody"></tbody>
+    </table></div>
+    <p style="margin-top:0.6rem"><a class="xlink" id="shopLink" href="../gc-exchange/">🛒 這個貨幣能換什麼（貨幣變現排行）</a></p>
+  </div>
+
+  <p class="note">
+    <b>部族名沒有台服來源，所以用貨幣道具名標示。</b> 找過三條路都不通：
+    上游的 <code>tribes</code> 表是<b>玩家種族</b>（中原之民＝Midlander），不是蠻族——
+    而且它的編號恰好和部族表對得上，照編號接會全錯；
+    Teamcraft 沒有部族名的繁中檔；<code>IntersocietalQuest</code> 是整個資料片共用的盟友任務
+    （蒼天三族都指向「伊修加爾德的盟友們」）。貨幣名是官方道具名，不是俗稱。<br>
+    <b>「每天接幾個」不是查來的</b>——那是遊戲的每日配額規則，不在資料表裡，所以做成可改的欄位（預設 3）。
+    本站<b>不做跨部族的配額分配最佳化</b>：每個部族的任務只給自己的聲望，換來換去沒有最佳化空間。<br>
+    <b>「盟友」階不靠聲望累積</b>（資料裡的門檻是 0）——要先做完該資料片的盟友部族任務，
+    所以試算到「誓約」為止，不會告訴你「盟友還要幾天」。<br>
+    <span class="est">橙色的</span>是<b>該階級沒有任務資料、用最接近的階級數值推的</b>——資料裡就只有那些階級有值，不臆造。<br>
+    台服未開放的部族（貨幣查不到繁中名）不顯示。
+  </p>
+</div>
+
+<footer class="page-footer">
+  <div class="container">
+    <p class="footer-text"><a href="../../">水神的工具箱</a> · 資料來源：遊戲本體、<a href="https://xivapi.com" target="_blank">XIVAPI</a></p>
+    <p class="footer-text" style="margin-top:4px">FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  var LS = 'ffxiv_beast_tribes';
+  var DB = null;
+
+  function $(id) { return document.getElementById(id); }
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+  function fmt(n) { return Math.round(n).toLocaleString(); }
+
+  function tribe() {
+    var id = +$('tribeSel').value;
+    return DB.data.find(function (t) { return t.id === id; }) || DB.data[0];
+  }
+
+  /* 某個階級的任務每個給多少聲望。
+     資料裡不是每個階級都有任務（例如紅蓮之後的部族只有階 3–6 有值），
+     缺的用**最接近的已知階級**補，並回報是不是推的——畫面上要標出來，不能假裝是查到的。 */
+  function repAt(t, rank) {
+    if (t.rep[rank] != null) return { v: t.rep[rank], from: rank, est: false };
+    var keys = Object.keys(t.rep).map(Number).sort(function (a, b) { return a - b; });
+    if (!keys.length) return { v: 0, from: null, est: true };
+    var best = keys[0];
+    for (var i = 0; i < keys.length; i++) {
+      if (Math.abs(keys[i] - rank) < Math.abs(best - rank)) best = keys[i];
+    }
+    return { v: t.rep[best], from: best, est: true };
+  }
+
+  /** 可試算的階級（門檻是 null 的不算——「盟友」不靠聲望累積） */
+  function reachable(t) {
+    return DB.ranks.filter(function (r) {
+      return r.rank > 0 && r.req != null && (!t.maxRank || r.rank <= t.maxRank);
+    });
+  }
+
+  function fillRankSelects() {
+    var t = tribe();
+    var list = reachable(t);
+    var cur = $('curRank'), tgt = $('tgtRank');
+    var keepCur = cur.value, keepTgt = tgt.value;
+    var opts = list.map(function (r) {
+      return '<option value="' + r.rank + '">' + esc(r.name) + '（階 ' + r.rank + '）</option>';
+    }).join('');
+    cur.innerHTML = opts;
+    tgt.innerHTML = opts;
+    // 換部族時盡量保留原本的選擇（上限階不同的話自動收斂到最後一階）
+    cur.value = list.some(function (r) { return String(r.rank) === keepCur; }) ? keepCur : String(list[0].rank);
+    tgt.value = list.some(function (r) { return String(r.rank) === keepTgt; }) ? keepTgt : String(list[list.length - 1].rank);
+  }
+
+  function save() {
+    try {
+      localStorage.setItem(LS, JSON.stringify({
+        tribe: +$('tribeSel').value, cur: +$('curRank').value, rep: +$('curRep').value,
+        tgt: +$('tgtRank').value, perDay: +$('perDay').value,
+      }));
+    } catch (e) {}
+  }
+
+  function render() {
+    var t = tribe();
+    var list = reachable(t);
+    var curR = +$('curRank').value;
+    var tgtR = +$('tgtRank').value;
+    var have = Math.max(0, parseInt($('curRep').value, 10) || 0);
+    var perDay = Math.max(1, Math.min(12, parseInt($('perDay').value, 10) || 3));
+
+    $('shopLink').href = '../gc-exchange/?c=' + t.currency.id;
+    $('shopLink').textContent = '🛒 ' + t.currency.name + ' 能換什麼（貨幣變現排行）';
+
+    // 逐階算：在階 R 時每個任務給 rep[R]，要湊滿「下一階的門檻 − 本階門檻」
+    var rows = [];
+    var totalQ = 0, totalD = 0, anyEst = false;
+    for (var i = 0; i < list.length; i++) {
+      var r = list[i];
+      var next = list[i + 1];
+      var span = next ? (next.req - r.req) : 0;      // 從本階升到下一階要多少聲望
+      var rp = repAt(t, r.rank);
+      if (rp.est) anyEst = true;
+      var need = span;
+      var inRange = r.rank >= curR && r.rank < tgtR;
+      if (r.rank === curR) need = Math.max(0, span - have);
+      var q = (next && rp.v > 0) ? Math.ceil(need / rp.v) : 0;
+      var d = q ? Math.ceil(q / perDay) : 0;
+      if (inRange) { totalQ += q; totalD += d; }
+      rows.push({ r: r, next: next, span: span, rp: rp, q: q, d: d, inRange: inRange, done: r.rank < curR });
+    }
+
+    $('tbody').innerHTML = rows.map(function (x) {
+      var cls = x.r.rank === curR ? 'now' : (x.done ? 'done' : '');
+      return '<tr class="' + cls + '">' +
+        '<td>' + esc(x.r.name) + '<span style="color:var(--text-muted)"> 階 ' + x.r.rank + '</span></td>' +
+        '<td class="n">' + fmt(x.r.req) + '</td>' +
+        '<td class="n">' + fmt(x.rp.v) +
+          (x.rp.est ? ' <span class="est" title="這一階沒有任務資料，用階 ' + x.rp.from + ' 的數值推">≈</span>' : '') + '</td>' +
+        '<td class="n">' + (x.next ? fmt(x.q) : '—') + '</td>' +
+        '<td class="n">' + (x.next ? fmt(x.d) + ' 天' : '—') + '</td>' +
+      '</tr>';
+    }).join('');
+
+    var curName = (list.find(function (r) { return r.rank === curR; }) || {}).name || '';
+    var tgtName = (list.find(function (r) { return r.rank === tgtR; }) || {}).name || '';
+    if (tgtR <= curR) {
+      $('result').innerHTML = '目標階級要比目前高。目前是 <b>' + esc(curName) + '</b>。';
+    } else {
+      $('result').innerHTML =
+        '<b>' + esc(t.currency.name) + '</b>（' + esc(t.expansion || '') + '・Lv' + (t.level || '?') + ' 起）<br>' +
+        '從 <b>' + esc(curName) + '</b> 到 <b>' + esc(tgtName) + '</b>：還要 <b>' + fmt(totalQ) +
+        '</b> 個任務，一天 ' + perDay + ' 個的話 <span class="big">' + fmt(totalD) + '</span> 天' +
+        (anyEst ? '<br><span class="warn">⚠ 有階級沒有任務資料，表上標 ≈ 的是用最接近的階級數值推的。</span>' : '');
+    }
+    save();
+  }
+
+  function onTribeChange() { fillRankSelects(); render(); }
+
+  ['curRank', 'curRep', 'tgtRank', 'perDay'].forEach(function (id) {
+    $(id).addEventListener('input', render);
+    $(id).addEventListener('change', render);
+  });
+  $('tribeSel').addEventListener('change', onTribeChange);
+
+  fetch('../../data/beast-tribes.json')
+    .then(function (r) { return r.json(); })
+    .then(function (db) {
+      DB = db;
+      $('tribeSel').innerHTML = db.data.map(function (t) {
+        return '<option value="' + t.id + '">' + esc(t.currency.name) + '（' +
+          esc(t.expansion || '') + '・Lv' + (t.level || '?') + '）</option>';
+      }).join('');
+      // 讀回上次的選擇
+      try {
+        var s = JSON.parse(localStorage.getItem(LS) || 'null');
+        if (s && db.data.some(function (t) { return t.id === s.tribe; })) $('tribeSel').value = String(s.tribe);
+        fillRankSelects();
+        if (s) {
+          if ($('curRank').querySelector('option[value="' + s.cur + '"]')) $('curRank').value = String(s.cur);
+          if ($('tgtRank').querySelector('option[value="' + s.tgt + '"]')) $('tgtRank').value = String(s.tgt);
+          if (s.rep >= 0) $('curRep').value = String(s.rep);
+          if (s.perDay > 0) $('perDay').value = String(s.perDay);
+        }
+      } catch (e) { fillRankSelects(); }
+      render();
+    })
+    .catch(function (e) {
+      $('result').textContent = '載入失敗：' + e.message;
+    });
+
+  // 頁內快捷鍵（登記制見知識庫 §4.73）
+  var keys = [{ keys: 'r', label: '聚焦聲望欄', run: function () { $('curRep').focus(); $('curRep').select(); } }];
+  if (window.SGT_SHORTCUTS) window.SGT_SHORTCUTS.register(keys);
+  else (window.SGT_SHORTCUTS_PENDING = window.SGT_SHORTCUTS_PENDING || []).push(keys);
+})();
+</script>
+</body>
+</html>

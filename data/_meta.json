@@ -87,6 +87,14 @@
       "count": 106
     },
     {
+      "name": "部族聲望",
+      "file": "beast-tribes.json",
+      "count": 18,
+      "updated": "2026-09-26",
+      "desc": "18 個部族的貨幣道具、等級、上限階與各階任務聲望，＋9 階門檻。**部族名沒有台服來源**，以貨幣道具名標示",
+      "source": "XIVAPI v2 BeastTribe／BeastReputationRank／Quest ＋ tw-locales(beastReputationRanks, exVersions) ＋ items.json（貨幣道具名）"
+    },
+    {
       "schema": "blue-magic",
       "file": "blue-magic.json",
       "name": "青魔法",
