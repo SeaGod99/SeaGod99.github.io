@@ -67,6 +67,87 @@
        改成橫向流排（同釣魚頁），短的幾組自然併到同一列 */
     #ct-filters { display: flex; flex-wrap: wrap; align-items: flex-start; column-gap: 48px; }
 
+
+    /* ── 缺卡跑圖檢視 ──────────────────────────────────────────────
+       只列「打贏這個 NPC 會給我還缺的卡」。用的是 NPC對戰（ItemPossibleReward），
+       **不是 NPC牌組**——牌組只代表對手手上有這張卡，打贏不見得拿得到。 */
+    .tt-view-switch { display: flex; gap: 6px; margin: 0 0 14px; }
+    .tt-view-btn {
+      background: var(--bg-card); color: var(--text-dim);
+      border: 1px solid var(--border); border-radius: 8px;
+      padding: 7px 14px; font: inherit; font-size: 13px; cursor: pointer; min-height: 40px;
+    }
+    .tt-view-btn:hover { background: var(--bg-card-hover); color: var(--text); }
+    .tt-view-btn.active {
+      background: color-mix(in srgb, var(--gold) 16%, var(--bg-card));
+      border-color: color-mix(in srgb, var(--gold) 45%, var(--border));
+      color: var(--gold-light); font-weight: 600;
+    }
+    .tt-view-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+    .tt-route { display: none; }
+    body.tt-route-mode .tt-route { display: block; }
+    body.tt-route-mode .tt-album { display: none; }
+    /* 跑圖檢視不吃篩選／排序／分頁（它問的是「我還缺什麼」，不是「這一頁有什麼」），
+       所以把引擎那幾區一起收起來，免得調了沒反應。進度條留著。 */
+    body.tt-route-mode #ct-filters,
+    body.tt-route-mode .toolbar,
+    body.tt-route-mode #ct-meta { display: none !important; }
+
+    .tt-route-sum {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 12px 14px; margin-bottom: 14px;
+      font-size: 13.5px; color: var(--text-dim); line-height: 1.75;
+    }
+    .tt-route-sum b { color: var(--gold-light); font-weight: 700; }
+    .tt-route-sum .warn { color: var(--text-muted); font-size: 12.5px; }
+
+    .tt-route-pick { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+    .tt-route-pick label { font-size: 12.5px; color: var(--text-muted); }
+    .tt-route-pick select {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px;
+      color: var(--text-dim); padding: 7px 9px; font: inherit; font-size: 13px;
+      min-height: 40px; max-width: 18rem; cursor: pointer;
+    }
+    .tt-route-pick select:focus { border-color: var(--gold); color: var(--text); }
+
+    .tt-map-head {
+      display: flex; align-items: baseline; gap: 8px;
+      margin: 18px 0 8px; padding-bottom: 5px; border-bottom: 1px solid var(--border);
+    }
+    .tt-map-name { font-size: 15px; font-weight: 700; color: var(--gold); }
+    .tt-map-n { font-size: 12px; color: var(--text-muted); }
+
+    .tt-npc {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 10px 12px; margin-bottom: 8px;
+    }
+    .tt-npc-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .tt-npc-name { font-size: 14px; font-weight: 700; color: var(--text); }
+    .tt-npc-at { font-size: 12px; color: var(--text-muted); }
+    .tt-npc-n {
+      margin-left: auto; font-size: 12px; font-weight: 700;
+      color: var(--gold-light); white-space: nowrap;
+    }
+    .tt-npc-meta { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+    .tt-npc-cards { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .tt-mini {
+      display: flex; align-items: center; gap: 5px;
+      background: var(--bg-base); border: 1px solid var(--border);
+      border-radius: 6px; padding: 3px 7px 3px 4px; font-size: 12px; color: var(--text-dim);
+    }
+    .tt-mini img { width: 22px; height: 27px; object-fit: cover; border-radius: 3px; display: block; }
+    .tt-mini .st { color: var(--gold); font-size: 11px; }
+
+    .tt-route-rest {
+      margin-top: 22px; padding-top: 12px; border-top: 1px dashed var(--border);
+      font-size: 13px; color: var(--text-muted); line-height: 1.8;
+    }
+    .tt-route-rest b { color: var(--text-dim); }
+
+    @media (max-width: 700px) {
+      .tt-npc-n { margin-left: 0; width: 100%; }
+    }
     .tt-album { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 20px; align-items: start; }
 
     /* ── 左：手帳本體（頁籤 ＋ 30 格 ＋ 總計）──
@@ -281,6 +362,14 @@
        這頁只有手帳一種呈現，所以引擎的卡片格線與分頁列都用 CSS 收起（見 style 內註解）。 -->
   <div id="ct-root"></div>
 
+  <!-- 檢視切換：手帳（預設）／缺卡跑圖 -->
+  <div class="tt-view-switch" role="group" aria-label="檢視切換">
+    <button type="button" class="tt-view-btn active" id="ttViewAlbum" aria-pressed="true">&#x1F4D6; 手帳</button>
+    <button type="button" class="tt-view-btn" id="ttViewRoute" aria-pressed="false">&#x1F5FA;&#xFE0F; 缺卡跑圖</button>
+  </div>
+
+  <!-- 缺卡跑圖：只列打贏會給「我還缺的卡」的 NPC，依地圖分組（由 TTRoute 渲染） -->
+  <div class="tt-route" id="ttRoute"></div>
   <!-- 手帳檢視：左頁籤＋30 格卡面，右詳情（內容由本頁下方的 TTAlbum 渲染） -->
   <div class="tt-album" id="ttAlbum">
     <div class="tt-book">
@@ -662,6 +751,192 @@ var TTAlbum = (function () {
 TTAlbum.boot();
 </script>
 <script>
+/* ── 缺卡跑圖 ─────────────────────────────────────────────────────
+   回答的是「我還缺的卡，要去打誰」——外部工具站多半只列「這張卡誰有」，
+   反過來以「我的缺卡」反查跑圖路線那一半沒人做。
+
+   ⚠ **只認 `NPC對戰`，不認 `NPC牌組`。**
+   兩者是不同語意（2026-09-23 才拆開，先前 938 筆「NPC對戰」有 99.6% 其實是牌組）：
+     · NPC對戰（ItemPossibleReward）＝打贏可能拿到 → 這才是取得管道
+     · NPC牌組（Fixed/Variable）＝對手手上有這張卡 → 打贏不見得拿得到
+   把牌組也算進來的話，這頁會叫使用者跑一堆白跑的路。
+
+   這個檢視刻意**不吃篩選／排序／分頁**：它問的是「我還缺什麼」而不是「這一頁有什麼」，
+   所以取的是 tracker.LIST 全量（已過 patch-gate）＋ 擁有狀態。
+   對應地，切到這個檢視時把引擎的工具列與篩選區收起來，免得調了沒反應。 */
+var TTRoute = (function () {
+  var esc = CollectionTracker.esc;
+  var IMG_BASE = '../../assets/triple-triad/';
+  var tracker = null;
+  var mounted = false;
+  var curMap = '';            // 地圖篩選（只在這次瀏覽有效，不進網址也不存）
+
+  function $(id) { return document.getElementById(id); }
+
+  function build() {
+    if (!tracker) return '';
+    var list = tracker.LIST || [];
+    var missing = list.filter(function (c) { return !tracker.isOwned(c); });
+
+    // NPC id → { 名稱, 地圖, 座標, 入場費, 規則, 缺卡[] }
+    var byNpc = new Map();
+    var coveredIds = new Set();
+    missing.forEach(function (c) {
+      (c.sources || []).forEach(function (s) {
+        if (s.type !== 'NPC對戰') return;
+        if (!s.npcName || !s.location || s.location.mapId == null) return;
+        var key = s.npcId + '@' + s.location.mapId;
+        if (!byNpc.has(key)) {
+          byNpc.set(key, {
+            npcId: s.npcId, name: s.npcName, title: s.npcTitle || null,
+            mapId: s.location.mapId, mapName: s.location.mapName,
+            x: s.location.x, y: s.location.y,
+            fee: s.fee != null ? s.fee : null,
+            rules: Array.isArray(s.rules) ? s.rules : [],
+            src: s, cards: []
+          });
+        }
+        byNpc.get(key).cards.push(c);
+        coveredIds.add(c.id);
+      });
+    });
+
+    var npcs = [...byNpc.values()];
+    var restN = missing.length - coveredIds.size;
+
+    if (!missing.length) {
+      return '<div class="tt-route-sum"><b>全部收齊了</b>——' + list.length + ' 張都已標記取得。</div>';
+    }
+
+    // 依地圖分組；組內「能補的缺卡張數」多的排前面，同數依入場費低的優先
+    var byMap = new Map();
+    npcs.forEach(function (n) {
+      if (!byMap.has(n.mapId)) byMap.set(n.mapId, { mapId: n.mapId, name: n.mapName, npcs: [] });
+      byMap.get(n.mapId).npcs.push(n);
+    });
+    var maps = [...byMap.values()];
+    maps.forEach(function (m) {
+      /* ⚠ **排序鍵不可以是缺卡數**（知識庫 §3.19）。這頁的使用情境就是「站在 NPC 前面
+         一邊打一邊標記」——依缺卡數排的話，每標記一張那個對手的數字就掉一格、
+         整份清單當場重排，剛在看的那列跑掉了。改用固定值：地圖 id → NPC id，
+         順序永遠一樣。「哪張圖最划算」的決策交給上面的地圖選單（那是出發前看一次的東西，
+         不是一邊操作一邊讀的清單）。 */
+      m.npcs.sort(function (a, b) { return a.npcId - b.npcId; });
+      m.total = m.npcs.reduce(function (n, x) { return n + x.cards.length; }, 0);
+    });
+    maps.sort(function (a, b) { return a.mapId - b.mapId; });
+
+    var sum = '<div class="tt-route-sum">' +
+      '還缺 <b>' + missing.length + '</b> 張，其中 <b>' + coveredIds.size + '</b> 張打得到 NPC 取得，' +
+      '分佈在 <b>' + maps.length + '</b> 張地圖的 <b>' + npcs.length + '</b> 個對手身上。' +
+      (restN ? '<br><span class="warn">另外 ' + restN + ' 張要從卡包、副本、任務等管道拿，不在這張清單裡。</span>' : '') +
+      '<br><span class="warn">列的是「打贏<b>可能</b>拿到」——幻卡是機率掉落，同一個對手常常要打好幾次。' +
+      '對手牌組裡有某張卡不代表打贏就給，所以這裡只算真正的對戰獎勵。</span>' +
+      '</div>';
+
+    /* 63 張地圖排下來一頁一萬八千像素，找特定一張圖只能用捲的。
+       加一個地圖選單當跳板——**不另外做排序選單**：順序已經是「一趟能補最多的在前」，
+       那是這個檢視唯一有意義的排法（同市場頁製作計畫的理由，知識庫 §3.19）。 */
+    // 選單依「可補張數」由多到少——那是出發前看一次的決策，不是一邊操作一邊讀的清單，
+    // 所以這裡用會變的值排是安全的（下面的清單則一律固定順序）。
+    var menu = maps.slice().sort(function (a, b) { return b.total - a.total || a.mapId - b.mapId; });
+    var pick = '<div class="tt-route-pick">' +
+      '<label for="ttRouteMap">地圖</label>' +
+      '<select id="ttRouteMap" title="選單依可補張數排序；下方清單固定依地圖與 NPC 編號排，標記取得不會讓它重排">' +
+      '<option value="">全部（' + maps.length + ' 張）</option>' +
+      menu.map(function (m) {
+        return '<option value="' + esc(m.name) + '"' + (curMap === m.name ? ' selected' : '') + '>' +
+          esc(m.name) + '（' + m.total + ' 張）</option>';
+      }).join('') + '</select></div>';
+
+    if (curMap) maps = maps.filter(function (m) { return m.name === curMap; });
+
+    var body = maps.map(function (m) {
+      return '<div class="tt-map-head">' +
+          '<span class="tt-map-name">' + esc(m.name) + '</span>' +
+          '<span class="tt-map-n">' + m.npcs.length + ' 個對手 · 可補 ' + m.total + ' 張</span>' +
+        '</div>' +
+        m.npcs.map(function (n) {
+          var meta = [];
+          if (n.fee != null) meta.push('入場 ' + n.fee.toLocaleString() + ' MGP');
+          if (n.rules.length) meta.push('規則：' + n.rules.join('、'));
+          return '<div class="tt-npc">' +
+            '<div class="tt-npc-head">' +
+              '<span class="tt-npc-name">' + esc(n.name) + '</span>' +
+              (n.title ? '<span class="tt-npc-at">' + esc(n.title) + '</span>' : '') +
+              '<span class="tt-npc-at">' + esc(n.x) + ', ' + esc(n.y) + '</span>' +
+              TTFmt.locBtn(n.src) +
+              '<span class="tt-npc-n">缺 ' + n.cards.length + ' 張</span>' +
+            '</div>' +
+            (meta.length ? '<div class="tt-npc-meta">' + esc(meta.join('　·　')) + '</div>' : '') +
+            '<div class="tt-npc-cards">' + n.cards.map(function (c) {
+              return '<span class="tt-mini">' +
+                '<img src="' + IMG_BASE + esc(c.id) + '.webp" alt="" loading="lazy" decoding="async"' +
+                ' onerror="this.remove()">' +
+                esc(c.name) +
+                (c.stars ? '<span class="st">' + '★'.repeat(c.stars) + '</span>' : '') +
+              '</span>';
+            }).join('') + '</div>' +
+          '</div>';
+        }).join('');
+    }).join('');
+
+    return sum + pick + body;
+  }
+
+  function render() {
+    var host = $('ttRoute');
+    if (!host) return;
+    host.innerHTML = build();
+    var sel = $('ttRouteMap');
+    if (sel) sel.addEventListener('change', function () { curMap = sel.value; render(); });
+  }
+
+  function setMode(route) {
+    document.body.classList.toggle('tt-route-mode', !!route);
+    var a = $('ttViewAlbum'), r = $('ttViewRoute');
+    if (a) { a.classList.toggle('active', !route); a.setAttribute('aria-pressed', String(!route)); }
+    if (r) { r.classList.toggle('active', !!route); r.setAttribute('aria-pressed', String(!!route)); }
+    if (route) render();
+    try { localStorage.setItem('ffxiv_triad_view', route ? 'route' : 'album'); } catch (e) {}
+  }
+
+  return {
+    mount: function (tk) {
+      tracker = tk;
+      if (mounted) return;
+      mounted = true;
+      var a = $('ttViewAlbum'), r = $('ttViewRoute');
+      if (a) a.addEventListener('click', function () { setMode(false); });
+      if (r) r.addEventListener('click', function () { setMode(true); });
+      // 記住上次看的是哪個檢視（純偏好，存 localStorage 沒問題）
+      var saved = null;
+      try { saved = localStorage.getItem('ffxiv_triad_view'); } catch (e) {}
+      if (saved === 'route') setMode(true);
+
+      // 標記取得／清除進度後要重算——缺卡清單是這個檢視的全部內容
+      if (window.SGT_SHORTCUTS) {
+        window.SGT_SHORTCUTS.register([{ keys: 'r', label: '切換手帳／缺卡跑圖', run: function () {
+          setMode(!document.body.classList.contains('tt-route-mode'));
+        } }]);
+      } else {
+        (window.SGT_SHORTCUTS_PENDING = window.SGT_SHORTCUTS_PENDING || []).push([
+          { keys: 'r', label: '切換手帳／缺卡跑圖', run: function () {
+            setMode(!document.body.classList.contains('tt-route-mode'));
+          } }
+        ]);
+      }
+    },
+    // 引擎每次 renderGrid() 後呼叫；只有正在看跑圖時才重畫
+    refresh: function (tk) {
+      tracker = tk;
+      if (document.body.classList.contains('tt-route-mode')) render();
+    },
+    // 引擎實例的存取口（回歸腳本用它標記取得後驗清單有沒有跟著變）
+    tracker: function () { return tracker; }
+  };
+})();
+
 CollectionTracker.init({
   dataUrl: '../../data/triple-triad.json',
   metaUrl: '../../data/_meta.json',
@@ -675,7 +950,12 @@ CollectionTracker.init({
   searchPlaceholder: '搜尋幻卡名稱、NPC、地點…',
   // 一頁 30 張＝手帳的一頁（頁碼同步到網址 ?p=，可分享）
   pageSize: TTAlbum.PER_PAGE,
-  onRender: function (list, pageSlice, tracker) { TTAlbum.sync(list, pageSlice, tracker); },
+  onRender: function (list, pageSlice, tracker) {
+    TTAlbum.sync(list, pageSlice, tracker);
+    // 跑圖檢視吃的是「全部缺卡」而不是這一頁，但標記取得後一樣要重算
+    TTRoute.mount(tracker);
+    TTRoute.refresh(tracker);
+  },
   // 台服有沒有這張卡＝data 的 name 有沒有值（name 只來自台服 items.json 的卡片道具名，
   // 見 scripts/patch-triple-triad-new-cards.mjs）。**不要再加「名稱要有中文字」那條**：
   // 台服官方就有一批拉丁字母卡名（9S／2P／2B／N-7000／Ark Angel MR–EV／Prishe／Shadow Lord），
