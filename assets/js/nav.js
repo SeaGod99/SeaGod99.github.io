@@ -171,7 +171,15 @@
       '@media (max-width:420px){#sgt-kb-panel{padding:16px;}' +
       '.sgt-kb-row{flex-direction:column;align-items:flex-start;gap:3px;padding:7px 0;}' +
       '.sgt-kb-row dt{min-width:0;}.sgt-kb-row dd{font-size:14.5px;}}' +
-      '@media print{#sgt-nav-launch{display:none;}}';
+      // 安裝鈕：只有瀏覽器丟出 beforeinstallprompt 時才會被加進 DOM
+      '.sgt-tb-install{display:inline-flex;align-items:center;gap:5px;flex:none;cursor:pointer;' +
+      'background:var(--gold-dim,rgba(200,169,110,.15));color:var(--gold-light,#e2c98a);' +
+      'border:1px solid var(--border-hover,rgba(200,169,110,.4));border-radius:8px;' +
+      'font:600 12px/1 inherit;padding:0 11px;min-height:34px;white-space:nowrap;}' +
+      '.sgt-tb-install:hover{background:color-mix(in srgb,var(--gold,#c8a96e) 26%,transparent);}' +
+      '.sgt-tb-install:focus-visible{outline:2px solid var(--gold,#c8a96e);outline-offset:2px;}' +
+      '@media (max-width:600px){.sgt-tb-install .lbl{display:none;}.sgt-tb-install{padding:0 9px;}}' +
+      '@media print{#sgt-nav-launch,.sgt-tb-install{display:none;}}';
     var st = document.createElement('style');
     st.id = 'sgt-nav-style';
     st.textContent = css;
@@ -473,6 +481,49 @@
     }
   });
 
+
+  /* ── 安裝為應用程式 ──────────────────────────────────────────────
+     **不彈窗、不擋畫面。** 只有瀏覽器自己判定「這站可以安裝」並丟出
+     `beforeinstallprompt` 時，才在頂列長出一顆小鈕；按了才叫原生安裝流程。
+     關掉之後記住（`ffxiv_pwa_dismissed`），不再長出來。
+
+     為什麼不做整條橫幅或彈窗：那是全站每一頁都會看到的東西，而安裝是一次性的動作
+     ——一次性的動作配上每頁都出現的提示，就是廣告。
+     iOS Safari 不支援 `beforeinstallprompt`，所以那裡不會有這顆鈕（它用「分享 → 加入主畫面」）。 */
+  var deferredPrompt = null;
+
+  function addInstallBtn(inner) {
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.id = 'sgt-tb-install';
+    btn.className = 'sgt-tb-install';
+    btn.title = '把水神的工具箱安裝成應用程式';
+    btn.innerHTML = '<span aria-hidden="true">⬇</span><span class="lbl">安裝</span>';
+    btn.addEventListener('click', function () {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(function (r) {
+        // 不論裝不裝，這一輪的 prompt 都用掉了
+        deferredPrompt = null;
+        btn.remove();
+        if (r && r.outcome === 'dismissed') {
+          try { localStorage.setItem('ffxiv_pwa_dismissed', '1'); } catch (e) {}
+        }
+      });
+    });
+    inner.appendChild(btn);
+    return btn;
+  }
+
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault();                 // 擋掉瀏覽器自己的迷你橫幅，改由這顆鈕觸發
+    var off = null;
+    try { off = localStorage.getItem('ffxiv_pwa_dismissed'); } catch (err) {}
+    if (off) return;
+    deferredPrompt = e;
+    var inner = document.querySelector('#sgt-topbar .sgt-tb-inner');
+    if (inner && !document.getElementById('sgt-tb-install')) addInstallBtn(inner);
+  });
   // 頂部細長工具列（全站切換器入口）：站名（連首頁）＋ 搜尋欄（點擊開面板）
   function addTopbar() {
     if (document.getElementById('sgt-topbar')) return;

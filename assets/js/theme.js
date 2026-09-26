@@ -107,7 +107,9 @@
         }
         addLink('manifest', '/manifest.json');
         addLink('icon', '/assets/icons/icon.svg', 'image/svg+xml');
-        addLink('apple-touch-icon', '/assets/icons/icon.svg');
+        /* ⚠ **iOS 的 apple-touch-icon 不吃 SVG**——原本指向 icon.svg，Safari 會直接忽略，
+           「加入主畫面」拿到的是網頁截圖而不是圖示。必須是 PNG（180×180）。 */
+        addLink('apple-touch-icon', '/assets/icons/apple-touch-icon.png');
         if (!document.querySelector('meta[name="theme-color"]')) {
           var tc = document.createElement('meta');
           tc.name = 'theme-color'; tc.content = '#0a0c10';
@@ -149,6 +151,7 @@
       t.src = (root || '') + 'assets/js/toast.js';
       t.defer = true;
       (document.head || document.documentElement).appendChild(t);
+
     } catch (e) { /* 忽略：切換器載入失敗不影響頁面 */ }
   })();
 })();
