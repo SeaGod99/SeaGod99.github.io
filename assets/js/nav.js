@@ -43,6 +43,7 @@
     { e: '🃏', n: '幻卡追蹤', p: 'collections/triple-triad/', c: 'collect', k: 'triple triad 幻卡' },
     // 戰鬥 / 副本（c:'battle'）
     { e: '⚔️', n: '副本圖鑑', p: 'tools/duty-codex/', c: 'battle', k: 'duty dungeon raid trial 副本 迷宮挑戰 討伐殲滅戰 大型任務 零式 極 絕 深層迷宮 時限 同步 解鎖' },
+    { e: '🛥️', n: '潛水艇航點查詢', p: 'tools/submarine/', c: 'battle', k: 'submarine 潛水艇 航點 部件 探索 部隊 桶 索敵 回收' },
     { e: '🏰', n: '冒險者小隊計算機', p: 'tools/squadron/', c: 'battle', k: 'squadron 小隊 派遣' },
     { e: '🛡️', n: '配裝規劃器（外部）', u: 'https://gearing.ffsusu.com/', c: 'battle', k: 'gearing 配裝 規劃', ext: true },
     // 生活職（c:'life'）

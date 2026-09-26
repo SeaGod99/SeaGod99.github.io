@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FF14 潛水艇航點與部件查詢 — 四個部位的部件數值合計，以及 123 個航點的階級需求、桶數、時間與經驗">
+  <title>潛水艇航點查詢 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <link rel="stylesheet" href="../../assets/css/tool-header.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 109.375%; }
+    body { background: var(--bg-base); color: var(--text); font-family: var(--font-sans); min-height: 100vh; }
+
+    .wrap { max-width: var(--w-content); margin: 0 auto; padding: 0.6rem 1.5rem 2.5rem; }
+
+    .panel {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 0.9rem 1rem; margin-bottom: 0.9rem;
+    }
+    .panel h2 { font-size: 0.82rem; color: var(--gold); margin-bottom: 0.6rem; font-weight: 700; }
+    .fields { display: flex; gap: 0.7rem; flex-wrap: wrap; align-items: flex-end; }
+    .f { display: flex; flex-direction: column; gap: 0.25rem; }
+    .f label { font-size: 0.73rem; color: var(--text-muted); }
+    .f select, .f input {
+      background: var(--bg-base); border: 1px solid var(--border); border-radius: 6px;
+      color: var(--text-dim); padding: 0.4rem 0.55rem; font: inherit; font-size: 0.82rem;
+      min-height: 40px; outline: none;
+    }
+    .f select:focus, .f input:focus { border-color: var(--gold); color: var(--text); }
+    .f select { cursor: pointer; max-width: 12rem; }
+    .f .num { width: 5rem; text-align: right; font-variant-numeric: tabular-nums; }
+
+    .totals { display: flex; gap: 1.2rem; flex-wrap: wrap; margin-top: 0.7rem; font-size: 0.82rem; }
+    .tot { display: flex; align-items: baseline; gap: 0.3rem; }
+    .tot span { color: var(--text-muted); font-size: 0.74rem; }
+    .tot b { color: var(--gold-light); font-variant-numeric: tabular-nums; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    thead th {
+      text-align: right; padding: 0.4rem 0.55rem; color: var(--text-muted);
+      font-size: 0.73rem; font-weight: 600; border-bottom: 1px solid var(--border); white-space: nowrap;
+    }
+    thead th:first-child, tbody td:first-child { text-align: left; }
+    tbody td {
+      padding: 0.45rem 0.55rem; border-bottom: 1px solid var(--border);
+      text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap;
+    }
+    tbody tr:hover { background: var(--bg-card-hover); }
+    tbody tr.locked td { color: var(--text-muted); opacity: 0.55; }
+    .dn { font-weight: 600; color: var(--text); }
+    .star { color: var(--gold); font-size: 0.72rem; }
+    .per { color: var(--green); font-weight: 700; }
+    .lock { font-size: 0.68rem; color: var(--orange); }
+
+    .status { font-size: 0.76rem; color: var(--text-muted); margin-bottom: 0.7rem; }
+    .status b { color: var(--gold-light); }
+    .note { font-size: 0.74rem; color: var(--text-muted); line-height: 1.8; margin-top: 1rem; }
+    .note b { color: var(--text-dim); font-weight: 600; }
+
+    @media (max-width: 700px) { .table-wrap { overflow-x: auto; } table { min-width: 40rem; } }
+    @media (pointer: coarse) { .f select, .f input { min-height: 44px; } }
+  </style>
+  <script src="../../assets/js/patch-gate.js"></script>
+  <script src="../../assets/js/theme.js"></script>
+</head>
+<body>
+<div class="tool-header">
+  <h1 class="tool-title">&#x1F6E5;&#xFE0F; 潛水艇航點查詢</h1>
+  <p class="tool-subtitle">四個部位的部件數值合計，以及 123 個航點的階級需求、桶數、時間與經驗</p>
+</div>
+
+<div class="wrap">
+  <div class="panel">
+    <h2>我的潛水艇</h2>
+    <div class="fields" id="partFields"></div>
+    <div class="fields" style="margin-top:0.7rem">
+      <div class="f">
+        <label for="rankIn">艇的階級</label>
+        <input class="num" id="rankIn" type="number" min="1" max="145" step="1" value="1">
+      </div>
+    </div>
+    <div class="totals" id="totals"></div>
+  </div>
+
+  <div class="status" id="status">載入中…</div>
+
+  <div class="table-wrap"><table>
+    <thead><tr>
+      <th>航點</th><th>海域</th><th>階級</th><th>桶</th><th>距離</th><th>時間</th><th>經驗</th>
+      <th title="單趟經驗 ÷ 航行小時">經驗／小時</th>
+    </tr></thead>
+    <tbody id="tbody"></tbody>
+  </table></div>
+
+  <p class="note">
+    <b>部位名取自道具分類</b>（潛水艇組件（船首）…），不是從 <code>SubmarinePart.Slot</code> 編號推的——
+    那個編號與道具順序不一致，照順序猜會四個部位全錯。<br>
+    <b>本站不提供「勾幾個點跑一趟要幾桶」的試算。</b> 那個公式不在遊戲資料裡（牽涉點與點之間的距離與航行規則），
+    憑印象算出來的桶數會讓你把艇派出去回不來。表上的<b>桶</b>與<b>時間</b>是各航點自己的數值。<br>
+    灰掉的是<b>階級還不夠</b>的航點。航點名來自台服語系檔，查不到的（20 個）不顯示。
+  </p>
+</div>
+
+<footer class="page-footer">
+  <div class="container">
+    <p class="footer-text"><a href="../../">水神的工具箱</a> · 資料來源：遊戲本體、<a href="https://xivapi.com" target="_blank">XIVAPI</a></p>
+    <p class="footer-text" style="margin-top:4px">FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  var DB = null;
+  var SLOT_ORDER = ['船體', '船首', '船尾', '艦橋'];
+  var STATS = [
+    ['surveillance', '索敵'], ['retrieval', '回收'], ['speed', '速度'], ['range', '航程'], ['favor', '好感'],
+  ];
+
+  function $(id) { return document.getElementById(id); }
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+  var fmt = function (n) { return Math.round(n).toLocaleString(); };
+
+  function buildPartPickers() {
+    var host = $('partFields');
+    host.innerHTML = SLOT_ORDER.map(function (slot) {
+      var opts = DB.parts.filter(function (p) { return p.slot === slot; })
+        .map(function (p) {
+          return '<option value="' + p.itemId + '">' + esc(p.name) + '</option>';
+        }).join('');
+      return '<div class="f"><label for="sl-' + esc(slot) + '">' + esc(slot) + '</label>' +
+        '<select id="sl-' + esc(slot) + '" data-slot="' + esc(slot) + '">' + opts + '</select></div>';
+    }).join('');
+    host.querySelectorAll('select').forEach(function (s) {
+      s.addEventListener('change', render);
+    });
+  }
+
+  function myParts() {
+    return SLOT_ORDER.map(function (slot) {
+      var sel = $('sl-' + slot);
+      if (!sel) return null;
+      var id = +sel.value;
+      return DB.parts.find(function (p) { return p.itemId === id; }) || null;
+    }).filter(Boolean);
+  }
+
+  /* 階級加成：`SubmarineRank` 每一階都有五個加成值。
+     這裡照資料相加，**不自己推公式**。 */
+  function rankBonus(rank) {
+    var r = DB.ranks.find(function (x) { return x.rank === rank; });
+    return r || { speed: 0, range: 0, surveillance: 0, retrieval: 0, favor: 0, capacity: 0 };
+  }
+
+  function totals() {
+    var ps = myParts();
+    var rank = Math.max(1, Math.min(145, parseInt($('rankIn').value, 10) || 1));
+    var rb = rankBonus(rank);
+    var t = {};
+    STATS.forEach(function (s) {
+      t[s[0]] = ps.reduce(function (n, p) { return n + (p[s[0]] || 0); }, 0) + (rb[s[0]] || 0);
+    });
+    t.rank = rank;
+    t.capacity = rb.capacity || 0;
+    return t;
+  }
+
+  function render() {
+    if (!DB) return;
+    var t = totals();
+    $('totals').innerHTML = STATS.map(function (s) {
+      return '<div class="tot"><span>' + esc(s[1]) + '</span><b>' + t[s[0]] + '</b></div>';
+    }).join('') + (t.capacity ? '<div class="tot"><span>可載</span><b>' + t.capacity + '</b></div>' : '');
+
+    /* **去得了的排前面。** 只依經驗／小時排的話，階級 60 的人會先看到 82 個灰掉的高階航點，
+       要滑很久才找到自己能去的——那跟「現在能做什麼」被探索筆記淹掉是同一類問題。
+       同一組之內才比經驗效率。 */
+    var perHr = function (d) { return d.minutes ? d.exp / (d.minutes / 60) : 0; };
+    var rows = DB.destinations.slice().sort(function (a, b) {
+      var la = a.rankReq > t.rank ? 1 : 0, lb = b.rankReq > t.rank ? 1 : 0;
+      return (la - lb) || (perHr(b) - perHr(a)) || (a.rankReq - b.rankReq);
+    });
+    var ok = rows.filter(function (d) { return d.rankReq <= t.rank; }).length;
+    $('status').innerHTML = '共 <b>' + rows.length + '</b> 個航點，階級 ' + t.rank +
+      ' 可去 <b>' + ok + '</b> 個（去得了的排前面，組內依經驗／小時）';
+
+    $('tbody').innerHTML = rows.map(function (d) {
+      var ph = perHr(d);
+      var locked = d.rankReq > t.rank;
+      return '<tr' + (locked ? ' class="locked"' : '') + '>' +
+        '<td><span class="dn">' + esc(d.name) + '</span>' +
+          (d.stars ? ' <span class="star">' + '★'.repeat(d.stars) + '</span>' : '') + '</td>' +
+        '<td>' + esc(d.sector || '') + '</td>' +
+        '<td>' + d.rankReq + (locked ? ' <span class="lock">不足</span>' : '') + '</td>' +
+        '<td>' + d.tanks + '</td>' +
+        '<td>' + d.distance + '</td>' +
+        '<td>' + (d.minutes / 60).toFixed(1) + ' 時</td>' +
+        '<td>' + fmt(d.exp) + '</td>' +
+        '<td class="per">' + fmt(ph) + '</td>' +
+      '</tr>';
+    }).join('');
+    syncURL();
+  }
+
+  /* 網址狀態。⚠ 進站參數要在模組載入時就存（§3.17／§4.60）。 */
+  var INITIAL_QUERY = location.search;
+  var applying = false;
+  function syncURL() {
+    if (applying) return;
+    var p = new URLSearchParams();
+    p.set('rank', $('rankIn').value);
+    SLOT_ORDER.forEach(function (slot) {
+      var sel = $('sl-' + slot);
+      if (sel) p.set(slot, sel.value);
+    });
+    history.replaceState(null, '', '?' + p.toString());
+  }
+
+  $('rankIn').addEventListener('input', render);
+
+  fetch('../../data/submarine.json')
+    .then(function (r) { return r.json(); })
+    .then(function (db) {
+      DB = db;
+      buildPartPickers();
+      applying = true;
+      var p = new URLSearchParams(INITIAL_QUERY);
+      if (p.get('rank')) $('rankIn').value = p.get('rank');
+      SLOT_ORDER.forEach(function (slot) {
+        var v = p.get(slot), sel = $('sl-' + slot);
+        if (v && sel && [].some.call(sel.options, function (o) { return o.value === v; })) sel.value = v;
+      });
+      applying = false;
+      render();
+    })
+    .catch(function (e) { $('status').textContent = '載入失敗：' + e.message; });
+
+  // 頁內快捷鍵（登記制見知識庫 §4.73）
+  var keys = [{ keys: 'r', label: '聚焦階級欄', run: function () { $('rankIn').focus(); $('rankIn').select(); } }];
+  if (window.SGT_SHORTCUTS) window.SGT_SHORTCUTS.register(keys);
+  else (window.SGT_SHORTCUTS_PENDING = window.SGT_SHORTCUTS_PENDING || []).push(keys);
+})();
+</script>
+</body>
+</html>
