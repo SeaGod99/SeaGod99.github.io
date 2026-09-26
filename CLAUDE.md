@@ -89,6 +89,8 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 重建物品精簡表（改完 items.json **兩支都要跑**） | `node scripts/build-items-lite.mjs`（採集兩頁用）＋`node scripts/build-items-market.mjs`（市場頁用） |
 | 重建市場頁的「取得管道」索引（改完 recipes／gathering／obtainable-methods） | `node scripts/build-market-sources.mjs` |
 | 更新 SW 快取版本（改完 assets/ 的 css/js 必跑） | `node scripts/bump-sw-version.mjs`（`--check` 只驗證） |
+| 重建 PWA 圖示（改了 `assets/icons/icon.svg` 才要跑） | `node scripts/build-pwa-icons.mjs`（dry-run 預設／`--apply`）→ 192／512／180／maskable-512 四張 PNG |
+| PWA 可安裝性回歸（**改完 `manifest.json`、`assets/icons/` 或 `theme.js` 的注入區必跑**） | `node scripts/validate-pwa.mjs`（jsdom，36 項：圖示規格、shortcuts 指得到頁、三種深度的頁面都注入得到 link、安裝鈕行為）|
 | 時尚品鑑週更（每週二／週五各一次） | `node scripts/build-fashion-report.mjs`（`--dry-run` 只印／`--offline` 用快取）→ `node scripts/validate-fashion-render.mjs`（頁面 render 回歸，七個週狀態，不需瀏覽器） |
 | 時尚品鑑跨週不變資料（改版時才跑） | `node scripts/build-dyes.mjs`／`build-fashion-fillers.mjs`／`build-fashion-themes.mjs` |
 | 重建無人島資料層 | `node scripts/build-island.mjs`（`--offline` 用快取／`--refresh` 強制重抓） |
@@ -279,6 +281,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 - **改了製作模擬器（`tools/crafting-sim/`）** → 改完 `craft-engine.js`、`craft-solver.js` 或 `data/craft-actions.json` **必跑 `node scripts/validate-craft-sim.mjs`**（Teamcraft 官方測試案例＋內建範本＋自動求解，104 項）。製作公式的取整點很多，差一個 `Math.floor` 在高階配方上差幾百品質、**畫面上完全看不出來**。規則出處、兩處刻意與 Teamcraft 不同的地方、範本怎麼解出來的、求解器為什麼只用「不靠運氣」的技能，見 [docs/crafting-sim.md](docs/crafting-sim.md)。**作業／品質的封頂只做在畫面上**（引擎要跟 Teamcraft 的期望值逐值對得上）。
 - **要算「買 N 個多少錢」** → 一律用 `Universalis.fillQuote()` 逐筆吃掉掛單，**絕不可用「最低價 × N」**。最便宜那筆常常只有 1～3 個，乘法會系統性低估、且低估幅度隨數量放大（知識庫 §3.14）。
 - **做「幾步才做得到」的東西（園藝配種、長鏈製作）** → **要算最短路徑，不要列配方**。列一層等於把問題丟回給使用者。園藝的成本模型＝`cost(種子)=0 若可直接買／採；否則 min over 配方 of max(cost(本),cost(鄰)) + 本株作物時數`，**用定點迭代不要用遞迴 memo**（配種關係有環，遞迴會把 `Infinity` 記進 memo 害整條鏈變無解）。另外「直接可得」**不能認市場板**——它對每個種子都成立，認了整棵樹會縮成一層。機制與出處見 [docs/gardening-rules.md](docs/gardening-rules.md)。
+- **動到 PWA（manifest／圖示／安裝）** → 三件事很容易各自看起來沒問題卻裝不起來，而且**全都不報錯**：①**頁面要有 `<link rel="manifest">`**——本站沒有任何一頁的 HTML 寫它，是 `theme.js` 執行期注入的，所以 grep HTML 會以為沒有 ②**Android 的安裝橫幅要 192／512 的 PNG**，只掛 SVG（`sizes:"any"`）時桌面 Chrome 吃得下但手機不出現提示 ③**iOS 的 `apple-touch-icon` 不吃 SVG**，指向 SVG 時 Safari 直接忽略、「加入主畫面」拿到的是網頁截圖。maskable 圖示要**另外畫**（縮到 80% 置中），拿原圖兼任會被 Android 裁掉外圈、變成圓角裡再一個圓角。改完跑 `node scripts/validate-pwa.mjs`。
 - **要做「某種收藏」的新頁，但那張 sheet 沒有 Name 欄** → 走坐騎那套已驗證的路子：XIVAPI search API 查 `Item.ItemAction.Action=<N>`，`ItemAction.Data[0]` 就是收藏 id，名字一律取自解鎖道具的 `items.json` 繁中名。**Action id 不要用猜的**——把整張 `ItemAction` 抓下來依 Action 分組，挑「筆數與該 sheet 列數相近、且 `Data[0]` 全落在 1..N」的那個，再逐件對名字確認（時尚配飾＝20086，坐騎笛＝1322）。
 - **幻卡的 `NPC牌組` 不是取得管道** → 「對局時對手手上會有這張卡」≠「打贏就拿得到」。真正的取得管道是 `NPC對戰`（`ItemPossibleReward`），258 筆／233 張卡；`NPC牌組` 有 944 筆。兩者 2026-09-23 才拆開，**先前 938 筆「NPC對戰」有 99.6% 其實是牌組**。做任何「我缺的卡去哪拿」的功能都只能認 `NPC對戰`，混進牌組會叫使用者跑一堆白跑的路。判別：牌組有 `slot`（固定／隨機），對戰有 `fee` 與 `rules`。
 - **做「會一邊操作一邊看」的清單** → **排序鍵不可以是會變的值**。市場頁的製作計畫原本依金額排，重新查價／改數量／按一次「✓ 已有」就整份洗牌，剛在看的那列跑掉了；改成依**物品 ID 遞增**（順序永遠一樣，且 FFXIV 的 id 大致依資料片遞增、同階材料自然聚在一起）。**不要為此開排序選單**，但要用表頭 `title` 說明依據；欄位不可點就**不要掛 `aria-sort`**（知識庫 §3.19）。

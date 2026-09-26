@@ -207,6 +207,14 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 
 ## 五、更新紀錄
 
+- **2026-09-26 第十二輪（PWA 可安裝性）**：補齊圖示與安裝入口；過程中自己誤判了一次，記下來。
+  - **原本卡在哪**：`manifest.json` 只掛一張 SVG 圖示（`sizes:"any"`），`apple-touch-icon` 也指向 SVG。**Android 的安裝橫幅硬性要求 192／512 的 PNG**，只有 SVG 時桌面 Chrome 吃得下、手機上安裝提示不會出現；**iOS 的 apple-touch-icon 不吃 SVG**，Safari 直接忽略、「加入主畫面」拿到的是網頁截圖。兩層都不報錯。
+  - **`scripts/build-pwa-icons.mjs`** 從既有的 `icon.svg` 產四張：192（Android 最低要求）、512（安裝／啟動畫面）、180（iOS）、maskable-512。**maskable 另外畫**——Android 只保證中間 80% 不被裁，拿原圖兼任 `any maskable` 的話原圖的圓角背景會被裁一圈、變成「圓角裡再一個圓角」，所以縮到 80% 再置中貼純色底。
+  - **manifest 補 shortcuts**（天氣／市場／時尚品鑑／釣魚），長按圖示就有快捷入口；回歸會驗那四個 url 指得到實際頁面。
+  - **安裝鈕做成頂列的小鈕，不做橫幅也不做彈窗**：安裝是一次性動作，一次性動作配上每頁都出現的提示就是廣告。只有瀏覽器丟出 `beforeinstallprompt` 時才長出來，拒絕後記進 `ffxiv_pwa_dismissed` 不再出現。
+  - **自己誤判了一次**：先 grep HTML 找 `rel="manifest"` 得到 0，就下結論「PWA 從來沒能安裝過」——其實 `theme.js` 第 96 行的 `pwa()` 一直在執行期注入，我還照這個錯誤前提加了一段重複的注入程式（它永遠不會執行，因為前面那段已經建好 link 了）。已移除，並把「grep HTML 找不到不代表沒有」記成知識庫 §4.78。
+  - 回歸新增 `scripts/validate-pwa.mjs` 36 項（圖示規格、shortcuts 指得到頁、三種目錄深度的頁面跑完 theme.js 後真的有 link、安裝鈕的完整行為）；37 頁體檢全過；已 bump SW。
+
 - **2026-09-26 第十一輪（時尚配飾收藏頁）**：新增 1 個收藏頁、1 支建置腳本；共用排版加一個參數。
   - **`/collections/ornaments/` 時尚配飾收藏追蹤**：陽傘、背包、火炬那一類，遊戲裡是獨立的收藏櫃，站內本來沒有這一類。43 件（56 件解鎖道具裡 13 件台服未開放，照鐵則不收）。
   - **`Ornament` sheet 沒有 Name 欄**（只有 Icon 與 Transient），名字一定要從解鎖道具反查。走坐騎那套已驗證的路子：search API 查 `Item.ItemAction.Action=<N>`，`Data[0]` 就是收藏 id。**Action id 是推出來的不是猜的**——把整張 `ItemAction`（3,051 列）依 Action 分組，挑「筆數 40–120 且 `Data[0]` 幾乎全在 1..59」的，20086 是 56 筆且全部落在範圍內，再逐件對名字（陽傘／油紙傘／背包／火炬）確認。另外三個候選筆數也接近，但 `Data[0]` 分佈對不上——**只看筆數會挑錯**。記成知識庫 §4.77。
