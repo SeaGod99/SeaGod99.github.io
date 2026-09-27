@@ -14,6 +14,7 @@
 //       gathering 的 EventItem 偽 id（≥2000000）已於 build 時過濾，此處仍計數以防回歸。
 
 import { readFile } from "node:fs/promises";
+import { readdirSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
@@ -222,6 +223,40 @@ const fishItemIds = new Set(fishes.map((f) => f.itemId));
       if (!fishItemIds.has(fid)) broken++;
     }
   report("fishing-spots.fishes[] → fishes.itemId", broken, total);
+}
+
+/* ---------- GitHub Pages 發佈檢查：底線開頭的檔要有 .nojekyll ----------
+   **這個問題本機完全測不出來。** `file://` 與任何本機伺服器都正常供應
+   `data/_meta.json`、`data/npc-shops/_index.json` 這種檔，但 GitHub Pages 預設跑 Jekyll，
+   而 **Jekyll 會把底線開頭的檔案與目錄整個排除在發佈之外** ——線上一律 404，
+   而且回的是 HTML 404 頁，所以前端的徵狀是
+   `Unexpected token '<', "<!DOCTYPE "... is not valid JSON`。
+
+   2026-09-27 實測：`data/_meta.json`、五個分片層的 `_index.json` 全部線上 404。
+   NPC 商店目錄整頁掛掉；`_meta.json` 只是剛好被 `patch-gate.js` 的後備值
+   `"7.21"` 蓋過去（那個值正好等於當時的台服版本，所以沒人發現）。
+
+   解法是 repo 根目錄放一個空的 `.nojekyll`。**這條斷言就是在防它被誤刪**——
+   刪掉之後本機所有測試都還是綠的，只有線上會壞。 */
+{
+  const underscore = [];
+  const scan = (rel = "") => {
+    for (const n of readdirSync(join(DATA, rel), { withFileTypes: true })) {
+      const r = rel ? `${rel}/${n.name}` : n.name;
+      if (n.isDirectory()) scan(r);
+      else if (n.name.startsWith("_")) underscore.push(`data/${r}`);
+    }
+  };
+  scan();
+  const hasNojekyll = existsSync(join(__dirname, "..", ".nojekyll"));
+  rows.push({
+    link: "底線開頭的資料檔 → 需要 .nojekyll",
+    broken: underscore.length && !hasNojekyll ? underscore.length : 0,
+    total: underscore.length,
+    note: hasNojekyll
+      ? "已有 .nojekyll，Jekyll 不會排除它們"
+      : "⚠ 沒有 .nojekyll —— 這些檔在 GitHub Pages 上一律 404（本機測不出來）",
+  });
 }
 
 // ---------- 輸出 ----------

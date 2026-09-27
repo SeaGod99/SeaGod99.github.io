@@ -168,6 +168,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 **repo 很大（約 860MB／2.8 萬檔，主要是 glamour 的圖）**：
 - `git clone`／`git pull`／`git checkout` 動輒數分鐘，**下 git 指令請把 timeout 拉到 5 分鐘以上**。曾因 2 分鐘超時中斷 checkout，留下 index.lock ＋ 5 千個沒寫完的檔案。
 - 還原檔案時**先確認範圍**：`git restore .` 會連同你正在編輯的檔案一起還原（曾因此洗掉未 commit 的文件修改），只想補回某目錄就寫 `git restore tools/glamour`。
+- **根目錄的 `.nojekyll` 絕對不能刪**：GitHub Pages 預設跑 Jekyll，而 **Jekyll 會把底線開頭的檔案與目錄整個排除在發佈之外**。本站有 7 個這種檔（`data/_meta.json` ＋五個分片層的 `_index.json`），少了 `.nojekyll` 它們線上一律 404、而且回的是 HTML 404 頁，前端徵狀是 `Unexpected token '<', "<!DOCTYPE "... is not valid JSON`。**這個問題本機完全測不出來**（`file://` 與任何本機伺服器都正常供應）。`validate-links.mjs` 有一條斷言在防它被誤刪。
 - **GitHub Pages 1GB 發佈上限**：2026-09-27 實測 git 追蹤總計 **784MB**，餘裕約 240MB（09-26 是 758MB，一輪加了 26MB——主要是副本圖與 `item-sources/` 分片。磁碟上的 1.8G 含 `out_data/`、`node_modules/` 與 glamour 的中間檔，那些都不進 git）。新增大批圖片前先估增量，量法：`git ls-files -z | xargs -0 du -cb | awk '/total$/{s+=$1} END{print s/1048576}'`。
 - 跑完 `update_all` 後，衍生的 js 與新縮圖**記得 commit**（`.gitignore` 已不擋）。
 
