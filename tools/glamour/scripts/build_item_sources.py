@@ -52,6 +52,17 @@ MGP_CURRENCIES = {29, 41629}
 EQUIP_CATEGORY_MAX = 49       # categoryId 1–49 = 貨幣其實是裝備 → 前一階升級兌換
 MAX_MOBS = 3                  # 掉落怪太多時只取前幾隻，避免鍵爆炸
 
+# 季節活動貨幣的分類名（主庫 items.json 的 `category`）。
+# 這些貨幣兌換來的裝備在前端應該歸「🗓️ 活動」而不是「🪙 代幣兌換」——
+# ⚠ 2026-09-27 量測：`item_sources.js` 裡 **🗓️／💒 開頭的鍵是 0 個**，
+# 所以前端 `KEY_EMOJI_ST` 的 🗓️→event 那條規則對來源鍵**永遠不會命中**；
+# 社群 7,081 套的「🗓️ 活動」篩選實測是 **0 筆**（精選＋官方的 65 筆全部來自
+# 整套層級的 `st`／`tags` 退路，不是來源鍵）。
+# 修法：這裡輸出「哪些來源鍵是季節活動貨幣」的索引清單（`ev`），前端照它改判。
+# **白名單留在資料側**（主庫的分類），不要寫死在頁面裡——
+# 新版加了季節貨幣就會自動流過來，寫死的話會安靜地漏掉。
+SEASONAL_CATEGORY = "雜貨（季節活動）"
+
 
 def load_js_value(path):
     """讀 `const _X = <JSON>;` 這種前端資料檔的值部分（陣列或物件都吃）"""
@@ -159,13 +170,32 @@ def main():
             n_multi += 1
         index[iid] = [key_table.setdefault(k, len(key_table)) for k in ks]
 
-    payload = {"k": list(key_table), "i": index}
+    # 哪些來源鍵是「季節活動貨幣兌換」→ 前端改判成 🗓️ 活動（見檔頭 SEASONAL_CATEGORY）
+    seasonal_names = {
+        it.get("name", "") for it in items.values()
+        if it.get("categoryName") == SEASONAL_CATEGORY and it.get("name")
+    }
+    # ⚠ **不可以寫 `k[2:]`。** Python 的字串以 code point 計數，`🪙` 只佔 1 個，
+    # 所以 `k[2:]` 會連名稱的第一個字一起砍掉 → 一個都對不上（而且不會報錯）。
+    # JS 那邊的 `k.slice(2)` 能用是因為 UTF-16 裡這個 emoji 佔 2 個單元。
+    ev = sorted(
+        idx for k, idx in key_table.items()
+        if k.startswith("🪙") and k[len("🪙"):].strip() in seasonal_names
+    )
+
+    payload = {"k": list(key_table), "i": index, "ev": ev}
     text = ("// 由 scripts/build_item_sources.py 產生，勿手改\n"
             "const _ITEM_SOURCES = "
             + json.dumps(payload, ensure_ascii=False, separators=(",", ":")) + ";\n")
     OUT.write_text(text, encoding="utf-8")
     print(f"\nitem_sources.js: {len(key_table):,} 種來源 / {len(index):,} 件裝備"
           f"（其中 {n_multi:,} 件有多種取法）· {len(text.encode('utf-8')) / 1024:.0f} KB")
+    print(f"  季節活動貨幣 {len(seasonal_names):,} 種 → 來源鍵 {len(ev)} 個改判成「🗓️ 活動」")
+    if ev:
+        print("  " + "、".join(list(key_table)[i] for i in ev[:12])
+              + ("…" if len(ev) > 12 else ""))
+    else:
+        print("  ⚠ 一個都沒對上——主庫的分類名可能變了，先查 SEASONAL_CATEGORY 再說")
 
 
 if __name__ == "__main__":

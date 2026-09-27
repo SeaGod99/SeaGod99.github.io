@@ -1239,7 +1239,36 @@ const KEY_EMOJI_ST = [["🗡️","raid"],["🗺️","raid"],["🎯","raid"],["�
   ["🛒","npc"],["🪙","token"],["🔶","scrip"],["🟣","scrip"],["🔨","craft"],
   ["🎲","gs"],["⚔️","pvp"],["💎","store"],["🗓️","event"],["💒","event"],
   ["🛡️","other"],["🚢","other"],["🎁","other"],["🏆","other"]];
+/* 季節活動貨幣兌換來的裝備要歸「🗓️ 活動」而不是「🪙 代幣兌換」。
+   名單由 `build_item_sources.py` 依主庫 items.json 的分類「雜貨（季節活動）」產出
+   （`_ITEM_SOURCES.ev` ＝來源鍵的索引），**不寫死在這裡**——
+   新版加了季節貨幣就會自動流過來，寫死的話會安靜地漏掉。
+
+   ⚠ 為什麼需要這條：`KEY_EMOJI_ST` 有 `🗓️→event`，但 2026-09-27 量測發現
+   **`item_sources.js` 裡 🗓️／💒 開頭的鍵是 0 個**——活動貨幣在建置時全都變成
+   `🪙<貨幣名>`，所以那條規則對來源鍵永遠不會命中。
+   實測社群 7,081 套的「🗓️ 活動」是 **0 筆**（精選＋官方的 65 筆全部來自整套層級的
+   `st`／`tags` 退路）。改判後：社群 648 筆、精選＋官方 76 筆。
+
+   ⚠ **不可以在頂層就把這個集合算好。** `item_sources.js` 是 `loadItemSources()`
+   動態插入的，頂層執行時 `_ITEM_SOURCES` 還不存在——那樣會得到一個空集合，
+   而且完全不報錯（篩選就永遠是修之前的樣子）。這裡照 `SK_GEN` 延遲建立。 */
+let EVENT_KEYS = null;
+let _evGen = -1;
+function eventKeys() {
+  if (EVENT_KEYS && _evGen === SK_GEN) return EVENT_KEYS;
+  const set = new Set();
+  if (typeof _ITEM_SOURCES !== "undefined" && Array.isArray(_ITEM_SOURCES.ev)) {
+    const keys = _ITEM_SOURCES.k || [];
+    for (const i of _ITEM_SOURCES.ev) if (keys[i]) set.add(keys[i]);
+  }
+  EVENT_KEYS = set;
+  _evGen = SK_GEN;
+  return EVENT_KEYS;
+}
+
 function stOfKey(k) {
+  if (eventKeys().has(k)) return "event";
   for (const [kw, st] of KEY_ST_KEYWORDS) if (k.includes(kw)) return st;
   for (const [emo, st] of KEY_EMOJI_ST) if (k.startsWith(emo)) return st;
   return "other";
