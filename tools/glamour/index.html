@@ -10,6 +10,9 @@
 <script src="../../assets/js/theme.js"></script>
 <script src="../../assets/js/unlock-banner.js"></script>
 <script src="curated_outfits.js"></script>
+<!-- 分享圖卡（掛 window.ShareCard）。彈窗開啟時才用得到，但它很小（約 8KB）
+     而且 `syncShareBtn()` 在開彈窗的同步流程裡，所以不做延遲載入。 -->
+<script src="share-card.js"></script>
 <style>
 /* ===== 站內共用設計語彙 → 映射到 Bootstrap 5 變數 =====
    色票／字體／圓角 token 一律來自 assets/css/tokens.css（暗色基準）
@@ -571,6 +574,9 @@ body::before{ content:''; position:fixed; inset:0; pointer-events:none; z-index:
         <div class="d-flex align-items-center gap-2">
           <button class="btn btn-sm btn-outline-warning" id="modal-fav-btn" onclick="toggleFav(filtered[currentIdx] && filtered[currentIdx].id)">☆ 收藏</button>
           <button class="btn btn-sm btn-outline-info" id="copy-btn" data-zh="📋 複製清單" data-en="📋 Copy list">📋 複製清單</button>
+          <!-- 分享圖卡：**只在資料齊全的套上長出來**（見 share-card.js 檔頭的量測）。
+               資料不齊時整顆鈕隱藏，並把原因寫在 title 上，不長一顆按了會開天窗的鈕。 -->
+          <button class="btn btn-sm btn-outline-light" id="share-btn" style="display:none">📤 分享圖卡</button>
           <button type="button" class="btn-close btn-close-white" id="close-btn" aria-label="Close"></button>
         </div>
       </div>
@@ -850,6 +856,26 @@ function toggleFav(id, ev) {
   if (favOnly) applyFilters(); else renderGrid();
   syncModalFav();
 }
+/* 分享圖卡鈕。**資料不齊全就整顆隱藏**——長一顆按下去會產生開天窗的卡片
+   比沒有這顆鈕更糟（見 share-card.js 檔頭的量測：精選 66% 的套至少缺一件台服名，
+   而那些 iid 在主庫裡根本不存在，是台服未開放，補不了）。 */
+function syncShareBtn(e) {
+  const btn = document.getElementById("share-btn");
+  if (!btn) return;
+  const gate = (window.ShareCard && e) ? ShareCard.canMake(e) : { ok: false, why: "" };
+  btn.style.display = gate.ok ? "" : "none";
+  btn.title = gate.ok ? "下載 1200×630 的 PNG 圖卡" : gate.why;
+  btn.onclick = gate.ok ? () => {
+    btn.disabled = true;
+    const old = btn.textContent;
+    btn.textContent = "產生中…";
+    ShareCard.make(e).catch(err => {
+      // 失敗要講出來——靜默失敗的話使用者會一直按
+      alert("圖卡產生失敗：" + (err && err.message ? err.message : "不明錯誤"));
+    }).finally(() => { btn.disabled = false; btn.textContent = old; });
+  } : null;
+}
+
 function syncModalFav() {
   const btn = document.getElementById("modal-fav-btn");
   const e = filtered[currentIdx];
@@ -2041,6 +2067,8 @@ function openModal(globalIdx, hist) {
   } else {
     renderMiraModal(e, globalIdx);
   }
+  // 三個 render 函式各自填內容，分享鈕在這裡統一同步（少接一處就會留著上一套的狀態）
+  syncShareBtn(e);
   openModalId = String(e.id);
   modalShowing = true;
   closeAfterShown = false;

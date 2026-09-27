@@ -129,6 +129,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 青魔補副本／地區連結 | `node scripts/patch-blue-magic-content-ids.mjs`（`--apply`） |
 | 收藏頁補空 sources（由 obtainable-methods 推） | `node scripts/patch-sources-from-om.mjs`（`--apply`） |
 | 幻化配裝圖鑑重建 | `py tools\glamour\scripts\update_all.py local`（離線）／不帶 `local`＝完整抓取 |
+| 套裝分享圖卡回歸（**改完 `tools/glamour/share-card.js` 或 `syncShareBtn` 必跑**） | `node scripts/validate-share-card.mjs`（32 項；最重要的是「資料不齊全的套整顆鈕隱藏」與「精選被擋掉的比例不可以突然變小」）|
 | 幻化圖鑑「🗓️ 活動」分類回歸（**改完 `build_item_sources.py` 或 `index.html` 的 `stOfKey`／`eventKeys` 必跑**） | `node scripts/validate-glamour-event.mjs`（19 項；最重要的是「社群配裝的活動篩選不可以是 0 筆」）|
 | 幻化配裝圖鑑的主庫健檢 | `py tools\glamour\scripts\check_maindb.py`（不改檔；msgpack 解不開會直接報出來） |
 | 幻化配裝圖鑑查重複投稿 | `py tools\glamour\scripts\check_duplicates.py`（只稽核／`--report` 出清單／`--apply` 標記移除，之後要跑 `build_site.py` 才生效） |
