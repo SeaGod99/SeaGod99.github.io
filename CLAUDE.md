@@ -168,7 +168,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 **repo 很大（約 860MB／2.8 萬檔，主要是 glamour 的圖）**：
 - `git clone`／`git pull`／`git checkout` 動輒數分鐘，**下 git 指令請把 timeout 拉到 5 分鐘以上**。曾因 2 分鐘超時中斷 checkout，留下 index.lock ＋ 5 千個沒寫完的檔案。
 - 還原檔案時**先確認範圍**：`git restore .` 會連同你正在編輯的檔案一起還原（曾因此洗掉未 commit 的文件修改），只想補回某目錄就寫 `git restore tools/glamour`。
-- **GitHub Pages 1GB 發佈上限**：2026-09-26 實測 git 追蹤總計 **758MB**，餘裕約 266MB（磁碟上的 1.8G 含 `out_data/`、`node_modules/` 與 glamour 的中間檔，那些都不進 git）。新增大批圖片前先估增量，量法：`git ls-files -z | xargs -0 du -cb | awk '/total$/{s+=$1} END{print s/1048576}'`。
+- **GitHub Pages 1GB 發佈上限**：2026-09-27 實測 git 追蹤總計 **784MB**，餘裕約 240MB（09-26 是 758MB，一輪加了 26MB——主要是副本圖與 `item-sources/` 分片。磁碟上的 1.8G 含 `out_data/`、`node_modules/` 與 glamour 的中間檔，那些都不進 git）。新增大批圖片前先估增量，量法：`git ls-files -z | xargs -0 du -cb | awk '/total$/{s+=$1} END{print s/1048576}'`。
 - 跑完 `update_all` 後，衍生的 js 與新縮圖**記得 commit**（`.gitignore` 已不擋）。
 
 **另外三條鐵則**（違反過、代價高，細節見「專案慣例與記憶」）：
