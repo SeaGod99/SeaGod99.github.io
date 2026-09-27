@@ -14,7 +14,7 @@
 //       gathering 的 EventItem 偽 id（≥2000000）已於 build 時過濾，此處仍計數以防回歸。
 
 import { readFile } from "node:fs/promises";
-import { readdirSync, existsSync } from "node:fs";
+import { readdirSync, existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
@@ -256,6 +256,57 @@ const fishItemIds = new Set(fishes.map((f) => f.itemId));
     note: hasNojekyll
       ? "已有 .nojekyll，Jekyll 不會排除它們"
       : "⚠ 沒有 .nojekyll —— 這些檔在 GitHub Pages 上一律 404（本機測不出來）",
+  });
+}
+
+/* ---------- 有頁尾的頁面要載 common.css ----------
+   `.page-footer`／`.footer-text`／`.container` 都定義在 `assets/css/common.css`。
+   新頁若只載 tokens／theme／tool-header，頁尾會**完全沒有樣式**——
+   文字擠在頁面最底下、沒有分隔線也沒有置中。
+
+   ⚠ **`validate-pages.mjs` 抓不到這個**：沒樣式的文字不會造成水平溢出、
+   不會有 console error、點擊目標也沒變小，所以 46 頁 × 3 寬度全綠而畫面是壞的。
+   2026-09-27 實測有 9 頁是這樣（全是那一輪新增的工具頁）。
+
+   `<link>` 要排在該頁自己的 `<style>` **之前**——common.css 有 `*`／`body`／`html`
+   這些全域規則，順序顛倒會把頁面自己的版面壓掉。 */
+{
+  const pages = [];
+  const scanHtml = (rel = "") => {
+    for (const n of readdirSync(join(__dirname, "..", rel), { withFileTypes: true })) {
+      if (["node_modules", ".git", "out_data", "assets", "vendor"].includes(n.name)) continue;
+      const r = rel ? `${rel}/${n.name}` : n.name;
+      if (n.isDirectory()) scanHtml(r);
+      else if (n.name.endsWith(".html")) pages.push(r);
+    }
+  };
+  scanHtml();
+  const bad = [];
+  for (const p of pages) {
+    const raw = readFileSync(join(__dirname, "..", p), "utf8");
+    if (!/class="page-footer"/.test(raw)) continue;
+    /* ⚠ **先把 HTML 註解拿掉再找位置**（§4.90）。那 9 頁的 `<link>` 上方有一段說明
+       「必須排在下面那個 <style> 之前」——註解裡的 `<style>` 會被 `indexOf` 當成真的
+       標籤，位置比 link 還前面，於是每一頁都被誤判成「順序錯」。第一版就是這樣。 */
+    const html = raw.replace(/<!--[\s\S]*?-->/g, "");
+    /* 樣式來源有兩種都算數：載 common.css，或頁面自己定義 `.page-footer`
+       （`tools/glamour/` 是併進來的子專案，自帶 Bootstrap 與自己的頁尾樣式）。
+       要擋的是「兩者皆無」——那才是沒有樣式的裸文字。 */
+    if (/\.page-footer\s*[{,]/.test(html)) continue;
+    const iCss = html.indexOf("assets/css/common.css");
+    const iStyle = html.indexOf("<style>");
+    // 沒載，或載在自己的 <style> 之後（後者會把版面壓掉）
+    if (iCss < 0 || (iStyle >= 0 && iCss > iStyle)) bad.push(p);
+  }
+  const withFooter = pages.filter((p) =>
+    /class="page-footer"/.test(readFileSync(join(__dirname, "..", p), "utf8"))).length;
+  rows.push({
+    link: "有 .page-footer 的頁 → 載 common.css",
+    broken: bad.length,
+    total: withFooter,
+    note: bad.length
+      ? `⚠ 頁尾沒有樣式：${bad.join("、")}`
+      : "頁尾都有樣式（體檢抓不到這個，只能在這裡驗）",
   });
 }
 

@@ -7,6 +7,10 @@
   <title>潛水艇航點查詢 | 水神的工具箱</title>
   <link rel="stylesheet" href="../../assets/css/tokens.css">
   <link rel="stylesheet" href="../../assets/css/theme.css">
+  <!-- 頁尾（.page-footer／.footer-text／.container）定義在 common.css。
+       **必須排在下面那個 <style> 之前**——本頁自己的規則要能蓋過 common.css 的
+       全域項（`*`／`body`／`html`），順序顛倒的話版面會被 common.css 壓掉。 -->
+  <link rel="stylesheet" href="../../assets/css/common.css">
   <link rel="stylesheet" href="../../assets/css/tool-header.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
