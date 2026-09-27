@@ -274,11 +274,7 @@
       color: var(--text-secondary);
       border: 1px solid var(--border);
     }
-    .badge-new {
-      background: rgba(200,169,110,0.15);
-      color: var(--gold);
-      border: 1px solid rgba(200,169,110,0.25);
-    }
+    /* .badge-new 已移除（2026-09-27 起不標「新」）——樣式一併刪掉，不留沒人用的規則 */
     .badge-api {
       background: rgba(79,195,247,0.12);
       color: var(--blue);
@@ -756,7 +752,7 @@
       <a href="tools/relic-note/" class="tool-card available" data-added="2026-09-27">
         <div class="card-emoji">📖</div>
         <div class="card-title">文書跑圖</div>
-        <div class="card-desc">九本文書各 19 個討伐目標的地名、座標與進度——一本一本打勾，不用開兩個視窗對照</div>
+        <div class="card-desc">製作 50 級光武要填的九本文書——每本 19 個討伐目標的地名、座標與進度</div>
         <div class="card-footer">
           <span class="card-badge badge-ready">可用</span>
           <span class="card-arrow">→</span>
@@ -1350,32 +1346,10 @@
 })();
 </script>
 
-<script>
-/* 「新」徽章由日期決定，不再寫死在 HTML 裡。
+<!-- 「新」徽章 2026-09-27 起**不再顯示**（站主決定）。
 
-   為什麼改：寫死的徽章**沒有人會回來拿掉**。2026-09-26 盤點時 30 張工具卡裡有 23 張掛著
-   「新」，其中 13 張是六～八月加的——掛了三個多月，那個字已經完全不帶資訊。
-
-   規則：卡片上的 data-added（加入日期，取自 docs/PROGRESS.md 的更新紀錄）距今 30 天內才標。
-   沒有 data-added 的卡一律不標——查不到日期就當它不是新的，寧可少標也不要標錯。
-   **新增工具頁時記得補 data-added**，否則它一天都不會被標成新的。 */
-(function () {
-  var DAYS = 30;
-  var now = Date.now();
-  var cards = document.querySelectorAll('.tool-card[data-added]');
-  for (var i = 0; i < cards.length; i++) {
-    var t = Date.parse(cards[i].getAttribute('data-added'));
-    if (!t || (now - t) > DAYS * 86400000) continue;
-    var foot = cards[i].querySelector('.card-footer');
-    if (!foot) continue;
-    var b = document.createElement('span');
-    b.className = 'card-badge badge-new';
-    b.textContent = '新';
-    // 插在「可用」之後、箭頭之前，維持原本的視覺順序
-    var arrow = foot.querySelector('.card-arrow');
-    if (arrow) foot.insertBefore(b, arrow); else foot.appendChild(b);
-  }
-})();
-</script>
+     卡片上的 `data-added` 保留著，但它現在只是「這個工具什麼時候上線」的記錄
+     （`validate-relic-note.mjs` 等回歸會驗新頁有沒有補），**不再驅動任何徽章**。
+     新增工具頁時照舊補 `data-added="YYYY-MM-DD"`，但不要再加回徽章。 -->
 </body>
 </html>
