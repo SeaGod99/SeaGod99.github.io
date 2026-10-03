@@ -35,6 +35,7 @@ FF14時尚配裝/
 ├── item_db.js            # ★ 社群配裝共用的裝備字典（格式見 scripts/mira_codec.py；先於 mirapri 載入）
 ├── mirapri_outfits.js    # 社群套裝資料（緊湊編碼 v2，需搭配 item_db.js 才解得開）
 ├── official_sets.js      # 官方套裝資料（由 build_site.py 產生，社群載完後延遲載入）
+├── site_meta.json        # 頁尾的「資料更新日與套數」（build_site.py 產生；**日期只在資料內容變了才更新**——雜湊算在 sort_keys 的資料上，不算輸出檔，因為 item_db.js 有個 dict 的鍵順序每次建置都可能不同）
 ├── 配裝圖片/             # 套裝圖片，命名格式：{編號}-{套裝名}.jpe
 │   ├── 縮圖/             # ★ 彈窗層：原尺寸 AVIF（build_image_tiers.py 產生）
 │   ├── 卡片/             # ★ 卡片層：寬 320px WebP（同上；卡片格子只需要這個尺寸）

@@ -172,11 +172,26 @@ const PROBE = `(() => {
       return el.tagName.toLowerCase() + (el.id ? '#' + el.id : '') + cls + ' ' +
         Math.round(r.width) + '×' + Math.round(r.height);
     })();
-    const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-    const self = document.elementFromPoint(cx, cy);
-    if (!self || !(self === el || el.contains(self) || self.contains(el))) { covered.push(label); continue; }
-    if (!hitOk(el, r, 24)) tiny.push(label);
-    else if (!hitOk(el, r, 44)) small.push(label);
+    const isSelf = (h) => h && (h === el || el.contains(h) || h.contains(el));
+    let rr = r;
+    let self = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+    /* 中心點被別的東西蓋住時，先把它捲到畫面正中央再量一次（2026-10-03）。
+       被 sticky 頁首蓋住只是「量測當下的捲動位置」，不是缺陷——捲過去之後還被蓋住的才報。
+       instant：頁面若設了 scroll-behavior: smooth，量的時候還沒捲到。量完捲回原位，不影響後面的元素。 */
+    if (!isSelf(self)) {
+      const y0 = scrollY, x0 = scrollX;
+      el.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' });
+      rr = el.getBoundingClientRect();
+      self = document.elementFromPoint(rr.left + rr.width / 2, rr.top + rr.height / 2);
+      const ok = isSelf(self);
+      const t24 = ok && !hitOk(el, rr, 24), s44 = ok && !t24 && !hitOk(el, rr, 44);
+      window.scrollTo({ left: x0, top: y0, behavior: 'instant' });
+      if (!ok) { covered.push(label); continue; }
+      if (t24) tiny.push(label); else if (s44) small.push(label);
+      continue;
+    }
+    if (!hitOk(el, rr, 24)) tiny.push(label);
+    else if (!hitOk(el, rr, 44)) small.push(label);
   }
 
   return {

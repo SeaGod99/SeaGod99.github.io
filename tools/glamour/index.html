@@ -559,6 +559,7 @@ a.chip-mb{ text-decoration:none; } a.chip-mb:hover{ text-decoration:underline; }
 
 <!-- Footer -->
 <footer class="page-footer">
+  <p id="glamMeta" hidden></p>
   <p><a href="../../">水神的工具箱</a> · 資料來源：Mirapri、XIVAPI、consolegameswiki、ffxiv-item-search-tc</p>
   <p>FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具</p>
 </footer>
@@ -2756,6 +2757,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const allRaceBtn = document.querySelector('.filter-btn[data-mf="race"][data-val=""]');
   if (allRaceBtn) allRaceBtn.classList.add("active");
 });
+</script>
+<script>
+/* 頁尾：資料更新日與套數（site_meta.json 由 scripts/build_site.py 產生；日期只在資料內容變了才更新）。
+   載不到就不顯示這一行，不影響其餘功能。 */
+fetch("site_meta.json").then(function (r) { if (!r.ok) throw 0; return r.json(); }).then(function (m) {
+  var el = document.getElementById("glamMeta");
+  var n = function (x) { return Number(x).toLocaleString("en-US"); };
+  var parts = ["資料更新 " + m.updated];
+  if (m.mirapri) parts.push("社群配裝 " + n(m.mirapri) + " 套");
+  if (m.official) parts.push("官方套裝 " + n(m.official) + " 套");
+  if (m.curated) parts.push("精選 " + n(m.curated) + " 套");
+  el.textContent = parts.join(" · ");
+  el.hidden = false;
+}).catch(function () {});
 </script>
 </body>
 </html>

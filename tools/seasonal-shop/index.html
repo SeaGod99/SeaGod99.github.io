@@ -49,6 +49,9 @@
     .cell img { width: 34px; height: 34px; flex-shrink: 0; image-rendering: auto; }
     .cell-body { min-width: 0; flex: 1; }
     .cell-name { font-size: 0.82rem; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    /* 一格一個連結，用真實 padding 撐到 27px（AA 24px 以上），不用 ::after（格子相鄰會蓋到隔壁） */
+    .cell-name a.mkt { display: inline-block; padding: 3px 0; color: inherit; text-decoration: none; border-bottom: 1px dotted var(--gold-dim); }
+    .cell-name a.mkt:hover { color: var(--gold); }
     .cell-sub { font-size: 0.7rem; color: var(--text-muted); }
     .cell-cost { font-size: 0.78rem; color: var(--gold); font-variant-numeric: tabular-nums; white-space: nowrap; }
 
@@ -139,7 +142,9 @@
           '<div class="cell">' +
             (i.icon ? '<img src="' + esc(icon(i.icon)) + '" alt="" loading="lazy">' : '') +
             '<div class="cell-body">' +
-              '<div class="cell-name" title="' + esc(i.name) + '">' + esc(i.name) + '</div>' +
+              '<div class="cell-name" title="' + esc(i.name) + '">' +
+                // 可交易的連市場頁（mk 由 build-seasonal-shop.mjs 依 items.json 的 marketable 標）
+                (i.mk ? '<a class="mkt" href="../market/?item=' + i.id + '">' + esc(i.name) + '</a>' : esc(i.name)) + '</div>' +
               '<div class="cell-sub">' + esc(i.category || '') + '</div>' +
             '</div>' +
             '<div class="cell-cost">' + cost + '</div>' +

@@ -78,6 +78,10 @@
   .r-et { font-weight: 600; color: var(--gold); min-width: 100px; font-variant-numeric: tabular-nums; }
   .r-rt { color: var(--text-dim); font-size: 14px; font-variant-numeric: tabular-nums; }
   .empty { color: var(--text-dim); font-size: 15px; padding: 8px 0; }
+  /* 選中的天氣 → 釣魚紀錄的「天氣」篩選。一行可能好幾個，用真實 padding 撐命中區 */
+  .fish-links { font-size: 14px; color: var(--text-dim); margin-top: 10px; line-height: 1.8; }
+  .fish-links a { display: inline-block; padding: 3px 0; color: var(--gold); text-decoration: none; border-bottom: 1px dotted var(--gold-dim); }
+  .fish-links a:hover { color: var(--gold-light); }
 
   /* 我的天氣目標。色票一律取自 tokens.css，這裡不開 :root（§3.6） */
   .watch-panel { background: var(--bg-card); border: 1px solid var(--border-hover); border-radius: 10px; padding: 14px 18px; margin-bottom: 20px; }
@@ -211,6 +215,7 @@
       </div>
       <div class="chips" id="weather-chips"></div>
       <div class="results" id="search-results"><div class="empty">點選上方天氣標籤以搜尋下次出現時間</div></div>
+      <div class="fish-links" id="fish-links"></div>
     </div>
   </div>
 
@@ -257,7 +262,7 @@
 import {
   WEATHER_PERIOD, periodStart, wi, WEATHER_INFO,
   initWeatherTables, getWeatherAt, getWeatherTable,
-  fmtET, fmtRT, fmtCountdown
+  fmtET, fmtRT, fmtCountdown, weatherKeys
 } from '../../assets/js/eorzea-weather.js';
 import { mountEtBar } from '../../assets/js/et-bar.js';
 
@@ -550,8 +555,39 @@ function scanWeather(zone, keys, prev, now, limit) {
   return out;
 }
 
+/* 天氣 → 釣魚紀錄（2026-10-03）。釣魚頁的「天氣」篩選只列**真的有魚**的天氣（選項由資料長出），
+   所以這裡也只對有魚的天氣給連結——否則連過去是一個不存在的選項、等於沒篩。
+   fishes.json 約 700KB，**選了天氣才載**，一個分頁只載一次。名稱規則與釣魚頁的版本閘門相同
+   （有台服名且不等於英文名；那頁註明這條與 patch 閘門擋掉的是同一批）。 */
+let FISH_WX = null;
+function loadFishWx() {
+  if (!FISH_WX) {
+    FISH_WX = fetch('../../data/fishes.json').then(r => (r.ok ? r.json() : null)).then(j => {
+      const has = new Set();
+      for (const f of (j && j.data) || []) {
+        if (!f.name || f.name === f.nameEn) continue;
+        weatherKeys(f.weatherSet).concat(weatherKeys(f.previousWeatherSet)).forEach(k => has.add(k));
+      }
+      return has;
+    }).catch(() => new Set());
+  }
+  return FISH_WX;
+}
+function renderFishLinks(keys) {
+  const box = document.getElementById('fish-links');
+  if (!box) return;
+  if (!keys.length) { box.innerHTML = ''; return; }
+  loadFishWx().then(has => {
+    const ok = keys.filter(k => has.has(k));
+    box.innerHTML = ok.length
+      ? '🎣 釣魚紀錄：' + ok.map(k => `<a href="../fishing/?f_weather=${encodeURIComponent(k)}">天氣條件含「${wi(k).name}」的魚</a>`).join('、')
+      : '';
+  });
+}
+
 function renderSearch() {
   const el = document.getElementById('search-results');
+  renderFishLinks([...selWeathers]);
   const addBtn = document.getElementById('watch-add');
   if (!selWeathers.size) {
     el.innerHTML = '<div class="empty">點選上方天氣標籤以搜尋下次出現時間</div>';

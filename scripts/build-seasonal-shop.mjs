@@ -79,6 +79,7 @@ async function main() {
       if (!it) { stats.noTw.push(got.id); continue; }
       ev.items.push({
         id: it.id, name: it.name, category: it.category, icon: it.icon,
+        ...(it.marketable ? { mk: 1 } : {}),   // 可交易 → 頁面把品名連到市場頁（2026-10-03）
         gil: cost.id === 1 ? cost.amount : null,   // 這幾間都是金幣商店；非金幣就留 null 不猜
         patch: it.patch || null,
       });
@@ -119,7 +120,7 @@ async function main() {
       id: curId, name: cur.name, icon: cur.icon, patch: cur.patch || null,
       items: [...m].map(([id, v]) => {
         const it = byId.get(id);
-        return { id, name: it.name, category: it.category, icon: it.icon, cost: v.cost, count: v.count, patch: it.patch || null };
+        return { id, name: it.name, category: it.category, icon: it.icon, ...(it.marketable ? { mk: 1 } : {}), cost: v.cost, count: v.count, patch: it.patch || null };
       }).sort((a, b) => a.cost / a.count - b.cost / b.count || a.id - b.id),
     });
   }

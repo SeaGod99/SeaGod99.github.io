@@ -783,7 +783,44 @@ def main():
         print(f"official_sets.js: {len(sets)} sets ({OFFICIAL_SETS_JS.stat().st_size//1024} KB)")
     else:
         print("official_sets.js: 略過（data/official_sets.json 不存在，先跑 build_sets.py）")
+    write_site_meta(curated, mirapri, sets)
     return 0
+
+
+SITE_META = ROOT / "site_meta.json"
+
+
+def write_site_meta(curated, mirapri, sets):
+    """頁尾的「資料更新日與套數」（2026-10-03，第二輪路線圖 glamour-meta）。
+
+    日期**只在資料內容真的變了才更新**。重跑建置但資料沒變時日期不動——否則頁尾寫的是
+    「上次有人跑過腳本」，不是「資料什麼時候更新」。
+    ⚠ 雜湊要算在 **sort_keys 的資料**上，不能算輸出檔：item_db.js 裡有一個 dict 的鍵順序
+    每次建置都可能不同（內容相同），拿檔案算的話每跑一次日期就跳一次。"""
+    import hashlib
+    from datetime import date
+    h = hashlib.sha256()
+    for obj in (curated, mirapri, sets):
+        h.update(json.dumps(obj, ensure_ascii=False, sort_keys=True).encode("utf-8"))
+    digest = h.hexdigest()[:16]
+    n_curated, n_mirapri = len(curated), len(mirapri)
+    n_official = len(sets) if sets is not None else None
+    old = {}
+    if SITE_META.exists():
+        try:
+            old = json.loads(SITE_META.read_text(encoding="utf-8"))
+        except ValueError:
+            old = {}
+    meta = {
+        "updated": old.get("updated") if old.get("hash") == digest else date.today().isoformat(),
+        "hash": digest,
+        "curated": n_curated,
+        "mirapri": n_mirapri,
+        "official": n_official if n_official is not None else old.get("official"),
+    }
+    if meta != old:
+        SITE_META.write_text(json.dumps(meta, ensure_ascii=False) + "\n", encoding="utf-8")
+    print(f"site_meta.json: 資料更新 {meta['updated']}（社群 {n_mirapri}／官方 {meta['official']}／精選 {n_curated}）")
 
 
 if __name__ == "__main__":
