@@ -228,6 +228,33 @@ async function openWith(query) {
   push('  這幾條路徑都沒有 console error', [a, b, c].every((x) => x.err.length === 0), [a, b, c].flatMap((x) => x.err).slice(0, 1).join('') || '乾淨');
 }
 
+// ── 2026-10-03：取得管道的副本來源點名並連到副本圖鑑（item-sources 分片層）──────────
+{
+  const dun = new Set(JSON.parse(readFileSync(join(ROOT, 'data/dungeons.json'), 'utf8')).data.map((d) => d.id));
+  const { readdirSync } = await import('node:fs');
+  let total = 0, named = 0, badId = 0, misaligned = 0, sample = null;
+  for (const f of readdirSync(join(ROOT, 'data/item-sources'))) {
+    if (f.startsWith('_')) continue;
+    const d = JSON.parse(readFileSync(join(ROOT, 'data/item-sources', f), 'utf8')).data;
+    for (const rows of Object.values(d)) for (const r of rows) {
+      if (r.t !== '副本') continue;
+      total++;
+      if (!r.du) continue;
+      named++;
+      if (!sample) sample = r;
+      if (r.du.some((x) => !dun.has(x))) badId++;
+      if (String(r.d).split('、').length !== r.du.length) misaligned++;
+    }
+  }
+  push('取得管道的副本來源大多直接點名（≤3 個副本時）', total > 0 && named / total > 0.9, `${named}/${total}`);
+  push('  du 都是 dungeons.json 的 id', badId === 0, `錯 ${badId}`);
+  push('  名稱與 du 一一對齊（前端靠這個逐一連結）', misaligned === 0, `對不齊 ${misaligned}`);
+  const dom = new JSDOM('<!doctype html><body>', { runScripts: 'outside-only', url: 'https://seagod99.github.io/tools/leveling-gear/' });
+  dom.window.eval(readFileSync(join(ROOT, 'assets/js/item-sources.js'), 'utf8'));
+  const out = dom.window.ItemSources.render([sample]);
+  push('  ItemSources.render() 把副本名連到副本圖鑑', /tools\/duty-codex\/\?id=duty:\d+/.test(out), out.slice(0, 140));
+}
+
 push('無 console error', errors.length === 0, errors.slice(0, 1).join('') || '乾淨');
 push('沒有未捕捉的 rejection', unhandled.length === 0, unhandled.slice(0, 2).join(' | ') || '乾淨');
 

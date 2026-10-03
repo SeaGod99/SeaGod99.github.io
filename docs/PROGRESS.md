@@ -223,6 +223,11 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 
 ## 五、更新紀錄
 
+- **2026-10-03j（副本串接中段：取得管道點名副本）**：第二輪路線圖 ⑥ (b)。
+  - 取得管道的副本來源原本一律寫「N 個副本可產出」——不說是哪幾個，玩家沒法行動；練級裝備頁有 1,065 件裝備是副本來源（其中 59% 不可交易，這行是它們唯一的出路）。現在 **≤3 個副本且全部對得到台服名時直接點名，並帶 `du`（dungeons.json 的 id）**，前端 `ItemSources.render()` 把每個名字連到副本圖鑑；任何一個對不到就維持舊寫法、不列半份。6,487 筆副本來源有 **6,158 筆（94.9%）點名**。
+  - **坑**：`data/obtainable-methods.json` 是前端篩選用的精簡版，副本條目只剩 `totalInstances`、**沒有副本 id**——第一次改完分片層 0 筆點名、大小一個 byte 都沒變。`convertOm()` 多收 `itemId`，副本條目沒帶 id 時回完整版 `out_data/obtainable-methods.msgpack` 查（第一次用到才載）；`build-item-sources`／`build-market-sources` 都改傳 `itemId`。分片層 4.22 → 4.38MB。
+  - 回歸 `validate-duty-codex.mjs` 40 → 44 項（點名比例、`du` 都在 dungeons.json、名稱與 `du` 一一對齊、render 出副本圖鑑連結）；`validate-extra-sources` 29、`validate-leveling-gear` 25 照過；練級裝備與市場頁真瀏覽器通過；SW bump。
+
 - **2026-10-03i（副本串接上半：副本圖鑑「資料列為此副本的產出」＋`?id=duty:<id>`）**：第二輪路線圖 ⑥ 的 (a)(c)。第一輪 `dungeon-codex` 掉落那半補上。
   - **副本 id 對照（`scripts/lib/duty-map.mjs`）**：挑戰者原本說「兩邊 id 不同套、只能用名稱接」——對了一半：`dungeons.json` 的 id 是副本搜尋器的 CFC id，取得方式用的是 InstanceContent id，**`out_data/cfc-content.json` 正好是兩者的對照表**。先用 id 精確對（386 個），對不到才退回「兩邊都唯一」的名稱（129 個），兩種方法都對得到的 **0 筆矛盾**。物品×副本 9,079 組接上 8,802 組（96.9%），比純名稱的 94.4% 好。
   - **`scripts/build-duty-drops.mjs` → `data/duty-drops.json`**：382／520 個副本、6,354 件（物品無台服名的 44 組不列），238KB／gzip 70KB。每件帶分類與連結：收藏道具（坐騎 54／寵物 106／樂譜 162／幻卡 147／髮型 2／鳥鞍 1／配飾 3）連該收藏頁的 `?id=`（幻卡用「九宮幻卡：X」的唯一卡名對回、髮型的 id 就是樣式書道具 id），其餘分「裝備」「其他」，可交易的連市場頁。

@@ -22,7 +22,7 @@
  *
  * 注意：本站為 GitHub Pages 使用者頁（根網域託管），故 scope／start_url 皆為 "/"。
  */
-const CACHE_VERSION = 'sgt-d9c5d86891'; /* AUTO-BUMP */
+const CACHE_VERSION = 'sgt-505d46a9bc'; /* AUTO-BUMP */
 const MAX_CACHE_BYTES = 5 * 1024 * 1024;
 
 // 安裝時預先快取的最小殼層（全站共用資源 + 首頁）

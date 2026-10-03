@@ -17,6 +17,31 @@
 // 生產職的 ClassJob row id → 繁中名。值取自 data/equip.json 的 names 表
 // （CLAUDE.md 指定的職業名權威來源），這裡只是把它固定下來避免每次都載那份檔。
 import { twOnly as twText } from "./tw-text.mjs";
+import { loadDutyMap } from "./duty-map.mjs";
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { decode } from "@msgpack/msgpack";
+
+/* data/obtainable-methods.json（前端篩選用的精簡版）的副本條目只剩 totalInstances、沒有副本 id；
+   要點名副本得回完整版 out_data/obtainable-methods.msgpack 查。第一次用到才載。 */
+let _inst = null;
+function instanceIdsOf(itemId) {
+  if (!_inst) {
+    _inst = new Map();
+    const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
+    const om = decode(readFileSync(join(root, "out_data", "obtainable-methods.msgpack")));
+    for (const [k, ms] of Object.entries(om)) {
+      const m = (ms || []).find((x) => x && x.type === "instance");
+      if (m && m.data) _inst.set(Number(k), m.data);
+    }
+  }
+  return _inst.get(Number(itemId)) || null;
+}
+
+// 副本 id 對照只在用到 instance 來源時才載（讀三份檔，約 1MB）
+let _dm = null;
+const dutyMap = () => _dm || (_dm = loadDutyMap());
 
 const JOB_TW = { 8: '刻木匠', 9: '鍛鐵匠', 10: '鑄甲匠', 11: '雕金匠', 12: '製革匠', 13: '裁衣匠', 14: '煉金術士', 15: '烹調師' };
 
@@ -70,7 +95,7 @@ export function npcNames(m) {
  * @param opts.twShop  shopId → 台服店名（補 om 自帶的英文店名）
  * @param opts.vendor  **這個物品**在 data/vendor-prices.json 的那一筆（補 vendor 型的販售者）
  */
-export function convertOm(m, { skip = SKIP_MARKET, twShop = null, vendor = null } = {}) {
+export function convertOm(m, { skip = SKIP_MARKET, twShop = null, vendor = null, itemId = null } = {}) {
   if (skip.has(m.type)) return null;
   switch (m.type) {
     case 'craft': {
@@ -110,8 +135,24 @@ export function convertOm(m, { skip = SKIP_MARKET, twShop = null, vendor = null 
         ...(vendor && vendor.mi != null ? { map: vendor.mi } : {}),
       };
     }
-    case 'instance':
+    case 'instance': {
+      /* 2026-10-03：≤3 個副本時直接點名，並帶 du（data/dungeons.json 的 id）讓前端連到副本圖鑑。
+         80% 的物品只出自 1 個副本、97.9% 不超過 3 個，原本只寫「N 個副本可產出」玩家沒法行動。
+         對照走 duty-map（InstanceContent → CFC id，對不到才退回唯一名稱）；**任何一個對不到就維持舊寫法**，不列半份。
+         同名的不同副本（一般／高難度）文字只寫一次、連到第一個。 */
+      const raw = m.data || (itemId != null ? instanceIdsOf(itemId) : null) || [];
+      const ids = raw.map((i) => dutyMap().byInstance.get(i));
+      if (ids.length && ids.length <= 3 && ids.every((x) => x != null)) {
+        const seen = new Set(), du = [], names = [];
+        for (const id of ids) {
+          const nm = dutyMap().dungeons.get(id).name;
+          if (seen.has(nm)) continue;
+          seen.add(nm); du.push(id); names.push(nm);
+        }
+        return { t: '副本', d: names.join('、'), du };
+      }
       return { t: '副本', d: `${m.totalInstances || 1} 個副本可產出` };
+    }
     case 'quest':
       return { t: '任務獎勵', d: twOnly(m.questName) || '任務獎勵' };
     case 'gathering':
@@ -166,6 +207,7 @@ export function normalizeEntries(list, { max = 8 } = {}) {
     const o = { t: e.t, d: e.d };
     if (e.w) o.w = e.w;
     if (e.map != null) o.map = e.map;
+    if (e.du && e.du.length) o.du = e.du;   // 副本 id（前端連副本圖鑑）
     return o;
   });
 }

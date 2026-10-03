@@ -126,7 +126,7 @@ for (const id of wanted) {
   const oms = om.data[String(id)] || [];
   const hasGatherDetail = list.some((x) => x.t === '採集' && x.w);
   for (const m of oms) {
-    const c = convertOm(m, { twShop, vendor: vendorPrices[id] || null });
+    const c = convertOm(m, { twShop, vendor: vendorPrices[id] || null, itemId: id });
     if (!c) continue;
     // 已經有帶座標的採集資料，就不要再塞一筆沒座標的「採集獲得」
     if (c.t === '採集' && hasGatherDetail) continue;

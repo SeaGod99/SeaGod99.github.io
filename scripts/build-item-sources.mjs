@@ -73,7 +73,7 @@ async function main() {
     // 這一層用 SKIP_CATALOG：製作與商城**是**有效答案（房屋家具有 701 件只能製作、
     // 154 件只在商城，濾掉的話那些物品會顯示成「查無取得方式」，那是錯的）。
     const entries = normalizeEntries([
-      ...(om[key] || []).map((m) => convertOm(m, { skip: SKIP_CATALOG, twShop, vendor: vendors[key] || null })),
+      ...(om[key] || []).map((m) => convertOm(m, { skip: SKIP_CATALOG, twShop, vendor: vendors[key] || null, itemId: id })),
       ...(extra[key] || []),
     ], { max: 8 });
     if (!entries.length) { stat.empty++; continue; }   // 只有 requirement／alarm 這種無行動意義的

@@ -68,13 +68,23 @@
     });
   }
 
+  /* 副本來源帶 du（data/dungeons.json 的 id）時，每個副本名各自連到副本圖鑑（2026-10-03）。
+     d 與 du 由建置端（scripts/lib/obtainable.mjs）保證同序、同數量；對不上就退回純文字。 */
+  function descHtml(r) {
+    if (!r.du || !r.du.length) return esc(r.d);
+    var names = String(r.d).split('、');
+    if (names.length !== r.du.length) return esc(r.d);
+    return names.map(function (n, i) {
+      return '<a href="' + ROOT + 'tools/duty-codex/?id=duty:' + r.du[i] + '">' + esc(n) + '</a>';
+    }).join('、');
+  }
   // 條目列表 → HTML。樣式 .is-row / .is-type / .is-desc / .is-where 在 common.css。
   function render(rows) {
     if (!rows || !rows.length) return '';
     return rows.map(function (r) {
       return '<div class="is-row">' +
         '<span class="is-type">' + esc(r.t) + '</span>' +
-        '<span class="is-desc">' + esc(r.d) + '</span>' +
+        '<span class="is-desc">' + descHtml(r) + '</span>' +
         (r.w ? '<span class="is-where">' + esc(r.w) + '</span>' : '') +
         '</div>';
     }).join('');
