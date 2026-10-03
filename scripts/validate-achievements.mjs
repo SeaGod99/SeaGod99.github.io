@@ -145,6 +145,24 @@ async function boot(query = "", seed = null) {
   push("「獎勵：稱號」篩選後每張卡都有稱號標籤", cards.length > 0 && cards.every((c) => /稱號/.test(c.textContent)), `${cards.length} 張`);
 }
 
+{
+  // 收藏頁的「成就」來源連到這頁（2026-10-03）：連過來的每一筆都要真的在頁面上（台服已開放、非舊版）
+  const vis = new Set(visible.map((a) => a.id));
+  let n = 0, miss = [];
+  for (const f of ["mounts", "minions", "orchestrion", "barding", "emotes", "triple-triad", "hairstyles", "ornaments"]) {
+    for (const e of JSON.parse(read(`data/${f}.json`)).data) for (const s of e.sources || []) {
+      if (s.achievementId == null) continue;
+      n++; if (!vis.has(s.achievementId)) miss.push(`${f}:${s.achievementId}`);
+    }
+  }
+  push("收藏頁的成就來源都連得到這頁（台服已開放、非舊版）", n > 0 && miss.length === 0, `${n} 筆，缺 ${miss.length}：${miss.slice(0, 3).join(",")}`);
+  const dom = new JSDOM("<!doctype html><body>", { runScripts: "outside-only", url: "https://seagod99.github.io/collections/mounts/" });
+  dom.window.eval(read("assets/js/patch-gate.js"));
+  dom.window.eval(read("assets/js/collection-tracker.js"));
+  const h = dom.window.CollectionTracker.sourceWhere({ type: "成就", detail: "x", achievementId: 921 });
+  push("  共用的 sourceWhere() 會畫出成就追蹤連結", /collections\/achievements\/\?id=id%3A921/.test(h), h.slice(0, 120));
+}
+
 // ───────────────────────── 報告 ─────────────────────────
 let fail = 0;
 for (const [n, ok, d] of results) {

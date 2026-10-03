@@ -864,8 +864,14 @@
       return '<a href="' + SITE_ROOT + 'tools/duty-codex/?id=duty:' + d[0] + '">' + esc(d[1]) + '</a>';
     }).join('、') + '</div>';
   }
+  /* 成就來源連到成就追蹤頁（patch-achievement-sources.mjs 補的 achievementId；108/108 都在成就頁裡，2026-10-03）。 */
+  function sourceAchievement(s) {
+    if (!s || s.achievementId == null) return '';
+    return '<div class="ct-where">&#x1F3C6; <a href="' + SITE_ROOT + 'collections/achievements/?id=' +
+      encodeURIComponent('id:' + s.achievementId) + '">成就追蹤</a></div>';
+  }
   function sourceWhere(s) {
-    var duty = sourceDuty(s);
+    var duty = sourceDuty(s) + sourceAchievement(s);
     if (!s || !s.issuer || !s.issuer.name) return duty;
     var at = s.at;
     /* 動詞可由資料指定。任務來源是「接取」（預設），NPC 商店是「販售」——
@@ -905,6 +911,7 @@
     sourceConditions: sourceConditions,
     sourceWhere: sourceWhere,
     sourceDuty: sourceDuty,
+    sourceAchievement: sourceAchievement,
     sourceWheres: sourceWheres
   };
 })();
