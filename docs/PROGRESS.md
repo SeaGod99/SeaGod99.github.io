@@ -223,6 +223,11 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 
 ## 五、更新紀錄
 
+- **2026-10-03n（Universalis 客戶端強化＋「我的伺服器」共用、變現扣稅）**：第二輪路線圖 `universalis-client-hardening`＋`home-world-and-tax`。
+  - **`assets/js/universalis.js`**：①在途請求合併（同一個查詢還在路上時共用同一個 Promise）②每次請求 15 秒逾時（AbortController；原本連線掛住會一直卡在「查價中…」）③`sessionStorage` 配額滿時先清掉最舊的一半查價快取再寫（原本只吞掉例外，之後每次都寫不進去、每次重打）④**修一個與註解相反的 bug**：「4xx 是永久錯誤不重試」那個 `throw` 寫在 `try` 裡、被同一個 `catch` 接走，4xx 其實照樣重試兩次。⑤新增 `Universalis.homeWorld()`（讀市場頁的 `ffxiv_market_home`）。
+  - **貨幣變現（換什麼）／雇員探險**：都是「賣掉換多少錢」，原本預設全 DC 範圍（別服的成交價，§3.16 踩過的錯）而且沒扣稅。現在沒指定範圍時預設「我的伺服器」，變現值與每趟收益 × 0.95（扣 5% 賣方交易稅），表頭 title 與說明文字寫明。「軍票怎麼賺」是買來交、跨服買得到，維持全 DC。
+  - 新回歸 `scripts/validate-universalis.mjs` 9 項（含「4xx 只打一次」「5xx 打三次」「配額滿後最新的寫得進去」）；收益排行回歸照過；三頁真瀏覽器通過；SW bump。
+
 - **2026-10-03m（收藏頁的成就來源連到成就頁）**：成就頁上線後新長出來的連結。收藏頁的「成就」來源早就由 `patch-achievement-sources.mjs` 補了 `achievementId`（108 筆，**108/108 都在成就頁裡且台服已開放**）。`CollectionTracker.sourceWhere()` 自動帶「🏆 成就追蹤」連到 `/collections/achievements/?id=id:<成就 id>`（新增 `sourceAchievement()`），幻卡頁另外接。回歸 `validate-achievements.mjs` 24 → 26 項；追蹤頁、幻卡跑圖、副本圖鑑回歸照過；SW bump。
 
 - **2026-10-03l（命令面板依相關度排序）**：第二輪路線圖 ⑦。原本只取 `site-index` 索引順序的前 40 筆、不排序——「陸行鳥」（幻卡）排第 50 搜不到、「騎士」的職業行會排第 29、單字「鳥／龍」40 格全被坐騎與寵物佔滿；加進 3,348 個成就後更糟。現在 `nav.js` 的 `filter()` 掃全部符合的條目，依**完全相符 → 開頭相符 → 包含**排，同一級維持索引順序（穩定）；工具頁仍排最前（保留「打工具名按 Enter」的習慣）；**不做每類配額**，超過 40 筆時最後一列只顯示不跳的「另有 N 筆符合」。實測：騎士 → 職業行會第一、陸行鳥 → 幻卡第一、「鳥」的前 40 筆涵蓋 7 種類型。回歸 `validate-shortcuts.mjs` 37 → 41 項；SW bump。

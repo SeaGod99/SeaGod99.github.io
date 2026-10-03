@@ -88,7 +88,7 @@
 <div class="table-wrap" id="tableWrap"><div class="loading">載入資料中…</div></div>
 
 <p class="info-note">
-  每趟收益 ＝ 參考價 × 帶回數量。帶回數量取決於雇員的<b>識別力</b>（採集職）或<b>裝備等級</b>（戰鬥職）：各探險有最多 5 個數量檔，填入數值後本頁自動判定落在哪一檔，並在「下一檔」欄標出還差幾點。參考價優先採「近期成交均價」，無成交紀錄時退回「最低在架價」；實際入手另受 5% 市場稅影響，大量拋售同一物品會壓低行情。<br>
+  每趟收益 ＝ 參考價 × 帶回數量 × 0.95（扣 5% 賣方交易稅）。查價範圍預設是市場頁設定的「我的伺服器」——東西只能賣在自己的伺服器。帶回數量取決於雇員的<b>識別力</b>（採集職）或<b>裝備等級</b>（戰鬥職）：各探險有最多 5 個數量檔，填入數值後本頁自動判定落在哪一檔，並在「下一檔」欄標出還差幾點。參考價優先採「近期成交均價」，無成交紀錄時退回「最低在架價」；大量拋售同一物品會壓低行情。<br>
   清單只列出<b>雇員等級 ≧ 探險等級</b>且採集力／裝等達到門檻的探險（未達門檻者本來就派不了）。日銷量不足 1 件／日的品項會沉到清單底部——那些久掛難出，排行數字參考價值低。<br>
   資料來源：遊戲本體的雇員探險表（經 <code>obtainable-methods</code>）＋ Teamcraft 台服探險名。只收「一趟帶回單一物品」的目標型探險共 969 個；舊式探索委託與「自由尋寶委託」一趟帶回的物品不固定，排不出每趟收益故不列。市價由 <a href="https://universalis.app" target="_blank" rel="noopener" style="color:var(--text-dim)">Universalis</a> 提供，10 分鐘快取。
 </p>
@@ -181,7 +181,8 @@
     var rows = runnable.map(function (v) {
       var t = tierOf(v, statVal);
       var p = pick(prices[v.itemId]);
-      return { v: v, t: t, p: p, total: p ? p.ref * t.cur.qty : -1 };
+      // 賣掉實拿：扣 5% 賣方交易稅（原本沒扣，排行數字整體偏高 5%）
+      return { v: v, t: t, p: p, total: p ? p.ref * (1 - Universalis.TAX_RATE) * t.cur.qty : -1 };
     }).filter(function (r) { return !hideNP || r.p; });
 
     // 日銷量 <1 的沉到底部，各組內再依每趟收益排序
@@ -194,7 +195,7 @@
     var kind = list.length ? statKindOf(list[0]) : 'perception';
     var html = '<table><thead><tr>' +
       '<th class="rank-num">#</th><th>探險</th><th>Lv</th><th>帶回</th>' +
-      '<th>下一檔</th><th>參考價</th><th>每趟收益</th><th>經驗</th><th>日銷量</th>' +
+      '<th>下一檔</th><th>參考價</th><th title="參考價 × 帶回數量，已扣 5% 賣方交易稅">每趟收益</th><th>經驗</th><th>日銷量</th>' +
       '</tr></thead><tbody>';
 
     var dividerShown = false;
@@ -302,6 +303,8 @@
       statVal = Math.max(0, Number(q.get('s') || saved.stat) || 0);
       var ws = q.get('scope') || saved.scope;
       if (ws && (ws === 'dc' || Universalis.WORLDS[ws])) scope = ws;
+      // 沒指定時預設「我的伺服器」：探險帶回來的東西要賣在自己的伺服器（§3.16），原本預設全 DC
+      else if (Universalis.homeWorld()) scope = String(Universalis.homeWorld());
 
       document.getElementById('catSel').value = String(cat);
       document.getElementById('lvInput').value = lv;

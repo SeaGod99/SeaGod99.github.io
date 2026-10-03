@@ -54,8 +54,32 @@
     } catch (e) { return null; }
   }
 
+  /* 配額滿時先清掉最舊的一半查價快取再寫一次（2026-10-03）。原本只吞掉例外：
+     30 筆掛單 × 100 件的回應很容易把 5MB 撐滿，之後每次都寫不進去、每次都重打 API，卻看不出來。 */
   function cacheSet(key, value) {
-    try { sessionStorage.setItem(key, JSON.stringify({ t: Date.now(), v: value })); } catch (e) { /* 配額滿/私密視窗：忽略 */ }
+    var raw = JSON.stringify({ t: Date.now(), v: value });
+    try { sessionStorage.setItem(key, raw); return; } catch (e) { /* 配額滿／私密視窗 */ }
+    try {
+      var olds = [];
+      for (var i = 0; i < sessionStorage.length; i++) {
+        var k = sessionStorage.key(i);
+        if (!k || k.indexOf('uni:') !== 0) continue;
+        var t = 0; try { t = JSON.parse(sessionStorage.getItem(k)).t || 0; } catch (e2) {}
+        olds.push([t, k]);
+      }
+      olds.sort(function (a, b) { return a[0] - b[0]; });
+      olds.slice(0, Math.ceil(olds.length / 2)).forEach(function (x) { sessionStorage.removeItem(x[1]); });
+      sessionStorage.setItem(key, raw);
+    } catch (e3) { /* 還是放不下（私密視窗）：不快取 */ }
+  }
+
+  /* 在途請求合併（2026-10-03）：同一個查詢還在路上時（例如詳情與製作清單同時查同一件），共用同一個 Promise。 */
+  var inflight = {};
+  function track(key, p) {
+    inflight[key] = p;
+    var clear = function () { delete inflight[key]; };
+    p.then(clear, clear);
+    return p;
   }
 
   function clearCache() {
@@ -90,21 +114,27 @@
   // 最多 RETRIES 次；4xx（除 429）視為永久錯誤，直接丟出不重試。
   var RETRIES = 2;          // 首次之外再試 2 次（共 3 次）
   var BACKOFF_MS = 600;     // 600ms → 1200ms
+  var TIMEOUT_MS = 15000;   // 單次請求逾時（原本沒有：連線掛住時會一直卡在「查價中…」）
   async function getJSON(url) {
     var lastErr = null;
     for (var attempt = 0; attempt <= RETRIES; attempt++) {
       if (attempt) await sleep(BACKOFF_MS * attempt);
+      var ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+      var timer = ctrl ? setTimeout(function () { ctrl.abort(); }, TIMEOUT_MS) : null;
+      var res = null;
       try {
-        var res = await fetch(url, { headers: { 'Accept': 'application/json' } });
-        if (res.ok) return res.json();
-        // 4xx（非 429）為永久錯誤，重試無意義
-        if (res.status >= 400 && res.status < 500 && res.status !== 429) {
-          throw new Error('HTTP ' + res.status);
-        }
-        lastErr = new Error('HTTP ' + res.status); // 429／5xx → 續試
+        res = await fetch(url, { headers: { 'Accept': 'application/json' }, signal: ctrl ? ctrl.signal : undefined });
       } catch (e) {
-        lastErr = e; // 網路層錯誤（離線／逾時／CORS）→ 續試
+        lastErr = e;          // 網路層錯誤（離線／逾時／CORS）→ 續試
+      } finally {
+        if (timer) clearTimeout(timer);
       }
+      if (!res) continue;
+      if (res.ok) return res.json();
+      /* 4xx（非 429）是永久錯誤，直接丟出。2026-10-03 前這個 throw 寫在 try 裡、
+         又被同一個 catch 接走，結果 4xx 也照樣重試兩次（與註解相反）。 */
+      if (res.status >= 400 && res.status < 500 && res.status !== 429) throw new Error('HTTP ' + res.status);
+      lastErr = new Error('HTTP ' + res.status); // 429／5xx → 續試
     }
     throw lastErr || new Error('fetch failed');
   }
@@ -140,7 +170,8 @@
     var key = 'uni:list:' + scopeKey(scope) + ':' + listings + ':' + ids.join(',');
     var cached = cacheGet(key);
     if (cached) return cached;
-
+    if (inflight[key]) return inflight[key];
+    return track(key, (async function () {
     try {
       var merged = {}; var lastUpload = 0;
       var groups = chunk(ids, MAX_PER_REQ);
@@ -161,6 +192,7 @@
     } catch (e) {
       return null;
     }
+    })());
   }
 
   /* 聚合摘要（最便宜世界、近期成交均價、銷量速度）。
@@ -172,7 +204,8 @@
     var key = 'uni:agg:' + scopeKey(scope) + ':' + ids.join(',');
     var cached = cacheGet(key);
     if (cached) return cached;
-
+    if (inflight[key]) return inflight[key];
+    return track(key, (async function () {
     try {
       var merged = {};
       var groups = chunk(ids, MAX_PER_REQ);
@@ -188,6 +221,7 @@
     } catch (e) {
       return null;
     }
+    })());
   }
 
   /* 近期成交紀錄（供價格走勢與「目前價位在近 N 筆的第幾百分位」）。
@@ -204,7 +238,8 @@
     var key = 'uni:hist:' + scopeKey(scope) + ':' + entries + ':' + days + ':' + ids.join(',');
     var cached = cacheGet(key);
     if (cached) return cached;
-
+    if (inflight[key]) return inflight[key];
+    return track(key, (async function () {
     try {
       var merged = {};
       var groups = chunk(ids, MAX_PER_REQ);
@@ -221,6 +256,7 @@
     } catch (e) {
       return null;
     }
+    })());
   }
 
   // 市場板交易稅 5%：**買方負擔**，成交時另外加在標價之上。
@@ -322,7 +358,17 @@
     return day + ' 天前';
   }
 
+  /* 「我的伺服器」（市場頁設定，存在 ffxiv_market_home）。賣只能掛在自己角色所在的伺服器（知識庫 §3.16），
+     所以算「賣掉換多少錢」的頁都該預設用它；沒設定回 null。2026-10-03 收成共用，貨幣變現／雇員探險也讀。 */
+  function homeWorld() {
+    try {
+      var n = Number(localStorage.getItem('ffxiv_market_home'));
+      return Number.isFinite(n) && WORLDS[n] ? n : null;
+    } catch (e) { return null; }
+  }
+
   window.Universalis = {
+    homeWorld: homeWorld,
     DC: DC,
     WORLDS: WORLDS,
     fetchListings: fetchListings,

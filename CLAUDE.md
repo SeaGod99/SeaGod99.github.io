@@ -98,6 +98,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 「現在能做什麼」回歸（**改完 `tools/now/` 或它吃的四份資料必跑**） | `node scripts/validate-now.mjs`（24 項，重點在兩個單位：探索筆記 `timeEnd` 含該小時、節點 `duration` 是 ET 分鐘）|
 | 重建魔晶石與禁忌鑲嵌資料（改版時才跑） | `node scripts/build-materia.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/materia.json`（31 種屬性／229 件／12 階成功率）|
 | 禁忌鑲嵌試算回歸（**改完 `tools/melding/` 或 `data/materia.json` 必跑**） | `node scripts/validate-melding.mjs`（35 項：成功率不可寫死、期望值與 90% 累積機率的算式、孔位選單要反映資料）|
+| Universalis 客戶端回歸（**改完 `assets/js/universalis.js` 的請求／快取段必跑**） | `node scripts/validate-universalis.mjs`（9 項：在途請求合併、4xx 不重試、5xx 重試、逾時 signal、配額滿時清最舊快取、`homeWorld()`、兩個賣出頁扣稅）|
 | 收益排行接製作數值的回歸（**改完 `market.js` 的 `gateOf`／`applyMyStats` 必跑**） | `node scripts/validate-profit-stats.mjs`（18 項：沒存數值的人要完全不受影響、門檻欄位靠 `columns` 對位）|
 | 重建製作理符（改版時才跑） | `node scripts/build-craft-leves.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/craft-leves.json`（1,120 張）|
 | 製作理符回歸（**改完 `tools/leves/` 或 `craft-leves.json` 必跑**） | `node scripts/validate-leves.mjs`（24 項；最重要的是「頁面不得宣稱 HQ 加成倍率」）|

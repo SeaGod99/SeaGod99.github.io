@@ -110,7 +110,7 @@
 <div class="table-wrap" id="tableWrap"><div class="loading">載入資料中…</div></div>
 
 <p class="info-note">
-  變現值 ＝ 參考價 ×（兌換數量 ÷ 成本）。成本動輒數百的貨幣（軍票、詩學神典石）以「每 100」計，一次只花幾點的（雙色寶石）以「每 1」計。參考價優先採「近期成交均價」，無成交紀錄時退回「最低在架價」；實際入手金額另受 5% 市場稅與價格波動影響。<br>
+  變現值 ＝ 參考價 ×（兌換數量 ÷ 成本）× 0.95（扣 5% 賣方交易稅）。查價範圍預設是市場頁設定的「我的伺服器」——東西只能賣在自己的伺服器。成本動輒數百的貨幣（軍票、詩學神典石）以「每 100」計，一次只花幾點的（雙色寶石）以「每 1」計。參考價優先採「近期成交均價」，無成交紀錄時退回「最低在架價」；實際入手金額另受價格波動影響。<br>
   日銷量低的物品可能久掛不出，建議優先挑「變現值高且日銷量 ≥ 1」的品項；日銷量不足 1 件／日的品項已自動沉到清單底部。大量拋售同一物品會壓低行情。<br>
   <b>軍票怎麼賺</b>分頁：軍需品調達任務依職業列出所有可能的交納品（2,516 件，全部有台服名），「每千 gil 軍票」＝買材料交納時的效率——自己採／自己做的話成本另計。<b>刻意不顯示「今天輪到哪一組」</b>：輪替與現實日期的對應沒有可靠來源，猜錯會整頁講錯東西，請對照遊戲內當天的指定。專家交納的軍票值只看裝備等級，與市價無關。<br>
   品項清單來源：Teamcraft 商店表（已解開 SpecialShop 的 CostType 索引）＋ XIVAPI，僅列出台服已開放、有台服官方名、且<b>掛得上市場板</b>（<code>ItemSearchCategory &gt; 0</code>）的物品。只收「成本為單一貨幣」的兌換項，複合成本（同時要兩種貨幣）換算不成單一幣值故不列。本頁不處理解鎖條件，清單以「該商店已解鎖」為前提。市價由 <a href="https://universalis.app" target="_blank" rel="noopener" style="color:var(--text-dim)">Universalis</a> 提供，10 分鐘快取。
@@ -212,7 +212,8 @@
       var cnt = x.count || 1;
       return {
         x: x, p: p,
-        per: p ? p.ref * cnt / x.cost : -1,
+        // 賣掉實拿：扣 5% 賣方交易稅（原本沒扣，數字整體偏高 5%）
+        per: p ? p.ref * (1 - Universalis.TAX_RATE) * cnt / x.cost : -1,
       };
     }).filter(function (r) { return !hideNP || r.p; });
 
@@ -229,7 +230,7 @@
     var html = '<table><thead><tr>' +
       '<th class="rank-num">#</th><th>物品</th><th>' + costHead + '</th><th>數量</th>' +
       (hasRank ? '<th title="兌換所需的軍銜">軍銜</th>' : '') +
-      '<th>參考價</th><th>最低在架</th><th>' + perHead + '</th><th>日銷量</th>' +
+      '<th>參考價</th><th>最低在架</th><th title="參考價 × 數量 ÷ 成本，已扣 5% 賣方交易稅（賣掉實拿）">' + perHead + '</th><th>日銷量</th>' +
       '</tr></thead><tbody>';
 
     var dividerShown = false;
@@ -440,6 +441,9 @@
       curId = CURRENCIES.some(function (c) { return c.id === want; }) ? want : (CURRENCIES[0] && CURRENCIES[0].id);
       var ws = q.get('scope');
       if (ws && (ws === 'dc' || Universalis.WORLDS[ws])) scope = ws;
+      /* 沒指定時預設「我的伺服器」：這頁算的是把兌換品賣掉換多少錢，賣只能掛在自己的伺服器（§3.16），
+         原本預設全 DC＝拿別服的成交價排。軍票怎麼賺（買來交）不受影響——買得到跨服。 */
+      else if (Universalis.homeWorld()) scope = String(Universalis.homeWorld());
       document.getElementById('curSel').value = String(curId);
       document.getElementById('scopeSel').value = scope;
 
