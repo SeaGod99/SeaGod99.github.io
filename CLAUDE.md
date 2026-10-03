@@ -104,8 +104,8 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 製作理符回歸（**改完 `tools/leves/` 或 `craft-leves.json` 必跑**） | `node scripts/validate-leves.mjs`（24 項；最重要的是「頁面不得宣稱 HQ 加成倍率」）|
 | 重建練級裝備路線（改完 items.json 後） | `node scripts/build-leveling-gear.mjs`（dry-run 預設／`--apply`）→ `data/leveling-gear/`（43 個職業檔＋`_index.json`）；**刻意不進 `minify-data.mjs`** |
 | 練級裝備回歸（**改完 `tools/leveling-gear/` 或該目錄資料必跑**） | `node scripts/validate-leveling-gear.mjs`（25 項：槽位眾數比對、前緣單調性、取得管道真的有填上）|
-| 重建潛水艇資料（改版時才跑） | `node scripts/build-submarine.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/submarine.json`（部件 40／航點 123／階級 145）|
-| 潛水艇回歸（**改完 `tools/submarine/` 或 `data/submarine.json` 必跑**） | `node scripts/validate-submarine.mjs`（44 項；最重要的是「部位名不可從 Slot 編號推」「不提供多點航程試算」「四艘存檔切艇前要先存、存 itemId 不存索引、網址參數優先」）|
+| 重建潛水艇資料（改版時才跑） | `node scripts/build-submarine.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/submarine.json`（部件 40／航點 123／階級 145；`airship` 區塊：部件 28／航點 24／等級 50。航點名用「Sea of Clouds NN ↔ 雲海NN」驗 row id 對齊，對不上就中止）|
+| 潛水艇回歸（**改完 `tools/submarine/` 或 `data/submarine.json` 必跑**） | `node scripts/validate-submarine.mjs`（61 項，含飛空艇分頁 17 項；最重要的是「部位名不可從 Slot 編號推」「不提供多點航程試算」「四艘存檔切艇前要先存、存 itemId 不存索引、網址參數優先」）|
 | 重建技能辭典（換台服版本後） | `node scripts/build-action-codex.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/action-codex/`（技能 1,326／特性 668／狀態 4,052）|
 | 技能辭典回歸（**改完 `tools/action-codex/`、該目錄資料或 `tools/macro-translator/` 必跑**） | `node scripts/validate-action-codex.mjs`（45 項：UI 標記洗乾淨、條件式收斂、PvP／PvE 分得開、連擊樹不畫半截也不混 PvP、解鎖時程沒選職業時不畫；巨集轉譯換出來的名字連到辭典且點過去搜得到）|
 | 貼清單匯入回歸（**改完 `market.js` 的 `parsePasteLines`／`importPasted` 必跑**） | `node scripts/validate-paste-import.mjs`（35 項：數量解析的 11 種貼法、查不到的要逐行列出、不解析外站連結這個決定）|

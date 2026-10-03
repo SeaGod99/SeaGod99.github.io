@@ -119,6 +119,74 @@ async function main() {
       favor: r.f.FavorBonus || 0,
     }));
 
+  /* ── 飛空艇（2026-10-03，第二輪路線圖 airship-voyages）──────────────────
+     同一套規則：部件靠 `Item.AdditionalData` = AirshipExplorationPart 的 row id（28 件一對一），
+     部位名取自道具分類（飛空艇組件（船體）…），**不從 Slot 推**。
+     航點名走 `tw-locales.airshipVoyages`（25 筆，row id 對齊）；對齊另外用名稱驗：
+     英文 `Sea of Clouds NN` 必須對到台服 `雲海NN`，對不上就中止。
+     `Passengers` 為真的那一列是雲冠群島的載客航班，不是探索航點，不收。
+     飛空艇的等級表只有可載量與升級經驗，**沒有能力值加成**（潛水艇才有）。 */
+  const aParts = await xiv.sheet(
+    "AirshipExplorationPart",
+    "Class,Rank,Slot,Speed,Range,Surveillance,Retrieval,Favor",
+    { limit: 100, cache: "out_data/cache/air-part.json", offline, label: "  飛空艇 Part：" }
+  );
+  const aPoints = await xiv.sheet(
+    "AirshipExplorationPoint",
+    "Name,NameShort,RankReq,CeruleumTankReq,SurveyDistance,SurveyDurationmin,ExpReward,Passengers,SurveillanceReq",
+    { limit: 200, cache: "out_data/cache/air-point.json", offline, label: "  飛空艇航點：" }
+  );
+  const aLevels = await xiv.sheet(
+    "AirshipExplorationLevel",
+    "Capacity,ExpToNext",
+    { limit: 200, cache: "out_data/cache/air-level.json", offline, label: "  飛空艇等級：" }
+  );
+  const aPartById = new Map(aParts.map((p) => [p.id, p.f]));
+  const aPartItems = items.filter((i) => /^飛空艇組件（/.test(i.category || ""));
+  const aAddl = await xiv.rows(
+    "Item",
+    aPartItems.map((i) => i.id),
+    "AdditionalData@as(raw)",
+    { chunk: 50, cache: "out_data/cache/air-part-items.json", offline, label: "  飛空艇部件道具：" }
+  );
+  const airParts = [];
+  const aStat = { noLink: [], noTw: 0 };
+  for (const it of aPartItems) {
+    if (!isTw(it.name)) { aStat.noTw++; continue; }
+    const pid = aAddl.get(it.id)?.["AdditionalData@as(raw)"];
+    const p = pid ? aPartById.get(pid) : null;
+    if (!p) { aStat.noLink.push(it.name); continue; }
+    airParts.push({
+      itemId: it.id, name: it.name, slot: slotOf(it.category), partId: pid, class: p.Class, rank: p.Rank,
+      speed: p.Speed, range: p.Range, surveillance: p.Surveillance, retrieval: p.Retrieval, favor: p.Favor,
+      marketable: !!it.marketable,
+    });
+  }
+  airParts.sort((a, b) => a.class - b.class || a.itemId - b.itemId);
+  const airDest = [];
+  const aFatal = [];
+  for (const e of aPoints) {
+    if (!e.f.NameShort || e.f.Passengers) continue;
+    const name = twName(tw.airshipVoyages, e.id);
+    if (!isTw(name)) continue;
+    const en = /Sea of Clouds (\d+)$/.exec(e.f.NameShort), zh = /^雲海(\d+)$/.exec(name);
+    if (!en || !zh || en[1] !== zh[1]) aFatal.push(`航點 ${e.id}：英文「${e.f.NameShort}」與台服「${name}」對不上`);
+    airDest.push({
+      id: e.id, name, rankReq: e.f.RankReq || 0, tanks: e.f.CeruleumTankReq || 0,
+      distance: e.f.SurveyDistance || 0, minutes: e.f.SurveyDurationmin || 0, exp: e.f.ExpReward || 0,
+      surveillanceReq: e.f.SurveillanceReq || 0,
+    });
+  }
+  airDest.sort((a, b) => a.rankReq - b.rankReq || a.id - b.id);
+  const airLevels = aLevels.filter((r) => r.f.Capacity > 0 || r.f.ExpToNext > 0)
+    .map((r) => ({ rank: r.id, capacity: r.f.Capacity || 0, expToNext: r.f.ExpToNext || 0 }));
+  const aSlots = {};
+  for (const p of airParts) aSlots[p.slot] = (aSlots[p.slot] || 0) + 1;
+  console.log(`\n飛空艇：部件 ${airParts.length} 件（${Object.entries(aSlots).map(([s, n]) => `${s} ${n}`).join("、")}）、航點 ${airDest.length} 個、等級表 ${airLevels.length} 階`);
+  if (aStat.noLink.length) console.log(`  ⚠ 對不到 AirshipExplorationPart 的 ${aStat.noLink.length} 件：${aStat.noLink.slice(0, 4).join("、")}`);
+  if (airParts.length !== 28) aFatal.push(`飛空艇部件應有 28 件，實得 ${airParts.length}`);
+  if (aFatal.length) { console.error("\n✗ 中止："); aFatal.forEach((x) => console.error("   " + x)); process.exit(1); }
+
   const slots = {};
   for (const p of outParts) slots[p.slot] = (slots[p.slot] || 0) + 1;
   console.log(`\n部件 ${outParts.length} 件：${Object.entries(slots).map(([s, n]) => `${s} ${n}`).join("、")}`);
@@ -139,12 +207,14 @@ async function main() {
   const db = {
     schema: "submarine",
     updated: new Date().toISOString().slice(0, 10),
-    source: "XIVAPI v2 SubmarinePart／SubmarineExploration／SubmarineRank ＋ data/items.json ＋ tw-locales.submarineVoyages",
+    source: "XIVAPI v2 SubmarinePart／SubmarineExploration／SubmarineRank／AirshipExplorationPart／AirshipExplorationPoint／AirshipExplorationLevel ＋ data/items.json ＋ tw-locales.submarineVoyages／airshipVoyages",
     note: "部件的部位名取自道具分類（台服官方），**不是從 SubmarinePart.Slot 推的**——Slot 編號與道具順序不一致。航點只有各點自己的桶數與時間；**多點航程要幾桶的公式不在遊戲資料裡，本站不提供**。",
-    counts: { parts: outParts.length, destinations: outDest.length, ranks: outRanks.length },
+    counts: { parts: outParts.length, destinations: outDest.length, ranks: outRanks.length,
+      airParts: airParts.length, airDestinations: airDest.length, airLevels: airLevels.length },
     parts: outParts,
     destinations: outDest,
     ranks: outRanks,
+    airship: { parts: airParts, destinations: airDest, levels: airLevels },
   };
   await writeFile(join(DATA, "submarine.json"), JSON.stringify(db));
   console.log(`\n✓ data/submarine.json（部件 ${outParts.length}／航點 ${outDest.length}／階級 ${outRanks.length}）`);

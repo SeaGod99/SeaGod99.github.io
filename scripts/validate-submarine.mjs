@@ -235,6 +235,64 @@ const byId = new Map(ITEMS.map((i) => [i.id, i]));
     !JSON.stringify(DB).includes('"drops"'), '');
 }
 
+// ── 飛空艇（2026-10-03）──────────────────────────────────
+/* 同一條鐵則：部位名取自道具分類、部件靠 AdditionalData 對 AirshipExplorationPart，
+   航點名 row id 對齊之外再用「Sea of Clouds NN ↔ 雲海NN」驗一次；載客航班不是探索航點。
+   飛空艇的等級表沒有能力值加成，頁面只做相加，不判定成功與否。 */
+{
+  const A = DB.airship || { parts: [], destinations: [], levels: [] };
+  push('飛空艇部件 28 件、四個部位各 7 件', A.parts.length === 28 &&
+    ['船體', '艤裝', '船首', '船尾'].every((s) => A.parts.filter((p) => p.slot === s).length === 7), A.parts.length + ' 件');
+  const bad = A.parts.filter((p) => byId.get(p.itemId)?.category !== '飛空艇組件（' + p.slot + '）');
+  push('  部位名與道具分類逐件一致（不從 Slot 推）', bad.length === 0, bad.slice(0, 2).map((p) => p.name).join('、'));
+  push('  partId 1–28 一對一', new Set(A.parts.map((p) => p.partId)).size === 28 && A.parts.every((p) => p.partId >= 1 && p.partId <= 28), '');
+  push('飛空艇航點 24 個，名稱都是「雲海NN」', A.destinations.length === 24 && A.destinations.every((d) => /^雲海\d\d$/.test(d.name)), A.destinations.length + ' 個');
+  push('  載客航班（雲冠群島）不收', !A.destinations.some((d) => /雲冠/.test(d.name)), '');
+  push('  建置腳本用英文名驗 row id 對齊', /Sea of Clouds \(\\d\+\)/.test(readFileSync(join(ROOT, 'scripts/build-submarine.mjs'), 'utf8')), '');
+  push('等級表 50 階、只有可載量與升級經驗（沒有能力值加成）', A.levels.length === 50 &&
+    A.levels.every((l) => Object.keys(l).sort().join() === 'capacity,expToNext,rank'), A.levels.length + ' 階');
+
+  const vc = new VirtualConsole();
+  const errs = [];
+  vc.on('jsdomError', (e) => errs.push(e.message));
+  const store = { ffxiv_airship: JSON.stringify({ parts: { 船體: A.parts.find((p) => p.slot === '船體' && p.class === 7)?.itemId }, rank: 20 }) };
+  const dom = new JSDOM(HTML, { runScripts: 'outside-only', url: 'https://seagod99.github.io/tools/submarine/?t=air', virtualConsole: vc });
+  const { window } = dom, doc = window.document;
+  Object.defineProperty(window, 'localStorage', { configurable: true, value: {
+    getItem: (k) => (k in store ? store[k] : null), setItem: (k, v) => { store[k] = String(v); },
+    removeItem: (k) => { delete store[k]; }, key: () => null, get length() { return 0; } } });
+  window.fetch = async (u) => {
+    const rel = String(u).replace(/^.*\/(data|assets)\//, '$1/');
+    if (!existsSync(join(ROOT, rel))) return { ok: false, status: 404, json: async () => ({}) };
+    return { ok: true, status: 200, json: async () => JSON.parse(readFileSync(join(ROOT, rel), 'utf8')) };
+  };
+  window.matchMedia = () => ({ matches: false, addEventListener() {}, addListener() {} });
+  window.eval([...doc.querySelectorAll('script:not([src])')].map((s) => s.textContent).join(';\n'));
+  await new Promise((r) => setTimeout(r, 800));
+  push('?t=air 直接停在飛空艇分頁', doc.getElementById('airView').hidden === false && doc.getElementById('subView').hidden === true &&
+    doc.getElementById('modeAir').getAttribute('aria-pressed') === 'true', window.location.search);
+  push('  四個部位的選單、每個 7 個選項', [...doc.querySelectorAll('#airFields select')].length === 4 &&
+    [...doc.querySelectorAll('#airFields select')].every((s) => s.options.length === 7), '');
+  push('  存檔還原：階級 20、船體是存的那件', doc.getElementById('airRank').value === '20' &&
+    +doc.getElementById('al-船體').value === JSON.parse(store.ffxiv_airship).parts.船體, '');
+  const sel = [...doc.querySelectorAll('#airFields select')].map((s) => A.parts.find((p) => p.itemId === +s.value));
+  const want = ['surveillance', 'retrieval', 'speed', 'range', 'favor'].map((k) => sel.reduce((t, p) => t + p[k], 0));
+  const got = [...doc.querySelectorAll('#airTotals .tot b')].slice(0, 5).map((b) => +b.textContent);
+  push('  能力值＝四件部件相加（不加等級加成）', JSON.stringify(want) === JSON.stringify(got), got.join('／'));
+  const trs = [...doc.querySelectorAll('#airBody tr')];
+  const firstLocked = trs.findIndex((tr) => tr.classList.contains('locked'));
+  push('  24 列、階級 20 去得了的排前面', trs.length === 24 && firstLocked === A.destinations.filter((d) => d.rankReq <= 20).length, `第一個灰掉的在第 ${firstLocked} 列`);
+  doc.getElementById('airRank').value = '35';
+  doc.getElementById('airRank').dispatchEvent(new window.Event('input', { bubbles: true }));
+  push('  改階級會存回 ffxiv_airship（存 itemId）', JSON.parse(store.ffxiv_airship).rank === 35 &&
+    Object.values(JSON.parse(store.ffxiv_airship).parts).every((id) => A.parts.some((p) => p.itemId === id)), store.ffxiv_airship);
+  push('  停在飛空艇分頁時網址不被潛水艇參數蓋掉', window.location.search === '?t=air', window.location.search);
+  doc.getElementById('modeSub').dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
+  push('  切回潛水艇：網址換回潛水艇的參數', /rank=/.test(window.location.search) && doc.getElementById('airView').hidden === true, window.location.search);
+  push('  頁面講明不判定成功、沒有等級加成', /不判定/.test(HTML) && /沒有能力值加成/.test(HTML), '');
+  push('  無 console error', errs.length === 0, errs.slice(0, 1).join('') || '乾淨');
+}
+
 push('data/submarine.json 有進 _meta', (() => {
   const meta = JSON.parse(readFileSync(join(ROOT, 'data/_meta.json'), 'utf8'));
   return (meta.databases || []).some((d) => d.file === 'submarine.json');

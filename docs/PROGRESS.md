@@ -223,6 +223,11 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 
 ## 五、更新紀錄
 
+- **2026-10-03v（潛水艇頁加「飛空艇」分頁）**：第二輪路線圖 `airship-voyages`。頁首一顆「潛水艇／飛空艇」切換，飛空艇分頁有四個部位的部件選單、艇的階級、能力值合計與可載量，以及 24 個雲海航點（階級、桶、距離、時間、經驗、經驗／小時、索敵需求原值）；去得了的排前面。網址 `?t=air`，配置存 `ffxiv_airship`（只記一艘、存 itemId）。
+  - **資料**：`build-submarine.mjs` 在 `submarine.json` 加 `airship` 區塊。部件 28 件靠 `Item.AdditionalData` = `AirshipExplorationPart` 的 row id（1–28 一對一），部位名取自道具分類（船體／艤裝／船首／船尾），**不從 Slot 推**（同潛水艇）。航點名走 `tw-locales.airshipVoyages`，row id 對齊之外再用「Sea of Clouds NN ↔ 雲海NN」逐筆驗，對不上就中止；雲冠群島的載客航班（`Passengers`）不是探索航點，不收。
+  - **只做相加，不判定成功**：飛空艇的等級表只有可載量與升級經驗、**沒有能力值加成**（潛水艇才有），頁面講明；不提供多點航程試算與掉落（同潛水艇）。「索敵需求」照 `SurveillanceReq` 原值列，不解讀。
+  - `validate-submarine.mjs` 44 → 61 項（含「停在飛空艇分頁時網址不被潛水艇參數蓋掉」「切回去網址換回來」）；真瀏覽器通過、另截 360px 看過；SW bump。
+
 - **2026-10-03u（新頁：任務查詢 `/tools/quest-finder/`）**：第二輪路線圖 `quest-finder`。用台服任務名的一部分查 5,130 個任務：等級、手帳章節、區域，展開後是接取 NPC（附地圖彈窗與 `/coord` 座標鈕）、前置任務（點了在頁內切過去）、物品報酬／可選報酬（可交易的連市場頁）、金幣；主線任務另連主線進度頁的 `?id=`。
   - **資料 `scripts/build-quests.mjs` → `data/quests/`**：索引 `_index.json`（搜尋用，gzip 80KB）＋依資料片 6 片細節（10–42KB，點開才載）。覆蓋率與路線圖驗證者量的對得上：等級 100%、區域 98.7%、NPC＋座標 95.4%（沒有的整行不顯示）、前置 83.8%、報酬物品 99.1% 有台服名。**`Quest.Reward` 是多型欄位，只收 sheet 是 `Item` 的**（30 筆指向別張表，照 id 查 items.json 會對到不相干的物品）。同名任務 70 組，一律以 id 為鍵。
   - **命令面板也搜得到任務**（`site-index` 13,648 筆、gzip 152.8KB，上限 200KB）；任務與成就同屬大類別、排在最後。`validate-achievements` 的「成就是最後一類」改成「成就排在大類別區」。
