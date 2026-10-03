@@ -163,7 +163,9 @@
       .zone-grid { grid-template-columns:1fr; }
       .exp-name { min-width:auto; width:100%; padding-top:0; }
     }
-  </style>
+    .g-mkt { color: inherit; }
+  .g-mkt:hover { color: var(--accent); }
+</style>
   <script src="../../assets/js/theme.js"></script>
 <script src="../../assets/js/unlock-banner.js"></script>
 </head>
@@ -273,7 +275,7 @@ function renderSummary() {
     <img class="g-icon" src="${g.icon ? 'https://v2.xivapi.com' + g.icon : ''}" alt="" onerror="this.style.visibility='hidden'">
     <div>
       <div class="g-main">${g.name.replace('陳舊的地圖', '陳舊的地圖 ')}${aliasNote}</div>
-      <div class="g-sub">${zones} 個地區 · ${g.locations.length} 個挖寶點</div>
+      <div class="g-sub">${zones} 個地區 · ${g.locations.length} 個挖寶點 · <a class="g-mkt" href="../market/?item=${g.id}">市場行情</a></div>
     </div>
     <span class="badge badge-exp">${g.expansion ? expLabel(g.expansion) : '—'}</span>
     <span class="badge ${party ? 'badge-party' : 'badge-solo'}">${party ? '👥 組隊寶物庫' : '🧍 單人挖掘'}</span>`;

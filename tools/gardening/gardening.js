@@ -732,6 +732,9 @@
           (p.minion ? '<span class="chip gold">寵物</span>' : '') +
           (p.flower ? '<span class="chip gold">花卉 · 9 色</span>' : '') +
           '<button type="button" class="copy-btn" data-copy="' + esc(p.name) + '">複製名稱</button>' +
+          // 市場頁（行情；不可交易的會改顯示取得管道）——2026-10-03 補，原本這頁沒有任何站內出口
+          '<a class="chip" href="../market/?item=' + p.productId + '">作物行情</a>' +
+          (p.seedId ? '<a class="chip" href="../market/?item=' + p.seedId + '">種子行情</a>' : '') +
         '</div>' +
       '</div></div>' +
       shortcutBlock(p) +

@@ -232,7 +232,10 @@
     .gnp-name { font-weight:700; width:100%; }
     .gnp-meta { opacity:.75; }
     .gnp .windows { width:100%; margin-top:2px; }
-  </style>
+    /* 產物名連到市場頁（行情；不可交易的會顯示取得管道） */
+  .item-link { color: inherit; text-decoration: none; border-bottom: 1px dotted var(--border-hover, var(--border)); }
+  .item-link:hover { color: var(--accent); border-bottom-color: currentColor; }
+</style>
   <!-- 鬧鐘引擎（classic script，掛 window.ETAlarm）。下面的 type="module" 是延後執行的，順序天然成立。 -->
   <script src="../../assets/js/et-alarm.js"></script>
   <script src="../../assets/js/theme.js"></script>
@@ -395,15 +398,18 @@ async function loadData(){
     .filter(n => n.limited === true)
     .map(n => {
       const map = MAPS.get(n.coords.mapId);
-      const itemNames = (n.items || [])
-        .map(id => ITEMS.get(id))
-        .filter(Boolean); // 對不到名稱 = 台服未開放，直接不顯示
+      // 保留 id：產物名連到市場頁（2026-10-03；原本載入時就把 id 丟掉，連不過去）
+      const items = (n.items || [])
+        .map(id => [id, ITEMS.get(id)])
+        .filter(x => x[1]); // 對不到名稱 = 台服未開放，直接不顯示
+      const itemNames = items.map(x => x[1]);
       return {
         id: n.id,
         job: n.job,
         typeName: n.typeName,
         level: n.level,
         itemNames,
+        items,
         mapId: n.coords.mapId,
         mapName: map ? map.name : null,
         mapMissing: !!n.mapMissing || n.coords.mapId === 0 || !map,
@@ -710,7 +716,7 @@ function render(){
         <div class="node-top">
           <div class="node-job">${jobEmoji(n.job)}</div>
           <div class="node-titles">
-            <div class="node-name">${n.itemNames.join('、')}</div>
+            <div class="node-name">${n.items.map(([id, nm]) => `<a class="item-link" href="../market/?item=${id}">${nm}</a>`).join('、')}</div>
             <div class="node-loc">${loc} ${verBadge}</div>
           </div>
           ${pill}

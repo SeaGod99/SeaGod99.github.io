@@ -62,7 +62,9 @@
     tbody td:first-child, tbody td:nth-child(2) { text-align: left; }
     tbody tr:hover { background: var(--bg-card-hover); }
     .rank-num { color: var(--text-muted); font-size: 0.75rem; width: 2.2em; }
-    .iname { font-weight: 600; }
+    .iname { font-weight: 600; color: inherit; text-decoration: none; }
+    a.iname:hover { color: var(--accent); text-decoration: underline; }
+    a.iname { display: inline-block; padding: 3px 0; }   /* 一行接一行的連結用真實 padding 撐高（CLAUDE.md） */
     .icat { color: var(--text-muted); font-size: 0.72rem; }
     .per { font-weight: 700; color: var(--gold); }
     .top3 .per { color: var(--green); }
@@ -248,7 +250,7 @@
       if (p && i < 3 && liquid(r)) cls.push('top3');
       html += '<tr class="' + cls.join(' ') + '">' +
         '<td class="rank-num">' + (i + 1) + '</td>' +
-        '<td><span class="iname">' + x.name + '</span> <span class="icat">' + (x.category || '') + '</span></td>' +
+        '<td><a class="iname" href="../market/?item=' + x.id + '">' + x.name + '</a> <span class="icat">' + (x.category || '') + '</span></td>' +
         '<td>' + fmt(x.cost) + '</td>' +
         '<td class="dimtxt">×' + (x.count || 1) + '</td>' +
         (hasRank ? '<td class="dimtxt">' + (x.rank || '—') + '</td>' : '') +
@@ -318,7 +320,7 @@
       if (p && i < 3 && liquid(r)) cls.push('top3');
       html += '<tr class="' + cls.join(' ') + '">' +
         '<td class="rank-num">' + (i + 1) + '</td>' +
-        '<td><span class="iname">' + x.name + '</span> <span class="icat">' + (x.category || '') + '</span></td>' +
+        '<td><a class="iname" href="../market/?item=' + x.id + '">' + x.name + '</a> <span class="icat">' + (x.category || '') + '</span></td>' +
         '<td class="dimtxt">×' + (x.count || 1) + '</td>' +
         '<td>' + fmt(x.seals) + '</td>' +
         '<td class="dimtxt">' + (x.xp ? x.xp.toLocaleString() : '—') + '</td>' +

@@ -45,8 +45,11 @@
     tbody td:first-child, tbody td:nth-child(2) { text-align: left; }
     tbody tr:hover { background: var(--bg-card-hover); }
     .rank-num { color: var(--text-muted); font-size: 0.75rem; width: 2.2em; }
-    .iname { font-weight: 600; }
-    .isub { color: var(--text-muted); font-size: 0.72rem; }
+    .iname { font-weight: 600; color: inherit; text-decoration: none; }
+    a.iname:hover, a.isub:hover { color: var(--accent); text-decoration: underline; }
+    /* 一行接一行的連結：用真實 padding 撐到 24px 以上（不能用 ::after 擴張層，會蓋到上下列；CLAUDE.md） */
+    a.iname, a.isub { display: inline-block; padding: 3px 0; }
+    .isub { color: var(--text-muted); font-size: 0.72rem; text-decoration: none; }
     .per { font-weight: 700; color: var(--gold); }
     .top3 .per { color: var(--green); }
     .dimtxt { color: var(--text-muted); }
@@ -216,8 +219,9 @@
         : '<span class="dimtxt">已滿檔</span>';
       html += '<tr class="' + cls.join(' ') + '">' +
         '<td class="rank-num">' + (i + 1) + '</td>' +
-        '<td><span class="iname">' + v.name + '</span>' +
-          (v.name !== v.itemName ? ' <span class="isub">' + v.itemName + '</span>' : '') + '</td>' +
+        (v.name === v.itemName
+          ? '<td><a class="iname" href="../market/?item=' + v.itemId + '">' + v.name + '</a></td>'
+          : '<td><span class="iname">' + v.name + '</span> <a class="isub" href="../market/?item=' + v.itemId + '">' + v.itemName + '</a></td>') +
         '<td class="dimtxt">' + (v.level || '—') + '</td>' +
         '<td class="qty">' + t.cur.qty + '</td>' +
         '<td class="next">' + nextTxt + '</td>' +

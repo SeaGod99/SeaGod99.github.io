@@ -389,6 +389,7 @@ body::before{ content:''; position:fixed; inset:0; pointer-events:none; z-index:
 .chip-dye{ color:var(--purple); border-color:color-mix(in srgb, var(--purple) 40%, transparent); }
 .chip-nodye{ color:var(--text-muted); }
 .chip-mb{ color:var(--green); border-color:color-mix(in srgb, var(--green) 35%, transparent); }
+a.chip-mb{ text-decoration:none; } a.chip-mb:hover{ text-decoration:underline; }
 .chip-set{ color:var(--accent2); border-color:rgba(110,159,212,.4); cursor:pointer; }
 .chip-set:hover{ background:rgba(110,159,212,.15); }
 .zh-missing{ color:var(--orange); font-size:.68rem; border:1px solid color-mix(in srgb, var(--orange) 40%, transparent); border-radius:9px; padding:1px 7px; white-space:nowrap; }
@@ -832,7 +833,10 @@ function badgeChips(p, withSet) {
     chips.push(p.dye > 0
       ? `<span class="mini-chip chip-dye">🎨×${p.dye}</span>`
       : `<span class="mini-chip chip-nodye">${currentLang === "en" ? "no dye" : "不可染"}</span>`);
-  if (p.mb) chips.push(`<span class="mini-chip chip-mb">${currentLang === "en" ? "tradable" : "可交易"}</span>`);
+  // 可交易的件連到市場頁看行情（2026-10-03；原本這頁沒有任何站內出口）
+  if (p.mb) chips.push(iid
+    ? `<a class="mini-chip chip-mb" href="../market/?item=${iid}" onclick="event.stopPropagation()">${currentLang === "en" ? "tradable · market" : "可交易 · 行情"}</a>`
+    : `<span class="mini-chip chip-mb">${currentLang === "en" ? "tradable" : "可交易"}</span>`);
   if (withSet) {
     const s = ITEM_SETS_BY_ID.get(Number(iid)) ||
               ITEM_SETS_BY_NAME.get(p.zh || "") || ITEM_SETS_BY_NAME.get(p.ja || p.name || "");
