@@ -20,6 +20,17 @@
 
 ---
 
+## 0b. 自動化（2026-10-03 起，平常不用手動跑）
+
+週更由 GitHub Actions 代跑：`.github/workflows/fashion-report.yml`。
+
+- **什麼時候**：週二、週五 台北 16:30／18:30／21:00 各跑一次（來源站換週要幾十分鐘到幾小時，早的那次報「來源尚未換週」就空跑，由晚的補上）。
+- **做什麼**：`build-fashion-report.mjs` → `validate-data.mjs` → `validate-fashion-render.mjs`，全過且資料有變才 commit `data/fashion-report.json`＋`data/_meta.json` 並推上 main（機器人：github-actions[bot]）。推完會讀線上的 `data/fashion-report.json` 確認週次真的變了；10 分鐘沒變就主動要求 Pages 重建（用 `GITHUB_TOKEN` 推送不一定會觸發部署）。
+- **出錯時**：不推送，開一個標籤 `fashion-report-bot` 的 issue（已有開著的就改成留言）。另一支 `.github/workflows/fashion-report-check.yml` 每週三、六中午檢查資料是否落後，落後也開 issue——這是防「自動週更根本沒跑」（排程被延遲或停用）。
+- **手動跑一次**：GitHub repo 的 Actions 頁 →「時尚品鑑自動週更」→「Run workflow」（publish 預設勾選＝會推送）。本機照下面第 1 節跑也完全可以，兩者不衝突（機器人推送前會先 rebase）。
+- **改了那支 workflow 檔**：推上去會自動試跑一次，**不推送**，並檢查 token 的三個權限（推臨時分支再刪、建標籤、讀 Pages 設定）。2026-10-03 第一次試跑全過，報告「會更新到 week 453（verified）」。
+- **本機開工前**：機器人每週會推兩次，記得先 `git pull`（repo 很大，timeout 拉長）。
+
 ## 1. 跑就對了
 
 ```bash

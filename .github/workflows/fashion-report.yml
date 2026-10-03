@@ -54,7 +54,7 @@ jobs:
       SITE: https://seagod99.github.io
     steps:
       # 整個 repo 追蹤約 790MB（多半是幻化圖），只抓腳本需要的
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 1
           filter: blob:none
@@ -70,7 +70,7 @@ jobs:
             /out_data/equipment.msgpack
             /out_data/en-items.msgpack
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 24
 
