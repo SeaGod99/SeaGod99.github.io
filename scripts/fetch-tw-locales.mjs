@@ -70,6 +70,8 @@ const FILES = {
   // ── 航行（submarine-planner 用）
   submarineVoyages: "tw-submarine-voyages.json",
   airshipVoyages: "tw-airship-voyages.json",
+  // ── 無人島工坊主題（2026-10-03 補：原本是簡轉繁，16 筆裡「家具」「調料」兩筆是錯的）
+  islandCraftworksThemes: "tw-island-craftworks-theme.json",
   // ── 部族（beast-tribe-reputation 用）
   tribes: "tw-tribes.json",
   beastReputationRanks: "tw-beast-reputation-ranks.json",

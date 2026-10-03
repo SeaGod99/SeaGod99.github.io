@@ -37,6 +37,7 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import { loadTwLocales, twName as twLocName } from "./lib/tw-locales.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
@@ -171,6 +172,13 @@ function loadOverride() {
   for (const k of ["animals", "animalSpawns", "buildings", "categories", "areas", "themes", "ranks"]) o[k] = o[k] || {};
   return o;
 }
+// 工坊主題：Teamcraft tw-island-craftworks-theme（台服官方，2026-10-03 收進 tw-locales）優先，
+// 查不到才退回人工表 island-names-tw.json 的 themes（簡轉繁，16 筆裡「家具」「調料」兩筆是錯的）。
+const TWL = await loadTwLocales();
+const themeTw = (id) => twLocName(TWL.islandCraftworksThemes || {}, id);
+const themeNm = (id) => themeTw(id) || OV.themes[id] || null;
+const themeSrc = (id) => (themeTw(id) ? "tw-official" : nameSrc("themes", OV.themes[id]));
+
 // 各區塊的名稱來源等級 → 寫進每筆的 nameSource，讓前端能標注「非官方名」。
 // 物品類（itemId → items.json）恆為 tw-official，不經這裡。
 // 讀 OV 的時機在函式內，因為 OV 在下方才 load。
@@ -472,8 +480,8 @@ const report = [];
     if (id > 0 && (t.Name || "").trim()) themeName.set(id, t.Name);
   }
   const themeRows = Array.from(themeName.entries()).map(([id, cn]) => ({
-    id, name: OV.themes[id] || null, nameCn: cn, nameMissing: !OV.themes[id],
-    nameSource: nameSrc("themes", OV.themes[id]),
+    id, name: themeNm(id), nameCn: cn, nameMissing: !themeNm(id),
+    nameSource: themeSrc(id),
   }));
   report.push(["island-themes", write("island-themes.json", "island-themes", themeRows),
     themeRows.filter((r) => r.name).length]);
@@ -494,8 +502,8 @@ const report = [];
       }
       const themes = [num(r["Theme[0]"]), num(r["Theme[1]"])]
         .filter((t) => t > 0)
-        .map((t) => ({ id: t, name: OV.themes[t] || null, nameCn: themeName.get(t) || null,
-          nameSource: nameSrc("themes", OV.themes[t]) }));
+        .map((t) => ({ id: t, name: themeNm(t), nameCn: themeName.get(t) || null,
+          nameSource: themeSrc(t) }));
       return {
         id: mainKey(r._key), itemId, name, nameMissing: !name, icon: twIcon(itemId),
         themes, materials,
