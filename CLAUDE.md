@@ -109,7 +109,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 技能辭典回歸（**改完 `tools/action-codex/` 或該目錄資料必跑**） | `node scripts/validate-action-codex.mjs`（39 項：UI 標記洗乾淨、條件式收斂、PvP／PvE 分得開、連擊樹不畫半截也不混 PvP、解鎖時程沒選職業時不畫）|
 | 貼清單匯入回歸（**改完 `market.js` 的 `parsePasteLines`／`importPasted` 必跑**） | `node scripts/validate-paste-import.mjs`（35 項：數量解析的 11 種貼法、查不到的要逐行列出、不解析外站連結這個決定）|
 | 綁定備份檔回歸（**改完首頁的進度備份區必跑**） | `node scripts/validate-backup-file.mjs`（32 項：不支援的瀏覽器不長鈕、`requestPermission` 只能在使用者手勢裡要、handle 只能放 IndexedDB、被拒時不可靜默失敗）|
-| 多角色設定檔回歸（**改完 `assets/js/profiles.js` 必跑**） | `node scripts/validate-profiles.mjs`（28 項：白名單反轉、只覆蓋不刪、存不進去就不切）|
+| 多角色設定檔回歸（**改完 `assets/js/profiles.js` 必跑**） | `node scripts/validate-profiles.mjs`（41 項：白名單反轉、只覆蓋不刪、存不進去就不切、**匯入備份時名單取聯集且目前進度歸給備份當時作用中的角色**）|
 | 重建主線任務（換台服版本後） | `node scripts/build-msq.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/msq.json`（14 章／1,012 個）|
 | 主線進度回歸（**改完 `tools/msq/` 或 `msq.json` 必跑**） | `node scripts/validate-msq.mjs`（26 項；最重要的是章節順序＝`JournalGenre` 的 row id）|
 | 重建部族聲望（改版開新部族時才跑） | `node scripts/build-beast-tribes.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/beast-tribes.json`（18 個部族＋9 階門檻）|

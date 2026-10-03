@@ -1157,6 +1157,8 @@
     else setTimeout(refresh, 400);
   })();
   document.getElementById('pdExportBtn').addEventListener('click', function () {
+    // 作用中角色的快照只在切換時寫；不先存的話備份裡那隻的快照是舊的
+    if (window.SGT_PROFILES && SGT_PROFILES.saveActive) SGT_PROFILES.saveActive();
     var keys = {};
     var n = 0;
     for (var i = 0; i < localStorage.length; i++) {
@@ -1190,14 +1192,29 @@
         }
         var names = Object.keys(data.keys).filter(function (k) { return k.indexOf('ffxiv_') === 0; });
         if (!names.length) { notify('匯入失敗：備份檔內沒有進度資料', 'err'); return; }
+        // 多角色的備份：角色名單與快照不算「進度紀錄」，確認框只數真正的進度，另外講有幾個角色
+        var snaps = names.filter(function (k) { return k.indexOf('ffxiv_profile_') === 0; }).length;
+        var prog = names.filter(function (k) { return k !== 'ffxiv_profiles' && k.indexOf('ffxiv_profile_') !== 0; }).length;
         // ⚠ Toast.confirm 回傳 Promise，整段還原流程必須放在 .then 裡（見 assets/js/toast.js 檔頭）
-        askConfirm('將還原 ' + names.length + ' 項進度紀錄（' + (data.exported ? '備份於 ' + data.exported.slice(0, 10) : '備份時間不明') + '），此瀏覽器上同名的既有進度會被覆蓋，確定嗎？', true)
+        askConfirm('將還原 ' + prog + ' 項進度紀錄' + (snaps ? '與 ' + snaps + ' 個角色的進度' : '') +
+          '（' + (data.exported ? '備份於 ' + data.exported.slice(0, 10) : '備份時間不明') + '），此瀏覽器上同名的既有進度會被覆蓋，確定嗎？', true)
           .then(function (ok) {
             if (!ok) return;
-            names.forEach(function (k) {
-              try { localStorage.setItem(k, data.keys[k]); } catch (err) {}
-            });
-            notify('匯入成功，已還原 ' + names.length + ' 項進度紀錄。', 'ok');
+            var msg;
+            if (window.SGT_PROFILES && SGT_PROFILES.importBackup) {
+              /* 有多角色的話不能逐 key 照寫：備份的角色名單會蓋掉本機的（本機多出的角色變孤兒），
+                 備份的目前進度也可能屬於另一隻角色。規則在 assets/js/profiles.js 的 importBackup()。 */
+              var r = SGT_PROFILES.importBackup(data.keys);
+              var cur = SGT_PROFILES.active();
+              msg = '匯入成功，已還原 ' + prog + ' 項進度紀錄' +
+                (r.into && cur && r.into !== cur ? '（存進角色「' + r.into + '」，目前仍是「' + cur + '」）' : '') + '。';
+            } else {
+              names.forEach(function (k) {
+                try { localStorage.setItem(k, data.keys[k]); } catch (err) {}
+              });
+              msg = '匯入成功，已還原 ' + prog + ' 項進度紀錄。';
+            }
+            notify(msg, 'ok');
             setTimeout(function () { location.reload(); }, 900);
           });
       } catch (err) {
@@ -1293,6 +1310,7 @@
     }
 
     function payload() {
+      if (window.SGT_PROFILES && SGT_PROFILES.saveActive) SGT_PROFILES.saveActive();
       var keys = {}, n = 0;
       for (var i = 0; i < localStorage.length; i++) {
         var k = localStorage.key(i);

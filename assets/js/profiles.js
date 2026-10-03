@@ -280,8 +280,51 @@
     setTimeout(function () { obs.disconnect(); }, 8000);
   }
 
+  /* 匯入「匯出全站進度」的備份檔（2026-10-03）。
+     舊版首頁直接把備份裡每個 ffxiv_ key 原樣寫回，有兩個錯：
+       ① 備份的角色名單（ffxiv_profiles）整個蓋掉本機的——本機有、備份沒有的角色，
+          快照還在 localStorage 裡卻從名單消失，介面上找不到（孤兒）
+       ② 備份裡的「目前進度」屬於**備份當下作用中的那隻角色**；本機若正切在別隻，
+          照寫回去就是把 A 的進度灌進 B
+     規則：各角色快照與共用偏好照備份還原；目前進度歸給備份的作用中角色（本機正好是同一隻、
+     或本機沒開多角色時才寫進目前進度，否則存進那隻的快照）；名單取聯集，作用中的角色以本機為準。
+     切換角色的「只覆蓋不刪」不在這裡，不受影響。 */
+  function importBackup(keys) {
+    var bMeta = null;
+    try { bMeta = JSON.parse(keys[LS_META] || 'null'); } catch (e) {}
+    if (!(bMeta && Array.isArray(bMeta.names))) bMeta = null;
+    var lMeta = readMeta();
+    var bActive = bMeta ? bMeta.active : null;
+    var lActive = lMeta ? lMeta.active : null;
+    var put = function (k, v) { try { localStorage.setItem(k, v); return 1; } catch (e) { return 0; } };
+    var live = {}, n = 0;
+    Object.keys(keys).forEach(function (k) {
+      if (k.indexOf('ffxiv_') !== 0 || k === LS_META) return;
+      if (k.indexOf(PREFIX) === 0 || SHARED[k]) n += put(k, keys[k]);   // 快照與共用偏好
+      else live[k] = keys[k];
+    });
+    var into;
+    if (bMeta && lMeta && bActive && bActive !== lActive) {
+      n += put(PREFIX + bActive, JSON.stringify(live));                // 歸給備份的作用中角色，不碰目前這隻
+      into = bActive;
+    } else {
+      Object.keys(live).forEach(function (k) { n += put(k, live[k]); });
+      into = lActive || bActive;
+    }
+    if (bMeta || lMeta) {
+      var names = (lMeta ? lMeta.names : []).slice();
+      (bMeta ? bMeta.names : []).forEach(function (x) { if (names.indexOf(x) < 0) names.push(x); });
+      writeMeta({ active: lActive || bActive, names: names });
+    }
+    return { written: n, progress: Object.keys(live).length, into: into || null,
+      characters: bMeta ? bMeta.names.slice() : [] };
+  }
+
   window.SGT_PROFILES = {
     SHARED: SHARED,
+    importBackup: importBackup,
+    /** 匯出前呼叫：作用中角色的快照只在切換時寫，不先存的話備份裡那隻的快照是舊的。 */
+    saveActive: function () { var m = readMeta(); return m && m.active ? saveInto(m.active) : true; },
     list: function () { var m = readMeta(); return m ? m.names.slice() : []; },
     active: function () { var m = readMeta(); return m ? m.active : null; },
     characterKeys: characterKeys,

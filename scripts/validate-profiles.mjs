@@ -165,6 +165,61 @@ function mk(seed) {
   push('theme.js 會載 profiles.js', /profiles\.js/.test(theme), '');
 }
 
+// ── ④ 匯入全站備份（2026-10-03）────────────────────────
+/* 舊版首頁逐 key 照寫：備份的角色名單蓋掉本機的（本機多出的角色變孤兒），
+   備份的「目前進度」也可能屬於另一隻角色。規則在 profiles.js 的 importBackup()。 */
+{
+  // 本機有 A、C 兩隻且正切在 C；備份來自另一台：A、B 兩隻、當時作用中是 A
+  const { P, store } = mk({
+    ffxiv_profiles: JSON.stringify({ active: 'C', names: ['A', 'C'] }),
+    ffxiv_mounts_owned: '{"C的坐騎":1}',
+    ffxiv_profile_A: JSON.stringify({ ffxiv_mounts_owned: '{"本機舊A":1}' }),
+    ffxiv_market_opts: '{"本機偏好":1}',
+  });
+  const r = P.importBackup({
+    ffxiv_profiles: JSON.stringify({ active: 'A', names: ['A', 'B'] }),
+    ffxiv_mounts_owned: '{"備份A的坐騎":1}',
+    ffxiv_profile_B: JSON.stringify({ ffxiv_mounts_owned: '{"備份B":1}' }),
+    ffxiv_market_opts: '{"備份偏好":1}',
+  });
+  const meta = JSON.parse(store.ffxiv_profiles);
+  push('匯入：角色名單取聯集（本機的 C 不能變孤兒）', meta.names.join(',') === 'A,C,B', meta.names.join(','));
+  push('  作用中的角色以本機為準', meta.active === 'C', meta.active);
+  push('  備份的目前進度歸給備份當時作用中的 A（存進 A 的快照）',
+    JSON.parse(store.ffxiv_profile_A || '{}').ffxiv_mounts_owned === '{"備份A的坐騎":1}', store.ffxiv_profile_A);
+  push('  不碰本機目前這隻 C 的進度', store.ffxiv_mounts_owned === '{"C的坐騎":1}', store.ffxiv_mounts_owned);
+  push('  備份裡其他角色的快照照樣還原', JSON.parse(store.ffxiv_profile_B || '{}').ffxiv_mounts_owned === '{"備份B":1}', '');
+  push('  共用偏好照備份還原', store.ffxiv_market_opts === '{"備份偏好":1}', store.ffxiv_market_opts);
+  push('  回報存進了哪一隻', r.into === 'A', String(r.into));
+}
+{
+  // 本機沒開多角色、備份也沒有：與舊行為相同，直接寫回目前進度
+  const { P, store } = mk({ ffxiv_mounts_owned: '{"舊":1}' });
+  P.importBackup({ ffxiv_mounts_owned: '{"新":1}' });
+  push('匯入（都沒開多角色）：直接寫回目前進度', store.ffxiv_mounts_owned === '{"新":1}', store.ffxiv_mounts_owned);
+  push('  不會憑空長出角色名單', !('ffxiv_profiles' in store), '');
+}
+{
+  // 本機與備份都切在同一隻：寫進目前進度
+  const { P, store } = mk({
+    ffxiv_profiles: JSON.stringify({ active: 'A', names: ['A'] }), ffxiv_mounts_owned: '{"舊":1}',
+  });
+  P.importBackup({ ffxiv_profiles: JSON.stringify({ active: 'A', names: ['A'] }), ffxiv_mounts_owned: '{"新":1}' });
+  push('匯入（同一隻角色）：寫進目前進度', store.ffxiv_mounts_owned === '{"新":1}', store.ffxiv_mounts_owned);
+}
+{
+  // 匯出前要先存作用中角色的快照（快照只在切換時寫）
+  const { P, store } = mk({
+    ffxiv_profiles: JSON.stringify({ active: 'A', names: ['A', 'B'] }), ffxiv_mounts_owned: '{"最新":1}',
+    ffxiv_profile_A: JSON.stringify({ ffxiv_mounts_owned: '{"舊快照":1}' }),
+  });
+  P.saveActive();
+  push('saveActive() 把作用中角色的快照更新到最新', JSON.parse(store.ffxiv_profile_A).ffxiv_mounts_owned === '{"最新":1}', '');
+  const home = readFileSync(join(ROOT, 'index.html'), 'utf8');
+  push('  首頁兩條匯出路徑（下載、綁定備份檔）都先呼叫 saveActive', (home.match(/SGT_PROFILES\.saveActive\(\)/g) || []).length >= 2, '');
+  push('  首頁匯入走 importBackup()', /SGT_PROFILES\.importBackup\(data\.keys\)/.test(home), '');
+}
+
 let fail = 0;
 for (const [n, ok, d] of results) { console.log(`${ok ? '✓' : '✗'} ${n}  ${d ?? ''}`); if (!ok) fail++; }
 console.log(fail ? `\n${fail} 項失敗（共 ${results.length}）` : `\n全部通過（${results.length} 項）`);
