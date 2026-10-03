@@ -55,10 +55,33 @@ for (const d of dbs) {
   }
 }
 
-// 沒登記進 databases[] 的資料檔（新增資料庫時很容易忘記登記）
+/* 刻意不登記的檔與目錄（2026-10-03，第二輪路線圖 meta-registry-rule）。
+   **登記的意思是「前端會讀、要追蹤它的新鮮度」。** 下面這些前端不讀（建置快照、中繼檔、報告），
+   每一條都要講得出理由；沒登記、也不在這裡的，才會被當成「忘了登記」報出來。
+   另外，一筆登記可以用 `family`（檔名前綴）代表一整組檔，例如 island-*.json。 */
+const NOT_REGISTERED = {
+  "barding-names-tc.json": "建置快照（patch-barding-tc.mjs 讀），前端不載",
+  "bluemage-sources-tc.json": "建置快照（build-blue-magic／patch-blue-magic-sources 讀），前端不載",
+  "emotes-sources-fxc.json": "建置快照（patch-emotes-sources.mjs 讀），前端不載",
+  "emotes-sources-tc.json": "建置快照（patch-emotes-sources.mjs 讀），前端不載",
+  "minions-names-tc.json": "建置快照（patch-minions-tc.mjs 讀），前端不載",
+  "mounts-sources-tc.json": "建置快照（build-mounts／patch-mounts-tc 讀），前端不載",
+  "orchestrion-sources-fxc.json": "建置快照（patch-orchestrion-sources.mjs 讀），前端不載",
+  "orchestrion-sources-tc.json": "建置快照（patch-orchestrion-sources／patch-sources-from-om 讀），前端不載",
+  "fashion-fillers.json": "時尚品鑑週更的建置輸入（build-fashion-report.mjs 讀），前端不載",
+  "scripts/": "舊的一次性腳本與 build-emotes.mjs 的未對上報告，不是資料",
+};
+
+// 沒登記進 databases[] 的資料檔與子目錄（新增資料庫時很容易忘記登記）
 const registered = new Set(dbs.map((d) => d.file));
-const onDisk = readdirSync(DATA).filter((f) => f.endsWith(".json") && f !== "_meta.json");
-const unregistered = onDisk.filter((f) => !registered.has(f));
+const families = dbs.map((d) => d.family).filter(Boolean);
+const entries = readdirSync(DATA, { withFileTypes: true });
+const onDisk = entries.filter((e) => e.isFile() && e.name.endsWith(".json") && e.name !== "_meta.json").map((e) => e.name);
+const dirs = entries.filter((e) => e.isDirectory()).map((e) => e.name + "/");
+const covered = (f) => registered.has(f) || families.some((p) => f.startsWith(p)) || f in NOT_REGISTERED;
+const unregistered = onDisk.filter((f) => !covered(f))
+  .concat(dirs.filter((d) => !(d in NOT_REGISTERED) && ![...registered].some((f) => f.startsWith(d))));
+const stale = Object.keys(NOT_REGISTERED).filter((f) => !onDisk.includes(f) && !dirs.includes(f));
 
 console.log(`_meta.json：${dbs.length} 個資料庫登記`);
 if (rows.length) {
@@ -68,9 +91,12 @@ if (rows.length) {
   console.log("  ✓ 全部已同步");
 }
 if (unregistered.length) {
-  console.log(`\n⚠ 有 ${unregistered.length} 個資料檔沒登記進 databases[]（新庫記得補）：`);
+  console.log(`\n⚠ 有 ${unregistered.length} 個資料檔／目錄沒登記進 databases[]（前端會讀就登記；建置用的寫進本檔的 NOT_REGISTERED 並寫理由）：`);
   unregistered.forEach((f) => console.log(`    ${f}`));
+} else {
+  console.log(`  ✓ 沒有漏登記的檔（刻意不登記 ${Object.keys(NOT_REGISTERED).length} 項，理由見 NOT_REGISTERED）`);
 }
+if (stale.length) console.log(`\n⚠ NOT_REGISTERED 裡有已經不存在的項目（請刪掉）：${stale.join("、")}`);
 
 if (!APPLY) { console.log("\n（dry-run，未寫入。加 --apply 才會寫進 data/_meta.json）"); process.exit(0); }
 if (!changed) { console.log("\n沒有要改的。"); process.exit(0); }

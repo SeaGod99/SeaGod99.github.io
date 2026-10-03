@@ -561,6 +561,92 @@
       "updated": "2026-10-03",
       "desc": "台服任務 5,130 個：等級、手帳章節、區域（索引），接取 NPC＋座標、前置任務、物品報酬與金幣（依資料片分片 6 檔）",
       "source": "out_data/tw-quests.json ＋ XIVAPI v2 Quest／Level（Reward 只收 Item 表）＋ tw-locales journalGenre ＋ places.msgpack；scripts/build-quests.mjs"
+    },
+    {
+      "name": "染劑",
+      "file": "dyes.json",
+      "desc": "125 種染劑的台服名與色值；時尚品鑑週更與幻化圖鑑分享圖卡用",
+      "source": "scripts/build-dyes.mjs（items.json ＋ Stain）",
+      "updated": "2026-08-29",
+      "count": 125
+    },
+    {
+      "name": "時尚品鑑主題",
+      "file": "fashion-themes.json",
+      "desc": "各週主題的台服名（跨週不變的資料）",
+      "source": "scripts/build-fashion-themes.mjs",
+      "updated": "2026-07-25",
+      "count": 86
+    },
+    {
+      "name": "取得管道類型遮罩",
+      "file": "item-source-types.json",
+      "desc": "itemId → 取得管道位元遮罩（差分陣列）；市場頁「🎁 取得方式」篩選用。與 item-sources/ 由同一支產生",
+      "source": "scripts/build-item-sources.mjs",
+      "updated": "2026-10-03",
+      "count": 36343
+    },
+    {
+      "name": "採集用物品精簡表",
+      "file": "items-gathering.json",
+      "desc": "限時採集與採集紀錄兩頁用的物品精簡表",
+      "source": "scripts/build-items-lite.mjs",
+      "updated": "2026-09-23",
+      "count": 1272
+    },
+    {
+      "name": "無人島",
+      "file": "island-craftworks.json",
+      "family": "island-",
+      "desc": "無人島開拓的 12 份資料（素材、採集區、工房、主題、配方、建築、動物、階級…）；以工房那份代表新鮮度，family 涵蓋 island-*.json",
+      "source": "scripts/build-island.mjs",
+      "updated": "2026-10-03",
+      "count": 81
+    },
+    {
+      "name": "取得管道分片層",
+      "file": "item-sources/_index.json",
+      "desc": "物品 → 取得管道（依 itemId >> 10 分 45 片）；收藏頁、市場頁等按需載入",
+      "source": "scripts/build-item-sources.mjs",
+      "updated": "2026-10-03",
+      "count": 36343
+    },
+    {
+      "name": "NPC 商店目錄",
+      "file": "npc-shops/_index.json",
+      "desc": "依 mapId 分片的 NPC 商店與交易品項",
+      "source": "scripts/build-npc-shops.mjs",
+      "updated": "2026-09-26",
+      "count": 89
+    },
+    {
+      "name": "練級裝備路線",
+      "file": "leveling-gear/_index.json",
+      "desc": "43 個職業各自的等級門檻前緣",
+      "source": "scripts/build-leveling-gear.mjs",
+      "updated": "2026-09-26",
+      "count": 43
+    },
+    {
+      "name": "物品四語名稱查詢",
+      "file": "item-names/_index.json",
+      "desc": "英／日／簡中 → 台服繁中（256 片，依查詢鍵雜湊）",
+      "source": "scripts/build-item-names.mjs",
+      "updated": "2026-09-25"
+    },
+    {
+      "name": "技能四語名稱查詢",
+      "file": "action-names/_index.json",
+      "desc": "技能／狀態／特性的四語查詢（256 片）",
+      "source": "scripts/build-action-names.mjs",
+      "updated": "2026-09-26"
+    },
+    {
+      "name": "副本／地名／怪物／任務名稱查詢",
+      "file": "term-names/_index.json",
+      "desc": "名稱翻譯的四類（256 片）；一對多存陣列",
+      "source": "scripts/build-term-names.mjs",
+      "updated": "2026-10-03"
     }
   ]
 }
