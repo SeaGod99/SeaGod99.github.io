@@ -68,6 +68,13 @@ const etHours = (w) => (w.we - w.ws) / 1000 * EORZEA_MULT / 3600;
   push('全天開放的魚會被排除（不必等的不列）',
     /if \(!timed && !wk\.length && !pk\.length\) continue;/.test(HTML), '');
   push('沒有時間窗的節點會被排除', /if \(!n\.spawns \|\| !n\.spawns\.length\) continue;/.test(HTML), '');
+  // 按需載入（2026-10-03）：沒標就不抓；探索筆記一律要抓（列的是「還沒完成」的）
+  push('沒標目標魚就不載 fishes／fishing-spots',
+    /wantFish\.size \? fetch\('\.\.\/\.\.\/data\/fishes\.json'\)/.test(HTML) &&
+    /wantFish\.size \? fetch\('\.\.\/\.\.\/data\/fishing-spots\.json'\)/.test(HTML), '');
+  push('沒追蹤節點就不載 gathering', /wantNode\.size \? fetch\('\.\.\/\.\.\/data\/gathering\.json'\)/.test(HTML), '');
+  push('  探索筆記不設條件（什麼都沒勾的人反而最需要）',
+    /^\s*fetch\('\.\.\/\.\.\/data\/exploration-log\.json'\)/m.test(HTML), '');
 }
 
 // ── 探索筆記要合併，且排在使用者標記的後面 ──────────────────

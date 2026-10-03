@@ -167,12 +167,15 @@ async function load() {
   const wantNode = readSet(KEYS.node);
   const doneLog = readObj(KEYS.explog);
 
+  /* 沒標目標魚就不載魚與釣場（約 800KB）、沒追蹤節點就不載採集表（約 200KB）。
+     探索筆記**一律要載**：那一類列的是「還沒完成」的，什麼都沒勾的人反而最多。 */
+  const none = Promise.resolve({ data: [] });
   const [fishes, spots, nodes, explog, meta] = await Promise.all([
     // ⚠ 天氣表沒先載的話，所有看天氣的魚都會落到「算不出時間窗」
     initWeatherTables('../../data/maps.json').then(() => null),
-    fetch('../../data/fishes.json').then((r) => r.json()),
-    fetch('../../data/fishing-spots.json').then((r) => r.json()),
-    fetch('../../data/gathering.json').then((r) => r.json()),
+    wantFish.size ? fetch('../../data/fishes.json').then((r) => r.json()) : none,
+    wantFish.size ? fetch('../../data/fishing-spots.json').then((r) => r.json()) : none,
+    wantNode.size ? fetch('../../data/gathering.json').then((r) => r.json()) : none,
     fetch('../../data/exploration-log.json').then((r) => r.json()),
     fetch('../../data/_meta.json').then((r) => r.json()),
   ]).then((a) => a.slice(1));

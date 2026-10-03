@@ -95,7 +95,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 重建 PWA 圖示（改了 `assets/icons/icon.svg` 才要跑） | `node scripts/build-pwa-icons.mjs`（dry-run 預設／`--apply`）→ 192／512／180／maskable-512 四張 PNG |
 | PWA 可安裝性回歸（**改完 `manifest.json`、`assets/icons/` 或 `theme.js` 的注入區必跑**） | `node scripts/validate-pwa.mjs`（jsdom，36 項：圖示規格、shortcuts 指得到頁、三種深度的頁面都注入得到 link、安裝鈕行為）|
 | 「資料已更新 ↻」回歸（**改完 `sw.js` 的快取策略、`theme.js` 的 SW 區或 `toast.js` 必跑**） | `node scripts/validate-sw-update.mjs`（37 項：直接取出 `sw.js` 的 `sameVersion()` 執行、只通報 `/data/`、`Toast.action()` 的去重與不自動消失）|
-| 「現在能做什麼」回歸（**改完 `tools/now/` 或它吃的四份資料必跑**） | `node scripts/validate-now.mjs`（24 項，重點在兩個單位：探索筆記 `timeEnd` 含該小時、節點 `duration` 是 ET 分鐘）|
+| 「現在能做什麼」回歸（**改完 `tools/now/` 或它吃的四份資料必跑**） | `node scripts/validate-now.mjs`（27 項，重點在兩個單位：探索筆記 `timeEnd` 含該小時、節點 `duration` 是 ET 分鐘；另釘住「沒標就不載魚與採集表、探索筆記一律載」）|
 | 重建魔晶石與禁忌鑲嵌資料（改版時才跑） | `node scripts/build-materia.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/materia.json`（31 種屬性／229 件／12 階成功率）|
 | 禁忌鑲嵌試算回歸（**改完 `tools/melding/` 或 `data/materia.json` 必跑**） | `node scripts/validate-melding.mjs`（35 項：成功率不可寫死、期望值與 90% 累積機率的算式、孔位選單要反映資料）|
 | Universalis 客戶端回歸（**改完 `assets/js/universalis.js` 的請求／快取段必跑**） | `node scripts/validate-universalis.mjs`（9 項：在途請求合併、4xx 不重試、5xx 重試、逾時 signal、配額滿時清最舊快取、`homeWorld()`、兩個賣出頁扣稅）|
