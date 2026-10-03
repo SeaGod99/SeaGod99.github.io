@@ -180,6 +180,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 - 還原檔案時**先確認範圍**：`git restore .` 會連同你正在編輯的檔案一起還原（曾因此洗掉未 commit 的文件修改），只想補回某目錄就寫 `git restore tools/glamour`。
 - **根目錄的 `.nojekyll` 絕對不能刪**：GitHub Pages 預設跑 Jekyll，而 **Jekyll 會把底線開頭的檔案與目錄整個排除在發佈之外**。本站有 7 個這種檔（`data/_meta.json` ＋五個分片層的 `_index.json`），少了 `.nojekyll` 它們線上一律 404、而且回的是 HTML 404 頁，前端徵狀是 `Unexpected token '<', "<!DOCTYPE "... is not valid JSON`。**這個問題本機完全測不出來**（`file://` 與任何本機伺服器都正常供應）。`validate-links.mjs` 有一條斷言在防它被誤刪。
 - **GitHub Pages 1GB 發佈上限**：2026-10-02 實測 git 追蹤總計 **789.5MB**，餘裕約 234MB（09-27 是 784MB；大頭是 `tools/glamour/配裝圖片/` 550.6MB）。⚠ **`out_data/` 有 40 個檔（63.6MB）在 git 裡**，所以也被發佈到 Pages、佔上限額度，雖然前端從來不讀它們——不進 git 的只有 `out_data/cache/`、`out_data/tmp-newdb/`、`node_modules/` 與 glamour 的中間檔（舊版本句寫「out_data 不進 git」是錯的，10-02 更正）。新增大批圖片前先估增量，量法：`git ls-files -z | xargs -0 du -cb | awk '/total$/{s+=$1} END{print s/1048576}'`。
+- **部署可以改用 GitHub Actions**（2026-10-03 建好、**等站主啟用**）：`.github/workflows/pages.yml`＋`scripts/build-pages-artifact.mjs` 只上傳前端會讀的檔（排除 `out_data/`、`scripts/`、`docs/`、`tools/glamour/data/` 等，省 89MB），部署後比對線上 `build.json` 的 commit sha，失敗開 `pages-deploy-bot` issue。啟用＝Pages Source 改「GitHub Actions」＋repo 變數 `PAGES_VIA_ACTIONS=true`，步驟與回復方式見 [docs/pages-deploy-sop.md](docs/pages-deploy-sop.md)。**新增前端會讀的檔不要放進 `EXCLUDE` 的路徑**（閘門會擋）。本機驗發佈檔：`node scripts/build-pages-artifact.mjs --out <目錄>` → `MSYS_NO_PATHCONV=1 node scripts/validate-pages.mjs --serve <目錄>`。
 - 跑完 `update_all` 後，衍生的 js 與新縮圖**記得 commit**（`.gitignore` 已不擋）。
 
 **另外三條鐵則**（違反過、代價高，細節見「專案慣例與記憶」）：

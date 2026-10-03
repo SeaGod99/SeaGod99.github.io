@@ -29,12 +29,13 @@
 //   node scripts/validate-pages.mjs --page market   # 只驗路徑含 market 的頁
 //   node scripts/validate-pages.mjs --width 390     # 只驗某個寬度
 //   node scripts/validate-pages.mjs --shot out/     # 順便存截圖（除錯用）
+//   node scripts/validate-pages.mjs --serve _site   # 改從別的目錄供檔（驗 build-pages-artifact.mjs 組出來的發佈檔）
 
 import { spawn } from "node:child_process";
 import { createServer } from "node:http";
 import { readFile, writeFile, stat, mkdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
-import { dirname, join, extname } from "node:path";
+import { dirname, join, extname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -43,6 +44,9 @@ const argOf = (k) => (argv.includes(k) ? argv[argv.indexOf(k) + 1] : null);
 const pageFilter = argOf("--page");
 const widthFilter = argOf("--width") ? Number(argOf("--width")) : null;
 const shotDir = argOf("--shot");
+// 供檔的根目錄。頁面清單仍讀 repo 的 nav.js；**少了檔就會 404 → console error 或空白頁**，
+// 所以拿它驗發佈檔是準的：被排除掉而頁面其實要用的檔，會在這裡現形。
+const SERVE = argOf("--serve") ? resolve(ROOT, argOf("--serve")) : ROOT;
 
 const EDGE_CANDIDATES = [
   "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe",
@@ -80,7 +84,7 @@ const missing = new Set();
 const server = createServer(async (req, res) => {
   let p = decodeURIComponent(req.url.split("?")[0]);
   if (p.endsWith("/")) p += "index.html";
-  const f = join(ROOT, p);
+  const f = join(SERVE, p);
   try {
     if ((await stat(f)).isDirectory()) throw new Error("dir");
     res.writeHead(200, { "Content-Type": MIME[extname(f)] || "application/octet-stream" });

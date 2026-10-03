@@ -223,6 +223,14 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 
 ## 五、更新紀錄
 
+- **2026-10-03za（網站部署改用 GitHub Actions：建好、等站主啟用）**：第二輪路線圖 `pages-deploy-via-actions`（§7-2，站主「都可以製作」）。**切換 Pages 來源是 repo 的管理設定，工作流程的權限改不到**，所以做成「站主按兩下就生效、沒按之前一切照舊」。SOP 在 [docs/pages-deploy-sop.md](pages-deploy-sop.md)。
+  - **`scripts/build-pages-artifact.mjs`**：從 `git ls-files` 扣掉 `EXCLUDE`（`out_data/`、`scripts/`、`docs/`、`.github/`、`tools/glamour/data/`、`tools/glamour/scripts/`、`data/scripts/`、`*.md`、`*.bat`、`*.py`…，每條附理由），發佈 29,879 檔／705.5MB，**省 89MB**（1GB 上限的餘裕 230MB → 320MB）。四道閘門：必備檔（含六個底線開頭的 `_index.json`，§4.94）、`nav.js` 每一頁、前端寫死的 64 條 `data/` 路徑、被排除的路徑沒有前端字串指向。`--stamp <sha>` 在產出放 `build.json`。
+  - **`.github/workflows/pages.yml`**：只有 repo 變數 `PAGES_VIA_ACTIONS=true` 時才跑（沒設就每次推送出現一筆「略過」）。build → `deploy-pages` → verify（線上 `build.json` 的 sha 等於這次 commit 才算數；不用 `sw.js` 版本號當指紋，因為只改資料的 commit 不會換它）→ 任一步失敗開 `pages-deploy-bot` issue。
+  - **時尚品鑑週更**：`GITHUB_TOKEN` 的推送不會觸發其他 workflow，所以 Actions 模式時推送後主動 `gh workflow run pages.yml`（`workflow_dispatch` 是例外、會觸發），補救也改成再 dispatch 一次；舊模式維持補打 `pages/builds`。權限多 `actions: write`，試跑時多驗「讀得到 pages.yml」。
+  - **`validate-pages.mjs --serve <目錄>`**：改從別的目錄供檔。用它對組出來的發佈檔跑了一次全站真瀏覽器體檢（48 頁 × 3 寬度），被排除而其實要用的檔會以 404 現形——結果見下一行。
+  - **對發佈檔的全站體檢：48 頁 × 3 寬度、144 次檢查全部通過、0 個 404**——被排除的路徑確實沒有任何頁面要用。
+  - **站主要做的事**：照 SOP 按兩下（Pages Source 改「GitHub Actions」＋新增 repo 變數 `PAGES_VIA_ACTIONS=true`），再手動 Run 一次「部署網站」看三個 job 都綠。沒按之前網站照舊從 main 發佈，什麼都不會變。
+
 - **2026-10-03z（頁面體檢的「被蓋住」假警報；幻化圖鑑頁尾的資料日期與套數）**：第二輪路線圖 `validate-pages-covered`、`glamour-meta`。
   - **`validate-pages.mjs`**：點擊目標的中心點被別的東西蓋住時，先 `scrollIntoView({block:'center', behavior:'instant'})` 再量一次，量完捲回原位；捲過去之後還被蓋住的才報。幻化圖鑑 360px 的 `button.fav-btn` 警告（sticky 頁首蓋住）因此消失——它本來就不是缺陷。`instant` 是因為頁面若設了 `scroll-behavior: smooth`，量的時候還沒捲到。
   - **幻化圖鑑頁尾**多一行「資料更新 2026-10-01 · 社群配裝 7,178 套 · 官方套裝 1,977 套 · 精選 95 套」，讀 `tools/glamour/site_meta.json`（`build_site.py` 產生）。**日期只在資料內容變了才更新**：雜湊算在 `sort_keys` 的資料上而不是輸出檔——`item_db.js` 裡有一個 dict 的鍵順序每次建置都可能不同（內容相同），拿檔案算的話每跑一次日期就跳一次（實測重建兩次雜湊相同）。初始日期用 PROGRESS 記錄的最後一次資料更新（10-01），不是今天。分享圖卡、活動分類、`health_check` 照過。

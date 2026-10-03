@@ -38,6 +38,7 @@ permissions:
   contents: write
   pages: write
   issues: write
+  actions: write     # Actions 部署模式時要 dispatch pages.yml（見下方「確認網站真的更新了」）
 
 concurrency:
   group: fashion-report
@@ -52,6 +53,8 @@ jobs:
       GH_TOKEN: ${{ github.token }}
       REPO: ${{ github.repository }}
       SITE: https://seagod99.github.io
+      # 站主把 Pages 改成 Actions 部署時設的 repo 變數（docs/pages-deploy-sop.md）。沒設＝舊的分支發佈
+      PAGES_VIA_ACTIONS: ${{ vars.PAGES_VIA_ACTIONS }}
     steps:
       # 整個 repo 追蹤約 790MB（多半是幻化圖），只抓腳本需要的
       - uses: actions/checkout@v5
@@ -89,6 +92,7 @@ jobs:
           gh label create fashion-report-bot --repo "$REPO" --color D93F0B --description "時尚品鑑自動週更" --force
           echo "✓ issues: write（建立標籤）"
           gh api "repos/$REPO/pages" --jq '"✓ pages 可讀：build_type=\(.build_type) source=\(.source.branch)/\(.source.path)"'
+          gh api "repos/$REPO/actions/workflows/pages.yml" --jq '"✓ actions 可讀：pages.yml 已登記（state=\(.state)）；PAGES_VIA_ACTIONS=" + env.PAGES_VIA_ACTIONS' || echo "::warning::讀不到 pages.yml（Actions 部署模式時週更會叫不動它）"
 
       - name: 跑週更腳本
         id: build
@@ -152,9 +156,15 @@ jobs:
           want="${{ steps.push.outputs.week }}/${{ steps.push.outputs.status }}"
           live() { curl -fsSL "$SITE/data/fashion-report.json?t=$(date +%s)" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const j=JSON.parse(s);console.log(j.week+"/"+j.status)})'; }
           wait_live() { for i in $(seq 1 20); do got=$(live || echo "?"); [ "$got" = "$want" ] && return 0; sleep 30; done; return 1; }
+          # Actions 部署模式：GITHUB_TOKEN 的推送**不會**觸發 pages.yml，要自己 dispatch（workflow_dispatch 是例外，會觸發）
+          redeploy() {
+            if [ "$PAGES_VIA_ACTIONS" = "true" ]; then gh workflow run pages.yml --repo "$REPO" --ref main
+            else gh api -X POST "repos/$REPO/pages/builds"; fi
+          }
+          if [ "$PAGES_VIA_ACTIONS" = "true" ]; then redeploy; fi
           if wait_live; then echo "✓ 線上已是 $want"; exit 0; fi
-          echo "::warning::10 分鐘內線上沒更新，主動要求 Pages 重建"
-          gh api -X POST "repos/$REPO/pages/builds" || true
+          echo "::warning::10 分鐘內線上沒更新，主動要求重新部署"
+          redeploy || true
           if wait_live; then echo "✓ 要求重建後線上已是 $want"; exit 0; fi
           echo "::error::推上去了但線上還不是 $want（Pages 沒有部署）"; exit 1
 
