@@ -107,6 +107,8 @@ jobs:
       - name: 驗證
         if: steps.build.outputs.result == 'built'
         run: |
+          # 週更腳本寫的是 pretty JSON，repo 裡的是壓縮版（不壓的話每次 commit 都是 2,800 行的格式翻動）
+          node scripts/minify-data.mjs --apply
           node scripts/validate-data.mjs
           node scripts/validate-fashion-render.mjs
 
