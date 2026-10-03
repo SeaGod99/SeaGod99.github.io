@@ -41,11 +41,18 @@ const visible = A.filter((a) => a.name && released(a.patch));
 push("成就數量 ≥ 3,000 且 count 與資料一致", A.length >= 3000 && db.count === A.length, `${A.length} 筆`);
 push("每筆成就名都過台服守門 isTw()", A.every((a) => isTw(a.name)), A.filter((a) => !isTw(a.name)).slice(0, 3).map((a) => a.id).join(","));
 push("達成條件不是 null 就要過 isTw()", A.every((a) => a.desc == null || isTw(a.desc)));
-const ALLOWED = new Set(["id", "name", "desc", "pts", "patch", "icon", "item", "title", "ord"]);
+// 10-04 起多了條件結構：sr 系列、ck 條件種類、lk 站內連結、h 遊戲內隱藏、pre 前置、inf 推論（都不是稱號名／分類名）
+const ALLOWED = new Set(["id", "name", "desc", "pts", "patch", "icon", "item", "title", "ord", "sr", "ck", "lk", "h", "pre", "inf"]);
 const extra = new Set();
 for (const a of A) for (const k of Object.keys(a)) if (!ALLOWED.has(k)) extra.add(k);
 push("資料沒有任何稱號名／分類名之類的額外欄位（只准 title 旗標與 ord 名次）", extra.size === 0, [...extra].join(","));
 push("title 只是旗標（1 或不存在）", A.every((a) => a.title === undefined || a.title === 1));
+// ck 是本站自己的描述性分類，值只能是建置腳本 KIND_OF_TYPE 裡的那幾個字（**不准變成遊戲內的分類名**）
+const BUILD = read("scripts/build-achievements.mjs");
+const kindBlock = (BUILD.match(/const KIND_OF_TYPE = \{([\s\S]*?)\};/) || [])[1] || "";
+const OUR_KINDS = new Set([...kindBlock.matchAll(/"([^"]+)"/g)].map((m) => m[1]).concat(["其他"]));
+const badCk = A.filter((a) => a.ck && !OUR_KINDS.has(a.ck));
+push("條件種類 ck 只用本站自己的描述性分類（不是遊戲內分類名）", OUR_KINDS.size > 5 && badCk.length === 0, [...new Set(badCk.map((a) => a.ck))].slice(0, 3).join(","));
 const ords = A.map((a) => a.ord).sort((x, y) => x - y);
 push("ord 是 0..N-1 的連續名次", ords.every((v, i) => v === i));
 push("資料順序就是 ord 順序（頁面的「預設排序」＝遊戲內排列）", A.every((a, i) => a.ord === i));
@@ -149,7 +156,7 @@ async function boot(query = "", seed = null) {
   await new Promise((r) => setTimeout(r, 50));
   push("勾第一張後，已達成點數＝該成就點數", line().includes(`已達成點數 ${first.pts} /`), line());
   const titled = cards.find((c) => /稱號/.test(c.textContent));
-  push("有稱號獎勵的卡片只標「稱號」，滑過說明為何沒有名字", !titled || /台服/.test(titled.querySelector('[title]')?.getAttribute("title") || ""));
+  push("有稱號獎勵的卡片只標「稱號」，滑過說明為何沒有名字", !titled || [...titled.querySelectorAll("[title]")].some((e) => /稱號/.test(e.textContent) && /台服/.test(e.getAttribute("title"))));
 }
 
 {
@@ -200,6 +207,81 @@ async function boot(query = "", seed = null) {
   dom.window.eval(read("assets/js/collection-tracker.js"));
   const h = dom.window.CollectionTracker.sourceWhere({ type: "成就", detail: "x", achievementId: 921 });
   push("  共用的 sourceWhere() 會畫出成就追蹤連結", /collections\/achievements\/\?id=id%3A921/.test(h), h.slice(0, 120));
+}
+
+// ── 條件結構（2026-10-04，第二輪路線圖 §10）──
+{
+  const byId = new Map(A.map((a) => [a.id, a]));
+  const series = new Map();
+  A.forEach((a) => { if (a.sr) { if (!series.has(a.sr[0])) series.set(a.sr[0], []); series.get(a.sr[0]).push(a); } });
+  const badSeries = [...series.values()].filter((arr) => {
+    const t = arr.map((a) => a.sr[1]).sort((x, y) => x - y);
+    return arr.length < 2 || !t.every((v, i) => v === i + 1) || !arr.every((a) => a.sr[2] === arr.length);
+  });
+  push("系列：≥300 個，每個系列的階數是 1..N 連續", series.size >= 300 && badSeries.length === 0, `${series.size} 個系列，錯 ${badSeries.length}`);
+  push("前置成就的 id 都在資料裡", A.every((a) => !a.pre || a.pre.every((id) => byId.has(id))));
+  /* 連結要名稱對得上：任務連結的名稱一定出現在說明裡（或說明寫的是它去掉括號的部分）；
+     釘住兩個已知的錯配——#1165 說明寫羅波那但 Key 是俾斯麥的任務、#3626 說明寫「極」但對到一般難度 */
+  const sp = (x) => String(x || "").replace(/[\s　]/g, "");
+  const badQ = A.filter((a) => (a.lk || []).some((l) => l[0] === "任務" && !sp(a.desc).includes(sp(l[1]).split("（")[0])));
+  push("任務連結的任務名都寫在說明裡（名稱對得上才連）", A.some((a) => (a.lk || []).some((l) => l[0] === "任務")) && badQ.length === 0, badQ.slice(0, 3).map((a) => a.id).join(","));
+  push("  已知錯配不連：#1165 沒有任務連結、#3626 沒有副本連結",
+    !(byId.get(1165)?.lk || []).some((l) => l[0] === "任務") && !(byId.get(3626)?.lk || []).some((l) => l[0] === "副本"), "");
+  const dun = new Set(JSON.parse(read("data/dungeons.json")).data.map((d) => "tools/duty-codex/?id=duty:" + d.id));
+  push("副本連結都指向 dungeons.json 的 id", A.every((a) => (a.lk || []).every((l) => l[0] !== "副本" || dun.has(l[2]))));
+  const STORES = new Set(["ffxiv_mounts_owned", "ffxiv_minions_owned", "ffxiv_orchestrion_owned", "ffxiv_barding_owned",
+    "ffxiv_ornaments_owned", "ffxiv_triadcards_owned", "ffxiv_aether_currents_unlocked"]);
+  const infAll = A.flatMap((a) => (a.inf || []).map((x) => [a, x]));
+  push("推論只讀已知收藏頁的存檔，而且條件不是空的", infAll.length > 100 && infAll.every(([, x]) => STORES.has(x[0]) && (x[1] === "min" ? x[2] > 0 : x[2].length > 0)), `${infAll.length} 條`);
+  push("  討伐筆記不推論（那頁把同一隻怪算成各職業共用）", !infAll.some(([, x]) => /hunting/.test(x[0])), "");
+  push("  獎勵收藏品的推論只用在「只能從成就取得」的那件", infAll.filter(([, x]) => x[1] === "all" && x[0] !== "ffxiv_aether_currents_unlocked").every(([a]) => a.item && a.item.only), "");
+  push("部族聲望頁收 ?tribe=（成就頁的部族關係連過去）", /new URLSearchParams\(location\.search\)\.get\('tribe'\)/.test(read("tools/beast-tribes/index.html")), "");
+}
+{
+  // 勾高階 → 同系列低階一併勾、可復原
+  const s3 = visible.find((a) => a.sr && a.sr[1] === 3 && !a.pre);
+  const tier = (t) => visible.find((a) => a.sr && a.sr[0] === s3.sr[0] && a.sr[1] === t);
+  const { window, doc } = await boot("?id=" + encodeURIComponent("id:" + s3.id));
+  const card = [...doc.querySelectorAll(".col-card")].find((c) => c.textContent.includes(s3.name));
+  card.querySelector(".ct-check").click();
+  await new Promise((r) => setTimeout(r, 50));
+  const done = () => new Set(JSON.parse(window.localStorage.getItem("ffxiv_achievements_done") || "[]"));
+  push("勾系列第 3 階時，第 1、2 階一併勾上", done().has("id:" + s3.id) && done().has("id:" + tier(1).id) && done().has("id:" + tier(2).id), `${s3.name}`);
+  const undo = [...doc.querySelectorAll(".sgt-sticky button")].find((b) => b.textContent === "復原");
+  undo && undo.click();
+  await new Promise((r) => setTimeout(r, 50));
+  push("  提示可以復原（只取消一併勾上的，剛勾的那個保留）", !!undo && done().has("id:" + s3.id) && !done().has("id:" + tier(1).id), "");
+}
+{
+  // 其他頁的標記 → 推論；反向提示
+  const mountOnly = visible.find((a) => a.item && a.item.only && a.item.p === "collections/mounts/");
+  const r = await boot("", { ffxiv_mounts_owned: JSON.stringify([mountOnly.item.k]) });
+  const sum = r.doc.getElementById("ac-infer-sum").textContent;
+  push("坐騎頁標了「只能從成就取得」的獎勵 → 推論出那個成就", !r.doc.getElementById("ac-infer").hidden && /1/.test(sum) && r.doc.getElementById("ac-infer-body").textContent.includes(mountOnly.name), sum);
+  r.doc.getElementById("ac-infer-apply").click();
+  await new Promise((x) => setTimeout(x, 50));
+  push("  按「全部標記」後那個成就變成已達成，推論面板收起", JSON.parse(r.window.localStorage.getItem("ffxiv_achievements_done")).includes("id:" + mountOnly.id) && r.doc.getElementById("ac-infer").hidden, "");
+  const v = await boot("", { ffxiv_achievements_done: JSON.stringify(["id:" + mountOnly.id]) });
+  const a = v.doc.querySelector("#ac-infer-body .ac-rev a");
+  push("成就已達成但獎勵沒在收藏頁標 → 給收藏頁連結（不替別頁改進度）", !!a && a.getAttribute("href").includes("collections/mounts/?id=") && v.window.localStorage.getItem("ffxiv_mounts_owned") === null, a && a.getAttribute("href"));
+}
+{
+  const q = await boot("?f_series=next");
+  const shown = q.doc.querySelector("#ct-meta")?.textContent || "";
+  const seriesN = new Set(visible.filter((a) => a.sr).map((a) => a.sr[0])).size;
+  const want = visible.filter((a) => !a.sr).length + seriesN;
+  push("「每個系列只顯示下一階」：清單變成 非系列 ＋ 每系列一張", shown.includes("顯示 " + want + " /"), `${shown.slice(0, 30)}（預期 ${want}）`);
+  const k = await boot("?f_ck=" + encodeURIComponent("任務"));
+  push("「條件：任務」篩選", [...k.doc.querySelectorAll(".col-card")].length > 0 && k.doc.querySelector(".ac-links a[href*='quest-finder']"), "");
+  const sp = await boot("?f_hid=cond", { ffxiv_achievements_spoiler: "1" });
+  const btn = sp.doc.querySelector(".ac-reveal");
+  push("防劇透打開時，遊戲內看不到條件的成就先遮住", !!btn && sp.doc.querySelectorAll(".col-card .ac-reveal").length === sp.doc.querySelectorAll(".col-card").length, "");
+  btn.click();
+  await new Promise((x) => setTimeout(x, 50));
+  push("  按「顯示條件」只打開那一張", sp.doc.querySelectorAll(".col-card .ac-reveal").length === sp.doc.querySelectorAll(".col-card").length - 1, "");
+  const rows = sp.doc.querySelectorAll("#ac-break-body tbody tr").length;
+  push("進度明細有版本與條件種類兩張表", rows >= 6 + 10, `${rows} 列`);
+  push("  這幾條路徑 console 都乾淨", [q, k, sp].every((x) => x.errors.length === 0), [q, k, sp].flatMap((x) => x.errors).slice(0, 1).join(""));
 }
 
 // ───────────────────────── 報告 ─────────────────────────

@@ -286,6 +286,13 @@
           if (s.perDay > 0) $('perDay').value = String(s.perDay);
         }
       } catch (e) { fillRankSelects(); }
+      /* ?tribe=<BeastTribe id>：成就頁的「部族關係」條件連過來（2026-10-04）。網址優先於存檔；
+         換了部族就照新的部族重建等級選單，不沿用存檔裡另一族的等級。 */
+      var want = +new URLSearchParams(location.search).get('tribe');
+      if (want && want !== +$('tribeSel').value && db.data.some(function (t) { return t.id === want; })) {
+        $('tribeSel').value = String(want);
+        fillRankSelects();
+      }
       render();
     })
     .catch(function (e) {

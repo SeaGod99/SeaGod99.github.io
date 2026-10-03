@@ -49,6 +49,10 @@
  * 3) onRender(list, pageSlice, tracker)
  *    每次重畫格線後呼叫，讓各頁同步自己的附加檢視（地圖標點、目標清單…）。
  *
+ * 4) onToggle(key, owned, tracker)　＋　tracker.markKeys(keys, owned?)
+ *    單筆切換後、存檔前呼叫，頁面可以順手改 tracker.owned（成就頁：勾高階一併勾低階）。
+ *    markKeys 是批次標記／取消，一次存檔一次重畫，回傳實際改了幾個。
+ *
  * 相依：patch-gate.js（PatchGate）。需先於本檔載入。
  */
 (function () {
@@ -360,9 +364,24 @@
   // 子項目模式下各頁用它切換單一子項目（e.g. 一個風脈泉、一件採集產物）
   CollectionTracker.prototype.toggleKey = function (k) {
     if (this.owned.has(k)) this.owned.delete(k); else this.owned.add(k);
+    /* 選用的 onToggle(key, owned, tracker)：在存檔前呼叫，頁面可以順手改 tracker.owned
+       （成就頁：勾高階時一併勾同系列的低階），一次存檔、一次重畫。2026-10-04 加。 */
+    if (this.cfg.onToggle) this.cfg.onToggle(k, this.owned.has(k), this);
     this.save();
     this.updateProgress();
     this.renderGrid();
+  };
+
+  /* 一次標記（或取消）多個 key，一次存檔、一次重畫。給頁面的批次動作用
+     （成就頁的「依其他頁的標記套用」、復原）。回傳實際改變的個數。 */
+  CollectionTracker.prototype.markKeys = function (keys, owned) {
+    var n = 0, self = this;
+    (keys || []).forEach(function (k) {
+      if (owned === false) { if (self.owned.delete(k)) n++; }
+      else if (!self.owned.has(k)) { self.owned.add(k); n++; }
+    });
+    if (n) { this.save(); this.updateProgress(); this.renderGrid(); }
+    return n;
   };
 
   CollectionTracker.prototype.filtered = function () {

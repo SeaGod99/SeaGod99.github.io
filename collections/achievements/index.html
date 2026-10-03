@@ -46,6 +46,36 @@
     }
     .ac-rw-eq { font-size: 11px; color: var(--text-muted); line-height: 1.5; padding-left: 30px; }
 
+    /* 條件連到站內頁、系列與隱藏的標籤（2026-10-04） */
+    .ac-chip { display: inline-block; font-size: 11px; padding: 0 6px; margin-left: 4px; border-radius: var(--radius-sm);
+      border: 1px solid var(--border); color: var(--text-secondary); white-space: nowrap; }
+    .ac-links { font-size: 12px; color: var(--text-muted); }
+    .ac-links a { display: inline-block; padding: 3px 0; color: var(--accent); text-decoration: none; }
+    .ac-links a:hover { text-decoration: underline; }
+    .ac-masked { color: var(--text-muted); font-style: normal; }
+    .ac-reveal { font: inherit; font-size: 12px; padding: 4px 10px; border-radius: var(--radius-sm); cursor: pointer;
+      border: 1px solid var(--border); background: var(--raise, rgba(255,255,255,0.04)); color: var(--text-secondary); }
+
+    /* 進度明細、其他頁推論：平常收著，摘要行說得出重點 */
+    .ac-panel { max-width: var(--w-content); margin: 0 auto 10px; background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-md); font-size: 13px; color: var(--text-secondary); }
+    .ac-panel > summary { cursor: pointer; padding: 10px 14px; min-height: 44px; display: flex; align-items: center; gap: 6px; }
+    .ac-panel > summary b { color: var(--accent); }
+    .ac-panel-body { padding: 0 14px 12px; }
+    .ac-panel table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 6px; }
+    .ac-panel th, .ac-panel td { padding: 5px 6px; border-bottom: 1px solid var(--border); text-align: right; font-variant-numeric: tabular-nums; }
+    .ac-panel th:first-child, .ac-panel td:first-child { text-align: left; }
+    .ac-panel th { color: var(--text-muted); font-weight: 600; }
+    .ac-panel h3 { font-size: 12px; color: var(--text-muted); margin: 10px 0 0; font-weight: 600; }
+    .ac-infer-list { list-style: none; margin: 6px 0 10px; padding: 0; max-height: 260px; overflow-y: auto; }
+    .ac-infer-list li { padding: 4px 0; border-bottom: 1px dashed var(--border); line-height: 1.5; }
+    .ac-infer-list li span { color: var(--text-muted); font-size: 12px; }
+    .ac-infer-apply { font: inherit; font-size: 13px; padding: 8px 14px; min-height: 44px; border-radius: var(--radius-sm); cursor: pointer;
+      border: 1px solid var(--accent); background: transparent; color: var(--accent); }
+    .ac-rev a { display: inline-block; padding: 3px 0; color: var(--accent); }
+    .ac-spoiler { display: flex; justify-content: center; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted);
+      margin: 0 auto 10px; min-height: 44px; cursor: pointer; }
+
     .ac-note { font-size: 12px; color: var(--text-muted); text-align: center; margin: -8px auto 14px; max-width: var(--w-content); }
     .ac-points { font-size: 13px; color: var(--text-secondary); text-align: center; margin: 0 0 10px; }
     .ac-points b { color: var(--accent); }
@@ -69,6 +99,9 @@
   </div>
   <p class="ac-note">稱號名稱與成就分類沒有台服官方資料來源，本頁不顯示（只標出「有稱號獎勵」）；舊版成就已無法達成，未收錄。</p>
   <p class="ac-points" id="ac-points" aria-live="polite"></p>
+  <details class="ac-panel" id="ac-infer" hidden><summary id="ac-infer-sum"></summary><div class="ac-panel-body" id="ac-infer-body"></div></details>
+  <details class="ac-panel" id="ac-break"><summary>進度明細（依版本、依條件種類）</summary><div class="ac-panel-body" id="ac-break-body"></div></details>
+  <label class="ac-spoiler"><input type="checkbox" id="ac-spoiler"> 遮住遊戲內隱藏的成就名稱與條件</label>
 
   <!-- 控制面（進度／工具列／篩選／格線）由 collection-tracker.js 渲染 -->
   <div id="ct-root"></div>
@@ -93,7 +126,143 @@
  *   兩者都**不可**拿來顯示文字。見該腳本檔頭。 */
 function fmtNum(n) { return Number(n || 0).toLocaleString('en-US'); }
 
-CollectionTracker.init({
+/* ── 條件結構（2026-10-04，見 build-achievements.mjs 的 enrichConditions）──
+   sr 系列、pre 前置、ck 條件種類、lk 站內連結、inf 由其他頁推論、h 遊戲內隱藏 */
+var T = null;                 // 引擎實體（init 回傳；資料非同步載入，第一次用到時一定已指派）
+var BY_ID = null, SERIES = null, IDX_N = -1;
+function index(list) {
+  if (IDX_N === list.length) return;
+  BY_ID = new Map(); SERIES = new Map();
+  list.forEach(function (a) {
+    BY_ID.set(a.id, a);
+    if (a.sr) { if (!SERIES.has(a.sr[0])) SERIES.set(a.sr[0], []); SERIES.get(a.sr[0]).push(a); }
+  });
+  SERIES.forEach(function (arr) { arr.sort(function (x, y) { return x.sr[1] - y.sr[1]; }); });
+  IDX_N = list.length;
+}
+/** 系列裡「下一階」：第一個還沒達成的；全部達成就是最後一階 */
+function nextOf(a) {
+  var arr = SERIES.get(a.sr[0]) || [a];
+  for (var i = 0; i < arr.length; i++) if (!T.isOwned(arr[i])) return arr[i];
+  return arr[arr.length - 1];
+}
+var HIDE_TEXT = { 1: '遊戲內整個成就隱藏，達成後才看得到', 2: '遊戲內看不到達成條件', 3: '遊戲內看不到名稱與達成條件' };
+var LINK_TEXT = {
+  '任務': function (n) { return '任務查詢「' + n + '」'; }, '副本': function (n) { return '副本圖鑑「' + n + '」'; },
+  '風脈泉': function (n) { return '風脈泉「' + n + '」'; }, '討伐筆記': function (n) { return '討伐筆記「' + n + '」'; },
+  '部族聲望': function (n) { return '部族聲望試算（' + n + '）'; }
+};
+var SPOILER_KEY = 'ffxiv_achievements_spoiler';
+var spoiler = false, revealed = new Set();
+try { spoiler = localStorage.getItem(SPOILER_KEY) === '1'; } catch (e) {}
+
+/* 其他頁的進度：各頁自己的 localStorage（JSON 陣列）。寵物頁存的是數字 id，一律轉字串比 */
+function readStore(k) {
+  try { return new Set((JSON.parse(localStorage.getItem(k) || '[]') || []).map(String)); } catch (e) { return new Set(); }
+}
+function inferList(tr) {
+  var stores = {}, out = [];
+  tr.LIST.forEach(function (a) {
+    if (!a.inf || tr.isOwned(a)) return;
+    for (var i = 0; i < a.inf.length; i++) {
+      var x = a.inf[i], s = stores[x[0]] || (stores[x[0]] = readStore(x[0]));
+      var ok = x[1] === 'min' ? s.size >= x[2] : x[2].every(function (k) { return s.has(String(k)); });
+      if (ok) { out.push({ a: a, why: x[3] }); break; }
+    }
+  });
+  return out;
+}
+/* 反過來：成就已達成，但「只能從這個成就拿到」的獎勵在收藏頁還沒標——給連結，不替別頁改進度 */
+var STORE_OF_PAGE = {
+  'collections/mounts/': 'ffxiv_mounts_owned', 'minions/': 'ffxiv_minions_owned', 'collections/orchestrion/': 'ffxiv_orchestrion_owned',
+  'collections/barding/': 'ffxiv_barding_owned', 'collections/ornaments/': 'ffxiv_ornaments_owned', 'collections/triple-triad/': 'ffxiv_triadcards_owned'
+};
+function reverseList(tr) {
+  var stores = {}, out = [];
+  tr.LIST.forEach(function (a) {
+    if (!a.item || !a.item.only || !tr.isOwned(a)) return;
+    var k = STORE_OF_PAGE[a.item.p]; if (!k) return;
+    var s = stores[k] || (stores[k] = readStore(k));
+    if (!s.has(String(a.item.k))) out.push(a);
+  });
+  return out;
+}
+
+function renderInfer(tr) {
+  var esc = CollectionTracker.esc;
+  var box = document.getElementById('ac-infer');
+  var inf = inferList(tr), rev = reverseList(tr);
+  if (!inf.length && !rev.length) { box.hidden = true; return; }
+  box.hidden = false;
+  var sum = [];
+  if (inf.length) sum.push('依你在其他頁的標記，有 <b>' + inf.length + '</b> 個成就應該已達成');
+  if (rev.length) sum.push('<b>' + rev.length + '</b> 個已達成成就的獎勵還沒在收藏頁標記');
+  document.getElementById('ac-infer-sum').innerHTML = sum.join('；');
+  var html = '';
+  if (inf.length) {
+    html += '<ul class="ac-infer-list">' + inf.map(function (x) {
+      return '<li>' + esc(x.a.name) + '<br><span>' + esc(x.why) + '</span></li>';
+    }).join('') + '</ul><button type="button" class="ac-infer-apply" id="ac-infer-apply">這 ' + inf.length + ' 個全部標記為已達成</button>';
+  }
+  if (rev.length) {
+    html += '<h3>已達成，但獎勵還沒在收藏頁標記（它們只能從成就取得）</h3><p class="ac-rev">' + rev.map(function (a) {
+      return '<a href="../../' + esc(a.item.p) + '?id=' + encodeURIComponent(a.item.k) + '">' + esc(a.item.n) + '</a>';
+    }).join('、') + '</p>';
+  }
+  document.getElementById('ac-infer-body').innerHTML = html;
+  var btn = document.getElementById('ac-infer-apply');
+  if (btn) btn.onclick = function () {
+    var keys = inf.map(function (x) { return tr.keyOf(x.a); });
+    var n = tr.markKeys(keys, true);
+    if (window.Toast) Toast.show('已標記 ' + n + ' 個成就', 'ok');
+  };
+}
+
+function renderBreakdown(tr) {
+  var bands = CollectionTracker.PATCH_BANDS, rowsV = [], byKind = {};
+  bands.forEach(function (b) {
+    var n = 0, d = 0, pt = 0, pd = 0;
+    tr.LIST.forEach(function (a) {
+      if (!a.patch || a.patch < b.min || a.patch > b.max) return;
+      n++; pt += a.pts; if (tr.isOwned(a)) { d++; pd += a.pts; }
+    });
+    if (n) rowsV.push([b.label, d, n, pd, pt]);
+  });
+  tr.LIST.forEach(function (a) {
+    var k = a.ck || '其他', r = byKind[k] || (byKind[k] = [k, 0, 0, 0, 0]);
+    r[2]++; r[4] += a.pts; if (tr.isOwned(a)) { r[1]++; r[3] += a.pts; }
+  });
+  var rowsK = Object.keys(byKind).map(function (k) { return byKind[k]; }).sort(function (x, y) { return y[2] - x[2]; });
+  var esc = CollectionTracker.esc;
+  var table = function (head, rows) {
+    return '<table><thead><tr><th>' + head + '</th><th>已達成</th><th>完成率</th><th>點數</th></tr></thead><tbody>' +
+      rows.map(function (r) {
+        return '<tr><td>' + esc(r[0]) + '</td><td>' + fmtNum(r[1]) + ' / ' + fmtNum(r[2]) + '</td><td>' +
+          (r[2] ? Math.round(r[1] / r[2] * 100) : 0) + '%</td><td>' + fmtNum(r[3]) + ' / ' + fmtNum(r[4]) + '</td></tr>';
+      }).join('') + '</tbody></table>';
+  };
+  document.getElementById('ac-break-body').innerHTML =
+    table('版本', rowsV) + '<h3>依條件種類（本站依遊戲資料的條件欄位分類，不是遊戲內的成就分類）</h3>' + table('條件', rowsK);
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  var cb = document.getElementById('ac-spoiler');
+  cb.checked = spoiler;
+  cb.addEventListener('change', function () {
+    spoiler = cb.checked;
+    try { localStorage.setItem(SPOILER_KEY, spoiler ? '1' : '0'); } catch (e) {}
+    if (T) T.renderGrid();
+  });
+  document.getElementById('ct-root').addEventListener('click', function (ev) {
+    var b = ev.target.closest && ev.target.closest('.ac-reveal');
+    if (!b) return;
+    revealed.add(+b.dataset.id);
+    if (T) T.renderGrid();
+  });
+});
+
+var lastCascade = null;
+T = CollectionTracker.init({
   dataUrl: '../../data/achievements.json',
   metaUrl: '../../data/_meta.json',
   storageKey: 'ffxiv_achievements_done',
@@ -144,14 +313,67 @@ CollectionTracker.init({
       },
       match: function (a, v) { return String(a.pts) === v; }
     },
-    { kind: 'patch' }
+    { kind: 'patch' },
+    {
+      /* 系列：同一計數器的多個門檻（310 個系列）。只顯示「下一階」＝第一個還沒達成的；全部達成就留最後一階 */
+      id: 'series', label: '系列',
+      options: function (list) { return list.some(function (a) { return a.sr; }) ? [{ value: 'next', label: '每個系列只顯示下一階' }] : []; },
+      match: function (a) { if (!a.sr || !T) return true; index(T.LIST); return nextOf(a) === a; }
+    },
+    {
+      /* 條件種類：本站依遊戲資料的條件欄位分的描述性分類（遊戲內的分類名沒有台服來源，§4.96） */
+      id: 'ck', label: '條件', render: 'select', allLabel: '全部條件',
+      options: function (list) {
+        var n = {};
+        list.forEach(function (a) { if (a.ck) n[a.ck] = (n[a.ck] || 0) + 1; });
+        return Object.keys(n).sort(function (x, y) { return n[y] - n[x]; })
+          .map(function (k) { return { value: k, label: k + '（' + n[k] + '）' }; });
+      },
+      match: function (a, v) { return a.ck === v; }
+    },
+    {
+      id: 'hid', label: '遊戲內',
+      options: function (list) {
+        return list.some(function (a) { return a.h; })
+          ? [{ value: 'cond', label: '看不到達成條件' }, { value: 'all', label: '整個成就隱藏' }] : [];
+      },
+      match: function (a, v) { return v === 'all' ? a.h === 1 : !!a.h; }
+    }
   ],
+  /* 勾高階時一併勾同系列的低階、以及「完成其他成就」類的前置（計數只增不減，高階達成就代表低階都達成了）。
+     取消不連動。改了幾個就跳一則可復原的提示。 */
+  onToggle: function (key, owned, tr) {
+    if (!owned) return;
+    index(tr.LIST);
+    var a = BY_ID.get(+String(key).replace(/^id:/, ''));
+    if (!a) return;
+    var added = [];
+    (function visit(x, depth) {
+      if (depth > 6) return;
+      var more = [];
+      if (x.sr) (SERIES.get(x.sr[0]) || []).forEach(function (y) { if (y.sr[1] < x.sr[1]) more.push(y); });
+      (x.pre || []).forEach(function (id) { var y = BY_ID.get(id); if (y) more.push(y); });
+      more.forEach(function (y) {
+        var k = tr.keyOf(y);
+        if (!tr.owned.has(k)) { tr.owned.add(k); added.push(k); visit(y, depth + 1); }
+      });
+    })(a, 0);
+    if (!added.length || !window.Toast) return;
+    if (lastCascade && lastCascade.parentNode) lastCascade.parentNode.removeChild(lastCascade);
+    lastCascade = Toast.action('一併標記了 ' + added.length + ' 個（同系列較低的階段或前置成就）', {
+      label: '復原', key: 'ac-cascade', onClick: function () { tr.markKeys(added, false); }
+    });
+    var el = lastCascade;
+    setTimeout(function () { if (el && el.parentNode) el.parentNode.removeChild(el); }, 10000);
+  },
   onRender: function (list, pageSlice, tracker) {
     var all = tracker.LIST || [];
     var total = 0, done = 0;
     all.forEach(function (a) { total += a.pts; if (tracker.isOwned(a)) done += a.pts; });
     var el = document.getElementById('ac-points');
     if (el) el.innerHTML = '已達成點數 <b>' + fmtNum(done) + '</b> / ' + fmtNum(total);
+    renderInfer(tracker);
+    renderBreakdown(tracker);
   },
   card: function (a) {
     var esc = CollectionTracker.esc;
@@ -180,11 +402,25 @@ CollectionTracker.init({
       lines.push('<div class="ac-rw-line"><span class="ac-rw-kind" title="稱號名稱沒有台服官方資料來源，故不顯示">稱號</span></div>');
     }
     var reward = lines.length ? '<div class="ac-reward" aria-label="獎勵">' + lines.join('') + '</div>' : '';
+    var chips = '';
+    if (a.sr) chips += '<span class="ac-chip" title="同一個計數的第 ' + a.sr[1] + ' 個門檻，共 ' + a.sr[2] + ' 個">系列 ' + a.sr[1] + '／' + a.sr[2] + '</span>';
+    if (a.h) chips += '<span class="ac-chip" title="' + esc(HIDE_TEXT[a.h] || '') + '">遊戲內隱藏</span>';
+    var links = (a.lk || []).map(function (l) {
+      var text = LINK_TEXT[l[0]] ? LINK_TEXT[l[0]](l[1]) : l[1];
+      return '<a href="../../' + esc(l[2]) + '">' + esc(text) + '</a>';
+    });
+    // 防劇透：遊戲內看不到條件的先遮住，按一下才顯示（名稱也看不到的那類連名稱一起遮）
+    var mask = spoiler && a.h && !revealed.has(a.id);
+    var nameHtml = mask && (a.h === 1 || a.h === 3) ? '<span class="ac-masked">（遊戲內隱藏的成就）</span>' : esc(a.name);
+    var descHtml = mask
+      ? '<div class="ac-desc"><button type="button" class="ac-reveal" data-id="' + a.id + '">顯示條件</button></div>'
+      : (a.desc ? '<div class="ac-desc">' + esc(a.desc) + '</div>' : '');
     return '' +
-      '<div class="ac-head">' + iconHtml + '<div class="col-name">' + esc(a.name) + '</div></div>' +
+      '<div class="ac-head">' + iconHtml + '<div class="col-name">' + nameHtml + '</div></div>' +
       '<div class="ac-meta"><span class="ac-pts">' + esc(a.pts) + ' 點</span>　No.' + esc(a.id) +
-        (a.patch ? ' · ver ' + esc(a.patch) : '') + '</div>' +
-      (a.desc ? '<div class="ac-desc">' + esc(a.desc) + '</div>' : '') +
+        (a.patch ? ' · ver ' + esc(a.patch) : '') + chips + '</div>' +
+      descHtml +
+      (links.length && !mask ? '<div class="ac-links">相關：' + links.join('、') + '</div>' : '') +
       reward;
   }
 });
