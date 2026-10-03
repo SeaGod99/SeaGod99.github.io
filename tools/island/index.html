@@ -418,17 +418,24 @@ const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g,
   (c) => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
 
 /* ── 載入 ── */
+// 載入失敗要講出來——原本頂層 await 沒有保護，任一份失敗整頁就停住、沒有任何提示（2026-10-03 補）
+const getJson = (u) => fetch(u).then((r) => { if (!r.ok) throw new Error(`${u} HTTP ${r.status}`); return r.json(); });
+function showLoadError(e) {
+  const box = document.querySelector('.container');
+  if (box) box.insertAdjacentHTML('afterbegin', '<div class="empty-state" role="alert">資料載入失敗（網路中斷，或網站正在更新資料），請重新整理頁面。</div>');
+  throw e;
+}
 const [mats, gatherAreas, craftworks, themes, recipes, buildings, animals, ranks, maps] = await Promise.all([
-  fetch('../../data/island-materials.json').then(r => r.json()),
-  fetch('../../data/island-gather-areas.json').then(r => r.json()),
-  fetch('../../data/island-craftworks.json').then(r => r.json()),
-  fetch('../../data/island-themes.json').then(r => r.json()),
-  fetch('../../data/island-recipes.json').then(r => r.json()),
-  fetch('../../data/island-buildings.json').then(r => r.json()),
-  fetch('../../data/island-animals.json').then(r => r.json()),
-  fetch('../../data/island-ranks.json').then(r => r.json()),
-  fetch('../../data/maps.json').then(r => r.json()),
-]);
+  getJson('../../data/island-materials.json'),
+  getJson('../../data/island-gather-areas.json'),
+  getJson('../../data/island-craftworks.json'),
+  getJson('../../data/island-themes.json'),
+  getJson('../../data/island-recipes.json'),
+  getJson('../../data/island-buildings.json'),
+  getJson('../../data/island-animals.json'),
+  getJson('../../data/island-ranks.json'),
+  getJson('../../data/maps.json'),
+]).catch(showLoadError);
 
 /* 圖示：icon id → assets/island/icons/<id>.png（scripts/download-island-icons.mjs 產生）。
    前端載不起 10MB 的 items.json，故 icon id 已在資料層各檔的 icon 欄。 */
@@ -449,7 +456,7 @@ const nameHtml = (o) => {
 
 const ISLAND_MAP = maps.data.find((m) => m.id === ISLAND_MAP_ID);
 initMapModal({ mapsData: maps.data, base: '../..' });
-await initWeatherTables('../../data/maps.json');
+await initWeatherTables('../../data/maps.json').catch(showLoadError);
 
 // 台服未開放（無繁中名）一律不顯示，與全站規則一致
 const MATS = mats.data.filter((m) => m.name);

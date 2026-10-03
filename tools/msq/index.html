@@ -189,7 +189,7 @@
   });
 
   fetch('../../data/msq.json')
-    .then(function (r) { return r.json(); })
+    .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
     .then(function (db) {
       DB = db;
       try {

@@ -284,10 +284,16 @@
   }
 
   /* ── 載入：先備好物品名與地圖，再交給引擎 ── */
+  // 載入失敗要講出來——原本沒有 catch，失敗時頁面就停在空白（2026-10-03 補）
+  function getJson(u) { return fetch(u).then(function (r) { if (!r.ok) throw new Error(u + ' HTTP ' + r.status); return r.json(); }); }
   Promise.all([
-    fetch('../../data/items-gathering.json').then(function (r) { return r.json(); }),
-    fetch('../../data/maps.json').then(function (r) { return r.json(); })
-  ]).then(function (res) {
+    getJson('../../data/items-gathering.json'),
+    getJson('../../data/maps.json')
+  ]).catch(function (e) {
+    var root = document.getElementById('ct-root');
+    if (root) root.innerHTML = '<div class="empty-state" role="alert">資料載入失敗（網路中斷，或網站正在更新資料），請重新整理頁面。</div>';
+    throw e;
+  }).then(function (res) {
     // data 已是 [[id, name], ...]。本頁只查採集產物，所以讀的是採集子集
     // （34KB／gzip 11KB，items-lite 則是 1.37MB／gzip 367KB）。
     // ⚠ 這份查不到 id 只代表「不是採集產物」，不代表台服未開放。見 scripts/build-items-lite.mjs

@@ -120,7 +120,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 成就追蹤回歸（**改完 `collections/achievements/`、`achievements.json` 或 `build-site-index.mjs` 必跑**） | `node scripts/validate-achievements.mjs`（jsdom，24 項；最重要：資料不准有稱號名／分類名欄位、畫面不准出現英文詞、收藏頁連結要對得到該頁 keyOf、索引的「成就」必須是最後一類）|
 | 時尚品鑑週更（每週二／週五各一次） | `node scripts/build-fashion-report.mjs`（`--dry-run` 只印／`--offline` 用快取）→ `node scripts/validate-fashion-render.mjs`（頁面 render 回歸，七個週狀態，不需瀏覽器） |
 | 時尚品鑑跨週不變資料（改版時才跑） | `node scripts/build-dyes.mjs`／`build-fashion-fillers.mjs`／`build-fashion-themes.mjs` |
-| 重建無人島資料層 | `node scripts/build-island.mjs`（`--offline` 用快取／`--refresh` 強制重抓） |
+| 重建無人島資料層 | `node scripts/build-island.mjs`（`--offline` 用快取／`--refresh` 強制重抓）。**會把 11 個 `island-*.json` 整份寫成 pretty JSON，跑完必接 `minify-data.mjs --apply`**；工坊主題名優先取 `tw-locales` 的台服官方表（2026-10-03 起） |
 | 幻卡補新卡（台服開新卡時） | `node scripts/patch-triple-triad-new-cards.mjs`（dry-run／`--apply` 寫入）→ `node scripts/download-triple-triad-images.mjs` |
 | 幻卡取得方式補繁中名（補完新卡後） | `node scripts/patch-triple-triad-source-names.mjs`（`--apply`／`--offline`，冪等） |
 | 副本補資料片欄位（改完 dungeons.json） | `node scripts/patch-dungeon-expansion.mjs`（`--apply`／`--offline`） |

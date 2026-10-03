@@ -262,7 +262,12 @@ window.hlOpenMap = async function (opts) {
   if (!ready) {
     ready = fetch('../../data/maps.json').then(r => r.json()).then(j => initMapModal({ mapsData: j.data, base: '../..' }));
   }
-  try { await ready; } catch (e) { ready = null; return; }
+  try { await ready; } catch (e) {
+    ready = null;
+    // 失敗要講出來：原本只 return，點了地圖鈕完全沒反應（2026-10-03 補）
+    if (window.Toast) Toast.show('地圖資料載入失敗，請稍後再試', 'error');
+    return;
+  }
   openMapModal(opts);
 };
 </script>

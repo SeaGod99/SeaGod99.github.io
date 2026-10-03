@@ -841,7 +841,13 @@ window.toggleW = toggleW;
 // Init
 // ============================================================
 (async function init() {
-  await initWeatherTables('../../data/maps.json');
+  // 載入失敗要講出來——原本沒有保護，天氣表抓不到時整頁停住、沒有任何提示（2026-10-03 補）
+  try { await initWeatherTables('../../data/maps.json'); }
+  catch (e) {
+    const box = document.querySelector('.container') || document.body;
+    box.insertAdjacentHTML('afterbegin', '<div class="empty-state" role="alert">資料載入失敗（網路中斷，或網站正在更新資料），請重新整理頁面。</div>');
+    throw e;
+  }
   // 初始化分組按鈕（只顯示對應到 GROUPS 的按鈕）
   Object.keys(GROUPS).forEach(k => {
     const btn = document.getElementById('grp-'+k);

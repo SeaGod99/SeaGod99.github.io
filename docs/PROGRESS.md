@@ -223,6 +223,12 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 
 ## 五、更新紀錄
 
+- **2026-10-03f（🔧 第一版遺留：載入失敗沒提示、小隊頁繞過快取、副標英文）**：第二輪路線圖 §3 的 `fetch-failure-states`＋`first-version-leftovers`。
+  - **資料載入失敗要講出來**：採集紀錄（`Promise.all` 沒 catch，失敗就白屏）、無人島（頂層 `await` 沒保護，9 份資料任一份失敗整頁停住）、天氣（`initWeatherTables` 失敗整頁停住）三頁補上「資料載入失敗（網路中斷，或網站正在更新資料），請重新整理頁面。」（共用 `.empty-state`、`role="alert"`），並檢查 `r.ok`。探索筆記／討伐筆記／幻卡的地圖彈窗失敗時原本只 `return`，點了沒反應，改成 Toast 提示。jsdom 實測採集紀錄回 404 時畫面會顯示那句話。
+  - **主線／文書**：fetch 補 `r.ok` 檢查——原本伺服器回 404 頁時畫面印的是「Unexpected token '<'」這種 JSON 解析錯誤。
+  - **小隊頁**：拿掉 `?v=Date.now()`（全站唯一一處，每次重抓 50KB、繞過 SW 快取）；副標與 meta 的「Chemistry」查不到台服用語，改成描述性的「隊員組合加成」（不宣稱是官方名）。
+  - 9 頁真瀏覽器體檢、追蹤頁／主線／文書／幻卡跑圖回歸全過。
+
 - **2026-10-03e（🔧 無人島工坊主題改台服官方名）**：第二輪路線圖 ⑧。Teamcraft `tw/` 51 個檔裡本站沒收的三個之一 `tw-island-craftworks-theme.json` 正好是無人島 16 個工坊製作主題的台服官方名；本站原本是簡轉繁，其中「家具」官方是「傢俱」、「調料」官方是「調味料」。`fetch-tw-locales.mjs` 收進 `islandCraftworksThemes`（32 檔／40,027 筆），`build-island.mjs` 主題名改以它為準、`nameSource` 升為 `tw-official`（頁面的「非官方譯名」註記因此不再出現），查不到才退回人工表。⚠ `build-island.mjs` 會把 11 個 `island-*.json` 整份寫成 pretty JSON，重建後一定要接 `minify-data.mjs --apply`；這次只有 `island-themes`／`island-craftworks` 內容變，其餘 10 份只差日期、已還原。建築／分類／地區仍無台服來源（Teamcraft 猜得到的網址都 404），維持標註。
 
 - **2026-10-03d（🔧 賺錢排行把查價失敗當成「沒人在架」）**：第二輪路線圖 ④。
