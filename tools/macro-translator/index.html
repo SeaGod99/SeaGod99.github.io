@@ -49,6 +49,9 @@
     .summary { margin-top: 0.6rem; font-size: 0.78rem; color: var(--text-muted); line-height: 1.8; }
     .summary b { color: var(--gold); }
     .summary .bad { color: var(--red); }
+    /* 換出來的名字 → 技能辭典。一行好幾個，用真實 padding 撐命中區（不用 ::after，會蓋到鄰居） */
+    .summary .codex a { display: inline-block; padding: 3px 0; color: var(--gold); text-decoration: none; border-bottom: 1px dotted var(--gold-dim); }
+    .summary .codex a:hover { color: var(--gold-light); }
     .actions { display: flex; gap: 0.45rem; flex-wrap: wrap; margin-top: 0.6rem; }
 
     /* 說明段裡的 <code> 預設不斷行，`/macroicon` 這種在 360px 下會撐破版面
@@ -152,11 +155,16 @@
   // 全形引號的**開合是不同字元**（“…”、「…」），不能用反向參照配對。
   // 從網頁複製巨集時全形引號很常見，配不到的話整行會被當成純文字、完全不轉譯。
   var QUOTE_PAIRS = { '"': '"', "'": "'", "“": "”", "「": "」", "‘": "’" };
+  /* ⚠ 結尾要找「與開頭配對的那個引號」，不能用一個通吃的字元類別：
+     `/statusoff "Army's Paeon"` 的撇號會被當成結尾、開合對不上，整行就不轉譯
+     （2026-10-03 前範例裡的這一行一直沒被換掉）。 */
   function parseLine(line) {
-    var m = line.match(/^(\s*)(\/[a-zA-Z]+)(\s+)(["'“「‘])(.*?)(["'”」’])(.*)$/);
+    var m = line.match(/^(\s*)(\/[a-zA-Z]+)(\s+)(["'“「‘])/);
     if (!m) return null;
-    if (QUOTE_PAIRS[m[4]] !== m[6]) return null;          // 開合對不上就不動這一行
-    return { indent: m[1], cmd: m[2].toLowerCase(), sp: m[3], q: m[4], name: m[5], rest: m[7] };
+    var end = line.indexOf(QUOTE_PAIRS[m[4]], m[0].length);
+    if (end < 0) return null;                              // 開合對不上就不動這一行
+    return { indent: m[1], cmd: m[2].toLowerCase(), sp: m[3], q: m[4],
+      name: line.slice(m[0].length, end), rest: line.slice(end + 1) };
   }
 
   async function translate() {
@@ -178,13 +186,14 @@
         results.set(jobs[i].cmd + '\u0000' + jobs[i].name, hit);
       }
 
-      var miss = [], hitN = 0;
+      var miss = [], hitN = 0, codex = [], seen = {};
       var out = rawLines.map(function (l) {
         var p = parseLine(l);
         if (!p || !CMD_KINDS[p.cmd]) return { raw: l, plain: l, html: '<span class="o-rest">' + esc(l) + '</span>' };
         var r = results.get(p.cmd + '\u0000' + p.name);
         var tw = r && r.tw;
         if (!tw && p.name.trim()) miss.push(p.name); else if (tw) hitN++;
+        if (tw && !seen[r.kind + tw]) { seen[r.kind + tw] = 1; codex.push({ name: tw, kind: r.kind }); }
         var name = tw || p.name;
         var plain = p.indent + p.cmd + p.sp + '"' + name + '"' + p.rest;
         return {
@@ -194,7 +203,7 @@
             '<span class="o-rest">' + esc(p.rest) + '</span>',
         };
       });
-      last = { lines: out, miss: miss, hit: hitN };
+      last = { lines: out, miss: miss, hit: hitN, codex: codex };
       render(last);
       $('statusLine').textContent = '';
     } catch (e) {
@@ -226,7 +235,15 @@
         (uniq.length > 5 ? ' 等' : '') + '</span>（已保留原文）');
     }
     if (n > MAX_LINES) parts.push('<span class="bad">超過遊戲的 ' + MAX_LINES + ' 行上限</span>');
-    $('summary').innerHTML = parts.join('　·　');
+    /* 換出來的名字連到技能辭典（看說明、威力、連擊）。技能帶 pvp=all：巨集裡也可能是 PvP 技能，
+       辭典預設只看 PvE，不帶的話點 PvP 技能會搜不到。狀態走 k=statuses。 */
+    var codex = (data.codex || []).map(function (c) {
+      var qs = c.kind === 's' ? 'k=statuses&q=' + encodeURIComponent(c.name)
+        : 'q=' + encodeURIComponent(c.name) + '&pvp=all';
+      return '<a href="../action-codex/?' + qs + '">' + esc(c.name) + '</a>';
+    });
+    $('summary').innerHTML = parts.join('　·　') +
+      (codex.length ? '<div class="codex">在技能辭典看：' + codex.join('、') + '</div>' : '');
     $('copyBtn').disabled = false;
   }
 

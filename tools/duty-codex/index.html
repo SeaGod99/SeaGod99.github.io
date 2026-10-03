@@ -77,6 +77,10 @@
       border-top: 1px dashed var(--border); padding-top: 0.35rem; margin-top: auto;
     }
     .unlock b { color: var(--green); font-weight: 600; }
+    /* 黃道文書的討伐目標在這個副本裡 → 文書跑圖。一行可能有兩本，用真實 padding 撐命中區 */
+    .relic { font-size: 0.73rem; color: var(--text-muted); line-height: 1.6; }
+    .relic a { display: inline-block; padding: 3px 0; color: var(--gold); text-decoration: none; border-bottom: 1px dotted var(--gold-dim); }
+    .relic a:hover { color: var(--gold-light); }
 
     .empty { text-align: center; color: var(--text-muted); padding: 3rem 1rem; font-size: 0.85rem; }
 
@@ -159,6 +163,7 @@
 
   var LIST = [];
   var DROPS = null;     // data/duty-drops.json（載不到也不影響其餘功能）
+  var RELIC = {};       // 副本名 → 有討伐目標在這裡的文書書名（data/relic-note.json；載不到就不畫）
   var ONLY_ID = null;   // ?id=duty:<id> 精確定位到的那一個副本（使用者一改篩選就解除）
   var els = {
     q: document.getElementById('q'),
@@ -214,9 +219,20 @@
         '<div class="tags">' + tags.join('') + '</div>' +
         (facts.length ? '<div class="facts">' + facts.join('　') + '</div>' : '') +
         unlock +
+        relicLine(d) +
         dropsSummary(d) +
       '</div>' +
     '</div>';
+  }
+
+  /* 文書跑圖那頁只在「副本名在本頁唯一」時才給連結（一般／高難度同名的不給），
+     所以反過來用名稱對也不會對錯；書名進那頁的 ?id=book:<書名> 會直接切到那一本。 */
+  function relicLine(d) {
+    var books = RELIC[d.name];
+    if (!books || !books.length) return '';
+    return '<div class="relic">黃道文書的討伐目標：' + books.map(function (b) {
+      return '<a href="../relic-note/?id=' + encodeURIComponent('book:' + b) + '">' + esc(b) + '</a>';
+    }).join('、') + '</div>';
   }
 
   /* 「資料列為此副本的產出」——措辭固定，不寫機率、不寫必掉（上游是 Teamcraft 整理的掉落資料，可能不完整）。
@@ -361,9 +377,22 @@
     .then(function (j) { DROPS = j; })
     .catch(function () { DROPS = null; });   // 掉落是附加資訊，載不到就不顯示那一段
 
+  var relicReady = fetch('../../data/relic-note.json')
+    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function (j) {
+      (j.data || []).forEach(function (b) {
+        (b.nms || []).forEach(function (m) {
+          if (!m.duty) return;
+          var arr = RELIC[m.duty] = RELIC[m.duty] || [];
+          if (arr.indexOf(b.name) < 0) arr.push(b.name);
+        });
+      });
+    })
+    .catch(function () { RELIC = {}; });
+
   fetch('../../data/dungeons.json')
     .then(function (r) { if (!r.ok) throw new Error('無法載入副本資料 (' + r.status + ')'); return r.json(); })
-    .then(function (db) { return dropsReady.then(function () { return db; }); })
+    .then(function (db) { return Promise.all([dropsReady, relicReady]).then(function () { return db; }); })
     .then(function (db) {
       return PatchGate.loadGamePatch('../../data/_meta.json').then(function (gp) {
         /* 台服未開放的版本一律不顯示。目前 0 筆會被擋掉，但重建資料時若抓到

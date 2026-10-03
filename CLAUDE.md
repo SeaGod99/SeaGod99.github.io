@@ -107,7 +107,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 重建潛水艇資料（改版時才跑） | `node scripts/build-submarine.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/submarine.json`（部件 40／航點 123／階級 145）|
 | 潛水艇回歸（**改完 `tools/submarine/` 或 `data/submarine.json` 必跑**） | `node scripts/validate-submarine.mjs`（44 項；最重要的是「部位名不可從 Slot 編號推」「不提供多點航程試算」「四艘存檔切艇前要先存、存 itemId 不存索引、網址參數優先」）|
 | 重建技能辭典（換台服版本後） | `node scripts/build-action-codex.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/action-codex/`（技能 1,326／特性 668／狀態 4,052）|
-| 技能辭典回歸（**改完 `tools/action-codex/` 或該目錄資料必跑**） | `node scripts/validate-action-codex.mjs`（39 項：UI 標記洗乾淨、條件式收斂、PvP／PvE 分得開、連擊樹不畫半截也不混 PvP、解鎖時程沒選職業時不畫）|
+| 技能辭典回歸（**改完 `tools/action-codex/`、該目錄資料或 `tools/macro-translator/` 必跑**） | `node scripts/validate-action-codex.mjs`（45 項：UI 標記洗乾淨、條件式收斂、PvP／PvE 分得開、連擊樹不畫半截也不混 PvP、解鎖時程沒選職業時不畫；巨集轉譯換出來的名字連到辭典且點過去搜得到）|
 | 貼清單匯入回歸（**改完 `market.js` 的 `parsePasteLines`／`importPasted` 必跑**） | `node scripts/validate-paste-import.mjs`（35 項：數量解析的 11 種貼法、查不到的要逐行列出、不解析外站連結這個決定）|
 | 綁定備份檔回歸（**改完首頁的進度備份區必跑**） | `node scripts/validate-backup-file.mjs`（32 項：不支援的瀏覽器不長鈕、`requestPermission` 只能在使用者手勢裡要、handle 只能放 IndexedDB、被拒時不可靜默失敗）|
 | 多角色設定檔回歸（**改完 `assets/js/profiles.js` 必跑**） | `node scripts/validate-profiles.mjs`（41 項：白名單反轉、只覆蓋不刪、存不進去就不切、**匯入備份時名單取聯集且目前進度歸給備份當時作用中的角色**）|
@@ -126,7 +126,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 幻卡取得方式補繁中名（補完新卡後） | `node scripts/patch-triple-triad-source-names.mjs`（`--apply`／`--offline`，冪等） |
 | 副本補資料片欄位（改完 dungeons.json） | `node scripts/patch-dungeon-expansion.mjs`（`--apply`／`--offline`） |
 | 副本補時限／通關經驗／解鎖任務（改完 dungeons.json） | `node scripts/patch-dungeon-details.mjs`（dry-run 預設／`--apply`／`--offline`）；補 `timeLimit`（516/520）、`clearExp`、`clearGil`、`unlock`（32/520），並把 `image` 的 `000000` 佔位改成 null |
-| 副本圖鑑回歸（**改完 `tools/duty-codex/` 或 `dungeons.json` 必跑**） | `node scripts/validate-duty-codex.mjs`（jsdom，29 項：類型標籤、篩選、`?id=duty:` 深連結、圖檔存在率）|
+| 副本圖鑑回歸（**改完 `tools/duty-codex/` 或 `dungeons.json` 必跑**） | `node scripts/validate-duty-codex.mjs`（jsdom，52 項：類型標籤、篩選、`?id=duty:<id>` 深連結、圖檔存在率、掉落段、取得管道與收藏頁的副本連結、回連文書跑圖）|
 | 幻卡缺卡跑圖回歸（**改完 `collections/triple-triad/` 或 `triple-triad.json` 必跑**） | `node scripts/validate-triad-route.mjs`（jsdom，31 項：只認 `NPC對戰` 不認 `NPC牌組`、地圖篩選、**標記取得不會讓清單重排**）|
 | 坐騎／寵物補手冊排序（重建後必跑，用來擋幻影條目） | `node scripts/patch-collection-order.mjs`（`--apply`／`--offline`） |
 | 青魔補副本／地區連結 | `node scripts/patch-blue-magic-content-ids.mjs`（`--apply`） |

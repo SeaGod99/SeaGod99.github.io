@@ -208,6 +208,46 @@ push('頁面講明只收玩家技能', /只收玩家技能/.test(HTML), '');
 push('  講明 PvP 與 PvE 威力差很多', /威力差幾十倍|PvE 180、PvP 6000/.test(HTML), '');
 push('  講明日文說明不顯示', /不會把日文放行/.test(HTML), '');
 
+// ── 巨集轉譯 → 技能辭典（反向連結，2026-10-03）────────────────
+/* 轉譯出來的名字連到 `?q=<台服名>`；技能帶 `pvp=all`（辭典預設只看 PvE，巨集裡也可能是 PvP 技能），
+   狀態帶 `k=statuses`。連過去之後要真的搜得到那一個，不然連結等於白給。 */
+async function bootAt(path, query, extra = []) {
+  const vc = new VirtualConsole();
+  const errs = [];
+  vc.on('jsdomError', (e) => errs.push(e.message));
+  const html = readFileSync(join(ROOT, path), 'utf8');
+  const dom = new JSDOM(html, { runScripts: 'outside-only', url: 'https://seagod99.github.io/' + path.replace('index.html', '') + query, virtualConsole: vc });
+  const { window } = dom;
+  window.fetch = async (u) => {
+    const rel = String(u).replace(/^.*\/(data|assets)\//, '$1/');
+    if (!existsSync(join(ROOT, rel))) return { ok: false, status: 404, json: async () => ({}) };
+    return { ok: true, status: 200, json: async () => JSON.parse(readFileSync(join(ROOT, rel), 'utf8')) };
+  };
+  window.matchMedia = () => ({ matches: false, addEventListener() {}, addListener() {} });
+  for (const f of extra) window.eval(readFileSync(join(ROOT, f), 'utf8'));
+  window.eval([...window.document.querySelectorAll('script:not([src])')].map((s) => s.textContent).join(';\n'));
+  await new Promise((r) => setTimeout(r, 900));
+  return { window, doc: window.document, errs };
+}
+{
+  const m = await bootAt('tools/macro-translator/index.html', '', ['assets/js/item-names.js']);
+  m.doc.getElementById('sampleBtn').dispatchEvent(new m.window.MouseEvent('click', { bubbles: true }));
+  await new Promise((r) => setTimeout(r, 1200));
+  const links = [...m.doc.querySelectorAll('#summary .codex a')].map((a) => ({ name: a.textContent, href: a.getAttribute('href') }));
+  const act = links.find((l) => /pvp=all/.test(l.href));
+  const st = links.find((l) => /k=statuses/.test(l.href));
+  push('巨集轉譯：換出來的名字連到技能辭典（技能帶 pvp=all、狀態帶 k=statuses）', !!act && !!st,
+    links.map((l) => l.name + ' → ' + l.href).join(' ｜ '));
+  push('  同一個名字只連一次（範例裡 Raging Strikes 出現兩次）', links.length === new Set(links.map((l) => l.href)).size, `${links.length} 條`);
+  push('  查不到的（標紅保留原文）不給連結', !links.some((l) => /NotARealSkill/.test(l.name)), '');
+  for (const l of [act, st].filter(Boolean)) {
+    const c = await bootAt('tools/action-codex/index.html', l.href.replace('../action-codex/', ''));
+    const names = [...c.doc.querySelectorAll('.row')].map((r) => r.textContent);
+    push(`  點過去搜得到「${l.name}」`, names.some((t) => t.includes(l.name)), `${names.length} 筆`);
+  }
+  push('  巨集轉譯頁無 console error', m.errs.length === 0, m.errs.slice(0, 1).join('') || '乾淨');
+}
+
 let fail = 0;
 for (const [n, ok, d] of results) { console.log(`${ok ? '✓' : '✗'} ${n}  ${d ?? ''}`); if (!ok) fail++; }
 console.log(fail ? `\n${fail} 項失敗（共 ${results.length}）` : `\n全部通過（${results.length} 項）`);

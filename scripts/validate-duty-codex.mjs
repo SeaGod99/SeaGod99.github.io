@@ -277,6 +277,29 @@ async function openWith(query) {
   push('  幻卡頁的副本來源連到副本圖鑑', /duty-codex\/\?id=duty:' \+ s\.duty\[0\]\[0\]/.test(tt), '');
 }
 
+// ── 2026-10-03：副本圖鑑 → 文書跑圖（反向連結）──────────────
+{
+  const relic = JSON.parse(readFileSync(join(ROOT, 'data/relic-note.json'), 'utf8')).data;
+  const dun = JSON.parse(readFileSync(join(ROOT, 'data/dungeons.json'), 'utf8')).data;
+  const want = new Map();
+  for (const b of relic) for (const m of b.nms) if (m.duty) {
+    if (!want.has(m.duty)) want.set(m.duty, new Set());
+    want.get(m.duty).add(b.name);
+  }
+  const notUnique = [...want.keys()].filter((n) => dun.filter((d) => d.name === n).length !== 1);
+  push('文書跑圖連過來的副本名在 dungeons.json 都唯一（反向用名稱對不會對錯）', want.size > 0 && notUnique.length === 0,
+    `${want.size} 個副本，不唯一 ${notUnique.length}`);
+  const [name, books] = [...want].find(([, v]) => v.size > 1) || [...want][0];
+  const d = dun.find((x) => x.name === name);
+  const r = await openWith('?id=' + encodeURIComponent('duty:' + d.id));
+  const links = [...r.doc.querySelectorAll('.relic a')].map((a) => decodeURIComponent(a.getAttribute('href')));
+  push('  卡片列出每一本有討伐目標在這裡的文書，連到 ?id=book:<書名>',
+    links.length === books.size && [...books].every((b) => links.includes('../relic-note/?id=book:' + b)), `${name}：${links.join(' ｜ ')}`);
+  const other = dun.find((x) => !want.has(x.name) && x.type === 'dungeon');
+  const o = await openWith('?id=' + encodeURIComponent('duty:' + other.id));
+  push('  沒有文書目標的副本不長這一行', o.doc.querySelectorAll('.relic').length === 0, other.name);
+}
+
 push('無 console error', errors.length === 0, errors.slice(0, 1).join('') || '乾淨');
 push('沒有未捕捉的 rejection', unhandled.length === 0, unhandled.slice(0, 2).join(' | ') || '乾淨');
 
