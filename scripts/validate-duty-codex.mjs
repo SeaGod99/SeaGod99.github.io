@@ -255,6 +255,28 @@ async function openWith(query) {
   push('  ItemSources.render() 把副本名連到副本圖鑑', /tools\/duty-codex\/\?id=duty:\d+/.test(out), out.slice(0, 140));
 }
 
+// ── 2026-10-03：收藏頁的副本類來源連到副本圖鑑（patch-collection-duty-links.mjs）─────
+{
+  const dun = new Set(JSON.parse(readFileSync(join(ROOT, 'data/dungeons.json'), 'utf8')).data.map((d) => d.id));
+  let n = 0, bad = 0;
+  for (const f of ['mounts', 'minions', 'orchestrion', 'barding', 'emotes', 'triple-triad']) {
+    for (const e of JSON.parse(readFileSync(join(ROOT, `data/${f}.json`), 'utf8')).data) {
+      for (const s of e.sources || []) if (s.duty) { n++; if (!s.duty.every((d) => dun.has(d[0]) && typeof d[1] === 'string')) bad++; }
+    }
+  }
+  push('收藏頁的副本類來源補上 duty（連副本圖鑑）', n >= 450, `${n} 筆`);
+  push('  duty 的 id 都在 dungeons.json', bad === 0, `錯 ${bad}`);
+  const dom = new JSDOM('<!doctype html><body>', { runScripts: 'outside-only', url: 'https://seagod99.github.io/collections/mounts/' });
+  dom.window.eval(readFileSync(join(ROOT, 'assets/js/patch-gate.js'), 'utf8'));
+  dom.window.eval(readFileSync(join(ROOT, 'assets/js/collection-tracker.js'), 'utf8'));
+  const html2 = dom.window.CollectionTracker.sourceWhere({ type: '高難度副本', detail: '極 迦樓羅殲滅戰', duty: [[65, '極 迦樓羅殲滅戰']] });
+  push('  共用的 sourceWhere() 會畫出副本圖鑑連結（沒有接取 NPC 也要畫）', /tools\/duty-codex\/\?id=duty:65/.test(html2), html2.slice(0, 120));
+  const bm = readFileSync(join(ROOT, 'collections/blue-magic/index.html'), 'utf8');
+  push('  青魔頁的副本習得來源連到副本圖鑑', /bm-duty[^\n]*duty-codex\/\?id=duty:/.test(bm), '');
+  const tt = readFileSync(join(ROOT, 'collections/triple-triad/index.html'), 'utf8');
+  push('  幻卡頁的副本來源連到副本圖鑑', /duty-codex\/\?id=duty:' \+ s\.duty\[0\]\[0\]/.test(tt), '');
+}
+
 push('無 console error', errors.length === 0, errors.slice(0, 1).join('') || '乾淨');
 push('沒有未捕捉的 rejection', unhandled.length === 0, unhandled.slice(0, 2).join(' | ') || '乾淨');
 

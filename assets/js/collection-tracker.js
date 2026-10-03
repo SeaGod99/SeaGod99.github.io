@@ -852,8 +852,21 @@
   /* 任務來源的接取點（patch-collection-quest-npc.mjs 補的 issuer／at）。
      「取得方式：任務」對玩家來說等於沒說——真正要的是去哪接。
      沒有 issuer 就整段不出現：寧可不顯示，也不要顯示猜的。 */
+  /* 副本類來源連到副本圖鑑（patch-collection-duty-links.mjs 補的 duty：[[dungeons.json id, 名稱], …]，2026-10-03）。
+     由 sourceWhere() 自動帶上，吃這支引擎的頁面不用各自改。 */
+  var SITE_ROOT = (function () {
+    var me = document.currentScript;
+    return me && me.src ? me.src.replace(/assets\/js\/collection-tracker\.js.*$/, '') : '/';
+  })();
+  function sourceDuty(s) {
+    if (!s || !s.duty || !s.duty.length) return '';
+    return '<div class="ct-where">&#x2694;&#xFE0F; 副本圖鑑：' + s.duty.map(function (d) {
+      return '<a href="' + SITE_ROOT + 'tools/duty-codex/?id=duty:' + d[0] + '">' + esc(d[1]) + '</a>';
+    }).join('、') + '</div>';
+  }
   function sourceWhere(s) {
-    if (!s || !s.issuer || !s.issuer.name) return '';
+    var duty = sourceDuty(s);
+    if (!s || !s.issuer || !s.issuer.name) return duty;
     var at = s.at;
     /* 動詞可由資料指定。任務來源是「接取」（預設），NPC 商店是「販售」——
        版面與座標鈕完全共用，**各頁不要自己排一份**（CLAUDE.md 的工作流）。 */
@@ -865,7 +878,7 @@
       html += ' <button type="button" class="ct-flag" data-flag="/coord ' + esc(at.x.toFixed(1)) + ' ' +
         esc(at.y.toFixed(1)) + ' ' + esc(at.mapName) + '" aria-label="複製座標指令">&#x1F4CB;</button>';
     }
-    return html + '</div>';
+    return html + '</div>' + duty;
   }
   /** 把一組 sources 的接取點全部列出 */
   function sourceWheres(sources) {
@@ -891,6 +904,7 @@
     sourceCondition: sourceCondition,
     sourceConditions: sourceConditions,
     sourceWhere: sourceWhere,
+    sourceDuty: sourceDuty,
     sourceWheres: sourceWheres
   };
 })();

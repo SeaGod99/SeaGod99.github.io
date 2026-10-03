@@ -130,6 +130,8 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 坐騎／寵物補手冊排序（重建後必跑，用來擋幻影條目） | `node scripts/patch-collection-order.mjs`（`--apply`／`--offline`） |
 | 青魔補副本／地區連結 | `node scripts/patch-blue-magic-content-ids.mjs`（`--apply`） |
 | 收藏頁取得方式的英文清掉／改中文格式（**`validate-data` 報「英文漏到收藏頁」時跑**；任何重建收藏資料後也跑一次） | `node scripts/patch-collection-source-text.mjs`（dry-run 預設／`--apply`，冪等）。規則與白名單只有這一份，`validate-data.mjs` import 它來掃；查不到台服名的英文一律清掉只留類型，不憑印象翻 |
+| 收藏頁副本類來源連到副本圖鑑（重建收藏資料後跑） | `node scripts/patch-collection-duty-links.mjs`（dry-run 預設／`--apply`，冪等）→ 寫 `sources[].duty = [[dungeons.json id, 名稱]]`，共用的 `CollectionTracker.sourceWhere()` 自動畫連結。副本 id 對照只有一份：`scripts/lib/duty-map.mjs`（InstanceContent → CFC id，走 `out_data/cfc-content.json`） |
+| 副本圖鑑的掉落反查（改完 obtainable-methods 或 dungeons.json 後） | `node scripts/build-duty-drops.mjs`（dry-run 預設／`--apply`）→ `data/duty-drops.json`；措辭固定「資料列為此副本的產出」，不寫機率 |
 | 收藏頁補空 sources（由 obtainable-methods 推） | `node scripts/patch-sources-from-om.mjs`（`--apply`） |
 | 幻化配裝圖鑑重建 | `py tools\glamour\scripts\update_all.py local`（離線）／不帶 `local`＝完整抓取 |
 | 套裝分享圖卡回歸（**改完 `tools/glamour/share-card.js` 或 `syncShareBtn` 必跑**） | `node scripts/validate-share-card.mjs`（32 項；最重要的是「資料不齊全的套整顆鈕隱藏」與「精選被擋掉的比例不可以突然變小」）|

@@ -384,7 +384,9 @@
       var mobs = (l.mobs && l.mobs.length) ? '：' + l.mobs.join('、') : '';
       if (l.type === '副本') {
         var name = DUNGEON_NAMES[l.contentId] || l.detail || '';
-        return { type: '副本', detail: (name ? '副本「' + name + '」' : '副本') + mobs };
+        // dutyId：詳情欄連到副本圖鑑（contentId 就是 dungeons.json 的 id，142/142 對得到；2026-10-03）
+        return { type: '副本', detail: (name ? '副本「' + name + '」' : '副本') + mobs,
+                 dutyId: DUNGEON_NAMES[l.contentId] ? l.contentId : null };
       }
       if (l.type === '野外') {
         // mapId 由 scripts/patch-blue-magic-content-ids.mjs 補入（地區名 → maps.json，
@@ -430,7 +432,10 @@
           ' data-mapid="' + esc(l.mapId) + '" data-zone="' + esc(l.zone) + '"' +
           ' data-spell="' + esc(m.name) + '">📍</button>'
         : '';
-      return '<div class="detail-line">' + esc(text) + btn + '</div>';
+      var duty = (l.dutyId != null)
+        ? ' <a class="bm-duty" href="../../tools/duty-codex/?id=duty:' + l.dutyId + '" title="到副本圖鑑看這個副本">⚔ 副本圖鑑</a>'
+        : '';
+      return '<div class="detail-line">' + esc(text) + btn + duty + '</div>';
     }).join('');
   }
 
