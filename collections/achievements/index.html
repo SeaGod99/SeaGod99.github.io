@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="FF14 成就追蹤 — 台服成就的達成條件、點數與物品獎勵，可標記已達成">
+  <meta name="description" content="FF14 成就追蹤 — 台服成就的分類、達成條件、點數與物品／稱號獎勵，可標記已達成">
   <title>成就追蹤 | 水神的工具箱</title>
   <link rel="stylesheet" href="../../assets/css/tokens.css">
   <link rel="stylesheet" href="../../assets/css/theme.css">
@@ -47,6 +47,7 @@
     .ac-rw-eq { font-size: 11px; color: var(--text-muted); line-height: 1.5; padding-left: 30px; }
 
     /* 條件連到站內頁、系列與隱藏的標籤（2026-10-04） */
+    .ac-cat { color: var(--text-secondary); }
     .ac-chip { display: inline-block; font-size: 11px; padding: 0 6px; margin-left: 4px; border-radius: var(--radius-sm);
       border: 1px solid var(--border); color: var(--text-secondary); white-space: nowrap; }
     .ac-links { font-size: 12px; color: var(--text-muted); }
@@ -94,13 +95,13 @@
   <!-- Header -->
   <div class="tool-header">
     <h1 class="tool-title">&#x1F3C6; 成就追蹤</h1>
-    <p class="tool-subtitle">台服已開放成就的達成條件、點數與物品獎勵——點卡片右上角的 ✓ 標記已達成，進度自動儲存於瀏覽器</p>
+    <p class="tool-subtitle">台服已開放成就的分類、達成條件、點數與獎勵——點卡片右上角的 ✓ 標記已達成，進度自動儲存於瀏覽器</p>
     <div class="header-divider"></div>
   </div>
-  <p class="ac-note">稱號名稱與成就分類沒有台服官方資料來源，本頁不顯示（只標出「有稱號獎勵」）；舊版成就已無法達成，未收錄。</p>
+  <p class="ac-note">分類與稱號名稱取自台服客戶端；舊版成就已無法達成，未收錄。</p>
   <p class="ac-points" id="ac-points" aria-live="polite"></p>
   <details class="ac-panel" id="ac-infer" hidden><summary id="ac-infer-sum"></summary><div class="ac-panel-body" id="ac-infer-body"></div></details>
-  <details class="ac-panel" id="ac-break"><summary>進度明細（依版本、依條件種類）</summary><div class="ac-panel-body" id="ac-break-body"></div></details>
+  <details class="ac-panel" id="ac-break"><summary>進度明細（依版本、分類、條件種類）</summary><div class="ac-panel-body" id="ac-break-body"></div></details>
   <label class="ac-spoiler"><input type="checkbox" id="ac-spoiler"> 遮住遊戲內隱藏的成就名稱與條件</label>
 
   <!-- 控制面（進度／工具列／篩選／格線）由 collection-tracker.js 渲染 -->
@@ -129,6 +130,16 @@ function fmtNum(n) { return Number(n || 0).toLocaleString('en-US'); }
 /* ── 條件結構（2026-10-04，見 build-achievements.mjs 的 enrichConditions）──
    sr 系列、pre 前置、ck 條件種類、lk 站內連結、inf 由其他頁推論、h 遊戲內隱藏 */
 var T = null;                 // 引擎實體（init 回傳；資料非同步載入，第一次用到時一定已指派）
+/* 分類（2026-10-04）：資料信封的 kinds／cats，名稱取自台服客戶端解包（見 build-achievements.mjs 檔頭）。
+     kinds[id] = [台服名, 英文名, 排序]　cats[id] = [大分類 id, 台服名, 英文名, 排序]
+   英文名只拿來搜尋（打「Dungeons」也找得到），畫面不顯示。 */
+var KINDS = {}, CATS = {};
+function catLabel(ct) {
+  var c = CATS[ct]; if (!c) return '';
+  var k = KINDS[c[0]];
+  return (k ? k[0] + '・' : '') + c[1];
+}
+function titleText(t) { return Array.isArray(t) ? t.join('／') : (typeof t === 'string' ? t : ''); }
 var BY_ID = null, SERIES = null, IDX_N = -1;
 function index(list) {
   if (IDX_N === list.length) return;
@@ -241,8 +252,16 @@ function renderBreakdown(tr) {
           (r[2] ? Math.round(r[1] / r[2] * 100) : 0) + '%</td><td>' + fmtNum(r[3]) + ' / ' + fmtNum(r[4]) + '</td></tr>';
       }).join('') + '</tbody></table>';
   };
+  var byCat = {};
+  tr.LIST.forEach(function (a) {
+    var c = CATS[a.ct]; if (!c) return;
+    var r = byCat[c[0]] || (byCat[c[0]] = [KINDS[c[0]] ? KINDS[c[0]][0] : '', 0, 0, 0, 0, KINDS[c[0]] ? KINDS[c[0]][2] : 99]);
+    r[2]++; r[4] += a.pts; if (tr.isOwned(a)) { r[1]++; r[3] += a.pts; }
+  });
+  var rowsC = Object.keys(byCat).map(function (k) { return byCat[k]; }).sort(function (x, y) { return x[5] - y[5]; });
   document.getElementById('ac-break-body').innerHTML =
-    table('版本', rowsV) + '<h3>依條件種類（本站依遊戲資料的條件欄位分類，不是遊戲內的成就分類）</h3>' + table('條件', rowsK);
+    table('版本', rowsV) + '<h3>依分類</h3>' + table('分類', rowsC) +
+    '<h3>依條件種類（本站依遊戲資料的條件欄位分類）</h3>' + table('條件', rowsK);
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -263,6 +282,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 var lastCascade = null;
 T = CollectionTracker.init({
+  rowsOf: function (json) { KINDS = json.kinds || {}; CATS = json.cats || {}; return json.data || []; },
   dataUrl: '../../data/achievements.json',
   metaUrl: '../../data/_meta.json',
   storageKey: 'ffxiv_achievements_done',
@@ -277,7 +297,9 @@ T = CollectionTracker.init({
   // 獎勵種類與可裝備職業也搜得到（打「坐騎」「騎士」就能找）
   searchText: function (a) {
     var it = a.item || {};
-    return [a.name, a.desc, it.n, it.c, it.eq && it.eq.slot, it.eq && it.eq.jobs, a.title ? '稱號' : ''].filter(Boolean).join(' ');
+    var c = CATS[a.ct] || [], k = KINDS[c[0]] || [];
+    return [a.name, a.desc, it.n, it.c, it.eq && it.eq.slot, it.eq && it.eq.jobs, a.title ? '稱號 ' + titleText(a.title) : '',
+      k[0], k[1], c[1], c[2]].filter(Boolean).join(' ').toLowerCase();   // 引擎把搜尋字轉小寫，這裡也要（英文參照才搜得到）
   },
   /* 「預設排序」＝資料順序＝遊戲內排列（建置時已依 種類 → 分類 → 分類內順序 排好，見 ord） */
   sorts: [
@@ -285,6 +307,31 @@ T = CollectionTracker.init({
     { value: 'pts', label: '點數高→低', cmp: function (a, b) { return (b.pts - a.pts) || (a.ord - b.ord); } }
   ],
   filters: [
+    {
+      /* 分類：大分類（戰鬥、PvP…）與底下的分類，排法與遊戲內相同。值 k:<大分類 id>／c:<分類 id> */
+      id: 'cat', label: '分類', render: 'select', allLabel: '全部分類',
+      options: function (list) {
+        var nk = {}, nc = {};
+        list.forEach(function (a) {
+          var c = CATS[a.ct]; if (!c) return;
+          nc[a.ct] = (nc[a.ct] || 0) + 1; nk[c[0]] = (nk[c[0]] || 0) + 1;
+        });
+        var out = [];
+        Object.keys(KINDS).sort(function (x, y) { return KINDS[x][2] - KINDS[y][2]; }).forEach(function (kid) {
+          if (!nk[kid]) return;
+          out.push({ value: 'k:' + kid, label: KINDS[kid][0] + '（' + nk[kid] + '）' });
+          Object.keys(CATS).filter(function (cid) { return String(CATS[cid][0]) === kid && nc[cid]; })
+            .sort(function (x, y) { return CATS[x][3] - CATS[y][3]; })
+            .forEach(function (cid) { out.push({ value: 'c:' + cid, label: '　' + KINDS[kid][0] + '・' + CATS[cid][1] + '（' + nc[cid] + '）' }); });
+        });
+        return out;
+      },
+      match: function (a, v) {
+        if (v.indexOf('c:') === 0) return String(a.ct) === v.slice(2);
+        var c = CATS[a.ct];
+        return !!c && String(c[0]) === v.slice(2);
+      }
+    },
     {
       /* 獎勵內容。item／title／none 三個值沿用舊網址（?f_reward=title 之類），
          中間的種類（坐騎、裝備…）由資料長出來，依筆數多寡排。 */
@@ -399,7 +446,11 @@ T = CollectionTracker.init({
       }
     }
     if (a.title) {
-      lines.push('<div class="ac-rw-line"><span class="ac-rw-kind" title="稱號名稱沒有台服官方資料來源，故不顯示">稱號</span></div>');
+      // 稱號名取自台服客戶端；男女角色不同時兩個都列。查不到名稱時（title 為 1）只標種類
+      var tt = titleText(a.title);
+      var tip = Array.isArray(a.title) ? ' title="男性角色顯示「' + esc(a.title[0]) + '」、女性角色顯示「' + esc(a.title[1]) + '」"' : '';
+      lines.push('<div class="ac-rw-line"><span class="ac-rw-kind">稱號</span>' +
+        (tt ? '<span class="ac-rw-name"' + tip + '>' + esc(tt) + '</span>' : '') + '</div>');
     }
     var reward = lines.length ? '<div class="ac-reward" aria-label="獎勵">' + lines.join('') + '</div>' : '';
     var chips = '';
@@ -417,7 +468,8 @@ T = CollectionTracker.init({
       : (a.desc ? '<div class="ac-desc">' + esc(a.desc) + '</div>' : '');
     return '' +
       '<div class="ac-head">' + iconHtml + '<div class="col-name">' + nameHtml + '</div></div>' +
-      '<div class="ac-meta"><span class="ac-pts">' + esc(a.pts) + ' 點</span>　No.' + esc(a.id) +
+      '<div class="ac-meta"><span class="ac-pts">' + esc(a.pts) + ' 點</span>' +
+        (a.ct != null && CATS[a.ct] ? '　<span class="ac-cat">' + esc(catLabel(a.ct)) + '</span>' : '') + '　No.' + esc(a.id) +
         (a.patch ? ' · ver ' + esc(a.patch) : '') + chips + '</div>' +
       descHtml +
       (links.length && !mask ? '<div class="ac-links">相關：' + links.join('、') + '</div>' : '') +

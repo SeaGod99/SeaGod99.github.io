@@ -67,7 +67,7 @@
 - 規劃與資料源見 [docs/無人島攻略工具規劃.md](docs/無人島攻略工具規劃.md)
 
 ### 🏆 收藏 / 成就
-- 🏅 稱號（**擱置**：玩家稱號沒有台服官方繁中名來源——XIVAPI `Title` 只有英文、Teamcraft tw/ 沒有稱號檔）。成就本身 2026-10-03 已上線（`/collections/achievements/`），只標「有稱號獎勵」不寫稱號名
+- 🏅 稱號：成就頁的獎勵已顯示台服稱號名（2026-10-04 起，取自台服客戶端解包 `thewakingsands/ffxiv-datamining-tc`）；獨立的稱號收藏頁尚未做
 - 👤 角色自動匯入（**擱置**：繁中服為獨立伺服器、不在全球 Lodestone，ffxivcollect 查不到陸行鳥角色）
 
 ### 已否決

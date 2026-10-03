@@ -4,9 +4,10 @@
 // data/achievements.json，或命令面板索引（build-site-index.mjs）之後。
 //
 // 最重要的三條：
-//   ① **稱號名與分類名不可以出現**——兩者都沒有台服來源（見 build-achievements.mjs 檔頭）。
-//      資料只准有 `title` 旗標與 `ord` 名次，不准有任何能拿來顯示的稱號／分類字串欄位；
-//      畫面上也不准出現英文詞。
+//   ① **畫面上的字都要是台服字串**。分類名與稱號名 2026-10-04 起取自台服客戶端解包
+//      （thewakingsands/ffxiv-datamining-tc，建置時與 Teamcraft 成就名比對一致才收）；
+//      英文分類名只能拿來搜尋，**畫面上不准出現英文詞**——台服本身就用拉丁字的官方字串
+//      （「PvP」、聯動稱號「Monster Hunter」）是唯一的例外，而且例外名單由資料自己長出來。
 //   ② 物品獎勵連到收藏頁時，`?id=` 的值要真的對得到該頁的 keyOf（寵物頁是純 id、其餘是 id:<id>），
 //      對不上的話連過去會安靜地捲不到東西。
 //   ③ 命令面板索引裡「成就」要排在**最後一類**：面板目前只取索引順序前 40 筆、不依相關度排序，
@@ -18,7 +19,7 @@
 import { readFileSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { isTw } from "./lib/tw-text.mjs";
+import { isTw, isTranslated } from "./lib/tw-text.mjs";
 
 let JSDOM, VirtualConsole;
 try { ({ JSDOM, VirtualConsole } = await import("jsdom")); }
@@ -42,11 +43,21 @@ push("成就數量 ≥ 3,000 且 count 與資料一致", A.length >= 3000 && db.
 push("每筆成就名都過台服守門 isTw()", A.every((a) => isTw(a.name)), A.filter((a) => !isTw(a.name)).slice(0, 3).map((a) => a.id).join(","));
 push("達成條件不是 null 就要過 isTw()", A.every((a) => a.desc == null || isTw(a.desc)));
 // 10-04 起多了條件結構：sr 系列、ck 條件種類、lk 站內連結、h 遊戲內隱藏、pre 前置、inf 推論（都不是稱號名／分類名）
-const ALLOWED = new Set(["id", "name", "desc", "pts", "patch", "icon", "item", "title", "ord", "sr", "ck", "lk", "h", "pre", "inf"]);
+const ALLOWED = new Set(["id", "name", "desc", "pts", "patch", "icon", "item", "title", "ord", "ct", "sr", "ck", "lk", "h", "pre", "inf"]);
 const extra = new Set();
 for (const a of A) for (const k of Object.keys(a)) if (!ALLOWED.has(k)) extra.add(k);
-push("資料沒有任何稱號名／分類名之類的額外欄位（只准 title 旗標與 ord 名次）", extra.size === 0, [...extra].join(","));
-push("title 只是旗標（1 或不存在）", A.every((a) => a.title === undefined || a.title === 1));
+push("資料只有既定的欄位", extra.size === 0, [...extra].join(","));
+// 稱號：台服稱號名（字串），男女角色不同時是兩個字串；查不到台服名才退回旗標 1
+const okTitle = (t) => t === undefined || t === 1 || (typeof t === "string" && isTranslated(t)) ||
+  (Array.isArray(t) && t.length === 2 && t.every((x) => typeof x === "string" && isTranslated(x)) && t[0] !== t[1]);
+push("稱號名都是台服字串（男女不同時才是兩個）", A.every((a) => okTitle(a.title)), A.filter((a) => !okTitle(a.title)).slice(0, 3).map((a) => a.id).join(","));
+push("  有稱號獎勵的成就都有稱號名（沒有退回旗標的）", A.filter((a) => a.title).every((a) => a.title !== 1), `${A.filter((a) => a.title === 1).length} 個沒有名字`);
+// 分類：信封的 kinds／cats，每個成就的 ct 都查得到；名稱是台服字串，英文只當參照
+const KINDS = db.kinds || {}, CATS = db.cats || {};
+push("每個成就的分類都查得到（ct → cats → kinds）", A.every((a) => CATS[a.ct] && KINDS[CATS[a.ct][0]]), `${Object.keys(KINDS).length} 個大分類、${Object.keys(CATS).length} 個分類`);
+push("  分類名是台服字串、附英文參照", Object.values(CATS).every((c) => isTranslated(c[1]) && c[2] && /[A-Za-z]/.test(c[2])) &&
+  Object.values(KINDS).every((k) => isTranslated(k[0]) && k[1]), "");
+push("  建置時有比對台服解包與 Teamcraft 的一致率（低於 99% 中止）", /rate < 0\.99/.test(read("scripts/build-achievements.mjs")), "");
 // ck 是本站自己的描述性分類，值只能是建置腳本 KIND_OF_TYPE 裡的那幾個字（**不准變成遊戲內的分類名**）
 const BUILD = read("scripts/build-achievements.mjs");
 const kindBlock = (BUILD.match(/const KIND_OF_TYPE = \{([\s\S]*?)\};/) || [])[1] || "";
@@ -145,9 +156,14 @@ async function boot(query = "", seed = null) {
   const cards = [...doc.querySelectorAll(".col-card")];
   push("一頁 60 張卡", cards.length === 60, `${cards.length}`);
   // ① 畫面上不得出現英文詞（No.／ver 是本站自己的標籤）
-  const gridText = doc.querySelector("#ct-root").textContent.replace(/No\.\d+|ver \d+\.\d+/g, "");
+  // 例外名單由資料長出來：台服官方的拉丁字串（大分類「PvP」、聯動稱號…）
+  const official = [...Object.values(db.kinds || {}).map((k) => k[0]), ...Object.values(db.cats || {}).map((c) => c[1]),
+    ...A.flatMap((a) => (Array.isArray(a.title) ? a.title : typeof a.title === "string" ? [a.title] : []))]
+    .filter((x) => /[A-Za-z]/.test(x)).sort((x, y) => y.length - x.length);
+  let gridText = doc.querySelector("#ct-root").textContent.replace(/No\.\d+|ver \d+\.\d+/g, "");
+  for (const o of official) gridText = gridText.split(o).join("");
   const eng = gridText.match(/[A-Za-z]{3,}/g) || [];
-  push("① 控制面與卡片沒有英文詞", eng.length === 0, eng.slice(0, 5).join(","));
+  push("① 控制面與卡片沒有英文詞（台服官方的拉丁字串除外）", eng.length === 0, eng.slice(0, 5).join(","));
   const pts = visible.reduce((s, a) => s + a.pts, 0);
   const line = () => doc.querySelector("#ac-points")?.textContent || "";
   push("點數合計：一開始是 0 / 總點數", line().includes(`0 / ${pts.toLocaleString("en-US")}`), line());
@@ -155,8 +171,12 @@ async function boot(query = "", seed = null) {
   cards[0].querySelector(".ct-check")?.click();
   await new Promise((r) => setTimeout(r, 50));
   push("勾第一張後，已達成點數＝該成就點數", line().includes(`已達成點數 ${first.pts} /`), line());
-  const titled = cards.find((c) => /稱號/.test(c.textContent));
-  push("有稱號獎勵的卡片只標「稱號」，滑過說明為何沒有名字", !titled || [...titled.querySelectorAll("[title]")].some((e) => /稱號/.test(e.textContent) && /台服/.test(e.getAttribute("title"))));
+  const firstTitled = visible.slice(0, 60).find((a) => a.title);
+  const titledCard = firstTitled && cards.find((c) => c.textContent.includes(firstTitled.name));
+  const tt = firstTitled && (Array.isArray(firstTitled.title) ? firstTitled.title.join("／") : firstTitled.title);
+  push("有稱號獎勵的卡片顯示台服稱號名", !firstTitled || (titledCard && titledCard.textContent.includes(tt)), tt);
+  const catOf = (a) => db.kinds[db.cats[a.ct][0]][0] + "・" + db.cats[a.ct][1];
+  push("卡片標出分類（大分類・分類）", cards[0].textContent.includes(catOf(visible[0])), catOf(visible[0]));
 }
 
 {
@@ -282,6 +302,29 @@ async function boot(query = "", seed = null) {
   const rows = sp.doc.querySelectorAll("#ac-break-body tbody tr").length;
   push("進度明細有版本與條件種類兩張表", rows >= 6 + 10, `${rows} 列`);
   push("  這幾條路徑 console 都乾淨", [q, k, sp].every((x) => x.errors.length === 0), [q, k, sp].flatMap((x) => x.errors).slice(0, 1).join(""));
+}
+
+// ── 分類與稱號的畫面（2026-10-04）──
+{
+  const cid = Object.keys(db.cats).find((k) => db.cats[k][2] === "Dungeons");
+  const c = await boot("?f_cat=" + encodeURIComponent("c:" + cid));
+  const cards = [...c.doc.querySelectorAll(".col-card")];
+  const want = visible.filter((a) => String(a.ct) === cid).length;
+  const label = db.kinds[db.cats[cid][0]][0] + "・" + db.cats[cid][1];
+  push("「分類」篩選到「戰鬥・迷宮探險」只列那一類", cards.length === Math.min(60, want) && cards.every((x) => x.textContent.includes(label)), `${label} ${cards.length}／${want}`);
+  const kid = Object.keys(db.kinds).find((k) => db.kinds[k][1] === "Battle");
+  const k = await boot("?f_cat=" + encodeURIComponent("k:" + kid));
+  const kn = visible.filter((a) => String(db.cats[a.ct][0]) === kid).length;
+  push("  選大分類會列出它底下所有分類", (k.doc.querySelector("#ct-meta")?.textContent || "").includes("顯示 " + kn + " /"), `${db.kinds[kid][0]} ${kn}`);
+  const opts = [...c.doc.querySelectorAll(".filter-select option")].map((o) => o.textContent);
+  push("  分類選單依遊戲內順序：大分類後面接它的分類", opts.some((o) => o.startsWith(db.kinds[kid][0] + "（")) && opts.some((o) => o.includes(label)), opts.slice(1, 4).join(" ｜ "));
+  const e = await boot("?q=Dungeons");
+  push("英文分類名可以搜尋（只當參照、不顯示）", [...e.doc.querySelectorAll(".col-card")].length > 0 && !e.doc.querySelector("#ct-grid").textContent.includes("Dungeons"), "");
+  const g = visible.find((a) => Array.isArray(a.title));
+  const t = await boot("?id=" + encodeURIComponent("id:" + g.id));
+  const card = [...t.doc.querySelectorAll(".col-card")].find((x) => x.textContent.includes(g.name));
+  push("男女稱號不同時兩個都列，滑過說明", card && card.textContent.includes(g.title.join("／")) && /男性角色.*女性角色/.test(card.querySelector(".ac-reward [title]")?.getAttribute("title") || ""), g.title.join("／"));
+  push("  這幾條路徑 console 都乾淨", [c, k, e, t].every((x) => x.errors.length === 0), [c, k, e, t].flatMap((x) => x.errors).slice(0, 1).join(""));
 }
 
 // ───────────────────────── 報告 ─────────────────────────

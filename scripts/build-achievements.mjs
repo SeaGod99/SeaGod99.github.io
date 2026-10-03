@@ -4,15 +4,16 @@
 // 的 tw/ 語系檔有成就名與達成條件（`tw-achievements`／`tw-achievement-descriptions`，
 // 各 3,611 筆，已收進 out_data/tw-locales.msgpack），擱置理由不成立，2026-10-03 站主決定做。
 //
-// ── 只有三樣東西有台服來源，其餘一律不顯示 ──────────────────────────────
-//   ✓ 成就名、達成條件（tw-locales）
+// ── 台服來源 ──────────────────────────────────────────────────────────
+//   ✓ 成就名、達成條件（Teamcraft tw-locales）
 //   ✓ 物品獎勵（data/items.json 的台服道具名）
 //   ✓ 點數、圖示、版本（數字與路徑，不是字串）
-//   ✗ **稱號名**：XIVAPI `Title` 只有英文 Masculine／Feminine，Teamcraft tw/ 51 個檔裡也沒有
-//     （`tw-npc-titles` 是 NPC 頭銜，不是玩家稱號）。所以只記「這個成就有稱號獎勵」這件事，
-//     **名字不寫**——不用英文補，也不憑印象翻（鐵則）。
-//   ✗ **分類名**（戰鬥／PvP／角色…與底下 82 個子分類）：同樣沒有台服來源。分類只拿來
-//     決定排列順序（同分類的成就排在一起，等同遊戲內的排列），**不當標籤顯示**。
+//   ✓ **分類名、稱號名**（2026-10-04 起）：取自**台服客戶端解包** thewakingsands/ffxiv-datamining-tc
+//     （xivapi 自己的 ffxiv-datamining 把 csv/tc 指向它；讀取走 scripts/lib/tc-datamining.mjs）。
+//     Teamcraft tw/ 沒收這兩張表，先前因此標「擱置」。**用之前先驗**：它的 Achievement 名稱與
+//     Teamcraft tw-locales 逐筆比對，中點（・／·）正規化後 3,609/3,610 相同——是同一份台服資料。
+//     這道比對寫在下面，**低於 99% 就中止**（上游換成別的語系或版本落差太大時不會安靜接錯）。
+//   · 英文分類名（XIVAPI）只放在資料裡當**搜尋用的參照**，畫面不顯示（鐵則：不用英文補）。
 //
 // ── 不收的 ─────────────────────────────────────────────────────────
 //   · 查不到台服名的（＝台服未開放）
@@ -30,7 +31,8 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { xiv } from "./lib/xivapi.mjs";
 import { loadTwLocales, twName } from "./lib/tw-locales.mjs";
-import { isTw } from "./lib/tw-text.mjs";
+import { isTw, isTranslated } from "./lib/tw-text.mjs";
+import { loadTcSheet, TC_REPO } from "./lib/tc-datamining.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const DATA = join(ROOT, "data");
@@ -128,8 +130,39 @@ async function main() {
   }
 
   const catById = new Map(cats.map((c) => [c.id, c.f]));
+
+  /* ── 分類名與稱號名：台服客戶端解包（見檔頭）＋英文參照 ── */
+  const tcAch = await loadTcSheet("Achievement", { offline });
+  const tcKind = new Map((await loadTcSheet("AchievementKind", { offline })).map((r) => [r.id, r]));
+  const tcCat = new Map((await loadTcSheet("AchievementCategory", { offline })).map((r) => [r.id, r]));
+  const tcTitle = new Map((await loadTcSheet("Title", { offline })).map((r) => [r.id, r]));
+  const enKind = new Map((await xiv.sheet("AchievementKind", "Name,Order",
+    { cache: join(CACHE, "achievement-kind-names.json"), offline })).map((r) => [r.id, r.f.Name]));
+  const enCat = new Map((await xiv.sheet("AchievementCategory", "Name,AchievementKind@as(raw),Order",
+    { cache: join(CACHE, "achievement-category-names.json"), offline })).map((r) => [r.id, r.f.Name]));
+  {
+    const dot = (x) => String(x || "").replace(/[・·•]/g, "·").replace(/\s+/g, " ").trim();
+    let n = 0, same = 0;
+    for (const r of tcAch) { const t = twName(tw.achievements, r.id); if (!t) continue; n++; if (dot(t) === dot(r.Name)) same++; }
+    const rate = n ? same / n : 0;
+    console.log(`台服客戶端解包（${TC_REPO}）與 Teamcraft tw-locales 的成就名一致：${same}/${n}（${(rate * 100).toFixed(2)}%）`);
+    if (rate < 0.99) { console.error("✗ 一致率低於 99%，台服解包可能不是同一份資料，中止"); process.exit(1); }
+  }
+  const usedCats = new Map();         // 分類 id → [種類 id, 台服名, 英文名, 排序]
+  const titleStat = { n: 0, named: 0, gender: 0 };
   const kindOrder = new Map(kinds.map((k) => [k.id, k.f.Order || 0]));
 
+  /* 稱號：男女同名時存字串，不同時存 [男性, 女性]。查不到台服名就退回旗標 1（畫面只標「稱號」） */
+  function titleOf(tid) {
+    if (!tid) return {};
+    titleStat.n++;
+    const t = tcTitle.get(tid);
+    const m = t && t.Masculine, f = t && t.Feminine;
+    if (!m || !isTranslated(m)) return { title: 1 };
+    titleStat.named++;
+    if (f && f !== m && isTranslated(f)) { titleStat.gender++; return { title: [m, f] }; }
+    return { title: m };
+  }
   const stat = { noTw: 0, legacy: 0, noCat: 0, descMissing: 0, descNotTw: [], itemNoTw: [], noPatch: 0, markup: [], jobsMissing: [] };
   const rows = [];
   for (const a of ach) {
@@ -180,7 +213,8 @@ async function main() {
         patch,
         icon: iconPath(a.f.Icon),
         ...(item ? { item } : {}),
-        ...(a.f["Title@as(raw)"] ? { title: 1 } : {}),
+        ct: a.f["AchievementCategory@as(raw)"],
+        ...titleOf(a.f["Title@as(raw)"]),
       },
     });
   }
@@ -189,6 +223,18 @@ async function main() {
   // 前端也不該拿它做任何顯示。
   rows.sort((x, y) => { for (let i = 0; i < 5; i++) if (x.sortKey[i] !== y.sortKey[i]) return x.sortKey[i] - y.sortKey[i]; return 0; });
   const out = rows.map((r, i) => ({ ...r.e, ord: i }));
+  // 分類表只收用得到的；名稱過守門（台服 PvP 分類本來就叫「PvP」，所以用 isTranslated 而不是 isTw）
+  for (const e of out) {
+    if (usedCats.has(e.ct)) continue;
+    const c = tcCat.get(e.ct), k = c && tcKind.get(+c.AchievementKind);
+    if (!c || !isTranslated(c.Name) || !k || !isTranslated(k.Name)) { console.error(`✗ 分類 ${e.ct} 在台服解包裡查不到名稱`); process.exit(1); }
+    usedCats.set(e.ct, [+c.AchievementKind, c.Name, enCat.get(e.ct) || null, +c.Order || 0]);
+  }
+  const usedKinds = {};
+  for (const [, v] of usedCats) if (!usedKinds[v[0]]) {
+    const k = tcKind.get(v[0]);
+    usedKinds[v[0]] = [k.Name, enKind.get(v[0]) || null, +k.Order || 0];
+  }
   const cstat = await enrichConditions(out, { tw, itemById, offline });
 
   // ── 報告 ──
@@ -202,7 +248,8 @@ async function main() {
   if (stat.descNotTw.length) console.log(`    擋下的說明：${stat.descNotTw.slice(0, 5).join("／")}`);
   if (stat.markup.length) console.log(`    含標記：${stat.markup.slice(0, 5).join("／")}`);
   console.log(`  物品獎勵 ${withItem}（連得到收藏頁 ${withColl}）；道具查無台服名而不列 ${stat.itemNoTw.length}`);
-  console.log(`  有稱號獎勵 ${withTitle}（稱號名無台服來源，只記旗標）`);
+  console.log(`  有稱號獎勵 ${withTitle}（有台服稱號名 ${titleStat.named}，其中男女稱號不同 ${titleStat.gender}）`);
+  console.log(`  分類：${Object.keys(usedKinds).length} 個大分類、${usedCats.size} 個分類（${Object.values(usedKinds).map((k) => k[0]).join("／")}）`);
   const rewardKinds = {};
   for (const e of out) if (e.item) rewardKinds[e.item.c] = (rewardKinds[e.item.c] || 0) + 1;
   console.log(`  獎勵種類：${Object.entries(rewardKinds).sort((a, b) => b[1] - a[1]).map(([k, n]) => `${k} ${n}`).join("、")}`);
@@ -226,8 +273,10 @@ async function main() {
     schema: "achievements",
     updated: new Date().toISOString().slice(0, 10),
     source: "XIVAPI v2 Achievement／AchievementCategory ＋ Teamcraft tw-achievements／tw-achievement-descriptions（out_data/tw-locales.msgpack）＋ Teamcraft patch-content ＋ data/items.json",
-    note: "稱號名與分類名沒有台服來源：title 只是旗標、ord 只是遊戲內排列名次，兩者都不可拿來顯示文字。舊版（Legacy）成就不收。",
+    note: "分類名與稱號名取自台服客戶端解包（thewakingsands/ffxiv-datamining-tc，建置時與 Teamcraft 成就名比對一致率 ≥99% 才收）；英文分類名只供搜尋，不顯示。ct＝分類 id（查 cats）；title＝稱號名（字串，或男女不同時 [男性, 女性]）；ord＝遊戲內排列名次。舊版（Legacy）成就不收。",
     count: out.length,
+    kinds: usedKinds,
+    cats: Object.fromEntries(usedCats),
     data: out,
   };
   await writeFile(join(DATA, "achievements.json"), JSON.stringify(db));
