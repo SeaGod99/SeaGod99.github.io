@@ -115,8 +115,14 @@ jobs:
         if: steps.build.outputs.result == 'built'
         run: |
           set -e
-          if git diff --quiet -- data/fashion-report.json; then
-            echo "資料沒有變動"; echo "changed=false" >> "$GITHUB_OUTPUT"; exit 0
+          # 只在「週次或狀態」變了才推：檔案每次重建都會變（quality.marketRefAt 時間戳、市價漂移），
+          # 照 git diff 判斷的話一週會推 6 個沒有實質變化的 commit。週二新週（predicted）、週五（verified）各一次。
+          old=$(git show HEAD:data/fashion-report.json | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const j=JSON.parse(s);console.log(j.week+"/"+j.status)})')
+          new=$(node -p "const j=require('./data/fashion-report.json'); j.week+'/'+j.status")
+          if [ "$old" = "$new" ]; then
+            echo "::notice::週次與狀態沒變（$new），不推送"
+            git checkout -- data/fashion-report.json
+            echo "changed=false" >> "$GITHUB_OUTPUT"; exit 0
           fi
           node scripts/sync-meta.mjs --apply
           week=$(node -p "require('./data/fashion-report.json').week")
