@@ -466,7 +466,7 @@
       "name": "全站搜尋索引（命令面板用）",
       "source": "各收藏／工具資料檔；key 為該頁 keyOf",
       "status": "used",
-      "count": 8518,
+      "count": 13648,
       "updated": "2026-10-03"
     },
     {
@@ -553,6 +553,14 @@
       "updated": "2026-10-03",
       "desc": "副本圖鑑的「資料列為此副本的產出」：obtainable-methods 的 instance 來源反查，382 個副本／6,354 件（不含機率）",
       "source": "out_data/obtainable-methods.msgpack 的 instance 來源（Teamcraft）× scripts/lib/duty-map.mjs × data/items.json"
+    },
+    {
+      "name": "任務查詢",
+      "file": "quests/_index.json",
+      "count": 5130,
+      "updated": "2026-10-03",
+      "desc": "台服任務 5,130 個：等級、手帳章節、區域（索引），接取 NPC＋座標、前置任務、物品報酬與金幣（依資料片分片 6 檔）",
+      "source": "out_data/tw-quests.json ＋ XIVAPI v2 Quest／Level（Reward 只收 Item 表）＋ tw-locales journalGenre ＋ places.msgpack；scripts/build-quests.mjs"
     }
   ]
 }

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FF14 任務查詢 — 用台服任務名查任務在哪接、幾級、前面卡著什麼、給什麼報酬；接取 NPC 附地圖與 /coord 座標">
+  <title>任務查詢 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <link rel="stylesheet" href="../../assets/css/tool-header.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 109.375%; }
+    body { background: var(--bg-base); color: var(--text); font-family: var(--font-sans); min-height: 100vh; }
+
+    .controls { max-width: var(--w-content); margin: 0 auto; padding: 1rem 1.5rem 0.5rem; display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; }
+    select.sel, input.search {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px;
+      color: var(--text-dim); padding: 0.45rem 0.65rem; font-size: 0.85rem; outline: none; font-family: inherit;
+    }
+    select.sel { cursor: pointer; }
+    input.search { flex: 1; min-width: 12rem; }
+    input.search:focus, select.sel:focus { border-color: var(--gold); color: var(--text); }
+
+    .status { max-width: var(--w-content); margin: 0 auto; padding: 0 1.5rem 0.5rem; font-size: 0.75rem; color: var(--text-muted); }
+    .body-wrap { max-width: var(--w-content); margin: 0 auto; padding: 0 1.5rem 2rem; }
+
+    /* 一列一個任務；點開就地展開細節（原生 <details>：鍵盤 Enter／Space 可開合，焦點環照常） */
+    .q-row {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md);
+      margin-bottom: 0.45rem; transition: border-color 0.15s;
+    }
+    .q-row:hover, .q-row[open] { border-color: var(--border-hover); }
+    .q-row > summary {
+      list-style: none; cursor: pointer; padding: 0.6rem 0.8rem; min-height: 44px;
+      display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;
+    }
+    .q-row > summary::-webkit-details-marker { display: none; }
+    .q-row > summary::before { content: '▸'; color: var(--text-muted); font-size: 0.75rem; width: 0.7rem; }
+    .q-row[open] > summary::before { content: '▾'; }
+    .q-row > summary:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; border-radius: var(--radius-md); }
+    .q-name { font-size: 0.95rem; font-weight: 600; color: var(--text); }
+    .q-meta { font-size: 0.74rem; color: var(--text-muted); margin-left: auto; text-align: right; }
+    .tag {
+      font-size: 0.68rem; padding: 0.1rem 0.4rem; border-radius: 4px; white-space: nowrap;
+      background: var(--bg-surface); color: var(--text-muted); border: 1px solid var(--border);
+    }
+    .tag.lv { color: var(--blue); border-color: var(--blue-dim); font-variant-numeric: tabular-nums; }
+    .tag.msq { color: var(--gold); border-color: var(--gold-dim); }
+
+    .q-body { padding: 0.1rem 0.85rem 0.8rem 2rem; display: flex; flex-direction: column; gap: 0.4rem; }
+    .q-line { font-size: 0.8rem; color: var(--text-dim); line-height: 1.7; }
+    .q-line > b:first-child { color: var(--text-muted); font-weight: 600; margin-right: 0.4rem; }
+    .q-line a { display: inline-block; padding: 3px 0; color: var(--gold); text-decoration: none; border-bottom: 1px dotted var(--gold-dim); }
+    .q-line a:hover { color: var(--gold-light); }
+    .q-line .qty { color: var(--text-muted); font-variant-numeric: tabular-nums; }
+    .q-btns { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+    .q-btn {
+      font-size: 0.74rem; padding: 0.25rem 0.55rem; border-radius: 5px; cursor: pointer;
+      border: 1px solid var(--border); background: var(--bg-surface); color: var(--text-dim);
+      font-family: inherit; transition: border-color 0.15s, color 0.15s;
+    }
+    .q-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .q-btn.copied { border-color: var(--green); color: var(--green); }
+    .q-none { font-size: 0.78rem; color: var(--text-muted); }
+
+    .more { text-align: center; font-size: 0.78rem; color: var(--text-muted); padding: 0.6rem 0 0.2rem; }
+    .empty { padding: 2rem 1rem; color: var(--text-dim); font-size: 0.86rem; line-height: 1.9; text-align: center; }
+    .empty b { color: var(--gold); }
+    .loading { text-align: center; padding: 3rem 0; color: var(--text-dim); font-size: 0.9rem; }
+    .loading.err { color: var(--red); }
+    .info-note { max-width: var(--w-content); margin: 0 auto; padding: 0 1.5rem 2rem; font-size: 0.72rem; color: var(--text-muted); line-height: 1.8; }
+    .site-footer { border-top: 1px solid var(--border); padding: 24px 0; text-align: center; }
+    .site-footer p { font-size: 12px; color: var(--text-muted); }
+    .site-footer a { color: var(--text-dim); }
+    @media (pointer: coarse) {
+      select.sel, input.search, .q-btn { min-height: 44px; }
+    }
+    @media (max-width: 560px) {
+      .q-meta { margin-left: 1.2rem; text-align: left; width: 100%; }
+      .q-body { padding-left: 1rem; }
+    }
+  </style>
+  <script src="../../assets/js/patch-gate.js"></script>
+  <script src="../../assets/js/theme.js"></script>
+</head>
+<body>
+<div class="tool-header">
+  <h1 class="tool-title">&#x1F4DC; 任務查詢</h1>
+  <p class="tool-subtitle">打任務名的一部分，查它在哪接、幾級、前面卡著什麼、給什麼報酬</p>
+  <div class="header-divider"></div>
+</div>
+
+<div class="controls">
+  <input class="search" id="q" type="search" placeholder="任務名的一部分，例如「陸行鳥」" aria-label="搜尋任務名" autocomplete="off">
+  <select class="sel" id="expSel" aria-label="資料片"><option value="">全部資料片</option></select>
+</div>
+
+<div class="status" id="status" role="status"></div>
+<div class="body-wrap" id="wrap"><div class="loading">載入任務清單中…</div></div>
+
+<p class="info-note">
+  任務名、接取 NPC、地名、手帳章節與物品名都取自台服官方字串（遊戲本體的任務表＋本站的 NPC／地圖／物品資料庫），不做翻譯。<b>台服還沒有中文名的任務不收</b>；查不到台服來源的欄位整行不顯示，不以英文或簡中補。<br>
+  <b>同名任務不合併</b>（例如三個城市各有一份的開場任務），每一筆都是遊戲裡獨立的任務，列表上的區域可以分辨。<br>
+  等級寫的是<b>接取所需等級</b>。前置任務只列上一層。「可選報酬」是交任務時從中挑選的那一組；報酬只列物品與金幣，經驗值依職業與等級而異，這裡不列。
+</p>
+
+<footer class="site-footer">
+  <p>水神的工具箱 · <a href="../../">回首頁</a> · 資料來源：遊戲本體、<a href="https://v2.xivapi.com" target="_blank" rel="noopener">XIVAPI</a> · FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具</p>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+  var MAX = 50;
+  var IDX = null;           // data/quests/_index.json
+  var BY_ID = new Map();    // 任務 id → 索引列
+  var SHARD = {};           // 資料片 id → Promise<細節檔>
+  var ONLY_ID = null;       // ?id=<任務 id>：只列那一筆並展開（使用者一打字就解除）
+  var $ = function (id) { return document.getElementById(id); };
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  // 索引列：[id, 名稱, 等級, 資料片序, 章節序, 區域序, 旗標]
+  function expOf(r) { return IDX.exps[r[3]]; }
+
+  function loadShard(expId) {
+    if (!SHARD[expId]) {
+      SHARD[expId] = fetch('../../data/quests/' + expId + '.json')
+        .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+        .catch(function (e) { delete SHARD[expId]; throw e; });
+    }
+    return SHARD[expId];
+  }
+
+  /* 排序：完全相符 → 開頭相符 → 包含（同命令面板），同一級裡依等級。
+     資料片篩選只在有選的時候套用。 */
+  function search() {
+    if (ONLY_ID != null) { var one = BY_ID.get(ONLY_ID); return one ? [one] : []; }
+    var q = $('q').value.trim().toLowerCase();
+    var ex = $('expSel').value;
+    if (!q && ex === '') return null;      // 沒條件：不倒 5,000 筆出來
+    var hits = [];
+    IDX.data.forEach(function (r) {
+      if (ex !== '' && String(expOf(r).id) !== ex) return;
+      var n = r[1].toLowerCase();
+      var rank = !q ? 2 : n === q ? 0 : n.indexOf(q) === 0 ? 1 : n.indexOf(q) >= 0 ? 2 : -1;
+      if (rank >= 0) hits.push([rank, r]);
+    });
+    hits.sort(function (a, b) { return a[0] - b[0] || a[1][2] - b[1][2] || a[1][0] - b[1][0]; });
+    return hits.map(function (h) { return h[1]; });
+  }
+
+  function rowHtml(r, open) {
+    var genre = r[4] >= 0 ? IDX.genres[r[4]] : '';
+    var place = r[5] >= 0 ? IDX.places[r[5]] : '';
+    return '<details class="q-row" data-id="' + r[0] + '"' + (open ? ' open' : '') + '>' +
+      '<summary>' +
+        '<span class="q-name">' + esc(r[1]) + '</span>' +
+        (r[2] ? '<span class="tag lv">Lv' + r[2] + '</span>' : '') +
+        (r[6] & 1 ? '<span class="tag msq">主線</span>' : '') +
+        '<span class="q-meta">' + esc([genre, place].filter(Boolean).join(' · ')) + '</span>' +
+      '</summary>' +
+      '<div class="q-body"><div class="q-none">載入中…</div></div>' +
+    '</details>';
+  }
+
+  function itemList(arr) {
+    return arr.map(function (it) {
+      var nm = esc(it[1]);
+      var link = it[3] ? '<a href="../market/?item=' + it[0] + '" title="市場行情">' + nm + '</a>' : nm;
+      return link + (it[2] > 1 ? '<span class="qty"> ×' + it[2] + '</span>' : '');
+    }).join('、');
+  }
+
+  function bodyHtml(r, sh) {
+    var d = sh.data[r[0]] || {};
+    var out = [];
+    if (d.n != null) {
+      var npc = sh.npcs[d.n];
+      var at = d.a ? sh.maps[d.a[0]].split('|') : null;     // "mapId|地圖名"
+      out.push('<div class="q-line"><b>接取</b>&#x1F9CD; ' + esc(npc) +
+        (at ? '　&#x1F4CD; ' + esc(at[1]) + ' (' + d.a[1] + ', ' + d.a[2] + ')' : '') + '</div>');
+      if (at) {
+        var flag = '/coord ' + d.a[1].toFixed(1) + ' ' + d.a[2].toFixed(1) + ' ' + at[1];
+        out.push('<div class="q-btns">' +
+          '<button type="button" class="q-btn q-map" data-mapid="' + at[0] + '" data-x="' + d.a[1] + '" data-y="' + d.a[2] +
+            '" data-mapname="' + esc(at[1]) + '" data-title="' + esc(r[1]) + '">&#x1F5FA; 地圖</button>' +
+          '<button type="button" class="q-btn q-flag" data-flag="' + esc(flag) + '">&#x1F4CB; 座標</button>' +
+        '</div>');
+      }
+    }
+    var prev = (d.p || []).map(function (pid) {
+      var p = BY_ID.get(pid);
+      return p ? '<a href="?id=' + pid + '" data-goto="' + pid + '">' + esc(p[1]) + '</a>' + (p[2] ? ' Lv' + p[2] : '') : '';
+    }).filter(Boolean);
+    if (prev.length) out.push('<div class="q-line"><b>前置任務</b>' + prev.join('、') + '</div>');
+    if (r[6] & 1) out.push('<div class="q-line"><b>主線</b><a href="../msq/?id=' + r[0] + '">看它在主線的哪一章、離你還有幾個</a></div>');
+    if (d.r) out.push('<div class="q-line"><b>報酬</b>' + itemList(d.r) + '</div>');
+    if (d.o) out.push('<div class="q-line"><b>可選報酬</b>' + itemList(d.o) + '</div>');
+    if (d.g) out.push('<div class="q-line"><b>金幣</b>' + d.g.toLocaleString('en-US') + '</div>');
+    return out.length ? out.join('') : '<div class="q-none">這個任務沒有可顯示的接取點、前置或物品報酬。</div>';
+  }
+
+  function fill(det) {
+    if (det.dataset.built) return;
+    var r = BY_ID.get(+det.dataset.id);
+    if (!r) return;
+    det.dataset.built = '1';
+    loadShard(expOf(r).id).then(function (sh) {
+      det.querySelector('.q-body').innerHTML = bodyHtml(r, sh);
+    }).catch(function (e) {
+      det.dataset.built = '';
+      det.querySelector('.q-body').innerHTML = '<div class="q-none">細節載入失敗（' + esc(e.message) + '），收合再展開可重試。</div>';
+    });
+  }
+
+  function render() {
+    var list = search();
+    var wrap = $('wrap');
+    if (list === null) {
+      $('status').textContent = IDX.count.toLocaleString('en-US') + ' 個任務';
+      wrap.innerHTML = '<div class="empty">打任務名的<b>一部分</b>就會列出來，例如「陸行鳥」「行會」「金碟」。<br>' +
+        '也可以只選資料片，看那個資料片的任務。</div>';
+      syncURL();
+      return;
+    }
+    if (!list.length) {
+      $('status').textContent = '0 個任務';
+      wrap.innerHTML = '<div class="empty">找不到名字含「' + esc($('q').value.trim()) + '」的任務。<br>' +
+        '試試只打其中兩三個字；台服還沒有中文名的任務不在這裡。</div>';
+      syncURL();
+      return;
+    }
+    var shown = list.slice(0, MAX);
+    $('status').textContent = list.length.toLocaleString('en-US') + ' 個任務' + (ONLY_ID != null ? '（連結指定的那一筆）' : '');
+    wrap.innerHTML = shown.map(function (r) { return rowHtml(r, ONLY_ID != null || list.length === 1); }).join('') +
+      (list.length > MAX ? '<div class="more">只列前 ' + MAX + ' 個，再多打幾個字縮小範圍</div>' : '');
+    wrap.querySelectorAll('details[open]').forEach(fill);
+    syncURL();
+  }
+
+  // 網址狀態：?q=<搜尋>&e=<資料片 id>；?id=<任務 id> 只列那一筆（docs/deep-links.md）
+  var INITIAL = location.search;
+  function syncURL() {
+    var p = new URLSearchParams();
+    if (ONLY_ID != null) p.set('id', String(ONLY_ID));
+    else {
+      if ($('q').value.trim()) p.set('q', $('q').value.trim());
+      if ($('expSel').value !== '') p.set('e', $('expSel').value);
+    }
+    var s = p.toString();
+    try { history.replaceState(null, '', s ? '?' + s : location.pathname); } catch (e) {}
+  }
+
+  // 展開時才載細節（capture：toggle 不冒泡）
+  $('wrap').addEventListener('toggle', function (e) {
+    if (e.target.matches && e.target.matches('details.q-row') && e.target.open) fill(e.target);
+  }, true);
+  $('wrap').addEventListener('click', function (ev) {
+    var go = ev.target.closest('a[data-goto]');
+    if (go) {           // 前置任務：在本頁切過去，不重新載入
+      ev.preventDefault();
+      ONLY_ID = +go.dataset.goto;
+      $('q').value = '';
+      render();
+      window.scrollTo({ top: 0 });
+      return;
+    }
+    var flag = ev.target.closest('.q-flag');
+    if (flag && navigator.clipboard) {
+      navigator.clipboard.writeText(flag.dataset.flag).then(function () {
+        var old = flag.innerHTML;
+        flag.innerHTML = '✓ 已複製'; flag.classList.add('copied');
+        setTimeout(function () { flag.innerHTML = old; flag.classList.remove('copied'); }, 1400);
+      });
+      return;
+    }
+    var map = ev.target.closest('.q-map');
+    if (map && window.uiOpenMap) {
+      var x = +map.dataset.x, y = +map.dataset.y;
+      window.uiOpenMap({
+        mapId: +map.dataset.mapid, x: x, y: y, title: '📜 ' + map.dataset.title, sub: map.dataset.mapname,
+        flagText: '/coord ' + x.toFixed(1) + ' ' + y.toFixed(1) + ' ' + map.dataset.mapname,
+      });
+    }
+  });
+  var deb;
+  $('q').addEventListener('input', function () {
+    clearTimeout(deb);
+    deb = setTimeout(function () { ONLY_ID = null; render(); }, 150);
+  });
+  $('expSel').addEventListener('change', function () { ONLY_ID = null; render(); });
+
+  fetch('../../data/quests/_index.json')
+    .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function (idx) {
+      IDX = idx;
+      idx.data.forEach(function (r) { BY_ID.set(r[0], r); });
+      $('expSel').innerHTML += idx.exps.map(function (e) {
+        return '<option value="' + e.id + '">' + esc(e.name) + '（' + e.n + '）</option>';
+      }).join('');
+      var p = new URLSearchParams(INITIAL);
+      var id = +p.get('id');
+      if (id && BY_ID.has(id)) ONLY_ID = id;
+      else {
+        $('q').value = p.get('q') || '';
+        var want = p.get('e');
+        if (want != null && idx.exps.some(function (e) { return String(e.id) === want; })) $('expSel').value = want;
+      }
+      render();
+    })
+    .catch(function (e) {
+      $('wrap').innerHTML = '<div class="loading err" role="alert">任務清單載入失敗：' + esc(e.message) + '</div>';
+    });
+
+  // 頁內快捷鍵（登記制見知識庫 §4.73）
+  var keys = [{ keys: 's', label: '聚焦搜尋框', run: function () { $('q').focus(); $('q').select(); } }];
+  if (window.SGT_SHORTCUTS) window.SGT_SHORTCUTS.register(keys);
+  else (window.SGT_SHORTCUTS_PENDING = window.SGT_SHORTCUTS_PENDING || []).push(keys);
+})();
+</script>
+<script type="module">
+/* 接取點：共用迷你地圖彈窗，maps.json 首次點擊才載入 */
+import { initMapModal, openMapModal } from '../../assets/js/map-modal.js';
+let ready = null;
+window.uiOpenMap = async function (opts) {
+  if (!ready) {
+    ready = fetch('../../data/maps.json').then(r => r.json()).then(j => initMapModal({ mapsData: j.data, base: '../..' }));
+  }
+  try { await ready; } catch (e) { ready = null; return; }
+  openMapModal(opts);
+};
+</script>
+</body>
+</html>

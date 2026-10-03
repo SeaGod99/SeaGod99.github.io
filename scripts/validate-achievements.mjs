@@ -73,7 +73,9 @@ push("nav.js 的 TOOLS 有這頁", /p:\s*'collections\/achievements\/'/.test(rea
 push("首頁有入口卡片且帶 data-added", /href="collections\/achievements\/"[^>]*data-added="\d{4}-\d{2}-\d{2}"/.test(read("index.html")));
 const idx = JSON.parse(read("data/site-index.json"));
 const ti = idx.types.findIndex((t) => t.label === "成就");
-push("③ 命令面板索引的「成就」是最後一類", ti >= 0 && ti === idx.types.length - 1, idx.types.map((t) => t.label).join(","));
+// 10-03 起「任務」（5,130 筆）也是大類別，與成就一起排在最後；兩個都在其他類別之後就對了
+const tailFrom = idx.types.findIndex((t) => t.label === "成就" || t.label === "任務");
+push("③ 命令面板索引的「成就」排在一般類別之後（大類別區）", ti >= 0 && ti >= tailFrom && idx.types.slice(tailFrom).every((t) => t.label === "成就" || t.label === "任務"), idx.types.map((t) => t.label).join(","));
 const idxN = idx.data.filter((r) => r[1] === ti).length;
 push("索引裡的成就數＝頁面可見數（同一道版本閘門）", idxN === visible.length, `索引 ${idxN}／頁面 ${visible.length}`);
 

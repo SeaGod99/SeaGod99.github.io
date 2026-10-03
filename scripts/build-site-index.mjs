@@ -125,6 +125,17 @@ async function main() {
 
   for (const s of TAIL_SOURCES) await addSource(s);
 
+  /* 任務（data/quests/_index.json，2026-10-03）：5,130 筆，與成就同屬「大類別」，放最後。
+     key 是任務 id，對應 tools/quest-finder/ 的 ?id=。同名任務 70 組，以 id 區分不會篩錯。 */
+  {
+    const qi = JSON.parse(await readFile(join(DATA, "quests", "_index.json"), "utf8"));
+    const ti = types.length;
+    types.push({ label: "任務", path: "tools/quest-finder/" });
+    let n = 0;
+    for (const r of qi.data) { if (!isTw(r[1])) continue; rows.push([r[1], ti, String(r[0])]); n++; }
+    report.push(`任務 ${n}`);
+  }
+
   const out = {
     schema: "site-index",
     updated: new Date().toISOString().slice(0, 10),
