@@ -49,25 +49,41 @@ const SOURCES = [
   ["副本", "dungeons", "tools/duty-codex/", (x) => ["duty:" + x.name, x.name]],
 ];
 
+// 排在**整份索引最後**的類別（在討伐目標／文書／系統解鎖／職業行會之後）。
+// 面板目前只取「索引順序的前 40 筆」、不依相關度排序（第二輪路線圖 cmd-palette-ranking），
+// 成就 3,349 筆若排在前面，短字查詢會被成就佔滿——例如搜「騎士」，名字含騎士的成就
+// 會把職業行會那一筆擠出前 40。面板改成依相關度排序之前，大類別一律放這裡。
+const TAIL_SOURCES = [
+  ["成就", "achievements", "collections/achievements/", (x) => ["id:" + x.id, x.name]],
+];
+
 async function main() {
   const types = [];
   const rows = [];
   const report = [];
 
-  for (const [label, file, path, fn] of SOURCES) {
+  // 與前端 assets/js/patch-gate.js 的 released() 同一套比對（"7.4" 補成 7.40 再比）。
+  // 頁面用它擋掉台服還沒開放的條目，索引若不擋，面板會列出一筆點進去卻捲不到的東西。
+  const gamePatch = JSON.parse(await readFile(join(DATA, "_meta.json"), "utf8")).gamePatch;
+  const pnum = (p) => { const m = p == null ? null : String(p).match(/^(\d+)\.(\d+)/); return m ? parseFloat(`${m[1]}.${m[2].padEnd(2, "0")}`) : null; };
+  const released = (p) => { const v = pnum(p), g = pnum(gamePatch); return v == null || g == null || v <= g; };
+
+  async function addSource([label, file, path, fn]) {
     const db = JSON.parse(await readFile(join(DATA, `${file}.json`), "utf8"));
     const ti = types.length;
     types.push({ label, path, patch: file });
-    let n = 0, noTw = 0;
+    let n = 0, noTw = 0, gated = 0;
     for (const e of db.data) {
       const [key, name] = fn(e);
       // 無台服繁中名＝台服未開放，本來就不該被搜到（鐵則）
       if (!name || !isTw(name)) { noTw++; continue; }
+      if (!released(e.patch)) { gated++; continue; }
       rows.push(key == null ? [name, ti] : [name, ti, key]);
       n++;
     }
-    report.push(`${label} ${n}${noTw ? `（略過無台服名 ${noTw}）` : ""}`);
+    report.push(`${label} ${n}${noTw ? `（略過無台服名 ${noTw}）` : ""}${gated ? `（略過版本 > ${gamePatch} ${gated}）` : ""}`);
   }
+  for (const s of SOURCES) await addSource(s);
 
   // 討伐目標（資料是「12 組 × 條目 × 目標」的巢狀，同一隻怪跨職業重複，依 baseId 去重）
   {
@@ -106,6 +122,8 @@ async function main() {
     for (const j of db.jobs) rows.push([j.name, tiJob, "job:" + j.abbr]);
     report.push(`系統解鎖 ${db.data.length}、職業行會 ${db.jobs.length}`);
   }
+
+  for (const s of TAIL_SOURCES) await addSource(s);
 
   const out = {
     schema: "site-index",

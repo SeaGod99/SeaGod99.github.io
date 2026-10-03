@@ -116,6 +116,8 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 部族聲望回歸（**改完 `tools/beast-tribes/` 或該資料必跑**） | `node scripts/validate-beast-tribes.mjs`（43 項；最重要的是「不可接到玩家種族表」與「盟友階門檻是 null 不是 0」）|
 | 重建文書討伐目標（改版時才跑） | `node scripts/build-relic-note.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/relic-note.json`（9 本 × 19 個目標）|
 | 文書跑圖回歸（**改完 `tools/relic-note/` 或 `relic-note.json` 必跑**） | `node scripts/validate-relic-note.mjs`（43 項；最重要的是「打勾的鍵要含書的 id」與「同名副本不給連結」）|
+| 重建成就追蹤資料（換台服版本後） | `node scripts/build-achievements.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/achievements.json`（3,349 個；**稱號名與分類名沒有台服來源，資料只存 `title` 旗標與 `ord` 名次**；舊版 Legacy 不收）；跑完接 `sync-meta.mjs --apply` 與 `build-site-index.mjs --apply` |
+| 成就追蹤回歸（**改完 `collections/achievements/`、`achievements.json` 或 `build-site-index.mjs` 必跑**） | `node scripts/validate-achievements.mjs`（jsdom，24 項；最重要：資料不准有稱號名／分類名欄位、畫面不准出現英文詞、收藏頁連結要對得到該頁 keyOf、索引的「成就」必須是最後一類）|
 | 時尚品鑑週更（每週二／週五各一次） | `node scripts/build-fashion-report.mjs`（`--dry-run` 只印／`--offline` 用快取）→ `node scripts/validate-fashion-render.mjs`（頁面 render 回歸，七個週狀態，不需瀏覽器） |
 | 時尚品鑑跨週不變資料（改版時才跑） | `node scripts/build-dyes.mjs`／`build-fashion-fillers.mjs`／`build-fashion-themes.mjs` |
 | 重建無人島資料層 | `node scripts/build-island.mjs`（`--offline` 用快取／`--refresh` 強制重抓） |
@@ -169,7 +171,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 - `git clone`／`git pull`／`git checkout` 動輒數分鐘，**下 git 指令請把 timeout 拉到 5 分鐘以上**。曾因 2 分鐘超時中斷 checkout，留下 index.lock ＋ 5 千個沒寫完的檔案。
 - 還原檔案時**先確認範圍**：`git restore .` 會連同你正在編輯的檔案一起還原（曾因此洗掉未 commit 的文件修改），只想補回某目錄就寫 `git restore tools/glamour`。
 - **根目錄的 `.nojekyll` 絕對不能刪**：GitHub Pages 預設跑 Jekyll，而 **Jekyll 會把底線開頭的檔案與目錄整個排除在發佈之外**。本站有 7 個這種檔（`data/_meta.json` ＋五個分片層的 `_index.json`），少了 `.nojekyll` 它們線上一律 404、而且回的是 HTML 404 頁，前端徵狀是 `Unexpected token '<', "<!DOCTYPE "... is not valid JSON`。**這個問題本機完全測不出來**（`file://` 與任何本機伺服器都正常供應）。`validate-links.mjs` 有一條斷言在防它被誤刪。
-- **GitHub Pages 1GB 發佈上限**：2026-09-27 實測 git 追蹤總計 **784MB**，餘裕約 240MB（09-26 是 758MB，一輪加了 26MB——主要是副本圖與 `item-sources/` 分片。磁碟上的 1.8G 含 `out_data/`、`node_modules/` 與 glamour 的中間檔，那些都不進 git）。新增大批圖片前先估增量，量法：`git ls-files -z | xargs -0 du -cb | awk '/total$/{s+=$1} END{print s/1048576}'`。
+- **GitHub Pages 1GB 發佈上限**：2026-10-02 實測 git 追蹤總計 **789.5MB**，餘裕約 234MB（09-27 是 784MB；大頭是 `tools/glamour/配裝圖片/` 550.6MB）。⚠ **`out_data/` 有 40 個檔（63.6MB）在 git 裡**，所以也被發佈到 Pages、佔上限額度，雖然前端從來不讀它們——不進 git 的只有 `out_data/cache/`、`out_data/tmp-newdb/`、`node_modules/` 與 glamour 的中間檔（舊版本句寫「out_data 不進 git」是錯的，10-02 更正）。新增大批圖片前先估增量，量法：`git ls-files -z | xargs -0 du -cb | awk '/total$/{s+=$1} END{print s/1048576}'`。
 - 跑完 `update_all` 後，衍生的 js 與新縮圖**記得 commit**（`.gitignore` 已不擋）。
 
 **另外三條鐵則**（違反過、代價高，細節見「專案慣例與記憶」）：
@@ -292,7 +294,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 - **要判斷「這個字串能不能印在畫面上」** → 用 `scripts/lib/tw-text.mjs` 的 `isTw()`，**不要再手寫 `/[一-鿿]/`**（站內曾有 19 份，每一份都有同一個洞：只要字串裡任何一處有漢字就整串放行，所以「コメンデーションクリスタルの取引」這種日文原文會直接上畫面）。`twName()` 用的是寬鬆版 `isTranslated()`——它只擋假名與遊戲內部佔位列，不要求漢字，因為台服真的會顯示 HP／PvP／F.A.T.E. 這類拉丁字串。**`twName()` 回傳有值不等於那是台服名**：上游語系檔的 `shops` 10 筆、`mobs` 89 筆、`statuses` 77 筆是未翻譯的日文。
 - **`ItemSources.getMany()` 回的是 `Map` 不是物件，而且鍵是數字** → 寫成 `map[id]` 會永遠拿到 `undefined`，**而且完全不報錯**——那一欄只是留白，看起來像「本站資料沒收」。正確寫法是 `map.get(+id)`。練級裝備路線第一版就是這樣，分片明明載進來了（log 看得到 `item-sources/18.json`）畫面上卻全空。回歸要驗「取得管道有填上」而不只是「有去載分片」。
 - **要把取得管道翻成畫面上的字** → 用 `scripts/lib/obtainable.mjs` 的 `convertOm()`＋`normalizeEntries()`。**兩種 skip 集合不要混用**：`SKIP_MARKET`（市場頁湊材料，濾掉製作／秘籍／商城）與 `SKIP_CATALOG`（分片層，製作與商城**是**有效答案）。上游的 `shopName`／NPC 名有 2,444 處是英文，`twOnly` 會擋掉，補得回來的走 `twShop` 解析器。
-- **做「下次什麼時候開」的功能** → 用 `assets/js/window-calc.js` 的 `nextWindows()`＋`statusOf()`，鬧鐘用 `assets/js/et-alarm.js`。**不要再寫第三份視窗演算法**——釣魚與限時採集兩頁已經收斂成薄包裝。改完必跑 `node scripts/validate-window-calc.mjs`（鬧鐘的錯誤是該響沒響，畫面上看不出來）。
+- **做「下次什麼時候開」的功能** → 用 `assets/js/window-calc.js` 的 `nextWindows()`＋`statusOf()`，鬧鐘用 `assets/js/et-alarm.js`。**不要再寫第三份視窗演算法**。⚠ 收斂只做了一半（2026-10-02 量到）：限時採集的 `nodeStatus()` 是薄包裝，但**釣魚頁 `fishStatus()`（`tools/fishing/index.html:441`，卡片／開窗看板／排序／鬧鐘都用它）仍是頁內第二份演算法**，不合併連續符合的天氣段，112 種魚開窗中的剩餘時間被低估；只有詳情彈窗與 `/tools/now/` 走 window-calc。修法見 [docs/功能發想與路線圖-第二輪.md](docs/功能發想與路線圖-第二輪.md)。改完必跑 `node scripts/validate-window-calc.mjs`（鬧鐘的錯誤是該響沒響，畫面上看不出來）。
   **鬧鐘 2026-09-27 才真的接上**：`et-alarm.js` 先前是寫好卻沒有任何頁面載它的死碼，兩頁各自留著自己的實作，而本檔與知識庫都宣稱「已收斂」。現在釣魚／限時採集／天氣三頁都走 `ETAlarm.create()`，改完跑 `node scripts/validate-et-alarm.mjs`——那支的第一組斷言就是「檔案真的被載了，而且沒有人自己再寫一份」。
 - **天氣的時間窗不要拿 window-calc 算**（單獨查「下次下雨」時）→ 天氣是 8 ET 小時一段、由雜湊決定，權威是 `assets/js/eorzea-weather.js` 的 `getWeatherAt()`；天氣頁的 `scanWeather()` 是目標搜尋／天氣鏈／我的天氣目標三處共用的那一份。**但把天氣當成條件掛在別的視窗上時走 window-calc**（`spec.weather = {mapId, keys, prevKeys}`，`startHour 0`／`endHour 24` 等於不限時段）。
 - **新增或改了「某個系統要先解鎖」的資訊** → 改 `scripts/lib/system-unlock-map.mjs` → `node scripts/build-system-unlocks.mjs`（先 dry-run 看閘門過不過）→ `--apply` → **`node scripts/build-site-index.mjs --apply`**（命令面板吃這份，漏跑會搜不到新系統）→ `validate-data` → `sync-meta --apply`。工具頁的橫幅**不必改頁面**——`assets/js/unlock-banner.js` 認的是 `system-unlocks.json` 的 `tool` 欄位對上網址路徑；新工具頁只要在 `<head>` 加一行 `<script src="../../assets/js/unlock-banner.js"></script>`。

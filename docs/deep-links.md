@@ -26,7 +26,7 @@
 
 ---
 
-## 2. `?id=` ——「連到特定一筆」（收藏追蹤引擎，13 頁）
+## 2. `?id=` ——「連到特定一筆」（收藏追蹤引擎，14 頁；2026-10-03 加成就追蹤 `/collections/achievements/?id=id%3A<成就 id>`）
 
 `/collections/mounts/?id=id%3A123` 會開啟坐騎頁、**自動翻到那一筆所在的分頁**、捲到它、閃兩秒。
 
@@ -39,6 +39,9 @@
 - 與 `q`／`own`／`sort`／`f_*`／`p` 可以並存；`?id=` 只負責捲，不會動篩選。
 
 實作在 `assets/js/collection-tracker.js` 的 `focusCard()`。
+
+目前的產生方之一：成就追蹤頁的物品獎勵若是收藏道具（坐騎笛、寵物、樂譜…72 個），直接連到該收藏頁的 `?id=`
+（key 由 `scripts/build-achievements.mjs` 依各頁 keyOf 算好寫進資料，`validate-achievements.mjs` 逐條驗得到）。
 
 ### 2.2 `#craft=` ——「帶一份材料清單過去」
 

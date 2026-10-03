@@ -2,7 +2,7 @@
   "project": "水神的工具箱 統一資料庫",
   "schemaDoc": "/data/SCHEMA.md",
   "gamePatch": "7.21",
-  "updated": "2026-09-27",
+  "updated": "2026-10-03",
   "idConventions": {
     "mapId": "遊戲 Map sheet row id（XIVAPI v2 /sheet/Map 的 row_id），全站統一；2026-06-11 起 maps.json 主鍵即此 id",
     "territoryId": "TerritoryType row id，僅輔助欄位（fishing-spots、gathering.coords.zoneId），顯示/連結一律用 mapId"
@@ -466,8 +466,8 @@
       "name": "全站搜尋索引（命令面板用）",
       "source": "各收藏／工具資料檔；key 為該頁 keyOf",
       "status": "used",
-      "count": 5177,
-      "updated": "2026-09-26"
+      "count": 8518,
+      "updated": "2026-10-03"
     },
     {
       "schema": "squadron",
@@ -537,6 +537,14 @@
       "status": "used",
       "count": 969,
       "updated": "2026-09-24"
+    },
+    {
+      "name": "成就",
+      "file": "achievements.json",
+      "count": 3349,
+      "updated": "2026-10-03",
+      "desc": "台服已開放的成就：達成條件、點數、物品獎勵、有無稱號（稱號名與分類名無台服來源，不收）；舊版（Legacy）成就不收",
+      "source": "XIVAPI v2 Achievement／AchievementCategory ＋ Teamcraft tw-achievements／tw-achievement-descriptions（out_data/tw-locales.msgpack）＋ Teamcraft patch-content ＋ data/items.json"
     }
   ]
 }

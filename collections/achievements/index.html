@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FF14 成就追蹤 — 台服成就的達成條件、點數與物品獎勵，可標記已達成">
+  <title>成就追蹤 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <link rel="stylesheet" href="../../assets/css/common.css">
+  <link rel="stylesheet" href="../../assets/css/tool-header.css">
+  <style>
+    /* 成就頁專屬樣式；通用版面與 .col-* 卡片系統見 assets/css/common.css，
+       控制面由 assets/js/collection-tracker.js 渲染 */
+    :root {
+      --accent:    var(--amber);                 /* 琥珀：金色已有六頁在用 */
+      --accent-2:  var(--orange);                /* 進度條尾色 */
+      --glow-1:    rgba(245,158,11,0.06);
+      --glow-2:    rgba(249,115,22,0.04);
+    }
+    /* 卡片以文字為主（名稱＋達成條件＋獎勵），欄寬比圖示型收藏頁寬 */
+    .col-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+    .col-card { padding: 16px 18px; gap: 6px; }
+    .ac-head { display: flex; align-items: center; gap: 10px; padding-right: 22px; }
+    .ac-head .col-icon { width: 40px; height: 40px; flex: none; margin: 0; }
+    .ac-head .col-name { padding-right: 0; }
+    .ac-meta { font-size: 11px; color: var(--text-muted); }
+    .ac-pts {
+      display: inline-block; min-width: 2.6em; padding: 1px 6px; border-radius: var(--radius-sm);
+      font-size: 11px; font-weight: 600; text-align: center;
+      color: var(--accent); background: var(--raise, rgba(255,255,255,0.04)); border: 1px solid var(--border);
+    }
+    /* 達成條件是這頁最主要的資訊：全文顯示，不截斷（同收藏頁「取得方式永遠預設顯示」） */
+    .ac-desc { font-size: 13px; line-height: 1.55; color: var(--text-secondary); }
+    .ac-reward { font-size: 12px; color: var(--text-secondary); }
+    .ac-reward b { color: var(--text-muted); font-weight: 500; }
+    .ac-reward a { color: var(--accent); }
+    .tag.reward-tag { background: var(--raise, rgba(255,255,255,0.04)); color: var(--text-secondary); border-color: var(--border); }
+
+    .ac-note { font-size: 12px; color: var(--text-muted); text-align: center; margin: -8px auto 14px; max-width: var(--w-content); }
+    .ac-points { font-size: 13px; color: var(--text-secondary); text-align: center; margin: 0 0 10px; }
+    .ac-points b { color: var(--accent); }
+
+    @media (max-width: 600px) { .col-grid { grid-template-columns: 1fr; } }
+  </style>
+  <script src="../../assets/js/patch-gate.js"></script>
+  <script src="../../assets/js/collection-tracker.js"></script>
+  <script src="../../assets/js/theme.js"></script>
+  <script src="../../assets/js/unlock-banner.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="tool-header">
+    <h1 class="tool-title">&#x1F3C6; 成就追蹤</h1>
+    <p class="tool-subtitle">台服已開放成就的達成條件、點數與物品獎勵——點卡片右上角的 ✓ 標記已達成，進度自動儲存於瀏覽器</p>
+    <div class="header-divider"></div>
+  </div>
+  <p class="ac-note">稱號名稱與成就分類沒有台服官方資料來源，本頁不顯示（只標出「有稱號獎勵」）；舊版成就已無法達成，未收錄。</p>
+  <p class="ac-points" id="ac-points" aria-live="polite"></p>
+
+  <!-- 控制面（進度／工具列／篩選／格線）由 collection-tracker.js 渲染 -->
+  <div id="ct-root"></div>
+
+</div>
+
+<!-- Footer -->
+<footer class="page-footer">
+  <div class="container">
+    <p class="footer-text">
+      <a href="../../">水神的工具箱</a> · 資料來源：遊戲本體、<a href="https://xivapi.com" target="_blank">XIVAPI</a>、<a href="https://github.com/ffxiv-teamcraft/ffxiv-teamcraft" target="_blank">Teamcraft</a> 台服語系檔
+    </p>
+    <p class="footer-text" style="margin-top:4px">
+      FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具
+    </p>
+  </div>
+</footer>
+
+<script>
+/* 資料：scripts/build-achievements.mjs → data/achievements.json
+ *   title 只是旗標（稱號名沒有台服來源）、ord 只是遊戲內排列的名次（分類名沒有台服來源）——
+ *   兩者都**不可**拿來顯示文字。見該腳本檔頭。 */
+function fmtNum(n) { return Number(n || 0).toLocaleString('en-US'); }
+
+CollectionTracker.init({
+  dataUrl: '../../data/achievements.json',
+  metaUrl: '../../data/_meta.json',
+  storageKey: 'ffxiv_achievements_done',
+  snapKey: 'achievements',
+  verb: '達成',
+  unit: '個',
+  noun: '成就',
+  searchPlaceholder: '搜尋成就名稱、達成條件、獎勵…',
+  pageSize: 60,
+  /* 資料層已只收有台服名的成就；這裡仍留一道 patch-gate（上游把個別成就標在台服之後的版本時，這是唯一的閘門）。 */
+  include: function (a, gp) { return !!a.name && PatchGate.released(a.patch, gp); },
+  searchText: function (a) { return [a.name, a.desc, a.item && a.item.n].filter(Boolean).join(' '); },
+  /* 「預設排序」＝資料順序＝遊戲內排列（建置時已依 種類 → 分類 → 分類內順序 排好，見 ord） */
+  sorts: [
+    'patch-desc', 'patch-asc', 'name',
+    { value: 'pts', label: '點數高→低', cmp: function (a, b) { return (b.pts - a.pts) || (a.ord - b.ord); } }
+  ],
+  filters: [
+    {
+      id: 'reward', label: '獎勵',
+      options: function () {
+        return [{ value: 'item', label: '物品' }, { value: 'title', label: '稱號' }, { value: 'none', label: '只有點數' }];
+      },
+      match: function (a, v) {
+        if (v === 'item') return !!a.item;
+        if (v === 'title') return !!a.title;
+        return !a.item && !a.title;
+      }
+    },
+    {
+      id: 'pts', label: '點數',
+      options: function (list) {
+        var set = new Set(list.map(function (a) { return a.pts; }));
+        return Array.from(set).sort(function (x, y) { return x - y; })
+          .map(function (p) { return { value: String(p), label: p + ' 點' }; });
+      },
+      match: function (a, v) { return String(a.pts) === v; }
+    },
+    { kind: 'patch' }
+  ],
+  onRender: function (list, pageSlice, tracker) {
+    var all = tracker.LIST || [];
+    var total = 0, done = 0;
+    all.forEach(function (a) { total += a.pts; if (tracker.isOwned(a)) done += a.pts; });
+    var el = document.getElementById('ac-points');
+    if (el) el.innerHTML = '已達成點數 <b>' + fmtNum(done) + '</b> / ' + fmtNum(total);
+  },
+  card: function (a) {
+    var esc = CollectionTracker.esc;
+    var iconHtml = a.icon
+      ? '<img class="col-icon" src="https://xivapi.com' + esc(a.icon) + '" alt="" loading="lazy" decoding="async"' +
+        ' onerror="this.remove();">'
+      : '<div class="col-icon placeholder">&#x1F3C6;</div>';
+    var tags = '';
+    if (a.item) tags += '<span class="tag reward-tag">物品獎勵</span>';
+    if (a.title) tags += '<span class="tag reward-tag" title="稱號名稱沒有台服官方資料來源，故不顯示">稱號</span>';
+    var reward = '';
+    if (a.item) {
+      var n = esc(a.item.n);
+      var link = a.item.p
+        ? '<a href="../../' + esc(a.item.p) + '?id=' + encodeURIComponent(a.item.k) + '">' + n + '</a>'
+        : n;
+      reward = '<div class="ac-reward"><b>獎勵：</b>' + link + '</div>';
+    }
+    return '' +
+      '<div class="ac-head">' + iconHtml + '<div class="col-name">' + esc(a.name) + '</div></div>' +
+      '<div class="ac-meta"><span class="ac-pts">' + esc(a.pts) + ' 點</span>　No.' + esc(a.id) +
+        (a.patch ? ' · ver ' + esc(a.patch) : '') + '</div>' +
+      (a.desc ? '<div class="ac-desc">' + esc(a.desc) + '</div>' : '') +
+      reward +
+      (tags ? '<div class="col-tags">' + tags + '</div>' : '');
+  }
+});
+</script>
+</body>
+</html>

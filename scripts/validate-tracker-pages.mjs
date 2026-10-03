@@ -45,7 +45,7 @@ const TRACKER_PAGES = [
   'collections/orchestrion/index.html', 'collections/emotes/index.html', 'collections/hairstyles/index.html',
   'collections/blue-magic/index.html', 'collections/triple-triad/index.html',
   'collections/exploration-log/index.html', 'collections/hunting-log/index.html',
-  'collections/ornaments/index.html', 'tools/aether-currents/index.html',
+  'collections/ornaments/index.html', 'collections/achievements/index.html', 'tools/aether-currents/index.html',
   'tools/gathering-log/index.html', 'tools/fishing/index.html',
 ].filter((p) => existsSync(join(ROOT, p)));
 

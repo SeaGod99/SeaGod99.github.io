@@ -21,6 +21,7 @@
 | 🐣 寵物收藏追蹤 | `/minions/` | 取得來源查詢、篩選搜尋、追蹤擁有進度 |
 | 🦜 鳥鞍收藏追蹤 | `/collections/barding/` | 陸行鳥鞍具來源查詢，追蹤擁有進度 |
 | 🌂 時尚配飾收藏追蹤 | `/collections/ornaments/` | 陽傘、背包、火炬等配飾的取得來源與擁有進度 |
+| 🏆 成就追蹤 | `/collections/achievements/` | 台服成就的達成條件、點數與物品獎勵，追蹤達成進度與點數（稱號名與分類無台服來源，不顯示） |
 | 🌬️ 風脈泉追蹤器 | `/tools/aether-currents/` | 31 地區 303 個風脈泉，任務型/野外型標示，追蹤解鎖進度 |
 | 💙 青魔法術收藏 | `/collections/blue-magic/` | 法術來源追蹤與習得路線建議 |
 | 🃏 幻卡追蹤 | `/collections/triple-triad/` | 幻卡取得來源與對戰策略查詢 |
@@ -65,7 +66,7 @@
 - 規劃與資料源見 [docs/無人島攻略工具規劃.md](docs/無人島攻略工具規劃.md)
 
 ### 🏆 收藏 / 成就
-- 🏅 稱號／成就追蹤（**擱置**：無台服官方繁中名來源，Title/Achievement 非物品、tw-items 不涵蓋，等台服 datamining 出現）
+- 🏅 稱號（**擱置**：玩家稱號沒有台服官方繁中名來源——XIVAPI `Title` 只有英文、Teamcraft tw/ 沒有稱號檔）。成就本身 2026-10-03 已上線（`/collections/achievements/`），只標「有稱號獎勵」不寫稱號名
 - 👤 角色自動匯入（**擱置**：繁中服為獨立伺服器、不在全球 Lodestone，ffxivcollect 查不到陸行鳥角色）
 
 ### 已否決

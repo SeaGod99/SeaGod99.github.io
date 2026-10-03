@@ -42,6 +42,7 @@
     { e: '🗡️', n: '討伐筆記追蹤', p: 'collections/hunting-log/', c: 'collect', k: 'hunting log 討伐筆記 怪物 monster note 經驗' },
     { e: '💙', n: '青魔法術收藏', p: 'collections/blue-magic/', c: 'collect', k: 'blue magic 青魔 法術' },
     { e: '🃏', n: '幻卡追蹤', p: 'collections/triple-triad/', c: 'collect', k: 'triple triad 幻卡' },
+    { e: '🏆', n: '成就追蹤', p: 'collections/achievements/', c: 'collect', k: 'achievement 成就 點數 達成條件 稱號 獎勵' },
     // 戰鬥 / 副本（c:'battle'）
     { e: '🗺️', n: '主線進度', p: 'tools/msq/', c: 'battle', k: 'msq main scenario 主線 劇情 進度 還剩幾個 章節' },
     { e: '⚔️', n: '副本圖鑑', p: 'tools/duty-codex/', c: 'battle', k: 'duty dungeon raid trial 副本 迷宮挑戰 討伐殲滅戰 大型任務 零式 極 絕 深層迷宮 時限 同步 解鎖' },
