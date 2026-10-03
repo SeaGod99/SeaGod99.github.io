@@ -216,6 +216,36 @@ const press = (key, target) => {
   push('  這頁也沒有 console error', err2.length === 0, err2.slice(0, 1).join('') || '乾淨');
 }
 
+// ── 命令面板依相關度排序（2026-10-03）────────────────────────────
+/* 原本只取索引順序前 40 筆、不排序：「陸行鳥」（幻卡）排第 50 搜不到、「騎士」的職業行會排第 29、
+   單字「鳥」40 格全被坐騎與寵物佔滿。現在：完全相符 → 開頭相符 → 包含，超過 40 筆講還有幾筆。 */
+{
+  if (!doc.getElementById('sgt-nav-input')) press('/');        // 面板第一次打開才建 DOM
+  await new Promise((r) => setTimeout(r, 50));
+  const inp = doc.getElementById('sgt-nav-input');
+  const search = async (q) => {
+    inp.value = q;
+    inp.dispatchEvent(new window.Event('input', { bubbles: true }));
+    await new Promise((r) => setTimeout(r, 400));          // 第一次要等索引載入
+    inp.dispatchEvent(new window.Event('input', { bubbles: true }));
+    await new Promise((r) => setTimeout(r, 50));
+    return [...doc.querySelectorAll('#sgt-nav-list .sgt-nav-item')].map((a) => ({
+      nm: a.querySelector('.nm').textContent, sub: (a.querySelector('.ext') || {}).textContent || '',
+    }));
+  };
+  if (inp) {
+    const content = (rows) => rows.filter((r) => r.sub && r.sub !== '物品' && r.sub !== '↗ 外部');
+    const k = content(await search('騎士'));
+    push('命令面板：完全相符的排第一（騎士）', k[0] && k[0].nm === '騎士', k.slice(0, 3).map((r) => r.nm + '/' + r.sub).join('、'));
+    const c = content(await search('陸行鳥'));
+    push('  原本排第 50 搜不到的「陸行鳥」（幻卡）找得到', c.some((r) => r.nm === '陸行鳥' && /幻卡/.test(r.sub)), c.slice(0, 3).map((r) => r.nm + '/' + r.sub).join('、'));
+    const b = await search('鳥');
+    push('  超過 40 筆時最後一列講還有幾筆', b.some((r) => /^另有 \d+ 筆符合/.test(r.nm)), (b.find((r) => /另有/.test(r.nm)) || {}).nm || '(沒有)');
+    const types = new Set(content(b).map((r) => r.sub));
+    push('  單字查詢不再只有坐騎與寵物（開頭相符的先排）', types.size >= 3, [...types].join('、'));
+  } else push('命令面板輸入框存在', false, '(找不到 #sgt-nav-input)');
+}
+
 push('全程無 console error', errors.length === 0, errors.slice(0, 1).join('') || '乾淨');
 push('沒有未捕捉的 rejection', unhandled.length === 0, unhandled.slice(0, 2).join(' | ') || '乾淨');
 

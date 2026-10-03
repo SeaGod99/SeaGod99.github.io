@@ -294,30 +294,41 @@
     var tools = TOOLS.filter(function (t) { return searchStr(t).indexOf(q) >= 0; });
     var content = [];
     if (idxState === 'idle') loadIndex();
+    var more = 0;
     if (idxState === 'ready' && q.length >= 1) {
-      var seen = {};
-      for (var i = 0; i < idx.data.length && content.length < 40; i++) {
+      /* 依相關度排：完全相符 → 開頭相符 → 包含；同一級維持索引順序（穩定，不會每打一字就換位置）。
+         2026-10-03 前只取「索引順序的前 40 筆」、不排序：「陸行鳥」（幻卡）排第 50 搜不到、
+         「騎士」的職業行會排第 29，單字「鳥／龍」40 格全被坐騎與寵物佔滿。
+         不做每類配額（會把使用者要的那一類擠掉），超過 40 筆時最後一列講還有幾筆。 */
+      var seen = {}, hits = [];
+      for (var i = 0; i < idx.data.length; i++) {
         var r = idx.data[i];
-        if (r[0].toLowerCase().indexOf(q) < 0) continue;
+        var nm = r[0].toLowerCase(), pos = nm.indexOf(q);
+        if (pos < 0) continue;
         var k = r[0] + '|' + r[1];
         if (seen[k]) continue;
         seen[k] = 1;
-        content.push(entryToRow(r[0], r[1], r[2]));
+        hits.push([nm === q ? 0 : pos === 0 ? 1 : 2, i, r]);
       }
+      hits.sort(function (a, b) { return a[0] - b[0] || a[1] - b[1]; });
+      content = hits.slice(0, 40).map(function (h) { return entryToRow(h[2][0], h[2][1], h[2][2]); });
+      more = Math.max(0, hits.length - 40);
     }
     // 市場保底：索引不收一般物品（45,548 筆太大），但使用者打的很可能就是道具名
     var fallback = {
       e: '💰', n: '到市場查價搜「' + q + '」', c: '__content__', sub: '物品',
       p: 'tools/market/?q=' + encodeURIComponent(q)
     };
-    filtered = tools.concat(content, [fallback]);
+    // 「另有 N 筆」只顯示、不跳（沒有 p，go() 會直接 return）
+    var moreRow = more ? [{ e: '…', n: '另有 ' + more + ' 筆符合，打更完整的名字可縮小範圍', c: '__content__', sub: '' }] : [];
+    filtered = tools.concat(content, moreRow, [fallback]);
     sel = 0;
     render();
   }
 
   function go(t) {
     if (t.ext) { window.open(t.u, '_blank', 'noopener'); close(); return; }
-    if (!t.p) return;            // 站內還沒有該類別的頁面（目前只有副本），只顯示不跳
+    if (!t.p) return;            // 沒有目的地的列（「另有 N 筆符合」）只顯示不跳
     window.location.href = hrefOf(t);
   }
 
