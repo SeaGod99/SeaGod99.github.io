@@ -1,0 +1,163 @@
+# 時尚品鑑自動週更（2026-10-03，站主決定「直接 commit 到 main」）
+#
+# 為什麼：手動週更時，week 442 起站上有 67.6% 的時間是上一週的資料（評分期也有 41.5%），
+# week 450 整週沒更新。根因是人工排程不是技術：腳本的輸入全在 git 裡、外部來源都是不需要金鑰的公開 API。
+#
+# 做什麼：跑 scripts/build-fashion-report.mjs → validate-data → validate-fashion-render，
+# 全過且資料有變才 commit（fashion-report.json＋_meta.json）並推上 main，再到線上確認網站真的更新了。
+#   · 「來源尚未換週」是換週後的正常真空期 → 這次空跑，等下一個時間點
+#   · 其他錯誤 → 不推送、開 issue（同一件事只開一個，之後改成留言）
+#   · 推上去之後讀線上的 data/fashion-report.json 確認週次已更新；10 分鐘沒更新就主動要求 Pages 重建，
+#     再 10 分鐘還沒有就開 issue（用 GITHUB_TOKEN 推送不一定會觸發 Pages 部署，這一步就是在防它）
+#
+# 三種觸發：
+#   · 排程：週二／週五 台北 16:30、18:30、21:00（來源站換週要幾十分鐘到幾小時，早的那次沒抓到由晚的補上）
+#   · 手動：Actions 頁面「Run workflow」（publish 預設勾選＝會推送）
+#   · 改到這支檔案本身：自動試跑一次，**不推送**，並檢查 token 的三個權限（推臨時分支再刪、建標籤、讀 Pages 設定）
+name: 時尚品鑑自動週更
+
+on:
+  schedule:
+    - cron: '30 8 * * 2'    # 週二 16:30 台北（cron 是 UTC）
+    - cron: '30 10 * * 2'   # 週二 18:30
+    - cron: '0 13 * * 2'    # 週二 21:00
+    - cron: '30 8 * * 5'    # 週五 16:30
+    - cron: '30 10 * * 5'   # 週五 18:30
+    - cron: '0 13 * * 5'    # 週五 21:00
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: '有變動時 commit 並推上 main'
+        type: boolean
+        default: true
+  push:
+    branches: [main]
+    paths: ['.github/workflows/fashion-report.yml']
+
+permissions:
+  contents: write
+  pages: write
+  issues: write
+
+concurrency:
+  group: fashion-report
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      PUBLISH: ${{ github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.publish) }}
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      SITE: https://seagod99.github.io
+    steps:
+      # 整個 repo 追蹤約 790MB（多半是幻化圖），只抓腳本需要的
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /package.json
+            /package-lock.json
+            /scripts/
+            /data/
+            /tools/fashion-report/
+            /out_data/npcs.msgpack
+            /out_data/shops.msgpack
+            /out_data/equipment.msgpack
+            /out_data/en-items.msgpack
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      # sharp 的安裝腳本會下載原生檔，週更用不到它，跳過
+      - run: npm ci --no-audit --no-fund --ignore-scripts
+
+      - name: 試跑時檢查 token 權限（不碰 main）
+        if: env.PUBLISH != 'true'
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          b="ci-permission-check-${GITHUB_RUN_ID}"
+          git push origin "HEAD:refs/heads/$b" && git push origin --delete "$b"
+          echo "✓ contents: write（推臨時分支再刪掉）"
+          gh label create fashion-report-bot --repo "$REPO" --color D93F0B --description "時尚品鑑自動週更" --force
+          echo "✓ issues: write（建立標籤）"
+          gh api "repos/$REPO/pages" --jq '"✓ pages 可讀：build_type=\(.build_type) source=\(.source.branch)/\(.source.path)"'
+
+      - name: 跑週更腳本
+        id: build
+        run: |
+          set +e
+          node scripts/build-fashion-report.mjs 2>&1 | tee build.log
+          code=${PIPESTATUS[0]}
+          if [ "$code" -ne 0 ] && grep -q "來源尚未換週" build.log; then
+            echo "::notice::來源尚未換週——換週後的正常真空期，這次空跑"
+            echo "result=not-yet" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          [ "$code" -eq 0 ] && echo "result=built" >> "$GITHUB_OUTPUT"
+          exit "$code"
+
+      - name: 驗證
+        if: steps.build.outputs.result == 'built'
+        run: |
+          node scripts/validate-data.mjs
+          node scripts/validate-fashion-render.mjs
+
+      - name: 有變動才 commit 並推上去
+        id: push
+        if: steps.build.outputs.result == 'built'
+        run: |
+          set -e
+          if git diff --quiet -- data/fashion-report.json; then
+            echo "資料沒有變動"; echo "changed=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          node scripts/sync-meta.mjs --apply
+          week=$(node -p "require('./data/fashion-report.json').week")
+          status=$(node -p "require('./data/fashion-report.json').status")
+          theme=$(node -p "(require('./data/fashion-report.json').theme||{}).name||''")
+          echo "week=$week" >> "$GITHUB_OUTPUT"; echo "status=$status" >> "$GITHUB_OUTPUT"
+          if [ "$PUBLISH" != "true" ]; then
+            echo "::notice::試跑：會更新到 week $week（$status）「$theme」，不推送"
+            git diff --stat -- data/
+            echo "changed=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/fashion-report.json data/_meta.json
+          git commit -m "data(fashion-report): 自動週更至 week ${week}「${theme}」（${status}）"
+          for i in 1 2 3; do
+            git push origin HEAD:main && break
+            git pull --rebase origin main   # 站主剛好也推了東西
+          done
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: 確認網站真的更新了
+        if: steps.push.outputs.changed == 'true'
+        run: |
+          want="${{ steps.push.outputs.week }}/${{ steps.push.outputs.status }}"
+          live() { curl -fsSL "$SITE/data/fashion-report.json?t=$(date +%s)" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const j=JSON.parse(s);console.log(j.week+"/"+j.status)})'; }
+          wait_live() { for i in $(seq 1 20); do got=$(live || echo "?"); [ "$got" = "$want" ] && return 0; sleep 30; done; return 1; }
+          if wait_live; then echo "✓ 線上已是 $want"; exit 0; fi
+          echo "::warning::10 分鐘內線上沒更新，主動要求 Pages 重建"
+          gh api -X POST "repos/$REPO/pages/builds" || true
+          if wait_live; then echo "✓ 要求重建後線上已是 $want"; exit 0; fi
+          echo "::error::推上去了但線上還不是 $want（Pages 沒有部署）"; exit 1
+
+      - name: 失敗就開 issue（同一件事只開一個）
+        if: failure() && env.PUBLISH == 'true'
+        run: |
+          url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          body="時尚品鑑自動週更失敗：$url"
+          n=$(gh issue list --repo "$REPO" --label fashion-report-bot --state open --json number --jq '.[0].number')
+          if [ -n "$n" ]; then gh issue comment "$n" --repo "$REPO" --body "$body"
+          else
+            gh label create fashion-report-bot --repo "$REPO" --color D93F0B --description "時尚品鑑自動週更" --force
+            gh issue create --repo "$REPO" --label fashion-report-bot --title "時尚品鑑自動週更失敗" --body "$body"
+          fi

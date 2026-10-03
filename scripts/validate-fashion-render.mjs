@@ -79,6 +79,12 @@ for (const [name, now, opt] of cases) {
   const bad = [];
   if (!h || h.length < 400) bad.push(`輸出過短(${h.length})`);
   if (/undefined|NaN|\[object Object\]/.test(h)) bad.push("洩漏 undefined/NaN/[object Object]");
+  /* 2026-10-03：資料落後時要講出「換週後已過多久」（只算本站落後，從當週週二 16:00 起）；
+     資料是當週或超前時不該出現。 */
+  const lag = /換週後已過 <b>(\d+ 天 )?\d+ 小時<\/b>，本站仍是第 \d+ 週的存檔/.test(h);
+  const behind = name.startsWith("資料落後");
+  if (behind && !lag) bad.push("落後時沒講換週後已過多久");
+  if (!behind && /換週後已過/.test(h)) bad.push("沒落後卻出現「換週後已過」");
   out.push(`${bad.length ? "❌" : "✅"} ${name}：${h.length} 字元${bad.length ? " → " + bad.join("、") : ""}`);
   if (bad.length) fail++;
   if (name === "資料當週・評分期（正常態）") writeFileSync(join(OUT_DIR, "render-normal.html"), h, "utf8");

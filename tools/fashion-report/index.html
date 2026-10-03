@@ -48,6 +48,8 @@
   .cta-row a:hover { border-color: var(--accent); }
   .cta-row a.primary { background: var(--gold); border-color: var(--gold); color: #14161c; font-weight: 600; }
   .cta-row a.primary:hover { filter: brightness(1.08); }
+  .state-lag { font-size: 13.5px; color: var(--text-dim); margin-top: 8px; }
+  .state-lag b { color: var(--text); }
   .archive-note { font-size: 13.5px; color: var(--text-dim); margin-top: 16px; padding-top: 13px; border-top: 1px solid var(--border); }
 
   /* ── 方案切換 ── */
@@ -202,6 +204,13 @@ const fmtDur = ms => {
 /* ── 狀態機 ──────────────────────────────────────────────────
    兩個獨立維度：遊戲階段（準備期／評分期）× 本站資料（本週已驗證／本週預測版／落後）。
    六個狀態各有固定的徽章、說明與主要行動；版面結構不變，只換內容。 */
+/* 本站落後多久（2026-10-03）：從當週週二 16:00 起算。只能講「本站落後」——來源站的 API 沒有 CORS，
+   前端查不到它換週了沒。week 442 起站上有 67.6% 的時間是上一週的資料，這行讓使用者知道該不該等。 */
+function fmtLag(ms) {
+  const h = Math.floor(ms / 3600000), d = Math.floor(h / 24);
+  return d ? `${d} 天 ${h % 24} 小時` : `${h} 小時`;
+}
+
 function stateOf(d, now) {
   const week = weekAt(now), b = boundsOf(week);
   const phase = now < b.judge ? 'prep' : 'judge';
@@ -539,6 +548,7 @@ function render(d, themes) {
         </div>
       </div>
       <div class="state-say">${T.say}</div>
+      ${st.key.startsWith('missing') ? `<div class="state-lag">換週後已過 <b>${fmtLag(now - st.bounds.start)}</b>，本站仍是第 ${d.week} 週的存檔。</div>` : ''}
       ${st.stale ? `<div class="cta-row">${EXT_LINKS.map(([u, t, p]) => `<a class="${p ? 'primary' : ''}" href="${u}" target="_blank" rel="noopener">${t}</a>`).join('')}</div>` : ''}
       ${st.stale ? `<div class="archive-note">下方保留<b>第 ${d.week} 週「${esc(d.theme.name)}」</b>（${weekRange(d.week)}）的完整存檔，僅供參考——那一週已經收榜，照著做不會得分。</div>` : ''}
     </div>`;

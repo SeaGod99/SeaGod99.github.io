@@ -1,0 +1,49 @@
+# 時尚品鑑落後檢查（2026-10-03）
+#
+# 自動週更（fashion-report.yml）失敗時會自己開 issue，但如果它根本沒跑（排程被 GitHub 延遲或停用、
+# 權限被改掉），就沒有人知道。這支每週三、六中午（台北）看一次 data/fashion-report.json 的週次，
+# 比網站時鐘的當週還舊就開 issue（同一件事只開一個，之後改成留言）。
+# 週次算法與 tools/fashion-report/index.html 的 weekAt() 相同：week 440 從 2026-06-30 16:00（台北）起算。
+name: 時尚品鑑落後檢查
+
+on:
+  schedule:
+    - cron: '0 4 * * 3'   # 週三 12:00 台北（準備期，應該已經是當週的預測版）
+    - cron: '0 4 * * 6'   # 週六 12:00 台北（評分期，應該已經是當週）
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /data/fashion-report.json
+      - name: 比對週次
+        run: |
+          read -r have now <<< "$(node -e '
+            const ANCHOR = Date.UTC(2026, 5, 30, 8, 0, 0), WEEK = 7 * 24 * 3600 * 1000;
+            const now = 440 + Math.floor((Date.now() - ANCHOR) / WEEK);
+            console.log(require("./data/fashion-report.json").week, now);')"
+          echo "資料 week $have／網站時鐘 week $now"
+          if [ "$have" -ge "$now" ]; then echo "✓ 沒有落後"; exit 0; fi
+          url="${{ github.server_url }}/${{ github.repository }}/actions/workflows/fashion-report.yml"
+          body="時尚品鑑落後：資料是 week $have，現在已是 week $now。自動週更的紀錄：$url"
+          n=$(gh issue list --repo "$REPO" --label fashion-report-bot --state open --json number --jq '.[0].number')
+          if [ -n "$n" ]; then gh issue comment "$n" --repo "$REPO" --body "$body"
+          else
+            gh label create fashion-report-bot --repo "$REPO" --color D93F0B --description "時尚品鑑自動週更" --force
+            gh issue create --repo "$REPO" --label fashion-report-bot --title "時尚品鑑落後一週以上" --body "$body"
+          fi
