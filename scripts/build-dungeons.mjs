@@ -191,14 +191,8 @@ async function main() {
         questName: null,
         questId: null,
       },
-      bosses: [],
-      rewards: {
-        tomestones: null,
-        itemLevel: null,
-        itemIds: [],
-        mounts: [],
-        minions: [],
-      },
+      // bosses／rewards 2026-10-03 移除：520 筆全空、前端不讀，而且沒有 datamine 來源（見 patch-dungeon-expansion.mjs 檔頭）。
+      // 「這個副本掉什麼」改由 build-duty-drops.mjs → data/duty-drops.json 回答。
       notes: f['Transient.Description'] ?? f.Transient?.Description ?? null,
     });
   }
@@ -240,8 +234,7 @@ TODO（腳本不自動處理，需後續補齊）：
      可能方向：Teamcraft 的 i18n/zh.json 或 thewakingsands datamining
   2. patch — 無直接欄位，可對照 SortKey 或 RequiredExVersion 手動分配
   3. unlock.type/questName — 需查 UnlockCriteria 對應任務
-  4. bosses — 需另表（ContentNpcEnemy 等）
-  5. rewards.mounts/minions — 需對照 mounts.json/minions.json 的 sources
+  （bosses／rewards 已移除：沒有 datamine 來源；掉落改由 build-duty-drops.mjs 回答）
 `);
 }
 

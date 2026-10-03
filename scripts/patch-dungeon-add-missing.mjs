@@ -174,8 +174,6 @@ async function main() {
       highEndDuty: r.highEnd,
       image: r.imagePath ? r.imagePath.replace('ui/icon/', '/i/').replace('.tex', '.png') : null,
       unlock: { type: 'unknown', questName: null, questId: null },
-      bosses: [],
-      rewards: { tomestones: null, itemLevel: null, itemIds: [], mounts: [], minions: [] },
       notes: null,
     });
   }

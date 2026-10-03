@@ -445,16 +445,6 @@ ARR 2.x / HW 3.x / SB 4.x / ShB 5.x / EW 6.x / DT 7.x
     "questName": "一燃而起",
     "questId": null
   },
-  "bosses": [
-    { "name": "伊夫利特", "nameEn": "Ifrit" }
-  ],
-  "rewards": {
-    "tomestones": null,
-    "itemLevel": 55,
-    "itemIds": [],
-    "mounts": [{ "mountId": 5, "name": "夢幻陸行鳥" }],
-    "minions": []
-  },
   "notes": "七色水晶武器素材來源"
 }
 ```
@@ -476,19 +466,13 @@ ARR 2.x / HW 3.x / SB 4.x / ShB 5.x / EW 6.x / DT 7.x
 | `unlock.type` | string | ✅ | `msq`（主線）/ `quest`（支線）/ `unlock_item`（道具）/ `achievement`（成就）/ `none` |
 | `unlock.questName` | string\|null | | 任務名稱 |
 | `unlock.questId` | number\|null | | 任務 ID（連 npcs 或 XIVAPI） |
-| `bosses` | array | | Boss 清單，每筆 `{ name, nameEn }` |
-| `rewards` | object | | 掉落獎勵（用於外觀/坐騎追蹤） |
-| `rewards.tomestones` | string\|null | | 掉落神典石種類（如「不朽石」），無則 null |
-| `rewards.itemLevel` | number\|null | | 掉落裝備裝等 |
-| `rewards.itemIds` | number[] | | 掉落物品 itemId 陣列（外連 items） |
-| `rewards.mounts` | array | | 掉落坐騎 `[{ mountId, name }]`（外連 mounts） |
-| `rewards.minions` | array | | 掉落寵物 `[{ minionId, name }]`（外連 minions） |
 | `notes` | string\|null | | 備注 |
 
+> **`bosses`／`rewards` 已於 2026-10-03 移除**：520 筆全空、前端不讀，而且沒有 datamine 來源。
+> 「這個副本掉什麼」改由 `data/duty-drops.json`（`scripts/build-duty-drops.mjs`，依 `dungeons.json` 的 id）回答。
+
 **與其他庫的關聯**：
-- `rewards.itemIds[]` → `items.id`
-- `rewards.mounts[].mountId` → `mounts.id`（收藏追蹤工具可用此反查副本）
-- `rewards.minions[].minionId` → `minions.id`
+- `data/duty-drops.json` 的鍵 → `dungeons.id`（收藏頁 `sources[].duty` 的 id 也是這個）
 - `mounts/minions` 的 `sources[].type = "高難度副本"` 時，`detail` 填副本 `name`（繁中），方便前端顯示時跨查
 
 **資料來源**：XIVAPI `ContentFinderCondition` sheet（解鎖條件、等級、隊伍人數）；掉落外觀、坐騎手動補充。

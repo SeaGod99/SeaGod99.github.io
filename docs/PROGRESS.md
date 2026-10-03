@@ -223,6 +223,8 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 
 ## 五、更新紀錄
 
+- **2026-10-03y（`dungeons.json` 移除兩個空欄位）**：第二輪路線圖 `duty-codex-dead-fields`。`bosses`（520 筆全是空陣列）與 `rewards`（520 筆的五個子欄全空）前端不讀、也沒有 datamine 來源，移除；「這個副本掉什麼」已由 `duty-drops.json` 回答。`build-dungeons.mjs` 與 `patch-dungeon-add-missing.mjs` 不再產這兩欄（重建不會長回來），`data/SCHEMA.md` 同步改寫。檔案 286KB → 251KB。副本圖鑑、文書跑圖、幻卡跑圖回歸照過；真瀏覽器通過。
+
 - **2026-10-03x（天書奇談格子資料：實測不做；`_meta` 登記規則）**：第二輪路線圖 `wondrous-tails-duty-data`、`meta-registry-rule`。
   - **天書奇談：不做。** `WeeklyBingoOrderData` 199 列裡，指定單一副本的（Type 0）130 列有 126 列對得回 `dungeons.json`（96.9%）；但另外 69 列是**類別規則**（「Lv51–59 的迷宮」、某個團隊任務系列、PvP…），只有等級或系列序號、沒有副本 id，要列出可選副本就得自己解讀規則；而且這些類別的說明文字（`WeeklyBingoText`）沒有台服來源。整體 126/199＝63%，未達 80% 的門檻。
   - **`_meta` 登記規則**：登記的意思是「前端會讀、要追蹤新鮮度」。補登 11 筆（染劑、時尚品鑑主題、取得管道類型遮罩、採集用物品表、無人島、以及六個分片目錄的 `_index.json`）；`_meta` 的條目可以用 `family`（檔名前綴）讓一筆代表一整組檔（`island-*.json` 12 份）。建置快照與中繼檔（`*-tc.json`／`*-fxc.json`、`fashion-fillers.json`、`data/scripts/`）寫進 `sync-meta.mjs` 的 `NOT_REGISTERED`，每條附理由。`sync-meta` 現在報「沒有漏登記的檔」——原本 25 個混在一起的警告，以後出現就是真的漏了；`NOT_REGISTERED` 裡的項目檔案消失時也會提醒刪掉。
