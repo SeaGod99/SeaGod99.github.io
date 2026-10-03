@@ -223,6 +223,14 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 
 ## 五、更新紀錄
 
+- **2026-10-04（成就追蹤：獎勵內容）**：站主要求「有獎勵的加上獎勵內容」。
+  - **卡片的獎勵區**：物品獎勵一行＝道具圖示＋種類標籤（文字，不只靠顏色）＋名稱；收藏品連到該收藏頁。**裝備**（94 件）多一行「部位・裝備等級・品級・可裝備職業」。稱號仍只標「稱號」（重查一次 Teamcraft tw/ 51 個檔，仍沒有稱號名來源）。
+  - **種類**：連得到收藏頁的用那一頁的名稱（坐騎笛的道具分類是「其他」，寫「坐騎」才看得懂），裝備統一叫「裝備」，其餘照道具分類。186 件：裝備 94、坐騎 43、幻卡 20、寵物 18、樂譜 7、鳥鞍 3、時尚配飾 1。
+  - **幻卡獎勵補連結**：20 張靠 `Item.AdditionalData` = 卡 id（§4.10 那條可證的關聯）連到幻卡頁，**再用名稱驗一次**（「九宮幻卡：X」對卡名 X，20/20）。收藏頁連結 72 → 92。
+  - **可裝備職業**：個別職業一律用 `data/equip.json` 的職業名；只有「所有職業」「戰鬥精英 魔法導師」兩個群組用 `tw-locales.jobCategories` 的官方字串——那張表的單一職業字串是舊譯（「木工師」＝刻木匠），回歸釘住。
+  - **「獎勵」篩選**多了種類選項（由資料長出、依筆數排）；`item`／`title`／`none` 三個舊值不變，舊連結照常。搜尋也吃獎勵種類、部位與可裝備職業（打「坐騎」「騎士」找得到）。
+  - `validate-achievements.mjs` 26 → 36 項；真瀏覽器三寬度通過，另截 1280／360 看過。資料 +2KB gzip。另附：成就頁下一步的盤點（條件類型、系列 310 個、跨頁推論約 125 個…）記在第二輪路線圖 §10。
+
 - **2026-10-03za（網站部署改用 GitHub Actions：建好、等站主啟用）**：第二輪路線圖 `pages-deploy-via-actions`（§7-2，站主「都可以製作」）。**切換 Pages 來源是 repo 的管理設定，工作流程的權限改不到**，所以做成「站主按兩下就生效、沒按之前一切照舊」。SOP 在 [docs/pages-deploy-sop.md](pages-deploy-sop.md)。
   - **`scripts/build-pages-artifact.mjs`**：從 `git ls-files` 扣掉 `EXCLUDE`（`out_data/`、`scripts/`、`docs/`、`.github/`、`tools/glamour/data/`、`tools/glamour/scripts/`、`data/scripts/`、`*.md`、`*.bat`、`*.py`…，每條附理由），發佈 29,879 檔／705.5MB，**省 89MB**（1GB 上限的餘裕 230MB → 320MB）。四道閘門：必備檔（含六個底線開頭的 `_index.json`，§4.94）、`nav.js` 每一頁、前端寫死的 64 條 `data/` 路徑、被排除的路徑沒有前端字串指向。`--stamp <sha>` 在產出放 `build.json`。
   - **`.github/workflows/pages.yml`**：只有 repo 變數 `PAGES_VIA_ACTIONS=true` 時才跑（沒設就每次推送出現一筆「略過」）。build → `deploy-pages` → verify（線上 `build.json` 的 sha 等於這次 commit 才算數；不用 `sw.js` 版本號當指紋，因為只改資料的 commit 不會換它）→ 任一步失敗開 `pages-deploy-bot` issue。

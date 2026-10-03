@@ -59,12 +59,33 @@ const KEYOF = {
   "collections/emotes/": ["emotes", (e) => "id:" + e.id],
   "collections/barding/": ["barding", (e) => "id:" + e.id],
   "collections/ornaments/": ["ornaments", (e) => "id:" + e.id],
+  "collections/triple-triad/": ["triple-triad", (e) => "id:" + e.id],
 };
 const keySets = {};
 for (const [p, [f, fn]] of Object.entries(KEYOF)) keySets[p] = new Set(JSON.parse(read(`data/${f}.json`)).data.map(fn));
 const linked = A.filter((a) => a.item && a.item.p);
 const badLinks = linked.filter((a) => !keySets[a.item.p] || !keySets[a.item.p].has(a.item.k));
 push("物品獎勵的收藏頁連結全部對得到該頁的 keyOf", linked.length > 0 && badLinks.length === 0, `${linked.length} 條，錯 ${badLinks.length}：${badLinks.slice(0, 3).map((a) => a.id).join(",")}`);
+
+// ── 獎勵內容（2026-10-04）──
+{
+  const items = new Map(JSON.parse(read("data/items.json")).data.map((x) => [x.id, x]));
+  const equip = JSON.parse(read("data/equip.json"));
+  const jobNames = new Set(Object.values(equip.names));
+  const rewarded = A.filter((a) => a.item);
+  push("每個物品獎勵都有種類標籤", rewarded.every((a) => a.item.c && isTw(a.item.c)), rewarded.filter((a) => !a.item.c).slice(0, 3).map((a) => a.id).join(","));
+  push("  有圖示的道具都帶了圖示", rewarded.every((a) => !items.get(a.item.id)?.icon || a.item.i === items.get(a.item.id).icon));
+  const gear = rewarded.filter((a) => items.get(a.item.id)?.equip);
+  push("裝備獎勵都有部位／裝備等級／品級／可裝備職業", gear.length > 0 && gear.every((a) => a.item.eq && a.item.eq.slot && a.item.eq.lv && a.item.eq.il && a.item.eq.jobs), `${gear.length} 件`);
+  /* 職業名鐵則：個別職業一律是 equip.json 的名字。jobCategories 的單一職業字串是舊譯（「木工師」＝刻木匠），
+     只准用它的兩個群組字串。 */
+  const GROUPS = new Set(["所有職業", "戰鬥精英 魔法導師"]);
+  const badJobs = gear.filter((a) => !GROUPS.has(a.item.eq.jobs) && !a.item.eq.jobs.split("、").every((n) => jobNames.has(n)));
+  push("  可裝備職業只用 equip.json 的職業名（或兩個官方群組字串），沒有舊譯", badJobs.length === 0, badJobs.slice(0, 3).map((a) => a.item.eq.jobs).join(" ｜ "));
+  const cards = rewarded.filter((a) => a.item.p === "collections/triple-triad/");
+  const tt = new Map(JSON.parse(read("data/triple-triad.json")).data.map((c) => ["id:" + c.id, c]));
+  push("幻卡獎勵連到幻卡頁，而且卡名與道具名對得上", cards.length >= 20 && cards.every((a) => a.item.n === "九宮幻卡：" + tt.get(a.item.k)?.name), `${cards.length} 張`);
+}
 
 // ───────────────────────── 登記 ─────────────────────────
 const m = meta.databases.find((d) => d.file === "achievements.json");
@@ -145,6 +166,22 @@ async function boot(query = "", seed = null) {
   const { doc } = await boot("?f_reward=title");
   const cards = [...doc.querySelectorAll(".col-card")];
   push("「獎勵：稱號」篩選後每張卡都有稱號標籤", cards.length > 0 && cards.every((c) => /稱號/.test(c.textContent)), `${cards.length} 張`);
+}
+
+{
+  // 獎勵內容的畫面：依種類篩、裝備那一行、幻卡連結
+  const { doc } = await boot("?f_reward=" + encodeURIComponent("k:坐騎"));
+  const cards = [...doc.querySelectorAll(".col-card")];
+  const want = visible.filter((a) => a.item && a.item.c === "坐騎").length;
+  push("「獎勵：坐騎」只列出獎勵是坐騎的成就", cards.length === Math.min(60, want) && cards.every((c) => c.querySelector(".ac-rw-kind")?.textContent === "坐騎"), `${cards.length}／${want}`);
+  push("  獎勵篩選的種類由資料長出（含裝備、幻卡）", /裝備/.test(doc.querySelector("#ct-root").textContent) && /幻卡/.test(doc.querySelector("#ct-root").textContent), "");
+  const g = await boot("?f_reward=" + encodeURIComponent("k:裝備"));
+  const eqLine = g.doc.querySelector(".ac-rw-eq")?.textContent || "";
+  push("裝備獎勵的卡片多一行部位・裝備等級・品級・職業", /裝備等級 \d+・品級 \d+・/.test(eqLine), eqLine);
+  const t = await boot("?f_reward=" + encodeURIComponent("k:幻卡"));
+  const a = t.doc.querySelector(".ac-reward a.ac-rw-name");
+  push("幻卡獎勵連到幻卡頁的 ?id=id:<卡 id>", !!a && /collections\/triple-triad\/\?id=id%3A\d+/.test(a.getAttribute("href")), a && a.getAttribute("href"));
+  push("  這幾條路徑 console 都乾淨", [g, t].every((x) => x.errors.length === 0), [g, t].flatMap((x) => x.errors).slice(0, 1).join(""));
 }
 
 {

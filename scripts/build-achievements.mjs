@@ -44,12 +44,13 @@ const LEGACY_KIND = 13;   // AchievementKind 13 = Legacy（見檔頭）
 
 // 物品獎勵若是收藏道具，連到該收藏頁的 ?id=（值＝該頁 keyOf 的輸出，見 docs/deep-links.md §2）
 const COLLECTIONS = [
-  { file: "mounts",      page: "collections/mounts/",      key: (e) => "id:" + e.id },
-  { file: "minions",     page: "minions/",                 key: (e) => String(e.id) },   // 寵物頁 keyOf 是純 id
-  { file: "orchestrion", page: "collections/orchestrion/", key: (e) => "id:" + e.id },
-  { file: "emotes",      page: "collections/emotes/",      key: (e) => "id:" + e.id },
-  { file: "barding",     page: "collections/barding/",     key: (e) => "id:" + e.id },
-  { file: "ornaments",   page: "collections/ornaments/",   key: (e) => "id:" + e.id },
+  // kind：卡片上的獎勵種類標籤（本站收藏頁的名稱，不是遊戲字串）
+  { file: "mounts",      page: "collections/mounts/",      key: (e) => "id:" + e.id, kind: "坐騎" },
+  { file: "minions",     page: "minions/",                 key: (e) => String(e.id), kind: "寵物" },   // 寵物頁 keyOf 是純 id
+  { file: "orchestrion", page: "collections/orchestrion/", key: (e) => "id:" + e.id, kind: "樂譜" },
+  { file: "emotes",      page: "collections/emotes/",      key: (e) => "id:" + e.id, kind: "表情" },
+  { file: "barding",     page: "collections/barding/",     key: (e) => "id:" + e.id, kind: "鳥鞍" },
+  { file: "ornaments",   page: "collections/ornaments/",   key: (e) => "id:" + e.id, kind: "時尚配飾" },
 ];
 
 async function cachedJson(file, url) {
@@ -95,13 +96,41 @@ async function main() {
   const collByItem = new Map();
   for (const c of COLLECTIONS) {
     const d = JSON.parse(await readFile(join(DATA, c.file + ".json"), "utf8")).data;
-    for (const e of d) if (e.itemId && !collByItem.has(e.itemId)) collByItem.set(e.itemId, { p: c.page, k: c.key(e) });
+    for (const e of d) if (e.itemId && !collByItem.has(e.itemId)) collByItem.set(e.itemId, { p: c.page, k: c.key(e), kind: c.kind });
+  }
+
+  /* ── 獎勵內容（2026-10-04）──────────────────────────────────────────
+     獎勵道具另外抓 ClassJobCategory 與 AdditionalData（只抓這 186 件）：
+       · 九宮幻卡道具：AdditionalData = TripleTriadCard 的 row id（§4.10 那條可證的關聯），
+         連到幻卡頁的 ?id=id:<卡 id>；**再用名稱驗一次**（「九宮幻卡：X」對卡名 X），對不上就不連。
+       · 裝備：可裝備職業的文字。單一／少數職業一律用 data/equip.json 的職業名（鐵則）；
+         **全職業**與**戰鬥精英＋魔法導師**這兩種群組才用 tw-locales.jobCategories 的官方字串——
+         那張表的單一職業字串是舊譯（「木工師」＝刻木匠），不可以拿來顯示個別職業。 */
+  const rewardIds = [...new Set(ach.map((a) => a.f["Item@as(raw)"]).filter(Boolean))];
+  const rewardRows = await xiv.rows("Item", rewardIds, "ClassJobCategory@as(raw),AdditionalData@as(raw)",
+    { cache: join(CACHE, "achievement-reward-items.json"), offline, label: "獎勵道具：" });
+  const triad = new Map(JSON.parse(await readFile(join(DATA, "triple-triad.json"), "utf8")).data.map((c) => [c.id, c]));
+  const equip = JSON.parse(await readFile(join(DATA, "equip.json"), "utf8"));
+  const jobName = equip.names || {};
+  const ALL_JOBS = 1, WAR_MAGIC = 34;            // ClassJobCategory：所有職業／戰鬥精英 魔法導師
+  function jobsText(itemId, it) {
+    const cat = rewardRows.get(itemId)?.["ClassJobCategory@as(raw)"];
+    if (cat === ALL_JOBS || cat === WAR_MAGIC) {
+      const t = twName(tw.jobCategories, cat);
+      return t && isTw(t) ? t : null;
+    }
+    const names = (it.equip?.jobs || []).filter((j) => j !== "ADV").map((j) => jobName[j]);
+    return names.length && names.every((n) => n && isTw(n)) ? names.join("、") : null;
+  }
+  function triadLink(itemId, it) {
+    const card = triad.get(rewardRows.get(itemId)?.["AdditionalData@as(raw)"]);
+    return card && it.name === "九宮幻卡：" + card.name ? { p: "collections/triple-triad/", k: "id:" + card.id, kind: "幻卡" } : null;
   }
 
   const catById = new Map(cats.map((c) => [c.id, c.f]));
   const kindOrder = new Map(kinds.map((k) => [k.id, k.f.Order || 0]));
 
-  const stat = { noTw: 0, legacy: 0, noCat: 0, descMissing: 0, descNotTw: [], itemNoTw: [], noPatch: 0, markup: [] };
+  const stat = { noTw: 0, legacy: 0, noCat: 0, descMissing: 0, descNotTw: [], itemNoTw: [], noPatch: 0, markup: [], jobsMissing: [] };
   const rows = [];
   for (const a of ach) {
     const name = twName(tw.achievements, a.id);
@@ -123,9 +152,18 @@ async function main() {
       const it = itemById.get(itemId);
       if (it && isTw(it.name)) {
         item = { id: itemId, n: it.name };
-        const coll = collByItem.get(itemId);
+        const coll = collByItem.get(itemId) || (it.category === "九宮幻卡" ? triadLink(itemId, it) : null);
         if (coll) { item.p = coll.p; item.k = coll.k; }
         else if (it.marketable) item.m = 1;
+        if (it.icon) item.i = it.icon;
+        /* 種類：連得到收藏頁的用那一頁的名稱（坐騎笛的道具分類是「其他」，寫「坐騎」才看得懂）；
+           裝備統一叫「裝備」、另附細項；其餘照道具分類（台服官方字串） */
+        item.c = coll ? coll.kind : it.equip ? "裝備" : it.category || null;
+        if (it.equip) {
+          item.eq = { lv: it.equip.level || null, il: it.ilvl || null, slot: it.category || null };
+          const jt = jobsText(itemId, it);
+          if (jt) item.eq.jobs = jt; else stat.jobsMissing.push(itemId);
+        }
       } else stat.itemNoTw.push(itemId);
     }
 
@@ -164,6 +202,10 @@ async function main() {
   if (stat.markup.length) console.log(`    含標記：${stat.markup.slice(0, 5).join("／")}`);
   console.log(`  物品獎勵 ${withItem}（連得到收藏頁 ${withColl}）；道具查無台服名而不列 ${stat.itemNoTw.length}`);
   console.log(`  有稱號獎勵 ${withTitle}（稱號名無台服來源，只記旗標）`);
+  const rewardKinds = {};
+  for (const e of out) if (e.item) rewardKinds[e.item.c] = (rewardKinds[e.item.c] || 0) + 1;
+  console.log(`  獎勵種類：${Object.entries(rewardKinds).sort((a, b) => b[1] - a[1]).map(([k, n]) => `${k} ${n}`).join("、")}`);
+  console.log(`  裝備獎勵 ${out.filter((e) => e.item && e.item.eq).length}（職業文字查不到而留白 ${stat.jobsMissing.length}）`);
   console.log(`  版本查無 ${stat.noPatch}`);
   const byPatch = {};
   for (const e of out) { const b = e.patch ? e.patch.split(".")[0] + ".x" : "?"; byPatch[b] = (byPatch[b] || 0) + 1; }
