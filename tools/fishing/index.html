@@ -1349,6 +1349,19 @@ document.getElementById('nowView').addEventListener('click', e => {
         match: (f, v) => !!f.bait?.length && baitIdsOf(f.bait[0]).includes(Number(v)),
       },
       {
+        /* 天氣（2026-10-03）：原本天氣只出現在卡片標籤與詳情，沒辦法「看到現在下雨，想知道能釣什麼」。
+           選項從資料裡實際出現的天氣長出來（不寫死），名稱用天氣模組的台服名；
+           「前置天氣」也算進來——那條魚要這個天氣出現過才釣得到。 */
+        id: 'weather', label: '天氣', render: 'select', allLabel: '全部天氣',
+        options: list => {
+          const keys = new Set();
+          list.forEach(f => wxKeys(f.weatherSet).concat(wxKeys(f.previousWeatherSet)).forEach(k => keys.add(k)));
+          return [...keys].filter(k => WX_INFO[k]).sort((a, b) => WX_INFO[a].name.localeCompare(WX_INFO[b].name, 'zh-Hant'))
+            .map(k => ({ value: k, label: WX_INFO[k].icon + ' ' + WX_INFO[k].name }));
+        },
+        match: (f, v) => wxKeys(f.weatherSet).includes(v) || wxKeys(f.previousWeatherSet).includes(v),
+      },
+      {
         id: 'target', label: '目標魚',
         options: () => [{ value: 'on', label: '🎯 只看目標' }],
         match: f => targets.has(f.itemId),
