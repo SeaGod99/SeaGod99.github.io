@@ -112,7 +112,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 綁定備份檔回歸（**改完首頁的進度備份區必跑**） | `node scripts/validate-backup-file.mjs`（32 項：不支援的瀏覽器不長鈕、`requestPermission` 只能在使用者手勢裡要、handle 只能放 IndexedDB、被拒時不可靜默失敗）|
 | 多角色設定檔回歸（**改完 `assets/js/profiles.js` 必跑**） | `node scripts/validate-profiles.mjs`（41 項：白名單反轉、只覆蓋不刪、存不進去就不切、**匯入備份時名單取聯集且目前進度歸給備份當時作用中的角色**）|
 | 重建主線任務（換台服版本後） | `node scripts/build-msq.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/msq.json`（14 章／1,012 個）|
-| 主線進度回歸（**改完 `tools/msq/` 或 `msq.json` 必跑**） | `node scripts/validate-msq.mjs`（26 項；最重要的是章節順序＝`JournalGenre` 的 row id）|
+| 主線進度回歸（**改完 `tools/msq/` 或 `msq.json` 必跑**） | `node scripts/validate-msq.mjs`（35 項；最重要的是章節順序＝`JournalGenre` 的 row id；另驗解鎖索引 → 主線頁的單向連結與 `?id=` 不改進度）|
 | 重建部族聲望（改版開新部族時才跑） | `node scripts/build-beast-tribes.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/beast-tribes.json`（18 個部族＋9 階門檻）|
 | 部族聲望回歸（**改完 `tools/beast-tribes/` 或該資料必跑**） | `node scripts/validate-beast-tribes.mjs`（43 項；最重要的是「不可接到玩家種族表」與「盟友階門檻是 null 不是 0」）|
 | 重建文書討伐目標（改版時才跑） | `node scripts/build-relic-note.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/relic-note.json`（9 本 × 19 個目標）|

@@ -51,6 +51,10 @@
       border: 1px solid var(--gold-dim); border-radius: 5px; padding: 0.12rem 0.45rem; white-space: nowrap;
     }
     .u-tool:hover { background: var(--gold-dim); }
+    /* 主線任務 → 主線進度頁（單向；主線頁不反向列解鎖，見 tools/msq/ 的說明）。
+       一行裡可能有好幾個前置任務，所以用真實 padding 撐命中區，不用 ::after 擴張層 */
+    .u-msq { display: inline-block; padding: 3px 0; color: var(--gold); text-decoration: none; border-bottom: 1px dotted var(--gold-dim); }
+    .u-msq:hover { color: var(--gold-light); }
     .tag {
       font-size: 0.68rem; padding: 0.1rem 0.4rem; border-radius: 4px;
       background: var(--bg-surface); color: var(--text-muted); border: 1px solid var(--border); white-space: nowrap;
@@ -144,6 +148,7 @@
   var filter = '__all__';
   var q = '';
   var focusKey = null;      // ?id=sys:<key> / ?id=job:<縮寫>，命令面板跳進來用
+  var MSQ = null;           // 主線任務 id 的集合；載不到就不畫連結（不擋主畫面）
 
   function esc(s) {
     return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
@@ -176,12 +181,20 @@
       '</div>';
   }
 
+  // 是主線任務就連到主線頁的那個位置（?id=<任務 id>）；那頁會說它在哪一章、離你還有幾個
+  function msqLink(id, text) {
+    return MSQ && MSQ.has(id)
+      ? '<a class="u-msq" href="../msq/?id=' + id + '" title="主線任務：看它在哪一章、離你還有幾個">' + text + '</a>'
+      : text;
+  }
+
   function questBlock(qq) {
     var prev = (qq.prev || []).map(function (p) {
-      return '「' + esc(p.name) + '」' + (p.level ? 'Lv' + p.level : '');
+      return '「' + msqLink(p.id, esc(p.name)) + '」' + (p.level ? 'Lv' + p.level : '');
     }).join('、');
     return '' +
-      '<div class="u-quest">&#x1F4DC; <b>「' + esc(qq.name) + '」</b></div>' +
+      '<div class="u-quest">&#x1F4DC; <b>「' + msqLink(qq.id, esc(qq.name)) + '」</b>' +
+        (MSQ && MSQ.has(qq.id) ? ' <span class="tag">主線</span>' : '') + '</div>' +
       whereBlock(qq.at, qq.issuer && qq.issuer.name, qq.name) +
       (qq.genre ? '<div class="u-line"><b>手帳章節</b>　' + esc(qq.genre) + '</div>' : '') +
       (prev ? '<div class="u-line"><b>前置任務</b>　' + prev + '</div>' : '');
@@ -392,6 +405,11 @@
         if (document.getElementById('filterSel').value === wf) filter = wf;
       }
       render();
+      // 主線清單晚到也沒關係：到了再重畫一次，只是多幾個連結。focusKey 已經用掉，不會再跳一次
+      fetch('../../data/msq.json')
+        .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+        .then(function (m) { MSQ = new Set((m.data || []).map(function (x) { return x.id; })); render(); })
+        .catch(function () {});
     } catch (e) {
       document.getElementById('bodyWrap').innerHTML = '<div class="loading err">資料載入失敗：' + esc(e.message) + '</div>';
     }

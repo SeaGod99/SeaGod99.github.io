@@ -48,6 +48,8 @@
     }
     .cur b { color: var(--gold-light); }
     .cur .big { font-size: 1.15rem; font-weight: 700; color: var(--green); }
+    /* 別頁用 ?id=<任務 id> 連過來問「這個主線任務在哪」：與「目前在」同一種框，但用中性邊框分開 */
+    .cur.target { background: var(--bg-card); border-color: var(--gold-dim); }
 
     .ch-row {
       display: flex; align-items: center; gap: 0.7rem; flex-wrap: wrap;
@@ -84,6 +86,7 @@
     <div class="hits" id="hits"></div>
   </div>
 
+  <div class="cur target" id="target" style="display:none" role="status"></div>
   <div class="cur" id="cur" style="display:none"></div>
   <div id="chapters"></div>
 
@@ -110,6 +113,9 @@
 
   var LS = 'ffxiv_msq_at';
   var DB = null, at = null;      // at = 目前所在任務的 id
+  /* ?id=<任務 id>：解鎖索引等頁連過來問「這個主線任務在哪一章、離我還有幾個」。
+     **只顯示、不改進度**——連過來的人不一定做到那裡了。 */
+  var target = +(new URLSearchParams(location.search).get('id')) || null;
 
   function $(id) { return document.getElementById(id); }
   function esc(s) {
@@ -144,10 +150,27 @@
     render();
   }
 
+  function renderTarget(idx) {
+    var box = $('target');
+    var ti = target == null ? -1 : DB.data.findIndex(function (x) { return x.id === target; });
+    if (ti < 0) { box.style.display = 'none'; return; }
+    var t = DB.data[ti];
+    var inCh = DB.data.filter(function (x) { return x.genre === t.genre; });
+    var pos = inCh.findIndex(function (x) { return x.id === t.id; }) + 1;
+    box.style.display = '';
+    box.innerHTML =
+      '要找的「<b>' + esc(t.name) + '</b>」（Lv' + t.lv + '）是 <b>' + esc(chName(t.genre)) + '</b> 的第 ' +
+      pos + ' / ' + inCh.length + ' 個主線任務<br>' +
+      (idx < 0 ? '在上面的搜尋框找到你目前做到的任務，就算得出還差幾個。'
+        : idx >= ti ? '✓ 你已經做過這個任務了。'
+        : '從你目前的位置還要 <span class="big">' + (ti - idx) + '</span> 個主線任務（含它本身）。');
+  }
+
   function render() {
     if (!DB) return;
     var idx = at == null ? -1 : DB.data.findIndex(function (x) { return x.id === at; });
     var cur = idx >= 0 ? DB.data[idx] : null;
+    renderTarget(idx);
 
     if (cur) {
       /* 「做到這裡」＝這個任務以前（含）都完成了。剩下的就是它後面的全部。

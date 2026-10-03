@@ -138,6 +138,73 @@ const BUILD = readFileSync(join(ROOT, 'scripts/build-msq.mjs'), 'utf8');
   push('  無 console error', errs.length === 0, errs.slice(0, 1).join('') || '乾淨');
 }
 
+// ── 解鎖索引 → 主線頁（單向，2026-10-03）──────────────────
+/* 解鎖索引的任務或前置任務是主線的，連到 `?id=<任務 id>`；主線頁只顯示「在哪一章、離你還有幾個」，
+   **不改使用者的進度**（連過來的人不一定做到那裡）。主線頁也**不反向列解鎖**（見頁面說明）。 */
+async function bootPage(path, query, seed) {
+  const html = readFileSync(join(ROOT, path), 'utf8');
+  const vc = new VirtualConsole();
+  const errs = [];
+  vc.on('jsdomError', (e) => errs.push(e.message));
+  const dom = new JSDOM(html, { runScripts: 'outside-only', url: 'https://seagod99.github.io/' + path.replace('index.html', '') + query, virtualConsole: vc });
+  const { window } = dom;
+  const store = { ...(seed || {}) };
+  Object.defineProperty(window, 'localStorage', {
+    configurable: true,
+    value: { getItem: (k) => (k in store ? store[k] : null), setItem: (k, v) => { store[k] = String(v); },
+      removeItem: (k) => { delete store[k]; }, key: () => null, get length() { return 0; } },
+  });
+  window.fetch = async (u) => {
+    const rel = String(u).replace(/^.*\/(data|assets)\//, '$1/');
+    if (!existsSync(join(ROOT, rel))) return { ok: false, status: 404, json: async () => ({}) };
+    return { ok: true, status: 200, json: async () => JSON.parse(readFileSync(join(ROOT, rel), 'utf8')) };
+  };
+  window.matchMedia = () => ({ matches: false, addEventListener() {}, addListener() {} });
+  window.HTMLElement.prototype.scrollIntoView = function () {};
+  // module 腳本（地圖彈窗）jsdom 跑不了，略過；這裡只驗清單與連結
+  for (const sc of window.document.querySelectorAll('script:not([src]):not([type="module"])')) window.eval(sc.textContent);
+  await new Promise((r) => setTimeout(r, 600));
+  return { doc: window.document, store, errs };
+}
+{
+  const UNL = JSON.parse(readFileSync(join(ROOT, 'data/system-unlocks.json'), 'utf8'));
+  const ids = new Set(DB.data.map((x) => x.id));
+  const want = new Set();
+  for (const o of [...UNL.data.flatMap((s) => s.quests), ...UNL.jobs.map((j) => j.quest)]) {
+    if (!o) continue;
+    if (ids.has(o.id)) want.add(o.id);
+    for (const p of o.prev || []) if (ids.has(p.id)) want.add(p.id);
+  }
+  const { doc, errs } = await bootPage('tools/unlock-index/index.html', '');
+  const sysIds = new Set([...doc.querySelectorAll('a.u-msq')].map((a) => +a.getAttribute('href').split('=')[1]));
+  const sysWant = new Set();
+  for (const s of UNL.data) for (const o of s.quests) {
+    if (ids.has(o.id)) sysWant.add(o.id);
+    for (const p of o.prev || []) if (ids.has(p.id)) sysWant.add(p.id);
+  }
+  push('解鎖索引（系統分頁）：是主線的任務／前置都連到主線頁', sysWant.size > 0 && [...sysWant].every((id) => sysIds.has(id)),
+    `應連 ${sysWant.size} 個、畫出 ${sysIds.size} 個；系統＋職業共 ${want.size} 個主線任務`);
+  push('  每條連結都指向真的主線任務 id', [...sysIds].every((id) => ids.has(id)), '');
+  push('  解鎖索引無 console error', errs.length === 0, errs.slice(0, 1).join('') || '乾淨');
+  push('  主線頁沒有反向列解鎖（單向）', !/system-unlocks/.test(HTML), '');
+}
+{
+  // 主線頁的 ?id=：還沒設進度 → 只說位置；設了進度 → 算出還差幾個；而且不改進度
+  const t = DB.data[300];
+  const a = await bootPage('tools/msq/index.html', '?id=' + t.id);
+  const box = a.doc.getElementById('target');
+  push('主線頁 ?id=<任務 id> 顯示它在哪一章的第幾個', box.style.display !== 'none' && box.textContent.includes(t.name) && /第 \d+ \/ \d+ 個/.test(box.textContent),
+    box.textContent.replace(/\s+/g, ' ').slice(0, 70));
+  push('  沒設進度時不改進度、也不假裝算得出差幾個', !('ffxiv_msq_at' in a.store) && /搜尋框/.test(box.textContent), '');
+  const before = DB.data[100];
+  const b = await bootPage('tools/msq/index.html', '?id=' + t.id, { ffxiv_msq_at: String(before.id) });
+  const box2 = b.doc.getElementById('target');
+  push('  設了進度：還差 (目標索引 − 目前索引) 個', box2.textContent.includes('還要 ' + (300 - 100) + ' 個'), box2.textContent.replace(/\s+/g, ' ').slice(-40));
+  push('  連過來不會改掉原本的進度', b.store.ffxiv_msq_at === String(before.id), b.store.ffxiv_msq_at);
+  const c = await bootPage('tools/msq/index.html', '?id=' + t.id, { ffxiv_msq_at: String(DB.data[400].id) });
+  push('  已經做過的顯示 ✓', /已經做過/.test(c.doc.getElementById('target').textContent), '');
+}
+
 push('data/msq.json 有進 _meta', (() => {
   const meta = JSON.parse(readFileSync(join(ROOT, 'data/_meta.json'), 'utf8'));
   return (meta.databases || []).some((d) => d.file === 'msq.json');
