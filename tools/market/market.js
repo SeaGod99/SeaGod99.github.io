@@ -2433,16 +2433,21 @@
 
   // 取樣量大時會是好幾十次請求，逐批送並回報進度——一個不動的「查詢中…」
   // 掛 40 秒，使用者只會以為當掉了。每批 100 個是 Universalis 的單次上限。
+  /* 失敗的批次一定要回報。2026-10-03 前這裡只在 `r && r.items` 時合併、失敗的批次直接略過：
+     成品批失敗會落入下面「這一服沒人在架」的退路被標成「無競爭者」，材料批失敗會讓成本被低估、
+     淨利虛高——兩種都會讓查價失敗看起來像商機，而且畫面上完全看不出來。
+     「失敗」只算整批拿不到（r 是 null）；批次成功但某件不在回應裡，那是真的沒資料，不算。 */
   async function fetchInChunks(fn, ids, label, onProg, tokenOk, sc) {
-    var out = {}, chunks = [];
+    var out = {}, chunks = [], failed = [], failedChunks = 0;
     for (var i = 0; i < ids.length; i += 100) chunks.push(ids.slice(i, i + 100));
     for (var c = 0; c < chunks.length; c++) {
       if (!tokenOk()) return null;
       onProg(label, c + 1, chunks.length);
       var r = await fn(sc == null ? scope : sc, chunks[c], { listings: LISTINGS_CAP });
       if (r && r.items) Object.keys(r.items).forEach(function (k) { out[k] = r.items[k]; });
+      else { failedChunks++; failed = failed.concat(chunks[c]); }
     }
-    return { items: out };
+    return { items: out, failed: failed, failedChunks: failedChunks, chunks: chunks.length };
   }
 
 
@@ -2630,9 +2635,17 @@
       pfBusy = false; return;
     }
 
+    var failP = new Set(prodLst.failed || []);
+    var failI = new Set((ingLst && ingLst.failed) || []);
+    var failN = [prodLst, prodAgg, ingLst].reduce(function (s, x) { return s + ((x && x.failedChunks) || 0); }, 0);
+    var allN = [prodLst, prodAgg, ingLst].reduce(function (s, x) { return s + ((x && x.chunks) || 0); }, 0);
+    var lost = 0;
+
     pfRows = [];
     cands.forEach(function (c) {
       var it = itemById.get(c.id);
+      // 成品的掛單批查價失敗：不知道這一服有沒有人在賣，不能走下面「沒人在架」的均價退路
+      if (failP.has(c.id)) { lost++; return; }
       var aggIt = prodAgg && prodAgg.items ? prodAgg.items[c.id] : null;
       var side = aggIt && aggIt[pfHq ? 'hq' : 'nq'];
       // 售價不加買方稅（賣方收到的是標價，再被抽賣方稅）。
@@ -2649,8 +2662,10 @@
       }
       if (sellUnit == null) return;                      // 既無在架也無成交紀錄
       var y = c.r.yield || 1;
-      var cost = 0, na = 0;
+      var cost = 0, na = 0, nf = 0;
       c.r.ingredients.forEach(function (g) {
+        // 查價失敗（nf）與真的沒人賣（na）分開算：前者重查就可能有價，後者重查也沒有
+        if (failI.has(g.itemId)) { nf++; return; }
         var q = quoteBuy(recOf(ingLst, g.itemId), g.itemId, g.qty, false);   // 含買方稅
         if (q) cost += q.total; else na++;
       });
@@ -2663,10 +2678,11 @@
         stars: c.job.stars || 0, yield: y, sell: sellUnit, cost: cost, net: net,
         rate: cost > 0 ? net / cost : null, vel: vel,
         perDay: vel > 0 ? (net / y) * vel : 0,       // 單件淨利 × 市場日成交量
-        na: na, stale: !!(sq && sq.stale), basis: basis
+        na: na, nf: nf, stale: !!(sq && sq.stale), basis: basis
       });
     });
-    pfMeta = { scanned: cands.length, total: cand.total, priced: pfRows.length,
+    pfMeta = { fail: { chunks: failN, of: allN, lost: lost, ings: failI.size },
+      scanned: cands.length, total: cand.total, priced: pfRows.length,
       ings: ingIds.length, min: min, max: max, limit: limit, reqs: totalReq,
       sellWhere: homeLabel() || scopeLabel(), buyWhere: scopeLabel(), noHome: homeWorld == null };
     pfBusy = false;
@@ -2675,14 +2691,26 @@
 
   function renderProfitTab() {
     var body = $('#profitBody');
+    var fail = pfMeta && pfMeta.fail;
+    var failNote = fail && fail.chunks
+      ? '<span class="flag danger" title="Universalis 那幾批沒有回應（逾時或限流）。成功的批次在快取裡，重查只會重抓失敗的部分">⚠ ' +
+        fail.chunks + '／' + fail.of + ' 批查價失敗</span>' +
+        (fail.lost ? fail.lost + ' 項成品沒查到售價、未列入；' : '') +
+        (fail.ings ? fail.ings + ' 種材料沒查到價，相關列標「材料查價失敗」並排在最後；' : '') +
+        ' <button type="button" class="btn" id="pfRetry">↻ 重查</button>'
+      : '';
     if (!pfRows.length) {
       // 空狀態該給下一步（UX empty-states），但一句就夠
       body.innerHTML = pfMeta
-        ? '<div class="search-note">取樣的 ' + pfMeta.scanned + ' 項都沒有在架商品，算不出售價。換個職業或等級區間再試。</div>'
+        ? (fail && fail.lost
+          ? '<div class="note shop-hint">' + failNote + '</div>'
+          : '<div class="search-note">取樣的 ' + pfMeta.scanned + ' 項都沒有在架商品，算不出售價。換個職業或等級區間再試。</div>')
         : '<div class="empty-state">選好職業與等級區間，按「💰 計算利潤」。</div>';
       return;
     }
     var rows = pfRows.slice().sort(function (a, b) {
+      // 材料查價失敗的列成本被低估，不管依哪一欄排都放最後
+      if (!!a.nf !== !!b.nf) return a.nf ? 1 : -1;
       var k = pfSort.key;
       var av = a[k], bv = b[k];
       if (k === 'name') return String(av).localeCompare(String(bv), 'zh-Hant') * pfSort.dir;
@@ -2716,7 +2744,7 @@
     // 計算方法的完整說明搬進表頭的 title（滑過才看）與文件；這裡只留
     // 「這份結果是用什麼算的」一行事實，加上真的會影響判讀的截斷／未設伺服器警告。
     body.innerHTML =
-      '<div class="note shop-hint">' + cut + (cut ? '<br>' : '') +
+      '<div class="note shop-hint">' + (failNote ? failNote + '<br>' : '') + cut + (cut ? '<br>' : '') +
       '取樣 <b>' + pfMeta.scanned + '</b> 項，<b>' + pfMeta.priced + '</b> 項有售價　·　' +
       '售價看 <b>' + esc(pfMeta.sellWhere) + '</b>（扣 ' + pctTxt(taxSell) + ' 賣方稅）　·　' +
       '材料看 <b>' + esc(pfMeta.buyWhere) + '</b>（加 ' + pctTxt(taxBuy) + ' 買方稅）</div>' +
@@ -2737,7 +2765,8 @@
               return g ? '<span class="flag-run"><span class="flag bad" title="你目前的製作數值做不了這個配方：' +
                 esc(g) + '">✗ 做不了</span></span>' : '';
             })() +
-            ((r.na || r.stale || r.basis === 'avg') ? '<span class="flag-run">' +
+            ((r.na || r.nf || r.stale || r.basis === 'avg') ? '<span class="flag-run">' +
+              (r.nf ? '<span class="flag danger" title="有 ' + r.nf + ' 種材料那一批查價失敗，成本被低估；按上方「↻ 重查」">⚠ 材料查價失敗</span>' : '') +
               (r.na ? '<span class="flag warn" title="有 ' + r.na + ' 種材料查不到市價，成本被低估">△ 缺 ' + r.na + ' 項材料價</span>' : '') +
               (r.stale ? '<span class="flag warn" title="售價資料可能已過期">△ 舊價</span>' : '') +
               (r.basis === 'avg' ? '<span class="flag info" title="你的伺服器目前沒人在賣，售價改用該服近期成交均價估算——沒有競爭者，價格可以自己開">ⓘ 無競爭者</span>' : '') +
@@ -3196,6 +3225,11 @@
       });
     });
     $('#pfRun').addEventListener('click', runProfitScan);
+    // 「↻ 重查」：排行是重畫出來的，用事件委派。成功的批次在 universalis.js 的快取裡，
+    // 所以整個重跑實際上只會重抓失敗的那幾批。
+    $('#profitBody').addEventListener('click', function (e) {
+      if (e.target.closest('#pfRetry')) runProfitScan();
+    });
   // 有存過製作數值才長出「套用我的數值」（沒存過完全靜默）
   if (readMyStats()) {
     var mineBtn = $('#pfMine');

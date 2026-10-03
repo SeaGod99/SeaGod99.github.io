@@ -41,7 +41,7 @@ const CR = JSON.parse(readFileSync(join(ROOT, 'data/craft-recipes.json'), 'utf8'
 }
 
 // ── 沒存過數值的人完全不受影響 ──────────────────────────
-async function runMarket(stats) {
+async function runMarket(stats, uni) {
   const vc = new VirtualConsole();
   const errs = [];
   vc.on('jsdomError', (e) => errs.push(e.message));
@@ -72,6 +72,7 @@ async function runMarket(stats) {
     fetchAggregated: async () => ({ items: {}, fetched: Date.now() }),
     fillQuote: () => null,
   };
+  if (uni) Object.assign(window.Universalis, uni);
   for (const f of ['assets/js/patch-gate.js', 'assets/js/toast.js', 'assets/js/item-sources.js']) {
     try { window.eval(readFileSync(join(ROOT, f), 'utf8')); } catch (e) { /* 非必要 */ }
   }
@@ -121,6 +122,37 @@ async function runMarket(stats) {
   push('  抓不到門檻表時不擋掃描', /catch \(e\) \{ \/\* 抓不到就不標記，不擋掃描 \*\/ \}/.test(JS), '');
   push('  沒有把做不了的從清單移除（使用者仍看得到它賺多少）',
     !/filter\([^)]*gateOf/.test(JS), '');
+}
+
+// ── 分批查價失敗不可以被當成「沒人在架」（2026-10-03）────────────────
+/* 舊版 fetchInChunks 只在 `r && r.items` 時合併、失敗的批次直接略過：成品批失敗會落入
+   「這一服沒人在架」的均價退路被標成「無競爭者」——查價失敗看起來像商機，畫面上完全看不出來。
+   這裡讓第一批成品查價失敗、成交均價全部都有（正是舊版會誤標的條件）。 */
+{
+  let calls = 0, failFirst = true;
+  const avg = (ids) => { const items = {}; ids.forEach((id) => { const side = { averageSalePrice: { world: { price: 1000 } }, dailySaleVelocity: { world: { quantity: 1 } } }; items[id] = { nq: side, hq: side }; }); return { items, fetched: Date.now() }; };
+  const { window, doc, errs } = await runMarket(null, {
+    fetchListings: async () => { calls++; if (failFirst && calls === 1) return null; return { items: {} }; },
+    fetchAggregated: async (s, ids) => avg(ids),
+  });
+  const chip = doc.querySelector("[data-pfjob]");
+  chip && chip.dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+  doc.getElementById("pfMin").value = "1"; doc.getElementById("pfMax").value = "100";
+  doc.getElementById("pfRun").dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+  await new Promise((r) => setTimeout(r, 2500));
+  const body = doc.getElementById("profitBody");
+  const txt = body.textContent;
+  push("分批查價失敗時，排行上方講出「幾批失敗」", /\d+／\d+ 批查價失敗/.test(txt), (txt.match(/\d+／\d+ 批查價失敗/) || ["(沒有)"])[0]);
+  const lost = (txt.match(/(\d+) 項成品沒查到售價/) || [])[1];
+  push("  失敗那批的成品不列入（不走「沒人在架」的均價退路）", lost && Number(lost) > 0, lost ? lost + " 項" : "(沒講)");
+  const rows = body.querySelectorAll("tbody tr").length;
+  push("  其餘批次照常列出", rows > 0, rows + " 列");
+  push("  有「↻ 重查」鈕", !!doc.getElementById("pfRetry"), "");
+  failFirst = false;
+  doc.getElementById("pfRetry")?.dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+  await new Promise((r) => setTimeout(r, 2500));
+  push("  重查成功後提示消失", !/批查價失敗/.test(doc.getElementById("profitBody").textContent), "");
+  push("  無 console error", errs.length === 0, errs.slice(0, 1).join("") || "乾淨");
 }
 
 let fail = 0;
