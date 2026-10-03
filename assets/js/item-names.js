@@ -11,6 +11,9 @@
  * 同一套分片規則現在服務兩份資料，由 NameLookup 工廠產生兩個查詢器：
  *   ItemNames    data/item-names/    物品（k 依語言分：en/ja/cn/tw）
  *   ActionNames  data/action-names/  技能／狀態／特性（k 依型別分：a/s/t，各自再依語言）
+ *   TermNames    data/term-names/    副本／地名／怪物／任務（k 依型別分：d/p/m/q，各自再依語言）。
+ *                ⚠ 這份的值可能是**陣列**——一個英文名對到好幾個台服名時全部列出（怪物、地名常見），
+ *                呼叫端要自己處理 `Array.isArray(hit.tw)`。
  *
  * 用法：
  *   const hit = await ItemNames.lookup('Iron Ingot');     // → { tw:'黑鐵錠', lang:'en' } 或 null
@@ -133,4 +136,6 @@
   window.ItemNames = create('data/item-names', null);
   // 技能／狀態／特性。預設先查技能再查狀態——巨集裡 `/ac` 遠多於 `/statusoff`。
   window.ActionNames = create('data/action-names', ['a', 's', 't']);
+  // 副本／地名／怪物／任務。名稱翻譯頁一次只查一種（kinds 由頁面指定），預設順序只是保底。
+  window.TermNames = create('data/term-names', ['d', 'p', 'm', 'q']);
 })();

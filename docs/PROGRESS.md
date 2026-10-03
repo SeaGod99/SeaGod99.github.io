@@ -223,6 +223,11 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 
 ## 五、更新紀錄
 
+- **2026-10-03w（名稱翻譯加「副本／地名／怪物／任務」四類）**：第二輪路線圖 `translator-more-categories`。頁名從「物品名稱翻譯」改成「名稱翻譯」，輸入框旁多一個類別選單（預設仍是物品，選擇記在 `ffxiv_translator_kind`）。副本連到副本圖鑑、任務連到任務查詢；「帶去市場查價」只在物品類別出現。
+  - **資料 `scripts/build-term-names.mjs` → `data/term-names/`**：與物品／技能同一套分片規則（共用 `build-item-names.mjs` 的 `shardOf`），前端 `item-names.js` 多一個 `TermNames` 查詢器。副本 612、地名 4,732、怪物 13,473、任務 5,130 個台服名；英文覆蓋 98.2%／100%／100%／100%。英／日名來源：Teamcraft 多語檔（副本、怪物、任務）與 `places.msgpack`（地名）；簡中這四類沒有來源，不支援。
+  - **一對多全部列出**：同一個鍵對到多個台服名時值存陣列（地名 209、怪物 200、任務 4、副本 2 個鍵），頁面全部畫出並標「N 個候選」——例如 `Trickster Imp` → 小頑童／欺詐小頑童／搗蛋鬼、`Limsa Lominsa` → 區域名與城區名。這幾類沒有可靠的優先序，挑一個會安靜給錯名。
+  - 新回歸 `scripts/validate-term-names.mjs` 17 項；物品名、技能辭典（巨集轉譯）回歸照過；`validate-data` 的日文守門掃過新分片；真瀏覽器通過；SW bump。
+
 - **2026-10-03v（潛水艇頁加「飛空艇」分頁）**：第二輪路線圖 `airship-voyages`。頁首一顆「潛水艇／飛空艇」切換，飛空艇分頁有四個部位的部件選單、艇的階級、能力值合計與可載量，以及 24 個雲海航點（階級、桶、距離、時間、經驗、經驗／小時、索敵需求原值）；去得了的排前面。網址 `?t=air`，配置存 `ffxiv_airship`（只記一艘、存 itemId）。
   - **資料**：`build-submarine.mjs` 在 `submarine.json` 加 `airship` 區塊。部件 28 件靠 `Item.AdditionalData` = `AirshipExplorationPart` 的 row id（1–28 一對一），部位名取自道具分類（船體／艤裝／船首／船尾），**不從 Slot 推**（同潛水艇）。航點名走 `tw-locales.airshipVoyages`，row id 對齊之外再用「Sea of Clouds NN ↔ 雲海NN」逐筆驗，對不上就中止；雲冠群島的載客航班（`Passengers`）不是探索航點，不收。
   - **只做相加，不判定成功**：飛空艇的等級表只有可載量與升級經驗、**沒有能力值加成**（潛水艇才有），頁面講明；不提供多點航程試算與掉落（同潛水艇）。「索敵需求」照 `SurveillanceReq` 原值列，不解讀。

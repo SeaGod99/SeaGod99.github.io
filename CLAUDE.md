@@ -76,6 +76,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 重建金碟獎品價目表（改完 items 或商店表後） | `node scripts/build-gold-saucer.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/gold-saucer.json`（金碟幣＋金碟聲譽，附六本圖鑑的收藏對應）|
 | 重建物品四語名稱查詢分片（換台服版本或四語快照後） | `node scripts/build-item-names.mjs`（dry-run 預設／`--apply`）→ `data/item-names/`（256 片＋`_index.json`）；**跑完必接 `node scripts/validate-item-names.mjs`**（驗前後端的正規化與雜湊一致）|
 | 重建技能／狀態四語查詢分片（換台服版本後） | `node scripts/build-action-names.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/action-names/`（256 片）；**與 `build-item-names.mjs` 共用 `shardOf`，SHARDS 要一起改**；跑完必接 `validate-item-names.mjs` |
+| 重建副本／地名／怪物／任務的查詢分片（換台服版本後） | `node scripts/build-term-names.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/term-names/`（256 片，65,740 鍵）；**與 `build-item-names.mjs` 共用 `shardOf`**。一個英文名對到多個台服名時**值存陣列、全部列出**（怪物 200、地名 209 個鍵），不挑一個。跑完接 `node scripts/validate-term-names.mjs`（17 項）|
 | 重建 NPC 金幣直購價（改完 items 或商店表後） | `node scripts/build-vendor-prices.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/vendor-prices.json`（4,641 種，市場頁用它對材料成本封頂）|
 | 重建 NPC 商店目錄（改完 items／npcs／商店表後） | `node scripts/build-npc-shops.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/npc-shops/`（89 張圖＋`_index.json`，依 mapId 分片）；**刻意不進 `minify-data.mjs`** |
 | 幻卡來源語意修正（**跑完 `build-triple-triad-all.mjs` 必接**） | `node scripts/patch-triple-triad-sources.mjs`（dry-run 預設／`--apply`／`--offline`） |

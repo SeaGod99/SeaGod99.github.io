@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="FF14 物品名稱翻譯 — 貼上英文、日文或簡體中文的物品名，一次查出台服官方繁中名；支援整份清單貼上、反向查詢，並可直接帶進市場查價">
-  <title>物品名稱翻譯 | 水神的工具箱</title>
+  <meta name="description" content="FF14 名稱翻譯 — 貼上英文、日文或簡體中文的物品、副本、地名、怪物或任務名，一次查出台服官方繁中名；支援整份清單貼上，物品可直接帶進市場查價">
+  <title>名稱翻譯 | 水神的工具箱</title>
   <link rel="stylesheet" href="../../assets/css/tokens.css">
   <link rel="stylesheet" href="../../assets/css/theme.css">
   <link rel="stylesheet" href="../../assets/css/tool-header.css">
@@ -52,6 +52,12 @@
       flex: none; font-size: 0.66rem; padding: 0.05rem 0.34rem; border-radius: 4px;
       background: var(--bg-surface); border: 1px solid var(--border); color: var(--text-muted);
     }
+    .r-multi { flex: none; font-size: 0.66rem; padding: 0.05rem 0.34rem; border-radius: 4px; border: 1px solid var(--orange); color: var(--orange); }
+    .kind-sel {
+      font-family: inherit; font-size: 0.8rem; padding: 0.3rem 0.5rem; border-radius: 6px; cursor: pointer;
+      border: 1px solid var(--border); background: var(--bg-card); color: var(--text-dim);
+    }
+    .kind-sel:focus { border-color: var(--gold); outline: none; }
     .r-row.miss .r-tw { color: var(--text-muted); font-weight: 400; font-style: normal; }
     .r-row.miss { background: color-mix(in srgb, var(--red-dim) 30%, transparent); }
     .r-empty { padding: 3rem 0; text-align: center; color: var(--text-dim); font-size: 0.88rem; }
@@ -64,15 +70,15 @@
     .site-footer { border-top: 1px solid var(--border); padding: 24px 0; text-align: center; }
     .site-footer p { font-size: 12px; color: var(--text-muted); }
     .site-footer a { color: var(--text-dim); }
-    @media (pointer: coarse) { .btn, textarea { min-height: 44px; } }
+    @media (pointer: coarse) { .btn, textarea, .kind-sel { min-height: 44px; } }
   </style>
   <script src="../../assets/js/patch-gate.js"></script>
   <script src="../../assets/js/theme.js"></script>
 </head>
 <body>
 <div class="tool-header">
-  <h1 class="tool-title">&#x1F524; 物品名稱翻譯</h1>
-  <p class="tool-subtitle">攻略與國際服影片講的是英文／日文／簡中名，站內與遊戲裡是台服繁中名。貼上一份清單，一次全部對照出來</p>
+  <h1 class="tool-title">&#x1F524; 名稱翻譯</h1>
+  <p class="tool-subtitle">攻略與國際服影片講的是英文／日文／簡中名，站內與遊戲裡是台服繁中名。物品、副本、地名、怪物、任務都查得到，貼上一份清單一次對照出來</p>
   <div class="header-divider"></div>
 </div>
 
@@ -81,6 +87,13 @@
     <div>
       <div class="pane-head">
         <span class="pane-title">貼上名稱</span>
+        <select class="kind-sel" id="kindSel" aria-label="查哪一類名稱">
+          <option value="item">物品</option>
+          <option value="d">副本</option>
+          <option value="p">地名</option>
+          <option value="m">怪物</option>
+          <option value="q">任務</option>
+        </select>
         <span class="pane-hint">一行一個，英／日／簡中／繁中都可以混著貼</span>
       </div>
       <textarea id="input" spellcheck="false" placeholder="Iron Ingot&#10;アイアンインゴット&#10;Soul of the Paladin&#10;黑鐵錠"></textarea>
@@ -109,6 +122,8 @@
   四語名稱取自本站的物品名快照（台服繁中、日文、英文、簡體中文各一份，皆為遊戲本體資料）。<b>只收得到台服繁中名的 45,546 件</b>——查不到就是台服尚未開放該物品，這時會標紅並原樣保留你貼的字，<b>不會用英文或簡中頂替</b>。<br>
   比對會忽略大小寫、空白、連字號與 <code>(HQ)</code> 標記，所以直接從遊戲或網頁複製貼上通常就查得到。<br>
   有 32 組名稱在某個語言底下是重複的（例如英文 <code>quicksilver</code> 同時是「水銀」與「流銀」），這種只會給先收錄的那一個；遇到明顯不對的請直接用<a href="../market/" style="color:var(--text-dim)">市場查價</a>搜繁中名確認。<br>
+  <b>副本、地名、怪物、任務</b>（上方選單切換）：副本 612、地名 4,732、怪物 13,473、任務 5,130 個台服名，英／日名取自遊戲本體的多語資料（簡中這四類沒有來源，不支援）。
+  <b>同一個英文名對到好幾個台服名時全部列出</b>並標「N 個候選」——例如同一種怪物在不同地方有不同的譯名、地名同時是區域名與副本名。這幾類沒有可靠的優先序，挑一個給你的話會安靜地給錯名。簡中只支援物品。<br>
   資料依查詢鍵切成 256 片，<b>只會下載你查到的那幾片</b>（每片約 15KB），不是整份載入。
 </p>
 
@@ -120,8 +135,23 @@
 <script>
 (function () {
   var LANG_TW = { en: '英文', ja: '日文', cn: '簡中', tw: '繁中' };
+  /* 查哪一類。物品走 ItemNames；其餘四類走 TermNames（值可能是陣列＝多個候選）。
+     連結只給有對應頁的：物品 → 市場、副本 → 副本圖鑑、任務 → 任務查詢。 */
+  var KIND_LINK = {
+    item: function (n) { return '../market/?q=' + encodeURIComponent(n); },
+    d: function (n) { return '../duty-codex/?q=' + encodeURIComponent(n); },
+    q: function (n) { return '../quest-finder/?q=' + encodeURIComponent(n); },
+  };
+  var SAMPLES = {
+    item: null,
+    d: ['Sastasha', 'The Aurum Vale', '地下霊殿 タムタラの墓所', 'Not A Real Duty'].join('\n'),
+    p: ['Limsa Lominsa', 'Gridania', 'Costa del Sol', 'ウルダハ'].join('\n'),
+    m: ['Trickster Imp', 'Northern Vulture', 'Morbol', 'ボム'].join('\n'),
+    q: ['The Steps of Faith', 'An Ill-conceived Venture', 'Close to Home', '冒険者への手引き'].join('\n'),
+  };
+  function kind() { return $('kindSel').value; }
   var SAMPLE = ['Iron Ingot', 'アイアンインゴット', 'Soul of the Paladin', 'Rowena\'s Token (Blue Crafters\' Scrip)', '黑鐵錠', 'Definitely Not An Item'].join('\n');
-  var last = [];      // [{ in, tw, lang }]
+  var last = [];      // [{ in, tw, lang }]；tw 可能是陣列（多個候選）
 
   function esc(s) {
     return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
@@ -143,15 +173,19 @@
       $('copyBtn').disabled = true; $('marketBtn').disabled = true;
       return;
     }
+    var link = KIND_LINK[kind()];
     out.innerHTML = rows.map(function (r) {
       if (!r.tw) {
         return '<div class="r-row miss"><span class="r-in">' + esc(r.in) + '</span>' +
           '<span class="r-arrow">→</span><span class="r-tw">查無（台服未開放或名稱有誤）</span></div>';
       }
-      // 繁中名直接連到市場查價：翻完名字下一步幾乎都是「那這個多少錢」
+      // 繁中名直接連到對應的頁：物品 → 市場查價、副本 → 副本圖鑑、任務 → 任務查詢
+      var names = Array.isArray(r.tw) ? r.tw : [r.tw];
+      var html = names.map(function (n) { return link ? '<a href="' + link(n) + '">' + esc(n) + '</a>' : esc(n); }).join('／');
       return '<div class="r-row"><span class="r-in">' + esc(r.in) + '</span>' +
         '<span class="r-arrow">→</span>' +
-        '<span class="r-tw"><a href="../market/?q=' + encodeURIComponent(r.tw) + '">' + esc(r.tw) + '</a></span>' +
+        '<span class="r-tw">' + html + '</span>' +
+        (names.length > 1 ? '<span class="r-multi" title="同一個名字對到好幾個台服名，全部列出">' + names.length + ' 個候選</span>' : '') +
         '<span class="r-lang">' + esc(LANG_TW[r.lang] || r.lang) + '</span></div>';
     }).join('');
 
@@ -164,7 +198,8 @@
         ? '　（來源：' + Object.keys(byLang).map(function (k) { return (LANG_TW[k] || k) + ' ' + byLang[k]; }).join('、') + '）'
         : '');
     $('copyBtn').disabled = !hit.length;
-    $('marketBtn').disabled = !hit.length;
+    $('marketBtn').disabled = !hit.length || kind() !== 'item';
+    $('marketBtn').hidden = kind() !== 'item';
   }
 
   async function translate() {
@@ -173,7 +208,8 @@
     $('statusLine').textContent = '查詢中…';
     $('goBtn').disabled = true;
     try {
-      var map = await ItemNames.lookupMany(names);
+      var k = kind();
+      var map = k === 'item' ? await ItemNames.lookupMany(names) : await TermNames.lookupMany(names, { kinds: [k] });
       render(names.map(function (n) {
         var r = map.get(n);
         return { in: n, tw: r && r.tw, lang: r && r.lang };
@@ -187,7 +223,16 @@
   }
 
   $('goBtn').addEventListener('click', translate);
-  $('sampleBtn').addEventListener('click', function () { $('input').value = SAMPLE; translate(); });
+  $('sampleBtn').addEventListener('click', function () { $('input').value = SAMPLES[kind()] || SAMPLE; translate(); });
+  // 換類別：輸入框有東西就直接重查（同一份清單換個類別查是常見的「咦，原來它是地名」）
+  $('kindSel').addEventListener('change', function () {
+    try { localStorage.setItem('ffxiv_translator_kind', kind()); } catch (e) {}
+    if (lines().length) translate(); else render([]);
+  });
+  try {
+    var savedKind = localStorage.getItem('ffxiv_translator_kind');
+    if (savedKind && [].some.call($('kindSel').options, function (o) { return o.value === savedKind; })) $('kindSel').value = savedKind;
+  } catch (e) {}
   $('clearBtn').addEventListener('click', function () { $('input').value = ''; render([]); $('input').focus(); });
   // Ctrl/⌘+Enter 直接翻譯——貼完清單的下一個動作幾乎一定是它
   $('input').addEventListener('keydown', function (e) {
@@ -196,7 +241,7 @@
 
   $('copyBtn').addEventListener('click', function () {
     var btn = this;
-    var txt = last.filter(function (r) { return r.tw; }).map(function (r) { return r.tw; }).join('\n');
+    var txt = last.filter(function (r) { return r.tw; }).map(function (r) { return Array.isArray(r.tw) ? r.tw.join('／') : r.tw; }).join('\n');
     if (!navigator.clipboard) return;
     navigator.clipboard.writeText(txt).then(function () {
       var old = btn.textContent;
@@ -210,6 +255,7 @@
      其餘留在剪貼簿。**不用 #craft=**——那條要的是物品 id 與數量，這頁只有名字，
      硬湊的話得先把名字反查成 id，而同名衝突會讓它安靜地帶錯東西。 */
   $('marketBtn').addEventListener('click', function () {
+    if (kind() !== 'item') return;
     var hits = last.filter(function (r) { return r.tw; });
     if (!hits.length) return;
     var rest = hits.map(function (r) { return r.tw; }).join('\n');

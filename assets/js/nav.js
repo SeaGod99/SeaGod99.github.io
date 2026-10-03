@@ -28,7 +28,7 @@
     { e: '📜', n: '任務查詢', p: 'tools/quest-finder/', c: 'daily', k: 'quest 任務 支線 接取 在哪接 npc 座標 前置 報酬 find' },
     { e: '🗝️', n: '系統解鎖索引', p: 'tools/unlock-index/', c: 'daily', k: 'unlock 解鎖 開放 前置 任務 行會 職業 轉職 靈魂水晶 quest guild job class 怎麼開 開不了' },
     { e: '🎰', n: '金碟獎品價目表', p: 'tools/gold-saucer/', c: 'daily', k: 'gold saucer mgp 金碟 獎品 價目 兌換 金碟幣 金碟聲譽 仙人微彩 幻卡 缺口 預算' },
-    { e: '🔤', n: '物品名稱翻譯', p: 'tools/name-translator/', c: 'daily', k: 'translate 翻譯 物品名 英文 日文 簡中 繁中 對照 name 查名字 攻略' },
+    { e: '🔤', n: '名稱翻譯', p: 'tools/name-translator/', c: 'daily', k: 'translate 翻譯 物品名 副本名 地名 怪物名 任務名 英文 日文 簡中 繁中 對照 name 查名字 攻略' },
     { e: '📘', n: '技能辭典', p: 'tools/action-codex/', c: 'battle', k: 'action codex 技能 辭典 特性 狀態 說明 威力 buff debuff' },
     { e: '📜', n: '巨集轉譯', p: 'tools/macro-translator/', c: 'daily', k: 'macro 巨集 轉譯 技能名 英文 日文 攻略 /ac 複製 貼上' },
     // 收藏 / 成就（c:'collect'）
