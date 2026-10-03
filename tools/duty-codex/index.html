@@ -87,6 +87,15 @@
       .grid { grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); }
     }
     @media (pointer: coarse) { select.sel, input.search { min-height: 44px; } }
+    /* 資料列為此副本的產出（data/duty-drops.json，2026-10-03） */
+    .drops { margin-top: 8px; font-size: 0.78rem; }
+    .drops > summary { cursor: pointer; color: var(--text-secondary); min-height: 32px; display: flex; align-items: center; }
+    .drops > summary b { color: var(--accent, var(--gold)); font-weight: 600; margin-left: 4px; }
+    .drop-grp { margin: 4px 0; line-height: 1.7; color: var(--text-secondary); }
+    .drop-grp > b { color: var(--text-muted); font-weight: 500; margin-right: 6px; }
+    .drop-grp a { color: var(--text); }
+    .drop-grp details > summary { cursor: pointer; display: inline; color: var(--text-muted); }
+    .drop-src { margin-top: 6px; font-size: 0.7rem; color: var(--text-muted); }
   </style>
   <script src="../../assets/js/patch-gate.js"></script>
   <script src="../../assets/js/theme.js"></script>
@@ -149,6 +158,8 @@
   TYPES.forEach(function (t, i) { TYPE_LABEL[t[0]] = t[1]; TYPE_ORDER[t[0]] = i; });
 
   var LIST = [];
+  var DROPS = null;     // data/duty-drops.json（載不到也不影響其餘功能）
+  var ONLY_ID = null;   // ?id=duty:<id> 精確定位到的那一個副本（使用者一改篩選就解除）
   var els = {
     q: document.getElementById('q'),
     type: document.getElementById('typeSel'),
@@ -203,11 +214,41 @@
         '<div class="tags">' + tags.join('') + '</div>' +
         (facts.length ? '<div class="facts">' + facts.join('　') + '</div>' : '') +
         unlock +
+        dropsSummary(d) +
       '</div>' +
     '</div>';
   }
 
+  /* 「資料列為此副本的產出」——措辭固定，不寫機率、不寫必掉（上游是 Teamcraft 整理的掉落資料，可能不完整）。
+     收藏道具連到該收藏頁的 ?id=、可交易的連市場頁；名稱一律是台服名（scripts/build-duty-drops.mjs）。 */
+  function dropsSummary(d) {
+    var ids = DROPS && DROPS.data[d.id];
+    if (!ids || !ids.length) return '';
+    return '<details class="drops" data-duty="' + d.id + '"><summary>資料列為此副本的產出<b>' + ids.length + ' 件</b></summary></details>';
+  }
+  function dropsBody(dutyId) {
+    var ids = DROPS.data[dutyId] || [];
+    var groups = {};
+    ids.forEach(function (iid) {
+      var it = DROPS.items[iid]; if (!it) return;
+      (groups[it[1]] = groups[it[1]] || []).push([iid, it]);
+    });
+    var link = function (iid, it) {
+      var nm = esc(it[0]);
+      if (it[2]) return '<a href="../../' + esc(it[2]) + '?id=' + encodeURIComponent(it[3]) + '">' + nm + '</a>';
+      if (it[4]) return '<a href="../market/?item=' + iid + '" title="市場行情">' + nm + '</a>';
+      return nm;
+    };
+    return Object.keys(groups).sort(function (a, b) { return a - b; }).map(function (c) {
+      var arr = groups[c], label = DROPS.cats[c];
+      var list = arr.map(function (x) { return link(x[0], x[1]); }).join('、');
+      if (arr.length > 20) list = '<details><summary>' + arr.length + ' 件（展開）</summary>' + list + '</details>';
+      return '<div class="drop-grp"><b>' + esc(label) + '</b>' + list + '</div>';
+    }).join('') + '<div class="drop-src">來源：Teamcraft 整理的掉落資料；不含機率，可能不完整。</div>';
+  }
+
   function filtered() {
+    if (ONLY_ID != null) return LIST.filter(function (d) { return d.id === ONLY_ID; });
     var q = els.q.value.trim().toLowerCase();
     var t = els.type.value, e = els.exp.value, lvR = els.lv.value;
     var lo = 0, hi = 9999;
@@ -271,6 +312,7 @@
     if (els.type.value) p.set('t', els.type.value);
     if (els.exp.value) p.set('e', els.exp.value);
     if (els.lv.value) p.set('lv', els.lv.value);
+    if (ONLY_ID != null) { p.delete('q'); p.set('id', 'duty:' + ONLY_ID); }
     var qs = p.toString();
     history.replaceState(null, '', qs ? '?' + qs : location.pathname);
   }
@@ -288,19 +330,40 @@
        同時把類型／資料片／等級清空，否則從面板點進來常常被既有篩選擋掉而看到空白。 */
     var id = p.get('id');
     if (id && id.indexOf('duty:') === 0) {
-      els.q.value = id.slice(5);
+      var v = id.slice(5);
       els.type.value = ''; els.exp.value = ''; els.lv.value = '';
+      /* 2026-10-03 前只認名稱、把它塞進搜尋框做子字串比對：dungeons.json 有 5 組同名
+         （一般／高難度），從命令面板點進來會看到好幾張。現在先認 dungeons.json 的 id。 */
+      var byId = /^\d+$/.test(v) ? LIST.filter(function (d) { return d.id === +v; }) : [];
+      var byName = byId.length ? [] : LIST.filter(function (d) { return d.name === v; });
+      var hit = byId.length === 1 ? byId[0] : (byName.length === 1 ? byName[0] : null);
+      if (hit) { ONLY_ID = hit.id; els.q.value = hit.name; }
+      else els.q.value = v;
     }
     applyingURL = false;
   }
 
+  function userChanged() { ONLY_ID = null; render(); }
   ['input', 'change'].forEach(function (ev) {
-    els.q.addEventListener(ev, render);
+    els.q.addEventListener(ev, userChanged);
   });
-  [els.type, els.exp, els.lv].forEach(function (s) { s.addEventListener('change', render); });
+  [els.type, els.exp, els.lv].forEach(function (s) { s.addEventListener('change', userChanged); });
+  // 掉落清單展開時才組（toggle 不冒泡，要用 capture）
+  els.wrap.addEventListener('toggle', function (e) {
+    var det = e.target;
+    if (!det.classList || !det.classList.contains('drops') || !det.open || det.dataset.built) return;
+    det.insertAdjacentHTML('beforeend', dropsBody(+det.dataset.duty));
+    det.dataset.built = '1';
+  }, true);
+
+  var dropsReady = fetch('../../data/duty-drops.json')
+    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function (j) { DROPS = j; })
+    .catch(function () { DROPS = null; });   // 掉落是附加資訊，載不到就不顯示那一段
 
   fetch('../../data/dungeons.json')
     .then(function (r) { if (!r.ok) throw new Error('無法載入副本資料 (' + r.status + ')'); return r.json(); })
+    .then(function (db) { return dropsReady.then(function () { return db; }); })
     .then(function (db) {
       return PatchGate.loadGamePatch('../../data/_meta.json').then(function (gp) {
         /* 台服未開放的版本一律不顯示。目前 0 筆會被擋掉，但重建資料時若抓到

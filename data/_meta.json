@@ -545,6 +545,14 @@
       "updated": "2026-10-03",
       "desc": "台服已開放的成就：達成條件、點數、物品獎勵、有無稱號（稱號名與分類名無台服來源，不收）；舊版（Legacy）成就不收",
       "source": "XIVAPI v2 Achievement／AchievementCategory ＋ Teamcraft tw-achievements／tw-achievement-descriptions（out_data/tw-locales.msgpack）＋ Teamcraft patch-content ＋ data/items.json"
+    },
+    {
+      "name": "副本掉落反查",
+      "file": "duty-drops.json",
+      "count": 382,
+      "updated": "2026-10-03",
+      "desc": "副本圖鑑的「資料列為此副本的產出」：obtainable-methods 的 instance 來源反查，382 個副本／6,354 件（不含機率）",
+      "source": "out_data/obtainable-methods.msgpack 的 instance 來源（Teamcraft）× scripts/lib/duty-map.mjs × data/items.json"
     }
   ]
 }

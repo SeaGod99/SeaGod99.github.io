@@ -176,6 +176,58 @@ push('登記了頁內快捷鍵', Array.isArray(window.SGT_SHORTCUTS_PENDING) &&
     rows.length + ' 筆，例：' + (rows[0] ? rows[0][2] : ''));
 }
 
+// ── 2026-10-03：?id=duty:<id> 精確定位＋「資料列為此副本的產出」──────────────
+async function openWith(query) {
+  const vc3 = new VirtualConsole(); const err3 = [];
+  vc3.on('jsdomError', (e) => err3.push(e.message));
+  const d3 = new JSDOM(html, { runScripts: 'outside-only', url: 'https://seagod99.github.io/tools/duty-codex/' + query, virtualConsole: vc3 });
+  const w3 = d3.window;
+  w3.fetch = window.fetch;
+  w3.matchMedia = () => ({ matches: false, addEventListener() {}, addListener() {} });
+  w3.eval(readFileSync(join(ROOT, 'assets/js/patch-gate.js'), 'utf8'));
+  w3.eval([...w3.document.querySelectorAll('script:not([src])')].map((s) => s.textContent).join(';\n'));
+  await new Promise((r) => setTimeout(r, 900));
+  return { w: w3, doc: w3.document, err: err3 };
+}
+{
+  const dun = JSON.parse(readFileSync(join(ROOT, 'data/dungeons.json'), 'utf8')).data;
+  const cnt = {}; dun.forEach((d) => { cnt[d.name] = (cnt[d.name] || 0) + 1; });
+  const dup = dun.find((d) => cnt[d.name] > 1);          // 同名副本（一般／高難度）
+  const a = await openWith('?id=' + encodeURIComponent('duty:' + dup.id));
+  push('?id=duty:<id> 在同名副本也只篩出那一個', a.doc.querySelectorAll('.duty').length === 1,
+    `${dup.name}（id ${dup.id}，同名 ${cnt[dup.name]} 個）→ ${a.doc.querySelectorAll('.duty').length} 張`);
+  push('  網址保留 id（可分享）', /id=duty%3A\d+|id=duty:\d+/.test(a.w.location.search), a.w.location.search);
+  const b = await openWith('?id=' + encodeURIComponent('duty:' + dup.name));
+  push('  舊的名稱連結仍可用（同名時列出全部）', b.doc.querySelectorAll('.duty').length === cnt[dup.name], `${b.doc.querySelectorAll('.duty').length} 張`);
+
+  const drops = JSON.parse(readFileSync(join(ROOT, 'data/duty-drops.json'), 'utf8'));
+  const dunIds = new Set(dun.map((d) => d.id));
+  const badDuty = Object.keys(drops.data).filter((k) => !dunIds.has(+k));
+  push('duty-drops 的副本 id 全都在 dungeons.json', badDuty.length === 0, `${Object.keys(drops.data).length} 個，錯 ${badDuty.length}`);
+  const mounts = new Set(JSON.parse(readFileSync(join(ROOT, 'data/mounts.json'), 'utf8')).data.map((m) => 'id:' + m.id));
+  const mountLinks = Object.values(drops.items).filter((it) => it[2] === 'collections/mounts/');
+  push('  坐騎掉落的連結 key 都對得到坐騎頁 keyOf', mountLinks.length > 0 && mountLinks.every((it) => mounts.has(it[3])), `${mountLinks.length} 件`);
+  const did = Object.keys(drops.data).find((k) => drops.data[k].some((i) => drops.items[i] && drops.items[i][2] === 'collections/mounts/'));
+  const c = await openWith('?id=' + encodeURIComponent('duty:' + did));
+  const det = c.doc.querySelector('details.drops');
+  push('有掉落資料的副本卡片長出「資料列為此副本的產出」', !!det && /資料列為此副本的產出/.test(det.textContent), det ? det.querySelector('summary').textContent : '(沒有)');
+  if (det) {
+    det.open = true;
+    det.dispatchEvent(new c.w.Event('toggle'));
+    const a2 = det.querySelector('a[href*="collections/mounts/"]');
+    push('  展開後坐騎連到坐騎頁的 ?id=', !!a2 && /\?id=id%3A\d+/.test(a2.getAttribute('href')), a2 ? a2.getAttribute('href') : '(沒有)');
+    push('  註明來源與「不含機率」', /不含機率/.test(det.textContent), '');
+  }
+  // 掃程式碼的斷言要先拿掉註解（知識庫 §4.90）——註解裡正好寫著「不寫必掉」
+  const code = html.replace(/\/\*[\s\S]*?\*\//g, '').replace(/<!--[\s\S]*?-->/g, '').replace(/^\s*\/\/.*$/gm, '');
+  push('  不寫「必掉」「機率 N%」之類的承諾', !/必掉|掉落率|機率 ?\d/.test(code), '');
+  const si = JSON.parse(readFileSync(join(ROOT, 'data/site-index.json'), 'utf8'));
+  const ti = si.types.findIndex((t) => t.label === '副本');
+  const rows = si.data.filter((r) => r[1] === ti);
+  push('命令面板的副本 key 改用 duty:<id>（同名不會篩出好幾張）', rows.length > 400 && rows.every((r) => /^duty:\d+$/.test(r[2])), rows[0] && rows[0][2]);
+  push('  這幾條路徑都沒有 console error', [a, b, c].every((x) => x.err.length === 0), [a, b, c].flatMap((x) => x.err).slice(0, 1).join('') || '乾淨');
+}
+
 push('無 console error', errors.length === 0, errors.slice(0, 1).join('') || '乾淨');
 push('沒有未捕捉的 rejection', unhandled.length === 0, unhandled.slice(0, 2).join(' | ') || '乾淨');
 

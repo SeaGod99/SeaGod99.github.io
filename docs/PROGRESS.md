@@ -223,6 +223,13 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 
 ## 五、更新紀錄
 
+- **2026-10-03i（副本串接上半：副本圖鑑「資料列為此副本的產出」＋`?id=duty:<id>`）**：第二輪路線圖 ⑥ 的 (a)(c)。第一輪 `dungeon-codex` 掉落那半補上。
+  - **副本 id 對照（`scripts/lib/duty-map.mjs`）**：挑戰者原本說「兩邊 id 不同套、只能用名稱接」——對了一半：`dungeons.json` 的 id 是副本搜尋器的 CFC id，取得方式用的是 InstanceContent id，**`out_data/cfc-content.json` 正好是兩者的對照表**。先用 id 精確對（386 個），對不到才退回「兩邊都唯一」的名稱（129 個），兩種方法都對得到的 **0 筆矛盾**。物品×副本 9,079 組接上 8,802 組（96.9%），比純名稱的 94.4% 好。
+  - **`scripts/build-duty-drops.mjs` → `data/duty-drops.json`**：382／520 個副本、6,354 件（物品無台服名的 44 組不列），238KB／gzip 70KB。每件帶分類與連結：收藏道具（坐騎 54／寵物 106／樂譜 162／幻卡 147／髮型 2／鳥鞍 1／配飾 3）連該收藏頁的 `?id=`（幻卡用「九宮幻卡：X」的唯一卡名對回、髮型的 id 就是樣式書道具 id），其餘分「裝備」「其他」，可交易的連市場頁。
+  - **副本圖鑑**：有資料的卡片多一段可展開的「資料列為此副本的產出（N 件）」，展開時才組；依類別分組、裝備超過 20 件再收一層；註明「來源：Teamcraft 整理的掉落資料；不含機率，可能不完整」。**措辭不寫必掉、不寫機率、不排行**。掉落索引載不到不影響其餘功能。
+  - **`?id=duty:<id>`**：原本只認名稱、塞進搜尋框做子字串比對（5 組同名會篩出好幾張）。現在先認 dungeons.json 的 id；名稱只對到一筆時也精確定位，對到多筆才退回舊行為（舊連結相容）；精確定位時網址保留 id。命令面板的副本 key 改成 `duty:<id>`。
+  - 回歸 `validate-duty-codex.mjs` 29 → 40 項（同名副本用 id 只出一張、舊名稱連結仍可用、坐騎連結 key 對得到坐騎頁、展開後連結正確、不寫承諾——**掃原始碼前先拿掉註解**，§4.90 又踩一次）。
+
 - **2026-10-03h（時尚品鑑自動週更＋落後標示；手動更新到 week 453）**：第二輪路線圖 ⑤＋`fashion-stale-label`。站主決定由機器人直接 commit 到 main。
   - **`.github/workflows/fashion-report.yml`**（repo 第一支 workflow）：週二／週五 台北 16:30、18:30、21:00 跑 `build-fashion-report` → `validate-data` → `validate-fashion-render`，有變動才 commit `fashion-report.json`＋`_meta.json` 推上 main，再讀線上 JSON 確認網站真的更新（10 分鐘沒變就主動要求 Pages 重建）；「來源尚未換週」＝正常空跑；其他錯誤不推送、開 `fashion-report-bot` 標籤的 issue。只 sparse-checkout 腳本需要的檔（repo 追蹤約 790MB）。**`.github/workflows/fashion-report-check.yml`** 每週三、六中午檢查是否落後（防「根本沒跑」）。
   - **PoC**：改到 workflow 檔時自動試跑（不推送）並檢查 token 三個權限。第一次試跑全過：推臨時分支再刪（contents: write）、建標籤（issues: write）、讀 Pages 設定都成功，三個外部來源在 GitHub runner 上連得到，報告「會更新到 week 453（verified）」。actions 升到 v5（v4 跑在已淘汰的 Node 20）。本機沒有 `gh`，所以驗證走「推送觸發試跑＋公開 API 讀步驟結果」，**沒有動用站主帳號的憑證**。

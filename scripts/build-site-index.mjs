@@ -46,7 +46,7 @@ const SOURCES = [
   ["魚", "fishes", "tools/fishing/", (x) => [String(x.itemId), x.name]],
   // 副本圖鑑的 ?id= 是 `duty:<名稱>`，語意與解鎖索引的 `sys:`／`job:` 同一套（docs/deep-links.md §2.1）。
   // 它不像追蹤頁那樣「捲到某張卡」，而是把該頁篩到只剩那一個副本——520 張卡捲過去不如直接篩。
-  ["副本", "dungeons", "tools/duty-codex/", (x) => ["duty:" + x.name, x.name]],
+  ["副本", "dungeons", "tools/duty-codex/", (x) => ["duty:" + x.id, x.name]],   // 10-03 起用 dungeons.json 的 id（5 組同名，用名稱會篩出好幾張）
 ];
 
 // 排在**整份索引最後**的類別（在討伐目標／文書／系統解鎖／職業行會之後）。
