@@ -105,6 +105,20 @@ const fishItemIds = new Set(fishes.map((f) => f.itemId));
   report("收藏頁 sources[].at.mapId → maps", broken, total);
 }
 {
+  // 收藏頁商店來源 → NPC 商店目錄（patch-collection-shop-links.mjs，2026-10-03）：
+  // 每一處都要是「那張圖的那位 NPC 真的有一筆交易給出這件物品」，否則點過去找不到
+  const { loadShopIndex } = await import("./patch-collection-shop-links.mjs");
+  const idx = loadShopIndex();
+  let broken = 0, total = 0;
+  for (const f of ["mounts", "minions", "orchestrion", "barding", "emotes", "ornaments"]) {
+    for (const e of await loadDB(f)) for (const s of e.sources || []) for (const [mapId, npc] of s.shop || []) {
+      total++;
+      if (!(idx.get(+e.itemId) || []).some((x) => x.mapId === mapId && x.npc === npc)) broken++;
+    }
+  }
+  report("收藏頁 sources[].shop → npc-shops 真的賣這件", broken, total);
+}
+{
   // 系統解鎖與職業行會的任務接取點（mapId=null 是副本／室內的實例地圖，只有地名沒有座標）
   const su = JSON.parse(await readFile(join(DATA, "system-unlocks.json"), "utf8"));
   let broken = 0, total = 0, inst = 0;

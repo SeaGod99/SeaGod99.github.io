@@ -870,8 +870,17 @@
     return '<div class="ct-where">&#x1F3C6; <a href="' + SITE_ROOT + 'collections/achievements/?id=' +
       encodeURIComponent('id:' + s.achievementId) + '">成就追蹤</a></div>';
   }
+  /* 商店／兌換來源連到 NPC 商店目錄（patch-collection-shop-links.mjs 補的 shop；2026-10-03）。
+     每一處都是目錄裡**真的賣這件**的 NPC——點過去就看得到這位 NPC 還賣什麼（包括別的收藏）。 */
+  function sourceShop(s) {
+    if (!s || !s.shop || !s.shop.length) return '';
+    return '<div class="ct-where">&#x1F3EA; NPC 商店目錄：' + s.shop.map(function (x) {
+      return '<a href="' + SITE_ROOT + 'tools/npc-shops/?m=' + x[0] + '&amp;q=' + encodeURIComponent(x[1]) + '">' +
+        esc(x[1]) + (x[2] ? '（' + esc(x[2]) + '）' : '') + '</a>';
+    }).join('、') + '</div>';
+  }
   function sourceWhere(s) {
-    var duty = sourceDuty(s) + sourceAchievement(s);
+    var duty = sourceDuty(s) + sourceAchievement(s) + sourceShop(s);
     if (!s || !s.issuer || !s.issuer.name) return duty;
     var at = s.at;
     /* 動詞可由資料指定。任務來源是「接取」（預設），NPC 商店是「販售」——
@@ -912,6 +921,7 @@
     sourceWhere: sourceWhere,
     sourceDuty: sourceDuty,
     sourceAchievement: sourceAchievement,
+    sourceShop: sourceShop,
     sourceWheres: sourceWheres
   };
 })();
