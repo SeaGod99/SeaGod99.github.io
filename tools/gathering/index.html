@@ -449,7 +449,7 @@ function nodeStatus(node, now = Date.now()){
   if (st.state === 'none') return { state:'closed', secsLeft: Infinity, startH:null };
   // startH＝該視窗開始的那個 ET 整點（畫面上用來標「幾點開」）
   const startH = st.window ? Math.round((st.window.ws * EORZEA_MULT / 3600000) % 24) % 24 : null;
-  return { state: st.state, secsLeft: st.secsLeft, startH };
+  return { state: st.state, secsLeft: st.secsLeft, startH, ws: st.window ? st.window.ws : null };
 }
 
 function fmtCountdown(secs){
@@ -608,7 +608,8 @@ function checkAlarms(now, primeOnly){
     const n = NODE_BY_ID.get(id);
     if (!n) continue;
     const st = nodeStatus(n, now);
-    list.push({ key: id, item: { n, st }, secsUntilOpen: st.state === 'open' ? 0 : st.secsLeft });
+    // openTs＝該窗的真實起點；只給 secsUntilOpen:0 的話已開的窗每 2 分鐘就重響一次（10-03 修）
+    list.push({ key: id, item: { n, st }, openTs: st.ws, secsUntilOpen: st.state === 'open' ? 0 : st.secsLeft });
   }
   alarm.check(now, list, primeOnly);
 }

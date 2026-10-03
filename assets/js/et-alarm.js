@@ -23,7 +23,9 @@
  *   });
  *   alarm.cfg                                  // { on, lead, sound }
  *   alarm.save()                               // 寫回 localStorage
- *   alarm.check(now, list, primeOnly)          // list: [{ key, item, secsUntilOpen }]
+ *   alarm.check(now, list, primeOnly)          // list: [{ key, item, openTs, secsUntilOpen }]
+ *                                              //   openTs＝這一窗的真實起點（毫秒，已開的窗是過去的時刻）——**一定要給**，
+ *                                              //   只給 secsUntilOpen 的話已開的窗會每 2 分鐘重響
  *   alarm.chime()                              // 試響
  */
 (function () {
@@ -118,8 +120,12 @@
         var n = 0;
         for (var i = 0; i < list.length; i++) {
           var e = list[i];
-          if (e.secsUntilOpen == null || e.secsUntilOpen > cfg.lead) continue;
-          var openTs = now + e.secsUntilOpen * 1000;
+          /* 去重要用「這一窗的真實起點」。呼叫端請給 openTs（毫秒）；只給 secsUntilOpen 的舊寫法仍收，
+             但窗已開時 secsUntilOpen 恆為 0，算出來的 openTs＝now 會一直往後漂，超過 120 秒容差就被
+             當成新的一窗——已開的窗每 2 分鐘重響一次（2026-10-03 修，三頁都改傳 openTs）。 */
+          var openTs = e.openTs != null ? e.openTs
+            : (e.secsUntilOpen == null ? null : now + e.secsUntilOpen * 1000);
+          if (openTs == null || (openTs - now) / 1000 > cfg.lead) continue;
           var prev = fired.get(e.key);
           // 120 秒容差：倒數每秒重算，開窗時刻會有零點幾秒的抖動，不能當成新的一窗
           if (prev && Math.abs(openTs - prev) < 120000) continue;

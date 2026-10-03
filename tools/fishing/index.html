@@ -383,8 +383,7 @@
 
 <script type="module">
 import {
-  initWeatherTables, getMapsData, getWeatherTable, lookupWeather, calcSeed, EN_TO_KEY,
-  WEATHER_PERIOD, WEATHER_INFO, ET_HOUR_MS,
+  initWeatherTables, getMapsData, getWeatherTable, EN_TO_KEY, WEATHER_INFO,
 } from '../../assets/js/eorzea-weather.js';
 import { initMapModal, openMapModal } from '../../assets/js/map-modal.js';
 import { createMapExplorer } from '../../assets/js/map-explorer.js';
@@ -395,7 +394,6 @@ const esc = CollectionTracker.esc;
 const LS_KEY     = 'ffxiv_fishing_owned';
 const TARGET_KEY = 'ffxiv_fishing_targets';
 const EORZEA_MULT = 3600 / 175;
-const ET_MIN_MS   = 175000 / 60; // 1 ET 分鐘的現實毫秒
 
 let allFish = [];
 let FISH_BY_ID = new Map();  // itemId -> 魚（釣場反查用，避免每次重畫都掃 1449 筆）
@@ -420,75 +418,41 @@ function wxLabel(set) {
   }).join('、');
 }
 
-/* ── 可釣狀態計算 ──
-   回傳 state：anytime（隨時）/ open（可釣中）/ wait（等開窗）/ faroff（近期無窗）/ unknown */
-const seedCache = new Map();   // periodIndex -> seed
-const wxCache = new Map();     // mapId -> Map(periodIndex -> weather key)
-function weatherOf(mapId, pi) {
-  let m = wxCache.get(mapId);
-  if (!m) { m = new Map(); wxCache.set(mapId, m); }
-  let k = m.get(pi);
-  if (k === undefined) {
-    let seed = seedCache.get(pi);
-    if (seed === undefined) { seed = calcSeed(new Date(pi * WEATHER_PERIOD)); seedCache.set(pi, seed); }
-    k = lookupWeather(getWeatherTable(mapId), seed);
-    m.set(pi, k);
-  }
-  return k;
-}
-function etHourOf(ms) { return Math.floor(ms * EORZEA_MULT / 3600000) % 24; }
-
+/* ── 可釣狀態計算（薄包裝；計算本體是 assets/js/window-calc.js）──
+   回傳 state：anytime（隨時）/ open（可釣中）/ wait（等開窗）/ faroff（近期無窗）/ unknown
+   open／wait 另帶 ws（該窗的真實起點，毫秒） */
 function fishStatus(f, now, spotIdOv) {
   const timed = f.startHour > 0 || f.endHour < 24;
   const wk = wxKeys(f.weatherSet), pk = wxKeys(f.previousWeatherSet);
   const needWx = wk.length > 0 || pk.length > 0;
   if (!timed && !needWx) return { state: 'anytime' };
 
-  // 只限時不限天氣：直接以 ET 時窗計算
-  if (!needWx) {
-    const etMin = (now * EORZEA_MULT / 60000) % 1440;
-    const s = f.startHour * 60, e = f.endHour * 60;
-    const inWin = s < e ? (etMin >= s && etMin < e) : (etMin >= s || etMin < e);
-    if (inWin) {
-      const remain = s < e ? e - etMin : (etMin >= s ? 1440 - etMin + e : e - etMin);
-      return { state: 'open', secsLeft: Math.round(remain * ET_MIN_MS / 1000) };
-    }
-    let until = s - etMin; if (until <= 0) until += 1440;
-    return { state: 'wait', secsLeft: Math.round(until * ET_MIN_MS / 1000), needWx: false };
-  }
+  // 只限時不限天氣
+  if (!needWx) return statusFromWindow(nextWindows(f, now, 1, spotIdOv)[0], now, false);
 
   // 限天氣（可能同時限時）：需要釣場所在地圖的天氣表
   const spot = (spotIdOv ?? f.spotId) != null ? SPOTS.get(spotIdOv ?? f.spotId) : null;
   const mapId = spot?.coords?.mapId;
   if (mapId == null || !getWeatherTable(mapId)) return { state: 'unknown' };
+  return statusFromWindow(nextWindows(f, now, 1, spotIdOv)[0], now, true);
+}
 
-  const pi0 = Math.floor(now / WEATHER_PERIOD);
-  for (let i = 0; i < 400; i++) { // 掃約 6.5 天
-    const pi = pi0 + i;
-    if (wk.length && !wk.includes(weatherOf(mapId, pi))) continue;
-    if (pk.length && !pk.includes(weatherOf(mapId, pi - 1))) continue;
-    const pStart = pi * WEATHER_PERIOD;
-    const pEtH = etHourOf(pStart); // 0 / 8 / 16
-    let ws, we;
-    if (!timed) { ws = pStart; we = pStart + WEATHER_PERIOD; }
-    else {
-      const segs = f.startHour < f.endHour
-        ? [[f.startHour, f.endHour]]
-        : [[f.startHour, 24], [0, f.endHour]];
-      let seg = null;
-      for (const [a, b] of segs) {
-        const st = Math.max(a, pEtH), en = Math.min(b, pEtH + 8);
-        if (en > st) { seg = [st, en]; break; }
-      }
-      if (!seg) continue;
-      ws = pStart + (seg[0] - pEtH) * ET_HOUR_MS;
-      we = pStart + (seg[1] - pEtH) * ET_HOUR_MS;
-    }
-    if (now >= we) continue;
-    if (now >= ws) return { state: 'open', secsLeft: Math.round((we - now) / 1000) };
-    return { state: 'wait', secsLeft: Math.round((ws - now) / 1000), needWx: true };
-  }
-  return { state: 'faroff' };
+/* 2026-10-03 前這裡是頁內第二份視窗演算法：只掃 400 個天氣段、**不合併連續符合的天氣段**，
+   所以 112 種魚開窗中的剩餘時間被低估（抽樣平均少 49 分、最多少 8.9 小時），卡片與詳情彈窗講的不一樣。
+   現在一律走 window-calc（與詳情彈窗、/tools/now/ 同一份）；`ws` 是該窗的真實起點，鬧鐘拿它去重。 */
+function statusFromWindow(w, now, needWx) {
+  if (!w) return { state: 'faroff' };
+  if (now >= w.ws) return { state: 'open', secsLeft: Math.round((w.we - now) / 1000), ws: w.ws };
+  return { state: 'wait', secsLeft: Math.round((w.ws - now) / 1000), needWx, ws: w.ws };
+}
+
+/* 排序比較函式會對同一條魚呼叫幾十次（1,422 條排一次約 3 萬次），同一秒內只算一次。 */
+let _stNow = 0, _stMap = new Map();
+function fishStatusCached(f, now) {
+  if (now !== _stNow) { _stNow = now; _stMap = new Map(); }
+  let s = _stMap.get(f.itemId);
+  if (!s) { s = fishStatus(f, now); _stMap.set(f.itemId, s); }
+  return s;
 }
 
 const ST_RANK = { open: 0, wait: 1, anytime: 2, faroff: 3, unknown: 3 };
@@ -1142,7 +1106,8 @@ function checkAlarms(now, primeOnly) {
     if (!f) continue;
     const st = fishStatus(f, now);
     if (st.state !== 'open' && st.state !== 'wait') continue; // 隨時可釣／近期無窗不提醒
-    list.push({ key: id, item: { f, st }, secsUntilOpen: st.state === 'open' ? 0 : st.secsLeft });
+    // openTs＝該窗的真實起點。只給 secsUntilOpen:0 的話已開的窗每 2 分鐘就會被當成新的一窗再響（10-03 修）
+    list.push({ key: id, item: { f, st }, openTs: st.ws, secsUntilOpen: st.state === 'open' ? 0 : st.secsLeft });
   }
   alarm.check(now, list, primeOnly);
 }
@@ -1330,8 +1295,8 @@ document.getElementById('nowView').addEventListener('click', e => {
     sorts: [
       'patch-desc', 'patch-asc',
       { value: 'window', label: '開窗時間（可釣中優先）', cmp: (a, b) => {
-          const now = Date.now();
-          const sa = fishStatus(a, now), sb = fishStatus(b, now);
+          const now = Math.floor(Date.now() / 1000) * 1000;   // 對齊到秒，快取才命中得到
+          const sa = fishStatusCached(a, now), sb = fishStatusCached(b, now);
           if (ST_RANK[sa.state] !== ST_RANK[sb.state]) return ST_RANK[sa.state] - ST_RANK[sb.state];
           return (sa.secsLeft ?? Infinity) - (sb.secsLeft ?? Infinity);
         } },

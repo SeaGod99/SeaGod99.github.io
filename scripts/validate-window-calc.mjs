@@ -284,6 +284,21 @@ const sameWins = (a, b) =>
     A.create({ scope: 'fishing', baseTitle: 'T' }).cfg.lead !== 45, '');
 }
 
+// ── ⑤ 頁面真的只用 window-calc（2026-10-03 補）──────────────────────────
+/* 上面全部是「共用模組 vs 重構前抄本」，**從沒檢查頁面是不是真的在用共用模組**。
+   釣魚頁的 fishStatus()（卡片／看板／排序／鬧鐘）因此一直保留著頁內第二份演算法
+   （掃 400 個天氣段、不合併連續段），112 種魚的剩餘時間被低估，而這支全綠。 */
+{
+  const fish = readFileSync(join(ROOT, 'tools/fishing/index.html'), 'utf8');
+  const gath = readFileSync(join(ROOT, 'tools/gathering/index.html'), 'utf8');
+  const body = (src, name) => { const i = src.indexOf(`function ${name}(`); return i < 0 ? '' : src.slice(i, src.indexOf('\n}\n', i)); };
+  const fs = body(fish, 'fishStatus'), ns = body(gath, 'nodeStatus');
+  push('釣魚頁 fishStatus() 走 window-calc（呼叫 nextWindows）', /nextWindows\(/.test(fs), '');
+  push('  釣魚頁沒有自己掃天氣段（沒有 weatherOf／calcSeed／WEATHER_PERIOD 迴圈）',
+    !/function weatherOf\(|calcSeed\(|WEATHER_PERIOD\s*\)/.test(fish), '');
+  push('限時採集頁 nodeStatus() 走 window-calc（nextWindows＋statusOf）', /nextWindows\(/.test(ns) && /statusOf\(/.test(ns), '');
+}
+
 let fail = 0;
 for (const [n, ok, d] of results) { console.log(`${ok ? "✓" : "✗"} ${n}  ${d ?? ""}`); if (!ok) fail++; }
 console.log(fail ? `\n${fail} 項失敗（共 ${results.length}）` : `\n全部通過（${results.length} 項）`);

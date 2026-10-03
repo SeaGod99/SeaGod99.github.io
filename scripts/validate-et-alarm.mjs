@@ -39,6 +39,8 @@ for (const [label, rel] of Object.entries(PAGES)) {
   /* 提醒運作中的提示：三頁都要講「需保持此分頁開啟」。
      不講的話使用者會把分頁關掉然後以為鬧鐘壞了。 */
   push(`  ${label}頁講明需保持分頁開啟`, /需保持此分頁開啟/.test(html), '');
+  // 2026-10-03：呼叫端一定要給 openTs（真實開窗起點），否則已開的窗每 2 分鐘重響（見 ② 的說明）
+  push(`  ${label}頁呼叫 alarm.check 時有傳 openTs`, /openTs:/.test(html), '');
 }
 
 // ── ② 引擎行為（同一窗只響一次、primeOnly、提前量、forget） ──
@@ -97,6 +99,40 @@ for (const [label, rel] of Object.entries(PAGES)) {
 
   push('secsUntilOpen 是 null 的跳過（算不出窗的不要亂響）',
     alarm.check(9000, [{ key: 'd', item: { id: 'd' }, secsUntilOpen: null }], false) === 0, '');
+
+  /* 2026-10-03 補：上面每一條的時間點都在 1000–3000ms 之間，**從來沒測過「窗開著超過 2 分鐘」**。
+     舊呼叫法對已開的窗傳 secsUntilOpen:0 → openTs＝now 一直漂 → 超過 120 秒容差就當新的一窗，
+     實際上已開的窗每 2 分鐘重響一次（8 ET 小時的天氣窗響 12 次）。現在三頁都改傳 openTs。 */
+  alarm.reset(); fires.length = 0;
+  const W = 10000000;
+  let nOpen = 0;
+  for (let t = W; t < W + 30 * 60000; t += 5000) {
+    nOpen += alarm.check(t, [{ key: 'o', item: { id: 'o' }, openTs: W, secsUntilOpen: 0 }], false);
+  }
+  push('已開的窗每 5 秒 check、連續 30 分鐘，只響 1 次（給 openTs）', nOpen === 1, `${nOpen} 次`);
+
+  alarm.reset(); fires.length = 0;
+  let nCount = 0;
+  for (let t = W - 120000; t < W + 10 * 60000; t += 5000) {
+    nCount += alarm.check(t, [{ key: 'w', item: { id: 'w' }, openTs: W, secsUntilOpen: Math.max(0, Math.round((W - t) / 1000)) }], false);
+  }
+  push('  倒數 → 開窗 → 開著 10 分鐘，整段只響 1 次', nCount === 1, `${nCount} 次`);
+
+  alarm.reset(); fires.length = 0;
+  alarm.check(W, [{ key: 'q', item: { id: 'q' }, openTs: W - 60000, secsUntilOpen: 0 }], true);
+  let nPrime = 0;
+  for (let t = W + 5000; t < W + 30 * 60000; t += 5000) {
+    nPrime += alarm.check(t, [{ key: 'q', item: { id: 'q' }, openTs: W - 60000, secsUntilOpen: 0 }], false);
+  }
+  push('  primeOnly 登記過的已開窗，之後 30 分鐘都不響', nPrime === 0, `${nPrime} 次`);
+
+  // 反證：舊呼叫法（只給 secsUntilOpen:0）就是會重響——確認上面三條真的在測那個 bug
+  alarm.reset(); fires.length = 0;
+  let nLegacy = 0;
+  for (let t = W; t < W + 30 * 60000; t += 5000) {
+    nLegacy += alarm.check(t, [{ key: 'l', item: { id: 'l' }, secsUntilOpen: 0 }], false);
+  }
+  push('  （反證）只給 secsUntilOpen:0 的舊呼叫法在 30 分鐘內會重響', nLegacy > 1, `${nLegacy} 次`);
 
   // 設定持久化與舊 key 遷移（§2.3：改 key 要留遷移、不刪舊的）
   alarm.cfg.lead = 180; alarm.save();

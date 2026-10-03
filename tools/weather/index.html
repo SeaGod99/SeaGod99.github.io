@@ -743,7 +743,8 @@ function checkAlarms(now, primeOnly) {
   const list = watches.map(w => {
     const hit = scanWeather(w.zone, w.w, w.prev, now, 1)[0];
     if (!hit) return null;
-    return { key: watchKey(w), item: w, secsUntilOpen: Math.max(0, Math.round((hit.t - now) / 1000)) };
+    // openTs＝那一段天氣的起點（已開時是過去的時刻，固定不漂）；只給 secsUntilOpen 的話已開的段每 2 分鐘重響（10-03 修）
+    return { key: watchKey(w), item: w, openTs: hit.t, secsUntilOpen: Math.max(0, Math.round((hit.t - now) / 1000)) };
   }).filter(Boolean);
   alarm.check(now, list, primeOnly);
 }
