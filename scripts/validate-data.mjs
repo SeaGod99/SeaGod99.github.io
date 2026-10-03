@@ -154,5 +154,28 @@ for (const f of files) {
   }
 }
 
+/* ── 收藏頁取得方式的英文（2026-10-03）──────────────────────────────────────
+   上面那道守門只擋日文假名，**不擋英文**：「製作：Craftable」「Unknown Shop」「Gil x120000, at 南薩納蘭」
+   這類字串在樂譜頁可見條目裡有 124 首，一直沒被抓到。規則與白名單只有一份，在
+   scripts/patch-collection-source-text.mjs（normalize／badLatin）；這裡報錯時就跑那支 --apply。 */
+{
+  const { normalize, badLatin } = await import("./patch-collection-source-text.mjs");
+  const hits = [];
+  for (const f of ["mounts", "minions", "orchestrion", "barding", "emotes", "triple-triad", "hairstyles", "ornaments"]) {
+    const d = JSON.parse(readFileSync(join(DATA, f + ".json"), "utf8")).data;
+    for (const e of d) for (const s of e.sources || []) {
+      for (const k of ["detail", "where", "condition"]) {
+        if (badLatin(s[k], e.name || "").length || (k === "detail" && normalize(s[k])[1])) hits.push(`${f}｜${e.name}｜${s[k]}`);
+      }
+    }
+  }
+  if (hits.length) {
+    console.log("收藏頁取得方式的英文");
+    for (const h of hits.slice(0, 6)) E(`英文漏到收藏頁：${h}`);
+    if (hits.length > 6) E(`…另有 ${hits.length - 6} 筆`);
+    E("跑 node scripts/patch-collection-source-text.mjs --apply（規則與白名單都在那支）");
+  }
+}
+
 console.log(`\n結果：${errors} error、${warns} warning`);
 process.exit(errors > 0 ? 1 : 0);

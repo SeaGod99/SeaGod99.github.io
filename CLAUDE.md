@@ -129,6 +129,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 幻卡缺卡跑圖回歸（**改完 `collections/triple-triad/` 或 `triple-triad.json` 必跑**） | `node scripts/validate-triad-route.mjs`（jsdom，31 項：只認 `NPC對戰` 不認 `NPC牌組`、地圖篩選、**標記取得不會讓清單重排**）|
 | 坐騎／寵物補手冊排序（重建後必跑，用來擋幻影條目） | `node scripts/patch-collection-order.mjs`（`--apply`／`--offline`） |
 | 青魔補副本／地區連結 | `node scripts/patch-blue-magic-content-ids.mjs`（`--apply`） |
+| 收藏頁取得方式的英文清掉／改中文格式（**`validate-data` 報「英文漏到收藏頁」時跑**；任何重建收藏資料後也跑一次） | `node scripts/patch-collection-source-text.mjs`（dry-run 預設／`--apply`，冪等）。規則與白名單只有這一份，`validate-data.mjs` import 它來掃；查不到台服名的英文一律清掉只留類型，不憑印象翻 |
 | 收藏頁補空 sources（由 obtainable-methods 推） | `node scripts/patch-sources-from-om.mjs`（`--apply`） |
 | 幻化配裝圖鑑重建 | `py tools\glamour\scripts\update_all.py local`（離線）／不帶 `local`＝完整抓取 |
 | 套裝分享圖卡回歸（**改完 `tools/glamour/share-card.js` 或 `syncShareBtn` 必跑**） | `node scripts/validate-share-card.mjs`（32 項；最重要的是「資料不齊全的套整顆鈕隱藏」與「精選被擋掉的比例不可以突然變小」）|
