@@ -3,10 +3,8 @@
 重建時「無解」跳過的裝備名（本機 DB＋7.x 備選庫都對不到）。
 多為 Ollama OCR 亂碼／幻覺；請 Claude 看圖確認正確裝備名後，寫入 ocr_aliases 或 recon_override。
 描述性幻覺（如「パンツ」「猫耳」）看圖後若圖上根本沒有名稱標籤，直接忽略即可。
-共 188 件。
+共 155 件。
 
-- `eb4b62b2-39e3-40f0-bb7d-f767b9b5de47` 踊り子風！　→ 蛯尾耳飾　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1732800094466-e4f779.jpg）
-- `2769b909-c4c6-490f-b5d2-be78190b416b` 鉄扇を使いたいやつ　→ 夜館髪留　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1734889663503-hv60p3.jpg）
 - `339a5406-9563-4b0a-87e6-671ec724e296` NIN　→ 天眞之籠手　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1762581465500-dg1unz.jpg）
 - `a312560b-4b7a-4022-9f4d-6db9d3216501` NIN　→ 天眞之籠手　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1765635568529-l7qx8d.jpg）
 - `6f71e73a-e3f7-4b60-903a-0c8e6ca8fc27` ♡　→ ベゴゴジィ・ボード　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1766058930836-4lvys.jpg）
@@ -14,10 +12,7 @@
 - `ff981396-011e-43b0-82a3-d20f817b4a4a` 無題の投稿　→ オデッサRE　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1778054275252-n2esy.jpg）
 - `afd11369-febf-4e64-ba37-2dfc1b4fce05` 無題の投稿　→ 魔戒法師の脚衣・裾　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1779341883323-kif6tq.jpg）
 - `9a72e7e1-9ef7-4544-b1e0-16a73ad8b12a` エクスアラガンヒラ胴　→ ブラッコボンム・ブーツ　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1732806230092-ku6so.jpg）
-- `1681b7ab-90bf-4ccc-b8a9-d5eca1ad2bb2` 無題の投稿　→ マイカ・ザ・ムーン　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1732849885116-zte7cq.jpg）
 - `2250a01e-c519-453a-90de-d698690cc969` ご賞味あれ　→ ストライプバックス　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1732898572796-l3pt58.jpg）
-- `3491d40e-ab0c-42e8-86b8-edd889914541` 赤鬼さん　→ ナイトデビル・シューズ　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1732957789706-hwi3dp.jpg）
-- `712a37cb-a91e-4504-855b-e8cc7e510668` 白魔導士のミラプリ　→ 真神【真打】　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1733234524043-mhqoy8.jpg）
 - `24c2e565-07f8-47ed-96ae-d9b509f0c7e7` ヒーラーといえば白！　→ スタービロード・ハンドカフス　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1733398916731-z5culg.jpg）
 - `44ffbbfe-266b-4c89-b026-b30a6831db3c` 白の占星術師　→ レプリカ・ラストエアーブ　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1733399276173-5qxq6.jpg）
 - `0867a4aa-f8a3-49d1-bb2e-cc104de9432d` 西洋の剣豪　→ 魔戒闘師の龍手・隠　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1733455917246-v4ebo3.jpg）
@@ -27,7 +22,6 @@
 - `7e0e9336-b3fa-4a0c-8470-21e09e509267` 可愛いは正義♡　→ ホルシクイーン・プリオール、東方風人形下　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1733635847464-f3tnv7.jpg）
 - `ad2e8a9e-edd6-47d5-b29c-fbffa4e29441` ペンギン風ララフェル🐧　→ トンペリブッツ　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1733746264306-edjp3g.jpg）
 - `1cc5809d-9840-453d-8acb-b051c88637b9` 貴族風　→ ユエヤーワーク・レンジャーアイリング　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1733753400651-e6edw.jpg）
-- `9183d123-9acd-4fe2-b284-0ceb228a41c1` セーラーちびムーン風　→ 東方麗火靴　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1733781670100-ph6yd.jpg）
 - `1577b838-027c-4c1b-a1fb-2ae83ed41a96` 　ノフィカさま🍃　→ ブラックボゾム・バーゲンナップ　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1734105522731-tm57zr.jpg）
 - `9e2b4b6a-f0c1-44cf-bacd-3808a52bced2` 大正ロマン風　→ 円宮袖飾　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1734328837843-ks46o7.jpg）
 - `bd35345e-8d63-4c92-b58b-c9757e9255f4` 🗡️寡黙なハンター🖤🤍　→ コルハエー装着格　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1734671928892-3uj6q.jpg）
@@ -36,20 +30,13 @@
 - `9ff32577-96ba-42f7-9a54-a5323d6060d7` Assassin　→ ミルハリー式軍帽　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1734888366145-y1sym.jpg）
 - `06b33622-c8de-457d-8135-080c9d106b6f` 💙🦊青狐巫女👘🤍　→ ヴァンガード・アンゲルプラン　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1735525421402-bkd4q.jpg）
 - `f414d5a6-2979-45ca-80bf-9b980ca514d2` 1人でセーラー戦士コス①　→ フロントリアパンプス　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1735636824651-trnffj.jpg）
-- `11c6a68c-b9ec-46ee-a6ea-7bb7fb42396f` 🩵🩷ʜᴀᴘᴘʏ ɴᴇᴡ ᴘᴀꜱᴛᴇʟ ʏᴇᴀʀ🩷🩵　→ 姫雫水干　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1736370782165-8d1hrj.jpg）
 - `9953d5af-d7d8-464f-a519-e6833805064e` アスレジャー・ストリート　→ クラッシックグラス:レッド　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1736517650199-a2wvq.jpg）
-- `707d8dd1-d131-4705-8398-6ab5b563d949` 無題の投稿　→ 滝士脚衣　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1737951666681-y33vnn.jpg）
 - `698e5548-7ad2-4c88-9638-9d7e52554ec8` カジュアルレンジ　→ 東方紛人帽　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1740910197548-czwj9q.jpg）
-- `5d40b914-5fc2-47f7-b1cc-a6f549a53107` ドーンブレイザー　→ 鶴大弓　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1741887642599-lteia.jpg）
 - `50addbcd-a418-4b16-9472-a58738cfe21d` ♥♡モノクロカラーモンク♥♡　→ ラベナングローブ　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1743327037140-9np29w.jpg）
 - `2c500007-6068-4a92-bffe-174eba7a570a` Dancer　→ サベネアンリボクロウ・オブ・ビースト　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1743420363998-9lr6rm.jpg）
-- `f2afdc25-9ac5-4090-8fb4-5f10ef88554c` モンク　→ 道士靴履　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1743429920307-6swro5.jpg）
 - `503f64db-8897-4047-8fef-c422349ffc4f` 白×ピンクのリボンコーデ　→ 東方久留米姉妹、バニーテールピースチェーン　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1745375184447-gp6ax0c.jpg）
 - `201d9c91-adfb-4b2e-95e0-dd5be93c5aaf` 怪しい占い師　→ ヒップボリフチョーカー、魔戒導師の腕　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1745762098373-zx8yxp.jpg）
 - `cb12472c-08d2-460e-8f7f-9445d70c4275` 妖精さん　→ サベネアンパンプス　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1745836060678-3xnwn.jpg）
-- `0722c86d-6ced-4ecb-a044-25c1376bfd21` モンク　→ ソビステスヒュボデーマ　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1746423248654-6mlh2d.jpg）
-- `138d0fbe-fefd-461c-a16b-39cde69b0715` 忍者　→ ワーグ・スカウトフィンガルゲルドロープ　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1746423265158-keyfxi.jpg）
-- `c292246e-e3ab-4f52-8e71-28d0638e89b8` ワンピ風タンク装備！　→ 紅蓮祭小裙　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1746604534719-pimrwt.jpg）
 - `173b5ed6-a37e-4356-93db-746f1454fec1` キャスター　→ 正進祭小袴　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1748263562327-negq4gb.jpg）
 - `4b57e92d-6aa7-4b28-a0b4-01a32a4754a7` サイバーパンク　→ ベビージェイチャンピオン・レンジャーキャップ　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1750501528200-2w409d.jpg）
 - `c18420e9-41c9-4f73-a211-3e6bef8e547b` サイオンズアドベンチャラーで制服風　→ Ribbon color variation　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1751626960760-fvckn9.jpg）
@@ -73,13 +60,11 @@
 - `4bf0465d-f486-4166-8f02-b96ce7e5858d` スチームパンク機関助士　→ ドージプレイザー・ブーツ　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1760697807141-a4omk.jpg）
 - `7b2399cf-d972-455b-8f80-9038a5445e09` DNC　→ 絆天袖下　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1761007838488-quotsc.jpg）
 - `b178e2f0-d800-400b-bbab-d33fb1427e6f` ❤️😈Succubus🦇🖤　→ 佐助の刀【絶】[模造]メタリックビーレッド、天階之戦手　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1761246129082-xetqin.jpg）
-- `3a40b2aa-3b39-4d50-918a-d9dc4adc3481` MUMMY!!!　→ アスレジャー・スーパー　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1761927968625-93lgqq.jpg）
 - `c78304e9-8160-449c-8066-c9aa6f76d6b7` 😈🔫❤️🖤　→ ミリハ五一式軍靴　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1762646493732-6nzr7s.jpg）
 - `4968989d-c264-48e2-a6c4-5e25b35c59aa` 侍　→ 辻天錦下 スリープラック　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1763288906907-w59efm.jpg）
 - `a1d5e7cb-8013-49b5-a33d-4534792d5c87` 占星術師　→ クエインチュエル・ラップルスカート、ガラディアヒール　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1764089184169-eon39r.jpg）
 - `e30c6abc-22fb-46d1-a74e-255afa5979de` 冬の仲良しららふぇるず　→ ネイルビブ、東方露人形下、東方露人形、ワッドランドウォーデン・ファインボアストール、パロニエル・ロングブーツ　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1764191972435-kbml4.jpg）
 - `0d9f0e74-7a13-403b-a19d-d57af6c088aa` 清楚系赤魔ららちゃん　→ サベナンリボン　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1764192010225-1ai1hg.jpg）
-- `b0b6dfd7-79ef-4ec8-a1d9-9df06e6c052a` 私服ミラプリ　→ 門客関着　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1764489685777-ushl65b.jpg）
 - `d29c49aa-a90c-42f3-8f48-edd93ce0cc31` 侍　→ 紅蓮祭水着　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1765068878236-1c5hld.jpg）
 - `d21e58f3-7bda-4f6e-a9f9-8928754ff119` 119　→ スノーコットン・レンジャーコート ステップブラック、エトワールドレスブーツ ステップブラック　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1765242305807-epv2sg.jpg）
 - `fd97e9e8-c973-4199-bc18-781aa7de106d` セレモニアル・ヒーラー　→ ソビステスヒュボーデーマ　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1765766213275-1lipuc.jpg）
@@ -93,17 +78,13 @@
 - `69a3efca-9e04-4392-8ced-9638047bee95` 機工士　→ シークロープブーツ　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1767320243627-tf4o8.jpg）
 - `46ed54c6-87cb-4190-997a-7e19f19708c6` 中華黒魔　→ ヘシカスト・シクラス バステルパープル ダークバーブル　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1767429670026-t0du3n.jpg）
 - `8d53d3f7-9c7a-42bc-8b91-fd48232bd1be` 冬コーデ　→ クイズパーシャインクール・コート　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1767955842050-j4m4i7.jpg）
-- `bc73ae6d-3439-479a-a531-a5196ffb8c86` 無題の投稿　→ 東方女宮靴　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1768845866169-qcmasm.jpg）
 - `f735385e-75c3-4bf8-bf43-53ae22e68a65` バードシャツ　→ クボクボシューズ　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1771062953936-bh4wa3.jpg）
 - `d93805ff-112a-403a-8a58-ce56afea90f2` サイバーパンク×SAMURAI　→ 機工刀（大）、剣士暗崎、リセットブック、ガントル　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1772184058557-kacti.jpg）
 - `de199bf0-5098-4f6b-a873-a8eb3e2adbd1` 😷🖤🤍🧻　→ バメラーケウィス　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1773453616940-pukcp8.jpg）
 - `03319377-f7eb-4a9f-b26d-84e5b6bc6efd` 🐉🏮🍽️👗🖤🤍　→ メイドリフトブリム　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1773789199071-rz5ebj.jpg）
-- `45bd128b-7749-4316-9b03-777b5d0f9c35` 武伝の守り人 　→ 源氏之槍手【闘士】、源氏之筒縄【闘士】　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1773801911753-qdr2ir.jpg）
-- `f1630d79-0534-4849-ae9b-fc54327573d3` 🕶️🌺❤️‎🤍🪽　→ 道士職衣　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1774571231033-bthcpn.jpg）
 - `4dbc27f1-6da2-47e8-ac47-23822289ebc6` 釣り好きの猫魔道士　→ バストラルオートケーン　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1774579988900-o60hxc.jpg）
 - `5a42a57a-85ed-4aaa-a974-597aa278ae1b` 無題の投稿　→ スイートピーネックレ　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1774647534433-9uuyhs.jpg）
 - `c47cb7a5-7ec7-4401-aef4-0389b8409e14` 🕶️🌺🤍🖤👟　→ 染尘鞋衣　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1774651934385-lsuz2a.jpg）
-- `ba1654e9-d00b-4321-b7e7-e54f263cfc38` 無題の投稿　→ 彼岸比岸【雅】　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1774683793775-mdgxr8.jpg）
 - `2a15fa70-4b6f-41d5-b18a-92cc167c9f21` 🦊🌺💜🤍　→ 乱波鎧子改　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1774739225582-i4otjf.jpg）
 - `513109c4-67d3-4ee1-81e5-8a7369937faa` 259　→ ニコB型ブーツ　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1774761408025-tl2l5m.jpg）
 - `3b8ab3e5-a3c7-410d-ac2f-7aaa44fea534` No.08　→ ニコB型ブーツ　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1774863312707-0opj32.jpg）
@@ -112,7 +93,6 @@
 - `61d6d8e5-8360-4a57-ac6e-bfa2d2e81230` 🐈‍⬛❤️👠🗡️　→ ポルトンフォス・スピローテイル　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1775100811406-o4bgr.jpg）
 - `e860f6a7-5ab1-4cbb-a93d-5e03250af8b0` 無題の投稿　→ マカイ・モーララーの顔具　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1775390059658-lxdj6k.jpg）
 - `a3b87340-3561-453c-8197-17d4040a02be` 黒法衣のロスガル　→ メディアン・ショーズ　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1776049146551-v610br.jpg）
-- `987e6338-920e-446f-a6a9-e193963dd15d` 🦊👘☂️⛩️ver.02　→ 万近士羽織　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1776088176332-codvj.jpg）
 - `e272d901-d947-42b8-a15a-8bcaf00d0f0b` 𝚕𝚘𝚐.𝟶𝟹　→ ヨソスヘルラード・リストラップ　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1776340194361-0axxyp.jpg）
 - `85b1b4c5-09b8-48d4-814d-80012f5679d4` 269　→ アスフォテロース・ハーブポウ　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1776930890814-6wdaba.jpg）
 - `79104b50-9ae0-4933-a393-f7bc1037bbbe` No.14　→ アナルネージズ・アクッカーアイアリング、ダーク・ディフェンダーマッハレス　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1777030879276-j5yet.jpg）
@@ -127,7 +107,6 @@
 - `f3f0eb03-db03-44d6-96dc-e516c7acb5f0` No,16　→ 頭防具 ヨルハ五一　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1779545984366-obe11ob.jpg）
 - `469dd375-6e05-4dd1-8807-455f0fd3537c` No,23　→ ファッションブーティー　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1779547219778-nrztxi.jpg）
 - `fc7fddf4-6c9c-4b8a-a5eb-85c748dc1fba` No,26　→ 頭防具 ヨルハ51式軍帽 術　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1779547620853-vzj39e.jpg）
-- `76559a4a-4b1e-4726-8fd2-84fb80273d45` No,27　→ 辮天靴　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1779547868321-gu105qj.jpg）
 - `c094bcbe-1c38-4f96-bf03-4df782af9ca2` 隠れ里の忍者　→ 天狗蹄　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1779937583383-eawgjp.jpg）
 - `16adae41-e116-4aa1-80db-2e6999a1059f` からくり時計の人形　→ アキュメンエフォート　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1780054712033-bn24a.jpg）
 - `ded5130d-1e18-4d47-af3a-315921fb60f1` ブレイクストリート　→ ヴァートゥ・ラベチャーチュニン　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1780055601934-avx1ow.jpg）
@@ -138,10 +117,7 @@
 - `67daee9c-2d55-476d-adcf-949eab23d601` ナイト:傭兵　→ オメガソード ジャイナルバー　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1780898666146-a854om.jpg）
 - `19ad6271-9c07-4b66-a6ec-b5dd72b551df` ミダース・メタルナックル　→ 服部鎧帽子【姫】、天河手甲　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1780899166404-ixkvzr.jpg）
 - `d5f46924-1406-4d7f-b3cf-eeafaf7f5c0b` 神殿の司祭　→ ダイヤ・ヒーラーのリーフ、ペクライドアタッカーアイリング　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1781232941330-2talon.jpg）
-- `91a40bfe-9cc5-42d4-bcc2-a0aded2e5dda` ルビーの王子　→ ワザード・ライン、フィアスタージャケット、キングダムテーラー・シンジャートラのサード、ラブリーディス・オフ・ロングラード　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1781578149348-ja2hoi.jpg）
 - `0c15838f-45f5-4813-b006-56a5f669274a` №  225　→ ネオナインズ・ラーディー、ネオナインズ・ショートパンツ、ネオナインズ・シューズ　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1781908930156-pq1ckh.jpg）
-- `061724d3-698c-475e-9c1e-828a04c44c3e` サファイアの聖騎士　→ シャラレンツ、ヴァートゥ・クリーデラ・エンブロイド、グレデンタル・ディフェンダー・モイスイ以降、ルナリオライ・ディフェンダー・ラグナー、ニスタイマスモリー・ディフェンダーグリーブ　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1781924428302-1gc5as.jpg）
-- `70b3942c-d83f-4a89-bd5b-5c3efca3f916` №  226　→ 紅蓮茶小将　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1781950950954-sab1cr.jpg）
 - `345dc19f-bf6b-4d07-9802-f038100809e8` モキュモキュ族　→ レディーワーカー・セット、グリフ・セラーフィック、アリージャ・ブラッズレイス、ライオンズパーク・パートナーシップ、フィーダスンダルブースRE　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1782183675458-3vrj1j.jpg）
 - `b586b783-a213-461c-85ba-4edaa246327b` ユウェヤーワータ・キャスター💙　→ ユエヤーウータ・キャスターロープ　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1782376457662-yzk5yc.jpg）
 - `9de0bb53-a437-4c09-b661-8b614ccf219a` Casual & Rock ⭐️　→ ニコッタシューズ　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1782377750281-8jya9i.jpg）
@@ -149,7 +125,6 @@
 - `83a18dc7-37aa-45ee-ad09-f3317874843d` チャイナドレス風🪭　→ エドクールボトム　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1782790962230-ocg6k.jpg）
 - `5c812055-a5ba-4823-93d5-c05b3c5cab6d` ゴシックメイジ🔷♠️　→ ミラージュコートリー　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1782791088137-wmplmq.jpg）
 - `4a52ed83-379d-4993-85e1-9ceb43c051c4` VD装備を使わないアラビアン②　→ サバネアンソルエル　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1782893025226-n1iw.jpg）
-- `b67aca86-3cdb-4d95-b8fd-73dbd8f8e451` 地獄の門番　→ スタイアン・ショース　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1783220054331-83o5vr.jpg）
 - `d134883d-7b71-43a9-b336-26c43766bd6a` 011(118)　→ デコレート・フラワーグラス　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1784949532764-4d7nqt.jpg）
 - `c8ee75e6-0ae6-4a90-a675-75aafb26a659` 遊びに行く用　→ ライトカラーグラス　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1785949498919-ag2fyb.jpg）
 - `5b79896b-f9ce-4d3a-8a71-12f5860c4b11` 無題の投稿　→ メタルアイパッチ:左　（https://mirapri.ff14eden.work/img/glamour_recipes/glamour_recipe_1786180958749-3tu8o.jpg）
