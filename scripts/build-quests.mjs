@@ -8,17 +8,23 @@
 //   data/quests/<資料片>.json  細節：接取 NPC＋座標、前置任務、物品報酬、金幣
 //
 // 資料來源（全部是台服官方字串，查不到就留空、前端整行不顯示）：
-//   任務名     out_data/tw-quests.json（**沒有台服名的任務整筆不收**＝台服未開放）
+//   ⚠ 2026-10-10 起名稱類一律**台服客戶端解包優先**（scripts/lib/tc-datamining.mjs）、Teamcraft 後備——
+//   Teamcraft 的台服語系檔停在 7.2，7.25 的 49 個新任務（輝鱗族、新月島、幻影武器、希爾迪布蘭德…）它沒有，
+//   舊任務也有 30 個用字已被官方改掉（英雄挽歌→英雄輓歌）、39 個中點不同。站主 10-10 拍板以客戶端為準。
+//   任務名     台服客戶端 Quest.Name（去掉私用區的任務圖示字元）→ out_data/tw-quests.json
+//              （**兩邊都沒有台服名的任務整筆不收**＝台服未開放；台服客戶端只含台服已開放的內容）
+//   交付物品   台服客戶端 Quest 的 Script{Instruction}＝RITEMn 的參數（物品 id，601 個任務）。**沒有數量欄**，
+//              所以只列物品；物品名取 data/items.json 的台服名，查不到的（任務專用的 EventItem）不列。
 //   等級／章節／區域／前置／接取 NPC／接取點   XIVAPI v2 Quest（快取 out_data/cache/quests-v2.json，
 //              build-system-unlocks.mjs 建的）＋ Level（快取 out_data/cache/levels-all.json）
 //   報酬       XIVAPI v2 Quest 的 Reward／OptionalItemReward（快取 out_data/cache/quest-finder-rewards.json）。
 //              **只收 sheet 是 Item 的**——Reward 是多型欄位，可能指向別張表，照 id 去查 items.json
 //              會對到毫不相干的物品（同 §4.10 的坑）。物品名一律取 data/items.json 的台服名。
-//   章節名     tw-locales 的 journalGenre
-//   區域名     out_data/places.msgpack 的 twPlaces（Quest.PlaceName）
-//   NPC 名     data/npcs.json → out_data/npcs.msgpack 的 twNpcs
+//   章節名     台服客戶端 JournalGenre.Name → tw-locales 的 journalGenre
+//   區域名     台服客戶端 PlaceName → out_data/places.msgpack 的 twPlaces（Quest.PlaceName）
+//   NPC 名     台服客戶端 ENpcResident.Singular → data/npcs.json → out_data/npcs.msgpack 的 twNpcs
 //   座標       data/maps.json（Level 的 X/Z 換算，公式同 build-system-unlocks.mjs）
-//   資料片名   data/dungeons.json 的 expansionId → expansion（站內既有的官方名）
+//   資料片名   data/official-terms.json（台服客戶端 ExVersion 的官方名；10-10 前取 dungeons.json 的舊寫法）
 //
 // 同名任務 70 組（各城市各一份之類的）：**一律以 id 為鍵**，前端列表會把區域印出來讓人分得開。
 //
@@ -35,6 +41,8 @@ import { decode } from "@msgpack/msgpack";
 import { xiv } from "./lib/xivapi.mjs";
 import { loadTwLocales, twName } from "./lib/tw-locales.mjs";
 import { isTw, isTranslated } from "./lib/tw-text.mjs";
+import { loadTcSheet } from "./lib/tc-datamining.mjs";
+import { isOddOfficial } from "./lib/official-odd-names.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const DATA = join(ROOT, "data");
@@ -67,14 +75,32 @@ async function main() {
   const maps = new Map(readJson(join(DATA, "maps.json")).data.map((m) => [m.id, m]));
   const tw = await loadTwLocales();
   const msqIds = new Set(readJson(join(DATA, "msq.json")).data.map((x) => x.id));
-  const expName = new Map();
-  for (const d of readJson(join(DATA, "dungeons.json")).data) if (d.expansion && d.expansionId != null) expName.set(d.expansionId, d.expansion);
+  // 資料片名：台服官方（data/official-terms.json，由 build-official-terms.mjs 從客戶端 ExVersion 產生）
+  const expName = new Map(readJson(join(DATA, "official-terms.json")).expansions.map((e) => [e.ex, e.name]));
 
-  const npcName = (id) => {
-    if (!id) return null;
-    const n = npcs.get(id)?.name || twName(npcMsg.twNpcs, id);
-    return n && isTw(n) ? n : null;
+  // 台服客戶端（名稱優先來源）
+  const clean = (s) => String(s || "").replace(/[\uE000-\uF8FF]/g, "").trim();
+  const tcQuest = new Map((await loadTcSheet("Quest", { offline })).map((r) => [r.id, r]));
+  const tcNpc = new Map((await loadTcSheet("ENpcResident", { offline })).map((r) => [r.id, clean(r.Singular)]));
+  const tcPlace = new Map((await loadTcSheet("PlaceName", { offline })).map((r) => [r.id, clean(r.Name)]));
+  const tcGenre = new Map((await loadTcSheet("JournalGenre", { offline })).map((r) => [r.id, clean(r.Name)]));
+  const pick = (...c) => c.find((x) => x && isTw(x)) || null;
+  // 任務名另外認 scripts/lib/official-odd-names.mjs 的特例（「●明●●極限●星球」「Hello, World」是正式主線任務）
+  const questName = (id) => pick(clean(tcQuest.get(id)?.Name), twQuests[id]?.tw)
+    || (isOddOfficial("quest", id) ? clean(tcQuest.get(id)?.Name) || twQuests[id]?.tw || null : null);
+  const npcName = (id) => (id ? pick(tcNpc.get(id), npcs.get(id)?.name, twName(npcMsg.twNpcs, id)) : null);
+  const placeName = (id) => (id ? pick(tcPlace.get(id), twName(places.twPlaces, id)) : null);
+  const genreName = (id) => (id ? pick(tcGenre.get(id), twName(tw.journalGenre, id)) : null);
+  // 交付物品：Script{Instruction}[i] 是 RITEMn 時，Script{Arg}[i] 是物品 id
+  const INSTR = Array.from({ length: 50 }, (_, i) => [`Script{Instruction}[${i}]`, `Script{Arg}[${i}]`]);
+  const turnInOf = (id) => {
+    const r = tcQuest.get(id);
+    if (!r) return [];
+    const out = [];
+    for (const [ik, ak] of INSTR) if (/^RITEM\d*$/.test(r[ik] || "")) { const it = Number(r[ak]); if (it && !out.includes(it)) out.push(it); }
+    return out;
   };
+  let nameFromClient = 0, nameFromTc = 0, turnInQuests = 0, turnInDropped = 0;
   const itemName = (id) => {
     const n = items.get(id)?.name;
     return n && isTranslated(n) && n !== "Gil" ? n : null;
@@ -100,8 +126,9 @@ async function main() {
   const dupNames = new Map();
 
   for (const q of quests) {
-    const name = twQuests[q.id]?.tw;
-    if (!name || !isTw(name)) continue;
+    const name = questName(q.id);
+    if (!name) continue;
+    if (name === clean(tcQuest.get(q.id)?.Name)) nameFromClient++; else nameFromTc++;
     const f = q.f;
     cover.total++;
     dupNames.set(name, (dupNames.get(name) || 0) + 1);
@@ -112,8 +139,8 @@ async function main() {
     if (!expIdx.has(ex)) { expIdx.set(ex, exps.length); exps.push({ id: ex, name: expName.get(ex) || null, n: 0 }); }
     const ei = expIdx.get(ex);
     exps[ei].n++;
-    const genre = twName(tw.journalGenre, f["JournalGenre@as(raw)"]);
-    const place = twName(places.twPlaces, f["PlaceName@as(raw)"]);
+    const genre = genreName(f["JournalGenre@as(raw)"]);
+    const place = placeName(f["PlaceName@as(raw)"]);
     if (place) cover.place++;
     const flags = msqIds.has(q.id) ? 1 : 0;
     index.push([q.id, name, lv || 0, ei, genres.idx(genre || null), placesT.idx(place || null), flags]);
@@ -126,7 +153,7 @@ async function main() {
     if (issuer) { cover.npc++; det.n = sh.npcs.idx(issuer); }
     const at = issuer ? coordsOf(f["IssuerLocation@as(raw)"]) : null;    // 沒有 NPC 名就不給座標（只剩一個點，說不出是誰）
     if (at) { cover.at++; det.a = [sh.maps.idx(at.mapId + "|" + at.mapName), at.x, at.y]; }
-    const prev = (f["PreviousQuest@as(raw)"] || []).filter((p) => p && twQuests[p]?.tw && isTw(twQuests[p].tw));   // 與收錄條件同一道守門，否則連結點了是空的
+    const prev = (f["PreviousQuest@as(raw)"] || []).filter((p) => p && questName(p));   // 與收錄條件同一道守門，否則連結點了是空的
     if (prev.length) { cover.prev++; det.p = prev; }
     const rw = rewardById.get(q.id);
     if (rw) {
@@ -151,6 +178,14 @@ async function main() {
       if (r1.length || r2.length) cover.rwQuests++;
       if (rw.GilReward > 0) { det.g = rw.GilReward; cover.gil++; }
     }
+    // 需交付物品（只列物品、不列數量——資料裡沒有數量欄，不猜）
+    const turnIn = [];
+    for (const it of turnInOf(q.id)) {
+      const nm = itemName(it);
+      if (!nm) { turnInDropped++; continue; }
+      turnIn.push([it, nm, items.get(it)?.marketable ? 1 : 0]);
+    }
+    if (turnIn.length) { det.t = turnIn; turnInQuests++; }
     if (Object.keys(det).length) sh.data[q.id] = det;
   }
 
@@ -172,12 +207,14 @@ async function main() {
   console.log(`  金幣報酬    ${cover.gil}`);
   console.log(`  同名任務    ${[...dupNames.values()].filter((n) => n > 1).length} 組（以 id 為鍵）`);
   console.log(`  資料片      ${exps.map((e) => `${e.name} ${e.n}`).join("、")}`);
+  console.log(`  任務名來源  台服客戶端 ${nameFromClient}、Teamcraft 後備 ${nameFromTc}`);
+  console.log(`  需交付物品  ${turnInQuests} 個任務（物品查不到台服名而不列 ${turnInDropped} 件）`);
 
   // ── 輸出 ──
   const files = {};
   files["_index.json"] = {
     schema: "quests-index", updated: today,
-    source: "out_data/tw-quests.json ＋ XIVAPI v2 Quest／Level ＋ tw-locales journalGenre ＋ places.msgpack；資料片名取自 data/dungeons.json",
+    source: "台服客戶端解包 Quest／ENpcResident／PlaceName／JournalGenre（優先）＋ out_data/tw-quests.json、tw-locales、places.msgpack（後備）＋ XIVAPI v2 Quest／Level；資料片名取自 data/official-terms.json",
     note: "data: [id, 名稱, 等級, 資料片序, 章節序(-1=無), 區域序(-1=無), 旗標(1=主線)]。細節依資料片分片，檔名 = 資料片的 id（exps[].id）。同名任務以 id 區分。",
     count: index.length,
     exps: exps.map((e) => ({ id: e.id, name: e.name, n: e.n })),

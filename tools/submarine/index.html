@@ -61,6 +61,13 @@
     .status { font-size: 0.76rem; color: var(--text-muted); margin-bottom: 0.7rem; }
     .status b { color: var(--gold-light); }
     .note { font-size: 0.74rem; color: var(--text-muted); line-height: 1.8; margin-top: 1rem; }
+    /* 建造材料（部隊工房） */
+    .mats > summary { cursor: pointer; font-weight: 600; min-height: 2.75rem; display: flex; align-items: center; }
+    .mat-part { margin: 0.5rem 0; }
+    .mat-part > summary { cursor: pointer; padding: 0.45rem 0; min-height: 2.75rem; display: flex; align-items: center; }
+    .mat-table td:nth-child(3) { text-align: right; white-space: nowrap; }
+    .mat-go { margin-top: 0.6rem; }
+    .mat-go a { display: inline-block; padding: 0.6rem 0.2rem; min-height: 2.75rem; }
     .note b { color: var(--text-dim); font-weight: 600; }
 
     /* 四艘的頁籤。色票取自 tokens.css（§3.6），不在這裡另開 :root */
@@ -118,6 +125,13 @@
     <div class="totals" id="totals"></div>
   </div>
 
+  <details class="panel mats" id="subMats">
+    <summary>&#x1F528; 建造材料（部隊工房）——上面這 4 件部件要交哪些素材</summary>
+    <div class="mats-body"></div>
+    <p class="note">素材與數量取自台服客戶端（CompanyCraftSequence／Process，數量＝一次交幾個 × 要交幾次，已與 Teamcraft 全數核對）。
+      標「另外取得」的沒有配方，要採集、向 NPC 買或從其他管道取得；有配方的到市場頁會往下展開。</p>
+  </details>
+
   <div class="status" id="status">載入中…</div>
 
   <div class="table-wrap"><table>
@@ -153,6 +167,11 @@
       </div>
       <div class="totals" id="airTotals"></div>
     </div>
+    <details class="panel mats" id="airMats">
+      <summary>&#x1F528; 建造材料（部隊工房）——上面這 4 件部件要交哪些素材</summary>
+      <div class="mats-body"></div>
+      <p class="note">素材與數量取自台服客戶端（同潛水艇）。標「另外取得」的沒有配方。</p>
+    </details>
     <div class="status" id="airStatus">載入中…</div>
     <div class="table-wrap"><table>
       <thead><tr>
@@ -347,8 +366,54 @@
         '<td class="per">' + fmt(ph) + '</td>' +
       '</tr>';
     }).join('');
+    renderMats('subMats', myParts());
     syncURL();
   }
+
+  /* ── 建造材料（部隊工房；2026-10-11，第三輪路線圖 §5 fc-workshop-materials）──────────────
+     data/fc-workshop.json（build-fc-workshop.mjs：台服客戶端 CompanyCraft*；數量＝一次交幾個 × 要交幾次，
+     與 Teamcraft 的部隊製作配方交叉核對 162/162）。366KB、多數人不看，所以**打開才載**。
+     每件部件列三個階段要交的素材；4 件的合計帶去市場頁的製作清單——市價、配方樹、「✓ 已有」都在那裡，
+     這頁不重做一份（材料成本的規則只有市場頁那一套）。 */
+  var FC = null, fcLoading = null;
+  function loadFc() {
+    return fcLoading || (fcLoading = fetch('../../data/fc-workshop.json')
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (j) { FC = new Map(j.data.map(function (d) { return [d.itemId, d]; })); return FC; }));
+  }
+  function renderMats(boxId, parts) {
+    var box = $(boxId), body = box && box.querySelector('.mats-body');
+    if (!body || !box.open) return;
+    if (!FC) {
+      body.textContent = '載入中…';
+      loadFc().then(function () { renderMats(boxId, parts); }, function () { body.textContent = '建造材料載入失敗，請重新整理頁面。'; });
+      return;
+    }
+    if (!parts.length) { body.innerHTML = '<p class="status">上面還沒選部件。</p>'; return; }
+    var total = new Map(), html = '';
+    parts.forEach(function (p) {
+      var d = FC.get(p.itemId);
+      if (!d) { html += '<p class="status"><b>' + esc(p.name) + '</b>：沒有部隊工房的建造資料（可能是買來的部件）。</p>'; return; }
+      d.total.forEach(function (t) { total.set(t.itemId, (total.get(t.itemId) || 0) + t.qty); });
+      html += '<details class="mat-part"><summary><b>' + esc(p.name) + '</b>　' + d.phases.length + ' 個階段・' + d.total.length + ' 種素材</summary>' +
+        '<div class="table-wrap"><table class="mat-table"><thead><tr><th>階段</th><th>素材</th><th title="一次交幾個 × 要交幾次">數量</th></tr></thead><tbody>' +
+        d.phases.map(function (ph) {
+          return ph.mats.map(function (m, i) {
+            return '<tr><td>' + (i === 0 ? '第 ' + ph.phase + ' 階段' : '') + '</td>' +
+              '<td><a href="../market/#item=' + m.itemId + '">' + esc(m.name) + '</a>' +
+              (m.craftable ? '' : ' <span class="lock" title="沒有配方：要採集、向 NPC 買或從其他管道取得">另外取得</span>') + '</td>' +
+              '<td>' + m.per + '×' + m.sets + '＝<b>' + m.qty + '</b></td></tr>';
+          }).join('');
+        }).join('') + '</tbody></table></div></details>';
+    });
+    /* 帶的是**部件本身**不是素材：市場頁製作清單上限 10 件，4 件部件的素材有四十多種會被截掉；
+       而市場頁的配方索引本來就收了部隊製作配方（recipes.json 的 jobId 0），部件放進去會自動展開成素材。 */
+    var built = parts.filter(function (p) { return FC.has(p.itemId); });
+    var link = '../market/#craft=' + built.map(function (p) { return p.itemId + ':1'; }).join(',');
+    body.innerHTML = html + (built.length
+      ? '<p class="mat-go"><a href="' + link + '">&#x1F4B0; 帶這 ' + built.length + ' 件部件去市場頁算材料成本（會自動展開成 ' + total.size + ' 種素材）</a></p>' : '');
+  }
+
 
   /* 網址狀態。⚠ 進站參數要在模組載入時就存（§3.17／§4.60）。 */
   var INITIAL_QUERY = location.search;
@@ -458,6 +523,7 @@
         '<td>' + (d.surveillanceReq || '—') + '</td>' +
       '</tr>';
     }).join('');
+    renderMats('airMats', ps);
   }
   function setMode(m) {
     mode = m;
@@ -471,6 +537,8 @@
   $('modeSub').addEventListener('click', function () { setMode('sub'); });
   $('modeAir').addEventListener('click', function () { if (DB && DB.airship) setMode('air'); });
   $('airRank').addEventListener('input', function () { airSave(); renderAir(); });
+  $('subMats').addEventListener('toggle', function () { if (this.open && DB) renderMats('subMats', myParts()); });
+  $('airMats').addEventListener('toggle', function () { if (this.open && DB && DB.airship) renderAir(); });
   dataReady.then(function () {
     if (!DB || !DB.airship) { $('modeAir').hidden = true; return; }
     buildAir();

@@ -168,6 +168,7 @@
 <div id="toast">已複製</div>
 
 <script type="module">
+function sgtFold(s) { return window.SGT_fold ? window.SGT_fold(s) : String(s == null ? '' : s).toLowerCase(); }   // 搜尋正規化：小寫＋中點摺疊（定義在 theme.js，§4.99-2）
 /* ══════════════════════════════════════════════════════════════
    時尚品鑑推薦頁
    設計原則（2026-07-25 改版）：
@@ -473,13 +474,13 @@ function itemRow(i) {
 function renderList(d) {
   const box = document.getElementById('flBody');
   if (!box) return;
-  const q = listState.q.trim().toLowerCase();
+  const q = sgtFold(listState.q.trim());
   let total = 0;
   const html = d.slots.map(s => {
     if (listState.slot !== 'all' && listState.slot !== s.slot) return '';
     let items = s.items.filter(i =>
       (listState.access === 'all' || i.access === listState.access) &&
-      (!q || i.name.toLowerCase().includes(q) || (i.nameEn ?? '').toLowerCase().includes(q)));
+      (!q || sgtFold(i.name).includes(q) || sgtFold(i.nameEn ?? '').includes(q)));
     if (listState.sort === 'gil') items = items.slice().sort((a, b) => (a.gil ?? 9e9) - (b.gil ?? 9e9));
     else if (listState.sort === 'level') items = items.slice().sort((a, b) => (a.equipLevel ?? 0) - (b.equipLevel ?? 0));
     total += items.length;
@@ -570,7 +571,7 @@ function render(d, themes) {
       <b>計分規則</b>：基礎 ${d.scoring.base} 分＋每個提示部位穿對 +${d.scoring.armorHint} 分（飾品 +${d.scoring.accHint}）＋六個部位各染上指定精確色 +${d.scoring.dyeExact} 分（同色系 +${d.scoring.dyeFamily}），上限 100 分。<b>評分前每個部位都要穿著裝備。</b><br>
       <b>時程</b>：每週二 16:00 收榜並揭曉新主題與提示、週五 16:00 開放評分，兩者皆為台北時間；每週最多評 4 次，參加得 10,000 MGP，80 分以上再得 50,000 MGP（每週各一次）。<br>
       <b>資料來源</b>：<a href="https://fashionreportxiv.com/" target="_blank" rel="noopener">Fashion Report XIV</a>（提示與社群實測）・裝備與染劑的台服名、價格、販賣 NPC、地點皆由本站資料庫離線比對。
-      主題與提示名取自陸服資料表轉繁（<b>非台服官方譯名</b>），裝備與染劑名則為台服官方名。
+      ${shownTheme && shownTheme.nameSource === 'tw-client' ? '主題名為台服官方名；提示名取自陸服資料表轉繁（<b>非台服官方譯名</b>）' : '主題與提示名取自陸服資料表轉繁（<b>非台服官方譯名</b>）'}，裝備與染劑名則為台服官方名。
     </div>`;
 
   // 倒數

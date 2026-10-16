@@ -8,8 +8,8 @@
  * 的 row id），是遊戲客戶端自己的資料片歸屬，不是從 patch 號推的。
  *
  * 繁中資料片名沿用全站唯一的那份對照（`assets/js/collection-tracker.js` 的
- * `PATCH_BANDS`）：2.x 原初之地／3.x 蒼天之禁地／4.x 紅蓮之狂潮／5.x 暗影之逆焰／
- * 6.x 曉月之終途／7.x 金曦之遺輝。**改任何一邊都要同步另一邊。**
+ * `PATCH_BANDS`）：2.x 新生艾奧傑亞／3.x 蒼天伊修加爾德／4.x 紅蓮解放者／5.x 漆黑反叛者／
+ * 6.x 曉月之終途／7.x 黃金遺產（台服官方，兩邊都讀 data/official-terms.json，2026-10-11 起不再各自手寫）。
  *
  * ── 為什麼不順手補 patch／unlock／bosses／rewards（別再重試這幾條路）──────
  *
@@ -43,15 +43,10 @@ const OFFLINE = process.argv.includes('--offline');
 const V2 = 'https://v2.xivapi.com/api/sheet';
 const CACHE = path.join(ROOT, 'out_data', 'cfc-expansion.json');
 
-// ExVersion row id → 站內統一的資料片繁中名（同 collection-tracker.js 的 PATCH_BANDS）
-const EXVERSION_TW = {
-  0: '原初之地',     // A Realm Reborn   2.x
-  1: '蒼天之禁地',   // Heavensward      3.x
-  2: '紅蓮之狂潮',   // Stormblood       4.x
-  3: '暗影之逆焰',   // Shadowbringers   5.x
-  4: '曉月之終途',   // Endwalker        6.x
-  5: '金曦之遺輝',   // Dawntrail        7.x
-};
+// ExVersion row id → 台服官方資料片名（data/official-terms.json＝台服客戶端 ExVersion，與 collection-tracker.js 的
+// PATCH_BANDS 同一份來源；2026-10-11 起不再手寫：0 新生艾奧傑亞 2.x … 5 黃金遺產 7.x）
+const EXVERSION_TW = Object.fromEntries(
+  JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'official-terms.json'), 'utf8')).expansions.map((e) => [e.ex, e.name]));
 // ExVersion row id ＝ patch 主版本 − 2（ARR 2.x 對 0），交叉驗證用
 const exFromPatch = (p) => {
   const m = String(p || '').match(/^(\d+)\./);

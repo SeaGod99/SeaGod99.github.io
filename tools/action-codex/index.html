@@ -161,6 +161,7 @@
 </footer>
 
 <script>
+function sgtFold(s) { return window.SGT_fold ? window.SGT_fold(s) : String(s == null ? '' : s).toLowerCase(); }   // 搜尋正規化：小寫＋中點摺疊（定義在 theme.js，§4.99-2）
 (function () {
   'use strict';
 
@@ -199,7 +200,7 @@
   }
 
   function filtered(list) {
-    var q = $('q').value.trim().toLowerCase();
+    var q = sgtFold($('q').value.trim());
     var job = $('jobSel').value;
     var lvR = $('lvSel').value;
     var lo = 0, hi = 999;
@@ -220,7 +221,7 @@
          所以上面三條全部掛在 `isAct` 上，不是無條件套用。 */
       if (lvR && isAct) { var ll = x.lv || 0; if (ll < lo || ll > hi) return false; }
       if (q) {
-        var hay = (x.name + ' ' + (x.desc || '') + ' ' + (x.job || '') + ' ' + (x.cat || '')).toLowerCase();
+        var hay = sgtFold(x.name + ' ' + (x.desc || '') + ' ' + (x.job || '') + ' ' + (x.cat || ''));
         if (hay.indexOf(q) < 0) return false;
       }
       return true;

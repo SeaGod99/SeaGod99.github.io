@@ -681,6 +681,18 @@
           </p>
           <div id="macroBoxes"></div>
         </details>
+
+        <details id="macroImport">
+          <summary>貼上巨集匯入循環</summary>
+          <p class="muted-sm" style="margin-top:0.4rem">
+            把遊戲內的製作巨集（或攻略上的英文巨集）整段貼進來，會換成上面的循環——取代目前的，可以用「復原」回去。
+            <code>/echo</code>、<code>/macrolock</code> 這類不是技能的行會略過；認不得的行逐行列出。
+          </p>
+          <label for="macroIn" class="sr-only">要匯入的巨集</label>
+          <textarea id="macroIn" rows="6" spellcheck="false" placeholder="/ac 堅信 <wait.3>&#10;/ac 崇敬 <wait.2>&#10;…"></textarea>
+          <div style="margin-top:0.4rem"><button class="btn btn-primary" type="button" id="macroImportBtn">匯入循環</button></div>
+          <div id="macroImportMsg" class="muted-sm" role="status" aria-live="polite" style="margin-top:0.4rem"></div>
+        </details>
         </div>
 
         <!-- 結果摘要條：寬螢幕是卡片底部的一條，窄螢幕改成浮在畫面下緣 -->
@@ -741,6 +753,7 @@
 <script src="../../assets/js/patch-gate.js"></script>
 <script src="craft-engine.js"></script>
 <script src="craft-solver.js"></script>
+<script src="../../assets/js/macro-parse.js"></script>
 <script src="crafting-sim.js" defer></script>
 </body>
 </html>

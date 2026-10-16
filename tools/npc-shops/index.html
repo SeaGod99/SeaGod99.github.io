@@ -89,7 +89,7 @@
 <body>
 <div class="tool-header">
   <h1 class="tool-title">&#x1F3EA; NPC 商店目錄</h1>
-  <p class="tool-subtitle">我人在這張圖，附近有哪些店、賣什麼、多少錢——89 張地圖、454 個店家 NPC，附座標一鍵複製</p>
+  <p class="tool-subtitle">我人在這張圖，附近有哪些店、賣什麼、多少錢——89 張地圖、445 個店家 NPC，附座標一鍵複製</p>
   <div class="header-divider"></div>
 </div>
 
@@ -113,6 +113,7 @@
 </footer>
 
 <script>
+function sgtFold(s) { return window.SGT_fold ? window.SGT_fold(s) : String(s == null ? '' : s).toLowerCase(); }   // 搜尋正規化：小寫＋中點摺疊（定義在 theme.js，§4.99-2）
 (function () {
   var GIL = 1;                 // items.json 裡它叫 "Gil"，畫面上一律顯示「金幣」
   var PER_SHOP = 12;           // 一間店先顯示幾筆，其餘按「顯示全部」才展開
@@ -170,10 +171,10 @@
 
   function matches(npc, shop, trades) {
     if (!q) return true;
-    if (npc.n.toLowerCase().indexOf(q) >= 0) return true;
-    if ((shop.n || '').toLowerCase().indexOf(q) >= 0) return true;
+    if (sgtFold(npc.n).indexOf(q) >= 0) return true;
+    if (sgtFold(shop.n || '').indexOf(q) >= 0) return true;
     return trades.some(function (t) {
-      return t.g.concat(t.c).some(function (p) { return String(nameOf(p[0])).toLowerCase().indexOf(q) >= 0; });
+      return t.g.concat(t.c).some(function (p) { return sgtFold(nameOf(p[0])).indexOf(q) >= 0; });
     });
   }
 
@@ -236,7 +237,7 @@
   });
   var deb;
   document.getElementById('searchInput').addEventListener('input', function () {
-    var v = this.value.trim().toLowerCase();
+    var v = sgtFold(this.value.trim());
     clearTimeout(deb);
     deb = setTimeout(function () {
       q = v;
@@ -273,7 +274,7 @@
       sel.innerHTML = IDX.maps.map(function (m) {
         return '<option value="' + m.mapId + '">' + esc(m.map) + '（' + m.npcCount + ' 人／' + m.shopCount + ' 店）</option>';
       }).join('');
-      q = (P.get('q') || '').trim().toLowerCase();
+      q = sgtFold((P.get('q') || '').trim());
       document.getElementById('searchInput').value = P.get('q') || '';
       var want = Number(P.get('m'));
       var pick = IDX.maps.some(function (m) { return m.mapId === want; }) ? want : IDX.maps[0].mapId;

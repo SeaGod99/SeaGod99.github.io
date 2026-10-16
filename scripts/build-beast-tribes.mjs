@@ -1,17 +1,18 @@
 // build-beast-tribes.mjs — 產生 data/beast-tribes.json（部族聲望階級與每日聲望）
 //
-// ── 部族名沒有台服來源，所以**用貨幣道具名當識別** ───────────────────
-// 找過三條路，全部不通：
-//   · `tw-locales` 的 `tribes`（＝Teamcraft `tw/tw-tribes.json`，16 筆）是
-//     **玩家種族**（中原之民＝Midlander、高地之民＝Highlander），不是蠻族。
-//     ⚠ 它的 row id 恰好與 `BeastTribe` 的前 16 列對得上，**照 id 接會全錯**
-//     （同 §4.10：接 id 之前先用名稱對一次）。
-//   · Teamcraft 沒有 `tw-beast-tribes.json`（404）。
-//   · `BeastTribe.IntersocietalQuest` 是**整個資料片共用**的盟友任務
-//     （蒼天三族都指向「伊修加爾德的盟友們」），不是部族名。
-// 所以每個部族以**貨幣道具的台服名**（旅翼幣、星鈷幣…）＋資料片＋等級標示。
-// 那是官方道具名，不是俗稱，也不必猜。**18/21 有台服名**，另兩個（Mamool Ja／
-// Yok Huy）的貨幣查不到繁中名＝台服未開放，整筆不收；第 0 列是空殼。
+// ── 部族名：台服客戶端解包的 BeastTribe（2026-10-10 起） ──────────────
+// 2026-09-27 版本以「部族名沒有台服來源」為由改用貨幣道具名標示——那時只找了 Teamcraft tw/ 與 XIVAPI。
+// **台服客戶端本身有**（thewakingsands/ffxiv-datamining-tc 的 BeastTribe：「蜥蜴人族：灰黨」「鳥人族：長風空力團」…）。
+// 兩個要注意的地方：
+//   · ⚠ **不要用 `tw-locales` 的 `tribes`**（＝Teamcraft `tw/tw-tribes.json`，16 筆）——那是
+//     **玩家種族**（中原之民＝Midlander、高地之民＝Highlander），不是蠻族，而它的 row id 恰好與
+//     `BeastTribe` 的前 16 列對得上，**照 id 接會全錯**（同 §4.10：接 id 之前先用名稱對一次）。
+//   · 客戶端 CSV 的**欄名位移了一格**：名稱字串在標「Adjective」的欄、貨幣道具 id 在標「DisplayOrder」的欄、
+//     友好度名在沒有欄名的最後一欄（`_c19`）；標「CurrencyItem」「Name」的欄是無關的數字。
+//     所以建置時用**貨幣欄逐列對位**當斷言：客戶端該列的貨幣必須等於 XIVAPI 的 CurrencyItem，
+//     任何一族對不上就中止——這同時證明沒有接到別張表。
+// 台服未開放的部族（貨幣道具或部族名查不到台服名）整筆不收；第 0 列是空殼。
+// 7.25 起多了第 19 族「輝鱗族：恆彩農園」（貨幣 青蕉幣）。
 //
 // ── 資料來源 ────────────────────────────────────────────────────────
 //   XIVAPI v2 BeastTribe            貨幣道具、MaxRank、資料片、顯示順序
@@ -41,6 +42,7 @@ import { fileURLToPath } from "node:url";
 import { xiv } from "./lib/xivapi.mjs";
 import { loadTwLocales, twName } from "./lib/tw-locales.mjs";
 import { isTw } from "./lib/tw-text.mjs";
+import { loadTcSheet } from "./lib/tc-datamining.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
@@ -67,6 +69,8 @@ async function main() {
   );
 
   const tw = await loadTwLocales();
+  // 台服官方部族名（見檔頭：欄名位移，名稱在 Adjective、貨幣在 DisplayOrder、友好度名在 _c19）
+  const tcTribe = new Map((await loadTcSheet("BeastTribe", { offline, keepUnnamed: true })).map((r) => [r.id, r]));
   const items = JSON.parse(await readFile(join(DATA, "items.json"), "utf8")).data;
   const twQuests = JSON.parse(await readFile(join(ROOT, "out_data", "tw-quests.json"), "utf8"));
   const itemById = new Map(items.map((i) => [i.id, i]));
@@ -106,6 +110,7 @@ async function main() {
 
   const out = [];
   const skipped = [];
+  const misaligned = [];
   for (const t of tribes) {
     if (!t.id) continue;                                 // 第 0 列是空殼
     const curId = t.f["CurrencyItem@as(raw)"];
@@ -113,11 +118,21 @@ async function main() {
     if (!item || !isTw(item.name)) { skipped.push(t.id + (item ? `（${item.name}）` : "")); continue; }
     const g = byTribe.get(t.id);
     if (!g || !g.rep.size) { skipped.push(t.id + "（沒有帶聲望的任務）"); continue; }
+    // 官方部族名：客戶端同一列，先用貨幣欄對位（對不上＝接錯表或欄位又位移了）
+    const c = tcTribe.get(t.id);
+    if (!c || Number(c.DisplayOrder) !== curId) {
+      misaligned.push(`${t.id}（XIVAPI 貨幣 ${curId}、客戶端 ${c ? c.DisplayOrder : "無此列"}）`);
+      continue;
+    }
+    const name = (c.Adjective || "").trim();
+    const relation = (c._c19 || "").trim();
+    if (!isTw(name)) { skipped.push(t.id + "（客戶端沒有台服部族名）"); continue; }
     const rep = {};
     [...g.rep.entries()].sort((a, b) => a[0] - b[0]).forEach(([k, v]) => { rep[k] = v; });
     out.push({
       id: t.id,
-      // 識別靠貨幣道具名（官方道具名），不是部族名——後者沒有台服來源
+      name,                                               // 台服官方部族名（客戶端 BeastTribe，貨幣欄對位）
+      relation: isTw(relation) ? relation : null,         // 友好度名（「蜥蜴人族友好度」）
       currency: { id: item.id, name: item.name, icon: item.icon || null },
       /* `MinLevel` 有 11 列是 0，不可信。等級門檻取該部族任務的最低 `ClassJobLevel`。 */
       level: g.lvs.length ? Math.min(...g.lvs) : null,
@@ -128,6 +143,10 @@ async function main() {
       rep,
     });
   }
+  if (misaligned.length) {
+    throw new Error(`客戶端 BeastTribe 與 XIVAPI 的貨幣對不上 ${misaligned.length} 族：${misaligned.join("、")}——` +
+      "欄位可能又位移了，或接到了別張表，中止不寫入");
+  }
   out.sort((a, b) => (a.level || 0) - (b.level || 0) || a.id - b.id);
 
   console.log(`\n部族 ${out.length} 個（略過 ${skipped.length}：${skipped.join("、")}）`);
@@ -136,7 +155,7 @@ async function main() {
   console.log("\n各部族：");
   for (const t of out) {
     const reps = Object.entries(t.rep).map(([k, v]) => `階${k}:${v}`).join(" ");
-    console.log(`  ${t.currency.name.padEnd(8)} Lv${String(t.level).padEnd(3)} ${t.expansion || "?"} 上限階${t.maxRank}　${t.quests} 個任務　${reps}`);
+    console.log(`  ${t.name}｜${t.currency.name.padEnd(8)} Lv${String(t.level).padEnd(3)} ${t.expansion || "?"} 上限階${t.maxRank}　${t.quests} 個任務　${reps}`);
   }
 
   if (!apply) { console.log("\n（dry-run，未寫入；加 --apply 才寫）"); return; }
@@ -144,8 +163,8 @@ async function main() {
   const db = {
     schema: "beast-tribes",
     updated: new Date().toISOString().slice(0, 10),
-    source: "XIVAPI v2 BeastTribe／BeastReputationRank／Quest ＋ tw-locales(beastReputationRanks, exVersions) ＋ items.json（貨幣道具名）",
-    note: "部族名沒有台服來源（tw-locales 的 tribes 是玩家種族、Teamcraft 沒有 tw-beast-tribes、IntersocietalQuest 是整個資料片共用），所以每個部族以**貨幣道具的台服名**標示。`rep` 是「該階級的任務每個給多少聲望」。第 8 階（盟友）的門檻寫 null——它不是靠聲望累積解鎖的，照抄 0 會算出「立刻就到」。**每天能接幾個不在資料裡**（那是遊戲配額規則），由前端當輸入。",
+    source: "XIVAPI v2 BeastTribe／BeastReputationRank／Quest ＋ 台服客戶端解包 BeastTribe（部族名、友好度名）＋ tw-locales(beastReputationRanks, exVersions) ＋ items.json（貨幣道具名）",
+    note: "部族名取自台服客戶端解包的 BeastTribe（thewakingsands/ffxiv-datamining-tc），建置時以貨幣欄逐列對位證明 row 對得上；**不是** tw-locales 的 tribes（那是玩家種族）。`rep` 是「該階級的任務每個給多少聲望」。第 8 階（盟友）的門檻寫 null——它不是靠聲望累積解鎖的，照抄 0 會算出「立刻就到」。**每天能接幾個不在資料裡**（那是遊戲配額規則），由前端當輸入。",
     count: out.length,
     ranks,
     data: out,

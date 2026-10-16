@@ -59,7 +59,14 @@ const BUILD = readFileSync(join(ROOT, 'scripts/build-msq.mjs'), 'utf8');
 
 // ── 台服名與資料品質 ────────────────────────────────────
 {
-  push('每個任務都有台服名', DB.data.every((q) => /[\u4e00-\u9fff]/.test(q.name)), '');
+  // 特例（scripts/lib/official-odd-names.mjs）：「Hello, World」是台服官方的英文任務名
+  const { isOddOfficial } = await import('./lib/official-odd-names.mjs');
+  const hasHan = (s) => /[\u4e00-\u9fff]/.test(s);
+  push('每個任務都有台服名（特例清單逐筆放行）', DB.data.every((q) => hasHan(q.name) || isOddOfficial('quest', q.id)),
+    DB.data.filter((q) => !hasHan(q.name) && !isOddOfficial('quest', q.id)).map((q) => q.id).join(','));
+  /* 10-10：主線的前置鏈不能斷——之前第 11 章少了 69992、69997（名稱撞到守門），第 14 章停在 70786 */
+  const ids = new Set(DB.data.map((q) => q.id));
+  push('  曉月之終途第 11 章的 69992、69997 與黃金終章 70835–70842 都在', [69992, 69997, 70835, 70842].every((i) => ids.has(i)), '');
   push('  沒有日文原文', !/[\u3041-\u3096\u30A1-\u30FA]/.test(JSON.stringify(DB.data.map((q) => q.name))), '');
   push('  等級是數字不是陣列', DB.data.every((q) => typeof q.lv === 'number'),
     '例：' + DB.data[0].name + ' Lv' + DB.data[0].lv);

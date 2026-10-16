@@ -53,6 +53,7 @@ import { readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { decode } from "@msgpack/msgpack";
+import { preferClient, logStats } from "./lib/client-names.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = join(__dirname, "..", "data");
@@ -122,11 +123,13 @@ function parseCSVLine(line) {
   return fields;
 }
 
-// 台服官方繁中地名：out_data/places.msgpack 的 twPlaces（key = PlaceName row id）
-// ⚠️ 不要改回簡轉繁。這張表是全站地名的唯一權威來源（見 CLAUDE.md 鐵則）。
+// 台服官方繁中地名：台服客戶端 PlaceName 優先、out_data/places.msgpack 的 twPlaces 備援（key = PlaceName row id；
+// lib/client-names.mjs，2026-10-11 起——twPlaces 是 Teamcraft 的快照，中點是「·」、少數舊譯，而且沒有新版本的地名）。
+// ⚠️ 不要改回簡轉繁（見 CLAUDE.md 鐵則）。
 async function loadTwPlaceNames() {
   const buf = await readFile(join(OUT_DATA, "places.msgpack"));
-  const twPlaces = decode(buf).twPlaces || {};
+  const twPlaces = await preferClient(decode(buf).twPlaces || {}, "place", { offline: false });
+  logStats("地名", twPlaces);
   const map = new Map();
   for (const [id, v] of Object.entries(twPlaces)) {
     if (v && v.tw) map.set(Number(id), v.tw);
@@ -348,7 +351,7 @@ async function main() {
       coords: { mapId, x: toGameCoord(info.x, sf), y: toGameCoord(info.y, sf) },
       fishes,
       spearfishing: true,                       // 魚叉捕魚（水下），前端要與一般垂釣區隔
-      level: info.level ?? null,                // 捕魚人需求等級
+      level: info.level ?? null,                // 漁師需求等級
       patch: prevSpotPatch.get(spotId) ?? (ps.length ? Math.min(...ps) : null),
     });
     spearAdded++;

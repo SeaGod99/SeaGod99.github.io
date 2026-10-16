@@ -5,7 +5,7 @@
 // 各 3,611 筆，已收進 out_data/tw-locales.msgpack），擱置理由不成立，2026-10-03 站主決定做。
 //
 // ── 台服來源 ──────────────────────────────────────────────────────────
-//   ✓ 成就名、達成條件（Teamcraft tw-locales）
+//   ✓ 成就名、達成條件（台服客戶端解包優先，Teamcraft tw-locales 後備——見下面 2026-10-10 那條）
 //   ✓ 物品獎勵（data/items.json 的台服道具名）
 //   ✓ 點數、圖示、版本（數字與路徑，不是字串）
 //   ✓ **分類名、稱號名**（2026-10-04 起）：取自**台服客戶端解包** thewakingsands/ffxiv-datamining-tc
@@ -14,6 +14,16 @@
 //     Teamcraft tw-locales 逐筆比對，中點（・／·）正規化後 3,609/3,610 相同——是同一份台服資料。
 //     這道比對寫在下面，**低於 99% 就中止**（上游換成別的語系或版本落差太大時不會安靜接錯）。
 //   · 英文分類名（XIVAPI）只放在資料裡當**搜尋用的參照**，畫面不顯示（鐵則：不用英文補）。
+//   ✓ **成就名／達成條件以台服客戶端為主、tw-locales 後備**（2026-10-10）：tw-locales 停在台服 7.2，
+//     客戶端是 7.25。兩者逐筆比過：名稱 3,610 筆共有、差異 252 筆裡 251 筆只差中點（7.25 起全改「・」，
+//     客戶端 0 個「·」）、1 筆是改譯（英雄挽歌→英雄輓歌）；說明差 309 筆，179 筆只差中點、130 筆是
+//     官方改寫（「向小麥酒港保交納」→「繳納」…）。所以 tw-locales 留著的是**舊版文字**，不是另一種譯法。
+//     客戶端兩欄都沒有標記碼（0 筆含 <>）。兩邊都照樣過守門（名稱 isTw、說明 isTw），客戶端那欄
+//     沒過守門或沒有值時才退回 tw-locales。台服 7.25 新開的 59 個成就本來就只有客戶端有。
+//     客戶端裡沒有 tw-locales 名的還有一列 1140「※ManHvs801」（內部佔位，分類 0）——isTw 會擋掉。
+//   ✓ **版本以台服版本清單為準**（scripts/lib/tw-release-*.json，台服客戶端前後兩版的差集）：
+//     Teamcraft 的全球版本表沒有 7.25，會把台服 7.25 的成就標成 7.3，版本閘門（patch-gate.js）就放不出來。
+//     清單裡有的 id 用清單的版號，其餘照舊取 Teamcraft patch-content（與 patch-tw-release.mjs 同一份清單）。
 //
 // ── 不收的 ─────────────────────────────────────────────────────────
 //   · 查不到台服名的（＝台服未開放）
@@ -33,6 +43,7 @@ import { xiv } from "./lib/xivapi.mjs";
 import { loadTwLocales, twName } from "./lib/tw-locales.mjs";
 import { isTw, isTranslated } from "./lib/tw-text.mjs";
 import { loadTcSheet, TC_REPO } from "./lib/tc-datamining.mjs";
+import { TW_RELEASES } from "./lib/tw-releases.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const DATA = join(ROOT, "data");
@@ -91,6 +102,14 @@ async function main() {
   for (const [pid, obj] of Object.entries(content)) {
     for (const id of obj.achievement || []) if (!patchOf.has(id)) patchOf.set(id, names[pid]?.version ?? null);
   }
+  // 台服版本清單（見檔頭）：同 patch-tw-release.mjs 的 loadReleases()。清單檔不在就中止——
+  // 安靜退回 Teamcraft 的 7.3 會讓整批成就被版本閘門擋掉，畫面上看不出來。
+  const twRelease = new Map();
+  for (const rel of TW_RELEASES) {
+    const file = join(ROOT, "scripts", "lib", rel.file);
+    if (!existsSync(file)) throw new Error(`找不到 ${file}，先跑 node scripts/patch-tw-release.mjs --build`);
+    for (const id of JSON.parse(await readFile(file, "utf8")).achievements || []) twRelease.set(id, rel.version);
+  }
 
   const items = JSON.parse(await readFile(join(DATA, "items.json"), "utf8")).data;
   const itemById = new Map(items.map((i) => [i.id, i]));
@@ -107,10 +126,19 @@ async function main() {
          連到幻卡頁的 ?id=id:<卡 id>；**再用名稱驗一次**（「九宮幻卡：X」對卡名 X），對不上就不連。
        · 裝備：可裝備職業的文字。單一／少數職業一律用 data/equip.json 的職業名（鐵則）；
          **全職業**與**戰鬥精英＋魔法導師**這兩種群組才用 tw-locales.jobCategories 的官方字串——
-         那張表的單一職業字串是舊譯（「木工師」＝刻木匠），不可以拿來顯示個別職業。 */
+         個別職業一律走 equip.json（10-11 起是台服官方名木工師…漁師），全站同一個來源。 */
   const rewardIds = [...new Set(ach.map((a) => a.f["Item@as(raw)"]).filter(Boolean))];
-  const rewardRows = await xiv.rows("Item", rewardIds, "ClassJobCategory@as(raw),AdditionalData@as(raw)",
-    { cache: join(CACHE, "achievement-reward-items.json"), offline, label: "獎勵道具：" });
+  const REWARD_FIELDS = "ClassJobCategory@as(raw),AdditionalData@as(raw)";
+  const REWARD_CACHE = join(CACHE, "achievement-reward-items.json");
+  const rewardRows = await xiv.rows("Item", rewardIds, REWARD_FIELDS, { cache: REWARD_CACHE, offline, label: "獎勵道具：" });
+  /* 快取是整份的（檔在就不再抓），快取之後才出現的獎勵道具（例：7.25 的 47978 惡魔板角笛）不會自己補進來。
+     缺的另外抓、併回快取；--offline 時只在報告裡列出來（影響的只有裝備職業文字與幻卡連結）。 */
+  let rewardMissing = rewardIds.filter((id) => !rewardRows.has(id));
+  if (rewardMissing.length && !offline) {
+    for (const [k, v] of await xiv.rows("Item", rewardMissing, REWARD_FIELDS, { label: "補抓獎勵道具：" })) rewardRows.set(k, v);
+    await writeFile(REWARD_CACHE, JSON.stringify(Object.fromEntries(rewardRows)));
+    rewardMissing = rewardIds.filter((id) => !rewardRows.has(id));
+  }
   const triad = new Map(JSON.parse(await readFile(join(DATA, "triple-triad.json"), "utf8")).data.map((c) => [c.id, c]));
   const equip = JSON.parse(await readFile(join(DATA, "equip.json"), "utf8"));
   const jobName = equip.names || {};
@@ -133,6 +161,7 @@ async function main() {
 
   /* ── 分類名與稱號名：台服客戶端解包（見檔頭）＋英文參照 ── */
   const tcAch = await loadTcSheet("Achievement", { offline });
+  const tcAchById = new Map(tcAch.map((r) => [r.id, r]));
   const tcKind = new Map((await loadTcSheet("AchievementKind", { offline })).map((r) => [r.id, r]));
   const tcCat = new Map((await loadTcSheet("AchievementCategory", { offline })).map((r) => [r.id, r]));
   const tcTitle = new Map((await loadTcSheet("Title", { offline })).map((r) => [r.id, r]));
@@ -163,17 +192,34 @@ async function main() {
     if (f && f !== m && isTranslated(f)) { titleStat.gender++; return { title: [m, f] }; }
     return { title: m };
   }
-  const stat = { noTw: 0, legacy: 0, noCat: 0, descMissing: 0, descNotTw: [], itemNoTw: [], noPatch: 0, markup: [], jobsMissing: [] };
+  const stat = { noTw: 0, legacy: 0, noCat: 0, descMissing: 0, descNotTw: [], itemNoTw: [], noPatch: 0, markup: [], jobsMissing: [],
+    nameClient: new Set(), nameTwLoc: 0, descTwLoc: 0, revised: { nameDot: 0, nameText: 0, descDot: 0, descText: 0 }, relTagged: {} };
+  const foldDot = (x) => String(x || "").replace(/[・·•‧]/g, "・");
+  const countRevision = (kind, client, old) => {
+    if (!client || !old || client === old.trim()) return;
+    if (foldDot(client) === foldDot(old.trim())) stat.revised[kind + "Dot"]++; else stat.revised[kind + "Text"]++;
+  };
   const rows = [];
   for (const a of ach) {
-    const name = twName(tw.achievements, a.id);
+    // 名稱：**台服客戶端優先**、客戶端沒有（或沒過守門）才退回 tw-locales（見檔頭 2026-10-10 那條）
+    const oldName = twName(tw.achievements, a.id);
+    const cName = tcAchById.get(a.id)?.Name;
+    let name = cName && isTw(cName) ? cName.trim() : null;
+    if (!name) { name = oldName; if (name) stat.nameTwLoc++; }
+    else if (!oldName) stat.nameClient.add(a.id);     // 只有客戶端有＝tw-locales 之後才開的（7.25 那 59 個）
+    else countRevision("name", name, oldName);
     if (!name || !isTw(name)) { stat.noTw++; continue; }
     const cat = catById.get(a.f["AchievementCategory@as(raw)"]);
     if (!cat) { stat.noCat++; continue; }
     const kind = cat["AchievementKind@as(raw)"];
-    if (kind === LEGACY_KIND) { stat.legacy++; continue; }
+    if (kind === LEGACY_KIND) { stat.legacy++; stat.nameClient.delete(a.id); continue; }
 
-    let desc = twName(tw.achievementDescriptions, a.id);
+    // 達成條件：同名稱，客戶端優先；下面照樣過標記與 isTw 守門
+    const oldDesc = twName(tw.achievementDescriptions, a.id);
+    const cDesc = (tcAchById.get(a.id)?.Description || "").trim();
+    let desc = cDesc && isTw(cDesc) ? cDesc : null;
+    if (!desc) { desc = oldDesc; if (desc) stat.descTwLoc++; }
+    else countRevision("desc", desc, oldDesc);
     if (desc && /<[^>]+>/.test(desc)) stat.markup.push(`${a.id} ${desc.slice(0, 40)}`);
     // 說明也要各自過守門：名字翻了不代表說明也翻了（CLAUDE.md 技能說明那條的教訓）
     if (desc && !isTw(desc)) { stat.descNotTw.push(`${a.id} ${desc.slice(0, 30)}`); desc = null; }
@@ -200,7 +246,10 @@ async function main() {
       } else stat.itemNoTw.push(itemId);
     }
 
-    const patch = patchOf.get(a.id) ?? null;
+    // 版本：台服版本清單優先（Teamcraft 把台服 7.25 的標成 7.3，見檔頭），其餘照 Teamcraft
+    const relPatch = twRelease.get(a.id);
+    if (relPatch) { const k = `${patchOf.get(a.id) ?? "?"}→${relPatch}`; stat.relTagged[k] = (stat.relTagged[k] || 0) + 1; }
+    const patch = relPatch ?? patchOf.get(a.id) ?? null;
     if (!patch) stat.noPatch++;
 
     rows.push({
@@ -255,6 +304,22 @@ async function main() {
   console.log(`  獎勵種類：${Object.entries(rewardKinds).sort((a, b) => b[1] - a[1]).map(([k, n]) => `${k} ${n}`).join("、")}`);
   console.log(`  裝備獎勵 ${out.filter((e) => e.item && e.item.eq).length}（職業文字查不到而留白 ${stat.jobsMissing.length}）`);
   console.log(`  版本查無 ${stat.noPatch}`);
+  console.log(`  台服版本清單重標（Teamcraft→台服）：${Object.entries(stat.relTagged).map(([k, n]) => `${k}×${n}`).join("、") || "0"}`);
+  const outIds = new Set(out.map((e) => e.id));
+  const relDropped = [...twRelease.keys()].filter((id) => !outIds.has(id));
+  if (relDropped.length) console.log(`  ⚠ 台服版本清單裡有、卻沒收錄的 ${relDropped.length}：${relDropped.slice(0, 15).join(",")}`);
+  if (rewardMissing.length) console.log(`  ⚠ 獎勵道具不在 XIVAPI 快取：${rewardMissing.join(",")}（只影響裝備職業文字與幻卡連結）`);
+  console.log(`  只有台服客戶端有名稱（tw-locales 沒有）${stat.nameClient.size}；退回 tw-locales：名稱 ${stat.nameTwLoc}、達成條件 ${stat.descTwLoc}`);
+  const rv = stat.revised;
+  console.log(`  客戶端（7.25）與 tw-locales（7.2）不同、採客戶端：名稱 ${rv.nameDot + rv.nameText}（只差中點 ${rv.nameDot}、改譯 ${rv.nameText}）、` +
+    `達成條件 ${rv.descDot + rv.descText}（只差中點 ${rv.descDot}、改寫 ${rv.descText}）`);
+  const clientNotRel = [...stat.nameClient].filter((id) => !twRelease.has(id));
+  if (clientNotRel.length) console.log(`  ⚠ 名稱取自客戶端、但不在台服版本清單的 ${clientNotRel.length}（版本照 Teamcraft）：${clientNotRel.slice(0, 15).join(",")}`);
+  for (const e of out.filter((x) => stat.nameClient.has(x.id)).sort((x, y) => x.id - y.id)) {
+    console.log(`    ${e.id} ${e.name}｜${usedCats.get(e.ct)?.[1] ?? "?"}｜${e.pts}點｜${e.patch}｜${e.ck ?? ""}` +
+      (e.item ? `｜獎勵 ${e.item.n}（${e.item.c}${e.item.p ? " → " + e.item.p + "?id=" + e.item.k : ""}${e.item.only ? "，只此一途" : ""}）` : "") +
+      (e.title ? `｜稱號 ${[].concat(e.title).join("／")}` : "") + (e.lk ? `｜連結 ${e.lk.map((l) => l[0] + ":" + l[1]).join("、")}` : ""));
+  }
   console.log(`  條件種類：${Object.entries(cstat.kind).sort((x, y) => y[1] - x[1]).map(([k, n]) => `${k} ${n}`).join("、")}`);
   console.log(`  系列 ${cstat.series} 個（${cstat.inSeries} 個成就）；前置成就 ${cstat.pre} 個；遊戲內隱藏 ${cstat.hidden} 個`);
   console.log(`  站內連結：${Object.entries(cstat.lk).map(([k, n]) => `${k} ${n}`).join("、")}；名稱對不上而不連：${Object.entries(cstat.lkSkip).map(([k, n]) => `${k} ${n}`).join("、") || "0"}`);
@@ -272,8 +337,8 @@ async function main() {
   const db = {
     schema: "achievements",
     updated: new Date().toISOString().slice(0, 10),
-    source: "XIVAPI v2 Achievement／AchievementCategory ＋ Teamcraft tw-achievements／tw-achievement-descriptions（out_data/tw-locales.msgpack）＋ Teamcraft patch-content ＋ data/items.json",
-    note: "分類名與稱號名取自台服客戶端解包（thewakingsands/ffxiv-datamining-tc，建置時與 Teamcraft 成就名比對一致率 ≥99% 才收）；英文分類名只供搜尋，不顯示。ct＝分類 id（查 cats）；title＝稱號名（字串，或男女不同時 [男性, 女性]）；ord＝遊戲內排列名次。舊版（Legacy）成就不收。",
+    source: "XIVAPI v2 Achievement／AchievementCategory ＋ Teamcraft tw-achievements／tw-achievement-descriptions（out_data/tw-locales.msgpack）＋ 台服客戶端解包 Achievement（tw-locales 沒有的名稱／達成條件）＋ scripts/lib/tw-release-*.json（台服版本）＋ Teamcraft patch-content ＋ data/items.json",
+    note: "分類名與稱號名取自台服客戶端解包（thewakingsands/ffxiv-datamining-tc，建置時與 Teamcraft 成就名比對一致率 ≥99% 才收）；Teamcraft 沒有的成就名與達成條件（台服 7.25 起新增的）也取自同一份解包。版本：台服版本清單有的用清單版號，其餘取 Teamcraft。英文分類名只供搜尋，不顯示。ct＝分類 id（查 cats）；title＝稱號名（字串，或男女不同時 [男性, 女性]）；ord＝遊戲內排列名次。舊版（Legacy）成就不收。",
     count: out.length,
     kinds: usedKinds,
     cats: Object.fromEntries(usedCats),
@@ -325,6 +390,17 @@ async function enrichConditions(out, { tw }) {
   const C = new Map(conds.map((r) => [r.id, r.f]));
   const byId = new Map(out.map((a) => [a.id, a]));
   const twQuests = JSON.parse(await readFile(join(ROOT, "out_data", "tw-quests.json"), "utf8"));
+  /* 任務名也以台服客戶端為準：說明改取客戶端之後，對照的任務名要是同一版——7.25 改了一批任務名
+     （英雄挽歌→英雄輓歌、向新天地進發→向新天地邁進、祭器創造的假像→假象），tw-quests 還是舊名，
+     不換的話這幾條連結會斷。私用區字元是任務圖示，去掉。客戶端沒有（或沒過守門）才退回 tw-quests。 */
+  const tcQuest = new Map((await loadTcSheet("Quest", { offline })).map((r) => [r.id, r]));
+  const questName = (qid) => {
+    const c = String(tcQuest.get(qid)?.Name || "").replace(/[\uE000-\uF8FF]/g, "").trim();
+    return c && isTw(c) ? c : twQuests[qid]?.tw;
+  };
+  /* 連結要有目的地：任務查詢頁（data/quests/）沒收的任務不連。客戶端任務名比 tw-quests 全，
+     7.25 的新任務（迷影重重新月島…）名字對得上、但那頁還沒有——連過去是一片空白。 */
+  const questIndex = new Set(JSON.parse(await readFile(join(DATA, "quests", "_index.json"), "utf8")).data.map((r) => r[0]));
   const { loadDutyMap } = await import("./lib/duty-map.mjs");
   const dm = loadDutyMap();
   const aether = JSON.parse(await readFile(join(DATA, "aether-currents.json"), "utf8")).zones;
@@ -335,7 +411,9 @@ async function enrichConditions(out, { tw }) {
     rewardEntry[p] = new Map(JSON.parse(await readFile(join(DATA, file + ".json"), "utf8")).data.map((e) => [key(e), e]));
   }
   const st = { kind: {}, series: 0, inSeries: 0, pre: 0, lk: {}, lkSkip: {}, inf: {}, hidden: 0 };
-  const sp = (s) => String(s || "").replace(/[\s　]/g, "");
+  /* 比對任務／副本名用：去空白，並把中點摺成一種——說明取自 7.25 客戶端（「・」），
+     任務名與副本名還是 tw-locales／dungeons.json（多數是「·」），不摺的話含中點的名字永遠對不上 */
+  const sp = (s) => String(s || "").replace(/[\s　]/g, "").replace(/[・·•‧]/g, "・");
 
   // ① 系列
   const groups = new Map();
@@ -376,7 +454,7 @@ async function enrichConditions(out, { tw }) {
     // ③ 任務：說明裡寫的任務名要與 Key／Data 指的任務對得上才連
     if (T === 6 || T === 24 || T === 9) {
       const qid = T === 9 ? data[0] : key;
-      const qn = twQuests[qid]?.tw;
+      const qn = questIndex.has(qid) ? questName(qid) : null;
       const m = (a.desc || "").match(/任務「([^」]+)」/);
       if (qn && m && (sp(qn) === sp(m[1]) || sp(qn).startsWith(sp(m[1]) + "（"))) addLk("任務", qn.trim(), "tools/quest-finder/?id=" + qid);
       else skip("任務");
@@ -392,7 +470,9 @@ async function enrichConditions(out, { tw }) {
     // ⑤ 開放飛行：說明「在 X 開放飛行」的 X 對到風脈泉頁的區域名（完全相同，或是區域名的結尾）
     if (T === 20) {
       const m = (a.desc || "").match(/在(.+?)開放飛行/);
-      const z = m && aether.find((x) => x.zone === m[1] || x.zone.endsWith(m[1]));
+      // 區域名是 twPlaces（多數「·」），說明是客戶端（「・」）——摺疊後比
+      const zk = m && sp(m[1]);
+      const z = zk && aether.find((x) => sp(x.zone) === zk || sp(x.zone).endsWith(zk));
       if (z) {
         addLk("風脈泉", z.zone, "tools/aether-currents/?q=" + encodeURIComponent(z.zone));
         const keys = (z.currents || []).map((cu) => "ac:" + cu.id);
@@ -405,7 +485,8 @@ async function enrichConditions(out, { tw }) {
       if (g) addLk("討伐筆記", g.name, "collections/hunting-log/?f_group=" + encodeURIComponent(g.name)); else skip("討伐筆記");
     }
     // ⑦ 部族關係：Key＝BeastTribe id（18 族的等級都落在 1..maxRank 內、12 個英文說明直接寫了族名）
-    if (T === 15 && tribes.has(key)) addLk("部族聲望", tribes.get(key).currency.name, "tools/beast-tribes/?tribe=" + key);
+    // 連結字用台服官方部族名（2026-10-10 起 beast-tribes.json 有 name）；舊資料沒有才退回貨幣名
+    if (T === 15 && tribes.has(key)) addLk("部族聲望", tribes.get(key).name || tribes.get(key).currency.name, "tools/beast-tribes/?tribe=" + key);
     // ⑧ 數量類：幻卡張數、寵物數（說明裡的數字要等於門檻才收）
     if (T === 1 && key === TT_COUNT_KEY) {
       const n = data[0], m = (a.desc || "").match(/獲得(\d+)種九宮幻卡/);

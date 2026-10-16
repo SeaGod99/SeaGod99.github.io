@@ -233,7 +233,7 @@ async function main() {
       coords: { mapId, x: toGameCoord(info.x, sf), y: toGameCoord(info.y, sf) },
       fishes: spotFishes,
       spearfishing: true,                          // 魚叉捕魚（水下），前端要與一般垂釣區隔
-      level: info.level ?? null,                   // 捕魚人需求等級
+      level: info.level ?? null,                   // 漁師需求等級
       patch: null,
     });
   }

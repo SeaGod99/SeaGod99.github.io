@@ -162,6 +162,7 @@
     @media (max-width: 600px) { .zone-mini-bar { width: 50px; } }
   </style>
   <script src="../../assets/js/patch-gate.js"></script>
+  <script src="../../assets/js/official-terms.js"></script>
   <script src="../../assets/js/collection-tracker.js"></script>
   <script src="../../assets/js/theme.js"></script>
 </head>
@@ -196,7 +197,9 @@
 (function () {
   var esc = CollectionTracker.esc;
 
-  var PATCH_LABELS = { '2.x':'2.x 原初之地', '3.x':'3.x 蒼天之禁地', '4.x':'4.x 紅蓮之狂潮', '5.x':'5.x 暗影之逆焰', '6.x':'6.x 曉月之終途', '7.x':'7.x 金曦之遺輝' };
+  // 資料片名＝台服官方（assets/js/official-terms.js；篩選值仍是 '2.x'…，舊分享連結不受影響）
+  var PATCH_LABELS = {};
+  [2, 3, 4, 5, 6, 7].forEach(function (m) { PATCH_LABELS[m + '.x'] = (window.OfficialTerms && OfficialTerms.expansionLabel(m)) || (m + '.x'); });
   var PATCH_ORDER  = ['2.x','3.x','4.x','5.x','6.x','7.x'];
   var PATCH_CSS    = { '2.x':'patch-arr', '3.x':'patch-hw', '4.x':'patch-sb', '5.x':'patch-shb', '6.x':'patch-ew', '7.x':'patch-dt' };
 

@@ -65,6 +65,20 @@ const fishItemIds = new Set(fishes.map((f) => f.itemId));
   report("monsters.positions[].mapId → maps", broken, total);
 }
 {
+  /* 座標的地名要與 maps.json 一致（2026-10-11）：以前是中國服 PlaceName 簡轉繁，5 張圖 2,490 個座標是舊譯名
+     （龍堡參天高地→德拉瓦尼亞山麓地…）。patch-monster-names.mjs 改取 maps.json，這條防它漂回去。 */
+  const nameOf = new Map(maps.map((m) => [m.id, m.name]));
+  let broken = 0, total = 0;
+  const ex = new Set();
+  for (const m of monsters)
+    for (const p of m.positions || []) {
+      if (!p.mapId || !nameOf.has(p.mapId)) continue;
+      total++;
+      if (p.mapName !== nameOf.get(p.mapId)) { broken++; if (ex.size < 3) ex.add(`${p.mapId}「${p.mapName}」≠「${nameOf.get(p.mapId)}」`); }
+    }
+  report("monsters.positions[].mapName ＝ maps.name", broken, total, ex.size ? [...ex].join("、") + "（跑 patch-monster-names.mjs --apply）" : "");
+}
+{
   let broken = 0, zero = 0;
   for (const g of gathering) {
     const id = g.coords?.mapId;
@@ -93,16 +107,18 @@ const fishItemIds = new Set(fishes.map((f) => f.itemId));
   report("exploration-log.coords.mapId → maps", broken, explorationLog.length, missing ? `另 ${missing} 筆無座標（室內子地圖，maps.json 無底圖）` : "");
 }
 {
-  // 收藏頁任務來源的接取點（patch-collection-quest-npc.mjs 補的）
-  let broken = 0, total = 0;
-  for (const f of ["mounts", "minions", "orchestrion", "barding", "emotes"]) {
+  // 收藏頁任務來源的接取點（patch-collection-quest-npc.mjs 補的）＋商店兌換處（patch-collection-client-shops.mjs，10-10）。
+  // mapId=null＝maps.json 沒收的地圖（實例地圖、新月島／渴望灣這類新區域），只有地名與座標——同 system-unlocks 那條
+  let broken = 0, total = 0, noMap = 0;
+  for (const f of ["mounts", "minions", "orchestrion", "barding", "emotes", "ornaments"]) {
     for (const e of await loadDB(f)) for (const s of e.sources || []) {
       if (!s.at) continue;
+      if (s.at.mapId == null) { noMap++; continue; }
       total++;
       if (!mapIds.has(s.at.mapId)) broken++;
     }
   }
-  report("收藏頁 sources[].at.mapId → maps", broken, total);
+  report("收藏頁 sources[].at.mapId → maps", broken, total, noMap ? `另 ${noMap} 筆是 maps.json 沒收的地圖（只有地名與座標）` : "");
 }
 {
   // 收藏頁商店來源 → NPC 商店目錄（patch-collection-shop-links.mjs，2026-10-03）：
@@ -322,6 +338,33 @@ const fishItemIds = new Set(fishes.map((f) => f.itemId));
       ? `⚠ 頁尾沒有樣式：${bad.join("、")}`
       : "頁尾都有樣式（體檢抓不到這個，只能在這裡驗）",
   });
+}
+
+/* ---------- 首頁卡片與工具頁副標題寫死的數字 ＝ 資料實數（2026-10-11）----------
+   2026-10-11 盤點：首頁「18 個部族」（實 19）、「45 種貨幣」（實 48）、「454 個店家」（實 445，HEAD 就寫錯）、
+   金碟頁「439 件獎品」（實 432）——資料重建後沒人回頭改文案。這些字串不從資料長出來（首頁是靜態卡片），
+   所以在這裡逐條比對；改了資料量就照實數改文案。 */
+{
+  const read = (f) => readFileSync(join(__dirname, "..", f), "utf8");
+  const dj = (f) => JSON.parse(readFileSync(join(DATA, f), "utf8"));
+  const gp = dj("_meta.json").gamePatch;
+  const pn = (p) => { const m = p == null ? null : String(p).match(/^(\d+)\.(\d+)/); return m ? parseFloat(`${m[1]}.${m[2].padEnd(2, "0")}`) : null; };
+  const released = (p) => { const v = pn(p), g = pn(gp); return v == null || g == null || v <= g; };
+  const shopIdx = dj("npc-shops/_index.json").maps;
+  const npcN = shopIdx.reduce((s, m) => s + m.npcCount, 0);
+  const goldN = new Set(dj("gold-saucer.json").data.flatMap((c) => c.items.map((i) => i.itemId))).size;
+  const checks = [
+    ["index.html", `${dj("beast-tribes.json").data.length} 個部族`],
+    ["index.html", `等 ${dj("currency-shop.json").data.length} 種貨幣`],
+    ["index.html", `${shopIdx.length} 張地圖、${npcN} 個店家`],
+    ["index.html", `共 ${dj("hunting-log.json").data.reduce((s, g) => s + g.entries.length, 0)} 條討伐目標`],
+    ["index.html", `${dj("dungeons.json").data.filter((d) => d.name && released(d.patch)).length} 個副本`],
+    ["index.html", `另附 ${dj("system-unlocks.json").jobs.length} 個職業`],
+    ["tools/npc-shops/index.html", `${shopIdx.length} 張地圖、${npcN} 個店家 NPC`],
+    ["tools/gold-saucer/index.html", `能換到的 ${goldN} 件獎品`],
+  ];
+  const bad = checks.filter(([f, s]) => !read(f).includes(s)).map(([f, s]) => `${f} 應寫「${s}」`);
+  rows.push({ link: "首頁／副標題寫死的數字 → 資料實數", broken: bad.length, total: checks.length, note: bad.join("；") || "都對得上" });
 }
 
 // ---------- 輸出 ----------

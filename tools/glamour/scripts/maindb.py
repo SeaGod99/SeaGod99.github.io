@@ -140,7 +140,8 @@ def job_names():
     這是**全站唯一的職業名權威**（docs/專案慣例與記憶.md §4.2）：
     白魔道士（非白魔法師）、召喚士（非召喚師）、占星術師（非占星術士）、
     奪魂者（RPR，非鐮刀師／釤鐮客）、毒蛇劍士（VPR，非劍蛇師／蝰蛇劍士）、
-    製作職一律「匠」不是「師」（刻木匠／鍛鐵匠／鑄甲匠／雕金匠／製革匠／裁衣匠）。
+    製作採集職是台服官方名（木工師／鍛造師／甲冑師／金工師／皮革師／裁縫師／鍊金術師／烹調師／
+    採掘師／園藝師／漁師；2026-10-09 對台服客戶端查證，10-11 全站改。以前寫的「一律『匠』」是陸服名轉繁，錯的）。
     不要在別處另抄一份——本圖鑑原本自帶一張表，33 個裡有 16 個是錯的。
     """
     return _memo("jobs", lambda: dict(
@@ -195,26 +196,56 @@ def craft_types():
 
 # ───────────────────────── 名稱解析表 ─────────────────────────
 
+def official_dots(s):
+    """名稱內部的「·」換成台服官方的「・」（2026-10-11，同主庫 scripts/lib/client-names.mjs 的 officialDots()）。
+
+    台服客戶端的名稱表一個「·」都沒有；這裡的 NPC／地名／任務名多半是 Teamcraft 快照，寫的是「·」。
+    只換「前後都不是空白」的——兩側有空白的是分隔符。**不要拿來處理玩家投稿的文字**（mirapri 的暱稱、標題）。
+    """
+    if not s or "·" not in s:
+        return s
+    out = []
+    for i, c in enumerate(s):
+        if c == "·" and 0 < i < len(s) - 1 and not s[i - 1].isspace() and not s[i + 1].isspace():
+            out.append("・")
+        else:
+            out.append(c)
+    return "".join(out)
+
+
 def tw_npcs():
-    return _memo("npcs", lambda: {
-        str(k): v.get("tw", "")
-        for k, v in load_msgpack(os.path.join(OUT_DATA, "npcs.msgpack")).get("twNpcs", {}).items()
-    })
+    """NPC id → 台服名。Teamcraft 快照（out_data/npcs.msgpack）打底，**主庫 data/npcs.json 的台服客戶端名蓋上去**
+    （2026-10-11 起 npcs.json 是客戶端 ENpcResident：船頭→船夫、芙莉妮→雜貨商芙莉妮…）。"""
+    def build():
+        out = {str(k): official_dots(v.get("tw", ""))
+               for k, v in load_msgpack(os.path.join(OUT_DATA, "npcs.msgpack")).get("twNpcs", {}).items()}
+        for n in _envelope("npcs.json"):
+            if n.get("name"):
+                out[str(n["id"])] = n["name"]
+        return out
+    return _memo("npcs", build)
 
 
 def tw_places():
     return _memo("places", lambda: {
-        str(k): v.get("tw", "")
+        str(k): official_dots(v.get("tw", ""))
         for k, v in load_msgpack(os.path.join(OUT_DATA, "places.msgpack")).get("twPlaces", {}).items()
     })
 
 
 def tw_quests():
-    """舊 quests.msgpack 的替代品：out_data/tw-quests.json {questId: {tw}}"""
-    return _memo("quests", lambda: {
-        str(k): (v.get("tw", "") if isinstance(v, dict) else str(v))
-        for k, v in _read_json(os.path.join(OUT_DATA, "tw-quests.json")).items()
-    })
+    """舊 quests.msgpack 的替代品：out_data/tw-quests.json {questId: {tw}}，
+    **主庫 data/quests/_index.json 的台服客戶端任務名蓋上去**（2026-10-11：30 個任務台服改譯過，Teamcraft 沒跟上）。"""
+    def build():
+        out = {str(k): official_dots(v.get("tw", "") if isinstance(v, dict) else str(v))
+               for k, v in _read_json(os.path.join(OUT_DATA, "tw-quests.json")).items()}
+        idx = os.path.join(DATA, "quests", "_index.json")
+        if os.path.exists(idx):
+            for row in _read_json(idx).get("data", []):
+                if len(row) > 1 and row[1]:
+                    out[str(row[0])] = row[1]
+        return out
+    return _memo("quests", build)
 
 
 def tw_monsters():
@@ -247,7 +278,7 @@ def tw_instances():
         for cfc_id, inst_id in cfc.items():
             nm = dung.get(int(cfc_id))
             if nm:
-                out.setdefault(int(inst_id), nm)
+                out.setdefault(int(inst_id), official_dots(nm))
         return out
 
     return _memo("instances", build)

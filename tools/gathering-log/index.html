@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="FF14 採集紀錄追蹤 — 查詢採礦工/園藝工採集點、座標、限時開放時間，追蹤已採紀錄">
+  <meta name="description" content="FF14 採集紀錄追蹤 — 查詢採掘師/園藝師採集點、座標、限時開放時間，追蹤已採紀錄">
   <title>採集紀錄追蹤 | 水神的工具箱</title>
   <link rel="stylesheet" href="../../assets/css/tokens.css">
   <link rel="stylesheet" href="../../assets/css/theme.css">
@@ -77,6 +77,7 @@
     .mx-detail .node-card { background: none; border: none; padding: 0; }
   </style>
   <script src="../../assets/js/patch-gate.js"></script>
+  <script src="../../assets/js/official-terms.js"></script>
   <script src="../../assets/js/collection-tracker.js"></script>
   <script src="../../assets/js/theme.js"></script>
 <script src="../../assets/js/unlock-banner.js"></script>
@@ -87,7 +88,7 @@
 
   <div class="tool-header">
     <h1 class="tool-title">⛏️ 採集紀錄追蹤</h1>
-    <p class="tool-subtitle">採礦工／園藝工採集節點一覽，勾選追蹤已採物品進度</p>
+    <p class="tool-subtitle">採掘師／園藝師採集節點一覽，勾選追蹤已採物品進度</p>
     <div class="header-divider"></div>
   </div>
 
@@ -122,6 +123,9 @@
 <script>
 (function () {
   var esc = CollectionTracker.esc;
+  // 台服官方職業名（＝gathering.json 的 job；assets/js/official-terms.js，10-11 起不再是採礦工／園藝工）
+  var MIN_NAME = (window.OfficialTerms && OfficialTerms.jobName('MIN')) || '採掘師';
+  var BTN_NAME = (window.OfficialTerms && OfficialTerms.jobName('BTN')) || '園藝師';
   var $ = function (id) { return document.getElementById(id); };
 
   // 基礎元素素材（六元素 × 碎晶/水晶/晶簇 = id 2–19）：每個採集點都會掉，屬雜訊，
@@ -175,7 +179,7 @@
         '<span class="node-map">' + esc(mapName) + '</span>' +
         (x ? '<span class="node-coords">(' + x + ', ' + y + ')</span>' : '') +
         '<div class="node-tags">' +
-          '<span class="tag ' + (n.job === '採礦工' ? 'tag-min' : 'tag-btn') + '">' + esc(n.job) + ' Lv' + esc(n.level) + '</span>' +
+          '<span class="tag ' + (n.job === MIN_NAME ? 'tag-min' : 'tag-btn') + '">' + esc(n.job) + ' Lv' + esc(n.level) + '</span>' +
           (n.legendary ? '<span class="tag tag-leg">傳說</span>' : '') +
           (n.ephemeral ? '<span class="tag tag-eph">短暫</span>' : '') +
           (n.limited && !n.legendary && !n.ephemeral ? '<span class="tag tag-lim">限時</span>' : '') +
@@ -228,7 +232,7 @@
         id: n.id, mapId: n.coords.mapId, x: n.coords.x, y: n.coords.y,
         name: names.join('、'),
         // 圓點顏色沿用原本的語意：已全採＝金，否則依職業分色
-        state: nodeStatus(n) === 'done' ? 'done' : (n.job === '採礦工' ? 'min' : 'btn'),
+        state: nodeStatus(n) === 'done' ? 'done' : (n.job === MIN_NAME ? 'min' : 'btn'),
         meta: 'Lv.' + n.level,
         live: got + '/' + all.length,
         search: names.join(' ') + ' ' + (n.typeName || ''),
@@ -248,8 +252,8 @@
         searchPlaceholder: '搜尋地圖、地區或物品名稱…',
         emptyText: '目前篩選沒有可定位在地圖上的採集點。',
         states: {
-          min:  { color: 'var(--orange)', label: '⛏ 採礦工' },
-          btn:  { color: 'var(--green)',  label: '🌿 園藝工' },
+          min:  { color: 'var(--orange)', label: '⛏ ' + MIN_NAME },
+          btn:  { color: 'var(--green)',  label: '🌿 ' + BTN_NAME },
           done: { color: 'var(--gold)',   label: '已全採' }
         },
         points: gatherLogPoints,
@@ -349,8 +353,10 @@
       filters: [
         {
           id: 'job', label: '職業',
-          options: function () { return [{ value: '採礦工', label: '⛏ 採礦工' }, { value: '園藝工', label: '🌿 園藝工' }]; },
-          match: function (n, v) { return n.job === v; }
+          options: function () { return [{ value: MIN_NAME, label: '⛏ ' + MIN_NAME }, { value: BTN_NAME, label: '🌿 ' + BTN_NAME }]; },
+          match: function (n, v) { return n.job === v; },
+          // 舊分享連結 ?f_job=採礦工／園藝工（10-11 改官方名之前）→ 現在的官方名
+          alias: function (v) { var a = window.OfficialTerms && OfficialTerms.jobAbbrOf(v); return a ? OfficialTerms.jobName(a) : v; }
         },
         {
           id: 'type', label: '節點種類',

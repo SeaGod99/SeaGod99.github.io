@@ -132,7 +132,7 @@
 <p class="info-note">
   每條的任務名、接取 NPC、地點座標與手帳章節都取自台服官方字串（遊戲本體的任務表 ＋ 本站的 NPC／地圖／職業名資料庫），不做翻譯。查不到台服來源的欄位一律留白，不以英文或簡中補。<br>
   <b>系統與工具</b>：「哪個任務解鎖哪個系統」這層對應遊戲資料裡沒有欄位可抓，是人工維護的對照表，每條都附認定依據（點卡片裡的「依據」展開）。少數系統查不到單一解鎖任務（管弦樂琴樂譜綁房屋、風脈泉每區各自解鎖、市場板隨主線開放…），不會出現在這裡——<b>查不到不代表沒有</b>。<br>
-  <b>職業與行會</b>：24 個進階職業的解鎖任務由遊戲資料的 <code>ClassJob.UnlockQuest</code> 直接指定；20 個基礎職沒有這個欄位，行會任務靠對照表，其中 9 個戰鬥職另有 <code>Quest.ClassJobUnlock</code> 可交叉驗證。職業繁中名取自本站職業資料庫，行會任務標題沿用台服原文（部分生產職的任務名仍是舊譯，如「木工師行會」＝刻木匠）。台服未開放的職業不列。<br>
+  <b>職業與行會</b>：24 個進階職業的解鎖任務由遊戲資料的 <code>ClassJob.UnlockQuest</code> 直接指定；20 個基礎職沒有這個欄位，行會任務靠對照表，其中 9 個戰鬥職另有 <code>Quest.ClassJobUnlock</code> 可交叉驗證。職業名與行會任務標題都是台服官方字串（台服客戶端解包；製作採集職是木工師、鍛造師…漁師，2026-10 起全站統一）。台服未開放的職業不列。<br>
   等級寫的是<b>接取任務所需等級</b>；ARR 的進階職業另需指定基礎職達到該等級，2.0 之後的職業則是任一戰鬥職達標即可。
 </p>
 
@@ -141,6 +141,7 @@
 </footer>
 
 <script>
+function sgtFold(s) { return window.SGT_fold ? window.SGT_fold(s) : String(s == null ? '' : s).toLowerCase(); }   // 搜尋正規化：小寫＋中點摺疊（定義在 theme.js，§4.99-2）
 (function () {
   var ICON_CDN = 'https://xivapi.com';
   var DB = { data: [], jobs: [] };
@@ -249,7 +250,7 @@
       all.push(x.name, x.nameEn, x.genre, x.issuer && x.issuer.name, x.at && x.at.mapName);
       (x.prev || []).forEach(function (p) { all.push(p.name); });
     });
-    return all.filter(Boolean).join(' ').toLowerCase();
+    return sgtFold(all.filter(Boolean).join(' '));
   }
 
   function visibleSys() {
@@ -353,7 +354,7 @@
   });
   var deb;
   document.getElementById('searchInput').addEventListener('input', function () {
-    var v = this.value.trim().toLowerCase();
+    var v = sgtFold(this.value.trim());
     clearTimeout(deb);
     deb = setTimeout(function () { q = v; render(); syncURL(); }, 160);
   });
@@ -394,7 +395,7 @@
       if (focusKey && focusKey.indexOf('job:') === 0) tab = 'job';
       else if (focusKey && focusKey.indexOf('sys:') === 0) tab = 'sys';
       else if (p.get('t') === 'job') tab = 'job';
-      q = (p.get('q') || '').trim().toLowerCase();
+      q = sgtFold((p.get('q') || '').trim());
       document.getElementById('searchInput').value = p.get('q') || '';
       document.getElementById('tabSys').classList.toggle('active', tab === 'sys');
       document.getElementById('tabJob').classList.toggle('active', tab === 'job');

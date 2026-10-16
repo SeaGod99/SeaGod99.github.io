@@ -627,6 +627,7 @@ a.chip-mb{ text-decoration:none; } a.chip-mb:hover{ text-decoration:underline; }
 
 <script src="vendor/bootstrap/bootstrap.bundle.min.js"></script>
 <script>
+function sgtFold(s) { return window.SGT_fold ? window.SGT_fold(s) : String(s == null ? '' : s).toLowerCase(); }   // 搜尋正規化：小寫＋中點摺疊（定義在 theme.js，§4.99-2）
 // ════════════════════════════════════════════════════════
 // CONSTANTS
 // ════════════════════════════════════════════════════════
@@ -901,7 +902,9 @@ const JOB_TAG_MAP = {
   caster:["法系職業", "繪靈法師", "青魔道士", "黑魔道士", "赤魔道士", "召喚士"],
   pranged:["遠程物理職業", "舞者", "吟遊詩人", "機工士"],
   melee:["近戰職業", "武僧", "龍騎士", "毒蛇劍士", "武士", "奪魂者", "忍者"],
-  crafter:["製作職業", "烹調師", "鑄甲匠", "煉金術士", "製革匠", "鍛鐵匠", "裁衣匠", "雕金匠", "刻木匠", "採集職業", "捕魚人", "採礦工", "園藝工"],
+  // 台服官方名（主庫 equip.json，10-11 起）＋舊名（重建前的舊資料、舊網址仍認得）
+  crafter:["製作職業", "烹調師", "甲冑師", "鍊金術師", "皮革師", "鍛造師", "裁縫師", "金工師", "木工師", "採集職業", "漁師", "採掘師", "園藝師",
+           "鑄甲匠", "煉金術士", "製革匠", "鍛鐵匠", "裁衣匠", "雕金匠", "刻木匠", "捕魚人", "採礦工", "園藝工"],
 };
 // 取得方式篩選 tag（與 build_site.py 的 ST_TAGS 同步；改這裡記得同步後端）
 const ST_TAG_SET = new Set(["raid","quest","npc","token","scrip","craft",
@@ -940,6 +943,8 @@ const JOB_CODES = {
   "採礦工":"MIN","採礦師":"MIN","採伐工":"BTN","園藝師":"BTN","漁夫":"FSH","捕魚人":"FSH",
   // ↓ 主庫 data/equip.json 的正式名（知識庫 §4.2）。上面的舊名保留當別名，
   //   讓舊網址／舊 localStorage 仍解得開。新資料一律產出下面這組。
+  //   2026-10-11：製作採集職改台服官方名（木工師…漁師）；原本列在這裡的刻木匠…捕魚人降為別名，照留。
+  "鍛造師":"BSM","金工師":"GSM","皮革師":"LTW","鍊金術師":"ALC","採掘師":"MIN","漁師":"FSH",
   "巴術士":"ACN","冒險者":"ADV","煉金術士":"ALC","弓術士":"ARC","鑄甲匠":"ARM","占星術師":"AST",
   "黑魔道士":"BLM","青魔道士":"BLU","吟遊詩人":"BRD","鍛鐵匠":"BSM","園藝工":"BTN","幻術士":"CNJ",
   "刻木匠":"CRP","烹調師":"CUL","舞者":"DNC","龍騎士":"DRG","暗黑騎士":"DRK","捕魚人":"FSH",
@@ -1381,8 +1386,8 @@ function renderSrcPickBtn() {
 
 function renderSrcPickList() {
   const list = document.getElementById("src-detail-list");
-  const kw = document.getElementById("src-detail-q").value.trim().toLowerCase();
-  const hits = kw ? SRC_OPTIONS.filter(o => o.key.toLowerCase().indexOf(kw) >= 0) : SRC_OPTIONS;
+  const kw = sgtFold(document.getElementById("src-detail-q").value.trim());
+  const hits = kw ? SRC_OPTIONS.filter(o => sgtFold(o.key).indexOf(kw) >= 0) : SRC_OPTIONS;
   const shown = hits.slice(0, SRC_PICK_LIMIT);
   let html = `<button type="button" class="srcpick-opt" role="option" data-key=""
     aria-selected="${srcDetail ? "false" : "true"}">${currentLang === "en" ? "All sources" : "全部取得方式"}</button>`;
@@ -1628,17 +1633,17 @@ function hayMatch(e, qLow) {
       parts = [e.name, e.color,
                ...(e.pieces || []).map(p => (p.zh || "") + " " + (p.en || "") + " " + (p.ja || ""))];
     }
-    e._hay = parts.filter(Boolean).join(" ").toLowerCase();
+    e._hay = sgtFold(parts.filter(Boolean).join(" "));
   }
   if (e._haySrcGen !== SK_GEN) {
-    e._haySrc = entrySrcKeys(e).join(" ").toLowerCase();
+    e._haySrc = sgtFold(entrySrcKeys(e).join(" "));
     e._haySrcGen = SK_GEN;
   }
   return e._hay.indexOf(qLow) >= 0 || e._haySrc.indexOf(qLow) >= 0;
 }
 
 function applyFilters() {
-  const qLow = q.toLowerCase();
+  const qLow = sgtFold(q);
   if (viewMode === "sets") {
     filtered = SETS.filter(e => {
       if (favOnly && !favs.has(e.id)) return false;

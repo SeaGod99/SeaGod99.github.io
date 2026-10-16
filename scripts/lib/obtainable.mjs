@@ -22,6 +22,14 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { decode } from "@msgpack/msgpack";
+import { jobNameById } from "./official-terms.mjs";
+import { clientNameMap, officialDots } from "./client-names.mjs";
+
+/* NPC 名客戶端優先（2026-10-11，知識庫 §4.98）：om 裡的 NPC 名來自 Teamcraft tw-npcs（中點「·」、
+   少數舊譯：船頭→船夫…），這裡依 NPC id 換成台服客戶端 ENpcResident；客戶端沒有的才用 om 自帶的名字
+   （仍過守門）。快取不在又連不上就整個退回 om 的名字——建置不能因為少了這層就中止。 */
+let CLIENT_NPC = new Map();
+try { CLIENT_NPC = await clientNameMap("npc", { offline: false }); } catch { /* 退回 om 自帶的名字 */ }
 
 /* data/obtainable-methods.json（前端篩選用的精簡版）的副本條目只剩 totalInstances、沒有副本 id；
    要點名副本得回完整版 out_data/obtainable-methods.msgpack 查。第一次用到才載。 */
@@ -43,7 +51,8 @@ function instanceIdsOf(itemId) {
 let _dm = null;
 const dutyMap = () => _dm || (_dm = loadDutyMap());
 
-const JOB_TW = { 8: '刻木匠', 9: '鍛鐵匠', 10: '鑄甲匠', 11: '雕金匠', 12: '製革匠', 13: '裁衣匠', 14: '煉金術士', 15: '烹調師' };
+// 製作職 jobId → 台服官方職業名（data/official-terms.json＝台服客戶端 ClassJob；站主 2026-10-10 拍板，舊名刻木匠…捕魚人只留作別名）
+const JOB_TW = Object.fromEntries([8, 9, 10, 11, 12, 13, 14, 15].map((id) => [id, jobNameById(id)]));
 
 /** 顯示優先序：能自己去拿的排前面，靠運氣或已淘汰的排後面。 */
 export const ORDER = [
@@ -84,7 +93,7 @@ const twOnly = twText;
 
 export function npcNames(m) {
   if (!Array.isArray(m.npcs) || !m.npcs.length) return null;
-  const uniq = [...new Set(m.npcs.map((n) => twOnly(n?.name)).filter(Boolean))];
+  const uniq = [...new Set(m.npcs.map((n) => CLIENT_NPC.get(Number(n?.id)) || twOnly(n?.name)).filter(Boolean))];
   return uniq.length ? uniq.slice(0, 3).join('、') : null;
 }
 
@@ -94,8 +103,9 @@ export function npcNames(m) {
  * @param opts.skip    要略過的 type 集合（SKIP_MARKET／SKIP_CATALOG，兩者用途不同）
  * @param opts.twShop  shopId → 台服店名（補 om 自帶的英文店名）
  * @param opts.vendor  **這個物品**在 data/vendor-prices.json 的那一筆（補 vendor 型的販售者）
+ * @param opts.shopWhere  shopId → 「NPC＠地名 (x, y)」（補兌換型的 NPC；見 lib/client-shop-sources.mjs 的 npcsForShop）
  */
-export function convertOm(m, { skip = SKIP_MARKET, twShop = null, vendor = null, itemId = null } = {}) {
+export function convertOm(m, { skip = SKIP_MARKET, twShop = null, vendor = null, itemId = null, shopWhere = null } = {}) {
   if (skip.has(m.type)) return null;
   switch (m.type) {
     case 'craft': {
@@ -116,7 +126,9 @@ export function convertOm(m, { skip = SKIP_MARKET, twShop = null, vendor = null,
       if (shop) parts.push(shop);
       if (curName && curName !== shop) parts.push(amount ? `${curName} ×${amount}` : curName);
       else if (amount) parts.push(`×${amount}`);
-      return { t: '兌換', d: parts.join(' · ') || '特殊商店', w: npcNames(m) };
+      /* 摘要沒有 NPC（台服新版的店，om 的 npcs 是 null）時，呼叫端可傳 shopWhere(shopId) 補
+         「NPC＠地名 (x, y)」——來源是 lib/client-shop-sources.mjs（Teamcraft 商店結構＋台服客戶端 NPC 名）。 */
+      return { t: '兌換', d: parts.join(' · ') || '特殊商店', w: npcNames(m) || (shopWhere && m.shopId ? shopWhere(m.shopId) : null) };
     }
     case 'vendor': {
       /* 上游 om 的 `npcs` 對 vendor 型幾乎都是空的或只有英文名（加了 twOnly 之後全被擋掉），
@@ -191,8 +203,11 @@ export function convertOm(m, { skip = SKIP_MARKET, twShop = null, vendor = null,
 export function normalizeEntries(list, { max = 8 } = {}) {
   const uniq = [];
   const seen = new Set();
-  for (const e of list) {
-    if (!e) continue;
+  for (const raw of list) {
+    if (!raw) continue;
+    /* 名稱內部的「·」一律換成台服官方的「・」（店名、NPC 名、地名多半來自 Teamcraft；2026-10-11）。
+       放在這裡是因為分片層與市場頁兩個消費端都只經過這一個出口。 */
+    const e = { ...raw, d: officialDots(raw.d), w: raw.w ? officialDots(raw.w) : raw.w };
     const k = `${e.t}|${e.d}|${e.w || ''}`;
     if (seen.has(k)) continue;
     seen.add(k);

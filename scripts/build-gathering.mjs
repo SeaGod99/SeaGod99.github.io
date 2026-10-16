@@ -14,6 +14,7 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import { jobNameById } from "./lib/official-terms.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const OUT = join(__dirname, "..", "data", "gathering.json");
@@ -22,13 +23,13 @@ const TC_BASE = "https://raw.githubusercontent.com/ffxiv-teamcraft/ffxiv-teamcra
 const NODES_URL = `${TC_BASE}/nodes.json`;
 
 // Teamcraft node type → 繁中 + 職業（對應 FFXIV GatheringType 列舉）
-// 0 = 礦脈, 1 = 岩脈（皆採礦工 MIN/16）；2 = 良材, 3 = 草場（皆園藝工 BTN/17）
-// 職業名用台服官方譯名，見 SCHEMA.md 1.8 JOBS 字典
+// 0 = 礦脈, 1 = 岩脈（皆採掘師 MIN/16）；2 = 良材, 3 = 草場（皆園藝師 BTN/17）
+// 職業名＝台服官方職業名（data/official-terms.json＝台服客戶端 ClassJob；站主 2026-10-10 拍板，舊名刻木匠…捕魚人只留作別名）
 const TYPE_MAP = {
-  0: { typeName: "礦脈", job: "採礦工", jobId: 16 },
-  1: { typeName: "岩脈", job: "採礦工", jobId: 16 },
-  2: { typeName: "良材", job: "園藝工", jobId: 17 },
-  3: { typeName: "草場", job: "園藝工", jobId: 17 },
+  0: { typeName: "礦脈", job: jobNameById(16), jobId: 16 },
+  1: { typeName: "岩脈", job: jobNameById(16), jobId: 16 },
+  2: { typeName: "良材", job: jobNameById(17), jobId: 17 },
+  3: { typeName: "草場", job: jobNameById(17), jobId: 17 },
 };
 
 async function fetchJson(url) {

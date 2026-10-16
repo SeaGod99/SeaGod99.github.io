@@ -411,6 +411,7 @@
 </div>
 
 <script>
+function sgtFold(s) { return window.SGT_fold ? window.SGT_fold(s) : String(s == null ? '' : s).toLowerCase(); }   // 搜尋正規化：小寫＋中點摺疊（定義在 theme.js，§4.99-2）
 // ─── STATE ───────────────────────────────────────────────────────────────────
 let DB = { recruits:[], missions:[], chemistry:[], chemCond:[], growths:[], trainings:[], tactics:[], books:[] };
 // roster: selected NPCs with per-member settings
@@ -430,7 +431,8 @@ const STORAGE_KEY = 'ffxiv_squadron';      // 全站備份只匯出 ffxiv_ 開�
 const LEGACY_STORAGE_KEY = 'squadron_v3';  // 2026-07 以前的舊 key，載入時一次性搬移
 
 const RANK_CAP = { 1:200, 2:280, 3:400 };
-const JOB_NAME = { MRD:'斧術師', GLA:'劍術師', ARC:'弓箭手', ROG:'雙劍師', LNC:'槍術師', PGL:'格鬥家', CNJ:'幻術師', THM:'咒術師', ACN:'秘術師' };
+// 台服官方職業名（data/official-terms.json＝客戶端 ClassJob；10-11 改，舊寫法斧術師／弓箭手／秘術師…是別名）
+const JOB_NAME = { MRD:'斧術士', GLA:'劍術士', ARC:'弓術士', ROG:'雙劍士', LNC:'槍術士', PGL:'格鬥士', CNJ:'幻術士', THM:'咒術士', ACN:'巴術士' };
 const JOB_ORDER = ['GLA','MRD','PGL','LNC','ARC','ROG','CNJ','THM','ACN'];
 const CHEM_STAT = {
   1:{scope:'self',stat:'physical'}, 2:{scope:'self',stat:'mental'}, 3:{scope:'self',stat:'tactical'},
@@ -1345,14 +1347,14 @@ function closeModal() { document.getElementById('modal').classList.add('hidden')
 function closeModalBg(e) { if (e.target.id==='modal') closeModal(); }
 
 function renderNpcList() {
-  const q = document.getElementById('npcSearch').value.toLowerCase();
+  const q = sgtFold(document.getElementById('npcSearch').value);
   const tbody = document.getElementById('npcBody');
   const selectedIds = new Set(roster.map(r=>r.recruitId));
 
   let npcs = DB.recruits;
   if (modalRaceFilter !== 'all') npcs = npcs.filter(n => n.race === modalRaceFilter);
   if (modalJobFilter !== 'all') npcs = npcs.filter(n => n.job === modalJobFilter);
-  if (q) npcs = npcs.filter(n => n.name.toLowerCase().includes(q) || n.nameEn.toLowerCase().includes(q));
+  if (q) npcs = npcs.filter(n => sgtFold(n.name).includes(q) || sgtFold(n.nameEn).includes(q));
 
   if (!npcs.length) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:1.5rem;color:var(--text-muted)">沒有符合條件的隊員</td></tr>'; return; }
 

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="FFXIV 限時採集節點查詢與艾歐澤亞時間計時器 — 傳說、稀有採集點開放時間、座標、採集職業一覽">
-  <meta name="keywords" content="FFXIV, FF14, 限時採集, 傳說採集, 採集節點, 採礦工, 園藝工, ET, 艾歐澤亞時間, 繁體中文">
+  <meta name="keywords" content="FFXIV, FF14, 限時採集, 傳說採集, 採集節點, 採掘師, 園藝師, ET, 艾歐澤亞時間, 繁體中文">
   <title>限時採集節點查詢 | 水神的工具箱</title>
   <!-- 本頁原本沒接共用樣式、整套設計自己手寫（連 :root 變數都複製一份），
        所以工具列與篩選長得跟其他 12 頁不一樣。改為載入 common.css 沿用共用的
@@ -239,6 +239,7 @@
   <!-- 鬧鐘引擎（classic script，掛 window.ETAlarm）。下面的 type="module" 是延後執行的，順序天然成立。 -->
   <script src="../../assets/js/et-alarm.js"></script>
   <script src="../../assets/js/theme.js"></script>
+  <script src="../../assets/js/official-terms.js"></script>
 </head>
 <body>
 <div class="container">
@@ -281,8 +282,8 @@
     <div class="filter-section">
       <div class="filter-label">職業</div>
       <div class="filter-tags" data-fid="job">
-        <button type="button" class="filter-tag" data-v="採礦工">⛏️ 採礦工</button>
-        <button type="button" class="filter-tag" data-v="園藝工">🌿 園藝工</button>
+        <button type="button" class="filter-tag" data-v="採掘師">⛏️ 採掘師</button>
+        <button type="button" class="filter-tag" data-v="園藝師">🌿 園藝師</button>
       </div>
     </div>
     <div class="filter-section">
@@ -355,6 +356,7 @@
 </footer>
 
 <script type="module">
+function sgtFold(s) { return window.SGT_fold ? window.SGT_fold(s) : String(s == null ? '' : s).toLowerCase(); }   // 搜尋正規化：小寫＋中點摺疊（定義在 theme.js，§4.99-2）
 import { initMapModal, openMapModal } from '../../assets/js/map-modal.js';
 import { createMapExplorer } from '../../assets/js/map-explorer.js';
 import { mountEtBar } from '../../assets/js/et-bar.js';
@@ -498,7 +500,7 @@ let sortMode = 'ver';
 try { const s = localStorage.getItem(SORT_KEY); if (s === 'ver' || s === 'time') sortMode = s; } catch(e) {}
 let gridSig = '';   // 網格簽章：成員/狀態/追蹤不變時不重建 DOM（避免迷你地圖 img 每秒重建閃爍）
 
-function jobEmoji(job){ return job === '採礦工' ? '⛏️' : '🌿'; }
+function jobEmoji(job){ return job === '採掘師' ? '⛏️' : '🌿'; }   // 台服官方職業名（10-11 起；舊名採礦工）
 
 function passesFilter(node){
   if (filterState.job && node.job !== filterState.job) return false;
@@ -509,7 +511,7 @@ function passesFilter(node){
   if (filterState.produce === 'material'    &&  node.collectable) return false;
   if (trackOnly && !trackedIds.has(node.id)) return false;
   if (searchTerm) {
-    const hay = `${node.itemNames.join(' ')} ${node.mapName||''} ${node.region||''}`.toLowerCase();
+    const hay = sgtFold(`${node.itemNames.join(' ')} ${node.mapName||''} ${node.region||''}`);
     if (!hay.includes(searchTerm)) return false;
   }
   return true;
@@ -850,7 +852,8 @@ document.getElementById('gViewToggle').addEventListener('click', e=>{
 function populateSelectors(){
   // 版本改用標籤（與其他頁的「版本」篩選同一種樣式與文案格式「N.x 資料片繁中名」）
   const verTags = document.getElementById('verTags');
-  const EXP_NAME = { 2:'原初之地', 3:'蒼天之禁地', 4:'紅蓮之狂潮', 5:'暗影之逆焰', 6:'曉月之終途', 7:'金曦之遺輝' };
+  // 資料片名＝台服官方（assets/js/official-terms.js；篩選值是主版本號，舊連結不受影響）
+  const EXP_NAME = Object.fromEntries(((window.OfficialTerms && OfficialTerms.expansions) || []).map((e) => [e.major, e.name]));
   const majors = [...new Set(NODES.map(n=>String(n.patch||'').split('.')[0]).filter(Boolean))].sort();
   verTags.innerHTML = majors.map(m=>
     `<button type="button" class="filter-tag" data-v="${m}">${EXP_NAME[m] ? `${m}.x ${EXP_NAME[m]}` : `${m}.x`}</button>`
@@ -866,7 +869,7 @@ function populateSelectors(){
 
 /* ── 事件 ── */
 document.getElementById('search').addEventListener('input', e=>{
-  searchTerm = e.target.value.trim().toLowerCase(); render();
+  searchTerm = sgtFold(e.target.value.trim()); render();
 });
 // 四組篩選標籤共用一支委派：每組單選、再點一次取消（同 collection-tracker 的行為）
 document.getElementById('gFilters').addEventListener('click', e=>{

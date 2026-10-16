@@ -1,0 +1,71 @@
+# 台服版本偵測（2026-10-10）
+#
+# 2026-10 台服已上 7.25 三週，站上還停在 7.21 而沒人發現——當時的偵測法（拿 Teamcraft 台服語系檔反推）
+# 在 Teamcraft 落後時不報錯、只給舊答案（知識庫 §4.5）。這支每週二、五看一次：
+#   官方更新筆記索引 vs data/_meta.json 的 gamePatch；台服客戶端解包的最新 commit vs _meta.json 的 twClient。
+# 落後就開 issue（同一件事只開一個，狀態變了才更新、留言），追上了自動關閉；
+# 偵測本身壞掉（官方頁改版解析不到、連不上來源）也開 issue——失靈時不能安靜地當成「沒落後」。
+# 判斷邏輯全在 scripts/check-tw-version.mjs（本機可直接跑）：結束碼 0 追上／10 落後／2、3 偵測失靈。
+name: 台服版本偵測
+
+on:
+  schedule:
+    - cron: '23 2 * * 2'   # 週二 10:23 台北（cron 是 UTC，避開整點）
+    - cron: '23 2 * * 5'   # 週五 10:23 台北
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /data/_meta.json
+            /scripts/check-tw-version.mjs
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: 偵測
+        id: w
+        run: |
+          rc=0; node scripts/check-tw-version.mjs > watch.json || rc=$?
+          echo "rc=$rc" >> "$GITHUB_OUTPUT"
+          cat watch.json
+      - name: 開／更新／關閉 issue
+        run: |
+          rc=${{ steps.w.outputs.rc }}
+          gh label create version-watch --repo "$REPO" --color 0E8A16 --description "台服版本偵測" --force
+          n=$(gh issue list --repo "$REPO" --label version-watch --state open --json number --jq '.[0].number')
+          if [ "$rc" = 0 ]; then
+            [ -n "$n" ] && gh issue close "$n" --repo "$REPO" --comment "站上已追上台服（官方筆記與客戶端解包都不比站上新），自動關閉。"
+            exit 0
+          fi
+          if [ "$rc" = 10 ]; then
+            title="台服有新版：$(jq -r '.reason | join("；")' watch.json)"
+            body=$(jq -r '"- 站上 gamePatch：\(.site)（資料取自客戶端 \(.siteClient)）\n- 官方更新筆記最新版：\(.official // "抓不到")\n- 台服客戶端解包：\(.client.msg // "抓不到")（\(.client.date // "-")）\n- Teamcraft 台服語系檔：\(.teamcraft.msg // "抓不到")（\(.teamcraft.date // "-")）\(if .teamcraft.behindOfficial then "——還沒跟上官方，升版不能走它" else "" end)\n\n升版步驟見 docs/專案慣例與記憶.md §4.5（名稱以台服客戶端解包為準）。\n\n<!-- state:\(.official)|\(.client.ver)|\(.siteClient) -->"' watch.json)
+          else
+            title="台服版本偵測失靈"
+            body=$(jq -r '"偵測沒有結論（結束碼 '"$rc"'）：\n\(.errors // [.error] | map("- " + .) | join("\n"))\n\n官方頁：https://www.ffxiv.com.tw/web/special/patchnote_log/ （GitHub runner 的雲端 IP 若被擋，請改成本機跑 node scripts/check-tw-version.mjs）\n\n<!-- state:error|'"$rc"' -->"' watch.json)
+          fi
+          if [ -z "$n" ]; then
+            gh issue create --repo "$REPO" --label version-watch --title "$title" --body "$body"
+          else
+            old=$(gh issue view "$n" --repo "$REPO" --json body --jq .body | grep -o '<!-- state:[^>]*-->' || true)
+            new=$(printf '%s' "$body" | grep -o '<!-- state:[^>]*-->' || true)
+            if [ "$old" != "$new" ]; then
+              gh issue edit "$n" --repo "$REPO" --title "$title" --body "$body"
+              gh issue comment "$n" --repo "$REPO" --body "狀態變了：$title"
+            fi
+          fi

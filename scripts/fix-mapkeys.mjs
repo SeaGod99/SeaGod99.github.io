@@ -29,13 +29,22 @@ function mkImage(key) {
 const norm = (s) => (s || "").toLowerCase().replace(/['’\-\s.]/g, "");
 
 // 英文天氣 → 繁中（XIVAPI 取的是英文名）
+// ⚠ 官方名以 data/official-terms.json 為準（台服客戶端 Weather.Name）；這張表與 assets/js/eorzea-weather.js 的
+//   WEATHER_INFO 要同步（§4.4），validate-official-terms.mjs 會比對。2026-10-11 改官方：陰天→陰雲、降雪→小雪、
+//   放電現象→靈電、星磁暴→磁暴、Hot Spells 是「高溫」不是「熱浪」。
+// ⚠ 英文名翻譯本身就有洞：同一個英文名在台服可能是兩個字（Gales＝強風／暴風），而這支用英文地名配對、
+//   同名取第一列，副本圖的天氣常抄到別列的。**跑完必接 node scripts/patch-map-weather-names.mjs --apply**，
+//   它依 Weather row id 從客戶端重取官方名（槽位不一致的圖會列出來）。
 const WEATHER_TC = {
-  "Clear Skies": "碧空", "Fair Skies": "晴朗", "Clouds": "陰天", "Fog": "薄霧",
+  "Clear Skies": "碧空", "Fair Skies": "晴朗", "Clouds": "陰雲", "Fog": "薄霧",
   "Wind": "微風", "Gales": "強風", "Rain": "小雨", "Showers": "暴雨",
   "Thunder": "打雷", "Thunderstorms": "雷雨", "Dust Storms": "揚沙", "Sandstorms": "沙塵暴",
-  "Hot Spells": "熱浪", "Heat Waves": "熱浪", "Snow": "降雪", "Blizzards": "暴雪",
-  "Gloom": "妖霧", "Umbral Wind": "靈風", "Umbral Static": "放電現象",
-  "Moon Dust": "月塵", "Astromagnetic Storm": "星磁暴", "Astromagnetic Storms": "星磁暴",
+  "Hot Spells": "高溫", "Heat Waves": "熱浪", "Snow": "小雪", "Blizzards": "暴雪",
+  "Gloom": "妖霧", "Umbral Wind": "靈風", "Umbral Static": "靈電",
+  "Moon Dust": "月塵", "Astromagnetic Storm": "磁暴", "Astromagnetic Storms": "磁暴",
+  "Dimensional Disruption": "次元", "Everlasting Light": "無盡光", "Brilliance": "光天", "Polarization": "星靈",
+  "Pandæmonium": "萬魔殿", "Transcendence": "神域", "Vacuity": "虛無", "Liminality": "閾限",
+  "Atmospheric Phantasms": "幻怪", "Illusory Disturbances": "幻妖",
   "Tension": "緊張",
 };
 const tcWeather = (en) => WEATHER_TC[en] || en;

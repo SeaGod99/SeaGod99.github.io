@@ -9,7 +9,7 @@
 // ── 推薦標準（2026-07-25 重訂）────────────────────────────────
 // 舊標準只排「取得管道」的優先序（NPC＞市場＞製作＞副本），完全沒把染色算進成本，
 // 於是出現「省事 80 分只要 116 金幣」這種結論——實際上它要染的萄乾棕卡在蜥蜴人族聲望，
-// 而 100 分方案要的東洲藍是刻木匠製作限定且不可交易。標價便宜，門檻卻可能高到做不到。
+// 而 100 分方案要的東洲藍是木工師製作限定且不可交易。標價便宜，門檻卻可能高到做不到。
 // 新標準把一套方案的代價拆成兩層，**依序**比較：
 //   ① 門檻數（部族聲望／製作職業／限時活動／看運氣）—— 能不能做到
 //   ② 金幣總額（裝備 + 染劑，染劑每染一格算一支）—— 要花多少
@@ -592,7 +592,7 @@ const out = {
   theme: {
     name: theme?.name ?? state.lastOptions.reportTitle,
     nameEn: state.lastOptions.reportTitle,
-    nameSource: theme ? "cn-hant" : "en", // cn-hant ＝簡轉繁、非台服官方譯名，前端要標註
+    nameSource: theme ? (theme.nameSource || "cn-hant") : "en", // tw-client＝台服原文；cn-hant＝簡轉繁、非台服官方譯名，前端要標註
   },
   scoring: { ...SCORING, base, hasAccessoryHint: hasAcc, hintSlots, dyeSlots, audit },
   plans,

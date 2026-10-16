@@ -95,8 +95,8 @@ push("物品獎勵的收藏頁連結全部對得到該頁的 keyOf", linked.leng
   push("  有圖示的道具都帶了圖示", rewarded.every((a) => !items.get(a.item.id)?.icon || a.item.i === items.get(a.item.id).icon));
   const gear = rewarded.filter((a) => items.get(a.item.id)?.equip);
   push("裝備獎勵都有部位／裝備等級／品級／可裝備職業", gear.length > 0 && gear.every((a) => a.item.eq && a.item.eq.slot && a.item.eq.lv && a.item.eq.il && a.item.eq.jobs), `${gear.length} 件`);
-  /* 職業名鐵則：個別職業一律是 equip.json 的名字。jobCategories 的單一職業字串是舊譯（「木工師」＝刻木匠），
-     只准用它的兩個群組字串。 */
+  /* 職業名鐵則：個別職業一律是 equip.json 的名字（10-11 起 equip.json 就是台服官方名：木工師…漁師）。
+     jobCategories 只准用它的兩個群組字串——它的單一職業字串有時寫法不同，而且要跟全站同一個來源。 */
   const GROUPS = new Set(["所有職業", "戰鬥精英 魔法導師"]);
   const badJobs = gear.filter((a) => !GROUPS.has(a.item.eq.jobs) && !a.item.eq.jobs.split("、").every((n) => jobNames.has(n)));
   push("  可裝備職業只用 equip.json 的職業名（或兩個官方群組字串），沒有舊譯", badJobs.length === 0, badJobs.slice(0, 3).map((a) => a.item.eq.jobs).join(" ｜ "));
@@ -241,13 +241,24 @@ async function boot(query = "", seed = null) {
   push("系列：≥300 個，每個系列的階數是 1..N 連續", series.size >= 300 && badSeries.length === 0, `${series.size} 個系列，錯 ${badSeries.length}`);
   push("前置成就的 id 都在資料裡", A.every((a) => !a.pre || a.pre.every((id) => byId.has(id))));
   /* 連結要名稱對得上：任務連結的名稱一定出現在說明裡（或說明寫的是它去掉括號的部分）；
-     釘住兩個已知的錯配——#1165 說明寫羅波那但 Key 是俾斯麥的任務、#3626 說明寫「極」但對到一般難度 */
-  const sp = (x) => String(x || "").replace(/[\s　]/g, "");
+     釘住已知的錯配——#1165 說明寫羅波那但 Key 是俾斯麥的任務（#3626 原本也列在這裡，10-10 查證是誤判，見下） */
+  // 中點摺成一種：說明是 7.25 客戶端（「・」），比對來源可能是舊版（「·」）——與建置腳本的 sp() 同一套
+  const sp = (x) => String(x || "").replace(/[\s　]/g, "").replace(/[・·•‧]/g, "・");
   const badQ = A.filter((a) => (a.lk || []).some((l) => l[0] === "任務" && !sp(a.desc).includes(sp(l[1]).split("（")[0])));
   push("任務連結的任務名都寫在說明裡（名稱對得上才連）", A.some((a) => (a.lk || []).some((l) => l[0] === "任務")) && badQ.length === 0, badQ.slice(0, 3).map((a) => a.id).join(","));
-  push("  已知錯配不連：#1165 沒有任務連結、#3626 沒有副本連結",
-    !(byId.get(1165)?.lk || []).some((l) => l[0] === "任務") && !(byId.get(3626)?.lk || []).some((l) => l[0] === "副本"), "");
-  const dun = new Set(JSON.parse(read("data/dungeons.json")).data.map((d) => "tools/duty-codex/?id=duty:" + d.id));
+  /* 10-10 任務名改取台服客戶端後，名字對得上的新任務（7.25）任務查詢頁還沒收——連過去是空白頁 */
+  const qIdx = new Set(JSON.parse(read("data/quests/_index.json")).data.map((r) => r[0]));
+  const badQT = A.filter((a) => (a.lk || []).some((l) => l[0] === "任務" && !qIdx.has(+String(l[2]).split("id=")[1])));
+  push("  任務連結都指向任務查詢頁收錄的任務（data/quests/_index.json）", badQT.length === 0, badQT.slice(0, 3).map((a) => a.id).join(","));
+  push("  已知錯配不連：#1165 沒有任務連結（說明寫羅波那、Key 是俾斯麥的任務）",
+    !(byId.get(1165)?.lk || []).some((l) => l[0] === "任務"), "");
+  /* #3626 原本也被當成錯配（「說明寫極、Key 對到一般難度」），10-10 查清楚是誤判：Key 20101 → CFC 1031 就是
+     「極 澤蓮尼亞殲滅戰」，與說明一致。當時沒連上是因為 1031 的站內名是非官方的「澤蓮尼婭殲殛戰」；
+     副本名改取台服客戶端後名字對上了。改釘「要連到極、不是一般難度（1030）」。 */
+  push("  #3626 連到「極 澤蓮尼亞殲滅戰」（1031），不是一般難度",
+    (byId.get(3626)?.lk || []).some((l) => l[0] === "副本" && l[2] === "tools/duty-codex/?id=duty:1031") &&
+    !(byId.get(3626)?.lk || []).some((l) => l[2] === "tools/duty-codex/?id=duty:1030"), JSON.stringify(byId.get(3626)?.lk || null));
+  const dun = new Set(JSON.parse(read("data/dungeons.json")).data.filter((d) => d.name).map((d) => "tools/duty-codex/?id=duty:" + d.id));
   push("副本連結都指向 dungeons.json 的 id", A.every((a) => (a.lk || []).every((l) => l[0] !== "副本" || dun.has(l[2]))));
   const STORES = new Set(["ffxiv_mounts_owned", "ffxiv_minions_owned", "ffxiv_orchestrion_owned", "ffxiv_barding_owned",
     "ffxiv_ornaments_owned", "ffxiv_triadcards_owned", "ffxiv_aether_currents_unlocked"]);

@@ -230,7 +230,7 @@ async function bootAt(path, query, extra = []) {
   return { window, doc: window.document, errs };
 }
 {
-  const m = await bootAt('tools/macro-translator/index.html', '', ['assets/js/item-names.js']);
+  const m = await bootAt('tools/macro-translator/index.html', '', ['assets/js/item-names.js', 'assets/js/macro-parse.js']);
   m.doc.getElementById('sampleBtn').dispatchEvent(new m.window.MouseEvent('click', { bubbles: true }));
   await new Promise((r) => setTimeout(r, 1200));
   const links = [...m.doc.querySelectorAll('#summary .codex a')].map((a) => ({ name: a.textContent, href: a.getAttribute('href') }));

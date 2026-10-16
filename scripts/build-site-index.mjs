@@ -24,7 +24,8 @@ import { readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { gzipSync } from "node:zlib";
-import { isTw } from "./lib/tw-text.mjs";
+import { isTw, isTranslated } from "./lib/tw-text.mjs";
+import { isOddOfficial } from "./lib/official-odd-names.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const DATA = join(ROOT, "data");
@@ -34,13 +35,14 @@ const apply = process.argv.includes("--apply");
 // keyOf 的寫法必須與該收藏頁的設定一致——對不上的話 ?id= 會安靜地捲不到東西。
 const SOURCES = [
   ["坐騎", "mounts", "collections/mounts/", (x) => ["id:" + x.id, x.name]],
-  ["寵物", "minions", "minions/", (x) => [String(x.id), x.name]],            // 純數字：沿用舊存檔格式
-  ["樂譜", "orchestrion", "collections/orchestrion/", (x) => ["id:" + x.id, x.name]],
+  ["寵物", "minions", "minions/", (x) => [String(x.id), x.name], { latin: true }],   // 純數字：沿用舊存檔格式
+  ["樂譜", "orchestrion", "collections/orchestrion/", (x) => ["id:" + x.id, x.name], { latin: true }],
   ["鳥鞍", "barding", "collections/barding/", (x) => ["id:" + x.id, x.name]],
   ["時尚配飾", "ornaments", "collections/ornaments/", (x) => ["id:" + x.id, x.name]],
+  ["臉部配件", "facewear", "collections/ornaments/", (x) => ["glasses:" + x.id, x.name]],   // 併在時尚配飾頁；keyOf 前綴同該頁（色版名走 aliases）
   ["髮型", "hairstyles", "collections/hairstyles/", (x) => ["id:" + x.id, x.name]],
   ["表情", "emotes", "collections/emotes/", (x) => ["id:" + x.id, x.name]],
-  ["幻卡", "triple-triad", "collections/triple-triad/", (x) => ["id:" + x.id, x.name]],
+  ["幻卡", "triple-triad", "collections/triple-triad/", (x) => ["id:" + x.id, x.name], { latin: true }],
   ["青魔法", "blue-magic", "collections/blue-magic/", (x) => ["id:" + x.id, x.name]],
   ["探索筆記", "exploration-log", "collections/exploration-log/", (x) => ["id:" + x.id, x.name]],
   ["魚", "fishes", "tools/fishing/", (x) => [String(x.itemId), x.name]],
@@ -48,6 +50,11 @@ const SOURCES = [
   // 它不像追蹤頁那樣「捲到某張卡」，而是把該頁篩到只剩那一個副本——520 張卡捲過去不如直接篩。
   ["副本", "dungeons", "tools/duty-codex/", (x) => ["duty:" + x.id, x.name]],   // 10-03 起用 dungeons.json 的 id（5 組同名，用名稱會篩出好幾張）
 ];
+
+/* { latin: true }：台服官方名本來就是拉丁字的（樂譜「Answers」「Heavensward」114 首、幻卡「2B」「9S」11 張、
+   寵物「Nano Lord」「2B」2 隻——都與台服客戶端逐字相同，頁面也照樣顯示）。isTw() 要求有漢字，會把它們當成
+   「沒有台服名」擋掉，面板就搜不到頁面上明明有的東西。這幾類改用 isTranslated()（只擋假名與內部佔位列），
+   與各頁的 include() 一致；坐騎、鳥鞍不放行——它們的頁面把「名稱＝英文名」當成未翻譯（2026-10-11）。 */
 
 // 排在**整份索引最後**的類別（在討伐目標／文書／系統解鎖／職業行會之後）。
 // 面板目前只取「索引順序的前 40 筆」、不依相關度排序（第二輪路線圖 cmd-palette-ranking），
@@ -68,20 +75,24 @@ async function main() {
   const pnum = (p) => { const m = p == null ? null : String(p).match(/^(\d+)\.(\d+)/); return m ? parseFloat(`${m[1]}.${m[2].padEnd(2, "0")}`) : null; };
   const released = (p) => { const v = pnum(p), g = pnum(gamePatch); return v == null || g == null || v <= g; };
 
-  async function addSource([label, file, path, fn]) {
+  async function addSource([label, file, path, fn, opt = {}]) {
     const db = JSON.parse(await readFile(join(DATA, `${file}.json`), "utf8"));
     const ti = types.length;
     types.push({ label, path, patch: file });
-    let n = 0, noTw = 0, gated = 0;
+    let n = 0, noTw = 0, gated = 0, aliased = 0;
     for (const e of db.data) {
       const [key, name] = fn(e);
       // 無台服繁中名＝台服未開放，本來就不該被搜到（鐵則）
-      if (!name || !isTw(name)) { noTw++; continue; }
+      if (!name || !(isTw(name) || (opt.latin && isTranslated(name)))) { noTw++; continue; }
       if (!released(e.patch)) { gated++; continue; }
-      rows.push(key == null ? [name, ti] : [name, ti, key]);
+      /* 第 4 欄 aliases（2026-10-11）：社群站舊譯名、上一版的官方名（patch-collection-names-client.mjs 收的）。
+         面板比對名稱時也比它，顯示的仍是現名——搜「白風」找得到「純白微風」。 */
+      const al = (e.aliases || []).filter((a) => isTw(a) && a !== name);
+      if (al.length) { aliased++; rows.push([name, ti, key ?? null, al]); }
+      else rows.push(key == null ? [name, ti] : [name, ti, key]);
       n++;
     }
-    report.push(`${label} ${n}${noTw ? `（略過無台服名 ${noTw}）` : ""}${gated ? `（略過版本 > ${gamePatch} ${gated}）` : ""}`);
+    report.push(`${label} ${n}${noTw ? `（略過無台服名 ${noTw}）` : ""}${gated ? `（略過版本 > ${gamePatch} ${gated}）` : ""}${aliased ? `（含別名 ${aliased}）` : ""}`);
   }
   for (const s of SOURCES) await addSource(s);
 
@@ -132,7 +143,8 @@ async function main() {
     const ti = types.length;
     types.push({ label: "任務", path: "tools/quest-finder/" });
     let n = 0;
-    for (const r of qi.data) { if (!isTw(r[1])) continue; rows.push([r[1], ti, String(r[0])]); n++; }
+    // 官方原文本來就不是漢字的任務（「…●…」「…Hello, World…」，lib/official-odd-names.mjs 逐筆登記）也收——任務查詢頁有它們
+    for (const r of qi.data) { if (!isTw(r[1]) && !isOddOfficial("quest", r[0])) continue; rows.push([r[1], ti, String(r[0])]); n++; }
     report.push(`任務 ${n}`);
   }
 

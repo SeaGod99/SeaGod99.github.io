@@ -24,7 +24,9 @@ const BASE = 'https://v2.xivapi.com';
 // ※ 30 以前被註記成 Bozja，是錯的（2026-07-28 實查 XIVAPI ContentType 30 = "V&C Dungeon Finder"）。
 // 注意：幻卡(Triple Triad)、麻將、PvP(ContentType=6,9) 不在清單，直接過濾
 // 絕境戰(Ultimate) 的 HighEndDuty=true，用此與 Alliance Raid 區分
-const VALID_CONTENT_TYPES = new Set([2, 3, 4, 5, 7, 21, 26, 28, 30]);
+// ※ 29／37／38 是 2026-10-10 加的（客戶端 ContentType 台服名：29「天佑女王」＝博茲雅與女王古殿、
+//   37「滅激鬥戰」、38「蜃景幻界新月島」）。與 patch-dungeon-add-missing.mjs 的清單要同步。
+const VALID_CONTENT_TYPES = new Set([2, 3, 4, 5, 7, 21, 26, 28, 29, 30, 37, 38]);
 
 // 這些 ContentType 有自己的進入介面、不掛在一般隨機任務裡，所以 IsInDutyFinder=false，
 // 但它們是**真的副本**，不能被下面那道 IsInDutyFinder 過濾擋掉（2026-07-28 修）。
@@ -34,7 +36,7 @@ const VALID_CONTENT_TYPES = new Set([2, 3, 4, 5, 7, 21, 26, 28, 30]);
 //   30 多變迷宮（希拉狄哈水道／六根山／阿羅阿羅島，含 Another／零式變體）
 // 漏了它們的代價：幻卡有 10 張卡的取得方式指向多變迷宮，卻因為 dungeons.json 沒收
 // 而只能顯示「副本 ×3」；青魔也有一筆卡在這。
-const DUTY_FINDER_EXEMPT_TYPES = new Set([7, 21, 26, 30]);
+const DUTY_FINDER_EXEMPT_TYPES = new Set([7, 21, 26, 29, 30, 38]);   // 29 博茲雅／38 新月島也有自己的入口（10-10）
 
 const EXPANSION_MAP = {
   'A Realm Reborn': 'ARR',
@@ -72,6 +74,9 @@ function resolveType(ctValue, nameEn, highEnd, allianceRoulette, isSavage) {
   if (ctValue === 28) return 'alliance_raid';
   // 30 是 V&C Dungeon Finder（多變迷宮／異聞迷宮），不是博茲雅——先前回傳 'bozja' 是錯的
   if (ctValue === 30) return 'variant_dungeon';
+  if (ctValue === 29) return 'save_the_queen';          // 天佑女王（博茲雅、女王古殿）
+  if (ctValue === 37) return 'chaotic_alliance_raid';   // 滅激鬥戰
+  if (ctValue === 38) return 'occult_crescent';         // 蜃景幻界新月島
   return 'other';
 }
 

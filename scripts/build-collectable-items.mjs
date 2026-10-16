@@ -14,37 +14,30 @@
 //   `AlwaysCollectable` 不是「專屬收藏品」的意思——64 個「收藏用○○」裡有 48 個是 false。
 //   要判斷「這件東西能不能當收藏品」，`IsCollectable` 才是對的旗標。
 //
+// 來源（2026-10-10 改）：**台服客戶端解包 Item.IsCollectable**（scripts/lib/tc-datamining.mjs，讀快取不連網）。
+//   原本逐頁掃 XIVAPI（106 次請求），而且 07-26 之後沒人重跑——7.15／7.21 的 268 件收藏品一直不在清單裡，
+//   採集頁的「收藏品」篩選因此漏了 4 個 Lv95 節點。客戶端的旗標與 XIVAPI 是同一欄，現有 1,023 件全在其中。
+//
 // 執行（repo 根目錄）：
 //   node scripts/build-collectable-items.mjs            ← 產生／更新
 //   node scripts/build-collectable-items.mjs --check    ← 只比對，不寫入（CI／驗收用）
-// 需求：Node 18+（內建 fetch）。重建 items.json 後建議重跑一次。
+//   node scripts/build-collectable-items.mjs --refresh  ← 重抓客戶端 Item.csv（升版時）
+// 重建 items.json 後要重跑一次（只收 items.json 有的＝台服已開放），接著 build-fish-uses.mjs。
 
 import { readFile, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import { loadTcSheet } from "./lib/tc-datamining.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
 const ITEMS_JSON = join(ROOT, "data", "items.json");
 const OUT_JSON = join(ROOT, "data", "collectable-items.json");
-const API = "https://v2.xivapi.com/api/sheet/Item";
 
 async function fetchCollectableIds() {
-  const ids = new Set();
-  let after = 0, pages = 0;
-  while (true) {
-    const url = `${API}?fields=IsCollectable&limit=500&after=${after}`;
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`Item sheet HTTP ${res.status} @ after=${after}`);
-    const rows = (await res.json()).rows || [];
-    if (!rows.length) break;
-    for (const r of rows) if (r.fields?.IsCollectable) ids.add(r.row_id);
-    after = rows[rows.length - 1].row_id;
-    pages++;
-    process.stdout.write(`  已掃 ${pages} 頁（至 row ${after}），累計收藏品 ${ids.size}\r`);
-  }
-  console.log("");
-  return ids;
+  const rows = await loadTcSheet("Item", { refresh: process.argv.includes("--refresh") });
+  if (!rows.length || !("IsCollectable" in rows[1])) throw new Error("客戶端 Item.csv 找不到 IsCollectable 欄，欄名可能改了，中止");
+  return new Set(rows.filter((r) => r.IsCollectable === "True").map((r) => r.id));
 }
 
 async function main() {
@@ -52,18 +45,18 @@ async function main() {
   const itemsDb = JSON.parse(await readFile(ITEMS_JSON, "utf8"));
   const known = new Set(itemsDb.data.map((i) => i.id));
 
-  console.log("向 XIVAPI 掃 Item sheet 的 IsCollectable…");
+  console.log("讀台服客戶端 Item.IsCollectable…");
   const all = await fetchCollectableIds();
 
   // 只留 items.json 有的（＝台服有繁中名的物品），與全站「查不到＝未開放」規則一致
   const ids = [...all].filter((id) => known.has(id)).sort((a, b) => a - b);
-  console.log(`XIVAPI 收藏品共 ${all.size} 種，其中 ${ids.length} 種在 items.json 內`);
+  console.log(`客戶端收藏品共 ${all.size} 種，其中 ${ids.length} 種在 items.json 內`);
 
   const out = {
     schema: "collectable-items",
     patch: itemsDb.patch,
     updated: new Date().toISOString().slice(0, 10),
-    source: "xivapi Item.IsCollectable",
+    source: "台服客戶端解包 Item.IsCollectable（scripts/lib/tc-datamining.mjs）",
     note: "可當收藏品採集／交付的物品 id。名稱不一定有「收藏用」前綴，勿用名稱判斷。",
     count: ids.length,
     data: ids,

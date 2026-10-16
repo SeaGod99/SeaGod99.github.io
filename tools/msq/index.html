@@ -108,6 +108,7 @@
 </footer>
 
 <script>
+function sgtFold(s) { return window.SGT_fold ? window.SGT_fold(s) : String(s == null ? '' : s).toLowerCase(); }   // 搜尋正規化：小寫＋中點摺疊（定義在 theme.js，§4.99-2）
 (function () {
   'use strict';
 
@@ -129,9 +130,9 @@
   }
 
   function search() {
-    var q = $('q').value.trim().toLowerCase();
+    var q = sgtFold($('q').value.trim());
     if (!q) { $('hits').innerHTML = ''; return; }
-    var hit = DB.data.filter(function (x) { return x.name.toLowerCase().indexOf(q) >= 0; }).slice(0, 40);
+    var hit = DB.data.filter(function (x) { return sgtFold(x.name).indexOf(q) >= 0; }).slice(0, 40);
     $('hits').innerHTML = hit.length
       ? hit.map(function (x) {
           return '<button type="button" class="hit" data-id="' + x.id + '">' +

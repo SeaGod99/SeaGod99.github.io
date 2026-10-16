@@ -171,8 +171,8 @@ def stamp_badges(piece, bidx):
 # 職業繁中名一律讀主庫 data/equip.json 的 names 表（全站權威，見知識庫 §4.2）。
 # ⚠ 這裡原本自帶一張硬寫的表，33 個裡 16 個與主庫不符：白魔法師（應為白魔道士）、
 #   召喚師（召喚士）、占星術士（占星術師）、鐮刀師（奪魂者）、劍蛇師（毒蛇劍士）、
-#   製作職全部寫成「師」（應為刻木匠／鍛鐵匠／鑄甲匠／雕金匠／製革匠／裁衣匠／烹調師）、
-#   採伐工（園藝工）。**不要再在這裡另抄一份。**
+#   採伐工（園藝師）。**不要再在這裡另抄一份。**
+#   （製作採集職 2026-10-11 起是台服官方名木工師…漁師；當年這裡把「師」當錯、改成「匠」，其實「師」才是官方。）
 _JOB_ZH = maindb.job_names()
 _ROLE_SETS = [
     ("盾衛職業", {"PLD", "WAR", "DRK", "GNB"}),
@@ -549,14 +549,15 @@ def transform_sets():
             "type": "set",
             "id": s["id"],
             "layer": s["layer"],
-            "name_zh": s["name_zh"], "name_ja": s["name_ja"], "name_en": s["name_en"],
-            "source": source,
+            # 套裝名與來源裡的商人名多半來自 Teamcraft（「布魯克·歐伽 i645 套裝」），中點照台服客戶端換成「・」
+            "name_zh": maindb.official_dots(s["name_zh"]), "name_ja": s["name_ja"], "name_en": s["name_en"],
+            "source": maindb.official_dots(source),
             "st": st_from_source(source or ""),
             "patch": s["patch"],
             "job": job_label,
             "tags": tags,
             "tw": bool(s.get("zh_ok")),
-            "pieces": [{k: p[k] for k in
+            "pieces": [{k: (maindb.official_dots(p[k]) if k in ("zh", "src") else p[k]) for k in
                         ("id", "slot", "zh", "ja", "en", "dye", "mb", "icon",
                          "patch", "lv", "src")
                         if k in p and p[k] != ""}
@@ -730,6 +731,12 @@ def main():
         print(f"  徽章蓋章（社群）：{n_hit}/{n_all} 件")
     if reconmap:
         print(f"  空殼重建合併：{sum(1 for m in mirapri if m.get('id') in reconmap)} 套")
+    # 裝備的取得方式字串（enrich 快取，NPC／副本名多半是 Teamcraft 的「·」）照台服客戶端換成「・」（2026-10-11）。
+    # **只動 equipments[].source**——套裝名、投稿者暱稱是玩家自己打的字，不碰。
+    for m in mirapri:
+        for eq in m.get("equipments", []):
+            if isinstance(eq, dict) and isinstance(eq.get("source"), str):
+                eq["source"] = maindb.official_dots(eq["source"])
 
     # 套用 action=="remove"：不顯示（其餘決定不影響網站）。
     if removed:

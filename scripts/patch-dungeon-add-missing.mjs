@@ -18,14 +18,15 @@
  * 實際代價：幻卡有 10 張卡的取得方式指向多變迷宮，先前只能顯示「副本 ×3」。
  *
  * ── 台服繁中名怎麼來 ──────────────────────────────────────────────────────
- * 沿用 `patch-dungeon-names.mjs` 的對應鏈，**不自己翻譯**：
- *   CFC row id → `ContentFinderCondition.Content`（InstanceContent id）
- *              → Teamcraft `tw/tw-instances.json` 的 `.tw`
- * 三座多變迷宮實測都查得到，而且台服叫「**多變迷宮**」不是「異聞迷宮」
- * （36001 多變迷宮 希拉狄哈水道／36002 六根山／36003 阿羅阿羅島）——
- * 這正是不能憑印象寫名字的例子。
+ * 2026-10-10 起：**台服客戶端 ContentFinderCondition.Name（依 CFC row id）**，與 patch-dungeon-names.mjs 同一個來源。
+ * （舊做法走 CFC.Content → Teamcraft tw-instances，不看 ContentLinkType，PublicContent 類會撞到同號的迷宮；
+ *  而且 tw-instances 停在台服 7.2。）多變迷宮台服叫「多變迷宮」不是「異聞迷宮」——不能憑印象寫名字。
  *
  * **拿不到台服名的一律不加**（依繁中名鐵則：台服未開放就不顯示），列在報告裡。
+ *
+ * ── 2026-10-10 加的三類（客戶端 ContentType 的台服名）────────────────────────
+ *   29「天佑女王」（南方博茲雅戰線、扎杜諾爾高原、女王古殿×2）、37「滅激鬥戰」、38「蜃景幻界新月島」。
+ *   29、38 有自己的進入介面（不在任務搜尋器），所以也列入豁免。build-dungeons.mjs 同步加。
  *
  * 執行：
  *   node scripts/patch-dungeon-add-missing.mjs            # dry-run
@@ -49,17 +50,20 @@ const CACHE_CFC = path.join(ROOT, 'out_data', 'cfc-missing-rows.json');
 const CACHE_TWI = path.join(ROOT, 'out_data', 'tw-instances.json');
 
 // 與 build-dungeons.mjs 同一份白名單／豁免清單，改任一邊要同步另一邊
-const VALID_CONTENT_TYPES = new Set([2, 3, 4, 5, 7, 21, 26, 28, 30]);
-const DUTY_FINDER_EXEMPT_TYPES = new Set([7, 21, 26, 30]);
+const VALID_CONTENT_TYPES = new Set([2, 3, 4, 5, 7, 21, 26, 28, 29, 30, 37, 38]);
+const DUTY_FINDER_EXEMPT_TYPES = new Set([7, 21, 26, 29, 30, 38]);
 
 // ContentType → 本站 type 字串（只涵蓋本支會補的那幾類；其餘沿用 build 腳本的判斷）
-const TYPE_BY_CT = { 7: 'quest_battle', 21: 'deep_dungeon', 26: 'eureka', 30: 'variant_dungeon' };
-
-// ExVersion row id → 站內統一的資料片繁中名（同 patch-dungeon-expansion.mjs）
-const EXVERSION_TW = {
-  0: '原初之地', 1: '蒼天之禁地', 2: '紅蓮之狂潮',
-  3: '暗影之逆焰', 4: '曉月之終途', 5: '金曦之遺輝',
+const TYPE_BY_CT = {
+  7: 'quest_battle', 21: 'deep_dungeon', 26: 'eureka', 30: 'variant_dungeon',
+  29: 'save_the_queen', 37: 'chaotic_alliance_raid', 38: 'occult_crescent',
 };
+const PARTY_BY_TYPE = { trial_hard: 8, trial_ex: 8, chaotic_alliance_raid: 24 };
+const REFRESH = process.argv.includes('--refresh');
+
+// ExVersion row id → 台服官方資料片名（data/official-terms.json，同 patch-dungeon-expansion.mjs；2026-10-11 起不再手寫）
+const EXVERSION_TW = Object.fromEntries(
+  JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'official-terms.json'), 'utf8')).expansions.map((e) => [e.ex, e.name]));
 
 const readData = (rel) => JSON.parse(fs.readFileSync(path.join(ROOT, rel), 'utf8'));
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -79,7 +83,8 @@ async function fetchJson(url, tries = 3) {
 
 /** 抓整張 ContentFinderCondition（含判斷所需欄位＋Content 連結） */
 async function loadCfc() {
-  if (fs.existsSync(CACHE_CFC)) return readData('out_data/cfc-missing-rows.json');
+  // 快取裡沒有的新列（台服升版後才出現的副本）要 --refresh 重抓
+  if (fs.existsSync(CACHE_CFC) && !REFRESH) return readData('out_data/cfc-missing-rows.json');
   if (OFFLINE) { console.warn('  ⚠ --offline 且無快取，無法繼續'); process.exit(1); }
   const fields = ['Name', 'ContentType', 'IsInDutyFinder', 'HighEndDuty', 'PvP',
     'RequiredExVersion', 'ContentUICategory', 'ClassJobLevelRequired', 'ClassJobLevelSync',
@@ -139,7 +144,15 @@ async function main() {
   console.log(`dungeons.json 目前 ${db.data.length} 筆`);
 
   const cfc = await loadCfc();
-  const twi = await loadTwInstances();
+  // 台服名：台服客戶端 ContentFinderCondition.Name（依 row id）；這一版才有台服名的＝台服版本清單的版號
+  const { loadTcSheet } = await import('./lib/tc-datamining.mjs');
+  const { TW_RELEASES } = await import('./lib/tw-releases.mjs');
+  const { isTw } = await import('./lib/tw-text.mjs');
+  const rel = TW_RELEASES[TW_RELEASES.length - 1];
+  const clean = (s) => String(s || '').replace(/[\uE000-\uF8FF]/g, '').trim();
+  const tcName = new Map((await loadTcSheet('ContentFinderCondition', { offline: OFFLINE })).map((r) => [r.id, clean(r.Name)]));
+  const prevNamed = new Set((await loadTcSheet('ContentFinderCondition', { offline: OFFLINE, sha: rel.prev.sha }))
+    .filter((r) => isTw(clean(r.Name))).map((r) => r.id));
 
   // 套 build-dungeons 的規則（含新的豁免），找出「合法但目前沒收」的列
   const missing = cfc.filter((r) => {
@@ -153,26 +166,61 @@ async function main() {
 
   const added = [], noTw = [];
   for (const r of missing) {
-    const t = r.contentId != null ? (twi[r.contentId] || twi[String(r.contentId)]) : null;
-    const tw = t && (t.tw || t.name);
-    if (!tw) { noTw.push(r); continue; }
+    const tw = tcName.get(r.id);
+    if (!tw || !isTw(tw)) { noTw.push(r); continue; }
     const isSavage = /savage/i.test(r.uiCategory) || /\(Savage\)/i.test(r.name);
+    // 討伐殲滅戰沿用 build-dungeons 的判斷：HighEndDuty 或英文名含 (Extreme) 才是「極」
+    const type = TYPE_BY_CT[r.ct]
+      || (r.ct === 4 ? ((r.highEnd || /\(Extreme\)/i.test(r.name)) ? 'trial_ex' : 'trial_hard') : null)
+      || (isSavage ? 'raid_savage' : 'dungeon');
     added.push({
       id: r.id,
       name: tw,
+      nameSource: 'tw-client',
       nameEn: r.name,
-      type: TYPE_BY_CT[r.ct] || (isSavage ? 'raid_savage' : 'dungeon'),
-      patch: null,                       // 無權威來源，留 null（見 patch-dungeon-expansion 的說明）
+      type,
+      // 這一版客戶端才有台服名＝台服版本清單的版號；其餘由 patch-dungeon-names.mjs 依 Teamcraft 補（只補 null）
+      patch: prevNamed.has(r.id) ? null : rel.version,
       ilvlSync: r.ilvlSync > 0 ? r.ilvlSync : null,
       ilvlReq: r.ilvlReq ?? 0,
       levelReq: r.levelReq ?? 0,
       levelSync: r.levelSync > 0 ? r.levelSync : null,
-      partySize: null,                   // 這幾類沒有固定隊伍人數
+      partySize: PARTY_BY_TYPE[type] ?? null,   // 博茲雅／新月島／任務戰鬥沒有固定隊伍人數
       expansion: EXVERSION_TW[r.exVersion] ?? '',
       expansionId: r.exVersion ?? null,
       sortKey: r.sortKey ?? 0,
       highEndDuty: r.highEnd,
       image: r.imagePath ? r.imagePath.replace('ui/icon/', '/i/').replace('.tex', '.png') : null,
+      unlock: { type: 'unknown', questName: null, questId: null },
+      notes: null,
+    });
+  }
+
+  /* 只有台服客戶端有的列：國際服那列已經清空（XIVAPI 的名稱是空字串），台服客戶端還有台服名。
+     例：1029「幻 朱雀征魂戰」——幻巧戰是輪替制，國際服輪到下一場時舊列被清掉，台服落後一版所以還是它。
+     欄位全取自台服客戶端那一列；英文名沒有來源（國際服已清、台服客戶端不含英文），nameEn 留 null，不猜。 */
+  const tcRows = await loadTcSheet('ContentFinderCondition', { offline: OFFLINE });
+  const tt = new Map((await loadTcSheet('TerritoryType', { offline: OFFLINE })).map((r) => [r.id, r]));
+  const xivName = new Map(cfc.map((r) => [r.id, r.name]));
+  const seen = new Set([...have, ...added.map((a) => a.id), ...noTw.map((r) => r.id)]);
+  for (const r of tcRows) {
+    const tw = clean(r.Name), ct = Number(r.ContentType);
+    if (!tw || !isTw(tw) || seen.has(r.id) || !VALID_CONTENT_TYPES.has(ct) || r.PvP === 'True') continue;
+    if (xivName.get(r.id)) continue;            // 國際服還有這列的，交給上面那條（照 build-dungeons 的規則判）
+    const highEnd = r.HighEndDuty === 'True';
+    const type = TYPE_BY_CT[ct] || (ct === 4 ? (highEnd ? 'trial_ex' : 'trial_hard') : ct === 2 ? 'dungeon' : null);
+    if (!type) { noTw.push({ id: r.id, name: tw, ct }); continue; }
+    const ex = Number(tt.get(Number(r.TerritoryType))?.ExVersion);
+    const icon = Number(r.Image) || 0;
+    added.push({
+      id: r.id, name: tw, nameSource: 'tw-client', nameEn: null, type,
+      patch: prevNamed.has(r.id) ? null : rel.version,
+      ilvlSync: Number(r['ItemLevel{Sync}']) || null, ilvlReq: Number(r['ItemLevel{Required}']) || 0,
+      levelReq: Number(r['ClassJobLevel{Required}']) || 0, levelSync: Number(r['ClassJobLevel{Sync}']) || null,
+      partySize: PARTY_BY_TYPE[type] ?? null,
+      expansion: EXVERSION_TW[ex] ?? '', expansionId: Number.isFinite(ex) ? ex : null,
+      sortKey: Number(r.SortKey) || 0, highEndDuty: highEnd,
+      image: icon ? `/i/${String(Math.floor(icon / 1000) * 1000).padStart(6, '0')}/${String(icon).padStart(6, '0')}_hr1.png` : null,
       unlock: { type: 'unknown', questName: null, questId: null },
       notes: null,
     });

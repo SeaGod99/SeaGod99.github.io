@@ -60,6 +60,7 @@ for (const d of dbs) {
    每一條都要講得出理由；沒登記、也不在這裡的，才會被當成「忘了登記」報出來。
    另外，一筆登記可以用 `family`（檔名前綴）代表一整組檔，例如 island-*.json。 */
 const NOT_REGISTERED = {
+  "official-terms.json": "術語單一來源（build-official-terms.mjs 產生）給建置腳本與回歸讀；前端讀的是同內容的 assets/js/official-terms.js",
   "barding-names-tc.json": "建置快照（patch-barding-tc.mjs 讀），前端不載",
   "bluemage-sources-tc.json": "建置快照（build-blue-magic／patch-blue-magic-sources 讀），前端不載",
   "emotes-sources-fxc.json": "建置快照（patch-emotes-sources.mjs 讀），前端不載",

@@ -3,8 +3,9 @@
 > **給 Claude / 後續對話的指示**：開始任何工作前先讀本檔。完成任何功能或資料變更後，**必須更新本檔**（狀態表 + 更新紀錄），並同步 `data/_meta.json` 的 status。
 > 規格細節見 `docs/feature-specs.md`，資料格式見 `data/SCHEMA.md`。
 
-**最後更新**：2026-09-27（路線圖清空的一輪，共 12 個回合）。**新增 10 個頁面**：副本圖鑑、主線進度、技能辭典、文書跑圖、練級裝備路線、潛水艇航點查詢、部族聲望試算、現在能做什麼、製作理符試算、禁忌鑲嵌花費試算（前七個在「戰鬥／副本」，狀態表這次一併補齊——先前有 15 頁只在更新紀錄裡、沒進狀態表）。**修掉三個看不出來的壞掉**：`assets/js/et-alarm.js` 是寫好卻沒有任何頁面載它的死碼（兩頁各自留著自己的鬧鐘，而文件宣稱已收斂）、幻化圖鑑的「🗓️ 活動」篩選對社群 7,081 套永遠是 0 筆、首頁少了 9 張工具卡。**新增功能**：天氣目標 ⭐ 訂閱＋出現提醒、「資料已更新 ↻」提示（SWR 的唯一代價）、綁定備份檔一鍵覆寫、貼一份物品清單、理符報酬與收藏品交納兩型取得管道、技能連擊樹與解鎖時程、潛水艇四艘存檔、幻化套裝分享圖卡。**四件事量測後不做並記下依據**：潛水艇掉落物、配裝網站連結解析、遺產武器的階段鏈、部族名（改用貨幣道具名）。回歸腳本從 16 支增到 **29 支**，46 頁 × 3 寬度體檢全過
-**網站**：https://seagod99.github.io ｜ GitHub Pages 純靜態 ｜ 台服版本 **7.21**（＝`data/_meta.json` 的 `gamePatch`，全站版本閘門唯一真實來源；2026-08-11 由 7.15 推進，依 Teamcraft 台服語系檔實測台服已含 7.2＋7.21 全部內容、7.25 起 0 件）
+**最後更新**：2026-10-15（**台服官方名稱全面收斂**：名稱一律台服客戶端優先（怪物、地名、NPC、任務、技能…新增 `scripts/lib/client-names.mjs`），製作採集職、資料片、天氣改官方名（舊名留作別名），收藏名衝突以客戶端為準（社群名進 aliases），名稱中點統一「・」並抽出全站共用的搜尋摺疊；第三輪路線圖其餘項目（無人島、小隊、時尚主題、頁尾資料版本、版本號單一來源…）做完；**新功能**：臉部配件、製作模擬器貼巨集匯入、潛水艇建造材料。細節見更新紀錄 10-11～10-15）。前一次：2026-10-10（**台服 7.25 升版**：物品名改以台服客戶端解包為權威（+305 件、官方改譯 27 件、中點「·」→「・」1,126 件，另修好 1 件上游欄位錯位的殘句名），gamePatch 7.21 → **7.25**；收藏補齊——樂譜 +25（含 7.2／7.21 漏掉的 18 首）、髮型 +3、幻卡 +4、時尚配飾 +2、成就 +59，新條目的取得方式由客戶端商店反查；部族改用台服官方部族名並開放第 19 族「輝鱗族：恆彩農園」；成就名與達成條件改以客戶端為主。不含國際服 7.3 以後的內容。細節見更新紀錄 10-10）。前一次：2026-09-27（路線圖清空的一輪，共 12 個回合）。**新增 10 個頁面**：副本圖鑑、主線進度、技能辭典、文書跑圖、練級裝備路線、潛水艇航點查詢、部族聲望試算、現在能做什麼、製作理符試算、禁忌鑲嵌花費試算（前七個在「戰鬥／副本」，狀態表這次一併補齊——先前有 15 頁只在更新紀錄裡、沒進狀態表）。**修掉三個看不出來的壞掉**：`assets/js/et-alarm.js` 是寫好卻沒有任何頁面載它的死碼（兩頁各自留著自己的鬧鐘，而文件宣稱已收斂）、幻化圖鑑的「🗓️ 活動」篩選對社群 7,081 套永遠是 0 筆、首頁少了 9 張工具卡。**新增功能**：天氣目標 ⭐ 訂閱＋出現提醒、「資料已更新 ↻」提示（SWR 的唯一代價）、綁定備份檔一鍵覆寫、貼一份物品清單、理符報酬與收藏品交納兩型取得管道、技能連擊樹與解鎖時程、潛水艇四艘存檔、幻化套裝分享圖卡。**四件事量測後不做並記下依據**：潛水艇掉落物、配裝網站連結解析、遺產武器的階段鏈、部族名（改用貨幣道具名）。回歸腳本從 16 支增到 **29 支**，46 頁 × 3 寬度體檢全過
+**網站**：https://seagod99.github.io ｜ GitHub Pages 純靜態 ｜ 台服版本 **7.25**（＝`data/_meta.json` 的 `gamePatch`，全站版本閘門唯一真實來源；2026-10-10 由 7.21 推進，資料取自台服客戶端 `2026.09.14.0000.0000`，記在 `_meta.json` 的 `twClient`。前一次是 2026-08-11 由 7.15 推進到 7.21）
+> 2026-10-09 盤點到「台服已 7.25、站上停在 7.21」（Teamcraft 台服語系檔停在 7.2，舊偵測法失靈），**10-10 已升版**。升版 SOP 已改寫成以台服客戶端解包為名稱來源、用「台服版本清單」重標閘門標籤，見知識庫 §4.5；第三輪推薦的實作進度見 [功能發想與路線圖-第三輪.md](功能發想與路線圖-第三輪.md) 開頭的表。
 
 ---
 
@@ -35,16 +36,16 @@
 |---|------|------|------|
 | 2.1 | 坐騎收藏追蹤 | `/collections/mounts/` | 完成（改接 data/mounts.json 385筆+圖片，篩選/追蹤重做，06-15重做） |
 | 2.2 | 寵物收藏追蹤 | `/minions/` | 完成（整頁重做，改接 data/minions.json+本機圖示，source 欄位修正，06-15重做） |
-| 2.3 | 樂譜收藏追蹤 | `/collections/orchestrion/` | 完成（接 data/orchestrion.json 724筆/618筆可顯示，版本篩選，06-16新增） |
+| 2.3 | 樂譜收藏追蹤 | `/collections/orchestrion/` | 完成（接 data/orchestrion.json，版本篩選，06-16新增；**10-10 補 25 首 → 749 筆**：7.2／7.21 該有卻漏掉的 18 首＋7.25 新增 7 首，`patch-orchestrion-add-missing.mjs`，取得方式由客戶端商店／任務反查） |
 | 2.4 | 表情收藏追蹤 | `/collections/emotes/` | 完成（接 data/emotes.json 292筆；scripts/build-emotes.mjs 重建：繁中名 260/292（Cafemaker 簡中→OpenCC，餘 32 筆為簡中服未開放之最新表情，前端隱藏）；**來源 292/292 全補齊**：預設94+動作指南書163+任務29+成就4+App2；前端加來源顯示+來源篩選（預設/動作指南書/任務/成就/App）；06-22 重建；07-16 加遊戲內分頁篩選（一般/特殊/情感表現，接 category 欄）與卡片分頁標籤） |
-| 2.5 | 髮型收藏追蹤 | `/collections/hairstyles/` | 完成（39 筆台服已開放髮型，版本/來源篩選，06-16新增） |
+| 2.5 | 髮型收藏追蹤 | `/collections/hairstyles/` | 完成（版本/來源篩選，06-16新增；**10-10 補 3 個 → 42 筆**：半雙馬尾 7.15、阿澤瑪 7.2、蘑菇頭 7.25，`patch-hairstyles-add-missing.mjs`） |
 | 2.6 | 鳥鞍收藏追蹤 | `/collections/barding/` | 完成（接 data/barding.json 106筆，部位/來源篩選，15筆無sources標待補充，06-15新增） |
 | 2.9 | 探索筆記追蹤器 | `/collections/exploration-log/` | 完成（340筆；**09-23 補座標 338/340**：走 XIVAPI Adventure→Level 換算，id 映射以 MinTime/MaxTime 逐筆驗證（0 筆不符），缺的 2 筆是游末邦室內子地圖；頁面加座標列＋🗺 地圖彈窗＋📋 /coord。天氣欄維持 null 且刻意不補。繁中景觀名已補齊：cafemaker Name_chs→手動繁化，座標因 XIVAPI SightseeingLog 不回傳而保持 null，06-17景觀名補完；07-23 遷入共用引擎，692→146 行） |
 | 2.12 | 討伐筆記追蹤 | `/collections/hunting-log/` | 完成（09-24 新增）：9 職業＋3 大國防聯軍共 540 條、666 列目標（362 隻相異怪）；子項目模式，同一隻怪跨職業共用進度；台服怪名與出沒地名各 362/362，座標 116/362 |
 | 2.10 | 青魔法術收藏 | `/collections/blue-magic/` | 完成（改接 data/blue-magic.json 124筆，副本來源用 contentId 對 dungeons.json 取繁中名，野外/怪物來源並列，14筆無資料標待補充，06-15新增；**07-26 改為仿遊戲內〈青魔法之書〉版型**：8 頁籤×4×4 格＋右側詳情欄，另留卡片檢視） |
-| 2.11 | 幻卡追蹤 | `/collections/triple-triad/` | 完成（**09-23 修來源語意**：原 938 筆「NPC對戰」有 934 筆其實是 NPC 牌組，真獎勵欄位 ItemPossibleReward 從沒被抓過；現拆成 NPC對戰 258（真獎勵＋入場費＋規則）／NPC牌組 944，另補 32 筆漏列的真獎勵、23 張兌換 NPC、6 張副本，並把 14 筆英文成就名換成台服官方名＋達成條件。遊戲自身的 AcquisitionType=6 交叉驗證 152/152 全中。詳見更新紀錄；**07-26 大改**：整頁改成仿遊戲內幻卡手帳的單一版型——一頁 5×6＝30 格＋頁籤一次 5 頁＋右側詳情＋底部「總計 n/m」，未取得＝灰階卡面，不再有清單檢視；排列改照遊戲的 `(uiPriority, order)`（15 張 FF 主角卡在最後一頁，非編號位置）；資料補齊 **435 張**（原 425，7.1 的編號 426–435 因 build 腳本寫死張數而漏抓）並修掉「名稱含中文字」誤擋 9S／2P／2B／N-7000 的問題，26 張 patch 一併校正，頁面顯示 421 → 435 與遊戲一致；星級/類型/來源/版本篩選、NPC對戰地點與 📍 地圖照舊，06-15新增）|
-| — | 成就追蹤 | `/collections/achievements/` | 完成（10-03 新增）：3,348 個台服已開放成就的達成條件、點數、物品獎勵與「已達成點數」合計。**稱號名與分類名沒有台服來源，不顯示**（稱號只標旗標、分類只決定排列）；舊版（Legacy）261 個不收 |
-| — | 時尚配飾收藏追蹤 | `/collections/ornaments/` | 完成（09-26 新增）：陽傘／背包／火炬等時尚配飾 43/56 件（13 件台服未開放不收）。走 XIVAPI search `Item.ItemAction.Action=20086`，名字取自解鎖道具的繁中名。**收藏櫃那半沒做**——遊戲資料沒有「已存放」的概念，那是玩家自己的狀態 |
+| 2.11 | 幻卡追蹤 | `/collections/triple-triad/` | 完成（**10-10 跟上 7.25**：+4 張（440–443）→ **443 張**，卡名照客戶端（61 張改中點或改譯，如魔導死亡爪→魔導死亡厲爪），新對戰 NPC 普代加、瑪勒沃倫特・威塞爾的名字與位置改由客戶端補（Teamcraft 台服 NPC 表沒有他們）；440 魔陶洛斯遊戲資料裡查不到取得方式，照規則留空；**09-23 修來源語意**：原 938 筆「NPC對戰」有 934 筆其實是 NPC 牌組，真獎勵欄位 ItemPossibleReward 從沒被抓過；現拆成 NPC對戰 258（真獎勵＋入場費＋規則）／NPC牌組 944，另補 32 筆漏列的真獎勵、23 張兌換 NPC、6 張副本，並把 14 筆英文成就名換成台服官方名＋達成條件。遊戲自身的 AcquisitionType=6 交叉驗證 152/152 全中。詳見更新紀錄；**07-26 大改**：整頁改成仿遊戲內幻卡手帳的單一版型——一頁 5×6＝30 格＋頁籤一次 5 頁＋右側詳情＋底部「總計 n/m」，未取得＝灰階卡面，不再有清單檢視；排列改照遊戲的 `(uiPriority, order)`（15 張 FF 主角卡在最後一頁，非編號位置）；資料補齊 **435 張**（原 425，7.1 的編號 426–435 因 build 腳本寫死張數而漏抓）並修掉「名稱含中文字」誤擋 9S／2P／2B／N-7000 的問題，26 張 patch 一併校正，頁面顯示 421 → 435 與遊戲一致；星級/類型/來源/版本篩選、NPC對戰地點與 📍 地圖照舊，06-15新增）|
+| — | 成就追蹤 | `/collections/achievements/` | 完成（10-03 新增）：台服已開放成就的達成條件、點數、物品獎勵與「已達成點數」合計；舊版（Legacy）261 個不收。10-04 起分類名與稱號名取自台服客戶端解包。**10-10 跟上 7.25**：+59 → **3,408 個**；名稱與達成條件改以**客戶端為主**、Teamcraft 後備（後者是 7.2 的舊文字：名稱 251 筆差在中點、1 筆改譯，條件 133 筆是官方改寫）；任務連結改用客戶端任務名比對、且只連任務查詢頁有收的任務（324 → 336 條）；部族關係的連結字改用官方部族名 |
+| — | 時尚配飾收藏追蹤 | `/collections/ornaments/` | 完成（09-26 新增；**10-11 併入臉部配件** 28 款：台服客戶端 GlassesStyle、12 個色版名當搜尋別名、「類別」篩選，keyOf 用 `glasses:<款式 id>` 與配飾分開）：陽傘／背包／火炬等時尚配飾，台服未開放的不收（**10-10 +2 → 45 件**：7.25 的黑色／白色蕾絲陽傘，取得方式＝新月島的古錢鑑定師，力之魔石 ×30）。走 XIVAPI search `Item.ItemAction.Action=20086`，名字取自解鎖道具的繁中名。**收藏櫃那半沒做**——遊戲資料沒有「已存放」的概念，那是玩家自己的狀態 |
 
 ### 戰鬥／副本
 
@@ -52,21 +53,21 @@
 |---|------|------|------|
 | 3.1 | 配裝規劃器 | 外連 gearing.ffsusu.com | 完成（維持外連） |
 | 3.2 | 冒險者小隊計算機 | `/tools/squadron/` | 完成（**07-29 大修**：名冊 8 人／出擊 4 人分離、隊員可轉職、修好吉兆條件與訓練池上限、任務卡補軍票/經驗/道具名與「還差多少」、最佳 4 人可一鍵套用、由門檻反推當週配置；squadron.json 166 筆，06-17新增） |
-| — | 副本圖鑑 | `/tools/duty-codex/` | 完成（09-26 新增）：520 個副本／討伐戰／大型任務，依資料片分組，等級需求＋同步等級＋人數＋時限；`?id=duty:<名稱>` 深連結。**解鎖任務只有 32/520**——遊戲資料只記得住這些 |
+| — | 副本圖鑑 | `/tools/duty-codex/` | 完成（09-26 新增；10-10 名稱改台服客戶端、未開放的 23 座不顯示 → **505 個**；10-11 資料片名改官方）：副本／討伐戰／大型任務，依資料片分組，等級需求＋同步等級＋人數＋時限；`?id=duty:<名稱>` 深連結。**解鎖任務只有 32/520**——遊戲資料只記得住這些 |
 | — | 主線進度 | `/tools/msq/` | 完成（09-27 新增）：14 章／1,012 個主線任務，搜尋目前做到哪裡算出還剩幾個。章節順序＝`JournalGenre` 的 row id（不是 `SortKey`）。**不估完成日、不列沿途解鎖的副本** |
-| — | 技能辭典 | `/tools/action-codex/` | 完成（09-27 補齊三階段）：玩家技能 1,326／特性 668／狀態 4,052 的台服官方名與說明，＋「⛓ 連擊」（53 招有前置）與「📈 解鎖時程」。**預設只看 PvE**（PvP 同名但威力差幾十倍） |
+| — | 技能辭典 | `/tools/action-codex/` | 完成（09-27 補齊三階段）：玩家技能 1,326／特性 668／狀態 4,169 的台服官方名與說明（10-11 名稱改台服客戶端優先：毀壞→中毀滅、白風→純白微風…），＋「⛓ 連擊」（53 招有前置）與「📈 解鎖時程」。**預設只看 PvE**（PvP 同名但威力差幾十倍） |
 | — | 文書跑圖 | `/tools/relic-note/` | 完成（09-27 新增）：九本文書各 19 個討伐目標（10 一般怪＋3 首領＋3 FATE＋3 理符）的台服名、出沒地與座標，逐項打勾。**只涵蓋文書這一段**——遺產武器的階段鏈不在遊戲資料表裡 |
 | — | 練級裝備路線 | `/tools/leveling-gear/` | 完成（09-26 新增）：43 個職業檔，每部位列「等級門檻前緣」穿得起的最高品級裝備＋取得管道。**只依 ilvl 不算副屬性** |
-| — | 潛水艇航點查詢 | `/tools/submarine/` | 完成（09-27 補四艘存檔）：部件數值合計（含階級加成）＋123 個航點的階級需求／桶數／時間／經驗，四艘配置各自記住。**不提供多點航程試算與掉落物**（公式與掉落都不在遊戲資料裡） |
-| — | 部族聲望試算 | `/tools/beast-tribes/` | 完成（09-27 新增）：18 個部族的各階門檻與每個任務的聲望，算出到目標階級最少幾天。**部族名沒有台服來源**，以貨幣道具名標示（知識庫 §4.92） |
+| — | 潛水艇航點查詢 | `/tools/submarine/` | 完成（09-27 補四艘存檔；**10-11 加「🔨 建造材料」**：目前 4 件部件的部隊工房三階段素材，數量與 Teamcraft 交叉核對 162/162，打開才載，可帶部件去市場頁算成本）：部件數值合計（含階級加成）＋123 個航點的階級需求／桶數／時間／經驗，四艘配置各自記住。**不提供多點航程試算與掉落物**（公式與掉落都不在遊戲資料裡） |
+| — | 部族聲望試算 | `/tools/beast-tribes/` | 完成（09-27 新增）：各部族的各階門檻與每個任務的聲望，算出到目標階級最少幾天。**10-10 改用台服官方部族名**（客戶端 `BeastTribe`，「蜥蜴人族：灰黨」…；以貨幣欄逐列對位，對不上就中止建置，知識庫 §4.92）並開放第 19 族「輝鱗族：恆彩農園」（7.25，青蕉幣）；選單在 360px 寬改成獨佔一列，收合時截斷、展開看全文 |
 
 ### 生活職
 
 | # | 工具 | 路徑 | 狀態 |
 |---|------|------|------|
 | 4.1 | 市場查價 + 比價 | `/tools/market/` | 完成（Universalis 即時價、跨服比價、製作原料樹、URL 深連結 `#item=`；收藏頁「💰 市場行情」連此。**08-09 總採買清單改為可折疊的縮排「製作計畫」**：同層相同物品合併、任一列可勾「我已經有了」並自動剪掉底下整段。**08-10 大改**：成本引擎改為逐筆吃掉掛單、新增「💰 賺錢排行」分頁、價格走勢與百分位、製作利潤試算、8 服一站購足比較、不可交易素材接站內取得管道、自訂實際買價、localStorage key 遷入 `ffxiv_` 前綴。**08-11**：頁面邏輯抽成 `tools/market/market.js`（index.html 3,636 → 776 行）、材料排序改為固定依物品 ID、「我的清單」改成可展開品項的折疊卡；**08-25**：物品彈窗若該物品可製作，多一顆「🔨 試做 ↗」另開製作模擬器並帶入該配方（`#r=<recipeId>`），工會工坊／無人島配方不給鈕——那不是用製作技能做的） |
-| 4.2 | 貨幣變現排行 | `/tools/gc-exchange/` | 完成（**09-23 擴充**：由軍票／雙色寶石兩種擴到 **45 種貨幣**，含詩學與數理神典石、巧手與大地各色票、狼印戰績、蒼天街振興票、狩獵戰利品、同盟徽章、宇宙信用點數等；資料 `data/currency-shop.json`，單位依成本自動每 1／每 100 切換，深連結 `?c=`） |
-| 4.11 | 製作模擬器 | `/tools/crafting-sim/` | 完成（**08-26 大改：自動求解＋料理／藥品＋我的循環**；08-25 新增）：選配方（13,835 筆收庫、台服可見 12,321）＋填工匠數值 → 排製作技能循環 → 逐步算出作業／品質／耐久／CP 與 HQ 機率，並產生遊戲內巨集（15 行分段、技能名為台服官方用字）。36 個技能全部取自台服語系檔，CP 與解鎖等級對 XIVAPI **36/36 相符**；規則移植自 Teamcraft 模擬器（MIT）並以其官方測試案例回歸（`scripts/validate-craft-sim.mjs`，76 項全過）。版面依使用時機分三頁（**① 準備**＝選配方＋工匠數值／**② 排循環**＝左技能面板右目前循環／說明）；**循環清單的每一列就是逐步明細**，右邊直接顯示做到當下的作業／品質／耐久／CP，不另開逐步表；技能面板**即時反映目前循環結尾的狀態**（等級／專家／CP／內靜／儉約衝突／一次限用都標出原因，連段成立標 ▶ 與折扣後 CP），滑過會顯示**官方說明文＋接在目前循環後的即時試算**；結果摘要條固定在畫面下緣，完整判定與隨機模擬在彈窗。成敗為**三態**：作業滿＝完成、耐久歸零而作業沒滿＝失敗、**兩者都沒發生＝還在進行中（不是失敗）**。巨集超過 15 行會**自動切段，每段各自一個框與複製鈕**。工匠數值**八職各存一組**，選配方時自動切到該配方職業的數值（舊的單一組存檔會自動遷移到八職）。另有拖曳／鍵盤排序、隨機模擬 200 次（完成率與 HQ 分佈）、HQ 材料初期品質、可分享網址、四套**經引擎實跑驗證**的內建範本。細節見 [crafting-sim.md](crafting-sim.md) |
+| 4.2 | 貨幣變現排行 | `/tools/gc-exchange/` | 完成（**10-10 跟上 7.25 → 48 種**：新月島的力之魔石、十二城邦金幣／銀幣，共 1,729 筆；**09-23 擴充**：由軍票／雙色寶石兩種擴到 **45 種貨幣**，含詩學與數理神典石、巧手與大地各色票、狼印戰績、蒼天街振興票、狩獵戰利品、同盟徽章、宇宙信用點數等；資料 `data/currency-shop.json`，單位依成本自動每 1／每 100 切換，深連結 `?c=`） |
+| 4.11 | 製作模擬器 | `/tools/crafting-sim/` | 完成（**10-11 加「貼上巨集匯入循環」**，解析與巨集轉譯共用 `assets/js/macro-parse.js`；**08-26 大改：自動求解＋料理／藥品＋我的循環**；08-25 新增）：選配方（13,835 筆收庫、台服可見 12,321）＋填工匠數值 → 排製作技能循環 → 逐步算出作業／品質／耐久／CP 與 HQ 機率，並產生遊戲內巨集（15 行分段、技能名為台服官方用字）。36 個技能全部取自台服語系檔，CP 與解鎖等級對 XIVAPI **36/36 相符**；規則移植自 Teamcraft 模擬器（MIT）並以其官方測試案例回歸（`scripts/validate-craft-sim.mjs`，76 項全過）。版面依使用時機分三頁（**① 準備**＝選配方＋工匠數值／**② 排循環**＝左技能面板右目前循環／說明）；**循環清單的每一列就是逐步明細**，右邊直接顯示做到當下的作業／品質／耐久／CP，不另開逐步表；技能面板**即時反映目前循環結尾的狀態**（等級／專家／CP／內靜／儉約衝突／一次限用都標出原因，連段成立標 ▶ 與折扣後 CP），滑過會顯示**官方說明文＋接在目前循環後的即時試算**；結果摘要條固定在畫面下緣，完整判定與隨機模擬在彈窗。成敗為**三態**：作業滿＝完成、耐久歸零而作業沒滿＝失敗、**兩者都沒發生＝還在進行中（不是失敗）**。巨集超過 15 行會**自動切段，每段各自一個框與複製鈕**。工匠數值**八職各存一組**，選配方時自動切到該配方職業的數值（舊的單一組存檔會自動遷移到八職）。另有拖曳／鍵盤排序、隨機模擬 200 次（完成率與 HQ 分佈）、HQ 材料初期品質、可分享網址、四套**經引擎實跑驗證**的內建範本。細節見 [crafting-sim.md](crafting-sim.md) |
 | 4.12 | 雇員探險收益排行 | `/tools/ventures/` | 完成（09-24 新增）：969 個目標型探險，依等級與識別力算每趟 gil 並標「再 +N 跳檔」 |
 | 4.13 | 季節活動商店 | `/tools/seasonal-shop/` | 完成（09-24 新增）：報酬管理人 307 件過往活動裝備（金幣買回）＋47 種活動貨幣反查 |
 | 4.3 | 物品／製作搜尋 | 併入 `/tools/market/` | 完成（09-27 結案，**不另開頁**）：規格要的四件事現有頁面都有了——繁中關鍵字搜尋＋圖示／分類／可否上市場在市場頁的「物品查詢」分頁、來源走「🎁 取得方式」篩選（`item-source-types.json`，19 種管道）、配方與職業等級走製作樹、連結到查價本來就在同一頁。四語互查在 `/tools/name-translator/`，跨頁找東西走命令面板 |
@@ -89,39 +90,42 @@
 
 | 庫 | 筆數 | 來源 | 更新 |
 |------|------|------|------|
-| items | **45548** | tw-items.msgpack + XIVAPI；**08-11 升 7.21 補 1800 筆**（7.2:758／7.21:948／7.15 補漏 91）並修正 80 個舊譯名（多為簡中用語，如馬蘇里拉乳酪→莫札瑞拉起司）。快照現由 `scripts/build-tw-items-msgpack.mjs` 從 Teamcraft 台服語系檔重建 | 08-11 |
+| items | **45853** | tw-items.msgpack + XIVAPI；**10-10 升 7.25**：快照改由 `scripts/build-tw-items-msgpack.mjs` 從**台服客戶端解包**重建（預設 `--source=client`；Teamcraft 台服語系檔停在 7.2，只當後備）→ +305 件、官方改譯 27 件（聖槍→神聖長槍、蜜瓜派→甜瓜派…）、中點「·」→「・」1,126 件，並修好 12066 那串欄位錯位的殘句名（→ 卡邦庫爾-橄欖石）。全球標成 7.3 的台服 7.25 物品由 `patch-tw-release.mjs` 重標回 7.25。08-11 升 7.21 補 1800 筆並修正 80 個舊譯名 | 10-10 |
 | dyes | 114 | XIVAPI Stain（顏色／色群）+ shops/obtainable-methods/npcs/maps（取得與門檻）；台服未實裝 11 支未收 | 07-25 |
-| fashion-themes | 86 | ffxiv-datamining-cn FashionCheckWeeklyTheme（row = 週次+9），week 440–525，簡轉繁非官方譯名 | 07-25 |
+| fashion-themes | 86 | FashionCheckWeeklyTheme（row = 週次+9），week 440–525；**440–466 週＝台服客戶端原文**（逐筆 `nameSource: tw-client`），其餘陸服簡轉繁（`cn-hant`，前端標非官方譯名） | 10-11 |
 | fashion-fillers | 5 | equipment/shops/items + XIVAPI DyeCount，每部位最便宜可染的全職業 NPC 裝 | 07-25 |
-| maps | 210 | XIVAPI + tw-places（id=Map sheet row id；底圖在 /assets/maps/，缺 8 張待本機補） | 06-11 |
+| maps | **212** | XIVAPI + 台服客戶端（id=Map sheet row id；底圖在 /assets/maps/）；10-10 補新月島南部 967、渴望灣 1003；**10-11 天氣名改依 Weather row id 取台服官方名**（`patch-map-weather-names.mjs`），地名中點照客戶端 | 10-11 |
 | recipes | 14182 | Teamcraft | — |
 | gathering | 733 | Teamcraft nodes（已濾 EventItem 偽 id；141 筆 mapMissing） | 06-11 |
-| npcs | 22079 | Teamcraft tw-npcs + 位置 | 06-08 |
+| npcs | 22079 | Teamcraft tw-npcs + 位置；**10-11 名稱改台服客戶端 ENpcResident**（用字不同 145 筆的 Teamcraft 舊名留在 `nameTc`、日文 24 筆改 null；`patch-npc-names-client.mjs`）。建置用，前端不載 | 10-11 |
 | minions | 581 | XIVAPI + items（圖在 /assets/minions/） | 06-05 |
 | mounts | 362 | XIVAPI + manual（圖在 /assets/mounts/）；**07-28 補 `order`**（`Mount.Order`），13 筆 -1＝不在遊戲坐騎手冊的內部列，前端已擋 → 頁面 301→**297 隻** | 07-28 |
-| triple-triad | 435 | XIVAPI v2 + items（張數以 items.json 的「九宮幻卡」道具數為準）+ npcs/maps/dungeons（取得方式）；圖在 /assets/triple-triad/ 共 435 張。**07-28 取得方式補繁中名**：副本走 Garland 英文名→dungeons.json（`contentId`），卡包走 itemId→items.json，任務走 Teamcraft tw-quests；**無名稱 0 筆**，純英文僅剩 14 個成就名 | 07-28 |
-| dungeons | **520** | XIVAPI＋tw-instances（圖在 /assets/dungeons/）；07-28 補 `expansion`／`expansionId` **520/520**、清掉 18 筆已證實錯誤的 `patch`；**同日補收 134 座**（深宮 40／優雷卡 4／多變迷宮 9／單人任務戰鬥 81）——它們先前被 `IsInDutyFinder` 過濾整批擋掉。繁中名 520/520 | 07-28 |
+| triple-triad | **443** | XIVAPI v2 + items（張數以 items.json 的「九宮幻卡」道具數為準）+ npcs/maps/dungeons（取得方式）；圖在 /assets/triple-triad/ 共 443 張（10-10 +440–443）。Teamcraft 台服 NPC 表沒有的對戰 NPC 改由客戶端 `ENpcResident`／`Title` 補名字、`npcs.msgpack` 補位置。**07-28 取得方式補繁中名**：副本走 Garland 英文名→dungeons.json（`contentId`），卡包走 itemId→items.json，任務走 Teamcraft tw-quests；**無名稱 0 筆**，純英文僅剩 14 個成就名 | 07-28 |
+| dungeons | **528**（顯示 505） | 10-10 名稱改台服客戶端 CFC（未開放的 23 筆名稱 null 不顯示）、+8 座；10-11 資料片名改官方、18 筆錯版本號清成 null（護欄見 `patch-dungeon-names.mjs`）。以下為舊紀錄： | XIVAPI＋tw-instances（圖在 /assets/dungeons/）；07-28 補 `expansion`／`expansionId` **520/520**、清掉 18 筆已證實錯誤的 `patch`；**同日補收 134 座**（深宮 40／優雷卡 4／多變迷宮 9／單人任務戰鬥 81）——它們先前被 `IsInDutyFinder` 過濾整批擋掉。繁中名 520/520 | 10-11 |
 | barding | 106 | XIVAPI + tw-items（圖在 /assets/barding/） | 06-04 |
 | blue-magic | 124 | XIVAPI | 06-09 |
-| monsters | 14361 | datamining-cn + Teamcraft + XIVAPI | 06-09 |
-| obtainable-methods | 36336 | mixed | 06-08 |
+| monsters | 14361 | **10-11 名稱改台服客戶端 BNpcName 優先**（tw-mobs 備援；查不到台服名的 640 筆改 null，不留簡轉繁），座標地名改取 maps.json（`patch-monster-names.mjs`；`build-monsters.mjs` 建完直接套同一支）。建置用，前端不載 | 10-11 |
+| obtainable-methods | **37726** | mixed（`build-obtainable.mjs`：`out_data/obtainable-methods.msgpack`＋tw-items 名稱）。**10-10 才重建**：上次是 06-08，所以 7.15 補漏／7.2／7.21／7.25 的 1,390 件物品一直不在摘要裡（取得管道分片層因此缺它們），另 166 個貨幣名從 null 補上 | 10-10 |
 | fishes / fishing-spots | 1449 / **355** | fish-tracker + items + FishingSpot.csv + SpearfishingNotebook + twPlaces（08-31 補進 48 個魚叉釣場） | 08-31 |
 | fish-uses | 1422 | items + collectable-items + recipes（釣魚頁的圖示與用途） | 08-31 |
-| items-lite | **45548** | items.json 精簡（只留 id→繁中名，1.3MB；`scripts/build-items-lite.mjs`） | 08-11 |
-| items-market | **45548** | items.json 精簡（市場頁用的六欄，2.1MB；`scripts/build-items-market.mjs`）。**改完 items.json 這支與 items-lite 都要重跑** | 08-11 |
-| market-sources | 7558 | 取得管道精簡表（市場頁用，751KB／gzip 52KB；`scripts/build-market-sources.mjs`）。由 obtainable-methods（7.7MB，前端載不動）＋gathering 座標＋gc-shop 軍票壓成「只含配方相關物品」。**改完 recipes／gathering／obtainable-methods 要重跑** | 08-10 |
+| items-lite | **45853** | items.json 精簡（只留 id→繁中名，1.3MB；`scripts/build-items-lite.mjs`） | 10-10 |
+| items-market | **45853** | items.json 精簡（市場頁用的六欄，2.1MB；`scripts/build-items-market.mjs`）。**改完 items.json 這支與 items-lite 都要重跑** | 10-10 |
+| market-sources | 7621 | 取得管道精簡表（市場頁用，751KB／gzip 52KB；`scripts/build-market-sources.mjs`）。由 obtainable-methods（7.7MB，前端載不動）＋gathering 座標＋gc-shop 軍票壓成「只含配方相關物品」。**改完 recipes／gathering／obtainable-methods 要重跑** | 08-10 |
 | craft-actions | **36** | Teamcraft `tw/tw-craft-actions`＋`tw/tw-actions`（繁中名）× XIVAPI CraftAction/Action（CP、等級，36/36 相符）× Teamcraft 模擬器（效率與規則，MIT）；`scripts/build-craft-sim.mjs` | 08-25 |
 | craft-recipes | **13835** | `data/recipes.json`（patch、職業）× Teamcraft `recipes.json`（除數／修正／conditionsFlag／HQ 材料）；只收八大製作職，工會工坊與無人島不收 | 08-25 |
 | craft-consumables | **61** | 製作用料理 49／藥品 12 的加成（百分比＋上限）；Teamcraft `foods.json`／`medicines.json`（源自 `ItemFood`）× items.json 繁中名與 patch，**查不到台服名的不收** | 08-26 |
-| island-* 十一檔 | 見下 | datamining-cn `MJI*` CSV ＋ items.json（`scripts/build-island.mjs`）；動物出現條件與台服名走人工表 `island-names-tw.json` | 07-24 |
+| island-* 十一檔 | 見下 | datamining-cn `MJI*` CSV ＋ items.json（`scripts/build-island.mjs`）；動物出現條件與台服名走人工表 `island-names-tw.json`；**10-11 地區／建築／分類 40 筆改走台服客戶端 MJIName／MJIText／MJIItemCategory**（名字不變、標成 tw-client） | 10-11 |
+| facewear | **28** | 台服客戶端 GlassesStyle／Glasses ＋ items.json（解鎖道具「臉部配件：…」）＋取得管道分片層（`scripts/build-facewear.mjs`）；時尚配飾頁的一個類別 | 10-11 |
+| fc-workshop | **162** | 台服客戶端 CompanyCraftSequence／Part／Process／SupplyItem（`scripts/build-fc-workshop.mjs`）；數量＝一次交幾個×要交幾次，**與 Teamcraft 部隊製作配方交叉核對 162/162**（對不上就中止）；潛水艇頁「建造材料」打開才載 | 10-11 |
+| squadron | 166 | `build-squadron.mjs` 內嵌數值；**10-11 文字改台服客戶端 GcArmy*／Status／ENpcResident**（26 筆原本是 OpenCC，`patch-squadron-client.mjs`） | 10-11 |
 
-仍為空（0 bytes）：emotes、exploration-log、orchestrion、squadron、fishing（由 fishes.json 取代）。
+（舊敘述「emotes／exploration-log／orchestrion／squadron 仍為空」早已過時，10-15 刪除；`fishing.json` 是停用的舊表，由 fishes.json 取代。）
 
 aether-currents.json 已建立（06-16）：31 地區 303 筆，schema 版本 1，任務型含繁中任務名，野外型座標暫設 null。
 
-hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Teamcraft items.json + tw-items.msgpack + XIVAPI icon；10 筆台服未開放（隱藏）。
+hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Teamcraft items.json + tw-items.msgpack + XIVAPI icon；10 筆台服未開放（隱藏）。**沒有建置腳本**，升版時由 `patch-hairstyles-add-missing.mjs` 補（10-10 → 42 筆）；樂譜 `orchestrion.json` 同理走 `patch-orchestrion-add-missing.mjs`。
 
-注意：`data/_meta.json` 的 status 欄已過時（06-04 之後沒更新），待同步。
+`data/_meta.json` 的 updated／count 由 `scripts/sync-meta.mjs --apply` 同步；**沒有建置腳本的資料檔**登記在 `validate-data.mjs` 的 `SCRIPTLESS`（樂譜、髮型、探索筆記、藏寶圖解讀圖、社群快照），新資料檔沒建置腳本也沒登記會被警告。
 
 建置腳本在 `/scripts/`（build-*.mjs、download-*.mjs），本機跑，需 `npm i`（@msgpack/msgpack、sharp）。
 
@@ -205,11 +209,21 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 ## 三、固定原則（不可違反）
 
 - 物品繁中名以 `tw-items.msgpack` 為準；對不到 = 台服未開放 → 前端直接不顯示，**不可用 XIVAPI 補名**。
-- 職業名用台服官方譯名（SCHEMA.md 1.8 JOBS 字典）。
+- 職業名、資料片名、天氣名用台服官方名：單一來源 `data/official-terms.json`（台服客戶端，`build-official-terms.mjs`），建置腳本走 `scripts/lib/official-terms.mjs`、前端走 `assets/js/official-terms.js`；舊寫法只當別名（`validate-official-terms.mjs`）。
+- 其他名稱（地名、NPC、怪物、任務、技能、狀態…）台服客戶端優先、Teamcraft 備援：`scripts/lib/client-names.mjs`；名稱中點一律「・」。
 - 資料信封格式 `{schema,patch,updated,source,count,data[]}`；座標 `{mapId,x,y}` 用遊戲內座標；`sources:[{type,detail,patch}]` 用 _meta.json 的 SOURCE_TYPES。
 - 優先做不需維護的純計算功能；不重複造輪子（製作/採集參考 Frozen Rabbit 系列工具）。
 
 ## 四、待辦（依優先序）
+
+> **10-15 現況**：第三輪路線圖的實作項目已全部做完（進度表見 [功能發想與路線圖-第三輪.md](功能發想與路線圖-第三輪.md) 開頭）。剩下的都要**站主決定或在遊戲內確認**：
+> - 收藏品換票對應（§7-8）、回報管道（§7-6）、要不要外連 xivtc 子站（§7-7）、Pages 改由 Actions 部署的啟用（§7-9）
+> - 時尚品鑑自動週更停在第 453 週（GitHub 排程，[issue #1](https://github.com/SeaGod99/SeaGod99.github.io/issues/1)）
+> - 無人島 4 隻動物的名稱（依位置推導可能錯：魔界花骨朵／毛爾波爾骨朵…）要遊戲內看一次再改
+> - 部隊工房的三階段數量：與 Teamcraft 一致，但遊戲內抽查一件更保險
+> - glamour 有 9 套官方套裝因商人名改譯換了 id（柯特克→雜貨商柯特克 7、布魯克・歐伽 2），收藏過這幾套的人要重新標
+>
+> 以下是早期（06 月）的待辦，留作歷史：
 
 0. ~~修 mapId ID 空間不一致~~ — **完成（2026-06-11）**，見 `docs/地圖ID統一修正計畫.md` 執行結果。遺留：~~底圖 8 張待補~~ **已補齊（2026-07-28 複查通過，清單文件已刪）**；新擴充地圖無 weatherRates/patch，需要時再補
 1. ~~06-15 驗收結論：四個「開發中」頁面皆未對接已備資料庫，需重新開發前端資料層~~ — **完成（2026-06-15）**：weather（共用模組+maps.json）、gathering（gathering.json/items.json/maps.json+篩選/追蹤）、mounts（mounts.json+圖片）、minions（整頁重做）皆已重做完成。
@@ -223,6 +237,31 @@ hairstyles.json 已建立（06-16）：39 筆台服已開放髮型，來源 Team
 
 ## 五、更新紀錄
 
+- **2026-10-11～10-15（台服官方名稱全面收斂＋第三輪路線圖其餘項目）**：站主 10-10 拍板四題（製作採集職名改官方、資料片名改官方、收藏名衝突以台服客戶端為準、站點維持不公開），指示「都進行補上」。
+  - **名稱一律台服客戶端優先**：新增 `scripts/lib/client-names.mjs`——`preferClient(Teamcraft 表, 種類)` 把客戶端解包的名字疊在 Teamcraft 表上、回傳同形狀的表（呼叫端只換一行）；怪物、地名、NPC、任務、FATE、理符、道具、技能、狀態、特性都走它。實測 Teamcraft 快照落後客戶端：NPC 用字不同 90／只差中點 3,366、怪物 30／274、地名 5／34、任務 30／39、技能 495（玩家技能 7：毀壞→中毀滅、白風→純白微風…）。改走它的：怪物庫（`patch-monster-names.mjs` 改寫，`build-monsters.mjs` 拿掉 OpenCC；查不到台服名的 640 筆名稱改 null；座標地名改取 maps.json，5 張圖 2,490 個座標原本是舊譯）、討伐筆記、文書跑圖、名稱查詢分片（term-names）、技能分片（action-names）與技能辭典、NPC 商店目錄的店名（`lib/shops.mjs`：SpecialShop／GilShop 客戶端優先）、取得方式出口（`lib/obtainable.mjs` 的 NPC 名依 id 換客戶端名）、系統解鎖、理符來源、釣魚的地名。
+  - **NPC 名**：`npcs.json` 改成客戶端 ENpcResident（用字不同 145：船頭→船夫、芙莉妮→雜貨商芙莉妮…；Teamcraft 那邊是日文的 24 筆改 null），舊名留在 `nameTc`；`patch-npc-renames.mjs` 只換 NPC 名欄位與「NPC 名：」開頭的取得方式文字（**不做子字串替換**——「船頭小屋」是官方地名、「年輕的導師與粗暴的男子」是官方任務名），收藏頁連到商店目錄的連結 418 → **419**。
+  - **中點**：台服客戶端 14 張名稱表**一個「·」都沒有**。前端資料裡名稱內部的「·」全部換成「・」（`patch-dot-names.mjs`，1,647 個字串；兩側有空白的分隔符不動），`validate-data` 加防回歸；搜尋摺疊抽成全站共用的 `window.SGT_fold`（`theme.js`），14 頁自帶的搜尋框都接上。
+  - **製作採集職改官方**（木工師、鍛造師、甲冑師、金工師、皮革師、裁縫師、鍊金術師、採掘師、園藝師、漁師）：單一來源 `data/official-terms.json`＋`scripts/lib/official-terms.mjs`，9 支建置腳本／共用庫不再手寫對照表；`patch-job-names.mjs` 換掉資料裡 25,748 處（「園藝工具」是官方物品分類，不換）；市場頁、製作模擬器、採集兩頁、小隊頁（基礎職 9 個）、幻化圖鑑的職業表跟上。採集紀錄的舊分享連結 `?f_job=採礦工` 照樣有效（收藏引擎的篩選加 `alias` 掛鉤）。
+  - **資料片名改官方**（新生艾奧傑亞…黃金遺產）：樂譜分類、副本、藏寶圖的資料改官方名（`patch-expansion-names.mjs`），會寫舊名的 4 支腳本改讀術語表，6 個頁面的標籤改由 `OfficialTerms` 長出；樂譜的舊連結 `?f_category=原初之地` 照樣有效。
+  - **天氣名改官方**：陰天→陰雲、降雪→小雪、放電現象→靈電、星磁暴→磁暴；maps.json 另有 7 種特殊天氣直接是英文（Vacuity…）、Hot Spells 被譯成「熱浪」——`patch-map-weather-names.mjs` 改依 **Weather row id** 從客戶端重取（先驗槽位機率逐格一致），116 張圖；`eorzea-weather.js` 與 `fix-mapkeys.mjs` 的 WEATHER_TC 同步改，舊名仍認得；無人島珍稀動物改用鍵比對（只換一邊的話動物會「永遠不出現」）。
+  - **收藏名衝突以客戶端為準**：寵物 14、坐騎 6、樂譜 2 換成台服客戶端名，社群舊名進 `aliases`；上一版的官方名（白風→純白微風、強力守護→非凡防禦…青魔法 4 個、迷你斯卡米留尼等 3 個）也進 `aliases`。收藏頁搜尋與命令面板都吃 aliases。
+  - **副本**：18 筆版本號是錯的（黃金遺產的副本標 6.0…）——`patch-dungeon-expansion.mjs` 清掉後 `patch-dungeon-names.mjs` 又照 Teamcraft 的錯表補回去，兩支互相抵銷；後者加「版號主版本要等於資料片」的護欄，這 18 筆改 null。
+  - **第三輪其餘項目**：無人島地區／建築／分類 40 筆改走客戶端 MJI 表（名字不變、「非官方譯名」標注消失）；小隊 26 筆 OpenCC 文字改客戶端（`patch-squadron-client.mjs`，`build-squadron.mjs` 建完直接套）；時尚品鑑週主題 440–466 週改台服原文（4 週不同：冬天的海盜、寢室的反抗軍、古代文明的妖艷之神、劣化起動；467 週起是日文預載列，只認連續的一段）；**頁尾顯示資料版本**（由 `_meta.json` 長出）；**版本號只剩一處寫死**（`patch-gate.js` 的 `FALLBACK_PATCH`，`patch-backfill.mjs` 的 TW_PATCH 改取台服版本清單，validate-data 斷言三者一致）；首頁與副標題寫死的數字修正（部族 19、貨幣 48、店家 445、金碟 432）並加斷言；命令面板收官方拉丁字名（樂譜 Answers…、幻卡 2B…、寵物 Nano Lord…）與兩個非漢字的官方任務名。
+  - **新功能**：**臉部配件**併入時尚配飾頁（28 款，台服客戶端 GlassesStyle，12 色版名當搜尋別名，`build-facewear.mjs`；收藏引擎加 `extraDataUrls`）；**製作模擬器「貼上巨集匯入循環」**（解析抽成兩頁共用的 `assets/js/macro-parse.js`，認不得的行逐行列出；回歸＝範本匯出再匯入逐步相等）；**潛水艇／飛空艇的建造材料**（部隊工房三階段素材，台服客戶端 CompanyCraft*，數量與 Teamcraft 交叉核對 **162/162**；打開才載；帶部件去市場頁算成本）。
+  - **維運**：`report-vs-client.mjs`（站上 vs 客戶端的單一報表，含 name-join 一節，永不 exit 1）、`validate-official-terms.mjs`（26 項：手寫副本與術語表一致、資料欄位只用官方名、搜尋摺疊）、`validate-data` 加「沒有建置腳本的資料檔」登記與「名稱內部的『·』」、`loadTcSheet` 加 `require`（欄名不在就中止）、幻卡抓取上限防呆、Pages 發佈容量閘門（74.6%）、刪掉 `collections/mounts/mounts.js.bak`。glamour 跟著重建：職業名改官方、名稱中點正規化（官方套裝 id 的雜湊照舊用「·」算，id 穩定；9 套因商人名用字改譯而換 id）。
+  - **驗收**：`validate-*.mjs` 35 支全過（`validate-data` 0 error／0 warning）；SW 版本已更新。
+- **2026-10-10（台服 7.25 升版：道具、收藏、部族）**：站主指示「先把網站的道具推到 7.25、補上收藏跟部族；不補國際版內容、不做手機優化」。對應第三輪路線圖 ③④⑤（②、① 各做了一部分），升版步驟已寫回知識庫 §4.5。
+  - **物品名改以台服客戶端解包為權威**：`build-tw-items-msgpack.mjs` 改寫，預設 `--source=client`（`Item.Name`，Teamcraft 只當後備；超集護欄、內容沒變不寫檔、`_meta.json` 記 `twClient`）。結果 45,548 → **45,853** 件（+305）、官方改譯 27 件、中點「·」→「・」1,126 件（遊戲內現在全是「・」，路線圖 §7-5 採建議）。另修好 **12066**：上游 CSV 這列的說明被拆成兩欄，`Name` 欄裝著說明的後半句「」。人工製作的卡邦庫爾…」，Teamcraft 也是同一段，站上一直顯示這串殘句 → 改取未受影響的 `Singular`「卡邦庫爾-橄欖石」（腳本加了守門：名稱含換行或以閉合標點開頭就退回 `Singular`）。
+  - **搜尋把中點摺成一種**（`·・‧•`）：收藏頁引擎 `collection-tracker.js`、命令面板 `nav.js`、市場頁 `market.js`。其餘 14 頁自帶的搜尋框沒有摺疊——從遊戲複製來的「・」反而因此對得上，手打「·」的才會落空（知識庫 §4.99）。
+  - **版本閘門：重標，不改閘門語意**。Teamcraft 全球版本表沒有 7.25，台服 7.25 的東西全被標成 7.3。新增 `scripts/lib/tw-releases.mjs`（台服版本 → 客戶端前後兩版的 commit sha）＋`patch-tw-release.mjs --build` 產 `scripts/lib/tw-release-7.25.json`（兩版客戶端的差集：物品 305、成就 59），`--apply` 把 patch 是 null 或晚於 7.25 的條目重標回 7.25（物品、配方、魚、坐騎、寵物、表情、鳥鞍、樂譜、時尚配飾、園藝、髮型、成就、釣場）；然後 gamePatch → **7.25**。新增唯讀的 `check-gate-release.mjs`：7.25 窗口放出 **393 筆、沒有台服名 0 筆**。國際服 7.3 以後的內容照舊隱藏（含 `items.json` 裡 2 件標 7.4 的預載物品）。寫死的 `7.21` 後備值（`patch-gate.js` 2 處、`market.js`、`crafting-sim.js`、`build-craft-sim.mjs`、`build-gardening.mjs`、`validate-data.mjs`、`patch-backfill.mjs`）一併改 7.25。
+  - **收藏補齊**：樂譜 724 → **749**（+25：7.2／7.21 漏掉的 18 首＋7.25 的 7 首，`patch-orchestrion-add-missing.mjs`）、髮型 39 → **42**（`patch-hairstyles-add-missing.mjs`，用 `CharaMakeCustomize.HintItem`）、幻卡 439 → **443**（440 魔陶洛斯遊戲資料裡查不到取得方式，留空）、時尚配飾 43 → **45**、成就 3,349 → **3,408**；坐騎 5／寵物 6／表情 1 本來就在資料裡，重標後自然出現。**新條目的取得方式**：社群站與 Teamcraft 台服表都沒有 7.25，新增 `scripts/lib/client-shop-sources.mjs`（Teamcraft 全球商店結構＋台服 NPC 名與位置）與 `patch-collection-client-shops.mjs`（只動版本清單裡的道具、只補細節是空的來源）→ 坐騎 4、寵物 5、表情 1、時尚配飾 2 筆補上「向誰、用什麼換、在哪」（瓣齒鯊＝力之魔石 ×99，向新月島南部的調查隊古錢鑑定師兌換…）。地點在 `maps.json` 還沒收的新地圖（新月島南部、渴望灣）的 17 筆只留地名與座標、`mapId` 記 null。
+  - **收藏名稱**（`patch-collection-names-client.mjs`）：寵物 6 隻英文名 → 台服名（袖珍梅爾維布…）、坐騎 4 筆簡轉繁 → 官方（黑暗羽衣、動力裝甲…）、表情 18 筆 OpenCC → 官方（不滅隊軍禮、百萬火光、搖雪克杯、伏地挺身…）；**只差中點的**跟客戶端（寵物 8、坐騎 4、鳥鞍 1）；**7.25 官方改譯**（站上名＝7.2 客戶端名、7.25 改了）跟上：迷你斯卡米留尼、迷你凱納槽、拘束型魔導死亡厲爪。**社群名與官方用字不同的沒動**（寵物 14、坐騎 6，路線圖 §7-4 待決定）。「名稱本來就是物品名」的欄位由 `patch-names-follow-items.mjs` 跟著物品名走：魚名 4、餌 35（黃金魚子→黃金鮭魚卵；「A／B 皆可」的餌名刻意跳過，§4.9）、傳承錄書 287、園藝 5、髮型 1、樂譜 1，以及表情 81／坐騎 1／樂譜 1 筆整串就是物品名的取得方式。
+  - **成就**：名稱與達成條件改成**客戶端為主**、Teamcraft tw-locales 後備——後者是 7.2 的舊文字（名稱 251 筆只差中點、1 筆改譯英雄挽歌→英雄輓歌；條件 137 筆差中點、133 筆官方改寫，如「保交納」→「繳納」）。任務連結改用客戶端任務名比對（7.25 也改了任務名），並且**只連任務查詢頁有收的任務**：324 → **336** 條、斷頭 0（`validate-achievements.mjs` 加一條斷言，68 → 69 項）；風脈泉比對加中點摺疊；部族關係的連結字改官方部族名。
+  - **部族**：`build-beast-tribes.mjs` 改讀客戶端 `BeastTribe`（欄名位移：名稱在 `Adjective`、貨幣在 `DisplayOrder`、友好度名在無欄名的第 20 欄；以貨幣欄逐列對位，對不上就中止）→ 18 → **19 族**，台服官方名「蜥蜴人族：灰黨」…＋第 19 族「輝鱗族：恆彩農園」（Lv90、青蕉幣）。頁面拿掉「部族名沒有台服來源」的說明與「以貨幣道具名標示」標籤；長名稱在 360px 撐出水平溢出（select 429px），改成窄螢幕獨佔一列、收合時截斷（設計依據：ui-ux-pro-max「內容不得寬於視窗」；展開是系統選單看得到全文，下方結果框也印全名）。`validate-beast-tribes.mjs` 43 → 46 項。
+  - **衍生資料重建**：items-lite／items-gathering／items-market、`item-names/`（四語）、gold-saucer、currency-shop（45 → **48 種**：力之魔石、十二城邦金幣／銀幣）、npc-shops、seasonal-shop、quests、duty-drops、leveling-gear、site-index，以及 **`obtainable-methods.json`——上次重建是 06-08**，7.15 補漏／7.2／7.21／7.25 共 **1,390 件**一直不在摘要裡（取得管道分片層也就沒有它們）→ 36,336 → **37,726**；分片層 45 → **48 片**／37,733 件，市場頁取得管道 7,558 → 7,621 件。
+  - **順手修**：`scripts/lib/xivapi.mjs` 的 `rows()` 有快取時不會去抓快取裡沒有的 id（新幻卡因此看不見）→ 補抓缺的並合併回快取；`loadTcSheet` 加 `keepUnnamed`（無欄名的欄）與 `sha`（讀指定版本的客戶端）；`patch-triple-triad-sources.mjs` 在 Teamcraft 台服 NPC 表查不到時改由客戶端補 NPC 名、稱號與位置。
+  - **刻意沒做**：國際服 7.3 以後的內容（站主指示）、手機相關（同）。任務查詢與主線頁沒有 7.25 的任務（Teamcraft tw-quests 停在 7.2；成就因此有 5 條任務連結不連）；`npcs.json` 沒有 7.25 的 NPC（`validate-links` 的幻卡 NPC 84 筆屬此）；地名／NPC／任務／怪物／商店名、`term-names`／`action-names` 仍是 Teamcraft 的舊版字串（中點多是「·」，第三輪 §3 `tw-names-from-client`）；`maps.json` 沒有新月島與渴望灣；製作採集職名與資料片名等站主決定（§7-2、§7-3）；幻化配裝圖鑑沒有重建（它自帶名稱資料，§4.14）。
+  - **驗收**：`validate-*.mjs` 33 支全過（`validate-data` 0 error／0 warning；`validate-links` 的 mapId 類 0 斷鏈）、`check-gate-release.mjs --to 7.25` 通過、全站體檢 **48 頁 × 3 寬度全過**。`assets/` 的 js 有改，SW 版本已更新（`sgt-92bae2d657`）。
 - **2026-10-09b（幻化配裝圖鑑：抓新投稿 +17，判讀首次改由 Haiku 5.5 執行）**：只動 `tools/glamour/`。
   - `pipeline.py all` 7,322 → **7,339 筆**（+17）；壓縮／縮圖／兩層化各 17 張。待判讀 28 張＝17 新圖 ＋ 11 張 2026-08-04 已知無面板的舊圖（依 §4.20b 正確狀態就是快取裡沒這筆，每輪都會重新出現，不要為了歸零而寫空紀錄）。
   - **判讀改用 Haiku 5.5**（3 批平行）。機械稽核：**87 件初版就 100% 完全相等解析、吸附違規 0、染色白名單外 0／70 槽**。三筆自報疑慮查證後全部採納（`クリティカルヒッツC2・ネイル*` 全庫只有 `ネイルチップ`；`グゥーブーグレイ` 是白名單正確寫法；`フェリシタス・フード` 經開圖確認英文行）。

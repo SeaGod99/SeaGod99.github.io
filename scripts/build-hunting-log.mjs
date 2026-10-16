@@ -7,8 +7,8 @@
 //   XIVAPI v2 MonsterNote        每一條討伐項目（怪的目標列 ×4、各自要打幾隻、獎勵經驗）
 //   XIVAPI v2 MonsterNoteTarget  目標列 → BNpcName ＋ 出沒地（PlaceNameZone／Location 各 3 組）
 //   data/monsters.json           BNpcName **對 `baseId` 不是 `id`**（§4.14）→ 拿座標
-//   out_data/tw-locales.msgpack  tw-mobs 台服怪名（實測 362/362 全中）
-//   out_data/places.msgpack      twPlaces 台服地名（**不可用 OpenCC 簡轉繁**）
+//   怪名                         台服客戶端 BNpcName → Teamcraft tw-mobs（lib/client-names.mjs，2026-10-11 起客戶端優先）
+//   地名                         台服客戶端 PlaceName → out_data/places.msgpack 的 twPlaces（**不可用 OpenCC 簡轉繁**）
 //   data/equip.json 的 names     職業台服名（ACN→巴術士…）
 //
 // 實測（2026-09-23）：MonsterNote 600 列（9 職業＋3 大國防聯軍各 50）、被引用的目標列 362，
@@ -26,6 +26,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { decode } from "@msgpack/msgpack";
 import { loadTwLocales, twName } from "./lib/tw-locales.mjs";
+import { preferClient, logStats } from "./lib/client-names.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const DATA = join(ROOT, "data");
@@ -75,7 +76,11 @@ async function main() {
   const equip = JSON.parse(await readFile(join(DATA, "equip.json"), "utf8"));
   const items = JSON.parse(await readFile(join(DATA, "items.json"), "utf8")).data;
   const tw = await loadTwLocales();
-  const twPlaces = decode(await readFile(join(ROOT, "out_data", "places.msgpack"))).twPlaces;
+  // 怪名與地名：客戶端優先、Teamcraft 備援（中點與改譯以客戶端為準，知識庫 §4.98）
+  const twPlaces = await preferClient(decode(await readFile(join(ROOT, "out_data", "places.msgpack"))).twPlaces, "place", { offline });
+  const mobs = await preferClient(tw.mobs, "mob", { offline });
+  logStats("地名", twPlaces);
+  logStats("怪名", mobs);
 
   const mapById = new Map(maps.map((m) => [m.id, m]));
   const itemName = new Map(items.map((i) => [i.id, i.name]));
@@ -110,7 +115,7 @@ async function main() {
     const f = tById.get(targetId);
     if (!f) return null;
     const baseId = f["BNpcName@as(raw)"];
-    const name = twName(tw.mobs, baseId);
+    const name = twName(mobs, baseId);
     if (!name) { stats.mobMiss.push(baseId); return null; }   // 無台服名＝不顯示（鐵則）
     stats.occurrences++;
     const firstTime = !seenTargets.has(targetId);
@@ -182,7 +187,7 @@ async function main() {
   const envelope = {
     schema: "hunting-log",
     updated: new Date().toISOString().slice(0, 10),
-    source: "XIVAPI v2 MonsterNote/MonsterNoteTarget + monsters.json(baseId) + tw-locales(tw-mobs) + places.msgpack(twPlaces) + equip.json",
+    source: "XIVAPI v2 MonsterNote/MonsterNoteTarget + monsters.json(baseId) + 台服客戶端 BNpcName/PlaceName（tw-mobs／twPlaces 備援） + equip.json",
     count: out.length,
     data: out,
   };

@@ -13,8 +13,8 @@
 |------|------|------|------|
 | **ffxivcollect** | `https://ffxivcollect.com/api/{mounts,minions,emotes,bardings,orchestrions}` | 收藏品的 `patch`（跨區版本號）、`item_id`、`sources`（type+text，**英文**） | **無 cards（幻卡）端點**；**無簡中 locale**（`?language=` 僅 en/de/fr/ja）。id 對齊：mounts/minions/emotes = 遊戲 row id；orchestrion 用 `item_id` 對 |
 | **Teamcraft patch 資料** | `raw.githubusercontent.com/ffxiv-teamcraft/ffxiv-teamcraft/staging/libs/data/src/lib/json/patch-content.json` 與 `patch-names.json` | `patch-content` = `{patchId:{contentType:[ids]}}`；`patch-names` = `{patchId:{version:"7.15",...}}` | contentType 含 `item / recipe(無，用 item) / enpcresident / bnpcname / instancecontent / fate / placename …`。反查 id→patchId→version |
-| **Teamcraft 台服物品名** | `raw.githubusercontent.com/…/libs/data/src/lib/json/tw/tw-items.json` | `{itemId:{tw:"繁中名"}}`，由台服客戶端抽出＝台服官方譯名 | **`out_data/tw-items.msgpack` 的來源**（腳本 [`scripts/build-tw-items-msgpack.mjs`](../scripts/build-tw-items-msgpack.mjs)，護欄：必須是既有快照的超集）。同時是**判斷台服在哪一版**的依據（見 §2）。2026-08-11：45,548 筆 |
-| **台服客戶端解包（TC datamining）** | `raw.githubusercontent.com/thewakingsands/ffxiv-datamining-tc/main/<表名>.csv`（xivapi 的 `ffxiv-datamining` 以 `csv/tc` 指向它） | 台服客戶端 SaintCoinach 匯出的 CSV（第 2 列欄名、第 3 列型別） | **Teamcraft tw/ 沒收的表先到這裡找**。讀取 [`scripts/lib/tc-datamining.mjs`](../scripts/lib/tc-datamining.mjs)（快取 `out_data/cache/tc-datamining/`）。2026-10-04 用於成就的 `AchievementKind`／`AchievementCategory`／`Title`；建置前比對 `Achievement` 名稱與 Teamcraft 一致率（3,609/3,610），**低於 99% 中止**。另有 `MJIText`、`WeeklyBingoText` 等（知識庫 §4.98） |
+| **Teamcraft 台服物品名** | `raw.githubusercontent.com/…/libs/data/src/lib/json/tw/tw-items.json` | `{itemId:{tw:"繁中名"}}`，由台服客戶端抽出＝台服官方譯名 | **2026-10-10 起只當後備**（`build-tw-items-msgpack.mjs --source=teamcraft`）：它的 `tw/` 停在台服 7.2（07-30），落後時不報錯、只給舊答案；**也不再拿它判斷台服在哪一版**（見 §2）。2026-08-11：45,548 筆 |
+| **台服客戶端解包（TC datamining）** | `raw.githubusercontent.com/thewakingsands/ffxiv-datamining-tc/main/<表名>.csv`（xivapi 的 `ffxiv-datamining` 以 `csv/tc` 指向它） | 台服客戶端 SaintCoinach 匯出的 CSV（第 2 列欄名、第 3 列型別） | **2026-10-10 起是物品名的權威來源**（`Item.Name` → `out_data/tw-items.msgpack`，[`scripts/build-tw-items-msgpack.mjs`](../scripts/build-tw-items-msgpack.mjs) 預設 `--source=client`，護欄：必須是既有快照的超集）；**比 Teamcraft `tw/` 早、也比它全**。讀取 [`scripts/lib/tc-datamining.mjs`](../scripts/lib/tc-datamining.mjs)（快取 `out_data/cache/tc-datamining/`；`sha` 選項讀指定版本、`keepUnnamed` 保留無欄名的欄）。用在：物品名、成就（名稱／條件／分類／稱號）、部族 `BeastTribe`、收藏名 `Companion`／`Mount`／`Emote`／`BuddyEquip`、髮型 `CharaMakeCustomize`、樂譜分類 `Orchestrion*`、NPC 名 `ENpcResident`、地名 `PlaceName`、任務名 `Quest`。台服版本清單（[`scripts/lib/tw-releases.mjs`](../scripts/lib/tw-releases.mjs)）以它前後兩版的差集決定「這一版開了什麼」。注意欄名位移與欄位錯位的列（知識庫 §4.98） |
 | **ffxiv.consolegameswiki.com** | `/wiki/Blue_Magic_Spellbook` | 青魔法習得來源（圖騰兌換條件、副本） | 人工查證，非 API |
 | **Teamcraft treasures** | `raw.githubusercontent.com/…/libs/data/src/lib/json/treasures.json` | 藏寶圖（陳舊的地圖）挖寶座標：`{ item, map(Map row id), coords{x,y}, partySize }` | 建 `treasure-maps.json`；名稱/圖示反查 items.json、地區/資料片反查 maps.json。腳本 [`scripts/build-treasure-maps.mjs`](../scripts/build-treasure-maps.mjs) |
 | **Teamcraft seeds** | `raw.githubusercontent.com/…/libs/data/src/lib/json/seeds.json` | 園藝：`{productId:{seedItemId, duration, crossBreeds[{baseSeed, adjacentSeed}]}}` | 建 `gardening.json`。腳本 [`scripts/build-gardening.mjs`](../scripts/build-gardening.mjs)（`--offline` 用 `out_data/cache/tc-seeds.json`）。**上游有一處錯**：紅色向日葵的種子指到 `4817 葵花籽`（食材、2.0），正解 `43962 向日葵種子`（英文同名 Sunflower Seeds）→ 腳本內 `SEED_OVERRIDE` 修正。**遊戲機制（配種判定、土壤、油粕花色）不在任何 datamine 裡**，出處見 [`docs/gardening-rules.md`](gardening-rules.md) |
@@ -33,9 +33,10 @@ README 的「資料來源」表為總覽；本表為這幾次回填實際用到�
 
 ## 2. patch（版本）欄位
 
-台服當前版本門檻寫在 [`data/_meta.json`](../data/_meta.json) 的 `gamePatch`（目前 **7.21**）。
-判定台服在哪一版的方法：拿 Teamcraft 台服語系檔 `tw/tw-items.json` 的 id 去對 `patch-content.json`→`patch-names.json`，取最高版本（2026-08-11 實測 7.2／7.21 皆滿、7.25 起 0 件）。
+台服當前版本門檻寫在 [`data/_meta.json`](../data/_meta.json) 的 `gamePatch`（目前 **7.25**；資料取自哪一版客戶端記在 `twClient`）。
+判定台服在哪一版的方法（2026-10-09 改）：官方[更新筆記索引](https://www.ffxiv.com.tw/web/special/patchnote_log/)的最高版本＋台服客戶端解包 repo 的最新 commit（訊息即客戶端版本）。~~拿 Teamcraft 台服語系檔的 id 對 `patch-content` 反推~~——Teamcraft 落後時這招不報錯、只給舊答案（2026-10 因此落後 7.25 三週）。
 前端 [`assets/js/patch-gate.js`](../assets/js/patch-gate.js)：`條目 patch > gamePatch → 台服未開放 → 隱藏`；patch 未知者不隱藏。
+**台服的小版號在全球版本表裡常常沒有**（Teamcraft 沒有 7.25，台服 7.25 的東西被標成 7.3）：升版時用台服版本清單（`scripts/lib/tw-releases.mjs` → `patch-tw-release.mjs`，兩版客戶端的差集）把它們重標回台服版，再用 `check-gate-release.mjs --to <版>` 預演閘門（知識庫 §4.5）。
 
 | 範圍 | 來源 | 腳本 |
 |------|------|------|
@@ -77,13 +78,13 @@ ffxivcollect 的 source `text` 是英文，無簡中可 OpenCC，故 detail 採�
 
 ## 4. 更新流程速查
 
-1. 升台服版本 → **先** `node scripts/build-tw-items-msgpack.mjs --apply`（刷新繁中名快照）→ `node scripts/build-items.mjs`（items.json 收下新物品）。
-2. 改 `patch-backfill.mjs` 的 `TW_PATCH` → 重跑 `patch-backfill.mjs` → `patch-backfill-all.mjs` → `patch-backfill-proxy.mjs`（dry-run 看數字，`--apply` 寫入）。
-3. 補取得來源 → 重跑 `backfill-sources.mjs`（只補新空缺）。青魔特殊來源 → 改 `patch-blue-magic-totems.mjs` 的 `FIX` 表。
-4. 補新開放條目的繁中名 → `node scripts/patch-tw-names.mjs --apply`（魚／園藝／鳥鞍／隨從，來源＝items.json）。
-5. 重建衍生檔（`build-items-lite`／`build-items-market`／`build-item-categories`／`build-market-sources`）→ `minify-data --apply` → `sync-meta --apply`。
-6. 製作模擬器的兩份表跟著 `recipes.json` 走 → `node scripts/build-craft-sim.mjs` → **`node scripts/validate-craft-sim.mjs`**（它會順便用 XIVAPI 校驗技能 CP／等級，官方調過技能就會在這裡報出來）。
-7. 跑 `node scripts/validate-data.mjs` 驗證（count 一致、無粗略 patch、覆蓋率），改過 `assets/` 再跑 `bump-sw-version.mjs`，commit。
+**升台服版本的完整步驟只寫在一處：[知識庫 §4.5](專案慣例與記憶.md)**（2026-10-10 升 7.25 時實跑定案）。這裡原本有一份 08-11 版的步驟，與 CLAUDE.md、知識庫三份各說各話，而且全部以 Teamcraft 台服語系檔為名稱來源——它停在 7.2 時整條流程會靜默 no-op。骨架：
+
+1. 物品名快照（台服客戶端）→ `build-items` → 補 patch → **台服版本清單重標** → **閘門預演** → 改 `TW_PATCH` 寫 gamePatch。
+2. 名稱跟上（補缺名、跟著物品改譯、收藏名跟客戶端）→ 收藏補齊（**樂譜與髮型沒有建置腳本**）→ 衍生檔（**含 `build-obtainable.mjs`**）→ 掃舊名。
+3. 配方有變時，製作模擬器的兩份表跟著 `recipes.json` 走 → `node scripts/build-craft-sim.mjs` → **`node scripts/validate-craft-sim.mjs`**（它會順便用 XIVAPI 校驗技能 CP／等級，官方調過技能就會在這裡報出來）。7.25 沒有新配方（全球 7.3 那 65 筆台服沒有）。
+4. 青魔特殊來源 → 改 `patch-blue-magic-totems.mjs` 的 `FIX` 表。
+5. `minify-data`／`sync-meta` → 全部回歸 → `validate-pages` → 改過 `assets/` 再跑 `bump-sw-version.mjs`，commit。
 
 ---
 

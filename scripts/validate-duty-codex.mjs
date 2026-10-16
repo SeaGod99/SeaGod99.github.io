@@ -18,12 +18,36 @@ const unhandled = [];
 process.on('unhandledRejection', (e) => unhandled.push(String((e && e.message) || e)));
 
 const DB = JSON.parse(readFileSync(join(ROOT, 'data/dungeons.json'), 'utf8'));
+const META = JSON.parse(readFileSync(join(ROOT, 'data/_meta.json'), 'utf8'));
+const pnum = (p) => { const m = String(p ?? '').match(/^(\d+)\.(\d+)/); return m ? parseFloat(m[1] + '.' + m[2].padEnd(2, '0')) : null; };
+/** 頁面上看得到的＝有台服名、而且版本不晚於台服（與 tools/duty-codex/index.html 的過濾同一套） */
+const VISIBLE = DB.data.filter((x) => x.name && (pnum(x.patch) == null || pnum(x.patch) <= pnum(META.gamePatch)));
 
 // ── 資料面 ──────────────────────────────────────────────
 {
   const d = DB.data;
   push('count 與 data.length 相符', DB.count === d.length, DB.count + ' / ' + d.length);
-  push('每個副本都有台服名', d.every((x) => x.name && x.name !== x.nameEn), '');
+  push('有台服名的副本，名稱都不是英文原名', d.filter((x) => x.name).every((x) => x.name !== x.nameEn), '');
+  /* 2026-10-10：國際服 7.3 以後的 23 個副本帶著簡轉繁名、patch 又是 null，閘門放行，上了這頁與命令面板。
+     現在名稱以台服客戶端為準，客戶端沒有台服名的 name 設 null（scripts/patch-dungeon-names.mjs）。 */
+  const hidden = d.filter((x) => !x.name);
+  push('台服未開放的副本名稱是 null（不留簡轉繁名）', hidden.length >= 23 && hidden.every((x) => x.nameSource === 'none'),
+    hidden.length + ' 筆：' + hidden.slice(0, 3).map((x) => x.nameEn).join('、'));
+  /* 優雷卡的 CFC.Content 是 PublicContent id，舊的名稱對應鏈把它當 InstanceContent 查，掛上同號迷宮的名字 */
+  const eureka = d.filter((x) => x.type === 'eureka' && x.name);
+  push('優雷卡區域的名稱都含「優雷卡」（不是借用迷宮名）', eureka.length >= 4 && eureka.every((x) => /優雷卡/.test(x.name)),
+    eureka.map((x) => x.name).join('、'));
+  // 名稱逐字等於台服客戶端（有快取才驗；CI 沒有 out_data/cache 就略過）
+  const cfcCsv = join(ROOT, 'out_data/cache/tc-datamining/ContentFinderCondition.csv');
+  if (existsSync(cfcCsv)) {
+    const { loadTcSheet } = await import('./lib/tc-datamining.mjs');
+    const tc = new Map((await loadTcSheet('ContentFinderCondition', { offline: true })).map((r) => [r.id, String(r.Name || '').replace(/[\uE000-\uF8FF]/g, '').trim()]));
+    const bad = d.filter((x) => x.name ? tc.get(x.id) !== x.name : !!tc.get(x.id));
+    push('  副本名逐字等於台服客戶端；名稱是 null 的客戶端也沒有台服名', bad.length === 0,
+      bad.slice(0, 3).map((x) => `${x.id} 站「${x.name}」客「${tc.get(x.id)}」`).join(' | ') || `${d.length} 筆全對`);
+  }
+  push('新類型（天佑女王／滅激鬥戰／蜃景幻界新月島）都有收', ['save_the_queen', 'chaotic_alliance_raid', 'occult_crescent']
+    .every((t) => VISIBLE.some((x) => x.type === t)), '');
   push('台服名不含日文原文', d.every((x) => !/[\u3041-\u3096\u30A1-\u30FA]/.test(x.name)), '');
 
   const withTime = d.filter((x) => x.timeLimit).length;
@@ -63,16 +87,21 @@ window.fetch = async (url) => {
 };
 window.matchMedia = () => ({ matches: false, addEventListener() {}, addListener() {} });
 
-for (const f of ['assets/js/patch-gate.js']) window.eval(readFileSync(join(ROOT, f), 'utf8'));
+for (const f of ['assets/js/patch-gate.js', 'assets/js/official-terms.js']) window.eval(readFileSync(join(ROOT, f), 'utf8'));
 window.eval([...doc.querySelectorAll('script:not([src])')].map((s) => s.textContent).join(';\n'));
 await new Promise((r) => setTimeout(r, 900));
 
 const cards = () => doc.querySelectorAll('.duty');
 const status = () => doc.getElementById('status').textContent;
 
-push('網址帶 ?t=ultimate 時只顯示絕殲滅戰', cards().length === 7, status());
-push('  類型選單是從資料長出來的', doc.getElementById('typeSel').options.length === 13,
-  doc.getElementById('typeSel').options.length + ' 個選項（含「全部類型」）');
+const ULT = VISIBLE.filter((x) => x.type === 'ultimate').length;
+push('網址帶 ?t=ultimate 時只顯示絕殲滅戰（台服已開放的）', cards().length === ULT, status() + `（資料 ${ULT}）`);
+const TYPES_N = new Set(VISIBLE.map((x) => x.type)).size + 1;
+push('  類型選單是從資料長出來的', doc.getElementById('typeSel').options.length === TYPES_N,
+  doc.getElementById('typeSel').options.length + ' 個選項（含「全部類型」），資料 ' + TYPES_N);
+push('  資料片選單是台服官方名（新生艾奧傑亞…黃金遺產）', [...doc.getElementById('expSel').options].slice(1).map((o) => o.value).join('、') ===
+  '新生艾奧傑亞、蒼天伊修加爾德、紅蓮解放者、漆黑反叛者、曉月之終途、黃金遺產',
+  [...doc.getElementById('expSel').options].slice(1).map((o) => o.value).join('、'));
 push('  資料片選單由舊到新', [...doc.getElementById('expSel').options].slice(1).map((o) => o.value).join('→'),
   [...doc.getElementById('expSel').options].slice(1, 3).map((o) => o.value).join('→'));
 
@@ -80,7 +109,8 @@ push('  資料片選單由舊到新', [...doc.getElementById('expSel').options].
 doc.getElementById('typeSel').value = '';
 doc.getElementById('typeSel').dispatchEvent(new window.Event('change', { bubbles: true }));
 await new Promise((r) => setTimeout(r, 400));
-push('清掉類型篩選後顯示全部', cards().length === DB.count, cards().length + ' 張卡');
+push('清掉類型篩選後顯示全部台服已開放的（未開放的不在頁面上）', cards().length === VISIBLE.length,
+  cards().length + ' 張卡／資料 ' + DB.count + ' 筆（可見 ' + VISIBLE.length + '）');
 push('  依資料片分組', doc.querySelectorAll('.exp-head').length >= 6,
   doc.querySelectorAll('.exp-head').length + ' 組');
 
@@ -174,6 +204,11 @@ push('登記了頁內快捷鍵', Array.isArray(window.SGT_SHORTCUTS_PENDING) &&
   const rows = (si.data || si.rows || []).filter((r) => r[1] === ti);
   push('  key 是 duty:<名稱>', rows.length > 400 && rows.every((r) => typeof r[2] === 'string' && r[2].indexOf('duty:') === 0),
     rows.length + ' 筆，例：' + (rows[0] ? rows[0][2] : ''));
+  /* 10-10：命令面板曾經收著 23 個台服未開放的副本（阿卡狄亞登天鬥技場 重量級1…），點進去是空白。
+     索引裡的每一筆都要是頁面看得到的副本（key 可能是 id 或名稱）。 */
+  const visIds = new Set(VISIBLE.map((x) => 'duty:' + x.id)), visNames = new Set(VISIBLE.map((x) => 'duty:' + x.name));
+  const leak = rows.filter((r) => !visIds.has(r[2]) && !visNames.has(r[2]));
+  push('  命令面板沒有台服未開放的副本', leak.length === 0, leak.length ? leak.slice(0, 3).map((r) => r[0]).join('、') + `…共 ${leak.length}` : '');
 }
 
 // ── 2026-10-03：?id=duty:<id> 精確定位＋「資料列為此副本的產出」──────────────

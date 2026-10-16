@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="FF14 金碟獎品價目表 — 金碟幣（MGP）與金碟聲譽能換到的 439 件獎品、各在哪間店向誰換，並依你在本站的收藏進度算出「還缺的那幾件總共要多少 MGP」">
+  <meta name="description" content="FF14 金碟獎品價目表 — 金碟幣（MGP）與金碟聲譽能換到的 432 件獎品、各在哪間店向誰換，並依你在本站的收藏進度算出「還缺的那幾件總共要多少 MGP」">
   <title>金碟獎品價目表 | 水神的工具箱</title>
   <link rel="stylesheet" href="../../assets/css/tokens.css">
   <link rel="stylesheet" href="../../assets/css/theme.css">
@@ -103,7 +103,7 @@
 <body>
 <div class="tool-header">
   <h1 class="tool-title">&#x1F3B0; 金碟獎品價目表</h1>
-  <p class="tool-subtitle">金碟幣（MGP）與金碟聲譽能換到的 439 件獎品、各在哪間店向誰換；並依你在本站的收藏進度算出還缺的那幾件總共要多少</p>
+  <p class="tool-subtitle">金碟幣（MGP）與金碟聲譽能換到的 432 件獎品、各在哪間店向誰換；並依你在本站的收藏進度算出還缺的那幾件總共要多少</p>
   <div class="header-divider"></div>
 </div>
 
@@ -135,6 +135,7 @@
 
 <script src="../../assets/js/unlock-banner.js"></script>
 <script>
+function sgtFold(s) { return window.SGT_fold ? window.SGT_fold(s) : String(s == null ? '' : s).toLowerCase(); }   // 搜尋正規化：小寫＋中點摺疊（定義在 theme.js，§4.99-2）
 (function () {
   var ICON_CDN = 'https://xivapi.com';
   var DB = [];              // [{key,id,name,items:[…]}]
@@ -173,9 +174,9 @@
       if (onlyCollect && !it.own) return false;
       if (hideHave && isOwned(it)) return false;
       if (cat !== '__all__' && (it.category || '（未分類）') !== cat) return false;
-      if (q && (it.name || '').toLowerCase().indexOf(q) < 0 &&
-          (it.shop || '').toLowerCase().indexOf(q) < 0 &&
-          (it.npc && it.npc.name || '').toLowerCase().indexOf(q) < 0) return false;
+      if (q && sgtFold(it.name || '').indexOf(q) < 0 &&
+          sgtFold(it.shop || '').indexOf(q) < 0 &&
+          sgtFold(it.npc && it.npc.name || '').indexOf(q) < 0) return false;
       return true;
     });
   }
@@ -291,7 +292,7 @@
   document.getElementById('hideHave').addEventListener('change', function () { hideHave = this.checked; render(); syncURL(); });
   var deb;
   document.getElementById('searchInput').addEventListener('input', function () {
-    var v = this.value.trim().toLowerCase();
+    var v = sgtFold(this.value.trim());
     clearTimeout(deb);
     deb = setTimeout(function () { q = v; render(); syncURL(); }, 160);
   });
@@ -314,7 +315,7 @@
     fetch('../../data/gold-saucer.json').then(function (r) { return r.json(); }).then(function (j) {
       DB = j.data || [];
       if (P.get('c') === 'reputation') cur = 'reputation';
-      q = (P.get('q') || '').trim().toLowerCase();
+      q = sgtFold((P.get('q') || '').trim());
       onlyCollect = P.get('only') === '1';
       hideHave = P.get('hide') === '1';
       document.getElementById('searchInput').value = P.get('q') || '';

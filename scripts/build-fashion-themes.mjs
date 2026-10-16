@@ -12,6 +12,11 @@
 //   FashionCheckWeeklyTheme 的 row ＝ 社群週次 + 9
 //   （驗證：row 449 = Western Rider = week 440；row 452 = 真麻正式装 = week 443）
 //
+// 2026-10-11 更正：**台服客戶端解包有這張表**（thewakingsands/ffxiv-datamining-tc 的 FashionCheckWeeklyTheme），
+// 但只有 week 440–466 是台服原文（之後是日文佔位或沒有列）。有台服原文的週逐筆用原文、標 nameSource: "tw-client"
+// （其中 4 週與陸服轉繁不同：451 冬天的海盜、453 寢室的反抗軍、456 古代文明的妖艷之神、466 劣化起動）；
+// 其餘維持下面的陸服轉繁並標 "cn-hant"。前端依**逐筆**的 nameSource 決定要不要標「非台服官方譯名」。
+// 以下是當初的說明（台服原文涵蓋不到的週次仍適用）：
 // ⚠️ 名稱來源限制：這張表**沒有台服官方譯名**。FashionCheckWeeklyTheme 不是物品／地名／
 // 副本名，tw-items 那條權威鏈涵蓋不到它，台服也沒有公開的時尚品鑑主題譯名表。
 // 因此本表走陸服 datamining 簡中原文 + OpenCC(cn→twp) 轉繁，並在每筆帶 nameCn 原文、
@@ -25,6 +30,8 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import * as OpenCC from "opencc-js";
+import { loadTcSheet } from "./lib/tc-datamining.mjs";
+import { cleanName, usable } from "./lib/client-names.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
@@ -91,21 +98,35 @@ for (const [week, expect] of Object.entries(CHECKPOINTS)) {
   }
 }
 
+/* 台服客戶端原文（row id 與陸服同一個空間：row ＝ 週次 + ROW_OFFSET）；讀不到就整張退回陸服轉繁 */
+const twTheme = new Map();
+try {
+  for (const r of await loadTcSheet("FashionCheckWeeklyTheme", { offline })) {
+    const n = cleanName(r.Name);
+    if (usable(n)) twTheme.set(r.id, n);
+  }
+} catch (e) { console.log(`  ⚠ 台服客戶端 FashionCheckWeeklyTheme 讀不到（${e.message}），全部用陸服轉繁`); }
+
 const maxRow = Math.max(...csv.keys());
 const lastWeek = maxRow - ROW_OFFSET;
 const data = {};
 let empty = 0;
+let twOpen = true;   // 見下：台服原文只認連續的一段
 for (let w = FIRST_WEEK; w <= lastWeek; w++) {
   const cn = csv.get(w + ROW_OFFSET);
   if (!cn) { empty++; continue; } // 表尾可能有空列
-  data[w] = { name: toTw(cn), nameCn: cn };
+  /* 只收「從 FIRST_WEEK 起**連續**有台服原文」的那一段：467 週起是未翻譯的日文預載列，其中 476「近未来山賊」、
+     485「天起律動」剛好沒有假名、過得了守門（来 是日文字形）——遇到第一個不可用的週就停，之後一律不認。 */
+  if (twOpen && !twTheme.has(w + ROW_OFFSET)) twOpen = false;
+  const tw = twOpen ? twTheme.get(w + ROW_OFFSET) : null;
+  data[w] = tw ? { name: tw, nameCn: cn, nameSource: "tw-client" } : { name: toTw(cn), nameCn: cn, nameSource: "cn-hant" };
 }
 
 const out = {
   schema: "fashion-themes",
   updated: new Date().toISOString().slice(0, 10),
-  source: "thewakingsands/ffxiv-datamining-cn FashionCheckWeeklyTheme.csv",
-  nameSource: "cn-hant", // 簡轉繁，非台服官方譯名 —— 前端必須標註
+  source: "台服客戶端 FashionCheckWeeklyTheme（有台服原文的週次）＋ thewakingsands/ffxiv-datamining-cn FashionCheckWeeklyTheme.csv（其餘，OpenCC 轉繁）",
+  nameSource: "per-entry", // 逐筆看 data[週].nameSource：tw-client＝台服原文；cn-hant＝簡轉繁、非台服官方譯名，前端必須標註
   rowOffset: ROW_OFFSET,
   firstWeek: FIRST_WEEK,
   lastWeek,

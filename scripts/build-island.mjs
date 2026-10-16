@@ -38,6 +38,8 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { loadTwLocales, twName as twLocName } from "./lib/tw-locales.mjs";
+import { clientNameMap, cleanName, usable } from "./lib/client-names.mjs";
+import { loadTcSheet } from "./lib/tc-datamining.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
@@ -175,6 +177,33 @@ function loadOverride() {
 // 工坊主題：Teamcraft tw-island-craftworks-theme（台服官方，2026-10-03 收進 tw-locales）優先，
 // 查不到才退回人工表 island-names-tw.json 的 themes（簡轉繁，16 筆裡「家具」「調料」兩筆是錯的）。
 const TWL = await loadTwLocales();
+
+/* 素材分類／島嶼地區／建築地標：**台服客戶端優先**（MJIItemCategory／MJIName 的 Singular、MJIText 的 Text，
+   以 row id 對；2026-10-11）。這 40 筆以前只能靠人工表 island-names-tw.json（簡轉繁，標 nameSource: "cn-hant"、
+   前端標「非官方譯名」），第三輪盤點量到它們與客戶端**逐字相同**——改走客戶端後名字不變、標記改成 tw-client，
+   免責標注自動消失。客戶端沒有的才退回人工表。 */
+async function clientMji(sheet, col) {
+  const m = new Map();
+  try {
+    for (const r of await loadTcSheet(sheet, { offline: process.argv.includes("--offline") })) {
+      const n = cleanName(r[col]);
+      if (usable(n)) m.set(r.id, n);
+    }
+  } catch (e) { console.log(`  ⚠ 台服客戶端 ${sheet} 讀不到（${e.message}），退回人工表`); }
+  return m;
+}
+const CLIENT_MJI = {
+  categories: await clientMji("MJIItemCategory", "Singular"),
+  areas: await clientMji("MJIName", "Singular"),
+  buildings: await clientMji("MJIText", "Text"),
+};
+/** [名稱, nameSource]：客戶端 → 人工表 → null */
+const mjiName = (section, id) => {
+  const c = CLIENT_MJI[section].get(Number(id));
+  if (c) return [c, "tw-client"];
+  const nm = OV[section][id] || null;
+  return [nm, nameSrc(section, nm)];
+};
 const themeTw = (id) => twLocName(TWL.islandCraftworksThemes || {}, id);
 const themeNm = (id) => themeTw(id) || OV.themes[id] || null;
 const themeSrc = (id) => (themeTw(id) ? "tw-official" : nameSrc("themes", OV.themes[id]));
@@ -249,8 +278,8 @@ const report = [];
     .filter((r) => mainKey(r._key) > 0 && (r.Singular || "").trim())
     .map((r) => {
       const id = mainKey(r._key);
-      const nm = OV.categories[id] || null;
-      return { id, name: nm, nameCn: r.Singular, nameMissing: !nm, nameSource: nameSrc("categories", nm) };
+      const [nm, src] = mjiName("categories", id);
+      return { id, name: nm, nameCn: r.Singular, nameMissing: !nm, nameSource: src };
     });
   report.push(["island-categories", write("island-categories.json", "island-categories", rows),
     rows.filter((r) => r.name).length]);
@@ -262,8 +291,8 @@ const report = [];
     .filter((r) => mainKey(r._key) > 0 && (r.Singular || "").trim())
     .map((r) => {
       const id = mainKey(r._key);
-      const nm = OV.areas[id] || null;
-      return { id, name: nm, nameCn: r.Singular, nameMissing: !nm, nameSource: nameSrc("areas", nm) };
+      const [nm, src] = mjiName("areas", id);
+      return { id, name: nm, nameCn: r.Singular, nameMissing: !nm, nameSource: src };
     });
   report.push(["island-areas", write("island-areas.json", "island-areas", rows),
     rows.filter((r) => r.name).length]);
@@ -536,12 +565,12 @@ const report = [];
         if (!materials.length) return null;
         const textRow = num(r.Name);
         const nameCn = mjiText.get(textRow) || null;
-        const name = OV.buildings[textRow] || null;
+        const [name, nameSrcB] = mjiName("buildings", textRow);
         return {
           id: `${type}-${r._key}`, type,
           // 子列 0 起算，對應遊戲內的等級 I／II／III…（等級也寫在 nameCn 尾巴）
           level: subKey(r._key) + 1,
-          name, nameCn, nameMissing: !name, nameSource: nameSrc("buildings", name),
+          name, nameCn, nameMissing: !name, nameSource: nameSrcB,
           textId: textRow || null,
           icon: num(r.Icon) || null,
           materials,

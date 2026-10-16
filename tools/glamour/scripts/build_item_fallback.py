@@ -133,6 +133,18 @@ def fetch_all_equip(esc2slot):
     return out
 
 
+def load_tw_release():
+    """主庫 scripts/lib/tw-release-*.json → {item id: 台服版號}（例：台服 7.25 新開的 305 件 → '7.25'）。"""
+    import glob
+    out = {}
+    for f in sorted(glob.glob(os.path.join(maindb.REPO, "scripts", "lib", "tw-release-*.json"))):
+        with open(f, encoding="utf-8") as fh:
+            d = json.load(fh)
+        for iid in d.get("items", []):
+            out[int(iid)] = d["version"]
+    return out
+
+
 def load_id2patch():
     """patchdata/Item.json(id→索引) + patchlist.json(索引→版本) → {id:'X.xx'}。"""
     item_idx = _get(f"{PATCHES_RAW}/patchdata/Item.json")
@@ -152,6 +164,11 @@ def main():
 
     print("抓 patch 對照（datamining-patches）…")
     id2patch = load_id2patch()
+    # 台服版本清單（主庫 scripts/lib/tw-release-*.json，台服客戶端前後兩版的差集）：
+    # 全球的版本表常常沒有台服的小版號——台服 7.25 的裝備在 datamining-patches／Teamcraft 都標成 7.3，
+    # 照抄會讓圖鑑把台服已開放的東西標成「7.3」。清單裡有的一律用台服版號（2026-10-10）。
+    tw_release = load_tw_release()
+    print(f"  台服版本清單：{len(tw_release)} 件改用台服版號")
 
     print("抓 EquipSlotCategory 部位表（XIVAPI v2）…")
     esc2slot = fetch_esc_map()
@@ -173,7 +190,7 @@ def main():
             "en": en.get(iid, "") or g["name_en"],
             "cn": cn.get(iid, ""),
             "zh": zh,
-            "patch": id2patch.get(iid) or tcv.get("patch", ""),
+            "patch": tw_release.get(iid) or id2patch.get(iid) or tcv.get("patch", ""),
             "slot": slot,
             "categoryId": cid,
             "categoryName": cname,
@@ -197,7 +214,7 @@ def main():
             "equip_set_slot_level": "XIVAPI v2 beta（整表掃 EquipSlotCategory/ItemUICategory/LevelEquip）",
             "names_ja_en_cn": "out_data/{ja,en,cn}-items.msgpack；缺者由 XIVAPI Name@lang(ja)/Name 補（7.x 件）",
             "name_zh_tw": "主庫 data/items.json（台服繁中官方名，缺則 ''）",
-            "patch": "github xivapi/ffxiv-datamining-patches（涵蓋最新）",
+            "patch": "主庫 scripts/lib/tw-release-*.json（台服版號）＞ github xivapi/ffxiv-datamining-patches（涵蓋最新）＞ 主庫 items.json",
         },
         "schema": ("items[id] = {ja,en,cn,zh,patch,slot,categoryId,categoryName,equipLevel,src,"
                    "dye,mb,icon,ilvl,cjc}"),

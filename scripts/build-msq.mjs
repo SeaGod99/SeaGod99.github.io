@@ -26,6 +26,8 @@ import { fileURLToPath } from "node:url";
 import { xiv } from "./lib/xivapi.mjs";
 import { loadTwLocales, twName } from "./lib/tw-locales.mjs";
 import { isTw } from "./lib/tw-text.mjs";
+import { loadTcSheet } from "./lib/tc-datamining.mjs";
+import { isOddOfficial } from "./lib/official-odd-names.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
@@ -48,6 +50,19 @@ async function main() {
 
   const tw = await loadTwLocales();
   const twQuests = JSON.parse(await readFile(join(ROOT, "out_data", "tw-quests.json"), "utf8"));
+  /* 2026-10-10：名稱改成**台服客戶端解包優先**、Teamcraft 後備（同 build-quests.mjs）。Teamcraft 台服語系檔
+     停在 7.2，第 14 章「黃金終章」後半 8 個任務（70835 來自過去的微光…70842 探究永久之人，全球 7.2 主線、
+     台服 08-11 已開放）它的 tw-quests 沒有，主線頁就停在 70786。另外第 11 章兩個正式任務名撞到台服名守門
+     （「●明●●極限●星球」「Hello, World」），由 scripts/lib/official-odd-names.mjs 逐筆放行。 */
+  const tcQuest = new Map((await loadTcSheet("Quest", { offline })).map((r) => [r.id, r.Name]));
+  const tcGenre = new Map((await loadTcSheet("JournalGenre", { offline })).map((r) => [r.id, r.Name]));
+  const strip = (x) => String(x || "").split("").filter((c) => { const k = c.charCodeAt(0); return k < 0xe000 || k > 0xf8ff; }).join("").trim();
+  const questName = (id) => {
+    for (const n of [strip(tcQuest.get(id)), twQuests[id]?.tw]) if (n && isTw(n)) return n;
+    if (isOddOfficial("quest", id)) return strip(tcQuest.get(id)) || twQuests[id]?.tw || null;
+    return null;
+  };
+  const genreName = (id) => [strip(tcGenre.get(id)), twName(tw.journalGenre, id)].find((n) => n && isTw(n)) || null;
   /* ⚠ **「沿途解鎖哪些副本」做不到。** `dungeons.json` 的 `unlock.questId` 只有 32 筆
      （`Quest.InstanceContentUnlock` 全表只有 48 筆，見知識庫 §4.74），而且與主線任務
      **零交集**——多數副本由主線解鎖，但那個關聯在任務腳本裡、不在 sheet 欄位上。
@@ -61,8 +76,8 @@ async function main() {
     const sec = cat && cat.JournalSection && cat.JournalSection.fields;
     const secName = sec ? sec.Name : "";
     if (!/^Main Scenario/.test(secName || "")) continue;
-    const name = twName(tw.journalGenre, g.id);
-    if (!isTw(name)) continue;                    // 台服未開放的章節不收
+    const name = genreName(g.id);
+    if (!name) continue;                          // 台服未開放的章節不收
     msqGenres.set(g.id, { id: g.id, name, section: secName });
   }
 
@@ -71,9 +86,8 @@ async function main() {
   for (const q of quests) {
     const gid = q.f["JournalGenre@as(raw)"];
     if (!gid || !msqGenres.has(gid)) { stat.notMsq++; continue; }
-    const row = twQuests[q.id];
-    const name = row && row.tw;
-    if (!isTw(name)) { stat.noTw++; continue; }   // 台服未開放＝整筆不收（鐵則）
+    const name = questName(q.id);
+    if (!name) { stat.noTw++; continue; }         // 台服未開放＝整筆不收（鐵則）
     // ClassJobLevel 是陣列（每職業一格），取第一個大於 0 的
     const lvArr = q.f.ClassJobLevel;
     const lv = Array.isArray(lvArr) ? (lvArr.find((x) => x > 0) || 0) : (lvArr || 0);

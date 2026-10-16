@@ -4,8 +4,11 @@
 //   1. 戰鬥特職＝tw-items「XX之證」官方名（白魔道士/召喚士/占星術師/奪魂者/毒蛇劍士…
 //      與 CN 簡轉繁差異極大，絕不可用 s2t）
 //   2. 基礎職＝tw-items 職業戒指系列官方名（劍術士/格鬥士/弓術士/巴術士…「士」非「師」）
-//   3. 製作職＝recipes.json jobId 對照（站內 UI 一致；官方「鍊金」與站內「煉金術士」並存，取站內）
-//   4. 採集職＝站內採集/釣魚工具既有名（採礦工/園藝工/捕魚人）
+//   0. **最優先：data/official-terms.json（台服客戶端 ClassJob.Name）**——2026-10-09 查證，製作採集職的台服官方名
+//      是木工師、鍛造師、甲冑師、金工師、皮革師、裁縫師、鍊金術師、烹調師、採掘師、園藝師、漁師；
+//      站上原本用的刻木匠…捕魚人是陸服名轉繁。站主 10-10 拍板改官方，舊名只留作別名（10-11 改）。
+//   3. 製作職＝recipes.json jobId 對照（舊做法，官方表查不到時的後備）
+//   4. 採集職＝固定表（同上，後備）
 // 遇到任何缺對照的縮寫一律 exit 1，嚴禁靜默輸出殘缺對照表。
 //
 // 用法：node scripts/build-equip.mjs [ClassJob.csv 路徑，預設 /tmp/ClassJob.csv]
@@ -13,6 +16,7 @@ import { createRequire } from 'module';
 import { readFileSync, writeFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import path from 'path';
+import { jobName } from './lib/official-terms.mjs';
 
 const REPO = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const require = createRequire(REPO + '/package.json');
@@ -57,7 +61,7 @@ const FIXED = {
   ADV: '冒險者',
   GLA: '劍術士', PGL: '格鬥士', MRD: '斧術士', LNC: '槍術士', ARC: '弓術士',
   CNJ: '幻術士', THM: '咒術士', ACN: '巴術士', ROG: '雙劍士',
-  MIN: '採礦工', BTN: '園藝工', FSH: '捕魚人',
+  MIN: '採掘師', BTN: '園藝師', FSH: '漁師',
 };
 
 // ---- 收集 equipment 用到的縮寫 ----
@@ -75,7 +79,8 @@ for (const abbr of Array.from(usedAbbrs).sort()) {
   const cj = cnByAbbr.get(abbr);
   if (!cj) { missing.push(abbr + '（ClassJob.csv 查無此縮寫）'); continue; }
   let name = null, src = '';
-  if (FIXED[abbr]) { name = FIXED[abbr]; src = '固定表（戒指系列/站內既有名）'; }
+  if (jobName(abbr)) { name = jobName(abbr); src = '台服客戶端 ClassJob（official-terms.json）'; }
+  else if (FIXED[abbr]) { name = FIXED[abbr]; src = '固定表（戒指系列/站內既有名）'; }
   else if (craftNameByJobId.has(cj.id)) { name = craftNameByJobId.get(cj.id); src = 'recipes.json jobId'; }
   else if (cj.soul > 0) {
     const soulTw = twName(cj.soul);                 // 例：「戰士之證」「白魔道士之證」

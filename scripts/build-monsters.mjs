@@ -1,33 +1,31 @@
 // build-monsters.mjs
 // 建立 data/monsters.json 怪物資料庫
 //
-// 策略：以 BNpcName.csv（14367 筆）為主表，Teamcraft 資料為補充。
+// 策略：以 BNpcName.csv（中國服，14367 筆）的 row id 為主表，Teamcraft 資料為補充。
 //   這樣可以確保討伐怪（S/A/B）即使沒有 Teamcraft 座標也能出現。
+//   **中國服那份只拿 row id，不拿名字**——名字一律走台服（2026-10-11 起，知識庫 §4.98）。
 //
 // 來源：
-//   Teamcraft tw/tw-mobs.json        baseid(=BNpcName row_id) → { tw: 台服官方名 }（名稱第一優先）
-//   thewakingsands BNpcName.csv      row_id → 簡中名（主表，全怪；OpenCC 簡轉繁為 fallback）
+//   thewakingsands BNpcName.csv（cn） row_id 宇集（只取 id）
 //   Teamcraft mobs.json              baseid(=BNpcName row_id) → { en, ja }
 //   Teamcraft monsters.json          monsterId → { baseid, positions[{map,zoneid,level,hp,x,y,z}] }
 //   Teamcraft drop-sources.json      monsterId → itemId[]
-//   opencc-js                        簡中 → 繁中
 //   data/items.json                  itemId → 繁中名（掉落物對照）
 //   thewakingsands MobHuntTarget.csv + MobHuntOrder.csv → baseId → rank
-//   thewakingsands PlaceName.csv      placeNameId → 簡中地名 → OpenCC 繁中
-//   XIVAPI Map                       mapId → PlaceName.value（placeNameId）
+//   名稱與座標地名                   patch-monster-names.mjs 的 applyMonsterNames()（建完直接呼叫，不必另外跑）：
+//                                    台服客戶端 BNpcName → Teamcraft tw-mobs → null；地名 maps.json → 客戶端 Map/PlaceName
 //
 // 輸出欄位（每筆）：
 //   id          - Teamcraft monsterId（無座標資料時為 null）
 //   baseId      - BNpcName row_id
-//   name        - 繁中名（優先 tw-mobs 台服官方名；無則 CN+OpenCC 簡轉繁）
-//   nameSource  - "tw-mobs"（僅官方名時存在；fallback 簡轉繁不標）
+//   name        - 台服名（查不到＝台服未開放 → null，不用簡轉繁補）
+//   nameSource  - "client" | "tw-mobs" | "none"
 //   nameEn      - 英文名（來自 mobs.json，無則 null）
 //   nameJa      - 日文名（來自 mobs.json，無則 null）
 //   huntRank    - null | "SS" | "S" | "A" | "B"（討伐怪等級）
 //   positions   - [{ mapId, mapName, level, hp, x, y, z }]（戶外怪才有）
 //   drops       - [{ itemId, name }]（有繁中名的才放）
 //
-// 注意：Cowork 沙箱擋外網，需在本機執行。
 // 執行（repo 根目錄）：node scripts/build-monsters.mjs
 // 需求：Node 18+（內建 fetch）
 
@@ -35,7 +33,7 @@ import { readFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { tmpdir } from "node:os";
-import * as OpenCC from "opencc-js";
+import { applyMonsterNames } from "./patch-monster-names.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DATA = join(__dirname, "..", "data");
@@ -46,14 +44,9 @@ const ITEMS_FILE = join(DATA, "items.json");
 
 const TC_BASE =
   "https://raw.githubusercontent.com/ffxiv-teamcraft/ffxiv-teamcraft/master/libs/data/src/lib/json";
-const TC_TW_BASE =
-  "https://raw.githubusercontent.com/ffxiv-teamcraft/ffxiv-teamcraft/staging/libs/data/src/lib/json/tw";
 const CN_BASE =
   "https://raw.githubusercontent.com/thewakingsands/ffxiv-datamining-cn/master";
 const XIVAPI = "https://v2.xivapi.com/api/sheet";
-
-// 簡中 → 繁中轉換器
-const converter = OpenCC.Converter({ from: "cn", to: "tw" });
 
 // ---------- 工具 ----------
 
@@ -113,12 +106,12 @@ function parseCSVLine(line) {
 
 // ---------- 資料抓取 ----------
 
-// thewakingsands BNpcName.csv：row_id → 繁中名（簡中轉換）
-async function fetchCnBNpcNames() {
+// thewakingsands BNpcName.csv（中國服）：只取 row id 當主表——名字一律走台服（applyMonsterNames）
+async function fetchCnBNpcIds() {
   const csv = await fetchText(`${CN_BASE}/BNpcName.csv`, "BNpcName.csv(cn)");
   const lines = csv.split("\n");
   // 前3行是 header/型別說明，第4行起是資料，第一欄是 row_id，第二欄是 Singular(簡中)
-  const map = new Map(); // row_id → 繁中名
+  const ids = new Set(); // row_id（有簡中名＝實際使用中的列）
   for (let i = 3; i < lines.length; i++) {
     const line = lines[i].trim();
     if (!line) continue;
@@ -126,10 +119,10 @@ async function fetchCnBNpcNames() {
     const rowId = parseInt(fields[0]);
     const cn = fields[1] || "";
     if (!cn || isNaN(rowId)) continue;
-    map.set(rowId, converter(cn));
+    ids.add(rowId);
   }
-  console.log(`  BNpcName(cn→tw) 共 ${map.size} 筆`);
-  return map;
+  console.log(`  BNpcName(cn) 共 ${ids.size} 個 row id`);
+  return ids;
 }
 
 // Teamcraft mobs.json：baseId(=BNpcName row_id) → { en, ja }
@@ -143,20 +136,6 @@ async function fetchMobs() {
     map.set(Number(idStr), { en, ja });
   }
   console.log(`  mobs 共 ${map.size} 筆`);
-  return map;
-}
-
-// Teamcraft tw-mobs.json：baseId → 台服官方繁中名（名稱第一優先來源）
-// 佔位值（含日文假名如「ラベル削除予定」、全形問號）視為無資料
-async function fetchTwMobs() {
-  const data = await fetchJson(`${TC_TW_BASE}/tw-mobs.json`, "tw-mobs.json");
-  const map = new Map();
-  for (const [idStr, v] of Object.entries(data)) {
-    const tw = v && v.tw;
-    if (!tw || /[぀-ヿ]/.test(tw) || /^[？?]+$/.test(tw)) continue;
-    map.set(Number(idStr), tw);
-  }
-  console.log(`  tw-mobs（台服官方名）共 ${map.size} 筆`);
   return map;
 }
 
@@ -238,36 +217,6 @@ async function fetchHuntTargets() {
   return map;
 }
 
-// thewakingsands PlaceName.csv：placeNameId → 繁中地名
-async function fetchCnPlaceNames() {
-  const csv = await fetchText(`${CN_BASE}/PlaceName.csv`, "PlaceName.csv(cn)");
-  const lines = csv.split("\n");
-  const map = new Map(); // placeNameId → 繁中名
-  for (let i = 3; i < lines.length; i++) {
-    const line = lines[i].trim();
-    if (!line) continue;
-    const fields = parseCSVLine(line);
-    const rowId = parseInt(fields[0]);
-    const cn = fields[1] || "";
-    if (!cn || isNaN(rowId)) continue;
-    map.set(rowId, converter(cn));
-  }
-  console.log(`  PlaceName(cn→tw) 共 ${map.size} 筆`);
-  return map;
-}
-
-// Map sheet：mapId → placeNameId（再用 placeNames 查繁中名）
-async function fetchMapPlaceIds() {
-  const rows = await fetchXivapiAll("Map", "PlaceName", "Map");
-  const map = new Map(); // mapId → placeNameId
-  for (const r of rows) {
-    const placeId = r.fields?.PlaceName?.value ?? null;
-    if (placeId != null) map.set(r.row_id, placeId);
-  }
-  console.log(`  Map 共 ${map.size} 筆`);
-  return map;
-}
-
 // ---------- 主程式 ----------
 
 async function main() {
@@ -282,20 +231,17 @@ async function main() {
 
   // 2. 抓遠端資料（並行）
   console.log("抓取遠端資料…");
-  const [tcMonsters, tcDrops, cnNames, mobs, huntTargets, mapPlaceIds, placeNames, twMobs] =
+  const [tcMonsters, tcDrops, cnIds, mobs, huntTargets] =
     await Promise.all([
       fetchJson(`${TC_BASE}/monsters.json`, "monsters.json"),
       fetchJson(`${TC_BASE}/drop-sources.json`, "drop-sources.json"),
-      fetchCnBNpcNames(),
+      fetchCnBNpcIds(),
       fetchMobs(),
       fetchHuntTargets(),
-      fetchMapPlaceIds(),
-      fetchCnPlaceNames(),
-      fetchTwMobs(),
     ]);
   console.log(`\n  monsters(Teamcraft) 共 ${Object.keys(tcMonsters).length} 筆`);
   console.log(`  drop-sources 共 ${Object.keys(tcDrops).length} 筆`);
-  console.log(`  BNpcName(主表) 共 ${cnNames.size} 筆\n`);
+  console.log(`  BNpcName(主表) 共 ${cnIds.size} 筆\n`);
 
   // 反轉 drop-sources：monsterId → itemId[]
   const monsterDrops = new Map();
@@ -320,7 +266,7 @@ async function main() {
   const data = [];
   let noEngName = 0;
 
-  for (const [baseId, nameTw] of cnNames) {
+  for (const baseId of cnIds) {
     const nameData = mobs.get(baseId) ?? null;
 
     // 沒有英文名的跳過（通常是廢棄/未使用的 NPC）
@@ -341,7 +287,7 @@ async function main() {
         posSet.add(key);
         positions.push({
           mapId: p.map,
-          mapName: placeNames.get(mapPlaceIds.get(p.map)) ?? null,
+          mapName: null,          // applyMonsterNames() 依 maps.json 補
           level: p.level ?? null,
           hp: p.hp ?? null,
           x: p.x ?? null,
@@ -368,19 +314,17 @@ async function main() {
     // 代表 monsterId（取第一個，無則 null）
     const id = monsterIds.length > 0 ? monsterIds[0] : null;
 
-    // 名稱優先序：tw-mobs 台服官方名 → CN+OpenCC 簡轉繁（fallback，不標 nameSource）
-    const twName = twMobs.get(baseId) ?? null;
+    // 名稱與座標地名由 applyMonsterNames() 統一填（客戶端 → tw-mobs → null），這裡先留空
     const entry = {
       id,
       baseId,
-      name: twName ?? nameTw,
+      name: null,
       nameEn: nameData.en,
       nameJa: nameData.ja,
       huntRank,
       positions,
       drops,
     };
-    if (twName) entry.nameSource = "tw-mobs";
     data.push(entry);
   }
 
@@ -393,18 +337,23 @@ async function main() {
     return a.baseId - b.baseId;
   });
 
-  // 5. 統計與輸出
+  // 5. 台服名與座標地名（與 patch-monster-names.mjs 同一支函式）
+  console.log("");
+  console.log("套台服名…");
+  await applyMonsterNames({ data });
+
+  // 6. 統計與輸出
   const huntCount = data.filter((d) => d.huntRank).length;
   const withDrops = data.filter((d) => d.drops.length > 0).length;
   const withTw = data.filter((d) => d.name).length;
-  const withOfficial = data.filter((d) => d.nameSource === "tw-mobs").length;
+  const fromClient = data.filter((d) => d.nameSource === "client").length;
   const withPos = data.filter((d) => d.positions.length > 0).length;
 
   const out = {
     schema: "monsters",
     patch: "7.2",
     updated: new Date().toISOString().slice(0, 10),
-    source: "tw-mobs+datamining-cn+teamcraft+xivapi+items",
+    source: "BNpcName(台服客戶端)+tw-mobs+teamcraft+xivapi+items",
     count: data.length,
     data,
   };
@@ -418,7 +367,7 @@ async function main() {
     const ws = createWriteStream(TMP, { encoding: "utf8", flags: "w" });
     ws.on("error", reject);
     ws.on("finish", resolve);
-    ws.write('{"schema":"monsters","patch":"7.2","updated":"' + out.updated + '","source":"tw-mobs+datamining-cn+teamcraft+xivapi+items","count":' + data.length + ',"data":[');
+    ws.write('{"schema":"monsters","patch":"7.2","updated":"' + out.updated + '","source":"' + out.source + '","count":' + data.length + ',"data":[');
     for (let i = 0; i < data.length; i++) {
       ws.write(JSON.stringify(data[i]));
       if (i < data.length - 1) ws.write(",");
@@ -440,7 +389,7 @@ async function main() {
 
   console.log(`\n✓ 寫入 ${OUT}`);
   console.log(`  總計 ${data.length} 筆（略過無英文名 ${noEngName} 筆）`);
-  console.log(`  有繁中名：${withTw} 筆（台服官方 tw-mobs ${withOfficial} 筆，其餘 CN+OpenCC fallback）`);
+  console.log(`  有台服名：${withTw} 筆（客戶端 ${fromClient} 筆，其餘 Teamcraft tw-mobs；查不到的 name 是 null）`);
   console.log(`  討伐怪（Hunt）：${huntCount} 筆`);
   console.log(`  有座標（戶外怪）：${withPos} 筆`);
   console.log(`  有掉落物：${withDrops} 筆`);

@@ -108,6 +108,13 @@ function main() {
     console.log(`  － ${rule.padEnd(24)} ${String(d.n).padStart(5)} 檔 ${MB(d.bytes).padStart(8)}　${why}`);
   }
   console.log(`  合計省下 ${MB(saved)}（GitHub Pages 發佈上限 1GB）`);
+  /* 容量閘門（2026-10-11）：上面的「MB」是以 1,048,576 位元組計（MiB）；GitHub 的「1 GB」沒寫清楚是哪一種，
+     保守當成十進位 10⁹ 位元組——比 1 GiB 少 7%，寧可早點收到警告。 */
+  const LIMIT = 1e9;
+  const pct = (keepBytes / LIMIT * 100).toFixed(1);
+  if (keepBytes > LIMIT) fatal.push(`發佈內容 ${MB(keepBytes)}（${keepBytes.toLocaleString()} 位元組）超過 GitHub Pages 的 1GB 上限`);
+  else if (keepBytes > LIMIT * 0.9) console.warn(`  ⚠ 發佈內容已用掉 1GB 上限的 ${pct}%——新增大批圖片前先估增量（CLAUDE.md「GitHub Pages 1GB 發佈上限」）`);
+  else console.log(`  容量：上限的 ${pct}%（以 1GB＝10⁹ 位元組保守估）`);
   console.log(`  前端寫死的 data/ 路徑 ${dataRefs.size} 條，必備檔 ${must.length} 個，頁面 ${TOOLS.filter((t) => t.p).length} 頁`);
 
   if (fatal.length) { console.error("\n✗ 中止：\n   " + fatal.join("\n   ")); process.exit(1); }

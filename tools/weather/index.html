@@ -146,6 +146,7 @@
   <!-- 鬧鐘引擎（classic script，掛 window.ETAlarm）。下面的 type="module" 是延後執行的，順序天然成立。 -->
   <script src="../../assets/js/et-alarm.js"></script>
   <script src="../../assets/js/theme.js"></script>
+  <script src="../../assets/js/official-terms.js"></script>
 </head>
 <body>
 
@@ -270,12 +271,14 @@ import { mountEtBar } from '../../assets/js/et-bar.js';
 // 地圖分組定義（mapId 對應 data/maps.json，同版本野外＋城市合併）
 // 6.0/7.0 天氣表已由 maps.json weatherRates 提供（台服官方資料），不再是推測值
 // ============================================================
+// 資料片標籤＝台服官方（assets/js/official-terms.js；GROUPS 的鍵 hw／sb… 才是網址與存檔用的值，標籤改了不影響）
+const expLabel = (m) => (window.OfficialTerms && OfficialTerms.expansionLabel(m)) || (m + '.x');
 const GROUPS = {
   lanoscea: {
     label: '拉諾西亞',
     zones: [
-      { mapId:11, name:'利姆薩·羅敏薩上層甲板' },
-      { mapId:12, name:'利姆薩·羅敏薩下層甲板' },
+      { mapId:11, name:'利姆薩・羅敏薩上層甲板' },
+      { mapId:12, name:'利姆薩・羅敏薩下層甲板' },
       { mapId:72, name:'海霧村' },
       { mapId:15, name:'中拉諾西亞' },
       { mapId:16, name:'拉諾西亞低地' },
@@ -312,7 +315,7 @@ const GROUPS = {
     ]
   },
   hw: {
-    label: '3.x 蒼天之禁地',
+    label: expLabel(3),
     zones: [
       { mapId:218, name:'伊修加爾德下層' },
       { mapId:219, name:'伊修加爾德上層' },
@@ -326,7 +329,7 @@ const GROUPS = {
     ]
   },
   sb: {
-    label: '4.x 紅蓮之狂潮',
+    label: expLabel(4),
     zones: [
       { mapId:370, name:'黃金港' },
       { mapId:364, name:'白銀鄉' },
@@ -339,20 +342,20 @@ const GROUPS = {
     ]
   },
   shb: {
-    label: '5.x 暗影之逆焰',
+    label: expLabel(5),
     zones: [
       { mapId:498, name:'遊末邦' },
       { mapId:497, name:'水晶都' },
       { mapId:491, name:'雷克蘭德' },
       { mapId:492, name:'珂露西亞島' },
-      { mapId:493, name:'安穆·艾蘭' },
+      { mapId:493, name:'安穆・艾蘭' },
       { mapId:494, name:'伊爾美格' },
       { mapId:495, name:'拉凱提卡大森林' },
       { mapId:496, name:'黑風海' },
     ]
   },
   ew: {
-    label: '6.x 曉月之終途',
+    label: expLabel(6),
     zones: [
       { mapId:693, name:'舊薩雷安' },
       { mapId:694, name:'拉札漢' },
@@ -366,7 +369,7 @@ const GROUPS = {
     ]
   },
   dt: {
-    label: '7.x 金曦之遺輝',
+    label: expLabel(7),
     zones: [
       { mapId:855, name:'圖萊尤拉' },
       { mapId:856, name:'九號解決方案' },

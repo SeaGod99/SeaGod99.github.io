@@ -84,7 +84,7 @@ async function run(t, kind, text) {
 {
   const t = await boot();
   const d = await run(t, "d", "Sastasha\n地下霊殿 タムタラの墓所\nNot A Real Duty");
-  push("副本：英／日都查得到，連到副本圖鑑", d[0].tw === "天然要害沙斯塔夏溶洞" && d[1].tw === "地下靈殿塔姆·塔拉墓園" && /duty-codex\/\?q=/.test(d[0].href), d.map((x) => x.tw).join("｜"));
+  push("副本：英／日都查得到，連到副本圖鑑", d[0].tw === "天然要害沙斯塔夏溶洞" && d[1].tw === "地下靈殿塔姆・塔拉墓園" && /duty-codex\/\?q=/.test(d[0].href), d.map((x) => x.tw).join("｜"));
   push("  查不到的標紅", d[2].miss, "");
   const m = await run(t, "m", "Trickster Imp\nMorbol");
   push("① 怪物多候選：全部列出並標「3 個候選」", /小頑童/.test(m[0].tw) && /欺詐小頑童/.test(m[0].tw) && /搗蛋鬼/.test(m[0].tw) && m[0].multi === "3 個候選", `${m[0].tw}（${m[0].multi}）`);
@@ -94,7 +94,7 @@ async function run(t, kind, text) {
   push("任務：連到任務查詢，三個城市版本都列", q[0].multi === "3 個候選" && /quest-finder\/\?q=/.test(q[0].href), q[0].tw);
   push("  非物品類別時藏起「帶去市場查價」", t.doc.getElementById("marketBtn").hidden === true, "");
   const p = await run(t, "p", "Limsa Lominsa");
-  push("地名：區域名與城區名都列", /利姆薩·羅敏薩城區/.test(p[0].tw) && p[0].multi === "2 個候選", p[0].tw);
+  push("地名：區域名與城區名都列", /利姆薩・羅敏薩城區/.test(p[0].tw) && p[0].multi === "2 個候選", p[0].tw);
   const it = await run(t, "item", "Iron Ingot");
   push("切回物品：仍走物品查詢、連市場、顯示市場鈕", it[0].tw === "黑鐵錠" && /market\/\?q=/.test(it[0].href) && t.doc.getElementById("marketBtn").hidden === false, it[0].tw);
   push("無 console error", t.errs.length === 0, t.errs.slice(0, 1).join("") || "乾淨");

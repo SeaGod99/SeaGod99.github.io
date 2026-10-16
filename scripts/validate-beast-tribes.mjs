@@ -3,8 +3,8 @@
 // 四個會安靜出錯的地方：
 //   ① **部族名接錯表。** 上游的 `tribes`（Teamcraft `tw/tw-tribes.json`）是**玩家種族**
 //      （中原之民＝Midlander），而它的 row id 恰好與 `BeastTribe` 的前 16 列對得上——
-//      照 id 接會得到 16 個看起來很正常但全錯的名字（同 §4.10）。
-//      所以本站以**貨幣道具名**標示，資料檔裡不可以出現那些種族名。
+//      照 id 接會得到 16 個看起來很正常但全錯的名字（同 §4.10）。資料檔裡不可以出現那些種族名。
+//      2026-10-10 起部族名改取台服客戶端解包的 BeastTribe，建置時用貨幣欄逐列對位證明 row 對得上。
 //   ② **「盟友」階的門檻是 0。** 它不是靠聲望累積解鎖的（要先做完盟友部族任務），
 //      照抄 0 會讓試算算出「立刻就到」。資料裡要寫 null，試算不可把它當終點。
 //   ③ **`BeastTribe.MinLevel` 有 11 列是 0**，不是接取等級。等級要取任務的 `ClassJobLevel`。
@@ -17,6 +17,7 @@ import { JSDOM, VirtualConsole } from 'jsdom';
 import { readFileSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { parseCsv } from './lib/tc-datamining.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..').split('\\').join('/');
 const results = [];
@@ -29,16 +30,16 @@ const ITEMS = new Map(JSON.parse(readFileSync(join(ROOT, 'data/items.json'), 'ut
 
 // ── 資料 ────────────────────────────────────────────────
 {
-  push('18 個部族', DB.data.length === 18, DB.data.length + ' 個');
+  push('19 個部族（台服 7.25 起多了輝鱗族）', DB.data.length === 19, DB.data.length + ' 個');
   push('  9 階都在', DB.ranks.length === 9, DB.ranks.map((r) => r.name).join('、'));
   push('  階級名都是台服名', DB.ranks.every((r) => /[\u4e00-\u9fff]/.test(r.name)), '');
   push('  沒有日文假名', !/[\u3041-\u3096\u30A1-\u30FA]/.test(JSON.stringify(DB)), '');
 
-  push('每個部族都有貨幣道具（那就是識別）',
+  push('每個部族都有貨幣道具',
     DB.data.every((t) => t.currency && t.currency.id && t.currency.name), '');
   push('  貨幣名與 items.json 一致（不是自己編的）',
     DB.data.every((t) => ITEMS.get(t.currency.id) === t.currency.name),
-    DB.data.filter((t) => ITEMS.get(t.currency.id) !== t.currency.name).map((t) => t.currency.name).join('、') || '18/18 相符');
+    DB.data.filter((t) => ITEMS.get(t.currency.id) !== t.currency.name).map((t) => t.currency.name).join('、') || DB.data.length + '/' + DB.data.length + ' 相符');
   push('  每個部族都有資料片與等級', DB.data.every((t) => t.expansion && t.level > 0),
     '例：' + DB.data[0].currency.name + '／' + DB.data[0].expansion + '／Lv' + DB.data[0].level);
   push('  每個部族都有 rep 表（各階任務給多少聲望）',
@@ -59,9 +60,25 @@ const ITEMS = new Map(JSON.parse(readFileSync(join(ROOT, 'data/items.json'), 'ut
     hit.length === 0, hit.join('、') || '乾淨');
   push('  建置腳本把這個坑寫下來了',
     /玩家種族/.test(BUILD) && /照 id 接會全錯|row id 恰好/.test(BUILD), '');
-  push('  頁面也對使用者講明為什麼用貨幣名', /部族名沒有台服來源/.test(HTML), '');
-  push('  資料檔沒有 tribeName 之類的欄位（查不到就不放）',
-    !DB.data.some((t) => t.name || t.tribeName), '');
+  push('  頁面不再宣稱「部族名沒有台服來源」（台服客戶端有）', !/部族名沒有台服來源/.test(HTML), '');
+  push('  每個部族都有台服官方部族名（「種族：組織」）',
+    DB.data.every((t) => t.name && /[\u4e00-\u9fff]/.test(t.name) && /：/.test(t.name)),
+    '例：' + DB.data.map((t) => t.name).slice(0, 3).join('、'));
+  push('  建置時用貨幣欄逐列對位（證明 row 對得上，不是種族表）',
+    /DisplayOrder/.test(BUILD) && /misaligned/.test(BUILD) && /throw new Error/.test(BUILD), '');
+  push('  第 19 族「輝鱗族」（台服 7.25）', DB.data.some((t) => t.id === 19 && /輝鱗族/.test(t.name)),
+    (DB.data.find((t) => t.id === 19) || {}).name || '(沒有)');
+  /* 本機有客戶端快取時再逐列核對一次（CI 沒有 out_data/cache，就略過這條） */
+  const tcCsv = join(ROOT, 'out_data/cache/tc-datamining/BeastTribe.csv');
+  if (existsSync(tcCsv)) {
+    const rows = parseCsv(readFileSync(tcCsv, 'utf8').replace(/^\uFEFF/, ''));
+    const h = rows[1];
+    const iName = h.indexOf('Adjective'), iCur = h.indexOf('DisplayOrder');
+    const byId = new Map(rows.slice(3).filter((r) => r[0] !== '').map((r) => [Number(r[0]), r]));
+    const bad = DB.data.filter((t) => { const r = byId.get(t.id); return !r || r[iName] !== t.name || Number(r[iCur]) !== t.currency.id; });
+    push('  名稱與貨幣逐列等於台服客戶端 BeastTribe', bad.length === 0,
+      bad.map((t) => t.id).join(',') || DB.data.length + '/' + DB.data.length);
+  }
 }
 
 // ── ② 盟友階的門檻 ─────────────────────────────────────
@@ -119,10 +136,11 @@ const ITEMS = new Map(JSON.parse(readFileSync(join(ROOT, 'data/items.json'), 'ut
   window.eval([...doc.querySelectorAll('script:not([src])')].map((s) => s.textContent).join(';\n'));
   await new Promise((r) => setTimeout(r, 500));
 
-  push('部族選單有 18 個選項', doc.querySelectorAll('#tribeSel option').length === 18,
+  push('部族選單有 ' + DB.data.length + ' 個選項', doc.querySelectorAll('#tribeSel option').length === DB.data.length,
     doc.querySelectorAll('#tribeSel option').length + ' 個');
-  push('  選項用貨幣名＋資料片＋等級標示',
-    /（.+・Lv\d+）$/.test(doc.querySelector('#tribeSel option').textContent),
+  push('  選項用部族名＋資料片＋等級標示',
+    /（.+・Lv\d+）$/.test(doc.querySelector('#tribeSel option').textContent) &&
+      doc.querySelector('#tribeSel option').textContent.startsWith(DB.data[0].name),
     doc.querySelector('#tribeSel option').textContent);
   push('  門檻表畫出來', doc.querySelectorAll('#tbody tr').length > 0,
     doc.querySelectorAll('#tbody tr').length + ' 列');

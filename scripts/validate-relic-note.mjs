@@ -5,8 +5,9 @@
 //      在第 1 本與第 6 本都要打），只用 baseId 當鍵的話，打勾一本會連動另一本——
 //      畫面上兩邊都變成完成，看起來完全正常，只是進度是假的。
 //   ② **座標鈕在 <label> 裡面**。不擋掉冒泡的話，按「複製座標」會順手把那一列打勾。
-//   ③ **同名副本的連結**。三個首領所在的副本一般版與高難度版同名，資料分不出是哪一本；
-//      照名字連過去會把人送去打錯副本（與知識庫 §4.10 是同一類坑）。
+//   ③ **同名副本的連結**。副本名不唯一時資料分不出首領在哪一個；照名字連過去會把人送去打錯副本
+//      （與知識庫 §4.10 是同一類坑）。10-10 前以為有 3 組「一般／高難度同名」，其實是優雷卡掛錯名
+//      （借用了迷宮名）；副本名改取台服客戶端後不再撞名，27/27 都接上。規則留著當防線。
 //
 // 需要 jsdom：npm i jsdom --no-save
 // 執行（repo 根目錄）：node scripts/validate-relic-note.mjs
@@ -58,16 +59,25 @@ const DUNGEONS = JSON.parse(readFileSync(join(ROOT, 'data/dungeons.json'), 'utf8
 
 // ── 同名副本不給連結 ────────────────────────────────────
 {
+  // 中點摺疊：副本名照客戶端是「・」，首領的地名（tw-locales）是「·」（同 build-relic-note.mjs）
+  const fold = (s) => String(s || '').replace(/[·・‧•]/g, '・');
   const cnt = {};
-  DUNGEONS.forEach((d) => { cnt[d.name] = (cnt[d.name] || 0) + 1; });
+  DUNGEONS.forEach((d) => { if (d.name) cnt[fold(d.name)] = (cnt[fold(d.name)] || 0) + 1; });
   const nms = DB.data.flatMap((b) => b.nms);
   const linked = nms.filter((m) => m.duty);
   push('首領的副本連結只給唯一解',
-    linked.every((m) => cnt[m.duty] === 1),
-    linked.filter((m) => cnt[m.duty] !== 1).map((m) => m.duty).join('、') || `${linked.length}/${nms.length} 個有連結`);
-  const dup = nms.filter((m) => { const s = m.zones[0] && m.zones[0].spot; return s && cnt[s] > 1; });
-  push('  同名（一般／高難度）的那些沒有連結', dup.length > 0 && dup.every((m) => !m.duty),
-    dup.length + ' 個：' + [...new Set(dup.map((m) => m.zones[0].spot))].join('、'));
+    linked.every((m) => cnt[fold(m.duty)] === 1),
+    linked.filter((m) => cnt[fold(m.duty)] !== 1).map((m) => m.duty).join('、') || `${linked.length}/${nms.length} 個有連結`);
+  const dup = nms.filter((m) => { const s = m.zones[0] && m.zones[0].spot; return s && cnt[fold(s)] > 1; });
+  push('  副本名不唯一的首領沒有連結', dup.every((m) => !m.duty),
+    dup.length + ' 個' + (dup.length ? '：' + [...new Set(dup.map((m) => m.zones[0].spot))].join('、') : ''));
+  /* 10-10 釘住：這三個首領以前因「同名」不給連結，實際上是優雷卡掛錯名；現在要連到一般難度的那本 */
+  const gyges = nms.find((m) => m.name === '強腕的居格斯');
+  const cm = DUNGEONS.find((d) => d.name === '封鎖坑道銅鈴銅山');
+  push('  優雷卡錯名修好後，居格斯連到銅鈴銅山一般難度（不是優雷卡、也不是高難度）',
+    gyges && gyges.duty === '封鎖坑道銅鈴銅山' && cm && cm.nameEn === 'Copperbell Mines', gyges ? gyges.duty : '找不到');
+  push('  中點寫法不同的副本也接得上（塔姆・塔拉墓園）',
+    nms.some((m) => m.duty === '地下靈殿塔姆・塔拉墓園'), '');
   push('  連結指得到的副本真的存在',
     linked.every((m) => DUNGEONS.some((d) => d.name === m.duty)), '');
 }
@@ -81,7 +91,7 @@ const DUNGEONS = JSON.parse(readFileSync(join(ROOT, 'data/dungeons.json'), 'utf8
   push('  講明這九本書屬於 50 級光武的製作流程', /50 級光武/.test(HTML), '');
   push('    並註明這條是站主提供、不是查資料得到的',
     /由站主提供/.test(HTML) && /查不到武器與書的關聯/.test(HTML), '');
-  push('  講明為什麼三個首領沒連結', /同名/.test(HTML) && /打錯副本/.test(HTML), '');
+  push('  講明同名副本不給連結的規則', /同名/.test(HTML) && /打錯副本/.test(HTML), '');
   push('  講明座標為什麼只有一部分', /不臆造座標/.test(HTML), '');
   /* 建置腳本要把「為什麼只做到這裡」寫下來。沒有這段的話，
      下一個人會以為是漏掉的，然後憑印象把階段鏈補上去。 */

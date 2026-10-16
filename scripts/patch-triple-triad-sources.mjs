@@ -34,6 +34,8 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { decode } from "@msgpack/msgpack";
 import { loadTwLocales, twName } from "./lib/tw-locales.mjs";
+import { loadTcSheet } from "./lib/tc-datamining.mjs";
+import { isTranslated } from "./lib/tw-text.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
@@ -82,6 +84,10 @@ async function fetchSheets(cardItemIds) {
       "Fee,TripleTriadRule@as(raw),ItemPossibleReward@as(raw),TripleTriadCardFixed@as(raw),TripleTriadCardVariable@as(raw),UsesRegionalRules"
     )}`
   );
+
+  /* 抓取上限防呆（2026-10-11，第三輪 §3 fetch-ceiling-guard）：XIVAPI 單頁超過 limit 時**不報錯、最新的列最先掉**。
+     現在 146 列、上限 500，離得還遠；但哪天真的超過，少掉的會是最新的對局，畫面上只是「某些卡沒有對戰來源」。 */
+  if (tt.rows.length >= 500) throw new Error(`TripleTriad 回了 ${tt.rows.length} 列＝撞到單頁上限 500，後面的列被截掉了——改成分頁抓（xiv.sheet）`);
 
   // 3) ENpcBase 全量掃描：哪個 NPC 主持哪一場對局
   //    （原腳本是拿 22k 個 npc id 逐一打 API；改成整表分頁掃描，約 120 次請求）
@@ -144,13 +150,25 @@ async function main() {
   // 沒有 ② 會誤殺：幻卡對局的 16 個 NPC 不在 npcs.json（無座標而被濾掉），
   // 其中 14 個 twNpcs 有台服名（如「梅花天王歐里福」），漏掉會讓卡 #181 吉吉變成零來源。
   // validate-links 的「triple-triad.sources[].npcId → npcs」本來就有這個已知缺口。
+  //   ③ 台服客戶端解包 ENpcResident（2026-10-10 起）—— Teamcraft 台服檔停在 7.2，台服新版的 NPC
+  //      （例：7.25 亞克特爾樹海的「普代加」）①② 都沒有。名字取客戶端（過 isTranslated），
+  //      座標取 out_data/npcs.msgpack 的 npcs（Teamcraft 全球資料，含 position），地名取 maps.json → 客戶端 PlaceName。
+  const clientNpc = new Map((await loadTcSheet("ENpcResident", { offline })).map((r) => [r.id, r]));
+  const clientPlace = new Map((await loadTcSheet("PlaceName", { offline })).map((r) => [r.id, r.Name]));
   function npcInfo(npcId) {
     const n = npcById.get(npcId);
-    const name = n?.name || twName(tw2.twNpcs, npcId);
+    const c = clientNpc.get(npcId);
+    const fromClient = c && isTranslated(c.Singular || "") ? c.Singular.trim() : null;
+    const name = n?.name || twName(tw2.twNpcs, npcId) || fromClient;
     if (!name) return null;
-    const out = { npcId, npcName: name, npcTitle: n?.title || twName(tw.npcTitles, npcId) };
+    const ct = c && isTranslated(c.Title || "") ? c.Title.trim() : null;
+    const out = { npcId, npcName: name, npcTitle: n?.title || twName(tw.npcTitles, npcId) || ct };
     if (n?.coords && mapName.has(n.coords.mapId)) {
       out.location = { mapId: n.coords.mapId, mapName: mapName.get(n.coords.mapId), x: n.coords.x, y: n.coords.y };
+    } else if (!n) {
+      const p = tw2.npcs?.[npcId]?.position;
+      const nm = p && (mapName.get(p.map) ?? clientPlace.get(p.zoneid));
+      if (p && nm && isTranslated(nm)) out.location = { mapId: p.map, mapName: nm, x: p.x, y: p.y };
     }
     return out;
   }

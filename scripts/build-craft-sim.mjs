@@ -134,7 +134,8 @@ const HQ_TABLE = [
 
 async function main() {
   const meta = JSON.parse(readFileSync(join(DATA, "_meta.json"), "utf8"));
-  const gamePatch = meta.gamePatch || "7.21";
+  const gamePatch = meta.gamePatch;
+  if (!gamePatch) throw new Error("data/_meta.json 沒有 gamePatch——不猜版本（版本號只寫在 _meta.json）");
   const today = new Date().toISOString().slice(0, 10);
 
   console.log("抓取來源…");

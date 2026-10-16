@@ -44,6 +44,7 @@ import { fileURLToPath } from "node:url";
 import { decode } from "@msgpack/msgpack";
 import { SYSTEMS, NO_SINGLE_QUEST, GUILD_QUESTS } from "./lib/system-unlock-map.mjs";
 import { loadTwLocales, twName } from "./lib/tw-locales.mjs";
+import { preferClient } from "./lib/client-names.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
@@ -148,6 +149,8 @@ async function main() {
   const maps = JSON.parse(await readFile(join(DATA, "maps.json"), "utf8")).data;
   const npcMsg = decode(await readFile(join(OUT, "npcs.msgpack")));
   const placeMsg = decode(await readFile(join(OUT, "places.msgpack")));
+  // 地名：台服客戶端 PlaceName 優先、twPlaces 備援（lib/client-names.mjs，2026-10-11）
+  placeMsg.twPlaces = await preferClient(placeMsg.twPlaces, "place", { offline });
   const tw = await loadTwLocales();
   const npcById = new Map(npcs.map((n) => [n.id, n]));
   const mapById = new Map(maps.map((m) => [m.id, m]));

@@ -133,9 +133,10 @@
     <code>Relic</code>／<code>RelicItem</code> 兩張表是空殼、九本書的 <code>EventItem.Quest</code> 全是 0，
     所以「哪把武器要幾本書」「書從哪個 NPC 拿」「下一階段要什麼」查不到依據，一律不寫，
     免得憑印象寫錯害人白跑。<br>
-    <b>三個首領沒有副本連結</b>，因為那三個副本名一般版與高難度版同名，
-    而資料分不出首領在哪一個（<code>dungeons.json</code> 的 <code>bosses</code> 是空的）。
-    寧可少一個連結，不要送人去打錯副本。<br>
+    <b>首領的副本連結只給名稱唯一的副本</b>：資料分不出首領在同名副本的哪一個時
+    （<code>dungeons.json</code> 沒有首領資料），寧可少一個連結，不要送人去打錯副本。
+    2026-10-10 前有三個首領因此沒連結——原因其實是副本名掛錯（三個優雷卡區域借用了迷宮名），
+    副本名改用台服客戶端之後已全部接上。<br>
     <b>一般怪只有 30% 查得到座標</b>（<code>monsters.json</code> 就只有這些有 positions），
     其餘只顯示出沒地名，不臆造座標。FATE 的座標齊全。<br>
     進度存在這台瀏覽器裡（<code>ffxiv_relic_note</code>），可從首頁「進度備份」匯出。
@@ -252,7 +253,7 @@
       var where = m.duty
         ? '<a href="../duty-codex/?id=duty:' + encodeURIComponent(m.duty) + '">' + esc(m.duty) + '</a>' +
           (m.zones[0] ? '<span class="alt"> · ' + esc(m.zones[0].zone) + '</span>' : '')
-        : zoneText(m.zones) + '<span class="alt">（一般／高難度同名，資料分不出是哪一本，不給連結）</span>';
+        : zoneText(m.zones) + (spot ? '<span class="alt">（副本名不唯一，資料分不出是哪一個，不給連結）</span>' : '');
       return row(book.id + ':n' + m.baseId, esc(m.name), where, m.at);
     });
     var fates = book.fates.map(function (f) {

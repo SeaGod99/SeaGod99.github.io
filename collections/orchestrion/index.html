@@ -33,14 +33,14 @@
     .oc-meta { font-size: 10px; color: var(--text-muted); }
 
     .tag.src-tag { background: var(--raise); color: var(--text-secondary); border-color: var(--border); }
-    /* 資料片分類配色 */
-    .tag.cat-原初之地   { background: rgba(74,222,128,0.1);   color: var(--green);  border-color: rgba(74,222,128,0.25); }
-    .tag.cat-蒼天之禁地 { background: rgba(79,195,247,0.1);   color: var(--blue);   border-color: rgba(79,195,247,0.25); }
-    .tag.cat-紅蓮之狂潮 { background: rgba(251,146,60,0.1);   color: var(--orange); border-color: rgba(251,146,60,0.25); }
-    .tag.cat-暗影之逆焰 { background: rgba(167,139,250,0.12); color: var(--purple); border-color: rgba(167,139,250,0.25); }
-    .tag.cat-曉月之終途 { background: rgba(34,211,238,0.1);   color: var(--cyan);   border-color: rgba(34,211,238,0.25); }
-    .tag.cat-金曦之遺輝 { background: rgba(200,169,110,0.12); color: var(--gold);   border-color: rgba(200,169,110,0.25); }
-    .tag.cat-未分類     { background: var(--raise); color: var(--text-muted); border-color: var(--border); }
+    /* 資料片分類配色（class 用主版本號，不用資料片名——名字改過一次就整組失效，10-11 改台服官方名時就是這樣） */
+    .tag.cat-2 { background: rgba(74,222,128,0.1);   color: var(--green);  border-color: rgba(74,222,128,0.25); }
+    .tag.cat-3 { background: rgba(79,195,247,0.1);   color: var(--blue);   border-color: rgba(79,195,247,0.25); }
+    .tag.cat-4 { background: rgba(251,146,60,0.1);   color: var(--orange); border-color: rgba(251,146,60,0.25); }
+    .tag.cat-5 { background: rgba(167,139,250,0.12); color: var(--purple); border-color: rgba(167,139,250,0.25); }
+    .tag.cat-6 { background: rgba(34,211,238,0.1);   color: var(--cyan);   border-color: rgba(34,211,238,0.25); }
+    .tag.cat-7 { background: rgba(200,169,110,0.12); color: var(--gold);   border-color: rgba(200,169,110,0.25); }
+    .tag.cat-none { background: var(--raise); color: var(--text-muted); border-color: var(--border); }
     .tag.gcat { background: rgba(79,195,247,0.1); color: var(--blue); border-color: rgba(79,195,247,0.25); }
 
     .col-detail .detail-line { margin-top: 2px; }
@@ -50,6 +50,7 @@
     @media (max-width: 380px) { .col-grid { grid-template-columns: 1fr; } }
   </style>
   <script src="../../assets/js/patch-gate.js"></script>
+  <script src="../../assets/js/official-terms.js"></script>
   <script src="../../assets/js/collection-tracker.js"></script>
   <script src="../../assets/js/theme.js"></script>
 </head>
@@ -83,9 +84,14 @@
 
 <script>
 (function () {
-  var CATEGORY_ORDER = ['原初之地', '蒼天之禁地', '紅蓮之狂潮', '暗影之逆焰', '曉月之終途', '金曦之遺輝', '未分類'];
+  /* 資料片名＝台服官方（assets/js/official-terms.js，台服客戶端 ExVersion；站主 10-10 拍板）。
+     資料的 category 已改官方名；舊名（原初之地…）只出現在舊分享連結，由篩選的 alias 換過來。 */
+  var EXPS = (window.OfficialTerms && OfficialTerms.expansions) || [];
+  var CATEGORY_ORDER = EXPS.map(function (e) { return e.name; }).concat(['未分類']);
   var GAME_CATEGORY_ORDER = ['區域場景1', '區域場景2', '迷宮挑戰', '迷宮挑戰2', '大型任務1', '大型任務2', '討伐殲滅戰', '任務相關', '季節活動', '環境音', '商城與特典', '其他'];
-  var EXP_PREFIX = { '原初之地': '2.x', '蒼天之禁地': '3.x', '紅蓮之狂潮': '4.x', '暗影之逆焰': '5.x', '曉月之終途': '6.x', '金曦之遺輝': '7.x' };
+  var EXP_PREFIX = {}, EXP_MAJOR = {};
+  EXPS.forEach(function (e) { EXP_PREFIX[e.name] = e.short; EXP_MAJOR[e.name] = e.major; });
+  function catOf(v) { var e = window.OfficialTerms && OfficialTerms.expansionByName(v); return e ? e.name : v; }
 
   CollectionTracker.init({
     dataUrl: '../../data/orchestrion.json',
@@ -116,7 +122,8 @@
           return CATEGORY_ORDER.filter(function (c) { return set.has(c); })
             .map(function (c) { return { value: c, label: EXP_PREFIX[c] ? EXP_PREFIX[c] + ' ' + c : c }; });
         },
-        match: function (r, v) { return r.category === v; }
+        match: function (r, v) { return r.category === v; },
+        alias: catOf                       // 舊連結 ?f_category=原初之地 → 新生艾奧傑亞
       },
       {
         id: 'source', label: '取得方式',
@@ -141,7 +148,7 @@
             .map(function (t) { return '<span class="tag src-tag">' + esc(t) + '</span>'; }).join('')
         : '<span class="tag placeholder">待補充</span>';
       var catName = r.category || '未分類';
-      var catTag = '<span class="tag cat-' + esc(catName) + '">' + esc(catName) + '</span>';
+      var catTag = '<span class="tag cat-' + (EXP_MAJOR[catName] || 'none') + '">' + esc(catName) + '</span>';
       var gcatTag = r.gameCategory ? '<span class="tag gcat">' + esc(r.gameCategory) + '</span>' : '';
       var lines = [];
       if (r.number) lines.push('<div class="detail-line"><b>編號：</b>No.' + esc(r.number) + '</div>');

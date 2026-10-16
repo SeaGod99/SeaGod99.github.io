@@ -32,6 +32,7 @@ import { gzipSync } from "node:zlib";
 import { convertOm, normalizeEntries, SKIP_CATALOG } from "./lib/obtainable.mjs";
 import { loadTwLocales, twName } from "./lib/tw-locales.mjs";
 import { isTw } from "./lib/tw-text.mjs";
+import { createOmShopResolvers } from "./lib/client-shop-sources.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const DATA = join(ROOT, "data");
@@ -52,7 +53,8 @@ async function main() {
   // 店名解析器：om 自帶的 shopName 有 2,062 處是英文（Immortal Flames…），
   // 用 tw-locales 的台服官方店名補；補不到就整個不印（鐵則：不落英文）
   const tw = await loadTwLocales();
-  const twShop = (id) => twName(tw.shops, id);
+  // 店名：台服客戶端 SpecialShop 優先、tw-locales 後備；兌換條目沒有 NPC 時補「誰＠哪裡」（2026-10-10，7.25 的 13 間店）
+  const { twShop, shopWhere } = await createOmShopResolvers({ root: join(DATA, ".."), offline: true, twLocales: tw });
 
   // 台服未開放（沒有繁中名）的一律不收——前端也不會顯示它，收了只是佔體積
   const hasTw = (id) => {
@@ -63,17 +65,33 @@ async function main() {
   const shards = new Map();            // 片號 → { id: entries }
   const stat = { items: 0, entries: 0, noTw: 0, empty: 0, byType: {} };
 
-  /* **要走 om 與 extra 的聯集**，不能只走 om 的 key。
+  /* 採集：data/gathering.json 的節點產物（2026-10-10 加）。om 只收得到 Teamcraft 取得方式摘要裡有的，
+     台服 7.25 的輝鱗族材料（古戰場細灰砂…）在節點裡有、摘要裡沒有，分片層就顯示「查無取得方式」——
+     市場頁的取得管道（build-market-sources.mjs）本來就讀 gathering.json，兩邊因此不一致。
+     om 已經有採集條目的不重複加；等級取節點中最低的。 */
+  const gathering = JSON.parse(await readFile(join(DATA, "gathering.json"), "utf8")).data;
+  const gatherLv = new Map();
+  for (const n of gathering) for (const it of [...(n.items || []), ...(n.hiddenItems || [])]) {
+    if (!it || it < 20) continue;                       // 2–19 是水晶／碎晶／晶簇，摘要本來就有
+    const lv = n.level || 0;
+    if (!gatherLv.has(it) || (lv && lv < gatherLv.get(it))) gatherLv.set(it, lv);
+  }
+
+  /* **要走 om、extra、採集節點的聯集**，不能只走 om 的 key。
      收藏品交納那 127 件裡多數在 om 裡根本沒有任何條目（所以先前顯示成「查無取得方式」），
      只跑 om 的話它們永遠補不進來，而且不會報錯。 */
-  const allKeys = new Set([...Object.keys(om), ...Object.keys(extra)]);
+  const allKeys = new Set([...Object.keys(om), ...Object.keys(extra), ...[...gatherLv.keys()].map(String)]);
   for (const key of allKeys) {
     const id = Number(key);
     if (!hasTw(id)) { stat.noTw++; continue; }
+    const omRows = om[key] || [];
+    const gatherExtra = gatherLv.has(id) && !omRows.some((m) => m.type === "gathering")
+      ? [{ type: "gathering", level: gatherLv.get(id) || null }] : [];
+    if (gatherExtra.length) stat.gatherAdded = (stat.gatherAdded || 0) + 1;
     // 這一層用 SKIP_CATALOG：製作與商城**是**有效答案（房屋家具有 701 件只能製作、
     // 154 件只在商城，濾掉的話那些物品會顯示成「查無取得方式」，那是錯的）。
     const entries = normalizeEntries([
-      ...(om[key] || []).map((m) => convertOm(m, { skip: SKIP_CATALOG, twShop, vendor: vendors[key] || null, itemId: id })),
+      ...[...omRows, ...gatherExtra].map((m) => convertOm(m, { skip: SKIP_CATALOG, twShop, shopWhere, vendor: vendors[key] || null, itemId: id })),
       ...(extra[key] || []),
     ], { max: 8 });
     if (!entries.length) { stat.empty++; continue; }   // 只有 requirement／alarm 這種無行動意義的
@@ -98,6 +116,7 @@ async function main() {
 
   console.log(`收錄 ${stat.items} 件物品／${stat.entries} 筆管道，切成 ${files.length} 片`);
   console.log(`  略過：無台服名 ${stat.noTw}、只有製作/秘籍等不顯示的管道 ${stat.empty}`);
+  console.log(`  由採集節點補上「採集」的：${stat.gatherAdded || 0} 件（取得方式摘要沒有的）`);
   console.log(`  合計 ${(totalBytes / 1024).toFixed(0)}KB（gzip ${(totalGz / 1024).toFixed(0)}KB）`);
   console.log(`  單片平均 ${(totalBytes / files.length / 1024).toFixed(1)}KB；最大三片：` +
     biggest.map((f) => `${f.name} ${(f.bytes / 1024).toFixed(0)}KB/${f.count} 件`).join("、"));

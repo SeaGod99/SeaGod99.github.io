@@ -14,23 +14,17 @@
 import { writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import { jobNameById } from "./lib/official-terms.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const OUT = join(__dirname, "..", "data", "recipes.json");
 
 const URL_SRC = "https://raw.githubusercontent.com/ffxiv-teamcraft/ffxiv-teamcraft/staging/libs/data/src/lib/json/recipes.json";
 
-// FFXIV ClassJob id → 台服官方職業譯名（見 SCHEMA.md 1.8 JOBS）
+// FFXIV ClassJob id → 台服官方職業名（data/official-terms.json＝台服客戶端 ClassJob；站主 2026-10-10 拍板，舊名刻木匠…捕魚人只留作別名）
 // 特殊製作系統不屬八大製作職：jobId 0=工會工坊（飛空艇零件/外牆/機工台）、-10=無人島開拓
 const JOBS = {
-  8:  "刻木匠",
-  9:  "鍛鐵匠",
-  10: "鑄甲匠",
-  11: "雕金匠",
-  12: "製革匠",
-  13: "裁衣匠",
-  14: "煉金術士",
-  15: "烹調師",
+  ...Object.fromEntries([8, 9, 10, 11, 12, 13, 14, 15].map((id) => [id, jobNameById(id)])),
   0:  "工會工坊",
   "-10": "無人島",
 };

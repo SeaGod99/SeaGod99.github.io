@@ -145,12 +145,12 @@ export const SYSTEMS = [
   },
   // ── 採集／製作職業（採集紀錄與製作模擬器的前提）──
   {
-    key: "miner", name: "採礦工", tool: "/tools/gathering-log/",
+    key: "miner", name: "採掘師", tool: "/tools/gathering-log/",   // 台服官方職業名（舊寫法「採礦工」，10-11 改）
     questEn: "Way of the Miner",
     basis: "QuestParams UNLOCK_IMAGE_GATHER_BOOK=17／UNLOCK_IMAGE_CLASS_MIN=52（職業解放＋採集筆記）",
   },
   {
-    key: "botanist", name: "園藝工", tool: "/tools/gathering-log/",
+    key: "botanist", name: "園藝師", tool: "/tools/gathering-log/",   // 台服官方職業名（舊寫法「園藝工」，10-11 改）
     questEn: "Way of the Botanist",
     basis: "QuestParams UNLOCK_IMAGE_GATHER_BOOK=17／UNLOCK_IMAGE_CLASS_HRV=26",
   },

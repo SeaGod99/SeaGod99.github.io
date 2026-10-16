@@ -105,8 +105,8 @@ async function runMarket(stats, uni) {
   btn.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
   await new Promise((r) => setTimeout(r, 200));
   const active = [...doc.querySelectorAll('[data-pfjob].active')].map((c) => c.dataset.pfjob);
-  push('  套用後選中有練到的職業', active.sort().join('、') === '烹調師、煉金術士', active.join('、') || '(沒選中)');
-  push('  等級 1 的職業不被選進去（那是預設值不是真的練了）', !active.includes('刻木匠'), '');
+  push('  套用後選中有練到的職業', active.sort().join('、') === '烹調師、鍊金術師', active.join('、') || '(沒選中)');
+  push('  等級 1 的職業不被選進去（那是預設值不是真的練了）', !active.includes('木工師'), '');
   push('  等級區間設成最高職業的 -10 ~ 本級',
     doc.getElementById('pfMax').value === '90' && doc.getElementById('pfMin').value === '80',
     doc.getElementById('pfMin').value + '–' + doc.getElementById('pfMax').value);

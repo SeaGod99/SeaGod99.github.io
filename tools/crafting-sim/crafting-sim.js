@@ -17,7 +17,8 @@
 
   var $ = function (id) { return document.getElementById(id); };
 
-  var JOBS = { 8: "刻木匠", 9: "鍛鐵匠", 10: "鑄甲匠", 11: "雕金匠", 12: "製革匠", 13: "裁衣匠", 14: "煉金術士", 15: "烹調師" };
+  // 台服官方職業名（data/official-terms.json＝客戶端 ClassJob；10-11 改，舊名刻木匠…只留作別名。validate-official-terms.mjs 會比對）
+  var JOBS = { 8: "木工師", 9: "鍛造師", 10: "甲冑師", 11: "金工師", 12: "皮革師", 13: "裁縫師", 14: "鍊金術師", 15: "烹調師" };
 
   var LS_STATS = "ffxiv_craftsim_stats";
   var LS_LAST = "ffxiv_craftsim_last";
@@ -93,7 +94,7 @@
     loadJson("../../data/craft-actions.json"),
     loadJson("../../data/craft-recipes.json"),
     loadJson("../../data/items-lite.json"),
-    window.PatchGate ? PatchGate.loadGamePatch("../../data/_meta.json") : Promise.resolve("7.21"),
+    window.PatchGate ? PatchGate.loadGamePatch("../../data/_meta.json") : Promise.resolve(null),   // 沒有 PatchGate＝不擋（版本號只寫在 patch-gate.js）
     // 料理／藥品缺了不該讓整頁掛掉——它是加分項，不是必要資料
     loadJson("../../data/craft-consumables.json").catch(function () { return { data: [] }; }),
   ]).then(function (res) {
@@ -1240,6 +1241,47 @@
     $("resultAnnounce").textContent = msg + "循環已換成求解結果，按「↶ 復原」可以還原。";
   }
 
+  /* ── 貼上巨集匯入循環（2026-10-11，第三輪路線圖 §4 craft-macro-import）──────────────
+     解析規則與巨集轉譯頁共用 assets/js/macro-parse.js（不在這裡再寫一份）。名字認台服名與英文名
+     （攻略多半是英文巨集）；比對前走全站共用的 SGT_fold（小寫＋中點摺疊）。
+     **認不得的行逐行列出**——只報數量的話使用者不知道是哪幾行。匯入取代目前的循環，可以「復原」。 */
+  var keyByActionName = null;
+  function keyOfActionName(name) {
+    var fold = window.SGT_fold || function (s) { return String(s == null ? "" : s).toLowerCase(); };
+    if (!keyByActionName) {
+      keyByActionName = new Map();
+      DB.actionList.forEach(function (a) {
+        [a.name, a.nameEn].forEach(function (n) { if (n && !keyByActionName.has(fold(n))) keyByActionName.set(fold(n), a.key); });
+      });
+    }
+    return keyByActionName.get(fold(name)) || null;
+  }
+  function importMacro() {
+    var msg = $("macroImportMsg");
+    var r = window.MacroParse ? MacroParse.importRotation($("macroIn").value, keyOfActionName) : null;
+    if (!r) { msg.textContent = "巨集解析模組沒有載入，請重新整理頁面。"; return; }
+    if (!r.keys.length) {
+      msg.textContent = "沒有認得的技能行，循環沒有變動" + (r.unknown.length ? "（認不得 " + r.unknown.length + " 行）" : "") + "。";
+    } else {
+      S.undo.push(S.rotation.slice());
+      S.rotation = r.keys;
+      afterChange();
+      msg.textContent = "已匯入 " + r.keys.length + " 個技能" + (r.skipped ? "（略過 " + r.skipped + " 行非技能指令）" : "") +
+        (r.unknown.length ? "；認不得 " + r.unknown.length + " 行：" : "。");
+    }
+    if (r.unknown.length) {
+      var ul = document.createElement("ul");
+      ul.className = "muted-sm";
+      r.unknown.slice(0, 20).forEach(function (u) {
+        var li = document.createElement("li");
+        li.textContent = "第 " + u.line + " 行：" + u.text.trim();
+        ul.appendChild(li);
+      });
+      if (r.unknown.length > 20) { var more = document.createElement("li"); more.textContent = "…另 " + (r.unknown.length - 20) + " 行"; ul.appendChild(more); }
+      msg.appendChild(ul);
+    }
+  }
+
   /* ── 巨集 ─────────────────────────────────────────────────────── */
 
   // 增益系 2 秒、其餘 3 秒（快速改革例外，動作較長）
@@ -1667,6 +1709,7 @@
 
     $("relBtn").addEventListener("click", runReliability);
     $("macroNotify").addEventListener("change", renderMacro);
+    $("macroImportBtn").addEventListener("click", importMacro);
     $("statsJob").addEventListener("change", function () { setStatsJob(+this.value, false); simulate(); });
     $("copyStatsAll").addEventListener("click", copyStatsToAllJobs);
     $("shareBtn").addEventListener("click", function () {

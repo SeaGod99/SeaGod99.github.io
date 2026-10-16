@@ -22,6 +22,8 @@
 //    現在玩家技能先寫、敵人技能只在該鍵還空著時才補。
 //
 // 只收**有台服繁中名**的；查不到台服名的不收（鐵則）。
+// 台服名**客戶端優先**（Action／Status／Trait 的 Name，lib/client-names.mjs，2026-10-11 起），
+// Teamcraft tw-{actions,statuses,traits} 是備援——Teamcraft 落後時中點（·／・）與改譯會跟客戶端不一樣。
 //
 // ── 型別分開存 ──────────────────────────────────────────────────────
 // 同一個名字可能同時是技能與狀態（「疾風」既是技能也是 DoT）。
@@ -40,6 +42,7 @@ import { gzipSync } from "node:zlib";
 import { normalizeName, shardOf } from "./build-item-names.mjs";
 import { xiv } from "./lib/xivapi.mjs";
 import { isTw } from "./lib/tw-text.mjs";
+import { preferClient, logStats } from "./lib/client-names.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const DATA = join(ROOT, "data");
@@ -83,7 +86,8 @@ async function main() {
   const collisions = [];
 
   for (const [kind, twFile, mlFile] of SETS) {
-    const tw = await grab(twFile);
+    const tw = await preferClient(await grab(twFile), { a: "action", s: "status", t: "trait" }[kind], { offline });
+    logStats({ a: "技能", s: "狀態", t: "特性" }[kind], tw);
     let ml = {};
     try { ml = await grab(mlFile); } catch { /* 多語檔缺就只收繁中（至少查得到自己） */ }
     let n = 0;
@@ -166,7 +170,7 @@ async function main() {
   await writeFile(join(OUT, "_index.json"), JSON.stringify({
     schema: "action-names-index",
     updated: new Date().toISOString().slice(0, 10),
-    source: "Teamcraft tw/tw-{actions,statuses,traits}.json ＋ {actions,statuses,traits}.json（多語）",
+    source: "台服客戶端 Action/Status/Trait（Teamcraft tw/tw-{actions,statuses,traits}.json 備援）＋ {actions,statuses,traits}.json（多語）",
     note: `片號 = FNV-1a(正規化鍵) % ${SHARDS}，與 data/item-names/ 同一套規則（共用 scripts/build-item-names.mjs 的 shardOf）。k 分 a=技能／s=狀態／t=特性。`,
     shards: SHARDS,
     kinds: stat.byKind,

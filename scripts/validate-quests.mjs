@@ -14,6 +14,7 @@ import { readFileSync, existsSync, readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { isTw } from "./lib/tw-text.mjs";
+import { isOddOfficial } from "./lib/official-odd-names.mjs";
 
 let JSDOM, VirtualConsole;
 try { ({ JSDOM, VirtualConsole } = await import("jsdom")); }
@@ -34,7 +35,9 @@ const maps = new Set(JSON.parse(read("data/maps.json")).data.map((m) => m.id));
 
 push("任務數 ≥ 5,000 且 count 一致", IDX.data.length >= 5000 && IDX.count === IDX.data.length, `${IDX.data.length}`);
 push("任務 id 不重複", ids.size === IDX.data.length);
-push("每個任務名都過台服守門", IDX.data.every((r) => isTw(r[1])), IDX.data.filter((r) => !isTw(r[1])).slice(0, 3).map((r) => r[0]).join(","));
+// 特例（scripts/lib/official-odd-names.mjs）：曉月之終途主線的「●明●●極限●星球」「Hello, World」是正式任務名
+push("每個任務名都過台服守門（特例清單逐筆放行）", IDX.data.every((r) => isTw(r[1]) || isOddOfficial("quest", r[0])),
+  IDX.data.filter((r) => !isTw(r[1]) && !isOddOfficial("quest", r[0])).slice(0, 3).map((r) => r[0]).join(","));
 push("章節／區域／資料片名都過台服守門", [...IDX.genres, ...IDX.places, ...IDX.exps.map((e) => e.name)].every((s) => s && isTw(s)));
 const byName = new Map();
 IDX.data.forEach((r) => byName.set(r[1], (byName.get(r[1]) || 0) + 1));
@@ -66,6 +69,24 @@ push("接取點的地圖都在 maps.json、座標落在 1–43", badMap === 0 &&
 push("接取 NPC 覆蓋率 ≥ 95%", npcs / IDX.data.length >= 0.95, `${npcs}/${IDX.data.length}`);
 const BUILD = read("scripts/build-quests.mjs");
 push("  ① 建置腳本只收 sheet 是 Item 的報酬", /r\.sheet !== "Item"/.test(BUILD));
+
+/* 需交付物品（10-10，台服客戶端任務腳本的 RITEM）：只有物品、沒有數量；物品名都要是 items.json 的台服名。
+   抽一筆已知的核對：65540「帶上笑容」交 5498 楓樹樹汁。 */
+{
+  const ITEMS = new Map(JSON.parse(read("data/items.json")).data.map((i) => [i.id, i]));
+  let tq = 0, tBad = 0;
+  for (const sh of Object.values(shards)) for (const d of Object.values(sh.data)) {
+    if (!d.t) continue;
+    tq++;
+    for (const [id, nm, mk] of d.t) if (ITEMS.get(id)?.name !== nm || (ITEMS.get(id)?.marketable ? 1 : 0) !== mk) tBad++;
+  }
+  push("需交付物品：≥ 500 個任務、物品名都對得上 items.json 的台服名", tq >= 500 && tBad === 0, `${tq} 個任務，錯 ${tBad}`);
+  const q65540 = Object.values(shards).map((sh) => sh.data[65540]).find(Boolean);
+  push("  抽驗：65540「帶上笑容」要交楓樹樹汁（5498）", !!q65540?.t?.some((x) => x[0] === 5498), JSON.stringify(q65540?.t || null));
+  push("  頁面講明沒有數量（不寫 ×N）", /只有物品、沒有數量/.test(read("tools/quest-finder/index.html")) && /數量以遊戲內任務說明為準/.test(read("tools/quest-finder/index.html")));
+}
+/* 7.25 的任務要在（10-10 前 Teamcraft 台服語系檔停在 7.2，新任務一筆都沒有）：輝鱗族、新月島、希爾迪布蘭德 */
+push("7.25 的新任務都收了（70845 新月島的魔物、70831 正直的偵探）", ids.has(70845) && ids.has(70831), "");
 const msq = new Set(JSON.parse(read("data/msq.json")).data.map((x) => x.id));
 const flagged = IDX.data.filter((r) => r[6] & 1);
 push("主線旗標與 msq.json 一致", flagged.length === [...msq].filter((id) => ids.has(id)).length && flagged.every((r) => msq.has(r[0])), `${flagged.length} 個`);

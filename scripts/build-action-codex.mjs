@@ -26,6 +26,7 @@ import { fileURLToPath } from "node:url";
 import { gzipSync } from "node:zlib";
 import { xiv } from "./lib/xivapi.mjs";
 import { isTw, isTranslated } from "./lib/tw-text.mjs";
+import { preferClient, logStats } from "./lib/client-names.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
@@ -97,7 +98,7 @@ function twDesc(tbl, id) {
 }
 
 async function main() {
-  const [twAct, twActDesc, twTrait, twTraitDesc, twStatus, twStatusDesc] = await Promise.all([
+  const [tcAct, twActDesc, tcTrait, twTraitDesc, tcStatus, twStatusDesc] = await Promise.all([
     grab("tw/tw-actions.json", "tc-tw-actions.json"),
     grab("tw/tw-action-descriptions.json", "tc-tw-action-desc.json"),
     grab("tw/tw-traits.json", "tc-tw-traits.json"),
@@ -105,6 +106,13 @@ async function main() {
     grab("tw/tw-statuses.json", "tc-tw-statuses.json"),
     grab("tw/tw-status-descriptions.json", "tc-tw-status-desc.json"),
   ]);
+  /* 名字客戶端優先（Action／Trait／Status 的 Name，2026-10-11）：巨集轉譯（action-names）已經改走客戶端，
+     辭典不跟的話「毀壞→中毀滅」這種台服改譯會讓轉譯結果連過來搜不到。說明仍走 Teamcraft——
+     客戶端 CSV 的說明標記格式與 Teamcraft 不同，clean() 沒驗過那一種。 */
+  const twAct = await preferClient(tcAct, "action", { offline });
+  const twTrait = await preferClient(tcTrait, "trait", { offline });
+  const twStatus = await preferClient(tcStatus, "status", { offline });
+  logStats("技能名", twAct); logStats("特性名", twTrait); logStats("狀態名", twStatus);
 
   // 玩家技能的 id、職業與等級
   const acts = await xiv.sheet(

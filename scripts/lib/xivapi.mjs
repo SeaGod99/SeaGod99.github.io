@@ -104,10 +104,10 @@ export const xiv = {
     if (!fields) throw new Error(`xiv.rows("${name}") 沒有指定 fields（§4.51）`);
     const { chunk = 50, label } = opts;
     const uniq = [...new Set(ids)].filter((x) => x != null);
-    const got = await cached(opts, async () => {
+    const fetchIds = async (list) => {
       const out = {};
-      for (let i = 0; i < uniq.length; i += chunk) {
-        const part = uniq.slice(i, i + chunk);
+      for (let i = 0; i < list.length; i += chunk) {
+        const part = list.slice(i, i + chunk);
         try {
           const d = await getJson(`${BASE}/${name}?rows=${part.join(",")}&fields=${enc(fields)}`);
           for (const r of d.rows) out[r.row_id] = r.fields;
@@ -116,11 +116,39 @@ export const xiv = {
             try { out[id] = await this.row(name, id, fields); } catch { /* 這筆真的沒有 */ }
           }
         }
-        if (label) process.stdout.write(`\r${label}${Object.keys(out).length}/${uniq.length}`);
+        if (label) process.stdout.write(`\r${label}${Object.keys(out).length}/${list.length}`);
       }
       if (label) process.stdout.write("\n");
       return out;
-    });
+    };
+    let got;
+    if (opts.cache && existsSync(opts.cache)) {
+      /* 快取是「上次要的那批 id」。台服升版後會多出新 id（例：7.25 的 4 張新幻卡道具、新成就的獎勵道具），
+         以前這裡直接回快取，新 id 就**安靜地查不到**——幻卡頁因此找不到新卡、還不報錯（2026-10-10）。
+         現在缺的 id 補抓後併回快取；--offline 時不連網，但會講出缺幾筆。 */
+      got = JSON.parse(await readFile(opts.cache, "utf8"));
+      if (label) console.log(`${label}用快取：${Object.keys(got).length} 筆`);
+      const missing = uniq.filter((id) => !(id in got));
+      if (missing.length) {
+        if (opts.offline) {
+          console.log(`  ⚠ ${label || name}快取缺 ${missing.length} 筆（--offline 不補抓）：${missing.slice(0, 8).join(",")}`);
+        } else {
+          if (label) console.log(`${label}快取缺 ${missing.length} 筆，補抓…`);
+          const more = await fetchIds(missing);
+          if (Object.keys(more).length) {
+            Object.assign(got, more);
+            await writeFile(opts.cache, JSON.stringify(got));
+          }
+        }
+      }
+    } else {
+      if (opts.offline) throw new Error(`--offline 但找不到快取 ${opts.cache || "(未指定 cache)"}`);
+      got = await fetchIds(uniq);
+      if (opts.cache) {
+        await mkdir(dirname(opts.cache), { recursive: true });
+        await writeFile(opts.cache, JSON.stringify(got));
+      }
+    }
     return new Map(Object.entries(got).map(([k, v]) => [Number(k), v]));
   },
 

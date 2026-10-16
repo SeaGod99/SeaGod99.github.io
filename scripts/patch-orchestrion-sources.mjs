@@ -13,7 +13,7 @@
 //
 // 另補 gameCategory（遊戲內樂譜分類，繁中）：TC 直接給 Category（如 區域場景1／討伐殲滅戰／
 //   季節活動…）；英文曲名（TC 無）改用 ffxivcollect 分類英文→繁中對照 FXC_CAT。
-//   原 category 欄（資料片：原初之地…）保留不動，前端「版本」篩選續用；gameCategory 給新「分類」篩選。
+//   原 category 欄（資料片：新生艾奧傑亞…，10-11 起台服官方名）保留不動，前端「版本」篩選續用；gameCategory 給新「分類」篩選。
 //
 // 完整覆寫＝冪等。執行：node scripts/patch-orchestrion-sources.mjs ／ 重建後需再跑。
 

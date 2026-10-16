@@ -16,7 +16,7 @@
 // ARR 舊式雜項藏寶圖（神秘地圖、鞣革製的隱藏地圖…）不在等級體系內，略過。
 
 import { readFile, writeFile } from "node:fs/promises";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
@@ -27,11 +27,10 @@ const OUT = join(ROOT, "data", "treasure-maps.json");
 const TC_BASE = "https://raw.githubusercontent.com/ffxiv-teamcraft/ffxiv-teamcraft/staging/libs/data/src/lib/json";
 const TREASURES_URL = `${TC_BASE}/treasures.json`;
 
-// 資料片繁中名（全站統一，見 collections/exploration-log PATCH_LABELS）
-const EXPANSION_BY_MAJOR = {
-  2: "原初之地", 3: "蒼天之禁地", 4: "紅蓮之狂潮",
-  5: "暗影之逆焰", 6: "曉月之終途", 7: "金曦之遺輝",
-};
+// 資料片名：台服官方（data/official-terms.json＝台服客戶端 ExVersion；站主 2026-10-10 拍板改官方，
+// 舊寫法「原初之地…」只留作別名）。不要在這裡另寫一份對照表——那是 10-10 前四份表各自漂掉的原因。
+const EXPANSION_BY_MAJOR = Object.fromEntries(
+  JSON.parse(readFileSync(join(ROOT, "data", "official-terms.json"), "utf8")).expansions.map((e) => [e.major, e.name]));
 
 // 名稱 → 等級：陳舊的地圖G8 / 陳舊的地圖S1
 const GRADE_RE = /^陳舊的地圖([GS])(\d+)$/;

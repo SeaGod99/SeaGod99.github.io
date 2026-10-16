@@ -38,6 +38,7 @@ import { decode } from "@msgpack/msgpack";
 import { xiv } from "./lib/xivapi.mjs";
 import { loadTwLocales, twName } from "./lib/tw-locales.mjs";
 import { isTw } from "./lib/tw-text.mjs";
+import { preferClient } from "./lib/client-names.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
@@ -95,7 +96,8 @@ async function main() {
   );
 
   const tw = await loadTwLocales();
-  const twPlaces = decode(await readFile(join(ROOT, "out_data", "places.msgpack"))).twPlaces;
+  // 地名：台服客戶端 PlaceName 優先、twPlaces 備援（lib/client-names.mjs，2026-10-11）
+  const twPlaces = await preferClient(decode(await readFile(join(ROOT, "out_data", "places.msgpack"))).twPlaces, "place", { offline });
   const items = JSON.parse(await readFile(join(DATA, "items.json"), "utf8")).data;
   const maps = JSON.parse(await readFile(join(DATA, "maps.json"), "utf8")).data;
   const itemName = new Map(items.map((i) => [i.id, i.name]));

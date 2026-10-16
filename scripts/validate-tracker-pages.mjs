@@ -201,6 +201,64 @@ if (skipped.length) console.log(`  ⓘ 跳過（整頁走 ES module，此 harnes
   }
 }
 
+// 「✨ 本次新增」（2026-10-10）：
+//   · 10-10 之前沒有任何頁面推進 ffxiv_seen_patch，篩選實際上是「自第一次來之後」——現在點了才推進、而且逐頁記
+//   · 升版時才補進來的舊條目（7.25 才補的 7.2 樂譜）靠 newIn 算進來，看 patch 會漏
+{
+  const newTag = (doc) => [...doc.querySelectorAll('.filter-tag')].find((b) => /^✨ /.test(b.textContent)) || null;
+  const countOf = (b) => +((b && b.textContent.match(/（(\d+)）/)) || [])[1] || 0;
+  const orch = JSON.parse(readFileSync(join(ROOT, 'data', 'orchestrion.json'), 'utf8')).data;
+  const backfilled = orch.filter((e) => e.newIn === '7.25' && e.patch !== '7.25').length;
+
+  const a = await boot('collections/orchestrion/index.html', [], { ffxiv_seen_patch: '7.21' });
+  const tagA = newTag(a.doc);
+  push('7.21 的老使用者在樂譜頁看得到「✨ 本次新增」', !!tagA, tagA ? tagA.textContent : '沒有篩選');
+  push('  數量含升版時補進的舊條目（newIn）', countOf(tagA) >= backfilled + 7, `顯示 ${countOf(tagA)}，補漏 ${backfilled}＋7.25 新曲 7`);
+  if (tagA) {
+    tagA.dispatchEvent(new a.window.MouseEvent('click', { bubbles: true }));
+    const pages = JSON.parse(a.window.localStorage.getItem('ffxiv_seen_patch_pages') || '{}');
+    push('  點了才推進，而且只推進這一頁', pages['/collections/orchestrion/'] === '7.25' && a.window.localStorage.getItem('ffxiv_seen_patch') === '7.21',
+      JSON.stringify(pages) + '｜全站 ' + a.window.localStorage.getItem('ffxiv_seen_patch'));
+  }
+  const seed = { ffxiv_seen_patch: '7.21', ffxiv_seen_patch_pages: JSON.stringify({ '/collections/orchestrion/': '7.25' }) };
+  const b = await boot('collections/orchestrion/index.html', [], seed);
+  push('  看過的頁下次不再掛', !newTag(b.doc), newTag(b.doc)?.textContent || '沒有篩選');
+  const c = await boot('collections/hairstyles/index.html', [], seed);
+  push('  別頁不受影響（髮型頁照樣標 7.21 之後的，含補漏的半雙馬尾、阿澤瑪）', countOf(newTag(c.doc)) >= 3, newTag(c.doc)?.textContent || '沒有篩選');
+  const d = await boot('collections/orchestrion/index.html');
+  push('  第一次來的人不掛（沒有比較基準），並記下當前版本', !newTag(d.doc) && !!d.window.localStorage.getItem('ffxiv_seen_patch'),
+    '基準 ' + d.window.localStorage.getItem('ffxiv_seen_patch'));
+}
+
+// 臉部配件併進時尚配飾頁（2026-10-11）：兩份資料都要載、keyOf 不能跟配飾撞號、色版名搜得到款式
+{
+  const fw = JSON.parse(readFileSync(join(ROOT, 'data', 'facewear.json'), 'utf8')).data;
+  const gp = JSON.parse(readFileSync(join(ROOT, 'data', '_meta.json'), 'utf8')).gamePatch;
+  const pn = (p) => { const m = p == null ? null : String(p).match(/^(\d+)\.(\d+)/); return m ? parseFloat(`${m[1]}.${m[2].padEnd(2, '0')}`) : null; };
+  const visible = fw.filter((e) => e.name && (pn(e.patch) == null || pn(e.patch) <= pn(gp)));
+  const t = await boot('collections/ornaments/index.html');
+  const cards = [...t.doc.querySelectorAll('.ct-card')];
+  const fwCards = cards.filter((c) => /^臉部配件/.test(c.querySelector('.or-meta')?.textContent || ''));
+  push('時尚配飾頁也載入臉部配件（extraDataUrls），一款一張卡', fwCards.length === visible.length && cards.length > fwCards.length,
+    `臉部配件 ${fwCards.length}/${visible.length}、全部 ${cards.length}`);
+  const kindTags = [...t.doc.querySelectorAll('.filter-tag, option')].map((x) => x.textContent.trim());
+  push('  有「類別」篩選（時尚配飾／臉部配件）', kindTags.some((s) => s.startsWith('臉部配件')) && kindTags.some((s) => s.startsWith('時尚配飾')), '');
+  const btn = fwCards[0]?.querySelector('.ct-check');
+  if (btn) btn.dispatchEvent(new t.window.MouseEvent('click', { bubbles: true }));
+  const owned = JSON.parse(t.window.localStorage.getItem('ffxiv_ornaments_owned') || '[]');
+  push('  勾臉部配件存成 glasses:<款式 id>，不跟配飾的 id:<id> 撞號', owned.length === 1 && /^glasses:\d+$/.test(owned[0]), JSON.stringify(owned));
+  const withAlias = visible.find((e) => (e.aliases || []).length);
+  if (withAlias) {
+    const si = t.doc.getElementById('ct-search');
+    si.value = withAlias.aliases[withAlias.aliases.length - 1];
+    si.dispatchEvent(new t.window.Event('input', { bubbles: true }));
+    await new Promise((r) => setTimeout(r, 400));
+    const names = [...t.doc.querySelectorAll('.ct-card .col-name')].map((n) => n.textContent);
+    push('  搜色版名（例：' + si.value + '）找得到它的款式', names.includes(withAlias.name), names.slice(0, 3).join('、') || '（沒有結果）');
+  }
+  push('  沒有 console error', t.errors.length === 0, t.errors.slice(0, 1).join(''));
+}
+
 let fail = 0;
 for (const [n, ok, d] of results) { console.log(`${ok ? '✓' : '✗'} ${n}  ${d ?? ''}`); if (!ok) fail++; }
 console.log(fail ? `\n${fail} 項失敗` : '\n全部通過');

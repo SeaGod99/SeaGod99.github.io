@@ -75,8 +75,11 @@ const col = all.filter(([, es]) => es.some((e) => e.t === '收藏品交納'));
 
 // ── ② 分片層走的是聯集 ─────────────────────────────────
 {
+  // 10-10 起聯集多了第三個來源（gathering.json 的採集節點），寫法是 [...om, ...extra, ...採集]
   push('分片層走 om 與 extra 的聯集（不是只走 om 的 key）',
-    /new Set\(\[\.\.\.Object\.keys\(om\), \.\.\.Object\.keys\(extra\)\]\)/.test(BIS), '');
+    /new Set\(\[\.\.\.Object\.keys\(om\), \.\.\.Object\.keys\(extra\)(\]|, )/.test(BIS), '');
+  push('  也收了採集節點的產物（gathering.json；7.25 的輝鱗族材料靠這條才有取得方式）',
+    /gatherLv/.test(BIS) && /\.\.\.\[\.\.\.gatherLv\.keys\(\)\]/.test(BIS), '');
   push('  市場頁也合併了 extra', /extra\[String\(id\)\] \|\| \[\]/.test(BMS), '');
   /* 實際驗一遍：收藏品交納那批裡挑幾件，確認真的出現在分片層的類型遮罩裡。
      只驗「腳本寫對了」不夠——分片是另外寫出去的檔。 */

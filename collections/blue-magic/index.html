@@ -283,6 +283,7 @@
     @media (max-width: 380px) { .col-grid { grid-template-columns: 1fr; } }
   </style>
   <script src="../../assets/js/patch-gate.js"></script>
+  <script src="../../assets/js/official-terms.js"></script>
   <script src="../../assets/js/collection-tracker.js"></script>
   <script src="../../assets/js/theme.js"></script>
 <script src="../../assets/js/unlock-banner.js"></script>
@@ -625,7 +626,7 @@
     include: function (m, gp) { return m.name && PatchGate.released(m.patch, gp); },
     prepare: function (list) { return list.slice().sort(function (a, b) { return (a.no || 0) - (b.no || 0); }); },
     searchText: function (m) {
-      var parts = [m.name, m.nameEn];
+      var parts = [m.name, m.nameEn].concat(m.aliases || []);   // aliases：上一版的官方名（白風→純白微風…）
       resolveLearnFrom(m).forEach(function (l) { if (l.detail) parts.push(l.detail); });
       return parts.filter(Boolean).join(' ').toLowerCase();
     },

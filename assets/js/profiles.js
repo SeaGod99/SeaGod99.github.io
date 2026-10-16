@@ -41,6 +41,7 @@
     ffxiv_pwa_dismissed: '關掉過安裝提示',
     ffxiv_unlock_banner_dismissed: '關掉過解鎖橫幅',
     ffxiv_seen_patch: '上次看到的遊戲版本（「本次新增」用）',
+    ffxiv_seen_patch_pages: '各頁看過「本次新增」到哪一版（同上，逐頁記）',
     ffxiv_recent_tools: '最近用過的工具',
     ffxiv_favs_migrated: '幻化收藏的一次性遷移旗標',
     ffxiv_market_migrated: '市場頁 key 的一次性遷移旗標',

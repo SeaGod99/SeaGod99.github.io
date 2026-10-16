@@ -18,7 +18,8 @@
  *     searchPlaceholder: '搜尋坐騎名稱…',
  *     keyOf(e), include(e, gp), alwaysOwned(e), searchText(e), prepare(list),
  *     filters: [ { id, label, options(list)->[{value,label}], match(e,value),
- *                  render?:'select', allLabel?:'全部' },   // render:'select' ＝選項多到標籤排不下時改下拉
+ *                  render?:'select', allLabel?:'全部',     // render:'select' ＝選項多到標籤排不下時改下拉
+ *                  alias?(v)->現值 },                      // 網址帶來的舊值換成現在的值（改名後舊分享連結不失效）
  *                { kind:'patch', of?:e=>e.patch } ],
  *
  * ── 收藏切換：一律是卡片右上角的 ✓ 鈕（2026-07-26 全站統一）──
@@ -70,14 +71,19 @@
     return Promise.resolve(window.confirm(msg));
   }
 
-  var PATCH_BANDS = [
-    { label: '2.x 原初之地',   min: '2.0', max: '2.9' },
-    { label: '3.x 蒼天之禁地', min: '3.0', max: '3.9' },
-    { label: '4.x 紅蓮之狂潮', min: '4.0', max: '4.9' },
-    { label: '5.x 暗影之逆焰', min: '5.0', max: '5.9' },
-    { label: '6.x 曉月之終途', min: '6.0', max: '6.9' },
-    { label: '7.x 金曦之遺輝', min: '7.0', max: '7.9' }
-  ];
+  /* 版本篩選的資料片標籤：台服官方資料片名（2026-10-10 起，站主拍板），由 assets/js/official-terms.js
+     （台服客戶端 ExVersion 產生）長出，**頁面要在本檔之前載入它**——validate-official-terms.mjs 會驗。
+     沒載到時退回只有「2.x」的標籤（不會壞，只是少了名字）。
+     舊標籤（「2.x 原初之地」…）收在 alias：舊的分享連結 ?f_patch=2.x 原初之地 由 applyURL 換成新標籤，不會靜默失效。 */
+  var PATCH_BANDS = (window.OfficialTerms && OfficialTerms.expansions ? OfficialTerms.expansions : [2, 3, 4, 5, 6, 7].map(function (m) {
+    return { major: m, short: m + '.x', name: '' };
+  })).map(function (e) {
+    return {
+      label: e.name ? e.short + ' ' + e.name : e.short,
+      min: e.major + '.0', max: e.major + '.9',
+      alias: (e.alias || []).map(function (a) { return e.short + ' ' + a; })
+    };
+  });
 
   var BUILTIN_SORTS = {
     'name':       { value: 'name',       label: '依名稱' },
@@ -91,6 +97,9 @@
     });
   }
   function pv(p) { return parseFloat(p) || 0; }
+  /* 中點摺疊：台服 7.25 把物品名的「·」（U+00B7）改成了「・」（U+30FB），站上各資料來源兩種都有，
+     使用者打字時又常是注音輸入的「‧」。搜尋比對前一律換成同一個字，不然打「雅·修朵拉」搜不到「雅・修朵拉」。 */
+  function foldDots(s) { return String(s).replace(/[·・‧•]/g, '・'); }
 
   function CollectionTracker(cfg) {
     var self = this;
@@ -122,7 +131,8 @@
     };
     this.alwaysOwned = cfg.alwaysOwned || function () { return false; };
     this.searchText = cfg.searchText || function (e) {
-      var parts = [e.name, e.nameEn];
+      /* aliases：社群站舊譯名、上一版的官方名（patch-collection-names-client.mjs 收的）——搜舊名照樣找得到 */
+      var parts = [e.name, e.nameEn].concat(e.aliases || []);
       (e.sources || []).forEach(function (s) { if (s && s.detail) parts.push(s.detail); });
       return parts.filter(Boolean).join(' ').toLowerCase();
     };
@@ -231,20 +241,30 @@
      · **這一頁真的沒有新東西就不掛**。掛一個永遠是 0 的篩選只會佔位置。
      · **數量由各頁自己過濾後的 LIST 算**，不是資料庫總數——同一版新增的東西不見得
        每一頁都收，寫死總數會讓使用者點進去發現是空的。 */
+  /* 2026-10-10 補兩件事：
+     · **逐頁記「看過」**：使用者點了這個篩選＝看過了，只推進這一頁（PatchGate.markSeenFor）；
+       下次來這頁就不再掛，別頁不受影響。之前沒有任何地方推進，所以一直是「自第一次來之後」。
+     · **補漏的舊條目也算新**：升版時才補進來的舊條目（7.25 才補的 7.2 樂譜）patch 比 seen 早，
+       看 patch 會漏掉——資料裡的 newIn（站上補進的版本）一起看。 */
   CollectionTracker.prototype.addWhatsNewFilter = function (gp) {
     if (this.filters.some(function (f) { return f.id === 'new'; })) return;   // 頁面自己定義過就尊重它
-    var info = PatchGate.initSeen(gp);
+    var scope = (location.pathname || '/').replace(/index\.html$/, '');
+    var info = PatchGate.initSeen(gp, scope);
     if (!info.hasNew) return;
     var seen = info.seen;
-    var hit = this.LIST.filter(function (e) { return PatchGate.isNewSince(e.patch, gp, seen); });
+    var isNew = function (e) { return PatchGate.isNewSince(e.patch, gp, seen, e.newIn); };
+    var hit = this.LIST.filter(isNew);
     if (!hit.length) return;
-    this.whatsNew = { seen: seen, gamePatch: gp, count: hit.length };
+    this.whatsNew = { seen: seen, gamePatch: gp, count: hit.length, scope: scope };
     this.filters.unshift({
       id: 'new',
       label: '更新',
       options: [{ value: 'y', label: '✨ ' + seen + ' 之後新增（' + hit.length + '）' }],
       match: function (e, value) {
-        return value !== 'y' || PatchGate.isNewSince(e.patch, gp, seen);
+        return value !== 'y' || isNew(e);
+      },
+      onChange: function (value) {
+        if (value === 'y') PatchGate.markSeenFor(scope, gp);
       }
     });
     this.filterState.new = null;
@@ -284,6 +304,7 @@
         sel.value = self.filterState[f.id] == null ? '' : self.filterState[f.id];
         sel.addEventListener('change', function () {
           self.filterState[f.id] = sel.value || null;
+          if (f.onChange) f.onChange(self.filterState[f.id]);
           self.page = 0;                     // 換條件回第一頁
           self.pushURL();
           self.renderGrid();
@@ -296,6 +317,7 @@
           btn.textContent = o.label;
           btn.addEventListener('click', function () {
             self.filterState[f.id] = self.filterState[f.id] === o.value ? null : o.value;
+            if (f.onChange) f.onChange(self.filterState[f.id]);
             self.page = 0;                     // 換條件回第一頁
             self.pushURL();
             self.renderFilters();
@@ -395,7 +417,7 @@
         if (v != null && !f.match(e, v)) return false;
       }
       if (self.searchQ) {
-        if (self.searchText(e).indexOf(self.searchQ) < 0) return false;
+        if (foldDots(self.searchText(e)).indexOf(foldDots(self.searchQ)) < 0) return false;
       }
       return true;
     });
@@ -659,6 +681,13 @@
       ? sort : (this.cfg.defaultSort || 'default');
     this.filters.forEach(function (f) {
       var v = p.get('f_' + f.id);
+      // 各頁自己的舊值對照（例：樂譜的「版本」篩選舊值是「原初之地」，現在是「新生艾奧傑亞」）
+      if (v != null && typeof f.alias === 'function') v = f.alias(v) || v;
+      // 版本篩選的舊標籤（改官方資料片名之前分享出去的連結）換成現在的標籤
+      if (v != null && f._patch) {
+        var band = PATCH_BANDS.filter(function (b) { return b.alias.indexOf(v) >= 0; })[0];
+        if (band) v = band.label;
+      }
       // 僅接受確實存在於選項中的值
       var ok = v != null && (self._opts[f.id] || []).some(function (o) { return o.value === v; });
       self.filterState[f.id] = ok ? v : null;
@@ -822,12 +851,18 @@
     this.buildSortOptions();
     this.wire();
     this.wireShortcuts();
-    fetch(this.cfg.dataUrl)
-      .then(function (res) { if (!res.ok) throw new Error('無法載入資料 (' + res.status + ')'); return res.json(); })
-      .then(function (json) {
+    /* extraDataUrls（選用，2026-10-11）：同一頁追蹤兩種收藏時，另一份資料的 data[] 併在後面
+       （時尚配飾頁＋臉部配件）。兩份的 keyOf 要分得開——由頁面的 keyOf 依 e.kind 加前綴，不要撞號。 */
+    var getJson = function (url) {
+      return fetch(url).then(function (res) { if (!res.ok) throw new Error('無法載入資料 (' + res.status + ')'); return res.json(); });
+    };
+    Promise.all([getJson(this.cfg.dataUrl)].concat((this.cfg.extraDataUrls || []).map(getJson)))
+      .then(function (all) {
+        var json = all[0];
         // 多數庫是信封的 data[]；少數用別的鍵（風脈泉是 zones[]）→ 由 rowsOf 指定
         var raw = self.cfg.rowsOf ? (self.cfg.rowsOf(json) || [])
           : ((json && json.data) ? json.data : (Array.isArray(json) ? json : []));
+        all.slice(1).forEach(function (j) { raw = raw.concat((j && j.data) || []); });
         return PatchGate.loadGamePatch(self.cfg.metaUrl).then(function (gp) {
           self.LIST = raw.filter(function (e) { return self.include(e, gp); });
           if (self.cfg.prepare) self.LIST = self.cfg.prepare(self.LIST) || self.LIST;

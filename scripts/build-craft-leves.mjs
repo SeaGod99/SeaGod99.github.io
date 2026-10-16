@@ -25,6 +25,7 @@ import { fileURLToPath } from "node:url";
 import { xiv } from "./lib/xivapi.mjs";
 import { loadTwLocales, twName } from "./lib/tw-locales.mjs";
 import { isTw } from "./lib/tw-text.mjs";
+import { jobName } from "./lib/official-terms.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
@@ -33,11 +34,8 @@ const DATA = join(ROOT, "data");
 const apply = process.argv.includes("--apply");
 const offline = process.argv.includes("--offline");
 
-// ClassJobCategory.Name → 台服職業名。八大製作職才收。
-const CRAFT_JOBS = {
-  CRP: "刻木匠", BSM: "鍛鐵匠", ARM: "鑄甲匠", GSM: "雕金匠",
-  LTW: "製革匠", WVR: "裁衣匠", ALC: "煉金術士", CUL: "烹調師",
-};
+// ClassJobCategory.Name → 台服職業名。八大製作職才收。職業名＝台服官方職業名（data/official-terms.json＝台服客戶端 ClassJob；站主 2026-10-10 拍板，舊名刻木匠…捕魚人只留作別名）
+const CRAFT_JOBS = Object.fromEntries(["CRP", "BSM", "ARM", "GSM", "LTW", "WVR", "ALC", "CUL"].map((a) => [a, jobName(a)]));
 
 async function main() {
   const leves = await xiv.sheet(

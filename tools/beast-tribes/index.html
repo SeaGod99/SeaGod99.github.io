@@ -25,11 +25,15 @@
     .panel h2 { font-size: 0.9rem; font-weight: 600; color: var(--text); margin-bottom: 0.6rem; }
 
     .fields { display: flex; gap: 0.7rem; flex-wrap: wrap; align-items: flex-end; }
-    .f { display: flex; flex-direction: column; gap: 0.25rem; }
+    /* min-width:0＋max-width:100%：台服官方部族名很長（「阿難陀族：阿露帕國境警備隊（紅蓮解放者・Lv60）」），
+       不讓 select 依最長選項撐開版面（2026-10-10 換官方名後 360px 寬溢出 429px）。
+       收合時截斷可接受：展開是系統選單、看得到全文，下方結果框也印完整名稱。 */
+    .f { display: flex; flex-direction: column; gap: 0.25rem; min-width: 0; max-width: 100%; }
     .f label { font-size: 0.73rem; color: var(--text-muted); }
     .f select, .f input {
       background: var(--bg-base); border: 1px solid var(--border); border-radius: 6px;
       color: var(--text); font: inherit; font-size: 0.84rem; padding: 0.35rem 0.5rem;
+      max-width: 100%;
     }
     .f input.num { width: 6.5rem; font-variant-numeric: tabular-nums; }
     .f select:focus, .f input:focus { border-color: var(--gold); outline: none; }
@@ -64,7 +68,10 @@
     .note code { font-family: var(--font-mono); font-size: 0.92em; color: var(--text-dim); }
 
     @media (pointer: coarse) { .f select, .f input { min-height: 44px; } }
-    @media (max-width: 620px) { .table-wrap { overflow-x: auto; } table { min-width: 24rem; } }
+    @media (max-width: 620px) {
+      .table-wrap { overflow-x: auto; } table { min-width: 24rem; }
+      .f-wide { flex: 1 1 100%; } .f-wide select { width: 100%; }
+    }
   </style>
   <script src="../../assets/js/patch-gate.js"></script>
   <script src="../../assets/js/theme.js"></script>
@@ -79,8 +86,8 @@
   <div class="panel">
     <h2>選部族</h2>
     <div class="fields">
-      <div class="f">
-        <label for="tribeSel">部族（以貨幣道具名標示）</label>
+      <div class="f f-wide">
+        <label for="tribeSel">部族</label>
         <select id="tribeSel"></select>
       </div>
       <div class="f">
@@ -117,17 +124,12 @@
   </div>
 
   <p class="note">
-    <b>部族名沒有台服來源，所以用貨幣道具名標示。</b> 找過三條路都不通：
-    上游的 <code>tribes</code> 表是<b>玩家種族</b>（中原之民＝Midlander），不是蠻族——
-    而且它的編號恰好和部族表對得上，照編號接會全錯；
-    Teamcraft 沒有部族名的繁中檔；<code>IntersocietalQuest</code> 是整個資料片共用的盟友任務
-    （蒼天三族都指向「伊修加爾德的盟友們」）。貨幣名是官方道具名，不是俗稱。<br>
     <b>「每天接幾個」不是查來的</b>——那是遊戲的每日配額規則，不在資料表裡，所以做成可改的欄位（預設 3）。
     本站<b>不做跨部族的配額分配最佳化</b>：每個部族的任務只給自己的聲望，換來換去沒有最佳化空間。<br>
     <b>「盟友」階不靠聲望累積</b>（資料裡的門檻是 0）——要先做完該資料片的盟友部族任務，
     所以試算到「誓約」為止，不會告訴你「盟友還要幾天」。<br>
     <span class="est">橙色的</span>是<b>該階級沒有任務資料、用最接近的階級數值推的</b>——資料裡就只有那些階級有值，不臆造。<br>
-    台服未開放的部族（貨幣查不到繁中名）不顯示。
+    台服未開放的部族不顯示。
   </p>
 </div>
 
@@ -250,7 +252,7 @@
       $('result').innerHTML = '目標階級要比目前高。目前是 <b>' + esc(curName) + '</b>。';
     } else {
       $('result').innerHTML =
-        '<b>' + esc(t.currency.name) + '</b>（' + esc(t.expansion || '') + '・Lv' + (t.level || '?') + ' 起）<br>' +
+        '<b>' + esc(t.name) + '</b>（' + esc(t.expansion || '') + '・Lv' + (t.level || '?') + ' 起・' + esc(t.currency.name) + '）<br>' +
         '從 <b>' + esc(curName) + '</b> 到 <b>' + esc(tgtName) + '</b>：還要 <b>' + fmt(totalQ) +
         '</b> 個任務，一天 ' + perDay + ' 個的話 <span class="big">' + fmt(totalD) + '</span> 天' +
         (anyEst ? '<br><span class="warn">⚠ 有階級沒有任務資料，表上標 ≈ 的是用最接近的階級數值推的。</span>' : '');
@@ -271,7 +273,7 @@
     .then(function (db) {
       DB = db;
       $('tribeSel').innerHTML = db.data.map(function (t) {
-        return '<option value="' + t.id + '">' + esc(t.currency.name) + '（' +
+        return '<option value="' + t.id + '">' + esc(t.name) + '（' +
           esc(t.expansion || '') + '・Lv' + (t.level || '?') + '）</option>';
       }).join('');
       // 讀回上次的選擇

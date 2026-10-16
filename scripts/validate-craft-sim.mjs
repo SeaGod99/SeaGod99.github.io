@@ -457,6 +457,34 @@ check("HQ 材料初期品質",
 check("HQ 材料超過上限不加倍",
   Engine.startingQualityFrom({ hqIngredients: [[100, 2, 300]] }, { 100: 9 }), 600);
 
+/* ── 貼上巨集匯入（2026-10-11，第三輪 §4 craft-macro-import）──────────────────
+   回歸方式照路線圖：**自己匯出的巨集回灌，循環逐步相等**。匯出格式照 crafting-sim.js 的 renderMacro
+   （`/ac 技能名 <wait.N>`、不加引號、最後一行 /echo），解析走共用的 assets/js/macro-parse.js。 */
+{
+  const sandbox = {};
+  new Function("window", readFileSync(join(REPO, "assets", "js", "macro-parse.js"), "utf8"))(sandbox);
+  const P = sandbox.MacroParse;
+  const src = readFileSync(join(REPO, "tools", "crafting-sim", "crafting-sim.js"), "utf8");
+  check("製作模擬器載入共用解析模組、不自己再寫一份", /MacroParse\.importRotation/.test(src) && !/function parseLine/.test(src), true);
+  const fold = (s) => String(s == null ? "" : s).toLowerCase().replace(/[·・‧•]/g, "・");
+  const byName = new Map();
+  for (const a of actions.data) for (const n of [a.name, a.nameEn]) if (n && !byName.has(fold(n))) byName.set(fold(n), a.key);
+  const keyOf = (n) => byName.get(fold(n)) || null;
+  const byKey = new Map(actions.data.map((a) => [a.key, a]));
+  const tplSrc = src.slice(src.indexOf("var TEMPLATES"), src.indexOf("];", src.indexOf("var TEMPLATES")) + 2);
+  const TEMPLATES = new Function(`${tplSrc}; return TEMPLATES;`)();
+  for (const t of TEMPLATES) {
+    const macro = t.rotation.map((k) => `/ac ${byKey.get(k).name} <wait.3>`).concat(["/echo 製作完成 <se.1>"]).join("\n");
+    const r = P.importRotation(macro, keyOf);
+    check(`巨集回灌「${t.name}」循環逐步相等`, JSON.stringify(r.keys), JSON.stringify(t.rotation));
+    check(`  「${t.name}」沒有認不得的行、/echo 算略過`, `${r.unknown.length}/${r.skipped}`, "0/1");
+  }
+  const en = P.importRotation('/macrolock\n/ac "Muscle Memory" <wait.3>\n/ac “Veneration” <wait.2>\n/ac Groundwork <wait.3>', keyOf);
+  check("英文巨集（直引號、全形引號、不加引號）都認得", en.keys.join(","), "muscleMemory,veneration,groundwork");
+  const bad = P.importRotation("/ac 不存在的技能 <wait.3>\n隨便一行\n/ac 製作 <wait.3>", keyOf);
+  check("認不得的行逐行列出（行號從 1 起算）", bad.unknown.map((u) => u.line).join(","), "1,2");
+}
+
 /* ── 結果 ─────────────────────────────────────────────────────────────── */
 
 console.log(`製作模擬引擎驗證：${pass} 過、${fail} 不符`);

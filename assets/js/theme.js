@@ -9,6 +9,14 @@
  * 偏好存於 localStorage('sgt-theme') = auto|light|dark（預設 auto，跟系統）。
  * auto 會即時跟隨系統淺/深色變化。切換鈕於 DOM ready 後注入 body，不需各頁改版面。
  */
+/* 搜尋比對用的正規化：轉小寫＋把中點「·・‧•」摺成一種（2026-10-11）。
+   台服客戶端的名稱一律用「・」，使用者手打的卻常是「·」或注音的「‧」——不摺的話打「雅·修朵拉」搜不到「雅・修朵拉」。
+   **全站只有這一份**：theme.js 在每頁 <head> 同步載入，各頁的搜尋框取 `window.SGT_fold`。
+   頁面寫法 `var fold = window.SGT_fold || function (s) { return String(s == null ? '' : s).toLowerCase(); };`
+   ——jsdom 回歸多半不載 theme.js，後備只轉小寫，不要在頁面裡再抄一份正規式（知識庫 §4.99-2）。
+   收藏頁引擎、命令面板、市場頁各有自己的 foldDots（先於這支存在），規則相同。 */
+window.SGT_fold = function (s) { return String(s == null ? '' : s).toLowerCase().replace(/[·・‧•]/g, '・'); };
+
 (function () {
   'use strict';
   var KEY = 'sgt-theme';

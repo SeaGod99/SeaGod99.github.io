@@ -19,6 +19,8 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { decode } from "@msgpack/msgpack";
+import { jobNameById } from "./official-terms.mjs";
+import { officialDots } from "./client-names.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..", "..");
@@ -75,10 +77,10 @@ export function currencyGate(curId, curName) {
 
 /* obtainable-methods 的 craft.jobId → 製作職業繁中名。
    對照由「obtainable-methods 有 jobId 且 recipes.json 也有配方」的約 1 萬件物品交叉統計得出
-   （8→刻木匠 1304 件、14→煉金術士 1107 件…），每個 jobId 對到的職業名唯一。 */
+   （8→木工師 1304 件、14→鍊金術師 1107 件…），每個 jobId 對到的職業名唯一。
+   職業名＝台服官方職業名（data/official-terms.json＝台服客戶端 ClassJob；站主 2026-10-10 拍板，舊名刻木匠…捕魚人只留作別名）。 */
 export const CRAFT_JOB = {
-  0: "工會工坊", 8: "刻木匠", 9: "鍛鐵匠", 10: "鑄甲匠", 11: "雕金匠",
-  12: "製革匠", 13: "裁衣匠", 14: "煉金術士", 15: "烹調師", "-10": "無人島",
+  0: "工會工坊", ...Object.fromEntries([8, 9, 10, 11, 12, 13, 14, 15].map((id) => [id, jobNameById(id)])), "-10": "無人島",
 };
 
 /* 取得管道權重：數字越小越好拿。best 的挑選與推薦器排序都吃這個。 */
@@ -131,7 +133,8 @@ export function loadIndexes() {
   /** NPC → 台服可用資訊。查不到繁中名或地圖 ⇒ 回 null（＝台服沒這個 NPC，見硬規則①）。 */
   function npcInfo(id) {
     const a = npcJson.get(id);
-    const name = a?.name || npcPack.twNpcs?.[id]?.tw || null;
+    // npcs.json 已是台服客戶端名；退回 Teamcraft twNpcs 時把名稱內部的「·」換成官方的「・」（2026-10-11）
+    const name = officialDots(a?.name || npcPack.twNpcs?.[id]?.tw || null);
     if (!name) return null;
     const pos = a?.coords ?? (npcPack.npcs?.[id]?.position
       ? { mapId: npcPack.npcs[id].position.map, x: npcPack.npcs[id].position.x, y: npcPack.npcs[id].position.y }

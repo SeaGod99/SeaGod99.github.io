@@ -30,11 +30,14 @@ export function periodStart(ms) {
 // 天氣中文名稱、英文 key、icon 對照
 // key 為內部統一識別碼（與舊版 W 表英文 key 相容），
 // name 為台服官方中文（對應 maps.json weatherRates.weather）
+// 官方名的單一來源是 data/official-terms.json（台服客戶端 Weather.Name，scripts/build-official-terms.mjs）；
+// 這張表是 ES module 用的手寫副本，validate-official-terms.mjs 逐鍵比對兩邊一致（§4.4：譯名表兩邊放就會漂）。
+// 2026-10-11 改官方：陰天→陰雲、降雪→小雪、放電現象→靈電、星磁暴→磁暴；舊名收在 OLD_NAMES，資料裡殘留的舊名照樣認得。
 // ============================================================
 export const WEATHER_INFO = {
   clearSkies:   { name: '碧空', icon: '🌤️' },
   fairSkies:    { name: '晴朗', icon: '☀️' },
-  clouds:       { name: '陰天', icon: '⛅' },
+  clouds:       { name: '陰雲', icon: '⛅' },
   fog:          { name: '薄霧', icon: '🌫️' },
   wind:         { name: '微風', icon: '💨' },
   gales:        { name: '強風', icon: '🌬️' },
@@ -42,22 +45,49 @@ export const WEATHER_INFO = {
   showers:      { name: '暴雨', icon: '🌦️' },
   thunder:      { name: '打雷', icon: '🌩️' },
   thunderstorms:{ name: '雷雨', icon: '⛈️' },
-  snow:         { name: '降雪', icon: '❄️' },
+  snow:         { name: '小雪', icon: '❄️' },
   blizzards:    { name: '暴雪', icon: '🌨️' },
   heatWaves:    { name: '熱浪', icon: '🔥' },
   dustStorms:   { name: '揚沙', icon: '🌪️' },
   sandstorms:   { name: '沙塵暴', icon: '🏜️' },
   gloom:        { name: '妖霧', icon: '🌑' },
   umbralWind:   { name: '靈風', icon: '🌀' },
-  umbralStatic: { name: '放電現象', icon: '⚡' },
+  umbralStatic: { name: '靈電', icon: '⚡' },
   moonDust:     { name: '月塵', icon: '🌘' },
-  astromagneticStorms: { name: '星磁暴', icon: '🌌' },
+  astromagneticStorms: { name: '磁暴', icon: '🌌' },
+  hotSpells:    { name: '高溫', icon: '🌡️' },
+  // 特殊天氣（副本／特殊場景才有；maps.json 以前存英文名，10-11 改官方）
+  violentGales: { name: '暴風', icon: '🌬️' },
+  dimensionalDisruption: { name: '次元', icon: '🕳️' },
+  everlastingLight: { name: '無盡光', icon: '✨' },
+  brilliance:   { name: '光天', icon: '🔆' },
+  polarization: { name: '星靈', icon: '💫' },
+  pandaemonium: { name: '萬魔殿', icon: '👹' },
+  transcendence: { name: '神域', icon: '🌟' },
+  vacuity:      { name: '虛無', icon: '⚫' },
+  liminality:   { name: '閾限', icon: '🚪' },
+  atmosphericPhantasms: { name: '幻怪', icon: '👻' },
+  illusoryDisturbances: { name: '幻妖', icon: '🎭' },
+};
+
+/* 站上用過的非官方寫法 → 鍵（與 official-terms.json 的 alias 相同）。只給「讀資料」用：
+   maps.json 已換成官方名，但使用者的舊分享連結、其他資料檔可能還留著舊名。 */
+const OLD_NAMES = {
+  '陰天': 'clouds', '降雪': 'snow', '放電現象': 'umbralStatic', '星磁暴': 'astromagneticStorms', '星磁暴雨': 'astromagneticStorms',
 };
 
 // 中文名稱 → key 的反查表（用於把 maps.json weatherRates.weather 轉成內部 key）
-const NAME_TO_KEY = Object.fromEntries(
-  Object.entries(WEATHER_INFO).map(([key, info]) => [info.name, key])
+const NAME_TO_KEY = Object.assign(
+  Object.fromEntries(Object.entries(WEATHER_INFO).map(([key, info]) => [info.name, key])),
+  OLD_NAMES
 );
+/* 暴風（row 28）與強風（row 6）英文都是 Gales；EN_TO_KEY 的 'Gales' 指強風（野外的那個），
+   暴風只出現在副本圖、資料裡一律是中文名，走 NAME_TO_KEY 就對得到。 */
+
+/** 中文天氣名（官方名或舊名）→ 鍵；查不到回 null。 */
+export function weatherKeyOfName(name) {
+  return NAME_TO_KEY[String(name || '').trim()] || null;
+}
 
 /**
  * 取得天氣顯示資訊 { name, icon }
@@ -72,6 +102,10 @@ export const EN_TO_KEY = {
   'Thunderstorms': 'thunderstorms', 'Dust Storms': 'dustStorms', 'Heat Waves': 'heatWaves',
   'Snow': 'snow', 'Blizzards': 'blizzards', 'Gloom': 'gloom', 'Umbral Wind': 'umbralWind',
   'Umbral Static': 'umbralStatic', 'Moon Dust': 'moonDust', 'Astromagnetic Storms': 'astromagneticStorms',
+  'Astromagnetic Storm': 'astromagneticStorms', 'Hot Spells': 'hotSpells', 'Sandstorms': 'sandstorms',
+  'Dimensional Disruption': 'dimensionalDisruption', 'Everlasting Light': 'everlastingLight', 'Brilliance': 'brilliance',
+  'Polarization': 'polarization', 'Pandæmonium': 'pandaemonium', 'Transcendence': 'transcendence', 'Vacuity': 'vacuity',
+  'Liminality': 'liminality', 'Atmospheric Phantasms': 'atmosphericPhantasms', 'Illusory Disturbances': 'illusoryDisturbances',
 };
 
 /** `fishes.json` 的 weatherSet 是 `[{name:'Fog'},…]`，轉成本檔用的 key 陣列。 */

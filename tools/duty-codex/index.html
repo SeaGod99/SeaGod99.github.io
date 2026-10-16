@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="FF14 副本圖鑑 — 520 個副本、討伐戰與大型任務，依資料片與類型分組，列出等級需求、同步等級、人數、時限與解鎖任務">
+  <meta name="description" content="FF14 副本圖鑑 — 505 個副本、討伐戰與大型任務，依資料片與類型分組，列出等級需求、同步等級、人數、時限與解鎖任務">
   <title>副本圖鑑 | 水神的工具箱</title>
   <link rel="stylesheet" href="../../assets/css/tokens.css">
   <link rel="stylesheet" href="../../assets/css/theme.css">
@@ -78,8 +78,11 @@
     }
     .unlock b { color: var(--green); font-weight: 600; }
     /* 黃道文書的討伐目標在這個副本裡 → 文書跑圖。一行可能有兩本，用真實 padding 撐命中區 */
-    .relic { font-size: 0.73rem; color: var(--text-muted); line-height: 1.6; }
-    .relic a { display: inline-block; padding: 3px 0; color: var(--gold); text-decoration: none; border-bottom: 1px dotted var(--gold-dim); }
+    /* 多本書並排時窄螢幕會換行：inline 連結換行後命中區探不到自己（體檢 360px 報 < 24px，10-11）。
+       改成 flex-wrap＋gap（相鄰目標間距 ≥ 8px）、每個連結用 min-height 撐出命中區——擴張層不能用，§3 「一行接一行的連結」 */
+    .relic { font-size: 0.73rem; color: var(--text-muted); line-height: 1.6; display: flex; flex-wrap: wrap; align-items: center; gap: 2px 10px; }
+    .relic a { display: inline-flex; align-items: center; min-height: 32px; color: var(--gold); text-decoration: none; }
+    .relic a span { border-bottom: 1px dotted var(--gold-dim); }
     .relic a:hover { color: var(--gold-light); }
 
     .empty { text-align: center; color: var(--text-muted); padding: 3rem 1rem; font-size: 0.85rem; }
@@ -102,12 +105,13 @@
     .drop-src { margin-top: 6px; font-size: 0.7rem; color: var(--text-muted); }
   </style>
   <script src="../../assets/js/patch-gate.js"></script>
+  <script src="../../assets/js/official-terms.js"></script>
   <script src="../../assets/js/theme.js"></script>
 </head>
 <body>
 <div class="tool-header">
   <h1 class="tool-title">&#x2694;&#xFE0F; 副本圖鑑</h1>
-  <p class="tool-subtitle">520 個副本、討伐戰與大型任務，依資料片分組——等級需求、同步等級、人數與時限一次看完</p>
+  <p class="tool-subtitle">505 個副本、討伐戰與大型任務，依資料片分組——等級需求、同步等級、人數與時限一次看完</p>
 </div>
 
 <div class="controls">
@@ -137,6 +141,7 @@
 <div class="body-wrap" id="wrap"></div>
 
 <script>
+function sgtFold(s) { return window.SGT_fold ? window.SGT_fold(s) : String(s == null ? '' : s).toLowerCase(); }   // 搜尋正規化：小寫＋中點摺疊（定義在 theme.js，§4.99-2）
 (function () {
   'use strict';
 
@@ -152,10 +157,13 @@
     ['raid_normal',     '大型任務'],
     ['raid_savage',     '大型任務・零式'],
     ['alliance_raid',   '大型任務・24 人'],
+    ['chaotic_alliance_raid', '滅激鬥戰'],
     ['ultimate',        '絕殲滅戰'],
     ['deep_dungeon',    '深層迷宮'],
     ['variant_dungeon', '特殊迷宮探索'],
     ['eureka',          '優雷卡'],
+    ['save_the_queen',  '天佑女王'],
+    ['occult_crescent', '蜃景幻界新月島'],
     ['quest_battle',    '任務戰鬥']
   ];
   var TYPE_LABEL = {}, TYPE_ORDER = {};
@@ -230,9 +238,9 @@
   function relicLine(d) {
     var books = RELIC[d.name];
     if (!books || !books.length) return '';
-    return '<div class="relic">黃道文書的討伐目標：' + books.map(function (b) {
-      return '<a href="../relic-note/?id=' + encodeURIComponent('book:' + b) + '">' + esc(b) + '</a>';
-    }).join('、') + '</div>';
+    return '<div class="relic"><span>黃道文書的討伐目標：</span>' + books.map(function (b) {
+      return '<a href="../relic-note/?id=' + encodeURIComponent('book:' + b) + '"><span>' + esc(b) + '</span></a>';
+    }).join('') + '</div>';
   }
 
   /* 「資料列為此副本的產出」——措辭固定，不寫機率、不寫必掉（上游是 Teamcraft 整理的掉落資料，可能不完整）。
@@ -265,7 +273,7 @@
 
   function filtered() {
     if (ONLY_ID != null) return LIST.filter(function (d) { return d.id === ONLY_ID; });
-    var q = els.q.value.trim().toLowerCase();
+    var q = sgtFold(els.q.value.trim());
     var t = els.type.value, e = els.exp.value, lvR = els.lv.value;
     var lo = 0, hi = 9999;
     if (lvR) { var p = lvR.split('-'); lo = +p[0]; hi = +p[1]; }
@@ -274,8 +282,8 @@
       if (e && d.expansion !== e) return false;
       if (lvR) { var l = d.levelReq || 0; if (l < lo || l > hi) return false; }
       if (q) {
-        var hay = (d.name + ' ' + (d.nameEn || '') + ' ' + (TYPE_LABEL[d.type] || '') +
-          ' ' + ((d.unlock && d.unlock.questName) || '')).toLowerCase();
+        var hay = sgtFold(d.name + ' ' + (d.nameEn || '') + ' ' + (TYPE_LABEL[d.type] || '') +
+          ' ' + ((d.unlock && d.unlock.questName) || ''));
         if (hay.indexOf(q) < 0) return false;
       }
       return true;
@@ -338,7 +346,11 @@
     var p = new URLSearchParams(INITIAL_QUERY);
     if (p.get('q')) els.q.value = p.get('q');
     if (p.get('t')) els.type.value = p.get('t');
-    if (p.get('e')) els.exp.value = p.get('e');
+    if (p.get('e')) {
+      // 舊連結帶的是舊資料片名（原初之地…），換成現在顯示的官方名
+      var ex = window.OfficialTerms && OfficialTerms.expansionByName(p.get('e'));
+      els.exp.value = ex ? ex.name : p.get('e');
+    }
     if (p.get('lv')) els.lv.value = p.get('lv');
     /* `?id=duty:<名稱>` ——命令面板搜到某個副本時用這條進來。
        語意與解鎖索引的 `sys:`／`job:` 一致（docs/deep-links.md §2.1）：
@@ -395,9 +407,17 @@
     .then(function (db) { return Promise.all([dropsReady, relicReady]).then(function () { return db; }); })
     .then(function (db) {
       return PatchGate.loadGamePatch('../../data/_meta.json').then(function (gp) {
-        /* 台服未開放的版本一律不顯示。目前 0 筆會被擋掉，但重建資料時若抓到
-           國際服領先的內容，這道就是唯一的閘門。 */
-        LIST = (db.data || []).filter(function (d) { return PatchGate.released(d.patch, gp); });
+        /* 台服未開放的一律不顯示，兩道：
+           · name 是 null＝台服客戶端沒有這個副本的台服名（scripts/patch-dungeon-names.mjs 設的；鐵則：沒有台服名就不顯示）。
+             2026-10-10 前這批 23 個國際服 7.3 以後的副本帶著簡轉繁名、patch 又是 null，閘門放行，就這樣上了這頁。
+           · patch 晚於台服版本。 */
+        LIST = (db.data || []).filter(function (d) { return d.name && PatchGate.released(d.patch, gp); });
+        /* 資料片名照台服官方（站主 10-10 拍板）：資料檔裡存的是舊寫法（原初之地…），顯示時換成官方名
+           （assets/js/official-terms.js，台服客戶端 ExVersion）。舊分享連結的 ?e=原初之地 由 applyURL 換過來。 */
+        if (window.OfficialTerms) LIST.forEach(function (d) {
+          var ex = OfficialTerms.expansionByName(d.expansion);
+          if (ex) d.expansion = ex.name;
+        });
 
         var types = {}, exps = [];
         LIST.forEach(function (d) {

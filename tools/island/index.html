@@ -408,8 +408,9 @@
 </footer>
 
 <script type="module">
+function sgtFold(s) { return window.SGT_fold ? window.SGT_fold(s) : String(s == null ? '' : s).toLowerCase(); }   // 搜尋正規化：小寫＋中點摺疊（定義在 theme.js，§4.99-2）
 import { initMapModal, openMapModal } from '../../assets/js/map-modal.js';
-import { initWeatherTables, getWeatherAt, wi, fmtET, fmtRT, fmtCountdown, etHourAt, ET_HOUR_MS }
+import { initWeatherTables, getWeatherAt, wi, weatherKeyOfName, fmtET, fmtRT, fmtCountdown, etHourAt, ET_HOUR_MS }
   from '../../assets/js/eorzea-weather.js';
 
 const ISLAND_MAP_ID = 772;
@@ -575,13 +576,13 @@ function setThemeFilter(id) {
 }
 
 function renderCw() {
-  const q = $('cwSearch').value.trim().toLowerCase();
+  const q = sgtFold($('cwSearch').value.trim());
   let list = CW.filter((c) => {
     if (timeFilter && c.craftingTime !== timeFilter) return false;
     if (themeFilter && !c.themes.some((t) => t.id === themeFilter)) return false;
     if (!q) return true;
-    if (c.name.toLowerCase().includes(q)) return true;
-    return c.materials.some((g) => (g.name || '').toLowerCase().includes(q));
+    if (sgtFold(c.name).includes(q)) return true;
+    return c.materials.some((g) => sgtFold(g.name || '').includes(q));
   });
   const eff = (c) => (c.craftingTime ? c.value / c.craftingTime : 0);
   list = list.slice().sort((a, b) =>
@@ -626,10 +627,10 @@ $('cwGrid').addEventListener('click', (e) => {
 let selMat = null;
 
 function renderMatList() {
-  const q = $('matSearch').value.trim().toLowerCase();
+  const q = sgtFold($('matSearch').value.trim());
   const groups = new Map(GROUP_ORDER.map((g) => [g, []]));
   for (const m of MATS) {
-    if (q && !m.name.toLowerCase().includes(q)) continue;
+    if (q && !sgtFold(m.name).includes(q)) continue;
     groups.get(groupOf(m)).push(m);
   }
   let html = '';
@@ -786,7 +787,9 @@ function availableAt(a, ms) {
     const h = etHourAt(ms), s = a.spawn.startHour, e = a.spawn.endHour;
     if (!(s < e ? h >= s && h < e : h >= s || h < e)) return false;
   }
-  if (a.weather && !a.weather.includes(wi(getWeatherAt(ISLAND_MAP_ID, ms)).name)) return false;
+  /* 用鍵比，不用顯示名比：animalSpawns 存的是中文名，10-11 天氣名改官方（陰天→陰雲）時，
+     只換一邊的話這裡永遠不成立、動物「不會出現」而且不報錯。weatherKeyOfName 舊名新名都認得。 */
+  if (a.weather && !a.weather.some((w) => weatherKeyOfName(w) === getWeatherAt(ISLAND_MAP_ID, ms))) return false;
   return true;
 }
 // 往後找狀態翻轉的時間點。上限不能拍腦袋定：最稀有的組合是 3 小時時窗 × 5% 天氣，
@@ -817,9 +820,8 @@ function stateOf(a, now) {
 const DROP_KINDS = [...new Set(ANIMALS.flatMap((a) => a.rewards.map((r) => r.name)))]
   .sort((x, y) => x.localeCompare(y, 'zh-Hant'));
 const shortDrop = (n) => n.replace(/^牧場動物的/, '');
-// 天氣繁中名 → 圖示（animalSpawns 存的是繁中名，WEATHER_INFO 以英文 key 為索引）
-const WICON = {};
-for (const k of ['clearSkies', 'fairSkies', 'clouds', 'rain', 'fog', 'showers']) WICON[wi(k).name] = wi(k).icon;
+// 天氣繁中名 → 圖示＋官方名（animalSpawns 存的是繁中名，WEATHER_INFO 以英文 key 為索引；舊名也認得）
+const wLabel = (w) => { const k = weatherKeyOfName(w); return k ? wi(k).icon + wi(k).name : w; };
 
 $('anNote').innerHTML = `
   稀有動物只在<b>特定 ET 時段</b>或<b>特定天氣</b>下出現，抓到後放進牧場才會持續產出素材。
@@ -861,14 +863,14 @@ function renderAnNow() {
 }
 
 function anFiltered() {
-  const q = $('anSearch').value.trim().toLowerCase();
+  const q = sgtFold($('anSearch').value.trim());
   const now = Date.now();
   return ANIMALS.filter((a) => {
     if (anOnlyNow && !stateOf(a, now).on) return false;
     if (anSizeFilter && a.size !== anSizeFilter) return false;
     if (anDropFilter && !a.rewards.some((r) => r.name === anDropFilter)) return false;
     if (!q) return true;
-    return a.name.toLowerCase().includes(q) || a.rewards.some((r) => r.name.toLowerCase().includes(q));
+    return sgtFold(a.name).includes(q) || a.rewards.some((r) => sgtFold(r.name).includes(q));
   });
 }
 
@@ -891,7 +893,7 @@ function renderAn() {
     const st = stateOf(a, now);
     const cond = [];
     if (a.spawn) cond.push(`ET ${String(a.spawn.startHour).padStart(2, '0')}:00–${String(a.spawn.endHour).padStart(2, '0')}:00`);
-    if (a.weather) cond.push(a.weather.map((w) => `${WICON[w] || ''}${w}`).join('／'));
+    if (a.weather) cond.push(a.weather.map(wLabel).join('／'));
     return `
     <div class="an-card${st.on ? ' on' : ''}" data-an="${a.id}">
       <div class="an-head">
@@ -1092,9 +1094,9 @@ $('rkNote').innerHTML = `
   藍幣／藍票與所需時數沿用原文，遊戲資料表無對應欄位可驗，僅供參考。`;
 
 function renderRk() {
-  const q = rkQuery.trim().toLowerCase();
+  const q = sgtFold(rkQuery.trim());
   const list = RANKS.filter((r) => !q ||
-    String(r.level) === q || (r.unlocks || []).some((u) => u.toLowerCase().includes(q)));
+    String(r.level) === q || (r.unlocks || []).some((u) => sgtFold(u).includes(q)));
   $('rkMeta').innerHTML = `顯示 <em>${list.length}</em> / ${RANKS.length} 級`;
   $('rkEmpty').style.display = list.length ? 'none' : '';
   $('rkList').style.display = list.length ? '' : 'none';

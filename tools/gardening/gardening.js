@@ -27,6 +27,7 @@
  */
 (function () {
   'use strict';
+function sgtFold(s) { return window.SGT_fold ? window.SGT_fold(s) : String(s == null ? '' : s).toLowerCase(); }   // 搜尋正規化：小寫＋中點摺疊（定義在 theme.js，§4.99-2）
 
   var DATA_URL = '../../data/gardening.json';
   var META_URL = '../../data/_meta.json';
@@ -287,7 +288,7 @@
     if (m[1] === 'flower' && m[2]) selectSpecies(Number(m[2]), { skipHash: true });
     if (m[1] === 'all') {
       STATE.kind = params.get('kind') || 'all';
-      STATE.q = (params.get('q') || '').toLowerCase();
+      STATE.q = sgtFold(params.get('q') || '');
       STATE.sort = params.get('sort') || 'name';
       syncAllControls(params.get('q') || '');
       renderAll();
@@ -309,7 +310,7 @@
     var v = lsGet(LS_VIEW), pl = lsGet(LS_PLAN);
 
     if (v.kind) STATE.kind = v.kind;
-    if (v.q) STATE.q = String(v.q).toLowerCase();
+    if (v.q) STATE.q = sgtFold(v.q);
     if (v.sort) STATE.sort = v.sort;
     syncAllControls(v.q || '');
     renderAll();
@@ -439,10 +440,10 @@
 
   function matchRows(q) {
     if (!q) return [];
-    var s = q.toLowerCase();
+    var s = sgtFold(q);
     var scored = [];
     ROWS.forEach(function (p) {
-      var name = p.name.toLowerCase();
+      var name = sgtFold(p.name);
       if (searchHay(p).indexOf(s) < 0) return;
       // 作物名開頭命中最相關，其次作物名內含，最後才是靠種子名／英文名撈到的
       scored.push({ p: p, rank: name.indexOf(s) === 0 ? 0 : (name.indexOf(s) >= 0 ? 1 : 2) });
@@ -473,7 +474,7 @@
         '<button type="button" class="plant-link" style="min-height:auto" id="planToAll">到「全部作物」找找看 →</button>';
       var toAll = $('planToAll');
       if (toAll) toAll.addEventListener('click', function () {
-        STATE.q = q.toLowerCase();
+        STATE.q = sgtFold(q);
         syncAllControls(q);
         renderAll();
         showTab('all', false, true);
@@ -1195,7 +1196,7 @@
       });
       renderAll(); writeHash(); saveView();
     });
-    $('allSearch').addEventListener('input', function () { STATE.q = this.value.trim().toLowerCase(); renderAll(); writeHash(); saveView(); });
+    $('allSearch').addEventListener('input', function () { STATE.q = sgtFold(this.value.trim()); renderAll(); writeHash(); saveView(); });
     $('allSort').addEventListener('change', function () { STATE.sort = this.value; renderAll(); writeHash(); saveView(); });
     // 兩顆鈕都走同一個委派，不要在每次重繪後逐個 addEventListener（原本 [data-flower] 是那樣綁的）
     $('allGrid').addEventListener('click', function (e) {
@@ -1213,8 +1214,8 @@
   var HAY = new Map();
   function searchHay(p) {
     if (!HAY.has(p.productId)) {
-      HAY.set(p.productId, (p.name + ' ' + p.seedName + ' ' + (p.nameEn || '') + ' ' + (p.seedNameEn || '') +
-        (p.flower ? ' ' + p.flower.colors.map(function (c) { return c.name; }).join(' ') : '')).toLowerCase());
+      HAY.set(p.productId, sgtFold(p.name + ' ' + p.seedName + ' ' + (p.nameEn || '') + ' ' + (p.seedNameEn || '') +
+        (p.flower ? ' ' + p.flower.colors.map(function (c) { return c.name; }).join(' ') : '')));
     }
     return HAY.get(p.productId);
   }

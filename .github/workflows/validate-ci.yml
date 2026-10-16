@@ -1,0 +1,57 @@
+# 回歸驗證（2026-10-10）：push／PR 時跑全部 scripts/validate-*.mjs
+#
+# 為什麼：34 支 validate（約 1,200 項斷言）是這個專案的回歸防線，但一直全靠人記得跑；
+# 大範圍改名（職業名、資料片名、地名…）之前，它是唯一的安全網（第三輪路線圖 ⑩）。
+# 2026-10-10 本機用「只有 git 會追蹤的檔」的乾淨樹實測：32 支全過、149 秒、不需要 out_data/cache 與網路。
+#
+# 不跑的兩支：validate-pages.mjs 要真瀏覽器（只認 Windows 的 Edge 路徑），validate-fashion-render.mjs 會寫快取。
+# 時尚品鑑機器人用 GITHUB_TOKEN 推送不會觸發這支（GitHub 的設計），它自己先跑兩支驗證。
+# 不擋部署：Pages 走的是另一條（pages.yml 或分支部署），這支紅了只是提醒，不會讓網站停更。
+name: 回歸驗證
+
+on:
+  push:
+    branches: [main]
+    paths-ignore: ['docs/**', '**/*.md', 'tools/glamour/配裝圖片/**']
+  pull_request:
+    paths-ignore: ['docs/**', '**/*.md', 'tools/glamour/配裝圖片/**']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-${{ github.ref }}   # 不與 pages.yml（group: pages）共用
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+          filter: blob:none
+          # 幻化圖鑑的圖約 550MB，驗證用不到
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/tools/glamour/配裝圖片/
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      # package.json 沒有 jsdom（只有建置腳本用的三個依賴）；驗證腳本要 jsdom 與 @msgpack/msgpack
+      - run: npm i --no-save --no-audit --no-fund @msgpack/msgpack jsdom
+      - name: 跑全部 validate-*
+        run: |
+          fail=0
+          for f in scripts/validate-*.mjs; do
+            case "$f" in */validate-pages.mjs|*/validate-fashion-render.mjs) continue;; esac
+            echo "::group::$f"
+            if node "$f"; then echo "✓ $f"; else echo "::error::$f 失敗"; fail=1; fi
+            echo "::endgroup::"
+          done
+          exit $fail
+      - name: 台服名守門自我測試
+        run: node scripts/lib/tw-text.mjs

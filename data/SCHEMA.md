@@ -151,28 +151,31 @@ ARR 2.x / HW 3.x / SB 4.x / ShB 5.x / EW 6.x / DT 7.x
 ### 1.8 職業字典（`JOBS`）— 台服官方譯名
 
 全資料庫（製作 recipes、採集 gathering、釣魚 fishing…）的 `job` 欄位**一律用台服官方譯名**。
+單一來源是 `data/official-terms.json`（台服客戶端 ClassJob；`scripts/build-official-terms.mjs` 產生），建置腳本走
+`scripts/lib/official-terms.mjs`、前端走 `assets/js/official-terms.js`；手寫副本由 `validate-official-terms.mjs` 比對。
+2026-10-11 前製作採集職用的是陸服名轉繁（刻木匠…捕魚人），現在只當搜尋別名。
 `jobId` 為 FFXIV ClassJob 內部編號（Teamcraft recipes 的 `job`、採集點推導用），名稱用台服譯名。
 
 製作職（Disciples of the Hand）：
 
 | jobId | 縮寫 | 台服官方名 |
 |:---:|:---:|------|
-| 8 | CRP | 刻木匠 |
-| 9 | BSM | 鍛鐵匠 |
-| 10 | ARM | 鑄甲匠 |
-| 11 | GSM | 雕金匠 |
-| 12 | LTW | 製革匠 |
-| 13 | WVR | 裁衣匠 |
-| 14 | ALC | 煉金術士 |
+| 8 | CRP | 木工師 |
+| 9 | BSM | 鍛造師 |
+| 10 | ARM | 甲冑師 |
+| 11 | GSM | 金工師 |
+| 12 | LTW | 皮革師 |
+| 13 | WVR | 裁縫師 |
+| 14 | ALC | 鍊金術師 |
 | 15 | CUL | 烹調師 |
 
 採集職（Disciples of the Land）：
 
 | jobId | 縮寫 | 台服官方名 |
 |:---:|:---:|------|
-| 16 | MIN | 採礦工 |
-| 17 | BTN | 園藝工 |
-| 18 | FSH | 捕魚人 |
+| 16 | MIN | 採掘師 |
+| 17 | BTN | 園藝師 |
+| 18 | FSH | 漁師 |
 
 特殊製作系統（非八大製作職，recipes 庫會出現）：
 
@@ -181,7 +184,7 @@ ARR 2.x / HW 3.x / SB 4.x / ShB 5.x / EW 6.x / DT 7.x
 | 0 | 工會工坊 | 飛空艇/潛水艇零件、房屋外牆、機工製作台 |
 | -10 | 無人島 | 無人島開拓製作（人工28 + 經濟型106） |
 
-**注意**：採集點（gathering）庫的 `job` 一律用「採礦工 / 園藝工」（不可寫「礦工 / 漁夫」）；釣魚用「捕魚人」。
+**注意**：採集點（gathering）庫的 `job` 一律用「採掘師 / 園藝師」（不可寫「礦工／採礦工／園藝工」）；釣魚用「漁師」。
 
 ---
 
@@ -352,8 +355,8 @@ ARR 2.x / HW 3.x / SB 4.x / ShB 5.x / EW 6.x / DT 7.x
 
 | 欄位 | 說明 |
 |------|------|
-| `type` / `typeName` | 採集點種類。0=礦脈(MIN) /1=岩脈(MIN) /2=良材(BTN) /3=草場(BTN)；對應 `job` 礦工或園藝工。漁場另見 fishing 庫。 |
-| `job` | 礦工 / 園藝工（依 type 推導） |
+| `type` / `typeName` | 採集點種類。0=礦脈(MIN) /1=岩脈(MIN) /2=良材(BTN) /3=草場(BTN)；對應 `job` 採掘師或園藝師。漁場另見 fishing 庫。 |
+| `job` | 採掘師 / 園藝師（依 type 推導） |
 | `level` | 採集等級 |
 | `items` | 可採集物品 id 陣列（外連 items 主表取名稱） |
 | `hiddenItems` | 隱藏物品（需高採集力或特定手法才出） |
@@ -376,7 +379,7 @@ ARR 2.x / HW 3.x / SB 4.x / ShB 5.x / EW 6.x / DT 7.x
 {
   "id": 1,
   "itemId": 5056,
-  "job": "鍛鐵匠",
+  "job": "鍛造師",
   "jobId": 9,
   "level": 1,
   "rlvl": 1,
@@ -752,7 +755,7 @@ ARR 2.x / HW 3.x / SB 4.x / ShB 5.x / EW 6.x / DT 7.x
 |------|------|
 | `name` | **台服官方繁中地名**——`FishingSpot.csv` 第 24 欄的 PlaceName row id → `out_data/places.msgpack` 的 `twPlaces`。**不可用 OpenCC 簡轉繁**（舊版這樣做，307 個裡 25 個是錯的：女巫崖→「落魔崖」、風之節點→「地場節點·風」、白銀市集→「白銀集市」…，而釣場詳情的 `/coord X Y 地名` 會把錯地名複製進遊戲） |
 | `spearfishing` | `true`＝**魚叉捕魚（水下）釣場**，48 個。來源是上游 data.js 的 `SPEARFISHING_SPOTS`（另一個 section，與 `FISHING_SPOTS` 分開）＋ XIVAPI v2 `SpearfishingNotebook`（用 `GatheringPointBase` row id ＝上游 `_id` 來 join，取 PlaceName／TerritoryType／X／Y／等級）。一般垂釣釣場沒有這個 key |
-| `level` | 捕魚人需求等級，目前只有魚叉釣場有（來自 `SpearfishingNotebook.GatheringLevel`） |
+| `level` | 漁師需求等級，目前只有魚叉釣場有（來自 `SpearfishingNotebook.GatheringLevel`） |
 | `coords` | 魚叉釣場的 X/Y 是 `SpearfishingNotebook` 的 0–2048 地圖空間值，換算 `X/2048*41/c + 1`（`c = sizeFactor/100`），與 `build-island.mjs` 的 `frac→gameCoord` 同式 |
 | `patch` | **沒有任何上游來源**（`patch-backfill-all.mjs` 明列 `fishing-spots` 為「無來源」）。`build-fishing.mjs` 重建時會從舊檔帶過來，否則會安靜洗掉 307 筆現有值 |
 
@@ -774,7 +777,7 @@ ARR 2.x / HW 3.x / SB 4.x / ShB 5.x / EW 6.x / DT 7.x
   "gradeNum": 10,
   "name": "陳舊的地圖G10",
   "icon": "/i/025000/025930.png",
-  "expansion": "紅蓮之狂潮",
+  "expansion": "紅蓮解放者",
   "major": 4,
   "locations": [
     { "mapId": 354, "x": 12.1, "y": 18.8, "partySize": 8 }
@@ -816,7 +819,7 @@ ARR 2.x / HW 3.x / SB 4.x / ShB 5.x / EW 6.x / DT 7.x
   "seedNameEn": "Thavnairian Onion Seeds",
   "seedIcon": "/i/027000/027453.png",
   "seed": {
-    "sources": [{ "type": "gather", "text": "園藝工 Lv.24（草場）", "gate": null, "npc": null }],
+    "sources": [{ "type": "gather", "text": "園藝師 Lv.24（草場）", "gate": null, "npc": null }],
     "marketable": true,
     "crossOnly": true
   },
@@ -1192,6 +1195,28 @@ ARR 2.x / HW 3.x / SB 4.x / ShB 5.x / EW 6.x / DT 7.x
 
 ---
 
+
+### 2.28 official-terms（台服官方術語，建置用）
+
+`scripts/build-official-terms.mjs` 從台服客戶端（ClassJob／ExVersion／Weather／Race）產生，同內容另輸出前端用的 `assets/js/official-terms.js`（`window.OfficialTerms`）。
+`{ jobs: { 縮寫: {id, name, alias?} }, expansions: [{ex, major, name, short, alias?}], weather: { 鍵: {id, name, alias?} }, races: { id: {name, alias?} } }`——`alias`＝站上用過的非官方寫法，只給「舊名也認得」用，不顯示。
+
+### 2.29 facewear（臉部配件，時尚配飾頁的一個類別）
+
+| 欄位 | 說明 |
+|------|------|
+| `id` | GlassesStyle row id（前端 keyOf＝`glasses:<id>`，與時尚配飾的 `id:<id>` 分開） |
+| `kind` | 固定 `facewear` |
+| `name` | 台服客戶端 GlassesStyle.Name |
+| `itemId`／`icon`／`patch` | 解鎖道具（items.json「臉部配件：<款式名>」）的 id、圖示、版本 |
+| `newIn` | 第一次出現在站上的 gamePatch（「✨ 本次新增」用；重建時保留原值） |
+| `aliases` | 12 個色版名（Glasses.Name），只當搜尋別名 |
+| `sources` | 兌換／購買走 `lib/client-shop-sources`（issuer／at），其他類型照取得管道分片層 |
+
+### 2.30 fc-workshop（部隊工房建造材料）
+
+`data[]`：`{ id: CompanyCraftSequence row, itemId: 成品, name, type: CompanyCraftType 台服名, phases: [{ part, phase, mats: [{ itemId, name, per, sets, qty, craftable? }] }], total: [{ itemId, qty }] }`。
+`qty`＝`per`（一次交幾個，SetQuantity）×`sets`（要交幾次，SetsRequired）；`craftable`＝素材在 recipes.json（jobId 8–15）有配方。建置時與 Teamcraft 的部隊製作配方（recipes.json 的 jobId 0）逐件核對總量，對不上就中止。
 
 ## 3. 前端載入慣例
 

@@ -15,8 +15,10 @@
 //   Teamcraft fates.json         FATE 座標（XIVAPI 的 `Fate.Location` **不是 Level 的 row id**，
 //                                實測拿 4258340 去取 Level 直接 404，別走那條路）
 //   data/monsters.json           BNpcName **對 `baseId` 不是 `id`**（§4.14）→ 拿座標
-//   out_data/tw-locales.msgpack  台服怪名／FATE 名／理符名／道具名
-//   out_data/places.msgpack      twPlaces 台服地名（**不可用 OpenCC 簡轉繁**）
+//   台服客戶端解包               怪名 BNpcName／FATE 名 Fate／理符名 Leve／道具名 EventItem／地名 PlaceName
+//                                （lib/client-names.mjs；2026-10-11 起客戶端優先）
+//   out_data/tw-locales.msgpack  上面幾類的備援（Teamcraft 台服語系檔）
+//   out_data/places.msgpack      twPlaces 地名備援（**不可用 OpenCC 簡轉繁**）
 //
 // ── 四類目標 ────────────────────────────────────────────────────────
 //   MonsterNoteTargetCommon ×10  一般怪，各 `MonsterCount` 隻
@@ -37,6 +39,7 @@ import { fileURLToPath } from "node:url";
 import { decode } from "@msgpack/msgpack";
 import { xiv } from "./lib/xivapi.mjs";
 import { loadTwLocales, twName } from "./lib/tw-locales.mjs";
+import { preferClient, logStats } from "./lib/client-names.mjs";
 import { isTw } from "./lib/tw-text.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -87,7 +90,16 @@ async function main() {
   );
 
   const tw = await loadTwLocales();
-  const twPlaces = decode(await readFile(join(ROOT, "out_data", "places.msgpack"))).twPlaces;
+  // 名稱一律客戶端優先、Teamcraft 備援（中點與改譯以客戶端為準，知識庫 §4.98）
+  const twPlaces = await preferClient(decode(await readFile(join(ROOT, "out_data", "places.msgpack"))).twPlaces, "place", { offline });
+  const N = {
+    mobs: await preferClient(tw.mobs, "mob", { offline }),
+    fates: await preferClient(tw.fates, "fate", { offline }),
+    leves: await preferClient(tw.leves, "leve", { offline }),
+    eventItems: await preferClient(tw.eventItems, "eventItem", { offline }),
+  };
+  logStats("地名", twPlaces);
+  for (const [k, t] of Object.entries(N)) logStats(k, t);
   const monsters = JSON.parse(await readFile(join(DATA, "monsters.json"), "utf8")).data;
   const maps = JSON.parse(await readFile(join(DATA, "maps.json"), "utf8")).data;
   const tcFates = await fateCoords();
@@ -96,10 +108,14 @@ async function main() {
      ⚠ 但有 3 個是**同名兩筆**（一般／高難度），而資料分不出首領在哪一個
      （`dungeons.json` 的 `bosses` 是空的、`MonsterNoteTarget` 只給地名）。
      副本圖鑑的深連結是 `?id=duty:<名稱>`，名字撞了就會連到錯的那本——
-     所以**只對唯一解的給連結**，同名的留純文字。寧可少一個連結，不要送人去打錯副本。 */
+     所以**只對唯一解的給連結**，同名的留純文字。寧可少一個連結，不要送人去打錯副本。
+     2026-10-10：那 3 組「同名」其實是優雷卡掛錯名（封鎖坑道銅鈴銅山…），副本名改取台服客戶端後就不撞了，
+     文書的首領（強腕的居格斯在銅鈴銅山一般難度…）因此接得上。另外副本名照客戶端改成「・」，
+     地名（tw-locales）還是「·」——比對時摺疊中點，連結值用副本庫裡的實際名稱。名稱是 null 的（台服未開放）不算。 */
   const dungeons = JSON.parse(await readFile(join(DATA, "dungeons.json"), "utf8")).data;
-  const dutyCount = {};
-  for (const d of dungeons) dutyCount[d.name] = (dutyCount[d.name] || 0) + 1;
+  const foldDot = (s) => String(s || "").replace(/[·・‧•]/g, "・");
+  const dutyByName = {};                                  // 摺疊後的名稱 → 實際名稱（可能多筆）
+  for (const d of dungeons) if (d.name) (dutyByName[foldDot(d.name)] ||= []).push(d.name);
 
   const tById = new Map(targets.map((t) => [t.id, t.f]));
   const leveById = new Map(leves.map((l) => [l.id, l.f]));
@@ -117,7 +133,7 @@ async function main() {
     const f = tById.get(targetId);
     if (!f) return null;
     const baseId = f["BNpcName@as(raw)"];
-    const name = twName(tw.mobs, baseId);
+    const name = twName(N.mobs, baseId);
     if (!isTw(name)) { stat.miss.push("mob:" + baseId); return null; }  // 無台服名＝不顯示（鐵則）
 
     // 出沒地：Zone／Location 是 3 組一列（同一種怪可能出現在多個區域）
@@ -143,7 +159,7 @@ async function main() {
   for (const n of notes) {
     const ev = n.f["EventItem@as(raw)"];
     if (!ev) continue;                                   // 第 0 列是空殼
-    const bookName = twName(tw.eventItems, ev);
+    const bookName = twName(N.eventItems, ev);
     if (!isTw(bookName)) { stat.miss.push("book:" + ev); continue; }
 
     const counts = n.f.MonsterCount || [];
@@ -167,8 +183,9 @@ async function main() {
       if (!m) continue;
       stat.nm++;
       const spot = m.zones[0] && m.zones[0].spot;
-      if (spot && dutyCount[spot] === 1) { m.duty = spot; stat.nmDuty++; }
-      else if (spot && dutyCount[spot] > 1) stat.nmDutyDup++;
+      const hits = spot ? dutyByName[foldDot(spot)] || [] : [];
+      if (hits.length === 1) { m.duty = hits[0]; stat.nmDuty++; }
+      else if (hits.length > 1) stat.nmDutyDup++;
       nms.push(m);
     }
 
@@ -177,7 +194,7 @@ async function main() {
     (n.f["Fate@as(raw)"] || []).forEach((fid, i) => {
       if (!fid) return;
       stat.fateAll++;
-      const name = twName(tw.fates, fid);
+      const name = twName(N.fates, fid);
       if (!isTw(name)) { stat.miss.push("fate:" + fid); return; }
       stat.fate++;
       const tc = tcFates[String(fid)];
@@ -194,7 +211,7 @@ async function main() {
     for (const lid of n.f["Leve@as(raw)"] || []) {
       if (!lid) continue;
       stat.leveAll++;
-      const name = twName(tw.leves, lid);
+      const name = twName(N.leves, lid);
       if (!isTw(name)) { stat.miss.push("leve:" + lid); continue; }
       stat.leve++;
       const lf = leveById.get(lid) || {};

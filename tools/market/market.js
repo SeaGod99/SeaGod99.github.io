@@ -71,7 +71,8 @@
   var recipesByItem = null;          // itemId -> 配方（延後載入）
   var usedInByItem = null;           // ingredientId -> Set<成品 itemId>（反查「向上」用途）
   var recipeJobsByItem = null;       // itemId -> Map<職業名, {job, level, stars}>（同職業取最低等級配方）
-  var gamePatch = '7.21';
+  // 開頁時由 PatchGate.loadGamePatch() 讀 _meta.json 蓋掉；這裡只是載入前的後備（版本號只寫在 patch-gate.js 一處）
+  var gamePatch = (window.PatchGate && PatchGate.FALLBACK_PATCH) || null;
   // 買與賣的範圍**不是同一個**：採購可以跨伺服器（世界訪問），所以 scope 預設全 DC；
   // 但掛售只能在自己角色所在的伺服器，所以售價與利潤一律以 homeWorld 為準。
   // 兩者混用會讓賺錢排行拿「別的伺服器的最低價」當你的售價，那個價你根本掛不上去。
@@ -130,6 +131,8 @@
     });
   }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]; }); }
+  /* 中點摺疊：台服 7.25 把物品名的「·」改成「・」，使用者打字常是「·」或注音的「‧」；比對前換成同一個字 */
+  function foldDots(s) { return String(s).replace(/[·・‧•]/g, '・'); }
   function relTime(ms) {
     if (!ms) return '';
     var d = Date.now() - ms, m = Math.round(d / 60000);
@@ -445,7 +448,7 @@
     return recipesByItem;
   }
 
-  // 可製作物品的職業＋等級需求文字（需先 ensureRecipes），如「鍛鐵匠 Lv.62★★／鑄甲匠 Lv.61」
+  // 可製作物品的職業＋等級需求文字（需先 ensureRecipes），如「鍛造師 Lv.62★★／甲冑師 Lv.61」
   function craftJobsText(id) {
     var jm = recipeJobsByItem && recipeJobsByItem.get(id);
     if (!jm || !jm.size) return '';
@@ -581,6 +584,7 @@
   async function executeSearch() {
     var box = $('#searchResults');
     var q = $('#searchInput').value.trim();
+    var qFold = foldDots(q);
     var cr = parseRange($('#craftMin'), $('#craftMax'));
     var er = parseRange($('#equipMin'), $('#equipMax'));
     var ej = $('#equipJob').value;
@@ -625,7 +629,8 @@
       if (!matchesEquip(it, er, ejSet)) continue;
       if (!q) starts.push(it);       // 純條件查詢（按鈕制下意圖明確，允許）
       else {
-        var idx = it.name.indexOf(q);
+        // 摺疊後的名字快取在物件上，4.5 萬件不必每次搜尋都重算
+        var idx = (it._fold || (it._fold = foldDots(it.name))).indexOf(qFold);
         if (idx === 0) starts.push(it);
         else if (idx > 0) contains.push(it);
       }
@@ -2406,7 +2411,7 @@
   // ===================== 賺錢排行 =====================
   //
   // 本頁原本只能「我想做這個 → 算成本」，但實際需求常常是反過來的：
-  // 「我 90 級鍛鐵匠，做什麼有賺頭？」
+  // 「我 90 級鍛造師，做什麼有賺頭？」
   //
   // 成本一律以**第一層直接材料的市價**計，並且**把水晶算進去**（水晶要花錢，
   // 排除掉會系統性高估利潤——這跟製作清單的「省略水晶」是不同的取捨：
@@ -2461,9 +2466,10 @@
      門檻欄位在 `data/craft-recipes.json`（`craftsmanshipReq`／`controlReq`／`lvl`），
      市場頁平常載的 `recipes.json` 沒有這些欄位，所以**延遲載**：只有在使用者存過數值、
      而且真的跑了一次收益掃描時才抓（那份 13,835 列不小）。 */
-  var CRAFT_JOBS = { 8: '刻木匠', 9: '鍛鐵匠', 10: '鑄甲匠', 11: '雕金匠', 12: '製革匠', 13: '裁衣匠', 14: '煉金術士', 15: '烹調師' };
+  // 台服官方職業名（＝recipes.json 的 job；data/official-terms.json，10-11 改，validate-official-terms.mjs 會比對）
+  var CRAFT_JOBS = { 8: '木工師', 9: '鍛造師', 10: '甲冑師', 11: '金工師', 12: '皮革師', 13: '裁縫師', 14: '鍊金術師', 15: '烹調師' };
   var loadCraftRecipesRaw = lazyJson('../../data/craft-recipes.json');
-  var myStats = null;          // { byJobName: { 煉金術士: {level, craftsmanship, control} }, lastJob }
+  var myStats = null;          // { byJobName: { 鍊金術師: {level, craftsmanship, control} }, lastJob }
   var reqByItem = null;        // itemId -> { c, ct, lvl, job }（取門檻最低的那個職業）
   var reqPromise = null;
 
@@ -2563,7 +2569,7 @@
     });
     // 取樣策略：等級高的先（收益通常也高），同級按 id 穩定排序。
     // total 要一起回傳——被截掉多少必須讓使用者知道，否則他會以為
-    // 「煉金術士全等級」只有 250 個配方（實際 1081 個）。
+    // 「鍊金術師全等級」只有 250 個配方（實際 1081 個）。
     out.sort(function (a, b) { return b.job.level - a.job.level || a.id - b.id; });
     return { list: out.slice(0, limit), total: out.length };
   }
@@ -2728,7 +2734,7 @@
         esc(c.t) + (active ? (pfSort.dir === 1 ? ' ▲' : ' ▼') : '') + '</button></th>';
     }).join('');
 
-    // 被截掉多少一定要講。不講的話「煉金術士全等級」看起來就只有 250 個配方
+    // 被截掉多少一定要講。不講的話「鍊金術師全等級」看起來就只有 250 個配方
     // （實際 1081 個），而且被砍掉的一律是低等級那一批。
     var cut = pfMeta.total > pfMeta.scanned
       ? '<span class="flag warn" title="被砍掉的一律是製作等級較低的那批">△ 符合 ' + pfMeta.total +

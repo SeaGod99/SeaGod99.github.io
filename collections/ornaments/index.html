@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="FF14 時尚配飾收藏追蹤 — 陽傘、背包、火炬等配飾的取得來源與擁有進度">
+  <meta name="description" content="FF14 時尚配飾與臉部配件收藏追蹤 — 陽傘、背包、火炬等配飾與眼鏡、墨鏡等臉部配件的取得來源與擁有進度">
   <title>時尚配飾收藏追蹤 | 水神的工具箱</title>
   <link rel="stylesheet" href="../../assets/css/tokens.css">
   <link rel="stylesheet" href="../../assets/css/theme.css">
@@ -33,6 +33,7 @@
     @media (max-width: 380px) { .col-grid { grid-template-columns: 1fr; } }
   </style>
   <script src="../../assets/js/patch-gate.js"></script>
+  <script src="../../assets/js/official-terms.js"></script>
   <script src="../../assets/js/collection-tracker.js"></script>
   <script src="../../assets/js/theme.js"></script>
   <script src="../../assets/js/unlock-banner.js"></script>
@@ -44,7 +45,7 @@
   <!-- Header -->
   <div class="tool-header">
     <h1 class="tool-title">&#x1F302; 時尚配飾收藏追蹤</h1>
-    <p class="tool-subtitle">陽傘、背包、火炬等配飾（遊戲內「時尚配飾」收藏櫃）——點卡片右上角的 ✓ 標記已取得，進度自動儲存於瀏覽器</p>
+    <p class="tool-subtitle">陽傘、背包、火炬等配飾（遊戲內「時尚配飾」收藏櫃），以及眼鏡、墨鏡等臉部配件——點卡片右上角的 ✓ 標記已取得，進度自動儲存於瀏覽器</p>
     <div class="header-divider"></div>
   </div>
 
@@ -68,6 +69,11 @@
 <script>
 CollectionTracker.init({
   dataUrl: '../../data/ornaments.json',
+  /* 臉部配件（2026-10-11，第三輪 §5 facewear-collection）：併在這頁當一個類別，不另開新頁。
+     資料是另一份（build-facewear.mjs 產生），id 是 GlassesStyle 的 row id、會跟配飾撞號，
+     所以 keyOf 加前綴 glasses:——配飾維持原本的 id:<id>，既有進度不受影響。 */
+  extraDataUrls: ['../../data/facewear.json'],
+  keyOf: function (o) { return (o.kind === 'facewear' ? 'glasses:' : 'id:') + o.id; },
   metaUrl: '../../data/_meta.json',
   storageKey: 'ffxiv_ornaments_owned',
   snapKey: 'ornaments',
@@ -78,9 +84,18 @@ CollectionTracker.init({
   /* 資料層已經把台服未開放的整筆濾掉了（build-ornaments.mjs 走 isTw），
      這裡仍留一道 patch-gate：重建資料時若抓到國際服領先的內容，這是唯一的閘門。 */
   include: function (o, gp) { return o.name && o.name !== o.nameEn && PatchGate.released(o.patch, gp); },
-  prepare: function (list) { return list.slice().sort(function (a, b) { return (a.id || 0) - (b.id || 0); }); },
+  prepare: function (list) {
+    return list.slice().sort(function (a, b) {
+      return ((a.kind === 'facewear') - (b.kind === 'facewear')) || (a.id || 0) - (b.id || 0);
+    });
+  },
   sorts: ['patch-desc', 'patch-asc', 'name'],
   filters: [
+    {
+      id: 'kind', label: '類別',
+      options: function () { return [{ value: 'ornament', label: '時尚配飾' }, { value: 'facewear', label: '臉部配件' }]; },
+      match: function (o, v) { return (o.kind || 'ornament') === v; }
+    },
     {
       id: 'source', label: '取得方式',
       options: function (list) {
@@ -110,7 +125,7 @@ CollectionTracker.init({
     var iconHtml = o.icon
       ? '<img class="col-icon" src="https://xivapi.com' + esc(o.icon) + '" alt="" loading="lazy" decoding="async"' +
         ' onerror="var p=this.parentNode;this.remove();">'
-      : '<div class="col-icon placeholder">&#x1F302;</div>';
+      : '<div class="col-icon placeholder">' + (o.kind === 'facewear' ? '&#x1F453;' : '&#x1F302;') + '</div>';
     var detailLines = srcs.length
       ? srcs.map(function (s) {
           return '<div class="detail-line"><b>' + esc(s.type) + '：</b>' + esc(s.detail || '') +
@@ -120,7 +135,9 @@ CollectionTracker.init({
     return '' +
       iconHtml +
       '<div class="col-name">' + esc(o.name) + '</div>' +
-      '<div class="or-meta">No.' + esc(o.id) + (o.patch ? ' · ver ' + esc(o.patch) : '') + '</div>' +
+      '<div class="or-meta">' + (o.kind === 'facewear'
+        ? '臉部配件' + ((o.aliases || []).length ? ' · ' + (o.aliases.length + 1) + ' 色' : '')
+        : 'No.' + esc(o.id)) + (o.patch ? ' · ver ' + esc(o.patch) : '') + '</div>' +
       '<div class="col-tags">' + sourceTags + '</div>' +
       '<div class="col-detail">' + detailLines + '</div>' +
       (o.itemId ? '<a class="ct-market" href="../../tools/market/#item=' + esc(o.itemId) + '" title="到市場查價工具查此物品行情">&#x1F4B0; 市場行情</a>' : '');

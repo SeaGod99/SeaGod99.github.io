@@ -26,6 +26,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { convertOm, normalizeEntries } from './lib/obtainable.mjs';
 import { loadTwLocales, twName } from './lib/tw-locales.mjs';
+import { createOmShopResolvers } from './lib/client-shop-sources.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (f) => JSON.parse(fs.readFileSync(path.join(ROOT, 'data', f), 'utf8'));
@@ -48,7 +49,8 @@ for (const it of items.data) { itemName.set(it.id, it.name); itemMarketable.set(
 
 // 店名解析器（同 build-item-sources.mjs）：om 的 shopName 有英文殘留，用 tw-locales 補
 const twLocales = await loadTwLocales();
-const twShop = (id) => twName(twLocales.shops, id);
+// 店名：台服客戶端 SpecialShop 優先、tw-locales 後備；兌換條目沒有 NPC 時補「誰＠哪裡」（與 build-item-sources.mjs 同一組，2026-10-10）
+const { twShop, shopWhere } = await createOmShopResolvers({ root: path.join(path.dirname(fileURLToPath(import.meta.url)), '..'), offline: true, twLocales });
 
 const mapName = new Map();
 for (const m of maps.data) mapName.set(m.id, m.name);
@@ -126,7 +128,7 @@ for (const id of wanted) {
   const oms = om.data[String(id)] || [];
   const hasGatherDetail = list.some((x) => x.t === '採集' && x.w);
   for (const m of oms) {
-    const c = convertOm(m, { twShop, vendor: vendorPrices[id] || null, itemId: id });
+    const c = convertOm(m, { twShop, shopWhere, vendor: vendorPrices[id] || null, itemId: id });
     if (!c) continue;
     // 已經有帶座標的採集資料，就不要再塞一筆沒座標的「採集獲得」
     if (c.t === '採集' && hasGatherDetail) continue;

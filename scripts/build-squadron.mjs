@@ -30,6 +30,7 @@
 //    重跑本腳本會把它們整組洗掉（前端 NPC 清單直接空掉）。已內嵌回來。
 
 import { writeFile } from "node:fs/promises";
+import { applySquadronClient } from "./patch-squadron-client.mjs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import * as OpenCC from "opencc-js";
@@ -498,6 +499,12 @@ const out = {
   count: data.length,
   data,
 };
+
+/* 台服客戶端的文字蓋掉 OpenCC 轉繁的（2026-10-11）：上面內嵌的是簡中＋OpenCC，違反鐵則；
+   與 patch-squadron-client.mjs 同一支函式，建完就套，不必另外跑。 */
+const fixed = await applySquadronClient(out, { offline: process.argv.includes("--offline") });
+console.log(`台服客戶端校正：${fixed.changes.length} 處（客戶端沒有而保留 ${fixed.kept.length}）`);
+out.source = "台服客戶端 GcArmy*／Status／ENpcResident（文字）＋ xivapi-v2(GcArmy* sheets，數值) + consolegameswiki(驗證) + data/items.json(道具繁中名)";
 
 await writeFile(join(ROOT, "data", "squadron.json"), JSON.stringify(out, null, 2) + "\n");
 console.log(`squadron.json written: ${data.length} entries`);

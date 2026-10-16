@@ -14,10 +14,13 @@
 // 所以同一個鍵對到多個不同的台服名時，**值存成陣列、前端全部列出**並標「N 個候選」。
 //
 // ── 資料來源（台服名查不到的整筆不收）─────────────────────────────
-//   d 副本  tw-locales.instances（InstanceContent id）＋ Teamcraft instances.json（en／ja）
-//   p 地名  out_data/places.msgpack 的 twPlaces ＋ places（en／ja，同一個 PlaceName id）
-//   m 怪物  tw-locales.mobs（BNpcName id）＋ Teamcraft mobs.json（en／ja）
-//   q 任務  out_data/tw-quests.json ＋ Teamcraft quests.json（en／ja）
+// 台服名一律**客戶端優先**（lib/client-names.mjs，2026-10-11 起；中點與改譯以客戶端為準，知識庫 §4.98），
+// Teamcraft 的台服語系檔是備援：
+//   d 副本  客戶端 ContentFinderCondition.Name（以 InstanceContent id 對）→ tw-locales.instances
+//           ＋ Teamcraft instances.json（en／ja）
+//   p 地名  客戶端 PlaceName → out_data/places.msgpack 的 twPlaces ＋ places（en／ja，同一個 PlaceName id）
+//   m 怪物  客戶端 BNpcName → tw-locales.mobs ＋ Teamcraft mobs.json（en／ja）
+//   q 任務  客戶端 Quest → out_data/tw-quests.json ＋ Teamcraft quests.json（en／ja）
 // 台服名一律過 tw-text 的守門（上游 mobs 有 89 筆是未翻譯的日文）。
 //
 // 執行（repo 根目錄）：
@@ -33,6 +36,7 @@ import { gzipSync } from "node:zlib";
 import { decode } from "@msgpack/msgpack";
 import { normalizeName, shardOf } from "./build-item-names.mjs";
 import { loadTwLocales, twName } from "./lib/tw-locales.mjs";
+import { preferClient, overlayNames, instanceNameMap, logStats } from "./lib/client-names.mjs";
 import { isTw } from "./lib/tw-text.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -60,11 +64,18 @@ async function main() {
   const tw = await loadTwLocales();
   const places = decode(await readFile(join(ROOT, "out_data", "places.msgpack")));
   const twQuests = JSON.parse(await readFile(join(ROOT, "out_data", "tw-quests.json"), "utf8"));
+  const T = {
+    d: overlayNames(tw.instances, await instanceNameMap({ offline })),
+    p: await preferClient(places.twPlaces, "place", { offline }),
+    m: await preferClient(tw.mobs, "mob", { offline }),
+    q: await preferClient(twQuests, "quest", { offline }),
+  };
+  for (const [k, t] of Object.entries(T)) logStats(KINDS[k], t);
   const sets = {
-    d: { tw: (id) => twName(tw.instances, id), ids: Object.keys(tw.instances || {}), ml: await grab("instances.json") },
-    p: { tw: (id) => twName(places.twPlaces, id), ids: Object.keys(places.twPlaces || {}), ml: places.places },
-    m: { tw: (id) => twName(tw.mobs, id), ids: Object.keys(tw.mobs || {}), ml: await grab("mobs.json") },
-    q: { tw: (id) => twQuests[id]?.tw || null, ids: Object.keys(twQuests), ml: await grab("quests.json") },
+    d: { tw: (id) => twName(T.d, id), ids: Object.keys(T.d), ml: await grab("instances.json") },
+    p: { tw: (id) => twName(T.p, id), ids: Object.keys(T.p), ml: places.places },
+    m: { tw: (id) => twName(T.m, id), ids: Object.keys(T.m), ml: await grab("mobs.json") },
+    q: { tw: (id) => twName(T.q, id), ids: Object.keys(T.q), ml: await grab("quests.json") },
   };
 
   // kind → lang → key → Set(台服名)

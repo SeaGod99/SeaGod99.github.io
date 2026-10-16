@@ -293,6 +293,63 @@ const byId = new Map(ITEMS.map((i) => [i.id, i]));
   push('  無 console error', errs.length === 0, errs.slice(0, 1).join('') || '乾淨');
 }
 
+/* 建造材料（部隊工房，2026-10-11）：數量語意要與 Teamcraft 一致、68 個部件都有、打開才載、
+   帶去市場頁的是部件本身（市場頁製作清單上限 10 件，帶素材會被截掉） */
+{
+  const FCW = JSON.parse(readFileSync(join(ROOT, 'data/fc-workshop.json'), 'utf8')).data;
+  const fcBy = new Map(FCW.map((d) => [d.itemId, d]));
+  const all = DB.parts.concat(DB.airship.parts);
+  push('建造材料：潛水艇 40＋飛空艇 28 個部件都查得到', all.every((p) => fcBy.has(p.itemId)), `${all.filter((p) => fcBy.has(p.itemId)).length}/${all.length}`);
+  const recipes = JSON.parse(readFileSync(join(ROOT, 'data/recipes.json'), 'utf8')).data.filter((r) => r.jobId === 0);
+  const sameAsTc = (d) => recipes.filter((r) => r.itemId === d.itemId).some((r) => {
+    const t = new Map(); for (const g of r.ingredients) t.set(g.itemId, (t.get(g.itemId) || 0) + g.qty);
+    return t.size === d.total.length && d.total.every((x) => t.get(x.itemId) === x.qty);
+  });
+  push('  每件的素材總量＝Teamcraft 的部隊製作配方（數量語意 SetQuantity×SetsRequired 的外部驗證）', FCW.every(sameAsTc),
+    FCW.filter((d) => !sameAsTc(d)).slice(0, 3).map((d) => d.name).join('、') || `${FCW.length}/${FCW.length}`);
+  push('  每筆素材 qty＝per×sets', FCW.every((d) => d.phases.every((ph) => ph.mats.every((m) => m.qty === m.per * m.sets))), '');
+  push('  頁面打開才載（不在開頁時就抓 366KB）', /function loadFc\(\)/.test(HTML) && !/fetch\('\.\.\/\.\.\/data\/fc-workshop\.json'\)[^]*?dataReady/.test(HTML.slice(0, HTML.indexOf('function loadFc'))), '');
+
+  const errs = [];
+  const vc = new VirtualConsole();
+  vc.on('jsdomError', (e) => errs.push(e.message));
+  const dom = new JSDOM(HTML, { runScripts: 'outside-only', url: 'https://seagod99.github.io/tools/submarine/?rank=60', virtualConsole: vc });
+  const { window } = dom, doc = window.document;
+  const fetched = [];
+  window.fetch = async (u) => {
+    const rel = String(u).replace(/^.*\/(data|assets)\//, '$1/');
+    fetched.push(rel);
+    if (!existsSync(join(ROOT, rel))) return { ok: false, status: 404, json: async () => ({}) };
+    return { ok: true, status: 200, json: async () => JSON.parse(readFileSync(join(ROOT, rel), 'utf8')) };
+  };
+  window.matchMedia = () => ({ matches: false, addEventListener() {}, addListener() {} });
+  window.eval([...doc.querySelectorAll('script:not([src])')].map((s) => s.textContent).join(';\n'));
+  await new Promise((r) => setTimeout(r, 700));
+  push('  開頁時沒有抓 fc-workshop.json', !fetched.includes('data/fc-workshop.json'), fetched.join('、'));
+  const box = doc.getElementById('subMats');
+  box.open = true;
+  box.dispatchEvent(new window.Event('toggle'));
+  await new Promise((r) => setTimeout(r, 500));
+  const parts = doc.querySelectorAll('#subMats .mat-part');
+  push('  打開後列出 4 件部件各自的三階段素材', parts.length === 4 && doc.querySelectorAll('#subMats .mat-table tbody tr').length > 12,
+    `${parts.length} 件、${doc.querySelectorAll('#subMats .mat-table tbody tr').length} 列`);
+  const a = doc.querySelector('#subMats .mat-go a');
+  const ids = a ? decodeURIComponent(a.getAttribute('href')).replace(/^.*#craft=/, '').split(',') : [];
+  push('  帶去市場頁的是 4 件部件本身（#craft=<部件id>:1，不超過市場頁上限 10 件）', ids.length === 4 && ids.every((x) => /^\d+:1$/.test(x)), ids.join(','));
+  const nonCraft = new Set(FCW.flatMap((d) => d.phases.flatMap((ph) => ph.mats.filter((m) => !m.craftable).map((m) => m.itemId))));
+  push('  素材 264 種裡 71 種沒有配方（路線圖量的數字）', nonCraft.size === 71 && new Set(FCW.flatMap((d) => d.total.map((x) => x.itemId))).size === 264, `${nonCraft.size} 種`);
+  // 預設那 4 件的素材全都有配方——換一件含「骨架」（沒有配方）的部件再看標記
+  const hull = doc.getElementById('sl-船體');
+  const withNon = FCW.find((d) => DB.parts.some((p) => p.itemId === d.itemId && p.slot === '船體') && d.phases.some((ph) => ph.mats.some((m) => !m.craftable)));
+  if (hull && withNon) {
+    hull.value = String(withNon.itemId);
+    hull.dispatchEvent(new window.Event('change', { bubbles: true }));
+    await new Promise((r) => setTimeout(r, 300));
+  }
+  push('  沒有配方的素材標「另外取得」（例：' + (withNon ? withNon.name : '?') + '）', doc.querySelectorAll('#subMats .lock').length > 0, doc.querySelectorAll('#subMats .lock').length + ' 處');
+  push('  無 console error', errs.length === 0, errs.slice(0, 1).join('') || '乾淨');
+}
+
 push('data/submarine.json 有進 _meta', (() => {
   const meta = JSON.parse(readFileSync(join(ROOT, 'data/_meta.json'), 'utf8'));
   return (meta.databases || []).some((d) => d.file === 'submarine.json');

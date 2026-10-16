@@ -54,6 +54,7 @@
     .q-line a { display: inline-block; padding: 3px 0; color: var(--gold); text-decoration: none; border-bottom: 1px dotted var(--gold-dim); }
     .q-line a:hover { color: var(--gold-light); }
     .q-line .qty { color: var(--text-muted); font-variant-numeric: tabular-nums; }
+    .q-line .q-hint { color: var(--text-muted); font-size: 0.74rem; margin-left: 0.3rem; }
     .q-btns { display: flex; gap: 0.35rem; flex-wrap: wrap; }
     .q-btn {
       font-size: 0.74rem; padding: 0.25rem 0.55rem; border-radius: 5px; cursor: pointer;
@@ -103,6 +104,7 @@
   任務名、接取 NPC、地名、手帳章節與物品名都取自台服官方字串（遊戲本體的任務表＋本站的 NPC／地圖／物品資料庫），不做翻譯。<b>台服還沒有中文名的任務不收</b>；查不到台服來源的欄位整行不顯示，不以英文或簡中補。<br>
   <b>同名任務不合併</b>（例如三個城市各有一份的開場任務），每一筆都是遊戲裡獨立的任務，列表上的區域可以分辨。<br>
   等級寫的是<b>接取所需等級</b>。前置任務只列上一層。「可選報酬」是交任務時從中挑選的那一組；報酬只列物品與金幣，經驗值依職業與等級而異，這裡不列。
+  「需交付物品」取自台服客戶端的任務腳本，<b>只有物品、沒有數量</b>（資料裡找不到數量欄），要交幾個請看遊戲內的任務說明。
 </p>
 
 <footer class="site-footer">
@@ -110,6 +112,7 @@
 </footer>
 
 <script>
+function sgtFold(s) { return window.SGT_fold ? window.SGT_fold(s) : String(s == null ? '' : s).toLowerCase(); }   // 搜尋正規化：小寫＋中點摺疊（定義在 theme.js，§4.99-2）
 (function () {
   'use strict';
   var MAX = 50;
@@ -139,13 +142,13 @@
      資料片篩選只在有選的時候套用。 */
   function search() {
     if (ONLY_ID != null) { var one = BY_ID.get(ONLY_ID); return one ? [one] : []; }
-    var q = $('q').value.trim().toLowerCase();
+    var q = sgtFold($('q').value.trim());
     var ex = $('expSel').value;
     if (!q && ex === '') return null;      // 沒條件：不倒 5,000 筆出來
     var hits = [];
     IDX.data.forEach(function (r) {
       if (ex !== '' && String(expOf(r).id) !== ex) return;
-      var n = r[1].toLowerCase();
+      var n = sgtFold(r[1]);
       var rank = !q ? 2 : n === q ? 0 : n.indexOf(q) === 0 ? 1 : n.indexOf(q) >= 0 ? 2 : -1;
       if (rank >= 0) hits.push([rank, r]);
     });
@@ -201,6 +204,11 @@
     if (d.r) out.push('<div class="q-line"><b>報酬</b>' + itemList(d.r) + '</div>');
     if (d.o) out.push('<div class="q-line"><b>可選報酬</b>' + itemList(d.o) + '</div>');
     if (d.g) out.push('<div class="q-line"><b>金幣</b>' + d.g.toLocaleString('en-US') + '</div>');
+    /* 需交付物品（台服客戶端任務腳本的 RITEM，2026-10-10）：資料裡**沒有數量**，所以只列物品、不寫 ×N，
+       並明講數量看遊戲內——寫成「×1」會讓人少準備。 */
+    if (d.t) out.push('<div class="q-line"><b>需交付物品</b>' +
+      itemList(d.t.map(function (x) { return [x[0], x[1], 1, x[2]]; })) +
+      '<span class="q-hint">（數量以遊戲內任務說明為準）</span></div>');
     return out.length ? out.join('') : '<div class="q-none">這個任務沒有可顯示的接取點、前置或物品報酬。</div>';
   }
 

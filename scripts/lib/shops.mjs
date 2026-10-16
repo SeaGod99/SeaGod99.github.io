@@ -10,8 +10,9 @@
 // ── 資料來源的取捨（實測，2026-09-25）──────────────────────────────────
 //   結構    Teamcraft `shops.json`（2,253 間，隨 staging 更新）
 //           **不用** out_data/shops.msgpack：那是舊 dump，7.21 之後的兌換品不在裡面。
-//   台服店名 out_data/tw-locales.msgpack 的 `shops`（1,875 間有名）
-//           實測完全涵蓋 msgpack 的 twShops（1,815 間）且多 60 間，沒有反向缺口。
+//   台服店名 **台服客戶端 SpecialShop／GilShop 的 Name 優先**（2026-10-11，知識庫 §4.98：Teamcraft 的中點是「·」、
+//           7.25 的新店沒有），查不到才用 out_data/tw-locales.msgpack 的 `shops`（1,875 間有名；
+//           實測完全涵蓋 msgpack 的 twShops（1,815 間）且多 60 間，沒有反向缺口）。
 //   NPC／地點 data/npcs.json（有繁中名與座標者）＋ data/maps.json
 //
 // ── 貨幣 vs 商品 ─────────────────────────────────────────────────────
@@ -33,6 +34,8 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { loadTwLocales, twName } from "./tw-locales.mjs";
+import { loadTcSheet } from "./tc-datamining.mjs";
+import { overlayNames, cleanName, usable, statsOf } from "./client-names.mjs";
 
 const TC_SHOPS =
   "https://raw.githubusercontent.com/ffxiv-teamcraft/ffxiv-teamcraft/staging/libs/data/src/lib/json/shops.json";
@@ -66,7 +69,16 @@ export async function loadShops({ root, offline = false, refresh = false } = {})
   const npcById = new Map(npcs.map((n) => [n.id, n]));
   const mapById = new Map(maps.map((m) => [m.id, m]));
 
-  const shopName = (id) => twName(tw.shops, id);
+  /* 店名客戶端優先：SpecialShop／GilShop 的 Name（兩張表的 row id 與 Teamcraft 的商店 id 同一個空間）。
+     快取不在又是 offline 就退回 tw-locales，不中止。 */
+  const clientShop = new Map();
+  for (const sheet of ["SpecialShop", "GilShop"]) {
+    try {
+      for (const r of await loadTcSheet(sheet, { offline })) { const n = cleanName(r.Name); if (usable(n)) clientShop.set(r.id, n); }
+    } catch { /* 退回 tw-locales */ }
+  }
+  const shopNames = overlayNames(tw.shops, clientShop);
+  const shopName = (id) => twName(shopNames, id);
 
   // NPC → { id, name, at }。查不到繁中名就整個不給（鐵則：不落英文）
   function npcInfo(id) {
@@ -137,7 +149,7 @@ export async function loadShops({ root, offline = false, refresh = false } = {})
     }
   }
 
-  return { shops, byCurrency, byItem, byNpc, shopName, itemById, npcInfo, raw, droppedDebug: dropped };
+  return { shops, byCurrency, byItem, byNpc, shopName, itemById, npcInfo, raw, droppedDebug: dropped, shopNameStats: statsOf(shopNames) };
 }
 
 /**

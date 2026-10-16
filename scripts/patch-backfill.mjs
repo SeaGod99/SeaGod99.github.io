@@ -24,12 +24,17 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import { TW_RELEASES } from "./lib/tw-releases.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
 const DATA = join(ROOT, "data");
 const APPLY = process.argv.includes("--apply");
-const TW_PATCH = "7.21"; // 台服當前版本門檻（依 Teamcraft tw-items 實測：台服客戶端已含 7.2＋7.21，無 7.25 以上）
+// 台服當前版本門檻＝台服版本清單（scripts/lib/tw-releases.mjs）的最後一筆（2026-10-11 起不再在這裡手寫）。
+// 升版時只在 tw-releases.mjs 登記新版（版號＋兩個客戶端 sha）；依據是官方更新筆記索引
+// （https://www.ffxiv.com.tw/web/special/patchnote_log/）＋台服客戶端解包。**不要再用 Teamcraft tw-items 反推**——
+// 它落後時不報錯、只給舊答案（知識庫 §4.5）。登記之前先跑 node scripts/check-gate-release.mjs --to <新版>。
+const TW_PATCH = TW_RELEASES[TW_RELEASES.length - 1].version;
 
 const FC = "https://ffxivcollect.com/api";
 const lc = (s) => (s == null ? "" : String(s)).toLowerCase().trim();

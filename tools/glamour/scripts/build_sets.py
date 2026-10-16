@@ -290,7 +290,7 @@ def source_signatures(entries, cur_info=None):
     for e in entries:
         t = e.get("type")
         if t == "instance":
-            names = sorted(e.get("instanceNames") or [])
+            names = sorted(e.get("instanceNames") or [], key=lambda n: n.replace("・", "·"))   # 排序鍵摺中點：id 要穩定（見 build_heuristic_sets 的雜湊）
             if names:
                 sigs.append(("inst:" + "|".join(names), "🗡️" + names[0]))
         elif t == "specialshop":
@@ -318,7 +318,7 @@ def source_signatures(entries, cur_info=None):
         elif t == "gcshop":
             sigs.append(("gc", "🛒軍票商店"))
         elif t == "vendor":
-            npcs = sorted({v.get("npcName", "") for v in (e.get("vendors") or []) if v.get("npcName")})
+            npcs = sorted({v.get("npcName", "") for v in (e.get("vendors") or []) if v.get("npcName")}, key=lambda n: n.replace("・", "·"))
             if npcs:
                 sigs.append(("npc:" + "|".join(npcs), "🛒" + npcs[0]))
     return sigs
@@ -358,7 +358,10 @@ def build_heuristic_sets(sources, info, equip_ids, cur_info=None):
                                "n": len(g["items"]),
                                "sample": [p["zh"] or p["ja"] for p in g["items"][:6]]})
             continue
-        h = hashlib.md5(sig.encode("utf-8")).hexdigest()[:8]
+        # ⚠ id 要穩定：使用者的收藏、wiki 官方照對應表（set_photos.json）都以 id 為鍵。2026-10-11 名稱的中點
+        #   照台服客戶端改成「・」之後，簽名裡的 NPC／副本名跟著變，88 套換了 id、78 套掉了官方照。
+        #   雜湊前把「・」摺回舊寫法「·」，id 就與改名前相同（顯示用的 label 照樣是「・」）。
+        h = hashlib.md5(sig.replace("・", "·").encode("utf-8")).hexdigest()[:8]
         sets.append({
             "id": f"src:{h}:{cjc}:{ilvl}",
             "layer": "src",

@@ -34,6 +34,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { decode } from "@msgpack/msgpack";
 import { loadIndexes, resolveSources, describeSource } from "./lib/game-sources.mjs";
+import { jobNameById } from "./lib/official-terms.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
@@ -146,7 +147,8 @@ async function loadSeeds() {
 const ix = loadIndexes();
 const enItems = decode(readFileSync(O("en-items.msgpack")));
 const meta = JSON.parse(readFileSync(D("_meta.json"), "utf8"));
-const gamePatch = meta.gamePatch || "7.21";
+const gamePatch = meta.gamePatch;
+if (!gamePatch) throw new Error("data/_meta.json 沒有 gamePatch——不猜版本（版本號只寫在 _meta.json）");
 const recipes = JSON.parse(readFileSync(D("recipes.json"), "utf8")).data;
 const minions = JSON.parse(readFileSync(D("minions.json"), "utf8")).data;
 const seeds = await loadSeeds();
@@ -189,11 +191,12 @@ function usedIn(productId) {
   return { count: set.size, top };
 }
 
-/* 採集點種類 → 職業與地形。對照見 data/SCHEMA.md：0=礦脈 1=岩脈（採礦工）／2=良材 3=草場（園藝工）。
+/* 採集點種類 → 職業與地形。對照見 data/SCHEMA.md：0=礦脈 1=岩脈（採掘師）／2=良材 3=草場（園藝師）。
+   職業名＝台服官方職業名（data/official-terms.json＝台服客戶端 ClassJob；站主 2026-10-10 拍板，舊名刻木匠…捕魚人只留作別名）。
    `resolveSources` 只回「採集」兩個字，但種子有沒有標等級差很多——沒有等級的「採集」等於沒說。 */
 const GATHER_KIND = {
-  0: ["採礦工", "礦脈"], 1: ["採礦工", "岩脈"],
-  2: ["園藝工", "良材"], 3: ["園藝工", "草場"],
+  0: [jobNameById(16), "礦脈"], 1: [jobNameById(16), "岩脈"],
+  2: [jobNameById(17), "良材"], 3: [jobNameById(17), "草場"],
 };
 /** 把 obtainable-methods 的採集細節接回來（職業／等級／地形）。 */
 function gatherDetail(seedId) {

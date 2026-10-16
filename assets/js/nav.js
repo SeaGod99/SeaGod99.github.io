@@ -37,7 +37,7 @@
     { e: '🎵', n: '樂譜收藏追蹤', p: 'collections/orchestrion/', c: 'collect', k: 'orchestrion 樂譜 演奏團' },
     { e: '💃', n: '表情收藏追蹤', p: 'collections/emotes/', c: 'collect', k: 'emote 表情 動作' },
     { e: '💇', n: '髮型收藏追蹤', p: 'collections/hairstyles/', c: 'collect', k: 'hairstyle 髮型 樣式書' },
-    { e: '🌂', n: '時尚配飾收藏追蹤', p: 'collections/ornaments/', c: 'collect', k: 'ornament fashion accessory 配飾 時尚配飾 陽傘 洋傘 背包 火炬' },
+    { e: '🌂', n: '時尚配飾收藏追蹤', p: 'collections/ornaments/', c: 'collect', k: 'ornament fashion accessory facewear glasses 配飾 時尚配飾 陽傘 洋傘 背包 火炬 臉部配件 眼鏡 墨鏡' },
     { e: '🦜', n: '鳥鞍收藏追蹤', p: 'collections/barding/', c: 'collect', k: 'barding 鳥鞍 陸行鳥' },
     { e: '👁️', n: '探索筆記追蹤器', p: 'collections/exploration-log/', c: 'collect', k: 'sightseeing 探索筆記 景觀' },
     { e: '🗡️', n: '討伐筆記追蹤', p: 'collections/hunting-log/', c: 'collect', k: 'hunting log 討伐筆記 怪物 monster note 經驗' },
@@ -84,7 +84,9 @@
   }
 
   function hrefOf(t) { return t.ext ? t.u : (t.p ? ROOT + t.p : 'javascript:void 0'); }
-  function searchStr(t) { return (t.n + ' ' + (t.k || '')).toLowerCase(); }
+  /* 中點摺疊（同 collection-tracker.js）：台服 7.25 起物品名用「・」，其他來源還有「·」，注音輸入常打出「‧」 */
+  function foldDots(s) { return String(s).replace(/[·・‧•]/g, '・'); }
+  function searchStr(t) { return foldDots((t.n + ' ' + (t.k || '')).toLowerCase()); }
 
   var overlay, input, listEl, items = [], sel = 0, filtered = TOOLS.slice();
 
@@ -289,7 +291,7 @@
   }
 
   function filter(q) {
-    q = (q || '').trim().toLowerCase();
+    q = foldDots((q || '').trim().toLowerCase());
     if (!q) { filtered = TOOLS.slice(); sel = 0; render(); return; }
 
     var tools = TOOLS.filter(function (t) { return searchStr(t).indexOf(q) >= 0; });
@@ -304,12 +306,21 @@
       var seen = {}, hits = [];
       for (var i = 0; i < idx.data.length; i++) {
         var r = idx.data[i];
-        var nm = r[0].toLowerCase(), pos = nm.indexOf(q);
+        var nm = foldDots(r[0].toLowerCase()), pos = nm.indexOf(q), rank = nm === q ? 0 : pos === 0 ? 1 : 2;
+        /* 第 4 欄是別名（社群舊譯名、上一版的官方名）：比對也看它，顯示的仍是現名 */
+        if (pos < 0 && r[3]) {
+          for (var a = 0; a < r[3].length; a++) {
+            var al = foldDots(String(r[3][a]).toLowerCase()), ap = al.indexOf(q);
+            if (ap < 0) continue;
+            rank = Math.min(pos < 0 ? 9 : rank, al === q ? 0 : ap === 0 ? 1 : 2);
+            pos = ap;
+          }
+        }
         if (pos < 0) continue;
         var k = r[0] + '|' + r[1];
         if (seen[k]) continue;
         seen[k] = 1;
-        hits.push([nm === q ? 0 : pos === 0 ? 1 : 2, i, r]);
+        hits.push([rank, i, r]);
       }
       hits.sort(function (a, b) { return a[0] - b[0] || a[1] - b[1]; });
       content = hits.slice(0, 40).map(function (h) { return entryToRow(h[2][0], h[2][1], h[2][2]); });
@@ -576,6 +587,7 @@
 
     addSkipLink(bar);
     addFooter();
+    addDataVersion();
   }
 
   /* ── 跳至主要內容（樣式在 tokens.css 的 .sgt-skip）────────────────────
@@ -620,6 +632,24 @@
       '<a href="https://xivapi.com" target="_blank" rel="noopener">XIVAPI</a><br>' +
       'FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具</p>';
     document.body.appendChild(f);
+  }
+
+  /* ── 頁尾的資料版本（2026-10-11，第三輪路線圖 §4 data-version-footer）──────────
+     使用者原本無從得知站上的資料停在哪一版——7.25 升版時站上落後三週，畫面上完全看不出來。
+     由 data/_meta.json 的 gamePatch／twClient 長出來（**不寫死版本號**），自帶頁尾與注入的頁尾都加；
+     抓不到就不顯示，不擋頁尾。 */
+  function addDataVersion() {
+    var foot = document.getElementById('sgt-footer') || document.querySelector('.page-footer, footer');
+    if (!foot || foot.querySelector('.sgt-data-ver') || !window.fetch) return;
+    fetch((ROOT || './') + 'data/_meta.json').then(function (r) { return r.ok ? r.json() : null; }).then(function (m) {
+      if (!m || !m.gamePatch || foot.querySelector('.sgt-data-ver')) return;
+      var cv = m.twClient && m.twClient.version ? String(m.twClient.version).split('.').slice(0, 3).join('.') : '';
+      var p = document.createElement('p');
+      p.className = 'footer-text sgt-data-ver';
+      p.style.marginTop = '4px';
+      p.textContent = '資料版本：台服 ' + m.gamePatch + (cv ? '（客戶端 ' + cv + '）' : '');
+      (foot.querySelector('.container') || foot).appendChild(p);
+    }).catch(function () { /* 離線或檔案開啟：不顯示 */ });
   }
 
   /* ── 最近使用的工具（給首頁的「最近使用」用）────────────────────────────

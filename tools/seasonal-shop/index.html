@@ -96,6 +96,7 @@
 </footer>
 
 <script>
+function sgtFold(s) { return window.SGT_fold ? window.SGT_fold(s) : String(s == null ? '' : s).toLowerCase(); }   // 搜尋正規化：小寫＋中點摺疊（定義在 theme.js，§4.99-2）
 (function () {
   var ICON_CDN = 'https://xivapi.com';
   var DB = { events: [], currencies: [] };
@@ -123,13 +124,13 @@
   function render() {
     var wrap = document.getElementById('bodyWrap');
     var gs = groups().filter(function (g) { return group === '__all__' || g.name === group; });
-    var needle = q.trim().toLowerCase();
+    var needle = sgtFold(q.trim());
     var shown = 0, total = 0;
 
     var html = gs.map(function (g) {
       total += g.items.length;
       var list = g.items.filter(function (i) {
-        return !needle || i.name.toLowerCase().indexOf(needle) >= 0 || (i.category || '').toLowerCase().indexOf(needle) >= 0;
+        return !needle || sgtFold(i.name).indexOf(needle) >= 0 || sgtFold(i.category || '').indexOf(needle) >= 0;
       });
       if (!list.length) return '';
       shown += list.length;

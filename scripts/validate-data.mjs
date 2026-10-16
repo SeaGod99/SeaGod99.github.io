@@ -20,7 +20,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const DATA = join(__dirname, "..", "data");
 
 const meta = JSON.parse(readFileSync(join(DATA, "_meta.json"), "utf8"));
-const GAME_PATCH = meta.gamePatch || "7.21";
+const GAME_PATCH = meta.gamePatch;
+if (!GAME_PATCH) { console.error("data/_meta.json 沒有 gamePatch"); process.exit(1); }
 
 // 有「取得來源／來源查詢」UI 的收藏檔：sources 空覆蓋率要盯，patch 要能數值化
 const SOURCE_PAGES = new Set(["mounts", "minions", "orchestrion", "barding", "triple-triad"]);
@@ -174,6 +175,82 @@ for (const f of files) {
     for (const h of hits.slice(0, 6)) E(`英文漏到收藏頁：${h}`);
     if (hits.length > 6) E(`…另有 ${hits.length - 6} 筆`);
     E("跑 node scripts/patch-collection-source-text.mjs --apply（規則與白名單都在那支）");
+  }
+}
+
+/* ── 沒有建置腳本產生的資料檔（2026-10-11，第三輪 §6 scriptless-data-guard）────────────
+   這些檔**重跑任何 build 都不會重新產生**，升版時只能靠下面寫的 patch 補——08-11 升版漏了樂譜 18 首、
+   髮型 2 個就是這樣來的（§4.19 型態：資料只存在 JSON 裡）。新資料檔若既沒有 build-*.mjs 提到它、
+   也沒登記在這裡，就警告：要嘛寫建置腳本，要嘛登記「怎麼維護」。 */
+{
+  const SCRIPTLESS = {
+    "orchestrion.json": "樂譜：patch-orchestrion-add-missing.mjs 補新曲（升版必跑），patch-orchestrion-sources／patch-names-follow-items 維護取得方式與名稱",
+    "hairstyles.json": "髮型：patch-hairstyles-add-missing.mjs 補新款（升版必跑）",
+    "exploration-log.json": "探索筆記：340 筆早期人工建檔，patch-exploration-coords.mjs 補座標；遊戲內容 5.x 後沒再增加",
+    "treasure-fragments.json": "藏寶圖解讀圖對照：ff14.tw 寶圖搜尋器整理的靜態表，新等級的圖要人工補",
+    "fishing.json": "舊釣魚表（_meta 標 superseded-by-fishes，前端不讀），保留只為不破壞舊連結；不維護",
+    "barding-names-tc.json": "社群站快照（patch-barding-tc.mjs 抓）", "minions-names-tc.json": "社群站快照（patch-minions-tc.mjs 抓）",
+    "emotes-sources-tc.json": "社群站快照（patch-emotes-sources.mjs 抓）", "emotes-sources-fxc.json": "ffxivcollect 快照（patch-emotes-sources.mjs 抓）",
+    "orchestrion-sources-tc.json": "社群站快照（patch-orchestrion-sources.mjs 抓）", "orchestrion-sources-fxc.json": "ffxivcollect 快照（patch-orchestrion-sources.mjs 抓）",
+  };
+  const builds = readdirSync(join(DATA, "..", "scripts")).filter((f) => /^build-.*\.mjs$/.test(f))
+    .map((f) => readFileSync(join(DATA, "..", "scripts", f), "utf8")).join("\n");
+  const orphan = readdirSync(DATA).filter((f) => f.endsWith(".json") && f !== "_meta.json" && !SCRIPTLESS[f] && !builds.includes(f));
+  if (orphan.length) {
+    console.log("沒有建置腳本的資料檔");
+    W(`${orphan.join("、")}：沒有任何 build-*.mjs 提到它，也沒登記在 validate-data.mjs 的 SCRIPTLESS（重跑建置不會重新產生，升版會漏）`);
+  }
+}
+
+/* ── 版本號只有一份（2026-10-11，第三輪路線圖 ②）──────────────────────────
+   台服版本的權威是 data/_meta.json 的 gamePatch（由 patch-backfill.mjs 寫，它的值取自台服版本清單
+   scripts/lib/tw-releases.mjs 的最後一筆）。前端只剩 assets/js/patch-gate.js 的 FALLBACK_PATCH 一處寫死
+   （抓不到 _meta 時的後備）。三者不一致＝升版只做了一半：前端在 _meta 抓不到時會用舊版本擋東西。 */
+{
+  const { TW_RELEASES } = await import("./lib/tw-releases.mjs");
+  const latest = TW_RELEASES[TW_RELEASES.length - 1]?.version;
+  const pg = readFileSync(join(DATA, "..", "assets", "js", "patch-gate.js"), "utf8").match(/const FALLBACK_PATCH = "([^"]+)"/);
+  const bad = [];
+  if (latest !== GAME_PATCH) bad.push(`台服版本清單最後一筆是 ${latest}`);
+  if (!pg) bad.push("patch-gate.js 找不到 FALLBACK_PATCH");
+  else if (pg[1] !== GAME_PATCH) bad.push(`patch-gate.js 的 FALLBACK_PATCH 是 ${pg[1]}`);
+  if (bad.length) {
+    console.log("版本號");
+    E(`_meta.json 的 gamePatch 是 ${GAME_PATCH}，但${bad.join("、")}——升版時三處要一起（知識庫 §4.5）`);
+  }
+}
+
+/* ── 名稱內部的「·」（2026-10-11）────────────────────────────────────────
+   台服客戶端的名稱一律用「・」（NPC、地名、物品、怪物、任務、成就…14 張名稱表實測沒有一個「·」），
+   「·」是 Teamcraft／社群站帶進來的。7.25 升版時物品名已全面換成「・」，其他名稱若不跟，
+   同一個東西在不同頁長得不一樣。規則（只認前後都不是空白的「·」；「季節活動報酬 · 幸運彩蛋」的分隔符不算）
+   與白名單都只有一份：scripts/lib/client-names.mjs 的 officialDots()、scripts/patch-dot-names.mjs 的 skipFile()。
+   報錯時跑 patch-dot-names.mjs --apply，再查是哪支建置又把 Teamcraft 的寫法帶回來。 */
+{
+  const { officialDots } = await import("./lib/client-names.mjs");
+  const { skipFile } = await import("./patch-dot-names.mjs");
+  const DOT = String.fromCharCode(0xb7);
+  const hits = new Map();
+  const walkDir = (dir, rel) => {
+    for (const d of readdirSync(dir, { withFileTypes: true })) {
+      if (d.isDirectory()) { walkDir(join(dir, d.name), rel + d.name + "/"); continue; }
+      if (!d.name.endsWith(".json") || skipFile(d.name)) continue;
+      const raw = readFileSync(join(dir, d.name), "utf8");
+      if (!raw.includes(DOT)) continue;
+      const key = rel ? rel + "*" : d.name;               // 分片目錄只報一次
+      const rec = (v) => {
+        if (typeof v === "string") { if (officialDots(v) !== v && !hits.has(key)) hits.set(key, v); }
+        else if (Array.isArray(v)) v.forEach(rec);
+        else if (v && typeof v === "object") Object.values(v).forEach(rec);
+      };
+      rec(JSON.parse(raw));
+    }
+  };
+  walkDir(DATA, "");
+  if (hits.size) {
+    console.log("名稱內部的「·」");
+    for (const [k, v] of [...hits].slice(0, 8)) E(`${k} 例「${v.slice(0, 40)}」（台服官方是「・」）`);
+    E("跑 node scripts/patch-dot-names.mjs --apply，並查是哪支建置把 Teamcraft 的「·」帶回來（規則在 lib/client-names.mjs 的 officialDots）");
   }
 }
 
