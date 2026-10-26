@@ -222,13 +222,23 @@ def load_all_data():
     print(f"msgpack={len(recipe_by_id):,}  主庫={len(recipes_json):,} 種產物")
 
     # ja 名稱 → 繁中名稱（用於 zh 步驟）
+    # ⚠ 日文名會撞名（主庫裡 70 組）。多數是同分類的重複道具、選哪個都一樣，
+    # 但其中 11 組是「套裝禮盒 vs 身體防具」：台服 7.25 新增的「○○套裝」禮盒
+    # （categoryName=套裝、沒有 equipStats）日文名與防具相同，而這份 msgpack 依 id
+    # 遞增走訪、後寫的會蓋掉先寫的 → 面板上的防具被寫成禮盒名（奧黛 → 奧黛套裝）。
+    # 幻化面板顯示的一定是穿得上身的那件，所以**有 equipStats 的優先，不可被禮盒覆蓋**。
     id_to_zh = {k: v["name"] for k, v in items.items() if "name" in v}
-    ja_to_zh = {}
+    ja_to_zh, _ja_is_equip = {}, {}
     for item_id, val in ja_data.items():
         ja_name = val.get("ja","")
         zh_name = id_to_zh.get(str(item_id),"")
-        if ja_name and zh_name:
-            ja_to_zh[ja_name] = zh_name
+        if not (ja_name and zh_name):
+            continue
+        equip = bool(items.get(str(item_id), {}).get("equipStats"))
+        if ja_name in ja_to_zh and _ja_is_equip[ja_name] and not equip:
+            continue
+        ja_to_zh[ja_name] = zh_name
+        _ja_is_equip[ja_name] = equip
     print(f"[對照表] 日文→繁中：{len(ja_to_zh):,} 組")
 
     return dict(
