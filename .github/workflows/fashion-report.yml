@@ -56,7 +56,11 @@ jobs:
       # 站主把 Pages 改成 Actions 部署時設的 repo 變數（docs/pages-deploy-sop.md）。沒設＝舊的分支發佈
       PAGES_VIA_ACTIONS: ${{ vars.PAGES_VIA_ACTIONS }}
     steps:
-      # 整個 repo 追蹤約 790MB（多半是幻化圖），只抓腳本需要的
+      # 整個 repo 追蹤約 790MB（多半是幻化圖），只抓腳本需要的。
+      # ⚠ 這份清單是手寫的，別處新增的檢查會讓它安靜地不夠用：`validate-data.mjs` 2026-10-16 加了一條
+      # 比對 `assets/js/patch-gate.js` 的 `FALLBACK_PATCH`（版本號只有一份），清單沒有 assets/ → 驗證步驟
+      # ENOENT 直接掛，而本機怎麼跑都正常，連續三次週更就這樣掉了。改驗證腳本時回頭看一眼這裡。
+      # （註解只能寫在這裡——`sparse-checkout: |` 區塊裡的 # 會被當成 pattern 傳給 git）
       - uses: actions/checkout@v5
         with:
           fetch-depth: 1
@@ -68,6 +72,7 @@ jobs:
             /scripts/
             /data/
             /tools/fashion-report/
+            /assets/js/
             /out_data/npcs.msgpack
             /out_data/shops.msgpack
             /out_data/equipment.msgpack

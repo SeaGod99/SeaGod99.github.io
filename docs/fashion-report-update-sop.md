@@ -30,6 +30,22 @@
 - **手動跑一次**：GitHub repo 的 Actions 頁 →「時尚品鑑自動週更」→「Run workflow」（publish 預設勾選＝會推送）。本機照下面第 1 節跑也完全可以，兩者不衝突（機器人推送前會先 rebase）。
 - **改了那支 workflow 檔**：推上去會自動試跑一次，**不推送**，並檢查 token 的三個權限（推臨時分支再刪、建標籤、讀 Pages 設定）。2026-10-03 第一次試跑全過，報告「會更新到 week 453（verified）」。
 - **本機開工前**：機器人每週會推兩次，記得先 `git pull`（repo 很大，timeout 拉長）。
+- ⚠ **它的 checkout 是手寫的檔案清單**（`sparse-checkout`，只抓 790MB repo 裡用得到的部分）。**在別處給 `validate-data.mjs` 加檢查、而那條檢查要讀清單外的檔案，週更就會從此掛在「驗證」步驟，而且本機怎麼跑都正常**——2026-10-16 加的「版本號只有一份」要讀 `assets/js/patch-gate.js`，清單沒有 `assets/`，10-30 起每次都 ENOENT。清單已改成整個拿 `/assets/js/`。**改驗證腳本時回頭看一眼那份清單。**
+- **怎麼查「自動化到底怎麼了」**（不必有 gh CLI，公開 repo 的這兩個端點不用 token）：
+  ```bash
+  # 每次跑的結論
+  curl -s "https://api.github.com/repos/SeaGod99/SeaGod99.github.io/actions/workflows/fashion-report.yml/runs?per_page=10"     | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>JSON.parse(s).workflow_runs.forEach(r=>console.log(r.created_at,r.event,r.conclusion)))'
+  # 哪一個步驟掛的（logs 要 token，steps 不用）
+  curl -s "https://api.github.com/repos/SeaGod99/SeaGod99.github.io/actions/runs/<run id>/jobs"     | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>JSON.parse(s).jobs[0].steps.forEach(x=>console.log(x.conclusion,x.name)))'
+  ```
+  **`conclusion: success` 不代表有更新**：「來源尚未換週」與「週次狀態沒變」都是成功的空跑（步驟表上會看到「驗證」之後全是 skipped）。看步驟表比看結論準。
+- **要重現 CI 環境**（本機全過但 CI 掛掉時唯一可靠的辦法）：照清單做一份只有那些檔案的樹，再跑同樣三個指令。
+  ```bash
+  git archive HEAD package.json package-lock.json scripts data tools/fashion-report assets/js       out_data/npcs.msgpack out_data/shops.msgpack out_data/equipment.msgpack out_data/en-items.msgpack     | tar -x -C <空目錄>
+  # node_modules 用目錄連結借過去（ESM 不吃 NODE_PATH）：cmd //c "mklink /J <空目錄>
+ode_modules <repo>
+ode_modules"
+  ```
 
 ## 1. 跑就對了
 
@@ -66,6 +82,7 @@ node scripts/validate-fashion-render.mjs     # 頁面 render 回歸（必跑，�
 | `Universalis 查價連續 3 次失敗` | 市場板查價掛了 | **稍後重跑**。不能放行——沒有價格的件會被當 0 元排序，產出「更便宜」的假最省解 |
 | `⚠️ 有 N 件取得方式未收錄，已當門檻處理` | 離線來源還沒收錄那件怎麼拿（多半是剛開放的新道具） | **不是錯誤**。腳本已把它排到所有門檻之後，不會被當免費選進推薦。想真正修好就更新 `obtainable-methods.json`／`shops.msgpack` 的 dump |
 | `計分公式驗算失敗：easy100 依公式只有 N 分` | 本週有公式沒涵蓋的規則（例如罕見的 +9 提示） | **不要硬改資料**，先人工確認實際規則，再更新腳本的 `SCORING` 常數 |
+| 只在 CI：`ENOENT: … assets/js/patch-gate.js`（或其他清單外的檔） | workflow 的 `sparse-checkout` 沒抓到某個驗證要讀的檔 | 把那個路徑補進 `.github/workflows/fashion-report.yml` 的清單，並照 §0b 的辦法重現確認。**本機跑不出這個錯** |
 
 ### 2.1 來源站品名掉所有格（week 444 首見）
 
