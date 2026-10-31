@@ -39,6 +39,8 @@
   curl -s "https://api.github.com/repos/SeaGod99/SeaGod99.github.io/actions/runs/<run id>/jobs"     | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>JSON.parse(s).jobs[0].steps.forEach(x=>console.log(x.conclusion,x.name)))'
   ```
   **`conclusion: success` 不代表有更新**：「來源尚未換週」與「週次狀態沒變」都是成功的空跑（步驟表上會看到「驗證」之後全是 skipped）。看步驟表比看結論準。
+- **最快的「什麼時候開始落後」時間軸**＝`fashion-report-bot` 那個 issue 的留言史（目前是 [issue #1](https://github.com/SeaGod99/SeaGod99.github.io/issues/1)）：落後檢查與失敗通報都往同一個 issue 留言，日期一眼看完，不用翻 Actions。
+- **誰真的推成功過**＝`git log --date=format-local:'%Y-%m-%d %H:%M %a' --pretty=format:'%h %ad %an %s' -- data/fashion-report.json`。機器人 commit 的時間分布比排程表更能看出哪一格有效。
 - **要重現 CI 環境**（本機全過但 CI 掛掉時唯一可靠的辦法）：照清單做一份只有那些檔案的樹，再跑同樣三個指令。
   ```bash
   git archive HEAD package.json package-lock.json scripts data tools/fashion-report assets/js       out_data/npcs.msgpack out_data/shops.msgpack out_data/equipment.msgpack out_data/en-items.msgpack     | tar -x -C <空目錄>
