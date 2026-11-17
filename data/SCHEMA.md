@@ -415,6 +415,13 @@ ARR 2.x / HW 3.x / SB 4.x / ShB 5.x / EW 6.x / DT 7.x
 通用副本主表。涵蓋一般副本、高難度（極神/蠻神）、大型副本（幻想大地/魔大陸）、絕境戰。
 供多個工具共用查詢（副本名稱/難度/解鎖條件/掉落外觀）。
 
+`nameSource`：`tw-client`＝台服客戶端 ContentFinderCondition.Name；`tw-teamcraft`＝客戶端解包還沒出這一版、名字暫取 Teamcraft
+那一版的 tw-instances（經 XIVAPI CFC 的 Content＋ContentLinkType 1 接過去；2026-11-17 起，台服 7.3 的 4 個副本）——解包追上後
+重跑 `patch-dungeon-names.mjs` 會換回 `tw-client`，`validate-duty-codex.mjs` 會擋忘了換的；`none`＝台服未開放（`name` 是 null）。
+
+`_meta.json` 頂層另有 `twClient`（站上資料取自哪一版台服客戶端解包）與 `twTeamcraft`（客戶端落後時，新內容取自 Teamcraft 哪一個
+commit：`{version, sha, date}`）；頁尾的「資料版本」由這兩個長出來。
+
 #### `type` 分類字典
 
 | 值 | 意義 |

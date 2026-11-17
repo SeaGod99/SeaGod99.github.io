@@ -15,7 +15,10 @@
 //   type                         instance（與優雷卡、博茲雅同類：自己的入口、不是一般野外）
 //
 // 執行：node scripts/patch-maps-add-client.mjs [--apply] [--ids 967,1003]
-// 跑完：node scripts/download-maps.mjs --id 967,1003 → node scripts/patch-collection-client-shops.mjs --apply（把 17 筆的 mapId 補回）
+//   不給 --ids 時補「站上資料有引用、maps.json 沒收」的全部地圖（npcs／fishing-spots／gathering／exploration-log 的 coords.mapId）。
+//   2026-11-17 升 7.3：地名與天氣名改走 lib/client-names.mjs 的 clientNameMap()——客戶端解包落後時已疊上 Teamcraft 那一版，
+//   7.3 的新地圖（朱諾周邊、行星法恩娜…）才有台服名；patch 的判斷照舊（上一版客戶端沒有台服名＝這一版才開）。
+// 跑完：node scripts/download-maps.mjs --id <新增的 id> → node scripts/patch-collection-client-shops.mjs --apply（把 mapId 補回）
 
 import { readFileSync, existsSync } from "node:fs";
 import { writeFile } from "node:fs/promises";
@@ -23,6 +26,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { xiv } from "./lib/xivapi.mjs";
 import { loadTcSheet } from "./lib/tc-datamining.mjs";
+import { clientNameMap, usable } from "./lib/client-names.mjs";
 import { TW_RELEASES } from "./lib/tw-releases.mjs";
 import { isTranslated } from "./lib/tw-text.mjs";
 
@@ -30,7 +34,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const FILE = join(ROOT, "data", "maps.json");
 const APPLY = process.argv.includes("--apply");
 const argOf = (k) => { const i = process.argv.indexOf(k); return i > 0 ? process.argv[i + 1] : null; };
-const ADD = (argOf("--ids") || "967,1003").split(",").map(Number).filter(Boolean);
+const IDS = argOf("--ids") ? argOf("--ids").split(",").map(Number).filter(Boolean) : null;
 const ok = (s) => typeof s === "string" && s.trim() !== "" && isTranslated(s);
 
 async function main() {
@@ -38,16 +42,23 @@ async function main() {
   const db = JSON.parse(raw);
   const have = new Map(db.data.map((m) => [m.id, m]));
   const blank = db.data.filter((m) => !m.name).map((m) => m.id);
+  // 站上資料有引用、maps.json 沒收的地圖（--ids 指定時只看那幾張）
+  const referenced = new Set();
+  if (!IDS) for (const file of ["npcs.json", "fishing-spots.json", "gathering.json", "exploration-log.json"]) {
+    const p = join(ROOT, "data", file);
+    if (!existsSync(p)) continue;
+    const j = JSON.parse(readFileSync(p, "utf8"));
+    for (const e of j.data || j) { const id = e?.coords?.mapId; if (id) referenced.add(id); }
+  }
+  const ADD = IDS ?? [...referenced];
   const want = [...new Set([...ADD.filter((id) => !have.has(id)), ...blank])];
   if (!want.length) { console.log("沒有要補的地圖。"); return; }
 
   const rel = TW_RELEASES[TW_RELEASES.length - 1];
-  const [place, placePrev, weather] = await Promise.all([
-    loadTcSheet("PlaceName", {}), loadTcSheet("PlaceName", { sha: rel.prev.sha }), loadTcSheet("Weather", {}),
+  const [placeName, placePrev, weatherName] = await Promise.all([
+    clientNameMap("place", { offline: false }), loadTcSheet("PlaceName", { sha: rel.prev.sha }), clientNameMap("weather", { offline: false }),
   ]);
-  const placeName = new Map(place.map((r) => [r.id, String(r.Name || "").trim()]));
   const prevNamed = new Set(placePrev.filter((r) => ok(String(r.Name || "").trim())).map((r) => r.id));
-  const weatherName = new Map(weather.map((r) => [r.id, String(r.Name || "").trim()]));
   const pcFile = join(ROOT, "out_data", "cache", "tc-patch-content.json"), pnFile = join(ROOT, "out_data", "cache", "tc-patch-names.json");
   const placePatch = new Map();
   if (existsSync(pcFile) && existsSync(pnFile)) {
@@ -82,7 +93,7 @@ async function main() {
       const wn = weatherName.get(Number(wid));
       if (rates[i] > 0 && ok(wn)) weatherRates.push({ weather: wn, rate: rates[i] });
     }
-    const region = placeName.get(f["PlaceNameRegion@as(raw)"]);
+    const region = placeName.get(f["PlaceNameRegion@as(raw)"]);   // clientNameMap 只收 usable 的：「？？？？」佔位不會進來
     const key = f.Id;
     const entry = {
       id: r.id, name, nameEn: f["PlaceName"]?.fields?.Name ?? f["PlaceName.Name"] ?? null,

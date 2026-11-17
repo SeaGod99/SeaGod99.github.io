@@ -81,16 +81,21 @@ async function main() {
   // 台服客戶端（名稱優先來源）
   const clean = (s) => String(s || "").replace(/[\uE000-\uF8FF]/g, "").trim();
   const tcQuest = new Map((await loadTcSheet("Quest", { offline })).map((r) => [r.id, r]));
-  const tcNpc = new Map((await loadTcSheet("ENpcResident", { offline })).map((r) => [r.id, clean(r.Singular)]));
-  const tcPlace = new Map((await loadTcSheet("PlaceName", { offline })).map((r) => [r.id, clean(r.Name)]));
+  /* 名稱走 lib/client-names.mjs 的 clientNameMap()：客戶端解包落後時（2026-11-17，台服 7.3）已疊上 Teamcraft 那一版的
+     新條目與官方改譯（任務 +29、改譯 3；NPC +457；地名 +79）。tcQuest 留著讀交付物品那些非名稱欄位。 */
+  const { clientNameMap, officialDots } = await import("./lib/client-names.mjs");
+  const cQuest = await clientNameMap("quest", { offline });
+  const tcNpc = await clientNameMap("npc", { offline });
+  const tcPlace = await clientNameMap("place", { offline });
   const tcGenre = new Map((await loadTcSheet("JournalGenre", { offline })).map((r) => [r.id, clean(r.Name)]));
   const pick = (...c) => c.find((x) => x && isTw(x)) || null;
   // 任務名另外認 scripts/lib/official-odd-names.mjs 的特例（「●明●●極限●星球」「Hello, World」是正式主線任務）
-  const questName = (id) => pick(clean(tcQuest.get(id)?.Name), twQuests[id]?.tw)
-    || (isOddOfficial("quest", id) ? clean(tcQuest.get(id)?.Name) || twQuests[id]?.tw || null : null);
+  const questName = (id) => pick(cQuest.get(id), twQuests[id]?.tw)
+    || (isOddOfficial("quest", id) ? cQuest.get(id) || clean(tcQuest.get(id)?.Name) || twQuests[id]?.tw || null : null);
   const npcName = (id) => (id ? pick(tcNpc.get(id), npcs.get(id)?.name, twName(npcMsg.twNpcs, id)) : null);
   const placeName = (id) => (id ? pick(tcPlace.get(id), twName(places.twPlaces, id)) : null);
-  const genreName = (id) => (id ? pick(tcGenre.get(id), twName(tw.journalGenre, id)) : null);
+  // 分類名的後備（Teamcraft tw-journal-genre）帶著「·」——台服 7.3 的「支線任務：安穆・艾蘭」客戶端還沒有，就從那邊來（2026-11-17）
+  const genreName = (id) => (id ? officialDots(pick(tcGenre.get(id), twName(tw.journalGenre, id))) : null);
   // 交付物品：Script{Instruction}[i] 是 RITEMn 時，Script{Arg}[i] 是物品 id
   const INSTR = Array.from({ length: 50 }, (_, i) => [`Script{Instruction}[${i}]`, `Script{Arg}[${i}]`]);
   const turnInOf = (id) => {
@@ -128,7 +133,7 @@ async function main() {
   for (const q of quests) {
     const name = questName(q.id);
     if (!name) continue;
-    if (name === clean(tcQuest.get(q.id)?.Name)) nameFromClient++; else nameFromTc++;
+    if (name === cQuest.get(q.id)) nameFromClient++; else nameFromTc++;
     const f = q.f;
     cover.total++;
     dupNames.set(name, (dupNames.get(name) || 0) + 1);

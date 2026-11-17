@@ -83,11 +83,25 @@ async function main() {
   const prevNamed = new Set(cfcPrev.filter((r) => isTw(clean(r.Name))).map((r) => r.id));
   const ttPlace = new Map(tt.map((r) => [r.id, Number(r.PlaceName) || null]));
   const pc = loadPatchContent();
+  /* 客戶端解包落後時（2026-11-17，台服 7.3）：客戶端 CFC 還沒有的副本改取 Teamcraft 那一版的 tw-instances。
+     它以 InstanceContent id 為鍵，所以要 XIVAPI 的 CFC（out_data/cfc-missing-rows.json，patch-dungeon-add-missing.mjs
+     --refresh 產的，含 Content 與 ContentLinkType）把 CFC id 接過去，而且只認 ContentLinkType 1（同上面的洞 ①）。
+     nameSource 記 tw-teamcraft；解包出了重跑這支就會換回 tw-client。 */
+  const { teamcraftNameMap, teamcraftAhead } = await import('./lib/client-names.mjs');
+  const tcByCfc = new Map();
+  if (teamcraftAhead) {
+    const xivFile = join(ROOT, 'out_data', 'cfc-missing-rows.json');
+    const xivCfc = existsSync(xivFile) ? JSON.parse(readFileSync(xivFile, 'utf8')) : [];
+    if (!xivCfc.some((x) => 'linkType' in x)) throw new Error('out_data/cfc-missing-rows.json 沒有 linkType 欄，先跑 node scripts/patch-dungeon-add-missing.mjs --refresh');
+    const tcInst = await teamcraftNameMap('instance', { offline: OFFLINE });
+    for (const x of xivCfc) if (Number(x.linkType) === 1 && tcInst.has(x.contentId)) tcByCfc.set(x.id, tcInst.get(x.contentId));
+  }
 
   const changed = [], same = [], unreleased = [], patchFilled = { release: 0, instance: 0, place: 0 }, patchMissing = [], patchConflict = [];
   for (const d of db.data) {
     const r = byId.get(d.id);
-    const tw = r ? clean(r.Name) : '';
+    let tw = r ? clean(r.Name) : '', src = 'tw-client';
+    if ((!tw || !isTw(tw)) && tcByCfc.has(d.id)) { tw = tcByCfc.get(d.id); src = 'tw-teamcraft'; }
     if (!tw || !isTw(tw)) {
       // 台服未開放：不留簡轉繁名
       if (d.name !== null) unreleased.push({ id: d.id, type: d.type, old: d.name, nameEn: d.nameEn });
@@ -98,7 +112,7 @@ async function main() {
     if (d.name === tw) same.push(d.id);
     else changed.push({ id: d.id, type: d.type, old: d.name, new: tw });
     d.name = tw;
-    d.nameSource = 'tw-client';
+    d.nameSource = src;
     if (d.patch == null) {
       let p = null, how = null;
       if (!prevNamed.has(d.id)) { p = rel.version; how = 'release'; }

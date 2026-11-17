@@ -55,16 +55,21 @@ const walk = (d) => { for (const f of readdirSync(d)) { const p = join(d, f); if
 walk(DATA);
 
 const olds = [...renamed.keys()];
+/* 舊名是另一件「現役」物品名的一段時，那件的名字不算命中（2026-11-17：台服 7.3 把「管弦樂琴樂譜：文明」改成
+   「管弦樂琴樂譜：Civilizations」，而 7.25 的「管弦樂琴樂譜：文明的景觀盒」開頭正好是舊名——8 處誤報）。
+   比對前先把這些較長的現役名從字串裡拿掉。 */
+const supers = new Map(olds.map((o) => [o, [...nowNames].filter((n) => n !== o && n.includes(o)).sort((a, b) => b.length - a.length)]));
+const stripSupers = (v, o) => supers.get(o).reduce((s, n) => s.split(n).join(""), v);
 const hits = new Map();   // "檔或目錄 欄位" → { why, n, eg: [] }
 for (const f of files) {
   const text = readFileSync(f, "utf8");
-  const present = olds.filter((o) => text.includes(o));
+  const present = olds.filter((o) => stripSupers(text, o).includes(o));
   if (!present.length) continue;          // 先整檔比對，有命中才逐欄位走
   const rel = relative(DATA, f).split("\\").join("/");
   const group = /\/\d+\.json$|\/_index\.json$/.test(rel) || rel.split("/").length > 1 ? rel.replace(/\/[^/]+$/, "/") : rel;
   const visit = (v, path) => {
     if (typeof v === "string") {
-      const o = present.find((x) => v.includes(x));
+      const o = present.find((x) => stripSupers(v, x).includes(x));
       if (!o) return;
       const key = `${group}\t${path}`;
       if (!hits.has(key)) hits.set(key, { file: group, path, why: expectedWhy(group, path), n: 0, eg: [] });

@@ -172,7 +172,9 @@ async function main() {
   {
     const dot = (x) => String(x || "").replace(/[・·•]/g, "·").replace(/\s+/g, " ").trim();
     let n = 0, same = 0;
-    for (const r of tcAch) { const t = twName(tw.achievements, r.id); if (!t) continue; n++; if (dot(t) === dot(r.Name)) same++; }
+    /* 只比兩邊都有名字的列：Teamcraft 比客戶端解包新時（2026-11-17，台服 7.3），客戶端那 60 列是空的預載列，
+       算進來一致率會掉到 98.28%——那不是「不同一份資料」，是 Teamcraft 多了一版 */
+    for (const r of tcAch) { const t = twName(tw.achievements, r.id); if (!t || !r.Name || !isTranslated(r.Name)) continue; n++; if (dot(t) === dot(r.Name)) same++; }
     const rate = n ? same / n : 0;
     console.log(`台服客戶端解包（${TC_REPO}）與 Teamcraft tw-locales 的成就名一致：${same}/${n}（${(rate * 100).toFixed(2)}%）`);
     if (rate < 0.99) { console.error("✗ 一致率低於 99%，台服解包可能不是同一份資料，中止"); process.exit(1); }
@@ -199,17 +201,28 @@ async function main() {
     if (!client || !old || client === old.trim()) return;
     if (foldDot(client) === foldDot(old.trim())) stat.revised[kind + "Dot"]++; else stat.revised[kind + "Text"]++;
   };
+  /* 客戶端解包落後時（2026-11-17，台服 7.3）：tw-locales 是 Teamcraft 7.3、比客戶端 7.25 新。兩邊不同的，只有 Teamcraft 在
+     推 7.3 的 commit 裡才改的（官方改譯，名稱 4 筆）採 Teamcraft；前一版就是那樣的是 Teamcraft 自己的舊字（達成條件 33 筆），照客戶端。 */
+  const { teamcraftAhead, loadTeamcraftTw, takeTeamcraft } = await import("./lib/client-names.mjs");
+  const [tcPrevName, tcPrevDesc] = teamcraftAhead?.parent
+    ? await Promise.all(["tw-achievements.json", "tw-achievement-descriptions.json"].map((f) => loadTeamcraftTw(f, teamcraftAhead.parent, { offline })))
+    : [null, null];
+  const fresh = (cur, prevTable, id, clientVal) => !!teamcraftAhead && !!cur && !!clientVal && takeTeamcraft(clientVal, cur.trim(), (prevTable?.[id]?.tw ?? "").trim() || null);
+  stat.tcFresh = { name: 0, desc: 0 };
   const rows = [];
   for (const a of ach) {
     // 名稱：**台服客戶端優先**、客戶端沒有（或沒過守門）才退回 tw-locales（見檔頭 2026-10-10 那條）
     const oldName = twName(tw.achievements, a.id);
     const cName = tcAchById.get(a.id)?.Name;
     let name = cName && isTw(cName) ? cName.trim() : null;
-    if (!name) { name = oldName; if (name) stat.nameTwLoc++; }
+    if (name && fresh(oldName, tcPrevName, a.id, name)) { name = oldName.trim(); stat.tcFresh.name++; }
+    else if (!name) { name = oldName; if (name) stat.nameTwLoc++; }
     else if (!oldName) stat.nameClient.add(a.id);     // 只有客戶端有＝tw-locales 之後才開的（7.25 那 59 個）
     else countRevision("name", name, oldName);
     if (!name || !isTw(name)) { stat.noTw++; continue; }
-    const cat = catById.get(a.f["AchievementCategory@as(raw)"]);
+    // 分類 0＝國際服把這列清空了、只有名字從台服來（2026-11-17：3790「美妙的初夢」，台服 7.3 才有、客戶端 7.25 也是空列）——
+    // 沒有分類、點數、圖示可放，等客戶端解包補齊再收
+    const cat = a.f["AchievementCategory@as(raw)"] ? catById.get(a.f["AchievementCategory@as(raw)"]) : null;
     if (!cat) { stat.noCat++; continue; }
     const kind = cat["AchievementKind@as(raw)"];
     if (kind === LEGACY_KIND) { stat.legacy++; stat.nameClient.delete(a.id); continue; }
@@ -218,7 +231,8 @@ async function main() {
     const oldDesc = twName(tw.achievementDescriptions, a.id);
     const cDesc = (tcAchById.get(a.id)?.Description || "").trim();
     let desc = cDesc && isTw(cDesc) ? cDesc : null;
-    if (!desc) { desc = oldDesc; if (desc) stat.descTwLoc++; }
+    if (desc && fresh(oldDesc, tcPrevDesc, a.id, desc)) { desc = oldDesc.trim(); stat.tcFresh.desc++; }
+    else if (!desc) { desc = oldDesc; if (desc) stat.descTwLoc++; }
     else countRevision("desc", desc, oldDesc);
     if (desc && /<[^>]+>/.test(desc)) stat.markup.push(`${a.id} ${desc.slice(0, 40)}`);
     // 說明也要各自過守門：名字翻了不代表說明也翻了（CLAUDE.md 技能說明那條的教訓）
@@ -276,7 +290,10 @@ async function main() {
   for (const e of out) {
     if (usedCats.has(e.ct)) continue;
     const c = tcCat.get(e.ct), k = c && tcKind.get(+c.AchievementKind);
-    if (!c || !isTranslated(c.Name) || !k || !isTranslated(k.Name)) { console.error(`✗ 分類 ${e.ct} 在台服解包裡查不到名稱`); process.exit(1); }
+    if (!c || !isTranslated(c.Name) || !k || !isTranslated(k.Name)) {
+      const who = out.filter((x) => x.ct === e.ct).slice(0, 5).map((x) => `${x.id} ${x.name}`).join("、");
+      console.error(`✗ 分類 ${e.ct} 在台服解包裡查不到名稱（例：${who}）`); process.exit(1);
+    }
     usedCats.set(e.ct, [+c.AchievementKind, c.Name, enCat.get(e.ct) || null, +c.Order || 0]);
   }
   const usedKinds = {};
@@ -311,8 +328,9 @@ async function main() {
   if (rewardMissing.length) console.log(`  ⚠ 獎勵道具不在 XIVAPI 快取：${rewardMissing.join(",")}（只影響裝備職業文字與幻卡連結）`);
   console.log(`  只有台服客戶端有名稱（tw-locales 沒有）${stat.nameClient.size}；退回 tw-locales：名稱 ${stat.nameTwLoc}、達成條件 ${stat.descTwLoc}`);
   const rv = stat.revised;
-  console.log(`  客戶端（7.25）與 tw-locales（7.2）不同、採客戶端：名稱 ${rv.nameDot + rv.nameText}（只差中點 ${rv.nameDot}、改譯 ${rv.nameText}）、` +
+  console.log(`  客戶端與 tw-locales 不同、採客戶端：名稱 ${rv.nameDot + rv.nameText}（只差中點 ${rv.nameDot}、改譯 ${rv.nameText}）、` +
     `達成條件 ${rv.descDot + rv.descText}（只差中點 ${rv.descDot}、改寫 ${rv.descText}）`);
+  if (teamcraftAhead) console.log(`  Teamcraft 台服 ${teamcraftAhead.version} 這次才改的、採 Teamcraft（客戶端解包還沒出這一版）：名稱 ${stat.tcFresh.name}、達成條件 ${stat.tcFresh.desc}`);
   const clientNotRel = [...stat.nameClient].filter((id) => !twRelease.has(id));
   if (clientNotRel.length) console.log(`  ⚠ 名稱取自客戶端、但不在台服版本清單的 ${clientNotRel.length}（版本照 Teamcraft）：${clientNotRel.slice(0, 15).join(",")}`);
   for (const e of out.filter((x) => stat.nameClient.has(x.id)).sort((x, y) => x.id - y.id)) {

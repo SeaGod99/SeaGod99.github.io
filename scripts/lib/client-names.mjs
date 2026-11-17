@@ -20,6 +20,11 @@
 
 import { loadTcSheet } from "./tc-datamining.mjs";
 import { isTranslated } from "./tw-text.mjs";
+import { TW_RELEASES } from "./tw-releases.mjs";
+import { readFile, writeFile, mkdir } from "node:fs/promises";
+import { existsSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
 
 const CR = String.fromCharCode(13);
 const LF = String.fromCharCode(10);
@@ -79,8 +84,69 @@ export const CLIENT_SHEETS = {
 };
 
 const _maps = new Map();
+const STATS = Symbol("client-names-stats");
+const nameIn = (row) => (row ? (typeof row.tw === "string" ? row.tw : row.name?.tw) : null);
 
-/** kind 的客戶端名表：Map<id, 名稱>（只收 usable 的）。 */
+/* ── 客戶端解包落後時：疊上 Teamcraft 那一版（2026-11-17，台服 7.3）──────────────
+   台服版本清單（tw-releases.mjs）的最後一筆若是 `teamcraft` 來源，代表 Teamcraft 已經推了這一版的台服資料、
+   客戶端解包還沒出。實測 Teamcraft 台服 7.3 與客戶端 7.25 同一張表幾乎逐字相同（NPC 28,901／28,904、
+   技能 38,253／38,380），不同的都是 7.3 的官方改譯（交匯河→交會河、振空擺→浮游擺、冰寒吐息→寒冰吐息…）。
+   所以「這一版最好的台服名」＝客戶端為底，疊上 Teamcraft（以 commit 釘住）**能用**的列：新條目補上、改譯跟上。
+   疊在這一層而不是交給各呼叫端，是因為呼叫端手上的 Teamcraft 表新舊不一（places.msgpack、各腳本自己的快取），
+   拿它們蓋客戶端會把舊字蓋回去。解包出了這一版、清單改回 `client` 之後這層自動停用。 */
+const TC_FILES = {
+  mob: "tw-mobs.json", place: "tw-places.json", npc: "tw-npcs.json", quest: "tw-quests.json", fate: "tw-fates.json",
+  leve: "tw-leves.json", eventItem: "tw-event-items.json", status: "tw-statuses.json", action: "tw-actions.json",
+  trait: "tw-traits.json", weather: "tw-weathers.json", instance: "tw-instances.json",
+};
+const LATEST = TW_RELEASES[TW_RELEASES.length - 1];
+/** 客戶端解包落後時疊上去的 Teamcraft 版本（{version, sha}）；沒有落後回 null */
+export const teamcraftAhead = LATEST && !LATEST.client && LATEST.teamcraft ? LATEST.teamcraft : null;
+const TC_CACHE = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "out_data", "cache", "teamcraft-tw");
+
+/** Teamcraft 台服語系檔 tw/<file>（釘在某個 commit，快取在 out_data/cache/teamcraft-tw/<sha8>/）→ 原始 JSON */
+export async function loadTeamcraftTw(file, sha, { offline = true } = {}) {
+  const p = join(TC_CACHE, sha.slice(0, 8), file);
+  let text;
+  if (existsSync(p)) text = await readFile(p, "utf8");
+  else {
+    if (offline) throw new Error(`client-names：--offline 但沒有 Teamcraft 台服資料的快取 ${p}（先不帶 --offline 跑一次）`);
+    const url = `https://raw.githubusercontent.com/ffxiv-teamcraft/ffxiv-teamcraft/${sha}/libs/data/src/lib/json/tw/${file}`;
+    const r = await fetch(url);
+    if (!r.ok) throw new Error(`${url} HTTP ${r.status}`);
+    text = await r.text();
+    await mkdir(dirname(p), { recursive: true });
+    await writeFile(p, text);
+  }
+  return JSON.parse(text);
+}
+
+const usableMap = (json) => {
+  const m = new Map();
+  for (const [id, row] of Object.entries(json)) { const n = cleanName(nameIn(row)); if (usable(n)) m.set(Number(id), n); }
+  return m;
+};
+
+/** Teamcraft 台服語系檔（釘在 teamcraftAhead.sha）→ Map<id, 名稱>（只收 usable 的）。不落後時回空表。 */
+export async function teamcraftNameMap(kind, { offline = true } = {}) {
+  if (!teamcraftAhead || !TC_FILES[kind]) return new Map();
+  return usableMap(await loadTeamcraftTw(TC_FILES[kind], teamcraftAhead.sha, { offline }));
+}
+
+/**
+ * 某一列該不該拿 Teamcraft 的字蓋掉客戶端的字：客戶端沒有這列 → 要；兩邊不同時，只有 **Teamcraft 在推這一版的 commit 裡
+ * 才改成這樣**的才要（7.3 的官方改譯）。Teamcraft 前一版就已經是這個字的，是它自己沒跟上客戶端的舊字（成就達成條件有 33 筆），不要。
+ * prev 是 Teamcraft 前一版（teamcraftAhead.parent）的同一張表。
+ */
+export const takeTeamcraft = (clientName, tcName, prevTcName) => clientName == null || (clientName !== tcName && prevTcName !== tcName);
+
+/** Teamcraft 前一版（teamcraftAhead.parent）的同一張表；沒有 parent 時回空表（＝不分辨，全部視為這次才改） */
+export async function teamcraftPrevNameMap(kind, { offline = true } = {}) {
+  if (!teamcraftAhead?.parent || !TC_FILES[kind]) return new Map();
+  return usableMap(await loadTeamcraftTw(TC_FILES[kind], teamcraftAhead.parent, { offline }));
+}
+
+/** kind 的客戶端名表：Map<id, 名稱>（只收 usable 的）。客戶端解包落後時已疊上 Teamcraft 那一版（見上）。 */
 export async function clientNameMap(kind, { offline = true } = {}) {
   const def = CLIENT_SHEETS[kind];
   if (!def) throw new Error(`client-names：不認得的種類 ${kind}`);
@@ -92,12 +158,24 @@ export async function clientNameMap(kind, { offline = true } = {}) {
     const n = cleanName(r[col]);
     if (usable(n)) m.set(r.id, n);
   }
+  const tc = await teamcraftNameMap(kind, { offline });
+  const tcPrev = tc.size ? await teamcraftPrevNameMap(kind, { offline }) : new Map();
+  const ahead = { added: 0, renamed: 0, stale: 0, examples: [], renames: [] };
+  for (const [id, n] of tc) {
+    const old = m.get(id);
+    if (old === n) continue;
+    if (!takeTeamcraft(old, n, tcPrev.get(id))) { ahead.stale++; continue; }
+    if (old == null) ahead.added++;
+    else { ahead.renamed++; ahead.renames.push([id, old, n]); if (ahead.examples.length < 6) ahead.examples.push(`${id}「${old}」→「${n}」`); }
+    m.set(id, n);
+  }
+  Object.defineProperty(m, STATS, { value: ahead });
   _maps.set(kind, m);
   return m;
 }
 
-const STATS = Symbol("client-names-stats");
-const nameIn = (row) => (row ? (typeof row.tw === "string" ? row.tw : row.name?.tw) : null);
+/** clientNameMap() 疊 Teamcraft 的統計（{added, renamed, stale, examples}；沒有疊回 null） */
+export const aheadStatsOf = (m) => m?.[STATS] ?? null;
 
 /**
  * 把客戶端名疊在 Teamcraft 形狀的表上，回傳新表（不改原表）。
@@ -154,6 +232,10 @@ export async function instanceNameMap({ offline = true } = {}) {
     const ic = Number(r.Content);
     if (ic && usable(n) && !m.has(ic)) m.set(ic, n);
   }
+  // 客戶端解包落後時：Teamcraft instances 同樣以 InstanceContent id 為鍵，直接疊（同 clientNameMap）
+  const tc = await teamcraftNameMap("instance", { offline });
+  const tcPrev = tc.size ? await teamcraftPrevNameMap("instance", { offline }) : new Map();
+  for (const [ic, n] of tc) if (takeTeamcraft(m.get(ic), n, tcPrev.get(ic))) m.set(ic, n);
   return m;
 }
 

@@ -31,7 +31,8 @@ const VISIBLE = DB.data.filter((x) => x.name && (pnum(x.patch) == null || pnum(x
   /* 2026-10-10：國際服 7.3 以後的 23 個副本帶著簡轉繁名、patch 又是 null，閘門放行，上了這頁與命令面板。
      現在名稱以台服客戶端為準，客戶端沒有台服名的 name 設 null（scripts/patch-dungeon-names.mjs）。 */
   const hidden = d.filter((x) => !x.name);
-  push('台服未開放的副本名稱是 null（不留簡轉繁名）', hidden.length >= 23 && hidden.every((x) => x.nameSource === 'none'),
+  // 筆數會隨台服升版變少（10-10 是 23、升 7.3 後 19），只驗「有」而且全都標 none
+  push('台服未開放的副本名稱是 null（不留簡轉繁名）', hidden.length > 0 && hidden.every((x) => x.nameSource === 'none'),
     hidden.length + ' 筆：' + hidden.slice(0, 3).map((x) => x.nameEn).join('、'));
   /* 優雷卡的 CFC.Content 是 PublicContent id，舊的名稱對應鏈把它當 InstanceContent 查，掛上同號迷宮的名字 */
   const eureka = d.filter((x) => x.type === 'eureka' && x.name);
@@ -42,9 +43,12 @@ const VISIBLE = DB.data.filter((x) => x.name && (pnum(x.patch) == null || pnum(x
   if (existsSync(cfcCsv)) {
     const { loadTcSheet } = await import('./lib/tc-datamining.mjs');
     const tc = new Map((await loadTcSheet('ContentFinderCondition', { offline: true })).map((r) => [r.id, String(r.Name || '').replace(/[\uE000-\uF8FF]/g, '').trim()]));
-    const bad = d.filter((x) => x.name ? tc.get(x.id) !== x.name : !!tc.get(x.id));
+    /* 客戶端解包落後時（2026-11-17，台服 7.3）名字取自 Teamcraft 那一版的列標 nameSource 'tw-teamcraft'：
+       那些只要求「客戶端確實還沒有這列的台服名」——客戶端有了卻沒換回 tw-client，就是忘了重跑 patch-dungeon-names.mjs */
+    const bad = d.filter((x) => x.nameSource === 'tw-teamcraft' ? !!tc.get(x.id) : x.name ? tc.get(x.id) !== x.name : !!tc.get(x.id));
+    const viaTc = d.filter((x) => x.nameSource === 'tw-teamcraft').length;
     push('  副本名逐字等於台服客戶端；名稱是 null 的客戶端也沒有台服名', bad.length === 0,
-      bad.slice(0, 3).map((x) => `${x.id} 站「${x.name}」客「${tc.get(x.id)}」`).join(' | ') || `${d.length} 筆全對`);
+      bad.slice(0, 3).map((x) => `${x.id} 站「${x.name}」客「${tc.get(x.id)}」`).join(' | ') || `${d.length} 筆全對` + (viaTc ? `（其中 ${viaTc} 筆客戶端還沒有、取自 Teamcraft）` : ''));
   }
   push('新類型（天佑女王／滅激鬥戰／蜃景幻界新月島）都有收', ['save_the_queen', 'chaotic_alliance_raid', 'occult_crescent']
     .every((t) => VISIBLE.some((x) => x.type === t)), '');

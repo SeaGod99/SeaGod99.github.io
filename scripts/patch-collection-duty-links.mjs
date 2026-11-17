@@ -54,9 +54,19 @@ function main() {
         if (!DUTY_TYPES.has(s.type)) continue;
         // 已經接過且 id 都還有效的保留——規則③會把「共 N 個副本掉落」換成副本名，
         // 不保留的話下一輪規則②會從新文字比對出不同組合，來回翻動（冪等性）
-        if (Array.isArray(s.duty) && s.duty.length && s.duty.every((d) => dm.dungeons.has(d[0]))) { stat.same++; continue; }
+        if (Array.isArray(s.duty) && s.duty.length && s.duty.every((d) => dm.dungeons.has(d[0]))) {
+          /* 但名字要跟著副本圖鑑走：連結文字畫的是 d[1]，副本改名後不跟的話收藏頁與副本圖鑑兩個名字
+             （2026-11-17 發現 3 筆：王城古蹟永護塔底→王城遺跡永護塔底、中量級4→次重量級4…，是 7.25 客戶端改的） */
+          // 副本沒有台服名（台服未開放，name 是 null）的不連——副本圖鑑也看不到它，留舊名就是留簡轉繁名
+          const fresh = s.duty.filter((d) => dm.dungeons.get(d[0]).name).map((d) => [d[0], dm.dungeons.get(d[0]).name]);
+          if (JSON.stringify(fresh) === JSON.stringify(s.duty)) { stat.same++; continue; }
+          if (fresh.length) s.duty = fresh; else delete s.duty;
+          stat.renamed = (stat.renamed || 0) + 1; changed++;
+          (samples["改名"] ||= []).push(`${f}｜${e.name}｜${fresh.map((d) => d[1]).join("、")}`);
+          continue;
+        }
         let duty = null, rule = null, detail = s.detail;
-        if (s.contentId != null && dm.dungeons.has(s.contentId)) {
+        if (s.contentId != null && dm.dungeons.get(s.contentId)?.name) {
           duty = [[s.contentId, dm.dungeons.get(s.contentId).name]]; rule = "①";
         }
         if (!duty && typeof s.detail === "string") {
@@ -69,7 +79,7 @@ function main() {
         if (!duty && mN && e.itemId) {
           const ids = (instOf(e.itemId) || []).map((i) => dm.byInstance.get(i));
           const uniq = [...new Set(ids)];
-          if (ids.length && uniq.length <= 3 && ids.every((x) => x != null)) {
+          if (ids.length && uniq.length <= 3 && ids.every((x) => x != null && dm.dungeons.get(x).name)) {
             duty = uniq.map((id) => [id, dm.dungeons.get(id).name]); rule = "③";
             detail = s.detail.replace(mN[0], duty.map((d) => d[1]).join("、"));
           }
@@ -85,8 +95,8 @@ function main() {
     if (apply && changed) writeFileSync(path, minified ? JSON.stringify(db) + (raw.endsWith("\n") ? "\n" : "") : JSON.stringify(db, null, 2) + "\n");
     console.log(`${f.padEnd(13)} 補 ${changed} 筆`);
   }
-  console.log(`\n① contentId ${stat["①"]}、② 名稱 ${stat["②"]}、③ 反查 ${stat["③"]}；已是最新 ${stat.same}、對不到 ${stat.miss}`);
-  for (const r of ["①", "②", "③"]) if (samples[r]) console.log(`  ${r} 例：${samples[r].slice(0, 2).join("　／　")}`);
+  console.log(`\n① contentId ${stat["①"]}、② 名稱 ${stat["②"]}、③ 反查 ${stat["③"]}；連結文字跟上副本改名 ${stat.renamed || 0}；已是最新 ${stat.same}、對不到 ${stat.miss}`);
+  for (const r of ["①", "②", "③", "改名"]) if (samples[r]) console.log(`  ${r} 例：${samples[r].slice(0, 2).join("　／　")}`);
   if (!apply) console.log("\n（dry-run，未寫入；加 --apply 才寫）");
 }
 

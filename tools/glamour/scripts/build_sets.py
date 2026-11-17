@@ -435,6 +435,32 @@ def dedup(mirage_sets, src_sets):
 
 # ───────────────────────── main ─────────────────────────
 
+def carry_over_ids(sets):
+    """套裝 id 沿用上一版：簽名吃「整串販售 NPC 名單」，台服升版只要多一個賣同樣東西的 NPC，id 就換號——
+    2026-11-17 升 7.3 時 35 套內容一模一樣卻換了 id（布魯克・歐伽 i650 套裝…），收藏與官方照對應都以 id 為鍵。
+    規則：第二層（src）、同職業類別、同品級、裝備件 id 完全相同，而且新算出的 id 上一版沒有、舊 id 這一版也沒有
+    → 沿用舊 id。一對多的不沿用（不猜）。回傳沿用的套數。"""
+    if not os.path.exists(OUT):
+        return 0
+    prev = json.load(open(OUT, encoding="utf-8")).get("sets", [])
+    key = lambda s: (tuple(s["id"].split(":")[2:]), tuple(sorted(p["id"] for p in s["pieces"])))
+    prev_ids = {s["id"] for s in prev}
+    new_ids = {s["id"] for s in sets}
+    orphan = {}
+    for s in prev:
+        if s.get("layer") == "src" and s["id"] not in new_ids:
+            orphan.setdefault(key(s), []).append(s["id"])
+    n = 0
+    for s in sets:
+        if s["layer"] != "src" or s["id"] in prev_ids:
+            continue
+        olds = orphan.get(key(s))
+        if olds and len(olds) == 1:
+            s["id"] = olds.pop()
+            n += 1
+    return n
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--fetch", action="store_true", help="強制重抓 XIVAPI 快取")
@@ -487,6 +513,9 @@ def main():
                          or cjc_names.get(str(next(iter(cjcs))), "")) if cjcs else ""
         s["zh_ok"] = all(p["zh"] for p in s["pieces"])   # 繁中版可幻化（全件有繁中）
 
+    n_carried = carry_over_ids(included)
+    if n_carried:
+        print(f"  id 沿用上一版：{n_carried} 套（內容相同、只是販售 NPC 名單變了）")
     included.sort(key=lambda s: (patch_key(s["patch"]), s["id"]), reverse=True)
     meta = {
         "generated": time.strftime("%Y-%m-%d %H:%M:%S"),

@@ -7,9 +7,10 @@
 // 來源（--source，預設 client）：
 //   client     台服客戶端解包 thewakingsands/ffxiv-datamining-tc 的 Item.csv「Name」欄（**升版的權威來源**）。
 //              注意是 Name 不是 Singular：Singular 與遊戲內顯示的物品名有 42 筆不同。
-//   teamcraft  Teamcraft 台服語系檔 tw/tw-items.json。它也是從台服客戶端抽的，但**更新會落後**：
-//              2026-07-30 停在 TW 7.2，台服 7.25 九月中旬就上線了，而它落後時不報錯、只是什麼都不變
-//              （知識庫 §4.5、docs/功能發想與路線圖-第三輪.md）。只在客戶端解包抓不到時當後備。
+//   teamcraft  Teamcraft 台服語系檔 tw/tw-items.json。它也是從台服客戶端抽的，但**更新時間不一定**：
+//              2026-07-30 停在 TW 7.2、台服 7.25 九月中旬就上線了（落後時不報錯、只是什麼都不變）；
+//              反過來 TW 7.3 它 11-17 當天就推了、客戶端解包反而還停在 7.25（知識庫 §4.5）。
+//              **哪一邊比較新就用哪一邊**：先跑 check-tw-version.mjs 看兩邊各在哪一版。
 //
 // 護欄：上游必須是既有快照的**超集**（id 一個都不能少），否則中止不寫入——
 //   避免上游某次抽取不完整就把台服已開放的物品名洗掉。內容沒變就不寫檔（repo 很大，別白增歷史）。
@@ -73,12 +74,36 @@ async function fromClient() {
   return remote;
 }
 
-/** Teamcraft 台服語系檔 → {id: {tw}} */
-async function fromTeamcraft() {
+/** Teamcraft 台服語系檔最後一次提交（commit 訊息形如「feat(db): TW 7.3 data」）→ {version, sha, date} */
+async function latestTeamcraftTw() {
+  const r = await fetch(
+    "https://api.github.com/repos/ffxiv-teamcraft/ffxiv-teamcraft/commits?per_page=1&sha=staging&path=libs/data/src/lib/json/tw/tw-items.json",
+    { headers: { accept: "application/vnd.github+json", "user-agent": "sgt-build-tw-items" } }
+  );
+  if (!r.ok) throw new Error(`GitHub API HTTP ${r.status}`);
+  const c = (await r.json())[0];
+  const msg = c.commit.message.split("\n")[0];
+  return { version: (msg.match(/TW\s*(\d+\.\d+)/i) || [])[1] ?? null, sha: c.sha.slice(0, 8), date: c.commit.committer.date.slice(0, 10) };
+}
+
+/** Teamcraft 台服語系檔 → {id: {tw}}
+ *  2026-11-17 升 7.3 時客戶端解包還停在 7.25、Teamcraft 當天就推了 TW 7.3，於是第一次拿它當主來源。
+ *  它與客戶端 Name 欄同源，所以同樣帶著 12066 那種欄位錯位的殘句——錯位的列沿用既有快照的名字
+ *  （快照是客戶端版時已經修好），不讓殘句蓋回去。 */
+async function fromTeamcraft(old) {
   if (OFFLINE) throw new Error("--offline 只支援 --source=client");
   const res = await fetch(URL_TW_ITEMS);
   if (!res.ok) throw new Error(`tw-items.json HTTP ${res.status}`);
-  return res.json();
+  const remote = await res.json();
+  const kept = [];
+  for (const [id, v] of Object.entries(remote)) {
+    const n = (v?.tw || "").trim();
+    if (!/[\r\n]/.test(n) && !/^[」』）】〕。，、；：]/.test(n)) continue;
+    if (old[id]?.tw) { kept.push(`${id}：${JSON.stringify(n).slice(0, 30)} → 沿用 ${old[id].tw}`); remote[id] = { tw: old[id].tw }; }
+    else console.log(`⚠ ${id} 的名稱像是欄位錯位、快照也沒有可沿用的名字，照收：${JSON.stringify(n).slice(0, 40)}`);
+  }
+  if (kept.length) console.log(`⚠ Teamcraft 名稱欄錯位、沿用既有快照 ${kept.length} 筆：${kept.join("；")}`);
+  return remote;
 }
 
 async function main() {
@@ -94,7 +119,9 @@ async function main() {
   console.log(`抓台服物品名（來源：${SOURCE === "client" ? "台服客戶端解包 Item.csv" : "Teamcraft tw-items.json"}）…`);
   const client = SOURCE === "client" ? (OFFLINE ? null : await latestTcClientVersion()) : null;
   if (client) console.log(`  客戶端版本 ${client.version}（解包 ${client.date} 提交）`);
-  const remote = SOURCE === "client" ? await fromClient() : await fromTeamcraft();
+  const tcCommit = SOURCE === "teamcraft" ? await latestTeamcraftTw() : null;
+  if (tcCommit) console.log(`  Teamcraft 台服資料 ${tcCommit.version ?? "?"}（${tcCommit.sha}，${tcCommit.date} 提交）`);
+  const remote = SOURCE === "client" ? await fromClient() : await fromTeamcraft(old);
   const remoteKeys = Object.keys(remote);
   console.log(`上游：${remoteKeys.length} 筆`);
 
@@ -161,6 +188,15 @@ async function main() {
       meta.twClient = { version: client.version, date: client.date };
       await writeFile(META, JSON.stringify(meta, null, 2) + "\n");
       console.log(`✅ _meta.json twClient ← ${client.version}`);
+    }
+  }
+  if (tcCommit) {
+    // 名稱有一部分取自 Teamcraft 的哪一版台服資料：頁尾與 report-vs-client 拿它說明「客戶端解包之後的新東西從哪來」
+    const meta = JSON.parse(await readFile(META, "utf8"));
+    if (meta.twTeamcraft?.sha !== tcCommit.sha) {
+      meta.twTeamcraft = tcCommit;
+      await writeFile(META, JSON.stringify(meta, null, 2) + "\n");
+      console.log(`✅ _meta.json twTeamcraft ← TW ${tcCommit.version}（${tcCommit.sha}）`);
     }
   }
   console.log("接著跑：node scripts/build-items.mjs → node scripts/patch-backfill-all.mjs --apply → node scripts/patch-tw-release.mjs --apply");

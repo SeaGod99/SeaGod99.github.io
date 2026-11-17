@@ -5,7 +5,7 @@
 // 這支用「台服客戶端這一版有名字、上一版沒有」的 id 清單，只重標那些條目。
 //
 // 兩種模式：
-//   node scripts/patch-tw-release.mjs --build    # 由兩版客戶端解包（以 commit SHA 釘住）產生清單檔
+//   node scripts/patch-tw-release.mjs --build    # 由兩版客戶端解包（以 commit SHA 釘住；這一版可改用 Teamcraft）產生清單檔，已有的略過（--rebuild 重產）
 //                                                #   scripts/lib/tw-release-<版本>.json（items／achievements）
 //   node scripts/patch-tw-release.mjs            # dry-run：列出會被重標的條目
 //   node scripts/patch-tw-release.mjs --apply    # 寫回 data/*.json（保留各檔原本的 minified／pretty 格式）
@@ -61,11 +61,38 @@ async function sheetAt(sha, name) {
   return named;
 }
 
+/* Teamcraft 台服語系檔（以 commit 釘住）有名字的 id——客戶端解包還沒出那一版時的「這一版」（見 tw-releases.mjs） */
+const TC_FILE = { Item: "tw-items.json", Achievement: "tw-achievements.json" };
+async function teamcraftAt(sha, sheet) {
+  const file = join(ROOT, "out_data", "cache", "teamcraft-tw", sha.slice(0, 8), TC_FILE[sheet]);
+  let text;
+  if (existsSync(file)) text = await readFile(file, "utf8");
+  else {
+    const url = `https://raw.githubusercontent.com/ffxiv-teamcraft/ffxiv-teamcraft/${sha}/libs/data/src/lib/json/tw/${TC_FILE[sheet]}`;
+    const r = await fetch(url);
+    if (!r.ok) throw new Error(`${url} HTTP ${r.status}`);
+    text = await r.text();
+    await mkdir(dirname(file), { recursive: true });
+    await writeFile(file, text);
+  }
+  const named = new Set();
+  for (const [id, v] of Object.entries(JSON.parse(text))) {
+    const n = (v?.tw || "").trim();
+    if (n && isTranslated(n)) named.add(Number(id));
+  }
+  return named;
+}
+
 async function build() {
   for (const rel of TW_RELEASES) {
-    const out = { version: rel.version, client: rel.client, prev: rel.prev, generated: today };
+    // 已有清單檔的版本不重產（generated 日期一變就是一筆白 diff）；換來源（teamcraft → client）時加 --rebuild
+    if (existsSync(join(LIB, rel.file)) && !process.argv.includes("--rebuild")) { console.log(`${rel.version}：${rel.file} 已存在，略過（--rebuild 重產）`); continue; }
+    const out = { version: rel.version, ...(rel.client ? { client: rel.client } : { teamcraft: rel.teamcraft }), prev: rel.prev, generated: today };
     for (const [key, sheet] of [["items", "Item"], ["achievements", "Achievement"]]) {
-      const [cur, prev] = await Promise.all([sheetAt(rel.client.sha, sheet), sheetAt(rel.prev.sha, sheet)]);
+      const [cur, prev] = await Promise.all([
+        rel.client ? sheetAt(rel.client.sha, sheet) : teamcraftAt(rel.teamcraft.sha, sheet),
+        sheetAt(rel.prev.sha, sheet),
+      ]);
       const added = [...cur].filter((id) => !prev.has(id)).sort((a, b) => a - b);
       const removed = [...prev].filter((id) => !cur.has(id));
       out[key] = added;

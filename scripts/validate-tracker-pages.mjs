@@ -208,19 +208,22 @@ if (skipped.length) console.log(`  ⓘ 跳過（整頁走 ES module，此 harnes
   const newTag = (doc) => [...doc.querySelectorAll('.filter-tag')].find((b) => /^✨ /.test(b.textContent)) || null;
   const countOf = (b) => +((b && b.textContent.match(/（(\d+)）/)) || [])[1] || 0;
   const orch = JSON.parse(readFileSync(join(ROOT, 'data', 'orchestrion.json'), 'utf8')).data;
-  const backfilled = orch.filter((e) => e.newIn === '7.25' && e.patch !== '7.25').length;
+  // 目前版本讀 _meta.json（2026-11-17 升 7.3 前這裡寫死 7.25，一升版就誤報）
+  const GP = JSON.parse(readFileSync(join(ROOT, 'data', '_meta.json'), 'utf8')).gamePatch;
+  const backfilled = orch.filter((e) => e.newIn === GP && e.patch !== GP).length;
+  const freshN = orch.filter((e) => e.patch === GP).length;
 
   const a = await boot('collections/orchestrion/index.html', [], { ffxiv_seen_patch: '7.21' });
   const tagA = newTag(a.doc);
   push('7.21 的老使用者在樂譜頁看得到「✨ 本次新增」', !!tagA, tagA ? tagA.textContent : '沒有篩選');
-  push('  數量含升版時補進的舊條目（newIn）', countOf(tagA) >= backfilled + 7, `顯示 ${countOf(tagA)}，補漏 ${backfilled}＋7.25 新曲 7`);
+  push('  數量含升版時補進的舊條目（newIn）', countOf(tagA) >= backfilled + freshN, `顯示 ${countOf(tagA)}，補漏 ${backfilled}＋${GP} 新曲 ${freshN}`);
   if (tagA) {
     tagA.dispatchEvent(new a.window.MouseEvent('click', { bubbles: true }));
     const pages = JSON.parse(a.window.localStorage.getItem('ffxiv_seen_patch_pages') || '{}');
-    push('  點了才推進，而且只推進這一頁', pages['/collections/orchestrion/'] === '7.25' && a.window.localStorage.getItem('ffxiv_seen_patch') === '7.21',
+    push('  點了才推進，而且只推進這一頁', pages['/collections/orchestrion/'] === GP && a.window.localStorage.getItem('ffxiv_seen_patch') === '7.21',
       JSON.stringify(pages) + '｜全站 ' + a.window.localStorage.getItem('ffxiv_seen_patch'));
   }
-  const seed = { ffxiv_seen_patch: '7.21', ffxiv_seen_patch_pages: JSON.stringify({ '/collections/orchestrion/': '7.25' }) };
+  const seed = { ffxiv_seen_patch: '7.21', ffxiv_seen_patch_pages: JSON.stringify({ '/collections/orchestrion/': GP }) };
   const b = await boot('collections/orchestrion/index.html', [], seed);
   push('  看過的頁下次不再掛', !newTag(b.doc), newTag(b.doc)?.textContent || '沒有篩選');
   const c = await boot('collections/hairstyles/index.html', [], seed);

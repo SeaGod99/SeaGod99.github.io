@@ -96,9 +96,23 @@ for (const job of JOBS) {
       }
     }
   }
-  // 園藝配種：本株與鄰株的種子名
+  // 園藝配種：本株與鄰株的種子名；花色（flower.colors[]）與「拿去做什麼」（usedIn.top[]）也是 {id, name} 的物品名
+  // （2026-11-17 加：台服 7.3 把「大麗花」改成「大理花」，花色 9 件與用途 1 件沒跟上；
+  //  不整份重跑 build-gardening.mjs 是因為 Teamcraft seeds.json 當時少了巫茄、血紅奇異果兩種作物）
   if (job.file === "gardening.json") {
     for (const e of rows) {
+      for (const x of [...(e.flower?.colors || []), ...(e.usedIn?.top || [])]) {
+        const n = items.get(x?.id);
+        if (!n || !isTw(n) || !x.name || x.name === n) continue;
+        changes.push(`${e.productId ?? e.id} 的 ${x.id}：${x.name} → ${n}`);
+        x.name = n;
+      }
+      // 花種名＝預設色的物品名去掉顏色（build-gardening.mjs 同一條規則：「紅色大理花」→「大理花」）
+      const def = (e.flower?.colors || []).find((c) => c.isDefault);
+      if (def && def.color && def.name?.startsWith(def.color)) {
+        const sp = def.name.slice(def.color.length);
+        if (sp && e.flower.species !== sp) { changes.push(`${e.productId ?? e.id} 的花種：${e.flower.species} → ${sp}`); e.flower.species = sp; }
+      }
       for (const cb of Array.isArray(e.crossBreeds) ? e.crossBreeds : []) {
         for (const [nk, ik] of [["baseSeedName", "baseSeedId"], ["adjacentSeedName", "adjacentSeedId"]]) {
           const n = items.get(cb[ik]);

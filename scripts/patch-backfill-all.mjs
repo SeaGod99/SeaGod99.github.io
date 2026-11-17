@@ -70,11 +70,20 @@ async function run() {
     const pid = inv[type]?.get(k);
     return pid ? ver(pid) : null;
   };
+  /* 副本：與 patch-dungeon-names.mjs 同一道護欄——版號的主版本對不上資料片就不填。
+     cfc 橋會把 18 個副本接到錯的 InstanceContent（究極武器破壞作戰 → 6.0、阿修羅殲滅戰 → 2.45…），
+     那邊清成 null 之後這支只要 fill-only 一跑就補回去（2026-11-17 升 7.3 時發現），所以兩邊都要擋。 */
+  const EXP_MAJOR = new Map(JSON.parse(readFileSync(join(DATA, "official-terms.json"), "utf8")).expansions
+    .flatMap((x) => [[x.name, x.major], ...(x.alias || []).map((a) => [a, x.major])]));
+  const dungeonConflicts = [];
   const dungeonResolver = (e) => {
     const cid = cfc[String(e.id)] ?? cfc[e.id];
     if (cid == null) return null;
     const pid = inv["instancecontent"]?.get(cid);
-    return pid ? ver(pid) : null;
+    const v = pid ? ver(pid) : null;
+    const want = EXP_MAJOR.get(e.expansion);
+    if (v && want && Number(String(v).split(".")[0]) !== want) { dungeonConflicts.push(`${e.id} ${e.name}：${v}，資料片是 ${e.expansion}`); return null; }
+    return v;
   };
   // 幻卡：ffxivcollect 無 cards 端點；改由 sources[].instanceId 反查所屬副本的 instancecontent 版本（近似：卡片隨該副本上線）
   const cardResolver = (e) => {
@@ -133,6 +142,7 @@ async function run() {
   console.log("\n檔案                 總數    填     仍無patch");
   for (const r of rows)
     console.log(`${r.file.padEnd(20)} ${String(r.total).padEnd(7)} ${String(r.filled).padEnd(6)} ${r.still}`);
+  if (dungeonConflicts.length) console.log(`\n副本版號與資料片對不上、不填 ${dungeonConflicts.length} 筆：\n  ${dungeonConflicts.join("\n  ")}`);
   console.log(`\n無 datamined patch 來源（不動）：${noSource.join(", ")}`);
   console.log(APPLY ? "\n✅ 已寫入" : "\n（dry-run，未寫入；加 --apply 套用）");
 }

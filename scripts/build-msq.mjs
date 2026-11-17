@@ -55,14 +55,17 @@ async function main() {
      台服 08-11 已開放）它的 tw-quests 沒有，主線頁就停在 70786。另外第 11 章兩個正式任務名撞到台服名守門
      （「●明●●極限●星球」「Hello, World」），由 scripts/lib/official-odd-names.mjs 逐筆放行。 */
   const tcQuest = new Map((await loadTcSheet("Quest", { offline })).map((r) => [r.id, r.Name]));
+  // 客戶端解包落後時（2026-11-17，台服 7.3）：疊上 Teamcraft 那一版的新任務與官方改譯（lib/client-names.mjs）
+  const { clientNameMap, officialDots } = await import("./lib/client-names.mjs");
+  const cQuest = await clientNameMap("quest", { offline });
   const tcGenre = new Map((await loadTcSheet("JournalGenre", { offline })).map((r) => [r.id, r.Name]));
   const strip = (x) => String(x || "").split("").filter((c) => { const k = c.charCodeAt(0); return k < 0xe000 || k > 0xf8ff; }).join("").trim();
   const questName = (id) => {
-    for (const n of [strip(tcQuest.get(id)), twQuests[id]?.tw]) if (n && isTw(n)) return n;
+    for (const n of [cQuest.get(id), strip(tcQuest.get(id)), twQuests[id]?.tw]) if (n && isTw(n)) return n;
     if (isOddOfficial("quest", id)) return strip(tcQuest.get(id)) || twQuests[id]?.tw || null;
     return null;
   };
-  const genreName = (id) => [strip(tcGenre.get(id)), twName(tw.journalGenre, id)].find((n) => n && isTw(n)) || null;
+  const genreName = (id) => officialDots([strip(tcGenre.get(id)), twName(tw.journalGenre, id)].find((n) => n && isTw(n)) || null);
   /* ⚠ **「沿途解鎖哪些副本」做不到。** `dungeons.json` 的 `unlock.questId` 只有 32 筆
      （`Quest.InstanceContentUnlock` 全表只有 48 筆，見知識庫 §4.74），而且與主線任務
      **零交集**——多數副本由主線解鎖，但那個關聯在任務腳本裡、不在 sheet 欄位上。

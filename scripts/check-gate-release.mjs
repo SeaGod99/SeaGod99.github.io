@@ -34,6 +34,24 @@ const ALLOW_LATIN = new Map([]);
 // 只建置用、前端不載的檔：版本閘門不作用在它們身上
 const BUILD_ONLY = new Set(["npcs.json", "monsters.json", "obtainable-methods.json", "maps.json"]);
 
+/* 頁面本身會把「沒有台服名」的條目藏起來的檔：這種條目放行了也看不到（鐵則：查不到台服名＝不顯示），
+   列出來但不算失敗。2026-11-17 升 7.3 時加的：Teamcraft 先出了台服 7.3、客戶端解包還沒出，
+   坐騎／寵物／表情的名字只有客戶端的 Mount／Companion／Emote 表有（從物品說明推坐騎名在已知 194 隻裡錯 10 隻，不推）。
+   **每一條都對頁面原始碼驗那個擋法還在**——找不到就退回嚴格判定，免得頁面改了這裡還在放行。 */
+const ROOT = join(__dirname, "..");
+const HIDES_UNNAMED = [
+  // 坐騎頁沒有自訂 include，走引擎預設：e.name && e.name !== e.nameEn
+  { file: "mounts.json", src: [["collections/mounts/index.html", null], ["assets/js/collection-tracker.js", "e.name && e.name !== e.nameEn"]],
+    hidden: (s) => s === "無名" || s === "同英文" },
+  { file: "emotes.json", src: [["collections/emotes/index.html", "e.name !== null"]], hidden: (s, e) => s === "無名" && e.name === null },
+  { file: "minions.json", src: [["minions/index.html", "!(m._noTwName && m.name === m.nameEn)"]],
+    hidden: (s, e) => s === "無名" || (s === "同英文" && e._noTwName === true) },
+].filter((h) => h.src.every(([f, snip]) => {
+  const t = readFileSync(join(ROOT, f), "utf8");
+  return snip == null ? !/\binclude\s*:/.test(t) : t.includes(snip);
+}));
+const hiddenRule = new Map(HIDES_UNNAMED.map((h) => [h.file, h.hidden]));
+
 const items = new Map();
 for (const it of JSON.parse(readFileSync(join(DATA, "items.json"), "utf8")).data) items.set(it.id, it);
 
@@ -41,12 +59,19 @@ function nameOf(file, e) {
   if (file === "recipes.json") return { name: items.get(e.itemId)?.name ?? null, en: null };
   return { name: e.name ?? null, en: e.nameEn ?? null };
 }
+/* 名字本身就是台服物品名的一段（樂譜＝「管弦樂琴樂譜：」後面那段、幻卡＝「九宮幻卡：」後面那段）：台服官方就用拉丁字的
+   （FFXI 聯動的「Ronfaure」、幻卡「Kam'lanaut」）只要台服物品名逐字是「前綴＋這個名字」，就是官方名，不必逐筆登記 ALLOW_LATIN。
+   2026-11-17 升 7.3 時加的（樂譜 20 首、幻卡 2 張）。 */
+const ITEM_PREFIX = { "orchestrion.json": "管弦樂琴樂譜：", "triple-triad.json": "九宮幻卡：" };
+const itemNames = new Set([...items.values()].map((it) => it.name));
+const officialLatin = (file, name) => ITEM_PREFIX[file] != null && itemNames.has(ITEM_PREFIX[file] + name);
+
 function status(file, e) {
   const { name, en } = nameOf(file, e);
   if (name == null || String(name).trim() === "") return "無名";
   if (/^#\d+$/.test(String(name))) return "#id";
   if (!isTranslated(String(name))) return "日文／佔位";
-  if (en && name === en && !isTw(String(name)) && !ALLOW_LATIN.has(`${file}:${e.id}`)) return "同英文";
+  if (en && name === en && !isTw(String(name)) && !ALLOW_LATIN.has(`${file}:${e.id}`) && !officialLatin(file, name)) return "同英文";
   return "ok";
 }
 
@@ -55,7 +80,7 @@ if (lo == null || hi == null) throw new Error(`版本格式不對：--from ${FRO
 const inWindow = (p) => { const v = pnum(p); return v != null && (FROM === TO ? v === hi : v > lo && v <= hi); };
 
 console.log(`放行窗口：${FROM === TO ? `＝${TO}` : `(${FROM}, ${TO}]`}（_meta.gamePatch＝${meta.gamePatch}）\n`);
-let bad = 0, total = 0;
+let bad = 0, total = 0, hiddenTotal = 0;
 for (const file of readdirSync(DATA).filter((f) => f.endsWith(".json") && f !== "_meta.json").sort()) {
   if (BUILD_ONLY.has(file)) continue;
   let db;
@@ -65,18 +90,21 @@ for (const file of readdirSync(DATA).filter((f) => f.endsWith(".json") && f !== 
   const hits = rows.filter((e) => e && inWindow(e.patch));
   if (!hits.length) continue;
   const byStatus = {};
-  const badRows = [];
+  const badRows = [], hiddenRows = [];
   for (const e of hits) {
-    const s = status(file, e);
+    let s = status(file, e);
+    if (s !== "ok" && hiddenRule.get(file)?.(s, e)) { hiddenRows.push(`${e.id ?? e.itemId} ${e.nameEn ?? ""}（${s}）`); s = "頁面隱藏"; }
     byStatus[s] = (byStatus[s] || 0) + 1;
-    if (s !== "ok") badRows.push(`${e.id ?? e.itemId} ${nameOf(file, e).name ?? ""}｜${e.nameEn ?? ""}（${s}）`);
+    if (s !== "ok" && s !== "頁面隱藏") badRows.push(`${e.id ?? e.itemId} ${nameOf(file, e).name ?? ""}｜${e.nameEn ?? ""}（${s}）`);
   }
   total += hits.length;
   bad += badRows.length;
+  hiddenTotal += hiddenRows.length;
   console.log(`${(badRows.length ? "✗" : "✓")} ${file.padEnd(24)} 放出 ${String(hits.length).padStart(4)}：` +
     Object.entries(byStatus).map(([k, v]) => `${k} ${v}`).join("、"));
   for (const r of badRows.slice(0, 15)) console.log(`      ${r}`);
   if (badRows.length > 15) console.log(`      …另 ${badRows.length - 15} 筆`);
+  if (hiddenRows.length) console.log(`      沒有台服名、頁面會隱藏（等客戶端解包補名）：${hiddenRows.join("、")}`);
 }
 /* 副本另外對台服客戶端：版本閘門對 patch 是 null 的一律放行（PatchGate.released(null)＝true），
    2026-10-10 前有 23 個國際服 7.3 以後的副本就是這樣上了副本圖鑑與命令面板——它們的名字是簡轉繁，
@@ -90,6 +118,15 @@ for (const file of readdirSync(DATA).filter((f) => f.endsWith(".json") && f !== 
     const { loadTcSheet } = await import("./lib/tc-datamining.mjs");
     const tc = new Map((await loadTcSheet("ContentFinderCondition", { offline: true }))
       .map((r) => [r.id, String(r.Name || "").replace(/[\uE000-\uF8FF]/g, "").trim()]));
+    /* \u5BA2\u6236\u7AEF\u89E3\u5305\u843D\u5F8C\u6642\uFF08\u53F0\u670D 7.3\uFF09\uFF1A\u5BA2\u6236\u7AEF\u6C92\u6709\u7684\u526F\u672C\u8A8D Teamcraft \u90A3\u4E00\u7248\u7684\u540D\u5B57\uFF0C\u8207 patch-dungeon-names.mjs \u540C\u4E00\u689D\u5C0D\u61C9\u93C8
+       \uFF08XIVAPI CFC \u7684 Content\uFF0BContentLinkType 1 \u2192 Teamcraft tw-instances\uFF09 */
+    const { teamcraftAhead, teamcraftNameMap } = await import("./lib/client-names.mjs");
+    const xivFile = join(__dirname, "..", "out_data", "cfc-missing-rows.json");
+    if (teamcraftAhead && existsSync(xivFile)) {
+      const tcInst = await teamcraftNameMap("instance", { offline: true }).catch(() => new Map());
+      for (const x of JSON.parse(readFileSync(xivFile, "utf8")))
+        if (!tc.get(x.id) && Number(x.linkType) === 1 && tcInst.has(x.contentId)) tc.set(x.id, tcInst.get(x.contentId));
+    }
     const duties = JSON.parse(readFileSync(join(DATA, "dungeons.json"), "utf8")).data;
     const visible = duties.filter((d) => d.name && (pnum(d.patch) == null || pnum(d.patch) <= hi));
     const off = visible.filter((d) => tc.get(d.id) !== d.name);
@@ -100,7 +137,7 @@ for (const file of readdirSync(DATA).filter((f) => f.endsWith(".json") && f !== 
   } else console.log("  （沒有台服客戶端 ContentFinderCondition 快取，略過副本對客戶端的檢查）");
 }
 
-console.log(`\n共放出 ${total} 筆，沒有台服名 ${bad} 筆`);
+console.log(`\n共放出 ${total} 筆，沒有台服名 ${bad} 筆` + (hiddenTotal ? `（另 ${hiddenTotal} 筆沒有台服名但頁面會隱藏）` : ""));
 if (bad) {
   console.log("✗ 先補名再改版本號（升版 SOP：patch-tw-names、各收藏的客戶端名稱補齊），不要放行");
   process.exit(1);

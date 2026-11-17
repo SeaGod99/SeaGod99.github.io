@@ -644,10 +644,16 @@
     fetch((ROOT || './') + 'data/_meta.json').then(function (r) { return r.ok ? r.json() : null; }).then(function (m) {
       if (!m || !m.gamePatch || foot.querySelector('.sgt-data-ver')) return;
       var cv = m.twClient && m.twClient.version ? String(m.twClient.version).split('.').slice(0, 3).join('.') : '';
+      /* 客戶端解包落後、這一版的新東西取自 Teamcraft 時（2026-11-17 升 7.3）一併標出——只寫客戶端版本會讓人以為
+         資料停在那一天。解包追上之後 Teamcraft 的日期會比客戶端版本舊，這段自動不顯示 */
+      var tc = m.twTeamcraft;
+      var tcAhead = tc && tc.version === m.gamePatch && tc.date && (!cv || tc.date.replace(/-/g, '.') > cv);
       var p = document.createElement('p');
       p.className = 'footer-text sgt-data-ver';
       p.style.marginTop = '4px';
       p.textContent = '資料版本：台服 ' + m.gamePatch + (cv ? '（客戶端 ' + cv + '）' : '');
+      // Teamcraft 那段放第二行：接在同一行時有 9 頁在 360px 寬溢出 2px（自帶 site-footer 的頁，2026-11-17 體檢）
+      if (tcAhead) { p.appendChild(document.createElement('br')); p.appendChild(document.createTextNode(m.gamePatch + ' 新內容取自 Teamcraft ' + tc.date.replace(/-/g, '.'))); }
       (foot.querySelector('.container') || foot).appendChild(p);
     }).catch(function () { /* 離線或檔案開啟：不顯示 */ });
   }

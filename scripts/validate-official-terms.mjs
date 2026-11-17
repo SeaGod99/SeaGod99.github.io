@@ -51,7 +51,8 @@ function stripComments(src) {
 // ── ① 前端版與 JSON 同一份 ─────────────────────────────────────────────
 {
   const js = read("assets/js/official-terms.js");
-  const m = js.match(/var T = (\{[\s\S]*?\});\n/);
+  // \r?：Windows 上 core.autocrlf=true 會把工作目錄換成 CRLF（2026-11-17 換機後這條因此誤報「不同」）
+  const m = js.match(/var T = (\{[\s\S]*?\});\r?\n/);
   const emb = m ? JSON.parse(m[1]) : null;
   const same = emb && ["jobs", "expansions", "weather", "races"].every((k) => JSON.stringify(emb[k]) === JSON.stringify(T[k]));
   push("assets/js/official-terms.js 嵌的資料與 data/official-terms.json 相同（不同＝有人手改，或忘了重跑 build-official-terms.mjs）", same,

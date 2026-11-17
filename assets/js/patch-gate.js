@@ -32,7 +32,7 @@
 
   /* 抓不到 data/_meta.json 時的後備台服版本。**前端只有這一處寫死版本號**（市場頁、製作模擬器都讀這個），
      validate-data.mjs 會斷言它等於 _meta.json 的 gamePatch——升版改 gamePatch 時這裡沒跟上就紅。 */
-  const FALLBACK_PATCH = "7.25";
+  const FALLBACK_PATCH = "7.3";
 
   async function loadGamePatch(metaUrl) {
     if (_gamePatch != null) return _gamePatch;

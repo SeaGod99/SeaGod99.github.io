@@ -51,7 +51,14 @@ push("資料只有既定的欄位", extra.size === 0, [...extra].join(","));
 const okTitle = (t) => t === undefined || t === 1 || (typeof t === "string" && isTranslated(t)) ||
   (Array.isArray(t) && t.length === 2 && t.every((x) => typeof x === "string" && isTranslated(x)) && t[0] !== t[1]);
 push("稱號名都是台服字串（男女不同時才是兩個）", A.every((a) => okTitle(a.title)), A.filter((a) => !okTitle(a.title)).slice(0, 3).map((a) => a.id).join(","));
-push("  有稱號獎勵的成就都有稱號名（沒有退回旗標的）", A.filter((a) => a.title).every((a) => a.title !== 1), `${A.filter((a) => a.title === 1).length} 個沒有名字`);
+/* 客戶端解包落後時（2026-11-17，台服 7.3）：稱號名只有客戶端的 Title 表有（Teamcraft 沒有台服稱號表），這一版新成就的
+   稱號暫時退回旗標 1。只放行「台服版本清單最後一筆是 Teamcraft 來源、而且成就在那份清單裡」的——其餘照舊不准退回 */
+const { TW_RELEASES } = await import("./lib/tw-releases.mjs");
+const lastRel = TW_RELEASES[TW_RELEASES.length - 1];
+const pendingTitle = new Set(!lastRel.client ? JSON.parse(read(join("scripts", "lib", lastRel.file))).achievements : []);
+const noTitle = A.filter((a) => a.title === 1);
+push("  有稱號獎勵的成就都有稱號名（沒有退回旗標的；客戶端解包還沒出的這一版除外）", noTitle.every((a) => pendingTitle.has(a.id)),
+  `${noTitle.length} 個沒有名字` + (noTitle.length ? `（${noTitle.filter((a) => pendingTitle.has(a.id)).length} 個是台服 ${lastRel.version} 的、等客戶端解包）` : ""));
 // 分類：信封的 kinds／cats，每個成就的 ct 都查得到；名稱是台服字串，英文只當參照
 const KINDS = db.kinds || {}, CATS = db.cats || {};
 push("每個成就的分類都查得到（ct → cats → kinds）", A.every((a) => CATS[a.ct] && KINDS[CATS[a.ct][0]]), `${Object.keys(KINDS).length} 個大分類、${Object.keys(CATS).length} 個分類`);

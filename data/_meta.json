@@ -1,8 +1,8 @@
 {
   "project": "水神的工具箱 統一資料庫",
   "schemaDoc": "/data/SCHEMA.md",
-  "gamePatch": "7.25",
-  "updated": "2026-11-13",
+  "gamePatch": "7.3",
+  "updated": "2026-11-17",
   "idConventions": {
     "mapId": "遊戲 Map sheet row id（XIVAPI v2 /sheet/Map 的 row_id），全站統一；2026-06-11 起 maps.json 主鍵即此 id",
     "territoryId": "TerritoryType row id，僅輔助欄位（fishing-spots、gathering.coords.zoneId），顯示/連結一律用 mapId"
@@ -83,7 +83,7 @@
       "name": "鳥鞍",
       "source": "xivapi+tw-items+obtainable-methods",
       "status": "used",
-      "updated": "2026-10-09",
+      "updated": "2026-11-17",
       "count": 106
     },
     {
@@ -118,7 +118,7 @@
       "name": "製作技能（繁中名／CP／等級／效率）",
       "source": "teamcraft tw-craft-actions+tw-actions ＋ XIVAPI CraftAction/Action（scripts/build-craft-sim.mjs）",
       "status": "used",
-      "updated": "2026-08-26",
+      "updated": "2026-11-17",
       "count": 36
     },
     {
@@ -127,14 +127,14 @@
       "name": "製作用料理／藥品的加成（百分比＋上限）",
       "source": "teamcraft foods/medicines（ItemFood）× data/items.json 繁中名（scripts/build-craft-sim.mjs）",
       "status": "used",
-      "updated": "2026-08-26",
-      "count": 61
+      "updated": "2026-11-17",
+      "count": 62
     },
     {
       "name": "製作理符",
       "file": "craft-leves.json",
       "count": 1120,
-      "updated": "2026-09-26",
+      "updated": "2026-11-17",
       "desc": "八大製作職的製作理符 1,120 張（交付物、經驗、gil、配額、可否三倍），來源 XIVAPI Leve + CraftLeve"
     },
     {
@@ -143,7 +143,7 @@
       "name": "製作模擬用配方（除數／修正／HQ 材料）",
       "source": "data/recipes.json × teamcraft recipes.json（scripts/build-craft-sim.mjs）",
       "status": "used",
-      "updated": "2026-08-26",
+      "updated": "2026-11-17",
       "count": 13835
     },
     {
@@ -152,8 +152,8 @@
       "name": "多幣種兌換品（變現排行）",
       "source": "teamcraft-shops+xivapi+items",
       "status": "used",
-      "count": 48,
-      "updated": "2026-10-10"
+      "count": 49,
+      "updated": "2026-11-17"
     },
     {
       "schema": "dungeons",
@@ -161,7 +161,7 @@
       "name": "副本",
       "source": "xivapi+tw-instances",
       "status": "filled",
-      "updated": "2026-10-10",
+      "updated": "2026-11-17",
       "count": 528
     },
     {
@@ -170,7 +170,7 @@
       "name": "表情",
       "source": "xivapi+tw-items",
       "status": "used",
-      "updated": "2026-10-11",
+      "updated": "2026-11-17",
       "count": 292
     },
     {
@@ -194,7 +194,7 @@
       "name": "額外取得管道（理符／收藏品）",
       "file": "extra-sources.json",
       "count": 1157,
-      "updated": "2026-10-15",
+      "updated": "2026-11-17",
       "desc": "obtainable-methods 沒有的兩型：理符報酬（1,030 件，池子裡隨機給一項）與收藏品交納（127 件，含工具改良用零件）。由 market-sources 與 item-sources 兩個消費端合併",
       "source": "XIVAPI v2 Leve→LeveRewardItem→LeveRewardItemGroup ＋ Teamcraft collectables.json ＋ tw-locales(leves) ＋ places.msgpack(twPlaces)"
     },
@@ -221,7 +221,7 @@
       "name": "魚",
       "source": "fish-tracker+items+FishingSpot.csv+SpearfishingNotebook",
       "status": "populated",
-      "updated": "2026-10-09",
+      "updated": "2026-11-17",
       "count": 1449
     },
     {
@@ -248,7 +248,7 @@
       "name": "園藝配種",
       "source": "teamcraft/seeds.json; tw-items.msgpack",
       "status": "used",
-      "updated": "2026-10-09",
+      "updated": "2026-11-17",
       "count": 107
     },
     {
@@ -267,7 +267,7 @@
       "source": "xivapi+items",
       "status": "superseded-by-currency-shop",
       "note": "2026-09-23 起 /tools/gc-exchange/ 改吃 currency-shop.json（涵蓋 45 種貨幣，含本檔的軍票與雙色寶石）。保留備查，前端已不載入。",
-      "updated": "2026-07-13"
+      "updated": "2026-11-17"
     },
     {
       "schema": "gc-supply",
@@ -276,13 +276,13 @@
       "source": "teamcraft-gc-supply+xivapi GCSupplyDutyReward+items+equip.names",
       "status": "used",
       "count": 11,
-      "updated": "2026-09-24"
+      "updated": "2026-11-17"
     },
     {
       "name": "金碟獎品價目表",
       "file": "gold-saucer.json",
       "count": 2,
-      "updated": "2026-10-10",
+      "updated": "2026-11-17",
       "desc": "金碟幣與金碟聲譽可換的獎品價目，附六本圖鑑的收藏對應",
       "source": "Teamcraft shops.json（經 scripts/lib/shops.mjs）＋ data/items.json ＋ 六本收藏庫的 itemId；幻卡走 Item.AdditionalData 可證對照"
     },
@@ -292,8 +292,8 @@
       "name": "髮型",
       "source": "teamcraft/items.json (en+itemId); tw-items.msgpack (tw names); xivapi (icon)",
       "status": "used",
-      "updated": "2026-10-09",
-      "count": 42
+      "updated": "2026-11-17",
+      "count": 44
     },
     {
       "schema": "hunting-log",
@@ -310,7 +310,7 @@
       "name": "物品分類（ItemUICategory id ↔ 繁中名）",
       "source": "teamcraft/tw-item-ui-categories.json（scripts/build-item-categories.mjs）",
       "status": "used",
-      "updated": "2026-08-11",
+      "updated": "2026-11-17",
       "count": 112
     },
     {
@@ -319,8 +319,8 @@
       "name": "物品精簡表（採集頁）",
       "source": "data/items.json（scripts/build-items-lite.mjs 精簡）",
       "status": "used",
-      "updated": "2026-10-09",
-      "count": 45853
+      "updated": "2026-11-17",
+      "count": 47071
     },
     {
       "schema": "items-market",
@@ -328,8 +328,8 @@
       "name": "物品精簡表（市場頁）",
       "source": "data/items.json（scripts/build-items-market.mjs 精簡）",
       "status": "used",
-      "updated": "2026-10-09",
-      "count": 45853
+      "updated": "2026-11-17",
+      "count": 47071
     },
     {
       "schema": "items",
@@ -337,8 +337,8 @@
       "name": "全物品",
       "source": "mixed",
       "status": "script-ready",
-      "updated": "2026-10-09",
-      "count": 45853
+      "updated": "2026-11-17",
+      "count": 47071
     },
     {
       "schema": "maps",
@@ -346,8 +346,8 @@
       "name": "地圖／區域",
       "source": "xivapi+tw-places",
       "status": "populated",
-      "updated": "2026-10-10",
-      "count": 212
+      "updated": "2026-11-17",
+      "count": 220
     },
     {
       "schema": "market-sources",
@@ -355,8 +355,8 @@
       "name": "取得管道精簡表（市場頁）",
       "source": "obtainable-methods/gathering/gc-shop/maps（scripts/build-market-sources.mjs 精簡）",
       "status": "used",
-      "updated": "2026-10-10",
-      "count": 7621
+      "updated": "2026-11-17",
+      "count": 7627
     },
     {
       "name": "魔晶石與禁忌鑲嵌",
@@ -371,7 +371,7 @@
       "name": "寵物",
       "source": "xivapi+items",
       "status": "populated",
-      "updated": "2026-10-10",
+      "updated": "2026-11-17",
       "count": 581
     },
     {
@@ -380,7 +380,7 @@
       "name": "怪物",
       "source": "datamining-cn+teamcraft+xivapi",
       "status": "used",
-      "updated": "2026-10-10",
+      "updated": "2026-11-17",
       "count": 14361
     },
     {
@@ -389,14 +389,14 @@
       "name": "坐騎",
       "source": "xivapi+tw-items+cn-opencc+manual",
       "status": "filled",
-      "updated": "2026-10-11",
+      "updated": "2026-11-17",
       "count": 362
     },
     {
       "name": "主線任務",
       "file": "msq.json",
-      "count": 1022,
-      "updated": "2026-10-10",
+      "count": 1032,
+      "updated": "2026-11-17",
       "desc": "14 個主線章節、1,012 個任務（依遊戲手帳順序），來源 XIVAPI Quest／JournalGenre 的 Main Scenario 區段"
     },
     {
@@ -405,8 +405,8 @@
       "name": "NPC",
       "source": "xivapi",
       "status": "example",
-      "updated": "2026-10-10",
-      "count": 22079
+      "updated": "2026-11-17",
+      "count": 22889
     },
     {
       "schema": "obtainable-methods",
@@ -414,8 +414,8 @@
       "name": "取得方式總表",
       "source": "mixed",
       "status": "used",
-      "updated": "2026-10-09",
-      "count": 37726
+      "updated": "2026-11-17",
+      "count": 38408
     },
     {
       "schema": "orchestrion",
@@ -423,22 +423,22 @@
       "name": "樂譜",
       "source": "xivapi+tw-items",
       "status": "used",
-      "updated": "2026-10-11",
-      "count": 749
+      "updated": "2026-11-17",
+      "count": 776
     },
     {
       "name": "時尚配飾",
       "file": "ornaments.json",
-      "count": 45,
-      "updated": "2026-10-11",
+      "count": 46,
+      "updated": "2026-11-17",
       "desc": "陽傘、背包、火炬等時尚配飾（XIVAPI search Item.ItemAction.Action=20086，名稱取自解鎖道具的繁中名）",
       "source": "XIVAPI v2 search（Item.ItemAction.Action=20086）＋ data/items.json ＋ data/obtainable-methods.json"
     },
     {
       "name": "臉部配件",
       "file": "facewear.json",
-      "count": 28,
-      "updated": "2026-10-15",
+      "count": 38,
+      "updated": "2026-11-17",
       "desc": "眼鏡、墨鏡等臉部配件（台服客戶端 GlassesStyle 款式＋Glasses 12 色版名當搜尋別名；解鎖道具＝items.json「臉部配件：…」）；時尚配飾頁的一個類別",
       "source": "台服客戶端 GlassesStyle／Glasses ＋ data/items.json ＋ 取得管道分片層 ＋ lib/client-shop-sources"
     },
@@ -448,7 +448,7 @@
       "name": "製作配方",
       "source": "teamcraft",
       "status": "script-ready",
-      "updated": "2026-06-23",
+      "updated": "2026-11-17",
       "count": 14182
     },
     {
@@ -474,8 +474,8 @@
       "name": "全站搜尋索引（命令面板用）",
       "source": "各收藏／工具資料檔；key 為該頁 keyOf",
       "status": "used",
-      "count": 13971,
-      "updated": "2026-10-15"
+      "count": 14132,
+      "updated": "2026-11-17"
     },
     {
       "schema": "squadron",
@@ -490,7 +490,7 @@
       "name": "潛水艇",
       "file": "submarine.json",
       "count": 123,
-      "updated": "2026-10-03",
+      "updated": "2026-11-17",
       "desc": "潛水艇部件 40 件（部位名取自道具分類）＋航點 123 個＋階級表 145 階，來源 XIVAPI Submarine* 三張表；2026-10-03 起另含飛空艇（airship：部件 28、航點 24、等級 50 階）"
     },
     {
@@ -508,7 +508,7 @@
       "source": "xivapi-quest+tw-quests+npcs+maps；對照表 scripts/lib/system-unlock-map.mjs",
       "status": "script-ready",
       "count": 26,
-      "updated": "2026-10-15"
+      "updated": "2026-11-17"
     },
     {
       "schema": "treasure-fragments",
@@ -534,14 +534,14 @@
       "name": "幻卡",
       "source": "xivapi+items+npcs+maps+dungeons",
       "status": "used",
-      "updated": "2026-10-11",
-      "count": 443
+      "updated": "2026-11-17",
+      "count": 449
     },
     {
       "name": "NPC 金幣直購價",
       "file": "vendor-prices.json",
-      "count": 4641,
-      "updated": "2026-10-10",
+      "count": 4821,
+      "updated": "2026-11-17",
       "desc": "4,641 種可交易物品的 NPC 金幣售價，市場頁用它對材料成本封頂",
       "source": "Teamcraft shops.json（經 scripts/lib/shops.mjs）的純金幣商店；賣家門檻表 scripts/lib/game-sources.mjs 的 VENDOR_GATES"
     },
@@ -551,30 +551,30 @@
       "name": "雇員探險（目標型 969 個）",
       "source": "obtainable-methods(venture)+tw-ventures+tw-job-categories+items",
       "status": "used",
-      "count": 969,
-      "updated": "2026-09-24"
+      "count": 971,
+      "updated": "2026-11-17"
     },
     {
       "name": "成就",
       "file": "achievements.json",
-      "count": 3408,
-      "updated": "2026-10-10",
+      "count": 3467,
+      "updated": "2026-11-17",
       "desc": "台服已開放的成就：達成條件、點數、物品獎勵、有無稱號（稱號名與分類名無台服來源，不收）；舊版（Legacy）成就不收",
       "source": "XIVAPI v2 Achievement／AchievementCategory ＋ Teamcraft tw-achievements／tw-achievement-descriptions（out_data/tw-locales.msgpack）＋ Teamcraft patch-content ＋ data/items.json"
     },
     {
       "name": "副本掉落反查",
       "file": "duty-drops.json",
-      "count": 382,
-      "updated": "2026-10-10",
+      "count": 385,
+      "updated": "2026-11-17",
       "desc": "副本圖鑑的「資料列為此副本的產出」：obtainable-methods 的 instance 來源反查，382 個副本／6,354 件（不含機率）",
       "source": "out_data/obtainable-methods.msgpack 的 instance 來源（Teamcraft）× scripts/lib/duty-map.mjs × data/items.json"
     },
     {
       "name": "任務查詢",
       "file": "quests/_index.json",
-      "count": 5210,
-      "updated": "2026-10-10",
+      "count": 5239,
+      "updated": "2026-11-17",
       "desc": "台服任務 5,130 個：等級、手帳章節、區域（索引），接取 NPC＋座標、前置任務、物品報酬與金幣（依資料片分片 6 檔）",
       "source": "out_data/tw-quests.json ＋ XIVAPI v2 Quest／Level（Reward 只收 Item 表）＋ tw-locales journalGenre ＋ places.msgpack；scripts/build-quests.mjs"
     },
@@ -583,7 +583,7 @@
       "file": "dyes.json",
       "desc": "125 種染劑的台服名與色值；時尚品鑑週更與幻化圖鑑分享圖卡用",
       "source": "scripts/build-dyes.mjs（items.json ＋ Stain）",
-      "updated": "2026-08-29",
+      "updated": "2026-11-17",
       "count": 125
     },
     {
@@ -599,16 +599,16 @@
       "file": "item-source-types.json",
       "desc": "itemId → 取得管道位元遮罩（差分陣列）；市場頁「🎁 取得方式」篩選用。與 item-sources/ 由同一支產生",
       "source": "scripts/build-item-sources.mjs",
-      "updated": "2026-10-10",
-      "count": 38040
+      "updated": "2026-11-17",
+      "count": 38756
     },
     {
       "name": "採集用物品精簡表",
       "file": "items-gathering.json",
       "desc": "限時採集與採集紀錄兩頁用的物品精簡表",
       "source": "scripts/build-items-lite.mjs",
-      "updated": "2026-10-09",
-      "count": 1320
+      "updated": "2026-11-17",
+      "count": 1358
     },
     {
       "name": "無人島",
@@ -624,23 +624,23 @@
       "file": "item-sources/_index.json",
       "desc": "物品 → 取得管道（依 itemId >> 10 分 45 片）；收藏頁、市場頁等按需載入",
       "source": "scripts/build-item-sources.mjs",
-      "updated": "2026-10-10",
-      "count": 38040
+      "updated": "2026-11-17",
+      "count": 38756
     },
     {
       "name": "NPC 商店目錄",
       "file": "npc-shops/_index.json",
       "desc": "依 mapId 分片的 NPC 商店與交易品項",
       "source": "scripts/build-npc-shops.mjs",
-      "updated": "2026-10-10",
-      "count": 89
+      "updated": "2026-11-17",
+      "count": 92
     },
     {
       "name": "練級裝備路線",
       "file": "leveling-gear/_index.json",
       "desc": "43 個職業各自的等級門檻前緣",
       "source": "scripts/build-leveling-gear.mjs",
-      "updated": "2026-10-09",
+      "updated": "2026-11-17",
       "count": 43
     },
     {
@@ -648,25 +648,30 @@
       "file": "item-names/_index.json",
       "desc": "英／日／簡中 → 台服繁中（256 片，依查詢鍵雜湊）",
       "source": "scripts/build-item-names.mjs",
-      "updated": "2026-10-09"
+      "updated": "2026-11-17"
     },
     {
       "name": "技能四語名稱查詢",
       "file": "action-names/_index.json",
       "desc": "技能／狀態／特性的四語查詢（256 片）",
       "source": "scripts/build-action-names.mjs",
-      "updated": "2026-10-10"
+      "updated": "2026-11-17"
     },
     {
       "name": "副本／地名／怪物／任務名稱查詢",
       "file": "term-names/_index.json",
       "desc": "名稱翻譯的四類（256 片）；一對多存陣列",
       "source": "scripts/build-term-names.mjs",
-      "updated": "2026-10-10"
+      "updated": "2026-11-17"
     }
   ],
   "twClient": {
     "version": "2026.09.14.0000.0000",
     "date": "2026-09-29"
+  },
+  "twTeamcraft": {
+    "version": "7.3",
+    "sha": "36c0e604",
+    "date": "2026-11-17"
   }
 }

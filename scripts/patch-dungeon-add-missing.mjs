@@ -88,7 +88,7 @@ async function loadCfc() {
   if (OFFLINE) { console.warn('  ⚠ --offline 且無快取，無法繼續'); process.exit(1); }
   const fields = ['Name', 'ContentType', 'IsInDutyFinder', 'HighEndDuty', 'PvP',
     'RequiredExVersion', 'ContentUICategory', 'ClassJobLevelRequired', 'ClassJobLevelSync',
-    'ItemLevelRequired', 'ItemLevelSync', 'SortKey', 'Image', 'Content'].join(',');
+    'ItemLevelRequired', 'ItemLevelSync', 'SortKey', 'Image', 'Content', 'ContentLinkType'].join(',');
   console.log('  抓 ContentFinderCondition…');
   const out = [];
   let after = 0;
@@ -114,6 +114,7 @@ async function loadCfc() {
         sortKey: f.SortKey ?? 0,
         imagePath: f.Image?.path_hr1 ?? f.Image?.path ?? null,
         contentId: f.Content?.row_id ?? f.Content?.value ?? null,
+        linkType: f.ContentLinkType ?? null,
       });
     }
     after = rows[rows.length - 1].row_id;
@@ -153,6 +154,17 @@ async function main() {
   const tcName = new Map((await loadTcSheet('ContentFinderCondition', { offline: OFFLINE })).map((r) => [r.id, clean(r.Name)]));
   const prevNamed = new Set((await loadTcSheet('ContentFinderCondition', { offline: OFFLINE, sha: rel.prev.sha }))
     .filter((r) => isTw(clean(r.Name))).map((r) => r.id));
+  /* 客戶端解包落後時（2026-11-17，台服 7.3）：客戶端的 CFC 還沒有這一版的副本，台服名改取 Teamcraft 那一版的
+     tw-instances——它以 InstanceContent id 為鍵，所以只認 ContentLinkType 1 的列（同 client-names.mjs 的 instanceNameMap；
+     其他連結類型的 Content 會撞到同號的迷宮）。實測 Teamcraft 7.3 與客戶端 7.25 已有的 610 個副本名逐字相同。 */
+  const { teamcraftNameMap, teamcraftAhead } = await import('./lib/client-names.mjs');
+  const tcInst = await teamcraftNameMap('instance', { offline: OFFLINE });
+  const fromTc = new Set();
+  for (const r of cfc) {
+    if (tcName.get(r.id) || Number(r.linkType) !== 1 || !tcInst.has(r.contentId)) continue;
+    tcName.set(r.id, tcInst.get(r.contentId)); fromTc.add(r.id);
+  }
+  if (fromTc.size) console.log(`  客戶端還沒有、改取 Teamcraft 台服 ${teamcraftAhead.version} 的副本名：${fromTc.size} 筆`);
 
   // 套 build-dungeons 的規則（含新的豁免），找出「合法但目前沒收」的列
   const missing = cfc.filter((r) => {
@@ -176,7 +188,7 @@ async function main() {
     added.push({
       id: r.id,
       name: tw,
-      nameSource: 'tw-client',
+      nameSource: fromTc.has(r.id) ? 'tw-teamcraft' : 'tw-client',
       nameEn: r.name,
       type,
       // 這一版客戶端才有台服名＝台服版本清單的版號；其餘由 patch-dungeon-names.mjs 依 Teamcraft 補（只補 null）

@@ -263,7 +263,9 @@
     searchPlaceholder: '搜尋寵物名稱（中／英文）、取得方式…',
     // 沿用既有進度：owned 存純數字 id
     keyOf: function (m) { return m.id; },
-    include: function (m, gp) { return m.name && m.name.trim() !== '' && PatchGate.released(m.patch, gp); },
+    // _noTwName＝建置時查不到台服名、name 暫填英文（例：7.3 的 sunray ray，客戶端解包還沒出）→ 不顯示。
+    // 不改成引擎預設的 name !== nameEn：台服官方就有拉丁字名的寵物（Nano Lord），那會把它誤藏
+    include: function (m, gp) { return m.name && m.name.trim() !== '' && !(m._noTwName && m.name === m.nameEn) && PatchGate.released(m.patch, gp); },
     sorts: ['patch-desc', 'patch-asc', 'name'],
     filters: [
       {

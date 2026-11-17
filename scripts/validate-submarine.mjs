@@ -59,12 +59,13 @@ const byId = new Map(ITEMS.map((i) => [i.id, i]));
 
 // ── 航點 ────────────────────────────────────────────────
 {
-  push('航點 123 個', DB.destinations.length === 123, DB.destinations.length + ' 個');
+  // 台服 7.3（2026-11-17）開了新海域 7 個點（月缺島…星痕水道深部，階級 131–135）：123 → 130
+  push('航點 130 個', DB.destinations.length === 130, DB.destinations.length + ' 個');
   push('  每個都有台服名', DB.destinations.every((d) => /[\u4e00-\u9fff]/.test(d.name)), '');
   push('  沒有日文原文', !/[\u3041-\u3096\u30A1-\u30FA]/.test(JSON.stringify(DB.destinations.map((d) => d.name))), '');
   push('  桶數只有 1／2／3／6', [...new Set(DB.destinations.map((d) => d.tanks))].sort((a, b) => a - b).join('／') === '1／2／3／6',
     [...new Set(DB.destinations.map((d) => d.tanks))].sort((a, b) => a - b).join('／'));
-  push('  階級需求遞增到 130', Math.max(...DB.destinations.map((d) => d.rankReq)) === 130,
+  push('  階級需求遞增到 135', Math.max(...DB.destinations.map((d) => d.rankReq)) === 135,
     Math.min(...DB.destinations.map((d) => d.rankReq)) + '–' + Math.max(...DB.destinations.map((d) => d.rankReq)));
   push('  時間與經驗都是正數', DB.destinations.every((d) => d.minutes > 0 && d.exp > 0), '');
 }

@@ -1,14 +1,14 @@
 {
 "_meta": {
-"generated": "2026-10-15 19:10:10",
-"sets": 1970,
+"generated": "2026-11-17 23:59:15",
+"sets": 1982,
 "mirage_sets": 1086,
-"src_sets": 884,
-"excluded_by_criteria": 10049,
-"dedup_dropped": 1049,
+"src_sets": 896,
+"excluded_by_criteria": 10146,
+"dedup_dropped": 1053,
 "mirage_empty_rows": 81,
-"no_source_items": 9138,
-"conflict_groups": 206
+"no_source_items": 8949,
+"conflict_groups": 204
 },
 "sets": [
 {
@@ -2769,7 +2769,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "",
-"src": "🪙宇宙信用點數×4800"
+"src": "🪙宇宙信用點數×4800（梅蘇艾東克）"
 },
 {
 "id": 50304,
@@ -2785,7 +2785,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "",
-"src": "🪙宇宙信用點數×8400"
+"src": "🪙宇宙信用點數×8400（梅蘇艾東克）"
 },
 {
 "id": 50305,
@@ -2801,7 +2801,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "",
-"src": "🪙宇宙信用點數×4800"
+"src": "🪙宇宙信用點數×4800（梅蘇艾東克）"
 },
 {
 "id": 50306,
@@ -2817,7 +2817,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "",
-"src": "🪙宇宙信用點數×7200"
+"src": "🪙宇宙信用點數×7200（梅蘇艾東克）"
 },
 {
 "id": 50307,
@@ -2833,7 +2833,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "",
-"src": "🪙宇宙信用點數×4800"
+"src": "🪙宇宙信用點數×4800（梅蘇艾東克）"
 }
 ],
 "cjc_name": "All Classes",
@@ -6898,7 +6898,7 @@
 {
 "id": "mirage:47720",
 "layer": "mirage",
-"name_zh": "",
+"name_zh": "宇宙駕駛員套裝",
 "name_ja": "コスモパイロット・アタイア",
 "name_en": "Star Pilot Attire",
 "source": "🎁幻化套裝箱",
@@ -6906,7 +6906,7 @@
 "pieces": [
 {
 "id": 47284,
-"zh": "",
+"zh": "宇宙駕駛員頭盔",
 "ja": "コスモパイロット・ヘルム",
 "en": "Star Pilot Helm",
 "slot": "頭部",
@@ -6917,12 +6917,12 @@
 "icon": 56869,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47285,
-"zh": "",
+"zh": "宇宙駕駛員服",
 "ja": "コスモパイロット・スーツ",
 "en": "Star Pilot Suit",
 "slot": "上身",
@@ -6933,12 +6933,12 @@
 "icon": 57288,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47286,
-"zh": "",
+"zh": "宇宙駕駛員手套",
 "ja": "コスモパイロット・グローブ",
 "en": "Star Pilot Gloves",
 "slot": "手部",
@@ -6949,12 +6949,12 @@
 "icon": 56378,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47287,
-"zh": "",
+"zh": "宇宙駕駛員矮靴",
 "ja": "コスモパイロット・ブーツ",
 "en": "Star Pilot Boots",
 "slot": "腳部",
@@ -6965,17 +6965,17 @@
 "icon": 57883,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 }
 ],
-"cjc_name": "All Classes",
-"zh_ok": false
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"zh_ok": true
 },
 {
 "id": "mirage:47718",
 "layer": "mirage",
-"name_zh": "",
+"name_zh": "宇宙艦長套裝",
 "name_ja": "コスモキャプテン・アタイア",
 "name_en": "Star Captain Attire",
 "source": "🎁幻化套裝箱",
@@ -6983,7 +6983,7 @@
 "pieces": [
 {
 "id": 47279,
-"zh": "",
+"zh": "宇宙艦長帽",
 "ja": "コスモキャプテン・ハット",
 "en": "Star Captain Hat",
 "slot": "頭部",
@@ -6994,12 +6994,12 @@
 "icon": 56870,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
-"src": "🪙宇宙信用點數×4800"
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"src": "🪙宇宙信用點數×4800（梅蘇艾東克）"
 },
 {
 "id": 47280,
-"zh": "",
+"zh": "宇宙艦長大衣",
 "ja": "コスモキャプテン・コート",
 "en": "Star Captain Coat",
 "slot": "上身",
@@ -7010,12 +7010,12 @@
 "icon": 57289,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
-"src": "🪙宇宙信用點數×8400"
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"src": "🪙宇宙信用點數×8400（梅蘇艾東克）"
 },
 {
 "id": 47281,
-"zh": "",
+"zh": "宇宙艦長手套",
 "ja": "コスモキャプテン・グローブ",
 "en": "Star Captain Gloves",
 "slot": "手部",
@@ -7026,12 +7026,12 @@
 "icon": 56379,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
-"src": "🪙宇宙信用點數×4800"
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"src": "🪙宇宙信用點數×4800（梅蘇艾東克）"
 },
 {
 "id": 47282,
-"zh": "",
+"zh": "宇宙艦長軟甲褲",
 "ja": "コスモキャプテン・トラウザー",
 "en": "Star Captain Trousers",
 "slot": "腿部",
@@ -7042,12 +7042,12 @@
 "icon": 57794,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
-"src": "🪙宇宙信用點數×7200"
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"src": "🪙宇宙信用點數×7200（梅蘇艾東克）"
 },
 {
 "id": 47283,
-"zh": "",
+"zh": "宇宙艦長皮靴",
 "ja": "コスモキャプテン・ブーツ",
 "en": "Star Captain Boots",
 "slot": "腳部",
@@ -7058,25 +7058,25 @@
 "icon": 57884,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
-"src": "🪙宇宙信用點數×4800"
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"src": "🪙宇宙信用點數×4800（梅蘇艾東克）"
 }
 ],
-"cjc_name": "All Classes",
-"zh_ok": false
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"zh_ok": true
 },
 {
 "id": "src:cfd4be41:76:750",
 "layer": "src",
-"name_zh": "",
+"name_zh": "改良型典禮制敵",
 "name_ja": "セレモニアル・スレイヤー",
 "name_en": "Augmented Ceremonial",
-"source": "🪙兌換",
+"source": "🪙兌換：永護塔的二類票據",
 "patch": "7.3",
 "pieces": [
 {
 "id": 46922,
-"zh": "",
+"zh": "改良型典禮制敵護耳帽",
 "ja": "セレモニアル・スレイヤーフラップキャップRE",
 "en": "Augmented Ceremonial Longcap of Maiming",
 "slot": "頭部",
@@ -7087,12 +7087,12 @@
 "icon": 56826,
 "ilvl": 750,
 "cjc": 76,
-"cjc_name": "",
-"src": "🪙兌換×11（艾蓮涅）"
+"cjc_name": "LNC DRG RPR",
+"src": "🪙永護塔的二類票據×11（艾蓮涅）"
 },
 {
 "id": 46923,
-"zh": "",
+"zh": "改良型典禮制敵護甲",
 "ja": "セレモニアル・スレイヤーコースリットRE",
 "en": "Augmented Ceremonial Corselet of Maiming",
 "slot": "上身",
@@ -7103,12 +7103,12 @@
 "icon": 57218,
 "ilvl": 750,
 "cjc": 76,
-"cjc_name": "",
-"src": "🪙兌換×17（艾蓮涅）"
+"cjc_name": "LNC DRG RPR",
+"src": "🪙永護塔的二類票據×17（艾蓮涅）"
 },
 {
 "id": 46924,
-"zh": "",
+"zh": "改良型典禮制敵臂甲",
 "ja": "セレモニアル・スレイヤーヴァンブレイスRE",
 "en": "Augmented Ceremonial Vambraces of Maiming",
 "slot": "手部",
@@ -7119,12 +7119,12 @@
 "icon": 56333,
 "ilvl": 750,
 "cjc": 76,
-"cjc_name": "",
-"src": "🪙兌換×11（艾蓮涅）"
+"cjc_name": "LNC DRG RPR",
+"src": "🪙永護塔的二類票據×11（艾蓮涅）"
 },
 {
 "id": 46925,
-"zh": "",
+"zh": "改良型典禮制敵騎兵褲",
 "ja": "セレモニアル・スレイヤーホーズRE",
 "en": "Augmented Ceremonial Hose of Maiming",
 "slot": "腿部",
@@ -7135,12 +7135,12 @@
 "icon": 57745,
 "ilvl": 750,
 "cjc": 76,
-"cjc_name": "",
-"src": "🪙兌換×17（艾蓮涅）"
+"cjc_name": "LNC DRG RPR",
+"src": "🪙永護塔的二類票據×17（艾蓮涅）"
 },
 {
 "id": 46926,
-"zh": "",
+"zh": "改良型典禮制敵脛甲",
 "ja": "セレモニアル・スレイヤーグリーヴRE",
 "en": "Augmented Ceremonial Greaves of Maiming",
 "slot": "腳部",
@@ -7151,25 +7151,25 @@
 "icon": 57835,
 "ilvl": 750,
 "cjc": 76,
-"cjc_name": "",
-"src": "🪙兌換×11（艾蓮涅）"
+"cjc_name": "LNC DRG RPR",
+"src": "🪙永護塔的二類票據×11（艾蓮涅）"
 }
 ],
 "cjc_name": "LNC DRG RPR",
-"zh_ok": false
+"zh_ok": true
 },
 {
 "id": "src:cfd4be41:66:750",
 "layer": "src",
-"name_zh": "",
+"name_zh": "改良型典禮精準",
 "name_ja": "セレモニアル・レンジャー",
 "name_en": "Augmented Ceremonial",
-"source": "🪙兌換",
+"source": "🪙兌換：永護塔的二類票據",
 "patch": "7.3",
 "pieces": [
 {
 "id": 46932,
-"zh": "",
+"zh": "改良型典禮精準護耳帽",
 "ja": "セレモニアル・レンジャーフラップキャップRE",
 "en": "Augmented Ceremonial Longcap of Aiming",
 "slot": "頭部",
@@ -7180,12 +7180,12 @@
 "icon": 56827,
 "ilvl": 750,
 "cjc": 66,
-"cjc_name": "",
-"src": "🪙兌換×11（艾蓮涅）"
+"cjc_name": "ARC BRD MCH DNC",
+"src": "🪙永護塔的二類票據×11（艾蓮涅）"
 },
 {
 "id": 46933,
-"zh": "",
+"zh": "改良型典禮精準坎肩",
 "ja": "セレモニアル・レンジャーベストRE",
 "en": "Augmented Ceremonial Vest of Aiming",
 "slot": "上身",
@@ -7196,12 +7196,12 @@
 "icon": 57222,
 "ilvl": 750,
 "cjc": 66,
-"cjc_name": "",
-"src": "🪙兌換×17（艾蓮涅）"
+"cjc_name": "ARC BRD MCH DNC",
+"src": "🪙永護塔的二類票據×17（艾蓮涅）"
 },
 {
 "id": 46934,
-"zh": "",
+"zh": "改良型典禮精準護臂",
 "ja": "セレモニアル・レンジャーアームガードRE",
 "en": "Augmented Ceremonial Armguards of Aiming",
 "slot": "手部",
@@ -7212,12 +7212,12 @@
 "icon": 56337,
 "ilvl": 750,
 "cjc": 66,
-"cjc_name": "",
-"src": "🪙兌換×11（艾蓮涅）"
+"cjc_name": "ARC BRD MCH DNC",
+"src": "🪙永護塔的二類票據×11（艾蓮涅）"
 },
 {
 "id": 46935,
-"zh": "",
+"zh": "改良型典禮精準寬鬆直筒褲",
 "ja": "セレモニアル・レンジャーワイドパンツRE",
 "en": "Augmented Ceremonial Culottes of Aiming",
 "slot": "腿部",
@@ -7228,12 +7228,12 @@
 "icon": 57747,
 "ilvl": 750,
 "cjc": 66,
-"cjc_name": "",
-"src": "🪙兌換×17（艾蓮涅）"
+"cjc_name": "ARC BRD MCH DNC",
+"src": "🪙永護塔的二類票據×17（艾蓮涅）"
 },
 {
 "id": 46936,
-"zh": "",
+"zh": "改良型典禮精準尖頭靴",
 "ja": "セレモニアル・レンジャークラコーRE",
 "en": "Augmented Ceremonial Crakows of Aiming",
 "slot": "腳部",
@@ -7244,25 +7244,25 @@
 "icon": 57839,
 "ilvl": 750,
 "cjc": 66,
-"cjc_name": "",
-"src": "🪙兌換×11（艾蓮涅）"
+"cjc_name": "ARC BRD MCH DNC",
+"src": "🪙永護塔的二類票據×11（艾蓮涅）"
 }
 ],
 "cjc_name": "ARC BRD MCH DNC",
-"zh_ok": false
+"zh_ok": true
 },
 {
 "id": "src:cfd4be41:65:750",
 "layer": "src",
-"name_zh": "",
+"name_zh": "改良型典禮強襲",
 "name_ja": "セレモニアル・ストライカー",
 "name_en": "Augmented Ceremonial",
-"source": "🪙兌換",
+"source": "🪙兌換：永護塔的二類票據",
 "patch": "7.3",
 "pieces": [
 {
 "id": 46927,
-"zh": "",
+"zh": "改良型典禮強襲護耳帽",
 "ja": "セレモニアル・ストライカーフラップキャップRE",
 "en": "Augmented Ceremonial Longcap of Striking",
 "slot": "頭部",
@@ -7273,12 +7273,12 @@
 "icon": 56830,
 "ilvl": 750,
 "cjc": 65,
-"cjc_name": "",
-"src": "🪙兌換×11（艾蓮涅）"
+"cjc_name": "PGL MNK SAM",
+"src": "🪙永護塔的二類票據×11（艾蓮涅）"
 },
 {
 "id": 46928,
-"zh": "",
+"zh": "改良型典禮強襲坎肩",
 "ja": "セレモニアル・ストライカーベストRE",
 "en": "Augmented Ceremonial Vest of Striking",
 "slot": "上身",
@@ -7289,12 +7289,12 @@
 "icon": 57221,
 "ilvl": 750,
 "cjc": 65,
-"cjc_name": "",
-"src": "🪙兌換×17（艾蓮涅）"
+"cjc_name": "PGL MNK SAM",
+"src": "🪙永護塔的二類票據×17（艾蓮涅）"
 },
 {
 "id": 46929,
-"zh": "",
+"zh": "改良型典禮強襲護臂",
 "ja": "セレモニアル・ストライカーアームガードRE",
 "en": "Augmented Ceremonial Armguards of Striking",
 "slot": "手部",
@@ -7305,12 +7305,12 @@
 "icon": 56336,
 "ilvl": 750,
 "cjc": 65,
-"cjc_name": "",
-"src": "🪙兌換×11（艾蓮涅）"
+"cjc_name": "PGL MNK SAM",
+"src": "🪙永護塔的二類票據×11（艾蓮涅）"
 },
 {
 "id": 46930,
-"zh": "",
+"zh": "改良型典禮強襲寬鬆直筒褲",
 "ja": "セレモニアル・ストライカーワイドパンツRE",
 "en": "Augmented Ceremonial Culottes of Striking",
 "slot": "腿部",
@@ -7321,12 +7321,12 @@
 "icon": 57746,
 "ilvl": 750,
 "cjc": 65,
-"cjc_name": "",
-"src": "🪙兌換×17（艾蓮涅）"
+"cjc_name": "PGL MNK SAM",
+"src": "🪙永護塔的二類票據×17（艾蓮涅）"
 },
 {
 "id": 46931,
-"zh": "",
+"zh": "改良型典禮強襲尖頭靴",
 "ja": "セレモニアル・ストライカークラコーRE",
 "en": "Augmented Ceremonial Crakows of Striking",
 "slot": "腳部",
@@ -7337,25 +7337,25 @@
 "icon": 57838,
 "ilvl": 750,
 "cjc": 65,
-"cjc_name": "",
-"src": "🪙兌換×11（艾蓮涅）"
+"cjc_name": "PGL MNK SAM",
+"src": "🪙永護塔的二類票據×11（艾蓮涅）"
 }
 ],
-"cjc_name": "PGL MNK SAM BST",
-"zh_ok": false
+"cjc_name": "PGL MNK SAM",
+"zh_ok": true
 },
 {
 "id": "src:cfd4be41:64:750",
 "layer": "src",
-"name_zh": "",
+"name_zh": "改良型典禮治癒",
 "name_ja": "セレモニアル・ヒーラー",
 "name_en": "Augmented Ceremonial",
-"source": "🪙兌換",
+"source": "🪙兌換：永護塔的二類票據",
 "patch": "7.3",
 "pieces": [
 {
 "id": 46942,
-"zh": "",
+"zh": "改良型典禮治癒兜帽",
 "ja": "セレモニアル・ヒーラーフードRE",
 "en": "Augmented Ceremonial Hood of Healing",
 "slot": "頭部",
@@ -7366,12 +7366,12 @@
 "icon": 56828,
 "ilvl": 750,
 "cjc": 64,
-"cjc_name": "",
-"src": "🪙兌換×11（艾蓮涅）"
+"cjc_name": "CNJ WHM SCH AST SGE",
+"src": "🪙永護塔的二類票據×11（艾蓮涅）"
 },
 {
 "id": 46943,
-"zh": "",
+"zh": "改良型典禮治癒束腰衣",
 "ja": "セレモニアル・ヒーラーチュニックRE",
 "en": "Augmented Ceremonial Tunic of Healing",
 "slot": "上身",
@@ -7382,12 +7382,12 @@
 "icon": 57219,
 "ilvl": 750,
 "cjc": 64,
-"cjc_name": "",
-"src": "🪙兌換×17（艾蓮涅）"
+"cjc_name": "CNJ WHM SCH AST SGE",
+"src": "🪙永護塔的二類票據×17（艾蓮涅）"
 },
 {
 "id": 46944,
-"zh": "",
+"zh": "改良型典禮治癒手套",
 "ja": "セレモニアル・ヒーラーグローブRE",
 "en": "Augmented Ceremonial Gloves of Healing",
 "slot": "手部",
@@ -7398,12 +7398,12 @@
 "icon": 56334,
 "ilvl": 750,
 "cjc": 64,
-"cjc_name": "",
-"src": "🪙兌換×11（艾蓮涅）"
+"cjc_name": "CNJ WHM SCH AST SGE",
+"src": "🪙永護塔的二類票據×11（艾蓮涅）"
 },
 {
 "id": 46945,
-"zh": "",
+"zh": "改良型典禮治癒騎兵褲",
 "ja": "セレモニアル・ヒーラーホーズRE",
 "en": "Augmented Ceremonial Hose of Healing",
 "slot": "腿部",
@@ -7414,12 +7414,12 @@
 "icon": 57744,
 "ilvl": 750,
 "cjc": 64,
-"cjc_name": "",
-"src": "🪙兌換×17（艾蓮涅）"
+"cjc_name": "CNJ WHM SCH AST SGE",
+"src": "🪙永護塔的二類票據×17（艾蓮涅）"
 },
 {
 "id": 46946,
-"zh": "",
+"zh": "改良型典禮治癒長靴",
 "ja": "セレモニアル・ヒーラーサイブーツRE",
 "en": "Augmented Ceremonial Thighboots of Healing",
 "slot": "腳部",
@@ -7430,12 +7430,12 @@
 "icon": 57836,
 "ilvl": 750,
 "cjc": 64,
-"cjc_name": "",
-"src": "🪙兌換×11（艾蓮涅）"
+"cjc_name": "CNJ WHM SCH AST SGE",
+"src": "🪙永護塔的二類票據×11（艾蓮涅）"
 },
 {
 "id": 46955,
-"zh": "",
+"zh": "改良型典禮治癒耳墜",
 "ja": "セレモニアル・ヒーラーイヤリングRE",
 "en": "Augmented Ceremonial Earring of Healing",
 "slot": "耳飾",
@@ -7446,12 +7446,12 @@
 "icon": 55549,
 "ilvl": 750,
 "cjc": 64,
-"cjc_name": "",
-"src": "🪙兌換×7（艾蓮涅）"
+"cjc_name": "CNJ WHM SCH AST SGE",
+"src": "🪙永護塔的二類票據×7（艾蓮涅）"
 },
 {
 "id": 46960,
-"zh": "",
+"zh": "改良型典禮治癒項鍊",
 "ja": "セレモニアル・ヒーラーネックレスRE",
 "en": "Augmented Ceremonial Necklace of Healing",
 "slot": "項鍊",
@@ -7462,12 +7462,12 @@
 "icon": 55100,
 "ilvl": 750,
 "cjc": 64,
-"cjc_name": "",
-"src": "🪙兌換×7（艾蓮涅）"
+"cjc_name": "CNJ WHM SCH AST SGE",
+"src": "🪙永護塔的二類票據×7（艾蓮涅）"
 },
 {
 "id": 46965,
-"zh": "",
+"zh": "改良型典禮治癒手鐲",
 "ja": "セレモニアル・ヒーラーバングルRE",
 "en": "Augmented Ceremonial Bangle of Healing",
 "slot": "手鐲",
@@ -7478,12 +7478,12 @@
 "icon": 55898,
 "ilvl": 750,
 "cjc": 64,
-"cjc_name": "",
-"src": "🪙兌換×7（艾蓮涅）"
+"cjc_name": "CNJ WHM SCH AST SGE",
+"src": "🪙永護塔的二類票據×7（艾蓮涅）"
 },
 {
 "id": 46970,
-"zh": "",
+"zh": "改良型典禮治癒指環",
 "ja": "セレモニアル・ヒーラーリングRE",
 "en": "Augmented Ceremonial Ring of Healing",
 "slot": "戒指",
@@ -7494,25 +7494,25 @@
 "icon": 54750,
 "ilvl": 750,
 "cjc": 64,
-"cjc_name": "",
-"src": "🪙兌換×7（艾蓮涅）"
+"cjc_name": "CNJ WHM SCH AST SGE",
+"src": "🪙永護塔的二類票據×7（艾蓮涅）"
 }
 ],
 "cjc_name": "CNJ WHM SCH AST SGE",
-"zh_ok": false
+"zh_ok": true
 },
 {
 "id": "src:cfd4be41:63:750",
 "layer": "src",
-"name_zh": "",
+"name_zh": "改良型典禮詠咒",
 "name_ja": "セレモニアル・キャスター",
 "name_en": "Augmented Ceremonial",
-"source": "🪙兌換",
+"source": "🪙兌換：永護塔的二類票據",
 "patch": "7.3",
 "pieces": [
 {
 "id": 46947,
-"zh": "",
+"zh": "改良型典禮詠咒兜帽",
 "ja": "セレモニアル・キャスターフードRE",
 "en": "Augmented Ceremonial Hood of Casting",
 "slot": "頭部",
@@ -7523,12 +7523,12 @@
 "icon": 56829,
 "ilvl": 750,
 "cjc": 63,
-"cjc_name": "",
-"src": "🪙兌換×11（艾蓮涅）"
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
+"src": "🪙永護塔的二類票據×11（艾蓮涅）"
 },
 {
 "id": 46948,
-"zh": "",
+"zh": "改良型典禮詠咒束腰衣",
 "ja": "セレモニアル・キャスターチュニックRE",
 "en": "Augmented Ceremonial Tunic of Casting",
 "slot": "上身",
@@ -7539,12 +7539,12 @@
 "icon": 57220,
 "ilvl": 750,
 "cjc": 63,
-"cjc_name": "",
-"src": "🪙兌換×17（艾蓮涅）"
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
+"src": "🪙永護塔的二類票據×17（艾蓮涅）"
 },
 {
 "id": 46949,
-"zh": "",
+"zh": "改良型典禮詠咒手套",
 "ja": "セレモニアル・キャスターグローブRE",
 "en": "Augmented Ceremonial Gloves of Casting",
 "slot": "手部",
@@ -7555,12 +7555,12 @@
 "icon": 56335,
 "ilvl": 750,
 "cjc": 63,
-"cjc_name": "",
-"src": "🪙兌換×11（艾蓮涅）"
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
+"src": "🪙永護塔的二類票據×11（艾蓮涅）"
 },
 {
 "id": 46950,
-"zh": "",
+"zh": "改良型典禮詠咒騎兵褲",
 "ja": "セレモニアル・キャスターホーズRE",
 "en": "Augmented Ceremonial Hose of Casting",
 "slot": "腿部",
@@ -7571,12 +7571,12 @@
 "icon": 57743,
 "ilvl": 750,
 "cjc": 63,
-"cjc_name": "",
-"src": "🪙兌換×17（艾蓮涅）"
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
+"src": "🪙永護塔的二類票據×17（艾蓮涅）"
 },
 {
 "id": 46951,
-"zh": "",
+"zh": "改良型典禮詠咒長靴",
 "ja": "セレモニアル・キャスターサイブーツRE",
 "en": "Augmented Ceremonial Thighboots of Casting",
 "slot": "腳部",
@@ -7587,12 +7587,12 @@
 "icon": 57837,
 "ilvl": 750,
 "cjc": 63,
-"cjc_name": "",
-"src": "🪙兌換×11（艾蓮涅）"
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
+"src": "🪙永護塔的二類票據×11（艾蓮涅）"
 },
 {
 "id": 46956,
-"zh": "",
+"zh": "改良型典禮詠咒耳墜",
 "ja": "セレモニアル・キャスターイヤリングRE",
 "en": "Augmented Ceremonial Earring of Casting",
 "slot": "耳飾",
@@ -7603,12 +7603,12 @@
 "icon": 55549,
 "ilvl": 750,
 "cjc": 63,
-"cjc_name": "",
-"src": "🪙兌換×7（艾蓮涅）"
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
+"src": "🪙永護塔的二類票據×7（艾蓮涅）"
 },
 {
 "id": 46961,
-"zh": "",
+"zh": "改良型典禮詠咒項鍊",
 "ja": "セレモニアル・キャスターネックレスRE",
 "en": "Augmented Ceremonial Necklace of Casting",
 "slot": "項鍊",
@@ -7619,12 +7619,12 @@
 "icon": 55100,
 "ilvl": 750,
 "cjc": 63,
-"cjc_name": "",
-"src": "🪙兌換×7（艾蓮涅）"
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
+"src": "🪙永護塔的二類票據×7（艾蓮涅）"
 },
 {
 "id": 46966,
-"zh": "",
+"zh": "改良型典禮詠咒手鐲",
 "ja": "セレモニアル・キャスターバングルRE",
 "en": "Augmented Ceremonial Bangle of Casting",
 "slot": "手鐲",
@@ -7635,12 +7635,12 @@
 "icon": 55898,
 "ilvl": 750,
 "cjc": 63,
-"cjc_name": "",
-"src": "🪙兌換×7（艾蓮涅）"
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
+"src": "🪙永護塔的二類票據×7（艾蓮涅）"
 },
 {
 "id": 46971,
-"zh": "",
+"zh": "改良型典禮詠咒指環",
 "ja": "セレモニアル・キャスターリングRE",
 "en": "Augmented Ceremonial Ring of Casting",
 "slot": "戒指",
@@ -7651,25 +7651,25 @@
 "icon": 54750,
 "ilvl": 750,
 "cjc": 63,
-"cjc_name": "",
-"src": "🪙兌換×7（艾蓮涅）"
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
+"src": "🪙永護塔的二類票據×7（艾蓮涅）"
 }
 ],
-"cjc_name": "THM ACN BLM SMN RDM BLU PCT",
-"zh_ok": false
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
+"zh_ok": true
 },
 {
 "id": "src:cfd4be41:59:750",
 "layer": "src",
-"name_zh": "",
+"name_zh": "改良型典禮禦敵",
 "name_ja": "セレモニアル・ディフェンダー",
 "name_en": "Augmented Ceremonial",
-"source": "🪙兌換",
+"source": "🪙兌換：永護塔的二類票據",
 "patch": "7.3",
 "pieces": [
 {
 "id": 46917,
-"zh": "",
+"zh": "改良型典禮禦敵護耳帽",
 "ja": "セレモニアル・ディフェンダーフラップキャップRE",
 "en": "Augmented Ceremonial Longcap of Fending",
 "slot": "頭部",
@@ -7680,12 +7680,12 @@
 "icon": 56825,
 "ilvl": 750,
 "cjc": 59,
-"cjc_name": "",
-"src": "🪙兌換×11（艾蓮涅）"
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
+"src": "🪙永護塔的二類票據×11（艾蓮涅）"
 },
 {
 "id": 46918,
-"zh": "",
+"zh": "改良型典禮禦敵護甲",
 "ja": "セレモニアル・ディフェンダーコースリットRE",
 "en": "Augmented Ceremonial Corselet of Fending",
 "slot": "上身",
@@ -7696,12 +7696,12 @@
 "icon": 57217,
 "ilvl": 750,
 "cjc": 59,
-"cjc_name": "",
-"src": "🪙兌換×17（艾蓮涅）"
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
+"src": "🪙永護塔的二類票據×17（艾蓮涅）"
 },
 {
 "id": 46919,
-"zh": "",
+"zh": "改良型典禮禦敵臂甲",
 "ja": "セレモニアル・ディフェンダーヴァンブレイスRE",
 "en": "Augmented Ceremonial Vambraces of Fending",
 "slot": "手部",
@@ -7712,12 +7712,12 @@
 "icon": 56332,
 "ilvl": 750,
 "cjc": 59,
-"cjc_name": "",
-"src": "🪙兌換×11（艾蓮涅）"
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
+"src": "🪙永護塔的二類票據×11（艾蓮涅）"
 },
 {
 "id": 46920,
-"zh": "",
+"zh": "改良型典禮禦敵騎兵褲",
 "ja": "セレモニアル・ディフェンダーホーズRE",
 "en": "Augmented Ceremonial Hose of Fending",
 "slot": "腿部",
@@ -7728,12 +7728,12 @@
 "icon": 57742,
 "ilvl": 750,
 "cjc": 59,
-"cjc_name": "",
-"src": "🪙兌換×17（艾蓮涅）"
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
+"src": "🪙永護塔的二類票據×17（艾蓮涅）"
 },
 {
 "id": 46921,
-"zh": "",
+"zh": "改良型典禮禦敵脛甲",
 "ja": "セレモニアル・ディフェンダーグリーヴRE",
 "en": "Augmented Ceremonial Greaves of Fending",
 "slot": "腳部",
@@ -7744,12 +7744,12 @@
 "icon": 57834,
 "ilvl": 750,
 "cjc": 59,
-"cjc_name": "",
-"src": "🪙兌換×11（艾蓮涅）"
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
+"src": "🪙永護塔的二類票據×11（艾蓮涅）"
 },
 {
 "id": 46952,
-"zh": "",
+"zh": "改良型典禮禦敵耳墜",
 "ja": "セレモニアル・ディフェンダーイヤリングRE",
 "en": "Augmented Ceremonial Earring of Fending",
 "slot": "耳飾",
@@ -7760,12 +7760,12 @@
 "icon": 55549,
 "ilvl": 750,
 "cjc": 59,
-"cjc_name": "",
-"src": "🪙兌換×7（艾蓮涅）"
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
+"src": "🪙永護塔的二類票據×7（艾蓮涅）"
 },
 {
 "id": 46957,
-"zh": "",
+"zh": "改良型典禮禦敵項鍊",
 "ja": "セレモニアル・ディフェンダーネックレスRE",
 "en": "Augmented Ceremonial Necklace of Fending",
 "slot": "項鍊",
@@ -7776,12 +7776,12 @@
 "icon": 55100,
 "ilvl": 750,
 "cjc": 59,
-"cjc_name": "",
-"src": "🪙兌換×7（艾蓮涅）"
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
+"src": "🪙永護塔的二類票據×7（艾蓮涅）"
 },
 {
 "id": 46962,
-"zh": "",
+"zh": "改良型典禮禦敵手鐲",
 "ja": "セレモニアル・ディフェンダーバングルRE",
 "en": "Augmented Ceremonial Bangle of Fending",
 "slot": "手鐲",
@@ -7792,12 +7792,12 @@
 "icon": 55898,
 "ilvl": 750,
 "cjc": 59,
-"cjc_name": "",
-"src": "🪙兌換×7（艾蓮涅）"
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
+"src": "🪙永護塔的二類票據×7（艾蓮涅）"
 },
 {
 "id": 46967,
-"zh": "",
+"zh": "改良型典禮禦敵指環",
 "ja": "セレモニアル・ディフェンダーリングRE",
 "en": "Augmented Ceremonial Ring of Fending",
 "slot": "戒指",
@@ -7808,25 +7808,25 @@
 "icon": 54750,
 "ilvl": 750,
 "cjc": 59,
-"cjc_name": "",
-"src": "🪙兌換×7（艾蓮涅）"
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
+"src": "🪙永護塔的二類票據×7（艾蓮涅）"
 }
 ],
 "cjc_name": "GLA MRD PLD WAR DRK GNB",
-"zh_ok": false
+"zh_ok": true
 },
 {
 "id": "src:cfd4be41:103:750",
 "layer": "src",
-"name_zh": "",
+"name_zh": "改良型典禮游擊",
 "name_ja": "セレモニアル・スカウト",
 "name_en": "Augmented Ceremonial",
-"source": "🪙兌換",
+"source": "🪙兌換：永護塔的二類票據",
 "patch": "7.3",
 "pieces": [
 {
 "id": 46937,
-"zh": "",
+"zh": "改良型典禮游擊護耳帽",
 "ja": "セレモニアル・スカウトフラップキャップRE",
 "en": "Augmented Ceremonial Longcap of Scouting",
 "slot": "頭部",
@@ -7837,12 +7837,12 @@
 "icon": 56831,
 "ilvl": 750,
 "cjc": 103,
-"cjc_name": "",
-"src": "🪙兌換×11（艾蓮涅）"
+"cjc_name": "ROG NIN VPR",
+"src": "🪙永護塔的二類票據×11（艾蓮涅）"
 },
 {
 "id": 46938,
-"zh": "",
+"zh": "改良型典禮游擊坎肩",
 "ja": "セレモニアル・スカウトベストRE",
 "en": "Augmented Ceremonial Vest of Scouting",
 "slot": "上身",
@@ -7853,12 +7853,12 @@
 "icon": 57223,
 "ilvl": 750,
 "cjc": 103,
-"cjc_name": "",
-"src": "🪙兌換×17（艾蓮涅）"
+"cjc_name": "ROG NIN VPR",
+"src": "🪙永護塔的二類票據×17（艾蓮涅）"
 },
 {
 "id": 46939,
-"zh": "",
+"zh": "改良型典禮游擊護臂",
 "ja": "セレモニアル・スカウトアームガードRE",
 "en": "Augmented Ceremonial Armguards of Scouting",
 "slot": "手部",
@@ -7869,12 +7869,12 @@
 "icon": 56338,
 "ilvl": 750,
 "cjc": 103,
-"cjc_name": "",
-"src": "🪙兌換×11（艾蓮涅）"
+"cjc_name": "ROG NIN VPR",
+"src": "🪙永護塔的二類票據×11（艾蓮涅）"
 },
 {
 "id": 46940,
-"zh": "",
+"zh": "改良型典禮游擊寬鬆直筒褲",
 "ja": "セレモニアル・スカウトワイドパンツRE",
 "en": "Augmented Ceremonial Culottes of Scouting",
 "slot": "腿部",
@@ -7885,12 +7885,12 @@
 "icon": 57748,
 "ilvl": 750,
 "cjc": 103,
-"cjc_name": "",
-"src": "🪙兌換×17（艾蓮涅）"
+"cjc_name": "ROG NIN VPR",
+"src": "🪙永護塔的二類票據×17（艾蓮涅）"
 },
 {
 "id": 46941,
-"zh": "",
+"zh": "改良型典禮游擊尖頭靴",
 "ja": "セレモニアル・スカウトクラコーRE",
 "en": "Augmented Ceremonial Crakows of Scouting",
 "slot": "腳部",
@@ -7901,12 +7901,663 @@
 "icon": 57840,
 "ilvl": 750,
 "cjc": 103,
-"cjc_name": "",
-"src": "🪙兌換×11（艾蓮涅）"
+"cjc_name": "ROG NIN VPR",
+"src": "🪙永護塔的二類票據×11（艾蓮涅）"
 }
 ],
 "cjc_name": "ROG NIN VPR",
-"zh_ok": false
+"zh_ok": true
+},
+{
+"id": "src:5b112c4d:76:750",
+"layer": "src",
+"name_zh": "沃・克勞德制敵",
+"name_ja": "ウォークラウド・スレイヤー",
+"name_en": "War Cloud's",
+"source": "🗡️桑多利亞：第二巡行",
+"patch": "7.3",
+"pieces": [
+{
+"id": 46865,
+"zh": "沃・克勞德制敵頭盔",
+"ja": "ウォークラウド・スレイヤーヘルム",
+"en": "War Cloud's Helm of Maiming",
+"slot": "頭部",
+"patch": "7.3",
+"lv": 100,
+"dye": 2,
+"mb": false,
+"icon": 56861,
+"ilvl": 750,
+"cjc": 76,
+"cjc_name": "LNC DRG RPR",
+"src": "🗡️桑多利亞：第二巡行（聯隊突擊）"
+},
+{
+"id": 46866,
+"zh": "沃・克勞德制敵戰鎧",
+"ja": "ウォークラウド・スレイヤーメイル",
+"en": "War Cloud's Mail of Maiming",
+"slot": "上身",
+"patch": "7.3",
+"lv": 100,
+"dye": 2,
+"mb": false,
+"icon": 57264,
+"ilvl": 750,
+"cjc": 76,
+"cjc_name": "LNC DRG RPR",
+"src": "🗡️桑多利亞：第二巡行（聯隊突擊）"
+},
+{
+"id": 46867,
+"zh": "沃・克勞德制敵手鎧",
+"ja": "ウォークラウド・スレイヤーガントレット",
+"en": "War Cloud's Gauntlets of Maiming",
+"slot": "手部",
+"patch": "7.3",
+"lv": 100,
+"dye": 2,
+"mb": false,
+"icon": 56369,
+"ilvl": 750,
+"cjc": 76,
+"cjc_name": "LNC DRG RPR",
+"src": "🗡️桑多利亞：第二巡行（聯隊突擊）"
+},
+{
+"id": 46868,
+"zh": "沃・克勞德制敵馬褲",
+"ja": "ウォークラウド・スレイヤーブリーチ",
+"en": "War Cloud's Breeches of Maiming",
+"slot": "腿部",
+"patch": "7.3",
+"lv": 100,
+"dye": 2,
+"mb": false,
+"icon": 57785,
+"ilvl": 750,
+"cjc": 76,
+"cjc_name": "LNC DRG RPR",
+"src": "🗡️桑多利亞：第二巡行（聯隊突擊）"
+},
+{
+"id": 46869,
+"zh": "沃・克勞德制敵長靴",
+"ja": "ウォークラウド・スレイヤーブーツ",
+"en": "War Cloud's Boots of Maiming",
+"slot": "腳部",
+"patch": "7.3",
+"lv": 100,
+"dye": 2,
+"mb": false,
+"icon": 57874,
+"ilvl": 750,
+"cjc": 76,
+"cjc_name": "LNC DRG RPR",
+"src": "🗡️桑多利亞：第二巡行（聯隊突擊）"
+}
+],
+"cjc_name": "LNC DRG RPR",
+"zh_ok": true
+},
+{
+"id": "src:5b112c4d:66:750",
+"layer": "src",
+"name_zh": "馬雅科夫精準",
+"name_ja": "マヤコフ・レンジャー",
+"name_en": "Mayakov",
+"source": "🗡️桑多利亞：第二巡行",
+"patch": "7.3",
+"pieces": [
+{
+"id": 46875,
+"zh": "馬雅科夫精準髮夾",
+"ja": "マヤコフ・レンジャーヘアピン",
+"en": "Mayakov Hairpin of Aiming",
+"slot": "頭部",
+"patch": "7.3",
+"lv": 100,
+"dye": 2,
+"mb": false,
+"icon": 56865,
+"ilvl": 750,
+"cjc": 66,
+"cjc_name": "ARC BRD MCH DNC",
+"src": "🗡️桑多利亞：第二巡行（聯隊突擊）"
+},
+{
+"id": 46876,
+"zh": "馬雅科夫精準舞衣",
+"ja": "マヤコフ・レンジャーカザク",
+"en": "Mayakov Casaque of Aiming",
+"slot": "上身",
+"patch": "7.3",
+"lv": 100,
+"dye": 2,
+"mb": false,
+"icon": 57268,
+"ilvl": 750,
+"cjc": 66,
+"cjc_name": "ARC BRD MCH DNC",
+"src": "🗡️桑多利亞：第二巡行（聯隊突擊）"
+},
+{
+"id": 46877,
+"zh": "馬雅科夫精準手箍",
+"ja": "マヤコフ・レンジャーリングバンド",
+"en": "Mayakov Ringbands of Aiming",
+"slot": "手部",
+"patch": "7.3",
+"lv": 100,
+"dye": 2,
+"mb": false,
+"icon": 56373,
+"ilvl": 750,
+"cjc": 66,
+"cjc_name": "ARC BRD MCH DNC",
+"src": "🗡️桑多利亞：第二巡行（聯隊突擊）"
+},
+{
+"id": 46878,
+"zh": "馬雅科夫精準緊身褲",
+"ja": "マヤコフ・レンジャータイツ",
+"en": "Mayakov Tights of Aiming",
+"slot": "腿部",
+"patch": "7.3",
+"lv": 100,
+"dye": 2,
+"mb": false,
+"icon": 57789,
+"ilvl": 750,
+"cjc": 66,
+"cjc_name": "ARC BRD MCH DNC",
+"src": "🗡️桑多利亞：第二巡行（聯隊突擊）"
+},
+{
+"id": 46879,
+"zh": "馬雅科夫精準舞鞋",
+"ja": "マヤコフ・レンジャートーシューズ",
+"en": "Mayakov Shoes of Aiming",
+"slot": "腳部",
+"patch": "7.3",
+"lv": 100,
+"dye": 2,
+"mb": false,
+"icon": 57878,
+"ilvl": 750,
+"cjc": 66,
+"cjc_name": "ARC BRD MCH DNC",
+"src": "🗡️桑多利亞：第二巡行（聯隊突擊）"
+}
+],
+"cjc_name": "ARC BRD MCH DNC",
+"zh_ok": true
+},
+{
+"id": "src:5b112c4d:65:750",
+"layer": "src",
+"name_zh": "普莉修強襲",
+"name_ja": "プリッシュ・ストライカー",
+"name_en": "Prishe's",
+"source": "🗡️桑多利亞：第二巡行",
+"patch": "7.3",
+"pieces": [
+{
+"id": 46870,
+"zh": "普莉修強襲華冠",
+"ja": "プリッシュ・ストライカーティアラ",
+"en": "Prishe's Tiara of Striking",
+"slot": "頭部",
+"patch": "7.3",
+"lv": 100,
+"dye": 2,
+"mb": false,
+"icon": 56864,
+"ilvl": 750,
+"cjc": 65,
+"cjc_name": "PGL MNK SAM",
+"src": "🗡️桑多利亞：第二巡行（聯隊突擊）"
+},
+{
+"id": 46871,
+"zh": "普莉修強襲短外套",
+"ja": "プリッシュ・ストライカーボレロ",
+"en": "Prishe's Bolero of Striking",
+"slot": "上身",
+"patch": "7.3",
+"lv": 100,
+"dye": 2,
+"mb": false,
+"icon": 57267,
+"ilvl": 750,
+"cjc": 65,
+"cjc_name": "PGL MNK SAM",
+"src": "🗡️桑多利亞：第二巡行（聯隊突擊）"
+},
+{
+"id": 46872,
+"zh": "普莉修強襲環帶",
+"ja": "プリッシュ・ストライカーリング",
+"en": "Prishe's Ring of Striking",
+"slot": "手部",
+"patch": "7.3",
+"lv": 100,
+"dye": 1,
+"mb": false,
+"icon": 56372,
+"ilvl": 750,
+"cjc": 65,
+"cjc_name": "PGL MNK SAM",
+"src": "🗡️桑多利亞：第二巡行（聯隊突擊）"
+},
+{
+"id": 46873,
+"zh": "普莉修強襲下身",
+"ja": "プリッシュ・ストライカーボトム",
+"en": "Prishe's Bottoms of Striking",
+"slot": "腿部",
+"patch": "7.3",
+"lv": 100,
+"dye": 2,
+"mb": false,
+"icon": 57788,
+"ilvl": 750,
+"cjc": 65,
+"cjc_name": "PGL MNK SAM",
+"src": "🗡️桑多利亞：第二巡行（聯隊突擊）"
+},
+{
+"id": 46874,
+"zh": "普莉修強襲筒靴",
+"ja": "プリッシュ・ストライカーブーツ",
+"en": "Prishe's Boots of Striking",
+"slot": "腳部",
+"patch": "7.3",
+"lv": 100,
+"dye": 2,
+"mb": false,
+"icon": 57877,
+"ilvl": 750,
+"cjc": 65,
+"cjc_name": "PGL MNK SAM",
+"src": "🗡️桑多利亞：第二巡行（聯隊突擊）"
+}
+],
+"cjc_name": "PGL MNK SAM",
+"zh_ok": true
+},
+{
+"id": "src:5b112c4d:64:750",
+"layer": "src",
+"name_zh": "口之院治癒",
+"name_ja": "オラステリー・ヒーラー",
+"name_en": "Orastery",
+"source": "🗡️桑多利亞：第二巡行",
+"patch": "7.3",
+"pieces": [
+{
+"id": 46885,
+"zh": "口之院治癒緞帶",
+"ja": "オラステリー・ヒーラーリボン",
+"en": "Orastery Ribbons of Healing",
+"slot": "頭部",
+"patch": "7.3",
+"lv": 100,
+"dye": 2,
+"mb": false,
+"icon": 56862,
+"ilvl": 750,
+"cjc": 64,
+"cjc_name": "CNJ WHM SCH AST SGE",
+"src": "🗡️桑多利亞：第二巡行（聯隊突擊）"
+},
+{
+"id": 46886,
+"zh": "口之院治癒長袍",
+"ja": "オラステリー・ヒーラーローブ",
+"en": "Orastery Robe of Healing",
+"slot": "上身",
+"patch": "7.3",
+"lv": 100,
+"dye": 2,
+"mb": false,
+"icon": 57265,
+"ilvl": 750,
+"cjc": 64,
+"cjc_name": "CNJ WHM SCH AST SGE",
+"src": "🗡️桑多利亞：第二巡行（聯隊突擊）"
+},
+{
+"id": 46887,
+"zh": "口之院治癒手套",
+"ja": "オラステリー・ヒーラーグローブ",
+"en": "Orastery Gloves of Healing",
+"slot": "手部",
+"patch": "7.3",
+"lv": 100,
+"dye": 2,
+"mb": false,
+"icon": 56370,
+"ilvl": 750,
+"cjc": 64,
+"cjc_name": "CNJ WHM SCH AST SGE",
+"src": "🗡️桑多利亞：第二巡行（聯隊突擊）"
+},
+{
+"id": 46888,
+"zh": "口之院治癒長褲",
+"ja": "オラステリー・ヒーラースロップ",
+"en": "Orastery Slops of Healing",
+"slot": "腿部",
+"patch": "7.3",
+"lv": 100,
+"dye": 2,
+"mb": false,
+"icon": 57786,
+"ilvl": 750,
+"cjc": 64,
+"cjc_name": "CNJ WHM SCH AST SGE",
+"src": "🗡️桑多利亞：第二巡行（聯隊突擊）"
+},
+{
+"id": 46889,
+"zh": "口之院治癒翹尖鞋",
+"ja": "オラステリー・ヒーラーピガッシュ",
+"en": "Orastery Pigaches of Healing",
+"slot": "腳部",
+"patch": "7.3",
+"lv": 100,
+"dye": 2,
+"mb": false,
+"icon": 57875,
+"ilvl": 750,
+"cjc": 64,
+"cjc_name": "CNJ WHM SCH AST SGE",
+"src": "🗡️桑多利亞：第二巡行（聯隊突擊）"
+}
+],
+"cjc_name": "CNJ WHM SCH AST SGE",
+"zh_ok": true
+},
+{
+"id": "src:5b112c4d:63:750",
+"layer": "src",
+"name_zh": "口之院詠咒",
+"name_ja": "オラステリー・キャスター",
+"name_en": "Orastery",
+"source": "🗡️桑多利亞：第二巡行",
+"patch": "7.3",
+"pieces": [
+{
+"id": 46890,
+"zh": "口之院詠咒緞帶",
+"ja": "オラステリー・キャスターリボン",
+"en": "Orastery Ribbons of Casting",
+"slot": "頭部",
+"patch": "7.3",
+"lv": 100,
+"dye": 2,
+"mb": false,
+"icon": 56863,
+"ilvl": 750,
+"cjc": 63,
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
+"src": "🗡️桑多利亞：第二巡行（聯隊突擊）"
+},
+{
+"id": 46891,
+"zh": "口之院詠咒長袍",
+"ja": "オラステリー・キャスターローブ",
+"en": "Orastery Robe of Casting",
+"slot": "上身",
+"patch": "7.3",
+"lv": 100,
+"dye": 2,
+"mb": false,
+"icon": 57266,
+"ilvl": 750,
+"cjc": 63,
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
+"src": "🗡️桑多利亞：第二巡行（聯隊突擊）"
+},
+{
+"id": 46892,
+"zh": "口之院詠咒手套",
+"ja": "オラステリー・キャスターグローブ",
+"en": "Orastery Gloves of Casting",
+"slot": "手部",
+"patch": "7.3",
+"lv": 100,
+"dye": 2,
+"mb": false,
+"icon": 56371,
+"ilvl": 750,
+"cjc": 63,
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
+"src": "🗡️桑多利亞：第二巡行（聯隊突擊）"
+},
+{
+"id": 46893,
+"zh": "口之院詠咒長褲",
+"ja": "オラステリー・キャスタースロップ",
+"en": "Orastery Slops of Casting",
+"slot": "腿部",
+"patch": "7.3",
+"lv": 100,
+"dye": 2,
+"mb": false,
+"icon": 57787,
+"ilvl": 750,
+"cjc": 63,
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
+"src": "🗡️桑多利亞：第二巡行（聯隊突擊）"
+},
+{
+"id": 46894,
+"zh": "口之院詠咒翹尖鞋",
+"ja": "オラステリー・キャスターピガッシュ",
+"en": "Orastery Pigaches of Casting",
+"slot": "腳部",
+"patch": "7.3",
+"lv": 100,
+"dye": 2,
+"mb": false,
+"icon": 57876,
+"ilvl": 750,
+"cjc": 63,
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
+"src": "🗡️桑多利亞：第二巡行（聯隊突擊）"
+}
+],
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
+"zh_ok": true
+},
+{
+"id": "src:5b112c4d:59:750",
+"layer": "src",
+"name_zh": "沃・克勞德禦敵",
+"name_ja": "ウォークラウド・ディフェンダー",
+"name_en": "War Cloud's",
+"source": "🗡️桑多利亞：第二巡行",
+"patch": "7.3",
+"pieces": [
+{
+"id": 46860,
+"zh": "沃・克勞德禦敵頭盔",
+"ja": "ウォークラウド・ディフェンダーヘルム",
+"en": "War Cloud's Helm of Fending",
+"slot": "頭部",
+"patch": "7.3",
+"lv": 100,
+"dye": 2,
+"mb": false,
+"icon": 56860,
+"ilvl": 750,
+"cjc": 59,
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
+"src": "🗡️桑多利亞：第二巡行（聯隊突擊）"
+},
+{
+"id": 46861,
+"zh": "沃・克勞德禦敵戰鎧",
+"ja": "ウォークラウド・ディフェンダーメイル",
+"en": "War Cloud's Mail of Fending",
+"slot": "上身",
+"patch": "7.3",
+"lv": 100,
+"dye": 2,
+"mb": false,
+"icon": 57263,
+"ilvl": 750,
+"cjc": 59,
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
+"src": "🗡️桑多利亞：第二巡行（聯隊突擊）"
+},
+{
+"id": 46862,
+"zh": "沃・克勞德禦敵手鎧",
+"ja": "ウォークラウド・ディフェンダーガントレット",
+"en": "War Cloud's Gauntlets of Fending",
+"slot": "手部",
+"patch": "7.3",
+"lv": 100,
+"dye": 2,
+"mb": false,
+"icon": 56368,
+"ilvl": 750,
+"cjc": 59,
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
+"src": "🗡️桑多利亞：第二巡行（聯隊突擊）"
+},
+{
+"id": 46863,
+"zh": "沃・克勞德禦敵襯褲",
+"ja": "ウォークラウド・ディフェンダーブレー",
+"en": "War Cloud's Brais of Fending",
+"slot": "腿部",
+"patch": "7.3",
+"lv": 100,
+"dye": 2,
+"mb": false,
+"icon": 57784,
+"ilvl": 750,
+"cjc": 59,
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
+"src": "🗡️桑多利亞：第二巡行（聯隊突擊）"
+},
+{
+"id": 46864,
+"zh": "沃・克勞德禦敵長靴",
+"ja": "ウォークラウド・ディフェンダーブーツ",
+"en": "War Cloud's Boots of Fending",
+"slot": "腳部",
+"patch": "7.3",
+"lv": 100,
+"dye": 2,
+"mb": false,
+"icon": 57873,
+"ilvl": 750,
+"cjc": 59,
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
+"src": "🗡️桑多利亞：第二巡行（聯隊突擊）"
+}
+],
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
+"zh_ok": true
+},
+{
+"id": "src:5b112c4d:103:750",
+"layer": "src",
+"name_zh": "馬雅科夫游擊",
+"name_ja": "マヤコフ・スカウト",
+"name_en": "Mayakov",
+"source": "🗡️桑多利亞：第二巡行",
+"patch": "7.3",
+"pieces": [
+{
+"id": 46880,
+"zh": "馬雅科夫游擊髮夾",
+"ja": "マヤコフ・スカウトヘアピン",
+"en": "Mayakov Hairpin of Scouting",
+"slot": "頭部",
+"patch": "7.3",
+"lv": 100,
+"dye": 2,
+"mb": false,
+"icon": 56866,
+"ilvl": 750,
+"cjc": 103,
+"cjc_name": "ROG NIN VPR",
+"src": "🗡️桑多利亞：第二巡行（聯隊突擊）"
+},
+{
+"id": 46881,
+"zh": "馬雅科夫游擊舞衣",
+"ja": "マヤコフ・スカウトカザク",
+"en": "Mayakov Casaque of Scouting",
+"slot": "上身",
+"patch": "7.3",
+"lv": 100,
+"dye": 2,
+"mb": false,
+"icon": 57269,
+"ilvl": 750,
+"cjc": 103,
+"cjc_name": "ROG NIN VPR",
+"src": "🗡️桑多利亞：第二巡行（聯隊突擊）"
+},
+{
+"id": 46882,
+"zh": "馬雅科夫游擊手箍",
+"ja": "マヤコフ・スカウトリングバンド",
+"en": "Mayakov Ringbands of Scouting",
+"slot": "手部",
+"patch": "7.3",
+"lv": 100,
+"dye": 2,
+"mb": false,
+"icon": 56374,
+"ilvl": 750,
+"cjc": 103,
+"cjc_name": "ROG NIN VPR",
+"src": "🗡️桑多利亞：第二巡行（聯隊突擊）"
+},
+{
+"id": 46883,
+"zh": "馬雅科夫游擊緊身褲",
+"ja": "マヤコフ・スカウトタイツ",
+"en": "Mayakov Tights of Scouting",
+"slot": "腿部",
+"patch": "7.3",
+"lv": 100,
+"dye": 2,
+"mb": false,
+"icon": 57790,
+"ilvl": 750,
+"cjc": 103,
+"cjc_name": "ROG NIN VPR",
+"src": "🗡️桑多利亞：第二巡行（聯隊突擊）"
+},
+{
+"id": 46884,
+"zh": "馬雅科夫游擊舞鞋",
+"ja": "マヤコフ・スカウトトーシューズ",
+"en": "Mayakov Shoes of Scouting",
+"slot": "腳部",
+"patch": "7.3",
+"lv": 100,
+"dye": 2,
+"mb": false,
+"icon": 57879,
+"ilvl": 750,
+"cjc": 103,
+"cjc_name": "ROG NIN VPR",
+"src": "🗡️桑多利亞：第二巡行（聯隊突擊）"
+}
+],
+"cjc_name": "ROG NIN VPR",
+"zh_ok": true
 },
 {
 "id": "mirage:51672",
@@ -7919,7 +8570,7 @@
 "pieces": [
 {
 "id": 47138,
-"zh": "",
+"zh": "霧憶詠咒髮巾",
 "ja": "ミスティックメモリー・キャスターヘッドラップ",
 "en": "Mistic Memory Head Wrap of Casting",
 "slot": "頭部",
@@ -7930,12 +8581,12 @@
 "icon": 56880,
 "ilvl": 735,
 "cjc": 63,
-"cjc_name": "",
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
 "src": ""
 },
 {
 "id": 47139,
-"zh": "",
+"zh": "霧憶詠咒長衣",
 "ja": "ミスティックメモリー・キャスターコート",
 "en": "Mistic Memory Coat of Casting",
 "slot": "上身",
@@ -7946,12 +8597,12 @@
 "icon": 57301,
 "ilvl": 735,
 "cjc": 63,
-"cjc_name": "",
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
 "src": ""
 },
 {
 "id": 47140,
-"zh": "",
+"zh": "霧憶詠咒護臂",
 "ja": "ミスティックメモリー・キャスターアームレット",
 "en": "Mistic Memory Armlets of Casting",
 "slot": "手部",
@@ -7962,12 +8613,12 @@
 "icon": 56386,
 "ilvl": 735,
 "cjc": 63,
-"cjc_name": "",
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
 "src": ""
 },
 {
 "id": 47141,
-"zh": "",
+"zh": "霧憶詠咒套裝下身",
 "ja": "ミスティックメモリー・キャスターボトム",
 "en": "Mistic Memory Bottoms of Casting",
 "slot": "腿部",
@@ -7978,12 +8629,12 @@
 "icon": 57405,
 "ilvl": 735,
 "cjc": 63,
-"cjc_name": "",
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
 "src": ""
 },
 {
 "id": 47142,
-"zh": "",
+"zh": "霧憶詠咒長靴",
 "ja": "ミスティックメモリー・キャスターブーツ",
 "en": "Mistic Memory Boots of Casting",
 "slot": "腳部",
@@ -7994,12 +8645,12 @@
 "icon": 57895,
 "ilvl": 735,
 "cjc": 63,
-"cjc_name": "",
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
 "src": ""
 },
 {
 "id": 47147,
-"zh": "",
+"zh": "霧憶詠咒耳墜",
 "ja": "ミスティックメモリー・キャスターイヤリング",
 "en": "Mistic Memory Earrings of Casting",
 "slot": "耳飾",
@@ -8010,12 +8661,12 @@
 "icon": 55559,
 "ilvl": 735,
 "cjc": 63,
-"cjc_name": "",
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
 "src": ""
 },
 {
 "id": 47152,
-"zh": "",
+"zh": "霧憶詠咒項環",
 "ja": "ミスティックメモリー・キャスターチョーカー",
 "en": "Mistic Memory Choker of Casting",
 "slot": "項鍊",
@@ -8026,12 +8677,12 @@
 "icon": 55106,
 "ilvl": 735,
 "cjc": 63,
-"cjc_name": "",
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
 "src": ""
 },
 {
 "id": 47157,
-"zh": "",
+"zh": "霧憶詠咒手鐲",
 "ja": "ミスティックメモリー・キャスターブレスレット",
 "en": "Mistic Memory Bracelet of Casting",
 "slot": "手鐲",
@@ -8042,12 +8693,12 @@
 "icon": 55904,
 "ilvl": 735,
 "cjc": 63,
-"cjc_name": "",
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
 "src": ""
 },
 {
 "id": 47162,
-"zh": "",
+"zh": "霧憶詠咒戒指",
 "ja": "ミスティックメモリー・キャスターリング",
 "en": "Mistic Memory Ring of Casting",
 "slot": "戒指",
@@ -8058,12 +8709,12 @@
 "icon": 54756,
 "ilvl": 735,
 "cjc": 63,
-"cjc_name": "",
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
 "src": ""
 }
 ],
-"cjc_name": "THM ACN BLM SMN RDM BLU PCT",
-"zh_ok": false
+"cjc_name": "THM BLM ACN SMN RDM BLU PCT",
+"zh_ok": true
 },
 {
 "id": "mirage:51671",
@@ -8076,7 +8727,7 @@
 "pieces": [
 {
 "id": 47133,
-"zh": "",
+"zh": "霧憶治癒髮巾",
 "ja": "ミスティックメモリー・ヒーラーヘッドラップ",
 "en": "Mistic Memory Head Wrap of Healing",
 "slot": "頭部",
@@ -8087,12 +8738,12 @@
 "icon": 56879,
 "ilvl": 735,
 "cjc": 64,
-"cjc_name": "",
+"cjc_name": "CNJ WHM SCH AST SGE",
 "src": ""
 },
 {
 "id": 47134,
-"zh": "",
+"zh": "霧憶治癒長衣",
 "ja": "ミスティックメモリー・ヒーラーコート",
 "en": "Mistic Memory Coat of Healing",
 "slot": "上身",
@@ -8103,12 +8754,12 @@
 "icon": 57300,
 "ilvl": 735,
 "cjc": 64,
-"cjc_name": "",
+"cjc_name": "CNJ WHM SCH AST SGE",
 "src": ""
 },
 {
 "id": 47135,
-"zh": "",
+"zh": "霧憶治癒護臂",
 "ja": "ミスティックメモリー・ヒーラーアームレット",
 "en": "Mistic Memory Armlets of Healing",
 "slot": "手部",
@@ -8119,12 +8770,12 @@
 "icon": 56385,
 "ilvl": 735,
 "cjc": 64,
-"cjc_name": "",
+"cjc_name": "CNJ WHM SCH AST SGE",
 "src": ""
 },
 {
 "id": 47136,
-"zh": "",
+"zh": "霧憶治癒套裝下身",
 "ja": "ミスティックメモリー・ヒーラーボトム",
 "en": "Mistic Memory Bottoms of Healing",
 "slot": "腿部",
@@ -8135,12 +8786,12 @@
 "icon": 57404,
 "ilvl": 735,
 "cjc": 64,
-"cjc_name": "",
+"cjc_name": "CNJ WHM SCH AST SGE",
 "src": ""
 },
 {
 "id": 47137,
-"zh": "",
+"zh": "霧憶治癒長靴",
 "ja": "ミスティックメモリー・ヒーラーブーツ",
 "en": "Mistic Memory Boots of Healing",
 "slot": "腳部",
@@ -8151,12 +8802,12 @@
 "icon": 57894,
 "ilvl": 735,
 "cjc": 64,
-"cjc_name": "",
+"cjc_name": "CNJ WHM SCH AST SGE",
 "src": ""
 },
 {
 "id": 47146,
-"zh": "",
+"zh": "霧憶治癒耳墜",
 "ja": "ミスティックメモリー・ヒーラーイヤリング",
 "en": "Mistic Memory Earrings of Healing",
 "slot": "耳飾",
@@ -8167,12 +8818,12 @@
 "icon": 55559,
 "ilvl": 735,
 "cjc": 64,
-"cjc_name": "",
+"cjc_name": "CNJ WHM SCH AST SGE",
 "src": ""
 },
 {
 "id": 47151,
-"zh": "",
+"zh": "霧憶治癒項環",
 "ja": "ミスティックメモリー・ヒーラーチョーカー",
 "en": "Mistic Memory Choker of Healing",
 "slot": "項鍊",
@@ -8183,12 +8834,12 @@
 "icon": 55106,
 "ilvl": 735,
 "cjc": 64,
-"cjc_name": "",
+"cjc_name": "CNJ WHM SCH AST SGE",
 "src": ""
 },
 {
 "id": 47156,
-"zh": "",
+"zh": "霧憶治癒手鐲",
 "ja": "ミスティックメモリー・ヒーラーブレスレット",
 "en": "Mistic Memory Bracelet of Healing",
 "slot": "手鐲",
@@ -8199,12 +8850,12 @@
 "icon": 55904,
 "ilvl": 735,
 "cjc": 64,
-"cjc_name": "",
+"cjc_name": "CNJ WHM SCH AST SGE",
 "src": ""
 },
 {
 "id": 47161,
-"zh": "",
+"zh": "霧憶治癒戒指",
 "ja": "ミスティックメモリー・ヒーラーリング",
 "en": "Mistic Memory Ring of Healing",
 "slot": "戒指",
@@ -8215,12 +8866,12 @@
 "icon": 54756,
 "ilvl": 735,
 "cjc": 64,
-"cjc_name": "",
+"cjc_name": "CNJ WHM SCH AST SGE",
 "src": ""
 }
 ],
 "cjc_name": "CNJ WHM SCH AST SGE",
-"zh_ok": false
+"zh_ok": true
 },
 {
 "id": "mirage:51670",
@@ -8233,7 +8884,7 @@
 "pieces": [
 {
 "id": 47128,
-"zh": "",
+"zh": "霧憶游擊眼罩",
 "ja": "ミスティックメモリー・スカウトアイパッチ",
 "en": "Mistic Memory Eyepatch of Scouting",
 "slot": "頭部",
@@ -8244,12 +8895,12 @@
 "icon": 56882,
 "ilvl": 735,
 "cjc": 103,
-"cjc_name": "",
+"cjc_name": "ROG NIN VPR",
 "src": ""
 },
 {
 "id": 47129,
-"zh": "",
+"zh": "霧憶游擊襯衫",
 "ja": "ミスティックメモリー・スカウトシャツ",
 "en": "Mistic Memory Shirt of Scouting",
 "slot": "上身",
@@ -8260,12 +8911,12 @@
 "icon": 57303,
 "ilvl": 735,
 "cjc": 103,
-"cjc_name": "",
-"src": ""
+"cjc_name": "ROG NIN VPR",
+"src": "🗡️永久幽界中央終端（迷宮挑戰）"
 },
 {
 "id": 47130,
-"zh": "",
+"zh": "霧憶游擊手套",
 "ja": "ミスティックメモリー・スカウトブレーサー",
 "en": "Mistic Memory Bracers of Scouting",
 "slot": "手部",
@@ -8276,12 +8927,12 @@
 "icon": 56388,
 "ilvl": 735,
 "cjc": 103,
-"cjc_name": "",
+"cjc_name": "ROG NIN VPR",
 "src": ""
 },
 {
 "id": 47131,
-"zh": "",
+"zh": "霧憶游擊襯褲",
 "ja": "ミスティックメモリー・スカウトブレー",
 "en": "Mistic Memory Brais of Scouting",
 "slot": "腿部",
@@ -8292,12 +8943,12 @@
 "icon": 57407,
 "ilvl": 735,
 "cjc": 103,
-"cjc_name": "",
+"cjc_name": "ROG NIN VPR",
 "src": ""
 },
 {
 "id": 47132,
-"zh": "",
+"zh": "霧憶游擊長靴",
 "ja": "ミスティックメモリー・スカウトブーツ",
 "en": "Mistic Memory Boots of Scouting",
 "slot": "腳部",
@@ -8308,12 +8959,12 @@
 "icon": 57897,
 "ilvl": 735,
 "cjc": 103,
-"cjc_name": "",
-"src": ""
+"cjc_name": "ROG NIN VPR",
+"src": "🗡️永久幽界中央終端（迷宮挑戰）"
 },
 {
 "id": 47145,
-"zh": "",
+"zh": "霧憶精準耳墜",
 "ja": "ミスティックメモリー・レンジャーイヤリング",
 "en": "Mistic Memory Earrings of Aiming",
 "slot": "耳飾",
@@ -8324,12 +8975,12 @@
 "icon": 55559,
 "ilvl": 735,
 "cjc": 105,
-"cjc_name": "",
+"cjc_name": "ARC BRD ROG NIN MCH DNC VPR",
 "src": ""
 },
 {
 "id": 47150,
-"zh": "",
+"zh": "霧憶精準項環",
 "ja": "ミスティックメモリー・レンジャーチョーカー",
 "en": "Mistic Memory Choker of Aiming",
 "slot": "項鍊",
@@ -8340,12 +8991,12 @@
 "icon": 55106,
 "ilvl": 735,
 "cjc": 105,
-"cjc_name": "",
+"cjc_name": "ARC BRD ROG NIN MCH DNC VPR",
 "src": ""
 },
 {
 "id": 47155,
-"zh": "",
+"zh": "霧憶精準手鐲",
 "ja": "ミスティックメモリー・レンジャーブレスレット",
 "en": "Mistic Memory Bracelet of Aiming",
 "slot": "手鐲",
@@ -8356,12 +9007,12 @@
 "icon": 55904,
 "ilvl": 735,
 "cjc": 105,
-"cjc_name": "",
+"cjc_name": "ARC BRD ROG NIN MCH DNC VPR",
 "src": ""
 },
 {
 "id": 47160,
-"zh": "",
+"zh": "霧憶精準戒指",
 "ja": "ミスティックメモリー・レンジャーリング",
 "en": "Mistic Memory Ring of Aiming",
 "slot": "戒指",
@@ -8372,12 +9023,12 @@
 "icon": 54756,
 "ilvl": 735,
 "cjc": 105,
-"cjc_name": "",
+"cjc_name": "ARC BRD ROG NIN MCH DNC VPR",
 "src": ""
 }
 ],
-"cjc_name": "ARC ROG BRD NIN MCH DNC VPR",
-"zh_ok": false
+"cjc_name": "ROG NIN VPR",
+"zh_ok": true
 },
 {
 "id": "mirage:51669",
@@ -8390,7 +9041,7 @@
 "pieces": [
 {
 "id": 47123,
-"zh": "",
+"zh": "霧憶精準狩獵帽",
 "ja": "ミスティックメモリー・レンジャーハット",
 "en": "Mistic Memory Hat of Aiming",
 "slot": "頭部",
@@ -8401,12 +9052,12 @@
 "icon": 56883,
 "ilvl": 735,
 "cjc": 66,
-"cjc_name": "",
+"cjc_name": "ARC BRD MCH DNC",
 "src": ""
 },
 {
 "id": 47124,
-"zh": "",
+"zh": "霧憶精準上衣",
 "ja": "ミスティックメモリー・レンジャートップス",
 "en": "Mistic Memory Top of Aiming",
 "slot": "上身",
@@ -8417,12 +9068,12 @@
 "icon": 57304,
 "ilvl": 735,
 "cjc": 66,
-"cjc_name": "",
+"cjc_name": "ARC BRD MCH DNC",
 "src": ""
 },
 {
 "id": 47125,
-"zh": "",
+"zh": "霧憶精準手套",
 "ja": "ミスティックメモリー・レンジャーグローブ",
 "en": "Mistic Memory Gloves of Aiming",
 "slot": "手部",
@@ -8433,12 +9084,12 @@
 "icon": 56389,
 "ilvl": 735,
 "cjc": 66,
-"cjc_name": "",
+"cjc_name": "ARC BRD MCH DNC",
 "src": ""
 },
 {
 "id": 47126,
-"zh": "",
+"zh": "霧憶精準垮褲",
 "ja": "ミスティックメモリー・レンジャーサルエル",
 "en": "Mistic Memory Sarouel of Aiming",
 "slot": "腿部",
@@ -8449,12 +9100,12 @@
 "icon": 57408,
 "ilvl": 735,
 "cjc": 66,
-"cjc_name": "",
+"cjc_name": "ARC BRD MCH DNC",
 "src": ""
 },
 {
 "id": 47127,
-"zh": "",
+"zh": "霧憶精準矮靴",
 "ja": "ミスティックメモリー・レンジャーブーツ",
 "en": "Mistic Memory Boots of Aiming",
 "slot": "腳部",
@@ -8465,12 +9116,12 @@
 "icon": 57898,
 "ilvl": 735,
 "cjc": 66,
-"cjc_name": "",
+"cjc_name": "ARC BRD MCH DNC",
 "src": ""
 },
 {
 "id": 47145,
-"zh": "",
+"zh": "霧憶精準耳墜",
 "ja": "ミスティックメモリー・レンジャーイヤリング",
 "en": "Mistic Memory Earrings of Aiming",
 "slot": "耳飾",
@@ -8481,12 +9132,12 @@
 "icon": 55559,
 "ilvl": 735,
 "cjc": 105,
-"cjc_name": "",
+"cjc_name": "ARC BRD ROG NIN MCH DNC VPR",
 "src": ""
 },
 {
 "id": 47150,
-"zh": "",
+"zh": "霧憶精準項環",
 "ja": "ミスティックメモリー・レンジャーチョーカー",
 "en": "Mistic Memory Choker of Aiming",
 "slot": "項鍊",
@@ -8497,12 +9148,12 @@
 "icon": 55106,
 "ilvl": 735,
 "cjc": 105,
-"cjc_name": "",
+"cjc_name": "ARC BRD ROG NIN MCH DNC VPR",
 "src": ""
 },
 {
 "id": 47155,
-"zh": "",
+"zh": "霧憶精準手鐲",
 "ja": "ミスティックメモリー・レンジャーブレスレット",
 "en": "Mistic Memory Bracelet of Aiming",
 "slot": "手鐲",
@@ -8513,12 +9164,12 @@
 "icon": 55904,
 "ilvl": 735,
 "cjc": 105,
-"cjc_name": "",
+"cjc_name": "ARC BRD ROG NIN MCH DNC VPR",
 "src": ""
 },
 {
 "id": 47160,
-"zh": "",
+"zh": "霧憶精準戒指",
 "ja": "ミスティックメモリー・レンジャーリング",
 "en": "Mistic Memory Ring of Aiming",
 "slot": "戒指",
@@ -8529,12 +9180,12 @@
 "icon": 54756,
 "ilvl": 735,
 "cjc": 105,
-"cjc_name": "",
+"cjc_name": "ARC BRD ROG NIN MCH DNC VPR",
 "src": ""
 }
 ],
-"cjc_name": "ARC ROG BRD NIN MCH DNC VPR",
-"zh_ok": false
+"cjc_name": "ARC BRD MCH DNC",
+"zh_ok": true
 },
 {
 "id": "mirage:51668",
@@ -8547,7 +9198,7 @@
 "pieces": [
 {
 "id": 47118,
-"zh": "",
+"zh": "霧憶強襲眼罩",
 "ja": "ミスティックメモリー・ストライカーアイパッチ",
 "en": "Mistic Memory Eyepatch of Striking",
 "slot": "頭部",
@@ -8558,12 +9209,12 @@
 "icon": 56881,
 "ilvl": 735,
 "cjc": 65,
-"cjc_name": "",
+"cjc_name": "PGL MNK SAM",
 "src": ""
 },
 {
 "id": 47119,
-"zh": "",
+"zh": "霧憶強襲襯衫",
 "ja": "ミスティックメモリー・ストライカーシャツ",
 "en": "Mistic Memory Shirt of Striking",
 "slot": "上身",
@@ -8574,12 +9225,12 @@
 "icon": 57302,
 "ilvl": 735,
 "cjc": 65,
-"cjc_name": "",
-"src": ""
+"cjc_name": "PGL MNK SAM",
+"src": "🗡️永久幽界中央終端（迷宮挑戰）"
 },
 {
 "id": 47120,
-"zh": "",
+"zh": "霧憶強襲手套",
 "ja": "ミスティックメモリー・ストライカーブレーサー",
 "en": "Mistic Memory Bracers of Striking",
 "slot": "手部",
@@ -8590,12 +9241,12 @@
 "icon": 56387,
 "ilvl": 735,
 "cjc": 65,
-"cjc_name": "",
+"cjc_name": "PGL MNK SAM",
 "src": ""
 },
 {
 "id": 47121,
-"zh": "",
+"zh": "霧憶強襲襯褲",
 "ja": "ミスティックメモリー・ストライカーブレー",
 "en": "Mistic Memory Brais of Striking",
 "slot": "腿部",
@@ -8606,12 +9257,12 @@
 "icon": 57406,
 "ilvl": 735,
 "cjc": 65,
-"cjc_name": "",
+"cjc_name": "PGL MNK SAM",
 "src": ""
 },
 {
 "id": 47122,
-"zh": "",
+"zh": "霧憶強襲長靴",
 "ja": "ミスティックメモリー・ストライカーブーツ",
 "en": "Mistic Memory Boots of Striking",
 "slot": "腳部",
@@ -8622,12 +9273,12 @@
 "icon": 57896,
 "ilvl": 735,
 "cjc": 65,
-"cjc_name": "",
+"cjc_name": "PGL MNK SAM",
 "src": ""
 },
 {
 "id": 47144,
-"zh": "",
+"zh": "霧憶強攻耳墜",
 "ja": "ミスティックメモリー・アタッカーイヤリング",
 "en": "Mistic Memory Earrings of Slaying",
 "slot": "耳飾",
@@ -8638,12 +9289,12 @@
 "icon": 55559,
 "ilvl": 735,
 "cjc": 84,
-"cjc_name": "",
+"cjc_name": "PGL LNC MNK DRG SAM RPR",
 "src": ""
 },
 {
 "id": 47149,
-"zh": "",
+"zh": "霧憶強攻項環",
 "ja": "ミスティックメモリー・アタッカーチョーカー",
 "en": "Mistic Memory Choker of Slaying",
 "slot": "項鍊",
@@ -8654,12 +9305,12 @@
 "icon": 55106,
 "ilvl": 735,
 "cjc": 84,
-"cjc_name": "",
+"cjc_name": "PGL LNC MNK DRG SAM RPR",
 "src": ""
 },
 {
 "id": 47154,
-"zh": "",
+"zh": "霧憶強攻手鐲",
 "ja": "ミスティックメモリー・アタッカーブレスレット",
 "en": "Mistic Memory Bracelet of Slaying",
 "slot": "手鐲",
@@ -8670,12 +9321,12 @@
 "icon": 55904,
 "ilvl": 735,
 "cjc": 84,
-"cjc_name": "",
+"cjc_name": "PGL LNC MNK DRG SAM RPR",
 "src": ""
 },
 {
 "id": 47159,
-"zh": "",
+"zh": "霧憶強攻戒指",
 "ja": "ミスティックメモリー・アタッカーリング",
 "en": "Mistic Memory Ring of Slaying",
 "slot": "戒指",
@@ -8686,12 +9337,12 @@
 "icon": 54756,
 "ilvl": 735,
 "cjc": 84,
-"cjc_name": "",
+"cjc_name": "PGL LNC MNK DRG SAM RPR",
 "src": ""
 }
 ],
-"cjc_name": "PGL MNK SAM BST",
-"zh_ok": false
+"cjc_name": "PGL MNK SAM",
+"zh_ok": true
 },
 {
 "id": "mirage:51667",
@@ -8704,7 +9355,7 @@
 "pieces": [
 {
 "id": 47113,
-"zh": "",
+"zh": "霧憶制敵角盔",
 "ja": "ミスティックメモリー・スレイヤーサレット",
 "en": "Mistic Memory Sallet of Maiming",
 "slot": "頭部",
@@ -8715,12 +9366,12 @@
 "icon": 56878,
 "ilvl": 735,
 "cjc": 76,
-"cjc_name": "",
+"cjc_name": "LNC DRG RPR",
 "src": ""
 },
 {
 "id": 47114,
-"zh": "",
+"zh": "霧憶制敵戰鎧",
 "ja": "ミスティックメモリー・スレイヤーメイル",
 "en": "Mistic Memory Mail of Maiming",
 "slot": "上身",
@@ -8731,12 +9382,12 @@
 "icon": 57299,
 "ilvl": 735,
 "cjc": 76,
-"cjc_name": "",
-"src": ""
+"cjc_name": "LNC DRG RPR",
+"src": "🗡️永久幽界中央終端（迷宮挑戰）"
 },
 {
 "id": 47115,
-"zh": "",
+"zh": "霧憶制敵臂甲",
 "ja": "ミスティックメモリー・スレイヤーヴァンブレイス",
 "en": "Mistic Memory Vambraces of Maiming",
 "slot": "手部",
@@ -8747,12 +9398,12 @@
 "icon": 56384,
 "ilvl": 735,
 "cjc": 76,
-"cjc_name": "",
+"cjc_name": "LNC DRG RPR",
 "src": ""
 },
 {
 "id": 47116,
-"zh": "",
+"zh": "霧憶制敵束膝褲",
 "ja": "ミスティックメモリー・スレイヤーガスキン",
 "en": "Mistic Memory Gaskins of Maiming",
 "slot": "腿部",
@@ -8763,12 +9414,12 @@
 "icon": 57403,
 "ilvl": 735,
 "cjc": 76,
-"cjc_name": "",
+"cjc_name": "LNC DRG RPR",
 "src": ""
 },
 {
 "id": 47117,
-"zh": "",
+"zh": "霧憶制敵脛甲",
 "ja": "ミスティックメモリー・スレイヤーグリーヴ",
 "en": "Mistic Memory Greaves of Maiming",
 "slot": "腳部",
@@ -8779,12 +9430,12 @@
 "icon": 57893,
 "ilvl": 735,
 "cjc": 76,
-"cjc_name": "",
+"cjc_name": "LNC DRG RPR",
 "src": ""
 },
 {
 "id": 47144,
-"zh": "",
+"zh": "霧憶強攻耳墜",
 "ja": "ミスティックメモリー・アタッカーイヤリング",
 "en": "Mistic Memory Earrings of Slaying",
 "slot": "耳飾",
@@ -8795,12 +9446,12 @@
 "icon": 55559,
 "ilvl": 735,
 "cjc": 84,
-"cjc_name": "",
+"cjc_name": "PGL LNC MNK DRG SAM RPR",
 "src": ""
 },
 {
 "id": 47149,
-"zh": "",
+"zh": "霧憶強攻項環",
 "ja": "ミスティックメモリー・アタッカーチョーカー",
 "en": "Mistic Memory Choker of Slaying",
 "slot": "項鍊",
@@ -8811,12 +9462,12 @@
 "icon": 55106,
 "ilvl": 735,
 "cjc": 84,
-"cjc_name": "",
+"cjc_name": "PGL LNC MNK DRG SAM RPR",
 "src": ""
 },
 {
 "id": 47154,
-"zh": "",
+"zh": "霧憶強攻手鐲",
 "ja": "ミスティックメモリー・アタッカーブレスレット",
 "en": "Mistic Memory Bracelet of Slaying",
 "slot": "手鐲",
@@ -8827,12 +9478,12 @@
 "icon": 55904,
 "ilvl": 735,
 "cjc": 84,
-"cjc_name": "",
+"cjc_name": "PGL LNC MNK DRG SAM RPR",
 "src": ""
 },
 {
 "id": 47159,
-"zh": "",
+"zh": "霧憶強攻戒指",
 "ja": "ミスティックメモリー・アタッカーリング",
 "en": "Mistic Memory Ring of Slaying",
 "slot": "戒指",
@@ -8843,12 +9494,12 @@
 "icon": 54756,
 "ilvl": 735,
 "cjc": 84,
-"cjc_name": "",
+"cjc_name": "PGL LNC MNK DRG SAM RPR",
 "src": ""
 }
 ],
 "cjc_name": "LNC DRG RPR",
-"zh_ok": false
+"zh_ok": true
 },
 {
 "id": "mirage:51666",
@@ -8861,7 +9512,7 @@
 "pieces": [
 {
 "id": 47108,
-"zh": "",
+"zh": "霧憶禦敵角盔",
 "ja": "ミスティックメモリー・ディフェンダーサレット",
 "en": "Mistic Memory Sallet of Fending",
 "slot": "頭部",
@@ -8872,12 +9523,12 @@
 "icon": 56877,
 "ilvl": 735,
 "cjc": 59,
-"cjc_name": "",
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
 "src": ""
 },
 {
 "id": 47109,
-"zh": "",
+"zh": "霧憶禦敵戰鎧",
 "ja": "ミスティックメモリー・ディフェンダーメイル",
 "en": "Mistic Memory Mail of Fending",
 "slot": "上身",
@@ -8888,12 +9539,12 @@
 "icon": 57298,
 "ilvl": 735,
 "cjc": 59,
-"cjc_name": "",
-"src": ""
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
+"src": "🗡️永久幽界中央終端（迷宮挑戰）"
 },
 {
 "id": 47110,
-"zh": "",
+"zh": "霧憶禦敵臂甲",
 "ja": "ミスティックメモリー・ディフェンダーヴァンブレイス",
 "en": "Mistic Memory Vambraces of Fending",
 "slot": "手部",
@@ -8904,12 +9555,12 @@
 "icon": 56383,
 "ilvl": 735,
 "cjc": 59,
-"cjc_name": "",
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
 "src": ""
 },
 {
 "id": 47111,
-"zh": "",
+"zh": "霧憶禦敵束膝褲",
 "ja": "ミスティックメモリー・ディフェンダーガスキン",
 "en": "Mistic Memory Gaskins of Fending",
 "slot": "腿部",
@@ -8920,12 +9571,12 @@
 "icon": 57402,
 "ilvl": 735,
 "cjc": 59,
-"cjc_name": "",
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
 "src": ""
 },
 {
 "id": 47112,
-"zh": "",
+"zh": "霧憶禦敵脛甲",
 "ja": "ミスティックメモリー・ディフェンダーグリーヴ",
 "en": "Mistic Memory Greaves of Fending",
 "slot": "腳部",
@@ -8936,12 +9587,12 @@
 "icon": 57892,
 "ilvl": 735,
 "cjc": 59,
-"cjc_name": "",
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
 "src": ""
 },
 {
 "id": 47143,
-"zh": "",
+"zh": "霧憶禦敵耳墜",
 "ja": "ミスティックメモリー・ディフェンダーイヤリング",
 "en": "Mistic Memory Earrings of Fending",
 "slot": "耳飾",
@@ -8952,12 +9603,12 @@
 "icon": 55559,
 "ilvl": 735,
 "cjc": 59,
-"cjc_name": "",
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
 "src": ""
 },
 {
 "id": 47148,
-"zh": "",
+"zh": "霧憶禦敵項環",
 "ja": "ミスティックメモリー・ディフェンダーチョーカー",
 "en": "Mistic Memory Choker of Fending",
 "slot": "項鍊",
@@ -8968,12 +9619,12 @@
 "icon": 55106,
 "ilvl": 735,
 "cjc": 59,
-"cjc_name": "",
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
 "src": ""
 },
 {
 "id": 47153,
-"zh": "",
+"zh": "霧憶禦敵手鐲",
 "ja": "ミスティックメモリー・ディフェンダーブレスレット",
 "en": "Mistic Memory Bracelet of Fending",
 "slot": "手鐲",
@@ -8984,12 +9635,12 @@
 "icon": 55904,
 "ilvl": 735,
 "cjc": 59,
-"cjc_name": "",
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
 "src": ""
 },
 {
 "id": 47158,
-"zh": "",
+"zh": "霧憶禦敵戒指",
 "ja": "ミスティックメモリー・ディフェンダーリング",
 "en": "Mistic Memory Ring of Fending",
 "slot": "戒指",
@@ -9000,17 +9651,17 @@
 "icon": 54756,
 "ilvl": 735,
 "cjc": 59,
-"cjc_name": "",
+"cjc_name": "GLA MRD PLD WAR DRK GNB",
 "src": ""
 }
 ],
 "cjc_name": "GLA MRD PLD WAR DRK GNB",
-"zh_ok": false
+"zh_ok": true
 },
 {
 "id": "mirage:47727",
 "layer": "mirage",
-"name_zh": "",
+"name_zh": "葛夫加里翁裝備套裝",
 "name_ja": "ガフガリオン・アタイア",
 "name_en": "Gaffgarion's Attire",
 "source": "🎁幻化套裝箱",
@@ -9018,7 +9669,7 @@
 "pieces": [
 {
 "id": 47307,
-"zh": "",
+"zh": "葛夫加里翁輕盔",
 "ja": "ガフガリオン・バーゴネット",
 "en": "Gaffgarion's Burgeonet",
 "slot": "頭部",
@@ -9029,12 +9680,12 @@
 "icon": 56884,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47308,
-"zh": "",
+"zh": "葛夫加里翁戰甲",
 "ja": "ガフガリオン・メイル",
 "en": "Gaffgarion's Mail",
 "slot": "上身",
@@ -9045,12 +9696,12 @@
 "icon": 57306,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47309,
-"zh": "",
+"zh": "葛夫加里翁手甲",
 "ja": "ガフガリオン・ヴァンブレイス",
 "en": "Gaffgarion's Vambraces",
 "slot": "手部",
@@ -9061,12 +9712,12 @@
 "icon": 56390,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47310,
-"zh": "",
+"zh": "葛夫加里翁束膝褲",
 "ja": "ガフガリオン・ガスキン",
 "en": "Gaffgarion's Gaskins",
 "slot": "腿部",
@@ -9077,12 +9728,12 @@
 "icon": 57410,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47311,
-"zh": "",
+"zh": "葛夫加里翁筒靴",
 "ja": "ガフガリオン・ブーツ",
 "en": "Gaffgarion's Boots",
 "slot": "腳部",
@@ -9093,17 +9744,17 @@
 "icon": 57900,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 }
 ],
-"cjc_name": "All Classes",
-"zh_ok": false
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"zh_ok": true
 },
 {
 "id": "mirage:47726",
 "layer": "mirage",
-"name_zh": "",
+"name_zh": "奧薇莉亞裝備套裝",
 "name_ja": "オヴェリア・アタイア",
 "name_en": "Ovelia's Attire",
 "source": "🎁幻化套裝箱",
@@ -9111,7 +9762,7 @@
 "pieces": [
 {
 "id": 47304,
-"zh": "",
+"zh": "奧薇莉亞禮裙",
 "ja": "オヴェリア・ドレス",
 "en": "Ovelia's Dress",
 "slot": "上身",
@@ -9122,12 +9773,12 @@
 "icon": 57305,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47305,
-"zh": "",
+"zh": "奧薇莉亞襯褲",
 "ja": "オヴェリア・ドロワーズ",
 "en": "Ovelia's Drawers",
 "slot": "腿部",
@@ -9138,12 +9789,12 @@
 "icon": 57409,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47306,
-"zh": "",
+"zh": "奧薇莉亞皮靴",
 "ja": "オヴェリア・ブーツ",
 "en": "Ovelia's Boots",
 "slot": "腳部",
@@ -9154,17 +9805,17 @@
 "icon": 57899,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 }
 ],
-"cjc_name": "All Classes",
-"zh_ok": false
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"zh_ok": true
 },
 {
 "id": "mirage:47725",
 "layer": "mirage",
-"name_zh": "",
+"name_zh": "拉姆札裝備套裝",
 "name_ja": "ラムザ・アタイア",
 "name_en": "Ramza's Attire",
 "source": "🎁幻化套裝箱",
@@ -9172,7 +9823,7 @@
 "pieces": [
 {
 "id": 47301,
-"zh": "",
+"zh": "拉姆札外衣",
 "ja": "ラムザ・コート",
 "en": "Ramza's Coat",
 "slot": "上身",
@@ -9183,12 +9834,12 @@
 "icon": 57307,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47302,
-"zh": "",
+"zh": "拉姆札手套",
 "ja": "ラムザ・グローブ",
 "en": "Ramza's Gloves",
 "slot": "手部",
@@ -9199,12 +9850,12 @@
 "icon": 56391,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47303,
-"zh": "",
+"zh": "拉姆札長靴",
 "ja": "ラムザ・サイブーツ",
 "en": "Ramza's Thighboots",
 "slot": "腳部",
@@ -9215,17 +9866,17 @@
 "icon": 57901,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 }
 ],
-"cjc_name": "All Classes",
-"zh_ok": false
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"zh_ok": true
 },
 {
 "id": "mirage:47715",
 "layer": "mirage",
-"name_zh": "",
+"name_zh": "伽拉忒亞裝備套裝",
 "name_ja": "ガラテア・アタイア",
 "name_en": "Galatea Attire",
 "source": "🎁幻化套裝箱",
@@ -9233,7 +9884,7 @@
 "pieces": [
 {
 "id": 47275,
-"zh": "",
+"zh": "伽拉忒亞王冠",
 "ja": "ガラテアクラウン",
 "en": "Galatea Crown",
 "slot": "頭部",
@@ -9244,12 +9895,12 @@
 "icon": 56875,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47276,
-"zh": "",
+"zh": "伽拉忒亞上衣",
 "ja": "ガラテアビスチェ",
 "en": "Galatea Bustier",
 "slot": "上身",
@@ -9260,12 +9911,12 @@
 "icon": 57296,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47277,
-"zh": "",
+"zh": "伽拉忒亞吊帶襪",
 "ja": "ガラテアタイツ",
 "en": "Galatea Tights",
 "slot": "腿部",
@@ -9276,12 +9927,12 @@
 "icon": 57400,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47278,
-"zh": "",
+"zh": "伽拉忒亞高跟鞋",
 "ja": "ガラテアヒール",
 "en": "Galatea Heels",
 "slot": "腳部",
@@ -9292,17 +9943,17 @@
 "icon": 57890,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 }
 ],
-"cjc_name": "All Classes",
-"zh_ok": false
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"zh_ok": true
 },
 {
 "id": "mirage:47714",
 "layer": "mirage",
-"name_zh": "",
+"name_zh": "另類裝備套裝",
 "name_ja": "アルタナティヴ・アタイア",
 "name_en": "Alternative Attire",
 "source": "🎁幻化套裝箱",
@@ -9310,7 +9961,7 @@
 "pieces": [
 {
 "id": 47270,
-"zh": "",
+"zh": "另類針織帽",
 "ja": "アルタナティヴ・キャップ",
 "en": "Alternative Cap",
 "slot": "頭部",
@@ -9321,12 +9972,12 @@
 "icon": 56876,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47271,
-"zh": "",
+"zh": "另類上衣",
 "ja": "アルタナティヴ・シャツ",
 "en": "Alternative Shirt",
 "slot": "上身",
@@ -9337,12 +9988,12 @@
 "icon": 57297,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47272,
-"zh": "",
+"zh": "另類皮手鐲",
 "ja": "アルタナティヴ・レザーブレスレット",
 "en": "Alternative Leather Bracelets",
 "slot": "手部",
@@ -9353,12 +10004,12 @@
 "icon": 56382,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47273,
-"zh": "",
+"zh": "另類布袋褲",
 "ja": "アルタナティヴ・バギーパンツ",
 "en": "Alternative Trousers",
 "slot": "腿部",
@@ -9369,12 +10020,12 @@
 "icon": 57401,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47274,
-"zh": "",
+"zh": "另類鉚釘鞋",
 "ja": "アルタナティヴ・スパインシューズ",
 "en": "Alternative Spiked Shoes",
 "slot": "腳部",
@@ -9385,17 +10036,17 @@
 "icon": 57891,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 }
 ],
-"cjc_name": "All Classes",
-"zh_ok": false
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"zh_ok": true
 },
 {
 "id": "mirage:47713",
 "layer": "mirage",
-"name_zh": "",
+"name_zh": "夏令禮裙套裝",
 "name_ja": "サマーフォーマル・ドレス・アタイア",
 "name_en": "Summertide Formal Attire (Dress)",
 "source": "🎁幻化套裝箱",
@@ -9403,7 +10054,7 @@
 "pieces": [
 {
 "id": 47261,
-"zh": "",
+"zh": "夏令禮裙",
 "ja": "サマーフォーマル・ドレス",
 "en": "Summertide Formal Dress",
 "slot": "上身",
@@ -9414,12 +10065,12 @@
 "icon": 57290,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47262,
-"zh": "",
+"zh": "夏令禮鞋",
 "ja": "サマーフォーマル・ドレスシューズ",
 "en": "Summertide Formal Dress Shoes",
 "slot": "腳部",
@@ -9430,17 +10081,17 @@
 "icon": 57885,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 }
 ],
-"cjc_name": "All Classes",
-"zh_ok": false
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"zh_ok": true
 },
 {
 "id": "mirage:47712",
 "layer": "mirage",
-"name_zh": "",
+"name_zh": "夏令禮服套裝",
 "name_ja": "サマーフォーマル・ジャケット・アタイア",
 "name_en": "Summertide Formal Attire (Jacket)",
 "source": "🎁幻化套裝箱",
@@ -9448,7 +10099,7 @@
 "pieces": [
 {
 "id": 47258,
-"zh": "",
+"zh": "夏令禮服",
 "ja": "サマーフォーマル・ジャケット",
 "en": "Summertide Formal Jacket",
 "slot": "上身",
@@ -9459,12 +10110,12 @@
 "icon": 57291,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47259,
-"zh": "",
+"zh": "夏令禮褲",
 "ja": "サマーフォーマル・スラックス",
 "en": "Summertide Formal Slacks",
 "slot": "腿部",
@@ -9475,12 +10126,12 @@
 "icon": 57795,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 },
 {
 "id": 47260,
-"zh": "",
+"zh": "夏令皮鞋",
 "ja": "サマーフォーマル・シューズ",
 "en": "Summertide Formal Shoes",
 "slot": "腳部",
@@ -9491,17 +10142,17 @@
 "icon": 57886,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": ""
 }
 ],
-"cjc_name": "All Classes",
-"zh_ok": false
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"zh_ok": true
 },
 {
 "id": "mirage:47711",
 "layer": "mirage",
-"name_zh": "",
+"name_zh": "暴擊C2套裝",
 "name_ja": "クリティカルヒッツC2・アタイア",
 "name_en": "Critical Hit C-2 Tour Attire",
 "source": "🎁幻化套裝箱",
@@ -9509,7 +10160,7 @@
 "pieces": [
 {
 "id": 47254,
-"zh": "",
+"zh": "暴擊C2外套",
 "ja": "クリティカルヒッツC2・ジャケット",
 "en": "Critical Hit C-2 Tour Jacket",
 "slot": "上身",
@@ -9520,12 +10171,12 @@
 "icon": 57313,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": "⚔️戰利水晶×1500（戰利水晶交易員）"
 },
 {
 "id": 47255,
-"zh": "",
+"zh": "暴擊C2甲片",
 "ja": "クリティカルヒッツC2・ネイルチップ",
 "en": "Critical Hit C-2 Tour False Nails",
 "slot": "手部",
@@ -9536,12 +10187,12 @@
 "icon": 56397,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": "⚔️戰利水晶×1500（戰利水晶交易員）"
 },
 {
 "id": 47256,
-"zh": "",
+"zh": "暴擊C2工裝褲",
 "ja": "クリティカルヒッツC2・カーゴパンツ",
 "en": "Critical Hit C-2 Tour Cargo Trousers",
 "slot": "腿部",
@@ -9552,12 +10203,12 @@
 "icon": 57416,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": "⚔️戰利水晶×1500（戰利水晶交易員）"
 },
 {
 "id": 47257,
-"zh": "",
+"zh": "暴擊C2便鞋",
 "ja": "クリティカルヒッツC2・シューズ",
 "en": "Critical Hit C-2 Tour Shoes",
 "slot": "腳部",
@@ -9568,17 +10219,17 @@
 "icon": 57907,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": "⚔️戰利水晶×1500（戰利水晶交易員）"
 }
 ],
-"cjc_name": "All Classes",
-"zh_ok": false
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"zh_ok": true
 },
 {
 "id": "mirage:47710",
 "layer": "mirage",
-"name_zh": "",
+"name_zh": "暴擊C1套裝",
 "name_ja": "クリティカルヒッツC1・アタイア",
 "name_en": "Critical Hit C-1 Tour Attire",
 "source": "🎁幻化套裝箱",
@@ -9586,7 +10237,7 @@
 "pieces": [
 {
 "id": 47250,
-"zh": "",
+"zh": "暴擊C1外套",
 "ja": "クリティカルヒッツC1・ジャケット",
 "en": "Critical Hit C-1 Tour Jacket",
 "slot": "上身",
@@ -9597,12 +10248,12 @@
 "icon": 57312,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": "⚔️戰利水晶×1500（戰利水晶交易員）"
 },
 {
 "id": 47251,
-"zh": "",
+"zh": "暴擊C1甲片",
 "ja": "クリティカルヒッツC1・ネイルチップ",
 "en": "Critical Hit C-1 Tour False Nails",
 "slot": "手部",
@@ -9613,12 +10264,12 @@
 "icon": 56396,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": "⚔️戰利水晶×1500（戰利水晶交易員）"
 },
 {
 "id": 47252,
-"zh": "",
+"zh": "暴擊C1工裝褲",
 "ja": "クリティカルヒッツC1・カーゴパンツ",
 "en": "Critical Hit C-1 Tour Cargo Trousers",
 "slot": "腿部",
@@ -9629,12 +10280,12 @@
 "icon": 57415,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": "⚔️戰利水晶×1500（戰利水晶交易員）"
 },
 {
 "id": 47253,
-"zh": "",
+"zh": "暴擊C1便鞋",
 "ja": "クリティカルヒッツC1・シューズ",
 "en": "Critical Hit C-1 Tour Shoes",
 "slot": "腳部",
@@ -9645,17 +10296,17 @@
 "icon": 57906,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": "⚔️戰利水晶×1500（戰利水晶交易員）"
 }
 ],
-"cjc_name": "All Classes",
-"zh_ok": false
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"zh_ok": true
 },
 {
 "id": "mirage:47709",
 "layer": "mirage",
-"name_zh": "",
+"name_zh": "暴擊B2套裝",
 "name_ja": "クリティカルヒッツB2・アタイア",
 "name_en": "Critical Hit B-2 Tour Attire",
 "source": "🎁幻化套裝箱",
@@ -9663,7 +10314,7 @@
 "pieces": [
 {
 "id": 47245,
-"zh": "",
+"zh": "暴擊B2頭戴設備",
 "ja": "クリティカルヒッツB2・ヘッドセット",
 "en": "Critical Hit B-2 Tour Headset",
 "slot": "頭部",
@@ -9674,12 +10325,12 @@
 "icon": 56888,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": "⚔️戰利水晶×1500（戰利水晶交易員）"
 },
 {
 "id": 47246,
-"zh": "",
+"zh": "暴擊B2上衣",
 "ja": "クリティカルヒッツB2・トップス",
 "en": "Critical Hit B-2 Tour Top",
 "slot": "上身",
@@ -9690,12 +10341,12 @@
 "icon": 57311,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": "⚔️戰利水晶×1500（戰利水晶交易員）"
 },
 {
 "id": 47247,
-"zh": "",
+"zh": "暴擊B2半指手套",
 "ja": "クリティカルヒッツB2・ハーフグローブ",
 "en": "Critical Hit B-2 Tour Halfgloves",
 "slot": "手部",
@@ -9706,12 +10357,12 @@
 "icon": 56395,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": "⚔️戰利水晶×1500（戰利水晶交易員）"
 },
 {
 "id": 47248,
-"zh": "",
+"zh": "暴擊B2馬褲",
 "ja": "クリティカルヒッツB2・ブリーチ",
 "en": "Critical Hit B-2 Tour Breeches",
 "slot": "腿部",
@@ -9722,12 +10373,12 @@
 "icon": 57414,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": "⚔️戰利水晶×1500（戰利水晶交易員）"
 },
 {
 "id": 47249,
-"zh": "",
+"zh": "暴擊B2長靴",
 "ja": "クリティカルヒッツB2・ロングブーツ",
 "en": "Critical Hit B-2 Tour Longboots",
 "slot": "腳部",
@@ -9738,17 +10389,17 @@
 "icon": 57905,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": "⚔️戰利水晶×1500（戰利水晶交易員）"
 }
 ],
-"cjc_name": "All Classes",
-"zh_ok": false
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"zh_ok": true
 },
 {
 "id": "mirage:47708",
 "layer": "mirage",
-"name_zh": "",
+"name_zh": "暴擊B1套裝",
 "name_ja": "クリティカルヒッツB1・アタイア",
 "name_en": "Critical Hit B-1 Tour Attire",
 "source": "🎁幻化套裝箱",
@@ -9756,7 +10407,7 @@
 "pieces": [
 {
 "id": 47240,
-"zh": "",
+"zh": "暴擊B1頭戴設備",
 "ja": "クリティカルヒッツB1・ヘッドセット",
 "en": "Critical Hit B-1 Tour Headset",
 "slot": "頭部",
@@ -9767,12 +10418,12 @@
 "icon": 56887,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": "⚔️戰利水晶×1500（戰利水晶交易員）"
 },
 {
 "id": 47241,
-"zh": "",
+"zh": "暴擊B1上衣",
 "ja": "クリティカルヒッツB1・トップス",
 "en": "Critical Hit B-1 Tour Top",
 "slot": "上身",
@@ -9783,12 +10434,12 @@
 "icon": 57310,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": "⚔️戰利水晶×1500（戰利水晶交易員）"
 },
 {
 "id": 47242,
-"zh": "",
+"zh": "暴擊B1半指手套",
 "ja": "クリティカルヒッツB1・ハーフグローブ",
 "en": "Critical Hit B-1 Tour Halfgloves",
 "slot": "手部",
@@ -9799,12 +10450,12 @@
 "icon": 56394,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": "⚔️戰利水晶×1500（戰利水晶交易員）"
 },
 {
 "id": 47243,
-"zh": "",
+"zh": "暴擊B1馬褲",
 "ja": "クリティカルヒッツB1・ブリーチ",
 "en": "Critical Hit B-1 Tour Breeches",
 "slot": "腿部",
@@ -9815,12 +10466,12 @@
 "icon": 57413,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": "⚔️戰利水晶×1500（戰利水晶交易員）"
 },
 {
 "id": 47244,
-"zh": "",
+"zh": "暴擊B1長靴",
 "ja": "クリティカルヒッツB1・ロングブーツ",
 "en": "Critical Hit B-1 Tour Longboots",
 "slot": "腳部",
@@ -9831,17 +10482,17 @@
 "icon": 57904,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": "⚔️戰利水晶×1500（戰利水晶交易員）"
 }
 ],
-"cjc_name": "All Classes",
-"zh_ok": false
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"zh_ok": true
 },
 {
 "id": "mirage:47707",
 "layer": "mirage",
-"name_zh": "",
+"name_zh": "暴擊A2套裝",
 "name_ja": "クリティカルヒッツA2・アタイア",
 "name_en": "Critical Hit A-2 Tour Attire",
 "source": "🎁幻化套裝箱",
@@ -9849,7 +10500,7 @@
 "pieces": [
 {
 "id": 47235,
-"zh": "",
+"zh": "暴擊A2針織帽",
 "ja": "クリティカルヒッツA2・ニットキャップ",
 "en": "Critical Hit A-2 Tour Knit Cap",
 "slot": "頭部",
@@ -9860,12 +10511,12 @@
 "icon": 56886,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": "⚔️戰利水晶×1500（戰利水晶交易員）"
 },
 {
 "id": 47236,
-"zh": "",
+"zh": "暴擊A2短版束帶衣",
 "ja": "クリティカルヒッツA2・クロップドハーネス",
 "en": "Critical Hit A-2 Tour Cropped Harness",
 "slot": "上身",
@@ -9876,12 +10527,12 @@
 "icon": 57309,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": "⚔️戰利水晶×1500（戰利水晶交易員）"
 },
 {
 "id": 47237,
-"zh": "",
+"zh": "暴擊A2護臂",
 "ja": "クリティカルヒッツA2・アームレット",
 "en": "Critical Hit A-2 Tour Armlets",
 "slot": "手部",
@@ -9892,12 +10543,12 @@
 "icon": 56393,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": "⚔️戰利水晶×1500（戰利水晶交易員）"
 },
 {
 "id": 47238,
-"zh": "",
+"zh": "暴擊A2套裝下身",
 "ja": "クリティカルヒッツA2・ボトム",
 "en": "Critical Hit A-2 Tour Bottoms",
 "slot": "腿部",
@@ -9908,12 +10559,12 @@
 "icon": 57412,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": "⚔️戰利水晶×1500（戰利水晶交易員）"
 },
 {
 "id": 47239,
-"zh": "",
+"zh": "暴擊A2短靴",
 "ja": "クリティカルヒッツA2・ブーツ",
 "en": "Critical Hit A-2 Tour Boots",
 "slot": "腳部",
@@ -9924,17 +10575,17 @@
 "icon": 57903,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": "⚔️戰利水晶×1500（戰利水晶交易員）"
 }
 ],
-"cjc_name": "All Classes",
-"zh_ok": false
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"zh_ok": true
 },
 {
 "id": "mirage:47706",
 "layer": "mirage",
-"name_zh": "",
+"name_zh": "暴擊A1套裝",
 "name_ja": "クリティカルヒッツA1・アタイア",
 "name_en": "Critical Hit A-1 Tour Attire",
 "source": "🎁幻化套裝箱",
@@ -9942,7 +10593,7 @@
 "pieces": [
 {
 "id": 47230,
-"zh": "",
+"zh": "暴擊A1針織帽",
 "ja": "クリティカルヒッツA1・ニットキャップ",
 "en": "Critical Hit A-1 Tour Knit Cap",
 "slot": "頭部",
@@ -9953,12 +10604,12 @@
 "icon": 56885,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": "⚔️戰利水晶×1500（戰利水晶交易員）"
 },
 {
 "id": 47231,
-"zh": "",
+"zh": "暴擊A1短版束帶衣",
 "ja": "クリティカルヒッツA1・クロップドハーネス",
 "en": "Critical Hit A-1 Tour Cropped Harness",
 "slot": "上身",
@@ -9969,12 +10620,12 @@
 "icon": 57308,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": "⚔️戰利水晶×1500（戰利水晶交易員）"
 },
 {
 "id": 47232,
-"zh": "",
+"zh": "暴擊A1護臂",
 "ja": "クリティカルヒッツA1・アームレット",
 "en": "Critical Hit A-1 Tour Armlets",
 "slot": "手部",
@@ -9985,12 +10636,12 @@
 "icon": 56392,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": "⚔️戰利水晶×1500（戰利水晶交易員）"
 },
 {
 "id": 47233,
-"zh": "",
+"zh": "暴擊A1套裝下身",
 "ja": "クリティカルヒッツA1・ボトム",
 "en": "Critical Hit A-1 Tour Bottoms",
 "slot": "腿部",
@@ -10001,12 +10652,12 @@
 "icon": 57411,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": "⚔️戰利水晶×1500（戰利水晶交易員）"
 },
 {
 "id": 47234,
-"zh": "",
+"zh": "暴擊A1短靴",
 "ja": "クリティカルヒッツA1・ブーツ",
 "en": "Critical Hit A-1 Tour Boots",
 "slot": "腳部",
@@ -10017,17 +10668,17 @@
 "icon": 57902,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "src": "⚔️戰利水晶×1500（戰利水晶交易員）"
 }
 ],
-"cjc_name": "All Classes",
-"zh_ok": false
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"zh_ok": true
 },
 {
 "id": "mirage:47704",
 "layer": "mirage",
-"name_zh": "",
+"name_zh": "輕量街頭套裝",
 "name_ja": "エアーストリート・アタイア",
 "name_en": "Air Cell Attire",
 "source": "🎁幻化套裝箱",
@@ -10035,7 +10686,7 @@
 "pieces": [
 {
 "id": 47202,
-"zh": "",
+"zh": "輕量街頭兜帽鴨舌帽",
 "ja": "エアーストリート・フードキャップ",
 "en": "Air Cell Hood",
 "slot": "頭部",
@@ -10046,12 +10697,12 @@
 "icon": 56868,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
-"src": "🗺️藏寶圖"
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"src": "🗺️藏寶圖（輕量街頭裝備箱 等）"
 },
 {
 "id": 47203,
-"zh": "",
+"zh": "輕量街頭外套",
 "ja": "エアーストリート・ジャケット",
 "en": "Air Cell Jacket",
 "slot": "上身",
@@ -10062,12 +10713,12 @@
 "icon": 57287,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
-"src": "🗺️藏寶圖"
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"src": "🗺️藏寶圖（輕量街頭裝備箱 等）"
 },
 {
 "id": 47204,
-"zh": "",
+"zh": "輕量街頭寬鬆袖套",
 "ja": "エアーストリート・ルーズアーム",
 "en": "Air Cell Armlets",
 "slot": "手部",
@@ -10078,12 +10729,12 @@
 "icon": 56377,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
-"src": "🗺️藏寶圖"
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"src": "🗺️藏寶圖（輕量街頭裝備箱 等）"
 },
 {
 "id": 47205,
-"zh": "",
+"zh": "輕量街頭五分褲",
 "ja": "エアーストリート・ハーフパンツ",
 "en": "Air Cell Halfslops",
 "slot": "腿部",
@@ -10094,12 +10745,12 @@
 "icon": 57793,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
-"src": "🗺️藏寶圖"
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"src": "🗺️藏寶圖（輕量街頭裝備箱 等）"
 },
 {
 "id": 47206,
-"zh": "",
+"zh": "輕量街頭鞋",
 "ja": "エアーストリート・シューズ",
 "en": "Air Cell Shoes",
 "slot": "腳部",
@@ -10110,12 +10761,12 @@
 "icon": 57882,
 "ilvl": 1,
 "cjc": 1,
-"cjc_name": "",
-"src": "🗺️藏寶圖"
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"src": "🗺️藏寶圖（輕量街頭裝備箱 等）"
 }
 ],
-"cjc_name": "All Classes",
-"zh_ok": false
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"zh_ok": true
 },
 {
 "id": "src:58181457:76:745",
@@ -10140,7 +10791,7 @@
 "ilvl": 745,
 "cjc": 76,
 "cjc_name": "LNC DRG RPR",
-"src": "🪙十二城邦銀幣×4000"
+"src": "🪙十二城邦銀幣×4000（調查隊的古錢鑑定師）"
 },
 {
 "id": 47774,
@@ -10156,7 +10807,7 @@
 "ilvl": 745,
 "cjc": 76,
 "cjc_name": "LNC DRG RPR",
-"src": "🪙十二城邦銀幣×4000"
+"src": "🪙十二城邦銀幣×4000（調查隊的古錢鑑定師）"
 },
 {
 "id": 47775,
@@ -10172,7 +10823,7 @@
 "ilvl": 745,
 "cjc": 76,
 "cjc_name": "LNC DRG RPR",
-"src": "🪙十二城邦銀幣×4000"
+"src": "🪙十二城邦銀幣×4000（調查隊的古錢鑑定師）"
 },
 {
 "id": 47776,
@@ -10188,7 +10839,7 @@
 "ilvl": 745,
 "cjc": 76,
 "cjc_name": "LNC DRG RPR",
-"src": "🪙十二城邦銀幣×4000"
+"src": "🪙十二城邦銀幣×4000（調查隊的古錢鑑定師）"
 },
 {
 "id": 47777,
@@ -10204,7 +10855,7 @@
 "ilvl": 745,
 "cjc": 76,
 "cjc_name": "LNC DRG RPR",
-"src": "🪙十二城邦銀幣×4000"
+"src": "🪙十二城邦銀幣×4000（調查隊的古錢鑑定師）"
 }
 ],
 "cjc_name": "LNC DRG RPR",
@@ -10233,7 +10884,7 @@
 "ilvl": 745,
 "cjc": 66,
 "cjc_name": "ARC BRD MCH DNC",
-"src": "🪙十二城邦銀幣×4000"
+"src": "🪙十二城邦銀幣×4000（調查隊的古錢鑑定師）"
 },
 {
 "id": 47804,
@@ -10249,7 +10900,7 @@
 "ilvl": 745,
 "cjc": 66,
 "cjc_name": "ARC BRD MCH DNC",
-"src": "🪙十二城邦銀幣×4000"
+"src": "🪙十二城邦銀幣×4000（調查隊的古錢鑑定師）"
 },
 {
 "id": 47805,
@@ -10265,7 +10916,7 @@
 "ilvl": 745,
 "cjc": 66,
 "cjc_name": "ARC BRD MCH DNC",
-"src": "🪙十二城邦銀幣×4000"
+"src": "🪙十二城邦銀幣×4000（調查隊的古錢鑑定師）"
 },
 {
 "id": 47806,
@@ -10281,7 +10932,7 @@
 "ilvl": 745,
 "cjc": 66,
 "cjc_name": "ARC BRD MCH DNC",
-"src": "🪙十二城邦銀幣×4000"
+"src": "🪙十二城邦銀幣×4000（調查隊的古錢鑑定師）"
 },
 {
 "id": 47807,
@@ -10297,7 +10948,7 @@
 "ilvl": 745,
 "cjc": 66,
 "cjc_name": "ARC BRD MCH DNC",
-"src": "🪙十二城邦銀幣×4000"
+"src": "🪙十二城邦銀幣×4000（調查隊的古錢鑑定師）"
 }
 ],
 "cjc_name": "ARC BRD MCH DNC",
@@ -10326,7 +10977,7 @@
 "ilvl": 745,
 "cjc": 65,
 "cjc_name": "PGL MNK SAM",
-"src": "🪙十二城邦銀幣×4000"
+"src": "🪙十二城邦銀幣×4000（調查隊的古錢鑑定師）"
 },
 {
 "id": 47789,
@@ -10342,7 +10993,7 @@
 "ilvl": 745,
 "cjc": 65,
 "cjc_name": "PGL MNK SAM",
-"src": "🪙十二城邦銀幣×4000"
+"src": "🪙十二城邦銀幣×4000（調查隊的古錢鑑定師）"
 },
 {
 "id": 47790,
@@ -10358,7 +11009,7 @@
 "ilvl": 745,
 "cjc": 65,
 "cjc_name": "PGL MNK SAM",
-"src": "🪙十二城邦銀幣×4000"
+"src": "🪙十二城邦銀幣×4000（調查隊的古錢鑑定師）"
 },
 {
 "id": 47791,
@@ -10374,7 +11025,7 @@
 "ilvl": 745,
 "cjc": 65,
 "cjc_name": "PGL MNK SAM",
-"src": "🪙十二城邦銀幣×4000"
+"src": "🪙十二城邦銀幣×4000（調查隊的古錢鑑定師）"
 },
 {
 "id": 47792,
@@ -10390,7 +11041,7 @@
 "ilvl": 745,
 "cjc": 65,
 "cjc_name": "PGL MNK SAM",
-"src": "🪙十二城邦銀幣×4000"
+"src": "🪙十二城邦銀幣×4000（調查隊的古錢鑑定師）"
 }
 ],
 "cjc_name": "PGL MNK SAM",
@@ -10419,7 +11070,7 @@
 "ilvl": 745,
 "cjc": 64,
 "cjc_name": "CNJ WHM SCH AST SGE",
-"src": "🪙十二城邦銀幣×4000"
+"src": "🪙十二城邦銀幣×4000（調查隊的古錢鑑定師）"
 },
 {
 "id": 47834,
@@ -10435,7 +11086,7 @@
 "ilvl": 745,
 "cjc": 64,
 "cjc_name": "CNJ WHM SCH AST SGE",
-"src": "🪙十二城邦銀幣×4000"
+"src": "🪙十二城邦銀幣×4000（調查隊的古錢鑑定師）"
 },
 {
 "id": 47835,
@@ -10451,7 +11102,7 @@
 "ilvl": 745,
 "cjc": 64,
 "cjc_name": "CNJ WHM SCH AST SGE",
-"src": "🪙十二城邦銀幣×4000"
+"src": "🪙十二城邦銀幣×4000（調查隊的古錢鑑定師）"
 },
 {
 "id": 47836,
@@ -10467,7 +11118,7 @@
 "ilvl": 745,
 "cjc": 64,
 "cjc_name": "CNJ WHM SCH AST SGE",
-"src": "🪙十二城邦銀幣×4000"
+"src": "🪙十二城邦銀幣×4000（調查隊的古錢鑑定師）"
 },
 {
 "id": 47837,
@@ -10483,7 +11134,7 @@
 "ilvl": 745,
 "cjc": 64,
 "cjc_name": "CNJ WHM SCH AST SGE",
-"src": "🪙十二城邦銀幣×4000"
+"src": "🪙十二城邦銀幣×4000（調查隊的古錢鑑定師）"
 }
 ],
 "cjc_name": "CNJ WHM SCH AST SGE",
@@ -10512,7 +11163,7 @@
 "ilvl": 745,
 "cjc": 63,
 "cjc_name": "THM BLM ACN SMN RDM BLU PCT",
-"src": "🪙十二城邦銀幣×4000"
+"src": "🪙十二城邦銀幣×4000（調查隊的古錢鑑定師）"
 },
 {
 "id": 47849,
@@ -10528,7 +11179,7 @@
 "ilvl": 745,
 "cjc": 63,
 "cjc_name": "THM BLM ACN SMN RDM BLU PCT",
-"src": "🪙十二城邦銀幣×4000"
+"src": "🪙十二城邦銀幣×4000（調查隊的古錢鑑定師）"
 },
 {
 "id": 47850,
@@ -10544,7 +11195,7 @@
 "ilvl": 745,
 "cjc": 63,
 "cjc_name": "THM BLM ACN SMN RDM BLU PCT",
-"src": "🪙十二城邦銀幣×4000"
+"src": "🪙十二城邦銀幣×4000（調查隊的古錢鑑定師）"
 },
 {
 "id": 47851,
@@ -10560,7 +11211,7 @@
 "ilvl": 745,
 "cjc": 63,
 "cjc_name": "THM BLM ACN SMN RDM BLU PCT",
-"src": "🪙十二城邦銀幣×4000"
+"src": "🪙十二城邦銀幣×4000（調查隊的古錢鑑定師）"
 },
 {
 "id": 47852,
@@ -10576,7 +11227,7 @@
 "ilvl": 745,
 "cjc": 63,
 "cjc_name": "THM BLM ACN SMN RDM BLU PCT",
-"src": "🪙十二城邦銀幣×4000"
+"src": "🪙十二城邦銀幣×4000（調查隊的古錢鑑定師）"
 }
 ],
 "cjc_name": "THM BLM ACN SMN RDM BLU PCT",
@@ -10605,7 +11256,7 @@
 "ilvl": 745,
 "cjc": 59,
 "cjc_name": "GLA MRD PLD WAR DRK GNB",
-"src": "🪙十二城邦銀幣×4000"
+"src": "🪙十二城邦銀幣×4000（調查隊的古錢鑑定師）"
 },
 {
 "id": 47759,
@@ -10621,7 +11272,7 @@
 "ilvl": 745,
 "cjc": 59,
 "cjc_name": "GLA MRD PLD WAR DRK GNB",
-"src": "🪙十二城邦銀幣×4000"
+"src": "🪙十二城邦銀幣×4000（調查隊的古錢鑑定師）"
 },
 {
 "id": 47760,
@@ -10637,7 +11288,7 @@
 "ilvl": 745,
 "cjc": 59,
 "cjc_name": "GLA MRD PLD WAR DRK GNB",
-"src": "🪙十二城邦銀幣×4000"
+"src": "🪙十二城邦銀幣×4000（調查隊的古錢鑑定師）"
 },
 {
 "id": 47761,
@@ -10653,7 +11304,7 @@
 "ilvl": 745,
 "cjc": 59,
 "cjc_name": "GLA MRD PLD WAR DRK GNB",
-"src": "🪙十二城邦銀幣×4000"
+"src": "🪙十二城邦銀幣×4000（調查隊的古錢鑑定師）"
 },
 {
 "id": 47762,
@@ -10669,7 +11320,7 @@
 "ilvl": 745,
 "cjc": 59,
 "cjc_name": "GLA MRD PLD WAR DRK GNB",
-"src": "🪙十二城邦銀幣×4000"
+"src": "🪙十二城邦銀幣×4000（調查隊的古錢鑑定師）"
 }
 ],
 "cjc_name": "GLA MRD PLD WAR DRK GNB",
@@ -10698,7 +11349,7 @@
 "ilvl": 745,
 "cjc": 103,
 "cjc_name": "ROG NIN VPR",
-"src": "🪙十二城邦銀幣×4000"
+"src": "🪙十二城邦銀幣×4000（調查隊的古錢鑑定師）"
 },
 {
 "id": 47819,
@@ -10714,7 +11365,7 @@
 "ilvl": 745,
 "cjc": 103,
 "cjc_name": "ROG NIN VPR",
-"src": "🪙十二城邦銀幣×4000"
+"src": "🪙十二城邦銀幣×4000（調查隊的古錢鑑定師）"
 },
 {
 "id": 47820,
@@ -10730,7 +11381,7 @@
 "ilvl": 745,
 "cjc": 103,
 "cjc_name": "ROG NIN VPR",
-"src": "🪙十二城邦銀幣×4000"
+"src": "🪙十二城邦銀幣×4000（調查隊的古錢鑑定師）"
 },
 {
 "id": 47821,
@@ -10746,7 +11397,7 @@
 "ilvl": 745,
 "cjc": 103,
 "cjc_name": "ROG NIN VPR",
-"src": "🪙十二城邦銀幣×4000"
+"src": "🪙十二城邦銀幣×4000（調查隊的古錢鑑定師）"
 },
 {
 "id": 47822,
@@ -10762,7 +11413,7 @@
 "ilvl": 745,
 "cjc": 103,
 "cjc_name": "ROG NIN VPR",
-"src": "🪙十二城邦銀幣×4000"
+"src": "🪙十二城邦銀幣×4000（調查隊的古錢鑑定師）"
 }
 ],
 "cjc_name": "ROG NIN VPR",
@@ -10791,7 +11442,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
-"src": "🪙十二城邦金幣×1600"
+"src": "🪙十二城邦金幣×1600（調查隊的古錢鑑定師）"
 },
 {
 "id": 47902,
@@ -10807,7 +11458,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
-"src": "🪙十二城邦金幣×1600"
+"src": "🪙十二城邦金幣×1600（調查隊的古錢鑑定師）"
 },
 {
 "id": 47903,
@@ -10823,7 +11474,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
-"src": "🪙十二城邦金幣×1600"
+"src": "🪙十二城邦金幣×1600（調查隊的古錢鑑定師）"
 },
 {
 "id": 47904,
@@ -10839,7 +11490,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
-"src": "🪙十二城邦金幣×1600"
+"src": "🪙十二城邦金幣×1600（調查隊的古錢鑑定師）"
 },
 {
 "id": 47905,
@@ -10855,7 +11506,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
-"src": "🪙十二城邦金幣×1600"
+"src": "🪙十二城邦金幣×1600（調查隊的古錢鑑定師）"
 }
 ],
 "cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
@@ -10884,7 +11535,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
-"src": "🪙十二城邦金幣×1600"
+"src": "🪙十二城邦金幣×1600（調查隊的古錢鑑定師）"
 },
 {
 "id": 47897,
@@ -10900,7 +11551,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
-"src": "🪙十二城邦金幣×1600"
+"src": "🪙十二城邦金幣×1600（調查隊的古錢鑑定師）"
 },
 {
 "id": 47898,
@@ -10916,7 +11567,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
-"src": "🪙十二城邦金幣×1600"
+"src": "🪙十二城邦金幣×1600（調查隊的古錢鑑定師）"
 },
 {
 "id": 47899,
@@ -10932,7 +11583,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
-"src": "🪙十二城邦金幣×1600"
+"src": "🪙十二城邦金幣×1600（調查隊的古錢鑑定師）"
 },
 {
 "id": 47900,
@@ -10948,7 +11599,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
-"src": "🪙十二城邦金幣×1600"
+"src": "🪙十二城邦金幣×1600（調查隊的古錢鑑定師）"
 }
 ],
 "cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
@@ -10977,7 +11628,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
-"src": "🪙十二城邦銀幣×1000"
+"src": "🪙十二城邦銀幣×1000（調查隊的古錢鑑定師）"
 },
 {
 "id": 47892,
@@ -10993,7 +11644,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
-"src": "🪙十二城邦銀幣×1000"
+"src": "🪙十二城邦銀幣×1000（調查隊的古錢鑑定師）"
 },
 {
 "id": 47893,
@@ -11009,7 +11660,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
-"src": "🪙十二城邦銀幣×1000"
+"src": "🪙十二城邦銀幣×1000（調查隊的古錢鑑定師）"
 },
 {
 "id": 47894,
@@ -11025,7 +11676,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
-"src": "🪙十二城邦銀幣×1000"
+"src": "🪙十二城邦銀幣×1000（調查隊的古錢鑑定師）"
 },
 {
 "id": 47895,
@@ -11041,7 +11692,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
-"src": "🪙十二城邦銀幣×1000"
+"src": "🪙十二城邦銀幣×1000（調查隊的古錢鑑定師）"
 }
 ],
 "cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
@@ -11224,7 +11875,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
-"src": "🪙宇宙信用點數×8400"
+"src": "🪙宇宙信用點數×8400（梅蘇艾東克）"
 },
 {
 "id": 47930,
@@ -11240,7 +11891,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
-"src": "🪙宇宙信用點數×4800"
+"src": "🪙宇宙信用點數×4800（梅蘇艾東克）"
 },
 {
 "id": 47931,
@@ -11256,7 +11907,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
-"src": "🪙宇宙信用點數×7200"
+"src": "🪙宇宙信用點數×7200（梅蘇艾東克）"
 },
 {
 "id": 47932,
@@ -11272,7 +11923,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
-"src": "🪙宇宙信用點數×4800"
+"src": "🪙宇宙信用點數×4800（梅蘇艾東克）"
 }
 ],
 "cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
@@ -19773,6 +20424,320 @@
 }
 ],
 "cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"zh_ok": true
+},
+{
+"id": "src:fca1a17c:33:690",
+"layer": "src",
+"name_zh": "歌吉斯 i690 套裝",
+"name_ja": "",
+"name_en": "",
+"source": "🛒歌吉斯",
+"patch": "7.0",
+"pieces": [
+{
+"id": 43314,
+"zh": "落雷絹巧匠無簷帽",
+"ja": "サンダーヤードシルク・クラフターキャップ",
+"en": "Thunderyards Silk Cap of Crafting",
+"slot": "頭部",
+"patch": "7.0",
+"lv": 100,
+"dye": 2,
+"mb": true,
+"icon": 56725,
+"ilvl": 690,
+"cjc": 33,
+"cjc_name": "CRP BSM ARM GSM LTW WVR ALC CUL",
+"src": "🛒歌吉斯 28659 Gil"
+},
+{
+"id": 43315,
+"zh": "落雷絹巧匠襯衫",
+"ja": "サンダーヤードシルク・クラフターシャツ",
+"en": "Thunderyards Silk Shirt of Crafting",
+"slot": "上身",
+"patch": "7.0",
+"lv": 100,
+"dye": 2,
+"mb": true,
+"icon": 57114,
+"ilvl": 690,
+"cjc": 33,
+"cjc_name": "CRP BSM ARM GSM LTW WVR ALC CUL",
+"src": "🛒歌吉斯 47765 Gil"
+},
+{
+"id": 43316,
+"zh": "卡岡圖亞革巧匠半指手套",
+"ja": "ガルガンチュア・クラフターハーフグローブ",
+"en": "Gargantuaskin Halfgloves of Crafting",
+"slot": "手部",
+"patch": "7.0",
+"lv": 100,
+"dye": 2,
+"mb": true,
+"icon": 56238,
+"ilvl": 690,
+"cjc": 33,
+"cjc_name": "CRP BSM ARM GSM LTW WVR ALC CUL",
+"src": "🛒歌吉斯 28659 Gil"
+},
+{
+"id": 43317,
+"zh": "落雷絹巧匠寬鬆七分褲",
+"ja": "サンダーヤードシルク・クラフターワイドパンツ",
+"en": "Thunderyards Silk Culottes of Crafting",
+"slot": "腿部",
+"patch": "7.0",
+"lv": 100,
+"dye": 2,
+"mb": true,
+"icon": 57642,
+"ilvl": 690,
+"cjc": 33,
+"cjc_name": "CRP BSM ARM GSM LTW WVR ALC CUL",
+"src": "🛒歌吉斯 47765 Gil"
+},
+{
+"id": 43318,
+"zh": "克拉洛胡桃木巧匠涼鞋",
+"ja": "クラロウォルナット・クラフターサンダル",
+"en": "Claro Walnut Sandals of Crafting",
+"slot": "腳部",
+"patch": "7.0",
+"lv": 100,
+"dye": 2,
+"mb": true,
+"icon": 49734,
+"ilvl": 690,
+"cjc": 33,
+"cjc_name": "CRP BSM ARM GSM LTW WVR ALC CUL",
+"src": "🛒歌吉斯 28659 Gil"
+},
+{
+"id": 43340,
+"zh": "黑星石巧匠耳墜",
+"ja": "ブラックスター・クラフターイヤリング",
+"en": "Black Star Earrings of Crafting",
+"slot": "耳飾",
+"patch": "7.0",
+"lv": 100,
+"dye": 0,
+"mb": true,
+"icon": 55534,
+"ilvl": 690,
+"cjc": 33,
+"cjc_name": "CRP BSM ARM GSM LTW WVR ALC CUL",
+"src": "🛒歌吉斯 21711 Gil"
+},
+{
+"id": 43341,
+"zh": "黑星石巧匠圍巾",
+"ja": "ブラックスター・クラフタースカーフ",
+"en": "Black Star Scarf of Crafting",
+"slot": "項鍊",
+"patch": "7.0",
+"lv": 100,
+"dye": 0,
+"mb": true,
+"icon": 55086,
+"ilvl": 690,
+"cjc": 33,
+"cjc_name": "CRP BSM ARM GSM LTW WVR ALC CUL",
+"src": "🛒歌吉斯 21711 Gil"
+},
+{
+"id": 43342,
+"zh": "黑星石巧匠手鐲",
+"ja": "ブラックスター・クラフターブレスレット",
+"en": "Black Star Bracelets of Crafting",
+"slot": "手鐲",
+"patch": "7.0",
+"lv": 100,
+"dye": 0,
+"mb": true,
+"icon": 55885,
+"ilvl": 690,
+"cjc": 33,
+"cjc_name": "CRP BSM ARM GSM LTW WVR ALC CUL",
+"src": "🛒歌吉斯 21711 Gil"
+},
+{
+"id": 43343,
+"zh": "卡扎納爾巧匠戒指",
+"ja": "カザナル・クラフターリング",
+"en": "Black Star Ring of Crafting",
+"slot": "戒指",
+"patch": "7.0",
+"lv": 100,
+"dye": 0,
+"mb": true,
+"icon": 54736,
+"ilvl": 690,
+"cjc": 33,
+"cjc_name": "CRP BSM ARM GSM LTW WVR ALC CUL",
+"src": "🛒歌吉斯 21711 Gil"
+}
+],
+"cjc_name": "CRP BSM ARM GSM LTW WVR ALC CUL",
+"zh_ok": true
+},
+{
+"id": "src:fca1a17c:32:690",
+"layer": "src",
+"name_zh": "歌吉斯 i690 套裝",
+"name_ja": "",
+"name_en": "",
+"source": "🛒歌吉斯",
+"patch": "7.0",
+"pieces": [
+{
+"id": 43319,
+"zh": "卡岡圖亞革大地工作帽",
+"ja": "ガルガンチュア・ギャザラーハット",
+"en": "Gargantuaskin Hat of Gathering",
+"slot": "頭部",
+"patch": "7.0",
+"lv": 100,
+"dye": 2,
+"mb": true,
+"icon": 56724,
+"ilvl": 690,
+"cjc": 32,
+"cjc_name": "MIN BTN FSH",
+"src": "🛒歌吉斯 28659 Gil"
+},
+{
+"id": 43320,
+"zh": "落雷絹大地坎肩",
+"ja": "サンダーヤードシルク・ギャザラーベスト",
+"en": "Thunderyards Silk Vest of Gathering",
+"slot": "上身",
+"patch": "7.0",
+"lv": 100,
+"dye": 2,
+"mb": true,
+"icon": 57113,
+"ilvl": 690,
+"cjc": 32,
+"cjc_name": "MIN BTN FSH",
+"src": "🛒歌吉斯 47765 Gil"
+},
+{
+"id": 43321,
+"zh": "卡岡圖亞革大地半指護手",
+"ja": "ガルガンチュア・ギャザラーフィンガレスグローブ",
+"en": "Gargantuaskin Fingerless Gloves of Gathering",
+"slot": "手部",
+"patch": "7.0",
+"lv": 100,
+"dye": 2,
+"mb": true,
+"icon": 56237,
+"ilvl": 690,
+"cjc": 32,
+"cjc_name": "MIN BTN FSH",
+"src": "🛒歌吉斯 28659 Gil"
+},
+{
+"id": 43322,
+"zh": "落雷絹大地寬鬆七分褲",
+"ja": "サンダーヤードシルク・ギャザラーワイドパンツ",
+"en": "Thunderyards Silk Culottes of Gathering",
+"slot": "腿部",
+"patch": "7.0",
+"lv": 100,
+"dye": 2,
+"mb": true,
+"icon": 57641,
+"ilvl": 690,
+"cjc": 32,
+"cjc_name": "MIN BTN FSH",
+"src": "🛒歌吉斯 47765 Gil"
+},
+{
+"id": 43323,
+"zh": "克拉洛胡桃木大地涼鞋",
+"ja": "クラロウォルナット・ギャザラーサンダル",
+"en": "Claro Walnut Sandals of Gathering",
+"slot": "腳部",
+"patch": "7.0",
+"lv": 100,
+"dye": 2,
+"mb": true,
+"icon": 49733,
+"ilvl": 690,
+"cjc": 32,
+"cjc_name": "MIN BTN FSH",
+"src": "🛒歌吉斯 28659 Gil"
+},
+{
+"id": 43344,
+"zh": "黑星石大地耳環",
+"ja": "ブラックスター・ギャザラーイヤリング",
+"en": "Black Star Earrings of Gathering",
+"slot": "耳飾",
+"patch": "7.0",
+"lv": 100,
+"dye": 0,
+"mb": true,
+"icon": 55533,
+"ilvl": 690,
+"cjc": 32,
+"cjc_name": "MIN BTN FSH",
+"src": "🛒歌吉斯 21711 Gil"
+},
+{
+"id": 43345,
+"zh": "克拉洛胡桃木大地項鍊",
+"ja": "クラロウォルナット・ギャザラーネックレス",
+"en": "Claro Walnut Necklace of Gathering",
+"slot": "項鍊",
+"patch": "7.0",
+"lv": 100,
+"dye": 0,
+"mb": true,
+"icon": 55085,
+"ilvl": 690,
+"cjc": 32,
+"cjc_name": "MIN BTN FSH",
+"src": "🛒歌吉斯 21711 Gil"
+},
+{
+"id": 43346,
+"zh": "克拉洛胡桃木大地手環",
+"ja": "クラロウォルナット・ギャザラーブレスレット",
+"en": "Claro Walnut Bracelet of Gathering",
+"slot": "手鐲",
+"patch": "7.0",
+"lv": 100,
+"dye": 0,
+"mb": true,
+"icon": 55884,
+"ilvl": 690,
+"cjc": 32,
+"cjc_name": "MIN BTN FSH",
+"src": "🛒歌吉斯 21711 Gil"
+},
+{
+"id": 43347,
+"zh": "卡扎納爾大地指環",
+"ja": "カザナル・ギャザラーリング",
+"en": "Ra'Kaznar Ring of Gathering",
+"slot": "戒指",
+"patch": "7.0",
+"lv": 100,
+"dye": 0,
+"mb": true,
+"icon": 54735,
+"ilvl": 690,
+"cjc": 32,
+"cjc_name": "MIN BTN FSH",
+"src": "🛒歌吉斯 21711 Gil"
+}
+],
+"cjc_name": "MIN BTN FSH",
 "zh_ok": true
 },
 {
@@ -57983,10 +58948,10 @@
 {
 "id": "src:a98441dd:33:560",
 "layer": "src",
-"name_zh": "雅・頌錦 i560 套裝",
+"name_zh": "歌吉斯 i560 套裝",
 "name_ja": "",
 "name_en": "",
-"source": "🛒雅・頌錦",
+"source": "🛒歌吉斯",
 "patch": "6.0",
 "pieces": [
 {
@@ -58076,10 +59041,10 @@
 {
 "id": "src:a98441dd:32:560",
 "layer": "src",
-"name_zh": "雅・頌錦 i560 套裝",
+"name_zh": "歌吉斯 i560 套裝",
 "name_ja": "",
 "name_en": "",
-"source": "🛒雅・頌錦",
+"source": "🛒歌吉斯",
 "patch": "6.0",
 "pieces": [
 {
@@ -58169,10 +59134,10 @@
 {
 "id": "src:a26720a5:33:540",
 "layer": "src",
-"name_zh": "發財威 i540 套裝",
+"name_zh": "歌吉斯 i540 套裝",
 "name_ja": "",
 "name_en": "",
-"source": "🛒發財威",
+"source": "🛒歌吉斯",
 "patch": "6.0",
 "pieces": [
 {
@@ -58262,10 +59227,10 @@
 {
 "id": "src:a26720a5:33:520",
 "layer": "src",
-"name_zh": "發財威 i520 套裝",
+"name_zh": "歌吉斯 i520 套裝",
 "name_ja": "",
 "name_en": "",
-"source": "🛒發財威",
+"source": "🛒歌吉斯",
 "patch": "6.0",
 "pieces": [
 {
@@ -58355,10 +59320,10 @@
 {
 "id": "src:a26720a5:33:480",
 "layer": "src",
-"name_zh": "發財威 i480 套裝",
+"name_zh": "歌吉斯 i480 套裝",
 "name_ja": "",
 "name_en": "",
-"source": "🛒發財威",
+"source": "🛒歌吉斯",
 "patch": "6.0",
 "pieces": [
 {
@@ -92512,7 +93477,7 @@
 "ilvl": 445,
 "cjc": 63,
 "cjc_name": "THM BLM ACN SMN RDM BLU PCT",
-"src": "🪙兌換×15；🗡️魔法宮殿宇宙宮（迷宮挑戰）"
+"src": "🪙稀少默示神典石×15；🗡️魔法宮殿宇宙宮（迷宮挑戰）"
 },
 {
 "id": 28246,
@@ -92528,7 +93493,7 @@
 "ilvl": 445,
 "cjc": 63,
 "cjc_name": "THM BLM ACN SMN RDM BLU PCT",
-"src": "🪙兌換×15；🗡️魔法宮殿宇宙宮（迷宮挑戰）"
+"src": "🪙稀少默示神典石×15；🗡️魔法宮殿宇宙宮（迷宮挑戰）"
 },
 {
 "id": 28247,
@@ -92669,7 +93634,7 @@
 "ilvl": 445,
 "cjc": 64,
 "cjc_name": "CNJ WHM SCH AST SGE",
-"src": "🪙兌換×15；🗡️魔法宮殿宇宙宮（迷宮挑戰）"
+"src": "🪙稀少默示神典石×15；🗡️魔法宮殿宇宙宮（迷宮挑戰）"
 },
 {
 "id": 28240,
@@ -92685,7 +93650,7 @@
 "ilvl": 445,
 "cjc": 64,
 "cjc_name": "CNJ WHM SCH AST SGE",
-"src": "🪙兌換×15；🗡️魔法宮殿宇宙宮（迷宮挑戰）"
+"src": "🪙稀少默示神典石×15；🗡️魔法宮殿宇宙宮（迷宮挑戰）"
 },
 {
 "id": 28241,
@@ -92826,7 +93791,7 @@
 "ilvl": 445,
 "cjc": 103,
 "cjc_name": "ROG NIN VPR",
-"src": "🪙兌換×15；🗡️魔法宮殿宇宙宮（迷宮挑戰）"
+"src": "🪙稀少默示神典石×15；🗡️魔法宮殿宇宙宮（迷宮挑戰）"
 },
 {
 "id": 28234,
@@ -92842,7 +93807,7 @@
 "ilvl": 445,
 "cjc": 103,
 "cjc_name": "ROG NIN VPR",
-"src": "🪙兌換×15；🗡️魔法宮殿宇宙宮（迷宮挑戰）"
+"src": "🪙稀少默示神典石×15；🗡️魔法宮殿宇宙宮（迷宮挑戰）"
 },
 {
 "id": 28235,
@@ -92983,7 +93948,7 @@
 "ilvl": 445,
 "cjc": 66,
 "cjc_name": "ARC BRD MCH DNC",
-"src": "🪙兌換×15；🗡️魔法宮殿宇宙宮（迷宮挑戰）"
+"src": "🪙稀少默示神典石×15；🗡️魔法宮殿宇宙宮（迷宮挑戰）"
 },
 {
 "id": 28228,
@@ -92999,7 +93964,7 @@
 "ilvl": 445,
 "cjc": 66,
 "cjc_name": "ARC BRD MCH DNC",
-"src": "🪙兌換×15；🗡️魔法宮殿宇宙宮（迷宮挑戰）"
+"src": "🪙稀少默示神典石×15；🗡️魔法宮殿宇宙宮（迷宮挑戰）"
 },
 {
 "id": 28229,
@@ -93140,7 +94105,7 @@
 "ilvl": 445,
 "cjc": 65,
 "cjc_name": "PGL MNK SAM",
-"src": "🪙兌換×15；🗡️魔法宮殿宇宙宮（迷宮挑戰）"
+"src": "🪙稀少默示神典石×15；🗡️魔法宮殿宇宙宮（迷宮挑戰）"
 },
 {
 "id": 28222,
@@ -93156,7 +94121,7 @@
 "ilvl": 445,
 "cjc": 65,
 "cjc_name": "PGL MNK SAM",
-"src": "🪙兌換×15；🗡️魔法宮殿宇宙宮（迷宮挑戰）"
+"src": "🪙稀少默示神典石×15；🗡️魔法宮殿宇宙宮（迷宮挑戰）"
 },
 {
 "id": 28223,
@@ -93297,7 +94262,7 @@
 "ilvl": 445,
 "cjc": 76,
 "cjc_name": "LNC DRG RPR",
-"src": "🪙兌換×15；🗡️魔法宮殿宇宙宮（迷宮挑戰）"
+"src": "🪙稀少默示神典石×15；🗡️魔法宮殿宇宙宮（迷宮挑戰）"
 },
 {
 "id": 28216,
@@ -93313,7 +94278,7 @@
 "ilvl": 445,
 "cjc": 76,
 "cjc_name": "LNC DRG RPR",
-"src": "🪙兌換×15；🗡️魔法宮殿宇宙宮（迷宮挑戰）"
+"src": "🪙稀少默示神典石×15；🗡️魔法宮殿宇宙宮（迷宮挑戰）"
 },
 {
 "id": 28217,
@@ -93454,7 +94419,7 @@
 "ilvl": 445,
 "cjc": 59,
 "cjc_name": "GLA MRD PLD WAR DRK GNB",
-"src": "🪙兌換×15；🗡️魔法宮殿宇宙宮（迷宮挑戰）"
+"src": "🪙稀少默示神典石×15；🗡️魔法宮殿宇宙宮（迷宮挑戰）"
 },
 {
 "id": 28210,
@@ -93470,7 +94435,7 @@
 "ilvl": 445,
 "cjc": 59,
 "cjc_name": "GLA MRD PLD WAR DRK GNB",
-"src": "🪙兌換×15；🗡️魔法宮殿宇宙宮（迷宮挑戰）"
+"src": "🪙稀少默示神典石×15；🗡️魔法宮殿宇宙宮（迷宮挑戰）"
 },
 {
 "id": 28211,
@@ -135670,10 +136635,10 @@
 {
 "id": "src:48f87dd6:33:220",
 "layer": "src",
-"name_zh": "武器商人 i220 套裝",
+"name_zh": "歌吉斯 i220 套裝",
 "name_ja": "",
 "name_en": "",
-"source": "🛒武器商人",
+"source": "🛒歌吉斯",
 "patch": "4.0",
 "pieces": [
 {
@@ -135763,10 +136728,10 @@
 {
 "id": "src:48f87dd6:32:220",
 "layer": "src",
-"name_zh": "武器商人 i220 套裝",
+"name_zh": "歌吉斯 i220 套裝",
 "name_ja": "",
 "name_en": "",
-"source": "🛒武器商人",
+"source": "🛒歌吉斯",
 "patch": "4.0",
 "pieces": [
 {
@@ -135856,10 +136821,10 @@
 {
 "id": "src:484fe534:33:200",
 "layer": "src",
-"name_zh": "無刀 i200 套裝",
+"name_zh": "歌吉斯 i200 套裝",
 "name_ja": "",
 "name_en": "",
-"source": "🛒無刀",
+"source": "🛒歌吉斯",
 "patch": "4.0",
 "pieces": [
 {
@@ -135952,7 +136917,7 @@
 "name_zh": "牛鬼革",
 "name_ja": "ギュウキ",
 "name_en": "Gyuki Leather",
-"source": "🛒無刀",
+"source": "🛒歌吉斯",
 "patch": "4.0",
 "pieces": [
 {
@@ -136677,10 +137642,10 @@
 {
 "id": "src:3d0b1398:33:290",
 "layer": "src",
-"name_zh": "無刀 i290 套裝",
+"name_zh": "歌吉斯 i290 套裝",
 "name_ja": "",
 "name_en": "",
-"source": "🛒無刀",
+"source": "🛒歌吉斯",
 "patch": "4.0",
 "pieces": [
 {
@@ -136770,10 +137735,10 @@
 {
 "id": "src:3d0b1398:33:260",
 "layer": "src",
-"name_zh": "無刀 i260 套裝",
+"name_zh": "歌吉斯 i260 套裝",
 "name_ja": "",
 "name_en": "",
-"source": "🛒無刀",
+"source": "🛒歌吉斯",
 "patch": "4.0",
 "pieces": [
 {
@@ -136863,10 +137828,10 @@
 {
 "id": "src:3d0b1398:33:180",
 "layer": "src",
-"name_zh": "無刀 i180 套裝",
+"name_zh": "歌吉斯 i180 套裝",
 "name_ja": "",
 "name_en": "",
-"source": "🛒無刀",
+"source": "🛒歌吉斯",
 "patch": "4.0",
 "pieces": [
 {
@@ -136956,10 +137921,10 @@
 {
 "id": "src:3d0b1398:32:290",
 "layer": "src",
-"name_zh": "無刀 i290 套裝",
+"name_zh": "歌吉斯 i290 套裝",
 "name_ja": "",
 "name_en": "",
-"source": "🛒無刀",
+"source": "🛒歌吉斯",
 "patch": "4.0",
 "pieces": [
 {
@@ -137049,10 +138014,10 @@
 {
 "id": "src:3d0b1398:32:260",
 "layer": "src",
-"name_zh": "無刀 i260 套裝",
+"name_zh": "歌吉斯 i260 套裝",
 "name_ja": "",
 "name_en": "",
-"source": "🛒無刀",
+"source": "🛒歌吉斯",
 "patch": "4.0",
 "pieces": [
 {
@@ -137142,10 +138107,10 @@
 {
 "id": "src:3d0b1398:32:180",
 "layer": "src",
-"name_zh": "無刀 i180 套裝",
+"name_zh": "歌吉斯 i180 套裝",
 "name_ja": "",
 "name_en": "",
-"source": "🛒無刀",
+"source": "🛒歌吉斯",
 "patch": "4.0",
 "pieces": [
 {
@@ -188061,7 +189026,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
-"src": "🪙兌換×30"
+"src": "🪙稀少默示神典石×30"
 },
 {
 "id": 8560,
@@ -188077,7 +189042,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
-"src": "🪙兌換×30"
+"src": "🪙稀少默示神典石×30"
 },
 {
 "id": 8561,
@@ -188138,7 +189103,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
-"src": "🪙兌換×30"
+"src": "🪙稀少默示神典石×30"
 },
 {
 "id": 8560,
@@ -188154,7 +189119,7 @@
 "ilvl": 1,
 "cjc": 1,
 "cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
-"src": "🪙兌換×30"
+"src": "🪙稀少默示神典石×30"
 },
 {
 "id": 8561,
@@ -193929,6 +194894,51 @@
 "zh_ok": true
 },
 {
+"id": "src:ccc05891:1:12",
+"layer": "src",
+"name_zh": "多米西安 i12 套裝",
+"name_ja": "",
+"name_en": "",
+"source": "🛒多米西安",
+"patch": "2.0",
+"pieces": [
+{
+"id": 3018,
+"zh": "草布長袍",
+"ja": "ローブ",
+"en": "Hempen Robe",
+"slot": "上身",
+"patch": "2.0",
+"lv": 12,
+"dye": 1,
+"mb": true,
+"icon": 42044,
+"ilvl": 12,
+"cjc": 1,
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"src": "🛒雜用商人（黑衣森林中央林區） 349 Gil；📋漁師的搭檔"
+},
+{
+"id": 3773,
+"zh": "硬革涼鞋",
+"ja": "ハードレザーサンダル",
+"en": "Hard Leather Sandals",
+"slot": "腳部",
+"patch": "2.0",
+"lv": 12,
+"dye": 1,
+"mb": true,
+"icon": 49804,
+"ilvl": 12,
+"cjc": 1,
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"src": "🛒雜用商人（黑衣森林中央林區） 286 Gil；📋獻給墓園的花"
+}
+],
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"zh_ok": true
+},
+{
 "id": "src:ccc05891:1:10",
 "layer": "src",
 "name_zh": "業餘",
@@ -195443,7 +196453,7 @@
 "ilvl": 24,
 "cjc": 1,
 "cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
-"src": "📋冒牌皮革師"
+"src": "🛒歌吉斯 1257 Gil；📋冒牌皮革師"
 },
 {
 "id": 3575,
@@ -195610,7 +196620,7 @@
 "ilvl": 46,
 "cjc": 1,
 "cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
-"src": "📋危機來臨"
+"src": "🛒歌吉斯 4316 Gil；📋危機來臨"
 },
 {
 "id": 3187,
@@ -196554,61 +197564,138 @@
 "zh_ok": true
 },
 {
-"id": "src:55740f77:1:26",
+"id": "src:55740f77:1:5",
 "layer": "src",
-"name_zh": "多米西安 i26 套裝",
+"name_zh": "多米西安 i5 套裝",
 "name_ja": "",
 "name_en": "",
 "source": "🛒多米西安",
 "patch": "2.0",
 "pieces": [
 {
-"id": 3077,
-"zh": "棉絨巧匠短上衣",
-"ja": "ベルベティーンクラフターコーティー",
-"en": "Velveteen Coatee of Crafting",
+"id": 2655,
+"zh": "草布寬邊帽",
+"ja": "ハット",
+"en": "Hempen Hat",
+"slot": "頭部",
+"patch": "2.0",
+"lv": 5,
+"dye": 1,
+"mb": true,
+"icon": 41015,
+"ilvl": 5,
+"cjc": 1,
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"src": "🛒雜用商人（黑衣森林北部林區） 113 Gil；📋孢子變異"
+},
+{
+"id": 3010,
+"zh": "草布短袍",
+"ja": "ハーフローブ",
+"en": "Hempen Halfrobe",
 "slot": "上身",
 "patch": "2.0",
-"lv": 26,
+"lv": 5,
 "dye": 1,
 "mb": true,
-"icon": 42198,
-"ilvl": 26,
+"icon": 42150,
+"ilvl": 5,
 "cjc": 1,
 "cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
-"src": "🛒防具商人（黑衣森林南部林區） 1613 Gil"
+"src": "🛒防具商（黑衣森林北部林區） 140 Gil；📋私語巨木鳥欄的金具"
 },
 {
-"id": 3581,
-"zh": "山羊革手箍",
-"ja": "アルドゴートリングバンド",
-"en": "Goatskin Ringbands",
+"id": 3531,
+"zh": "鞣革連指輕手套",
+"ja": "ライトミトン",
+"en": "Leather Lightmitts",
 "slot": "手部",
 "patch": "2.0",
-"lv": 26,
+"lv": 5,
 "dye": 1,
 "mb": true,
-"icon": 48240,
-"ilvl": 26,
+"icon": 44065,
+"ilvl": 5,
 "cjc": 1,
 "cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
-"src": "🛒防具商人（黑衣森林南部林區） 1158 Gil；📋射向深淵的光"
+"src": "🛒雜用商人（黑衣森林北部林區） 126 Gil；📋儀式準備"
 },
 {
-"id": 3821,
-"zh": "山羊革筒靴",
-"ja": "アルドゴートブーツ",
-"en": "Goatskin Boots",
-"slot": "腳部",
+"id": 3312,
+"zh": "草布緊身褲",
+"ja": "タイツ",
+"en": "Hempen Tights",
+"slot": "腿部",
 "patch": "2.0",
-"lv": 26,
+"lv": 5,
 "dye": 1,
 "mb": true,
-"icon": 46140,
-"ilvl": 26,
+"icon": 45079,
+"ilvl": 5,
 "cjc": 1,
 "cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
-"src": "🛒防具商人（黑衣森林南部林區） 1654 Gil"
+"src": "🛒雜用商人（黑衣森林北部林區） 94 Gil；📋小搬運工"
+},
+{
+"id": 3764,
+"zh": "鞣革涼鞋",
+"ja": "サンダル",
+"en": "Leather Sandals",
+"slot": "腳部",
+"patch": "2.0",
+"lv": 5,
+"dye": 1,
+"mb": true,
+"icon": 49804,
+"ilvl": 5,
+"cjc": 1,
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"src": "🛒雜用商人（黑衣森林北部林區） 115 Gil"
+}
+],
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"zh_ok": true
+},
+{
+"id": "src:55740f77:1:27",
+"layer": "src",
+"name_zh": "棉絨",
+"name_ja": "ベルベティーン",
+"name_en": "Velveteen",
+"source": "🛒多米西安",
+"patch": "2.0",
+"pieces": [
+{
+"id": 3090,
+"zh": "棉絨僧袍",
+"ja": "ベルベティーンカウル",
+"en": "Velveteen Cowl",
+"slot": "上身",
+"patch": "2.0",
+"lv": 27,
+"dye": 1,
+"mb": true,
+"icon": 43615,
+"ilvl": 27,
+"cjc": 1,
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"src": "🛒防具商人（黑衣森林南部林區） 2568 Gil；📋威爾雷德的邀請"
+},
+{
+"id": 3355,
+"zh": "棉絨緊身褲",
+"ja": "ベルベティーンタイツ",
+"en": "Velveteen Tights",
+"slot": "腿部",
+"patch": "2.0",
+"lv": 27,
+"dye": 1,
+"mb": true,
+"icon": 45088,
+"ilvl": 27,
+"cjc": 1,
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"src": "🛒防具商人（黑衣森林南部林區） 1220 Gil；📋遺失的鑰匙"
 }
 ],
 "cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
@@ -196620,7 +197707,7 @@
 "name_zh": "顯貴",
 "name_ja": "パトリシアン",
 "name_en": "Patrician's",
-"source": "🛒諾爾蕾茲",
+"source": "🛒歌吉斯",
 "patch": "2.0",
 "pieces": [
 {
@@ -197185,28 +198272,12 @@
 {
 "id": "src:3238a406:1:44",
 "layer": "src",
-"name_zh": "多米西安 i44 套裝",
+"name_zh": "呢絨",
 "name_ja": "",
-"name_en": "",
+"name_en": "Woolen",
 "source": "🛒多米西安",
 "patch": "2.0",
 "pieces": [
-{
-"id": 2834,
-"zh": "鈷鐵護目鏡",
-"ja": "コバルトプリザーヴ",
-"en": "Cobalt Preserves",
-"slot": "頭部",
-"patch": "2.0",
-"lv": 44,
-"dye": 1,
-"mb": true,
-"icon": 40912,
-"ilvl": 44,
-"cjc": 1,
-"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
-"src": "🛒雜用商人（摩杜納） 4554 Gil"
-},
 {
 "id": 3178,
 "zh": "呢絨外袍",
@@ -197562,6 +198633,67 @@
 }
 ],
 "cjc_name": "GLA PGL MRD LNC ARC PLD MNK WAR DRG BRD ROG NIN MCH DRK SAM GNB DNC RPR VPR",
+"zh_ok": true
+},
+{
+"id": "src:13665e6c:1:15",
+"layer": "src",
+"name_zh": "多米西安 i15 套裝",
+"name_ja": "",
+"name_en": "",
+"source": "🛒多米西安",
+"patch": "2.0",
+"pieces": [
+{
+"id": 3024,
+"zh": "棉布僧袍",
+"ja": "コットンカウル",
+"en": "Cotton Cowl",
+"slot": "上身",
+"patch": "2.0",
+"lv": 15,
+"dye": 1,
+"mb": true,
+"icon": 43610,
+"ilvl": 15,
+"cjc": 1,
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"src": "🛒雜用商人（黑衣森林東部林區） 663 Gil；📋水之試煉"
+},
+{
+"id": 3327,
+"zh": "棉布緊身褲",
+"ja": "コットンタイツ",
+"en": "Cotton Tights",
+"slot": "腿部",
+"patch": "2.0",
+"lv": 15,
+"dye": 1,
+"mb": true,
+"icon": 45083,
+"ilvl": 15,
+"cjc": 1,
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"src": "🛒雜用商人（黑衣森林東部林區） 315 Gil；📋水之試煉"
+},
+{
+"id": 3777,
+"zh": "硬革筒靴",
+"ja": "ハードレザーブーツ",
+"en": "Hard Leather Boots",
+"slot": "腳部",
+"patch": "2.0",
+"lv": 15,
+"dye": 1,
+"mb": true,
+"icon": 46139,
+"ilvl": 15,
+"cjc": 1,
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
+"src": "🛒雜用商人（黑衣森林東部林區） 480 Gil；📋水之試煉"
+}
+],
+"cjc_name": "ADV GLA PGL MRD LNC ARC CNJ THM CRP BSM ARM GSM LTW WVR ALC CUL MIN BTN FSH PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
 "zh_ok": true
 },
 {
