@@ -3,7 +3,7 @@
 """
 build_sets.py —— 建「官方套裝」資料（data/official_sets.json），供官方套裝圖鑑分頁用。
 
-兩層來源（混合方案，2026-07-09 CEO review 定案）：
+三層來源（混合方案，2026-07-09 CEO review 定案；第三層 2026-11-18 加）：
   第一層（權威）：XIVAPI MirageStoreSetItem —— row_id=套裝箱道具ID，欄位=各部位道具ID。
     涵蓋商城/活動/特典「幻化套裝箱」。套裝 ID = mirage:{row_id}（遊戲原生，永久穩定）。
     空列（約 89/1170）與 row 0 垃圾列排除；數量入報告。
@@ -18,8 +18,12 @@ build_sets.py —— 建「官方套裝」資料（data/official_sets.json），
     套裝 ID = src:{簽名md5前8}:{cjc}:{ilvl}。
     註：收藏追蹤是「逐件」勾選（鍵=道具ID），套裝 ID 漂移只影響書籤/顯示，不毀資料。
 
+  第三層（退路，2026-11-18）：上面五種簽名都沒有、只靠製作／秘籍拿得到的可見防具，照 (cjc, ilvl) 分組。
+    簽名＝常數 "craft"（所以分組鍵實際上就是 cjc＋ilvl）。職人裝一階一套、七職能各自一個 cjc，靠 cjc 分得開。
+    **另有嚴格準則（craft_set_ok：五個可見部位各恰一件）**，理由見該函式與知識庫 §4.102。
+
   跨層去重：啟發式套的可見件集合 ⊆ 某 mirage 套 → 砍啟發式、留官方。
-  v1 收錄準則（防垃圾堆）：套內含上身、且可見件（頭/上身/手/腿/腳）≥2。
+  v1 收錄準則（防垃圾堆）：套內含上身、且可見件（頭/上身/手/腿/腳）≥2（製作層走 craft_set_ok）。
   未收錄/未分組件不丟——計數與樣本進 data/套裝報告.md（cp950 陷阱：報告寫檔不 print）。
 
 網路與快取：
@@ -55,6 +59,7 @@ REPORT = os.path.join(DATA, "套裝報告.md")
 V2 = "https://beta.xivapi.com/api/1/sheet"
 
 VISIBLE_SLOTS = ("頭部", "上身", "手部", "腿部", "腳部")
+CRAFT_SIG = "craft"                   # 製作裝退路的來源簽名（見 source_signatures 尾端與 craft_set_ok）
 # MirageStoreSetItem 可能的部位欄位（多要不會錯，缺的欄 XIVAPI 直接忽略）
 MSSI_FIELDS = ["MainHand", "OffHand", "Head", "Body", "Gloves", "Hands",
                "Legs", "Feet", "Earrings", "Necklace", "Bracelets",
@@ -283,9 +288,10 @@ def fmt_piece_source(entries, cur_info):
     return "；".join(uniq[:2])
 
 
-def source_signatures(entries, cur_info=None):
+def source_signatures(entries, cur_info=None, piece=None):
     """一件裝備的 sources 條目 → [(簽名, 顯示label)]，只取「套裝式」來源。
-    cur_info(id) → (名稱, categoryId)，用來把「🪙兌換」補成具體貨幣。"""
+    cur_info(id) → (名稱, categoryId)，用來把「🪙兌換」補成具體貨幣。
+    piece＝這件的 info（給製作退路判部位用，見函式尾端）。"""
     sigs = []
     for e in entries:
         t = e.get("type")
@@ -321,6 +327,18 @@ def source_signatures(entries, cur_info=None):
             npcs = sorted({v.get("npcName", "") for v in (e.get("vendors") or []) if v.get("npcName")}, key=lambda n: n.replace("・", "·"))
             if npcs:
                 sigs.append(("npc:" + "|".join(npcs), "🛒" + npcs[0]))
+    # 製作裝的退路（2026-11-18，站主定案；知識庫 §4.102）：上面五種來源都沒有、只靠製作／秘籍拿得到的，
+    # 照「職業類別＋品級」分組。簽名是常數 "craft"，所以分組鍵實際上是 (cjc, ilvl)——職人裝一階一套、
+    # 七個職能（禦敵／制敵／強襲／精準／游擊／治癒／詠咒）正好各自一個 cjc，靠 cjc 就分得開。
+    # ⚠ 兩個不能拿掉的限制：
+    #   ① **只在 sigs 是空的時候才給**。有副本／兌換／任務來源的件再加一個 craft 簽名，會把不同套的件
+    #      按 (cjc, ilvl) 重新黏成一坨（它們本來已經各自歸在正確的套裡）。
+    #   ② **只收可見部位**。鍵只有 (cjc, ilvl) 太弱，收飾品與武器的話同階會湊出 4 個戒指 2 把武器——
+    #      同鍵衝突檢查只看可見部位，攔不到。
+    #   這一層另外要過 craft_set_ok()（五個可見部位各恰一件），不是一般的 visible_ok()。
+    if not sigs and piece and piece.get("slot") in VISIBLE_SLOTS:
+        if any(e.get("type") in ("craft", "masterbook") for e in entries):
+            sigs.append((CRAFT_SIG, "🔨製作"))
     return sigs
 
 
@@ -332,7 +350,7 @@ def build_heuristic_sets(sources, info, equip_ids, cur_info=None):
         if not p or not p["slot"]:
             continue
         entries = sources.get(str(iid)) or []
-        sigs = source_signatures(entries, cur_info)
+        sigs = source_signatures(entries, cur_info, p)
         if not sigs:
             no_source.append(iid)
             continue
@@ -365,6 +383,7 @@ def build_heuristic_sets(sources, info, equip_ids, cur_info=None):
         sets.append({
             "id": f"src:{h}:{cjc}:{ilvl}",
             "layer": "src",
+            "_sig": sig,                                   # 只給準則判斷用，寫檔前 pop 掉
             "name_zh": "", "name_ja": "", "name_en": "",   # 稍後補共同前綴
             "source": g["label"],
             "patch": max((p["patch"] for p in g["items"] if p["patch"]),
@@ -393,6 +412,41 @@ def common_prefix_name(pieces, lang):
     return pre if len(pre) >= 2 else ""
 
 
+def longest_common_substr(strings, minlen=2):
+    """所有字串共有的最長子字串（短於 minlen 回空字串）。
+
+    製作裝的職能字（禦敵／制敵／強襲／精準／游擊／治癒／詠咒）**不在開頭**——前面是逐件不同的材質名
+    （「清銀強襲假面」＋「地懶革強襲高筒靴」），所以共同前綴抓不到它，得靠共同子字串。"""
+    if not strings:
+        return ""
+    base = min(strings, key=len)
+    for size in range(len(base), minlen - 1, -1):
+        for i in range(len(base) - size + 1):
+            cand = base[i:i + size]
+            if all(cand in s for s in strings):
+                return cand
+    return ""
+
+
+def craft_name_zh(pieces, ilvl):
+    """製作裝退路的套裝名（2026-11-18）。共同前綴 ＋ 共同子字串（職能字），兩者都抓不到才合成。
+
+    為什麼不能只用共同前綴：製作裝按材質逐件命名，同一套的五件常常開頭就不同。實測只用前綴的話
+    43 套落到「製作 iNNN 套裝」、其中 7 套同階同名（使用者分不出哪個是治癒哪個是詠咒）。
+    ⚠ 前綴是空的時候**不要只用子字串當名字**——那會得到光禿禿的「制敵」，看不出是哪一階。"""
+    names = [_SLOT_SUFFIX.sub("", p["zh"]) for p in pieces
+             if p.get("zh") and p["slot"] in VISIBLE_SLOTS]
+    if len(names) < 2:
+        return ""
+    pre = (common_prefix_name(pieces, "zh") or "")
+    pre = _SLOT_SUFFIX.sub("", pre).strip("之的 　")
+    rest = [n[len(pre):] if pre and n.startswith(pre) else n for n in names]
+    core = longest_common_substr(rest)
+    if pre:
+        return (pre + core).strip("・･ 　-—:：之的")
+    return f"製作 i{ilvl} {core}套裝" if core else f"製作 i{ilvl} 套裝"
+
+
 def fill_heuristic_names(sets):
     lead_sym = re.compile(r"^[^\w一-鿿]+")
     for s in sets:
@@ -404,6 +458,10 @@ def fill_heuristic_names(sets):
         s["name_zh"] = zh
         s["name_ja"] = common_prefix_name(s["pieces"], "ja")
         s["name_en"] = common_prefix_name(s["pieces"], "en")
+        if s.get("_sig") == CRAFT_SIG:
+            # 製作層自己一套命名（只動這一層：既有 1,982 套的名字是官方照對應與使用者收藏的基礎，不動）
+            s["name_zh"] = craft_name_zh(s["pieces"], s["id"].rsplit(":", 1)[-1]) or s["name_zh"]
+            continue
         if not (s["name_zh"] or s["name_ja"] or s["name_en"]):
             # 共同前綴抓不到（雜牌組合）→ 用「來源＋ilvl」合成，避免 UI 顯示裸 ID
             label = lead_sym.sub("", s["source"] or "").strip() or "官方套裝"
@@ -415,7 +473,23 @@ def fill_heuristic_names(sets):
 
 def visible_ok(s):
     slots = {p["slot"] for p in s["pieces"] if p["slot"] in VISIBLE_SLOTS}
+    if s.get("_sig") == CRAFT_SIG:
+        return craft_set_ok(slots)
     return "上身" in slots and len(slots) >= 2
+
+
+def craft_set_ok(slots):
+    """製作裝退路的嚴格準則（2026-11-18）：**五個可見部位各恰一件**。
+
+    為什麼要比 v1 嚴：這一層的分組鍵只有 (cjc, ilvl)，沒有副本／商店那種「同一個來源」的語意。
+    量測過三種寬鬆度（知識庫 §4.102）：
+      ・照 v1（含上身＋≥2 部位）→ 182 組，其中 58 組是不同家族混在一起（ilvl 49 把古典兜帽＋
+        纖維騎士帽＋纖維外袍湊成一套、ilvl 55 混民兵與特務）——2.x–3.x 的製作裝在同一階本來就是散裝。
+      ・五個部位各恰一件 → 157 組，逐組抽看都是連貫的一階（ilvl 170 那階剛好長出八個製作職的「大師」套）。
+    ⚠ 不要改用「名稱共同前綴」當門檻：製作裝按**材質**逐件命名，「清銀強襲假面」＋「地懶革強襲高筒靴」
+      其實是同一套，前綴比對會把它判成雜牌而漏掉。要擋的是「部位湊不齊」，不是「名字不像」。
+    """
+    return len(slots) == len(VISIBLE_SLOTS)
 
 
 def dedup(mirage_sets, src_sets):
@@ -517,11 +591,15 @@ def main():
     if n_carried:
         print(f"  id 沿用上一版：{n_carried} 套（內容相同、只是販售 NPC 名單變了）")
     included.sort(key=lambda s: (patch_key(s["patch"]), s["id"]), reverse=True)
+    n_craft = sum(1 for s in included if s.pop("_sig", None) == CRAFT_SIG)   # pop：_sig 只是準則用的內部欄位
+    if n_craft:
+        print(f"  其中製作裝退路：{n_craft} 套（五部位各恰一件才收，見 craft_set_ok）")
     meta = {
         "generated": time.strftime("%Y-%m-%d %H:%M:%S"),
         "sets": len(included),
         "mirage_sets": sum(1 for s in included if s["layer"] == "mirage"),
         "src_sets": sum(1 for s in included if s["layer"] == "src"),
+        "craft_sets": n_craft,
         "excluded_by_criteria": excluded,
         "dedup_dropped": n_dedup,
         "mirage_empty_rows": n_empty,
