@@ -420,7 +420,7 @@ ARR 2.x / HW 3.x / SB 4.x / ShB 5.x / EW 6.x / DT 7.x
 重跑 `patch-dungeon-names.mjs` 會換回 `tw-client`，`validate-duty-codex.mjs` 會擋忘了換的；`none`＝台服未開放（`name` 是 null）。
 
 `_meta.json` 頂層另有 `twClient`（站上資料取自哪一版台服客戶端解包）與 `twTeamcraft`（客戶端落後時，新內容取自 Teamcraft 哪一個
-commit：`{version, sha, date}`）；頁尾的「資料版本」由這兩個長出來。
+commit：`{version, sha, date}`；**解包追上之後 `build-tw-items-msgpack.mjs` 會把它刪掉**，平常不存在）；頁尾的「資料版本」由這兩個長出來（`twClient.date` 是解包 commit 日，頁尾拿它判斷 Teamcraft 有沒有比較新）。
 
 #### `type` 分類字典
 

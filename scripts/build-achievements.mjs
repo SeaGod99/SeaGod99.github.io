@@ -84,6 +84,9 @@ const iconPath = (ic) => {
   return m ? `/i/${m[1]}/${m[2]}.png` : null;
 };
 
+/** 國際服清空、結構欄位改取台服客戶端的成就：id → 客戶端 Achievement 列（main() 填，enrichConditions() 讀） */
+const clientOnlyRows = new Map();
+
 async function main() {
   const tw = await loadTwLocales();
 
@@ -94,6 +97,23 @@ async function main() {
     { cache: join(CACHE, "achievement-categories-v2.json"), offline, label: "AchievementCategory：" });
   const kinds = await xiv.sheet("AchievementKind", "Order",
     { cache: join(CACHE, "achievement-kinds-v2.json"), offline, label: "AchievementKind：" });
+  clientOnlyRows.clear();
+  {
+    /* 國際服把這列清空（分類 0）、台服客戶端有完整資料的：結構欄位改取客戶端（2026-11-19）。
+       例：3790「美妙的初夢」——國際服的新年活動成就被清成空列，台服 7.3 才開，客戶端 7.3 有分類 38、10 點、任務 70913。
+       不換的話分類 0 會被當成「分類查無」而不收。條件（Type/Key/Data）在 enrichConditions() 用同一份對照換。 */
+    const tc = new Map((await loadTcSheet("Achievement", { offline })).map((r) => [r.id, r]));
+    const num = (v) => Number(v) || 0;
+    for (const a of ach) {
+      const c = tc.get(a.id);
+      if (a.f["AchievementCategory@as(raw)"] || !c || !num(c.AchievementCategory) || !isTw(c.Name || "")) continue;
+      const ic = num(c.Icon), dir = String(Math.floor(ic / 1000) * 1000).padStart(6, "0"), file = String(ic).padStart(6, "0");
+      a.f = { ...a.f, "AchievementCategory@as(raw)": num(c.AchievementCategory), Points: num(c.Points), Order: num(c.Order),
+        "Item@as(raw)": num(c.Item), "Title@as(raw)": num(c.Title), Icon: ic ? { id: ic, path: `ui/icon/${dir}/${file}.tex` } : a.f.Icon };
+      clientOnlyRows.set(a.id, c);
+    }
+    if (clientOnlyRows.size) console.log(`國際服清空、改取台服客戶端結構欄位的成就：${[...clientOnlyRows.keys()].join("、")}`);
+  }
 
   // 版本：Teamcraft patch-content 的 achievement 類（同 patch-backfill-all.mjs 的反查法）
   const content = await cachedJson("tc-patch-content.json", `${TC}/patch-content.json`);
@@ -220,8 +240,8 @@ async function main() {
     else if (!oldName) stat.nameClient.add(a.id);     // 只有客戶端有＝tw-locales 之後才開的（7.25 那 59 個）
     else countRevision("name", name, oldName);
     if (!name || !isTw(name)) { stat.noTw++; continue; }
-    // 分類 0＝國際服把這列清空了、只有名字從台服來（2026-11-17：3790「美妙的初夢」，台服 7.3 才有、客戶端 7.25 也是空列）——
-    // 沒有分類、點數、圖示可放，等客戶端解包補齊再收
+    // 分類 0＝國際服把這列清空了、台服客戶端也沒有結構欄位（客戶端有的已在 main() 開頭改取客戶端，例：3790「美妙的初夢」
+    // 11-17 客戶端 7.25 還是空列，11-19 解包出 7.3 後收進來）——沒有分類、點數、圖示可放，不收
     const cat = a.f["AchievementCategory@as(raw)"] ? catById.get(a.f["AchievementCategory@as(raw)"]) : null;
     if (!cat) { stat.noCat++; continue; }
     const kind = cat["AchievementKind@as(raw)"];
@@ -406,6 +426,12 @@ async function enrichConditions(out, { tw }) {
     "Name,Type,Key@as(raw),Data@as(raw),AchievementHideCondition@as(raw),AchievementTarget@as(raw)",
     { cache: join(CACHE, "achievement-conditions-v2.json"), offline, label: "Achievement 條件：" });
   const C = new Map(conds.map((r) => [r.id, r.f]));
+  // 國際服清空、台服客戶端有的列（見 main() 的 clientOnlyRows）：條件也改取客戶端
+  for (const [id, c] of clientOnlyRows) {
+    const n = (v) => Number(v) || 0;
+    C.set(id, { ...(C.get(id) || {}), Type: n(c.Type), "Key@as(raw)": n(c.Key), "Data@as(raw)": Array.from({ length: 8 }, (_, i) => n(c[`Data[${i}]`])),
+      "AchievementHideCondition@as(raw)": n(c.AchievementHideCondition), "AchievementTarget@as(raw)": n(c.AchievementTarget) });
+  }
   const byId = new Map(out.map((a) => [a.id, a]));
   const twQuests = JSON.parse(await readFile(join(ROOT, "out_data", "tw-quests.json"), "utf8"));
   /* 任務名也以台服客戶端為準：說明改取客戶端之後，對照的任務名要是同一版——7.25 改了一批任務名

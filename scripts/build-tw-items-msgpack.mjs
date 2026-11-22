@@ -184,11 +184,19 @@ async function main() {
   if (client) {
     // 記下資料取自哪一版客戶端：版本偵測與升版 SOP 拿它當比較基準
     const meta = JSON.parse(await readFile(META, "utf8"));
+    let dirty = false;
     if (meta.twClient?.version !== client.version) {
       meta.twClient = { version: client.version, date: client.date };
-      await writeFile(META, JSON.stringify(meta, null, 2) + "\n");
+      dirty = true;
       console.log(`✅ _meta.json twClient ← ${client.version}`);
     }
+    // 解包追上了：名稱已全部取自客戶端，「這一版新內容取自 Teamcraft」的紀錄不再成立（頁尾靠它顯示那一行）
+    if (meta.twTeamcraft && meta.twTeamcraft.date <= client.date) {
+      delete meta.twTeamcraft;
+      dirty = true;
+      console.log("✅ _meta.json 移除 twTeamcraft（客戶端解包已追上 Teamcraft）");
+    }
+    if (dirty) await writeFile(META, JSON.stringify(meta, null, 2) + "\n");
   }
   if (tcCommit) {
     // 名稱有一部分取自 Teamcraft 的哪一版台服資料：頁尾與 report-vs-client 拿它說明「客戶端解包之後的新東西從哪來」

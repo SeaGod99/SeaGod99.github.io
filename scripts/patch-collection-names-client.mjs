@@ -101,8 +101,13 @@ for (const job of JOBS) {
   let marked = 0;
   for (const e of db.data) {
     const c = client.get(e.id);
-    if (!c || !isTw(c) || !e.name) continue;
-    const picked = job.pick(e, c);
+    if (!c || !isTw(c)) continue;
+    /* 站上還沒有台服名（null，或建置時暫填的英文名）、客戶端這一版有了（2026-11-19，解包追上 7.3）：直接補上。
+       不能交給下面的「社群名衝突」——那條會把英文暫名塞進 aliases、`_noTwName` 也不會拿掉。
+       客戶端本身就是拉丁字的（528 Nano Lord、CHL P-0006）hasCJK(c) 不成立，不在這條。 */
+    const untranslated = (!e.name || !hasCJK(e.name)) && hasCJK(c);
+    if (!e.name && !untranslated) continue;
+    const picked = untranslated || job.pick(e, c);
     const dotOnly = !picked && e.name !== c && fold(e.name) === fold(c);
     // 站上是上一版的官方名、這一版改了＝官方改譯（不是社群名，§7-4 那題管不到它）
     const p = prev.get(e.id);
@@ -121,6 +126,7 @@ for (const job of JOBS) {
       continue;
     }
     if (e.name !== c) { (dotOnly ? dots : renamed ? renames : changes).push(`${e.id}：${e.name} → ${c}`); e.name = c; }
+    if (untranslated) delete e._noTwName;   // 有台服名了，頁面的「沒台服名就藏」不再適用
     // 來源標記只跟著「換來源」的那幾類走；只換中點的、跟官方改譯的不算換來源
     if (picked && job.mark && e.nameSource !== "tw-client") { job.mark(e); marked++; }
   }

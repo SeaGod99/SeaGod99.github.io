@@ -19,6 +19,9 @@
 //                      ③ 其餘：台服客戶端 Orchestrion.Description（官方的一句話取得方式，如「「阿卡狄亞登天鬥技場 次重量級1」獲得」）
 //                      類型用 ffxivcollect 的分類，對照表與 backfill-sources.mjs 相同。
 //
+// 另外會回填既有條目（2026-11-19）：客戶端解包落後時補進來的曲子缺分類、缺說明、流水號沒照列號排，
+// 解包追上後重跑這支就補齊（只補空欄、只在「這一版新曲」那段互換流水號，見 main() 裡的說明）。
+//
 // 執行：node scripts/patch-orchestrion-add-missing.mjs [--apply] [--offline]
 // 跑完接：patch-collection-quest-npc.mjs --apply（補任務接取點）→ minify-data／sync-meta（升版 SOP 的收尾）。
 
@@ -81,12 +84,52 @@ async function main() {
     .sort((a, b) => a.id - b.id);
   console.log(`items.json 有 ${items.filter((i) => i.name.startsWith(PREFIX)).length} 件樂譜道具，orchestrion.json ${rows.length} 首；` +
     `已開放（≤${gamePatch}）卻沒收的 ${missing.length} 首`);
-  if (!missing.length) return;
 
   const clientItem = new Map((await loadTcSheet("Item", { offline: OFFLINE })).map((r) => [r.id, r]));
   const orch = new Map((await loadTcSheet("Orchestrion", { offline: OFFLINE })).map((r) => [r.id, r]));
   const ui = new Map((await loadTcSheet("OrchestrionUiparam", { offline: OFFLINE })).map((r) => [r.id, r]));
   const cat = new Map((await loadTcSheet("OrchestrionCategory", { offline: OFFLINE })).map((r) => [r.id, r.Name]));
+  const rowOf = (itemId) => Number(clientItem.get(itemId)?.AdditionalData || 0);
+  const descOf = (row) => (orch.get(row)?.Description || "").replace(/\s*\n\s*/g, " ").trim();
+
+  /* ── 回填既有條目（2026-11-19）──────────────────────────────────────────
+     客戶端解包落後時補進來的曲子（11-17 台服 7.3 的 27 首），當時客戶端還沒有這幾列：沒有遊戲內分類、
+     流水號只能照道具 id 排、沒有商店／任務來源的只剩類型。解包追上之後重跑這支就補齊：
+       ① gameCategory 是 null、客戶端有分類的補上
+       ② 唯一的來源只有類型（detail 是 null）的，補官方說明——與下面新曲同一條規則。
+          說明裡有「？？」的不補：那是遊戲為了防雷遮掉的副本名（「極？？？？殲滅戰」），印出來像亂碼
+       ③ newIn＝這一版的那一段，依客戶端列號重排**它們自己已有的**流水號（只在段內互換，不動其他條目） */
+  const fill = { cat: [], desc: [], renum: 0 };
+  for (const e of rows) {
+    const row = rowOf(e.itemId);
+    if (!row) continue;
+    if (e.gameCategory == null) {
+      const c = cat.get(Number(ui.get(row)?.OrchestrionCategory));
+      if (c) { e.gameCategory = c; fill.cat.push(`No.${e.number} ${e.name}→${c}`); }
+    }
+    const d = descOf(row);
+    // 只回填這一版的新曲：舊條目的類型多半取自 ffxivcollect、常與官方說明對不上（No.717 類型「副本掉落」、說明「潛水艇探索獲得」），
+    // 補上去會變成自相矛盾的一行——那是另一題（類型要改從說明推），不在這裡順手做
+    if (e.newIn === gamePatch && e.sources?.length === 1 && e.sources[0].detail == null && d && isTranslated(d) && !/？？|\?\?/.test(d)) {
+      e.sources[0].detail = d;
+      fill.desc.push(`No.${e.number} ${e.name}（${e.sources[0].type}）：${d}`);
+    }
+  }
+  const group = rows.filter((e) => e.newIn === gamePatch && rowOf(e.itemId));
+  const nums = group.map((e) => e.number).sort((a, b) => a - b);
+  [...group].sort((a, b) => rowOf(a.itemId) - rowOf(b.itemId)).forEach((e, i) => { if (e.number !== nums[i]) { e.number = nums[i]; fill.renum++; } });
+  console.log(`回填既有條目：遊戲內分類 ${fill.cat.length}、官方說明 ${fill.desc.length}、${gamePatch} 新曲依列號重排流水號 ${fill.renum}`);
+  if (fill.cat.length) console.log("  分類：" + fill.cat.join("、"));
+  if (fill.desc.length) console.log("  說明：\n    " + fill.desc.join("\n    "));
+  const backfilled = fill.cat.length + fill.desc.length + fill.renum > 0;
+  if (!missing.length) {
+    if (!backfilled) return;
+    if (!APPLY) { console.log("\n（dry-run，未寫入；加 --apply 寫入回填）"); return; }
+    db.updated = today;
+    await writeFile(FILE, JSON.stringify(db) + "\n");
+    console.log(`\n✅ 已寫入回填（共 ${rows.length} 首）`);
+    return;
+  }
   const fc = await cachedJson("fc-orchestrions.json", "https://ffxivcollect.com/api/orchestrions?limit=9999");
   const fcByItem = new Map((fc.results || []).map((x) => [x.item_id, x]));
   const shops = await createShopSources({ root: ROOT, offline: true });

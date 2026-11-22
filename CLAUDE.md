@@ -100,7 +100,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 臉部配件（時尚配飾頁的一個類別） | `node scripts/build-facewear.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/facewear.json`（28 款，台服客戶端 GlassesStyle）；頁面 keyOf 是 `glasses:<款式 id>`；回歸在 `validate-tracker-pages.mjs` |
 | 部隊工房建造材料（潛水艇頁「🔨 建造材料」） | `node scripts/build-fc-workshop.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/fc-workshop.json`（162 件）；**與 Teamcraft 的部隊製作配方交叉核對，對不上就中止**；回歸在 `validate-submarine.mjs` |
 | 本來就是物品名的欄位跟著改譯 | `node scripts/patch-names-follow-items.mjs`（dry-run 預設／`--apply`）：魚名、餌（**含「／」的段落跳過**，§4.9）、傳承錄書、園藝產物與配種種子、髮型名；樂譜名用字不同的也跟（社群舊名進 `aliases`，10-11 起）；收藏頁整串是物品名的 `sources[].detail` 只認「只差中點」。冪等，**重建魚／園藝／收藏後要重跑** |
-| 樂譜／髮型補漏（**這兩份沒有建置腳本**，升版必跑） | `node scripts/patch-orchestrion-add-missing.mjs`、`node scripts/patch-hairstyles-add-missing.mjs`（dry-run 預設／`--apply`；只 append 不重排；`patch ≤ gamePatch` 才補；取得方式走客戶端商店／任務反查）|
+| 樂譜／髮型補漏（**這兩份沒有建置腳本**，升版必跑） | `node scripts/patch-orchestrion-add-missing.mjs`、`node scripts/patch-hairstyles-add-missing.mjs`（dry-run 預設／`--apply`；新條目只 append；`patch ≤ gamePatch` 才補；取得方式走客戶端商店／任務反查。樂譜那支另會**回填這一版新曲**缺的遊戲內分類、官方說明與流水號——客戶端解包落後時補進來的曲子，解包追上後重跑就補齊）|
 | 台服新條目的取得方式（收藏頁） | `node scripts/patch-collection-client-shops.mjs`（dry-run 預設／`--apply`）：只動台服版本清單裡的道具、只補細節是空的來源；商店結構走 Teamcraft 全球 `shops.json`、NPC 名與位置走 `scripts/lib/client-shop-sources.mjs`。**地點的 mapId 不在 `maps.json` 的記 null**（新月島、渴望灣還沒收），地名與座標照留 |
 | 補新開放條目的繁中名（魚／園藝／鳥鞍／隨從） | `node scripts/patch-tw-names.mjs`（dry-run 預設／`--apply`，來源＝items.json，只補不覆蓋） |
 | 重建物品精簡表（改完 items.json **兩支都要跑**） | `node scripts/build-items-lite.mjs`（採集兩頁用）＋`node scripts/build-items-market.mjs`（市場頁用） |

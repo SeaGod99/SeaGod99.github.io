@@ -645,9 +645,12 @@
       if (!m || !m.gamePatch || foot.querySelector('.sgt-data-ver')) return;
       var cv = m.twClient && m.twClient.version ? String(m.twClient.version).split('.').slice(0, 3).join('.') : '';
       /* 客戶端解包落後、這一版的新東西取自 Teamcraft 時（2026-11-17 升 7.3）一併標出——只寫客戶端版本會讓人以為
-         資料停在那一天。解包追上之後 Teamcraft 的日期會比客戶端版本舊，這段自動不顯示 */
+         資料停在那一天。比的是兩邊**推送的日期**（twClient.date＝解包 commit 日），不是客戶端版本字串：
+         版本字串是遊戲的建置日（7.3 是 2026.11.05），解包常晚它十幾天才出，拿它比會讓這行在解包追上之後還掛著。
+         正常流程下解包追上時 build-tw-items-msgpack 會把 twTeamcraft 刪掉，這裡是第二道 */
       var tc = m.twTeamcraft;
-      var tcAhead = tc && tc.version === m.gamePatch && tc.date && (!cv || tc.date.replace(/-/g, '.') > cv);
+      var cd = m.twClient && m.twClient.date ? String(m.twClient.date) : '';
+      var tcAhead = tc && tc.version === m.gamePatch && tc.date && (!cd || tc.date > cd);
       var p = document.createElement('p');
       p.className = 'footer-text sgt-data-ver';
       p.style.marginTop = '4px';

@@ -1,25 +1,22 @@
 # dungeons.json 名稱校正報告（台服客戶端）
 
-產生時間：2026-11-17 ｜ 來源：台服客戶端解包 ContentFinderCondition（依 row id）＋ Teamcraft patch-content（只補 null 的 patch）
+產生時間：2026-11-19 ｜ 來源：台服客戶端解包 ContentFinderCondition（依 row id）＋ Teamcraft patch-content（只補 null 的 patch）
 
-- 總筆數：528
-- 改名：4
-- 原本就與官方一致：505
-- 台服未開放（客戶端沒有台服名，名稱設 null、前端不顯示）：19
+- 總筆數：529
+- 改名：0
+- 原本就與官方一致：509
+- 台服未開放（客戶端沒有台服名，名稱設 null、前端不顯示）：20
 
 ## 改名清單（舊 → 新）
 
 | CFC id | type | 舊名 | 新名（台服客戶端） |
 |---|---|---|---|
-| 1028 | dungeon |  | 永久幽界中央終端 |
-| 1058 | alliance_raid |  | 桑多利亞：第二巡行 |
-| 1061 | trial_hard |  | 永恆黑暗殲滅戰 |
-| 1062 | trial_hard |  | 極 永恆黑暗殲滅戰 |
 
 ## 台服未開放（名稱為 null）
 
 | CFC id | type | nameEn |
 |---|---|---|
+| 1029 | trial_hard | null |
 | 1064 | dungeon | Mistwake |
 | 1011 | dungeon | the Clyteum |
 | 1117 | raid_normal | Windurst: The Third Walk |

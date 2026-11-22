@@ -17,7 +17,8 @@
 // **客戶端解包還沒出、Teamcraft 先出的時候**（2026-11-17 升 7.3 就是這樣）：這一版改填
 // `teamcraft: {version, sha}`（Teamcraft 推台服資料的那個 commit），`prev` 照填上一版的客戶端。
 // 「這一版」就變成 Teamcraft 台服語系檔（tw-items／tw-achievements）有名字的 id——它和客戶端 Name 欄同源，
-// 只是換一個人抽。等解包出了，把 `teamcraft` 換成 `client` 重跑 --build，清單應該幾乎一樣。
+// 只是換一個人抽。等解包出了，補上 `client` 重跑 `--build --rebuild`，清單應該幾乎一樣
+// （有 `client` 就以它為準，`teamcraft` 可以留著當紀錄，7.3 就是這樣）。
 // 讀這份清單的腳本若要拿「這一版的客戶端」，先看 `client` 在不在（`currentClientSha()`）。
 
 export const TW_RELEASES = [
@@ -29,6 +30,9 @@ export const TW_RELEASES = [
   },
   {
     version: "7.3",
+    // 客戶端解包 2026-11-17 17:34Z 才推（比 Teamcraft 晚半天），11-19 換回客戶端。有 client 時一律以它為準；
+    // teamcraft 欄留著當紀錄（11-17～11-19 站上的 7.3 新條目取自它），不再被任何腳本讀取。
+    client: { version: "2026.11.05.0000.0000", sha: "8adc04cbe4eb469017025a80d9a439451805523d" },
     // parent＝Teamcraft 推台服 7.3 前一個 commit：用來分辨「這次才改的字」（7.3 改譯）與「Teamcraft 本來就沒跟上的舊字」
     teamcraft: { version: "7.3", sha: "36c0e6045fed3162c1c51aba2250a2638193b29f", parent: "8c0af4563b714fdbf35fc5c293093613d60238ea" },
     prev: { version: "2026.09.14.0000.0000", sha: "1cf1f9fb735bad0748848dbd3f4de05721fe619a" },
