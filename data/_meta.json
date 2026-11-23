@@ -2,7 +2,7 @@
   "project": "水神的工具箱 統一資料庫",
   "schemaDoc": "/data/SCHEMA.md",
   "gamePatch": "7.3",
-  "updated": "2026-11-20",
+  "updated": "2026-11-23",
   "idConventions": {
     "mapId": "遊戲 Map sheet row id（XIVAPI v2 /sheet/Map 的 row_id），全站統一；2026-06-11 起 maps.json 主鍵即此 id",
     "territoryId": "TerritoryType row id，僅輔助欄位（fishing-spots、gathering.coords.zoneId），顯示/連結一律用 mapId"
@@ -153,7 +153,7 @@
       "source": "teamcraft-shops+xivapi+items",
       "status": "used",
       "count": 49,
-      "updated": "2026-11-17"
+      "updated": "2026-11-23"
     },
     {
       "schema": "dungeons",
@@ -282,7 +282,7 @@
       "name": "金碟獎品價目表",
       "file": "gold-saucer.json",
       "count": 2,
-      "updated": "2026-11-17",
+      "updated": "2026-11-23",
       "desc": "金碟幣與金碟聲譽可換的獎品價目，附六本圖鑑的收藏對應",
       "source": "Teamcraft shops.json（經 scripts/lib/shops.mjs）＋ data/items.json ＋ 六本收藏庫的 itemId；幻卡走 Item.AdditionalData 可證對照"
     },

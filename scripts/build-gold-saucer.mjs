@@ -11,8 +11,8 @@
 // ── 資料來源 ────────────────────────────────────────────────────────
 //   商店     scripts/lib/shops.mjs（共用層；台服店名走 tw-locales）
 //   物品     data/items.json（繁中名、icon、分類、patch）
-//   收藏對應 data/{mounts,minions,orchestrion,barding,emotes}.json 的 itemId
-//            ＋幻卡走 scripts/lib/triple-triad-map.mjs 的可證對照
+//   收藏對應 scripts/lib/collection-owners.mjs（各收藏庫的 itemId ＋幻卡的可證對照；
+//            與貨幣變現排行共用，storageKey／keyOf 只有那一份）
 //
 // ── 兩種貨幣 ────────────────────────────────────────────────────────
 //   金碟幣（MGP, id 29）    主要貨幣，455 種兌換品
@@ -28,7 +28,7 @@ import { readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadShops, describeShops } from "./lib/shops.mjs";
-import { loadCardMap } from "./lib/triple-triad-map.mjs";
+import { loadCollectionOwners, ownField } from "./lib/collection-owners.mjs";
 import { isTw } from "./lib/tw-text.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -41,17 +41,6 @@ const CURRENCIES = [
   { id: 41629, key: "reputation" },
 ];
 
-// 六本圖鑑：哪個收藏檔、前端要用哪個 storageKey 與 keyOf 去對進度。
-// keyOf 各頁不同（多數 'id:<id>'，寵物是純數字），這裡照各頁的實際設定產生，
-// **不統一格式**——那是使用者的存檔鍵，改它會動到進度（§2.5）。
-const COLLECTIONS = [
-  { file: "mounts", label: "坐騎", path: "collections/mounts/", storageKey: "ffxiv_mounts_owned", keyOf: (e) => "id:" + e.id },
-  { file: "minions", label: "寵物", path: "minions/", storageKey: "ffxiv_minions_owned", keyOf: (e) => String(e.id) },
-  { file: "orchestrion", label: "樂譜", path: "collections/orchestrion/", storageKey: "ffxiv_orchestrion_owned", keyOf: (e) => "id:" + e.id },
-  { file: "barding", label: "鳥鞍", path: "collections/barding/", storageKey: "ffxiv_barding_owned", keyOf: (e) => "id:" + e.id },
-  { file: "emotes", label: "表情", path: "collections/emotes/", storageKey: "ffxiv_emotes_owned", keyOf: (e) => "id:" + e.id },
-];
-
 async function main() {
   const S = await loadShops({ root: ROOT, offline });
   console.log(describeShops(S));
@@ -59,27 +48,8 @@ async function main() {
   const items = JSON.parse(await readFile(join(DATA, "items.json"), "utf8")).data;
   const byId = new Map(items.map((i) => [i.id, i]));
 
-  // 收藏對應：itemId → { collection, label, path, storageKey, key, name }
-  const owner = new Map();
-  for (const c of COLLECTIONS) {
-    const db = JSON.parse(await readFile(join(DATA, `${c.file}.json`), "utf8")).data;
-    for (const e of db) {
-      if (!e.itemId) continue;
-      owner.set(e.itemId, { collection: c.file, label: c.label, path: c.path, storageKey: c.storageKey, key: c.keyOf(e), name: e.name });
-    }
-  }
-  // 幻卡沒有 itemId 欄位，走可證對照（Item.AdditionalData → TripleTriadCard）
-  const cardMap = await loadCardMap({ root: ROOT, cache: join(ROOT, "out_data/cache/tt-card-items.json"), offline });
-  const triad = JSON.parse(await readFile(join(DATA, "triple-triad.json"), "utf8")).data;
-  const triadById = new Map(triad.map((c) => [c.id, c]));
-  for (const [card, itemId] of cardMap.cardToItem) {
-    const c = triadById.get(card);
-    if (!c) continue;
-    owner.set(itemId, {
-      collection: "triple-triad", label: "幻卡", path: "collections/triple-triad/",
-      storageKey: "ffxiv_triple_triad_owned", key: "id:" + card, name: c.name,
-    });
-  }
+  // 收藏對應：itemId → { collection, label, path, storageKey, key, name }（共用層，§ collection-owners.mjs 檔頭）
+  const owner = await loadCollectionOwners({ root: ROOT, offline });
 
   const out = [];
   const stat = { noTw: 0, byCurrency: {} };
@@ -121,7 +91,7 @@ async function main() {
         cost: b.unit,
         shop: b.shopName || null,
         npc: b.npc ? { id: b.npc.id, name: b.npc.name, at: b.npc.at } : null,
-        ...(own ? { own: { c: own.collection, label: own.label, path: own.path, sk: own.storageKey, k: own.key } } : {}),
+        ...(own ? { own: ownField(own) } : {}),
       });
     }
     list.sort((a, b) => a.cost - b.cost || a.itemId - b.itemId);
@@ -156,7 +126,7 @@ async function main() {
   const envelope = {
     schema: "gold-saucer",
     updated: new Date().toISOString().slice(0, 10),
-    source: "Teamcraft shops.json（經 scripts/lib/shops.mjs）＋ data/items.json ＋ 六本收藏庫的 itemId；幻卡走 Item.AdditionalData 可證對照",
+    source: "Teamcraft shops.json（經 scripts/lib/shops.mjs）＋ data/items.json ＋ 收藏對應（scripts/lib/collection-owners.mjs：各收藏庫的 itemId；幻卡走 Item.AdditionalData 可證對照）",
     note: "刻意不做變現排行——455 種兌換品幾乎不能上市場板，排每 MGP 值多少 gil 沒有意義。這份的軸是收藏缺口。",
     count: out.length,
     data: out,

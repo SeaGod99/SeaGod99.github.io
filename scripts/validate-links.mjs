@@ -300,17 +300,20 @@ const fishItemIds = new Set(fishes.map((f) => f.itemId));
 
    `<link>` 要排在該頁自己的 `<style>` **之前**——common.css 有 `*`／`body`／`html`
    這些全域規則，順序顛倒會把頁面自己的版面壓掉。 */
+const HTML_PAGES = [];
 {
-  const pages = [];
   const scanHtml = (rel = "") => {
     for (const n of readdirSync(join(__dirname, "..", rel), { withFileTypes: true })) {
       if (["node_modules", ".git", "out_data", "assets", "vendor"].includes(n.name)) continue;
       const r = rel ? `${rel}/${n.name}` : n.name;
       if (n.isDirectory()) scanHtml(r);
-      else if (n.name.endsWith(".html")) pages.push(r);
+      else if (n.name.endsWith(".html")) HTML_PAGES.push(r);
     }
   };
   scanHtml();
+}
+{
+  const pages = HTML_PAGES;
   const bad = [];
   for (const p of pages) {
     const raw = readFileSync(join(__dirname, "..", p), "utf8");
@@ -337,6 +340,55 @@ const fishItemIds = new Set(fishes.map((f) => f.itemId));
     note: bad.length
       ? `⚠ 頁尾沒有樣式：${bad.join("、")}`
       : "頁尾都有樣式（體檢抓不到這個，只能在這裡驗）",
+  });
+}
+
+/* ---------- 表格外框會橫向捲動時，表頭的 sticky top 必須是 0（2026-11-23）----------
+   `.table-wrap { overflow-x: auto }` 會讓外框變成 sticky 的參考框，`thead th { top: 46px }`
+   的意思就從「黏在全站頂列下方」變成「離表格框頂端 46px」——表頭永遠往下壓一列、
+   **蓋住第 1 列**，而且從來沒黏在視窗上過。貨幣變現排行（11-22）、金碟價目表、雇員探險
+   （11-23）都是這樣，三頁的第 1 名一直被表頭蓋著。
+   ⚠ `validate-pages.mjs` 抓不到：沒有溢出、沒有 console error，被蓋住的是資料列不是點擊目標。
+   規則：在**不屬於任何 @media 的基本樣式**裡，只要頁面有橫向捲動的外框，`thead th` 的
+   sticky top 就只能是 0；46px 只能出現在拿掉橫向捲動的斷點裡（三頁的修法）。 */
+{
+  // 拿掉所有 @media 區塊（含巢狀大括號），剩下的就是基本樣式
+  const stripMedia = (css) => {
+    let out = "", i = 0;
+    while (i < css.length) {
+      const at = css.indexOf("@media", i);
+      if (at < 0) { out += css.slice(i); break; }
+      out += css.slice(i, at);
+      let j = css.indexOf("{", at), depth = 0;
+      for (; j < css.length; j++) {
+        if (css[j] === "{") depth++;
+        else if (css[j] === "}" && --depth === 0) break;
+      }
+      i = j + 1;
+    }
+    return out;
+  };
+  const bad = [];
+  let withScrollTable = 0;
+  for (const p of HTML_PAGES) {
+    const html = readFileSync(join(__dirname, "..", p), "utf8");
+    const css = [...html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)].map((m) => m[1]).join("\n")
+      .replace(/\/\*[\s\S]*?\*\//g, "");
+    const base = stripMedia(css);
+    const wrapScrolls = /\.table-wrap\s*\{[^}]*overflow-x:\s*auto/.test(base);
+    if (!wrapScrolls) continue;
+    withScrollTable++;
+    for (const m of base.matchAll(/(^|[},\s])thead th\s*\{([^}]*)\}/g)) {
+      const body = m[2];
+      const top = body.match(/(?:^|;|\s)top:\s*([\d.]+)px/);
+      if (/position:\s*sticky/.test(body) && top && parseFloat(top[1]) > 0) bad.push(`${p}（top: ${top[1]}px）`);
+    }
+  }
+  rows.push({
+    link: "橫向捲動的表格 → 表頭 sticky top: 0",
+    broken: bad.length,
+    total: withScrollTable,
+    note: bad.length ? `⚠ 表頭會蓋住第 1 列：${bad.join("、")}` : "沒有表頭蓋住第 1 列（體檢抓不到這個）",
   });
 }
 

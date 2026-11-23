@@ -2382,6 +2382,11 @@
     var ups = usedInByItem.get(id);
     var arr = ups ? Array.from(ups).filter(visibleItem).sort(function (a, b) { return a - b; }) : [];
     var CAP = 24;
+    // 既沒有配方、也不是任何配方的材料：整區不出現（同水晶）。
+    // 舊版在這裡印「基礎素材 · 無已知用途」——但這一區只看配方，而有 2,354 種物品
+    // 不在任何配方裡、卻是 NPC 商店的兌換成本（巧手紫票、詩學神典石、狩獵任務的戰利品…），
+    // 「無已知用途」對它們是錯的；坐騎笛、貨幣也不是「基礎素材」（2026-11-23）。
+    if (!ings.length && !arr.length) return '';
 
     var body = '<div class="fold-row"><div class="nav-label">製作材料（向下）</div>' +
       (ings.length
@@ -2394,10 +2399,11 @@
         ? '<div class="nav-list">' + arr.slice(0, CAP).map(function (pid) {
             return navChipHtml(pid, itemById.get(pid).name);
           }).join('') + '</div>' + (arr.length > CAP ? '<div class="note">… 另有 ' + (arr.length - CAP) + ' 項</div>' : '')
-        : '<div class="note">無已知用途。</div>') + '</div>';
+        : '<div class="note">不是任何配方的材料。</div>') + '</div>';
 
+    // 這一區只講配方關係，摘要不可以說成整件物品的結論（「無已知用途」）
     var sum = (ings.length ? '材料 ' + ings.length + ' 種' : '基礎素材') +
-      ' · ' + (arr.length ? '用於 ' + arr.length + ' 項' : '無已知用途');
+      ' · ' + (arr.length ? '用於 ' + arr.length + ' 項' : '不是配方材料');
     return foldHtml('recipe', '🔗 上下游配方', sum, body);
   }
   function navChipHtml(id, label) {

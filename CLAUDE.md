@@ -63,7 +63,8 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 追蹤頁回歸（**改完 `collection-tracker.js` 或 `toast.js` 必跑**） | `node scripts/validate-tracker-pages.mjs`（jsdom，需先 `npm i jsdom --no-save`；驗 12 頁控制面＋「按清除→取消，進度不能動」） |
 | 頁內快捷鍵回歸（**改完 `nav.js` 的快捷鍵區或 `collection-tracker.js` 的 `wireShortcuts` 必跑**） | `node scripts/validate-shortcuts.mjs`（jsdom，37 項：登記佇列、s／o／`[`／`]`、`?` 浮層、焦點不外逃、輸入框與 `<dialog open>` 時不攔）|
 | 刷新 Teamcraft 台服語系檔（成就／FATE／理符／怪物／探險／商店／幻卡規則…） | `node scripts/fetch-tw-locales.mjs`（dry-run 預設／`--apply`／`--list` 看內容）→ `out_data/tw-locales.msgpack`，讀取走 `scripts/lib/tw-locales.mjs` |
-| 多幣種變現排行重建（48 種貨幣） | `node scripts/build-currency-shop.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/currency-shop.json` |
+| 多幣種變現排行重建（49 種貨幣） | `node scripts/build-currency-shop.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/currency-shop.json`（每種另帶圖示、兌換 NPC 與地點、所屬部族，以及 `collect[]`＝換得到的收藏圖鑑品；**吃 `npc-shops/`、`beast-tribes.json` 與各收藏庫，那些重建後要重跑這支**）|
+| ↑ 那頁的回歸（**改完 `tools/gc-exchange/`、上面那支、`currency-shop.json` 或 `scripts/lib/collection-owners.mjs` 必跑**） | `node scripts/validate-currency-shop.mjs`（jsdom，53 項：打「無人島」要搜得到謝爾達萊青船幣／綠島幣、圖示與 items.json 一致、NPC 商店目錄連結只給目錄裡真的收這種貨幣的 NPC、部族連結對位、鍵盤操作、表頭不可蓋住第 1 名；**收藏缺口**：共用對照表的 storageKey／keyOf 要與各收藏頁原始碼逐字一致（金碟頁資料也驗）、標了一件就少一件、寵物的純數字鍵認得、切貨幣保留展開）|
 | 系統解鎖＋職業行會重建 | `node scripts/build-system-unlocks.mjs`（dry-run／`--apply`／`--offline`／`--find <關鍵字>` 查候選任務）→ `data/system-unlocks.json` 的 `data[]`＋`jobs[]`；對照表人工維護在 `scripts/lib/system-unlock-map.mjs`（`SYSTEMS` 26 條、`GUILD_QUESTS` 20 條；**24 個進階職不用維護，走 `ClassJob.UnlockQuest`**）|
 | 收藏頁任務來源補接取點（改完上述任一或 tw-quests 後） | `node scripts/patch-collection-quest-npc.mjs`（dry-run 預設／`--apply`／`--offline`；**寫的是 pretty JSON，必接 `minify-data.mjs --apply`**）|
 | 重建理符報酬＋收藏品交納（改版時才跑；**兩個消費端的上游**） | `node scripts/build-extra-sources.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/extra-sources.json`（理符 1,030 件＋收藏品 127 件）；**跑完必接 `build-market-sources.mjs` 與 `build-item-sources.mjs --apply`** |
@@ -73,7 +74,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 視窗計算回歸（**改完 `window-calc.js` 或釣魚／限時採集的時間窗邏輯必跑**） | `node scripts/validate-window-calc.mjs`（差分測：把重構前兩頁的實作抄一份當參照，307 種魚＋36 組天氣案例＋225 個節點逐筆比對）|
 | 鬧鐘回歸（**改完 `et-alarm.js` 或釣魚／限時採集／天氣任一頁的鬧鐘接線必跑**） | `node scripts/validate-et-alarm.mjs`（52 項：三頁真的載了引擎且沒有人自己再寫一份、同一窗只響一次、**已開的窗連續 check 30 分鐘只響一次**、三頁都傳 `openTs`、primeOnly、提前量、舊 key 遷移、天氣訂閱）|
 | 全站頁面體檢（**改完任何版面、共用 CSS／JS 或新增頁面必跑**） | `MSYS_NO_PATHCONV=1 node scripts/validate-pages.mjs`（真瀏覽器：36 頁 × 360／768／1280 三寬度，驗 console error／水平溢出／重複 id／缺 alt／點擊目標）；`--page <關鍵字>` 只驗某頁、`--shot <目錄>` 存截圖 |
-| 重建金碟獎品價目表（改完 items 或商店表後） | `node scripts/build-gold-saucer.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/gold-saucer.json`（金碟幣＋金碟聲譽，附六本圖鑑的收藏對應）|
+| 重建金碟獎品價目表（改完 items 或商店表後） | `node scripts/build-gold-saucer.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/gold-saucer.json`（金碟幣＋金碟聲譽，附收藏對應——走共用的 `scripts/lib/collection-owners.mjs`，與貨幣變現排行同一份；**各收藏庫重建後要重跑**）|
 | 重建物品四語名稱查詢分片（換台服版本或四語快照後） | `node scripts/build-item-names.mjs`（dry-run 預設／`--apply`）→ `data/item-names/`（256 片＋`_index.json`）；**跑完必接 `node scripts/validate-item-names.mjs`**（驗前後端的正規化與雜湊一致）|
 | 重建技能／狀態四語查詢分片（換台服版本後） | `node scripts/build-action-names.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/action-names/`（256 片）；**與 `build-item-names.mjs` 共用 `shardOf`，SHARDS 要一起改**；跑完必接 `validate-item-names.mjs` |
 | 重建副本／地名／怪物／任務的查詢分片（換台服版本後） | `node scripts/build-term-names.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/term-names/`（256 片，65,740 鍵）；**與 `build-item-names.mjs` 共用 `shardOf`**。一個英文名對到多個台服名時**值存陣列、全部列出**（怪物 200、地名 209 個鍵），不挑一個。跑完接 `node scripts/validate-term-names.mjs`（17 項）|

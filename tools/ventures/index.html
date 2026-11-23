@@ -38,7 +38,17 @@
     thead th {
       text-align: right; font-size: 0.72rem; color: var(--text-muted); font-weight: 600;
       padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--border); white-space: nowrap;
-      position: sticky; top: 46px; background: var(--bg-base); z-index: 2;
+      position: sticky; top: 0; background: var(--bg-base); z-index: 2;
+    }
+    /* ⚠ 表頭的 top 只能在外框不是捲動容器時設 46px（2026-11-23 修，同貨幣變現排行 11-22 那次）。
+       .table-wrap 有 overflow-x: auto，它就成了 sticky 的參考框：top: 46px 變成「離表格框頂端 46px」，
+       表頭永遠往下壓一列、蓋住第 1 名，而且從來沒黏在視窗上過。
+       寬螢幕表格放得下，就拿掉橫向捲動，表頭改黏在全站頂列（#sgt-topbar，46px）下方；窄螢幕保留橫向捲動。 */
+    @media (min-width: 1200px) {
+      .table-wrap { overflow-x: visible; }
+      thead th { top: 46px; }
+      /* 沒有橫向捲動了，探險名欄要能換行，不然表格比外框寬、整頁溢出 */
+      tbody td:nth-child(2) { white-space: normal; }
     }
     thead th:first-child, thead th:nth-child(2) { text-align: left; }
     tbody td { padding: 0.45rem 0.6rem; border-bottom: 1px solid var(--border); text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }

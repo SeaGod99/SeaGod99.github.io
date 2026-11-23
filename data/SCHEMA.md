@@ -1060,9 +1060,14 @@ commit：`{version, sha, date}`；**解包追上之後 `build-tw-items-msgpack.m
 | `cost` | **同一件獎品在所有商店裡的最低單價**（同一件常常好幾間店都有）|
 | `own` | 這件在哪本圖鑑。`sk`＝該收藏頁的 localStorage key、`k`＝該頁 `keyOf` 的輸出值 |
 
-`own.k` **必須照各收藏頁的 `keyOf` 產生**（多數 `id:<id>`，寵物是純數字），
+`own.k` **必須照各收藏頁的 `keyOf` 產生**（多數 `id:<id>`，寵物是純數字、臉部配件是 `glasses:<id>`），
 自己拼格式的話缺口預算會把「已有」算成「還沒有」，而畫面上看不出來。
-幻卡沒有 `itemId` 欄位，走 `scripts/lib/triple-triad-map.mjs` 的可證對照。
+`own` 一律由 `scripts/lib/collection-owners.mjs` 產生（2026-11-23 起；與 `currency-shop.json` 的 `collect[].own` 同一份）。
+幻卡沒有 `itemId` 欄位，走 `scripts/lib/triple-triad-map.mjs` 的可證對照，存檔鍵是 `ffxiv_triadcards_owned`
+（11-23 前寫成 `ffxiv_triple_triad_owned`，幻卡進度從來沒讀到）。
+
+**同形狀的欄位也在 `currency-shop.json`**：每種貨幣可選的 `collect[]`＝`{ id, name, icon, patch, cost, count, rank?, own }`，
+這種貨幣換得到的收藏圖鑑品（不論能否交易；`items[]` 只收掛得上市場板的），單價取法與 `items[]` 相同，依每單位成本排。
 
 **建置**：`node scripts/build-gold-saucer.mjs --apply`。
 刻意不做變現排行——兌換品幾乎不能上市場板，見腳本檔頭。

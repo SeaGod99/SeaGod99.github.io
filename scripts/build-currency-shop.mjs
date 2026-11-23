@@ -35,6 +35,7 @@ import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { loadShops, describeShops } from "./lib/shops.mjs";
+import { loadCollectionOwners, ownField } from "./lib/collection-owners.mjs";
 import { isTw } from "./lib/tw-text.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -171,6 +172,109 @@ for (const [curId, m] of byCurrency) {
 // 分頁順序：品項多的排前面
 currencies.sort((a, b) => b.items.length - a.items.length);
 
+/* ── 4. 辨識用的附加資訊：圖示、去哪換、屬於哪個部族（2026-11-22）──
+   起因：無人島的兩種貨幣一直都在清單裡，但台服官方名是「謝爾達萊青船幣／綠島幣」，
+   名字裡沒有「無人島」，站主自己都找不到。所以每種貨幣另外帶：
+     icon  貨幣道具的圖示（items.json，與金碟頁同一個 CDN）
+     at    兌換 NPC 與地點（最多 3 處，依交易筆數排）——**由這份清單真的收進來的兌換項反推**，
+           不是手寫的「這是哪裡的貨幣」。NPC 沒有繁中名或沒有座標的不列（鐵則：不落英文、不編地名）。
+           第 3 欄是 NPC 商店目錄的 mapId：**目錄裡那張圖真的有這位 NPC、而且他真的收這種貨幣**才給，
+           否則是 null（無名島、新月島還沒進目錄），前端就只印字不給連結。
+     tribe 部族聲望的貨幣（data/beast-tribes.json 的 currency.id）→ [部族 id, 部族名]，前端連部族頁。 */
+const npcShopIdx = JSON.parse(await readFile(join(ROOT, "data/npc-shops/_index.json"), "utf8"));
+const catalogMaps = new Set(npcShopIdx.maps.map((m) => m.mapId));
+const shardCache = new Map();
+async function catalogSells(mapId, npcName, curIds) {
+  if (mapId == null || !catalogMaps.has(mapId)) return false;
+  if (!shardCache.has(mapId)) shardCache.set(mapId, JSON.parse(await readFile(join(ROOT, `data/npc-shops/${mapId}.json`), "utf8")));
+  return shardCache.get(mapId).npcs.some((n) => n.n === npcName &&
+    n.s.some((s) => s.tr.some((t) => t.c.some(([id]) => curIds.includes(id)))));
+}
+const tribeByCurrency = new Map();
+for (const t of JSON.parse(await readFile(join(ROOT, "data/beast-tribes.json"), "utf8")).data) {
+  if (t.currency?.id && !tribeByCurrency.has(t.currency.id)) tribeByCurrency.set(t.currency.id, [t.id, t.name]);
+}
+const MAX_AT = 3;
+let linked = 0, unlinked = 0;
+for (const c of currencies) {
+  const curIds = c.ids || [c.id];
+  const icon = byId.get(curIds[0])?.icon;
+  if (icon) c.icon = icon;
+  const want = new Set(c.items.map((x) => x.id));
+  const places = new Map();     // "NPC名@地圖名" → { npc, map, mapId, n }
+  for (const cid of curIds) {
+    for (const { shop, trade } of S.byCurrency.get(cid) || []) {
+      if (trade.cost.length !== 1 || !trade.gives.some((g) => want.has(g.itemId))) continue;
+      for (const npc of shop.npcs) {
+        if (!npc.at || !npc.at.mapName) continue;
+        const k = npc.name + "@" + npc.at.mapName;
+        const p = places.get(k) || { npc: npc.name, map: npc.at.mapName, mapId: npc.at.mapId, n: 0 };
+        p.n++;
+        places.set(k, p);
+      }
+    }
+  }
+  const sorted = [...places.values()].sort((a, b) => b.n - a.n || a.mapId - b.mapId || (a.npc < b.npc ? -1 : 1));
+  if (sorted.length) {
+    c.at = [];
+    for (const p of sorted.slice(0, MAX_AT)) {
+      const ok = await catalogSells(p.mapId, p.npc, curIds);
+      ok ? linked++ : unlinked++;
+      c.at.push([p.map, p.npc, ok ? p.mapId : null]);
+    }
+    if (sorted.length > MAX_AT) c.atMore = sorted.length - MAX_AT;
+  }
+  const tribe = tribeByCurrency.get(c.id);
+  if (tribe) c.tribe = tribe;
+}
+{
+  const noIcon = currencies.filter((c) => !c.icon).map((c) => c.name);
+  const noAt = currencies.filter((c) => !c.at).map((c) => c.name);
+  console.log(`\n辨識資訊：圖示 ${currencies.length - noIcon.length}/${currencies.length}` + (noIcon.length ? `（缺：${noIcon.join("、")}）` : "") +
+    `；兌換地點 ${currencies.length - noAt.length}/${currencies.length}（連得到 NPC 商店目錄 ${linked} 處、目錄沒收 ${unlinked} 處）` +
+    `；部族貨幣 ${currencies.filter((c) => c.tribe).length} 種`);
+  if (noAt.length) console.log(`  沒有兌換地點（兌換 NPC 無繁中名或無座標）：${noAt.join("、")}`);
+}
+
+/* ── 5. 收藏缺口：這種貨幣換得到、而且是收藏圖鑑一格的東西（2026-11-23）──
+   回答「我身上這些 X 能換哪些我還沒有的收藏、總共要多少」。金碟頁的缺口預算推廣到每種貨幣。
+   變現排行（items）只收掛得上市場板的；收藏品幾乎都不能交易，所以這裡另外從**同一份** byCurrency
+   挑出來——單價取法（每單位最划算的一筆）、只收單一貨幣成本、鐵則（無台服名不收）都與 items 相同。
+   哪件是哪本圖鑑的哪一格走共用層 scripts/lib/collection-owners.mjs（與金碟頁同一份，storageKey 錯了會安靜讀不到進度）。 */
+const owner = await loadCollectionOwners({ root: ROOT, offline });
+function buildCollect(map) {
+  const out = [];
+  for (const [id, v] of map || []) {
+    const o = owner.get(id);
+    if (!o || !hasTwName(id)) continue;
+    const it = byId.get(id);
+    out.push({ id, name: it.name, icon: it.icon || null, patch: it.patch ?? null, cost: v.cost, count: v.count, ...(v.rank ? { rank: v.rank } : {}), own: ownField(o) });
+  }
+  out.sort((a, b) => a.cost / a.count - b.cost / b.count || a.id - b.id);
+  return out;
+}
+{
+  const reached = new Set();
+  for (const c of currencies) {
+    const list = buildCollect(c.ids ? sealMerged : byCurrency.get(c.id));
+    if (list.length) { c.collect = list; list.forEach((x) => reached.add(x.id)); }
+  }
+  // 全部「能用某種非金幣東西換到」的收藏品裡，這頁涵蓋多少——其餘的貨幣沒進這頁（可上市品項不到門檻，如金碟幣有自己的頁）
+  const all = new Map();
+  for (const [curId, m] of byCurrency) {
+    if (curId === 1) continue;
+    for (const id of m.keys()) if (owner.has(id) && hasTwName(id) && !all.has(id)) all.set(id, curId);
+  }
+  const missed = new Map();
+  for (const [id, curId] of all) if (!reached.has(id)) missed.set(curId, (missed.get(curId) || 0) + 1);
+  const byLabel = {};
+  for (const c of currencies) for (const x of c.collect || []) byLabel[x.own.label] = (byLabel[x.own.label] || 0) + 1;
+  console.log(`\n收藏缺口：${currencies.filter((c) => c.collect).length} 種貨幣換得到收藏品，共 ${reached.size} 件（跨貨幣重複算一次）；` +
+    `各圖鑑（依貨幣累計）：${Object.entries(byLabel).sort((a, b) => b[1] - a[1]).map(([k, n]) => `${k} ${n}`).join("、")}`);
+  console.log(`  能用非金幣兌換的收藏品共 ${all.size} 件，其中 ${all.size - reached.size} 件的貨幣不在這頁：` +
+    [...missed].sort((a, b) => b[1] - a[1]).slice(0, 12).map(([id, n]) => `${nameOf(id) || id}(${n})`).join("、"));
+}
+
 console.log(`\n收錄 ${currencies.length} 種貨幣（門檻：可上市品項 ≥ ${MIN_ITEMS}、且該貨幣本身掛不上市場板）：`);
 for (const c of currencies) console.log(`  ${String(c.items.length).padStart(4)} 件  ${c.name}（id ${c.id}）`);
 
@@ -182,8 +286,8 @@ if (skipped.belowMin.length) console.log(`\n未達 ${MIN_ITEMS} 件門檻：\n  
 const out = {
   schema: "currency-shop@1",
   updated: new Date().toISOString().slice(0, 10),
-  source: "Teamcraft shops.json（已解開 SpecialShop 的 CostType 索引）＋ XIVAPI v2 Item.ItemSearchCategory；名稱取自 data/items.json",
-  note: `只收成本為單一貨幣的兌換項；貨幣＝自己掛不上市場板者；每種至少 ${MIN_ITEMS} 件可上市品項才收錄`,
+  source: "Teamcraft shops.json（已解開 SpecialShop 的 CostType 索引）＋ XIVAPI v2 Item.ItemSearchCategory；名稱取自 data/items.json；收藏對應 scripts/lib/collection-owners.mjs",
+  note: `只收成本為單一貨幣的兌換項；貨幣＝自己掛不上市場板者；每種至少 ${MIN_ITEMS} 件可上市品項才收錄。collect＝同一種貨幣換得到的收藏圖鑑品（不論能否交易），前端用 own.sk／own.k 對使用者在收藏頁的進度`,
   count: currencies.length,                                        // validate-data 要求 count === data.length
   itemCount: currencies.reduce((n, c) => n + c.items.length, 0),
   data: currencies,
