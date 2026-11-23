@@ -28,7 +28,7 @@
   blue-magic.json       ← 青魔法
   exploration-log.json  ← 探索筆記（探索手帳）
   emotes.json           ← 表情
-  orchestrion.json      ← 樂譜
+  orchestrion.json      ← 樂譜（沒有建置腳本；nameEn＝道具英文名、只有類型的取得方式＝官方說明，由 patch-orchestrion-official.mjs 對齊，2026-11-23）
   minions.json          ← 寵物
   mounts.json           ← 坐騎
   barding.json          ← 鳥鞍
