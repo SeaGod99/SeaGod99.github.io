@@ -71,6 +71,8 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | ↑ 那兩型的回歸（**改完上面那支或兩個消費端的合併處必跑**） | `node scripts/validate-extra-sources.mjs`（29 項；最重要的是「措辭不可承諾」與「分片層要走 om ∪ extra 的聯集」）|
 | 重建取得管道分片層（改完 obtainable-methods、items 或 extra-sources 後） | `node scripts/build-item-sources.mjs`（dry-run 預設／`--apply`）→ `data/item-sources/`（48 片＋`_index.json`）；前端走 `assets/js/item-sources.js`，**刻意不進 `minify-data.mjs`** |
 | ↑ 上面那支同時產 `data/item-source-types.json` | itemId → 取得管道位元遮罩（差分陣列，gzip 15KB），市場頁的「🎁 取得方式」篩選吃這份。**與分片層由同一支保證同步**，不要另外寫一支 |
+| 重建物品用途分片層（取得管道的反方向：「會用掉它的地方」） | `node scripts/build-item-uses.mjs`（dry-run 預設／`--apply`）→ `data/item-uses/`（48 片＋`_index.json`，7,427 件）：NPC 兌換的成本、任務交付、製作理符、軍需品、部隊工房、收藏品；有專頁的貨幣只連過去。**吃 `npc-shops/`、`quests/`、`craft-leves`、`gc-supply`、`fc-workshop`、`collectable-items`、`currency-shop`，那些重建後要重跑這支**；刻意不進 `minify-data.mjs`。前端在 `tools/market/market.js` 的 `renderUses()`，片號常數 `USES_SHARD_BITS` 要與建置端一致 |
+| ↑ 那一層的回歸（**改完上面那支、`data/item-uses/` 或市場頁的用途區必跑**） | `node scripts/validate-item-uses.mjs`（jsdom，33 項：片號位數前後端一致、每一處兌換地點都對得到 NPC 商店目錄、任務／理符／軍需品／貨幣連結的參數都是目標頁真的吃的、**404 的片＝查不到、網路錯誤＝載入失敗不可混**、查不到時講出沒收錄哪些用途、節點視窗與 `?item=` 兩個入口都有）|
 | 視窗計算回歸（**改完 `window-calc.js` 或釣魚／限時採集的時間窗邏輯必跑**） | `node scripts/validate-window-calc.mjs`（差分測：把重構前兩頁的實作抄一份當參照，307 種魚＋36 組天氣案例＋225 個節點逐筆比對）|
 | 鬧鐘回歸（**改完 `et-alarm.js` 或釣魚／限時採集／天氣任一頁的鬧鐘接線必跑**） | `node scripts/validate-et-alarm.mjs`（52 項：三頁真的載了引擎且沒有人自己再寫一份、同一窗只響一次、**已開的窗連續 check 30 分鐘只響一次**、三頁都傳 `openTs`、primeOnly、提前量、舊 key 遷移、天氣訂閱）|
 | 全站頁面體檢（**改完任何版面、共用 CSS／JS 或新增頁面必跑**） | `MSYS_NO_PATHCONV=1 node scripts/validate-pages.mjs`（真瀏覽器：36 頁 × 360／768／1280 三寬度，驗 console error／水平溢出／重複 id／缺 alt／點擊目標）；`--page <關鍵字>` 只驗某頁、`--shot <目錄>` 存截圖 |

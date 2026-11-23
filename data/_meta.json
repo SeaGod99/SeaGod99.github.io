@@ -628,6 +628,14 @@
       "count": 38756
     },
     {
+      "name": "物品用途分片層",
+      "file": "item-uses/_index.json",
+      "desc": "物品 → 會用掉它的地方（NPC 兌換成本、任務交付、製作理符、軍需品、部隊工房、收藏品；依 itemId >> 10 分片）；市場頁物品詳情按需載入",
+      "source": "scripts/build-item-uses.mjs",
+      "updated": "2026-11-23",
+      "count": 7427
+    },
+    {
       "name": "NPC 商店目錄",
       "file": "npc-shops/_index.json",
       "desc": "依 mapId 分片的 NPC 商店與交易品項",

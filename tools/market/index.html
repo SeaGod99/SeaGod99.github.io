@@ -549,6 +549,29 @@
     .src-d { flex: 1; min-width: 0; }
     .src-where { color: var(--text-muted); font-size: 0.76rem; font-variant-numeric: tabular-nums; }
 
+    /* 「會用掉它的地方」（2026-11-23）：列沿用取得管道的 .src-row，分組沿用 .fold-row＋.nav-label。
+       本頁的 a 全域是 inherit 無底線，這區的連結要看得出是連結；一行接一行，用真實 padding 撐高（CLAUDE.md） */
+    a.use-link { color: var(--blue); display: inline-block; padding: 3px 0; }
+    a.use-link:hover { color: var(--gold-light); text-decoration: underline; }
+    .use-btn {
+      font: inherit; font-size: 0.76rem; color: var(--blue); background: none; cursor: pointer;
+      border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 3px 8px;
+    }
+    .use-btn:hover { border-color: var(--gold); color: var(--gold-light); }
+    .use-sub { color: var(--text-muted); font-size: 0.72rem; }
+    /* 兌換：地點每組講一次，組內多欄格（寬螢幕多欄、手機一欄） */
+    .use-where { font-size: 0.78rem; color: var(--text-dim); margin: 8px 0 4px; }
+    .use-where:first-of-type { margin-top: 0; }
+    .use-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); gap: 4px 8px; }
+    .use-cell {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px; min-width: 0;
+      background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 3px 8px 3px 3px;
+    }
+    .use-cell .nav-chip { border-color: transparent; background: none; min-width: 0; }
+    .use-cell .src-where { white-space: nowrap; }
+    .use-more { margin-top: 6px; }
+    @media (pointer: coarse) { a.use-link { padding: 10px 0; } .use-btn { min-height: 44px; } }
+
     /* 逐物品的 HQ/NQ 覆寫（節點卡與簡易列共用）。三顆鈕擠在 156px 的卡片上，
        字級與內距都得比一般 .seg 再小一號，但 pointer:coarse 下仍拉到 44px。 */
     .hq-seg { display: flex; justify-content: center; margin-top: 5px; }

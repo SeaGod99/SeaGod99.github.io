@@ -880,8 +880,13 @@
       simBtnHtml(id);
 
     if (!it.marketable) {
-      box.innerHTML += '<div class="error">此物品無法在市場交易（不可上架）。</div>' + qtyAddHtml(id);
+      /* 不可交易＝要自己去弄。站內好幾頁連到 ?item= 時刻意不限定可交易（10-03o：「市場頁會展開取得管道」），
+         但這條路徑先前只印一行「無法交易」就結束，從那些連結點進來是空頁（節點視窗那條路徑才有接）。
+         2026-11-23 補上：取得管道（預設展開）＋會用掉它的地方。 */
+      box.innerHTML += '<div id="dSrc"></div><div id="dUses"></div>' + qtyAddHtml(id);
       bindQtyAdd(box, id);
+      renderSources($('#dSrc'), id);
+      renderUses($('#dUses'), id, 'detail');
       return;
     }
     box.innerHTML += '<div class="loading" id="detailLoading">查詢市場資料中…</div>';
@@ -890,17 +895,19 @@
     if (currentDetailId !== id) return; // 期間切換了物品
     if (!M.ok) {
       box.innerHTML = box.innerHTML.replace(/<div class="loading"[^>]*>[^<]*<\/div>/, '') +
-        '<div class="error">暫時無法連線 Universalis，請稍後再試或按重新整理。</div>' + qtyAddHtml(id);
+        '<div class="error">暫時無法連線 Universalis，請稍後再試或按重新整理。</div><div id="dUses"></div>' + qtyAddHtml(id);
       bindQtyAdd(box, id);
+      renderUses($('#dUses'), id, 'detail');
       return;
     }
     lastUpload = (M.rec && M.rec.upload) || lastUpload;
     renderUpdateTime();
 
     box.innerHTML = box.innerHTML.replace(/<div class="loading"[^>]*>[^<]*<\/div>/, '') +
-      marketPanelHtml(id, M, 'd') + qtyAddHtml(id);
+      marketPanelHtml(id, M, 'd') + '<div id="dUses"></div>' + qtyAddHtml(id);
     bindMarketPanel(box, id, M, 'd', function () { showDetail(id); });
     bindQtyAdd(box, id);
+    renderUses($('#dUses'), id, 'detail');
   }
 
   // 面板 id 要帶前綴：單品詳情與節點視窗可能同時存在於 DOM，
@@ -2339,8 +2346,10 @@
       simBtnHtml(id) +
       '<div id="nmMarket">' + (it.marketable ? '<div class="loading">查詢市場資料中…</div>' : '<div class="note">此物品無法在市場交易。</div>') + '</div>' +
       nmRecipeSection(id) +
+      '<div id="nmUses"></div>' +
       '<div class="qty-add"><span class="note">加入製作清單：</span><input type="number" id="nmQty" min="1" value="1"><button class="btn primary" data-nm="add" data-id="' + id + '">＋ 加入</button></div>';
     bindFolds(body);
+    renderUses($('#nmUses'), id, 'modal');   // 不等行情：用途與 Universalis 無關，查價失敗也要看得到
 
     if (it.marketable) {
       var M = await fetchItemMarket(id);
@@ -2409,6 +2418,147 @@
   function navChipHtml(id, label) {
     var it = itemById.get(id);
     return '<span class="nav-chip" data-nm="nav" data-id="' + id + '"><img src="' + iconUrl(it) + '" alt="" onerror="this.style.display=\'none\'">' + esc(label) + '</span>';
+  }
+
+  // ===================== 會用掉它的地方（2026-11-23）=====================
+  //
+  // 回答「背包裡這個還有沒有用、能不能丟」。配方用途本頁本來就有（usedInByItem），
+  // 其餘六種來自 data/item-uses/（scripts/build-item-uses.mjs）：NPC 兌換的成本、任務交付、
+  // 製作理符、軍需品調達、部隊工房、收藏品；有專頁的貨幣直接連過去。
+  // 片號由 id 直接算（同 item-sources），只寫有資料的片——404＝那段 id 都沒有紀錄，不是錯誤。
+  //
+  // **「都沒有」要講清楚查了什麼、沒查什麼**：這區的結論會被拿來決定要不要丟東西，
+  // 而分解、精選、專家交納這幾種用途本站沒有資料，不能讓「查不到」讀起來像「沒用」。
+  var USES_SHARD_BITS = 10;          // 必須與 scripts/build-item-uses.mjs 的 SHARD_BITS 一致
+  var USES_CAP = 30;                 // 兌換一件東西最多列幾筆（戰利水晶有 333 筆），其餘給數量與連結
+  var USES_CHECKED = '配方、NPC 兌換、任務交付、製作理符、軍需品調達、部隊工房、收藏品交納';
+  var USES_NOT_COVERED = '分解、精選、專家交納、雇員探險、無人島、園藝配種';
+  var usesCache = {};
+  function loadUses(id) {
+    var s = id >> USES_SHARD_BITS;
+    if (!usesCache[s]) {
+      usesCache[s] = fetch('../../data/item-uses/' + s + '.json')
+        .then(function (r) {
+          if (r.status === 404) return { data: {} };
+          if (!r.ok) throw new Error(r.status);
+          return r.json();
+        })
+        .then(function (j) { return j.data || {}; })
+        .catch(function () { delete usesCache[s]; return null; });   // null＝載入失敗（≠ 沒有用途），下次再試
+    }
+    return usesCache[s].then(function (d) { return d ? (d[id] || {}) : null; });
+  }
+  function useItemName(id) {
+    if (id === 1) return '金幣';                  // items.json 裡金幣的名字是 "Gil"（CLAUDE.md）
+    var it = itemById.get(id);
+    return it ? it.name : '#' + id;
+  }
+  function useGroup(label, rows, more) {
+    return '<div class="fold-row"><div class="nav-label">' + label + '</div>' +
+      '<div class="src-list">' + rows.join('') + '</div>' +
+      (more ? '<div class="note use-more">' + more + '</div>' : '') + '</div>';
+  }
+  function useRow(main, where) {
+    return '<div class="src-row"><span class="src-d">' + main + '</span>' +
+      (where ? '<span class="src-where">' + where + '</span>' : '') + '</div>';
+  }
+  // ctx：'modal'（節點視窗，上面就有上下游配方區）或 'detail'（單品詳情，沒有配方區，要給一顆鈕開過去）
+  async function renderUses(el, id, ctx) {
+    if (!el || id === 1) return;
+    try { await ensureRecipes(); } catch (e) { /* 配方載不到時其餘用途照樣顯示 */ }
+    var u = await loadUses(id);
+    if (!el.isConnected) return;                // 等資料的期間已經換了物品
+    var it = itemById.get(id);
+    var nm = it ? it.name : '';
+    var title = '♻️ 會用掉它的地方';
+    if (u === null) {
+      el.innerHTML = foldHtml('uses', title, '載入失敗', '<div class="note">用途資料載入失敗，請重新整理頁面。</div>');
+      bindFolds(el);
+      return;
+    }
+
+    var parts = [], groups = [];
+    var ups = usedInByItem && usedInByItem.get(id);
+    var recN = ups ? Array.from(ups).filter(visibleItem).length : 0;
+    if (recN) {
+      parts.push('配方 ' + recN.toLocaleString() + ' 項');
+      groups.push(useGroup('製作材料', [useRow('用於 <b>' + recN.toLocaleString() + '</b> 項配方',
+        ctx === 'modal' ? '見上方「🔗 上下游配方」'
+          : '<button type="button" class="use-btn" data-nm="nav" data-id="' + id + '">看是哪些配方 →</button>')]));
+    }
+    if (u.cur) {
+      parts.push('貨幣');
+      var href = u.cur[0] === 'gs'
+        ? '../gold-saucer/' + (u.cur[1] === 'reputation' ? '?c=reputation' : '')
+        : '../gc-exchange/?c=' + u.cur[1];
+      groups.push(useGroup('拿去兌換', [useRow('這是一種貨幣——能換的東西太多，另有專頁：<a class="use-link" href="' + href + '">' +
+        (u.cur[0] === 'gs' ? '🎰 金碟獎品價目表' : '🎖️ 貨幣變現排行（含收藏缺口）') + ' →</a>')]));
+    }
+    var xs = (u.x || []).filter(function (r) { return visibleItem(r[0]); });
+    if (xs.length) {
+      parts.push('兌換 ' + xs.length + ' 種');
+      /* 依「在哪幾位 NPC 換」分組，地點每組只講一次。白銀陸行鳥的羽毛 179 筆全是同三位失物管理人，
+         逐列各印一次三個地點，畫面就只剩重複的字。組的順序跟著各組第一筆的物品 id（資料已排好，固定不跳）。 */
+      var bySig = new Map();
+      xs.forEach(function (r) {
+        var k = JSON.stringify([r[4], r[5]]);
+        if (!bySig.has(k)) bySig.set(k, { places: r[4], more: r[5], rows: [] });
+        bySig.get(k).rows.push(r);
+      });
+      var shown = 0, blocks = [];
+      bySig.forEach(function (g) {
+        if (shown >= USES_CAP) return;
+        var take = g.rows.slice(0, USES_CAP - shown);
+        shown += take.length;
+        var places = g.places.map(function (p) {
+          return '<a class="use-link" href="../npc-shops/?m=' + p[1] + '&amp;q=' + encodeURIComponent(nm) + '" title="在 NPC 商店目錄看這位 NPC">' +
+            esc(p[0]) + '（' + esc(p[2]) + '）</a>';
+        }).join('、') + (g.more ? ' 等 ' + (g.places.length + g.more) + ' 處' : '');
+        blocks.push('<div class="use-where">📍 ' + places + '</div><div class="use-grid">' + take.map(function (r) {
+          var other = r[3] ? r[3].map(function (o) { return '＋' + esc(useItemName(o[0])) + '×' + o[1].toLocaleString(); }).join(' ') : '';
+          return '<div class="use-cell">' + navChipHtml(r[0], useItemName(r[0]) + (r[1] > 1 ? ' ×' + r[1] : '')) +
+            '<span class="src-where">付 ×' + r[2].toLocaleString() + (other ? ' ' + other : '') + '</span></div>';
+        }).join('') + '</div>');
+      });
+      groups.push('<div class="fold-row"><div class="nav-label">拿去兌換（NPC 收它當代價）</div>' + blocks.join('') +
+        (xs.length > USES_CAP ? '<div class="note use-more">另有 ' + (xs.length - USES_CAP) + ' 項——到 NPC 商店目錄搜「' + esc(nm) + '」看全部</div>' : '') + '</div>');
+    }
+    if (u.q && u.q.length) {
+      parts.push('任務 ' + u.q.length + ' 個');
+      groups.push(useGroup('任務交付', u.q.map(function (r) {
+        return useRow('<a class="use-link" href="../quest-finder/?id=' + r[0] + '">' + esc(r[1]) + '</a>');
+      }), '資料裡沒有交付數量。'));
+    }
+    if (u.l && u.l.length) {
+      parts.push('理符 ' + u.l.length + ' 張');
+      groups.push(useGroup('製作理符', u.l.map(function (r) {
+        return useRow('<a class="use-link" href="../leves/?job=' + encodeURIComponent(r[2]) + '&amp;lv=' + r[3] + '">' + esc(r[1]) + '</a>',
+          esc(r[2]) + ' Lv.' + r[3] + ' · 交 ×' + r[4]);
+      })));
+    }
+    if (u.g && u.g.length) {
+      parts.push('軍需品');
+      groups.push(useGroup('軍需品調達（輪到這一件的那天才收）', u.g.map(function (r) {
+        return useRow('<a class="use-link" href="../gc-exchange/?m=earn&amp;job=' + r[0] + '">' + esc(r[1]) + '</a>',
+          '交 ×' + r[2] + ' → ' + r[3].toLocaleString() + ' 軍票');
+      })));
+    }
+    if (u.w && u.w.length) {
+      parts.push('部隊工房 ' + u.w.length + ' 件');
+      groups.push(useGroup('部隊工房的建造素材', u.w.map(function (r) {
+        return useRow(esc(r[1]) + (r[2] ? ' <span class="use-sub">' + esc(r[2]) + '</span>' : ''), '三階段合計 ×' + r[3].toLocaleString());
+      })));
+    }
+    if (u.c) {
+      parts.push('收藏品');
+      groups.push(useGroup('收藏品交納', [useRow('這件可以收藏品的形式交納（採集或製作時要做成收藏品）')]));
+    }
+
+    var foot = '<div class="fold-row note">本站查的是：' + USES_CHECKED + '。沒收錄的用途：' + USES_NOT_COVERED + '。</div>';
+    el.innerHTML = foldHtml('uses', title,
+      parts.length ? esc(parts.join(' · ')) : '本站資料裡查不到',
+      (groups.length ? groups.join('') : '<div class="fold-row">' + USES_CHECKED + '都沒有用到它。</div>') + foot);
+    bindFolds(el);
   }
   function closeNodeModal() { nmCurrentId = null; $('#nodeModal').classList.remove('open'); }
   // 關閉節點視窗＝退回上一筆歷史，讓瀏覽器上/下頁與工具內導覽一致
@@ -3419,6 +3569,12 @@
       if (v > gmax) { v = gmax; e.target.value = v; }
       gotMap[gid] = v;
       saveGot();
+    });
+
+    // 單品詳情：「會用掉它的地方」裡的物品晶片與「看是哪些配方」鈕 → 開節點視窗（同搜尋結果卡片）
+    $('#itemDetail').addEventListener('click', function (e) {
+      var t = e.target.closest('[data-nm="nav"]');
+      if (t) navTo({ node: Number(t.getAttribute('data-id')) });
     });
 
     // 節點詳情 modal：委派（關閉 / 上下游導覽 / 加入清單）
