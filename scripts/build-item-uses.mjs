@@ -30,12 +30,15 @@ import { existsSync } from "node:fs";
 import { gzipSync } from "node:zlib";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { isTw } from "./lib/tw-text.mjs";
+import { isTw, isTranslated } from "./lib/tw-text.mjs";
+import { loadShops } from "./lib/shops.mjs";
+import { loadCollectionOwners, ownField } from "./lib/collection-owners.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const DATA = join(ROOT, "data");
 const OUT = join(DATA, "item-uses");
 const apply = process.argv.includes("--apply");
+const offline = process.argv.includes("--offline");
 
 const SHARD_BITS = 10;                 // 必須與 tools/market/market.js 的 USES_SHARD_BITS 一致
 const shardOf = (id) => id >> SHARD_BITS;
@@ -60,34 +63,61 @@ curLink.set(29, ["gs", "mgp"]);
 curLink.set(41629, ["gs", "reputation"]);
 for (const [id, link] of curLink) { U(id).cur = link; bump("cur"); }
 
-/* ── x：NPC 兌換的成本 ── */
+/* ── x：NPC 兌換的成本 ──
+   2026-11-23b 起改吃完整商店表（scripts/lib/shops.mjs），不再只吃 NPC 商店目錄：目錄會把「客戶端沒有店名」的店
+   整間略過（360 間），成就幣（喬納森）、庫洛獎狀、未知的魔導組件…的兌換全在裡面——有 61 件收藏品只在這些店換得到。
+   這裡只要求 **NPC 有台服名且有座標**（鐵則：不落英文、不編地名）。每一處地點另標「NPC 商店目錄裡有沒有這位 NPC
+   收這件」：有才給連結，沒有就只印字（點過去是空的，比不連更糟）。 */
+const owner = await loadCollectionOwners({ root: ROOT, offline });
 {
-  const idx = await rd("npc-shops/_index.json");
+  const S = await loadShops({ root: ROOT, offline });
+  // 目錄裡「這張圖的這位 NPC 收這件當代價」的集合，用來標地點可不可以連
+  const inCatalog = new Set();
+  for (const m of (await rd("npc-shops/_index.json")).maps) {
+    const sh = await rd(`npc-shops/${m.mapId}.json`);
+    for (const n of sh.npcs) for (const s of n.s) for (const t of s.tr) for (const [c] of t.c) inCatalog.add(`${sh.mapId}|${n.n}|${c}`);
+  }
   // 同一筆兌換（換到什麼×幾個、這件要付幾個、另外還要付什麼）常常在好幾個 NPC 那裡都有，合併成一筆、地點另列
   const agg = new Map();               // `${cost}|${give}|${gAmt}|${amt}|${others}` → { cost, give, gAmt, amt, others, places: Map }
-  for (const m of idx.maps) {
-    const sh = await rd(`npc-shops/${m.mapId}.json`);
-    for (const n of sh.npcs) for (const s of n.s) for (const t of s.tr) {
-      for (const [costId, amt] of t.c) {
-        if (costId === 1 || curLink.has(costId)) continue;      // 金幣不算「用途」；有專頁的貨幣連過去
-        const others = t.c.filter(([id]) => id !== costId);
-        for (const [give, gAmt] of t.g) {
-          const key = `${costId}|${give}|${gAmt}|${amt}|${others.map((o) => o.join("x")).join(",")}`;
+  for (const shop of S.shops) {
+    // NPC 名與地名用寬鬆版 isTranslated()（只擋假名與內部佔位列）：台服真的有拉丁字母的官方名，
+    // 例如奧密克戎族的兌換商「N-0598」——用 isTw() 會把它連同 12 筆兌換一起丟掉（第一版就是這樣）
+    const npcs = shop.npcs.filter((n) => n.name && isTranslated(n.name) && n.at && n.at.mapName && isTranslated(n.at.mapName) && n.at.mapId != null);
+    if (!npcs.length) { bump("x 店沒有可用的 NPC"); continue; }
+    for (const t of shop.trades) {
+      const cost = t.cost.filter((c) => c && c.itemId && c.amount);
+      for (const c of cost) {
+        if (c.itemId === 1 || curLink.has(c.itemId)) continue;   // 金幣不算「用途」；有專頁的貨幣連過去
+        const others = cost.filter((o) => o !== c).map((o) => [o.itemId, o.amount]);
+        for (const g of t.gives) {
+          if (!g || !g.itemId) continue;
+          const gAmt = g.amount || 1;
+          const key = `${c.itemId}|${g.itemId}|${gAmt}|${c.amount}|${others.map((o) => o.join("x")).join(",")}`;
           let a = agg.get(key);
-          if (!a) { a = { costId, give, gAmt, amt, others, places: new Map() }; agg.set(key, a); }
-          const pk = n.n + "@" + sh.mapId;
-          if (!a.places.has(pk)) a.places.set(pk, [n.n, sh.mapId, sh.map]);
+          if (!a) { a = { costId: c.itemId, give: g.itemId, gAmt, amt: c.amount, others, places: new Map() }; agg.set(key, a); }
+          for (const n of npcs) {
+            const pk = n.name + "@" + n.at.mapId;
+            if (!a.places.has(pk)) a.places.set(pk, [n.name, n.at.mapId, n.at.mapName, inCatalog.has(`${n.at.mapId}|${n.name}|${c.itemId}`) ? 1 : 0]);
+          }
         }
       }
     }
   }
+  let linked = 0, unlinked = 0;
   for (const a of agg.values()) {
-    if (!twItem(a.give) || !twItem(a.costId)) { bump("x 無台服名略過"); continue; }
-    const pl = [...a.places.values()].sort((p, q) => p[1] - q[1] || (p[0] < q[0] ? -1 : 1));
-    // [換到的物品 id, 換到幾個, 這件要付幾個, 另外要付的 [[id, 數量]…]（沒有就 0）, 地點 [[NPC, mapId, 地圖名]…], 其餘地點數]
-    push(a.costId, "x", [a.give, a.gAmt, a.amt, a.others.length ? a.others : 0, pl.slice(0, MAX_PLACES), Math.max(0, pl.length - MAX_PLACES)]);
+    if (!twItem(a.give) || !twItem(a.costId) || a.others.some(([id]) => id !== 1 && !twItem(id))) { bump("x 無台服名略過"); continue; }
+    // 目錄連得到的地點排前面，再依 mapId／NPC 名（固定順序）
+    const pl = [...a.places.values()].sort((p, q) => q[3] - p[3] || p[1] - q[1] || (p[0] < q[0] ? -1 : 1));
+    for (const p of pl.slice(0, MAX_PLACES)) p[3] ? linked++ : unlinked++;
+    const own = owner.get(a.give);
+    // [換到的物品 id, 換到幾個, 這件要付幾個, 另外要付的 [[id, 數量]…]（沒有就 0）,
+    //  地點 [[NPC, mapId, 地圖名, 目錄有沒有(1/0)]…], 其餘地點數, 收藏對應 own（不是收藏品就 0）]
+    push(a.costId, "x", [a.give, a.gAmt, a.amt, a.others.length ? a.others : 0, pl.slice(0, MAX_PLACES), Math.max(0, pl.length - MAX_PLACES), own ? ownField(own) : 0]);
     bump("x 筆");
+    if (own) bump("x 收藏品筆");
   }
+  bump("x 地點連得到目錄", linked);
+  bump("x 地點目錄沒收（只印字）", unlinked);
 }
 
 /* ── q：任務交付 ── */
@@ -174,7 +204,7 @@ await writeFile(join(OUT, "_index.json"), JSON.stringify({
   schema: "item-uses-index",
   updated: new Date().toISOString().slice(0, 10),
   source: "data/npc-shops ＋ data/quests ＋ data/craft-leves.json ＋ data/gc-supply.json ＋ data/fc-workshop.json ＋ data/collectable-items.json ＋ data/currency-shop.json（scripts/build-item-uses.mjs）",
-  note: `片號 = itemId >> ${SHARD_BITS}；檔名 <片號>.json，只寫有資料的片。x=NPC 兌換的成本 [換到的 id, 換到幾個, 付幾個, 另付 [[id,數量]]|0, 地點 [[NPC, mapId, 地圖名]], 其餘地點數]、q=任務交付 [任務 id, 名稱]、l=製作理符 [理符 id, 名稱, 職業, 等級, 數量]、g=軍需品 [職業序, 職業, 數量, 軍票]、w=部隊工房 [成品 id, 成品名, 類型, 總數]、c=可當收藏品交納、cur=有專頁的貨幣 ["gc", ?c=]／["gs", mgp|reputation]。配方用途不在這裡（市場頁自己有）。`,
+  note: `片號 = itemId >> ${SHARD_BITS}；檔名 <片號>.json，只寫有資料的片。x=NPC 兌換的成本 [換到的 id, 換到幾個, 付幾個, 另付 [[id,數量]]|0, 地點 [[NPC, mapId, 地圖名, NPC 商店目錄有沒有(1/0)]], 其餘地點數, 收藏對應 {c,label,path,sk,k}|0]、q=任務交付 [任務 id, 名稱]、l=製作理符 [理符 id, 名稱, 職業, 等級, 數量]、g=軍需品 [職業序, 職業, 數量, 軍票]、w=部隊工房 [成品 id, 成品名, 類型, 總數]、c=可當收藏品交納、cur=有專頁的貨幣 ["gc", ?c=]／["gs", mgp|reputation]。配方用途不在這裡（市場頁自己有）。`,
   shardBits: SHARD_BITS,
   count: uses.size,
   shards: files.map((f) => ({ shard: f.shard, count: f.count, bytes: f.bytes })),

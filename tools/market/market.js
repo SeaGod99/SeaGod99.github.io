@@ -2448,6 +2448,12 @@
     }
     return usesCache[s].then(function (d) { return d ? (d[id] || {}) : null; });
   }
+  // 某本收藏圖鑑的進度（只讀）。存檔鍵與格式由資料的 own.sk／own.k 決定（collection-owners.mjs），這裡不自己拼
+  function useOwnedSet(sk) {
+    var s = new Set();
+    try { JSON.parse(localStorage.getItem(sk) || '[]').forEach(function (k) { s.add(String(k)); }); } catch (e) {}
+    return s;
+  }
   function useItemName(id) {
     if (id === 1) return '金幣';                  // items.json 裡金幣的名字是 "Gil"（CLAUDE.md）
     var it = itemById.get(id);
@@ -2497,6 +2503,43 @@
     var xs = (u.x || []).filter(function (r) { return visibleItem(r[0]); });
     if (xs.length) {
       parts.push('兌換 ' + xs.length + ' 種');
+      /* 收藏缺口（2026-11-23，第四輪 §5-1）：兌換列的 r[6] 是收藏對應 {c,label,path,sk,k}（不是收藏品就 0），
+         由 scripts/lib/collection-owners.mjs 產生——與金碟頁、貨幣變現排行同一份，這裡不自己拼存檔鍵。
+         變現排行只收 49 種貨幣；成就幣、戰利水晶、部族幣、季節活動幣…的收藏缺口在這裡算。
+         同一件收藏品有好幾種價錢時取最便宜的；缺的那幾件獨立列一排（不受下面「最多 30 筆」限制）。 */
+      var gapHtml = '', ownSets = {};
+      var hasOwn = function (o) {
+        if (!ownSets[o.sk]) ownSets[o.sk] = useOwnedSet(o.sk);
+        return ownSets[o.sk].has(String(o.k));
+      };
+      var best = new Map();
+      xs.forEach(function (r) { if (r[6]) { var b = best.get(r[0]); if (!b || r[2] < b[2]) best.set(r[0], r); } });
+      if (best.size) {
+        var miss = [], gapCost = 0, gapOther = false, labels = [];
+        best.forEach(function (r) {
+          if (labels.indexOf(r[6].label) < 0) labels.push(r[6].label);
+          if (!hasOwn(r[6])) { miss.push(r); gapCost += r[2]; if (r[3]) gapOther = true; }
+        });
+        miss.sort(function (a, b) { return a[2] - b[2] || a[0] - b[0]; });
+        var noData = labels.filter(function (l) {
+          var r = Array.from(best.values()).find(function (x) { return x[6].label === l; });
+          return ownSets[r[6].sk] && ownSets[r[6].sk].size === 0;
+        });
+        parts.push(miss.length ? '收藏缺 ' + miss.length + ' 件' : '收藏已收齊');
+        gapHtml = '<div class="use-gap">🧩 換得到的收藏品 <b>' + best.size + '</b> 件，' +
+          (miss.length
+            ? '你還缺 <b>' + miss.length + '</b> 件，全換要 <b>' + gapCost.toLocaleString() + '</b> 個' + esc(nm) + (gapOther ? '（部分另需其他代價）' : '')
+            : '<span class="use-done">你都有了 ✓</span>') + '</div>' +
+          (miss.length ? (function () {
+            var list = '<div class="use-gap-list">' + miss.map(function (r) {
+              return '<a class="use-gap-chip" href="../../' + esc(r[6].path) + '?id=' + encodeURIComponent(r[6].k) + '" title="到收藏頁看這一格">' +
+                esc(useItemName(r[0])) + ' <span class="use-sub">' + esc(r[6].label) + '・×' + r[2].toLocaleString() + '</span></a>';
+            }).join('') + '</div>';
+            // 缺很多件（成就幣 28 件）時一次攤開會佔掉整個手機畫面、把兌換清單推到很下面——收起來，摘要行照樣有數字
+            return miss.length > 6 ? '<details class="use-gap-more"><summary>看是哪 ' + miss.length + ' 件</summary>' + list + '</details>' : list;
+          })() : '') +
+          (noData.length ? '<div class="note use-more">⚠ 沒有讀到「' + esc(noData.join('、')) + '」頁的進度，這幾本全部當成還沒有算——先去那幾頁把已有的勾起來。</div>' : '');
+      }
       /* 依「在哪幾位 NPC 換」分組，地點每組只講一次。白銀陸行鳥的羽毛 179 筆全是同三位失物管理人，
          逐列各印一次三個地點，畫面就只剩重複的字。組的順序跟著各組第一筆的物品 id（資料已排好，固定不跳）。 */
       var bySig = new Map();
@@ -2505,23 +2548,31 @@
         if (!bySig.has(k)) bySig.set(k, { places: r[4], more: r[5], rows: [] });
         bySig.get(k).rows.push(r);
       });
+      /* 截到 30 筆的前提是「其餘的在 NPC 商店目錄看得到」。這件的兌換店目錄全都沒收（成就幣的喬納森——客戶端沒店名）時，
+         叫人去目錄搜只會撲空，所以整份列出來。 */
+      var anyCatalog = xs.some(function (r) { return r[4].some(function (p) { return p[3]; }); });
+      var cap = anyCatalog ? USES_CAP : Infinity;
       var shown = 0, blocks = [];
       bySig.forEach(function (g) {
-        if (shown >= USES_CAP) return;
-        var take = g.rows.slice(0, USES_CAP - shown);
+        if (shown >= cap) return;
+        var take = g.rows.slice(0, cap - shown);
         shown += take.length;
+        // p[3]＝NPC 商店目錄有沒有這位 NPC 收這件：有才連；沒有（客戶端沒店名的店，目錄不收）只印字，點過去是空的比不連更糟
         var places = g.places.map(function (p) {
-          return '<a class="use-link" href="../npc-shops/?m=' + p[1] + '&amp;q=' + encodeURIComponent(nm) + '" title="在 NPC 商店目錄看這位 NPC">' +
-            esc(p[0]) + '（' + esc(p[2]) + '）</a>';
+          return p[3]
+            ? '<a class="use-link" href="../npc-shops/?m=' + p[1] + '&amp;q=' + encodeURIComponent(nm) + '" title="在 NPC 商店目錄看這位 NPC">' +
+              esc(p[0]) + '（' + esc(p[2]) + '）</a>'
+            : '<span title="NPC 商店目錄沒收這間店（客戶端沒有店名）">' + esc(p[0]) + '（' + esc(p[2]) + '）</span>';
         }).join('、') + (g.more ? ' 等 ' + (g.places.length + g.more) + ' 處' : '');
         blocks.push('<div class="use-where">📍 ' + places + '</div><div class="use-grid">' + take.map(function (r) {
           var other = r[3] ? r[3].map(function (o) { return '＋' + esc(useItemName(o[0])) + '×' + o[1].toLocaleString(); }).join(' ') : '';
-          return '<div class="use-cell">' + navChipHtml(r[0], useItemName(r[0]) + (r[1] > 1 ? ' ×' + r[1] : '')) +
+          var col = r[6] ? (hasOwn(r[6]) ? ' <span class="use-col have">✓ ' + esc(r[6].label) + '</span>' : ' <span class="use-col">' + esc(r[6].label) + '</span>') : '';
+          return '<div class="use-cell"><span class="use-cell-main">' + navChipHtml(r[0], useItemName(r[0]) + (r[1] > 1 ? ' ×' + r[1] : '')) + col + '</span>' +
             '<span class="src-where">付 ×' + r[2].toLocaleString() + (other ? ' ' + other : '') + '</span></div>';
         }).join('') + '</div>');
       });
-      groups.push('<div class="fold-row"><div class="nav-label">拿去兌換（NPC 收它當代價）</div>' + blocks.join('') +
-        (xs.length > USES_CAP ? '<div class="note use-more">另有 ' + (xs.length - USES_CAP) + ' 項——到 NPC 商店目錄搜「' + esc(nm) + '」看全部</div>' : '') + '</div>');
+      groups.push('<div class="fold-row"><div class="nav-label">拿去兌換（NPC 收它當代價）</div>' + gapHtml + blocks.join('') +
+        (xs.length > cap ? '<div class="note use-more">另有 ' + (xs.length - cap) + ' 項——到 NPC 商店目錄搜「' + esc(nm) + '」看全部</div>' : '') + '</div>');
     }
     if (u.q && u.q.length) {
       parts.push('任務 ' + u.q.length + ' 個');

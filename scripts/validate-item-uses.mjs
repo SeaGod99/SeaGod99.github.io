@@ -18,7 +18,8 @@
 import { readFileSync, existsSync, readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { isTw } from "./lib/tw-text.mjs";
+import { isTw, isTranslated } from "./lib/tw-text.mjs";
+import { COLLECTIONS, TRIAD } from "./lib/collection-owners.mjs";
 
 let JSDOM, VirtualConsole;
 try { ({ JSDOM, VirtualConsole } = await import("jsdom")); }
@@ -57,20 +58,33 @@ const JS = read("tools/market/market.js");
   // NPC 兌換：換到的物品有台服名；每一處地點都是「目錄裡那張圖真的有這位 NPC、他真的收這件」
   const shopCache = new Map();
   const shop = (m) => { if (!shopCache.has(m)) shopCache.set(m, existsSync(join(ROOT, `data/npc-shops/${m}.json`)) ? rj(`data/npc-shops/${m}.json`) : null); return shopCache.get(m); };
-  let n = 0, places = 0;
-  const bad = [];
+  /* 2026-11-23b 起兌換列改吃完整商店表（目錄會略過客戶端沒有店名的店，成就幣就在那裡），每一處地點帶「目錄有沒有」旗標。
+     兩個方向都要對：標 1 的，目錄那張圖真的有這位 NPC 收它換這件（連過去才不會是空的）；
+     標 0 的，目錄真的沒有這位 NPC 收這件（不然就是該連卻沒連）。 */
+  let n = 0, on = 0, off = 0;
+  const bad = [], badOff = [];
   for (const [id, { u }] of USES) for (const r of u.x || []) {
     n++;
     if (!items.get(r[0])?.name || !isTw(items.get(r[0]).name)) bad.push(`${id}→${r[0]} 無台服名`);
-    for (const [npc, mapId, mapName] of r[4]) {
-      places++;
+    for (const [npc, mapId, mapName, inCat] of r[4]) {
       const sh = shop(mapId);
-      const ok = sh && sh.map === mapName && sh.npcs.some((p) => p.n === npc && p.s.some((s) => s.tr.some((t) => t.c.some(([c]) => c === id) && t.g.some(([g]) => g === r[0]))));
-      if (!ok) bad.push(`${items.get(id)?.name}@${npc}/${mapId}`);
+      if (inCat === 1) {
+        on++;
+        const ok = sh && sh.map === mapName && sh.npcs.some((p) => p.n === npc && p.s.some((s) => s.tr.some((t) => t.c.some(([c]) => c === id) && t.g.some(([g]) => g === r[0]))));
+        if (!ok) bad.push(`${items.get(id)?.name}@${npc}/${mapId}`);
+      } else if (inCat === 0) {
+        off++;
+        if (sh && sh.npcs.some((p) => p.n === npc && p.s.some((s) => s.tr.some((t) => t.c.some(([c]) => c === id))))) badOff.push(`${items.get(id)?.name}@${npc}/${mapId}`);
+        if (!isTranslated(npc) || !isTranslated(mapName)) badOff.push(`${npc}／${mapName} 沒過守門`);
+      } else bad.push(`${items.get(id)?.name}@${npc} 沒有目錄旗標`);
     }
   }
-  push("② NPC 兌換的每一處地點都對得到 NPC 商店目錄（那位 NPC 真的收它換這件）", n > 5000 && bad.length === 0,
-    bad.length ? bad.slice(0, 3).join("、") : `${n} 筆、${places} 處`);
+  push("② NPC 兌換中標「目錄有」的地點都對得到 NPC 商店目錄（那位 NPC 真的收它換這件）", n > 8000 && on > 12000 && bad.length === 0,
+    bad.length ? bad.slice(0, 3).join("、") : `${n} 筆、可連 ${on} 處`);
+  push("  標「目錄沒有」的地點目錄裡真的沒有（不是該連沒連）、NPC 名與地名過守門", off > 100 && badOff.length === 0,
+    badOff.length ? badOff.slice(0, 3).join("、") : `只印字 ${off} 處`);
+  const placed = [...USES.values()].every(({ u }) => (u.x || []).every((r) => r[4].every((p, i, a) => i === 0 || a[i - 1][3] >= p[3])));
+  push("  連得到目錄的地點排在前面", placed);
   const sorted = [...USES.values()].every(({ u }) => !u.x || u.x.every((r, i, a) => i === 0 || a[i - 1][0] <= r[0]));
   push("  兌換清單依換到的物品 id 排（固定順序）", sorted);
 }
@@ -122,15 +136,36 @@ const JS = read("tools/market/market.js");
   push("案例：獸骨漁槍（1820）→ 製作理符 21", (USES.get(1820)?.u.l || []).some((r) => r[0] === 21));
 }
 
+{
+  // ⑥ 收藏缺口（第四輪 §5-1）：兌換列的 r[6] 是收藏對應，存檔鍵與格子鍵要真的對得到那本圖鑑（錯了不報錯，只會把已有的算成還缺）
+  const keysOf = new Map();
+  for (const c of COLLECTIONS) {
+    const s = keysOf.get(c.storageKey) || new Set();
+    for (const e of rj(`data/${c.file}.json`).data) s.add(String(c.keyOf(e)));
+    keysOf.set(c.storageKey, s);
+  }
+  keysOf.set(TRIAD.storageKey, new Set(rj("data/triple-triad.json").data.map((e) => String(TRIAD.keyOf(e)))));
+  const colRows = [...USES].flatMap(([id, { u }]) => (u.x || []).filter((r) => r[6]).map((r) => [id, r]));
+  const badOwn = colRows.filter(([, r]) => !keysOf.get(r[6].sk)?.has(String(r[6].k)) || !r[6].path || !r[6].label);
+  push("⑥ 兌換列的收藏對應都對得到那本圖鑑真的有的一格", colRows.length >= 150 && badOwn.length === 0,
+    badOwn.length ? badOwn.slice(0, 3).map(([id, r]) => `${id}→${r[0]}(${r[6].sk}/${r[6].k})`).join("、") : `${colRows.length} 筆`);
+  const notCol = [...USES.values()].flatMap(({ u }) => u.x || []).filter((r) => !r[6]).length;
+  push("  不是收藏品的兌換列收藏欄是 0（不是 undefined）", [...USES.values()].every(({ u }) => (u.x || []).every((r) => r.length === 7 && (r[6] === 0 || typeof r[6] === "object"))), `${notCol} 筆非收藏`);
+  const cert = USES.get(21172)?.u;
+  const certCol = new Set((cert?.x || []).filter((r) => r[6]).map((r) => r[0]));
+  push("案例：成就幣（目錄沒收的店）→ 28 件收藏品，喬納森標「目錄沒有」", certCol.size === 28 && cert.x.every((r) => r[4].some((p) => p[0] === "喬納森" && p[3] === 0)),
+    `${certCol.size} 件`);
+}
+
 // ── 頁面（jsdom）─────────────────────────────────────────
 const HTML = read("tools/market/index.html");
-async function boot(hash, { failUses = false } = {}) {
+async function boot(hash, { failUses = false, ls = {} } = {}) {
   const vc = new VirtualConsole();
   const errs = [];
   vc.on("jsdomError", (e) => errs.push(e.message));
   const dom = new JSDOM(HTML, { runScripts: "outside-only", url: "https://seagod99.github.io/tools/market/" + hash, virtualConsole: vc });
   const { window } = dom;
-  const store = {};
+  const store = { ...ls };
   Object.defineProperty(window, "localStorage", { configurable: true, value: {
     getItem: (k) => (k in store ? store[k] : null), setItem: (k, v) => { store[k] = String(v); }, removeItem: (k) => { delete store[k]; },
     key: () => null, get length() { return 0; } } });
@@ -249,6 +284,64 @@ if (inMissingShard) {
   push("案例頁面：巧手紫票的用途區連到 ../gc-exchange/?c=33913", !!f?.querySelector('a[href="../gc-exchange/?c=33913"]'), sumOf(f));
   const { doc: d2 } = await boot("#item=29");
   push("案例頁面：金碟幣連到金碟獎品價目表", !!usesFold(d2, "#dUses")?.querySelector('a[href="../gold-saucer/"]'));
+}
+
+{
+  // ⑥ 收藏缺口（第四輪 §5-1）：成就幣——變現排行沒有、NPC 商店目錄也沒收（客戶端沒店名）的貨幣
+  // 期望值照頁面同一條規則算：兌換品要有名字、且過版本閘門（visibleItem）
+  const gp = rj("data/_meta.json").gamePatch;
+  const pnum = (p) => { const m = p == null ? null : String(p).match(/^(\d+)\.(\d+)/); return m ? parseFloat(`${m[1]}.${m[2].padEnd(2, "0")}`) : null; };
+  const released = (p) => { const v = pnum(p), g = pnum(gp); return v == null || g == null || v <= g; };
+  const cert = USES.get(21172).u;
+  const best = new Map();
+  for (const r of cert.x) {
+    const it = items.get(r[0]);
+    if (!r[6] || !it || !it.name || !released(it.patch)) continue;
+    const b = best.get(r[0]); if (!b || r[2] < b[2]) best.set(r[0], r);
+  }
+  const want = [...best.values()].reduce((s, r) => s + r[2], 0);
+  let { doc } = await boot("#item=21172");
+  let f = usesFold(doc, "#dUses");
+  const gap = () => (f?.querySelector(".use-gap")?.textContent || "").replace(/,/g, "");
+  const n = (re) => Number((gap().match(re) || [])[1]);
+  push("⑥ 成就幣的用途區有收藏缺口：換得到幾件、還缺幾件、全換要幾個成就幣", n(/換得到的收藏品 (\d+) 件/) === best.size && n(/你還缺 (\d+) 件/) === best.size &&
+    n(/全換要 (\d+) 個/) === want && /收藏缺 \d+ 件/.test(sumOf(f)), gap());
+  const chips = [...f.querySelectorAll("a.use-gap-chip")];
+  const r0 = [...best.values()].sort((a, b) => a[2] - b[2] || a[0] - b[0])[0];
+  push("  還缺的每一件都列成連結、連到收藏頁那一格（?id=），不受兌換清單 30 筆的限制", chips.length === best.size &&
+    chips[0].getAttribute("href") === "../../" + r0[6].path + "?id=" + encodeURIComponent(r0[6].k), chips[0] && chips[0].getAttribute("href"));
+  const more = f.querySelector("details.use-gap-more");
+  push("  缺超過 6 件時連結收在「看是哪 N 件」裡（預設收合，摘要行照樣有數字）", more && !more.open && more.contains(chips[0]) &&
+    more.querySelector("summary").textContent === `看是哪 ${best.size} 件`, more && more.querySelector("summary").textContent);
+  push("  沒讀到進度的圖鑑點名講出來", /沒有讀到「/.test(f.textContent));
+  push("  喬納森（目錄沒收的店）只印字、不給 NPC 商店目錄連結", /喬納森（格里達尼亞舊街）/.test(f.textContent) &&
+    ![...f.querySelectorAll('a.use-link[href^="../npc-shops/"]')].some((a) => /喬納森/.test(a.textContent)));
+  const certVisible = cert.x.filter((r) => { const it = items.get(r[0]); return it && it.name && released(it.patch); }).length;
+  push("  兌換店目錄全都沒收時不截 30 筆、也不叫人去目錄搜（會撲空）", f.querySelectorAll(".use-cell").length === certVisible &&
+    !/到 NPC 商店目錄搜/.test(f.textContent), `${f.querySelectorAll(".use-cell").length}／${certVisible} 筆`);
+  // 逐格驗：顯示出來的格子是收藏品就要有圖鑑標籤、不是就不能有（清單只列前 30 筆，收藏品不一定都在裡面）
+  const colIds = new Set(cert.x.filter((r) => r[6]).map((r) => r[0]));
+  const cells = [...f.querySelectorAll(".use-cell")];
+  const wrongTag = cells.filter((c) => colIds.has(Number(c.querySelector(".nav-chip").getAttribute("data-id"))) !== !!c.querySelector(".use-col"));
+  push("  兌換格：是收藏品的才標圖鑑名（逐格對）", cells.length > 0 && wrongTag.length === 0 && cells.some((c) => c.querySelector(".use-col")),
+    `${cells.length} 格、標了 ${cells.filter((c) => c.querySelector(".use-col")).length} 格`);
+
+  // 標了一件：少一件、總價扣掉它的單價、格子打勾
+  ({ doc } = await boot("#item=21172", { ls: { [r0[6].sk]: JSON.stringify([r0[6].k]) } }));
+  f = usesFold(doc, "#dUses");
+  push("⑥ 在收藏頁標了一件 → 少一件、總價扣掉它的單價、格子標「✓」", n(/你還缺 (\d+) 件/) === best.size - 1 && n(/全換要 (\d+) 個/) === want - r0[2] &&
+    f.querySelectorAll(".use-col.have").length >= 1 && f.querySelectorAll("a.use-gap-chip").length === best.size - 1, gap());
+
+  // 全部都有 → 「你都有了」、不列連結
+  const ls = {};
+  for (const r of best.values()) { const s = ls[r[6].sk] ? JSON.parse(ls[r[6].sk]) : []; s.push(r[6].k); ls[r[6].sk] = JSON.stringify(s); }
+  ({ doc } = await boot("#item=21172", { ls }));
+  f = usesFold(doc, "#dUses");
+  push("  全部都有 → 摘要寫「你都有了」、摘要行寫「收藏已收齊」、不列缺件連結", /你都有了/.test(gap()) && /收藏已收齊/.test(sumOf(f)) && !f.querySelector("a.use-gap-chip"));
+
+  // 寵物頁存純數字也要認得
+  const petRow = [...USES.values()].flatMap(({ u }) => u.x || []).find((r) => r[6] && r[6].c === "minions");
+  push("  收藏對應裡寵物的鍵是純數字（寵物頁 keyOf 回傳 m.id）", petRow && /^\d+$/.test(String(petRow[6].k)), petRow && String(petRow[6].k));
 }
 
 // ── 報告 ──

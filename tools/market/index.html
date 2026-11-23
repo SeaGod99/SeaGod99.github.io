@@ -569,8 +569,29 @@
     }
     .use-cell .nav-chip { border-color: transparent; background: none; min-width: 0; }
     .use-cell .src-where { white-space: nowrap; }
+    .use-cell-main { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 6px; min-width: 0; }
+    /* 收藏缺口（第四輪 §5-1）：摘要一行＋還缺的那幾件一排連結（連到收藏頁那一格） */
+    .use-gap { font-size: 0.8rem; color: var(--text-dim); margin: 2px 0 6px; }
+    .use-gap b { color: var(--gold-light); font-variant-numeric: tabular-nums; }
+    .use-done { color: var(--green); }
+    .use-gap-list { display: flex; flex-wrap: wrap; gap: 4px 6px; margin-bottom: 8px; }
+    /* inline-block 會吃掉瀏覽器原生的展開箭頭，自己補一個，不然看起來只是一行灰字、不像可以點 */
+    .use-gap-more > summary {
+      cursor: pointer; font-size: 0.76rem; color: var(--blue); margin-bottom: 6px; display: inline-block; padding: 3px 0;
+      text-decoration: underline dotted; text-underline-offset: 3px;
+    }
+    .use-gap-more > summary::before { content: '▸ '; text-decoration: none; display: inline-block; margin-right: 2px; }
+    .use-gap-more[open] > summary::before { content: '▾ '; }
+    .use-gap-more > summary:hover { color: var(--gold-light); }
+    a.use-gap-chip {
+      display: inline-flex; align-items: center; gap: 4px; font-size: 0.76rem; color: var(--blue);
+      border: 1px dashed var(--border-hover); border-radius: 999px; padding: 3px 9px;
+    }
+    a.use-gap-chip:hover { border-color: var(--gold); color: var(--gold-light); }
+    .use-col { font-size: 0.68rem; color: var(--text-muted); border: 1px solid var(--border); border-radius: 4px; padding: 0 5px; white-space: nowrap; }
+    .use-col.have { color: var(--green); border-color: var(--green-dim); }
     .use-more { margin-top: 6px; }
-    @media (pointer: coarse) { a.use-link { padding: 10px 0; } .use-btn { min-height: 44px; } }
+    @media (pointer: coarse) { a.use-link { padding: 10px 0; } .use-btn, a.use-gap-chip, .use-gap-more > summary { min-height: 44px; } }
 
     /* 逐物品的 HQ/NQ 覆寫（節點卡與簡易列共用）。三顆鈕擠在 156px 的卡片上，
        字級與內距都得比一般 .seg 再小一號，但 pointer:coarse 下仍拉到 44px。 */
