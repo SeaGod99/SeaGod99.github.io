@@ -145,7 +145,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 重建無人島資料層 | `node scripts/build-island.mjs`（`--offline` 用快取／`--refresh` 強制重抓）。**會把 11 個 `island-*.json` 整份寫成 pretty JSON，跑完必接 `minify-data.mjs --apply`**；工坊主題名優先取 `tw-locales` 的台服官方表（2026-10-03 起） |
 | 幻卡補新卡（台服開新卡時） | `node scripts/patch-triple-triad-new-cards.mjs`（dry-run／`--apply` 寫入）→ `node scripts/download-triple-triad-images.mjs` |
 | 幻卡取得方式補繁中名（補完新卡後） | `node scripts/patch-triple-triad-source-names.mjs`（`--apply`／`--offline`，冪等） |
-| 副本補資料片欄位（改完 dungeons.json） | `node scripts/patch-dungeon-expansion.mjs`（`--apply`／`--offline`） |
+| 副本補資料片欄位（改完 dungeons.json） | `node scripts/patch-dungeon-expansion.mjs`（`--apply`／`--offline`；**寫 pretty JSON，必接 `minify-data.mjs --apply`**）。2026-11-24 起：版號護欄**不對稱**——版號的資料片早於所需資料片＝不可能、清成 null；晚於＝合理（死者宮殿 3.35 只要新生）、保留並列出。資料片欄位**只填空的、不覆蓋**（`patch-dungeon-add-missing` 用 TerritoryType.ExVersion，這支用 RequiredExVersion，兩個定義不同的會被最後跑的那支翻掉），不一致的列出。回歸在 `validate-duty-codex.mjs` |
 | 副本補時限／通關經驗／解鎖任務（改完 dungeons.json） | `node scripts/patch-dungeon-details.mjs`（dry-run 預設／`--apply`／`--offline`）；補 `timeLimit`（516/520）、`clearExp`、`clearGil`、`unlock`（32/520），並把 `image` 的 `000000` 佔位改成 null |
 | 副本圖鑑回歸（**改完 `tools/duty-codex/` 或 `dungeons.json` 必跑**） | `node scripts/validate-duty-codex.mjs`（jsdom，52 項：類型標籤、篩選、`?id=duty:<id>` 深連結、圖檔存在率、掉落段、取得管道與收藏頁的副本連結、回連文書跑圖）|
 | 幻卡缺卡跑圖回歸（**改完 `collections/triple-triad/` 或 `triple-triad.json` 必跑**） | `node scripts/validate-triad-route.mjs`（jsdom，31 項：只認 `NPC對戰` 不認 `NPC牌組`、地圖篩選、**標記取得不會讓清單重排**）|

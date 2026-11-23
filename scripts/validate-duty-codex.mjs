@@ -38,6 +38,17 @@ const VISIBLE = DB.data.filter((x) => x.name && (pnum(x.patch) == null || pnum(x
   const eureka = d.filter((x) => x.type === 'eureka' && x.name);
   push('優雷卡區域的名稱都含「優雷卡」（不是借用迷宮名）', eureka.length >= 4 && eureka.every((x) => /優雷卡/.test(x.name)),
     eureka.map((x) => x.name).join('、'));
+  /* 版號與資料片（2026-11-24，第四輪 §5-3）。「需要哪個資料片」與「哪一版加的」是兩件事，只有一個方向是錯：
+     版號的資料片 **早於** 副本的資料片＝不可能（正統優雷卡標 5.2 卻是曉月內容）→ 不准出現；
+     版號的資料片 **晚於** 副本的資料片＝合理（死者宮殿 3.35 只要新生、6.x 改版的新生主線副本）→ 版號要保留。
+     舊版 patch-dungeon-expansion.mjs 的護欄不分方向、一律清，會把死者宮殿這 10 筆正確的版號清掉。 */
+  const exOfPatch = (p) => { const m = String(p ?? '').match(/^(\d+)\./); return m ? Number(m[1]) - 2 : null; };
+  const impossible = d.filter((x) => x.patch && x.expansionId != null && exOfPatch(x.patch) < x.expansionId);
+  push('沒有副本的版號早於它的資料片（「不可能」那個方向）', impossible.length === 0,
+    impossible.slice(0, 4).map((x) => x.id + ' ' + x.name + '：' + x.patch + ' vs ' + x.expansion).join('、') || '0 筆');
+  const pod = d.filter((x) => /^死者宮殿 地下/.test(x.name || '') && x.patch === '3.35');
+  push('「後來才加、門檻較低」的版號保留（死者宮殿 3.35 只要新生）', pod.length >= 5 && pod.every((x) => x.expansionId === 0),
+    pod.length + ' 筆');
   // 名稱逐字等於台服客戶端（有快取才驗；CI 沒有 out_data/cache 就略過）
   const cfcCsv = join(ROOT, 'out_data/cache/tc-datamining/ContentFinderCondition.csv');
   if (existsSync(cfcCsv)) {

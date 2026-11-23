@@ -132,27 +132,33 @@ async function main() {
     process.exit(1);
   }
 
-  // ── 護欄②：既有 patch 與 ExVersion 的矛盾偵測 ────────────────────────────
-  // 2026-07-28 首跑抓到 18 筆矛盾，逐筆確認**全部都是 dungeons.json 的 patch 錯**
-  // （究極武器破壞作戰是 ARR 內容卻標 6.0、深空天坑是 7.0 卻標 6.0、亞歷山大機神城
-  // 是 3.0 卻標 2.45…），成因是 build-dungeons.mjs 走 XIVAPI v1 的 GamePatch 而 v1
-  // 已停更。ExVersion 才是客戶端自己的歸屬，所以**矛盾時信 ExVersion**。
-  // 已證實為錯的 patch 直接清成 null（保留一個錯的值比留空更糟——版本篩選會把副本
-  // 分到錯的資料片），但**不猜正確 patch**：沒有權威來源，null 就是誠實的答案。
-  const bad = [];
+  // ── 護欄②：既有 patch 與 ExVersion 的矛盾偵測（2026-11-24 改成不對稱）─────────
+  // **RequiredExVersion 是「進這個副本要哪個資料片」，不是「哪一版加的」**。所以兩個方向的意義不同：
+  //   · patch 推得的資料片 **早於** ExVersion → **不可能**（內容不會比它要求的資料片更早推出）
+  //     ＝patch 一定錯：正統優雷卡標 5.2 卻要曉月、一位國王，一位父親標 6.5 卻要黃金（多半是「首次出現在資料裡」的預載版號）。
+  //     這種清成 null（錯的值比留空更糟），但**不猜正確 patch**：沒有權威來源，null 就是誠實的答案。
+  //   · patch 推得的資料片 **晚於** ExVersion → **合理**：後來才加、門檻卻低的內容——死者宮殿 3.35 只要新生、
+  //     6.x 改版的新生主線副本（里塔提恩強攻戰 6.0、皇都伊修加爾德保衛戰 6.28）。**保留現值、只列出來**。
+  // 舊版「矛盾時一律信 ExVersion、清成 null」會把這 10 筆正確的版號清掉（11-17 起列在待辦、沒敢跑）。
+  // 它當年（07-28）清掉的 18 筆（究極武器破壞作戰標 6.0…）也屬於「晚於」這一側、這條規則分不出來——
+  // 但那 18 筆早已是 null，這支只清不補，不會翻回去；補版號的 patch-dungeon-names 另有自己的護欄。
+  const bad = [], later = [];
   for (const d of dungeons) {
     const c = cfc[d.id];
     if (!c || c.exVersion == null || !d.patch) continue;
     const want = exFromPatch(d.patch);
-    if (want != null && want !== c.exVersion) bad.push({ d, got: c.exVersion, want });
+    if (want == null || want === c.exVersion) continue;
+    (want < c.exVersion ? bad : later).push({ d, got: c.exVersion, want });
   }
-  console.log(`護欄② patch 矛盾：${bad.length} 筆的 patch 與 ExVersion 對不起來`
-    + (bad.length ? `（信 ExVersion，把這些 patch 清成 null）` : ''));
-  bad.slice(0, 20).forEach((m) => console.log(
-    `  · ${m.d.id} ${m.d.name}：patch ${m.d.patch}（推得 ${EXVERSION_TW[m.want] || m.want}）`
-    + ` vs ExVersion ${EXVERSION_TW[m.got] || m.got} ← 採用`));
+  console.log(`護欄② patch 與 ExVersion 不一致：${bad.length + later.length} 筆`);
+  console.log(`  不可能（版號早於它要的資料片）→ 清成 null：${bad.length} 筆`);
+  bad.forEach((m) => console.log(
+    `    ✗ ${m.d.id} ${m.d.name}：patch ${m.d.patch}（${EXVERSION_TW[m.want] || m.want}）卻要 ${EXVERSION_TW[m.got] || m.got}`));
+  console.log(`  合理（後來才加、門檻較低）→ 保留：${later.length} 筆`);
+  later.forEach((m) => console.log(
+    `    · ${m.d.id} ${m.d.name}：patch ${m.d.patch}（${EXVERSION_TW[m.want] || m.want}），只要 ${EXVERSION_TW[m.got] || m.got}`));
   if (bad.length > 40) {
-    console.error(`\n✗ 矛盾筆數 ${bad.length} 過多，先確認 ExVersion 對照是否正確，中止不寫入。`);
+    console.error(`\n✗ 「不可能」的筆數 ${bad.length} 過多，先確認 ExVersion 對照是否正確，中止不寫入。`);
     process.exit(1);
   }
 
@@ -165,24 +171,34 @@ async function main() {
     + (lvlDiff.length ? `（${lvlDiff.slice(0, 5).map((d) => d.id).join(',')}…，只報告不自動改）` : ''));
 
   // ── 套用 ─────────────────────────────────────────────────────────────────
+  // **只填空的 expansion，不覆蓋既有值**（2026-11-24）。這支當年的任務是補「386 筆全是空字串」；現在都填滿了，
+  // 而另一支 patch-dungeon-add-missing.mjs 補新副本時用的是 **TerritoryType.ExVersion**（地圖屬於哪個資料片），
+  // 這裡用的是 **CFC.RequiredExVersion**（要擁有哪個資料片）——兩個定義對多數副本一樣，但不一樣的會被「最後跑的那支」翻掉：
+  // 7.3 的「幻 青龍征魂戰」地圖屬黃金遺產、所需資料片卻是 0（新生），跑這支就會從副本圖鑑的黃金遺產掉到新生。
+  // 哪個定義才是副本圖鑑要的分組，是另一題（第四輪路線圖 §5）；在定案前兩邊都不覆蓋對方，不一致的列出來。
   const byExp = {};
   let filled = 0, noEx = [];
+  const differ = [];
   for (const d of dungeons) {
     const c = cfc[d.id];
     if (!c || c.exVersion == null) { noEx.push(d.id); continue; }
     const label = EXVERSION_TW[c.exVersion];
     if (!label) { console.warn(`  ⚠ ${d.id} ${d.name}：未知的 ExVersion ${c.exVersion}（新資料片？請補 EXVERSION_TW）`); noEx.push(d.id); continue; }
     byExp[label] = (byExp[label] || 0) + 1;
-    if (d.expansion !== label || d.expansionId !== c.exVersion) filled++;
-    if (APPLY) { d.expansion = label; d.expansionId = c.exVersion; }
+    if (d.expansion && (d.expansion !== label || d.expansionId !== c.exVersion)) { differ.push({ d, label }); continue; }
+    if (!d.expansion) { filled++; if (APPLY) { d.expansion = label; d.expansionId = c.exVersion; } }
   }
-  console.log(`\n可填 expansion：${dungeons.length - noEx.length}/${dungeons.length}（要更新 ${filled} 筆）`);
+  console.log(`\n可填 expansion：${dungeons.length - noEx.length}/${dungeons.length}（空的要補 ${filled} 筆）`);
   Object.entries(byExp).sort().forEach(([k, v]) => console.log(`  ${k.padEnd(6)} ${v} 座`));
   if (noEx.length) console.log(`  補不到的 ${noEx.length} 筆：${noEx.slice(0, 20).join(', ')}`);
+  if (differ.length) {
+    console.log(`  現值與所需資料片不同而保留現值：${differ.length} 筆`);
+    differ.forEach(({ d, label }) => console.log(`    · ${d.id} ${d.name || '（無名）'}：現值 ${d.expansion}，所需資料片 ${label}`));
+  }
 
-  // 已證實為錯的 patch 清成 null（理由見護欄②）
+  // 已證實為錯的 patch 清成 null（只有「不可能」那一側，理由見護欄②）
   if (APPLY) bad.forEach(({ d }) => { d.patch = null; });
-  console.log(`清掉已證實錯誤的 patch：${bad.length} 筆`
+  console.log(`清掉不可能的 patch：${bad.length} 筆`
     + `（清完 patch 為 null 者 ${dungeons.filter((d) => !d.patch).length + (APPLY ? 0 : bad.length)}/${dungeons.length}）`);
 
   if (!APPLY) { console.log('\n（dry-run，未寫入。加 --apply 才會寫進 data/dungeons.json）'); return; }
