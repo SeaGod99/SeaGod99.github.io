@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FF14 部隊工房建造材料 — 房屋外牆、乙太轉輪、轉輪台、潛水艇與飛空艇部件，每個部位、每個階段要交哪些素材各幾個；可用素材名反查，一鍵帶去市場頁算成本">
+  <title>部隊工房建造材料 | 水神的工具箱</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <!-- 頁尾（.page-footer／.footer-text／.container）定義在 common.css。
+       **必須排在下面那個 <style> 之前**——本頁自己的規則要能蓋過 common.css 的
+       全域項（`*`／`body`／`html`），順序顛倒的話版面會被 common.css 壓掉。 -->
+  <link rel="stylesheet" href="../../assets/css/common.css">
+  <link rel="stylesheet" href="../../assets/css/tool-header.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 109.375%; }
+    body { background: var(--bg-base); color: var(--text); font-family: var(--font-sans); min-height: 100vh; }
+
+    .wrap { max-width: var(--w-content); margin: 0 auto; padding: 0.6rem 1.5rem 2.5rem; }
+    .note { font-size: 0.75rem; color: var(--text-muted); line-height: 1.75; margin-bottom: 0.9rem; }
+    .note b { color: var(--text-dim); font-weight: 600; }
+
+    .controls { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-bottom: 0.6rem; }
+    .controls input[type="search"] {
+      flex: 1 1 16rem; min-width: 0; background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px;
+      color: var(--text); padding: 0.45rem 0.7rem; font: inherit; font-size: 0.85rem;
+    }
+    .controls select { background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; color: var(--text-dim); padding: 0.45rem 0.6rem; font: inherit; font-size: 0.82rem; }
+    .status { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.6rem; }
+    .status button { margin-left: 0.5rem; background: none; border: 1px solid var(--border); border-radius: 6px; color: var(--text-dim); padding: 0.2rem 0.6rem; font: inherit; font-size: 0.74rem; cursor: pointer; }
+    .status button:hover { border-color: var(--gold); color: var(--gold-light); }
+
+    .grp { margin-top: 1.1rem; }
+    .grp-head { display: flex; align-items: baseline; gap: 0.5rem; padding-bottom: 0.35rem; margin-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+    .grp-name { font-size: 0.95rem; font-weight: 700; color: var(--gold-light); }
+    .grp-n { font-size: 0.74rem; color: var(--text-muted); }
+
+    .fw { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); margin-bottom: 0.4rem; }
+    .fw > summary {
+      display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2rem 0.6rem; min-height: 44px;
+      padding: 0.6rem 0.85rem; cursor: pointer; list-style: none;
+    }
+    .fw > summary::-webkit-details-marker { display: none; }
+    .fw > summary::before { content: '▸'; color: var(--text-muted); transition: transform var(--transition); }
+    .fw[open] > summary::before { transform: rotate(90deg); }
+    .fw > summary:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: -2px; border-radius: var(--radius-md); }
+    .fw-name { font-size: 0.9rem; font-weight: 600; color: var(--text); }
+    .fw-sub { font-size: 0.72rem; color: var(--text-muted); }
+    .fw-hit { font-size: 0.74rem; color: var(--gold); flex-basis: 100%; padding-left: 1.1rem; }
+    .fw-body { padding: 0.2rem 0.85rem 0.85rem; border-top: 1px solid var(--border); }
+    .fw-part { font-size: 0.8rem; font-weight: 700; color: var(--text-dim); margin: 0.75rem 0 0.3rem; }
+
+    .table-wrap { overflow-x: auto; }
+    /* 寬螢幕上不拉滿：素材名與數量隔太遠，視線要橫跨整個畫面才對得上 */
+    table { width: 100%; max-width: 42rem; border-collapse: collapse; font-size: 0.8rem; }
+    th { text-align: left; font-size: 0.7rem; color: var(--text-muted); font-weight: 600; padding: 0.35rem 0.5rem; border-bottom: 1px solid var(--border); white-space: nowrap; }
+    td { padding: 0.3rem 0.5rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    td.ph { color: var(--text-muted); white-space: nowrap; width: 5.5em; }
+    td.q { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; width: 7em; }
+    td.q b { color: var(--text); }
+    th.q { text-align: right; }
+    /* 一行接一行的連結：用真實 padding 撐高，不用 ::after 擴張層（會蓋到上下列；CLAUDE.md） */
+    td a { color: var(--blue); text-decoration: none; display: inline-block; padding: 3px 0; }
+    td a:hover { color: var(--gold-light); text-decoration: underline; }
+    .ext { font-size: 0.68rem; color: var(--text-muted); border: 1px solid var(--border); border-radius: 4px; padding: 0 0.35rem; margin-left: 0.3rem; white-space: nowrap; }
+    .mat-hit td { background: var(--gold-dim); }
+    .fw-total { margin-top: 0.8rem; }
+    .fw-go { margin-top: 0.7rem; font-size: 0.8rem; }
+    .fw-go a { color: var(--gold); display: inline-block; padding: 4px 0; }
+    .empty { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.2rem; font-size: 0.85rem; color: var(--text-dim); }
+
+    @media (max-width: 600px) { .wrap { padding: 0.6rem 1rem 2rem; } }
+    @media (pointer: coarse) {
+      .controls input[type="search"], .controls select, .status button { min-height: 44px; }
+      td a, .fw-go a { padding: 12px 0; }   /* 0.8rem 的字＋上下 12px ≈ 44px */
+    }
+  </style>
+  <script src="../../assets/js/theme.js"></script>
+</head>
+<body>
+<div class="tool-header">
+  <h1 class="tool-title">&#x1F3D7;&#xFE0F; 部隊工房建造材料</h1>
+  <p class="tool-subtitle">房屋外牆、乙太轉輪、轉輪台、潛水艇與飛空艇部件——每個部位、每個階段要交哪些素材、各幾個</p>
+</div>
+
+<div class="wrap">
+  <p class="note">
+    遊戲內的工房介面一次只看得到一個階段；這裡把整件攤開，附合計。數量＝<b>一次交幾個 × 要交幾次</b>，
+    資料取自台服客戶端，並與 Teamcraft 的部隊製作配方逐件核對過（162／162 一致）。
+    標「另外取得」的素材沒有製作配方，要採集、向 NPC 買或從其他管道取得。
+    潛水艇的部件搭配與航點在<a href="../submarine/" style="color:var(--text-dim)">潛水艇航點查詢</a>。
+  </p>
+  <div class="controls">
+    <input type="search" id="q" placeholder="搜尋成品或素材（例：小型商店外牆、鈷鐵鉚釘）" aria-label="搜尋成品或素材" autocomplete="off">
+    <select id="typeSel" aria-label="類型"><option value="">全部類型</option></select>
+  </div>
+  <div class="status" id="status" aria-live="polite"></div>
+  <div id="list"><p class="note">載入中…</p></div>
+</div>
+
+<footer class="page-footer">
+  <div class="container">
+    <p class="footer-text"><a href="../../">水神的工具箱</a> · 資料來源：遊戲本體（台服客戶端解包）、<a href="https://github.com/ffxiv-teamcraft/ffxiv-teamcraft" target="_blank" rel="noopener">Teamcraft</a>（核對）</p>
+    <p class="footer-text" style="margin-top:4px">FINAL FANTASY XIV © SQUARE ENIX　此為玩家自製非官方工具</p>
+  </div>
+</footer>
+
+<script>
+/* 部隊工房建造材料（2026-11-23，第三輪路線圖 §5 fc-workshop-materials 第二期）。
+   第一期長在潛水艇頁（只有潛水艇／飛空艇部件）；外牆、乙太轉輪、轉輪台跟潛水艇無關，所以獨立成頁，162 件全收。
+   資料 data/fc-workshop.json（scripts/build-fc-workshop.mjs），這頁不另做資料。
+
+   ── 會安靜出錯的地方 ──────────────────────────────────────────────
+   ① 空的階段：乙太轉輪只有第 1 階段要交東西，外牆第 3 部位以後也只有第 1 階段——資料裡第 2、3 階段的 mats 是空陣列。
+      不濾的話會印出空表格，「3 個階段」也會算錯。
+   ② 外牆的部位名來自客戶端（CompanyCraftPart 的 CompanyCraftType），不要用「部位 1～8」，也不要自己補名字。
+   ③ 分組與類型選單由資料長出來（類型名照客戶端原文，例如「外牆(一體型)」），不寫死清單。
+   ④ 每件的內容在展開時才畫（162 件、外牆一件就有四十幾列），搜尋比對的是資料不是 DOM。 */
+(function () {
+  'use strict';
+  var DATA = [];
+  var state = { q: '', type: '', id: null };
+  var $ = function (id) { return document.getElementById(id); };
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function sgtFold(s) { return window.SGT_fold ? window.SGT_fold(s) : String(s == null ? '' : s).toLowerCase(); }
+
+  // 「潛水艇：船體」→ 組「潛水艇部件」、細類「船體」；其餘的類型本身就是組
+  function groupOf(t) { var i = String(t || '').indexOf('：'); return i > 0 ? t.slice(0, i) + '部件' : (t || '其他'); }
+  function subOf(t) { var i = String(t || '').indexOf('：'); return i > 0 ? t.slice(i + 1) : ''; }
+
+  function prep(d) {
+    var names = new Map();
+    d.phases.forEach(function (ph) { ph.mats.forEach(function (m) { names.set(m.itemId, { name: m.name, craftable: !!m.craftable }); }); });
+    d._names = names;
+    d._phases = d.phases.filter(function (ph) { return ph.mats.length; });      // ① 空的階段不算
+    d._parts = new Set(d._phases.map(function (ph) { return ph.part; })).size;
+    d._group = groupOf(d.type);
+    d._key = sgtFold([d.name, d.type].concat(Array.from(names.values()).map(function (n) { return n.name; })).join(' '));
+    d._nameKey = sgtFold(d.name + ' ' + d.type);
+    return d;
+  }
+
+  function matLink(id, info) {
+    return '<a href="../market/#item=' + id + '">' + esc(info.name) + '</a>' +
+      (info.craftable ? '' : '<span class="ext" title="沒有製作配方：要採集、向 NPC 買或從其他管道取得">另外取得</span>');
+  }
+  // 搜尋字串比對到的素材（成品名本身沒比對到時，摘要要講是哪個素材讓它出現）
+  function matHits(d, q) {
+    if (!q) return [];
+    var out = [];
+    d._names.forEach(function (info, id) { if (sgtFold(info.name).indexOf(q) >= 0) out.push(id); });
+    return out;
+  }
+
+  function bodyHtml(d) {
+    var q = state.q, hits = new Set(matHits(d, q));
+    var row = function (phLabel, m) {
+      return '<tr' + (hits.has(m.itemId) ? ' class="mat-hit"' : '') + '><td class="ph">' + phLabel + '</td>' +
+        '<td>' + matLink(m.itemId, d._names.get(m.itemId)) + '</td>' +
+        '<td class="q">' + m.per + '×' + m.sets + '＝<b>' + m.qty.toLocaleString() + '</b></td></tr>';
+    };
+    var html = '';
+    var parts = Array.from(new Set(d._phases.map(function (ph) { return ph.part; })));
+    parts.forEach(function (pn) {
+      var phs = d._phases.filter(function (ph) { return ph.part === pn; });
+      if (d.parts) html += '<h3 class="fw-part">' + esc(d.parts[pn - 1] || '') + '</h3>';     // ② 部位名照客戶端
+      html += '<div class="table-wrap"><table><thead><tr><th>階段</th><th>素材</th><th class="q" title="一次交幾個 × 要交幾次">數量</th></tr></thead><tbody>' +
+        phs.map(function (ph) {
+          return ph.mats.map(function (m, i) { return row(i === 0 ? '第 ' + ph.phase + ' 階段' : '', m); }).join('');
+        }).join('') + '</tbody></table></div>';
+    });
+    // 合計：依數量由多到少（固定資料，順序不會跳），同量依 id
+    var tot = d.total.slice().sort(function (a, b) { return b.qty - a.qty || a.itemId - b.itemId; });
+    html += '<div class="fw-total"><h3 class="fw-part">合計 ' + tot.length + ' 種素材</h3><div class="table-wrap"><table><thead><tr><th>素材</th><th class="q">合計</th></tr></thead><tbody>' +
+      tot.map(function (t) {
+        return '<tr' + (hits.has(t.itemId) ? ' class="mat-hit"' : '') + '><td>' + matLink(t.itemId, d._names.get(t.itemId)) + '</td>' +
+          '<td class="q"><b>' + t.qty.toLocaleString() + '</b></td></tr>';
+      }).join('') + '</tbody></table></div></div>';
+    /* 帶的是成品本身：市場頁的配方索引收了部隊製作配方（recipes.json 的 jobId 0），放進去會自動展開成素材，
+       市價、配方樹、「✓ 已有」都在那裡，這頁不重做一份成本計算。 */
+    html += '<p class="fw-go"><a href="../market/#craft=' + d.itemId + ':1">&#x1F4B0; 帶去市場頁算材料成本（會自動展開成 ' + tot.length + ' 種素材）</a></p>';
+    return html;
+  }
+
+  function visible() {
+    var q = state.q;
+    return DATA.filter(function (d) {
+      if (state.id != null) return d.itemId === state.id;
+      if (state.type && d._group !== state.type) return false;
+      return !q || d._key.indexOf(q) >= 0;
+    });
+  }
+
+  function render() {
+    var list = visible();
+    var host = $('list');
+    var st = $('status');
+    if (state.id != null) {
+      st.innerHTML = list.length ? '只顯示這一件。<button type="button" id="showAll">顯示全部</button>' : '找不到這件成品（id ' + state.id + '）。<button type="button" id="showAll">顯示全部</button>';
+    } else {
+      st.textContent = list.length + ' 件成品' + (state.q ? '（符合「' + $('q').value.trim() + '」）' : '') + (state.type ? '・' + state.type : '');
+    }
+    if (!list.length) { host.innerHTML = state.id != null ? '' : '<div class="empty">找不到符合的成品或素材。</div>'; return; }
+    var groups = new Map();
+    list.forEach(function (d) { if (!groups.has(d._group)) groups.set(d._group, []); groups.get(d._group).push(d); });
+    var html = '';
+    groups.forEach(function (arr, g) {
+      html += '<section class="grp"><div class="grp-head"><h2 class="grp-name">' + esc(g) + '</h2><span class="grp-n">' + arr.length + ' 件</span></div>' +
+        arr.map(function (d) {
+          var hits = (state.q && d._nameKey.indexOf(state.q) < 0) ? matHits(d, state.q) : [];
+          var sub = subOf(d.type);
+          var phN = d._phases.length;
+          return '<details class="fw" id="fw-' + d.itemId + '" data-id="' + d.itemId + '"' + (state.id != null ? ' open' : '') + '>' +
+            '<summary><span class="fw-name">' + esc(d.name) + '</span>' +
+            '<span class="fw-sub">' + (sub ? esc(sub) + '・' : '') + (d._parts > 1 ? d._parts + ' 個部位・' : '') +
+              phN + ' 個階段・' + d.total.length + ' 種素材</span>' +
+            (hits.length ? '<span class="fw-hit">用到：' + hits.map(function (id) {
+              var t = d.total.find(function (x) { return x.itemId === id; });
+              return esc(d._names.get(id).name) + ' ×' + (t ? t.qty.toLocaleString() : '?');
+            }).join('、') + '</span>' : '') +
+            '</summary><div class="fw-body"></div></details>';
+        }).join('') + '</section>';
+    });
+    host.innerHTML = html;
+    // ④ 已展開的（?id= 深連結）立刻畫內容
+    host.querySelectorAll('details.fw[open]').forEach(fill);
+  }
+  function fill(det) {
+    var body = det.querySelector('.fw-body');
+    if (!body || body.dataset.done) return;
+    var d = DATA.find(function (x) { return x.itemId === Number(det.getAttribute('data-id')); });
+    if (!d) return;
+    body.innerHTML = bodyHtml(d);
+    body.dataset.done = '1';
+  }
+
+  var INITIAL_QUERY = location.search;   // 進站參數先存（§3.17）
+  function syncURL() {
+    var p = new URLSearchParams();
+    if (state.id != null) p.set('id', state.id);
+    else {
+      if ($('q').value.trim()) p.set('q', $('q').value.trim());
+      if (state.type) p.set('type', state.type);
+    }
+    var s = p.toString();
+    history.replaceState(null, '', s ? '?' + s : location.pathname);
+  }
+
+  // toggle 不冒泡，用捕獲階段在容器上接
+  $('list').addEventListener('toggle', function (e) { if (e.target.open) fill(e.target); }, true);
+  $('status').addEventListener('click', function (e) {
+    if (e.target.id !== 'showAll') return;
+    var keep = state.id;
+    state.id = null; render(); syncURL();
+    var el = keep != null && $('fw-' + keep);
+    if (el) { el.open = true; fill(el); el.scrollIntoView({ block: 'center' }); el.querySelector('summary').focus(); }
+  });
+  var tmr = null;
+  $('q').addEventListener('input', function () {
+    clearTimeout(tmr);
+    tmr = setTimeout(function () { state.q = sgtFold($('q').value.trim()); state.id = null; render(); syncURL(); }, 150);
+  });
+  $('typeSel').addEventListener('change', function () { state.type = this.value; state.id = null; render(); syncURL(); });
+
+  fetch('../../data/fc-workshop.json')
+    .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function (j) {
+      DATA = (j.data || []).map(prep);
+      // ③ 類型選單由資料長出來，順序照資料
+      var gs = [];
+      DATA.forEach(function (d) { if (gs.indexOf(d._group) < 0) gs.push(d._group); });
+      $('typeSel').innerHTML = '<option value="">全部類型</option>' + gs.map(function (g) {
+        var n = DATA.filter(function (d) { return d._group === g; }).length;
+        return '<option value="' + esc(g) + '">' + esc(g) + '（' + n + '）</option>';
+      }).join('');
+      var p = new URLSearchParams(INITIAL_QUERY);
+      var wid = Number(p.get('id'));
+      if (wid && DATA.some(function (d) { return d.itemId === wid; })) state.id = wid;
+      if (p.get('q')) { $('q').value = p.get('q'); state.q = sgtFold(p.get('q').trim()); }
+      if (p.get('type') && gs.indexOf(p.get('type')) >= 0) { state.type = p.get('type'); $('typeSel').value = state.type; }
+      render();
+    })
+    .catch(function (e) {
+      $('list').innerHTML = '<div class="empty">資料載入失敗：' + esc(e.message) + '。請重新整理頁面。</div>';
+    });
+})();
+</script>
+</body>
+</html>

@@ -32,7 +32,7 @@ const offline = process.argv.includes("--offline");
 async function main() {
   const REQUIRE = {
     CompanyCraftSequence: ["ResultItem", "CompanyCraftType", "CompanyCraftPart[0]"],
-    CompanyCraftPart: ["CompanyCraftProcess[0]", "CompanyCraftProcess[2]"],
+    CompanyCraftPart: ["CompanyCraftType", "CompanyCraftProcess[0]", "CompanyCraftProcess[2]"],
     CompanyCraftProcess: ["SupplyItem[0]", "SetQuantity[0]", "SetsRequired[0]", "SupplyItem[11]"],
     CompanyCraftSupplyItem: ["Item"], CompanyCraftType: ["Name"],
   };
@@ -45,7 +45,7 @@ async function main() {
   const tcFc = new Map();
   for (const r of recipes.filter((x) => x.jobId === 0)) { if (!tcFc.has(r.itemId)) tcFc.set(r.itemId, []); tcFc.get(r.itemId).push(r); }
 
-  const data = [], skipped = [];
+  const data = [], skipped = [], badPart = [];
   let crossOk = 0;
   const crossBad = [];
   for (const s of seq.values()) {
@@ -55,11 +55,14 @@ async function main() {
     if (!it || !usable(it.name)) { skipped.push(`${s.id}（成品 ${result} 沒有台服名）`); continue; }
     const phases = [];
     const total = new Map();
+    const partNames = [];
     let missing = null;
     for (let i = 0; i < 8; i++) {
       const pid = Number(s[`CompanyCraftPart[${i}]`]);
       const p = pid ? part.get(pid) : null;
       if (!p) continue;
+      // 部位名：CompanyCraftPart 自己也帶 CompanyCraftType（外牆(一體型) 的 8 個部位＝外牆／房頂／房門／窗戶／院牆／門牌／房頂裝飾／外牆裝飾）
+      partNames[i] = cleanName(type.get(Number(p.CompanyCraftType))?.Name) || null;
       for (let j = 0; j < 3; j++) {
         const pr = proc.get(Number(p[`CompanyCraftProcess[${j}]`]));
         if (!pr) continue;
@@ -88,11 +91,22 @@ async function main() {
       return t.size === total.size && [...total].every(([k, v]) => t.get(k) === v);
     });
     if (ok) crossOk++; else crossBad.push(`${s.id} ${it.name}`);
+    // 多部位的成品（外牆）才帶 parts：parts[部位編號-1]＝台服部位名。單一部位的部位名就是類型名，不重複存
+    const partList = partNames.map((n, i) => (phases.some((ph) => ph.part === i + 1) ? n : undefined)).filter((n) => n !== undefined);
+    const multi = new Set(phases.map((ph) => ph.part)).size > 1;
+    if (multi && partList.some((n) => !n || !usable(n))) badPart.push(`${s.id} ${it.name}`);
     data.push({
       id: s.id, itemId: result, name: it.name, type: cleanName(type.get(Number(s.CompanyCraftType))?.Name) || null,
+      ...(multi ? { parts: partNames.slice(0, Math.max(...phases.map((ph) => ph.part))) } : {}),
       phases, total: [...total].map(([itemId, qty]) => ({ itemId, qty })),
     });
   }
+  if (badPart.length) {
+    console.error(`✗ ${badPart.length} 件多部位成品有部位查不到台服名（${badPart.slice(0, 5).join("、")}）——中止不出檔`);
+    process.exit(1);
+  }
+  const multiN = data.filter((d) => d.parts).length;
+  console.log(`  多部位成品 ${multiN} 件，部位名：${[...new Set(data.flatMap((d) => d.parts || []))].join("／")}`);
   console.log(`部隊工房成品 ${data.length} 件（略過 ${skipped.length}）；與 Teamcraft 交叉核對 ${crossOk}/${data.length}`);
   const byType = {};
   for (const d of data) byType[d.type] = (byType[d.type] || 0) + 1;
@@ -106,7 +120,7 @@ async function main() {
   const out = {
     schema: "fc-workshop", updated: new Date().toISOString().slice(0, 10),
     source: "台服客戶端 CompanyCraftSequence／Part／Process／SupplyItem／Type ＋ data/items.json（名稱）＋ data/recipes.json（素材能不能做；jobId 0 交叉核對數量）",
-    note: "qty＝per（一次交幾個）× sets（要交幾次）；phases[].part＝第幾個部位（多數成品只有 1 個）、phase＝第幾階段（1–3）",
+    note: "qty＝per（一次交幾個）× sets（要交幾次）；phases[].part＝第幾個部位（多數成品只有 1 個）、phase＝第幾階段（1–3），mats 可能是空的（那一階段不用交東西）；parts＝多部位成品（外牆）的台服部位名，parts[part-1]",
     count: data.length, data,
   };
   await writeFile(OUT, JSON.stringify(out) + "\n");

@@ -411,7 +411,8 @@
     var built = parts.filter(function (p) { return FC.has(p.itemId); });
     var link = '../market/#craft=' + built.map(function (p) { return p.itemId + ':1'; }).join(',');
     body.innerHTML = html + (built.length
-      ? '<p class="mat-go"><a href="' + link + '">&#x1F4B0; 帶這 ' + built.length + ' 件部件去市場頁算材料成本（會自動展開成 ' + total.size + ' 種素材）</a></p>' : '');
+      ? '<p class="mat-go"><a href="' + link + '">&#x1F4B0; 帶這 ' + built.length + ' 件部件去市場頁算材料成本（會自動展開成 ' + total.size + ' 種素材）</a></p>' : '') +
+      '<p class="mat-go"><a href="../fc-workshop/">&#x1F3D7;&#xFE0F; 全部部隊工房成品（外牆、乙太轉輪、轉輪台…）</a></p>';
   }
 
 

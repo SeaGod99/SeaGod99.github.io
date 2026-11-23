@@ -97,6 +97,12 @@ const JS = read("tools/market/market.js");
   const emptyJobs = sup.filter((j) => !j.items.some((i) => rel(i.patch))).map((j) => j.name);
   push("  每個職業都有已開放的交納品（頁面的職業序＝資料的職業序）", emptyJobs.length === 0, emptyJobs.join("、"));
 
+  // 部隊工房列連到 /tools/fc-workshop/?id=<成品 id>——那一頁只認 fc-workshop.json 裡有的成品
+  const fcIds = new Set(rj("data/fc-workshop.json").data.map((d) => d.itemId));
+  const wBad = [...USES.values()].flatMap(({ u }) => (u.w || []).filter((r) => !fcIds.has(r[0])));
+  const wN = [...USES.values()].reduce((s, { u }) => s + (u.w || []).length, 0);
+  push("② 部隊工房的成品 id 都是部隊工房頁 ?id= 找得到的", wN > 1000 && wBad.length === 0, wBad.length ? JSON.stringify(wBad.slice(0, 2)) : `${wN} 筆`);
+
   const CS = rj("data/currency-shop.json");
   const csIds = new Set(CS.data.map((c) => c.id));
   const cBad = [...USES].filter(([, { u }]) => u.cur && !(u.cur[0] === "gs" ? ["mgp", "reputation"].includes(u.cur[1]) : csIds.has(u.cur[1])));

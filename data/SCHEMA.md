@@ -1257,6 +1257,9 @@ commit：`{version, sha, date}`；**解包追上之後 `build-tw-items-msgpack.m
 
 `data[]`：`{ id: CompanyCraftSequence row, itemId: 成品, name, type: CompanyCraftType 台服名, phases: [{ part, phase, mats: [{ itemId, name, per, sets, qty, craftable? }] }], total: [{ itemId, qty }] }`。
 `qty`＝`per`（一次交幾個，SetQuantity）×`sets`（要交幾次，SetsRequired）；`craftable`＝素材在 recipes.json（jobId 8–15）有配方。建置時與 Teamcraft 的部隊製作配方（recipes.json 的 jobId 0）逐件核對總量，對不上就中止。
+**`mats` 可能是空陣列**——那一階段不用交東西（乙太轉輪只有第 1 階段、外牆第 3 部位以後也只有第 1 階段，共 592 個空階段）；前端要濾掉，不然會印出空表格、階段數也會算錯。
+**`parts`**（2026-11-23 起，只有多部位的成品才有）：`parts[part-1]`＝台服部位名，取自客戶端 `CompanyCraftPart.CompanyCraftType`。外牆(一體型) 57 件：8 個部位的是外牆／房頂／房門／窗戶／院牆／門牌／房頂裝飾／外牆裝飾，6 個部位的是前六個。單一部位的成品不帶（部位名＝類型名）。
+前端：`/tools/fc-workshop/`（全部 162 件）與潛水艇頁的「🔨 建造材料」（只有潛水艇／飛空艇部件）。
 
 ## 3. 前端載入慣例
 

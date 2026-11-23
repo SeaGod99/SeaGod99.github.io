@@ -2546,7 +2546,8 @@
     if (u.w && u.w.length) {
       parts.push('部隊工房 ' + u.w.length + ' 件');
       groups.push(useGroup('部隊工房的建造素材', u.w.map(function (r) {
-        return useRow(esc(r[1]) + (r[2] ? ' <span class="use-sub">' + esc(r[2]) + '</span>' : ''), '三階段合計 ×' + r[3].toLocaleString());
+        return useRow('<a class="use-link" href="../fc-workshop/?id=' + r[0] + '">' + esc(r[1]) + '</a>' +
+          (r[2] ? ' <span class="use-sub">' + esc(r[2]) + '</span>' : ''), '各階段合計 ×' + r[3].toLocaleString());
       })));
     }
     if (u.c) {

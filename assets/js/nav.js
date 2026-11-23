@@ -57,6 +57,7 @@
     { e: '🏪', n: 'NPC 商店目錄', p: 'tools/npc-shops/', c: 'life', k: 'npc shop vendor 商店 雜貨 販售 目錄 這張圖有什麼店 買東西' },
     { e: '🛡️', n: '練級裝備路線', p: 'tools/leveling-gear/', c: 'battle', k: 'leveling gear 練級 裝備 品級 ilvl 部位 換裝' },
     { e: '📜', n: '製作理符試算', p: 'tools/leves/', c: 'life', k: 'leve levequest 理符 製作理符 委託 配額 經驗 練級' },
+    { e: '🏗️', n: '部隊工房建造材料', p: 'tools/fc-workshop/', c: 'life', k: 'fc workshop company craft 部隊 工房 建造 材料 素材 外牆 房頂 房門 窗戶 院牆 門牌 乙太轉輪 轉輪台 潛水艇 飛空艇 部件 階段' },
     { e: '💎', n: '禁忌鑲嵌花費試算', p: 'tools/melding/', c: 'life', k: 'melding materia 鑲嵌 禁忌 魔晶石 成功率 期望值 花費' },
     { e: '🔨', n: '製作模擬器', p: 'tools/crafting-sim/', c: 'life', k: 'crafting sim 製作 模擬 巨集 macro 循環 rotation 手法 hq' },
     { e: '🎖️', n: '貨幣變現排行', p: 'tools/gc-exchange/', c: 'life', k: 'gc seals 軍票 詩學 神典石 工票 紫票 橙票 狼印 戰績 雙色寶石 grand company tomestone scrip 變現' },
