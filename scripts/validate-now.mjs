@@ -108,6 +108,154 @@ push('  並講明「不是不會開」', /不是「不會開」/.test(HTML), '')
 push('頁面講明這不是鬧鐘', /不是鬧鐘/.test(HTML), '');
 push('空狀態會教人去哪標記', /還沒有標記任何限時目標/.test(HTML) && /tools\/fishing\//.test(HTML), '');
 
+// ══ 重置倒數與例行清單（2026-11-23，tools/now/reset-clock.js）══════════════
+// 會安靜出錯的地方：①重置時刻差一小時或差一天（時區、週幾）——倒數照跑、看不出錯
+// ②打勾沒在重置時清掉／清錯週期 ③清單每秒重畫吃掉打字與焦點 ④內建項目混進官網沒寫重置時間的東西（鐵則：不憑印象）
+{
+  const RC = await import('../tools/now/reset-clock.js');
+  const H = 3600000, TW = 8 * H;
+  const twParts = (ms) => { const d = new Date(ms + TW); return { day: d.getUTCDay(), h: d.getUTCHours(), m: d.getUTCMinutes(), s: d.getUTCSeconds() }; };
+
+  // ① 時刻：每日 23:00、每週二 16:00（UTC+8）。官網原文就是這兩個——常數與畫面文字都要對得上
+  push('重置：每日 23:00（UTC+8）＝UTC 15:00', RC.DAILY_UTC_MS === 15 * H && /23:00（UTC\+8）/.test(RC.SOURCES.d.when) && /每日 23:00（UTC\+8）/.test(RC.SOURCES.d.quote), RC.SOURCES.d.when);
+  push('  每週二 16:00（UTC+8）', /週二 16:00（UTC\+8）/.test(RC.SOURCES.w.when) && /每週二下午4點（UTC\+08:00）/.test(RC.SOURCES.w.quote), RC.SOURCES.w.when);
+  push('  出處連到台服官網的遊戲手冊', /^https:\/\/www\.ffxiv\.com\.tw\/web\/intro\/guide\/game_manual\//.test(RC.SOURCES.d.href) && /^https:\/\/www\.ffxiv\.com\.tw\/web\/intro\/guide\/game_manual\//.test(RC.SOURCES.w.href), '');
+  let badD = 0, badW = 0;
+  for (let i = 0; i < 400; i++) {
+    const t = Date.UTC(2024, 0, 1) + Math.floor(i * 7919.3 * H) + i * 61001;   // 跨 2024–2027、各種時分秒（含錨點之前）
+    const nd = RC.nextReset('d', t), nw = RC.nextReset('w', t), pd = twParts(nd), pw = twParts(nw);
+    if (!(nd > t && nd - t <= 86400000 && pd.h === 23 && pd.m === 0 && pd.s === 0)) badD++;
+    if (!(nw > t && nw - t <= 7 * 86400000 && pw.day === 2 && pw.h === 16 && pw.m === 0 && pw.s === 0)) badW++;
+    if (RC.lastReset('d', t) > t || RC.lastReset('w', t) > t) { badD++; badW++; }
+  }
+  push('  400 個時刻：下次每日重置都是台北 23:00 整、24 小時內', badD === 0, badD + ' 個不對');
+  push('  400 個時刻：下次每週重置都是台北週二 16:00 整、7 天內（含錨點之前的日期）', badW === 0, badW + ' 個不對');
+  const edge = Date.UTC(2026, 10, 24, 8, 0, 0);      // 2026-11-24（二）16:00 台北
+  push('  剛好在重置那一刻：上一次＝此刻、下一次＝下週', RC.lastReset('w', edge) === edge && RC.nextReset('w', edge) === edge + 7 * 86400000 &&
+    RC.nextReset('w', edge - 1) === edge, '');
+
+  // ④ 內建項目只有官網寫了重置時間的兩個
+  push('內建建議只有官網有寫重置時間的（隨機任務獎勵、挑戰筆記）', RC.PRESETS.length === 2 &&
+    RC.PRESETS.some((p) => p.id === 'p:roulette' && p.p === 'd') && RC.PRESETS.some((p) => p.id === 'p:challenge' && p.p === 'w') &&
+    !RC.PRESETS.some((p) => /理符|軍需|仙人|天書|部族|青魔/.test(p.name)), RC.PRESETS.map((p) => p.name).join('、'));
+
+  // ── DOM（jsdom）──
+  const { JSDOM } = await import('jsdom');
+  const mk = (init = {}) => {
+    const dom = new JSDOM('<!DOCTYPE html><body><div id="h"></div></body>', { url: 'https://seagod99.github.io/tools/now/' });
+    const store = new Map(Object.entries(init));
+    let failSet = false;
+    const storage = { getItem: (k) => (store.has(k) ? store.get(k) : null), setItem: (k, v) => { if (failSet) throw new Error('QuotaExceeded'); store.set(k, String(v)); } };
+    const clock = { t: Date.UTC(2026, 10, 23, 12, 0, 0) };   // 台北 11/23（一）20:00
+    const toasts = [];
+    const toast = { action: (msg, o) => { toasts.push({ msg, o }); return dom.window.document.createElement('div'); } };
+    const host = dom.window.document.getElementById('h');
+    const api = RC.mountRoutine(host, { storage, now: () => clock.t, toast, tzOffsetMin: -480 });
+    return { dom, host, api, store, clock, toasts, setFail: (v) => { failSet = v; }, saved: () => JSON.parse(store.get(RC.STORAGE_KEY) || 'null') };
+  };
+  const ev = (w, el, type) => el.dispatchEvent(new w.Event(type, { bubbles: true, cancelable: true }));
+
+  {
+    const { dom, host, api, clock, saved } = mk();
+    const w = dom.window;
+    push('清單：空的時候兩張卡都有倒數與空狀態說明、兩個建議鈕', host.querySelectorAll('.rc-card').length === 2 &&
+      host.querySelector('[data-cd="d"]').textContent === '3 小時 0 分' && host.querySelectorAll('.rc-empty').length === 2 &&
+      host.querySelectorAll('.rc-chip').length === 2, host.querySelector('[data-cd="d"]').textContent + '／' + host.querySelector('[data-cd="w"]').textContent);
+    push('  台北時區的人不另外顯示「你的時間」', !host.querySelector('.rc-local'));
+
+    host.querySelector('[data-preset="p:roulette"]').click();
+    host.querySelector('[data-preset="p:challenge"]').click();
+    let s = saved();
+    push('  按建議鈕：加進對應週期的卡、存進 ffxiv_now_routine、建議鈕消失', s && s.items.length === 2 &&
+      host.querySelector('.rc-card[data-p="d"] input[data-id="p:roulette"]') && host.querySelector('.rc-card[data-p="w"] input[data-id="p:challenge"]') &&
+      !host.querySelector('.rc-chip'), JSON.stringify(s && s.items));
+
+    for (const id of ['p:roulette', 'p:challenge']) {
+      const cb = host.querySelector('input[data-id="' + id + '"]');
+      cb.checked = true; ev(w, cb, 'change');
+    }
+    s = saved();
+    push('  打勾：記下打勾的時刻（不是 true/false）、畫面劃掉', s.done['p:roulette'] === clock.t && s.done['p:challenge'] === clock.t &&
+      host.querySelectorAll('.rc-item.done').length === 2 && w.document.activeElement === host.querySelector('input[data-id="p:challenge"]'), JSON.stringify(s.done));
+
+    // ③ 每秒 tick 不重畫清單：打到一半的字與焦點都在
+    const input = host.querySelector('.rc-input');
+    input.focus(); input.value = '天書奇';
+    clock.t += 1000; api.tick();
+    push('③ 每秒 tick 只改倒數，不重畫清單（打到一半的字與焦點都還在）', host.querySelector('.rc-input') === input && input.value === '天書奇' &&
+      w.document.activeElement === input && host.querySelector('[data-cd="d"]').textContent === '2 小時 59 分', host.querySelector('[data-cd="d"]').textContent);
+
+    // ② 跨過每日重置：每日的清掉、每週的留著；打到一半的字跨過重置也保留
+    clock.t = Date.UTC(2026, 10, 23, 15, 0, 1);   // 台北 23:00:01
+    api.tick();
+    push('② 跨過每日重置：每日項目的勾清掉、每週的留著', !host.querySelector('input[data-id="p:roulette"]').checked &&
+      host.querySelector('input[data-id="p:challenge"]').checked, '');
+    push('  跨過重置時整塊重畫，但新增框打到一半的字還在', host.querySelector('.rc-input').value === '天書奇' && w.document.activeElement === host.querySelector('.rc-input'));
+    clock.t = Date.UTC(2026, 10, 24, 8, 0, 0);    // 台北 11/24（二）16:00
+    api.tick();
+    push('  跨過每週重置（週二 16:00）：每週項目的勾也清掉', !host.querySelector('input[data-id="p:challenge"]').checked, '');
+    host.querySelector('input[data-id="p:roulette"]').checked = true; ev(w, host.querySelector('input[data-id="p:roulette"]'), 'change');
+    push('  存檔時清掉過期的打勾紀錄（只留這一期的）', Object.keys(saved().done).join() === 'p:roulette', JSON.stringify(saved().done));
+
+    // 自訂項目：空白不收、同卡同名不重複、長度上限、週期照選的
+    const add = (name, p) => { host.querySelector('.rc-input').value = name; host.querySelector('.rc-period').value = p; ev(w, host.querySelector('.rc-add'), 'submit'); };
+    add('   ', 'd');
+    add('天書奇談', 'w'); add('天書奇談', 'w'); add('天書奇談', 'd');
+    add('一'.repeat(50), 'd');
+    s = saved();
+    const tales = s.items.filter((x) => x.name === '天書奇談');
+    push('自訂項目：空白不收、同一張卡同名不重複（兩張卡可各一個）、名稱截到 30 字', s.items.length === 5 && tales.length === 2 &&
+      tales.some((x) => x.p === 'w') && tales.some((x) => x.p === 'd') && s.items.some((x) => x.name.length === 30), s.items.map((x) => x.p + ':' + x.name.length).join(' '));
+    push('  加完焦點回到新增框、週期選單維持剛剛選的', w.document.activeElement === host.querySelector('.rc-input') && host.querySelector('.rc-period').value === 'd');
+  }
+
+  {
+    // 刪除＋復原
+    const { dom, host, toasts, saved } = mk();
+    const w = dom.window;
+    host.querySelector('[data-preset="p:roulette"]').click();
+    const add = (name) => { host.querySelector('.rc-input').value = name; ev(w, host.querySelector('.rc-add'), 'submit'); };
+    add('老主顧'); add('雇員');
+    const cb = host.querySelector('input[data-id="p:roulette"]'); cb.checked = true; ev(w, cb, 'change');
+    host.querySelector('[data-del="p:roulette"]').click();
+    const after = saved();
+    push('刪除：從存檔拿掉、焦點移到同一張卡的下一項、跳出「復原」提示', !after.items.some((x) => x.id === 'p:roulette') && !('p:roulette' in after.done) &&
+      toasts.length === 1 && toasts[0].o.label === '復原' && w.document.activeElement && w.document.activeElement.getAttribute('data-id') === after.items[0].id,
+      toasts[0] && toasts[0].msg);
+    toasts[0].o.onClick();
+    const back = saved();
+    push('  按復原：回到原本的位置、連打勾狀態一起回來', back.items[0].id === 'p:roulette' && back.done['p:roulette'] != null &&
+      host.querySelector('input[data-id="p:roulette"]').checked, back.items.map((x) => x.name).join('、'));
+  }
+
+  {
+    // 存不進去要講出來，畫面不可以假裝勾成功
+    const { dom, host, setFail } = mk();
+    const w = dom.window;
+    host.querySelector('[data-preset="p:roulette"]').click();
+    setFail(true);
+    const cb = host.querySelector('input[data-id="p:roulette"]'); cb.checked = true; ev(w, cb, 'change');
+    push('存檔失敗：講出來（role=alert），而且畫面上沒有勾起來', /存不進去/.test(host.querySelector('.rc-err[role="alert"]')?.textContent || '') &&
+      !host.querySelector('input[data-id="p:roulette"]').checked, '');
+  }
+
+  {
+    // 壞掉的存檔不可以讓整頁掛掉；非台北時區要附當地時間
+    const dom = new JSDOM('<!DOCTYPE html><body><div id="h"></div></body>');
+    const host = dom.window.document.getElementById('h');
+    const storage = { getItem: () => '{這不是 JSON', setItem() {} };
+    let threw = false;
+    try { RC.mountRoutine(host, { storage, now: () => Date.UTC(2026, 10, 23, 12, 0, 0), toast: null, tzOffsetMin: 0 }); } catch (e) { threw = true; }
+    push('壞掉的存檔當成空的、不丟例外', !threw && host.querySelectorAll('.rc-empty').length === 2);
+    push('  UTC 時區的人：每日重置另附「你的時間 一 15:00」', /你的時間 一 15:00/.test(host.querySelector('.rc-card[data-p="d"] .rc-local')?.textContent || ''),
+      host.querySelector('.rc-card[data-p="d"] .rc-local')?.textContent);
+  }
+
+  push('頁面：重置區獨立掛在 #resetBox（不跟著每秒整塊重畫的 #body）、每秒呼叫 tick、不等資料載入',
+    /<div id="resetBox"><\/div>/.test(HTML) && /mountRoutine\(document\.getElementById\('resetBox'\)\)/.test(HTML) &&
+    /setInterval\(routine\.tick, 1000\)/.test(HTML) && HTML.indexOf("mountRoutine(document") < HTML.indexOf('load().then('), '');
+}
+
 let fail = 0;
 for (const [n, ok, d] of results) { console.log(`${ok ? '✓' : '✗'} ${n}  ${d ?? ''}`); if (!ok) fail++; }
 console.log(fail ? `\n${fail} 項失敗（共 ${results.length}）` : `\n全部通過（${results.length} 項）`);

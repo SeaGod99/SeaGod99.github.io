@@ -112,7 +112,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 重建 PWA 圖示（改了 `assets/icons/icon.svg` 才要跑） | `node scripts/build-pwa-icons.mjs`（dry-run 預設／`--apply`）→ 192／512／180／maskable-512 四張 PNG |
 | PWA 可安裝性回歸（**改完 `manifest.json`、`assets/icons/` 或 `theme.js` 的注入區必跑**） | `node scripts/validate-pwa.mjs`（jsdom，36 項：圖示規格、shortcuts 指得到頁、三種深度的頁面都注入得到 link、安裝鈕行為）|
 | 「資料已更新 ↻」回歸（**改完 `sw.js` 的快取策略、`theme.js` 的 SW 區或 `toast.js` 必跑**） | `node scripts/validate-sw-update.mjs`（37 項：直接取出 `sw.js` 的 `sameVersion()` 執行、只通報 `/data/`、`Toast.action()` 的去重與不自動消失）|
-| 「現在能做什麼」回歸（**改完 `tools/now/` 或它吃的四份資料必跑**） | `node scripts/validate-now.mjs`（27 項，重點在兩個單位：探索筆記 `timeEnd` 含該小時、節點 `duration` 是 ET 分鐘；另釘住「沒標就不載魚與採集表、探索筆記一律載」）|
+| 「現在能做什麼」回歸（**改完 `tools/now/` 或它吃的四份資料必跑**） | `node scripts/validate-now.mjs`（51 項，重點在兩個單位：探索筆記 `timeEnd` 含該小時、節點 `duration` 是 ET 分鐘；另釘住「沒標就不載魚與採集表、探索筆記一律載」；**重置倒數**（`tools/now/reset-clock.js`）：400 個時刻都落在台北每日 23:00／週二 16:00、內建建議只限官網有寫重置時間的兩項、跨過重置才清勾、每秒 tick 不吃焦點、存不進去要講）|
 | 重建魔晶石與禁忌鑲嵌資料（改版時才跑） | `node scripts/build-materia.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/materia.json`（31 種屬性／229 件／12 階成功率）|
 | 禁忌鑲嵌試算回歸（**改完 `tools/melding/` 或 `data/materia.json` 必跑**） | `node scripts/validate-melding.mjs`（35 項：成功率不可寫死、期望值與 90% 累積機率的算式、孔位選單要反映資料）|
 | Universalis 客戶端回歸（**改完 `assets/js/universalis.js` 的請求／快取段必跑**） | `node scripts/validate-universalis.mjs`（9 項：在途請求合併、4xx 不重試、5xx 重試、逾時 signal、配額滿時清最舊快取、`homeWorld()`、兩個賣出頁扣稅）|
@@ -298,6 +298,7 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 
 - **改了收藏頁版面 / 樣式** → 改碼 → `/browse` 開該頁截圖 → `/design-review` 視覺把關。
 - **改了共用資料或腳本（`/data`、`/scripts`、`/assets/js`）** → `node scripts/validate-data.mjs` → `/verify` 確認受影響頁面行為正常 → `/code-review`。改到 `assets/` 的 css/js 還要跑 `node scripts/bump-sw-version.mjs`（否則使用者會被舊 SW 快取黏住）。
+- **push 之前用 CI 的同一個迴圈把全部回歸跑一遍**，不要只挑「看起來相關」的：`for f in scripts/validate-*.mjs; do case "$f" in */validate-pages.mjs|*/validate-fashion-render.mjs) continue;; esac; node "$f" >/dev/null 2>&1 || echo "✗ $f"; done`（約 3 分鐘）。2026-11-23 的教訓：市場頁加了用途區，`validate-extra-sources.mjs` 有一條查「整份 market.js 不准出現『收藏品交納』」（防篩選選項寫死），說明文字也被判成違規——那支看起來跟改動無關所以沒跑，CI 才報出來（斷言已改成只掃建選項的程式段）。
 - **改了版面／共用樣式／新增頁面** → `MSYS_NO_PATHCONV=1 node scripts/validate-pages.mjs`。頁面清單**直接讀 `nav.js` 的 TOOLS**，新頁只要登記在那裡就會自動納入。點擊目標分兩級：低於 24×24 違反 WCAG AA（擋），24–44 只是沒達到 AAA 建議（警告）。**站內好幾處用 `::after` 透明擴張層把小圖示的命中區推到 44px**，所以這支量的是 `elementFromPoint` 的實際命中區而不是盒子尺寸——新做小圖示鈕請沿用那個做法，不要改字級。
 - **首頁不標「新」徽章**（2026-09-27 起，站主決定）→ 徽章的 JS 與 `.badge-new` 樣式都已移除，**不要再加回來**。`data-added="YYYY-MM-DD"` 仍然要補，但它現在只是「這個工具什麼時候上線」的記錄（`validate-relic-note.mjs` 等回歸會驗新頁有沒有補），不驅動任何顯示。
 - **登記在 `nav.js` 不等於首頁有入口** → 兩者各自維護。2026-09-27 盤點時首頁**少了 9 張卡**（now／action-codex／msq／duty-codex／submarine／leveling-gear／ornaments／leves／melding），全都只在 `nav.js` 裡、首頁點不進去，累積九輪沒人發現。**新頁兩邊都要登記**，並在該頁回歸裡寫一條斷言。分類計數（`section-count`）已改成由實際卡片數算——寫死的數字會飄（曾經三個分類全錯）。

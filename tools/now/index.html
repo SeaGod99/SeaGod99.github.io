@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="FF14 現在能做什麼 — 把你標記的目標魚、追蹤節點與未完成的限時探索筆記放在同一頁，依開窗中／快開了／稍後排序">
+  <meta name="description" content="FF14 現在能做什麼 — 每日／每週重置倒數（台服官網時間）與自訂例行清單，加上你標記的目標魚、追蹤節點與未完成的限時探索筆記，依開窗中／快開了／稍後排序">
   <title>現在能做什麼 | 水神的工具箱</title>
   <link rel="stylesheet" href="../../assets/css/tokens.css">
   <link rel="stylesheet" href="../../assets/css/theme.css">
@@ -80,6 +80,40 @@
       .cd { margin-left: 0; width: 100%; }
     }
     @media (pointer: coarse) { .go { min-height: 44px; } }
+
+    /* ── 重置倒數與例行清單（2026-11-23，邏輯在 reset-clock.js）── */
+    .rc { margin: 0.8rem 0 1.2rem; }
+    .rc-title { font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 0.55rem; }
+    .rc-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 0.6rem; }
+    .rc-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 0.7rem 0.85rem; }
+    .rc-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 0.6rem; }
+    .rc-name { font-size: 0.88rem; font-weight: 700; color: var(--gold-light); }
+    .rc-when { font-size: 0.74rem; color: var(--text-muted); }
+    .rc-local { margin-left: 0.4rem; }
+    .rc-cd { margin-left: auto; font-size: 0.8rem; color: var(--text-dim); white-space: nowrap; }
+    .rc-cd b { color: var(--text); font-variant-numeric: tabular-nums; }
+    .rc-n { font-size: 0.72rem; color: var(--text-muted); margin: 0.45rem 0 0.2rem; }
+    .rc-list { list-style: none; }
+    .rc-item { display: flex; align-items: center; gap: 0.4rem; border-top: 1px solid var(--border); }
+    .rc-item label { flex: 1; min-width: 0; display: flex; align-items: center; gap: 0.5rem; padding: 0.45rem 0; cursor: pointer; font-size: 0.84rem; overflow-wrap: anywhere; }
+    .rc-item input { width: 18px; height: 18px; flex: none; accent-color: var(--green); }
+    .rc-item.done label span { color: var(--text-muted); text-decoration: line-through; }
+    .rc-del { flex: none; background: none; border: 1px solid transparent; border-radius: 6px; color: var(--text-muted); cursor: pointer; min-width: 32px; min-height: 32px; font-size: 0.8rem; }
+    .rc-del:hover { border-color: var(--border-hover); color: var(--red); }
+    .rc-empty { font-size: 0.76rem; color: var(--text-muted); line-height: 1.7; margin-top: 0.45rem; }
+    .rc-add { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.6rem; }
+    .rc-input { flex: 1 1 12rem; min-width: 0; background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; color: var(--text); padding: 0.4rem 0.6rem; font: inherit; font-size: 0.84rem; }
+    .rc-period, .rc-btn { background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; color: var(--text-dim); padding: 0.4rem 0.6rem; font: inherit; font-size: 0.82rem; cursor: pointer; }
+    .rc-btn:hover, .rc-chip:hover { border-color: var(--gold); color: var(--gold-light); }
+    .rc-err { font-size: 0.76rem; color: var(--red); margin-top: 0.4rem; }
+    .rc-sug { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; margin-top: 0.5rem; font-size: 0.74rem; color: var(--text-muted); }
+    .rc-chip { background: none; border: 1px dashed var(--border-hover); border-radius: 999px; color: var(--text-dim); padding: 0.25rem 0.7rem; font: inherit; font-size: 0.76rem; cursor: pointer; }
+    .rc-src { font-size: 0.7rem; color: var(--text-muted); line-height: 1.75; margin-top: 0.6rem; }
+    .rc-src a { color: var(--text-dim); }
+    @media (pointer: coarse) {
+      .rc-item label { min-height: 44px; }
+      .rc-del, .rc-period, .rc-btn, .rc-input, .rc-chip { min-height: 44px; min-width: 44px; }
+    }
   </style>
   <script src="../../assets/js/patch-gate.js"></script>
   <script src="../../assets/js/theme.js"></script>
@@ -87,13 +121,17 @@
 <body>
 <div class="tool-header">
   <h1 class="tool-title">&#x23F1;&#xFE0F; 現在能做什麼</h1>
-  <p class="tool-subtitle">把你在各頁標記的限時目標放在同一頁——開窗中的排最上面，其餘依還要等多久排</p>
+  <p class="tool-subtitle">每日／每週重置倒數與你的例行清單，加上你在各頁標記的限時目標——開窗中的排最上面，其餘依還要等多久排</p>
 </div>
 
 <div class="wrap">
 
   <!-- ET 時鐘列（共用元件 assets/js/et-bar.js；改用 import 掛，不能用 <script src>）-->
   <div id="etBar"></div>
+
+  <!-- 重置倒數與例行清單（tools/now/reset-clock.js）——與下方的時間窗清單分開渲染：
+       下方每秒整塊重畫，這塊每秒只改倒數數字，打勾與打字的焦點才不會被洗掉 -->
+  <div id="resetBox"></div>
 
   <p class="note">
     只列<b>你自己標記過</b>的東西：釣魚頁的 ⭐ 目標魚、限時採集頁的追蹤節點，
@@ -126,8 +164,12 @@ import { nextWindows, statusOf, EORZEA_MULT } from '../../assets/js/window-calc.
    `[{name:'Fog'}]` 轉成本站用的 key（那張對照表是共用的，不要在這裡再抄一份）。 */
 import { initWeatherTables, weatherKeys, WEATHER_INFO, getMapsData } from '../../assets/js/eorzea-weather.js';
 import { mountEtBar } from '../../assets/js/et-bar.js';
+import { mountRoutine } from './reset-clock.js';
 
 mountEtBar('#etBar', { metric: 'weather' });
+// 重置倒數不等資料載入：它只靠時鐘，資料載失敗也要看得到
+const routine = mountRoutine(document.getElementById('resetBox'));
+setInterval(routine.tick, 1000);
 
 const SOON_SECS = 15 * 60;          // 「快開了」的門檻：15 分鐘（現實時間）
 const TICK_MS = 1000;

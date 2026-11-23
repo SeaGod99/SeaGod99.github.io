@@ -153,11 +153,21 @@ const col = all.filter(([, es]) => es.some((e) => e.t === '收藏品交納'));
     TYPES.types.indexOf('理符報酬') >= 0 && TYPES.types.indexOf('收藏品交納') >= 0,
     TYPES.types.length + ' 種類型');
   const market = readFileSync(join(ROOT, 'tools/market/market.js'), 'utf8');
+  const marketHtml = readFileSync(join(ROOT, 'tools/market/index.html'), 'utf8');
   /* 選項名單要從資料檔自己長出來——寫死的話新增一種管道會從篩選裡安靜消失。
-     這正是這一輪新增兩型後不必改前端的原因。 */
-  push('  市場頁的篩選選項從資料檔長出來（不是寫死的清單）',
-    !/理符報酬/.test(market) && !/收藏品交納/.test(market),
-    '市場頁沒有寫死任何管道名');
+     這正是這一輪新增兩型後不必改前端的原因。
+     ⚠ 2026-11-23 改成只掃「建篩選選項的那幾段」：舊版查整份 market.js 不可以出現「收藏品交納」，
+     而同一頁的「♻️ 會用掉它的地方」本來就要用這個詞說明用途（那是說明文字，不是篩選選項），
+     CI 因此誤判失敗。現在查的範圍變小，但要求變嚴：item-source-types.json 的每一種管道名都不准寫死在這幾段裡。 */
+  const opts = market.match(/ensureSrcTypes\(\)\.then\(function \(st\) \{[\s\S]*?\}\)\.catch\(/)?.[0] || '';
+  const hasFn = market.match(/function hasSrcType\([\s\S]*?\n  \}/)?.[0] || '';
+  const sel = marketHtml.match(/<select id="srcSel"[\s\S]*?<\/select>/)?.[0] || '';
+  push('  市場頁的篩選選項由 item-source-types.json 的 types 長出來',
+    /st\.types\.slice\(\)/.test(opts) && /srcTypes\.types\.indexOf\(typeName\)/.test(hasFn),
+    opts ? '找到建選項與比對的程式段' : '找不到建選項的程式段（改寫過的話這條要跟著改）');
+  const hard = TYPES.types.filter((t) => opts.includes(t) || hasFn.includes(t) || sel.includes(t));
+  push('  建選項、比對與 #srcSel 都沒有寫死任何管道名（' + TYPES.types.length + ' 種全查）',
+    opts && hasFn && sel && hard.length === 0, hard.length ? '寫死了：' + hard.join('、') : '沒有寫死');
 }
 
 // ── 登記 ────────────────────────────────────────────────
