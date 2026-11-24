@@ -51,6 +51,8 @@
       font-size: 0.78rem; font-weight: 600; color: var(--gold); margin-top: 0.55rem; margin-bottom: 0.2rem;
     }
     .shop-h .cnt { color: var(--text-muted); font-weight: 400; font-size: 0.72rem; }
+    /* 客戶端沒有店名的店：標題是「用它收的代價」組成的標示，不是店名，所以不用店名的金色（第四輪 §5-6） */
+    .shop-h.anon { color: var(--text-dim); font-weight: 500; }
     .tr-row {
       display: flex; align-items: baseline; gap: 0.4rem; flex-wrap: wrap;
       font-size: 0.8rem; line-height: 1.75; padding: 0.06rem 0;
@@ -89,7 +91,7 @@
 <body>
 <div class="tool-header">
   <h1 class="tool-title">&#x1F3EA; NPC 商店目錄</h1>
-  <p class="tool-subtitle">我人在這張圖，附近有哪些店、賣什麼、多少錢——92 張地圖、466 個店家 NPC，附座標一鍵複製</p>
+  <p class="tool-subtitle">我人在這張圖，附近有哪些店、賣什麼、多少錢——97 張地圖、556 個店家 NPC，附座標一鍵複製</p>
   <div class="header-divider"></div>
 </div>
 
@@ -102,7 +104,9 @@
 <div class="body-wrap" id="bodyWrap"><div class="loading">載入資料中…</div></div>
 
 <p class="info-note">
-  店名與 NPC 名皆為台服官方名，座標取自本站的 NPC 資料庫。只收「查得到台服店名、且 NPC 有繁中名與座標」的商店——查不到的不列，<b>不代表遊戲裡沒有</b>。<br>
+  店名與 NPC 名皆為台服官方名，座標取自本站的 NPC 資料庫。只收「NPC 有繁中名與座標」的商店——查不到的不列，<b>不代表遊戲裡沒有</b>。<br>
+  有些店在台服客戶端裡<b>沒有店名</b>（多半是對 NPC 說話後從對話選單開的兌換，或一講話就直接開的店），標成灰字「無店名・付 ○○」——那不是店名，是用它收的代價標示，讓同一位 NPC 的幾間店分得開。<br>
+  <b>季節活動期間才出現的 NPC</b> 若店沒有店名就不列（多半是往年活動的攤位，平常不在那張圖上）；活動商品請看<a href="../seasonal-shop/">季節活動商店</a>。<br>
   每張地圖的資料<b>分開存放，選了才下載</b>（多數不到 10KB），不是整份載入。<br>
   價目為遊戲內固定價，不含市場板。要比較「NPC 買 vs 市場買」哪個划算，市場查價頁的製作計畫已經會自動取兩者較低者並標出 NPC 來源。<br>
   <b>刻意不做「NPC 套利掃描」</b>（哪間店的東西拿去市場板轉賣有利可圖）：那會鼓勵洗版式掛單，而且價差幾乎都被交易稅吃掉。
@@ -169,6 +173,16 @@ function sgtFold(s) { return window.SGT_fold ? window.SGT_fold(s) : String(s == 
       (t.r ? '<span class="tr-rank">需軍階 ' + t.r + '</span>' : '') + '</div>';
   }
 
+  /* 店的標題。客戶端沒有店名的店（資料不帶 n）標成「無店名・付 ○○」：○○ 是這間店收的代價裡最常見的前兩種
+     （建置端算好放在 p，總共幾種在 pn）。**不要拿 NPC 對話選單的文字來當店名**——哪一句對應哪一間店
+     寫在對話腳本裡，解包讀不到（build-npc-shops.mjs 檔頭）。 */
+  function shopTitle(sh) {
+    if (sh.n) return '<div class="shop-h">' + esc(sh.n);
+    var pay = (sh.p || []).map(nameOf).join('、');
+    return '<div class="shop-h anon" title="台服客戶端裡這間店沒有店名，這裡以它收的代價標示">無店名・付 ' +
+      esc(pay) + (sh.pn > 2 ? ' 等 ' + sh.pn + ' 種' : '');
+  }
+
   function matches(npc, shop, trades) {
     if (!q) return true;
     if (sgtFold(npc.n).indexOf(q) >= 0) return true;
@@ -201,7 +215,7 @@ function sgtFold(s) { return window.SGT_fold ? window.SGT_fold(s) : String(s == 
           var key = npc.id + ':' + sh.id;
           var all = expanded[key];
           var list = all ? sh.tr : sh.tr.slice(0, PER_SHOP);
-          return '<div class="shop-h">' + esc(sh.n) +
+          return shopTitle(sh) +
               ' <span class="cnt">' + sh.tr.length + ' 項</span></div>' +
             list.map(tradeHtml).join('') +
             (sh.tr.length > PER_SHOP

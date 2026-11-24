@@ -5,10 +5,26 @@
 // 而玩家在遊戲裡的實際動線是「先到某張圖，再看這裡能辦什麼事」。
 //
 // ── 收錄條件 ────────────────────────────────────────────────────────
-//   · 商店有台服官方店名（tw-locales 的 shops）
 //   · 至少一個有台服繁中名的 NPC（查不到就講不出「去找誰」）
 //   · NPC 有座標（沒有座標的「去哪找」等於沒說）
 // 同一個 NPC 常常開好幾間店（一般雜貨／特殊兌換分開），全部掛在同一個 NPC 底下。
+//
+// ── 客戶端沒有店名的店（2026-11-24 起收，第四輪 §5-6，站主決定）──────────
+// 2,253 間裡 360 間在台服客戶端沒有店名（SpecialShop／GilShop 的 Name 是空的），其中 229 間的 NPC 有台服名與座標。
+// 先前整間略過，於是廣域交易商（雙色寶石）、喬納森（成就幣）、深層迷宮、軍票補給負責人…的 3,225 筆交易、
+// **1,634 件只在這些店換得到的物品**在目錄裡查不到。
+// 遊戲內它們多半不是「一間有名字的店」：金幣店是對 NPC 一講話就直接開（沒有選單），其餘由 NPC 的對話腳本
+// （CustomTalk）開——選單文字在客戶端的 custom/ 文字表裡（例如喬納森的「成就幣交易」），但**哪一句對應哪一間店
+// 寫在腳本邏輯裡，解包讀不到**，硬接就是自己編。所以：
+//   · 店名留 null（`n` 不寫），另存 `p`＝這間店收的代價依筆數排序的前 2 種 itemId、`pn`＝總共幾種；
+//     前端標成「無店名・付 ○○」——那是用官方物品名組成的標示，不是店名。
+//   · 同一位 NPC 名下、`p` 相同的無名店合併成一間（軍票補給負責人有 11 間、喬納森 4 間，標題全一樣，
+//     分開列只是重複的標題），交易完全相同的去重。
+//   · **NPC 是活動圖層（Teamcraft npcs.json 的 `festival`）的無名店不收**。無名店裡這種有 110 個 NPC，
+//     幾乎全是往年季節活動的攤位（2019／2020／2021 年的瓦倫提昂家的女僕、南瓜餅乾 2018 的奇怪的店員…，
+//     付的是早就過期的活動貨幣）——平常根本不在那張圖上，列進「我人在這張圖，附近有哪些店」會叫人白跑。
+//     ⚠ 不能反過來把有店名的活動 NPC 也一併拿掉：`festival` 不等於季節活動，渴望灣的梅蘇艾東克（宇宙信用點數
+//     交易）也在活動圖層上，而資料裡分不出哪些圖層是常駐的。有店名的維持原樣（45 個，見第四輪路線圖候選 8）。
 //
 // ── 品項只存 id 與價格，不存名字 ───────────────────────────────────
 // 39,000 筆交易若每筆都帶物品名，檔案會爆。前端本來就有 `items-market.json`
@@ -49,11 +65,24 @@ async function main() {
 
   // mapId → NPC id → { name, x, y, shops: [] }
   const byMap = new Map();
-  const stat = { shops: 0, noName: 0, noNpc: 0, noCoord: 0, trades: 0, dropTrade: 0 };
+  const festival = await loadFestivalNpcs();
+  const stat = { shops: 0, anon: 0, anonMerged: 0, anonFestival: 0, noNpc: 0, noCoord: 0, trades: 0, dropTrade: 0 };
+
+  /* 代價依筆數排序（同數依 id），無名店的標示與合併鍵都用它 */
+  const payOf = (trades) => {
+    const cnt = new Map();
+    for (const t of trades) for (const [id] of new Map(t.c)) cnt.set(id, (cnt.get(id) || 0) + 1);
+    return [...cnt].sort((a, b) => b[1] - a[1] || a[0] - b[0]).map(([id]) => id);
+  };
 
   for (const shop of S.shops) {
-    if (!shop.name) { stat.noName++; continue; }
-    const npcs = shop.npcs.filter((n) => n.at && n.at.mapId != null);
+    let npcs = shop.npcs.filter((n) => n.at && n.at.mapId != null);
+    if (!shop.name && npcs.length) {
+      const before = npcs.length;
+      npcs = npcs.filter((n) => !festival.has(n.id));
+      if (!npcs.length) { stat.anonFestival++; continue; }
+      if (npcs.length < before) stat.anonFestival++;
+    }
     if (!npcs.length) {
       if (shop.npcs.length) stat.noCoord++; else stat.noNpc++;
       continue;
@@ -85,14 +114,29 @@ async function main() {
     }
     if (!trades.length) continue;
     stat.shops++;
+    if (!shop.name) stat.anon++;
 
     for (const n of npcs) {
       const mid = n.at.mapId;
       if (!byMap.has(mid)) byMap.set(mid, new Map());
       const m = byMap.get(mid);
       if (!m.has(n.id)) m.set(n.id, { id: n.id, n: n.name, x: n.at.x, y: n.at.y, s: [] });
-      m.get(n.id).s.push({ id: shop.id, n: shop.name, t: shop.type, tr: trades });
+      const list = m.get(n.id).s;
+      if (shop.name) { list.push({ id: shop.id, n: shop.name, t: shop.type, tr: trades }); continue; }
+      // 無名店：同一位 NPC 名下代價前 2 種相同的併成一間（見檔頭）
+      const pay = payOf(trades);
+      const key = pay.slice(0, 2).join(",");
+      const same = list.find((s) => !s.n && s._k === key);
+      if (!same) { list.push({ id: shop.id, t: shop.type, _k: key, tr: trades.slice() }); continue; }
+      stat.anonMerged++;
+      const seen = new Set(same.tr.map((t) => JSON.stringify(t)));
+      for (const t of trades) { const k = JSON.stringify(t); if (!seen.has(k)) { seen.add(k); same.tr.push(t); } }
     }
+  }
+  // 無名店的標示在合併完才算（合併後的交易才是畫面上那一間的內容）；有名的店排在無名店前面
+  for (const m of byMap.values()) for (const npc of m.values()) {
+    for (const s of npc.s) if (!s.n) { const pay = payOf(s.tr); s.p = pay.slice(0, 2); s.pn = pay.length; delete s._k; }
+    npc.s.sort((a, b) => (a.n ? 0 : 1) - (b.n ? 0 : 1));
   }
 
   const out = [];
@@ -116,8 +160,8 @@ async function main() {
   const index = {
     schema: "npc-shops-index",
     updated: new Date().toISOString().slice(0, 10),
-    source: "Teamcraft shops.json（經 scripts/lib/shops.mjs）＋ data/npcs.json ＋ data/maps.json；店名為 tw-locales 的台服官方名",
-    note: "檔名 <mapId>.json。品項只存 id 與數量，名字由前端查 items-market.json。金幣（id 1）在 items.json 裡名為 \"Gil\"，是刻意豁免的，前端顯示「金幣」。",
+    source: "Teamcraft shops.json（經 scripts/lib/shops.mjs）＋ data/npcs.json ＋ data/maps.json ＋ Teamcraft npcs.json 的 festival（活動圖層）；店名為台服客戶端 SpecialShop／GilShop（tw-locales 後備），客戶端沒有店名的不寫",
+    note: "檔名 <mapId>.json。品項只存 id 與數量，名字由前端查 items-market.json。金幣（id 1）在 items.json 裡名為 \"Gil\"，是刻意豁免的，前端顯示「金幣」。客戶端沒有店名的店不寫 n，改帶 p（代價依筆數排序的前 2 種 itemId）與 pn（共幾種），前端標成「無店名・付 ○○」。",
     count: out.length,
     maps: out.map((m) => ({ mapId: m.mapId, map: m.map, npcCount: m.npcCount, shopCount: m.shopCount })),
   };
@@ -130,7 +174,9 @@ async function main() {
 
   console.log(`
 地圖 ${out.length} 張、NPC ${out.reduce((a, m) => a + m.npcCount, 0)} 個、商店 ${stat.shops} 間`);
-  console.log(`  略過：無台服店名 ${stat.noName}、無 NPC ${stat.noNpc}、NPC 無座標 ${stat.noCoord}`);
+  console.log(`  其中客戶端沒有店名的 ${stat.anon} 間（同一位 NPC 名下代價相同的合併了 ${stat.anonMerged} 次；` +
+    `NPC 在活動圖層而略過的 ${stat.anonFestival} 間）`);
+  console.log(`  略過：無 NPC ${stat.noNpc}、NPC 無座標 ${stat.noCoord}`);
   console.log(`  交易 ${stat.trades} 筆，其中有品項無台服名而略過 ${stat.dropTrade} 筆`);
   console.log(`  合計 gzip ${(totalGz / 1024).toFixed(0)}KB；索引 ${(gzipSync(JSON.stringify(index)).length / 1024).toFixed(1)}KB；最大一張 ${biggest.map} ${(biggest.gz / 1024).toFixed(0)}KB`);
   console.log(`
@@ -152,6 +198,27 @@ async function main() {
   console.log(`
 ✓ data/npc-shops/（${files.length} 張圖＋_index.json）`);
   console.log("  這個目錄刻意不進 minify-data.mjs——它本來就是壓過的形狀");
+}
+
+/* Teamcraft npcs.json 裡帶 `festival` 的 NPC id（活動圖層才出現的 NPC）。
+   那份 17MB，只取這一欄；快取在 out_data/cache/tc-npcs.json（不進 git）。--offline 而快取不在就中止——
+   安靜地當成「沒有活動 NPC」會把 110 個往年活動攤位放進目錄。 */
+async function loadFestivalNpcs() {
+  const cache = join(ROOT, "out_data/cache/tc-npcs.json");
+  let raw;
+  if (existsSync(cache)) raw = JSON.parse(await readFile(cache, "utf8"));
+  else if (offline) throw new Error(`--offline 但找不到 ${cache}（先不帶 --offline 跑一次）`);
+  else {
+    const r = await fetch("https://raw.githubusercontent.com/ffxiv-teamcraft/ffxiv-teamcraft/staging/libs/data/src/lib/json/npcs.json");
+    if (!r.ok) throw new Error(`Teamcraft npcs.json HTTP ${r.status}`);
+    const t = await r.text();
+    await mkdir(join(ROOT, "out_data/cache"), { recursive: true });
+    await writeFile(cache, t);
+    raw = JSON.parse(t);
+  }
+  const set = new Set(Object.entries(raw).filter(([, v]) => v && v.festival).map(([id]) => Number(id)));
+  if (set.size < 1000) throw new Error(`Teamcraft npcs.json 的活動 NPC 只有 ${set.size} 個（2026-11 是 4,154）——欄位可能改名了`);
+  return set;
 }
 
 main().catch((e) => { console.error(e); process.exit(1); });

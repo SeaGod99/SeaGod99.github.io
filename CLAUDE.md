@@ -81,7 +81,8 @@ tools/glamour/          # 併入的獨立子專案，自帶 Python 管線與 CLA
 | 重建技能／狀態四語查詢分片（換台服版本後） | `node scripts/build-action-names.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/action-names/`（256 片）；**與 `build-item-names.mjs` 共用 `shardOf`，SHARDS 要一起改**；跑完必接 `validate-item-names.mjs` |
 | 重建副本／地名／怪物／任務的查詢分片（換台服版本後） | `node scripts/build-term-names.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/term-names/`（256 片，65,740 鍵）；**與 `build-item-names.mjs` 共用 `shardOf`**。一個英文名對到多個台服名時**值存陣列、全部列出**（怪物 200、地名 209 個鍵），不挑一個。跑完接 `node scripts/validate-term-names.mjs`（17 項）|
 | 重建 NPC 金幣直購價（改完 items 或商店表後） | `node scripts/build-vendor-prices.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/vendor-prices.json`（4,641 種，市場頁用它對材料成本封頂）|
-| 重建 NPC 商店目錄（改完 items／npcs／商店表後） | `node scripts/build-npc-shops.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/npc-shops/`（89 張圖＋`_index.json`，依 mapId 分片）；**刻意不進 `minify-data.mjs`** |
+| 重建 NPC 商店目錄（改完 items／npcs／商店表後） | `node scripts/build-npc-shops.mjs`（dry-run 預設／`--apply`／`--offline`）→ `data/npc-shops/`（97 張圖＋`_index.json`，依 mapId 分片）；**刻意不進 `minify-data.mjs`**。2026-11-24 起也收**客戶端沒有店名的店**（不寫 `n`，改帶 `p`／`pn`，前端標「無店名・付 ○○」；同一位 NPC 名下代價相同的合併），但**活動圖層上的 NPC（Teamcraft npcs.json 的 `festival`）的無名店不收**——要讀 `out_data/cache/tc-npcs.json`（17MB、不進 git，第一次不帶 `--offline` 跑會自己抓）。**重建後要接 `build-currency-shop.mjs --apply` → `build-item-uses.mjs --apply` → `patch-collection-shop-links.mjs --apply`**（三支都吃目錄決定給不給連結）|
+| ↑ 那一頁的回歸（**改完 `tools/npc-shops/`、上面那支或 `data/npc-shops/` 必跑**） | `node scripts/validate-npc-shops.mjs`（jsdom，19 項：無名店的 `p` 真的是那間店收的、照筆數排；同一位 NPC 沒有兩間代價相同的無名店；沒有無名店收往年活動貨幣；本機有 `tc-npcs.json` 快取時逐筆驗活動 NPC，CI 略過）|
 | 幻卡來源語意修正（**跑完 `build-triple-triad-all.mjs` 必接**） | `node scripts/patch-triple-triad-sources.mjs`（dry-run 預設／`--apply`／`--offline`） |
 | 探索筆記補座標（已補完 338/340，留著備查） | `node scripts/patch-exploration-coords.mjs`（dry-run 預設／`--apply`／`--offline`） |
 | `_meta.json` 與資料檔同步（validate 報不同步時跑） | `node scripts/sync-meta.mjs`（`--apply`） |

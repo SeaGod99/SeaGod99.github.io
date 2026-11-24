@@ -2,7 +2,7 @@
   "project": "水神的工具箱 統一資料庫",
   "schemaDoc": "/data/SCHEMA.md",
   "gamePatch": "7.3",
-  "updated": "2026-11-23",
+  "updated": "2026-11-24",
   "idConventions": {
     "mapId": "遊戲 Map sheet row id（XIVAPI v2 /sheet/Map 的 row_id），全站統一；2026-06-11 起 maps.json 主鍵即此 id",
     "territoryId": "TerritoryType row id，僅輔助欄位（fishing-spots、gathering.coords.zoneId），顯示/連結一律用 mapId"
@@ -153,7 +153,7 @@
       "source": "teamcraft-shops+xivapi+items",
       "status": "used",
       "count": 49,
-      "updated": "2026-11-23"
+      "updated": "2026-11-24"
     },
     {
       "schema": "dungeons",
@@ -632,7 +632,7 @@
       "file": "item-uses/_index.json",
       "desc": "物品 → 會用掉它的地方（NPC 兌換成本、任務交付、製作理符、軍需品、部隊工房、收藏品；依 itemId >> 10 分片）；市場頁物品詳情按需載入",
       "source": "scripts/build-item-uses.mjs",
-      "updated": "2026-11-23",
+      "updated": "2026-11-24",
       "count": 7528
     },
     {
@@ -640,8 +640,8 @@
       "file": "npc-shops/_index.json",
       "desc": "依 mapId 分片的 NPC 商店與交易品項",
       "source": "scripts/build-npc-shops.mjs",
-      "updated": "2026-11-19",
-      "count": 92
+      "updated": "2026-11-24",
+      "count": 97
     },
     {
       "name": "練級裝備路線",

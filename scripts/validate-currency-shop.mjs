@@ -219,7 +219,11 @@ const key = (win, el, k) => el.dispatchEvent(new win.KeyboardEvent("keydown", { 
   const info = doc.getElementById("curInfo");
   push("① 兌換資訊列：貿易小員（無名島）＋連到無人島頁", !info.hidden && /貿易小員（無名島）/.test(info.textContent) &&
     !!info.querySelector('a[href="../island/"]'));
-  push("  無名島不在 NPC 商店目錄，所以 NPC 不給連結", !info.querySelector('a[href^="../npc-shops/"]'));
+  /* 2026-11-24 起 NPC 商店目錄也收客戶端沒有店名的店（第四輪 §5-6），貿易小員的兌換就是這種店——
+     先前這條驗的是「無名島不在目錄所以不給連結」，前提已經變了。目錄真的收這位 NPC 收這種貨幣，由上面的 ③ 逐處驗。 */
+  const isl = [...info.querySelectorAll('a[href^="../npc-shops/"]')].find((a) => /貿易小員/.test(a.textContent));
+  push("  貿易小員（無店名的店，11-24 起目錄有收）連到 NPC 商店目錄的無名島", isl && new URL(isl.getAttribute("href"), "http://x/").searchParams.get("m") ===
+    String(shopIdx.maps.find((m) => m.map === "無名島")?.mapId), isl && isl.getAttribute("href"));
 
   key(window, btn, "ArrowDown");
   await wait(20);

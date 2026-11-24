@@ -153,8 +153,13 @@ const JS = read("tools/market/market.js");
   push("  不是收藏品的兌換列收藏欄是 0（不是 undefined）", [...USES.values()].every(({ u }) => (u.x || []).every((r) => r.length === 7 && (r[6] === 0 || typeof r[6] === "object"))), `${notCol} 筆非收藏`);
   const cert = USES.get(21172)?.u;
   const certCol = new Set((cert?.x || []).filter((r) => r[6]).map((r) => r[0]));
-  push("案例：成就幣（目錄沒收的店）→ 28 件收藏品，喬納森標「目錄沒有」", certCol.size === 28 && cert.x.every((r) => r[4].some((p) => p[0] === "喬納森" && p[3] === 0)),
+  /* 2026-11-24 起 NPC 商店目錄也收客戶端沒有店名的店（第四輪 §5-6），喬納森從「目錄沒有」翻成「目錄有」。
+     「目錄沒有」那一支改由往年活動的攤位當案例：活動圖層上的無名店目錄刻意不收（build-npc-shops.mjs 檔頭）。 */
+  push("案例：成就幣 → 28 件收藏品，喬納森標「目錄有」（11-24 起目錄收無店名的店）", certCol.size === 28 && cert.x.every((r) => r[4].some((p) => p[0] === "喬納森" && p[3] === 1)),
     `${certCol.size} 件`);
+  const choc = USES.get(28650)?.u;
+  push("案例：戀人巧克力2021（往年活動攤位的無名店）→ 地點全標「目錄沒有」", choc && choc.x.length > 30 && choc.x.every((r) => r[4].every((p) => p[3] === 0)),
+    choc ? `${choc.x.length} 筆` : "沒有這件的兌換資料");
 }
 
 // ── 頁面（jsdom）─────────────────────────────────────────
@@ -287,7 +292,7 @@ if (inMissingShard) {
 }
 
 {
-  // ⑥ 收藏缺口（第四輪 §5-1）：成就幣——變現排行沒有、NPC 商店目錄也沒收（客戶端沒店名）的貨幣
+  // ⑥ 收藏缺口（第四輪 §5-1）：成就幣——變現排行沒有的貨幣（店在客戶端沒有店名，NPC 商店目錄 11-24 起才收）
   // 期望值照頁面同一條規則算：兌換品要有名字、且過版本閘門（visibleItem）
   const gp = rj("data/_meta.json").gamePatch;
   const pnum = (p) => { const m = p == null ? null : String(p).match(/^(\d+)\.(\d+)/); return m ? parseFloat(`${m[1]}.${m[2].padEnd(2, "0")}`) : null; };
@@ -314,11 +319,12 @@ if (inMissingShard) {
   push("  缺超過 6 件時連結收在「看是哪 N 件」裡（預設收合，摘要行照樣有數字）", more && !more.open && more.contains(chips[0]) &&
     more.querySelector("summary").textContent === `看是哪 ${best.size} 件`, more && more.querySelector("summary").textContent);
   push("  沒讀到進度的圖鑑點名講出來", /沒有讀到「/.test(f.textContent));
-  push("  喬納森（目錄沒收的店）只印字、不給 NPC 商店目錄連結", /喬納森（格里達尼亞舊街）/.test(f.textContent) &&
-    ![...f.querySelectorAll('a.use-link[href^="../npc-shops/"]')].some((a) => /喬納森/.test(a.textContent)));
+  const jon = [...f.querySelectorAll('a.use-link[href^="../npc-shops/"]')].find((a) => /喬納森/.test(a.textContent));
+  push("  喬納森（無店名的店，11-24 起目錄有收）連到 NPC 商店目錄，帶 m 與成就幣的名字", jon && /[?&]m=3(&|$)/.test(jon.getAttribute("href")) &&
+    jon.getAttribute("href").includes("q=" + encodeURIComponent(items.get(21172).name)), jon && jon.getAttribute("href"));
   const certVisible = cert.x.filter((r) => { const it = items.get(r[0]); return it && it.name && released(it.patch); }).length;
-  push("  兌換店目錄全都沒收時不截 30 筆、也不叫人去目錄搜（會撲空）", f.querySelectorAll(".use-cell").length === certVisible &&
-    !/到 NPC 商店目錄搜/.test(f.textContent), `${f.querySelectorAll(".use-cell").length}／${certVisible} 筆`);
+  push("  目錄收了的兌換店：超過 30 筆截 30 筆、叫人去目錄搜", certVisible > 30 && f.querySelectorAll(".use-cell").length === 30 &&
+    /到 NPC 商店目錄搜/.test(f.textContent), `${f.querySelectorAll(".use-cell").length}／${certVisible} 筆`);
   // 逐格驗：顯示出來的格子是收藏品就要有圖鑑標籤、不是就不能有（清單只列前 30 筆，收藏品不一定都在裡面）
   const colIds = new Set(cert.x.filter((r) => r[6]).map((r) => r[0]));
   const cells = [...f.querySelectorAll(".use-cell")];
@@ -342,6 +348,21 @@ if (inMissingShard) {
   // 寵物頁存純數字也要認得
   const petRow = [...USES.values()].flatMap(({ u }) => u.x || []).find((r) => r[6] && r[6].c === "minions");
   push("  收藏對應裡寵物的鍵是純數字（寵物頁 keyOf 回傳 m.id）", petRow && /^\d+$/.test(String(petRow[6].k)), petRow && String(petRow[6].k));
+}
+
+{
+  // 兌換店目錄全都沒收（往年活動攤位）：不截 30 筆、不叫人去目錄搜（會撲空）、地點只印字
+  const gp = rj("data/_meta.json").gamePatch;
+  const pnum = (p) => { const m = p == null ? null : String(p).match(/^(\d+)\.(\d+)/); return m ? parseFloat(`${m[1]}.${m[2].padEnd(2, "0")}`) : null; };
+  const released = (p) => { const v = pnum(p), g = pnum(gp); return v == null || g == null || v <= g; };
+  const choc = USES.get(28650).u;
+  const vis = choc.x.filter((r) => { const it = items.get(r[0]); return it && it.name && released(it.patch); }).length;
+  const { doc } = await boot("#item=28650");
+  const f = usesFold(doc, "#dUses");
+  push("⑥ 兌換店目錄全都沒收時不截 30 筆、也不叫人去目錄搜（會撲空）、地點不給目錄連結（戀人巧克力2021）",
+    vis > 30 && f && f.querySelectorAll(".use-cell").length === vis && !/到 NPC 商店目錄搜/.test(f.textContent) &&
+    !f.querySelector('a.use-link[href^="../npc-shops/"]') && /瓦倫提昂家的女僕（格里達尼亞舊街）/.test(f.textContent),
+    f ? `${f.querySelectorAll(".use-cell").length}／${vis} 筆` : "沒有用途區");
 }
 
 // ── 報告 ──
