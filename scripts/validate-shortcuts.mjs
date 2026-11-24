@@ -243,7 +243,53 @@ const press = (key, target) => {
     push('  超過 40 筆時最後一列講還有幾筆', b.some((r) => /^另有 \d+ 筆符合/.test(r.nm)), (b.find((r) => /另有/.test(r.nm)) || {}).nm || '(沒有)');
     const types = new Set(content(b).map((r) => r.sub));
     push('  單字查詢不再只有坐騎與寵物（開頭相符的先排）', types.size >= 3, [...types].join('、'));
+
+    /* 第五輪 ②（2026-11-24）：貨幣／部族／部隊工房／商店 NPC 進索引。前三類以外的深連結不是 ?id=，
+       索引的類別帶 qs:true、key 是未編碼的查詢字串，面板用 URLSearchParams 編碼——連錯的話點過去是空頁，畫面上看不出來 */
+    const hrefs = async (q) => {
+      await search(q);
+      return [...doc.querySelectorAll('#sgt-nav-list .sgt-nav-item')].map((a) => ({
+        nm: a.querySelector('.nm').textContent, sub: (a.querySelector('.ext') || {}).textContent || '',
+        href: decodeURIComponent((a.getAttribute('href') || '').replace(/^.*?(tools\/)/, '$1')),
+      }));
+    };
+    const cur = (await hrefs('雙色寶石')).find((r) => /貨幣/.test(r.sub));
+    push('命令面板：貨幣連到貨幣變現頁 ?c=<貨幣 id>（雙色寶石）', cur && cur.href === 'tools/gc-exchange/?c=26807', cur && cur.href);
+    const jon = (await hrefs('喬納森')).find((r) => /商店 NPC/.test(r.sub));
+    push('  商店 NPC 連到 NPC 商店目錄 ?m=<地圖>&q=<NPC 名>，名稱帶地圖（喬納森）', jon && jon.nm === '喬納森（格里達尼亞舊街）' &&
+      jon.href === 'tools/npc-shops/?m=3&q=喬納森', jon && jon.nm + ' → ' + jon.href);
+    const bar = (await hrefs('酒保商人')).filter((r) => /商店 NPC/.test(r.sub));
+    push('  同名不同圖的 NPC 各一列（酒保商人在四個以上住宅區），不會被「名稱＋類別」去重吃掉', bar.length >= 4 && new Set(bar.map((r) => r.href)).size === bar.length,
+      bar.map((r) => r.nm).join('、'));
+    const tr = (await hrefs('長風空力團')).find((r) => /部族/.test(r.sub));
+    push('  部族連到部族頁 ?tribe=<id>（鳥人族：長風空力團）', tr && tr.href === 'tools/beast-tribes/?tribe=5', tr && tr.href);
+    const fw = (await hrefs('轉輪台II')).find((r) => /部隊工房/.test(r.sub));
+    push('  部隊工房成品連到 ?id=<itemId>（轉輪台II）', fw && fw.href === 'tools/fc-workshop/?id=9462', fw && fw.href);
+    const kn = (await hrefs('騎士')).filter((r) => r.sub);
+    push('  原本的類別照舊走 ?id=（職業行會「騎士」）', kn.some((r) => /職業行會/.test(r.sub) && /\?id=job:/.test(r.href)), kn.slice(0, 2).map((r) => r.href).join('、'));
   } else push('命令面板輸入框存在', false, '(找不到 #sgt-nav-input)');
+}
+
+// 索引資料層：qs 類別的每一筆都連得到東西（不靠 jsdom，逐筆驗）
+{
+  const SI = JSON.parse(readFileSync(join(ROOT, 'data/site-index.json'), 'utf8'));
+  const tIdx = (l) => SI.types.findIndex((t) => t.label === l);
+  const rowsOf = (l) => SI.data.filter((r) => r[1] === tIdx(l));
+  const P = (k) => new URLSearchParams(k);
+  const csIds = new Set(JSON.parse(readFileSync(join(ROOT, 'data/currency-shop.json'), 'utf8')).data.map((c) => c.id));
+  const btIds = new Set(JSON.parse(readFileSync(join(ROOT, 'data/beast-tribes.json'), 'utf8')).data.map((t) => t.id));
+  const fwIds = new Set(JSON.parse(readFileSync(join(ROOT, 'data/fc-workshop.json'), 'utf8')).data.map((d) => d.itemId));
+  const shopIdx = JSON.parse(readFileSync(join(ROOT, 'data/npc-shops/_index.json'), 'utf8')).maps;
+  const npcAt = new Set();
+  for (const m of shopIdx) for (const n of JSON.parse(readFileSync(join(ROOT, `data/npc-shops/${m.mapId}.json`), 'utf8')).npcs) npcAt.add(m.mapId + '|' + n.n);
+  push('索引：貨幣／部族／商店 NPC 三類帶 qs、部隊工房不帶', ['貨幣', '部族', '商店 NPC'].every((l) => SI.types[tIdx(l)]?.qs === true) && SI.types[tIdx('部隊工房')] && !SI.types[tIdx('部隊工房')].qs);
+  push('  每筆貨幣的 ?c= 都是變現排行裡的貨幣', rowsOf('貨幣').length >= 40 && rowsOf('貨幣').every((r) => csIds.has(+P(r[2]).get('c'))), rowsOf('貨幣').length + ' 筆');
+  push('  每筆部族的 ?tribe= 都在部族資料裡', rowsOf('部族').length >= 15 && rowsOf('部族').every((r) => btIds.has(+P(r[2]).get('tribe'))), rowsOf('部族').length + ' 筆');
+  push('  每筆部隊工房的 ?id= 都是部隊工房成品', rowsOf('部隊工房').length >= 150 && rowsOf('部隊工房').every((r) => fwIds.has(+r[2])), rowsOf('部隊工房').length + ' 筆');
+  const badNpc = rowsOf('商店 NPC').filter((r) => { const p = P(r[2]); return !npcAt.has(p.get('m') + '|' + p.get('q')) || r[0] !== `${p.get('q')}（${shopIdx.find((m) => m.mapId === +p.get('m'))?.map}）`; });
+  push('  每筆商店 NPC 的 ?m=&q= 在目錄那張圖真的有這位 NPC、顯示名＝NPC 名（地圖）', rowsOf('商店 NPC').length >= 400 && badNpc.length === 0,
+    badNpc.slice(0, 3).map((r) => r[0]).join('、') || rowsOf('商店 NPC').length + ' 筆');
+  push('  大類別區（成就、任務）仍排在這四類之後', ['貨幣', '部族', '部隊工房', '商店 NPC'].every((l) => tIdx(l) < tIdx('成就')));
 }
 
 push('全程無 console error', errors.length === 0, errors.slice(0, 1).join('') || '乾淨');

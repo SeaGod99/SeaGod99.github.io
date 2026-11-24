@@ -134,6 +134,55 @@ async function main() {
     report.push(`系統解鎖 ${db.data.length}、職業行會 ${db.jobs.length}`);
   }
 
+  /* 貨幣／部族／部隊工房／商店 NPC（2026-11-24，第五輪 ②）：打「雙色寶石」「喬納森」「庫洛獎狀」原本什麼都搜不到。
+     這幾頁的深連結參數不是 ?id=（貨幣頁 ?c=、部族頁 ?tribe=、NPC 商店目錄 ?m=&q=），所以類別帶 `qs: true`：
+     key 本身就是**查詢字串**（未編碼），面板用 URLSearchParams 編碼後接在 `?` 後面（assets/js/nav.js 的 entryToRow）——目標頁一個都不用改。
+     部隊工房本來就吃 ?id=<itemId>，照一般類別。 */
+  {
+    /* key 存**未編碼**的 `m=3&q=喬納森`，面板用 URLSearchParams 編碼後才接到網址（nav.js entryToRow）。
+       存編碼過的會讓 448 個 NPC 名每個中文字變成 9 個字元，索引 gzip 多 6KB。代價是值裡不能有 & = + % #
+       （URLSearchParams 解析時有特殊意義）——出現就中止，別讓面板安靜地連錯。 */
+    const qs = (o) => Object.entries(o).map(([k, v]) => {
+      if (/[&=+%#]/.test(String(v))) { console.error(`✗ 深連結的值含 & = + % #：${k}=${v}`); process.exit(1); }
+      return `${k}=${v}`;
+    }).join("&");
+    // 貨幣：與貨幣變現頁同一道篩選（過版本閘門、兌換品至少 3 件），不然面板列得出、頁面卻選不到
+    const cs = JSON.parse(await readFile(join(DATA, "currency-shop.json"), "utf8")).data;
+    let ti = types.length, n = 0;
+    types.push({ label: "貨幣", path: "tools/gc-exchange/", qs: true });
+    for (const c of cs) { if (!isTw(c.name) || !released(c.patch) || (c.items || []).length < 3) continue; rows.push([c.name, ti, qs({ c: c.id })]); n++; }
+    report.push(`貨幣 ${n}`);
+    // 部族：部族頁 ?tribe=<BeastTribe id>
+    const bt = JSON.parse(await readFile(join(DATA, "beast-tribes.json"), "utf8")).data;
+    ti = types.length;
+    types.push({ label: "部族", path: "tools/beast-tribes/", qs: true });
+    for (const t of bt) if (isTw(t.name)) rows.push([t.name, ti, qs({ tribe: t.id })]);
+    report.push(`部族 ${bt.filter((t) => isTw(t.name)).length}`);
+    // 部隊工房：?id=<成品 itemId>
+    const fw = JSON.parse(await readFile(join(DATA, "fc-workshop.json"), "utf8")).data;
+    ti = types.length;
+    types.push({ label: "部隊工房", path: "tools/fc-workshop/" });
+    for (const d of fw) if (isTw(d.name)) rows.push([d.name, ti, String(d.itemId)]);
+    report.push(`部隊工房 ${fw.filter((d) => isTw(d.name)).length}`);
+    /* 商店 NPC：?m=<mapId>&q=<NPC 名>。面板以「名稱＋類別」去重，同名不同圖的（五個住宅區的酒保商人、
+       三國的季節活動 NPC）會只剩第一個——名稱帶地圖。同名同圖的多個 NPC id 併成一筆（目錄頁用 q 篩出來的就是它們全部）。
+       NPC 名用寬鬆版 isTranslated()：台服有拉丁字的官方 NPC 名（奧密克戎族的「N-1499」）。 */
+    const si = JSON.parse(await readFile(join(DATA, "npc-shops", "_index.json"), "utf8"));
+    ti = types.length;
+    types.push({ label: "商店 NPC", path: "tools/npc-shops/", qs: true });
+    const seenNpc = new Set();
+    for (const m of si.maps) {
+      const sh = JSON.parse(await readFile(join(DATA, "npc-shops", `${m.mapId}.json`), "utf8"));
+      for (const npc of sh.npcs) {
+        const k = npc.n + "@" + m.mapId;
+        if (seenNpc.has(k) || !isTranslated(npc.n)) continue;
+        seenNpc.add(k);
+        rows.push([`${npc.n}（${sh.map}）`, ti, qs({ m: m.mapId, q: npc.n })]);
+      }
+    }
+    report.push(`商店 NPC ${seenNpc.size}`);
+  }
+
   for (const s of TAIL_SOURCES) await addSource(s);
 
   /* 任務（data/quests/_index.json，2026-10-03）：5,130 筆，與成就同屬「大類別」，放最後。

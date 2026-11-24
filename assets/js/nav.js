@@ -283,11 +283,14 @@
   // 索引裡的一筆 → 面板列（形狀比照 TOOLS，render() 才不用分兩套）
   function entryToRow(name, typeIdx, key) {
     var t = idx.types[typeIdx] || {};
+    /* 類別帶 qs:true（貨幣 ?c=、部族 ?tribe=、NPC 商店目錄 ?m=&q=，2026-11-24）：key 是未編碼的查詢字串，
+       用 URLSearchParams 編碼後整串接上；其餘類別照舊 ?id=<key>（build-site-index.mjs） */
+    var query = key == null ? '' : t.qs ? '?' + new URLSearchParams(String(key)).toString() : '?id=' + encodeURIComponent(key);
     return {
       e: '🔎', n: name, c: '__content__',
       sub: t.label,
       // 沒有 path 的類別（目前只有副本，站內還沒有副本頁）只顯示不跳轉
-      p: t.path ? t.path + (key != null ? '?id=' + encodeURIComponent(key) : '') : null
+      p: t.path ? t.path + query : null
     };
   }
 
