@@ -134,10 +134,14 @@ push('空狀態會教人去哪標記', /還沒有標記任何限時目標/.test(
   push('  剛好在重置那一刻：上一次＝此刻、下一次＝下週', RC.lastReset('w', edge) === edge && RC.nextReset('w', edge) === edge + 7 * 86400000 &&
     RC.nextReset('w', edge - 1) === edge, '');
 
-  // ④ 內建項目只有官網寫了重置時間的兩個
-  push('內建建議只有官網有寫重置時間的（隨機任務獎勵、挑戰筆記）', RC.PRESETS.length === 2 &&
-    RC.PRESETS.some((p) => p.id === 'p:roulette' && p.p === 'd') && RC.PRESETS.some((p) => p.id === 'p:challenge' && p.p === 'w') &&
-    !RC.PRESETS.some((p) => /理符|軍需|仙人|天書|部族|青魔/.test(p.name)), RC.PRESETS.map((p) => p.name).join('、'));
+  // ④ 內建項目只收「重置時間有出處」的：官網寫了的兩個＋站主 2026-11-24 確認的四個（第四輪 §5-5）。
+  //    理符配額、軍需品調達、仙彩沒有確認——混進來就是憑印象（鐵則）。週期要逐項對，錯一個使用者就會以為做完了。
+  const WANT = { 'p:roulette': ['d', 'site'], 'p:challenge': ['w', 'site'], 'p:minicactpot': ['d', 'owner'], 'p:tribe-daily': ['d', 'owner'],
+    'p:wondrous-tails': ['w', 'owner'], 'p:masked-carnivale': ['w', 'owner'] };
+  push('內建建議＝官網的 2 項＋站主確認的 4 項，週期與出處逐項對', RC.PRESETS.length === 6 &&
+    RC.PRESETS.every((p) => WANT[p.id] && WANT[p.id][0] === p.p && WANT[p.id][1] === p.by), RC.PRESETS.map((p) => `${p.name}(${p.p}/${p.by})`).join('、'));
+  push('  沒有確認過的（理符配額、軍需品調達、仙彩）不內建', !RC.PRESETS.some((p) => /理符|軍需|^仙彩/.test(p.name)));
+  push('  站主確認的日期有記（畫面講出處用）', /^\d{4}-\d{2}-\d{2}$/.test(RC.OWNER_CONFIRMED || ''));
 
   // ── DOM（jsdom）──
   const { JSDOM } = await import('jsdom');
@@ -158,17 +162,24 @@ push('空狀態會教人去哪標記', /還沒有標記任何限時目標/.test(
   {
     const { dom, host, api, clock, saved } = mk();
     const w = dom.window;
-    push('清單：空的時候兩張卡都有倒數與空狀態說明、兩個建議鈕', host.querySelectorAll('.rc-card').length === 2 &&
+    push('清單：空的時候兩張卡都有倒數與空狀態說明、每個內建建議一顆鈕', host.querySelectorAll('.rc-card').length === 2 &&
       host.querySelector('[data-cd="d"]').textContent === '3 小時 0 分' && host.querySelectorAll('.rc-empty').length === 2 &&
-      host.querySelectorAll('.rc-chip').length === 2, host.querySelector('[data-cd="d"]').textContent + '／' + host.querySelector('[data-cd="w"]').textContent);
+      host.querySelectorAll('.rc-chip').length === RC.PRESETS.length, host.querySelector('[data-cd="d"]').textContent + '／' + host.querySelector('[data-cd="w"]').textContent);
+    push('  出處段落講明哪些是站主確認、哪些沒確認', /站主在遊戲內確認/.test(host.querySelector('.rc-src').textContent) &&
+      /理符配額、軍需品調達、仙彩沒有確認/.test(host.querySelector('.rc-src').textContent));
     push('  台北時區的人不另外顯示「你的時間」', !host.querySelector('.rc-local'));
 
     host.querySelector('[data-preset="p:roulette"]').click();
     host.querySelector('[data-preset="p:challenge"]').click();
     let s = saved();
-    push('  按建議鈕：加進對應週期的卡、存進 ffxiv_now_routine、建議鈕消失', s && s.items.length === 2 &&
+    push('  按建議鈕：加進對應週期的卡、存進 ffxiv_now_routine、按過的建議鈕消失', s && s.items.length === 2 &&
       host.querySelector('.rc-card[data-p="d"] input[data-id="p:roulette"]') && host.querySelector('.rc-card[data-p="w"] input[data-id="p:challenge"]') &&
-      !host.querySelector('.rc-chip'), JSON.stringify(s && s.items));
+      !host.querySelector('[data-preset="p:roulette"]') && !host.querySelector('[data-preset="p:challenge"]') &&
+      host.querySelectorAll('.rc-chip').length === RC.PRESETS.length - 2, JSON.stringify(s && s.items));
+    host.querySelector('[data-preset="p:masked-carnivale"]').click();
+    push('  假面狂歡每週目標加進「每週」那張卡（站主確認是週二 16:00，不是青魔頁的 17:00）',
+      !!host.querySelector('.rc-card[data-p="w"] input[data-id="p:masked-carnivale"]'));
+    { const cb = host.querySelector('input[data-id="p:masked-carnivale"]'); if (cb) { cb.closest('.rc-item').querySelector('.rc-del')?.click(); } }
 
     for (const id of ['p:roulette', 'p:challenge']) {
       const cb = host.querySelector('input[data-id="' + id + '"]');
@@ -207,6 +218,17 @@ push('空狀態會教人去哪標記', /還沒有標記任何限時目標/.test(
     push('自訂項目：空白不收、同一張卡同名不重複（兩張卡可各一個）、名稱截到 30 字', s.items.length === 5 && tales.length === 2 &&
       tales.some((x) => x.p === 'w') && tales.some((x) => x.p === 'd') && s.items.some((x) => x.name.length === 30), s.items.map((x) => x.p + ':' + x.name.length).join(' '));
     push('  加完焦點回到新增框、週期選單維持剛剛選的', w.document.activeElement === host.querySelector('.rc-input') && host.querySelector('.rc-period').value === 'd');
+  }
+
+  {
+    // 11-24 以前內建只有兩項：自己手打過「天書奇談（每週）」的人（自訂 id），建議裡不要再出現同一張卡的同名那顆（按下去會多一筆一樣的）；
+    // 放在別張卡的同名不算（兩張卡可各一個，與自訂項目同一條規則）
+    const seed = (items) => ({ [RC.STORAGE_KEY]: JSON.stringify({ v: 1, items, done: {} }) });
+    const { host } = mk(seed([{ id: 'u:1', name: '天書奇談', p: 'w' }]));
+    push('  同一張卡上自己加過同名的，內建建議不再列它（id 不同也算）', !host.querySelector('[data-preset="p:wondrous-tails"]') &&
+      host.querySelectorAll('.rc-chip').length === RC.PRESETS.length - 1, [...host.querySelectorAll('.rc-chip')].map((b) => b.textContent).join('、'));
+    const { host: h2 } = mk(seed([{ id: 'u:1', name: '天書奇談', p: 'd' }]));
+    push('  同名但在另一張卡（每日）的不算，每週的建議照列', !!h2.querySelector('[data-preset="p:wondrous-tails"]'));
   }
 
   {

@@ -4,9 +4,11 @@
  *   每日 23:00（UTC+8）  遊戲手冊・任務搜尋器：隨機任務的獎勵「每日可領一次（於每日 23:00（UTC+8）更新）」
  *   每週二 16:00（UTC+8）遊戲手冊・管理筆記：「挑戰進度會在每週二下午4點（UTC+08:00）進行重置。」
  *                        （7.3 更新筆記的每週限制也寫「每週二16:00重置」）
- * 2026-11-23 逐頁讀過的官網：理符配額、軍需品調達、仙人微彩／仙彩、天書奇談、部族每日任務都**沒寫重置時間**，
- * 所以這裡不內建它們——使用者自己加、自己選每日或每週（鐵則：不憑印象）。
- * ⚠ 官網的青魔頁寫「每週二17:00（地球時間）」，與其他頁不一致；原因官網沒說明，**不採用也不推論**。
+ * 2026-11-23 逐頁讀過的官網：理符配額、軍需品調達、仙人微彩／仙彩、天書奇談、部族每日任務都**沒寫重置時間**。
+ * **2026-11-24 站主確認**（第四輪 §5-5）：仙人微彩、部族每日任務跟每日 23:00；天書奇談、假面狂歡每週目標跟每週二 16:00
+ *   （官網青魔頁寫「每週二17:00（地球時間）」，站主確認是 16:00）。這四項加進內建建議，畫面上註明出處是站主確認、不是官網。
+ *   **理符配額、軍需品調達、仙彩沒有確認**跟著這兩個時間，仍不內建——使用者自己加、自己選（鐵則：不憑印象）。
+ *   時刻本身仍然只有官網寫的兩個；要加別的時刻（例如每 12 小時）得先有出處。
  *
  * 一律用 UTC 算：23:00 UTC+8 ＝ UTC 15:00；週二 16:00 UTC+8 ＝ 週二 UTC 08:00。
  * 不在 UTC+8 的人也算得對（畫面另附當地時間）。台灣沒有夏令時，所以全年固定。
@@ -31,11 +33,16 @@ export const SOURCES = {
   w: { label: '每週重置', when: '每週二 16:00（UTC+8）', href: 'https://www.ffxiv.com.tw/web/intro/guide/game_manual/view/index.html',
        cite: '遊戲手冊・管理筆記', quote: '挑戰進度會在每週二下午4點（UTC+08:00）進行重置' },
 };
-// 內建建議：只有官網寫了重置時間的。不預先塞進清單（這頁只列使用者自己標的東西）
+// 內建建議：重置時間有出處的。`by`＝出處（官網原文／站主確認）。不預先塞進清單（這頁只列使用者自己標的東西）
 export const PRESETS = [
-  { id: 'p:roulette', name: '隨機任務獎勵', p: 'd' },
-  { id: 'p:challenge', name: '挑戰筆記', p: 'w' },
+  { id: 'p:roulette', name: '隨機任務獎勵', p: 'd', by: 'site' },
+  { id: 'p:minicactpot', name: '仙人微彩', p: 'd', by: 'owner' },
+  { id: 'p:tribe-daily', name: '部族每日任務', p: 'd', by: 'owner' },
+  { id: 'p:challenge', name: '挑戰筆記', p: 'w', by: 'site' },
+  { id: 'p:wondrous-tails', name: '天書奇談', p: 'w', by: 'owner' },
+  { id: 'p:masked-carnivale', name: '假面狂歡每週目標', p: 'w', by: 'owner' },
 ];
+export const OWNER_CONFIRMED = '2026-11-24';   // 站主確認上面 by: 'owner' 那幾項的日期
 
 /** 下一次重置的時刻（嚴格大於 now） */
 export function nextReset(p, now) {
@@ -128,7 +135,10 @@ export function mountRoutine(host, opts = {}) {
     const r = readRoutine(storage);
     rendered = { d: lastReset('d', t), w: lastReset('w', t) };
     const have = new Set(r.items.map((x) => x.id));
-    const sug = PRESETS.filter((x) => !have.has(x.id));
+    // 同一張卡上已有同名的也不建議（與「同一張卡同名不重複」同一條規則）：11-24 以前內建只有兩項，
+    // 自己加過「天書奇談（每週）」的人 id 是自訂的，按下去會在同一張卡多一筆一樣的
+    const haveName = new Set(r.items.map((x) => x.p + '|' + x.name));
+    const sug = PRESETS.filter((x) => !have.has(x.id) && !haveName.has(x.p + '|' + x.name));
     host.innerHTML =
       '<section class="rc" aria-labelledby="rcTitle">' +
         '<h2 class="rc-title" id="rcTitle">⏳ 重置倒數與例行清單</h2>' +
@@ -139,11 +149,12 @@ export function mountRoutine(host, opts = {}) {
           '<button type="submit" class="rc-btn">＋ 加入</button>' +
         '</form>' +
         (err ? '<p class="rc-err" role="alert">' + esc(err) + '</p>' : '') +
-        (sug.length ? '<div class="rc-sug"><span>官網有寫重置時間的：</span>' + sug.map((x) =>
+        (sug.length ? '<div class="rc-sug"><span>內建建議：</span>' + sug.map((x) =>
           '<button type="button" class="rc-chip" data-preset="' + x.id + '">＋ ' + esc(x.name) + '（' + (x.p === 'd' ? '每日' : '每週') + '）</button>').join('') + '</div>' : '') +
         '<p class="rc-src">重置時間出自台服官網：<a href="' + SOURCES.d.href + '" target="_blank" rel="noopener">' + SOURCES.d.cite + '</a>' +
           '（「' + SOURCES.d.quote + '」）、<a href="' + SOURCES.w.href + '" target="_blank" rel="noopener">' + SOURCES.w.cite + '</a>' +
-          '（「' + SOURCES.w.quote + '」）。理符配額、軍需品、仙人微彩、天書奇談、部族每日任務的重置時間官網沒寫，本站不替你判斷——' +
+          '（「' + SOURCES.w.quote + '」）。仙人微彩、部族每日任務、天書奇談、假面狂歡每週目標的重置時間官網沒寫，' +
+          '是站主在遊戲內確認跟著這兩個時間（' + OWNER_CONFIRMED + '）；理符配額、軍需品調達、仙彩沒有確認，本站不替你判斷——' +
           '自己加的項目由你選每日或每週。打勾記在這台裝置的瀏覽器，跟著角色走。</p>' +
       '</section>';
     err = '';
