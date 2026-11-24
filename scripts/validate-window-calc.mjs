@@ -116,6 +116,38 @@ const sameWins = (a, b) =>
   a.length === b.length &&
   a.every((w, i) => Math.abs(w.ws - b[i].ws) < 1 && Math.abs(w.we - b[i].we) < 1 && w.active === b[i].active);
 
+/* 2026-11-24：區間型修了一個參照實作也有的毛病——從「現在所在的天氣週期」往後掃，在之前的週期就開了的窗，
+   起點會被切在這個週期的開頭（ET 0／8／16），鬧鐘因此在午夜或週期邊界後重響（validate-et-alarm.mjs ④）。
+   所以區間型改成：**除了第一個已開的窗的起點**，其餘要與參照逐筆相同；那個起點可以比參照早，
+   而且必須等於暴力解（逐個 ET 小時往回看「這一小時開不開」，一直退到不開為止）。 */
+const ET_H = ET_HOUR_MS;
+const openAt = (c, t) => {
+  const h = (t * EORZEA_MULT / 3600000) % 24;                      // 帶小數：資料裡有 21.5 點開始的魚（沉川鮭）
+  const timed = c.startHour > 0 || c.endHour < 24;
+  if (timed && !(c.startHour < c.endHour ? h >= c.startHour && h < c.endHour : h >= c.startHour || h < c.endHour)) return false;
+  const pi = Math.floor(t / WEATHER_PERIOD);
+  if ((c.wk || []).length && !c.wk.includes(weatherOfPi(c.mapId, pi))) return false;
+  if ((c.pk || []).length && !c.pk.includes(weatherOfPi(c.mapId, pi - 1))) return false;
+  return true;
+};
+const bruteStart = (c, now) => {
+  const step = ET_H / 12;                                         // 5 個 ET 分鐘一步（資料裡的起點有半點，例如 21.5）
+  let s = Math.floor(now / step) * step;
+  for (let i = 0; i < 50000 && openAt(c, s - step / 2); i++) s -= step;
+  return s;
+};
+let startFixed = 0;
+const sameWinsLookback = (ref, got, c, now) => {
+  if (ref.length !== got.length) return false;
+  for (let i = 0; i < ref.length; i++) {
+    if (Math.abs(ref[i].we - got[i].we) >= 1 || ref[i].active !== got[i].active) return false;
+    if (Math.abs(ref[i].ws - got[i].ws) < 1) continue;
+    if (i !== 0 || !got[0].active || got[0].ws > ref[0].ws || Math.abs(got[0].ws - bruteStart(c, now)) >= 1) return false;
+    startFixed++;
+  }
+  return true;
+};
+
 // ── ① 區間型（釣魚）────────────────────────────────────────────────
 {
   const fishes = JSON.parse(await readFile(join(ROOT, "data/fishes.json"), "utf8")).data;
@@ -133,14 +165,24 @@ const sameWins = (a, b) =>
     for (const now of times) {
       const ref = refFishWindows({ startHour: f.startHour, endHour: f.endHour }, now, 3, weatherOfPi, hasTable);
       const got = wc.nextWindows({ startHour: f.startHour, endHour: f.endHour }, now, { max: 3 });
-      if (!sameWins(ref, got)) {
+      if (!sameWinsLookback(ref, got, { startHour: f.startHour, endHour: f.endHour }, now)) {
         bad.push(`${f.name} ${f.startHour}-${f.endHour} @${now}：參照 ${JSON.stringify(ref)} / 新 ${JSON.stringify(got)}`);
         if (bad.length > 3) break;
       }
     }
     if (bad.length > 3) break;
   }
-  push(`區間型與參照實作相同（${timed.length} 種魚 × ${times.length} 時刻）`, bad.length === 0, bad.slice(0, 2).join(' | ') || '全部相同');
+  push(`區間型與參照實作相同（${timed.length} 種魚 × ${times.length} 時刻；已開的窗起點除外，那個要等於暴力解）`, bad.length === 0, bad.slice(0, 2).join(' | ') || `全部相同，其中起點往前補了 ${startFixed} 次`);
+  push('  確實測到「已開的窗起點被切在週期開頭」的情況（往前補過）', startFixed > 0, `${startFixed} 次`);
+  // 釘一個看得懂的案例：18–6 的魚在 ET 2 點查 → 起點是前一天 ET 18:00，不是 00:00
+  {
+    const dayMs = 24 * ET_H;
+    const d = Math.floor(Date.UTC(2026, 10, 24) / dayMs) * dayMs;
+    const now = d + 2 * ET_H + 30000;                               // ET 02:00 過一點
+    const w = wc.nextWindows({ startHour: 18, endHour: 6 }, now, { max: 1 })[0];
+    push('  案例：18–6 在 ET 2 點查，已開的窗起點是前一天 ET 18:00（不是 00:00）', w && w.active && w.ws === d - 6 * ET_H && w.we === d + 6 * ET_H,
+      w ? `起點 ET ${refEtHourOf(w.ws)}:00、終點 ET ${refEtHourOf(w.we)}:00` : '沒有窗');
+  }
 
   // 跨午夜的要特別確認（17→3 這種會拆兩段）
   const cross = timed.filter((f) => f.startHour > f.endHour).slice(0, 50);
@@ -165,13 +207,14 @@ const sameWins = (a, b) =>
     cases.push({ mapId: m.id, wk: [keys[0]], pk: [], startHour: 17, endHour: 3 });   // 天氣＋跨午夜
   }
   let bad = [], merged = 0;
+  const fixedBefore = startFixed;
   for (const c of cases) {
     for (const now of times) {
       const ref = refFishWindows(c, now, 3, weatherOfPi, hasTable);
       const got = wc.nextWindows(
         { startHour: c.startHour, endHour: c.endHour, weather: { mapId: c.mapId, keys: c.wk, prevKeys: c.pk } },
         now, { max: 3 });
-      if (!sameWins(ref, got)) {
+      if (!sameWinsLookback(ref, got, c, now)) {
         bad.push(`map ${c.mapId} wk=${c.wk} pk=${c.pk} ${c.startHour}-${c.endHour} @${now}`);
         if (bad.length > 3) break;
       }
@@ -182,6 +225,7 @@ const sameWins = (a, b) =>
   }
   push(`天氣條件與參照實作相同（${cases.length} 組 × ${times.length} 時刻）`, bad.length === 0, bad.slice(0, 2).join(' | ') || '全部相同');
   push('  測到了跨週期合併的視窗', merged > 0, merged + ' 次');
+  push('  天氣窗連續好幾段時，進到後面那段起點仍是第一段的開頭（往前補過，且都等於暴力解）', startFixed - fixedBefore > 0, `${startFixed - fixedBefore} 次`);
   push('  沒有天氣表的地圖回空陣列',
     wc.nextWindows({ startHour: 0, endHour: 24, weather: { mapId: 999999, keys: ['fairSkies'] } }, base).length === 0, '');
 }

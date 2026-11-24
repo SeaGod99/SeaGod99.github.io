@@ -98,9 +98,34 @@ export function nextWindows(spec, now, opts = {}) {
       else wins.push({ ws, we });
     }
   }
+  /* 往回補已開那一窗的真正起點（2026-11-24）。上面從「現在所在的天氣週期」往後掃，一個在之前的週期就開了的窗，
+     起點會被切在這個週期的開頭（ET 0／8／16 點）：18–5 的窗在 ET 2 點查，回的是 00:00 而不是前一天 18:00；
+     連續兩段晴天的窗，進到第二段後起點變成第二段的開頭。剩餘時間不受影響，但**鬧鐘用起點判斷是不是同一窗**
+     （et-alarm.js 的 openTs）——起點一跳就當成新的一窗，午夜或週期邊界後再響一次。
+     做法：第一窗已開、且起點剛好在 pi0 的開頭時，往前一個週期看它的最後一段是否接得上；接得上就把起點往前移，
+     那一段若也是從它所在週期的開頭開始，就繼續往前。最多看 LOOKBACK 個週期（不限時段的天氣窗可以連很多段）。 */
+  const first = wins[0];
+  if (first && now >= first.ws && Math.abs(first.ws - pi0 * WEATHER_PERIOD) < 1000) {
+    for (let k = 1; k <= LOOKBACK; k++) {
+      const pi = pi0 - k;
+      if (needWx && !weatherOk(wx.mapId, pi, wk, pk)) break;
+      const pStart = pi * WEATHER_PERIOD;
+      const pEtH = etHourOf(pStart);
+      const segs = segs0
+        ? segs0.map(([a, b]) => [Math.max(a, pEtH), Math.min(b, pEtH + 8)]).filter(([a, b]) => b > a)
+        : [[pEtH, pEtH + 8]];
+      const lastSeg = segs[segs.length - 1];
+      if (!lastSeg) break;
+      const segEnd = pStart + (lastSeg[1] - pEtH) * ET_HOUR_MS;
+      if (Math.abs(segEnd - first.ws) >= 1000) break;          // 接不上：這個週期的最後一段沒有連到現在這一窗
+      first.ws = pStart + (lastSeg[0] - pEtH) * ET_HOUR_MS;
+      if (lastSeg[0] !== pEtH) break;                           // 這一段不是從週期開頭開始，起點就是它了
+    }
+  }
   wins.forEach((w) => { w.active = now >= w.ws; });
   return wins.slice(0, max);
 }
+const LOOKBACK = 60;   // 往回最多看幾個天氣週期（60 個＝20 ET 日≈23 真實小時；天氣窗連這麼長幾乎不可能）
 
 function weatherOk(mapId, pi, wk, pk) {
   if (wk.length && !wk.includes(getWeatherAt(mapId, pi * WEATHER_PERIOD))) return false;

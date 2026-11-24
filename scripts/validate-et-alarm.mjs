@@ -40,7 +40,7 @@ for (const [label, rel] of Object.entries(PAGES)) {
      不講的話使用者會把分頁關掉然後以為鬧鐘壞了。 */
   push(`  ${label}頁講明需保持分頁開啟`, /需保持此分頁開啟/.test(html), '');
   // 2026-10-03：呼叫端一定要給 openTs（真實開窗起點），否則已開的窗每 2 分鐘重響（見 ② 的說明）
-  push(`  ${label}頁呼叫 alarm.check 時有傳 openTs`, /openTs:/.test(html), '');
+  push(`  ${label}頁呼叫 alarm.check 時有傳 openTs`, /\bopenTs\s*[:,}]/.test(html), '');   // 物件簡寫 `{ …, openTs, … }` 也算（天氣頁 11-24 起）
 }
 
 // ── ② 引擎行為（同一窗只響一次、primeOnly、提前量、forget） ──
@@ -211,6 +211,66 @@ for (const [label, rel] of Object.entries(PAGES)) {
     Date.now(), { max: 2 });
   push('  純天氣 spec 真的算得出視窗（東拉諾西亞・fairSkies）', wins.length > 0,
     wins.length + ' 個視窗，第一個長 ' + (wins[0] ? Math.round((wins[0].we - wins[0].ws) / 1000) + ' 秒' : '—'));
+}
+
+/* ── ⑥ 已開的窗跨過天氣週期邊界（ET 0／8／16 點）只響一次（2026-11-24）──────────────
+   window-calc 原本從「現在所在的天氣週期」往後掃，在之前的週期就開了的窗，起點被切在這個週期的開頭：
+   18–5 的魚到 ET 0 點起點從 18:00 跳成 00:00、連續兩段晴天進到第二段起點也跳——鬧鐘用起點去重，於是**再響一次**。
+   天氣頁的訂閱是逐段的，連續兩段同天氣也一樣。上面 ② 的測試都把 openTs 寫死，量不到這個；
+   這裡用真的 window-calc／eorzea-weather 算 openTs，一路走過邊界數響幾次。 */
+{
+  const wc = await import('../assets/js/window-calc.js');
+  const ez = await import('../assets/js/eorzea-weather.js');
+  const dom = new JSDOM('<!doctype html><title>T</title><body>', { runScripts: 'outside-only', url: 'https://x/' });
+  const st = {};
+  Object.defineProperty(dom.window, 'localStorage', { configurable: true,
+    value: { getItem: (k) => (k in st ? st[k] : null), setItem: (k, v) => { st[k] = String(v); }, removeItem: (k) => { delete st[k]; }, key: () => null, get length() { return 0; } } });
+  dom.window.eval(ENGINE);
+  const mk = () => { const a = dom.window.ETAlarm.create({ scope: 't6', baseTitle: 'T', onFire: () => ({ title: 't' }) }); a.cfg.on = true; a.cfg.lead = 60; return a; };
+  const ETH = 175000, WP = ez.WEATHER_PERIOD;
+  // 釣魚頁的接法：openTs＝statusOf(nextWindows()).window.ws（tools/fishing/index.html 的 checkAlarms）
+  const run = (spec, from, to) => {
+    const a = mk(); let n = 0;
+    for (let t = from; t < to; t += 30000) {
+      const s = wc.statusOf(wc.nextWindows(spec, t, { max: 1 }), t);
+      if (s.window) n += a.check(t, [{ key: 'k', item: {}, openTs: s.window.ws, secsUntilOpen: s.state === 'open' ? 0 : s.secsLeft }], false);
+    }
+    return n;
+  };
+  const day = Math.floor(Date.UTC(2026, 10, 24) / (24 * ETH)) * 24 * ETH;
+  const n1 = run({ startHour: 18, endHour: 5 }, day + 17.5 * ETH, day + 29.5 * ETH);
+  push('⑥ 18–5 的魚：從 ET 17:30 一路走到隔天 5:30（跨午夜），只響 1 次', n1 === 1, `${n1} 次（修前在 ET 0:00 再響一次）`);
+  const n1b = run({ startHour: 6, endHour: 10 }, day + 5.5 * ETH, day + 10.5 * ETH);
+  push('  6–10 的魚：跨 ET 8 點的天氣週期邊界，只響 1 次（不只午夜）', n1b === 1, `${n1b} 次`);
+
+  // 找一個「連續兩段都是同一天氣、前一段不是」的真實案例（東拉諾西亞起往後找）
+  const maps = JSON.parse(readFileSync(join(ROOT, 'data/maps.json'), 'utf8')).data.filter((m) => m.weatherRates && m.weatherRates.length);
+  let found = null;
+  const base = Math.floor(Date.UTC(2026, 10, 24) / WP) * WP;
+  for (const m of maps) {
+    for (let i = 1; i < 300 && !found; i++) {
+      const w0 = ez.getWeatherAt(m.id, base + i * WP);
+      if (w0 && w0 === ez.getWeatherAt(m.id, base + (i + 1) * WP) && ez.getWeatherAt(m.id, base + (i - 1) * WP) !== w0) found = { mapId: m.id, key: w0, p: base + i * WP };
+    }
+    if (found) break;
+  }
+  const n2 = found ? run({ startHour: 0, endHour: 24, weather: { mapId: found.mapId, keys: [found.key], prevKeys: [] } }, found.p - 120000, found.p + 2 * WP - 60000) : -1;
+  push('  天氣條件連續兩段都符合的魚：進到第二段不再響', n2 === 1, found ? `地圖 ${found.mapId}・${found.key}：${n2} 次` : '找不到案例');
+
+  // 天氣頁的接法：openTs＝已開時用 weatherRunStart() 的開頭（tools/weather/index.html 的 checkAlarms）
+  const html = readFileSync(join(ROOT, 'tools/weather/index.html'), 'utf8');
+  push('  天氣頁的鬧鐘已開時用 weatherRunStart() 當 openTs', /hit\.t <= now \? weatherRunStart\(w\.zone, w\.w, w\.prev, hit\.t\) : hit\.t/.test(html));
+  if (found) {
+    const a = mk(); let n3 = 0;
+    for (let t = found.p - 120000; t < found.p + 2 * WP - 60000; t += 30000) {
+      const hit = ez.periodStart(t) + (ez.getWeatherAt(found.mapId, t) === found.key ? 0 : WP);   // 這段案例裡下一個命中就是 found.p
+      const openTs = hit <= t ? ez.weatherRunStart(found.mapId, [found.key], null, hit) : hit;
+      n3 += a.check(t, [{ key: 'w', item: {}, openTs, secsUntilOpen: Math.max(0, Math.round((hit - t) / 1000)) }], false);
+    }
+    push('  天氣頁訂閱同一案例：連續兩段同天氣只響 1 次', n3 === 1, `${n3} 次`);
+    push('  weatherRunStart：第二段往回找到第一段的開頭、第一段就是自己', ez.weatherRunStart(found.mapId, [found.key], null, found.p + WP) === found.p &&
+      ez.weatherRunStart(found.mapId, [found.key], null, found.p) === found.p);
+  }
 }
 
 let fail = 0;

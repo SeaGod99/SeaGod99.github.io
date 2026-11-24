@@ -218,6 +218,26 @@ export function getWeatherAt(mapId, ms) {
   return lookupWeather(table, calcSeed(new Date(periodStart(ms))));
 }
 
+/**
+ * 「連續符合」的那一段從哪個天氣週期開始（2026-11-24）。
+ * 天氣頁的目標搜尋是逐段的（每 8 ET 小時一段），但連續兩段都是目標天氣時，對玩家來說是**同一段天氣一直持續**。
+ * 鬧鐘拿逐段的起點去重的話，第二段一開始就當成新的一窗再響一次——天氣其實沒變。這支往回找連續符合的開頭。
+ * 規則與搜尋相同：天氣要在 keys 裡；有 prev 時前一段要是 prev。
+ * @param t  某個符合的週期起點（毫秒）
+ * @returns  連續符合那一段的第一個週期起點（最多往回 60 段）
+ */
+export function weatherRunStart(mapId, keys, prev, t) {
+  const ok = (s) => {
+    const w = getWeatherAt(mapId, s);
+    if (keys && keys.length && keys.indexOf(w) < 0) return false;
+    if (prev && getWeatherAt(mapId, s - WEATHER_PERIOD) !== prev) return false;
+    return true;
+  };
+  let s = periodStart(t);
+  for (let i = 0; i < 60 && ok(s - WEATHER_PERIOD); i++) s -= WEATHER_PERIOD;
+  return s;
+}
+
 /** 取得某地圖的天氣表（給多步驟搜尋用，避免重複查 Map） */
 export function getWeatherTable(mapId) {
   if (!_tableCache) throw new Error('eorzea-weather: 請先呼叫 initWeatherTables()');
