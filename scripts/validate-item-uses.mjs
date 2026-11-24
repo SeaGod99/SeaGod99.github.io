@@ -39,6 +39,8 @@ for (const f of readdirSync(join(ROOT, "data/item-uses")).filter((f) => /^\d+\.j
   for (const [id, u] of Object.entries(sh.data)) USES.set(Number(id), { u, shard: sh.shard });
 }
 const items = new Map(rj("data/items.json").data.map((x) => [x.id, x]));
+// 用途層 11-24 起也帶「賣給 NPC 商店的價格」（s）——它不是用途，「這件有沒有用途」要看 s 以外的鍵
+const hasUse = (id) => { const v = USES.get(id); return !!v && Object.keys(v.u).some((k) => k !== "s"); };
 const byName = (n) => [...items.values()].find((x) => x.name === n)?.id;
 const JS = read("tools/market/market.js");
 
@@ -48,7 +50,9 @@ const JS = read("tools/market/market.js");
   push("① 前端與建置端的片號位數一致", feBits && feBits === beBits && feBits === IDX.shardBits, `前端 ${feBits}／建置 ${beBits}／索引 ${IDX.shardBits}`);
   const misplaced = [...USES].filter(([id, v]) => (id >> IDX.shardBits) !== v.shard);
   push("  每件都在 id >> 位數 那一片", misplaced.length === 0, misplaced.slice(0, 3).map(([id]) => id).join("、"));
-  push("  索引的件數與各片加總一致", IDX.count === USES.size && IDX.shards.reduce((s, x) => s + x.count, 0) === USES.size, `${IDX.count}／${USES.size}`);
+  const useN = [...USES.keys()].filter(hasUse).length;
+  push("  索引的件數＝有用途的物品數（不含只有賣價的）、各片件數加總＝實際筆數", IDX.count === useN && IDX.shards.reduce((s, x) => s + x.count, 0) === USES.size,
+    `有用途 ${IDX.count}／${useN}、全部 ${USES.size}`);
   push("  金幣（id 1）不收", !USES.has(1));
   const noTw = [...USES.keys()].filter((id) => !items.get(id)?.name || !isTw(items.get(id).name));
   push("  收的物品都有台服名", noTw.length === 0, noTw.slice(0, 5).join("、"));
@@ -228,7 +232,8 @@ const ingr = new Set();
 for (const r of rj("data/recipes.json").data) for (const g of r.ingredients || []) ingr.add(g.itemId ?? g.id ?? g[0]);
 const old = (p) => p && /^[2-6]\./.test(p);
 const untradableX = mk.find((r) => !r[4] && old(r[5]) && (USES.get(r[0])?.u.x || []).length > 40);
-const noUse = mk.find((r) => !r[4] && old(r[5]) && isTw(r[1]) && !USES.has(r[0]) && !ingr.has(r[0]));
+const noUse = mk.find((r) => !r[4] && old(r[5]) && isTw(r[1]) && !USES.has(r[0]) && !ingr.has(r[0]));            // 沒用途也沒賣價
+const noUseSell = mk.find((r) => !r[4] && old(r[5]) && isTw(r[1]) && !hasUse(r[0]) && USES.get(r[0])?.u.s > 0 && !ingr.has(r[0]));   // 沒用途、有賣價
 const shardSet = new Set(IDX.shards.map((s) => s.shard));
 const inMissingShard = mk.find((r) => isTw(r[1]) && old(r[5]) && !shardSet.has(r[0] >> IDX.shardBits));
 
@@ -248,7 +253,7 @@ const inMissingShard = mk.find((r) => isTw(r[1]) && old(r[5]) && !shardSet.has(r
     if (!srcShard.has(s)) srcShard.set(s, existsSync(join(ROOT, `data/item-sources/${s}.json`)) ? rj(`data/item-sources/${s}.json`).data : {});
     return !!(srcShard.get(s)[id] || []).length;
   };
-  const withSrc = mk.find((r) => !r[4] && old(r[5]) && isTw(r[1]) && USES.has(r[0]) && hasSrc(r[0]));
+  const withSrc = mk.find((r) => !r[4] && old(r[5]) && isTw(r[1]) && hasUse(r[0]) && hasSrc(r[0]));
   if (withSrc) {
     const { doc: d2 } = await boot("#item=" + withSrc[0]);
     const s2 = d2.querySelector('#dSrc details.fold[data-fold="src"]');
@@ -269,7 +274,31 @@ const inMissingShard = mk.find((r) => isTw(r[1]) && old(r[5]) && !shardSet.has(r
   const { doc } = await boot("#item=" + noUse[0]);
   const f = usesFold(doc, "#dUses");
   push("③④ 什麼用途都沒有：摘要「本站資料裡查不到」、內文列出查過哪些與沒查哪些", f && sumOf(f) === "本站資料裡查不到" &&
-    /都沒有用到它/.test(f.textContent) && /沒收錄的用途/.test(f.textContent), `${noUse[1]}：${sumOf(f)}`);
+    /都沒有用到它/.test(f.textContent) && /沒收錄的用途/.test(f.textContent) && !/賣給 NPC 商店/.test(f.textContent), `${noUse[1]}：${sumOf(f)}`);
+}
+
+/* ⑧ 賣給 NPC 商店的價格（第五輪 ③）：s＝客戶端 Item.Price{Low}。不是用途——沒用途時摘要仍說「查不到」，後面附賣價；
+   沒有 s 時什麼都不說（沒查證「0＝賣不了」，見上一條的 !/賣給 NPC 商店/） */
+{
+  const sN = [...USES.values()].filter((v) => v.u.s).length;
+  push("⑧ 賣價：三萬件以上有 s，全是正整數", sN > 30000 && [...USES.values()].every((v) => v.u.s == null || (Number.isInteger(v.u.s) && v.u.s > 0)), `${sN} 件`);
+  const mid = rj("data/vendor-prices.json").data;
+  push("  建置端有拿 Price{Mid}＝NPC 直購價驗欄位對位（欄位位移時中止）", read("scripts/build-item-uses.mjs").includes('+r["Price{Mid}"] === v.p') &&
+    read("scripts/build-item-uses.mjs").includes("< 0.99"), `直購價 ${Object.keys(mid).length} 筆可比`);
+  const { doc } = await boot("#item=" + noUseSell[0]);
+  const f = usesFold(doc, "#dUses");
+  const want = USES.get(noUseSell[0]).u.s.toLocaleString();
+  push("  沒用途、有賣價：摘要「本站資料裡查不到 · 賣商店 N 金幣」，內文仍列出查過哪些、另有「賣給 NPC 商店」一組",
+    f && sumOf(f) === "本站資料裡查不到 · 賣商店 " + want + " 金幣" && /都沒有用到它/.test(f.textContent) &&
+    f.textContent.includes("賣給 NPC 商店每個 " + want + " 金幣"), `${noUseSell[1]}：${f && sumOf(f)}`);
+  // 有用途（兌換）也有賣價的一件：賣價接在摘要最後
+  const both = mk.find((r) => old(r[5]) && isTw(r[1]) && (USES.get(r[0])?.u.x || []).length && USES.get(r[0]).u.s > 0);
+  const { doc: d2 } = await boot("#item=" + both[0]);
+  const f2 = usesFold(d2, "#dUses");
+  const s2 = USES.get(both[0]).u.s;
+  push("  有用途也有賣價：賣價接在摘要最後、內文另有「賣給 NPC 商店」", f2 && /兌換 \d+ 種/.test(sumOf(f2)) &&
+    sumOf(f2).endsWith(" · 賣商店 " + s2.toLocaleString() + " 金幣") && f2.textContent.includes("賣給 NPC 商店每個 " + s2.toLocaleString() + " 金幣"),
+    `${both[1]}：${f2 && sumOf(f2)}`);
 }
 
 if (inMissingShard) {

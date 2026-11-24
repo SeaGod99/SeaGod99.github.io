@@ -33,6 +33,7 @@ import { fileURLToPath } from "node:url";
 import { isTw, isTranslated } from "./lib/tw-text.mjs";
 import { loadShops } from "./lib/shops.mjs";
 import { loadSeasonalNpcs } from "./lib/seasonal-npcs.mjs";
+import { loadTcSheet } from "./lib/tc-datamining.mjs";
 import { loadCollectionOwners, ownField } from "./lib/collection-owners.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -161,6 +162,28 @@ for (const p of (await rd("fc-workshop.json")).data) {
 /* ── c：收藏品 ── */
 for (const id of (await rd("collectable-items.json")).data) { U(id).c = 1; bump("c"); }
 
+/* ── s：賣給 NPC 商店的價格（2026-11-24，第五輪 ③）──
+   「這東西還有沒有用、能不能丟」的另一半是「直接賣給商店值多少」。來源＝台服客戶端 Item.Price{Low}（遊戲的賣出價格）。
+   ⚠ 客戶端 CSV 的欄名可能位移（BeastTribe、WeeklyBingoOrderData 都發生過）：拿旁邊的 Price{Mid}（NPC 售價）去對
+   站上的 NPC 金幣直購價（vendor-prices.json，另一條管線來的），一致率不到 99% 就中止——位移的話 Price{Low} 也是錯的。
+   只寫 > 0 的；0 不寫也**不在畫面上說「無法出售」**（沒有查證 0 就等於賣不了）。不是「用途」，所以不算進 count。 */
+{
+  const rows = await loadTcSheet("Item", { offline, require: ["Price{Low}", "Price{Mid}"] });
+  const vp = (await rd("vendor-prices.json")).data;
+  const byId = new Map(rows.map((r) => [r.id, r]));
+  let eq = 0, ne = 0;
+  for (const [id, v] of Object.entries(vp)) { const r = byId.get(+id); if (!r) continue; +r["Price{Mid}"] === v.p ? eq++ : ne++; }
+  if (eq + ne < 1000 || eq / (eq + ne) < 0.99) {
+    console.error(`✗ Item.Price{Mid} 與 NPC 直購價只對上 ${eq}／${eq + ne}——客戶端欄位可能位移了，Price{Low} 不可信，中止`);
+    process.exit(1);
+  }
+  bump("s 欄位驗證：Price{Mid}＝NPC 直購價", eq);
+  for (const r of rows) {
+    const p = +r["Price{Low}"];
+    if (p > 0 && items.has(r.id)) { U(r.id).s = p; bump("s 有賣價"); }
+  }
+}
+
 /* ── 排序（固定順序，不依會變的值，§3.19）── */
 for (const u of uses.values()) {
   if (u.x) u.x.sort((a, b) => a[0] - b[0] || a[2] - b[2]);
@@ -191,14 +214,17 @@ for (const [s, obj] of [...shards].sort((a, b) => a[0] - b[0])) {
 // ── 報告 ──
 const cnt = {};
 for (const u of uses.values()) for (const k of Object.keys(u)) cnt[k] = (cnt[k] || 0) + 1;
-console.log(`有用途紀錄的物品 ${uses.size} 件；各類（件數）：` +
-  Object.entries({ cur: "有專頁的貨幣", x: "NPC 兌換", q: "任務交付", l: "製作理符", g: "軍需品", w: "部隊工房", c: "收藏品" })
+// 「有用途」不含只有賣價的（s 不是用途）
+const useCount = [...uses.values()].filter((u) => Object.keys(u).some((k) => k !== "s")).length;
+console.log(`有用途紀錄的物品 ${useCount} 件（另有只有賣價的 ${uses.size - useCount} 件）；各類（件數）：` +
+  Object.entries({ cur: "有專頁的貨幣", x: "NPC 兌換", q: "任務交付", l: "製作理符", g: "軍需品", w: "部隊工房", c: "收藏品", s: "賣給商店" })
     .map(([k, t]) => `${t} ${cnt[k] || 0}`).join("、"));
 console.log(`明細：${Object.entries(stat).map(([k, v]) => `${k} ${v}`).join("、")}`);
 const topX = [...uses].filter(([, u]) => u.x).sort((a, b) => b[1].x.length - a[1].x.length).slice(0, 6);
 console.log(`兌換筆數最多：${topX.map(([id, u]) => `${items.get(id).name}(${u.x.length})`).join("、")}`);
 console.log(`${files.length} 片，合計 ${(raw / 1024).toFixed(0)}KB（gzip ${(gz / 1024).toFixed(0)}KB，最大一片 gzip ${(maxGz / 1024).toFixed(1)}KB）`);
 if (maxGz > 40 * 1024) { console.error(`✗ 有一片 gzip 超過 40KB——市場頁開一個彈窗就要載它，太重。調小 SHARD_BITS 或收斂 x 的筆數`); process.exit(1); }
+if ((cnt.s || 0) < 20000) { console.error(`✗ 有賣價的物品只有 ${cnt.s || 0} 件（2026-11 是 3 萬多）——Item.Price{Low} 可能沒讀到`); process.exit(1); }
 for (const k of ["x", "q", "l", "g", "w", "c"]) if (!cnt[k]) { console.error(`✗ ${k} 一筆都沒有——上游資料格式變了？`); process.exit(1); }
 
 if (!apply) { console.log("\n（dry-run，未寫入；加 --apply 才寫）"); process.exit(0); }
@@ -210,9 +236,9 @@ await writeFile(join(OUT, "_index.json"), JSON.stringify({
   schema: "item-uses-index",
   updated: new Date().toISOString().slice(0, 10),
   source: "data/npc-shops ＋ data/quests ＋ data/craft-leves.json ＋ data/gc-supply.json ＋ data/fc-workshop.json ＋ data/collectable-items.json ＋ data/currency-shop.json（scripts/build-item-uses.mjs）",
-  note: `片號 = itemId >> ${SHARD_BITS}；檔名 <片號>.json，只寫有資料的片。x=NPC 兌換的成本 [換到的 id, 換到幾個, 付幾個, 另付 [[id,數量]]|0, 地點 [[NPC, mapId, 地圖名, NPC 商店目錄有沒有(1/0), 只在季節活動期間(1/0)]], 其餘地點數, 收藏對應 {c,label,path,sk,k}|0]、q=任務交付 [任務 id, 名稱]、l=製作理符 [理符 id, 名稱, 職業, 等級, 數量]、g=軍需品 [職業序, 職業, 數量, 軍票]、w=部隊工房 [成品 id, 成品名, 類型, 總數]、c=可當收藏品交納、cur=有專頁的貨幣 ["gc", ?c=]／["gs", mgp|reputation]。配方用途不在這裡（市場頁自己有）。`,
+  note: `片號 = itemId >> ${SHARD_BITS}；檔名 <片號>.json，只寫有資料的片。x=NPC 兌換的成本 [換到的 id, 換到幾個, 付幾個, 另付 [[id,數量]]|0, 地點 [[NPC, mapId, 地圖名, NPC 商店目錄有沒有(1/0), 只在季節活動期間(1/0)]], 其餘地點數, 收藏對應 {c,label,path,sk,k}|0]、q=任務交付 [任務 id, 名稱]、l=製作理符 [理符 id, 名稱, 職業, 等級, 數量]、g=軍需品 [職業序, 職業, 數量, 軍票]、w=部隊工房 [成品 id, 成品名, 類型, 總數]、c=可當收藏品交納、s=賣給 NPC 商店的價格（客戶端 Item.Price{Low}，>0 才寫；不是用途，不算進 count）、cur=有專頁的貨幣 ["gc", ?c=]／["gs", mgp|reputation]。配方用途不在這裡（市場頁自己有）。`,
   shardBits: SHARD_BITS,
-  count: uses.size,
+  count: useCount,                     // 有用途的物品數（不含只有賣價的）
   shards: files.map((f) => ({ shard: f.shard, count: f.count, bytes: f.bytes })),
 }));
 console.log(`\n✓ data/item-uses/（${files.length} 片＋_index.json）`);

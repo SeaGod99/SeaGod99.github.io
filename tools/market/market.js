@@ -2611,10 +2611,19 @@
       groups.push(useGroup('收藏品交納', [useRow('這件可以收藏品的形式交納（採集或製作時要做成收藏品）')]));
     }
 
+    /* 賣給 NPC 商店（第五輪 ③，2026-11-24）：u.s＝客戶端 Item.Price{Low}（遊戲的賣出價格），只有 > 0 才有。
+       它不是「用途」——沒有用途時摘要照樣說「查不到」，後面再附賣價；這正是「能不能丟」那一刻要的數字。
+       沒有 u.s 時**什麼都不說**：沒有查證過「0＝賣不了」，不替遊戲下結論。 */
+    var sellHtml = '';
+    if (u.s) {
+      sellHtml = useGroup('賣給 NPC 商店', [useRow('每個 <b>' + u.s.toLocaleString() + '</b> 金幣',
+        '遊戲資料裡的賣出價格')]);
+    }
     var foot = '<div class="fold-row note">本站查的是：' + USES_CHECKED + '。沒收錄的用途：' + USES_NOT_COVERED + '。</div>';
+    var sellSum = u.s ? '賣商店 ' + u.s.toLocaleString() + ' 金幣' : '';
     el.innerHTML = foldHtml('uses', title,
-      parts.length ? esc(parts.join(' · ')) : '本站資料裡查不到',
-      (groups.length ? groups.join('') : '<div class="fold-row">' + USES_CHECKED + '都沒有用到它。</div>') + foot);
+      parts.length ? esc(parts.concat(sellSum ? [sellSum] : []).join(' · ')) : '本站資料裡查不到' + (sellSum ? ' · ' + sellSum : ''),
+      (groups.length ? groups.join('') : '<div class="fold-row">' + USES_CHECKED + '都沒有用到它。</div>') + sellHtml + foot);
     bindFolds(el);
   }
   function closeNodeModal() { nmCurrentId = null; $('#nodeModal').classList.remove('open'); }
