@@ -24,7 +24,15 @@
 //     幾乎全是往年季節活動的攤位（2019／2020／2021 年的瓦倫提昂家的女僕、南瓜餅乾 2018 的奇怪的店員…，
 //     付的是早就過期的活動貨幣）——平常根本不在那張圖上，列進「我人在這張圖，附近有哪些店」會叫人白跑。
 //     ⚠ 不能反過來把有店名的活動 NPC 也一併拿掉：`festival` 不等於季節活動，渴望灣的梅蘇艾東克（宇宙信用點數
-//     交易）也在活動圖層上，而資料裡分不出哪些圖層是常駐的。有店名的維持原樣（45 個，見第四輪路線圖候選 8）。
+//     交易）也在活動圖層上。有店名的照收，但標出來（下一段）。
+//
+// ── 季節活動期間才出現的 NPC：`ev: 1`（2026-11-24，第四輪 §5-8，站主決定「標示、不拿掉」）──────────
+// 判別只用台服官方字串，不自己列名單。NPC 在活動圖層上，而且下列任一成立：
+//   · 它的官方頭銜（客戶端 ENpcResident.Title）含「季節」（季節商店／季節商鋪，34 個）；
+//   · 同一個活動圖層上有任何 NPC 的頭銜含「季節」（可疑的占卜師沒有頭銜，但與瓦倫提昂家的女僕同圖層）；
+//   · 它開的店的官方店名含「季節活動」（金碟遊樂園的特別紀念品兌換員：沒頭銜、圖層上也沒別人，店名是「季節活動報酬1」）。
+// 渴望灣的梅蘇艾東克／歌吉斯（頭銜「貿易人員」「購物&修理」，宇宙探索常駐）三條都不成立，不標。
+// 前端在卡片上標「季節活動期間限定」並連到季節活動商店頁；同一張圖裡排在常駐 NPC 後面。
 //
 // ── 品項只存 id 與價格，不存名字 ───────────────────────────────────
 // 39,000 筆交易若每筆都帶物品名，檔案會爆。前端本來就有 `items-market.json`
@@ -46,6 +54,7 @@ import { fileURLToPath } from "node:url";
 import { gzipSync } from "node:zlib";
 import { loadShops, describeShops } from "./lib/shops.mjs";
 import { isTw } from "./lib/tw-text.mjs";
+import { loadTcSheet } from "./lib/tc-datamining.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const DATA = join(ROOT, "data");
@@ -66,6 +75,11 @@ async function main() {
   // mapId → NPC id → { name, x, y, shops: [] }
   const byMap = new Map();
   const festival = await loadFestivalNpcs();
+  // 季節活動判別（見檔頭）：官方頭銜含「季節」的 NPC 所在的活動圖層
+  const npcTitle = new Map((await loadTcSheet("ENpcResident", { offline, require: ["Title"] })).map((r) => [r.id, r.Title || ""]));
+  const seasonalLayer = new Set();
+  for (const [id, f] of festival) if (/季節/.test(npcTitle.get(id) || "")) seasonalLayer.add(f);
+  if (seasonalLayer.size < 50) throw new Error(`頭銜含「季節」的活動圖層只有 ${seasonalLayer.size} 個（2026-11 是 97）——ENpcResident.Title 可能位移了`);
   const stat = { shops: 0, anon: 0, anonMerged: 0, anonFestival: 0, noNpc: 0, noCoord: 0, trades: 0, dropTrade: 0 };
 
   /* 代價依筆數排序（同數依 id），無名店的標示與合併鍵都用它 */
@@ -137,13 +151,17 @@ async function main() {
   for (const m of byMap.values()) for (const npc of m.values()) {
     for (const s of npc.s) if (!s.n) { const pay = payOf(s.tr); s.p = pay.slice(0, 2); s.pn = pay.length; delete s._k; }
     npc.s.sort((a, b) => (a.n ? 0 : 1) - (b.n ? 0 : 1));
+    const f = festival.get(npc.id);
+    if (f && (seasonalLayer.has(f) || /季節/.test(npcTitle.get(npc.id) || "") || npc.s.some((s) => /季節活動/.test(s.n || "")))) { npc.ev = 1; stat.ev = (stat.ev || 0) + 1; }
+    else if (f) (stat.festivalKept ||= []).push(`${npc.n}（${npcTitle.get(npc.id) || "無頭銜"}）`);
   }
 
   const out = [];
   for (const [mid, npcMap] of byMap) {
     const map = mapById.get(mid);
     if (!map || !map.name) continue;                 // 地名查不到就不收（鐵則）
-    const npcs = [...npcMap.values()].sort((a, b) => a.n.localeCompare(b.n, "zh-Hant"));
+    // 季節活動期間才出現的排在常駐的後面（「我人在這張圖，附近有哪些店」先看常駐的）
+    const npcs = [...npcMap.values()].sort((a, b) => (a.ev || 0) - (b.ev || 0) || a.n.localeCompare(b.n, "zh-Hant"));
     out.push({
       mapId: mid,
       map: map.name,
@@ -177,6 +195,8 @@ async function main() {
   console.log(`  其中客戶端沒有店名的 ${stat.anon} 間（同一位 NPC 名下代價相同的合併了 ${stat.anonMerged} 次；` +
     `NPC 在活動圖層而略過的 ${stat.anonFestival} 間）`);
   console.log(`  略過：無 NPC ${stat.noNpc}、NPC 無座標 ${stat.noCoord}`);
+  console.log(`  標「季節活動期間限定」的 NPC ${stat.ev || 0} 個；在活動圖層上但不標的 ${(stat.festivalKept || []).length} 個：` +
+    [...new Set(stat.festivalKept || [])].join("、"));
   console.log(`  交易 ${stat.trades} 筆，其中有品項無台服名而略過 ${stat.dropTrade} 筆`);
   console.log(`  合計 gzip ${(totalGz / 1024).toFixed(0)}KB；索引 ${(gzipSync(JSON.stringify(index)).length / 1024).toFixed(1)}KB；最大一張 ${biggest.map} ${(biggest.gz / 1024).toFixed(0)}KB`);
   console.log(`
@@ -216,9 +236,9 @@ async function loadFestivalNpcs() {
     await writeFile(cache, t);
     raw = JSON.parse(t);
   }
-  const set = new Set(Object.entries(raw).filter(([, v]) => v && v.festival).map(([id]) => Number(id)));
-  if (set.size < 1000) throw new Error(`Teamcraft npcs.json 的活動 NPC 只有 ${set.size} 個（2026-11 是 4,154）——欄位可能改名了`);
-  return set;
+  const map = new Map(Object.entries(raw).filter(([, v]) => v && v.festival).map(([id, v]) => [Number(id), v.festival]));
+  if (map.size < 1000) throw new Error(`Teamcraft npcs.json 的活動 NPC 只有 ${map.size} 個（2026-11 是 4,154）——欄位可能改名了`);
+  return map;   // NPC id → 活動圖層 id
 }
 
 main().catch((e) => { console.error(e); process.exit(1); });

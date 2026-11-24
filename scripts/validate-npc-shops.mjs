@@ -96,6 +96,26 @@ const anon = all.filter(([, , s]) => !s.n);
     push("  活動圖層上的 NPC 沒有無名店（本機有 Teamcraft npcs.json 快取才驗）", fest.length === 0,
       fest.length ? fest.slice(0, 3).map(([sh, n]) => `${n.n}@${sh.map}`).join("、") : `有店名的活動 NPC 店 ${festNamed} 間維持原樣（候選 8）`);
   } else push("  活動圖層上的 NPC 沒有無名店", true, "沒有 out_data/cache/tc-npcs.json，略過（CI）");
+
+  // ⑤ 季節活動期間才出現的 NPC（ev，第四輪 §5-8）：依官方頭銜／店名判別，宇宙探索的常駐 NPC 不標
+  const evs = SHARDS.flatMap((sh) => sh.npcs.filter((n) => n.ev).map((n) => [sh, n]));
+  const byName = (name, map) => SHARDS.filter((sh) => sh.map === map).flatMap((sh) => sh.npcs.filter((n) => n.n === name));
+  push("⑤ 季節活動期間限定的 NPC 有標（30–60 個）", evs.length >= 30 && evs.length <= 60, `${evs.length} 個`);
+  push("  案例：星芒祭執行委員（頭銜「季節商店」）有標、渴望灣的梅蘇艾東克／歌吉斯（宇宙探索常駐）不標",
+    byName("星芒祭執行委員", "格里達尼亞舊街").length > 0 && byName("星芒祭執行委員", "格里達尼亞舊街").every((n) => n.ev) &&
+    byName("梅蘇艾東克", "渴望灣").length > 0 && [...byName("梅蘇艾東克", "渴望灣"), ...byName("歌吉斯", "渴望灣")].every((n) => !n.ev));
+  push("  案例：特別紀念品兌換員（沒頭銜，店名「季節活動報酬」）有標", byName("特別紀念品兌換員", "金碟遊樂園").length > 0 &&
+    byName("特別紀念品兌換員", "金碟遊樂園").every((n) => n.ev));
+  push("  有標的 NPC 沒有無名店（無名的活動攤位整間不收）", evs.every(([, n]) => n.s.every((s) => s.n)));
+  const evOrder = SHARDS.filter((sh) => { const i = sh.npcs.findIndex((n) => n.ev); return i >= 0 && sh.npcs.slice(i).some((n) => !n.ev); });
+  push("  同一張圖裡季節活動 NPC 排在常駐的後面", evOrder.length === 0, evOrder.map((sh) => sh.map).join("、"));
+  if (existsSync(cache)) {
+    const tc = JSON.parse(readFileSync(cache, "utf8"));
+    const notFest = evs.filter(([, n]) => !tc[n.id]?.festival);
+    const kept = new Set(SHARDS.flatMap((sh) => sh.npcs.filter((n) => !n.ev && tc[n.id]?.festival).map((n) => n.n)));
+    push("  有標的都在活動圖層上；在活動圖層上卻不標的只有渴望灣那兩位（本機有快取才驗）", notFest.length === 0 &&
+      [...kept].every((n) => n === "梅蘇艾東克" || n === "歌吉斯"), [...kept].join("、") || "—");
+  }
 }
 
 // ── 頁面（jsdom）─────────────────────────────────────────
@@ -128,6 +148,20 @@ const cardOf = (doc, name) => [...doc.querySelectorAll(".npc-card")].find((c) =>
     /季節活動期間才出現的 NPC/.test(doc.querySelector(".info-note").textContent) && !!doc.querySelector('.info-note a[href="../seasonal-shop/"]'));
   push("③ 頁面：往年活動的瓦倫提昂家的女僕沒有無名店（只剩有店名的那間）", !cardOf(doc, "瓦倫提昂家的女僕") ||
     [...doc.querySelectorAll(".npc-card")].filter((c) => c.querySelector(".npc-name").textContent === "瓦倫提昂家的女僕").every((c) => !c.querySelector(".shop-h.anon")));
+}
+
+{
+  const { doc } = await boot("?m=" + mapIdOf("格里達尼亞舊街"));
+  const cards = [...doc.querySelectorAll(".npc-card")];
+  const evCards = cards.filter((c) => c.querySelector("a.ev-tag"));
+  const star = cardOf(doc, "星芒祭執行委員");
+  push("⑤ 頁面：季節活動 NPC 卡片有「季節活動期間限定」、連到季節活動商店", star && star.querySelector('a.ev-tag[href="../seasonal-shop/"]')?.textContent === "季節活動期間限定");
+  push("  常駐 NPC 沒有標籤、季節活動的卡片全排在後面", !cardOf(doc, "喬納森").querySelector(".ev-tag") && evCards.length > 0 &&
+    cards.indexOf(evCards[0]) === cards.length - evCards.length, `${cards.length} 張、標了 ${evCards.length} 張`);
+  push("  狀態列講出有幾個只在季節活動期間出現", new RegExp(`其中 ${evCards.length} 個只在季節活動期間出現`).test(doc.getElementById("statusLine").textContent),
+    doc.getElementById("statusLine").textContent);
+  const { doc: d2 } = await boot("?m=" + mapIdOf("渴望灣"));
+  push("  渴望灣（宇宙探索常駐）一張標籤都沒有", d2.querySelectorAll(".npc-card").length > 0 && !d2.querySelector(".ev-tag"));
 }
 
 {

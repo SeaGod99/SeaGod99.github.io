@@ -38,6 +38,12 @@
     .npc-name { font-size: 0.95rem; font-weight: 700; color: var(--text); }
     .npc-at { font-size: 0.76rem; color: var(--text-muted); }
     .npc-count { margin-left: auto; font-size: 0.74rem; color: var(--text-muted); }
+    /* 季節活動期間才出現的 NPC（資料的 ev，依台服官方頭銜判別，第四輪 §5-8） */
+    .ev-tag {
+      font-size: 0.68rem; padding: 0.08rem 0.4rem; border-radius: 4px; text-decoration: none; white-space: nowrap;
+      color: var(--purple); background: var(--purple-dim); border: 1px solid var(--purple-dim);
+    }
+    .ev-tag:hover { border-color: var(--purple); }
     .coord-btn {
       font: inherit; font-size: 0.7rem; padding: 0.12rem 0.36rem;
       border: 1px solid var(--border); border-radius: 4px; background: var(--bg-surface);
@@ -78,6 +84,7 @@
     .site-footer a { color: var(--text-dim); }
     @media (pointer: coarse) {
       select.sel, input.search, .coord-btn, .more-btn { min-height: 44px; }
+      .ev-tag { display: inline-flex; align-items: center; min-height: 44px; padding: 0 0.6rem; }
       .npc-head { min-height: 44px; }
       /* 交易列一行接一行，**不能用透明擴張層**——44px 高的 ::after 會蓋到上下兩列
          （同金碟頁的預算格，知識庫 §4.59）。改用真實行高把每列撐到 44px。 */
@@ -106,7 +113,7 @@
 <p class="info-note">
   店名與 NPC 名皆為台服官方名，座標取自本站的 NPC 資料庫。只收「NPC 有繁中名與座標」的商店——查不到的不列，<b>不代表遊戲裡沒有</b>。<br>
   有些店在台服客戶端裡<b>沒有店名</b>（多半是對 NPC 說話後從對話選單開的兌換，或一講話就直接開的店），標成灰字「無店名・付 ○○」——那不是店名，是用它收的代價標示，讓同一位 NPC 的幾間店分得開。<br>
-  <b>季節活動期間才出現的 NPC</b> 若店沒有店名就不列（多半是往年活動的攤位，平常不在那張圖上）；活動商品請看<a href="../seasonal-shop/">季節活動商店</a>。<br>
+  <b>季節活動期間才出現的 NPC</b> 標「季節活動期間限定」、排在常駐 NPC 後面（依台服官方頭銜「季節商店」與店名判別）；這類 NPC 的店若沒有店名就不列（多半是往年活動的攤位）。活動商品請看<a href="../seasonal-shop/">季節活動商店</a>。<br>
   每張地圖的資料<b>分開存放，選了才下載</b>（多數不到 10KB），不是整份載入。<br>
   價目為遊戲內固定價，不含市場板。要比較「NPC 買 vs 市場買」哪個划算，市場查價頁的製作計畫已經會自動取兩者較低者並標出 NPC 來源。<br>
   <b>刻意不做「NPC 套利掃描」</b>（哪間店的東西拿去市場板轉賣有利可圖）：那會鼓勵洗版式掛單，而且價差幾乎都被交易稅吃掉。
@@ -198,17 +205,19 @@ function sgtFold(s) { return window.SGT_fold ? window.SGT_fold(s) : String(s == 
     if (!data) { wrap.innerHTML = '<div class="loading err">這張地圖的資料載入失敗</div>'; return; }
 
     var html = [];
-    var nShown = 0, nShops = 0;
+    var nShown = 0, nShops = 0, nEv = 0;
     data.npcs.forEach(function (npc) {
       var shops = npc.s.filter(function (sh) { return matches(npc, sh, sh.tr); });
       if (!shops.length) return;
       nShown++; nShops += shops.length;
+      if (npc.ev) nEv++;
       var flag = '/coord ' + npc.x.toFixed(1) + ' ' + npc.y.toFixed(1) + ' ' + data.map;
       html.push('<div class="npc-card">' +
         '<div class="npc-head" data-npc="' + npc.id + '">' +
           '<span class="npc-name">' + esc(npc.n) + '</span>' +
           '<span class="npc-at">' + esc(data.map) + ' (' + npc.x + ', ' + npc.y + ')</span>' +
           '<button class="coord-btn" data-flag="' + esc(flag) + '" aria-label="複製座標指令">&#x1F4CB;</button>' +
+          (npc.ev ? '<a class="ev-tag" href="../seasonal-shop/" title="這位 NPC 只在季節活動期間出現；活動商品可到季節活動商店查">季節活動期間限定</a>' : '') +
           '<span class="npc-count">' + shops.length + ' 間店</span>' +
         '</div>' +
         '<div class="npc-body">' + shops.map(function (sh) {
@@ -226,7 +235,8 @@ function sgtFold(s) { return window.SGT_fold ? window.SGT_fold(s) : String(s == 
       '</div>');
     });
 
-    status.textContent = nShown + ' 個店家 NPC、' + nShops + ' 間店' + (q ? '（符合「' + q + '」）' : '');
+    status.textContent = nShown + ' 個店家 NPC、' + nShops + ' 間店' + (q ? '（符合「' + q + '」）' : '') +
+      (nEv ? '；其中 ' + nEv + ' 個只在季節活動期間出現（排在後面）' : '');
     wrap.innerHTML = html.length ? html.join('') : '<div class="loading">這張地圖沒有符合的店家</div>';
   }
 

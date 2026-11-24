@@ -49,6 +49,14 @@ const VISIBLE = DB.data.filter((x) => x.name && (pnum(x.patch) == null || pnum(x
   const pod = d.filter((x) => /^死者宮殿 地下/.test(x.name || '') && x.patch === '3.35');
   push('「後來才加、門檻較低」的版號保留（死者宮殿 3.35 只要新生）', pod.length >= 5 && pod.every((x) => x.expansionId === 0),
     pod.length + ' 筆');
+  /* 「資料片」兩種定義只在這 2 個副本不同（2026-11-24 量，529 個裡）：地圖所屬（TerritoryType.ExVersion，patch-dungeon-add-missing 用）
+     與所需資料片（RequiredExVersion，patch-dungeon-expansion 用）。不論統一成哪一種都會把其中一個翻成反直覺的分組，
+     站主決定維持現狀（第四輪 §5-7）：兩支都只填空的、不覆蓋。這裡釘住，防日後有人把其中一支改回覆蓋。 */
+  const byId = new Map(d.map((x) => [x.id, x]));
+  const pin = [[178, '死者宮殿 地下41～50層', 0, '地圖屬蒼天、所需新生'], [1042, '幻 青龍征魂戰', 5, '地圖屬黃金、所需新生']]
+    .map(([id, name, ex, why]) => { const x = byId.get(id); return { ok: x && x.name === name && x.expansionId === ex, msg: `${name}（${why}）→ ${x ? x.expansion : '不在'}` }; });
+  push('兩種「資料片」定義不同的 2 個副本維持直覺分組（死者宮殿 41～50 層＝新生、幻 青龍征魂戰＝黃金）', pin.every((p) => p.ok),
+    pin.map((p) => p.msg).join('；'));
   // 名稱逐字等於台服客戶端（有快取才驗；CI 沒有 out_data/cache 就略過）
   const cfcCsv = join(ROOT, 'out_data/cache/tc-datamining/ContentFinderCondition.csv');
   if (existsSync(cfcCsv)) {
