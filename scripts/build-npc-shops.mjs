@@ -27,7 +27,7 @@
 //     交易）也在活動圖層上。有店名的照收，但標出來（下一段）。
 //
 // ── 季節活動期間才出現的 NPC：`ev: 1`（2026-11-24，第四輪 §5-8，站主決定「標示、不拿掉」）──────────
-// 判別只用台服官方字串，不自己列名單。NPC 在活動圖層上，而且下列任一成立：
+// 判別只用台服官方字串，不自己列名單（規則本體在 scripts/lib/seasonal-npcs.mjs，與 build-item-uses 共用）。NPC 在活動圖層上，而且下列任一成立：
 //   · 它的官方頭銜（客戶端 ENpcResident.Title）含「季節」（季節商店／季節商鋪，34 個）；
 //   · 同一個活動圖層上有任何 NPC 的頭銜含「季節」（可疑的占卜師沒有頭銜，但與瓦倫提昂家的女僕同圖層）；
 //   · 它開的店的官方店名含「季節活動」（金碟遊樂園的特別紀念品兌換員：沒頭銜、圖層上也沒別人，店名是「季節活動報酬1」）。
@@ -54,7 +54,7 @@ import { fileURLToPath } from "node:url";
 import { gzipSync } from "node:zlib";
 import { loadShops, describeShops } from "./lib/shops.mjs";
 import { isTw } from "./lib/tw-text.mjs";
-import { loadTcSheet } from "./lib/tc-datamining.mjs";
+import { loadSeasonalNpcs } from "./lib/seasonal-npcs.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const DATA = join(ROOT, "data");
@@ -74,12 +74,9 @@ async function main() {
 
   // mapId → NPC id → { name, x, y, shops: [] }
   const byMap = new Map();
-  const festival = await loadFestivalNpcs();
-  // 季節活動判別（見檔頭）：官方頭銜含「季節」的 NPC 所在的活動圖層
-  const npcTitle = new Map((await loadTcSheet("ENpcResident", { offline, require: ["Title"] })).map((r) => [r.id, r.Title || ""]));
-  const seasonalLayer = new Set();
-  for (const [id, f] of festival) if (/季節/.test(npcTitle.get(id) || "")) seasonalLayer.add(f);
-  if (seasonalLayer.size < 50) throw new Error(`頭銜含「季節」的活動圖層只有 ${seasonalLayer.size} 個（2026-11 是 97）——ENpcResident.Title 可能位移了`);
+  // 活動圖層與季節活動判別：scripts/lib/seasonal-npcs.mjs（與 build-item-uses.mjs 共用同一份規則，見檔頭）
+  const SN = await loadSeasonalNpcs({ root: ROOT, offline, shops: S });
+  const festival = SN.festival;
   const stat = { shops: 0, anon: 0, anonMerged: 0, anonFestival: 0, noNpc: 0, noCoord: 0, trades: 0, dropTrade: 0 };
 
   /* 代價依筆數排序（同數依 id），無名店的標示與合併鍵都用它 */
@@ -151,9 +148,8 @@ async function main() {
   for (const m of byMap.values()) for (const npc of m.values()) {
     for (const s of npc.s) if (!s.n) { const pay = payOf(s.tr); s.p = pay.slice(0, 2); s.pn = pay.length; delete s._k; }
     npc.s.sort((a, b) => (a.n ? 0 : 1) - (b.n ? 0 : 1));
-    const f = festival.get(npc.id);
-    if (f && (seasonalLayer.has(f) || /季節/.test(npcTitle.get(npc.id) || "") || npc.s.some((s) => /季節活動/.test(s.n || "")))) { npc.ev = 1; stat.ev = (stat.ev || 0) + 1; }
-    else if (f) (stat.festivalKept ||= []).push(`${npc.n}（${npcTitle.get(npc.id) || "無頭銜"}）`);
+    if (SN.isSeasonal(npc.id)) { npc.ev = 1; stat.ev = (stat.ev || 0) + 1; }
+    else if (festival.has(npc.id)) (stat.festivalKept ||= []).push(`${npc.n}（${SN.title(npc.id) || "無頭銜"}）`);
   }
 
   const out = [];
@@ -218,27 +214,6 @@ async function main() {
   console.log(`
 ✓ data/npc-shops/（${files.length} 張圖＋_index.json）`);
   console.log("  這個目錄刻意不進 minify-data.mjs——它本來就是壓過的形狀");
-}
-
-/* Teamcraft npcs.json 裡帶 `festival` 的 NPC id（活動圖層才出現的 NPC）。
-   那份 17MB，只取這一欄；快取在 out_data/cache/tc-npcs.json（不進 git）。--offline 而快取不在就中止——
-   安靜地當成「沒有活動 NPC」會把 110 個往年活動攤位放進目錄。 */
-async function loadFestivalNpcs() {
-  const cache = join(ROOT, "out_data/cache/tc-npcs.json");
-  let raw;
-  if (existsSync(cache)) raw = JSON.parse(await readFile(cache, "utf8"));
-  else if (offline) throw new Error(`--offline 但找不到 ${cache}（先不帶 --offline 跑一次）`);
-  else {
-    const r = await fetch("https://raw.githubusercontent.com/ffxiv-teamcraft/ffxiv-teamcraft/staging/libs/data/src/lib/json/npcs.json");
-    if (!r.ok) throw new Error(`Teamcraft npcs.json HTTP ${r.status}`);
-    const t = await r.text();
-    await mkdir(join(ROOT, "out_data/cache"), { recursive: true });
-    await writeFile(cache, t);
-    raw = JSON.parse(t);
-  }
-  const map = new Map(Object.entries(raw).filter(([, v]) => v && v.festival).map(([id, v]) => [Number(id), v.festival]));
-  if (map.size < 1000) throw new Error(`Teamcraft npcs.json 的活動 NPC 只有 ${map.size} 個（2026-11 是 4,154）——欄位可能改名了`);
-  return map;   // NPC id → 活動圖層 id
 }
 
 main().catch((e) => { console.error(e); process.exit(1); });

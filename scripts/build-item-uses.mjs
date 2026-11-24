@@ -32,6 +32,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { isTw, isTranslated } from "./lib/tw-text.mjs";
 import { loadShops } from "./lib/shops.mjs";
+import { loadSeasonalNpcs } from "./lib/seasonal-npcs.mjs";
 import { loadCollectionOwners, ownField } from "./lib/collection-owners.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -71,6 +72,7 @@ for (const [id, link] of curLink) { U(id).cur = link; bump("cur"); }
 const owner = await loadCollectionOwners({ root: ROOT, offline });
 {
   const S = await loadShops({ root: ROOT, offline });
+  const SN = await loadSeasonalNpcs({ root: ROOT, offline, shops: S });
   // 目錄裡「這張圖的這位 NPC 收這件當代價」的集合，用來標地點可不可以連
   const inCatalog = new Set();
   for (const m of (await rd("npc-shops/_index.json")).maps) {
@@ -97,7 +99,10 @@ const owner = await loadCollectionOwners({ root: ROOT, offline });
           if (!a) { a = { costId: c.itemId, give: g.itemId, gAmt, amt: c.amount, others, places: new Map() }; agg.set(key, a); }
           for (const n of npcs) {
             const pk = n.name + "@" + n.at.mapId;
-            if (!a.places.has(pk)) a.places.set(pk, [n.name, n.at.mapId, n.at.mapName, inCatalog.has(`${n.at.mapId}|${n.name}|${c.itemId}`) ? 1 : 0]);
+            // 第 5 欄＝只在季節活動期間出現（規則與 NPC 商店目錄同一份）。同名同圖的 NPC 會併成一處：全部都是季節活動才標 1
+            const ev = SN.isSeasonal(n.id) ? 1 : 0;
+            if (!a.places.has(pk)) a.places.set(pk, [n.name, n.at.mapId, n.at.mapName, inCatalog.has(`${n.at.mapId}|${n.name}|${c.itemId}`) ? 1 : 0, ev]);
+            else if (!ev) a.places.get(pk)[4] = 0;
           }
         }
       }
@@ -106,12 +111,13 @@ const owner = await loadCollectionOwners({ root: ROOT, offline });
   let linked = 0, unlinked = 0;
   for (const a of agg.values()) {
     if (!twItem(a.give) || !twItem(a.costId) || a.others.some(([id]) => id !== 1 && !twItem(id))) { bump("x 無台服名略過"); continue; }
-    // 目錄連得到的地點排前面，再依 mapId／NPC 名（固定順序）
-    const pl = [...a.places.values()].sort((p, q) => q[3] - p[3] || p[1] - q[1] || (p[0] < q[0] ? -1 : 1));
-    for (const p of pl.slice(0, MAX_PLACES)) p[3] ? linked++ : unlinked++;
+    // 目錄連得到的地點排前面，同樣連得到的常駐在季節活動前面，再依 mapId／NPC 名（固定順序）
+    const pl = [...a.places.values()].sort((p, q) => q[3] - p[3] || p[4] - q[4] || p[1] - q[1] || (p[0] < q[0] ? -1 : 1));
+    for (const p of pl.slice(0, MAX_PLACES)) { p[3] ? linked++ : unlinked++; if (p[4]) bump("x 地點只在季節活動期間"); }
+    if (pl.every((p) => p[4])) bump("x 筆只在季節活動期間換得到");
     const own = owner.get(a.give);
     // [換到的物品 id, 換到幾個, 這件要付幾個, 另外要付的 [[id, 數量]…]（沒有就 0）,
-    //  地點 [[NPC, mapId, 地圖名, 目錄有沒有(1/0)]…], 其餘地點數, 收藏對應 own（不是收藏品就 0）]
+    //  地點 [[NPC, mapId, 地圖名, 目錄有沒有(1/0), 只在季節活動期間(1/0)]…], 其餘地點數, 收藏對應 own（不是收藏品就 0）]
     push(a.costId, "x", [a.give, a.gAmt, a.amt, a.others.length ? a.others : 0, pl.slice(0, MAX_PLACES), Math.max(0, pl.length - MAX_PLACES), own ? ownField(own) : 0]);
     bump("x 筆");
     if (own) bump("x 收藏品筆");
@@ -204,7 +210,7 @@ await writeFile(join(OUT, "_index.json"), JSON.stringify({
   schema: "item-uses-index",
   updated: new Date().toISOString().slice(0, 10),
   source: "data/npc-shops ＋ data/quests ＋ data/craft-leves.json ＋ data/gc-supply.json ＋ data/fc-workshop.json ＋ data/collectable-items.json ＋ data/currency-shop.json（scripts/build-item-uses.mjs）",
-  note: `片號 = itemId >> ${SHARD_BITS}；檔名 <片號>.json，只寫有資料的片。x=NPC 兌換的成本 [換到的 id, 換到幾個, 付幾個, 另付 [[id,數量]]|0, 地點 [[NPC, mapId, 地圖名, NPC 商店目錄有沒有(1/0)]], 其餘地點數, 收藏對應 {c,label,path,sk,k}|0]、q=任務交付 [任務 id, 名稱]、l=製作理符 [理符 id, 名稱, 職業, 等級, 數量]、g=軍需品 [職業序, 職業, 數量, 軍票]、w=部隊工房 [成品 id, 成品名, 類型, 總數]、c=可當收藏品交納、cur=有專頁的貨幣 ["gc", ?c=]／["gs", mgp|reputation]。配方用途不在這裡（市場頁自己有）。`,
+  note: `片號 = itemId >> ${SHARD_BITS}；檔名 <片號>.json，只寫有資料的片。x=NPC 兌換的成本 [換到的 id, 換到幾個, 付幾個, 另付 [[id,數量]]|0, 地點 [[NPC, mapId, 地圖名, NPC 商店目錄有沒有(1/0), 只在季節活動期間(1/0)]], 其餘地點數, 收藏對應 {c,label,path,sk,k}|0]、q=任務交付 [任務 id, 名稱]、l=製作理符 [理符 id, 名稱, 職業, 等級, 數量]、g=軍需品 [職業序, 職業, 數量, 軍票]、w=部隊工房 [成品 id, 成品名, 類型, 總數]、c=可當收藏品交納、cur=有專頁的貨幣 ["gc", ?c=]／["gs", mgp|reputation]。配方用途不在這裡（市場頁自己有）。`,
   shardBits: SHARD_BITS,
   count: uses.size,
   shards: files.map((f) => ({ shard: f.shard, count: f.count, bytes: f.bytes })),

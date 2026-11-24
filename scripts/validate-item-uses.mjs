@@ -160,6 +160,27 @@ const JS = read("tools/market/market.js");
   const choc = USES.get(28650)?.u;
   push("案例：戀人巧克力2021（往年活動攤位的無名店）→ 地點全標「目錄沒有」", choc && choc.x.length > 30 && choc.x.every((r) => r[4].every((p) => p[3] === 0)),
     choc ? `${choc.x.length} 筆` : "沒有這件的兌換資料");
+
+  /* ⑦ 地點第 5 欄＝只在季節活動期間出現（第五輪 ①，規則在 scripts/lib/seasonal-npcs.mjs，與 NPC 商店目錄的 ev 同一份）。
+     兩邊要一致：目錄卡片標了「季節活動期間限定」的 NPC，用途區的地點也要標；目錄沒標的不能標。 */
+  const allPl = [...USES.values()].flatMap(({ u }) => (u.x || []).flatMap((r) => r[4]));
+  push("⑦ 每處兌換地點都有第 5 欄（季節活動 1／0）", allPl.length > 10000 && allPl.every((p) => p.length === 5 && (p[4] === 0 || p[4] === 1)),
+    `${allPl.filter((p) => p[4]).length}／${allPl.length} 處是季節活動`);
+  const catEv = new Map();   // `${mapId}|${NPC 名}` → 目錄裡同名同圖的 NPC 是不是全都 ev
+  for (const m of rj("data/npc-shops/_index.json").maps) for (const n of rj(`data/npc-shops/${m.mapId}.json`).npcs) {
+    const k = `${m.mapId}|${n.n}`; catEv.set(k, (catEv.get(k) ?? true) && !!n.ev);
+  }
+  const mismatch = allPl.filter((p) => p[3] === 1 && catEv.has(`${p[1]}|${p[0]}`) && catEv.get(`${p[1]}|${p[0]}`) !== !!p[4]);
+  push("  目錄收了的地點：季節活動旗標與目錄卡片的「季節活動期間限定」一致", mismatch.length === 0,
+    mismatch.slice(0, 3).map((p) => `${p[0]}@${p[2]}:${p[4]}`).join("、") || `${allPl.filter((p) => p[3] === 1 && p[4]).length} 處兩邊都標`);
+  const offNotEv = allPl.filter((p) => p[3] === 0 && !p[4]);
+  push("  目錄沒收的地點全是季節活動的無名攤位（目錄只擋這一種）", offNotEv.length === 0, offNotEv.slice(0, 3).map((p) => `${p[0]}@${p[2]}`).join("、"));
+  push("  案例：戀人巧克力2021 的地點全標季節活動、成就幣的喬納森不標", choc.x.every((r) => r[4].every((p) => p[4] === 1)) &&
+    cert.x.every((r) => r[4].every((p) => p[0] !== "喬納森" || p[4] === 0)));
+  const rising = USES.get(23381)?.u;   // 新生祭票據2019：市區軍事演習的宣傳員（目錄有收、有店名、季節活動）
+  push("  案例：新生祭票據2019 → 市區軍事演習的宣傳員「目錄有」且標季節活動", rising && rising.x.some((r) => r[4].some((p) => p[0] === "市區軍事演習的宣傳員" && p[3] === 1 && p[4] === 1)));
+  const evOrder = [...USES.values()].every(({ u }) => (u.x || []).every((r) => r[4].every((p, i, a) => i === 0 || a[i - 1][3] > p[3] || a[i - 1][4] <= p[4])));
+  push("  同樣連得到目錄的地點裡，常駐的排在季節活動前面", evOrder);
 }
 
 // ── 頁面（jsdom）─────────────────────────────────────────
@@ -363,6 +384,23 @@ if (inMissingShard) {
     vis > 30 && f && f.querySelectorAll(".use-cell").length === vis && !/到 NPC 商店目錄搜/.test(f.textContent) &&
     !f.querySelector('a.use-link[href^="../npc-shops/"]') && /瓦倫提昂家的女僕（格里達尼亞舊街）/.test(f.textContent),
     f ? `${f.querySelectorAll(".use-cell").length}／${vis} 筆` : "沒有用途區");
+  const wh = [...f.querySelectorAll(".use-where")];
+  push("⑦ 頁面：往年活動攤位的地點都註明「季節活動期間」", wh.length > 0 && wh.every((w) => w.querySelectorAll(".use-ev").length >= 1) &&
+    /季節活動期間/.test(wh[0].textContent), wh[0] && wh[0].textContent);
+  const { doc: d2 } = await boot("#item=23381");
+  const w2 = usesFold(d2, "#dUses")?.querySelector(".use-where");
+  const link = w2 && [...w2.querySelectorAll('a.use-link[href^="../npc-shops/"]')].find((a) => /市區軍事演習的宣傳員/.test(a.textContent));
+  push("  目錄有收的季節活動 NPC：照樣連到目錄；一組全是季節活動時只在開頭標一次", !!link && w2.querySelectorAll(".use-ev").length === 1 &&
+    w2.querySelector(".use-ev").classList.contains("use-ev-all"), w2 && w2.textContent);
+  // 混著常駐與季節活動的一組：逐個標（只標季節活動那幾處）
+  const mixed = [...USES.entries()].map(([id, { u }]) => [id, (u.x || []).find((r) => r[4].some((p) => p[4]) && r[4].some((p) => !p[4]))]).find(([, r]) => r);
+  if (mixed) {
+    const { doc: d4 } = await boot("#item=" + mixed[0]);
+    const evs = [...(usesFold(d4, "#dUses")?.querySelectorAll(".use-where .use-ev") || [])];
+    push("  混著常駐的一組：只在季節活動那幾處後面標", evs.length > 0 && evs.every((e) => !e.classList.contains("use-ev-all")), `#${mixed[0]}：${evs.length} 個`);
+  } else push("  混著常駐的一組：只在季節活動那幾處後面標", true, "目前資料沒有這種組合，略過");
+  const { doc: d3 } = await boot("#item=21172");
+  push("  常駐 NPC（成就幣的喬納森）不註明", !usesFold(d3, "#dUses")?.querySelector(".use-ev"));
 }
 
 // ── 報告 ──

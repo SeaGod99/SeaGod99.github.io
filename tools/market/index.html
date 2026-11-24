@@ -562,6 +562,9 @@
     /* 兌換：地點每組講一次，組內多欄格（寬螢幕多欄、手機一欄） */
     .use-where { font-size: 0.78rem; color: var(--text-dim); margin: 8px 0 4px; }
     .use-where:first-of-type { margin-top: 0; }
+    /* 只在季節活動期間出現的 NPC（用途層地點的第 5 欄，與 NPC 商店目錄的「季節活動期間限定」同一份規則） */
+    .use-ev { font-size: 0.68rem; color: var(--purple); background: var(--purple-dim); border-radius: 4px; padding: 0 5px; margin-left: 3px; white-space: nowrap; }
+    .use-ev.use-ev-all { margin-left: 0; }
     .use-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); gap: 4px 8px; }
     .use-cell {
       display: flex; align-items: center; justify-content: space-between; gap: 8px; min-width: 0;

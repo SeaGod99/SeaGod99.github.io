@@ -2548,8 +2548,8 @@
         if (!bySig.has(k)) bySig.set(k, { places: r[4], more: r[5], rows: [] });
         bySig.get(k).rows.push(r);
       });
-      /* 截到 30 筆的前提是「其餘的在 NPC 商店目錄看得到」。這件的兌換店目錄全都沒收（成就幣的喬納森——客戶端沒店名）時，
-         叫人去目錄搜只會撲空，所以整份列出來。 */
+      /* 截到 30 筆的前提是「其餘的在 NPC 商店目錄看得到」。這件的兌換店目錄全都沒收時（戀人巧克力2021——往年活動的無名攤位，
+         目錄刻意不收），叫人去目錄搜只會撲空，所以整份列出來。 */
       var anyCatalog = xs.some(function (r) { return r[4].some(function (p) { return p[3]; }); });
       var cap = anyCatalog ? USES_CAP : Infinity;
       var shown = 0, blocks = [];
@@ -2557,14 +2557,19 @@
         if (shown >= cap) return;
         var take = g.rows.slice(0, cap - shown);
         shown += take.length;
-        // p[3]＝NPC 商店目錄有沒有這位 NPC 收這件：有才連；沒有（客戶端沒店名的店，目錄不收）只印字，點過去是空的比不連更糟
+        /* p[3]＝NPC 商店目錄有沒有這位 NPC 收這件：有才連；沒有只印字，點過去是空的比不連更糟。
+           p[4]＝這位 NPC 只在季節活動期間出現（與目錄的「季節活動期間限定」同一份規則，scripts/lib/seasonal-npcs.mjs）——
+           不註明的話往年活動的攤位看起來跟常駐商人一樣。目錄沒收的地點 11-24 起全是這種（無名的活動攤位整間不收）。 */
+        // 一組地點全是季節活動時只在開頭標一次（逐個標在手機上會變成三行標籤夾三個地點）；混著常駐的才逐個標
+        var allEv = g.places.length > 0 && g.places.every(function (p) { return p[4]; });
         var places = g.places.map(function (p) {
+          var ev = p[4] && !allEv ? '<span class="use-ev">季節活動期間</span>' : '';
           return p[3]
             ? '<a class="use-link" href="../npc-shops/?m=' + p[1] + '&amp;q=' + encodeURIComponent(nm) + '" title="在 NPC 商店目錄看這位 NPC">' +
-              esc(p[0]) + '（' + esc(p[2]) + '）</a>'
-            : '<span title="NPC 商店目錄沒收這間店（客戶端沒有店名）">' + esc(p[0]) + '（' + esc(p[2]) + '）</span>';
+              esc(p[0]) + '（' + esc(p[2]) + '）</a>' + ev
+            : '<span title="' + (p[4] ? '季節活動的攤位（多半是往年活動），NPC 商店目錄不收' : 'NPC 商店目錄沒收這間店') + '">' + esc(p[0]) + '（' + esc(p[2]) + '）</span>' + ev;
         }).join('、') + (g.more ? ' 等 ' + (g.places.length + g.more) + ' 處' : '');
-        blocks.push('<div class="use-where">📍 ' + places + '</div><div class="use-grid">' + take.map(function (r) {
+        blocks.push('<div class="use-where">📍 ' + (allEv ? '<span class="use-ev use-ev-all">季節活動期間</span> ' : '') + places + '</div><div class="use-grid">' + take.map(function (r) {
           var other = r[3] ? r[3].map(function (o) { return '＋' + esc(useItemName(o[0])) + '×' + o[1].toLocaleString(); }).join(' ') : '';
           var col = r[6] ? (hasOwn(r[6]) ? ' <span class="use-col have">✓ ' + esc(r[6].label) + '</span>' : ' <span class="use-col">' + esc(r[6].label) + '</span>') : '';
           return '<div class="use-cell"><span class="use-cell-main">' + navChipHtml(r[0], useItemName(r[0]) + (r[1] > 1 ? ' ×' + r[1] : '')) + col + '</span>' +

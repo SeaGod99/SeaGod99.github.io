@@ -27,7 +27,12 @@ const etHours = (w) => (w.we - w.ws) / 1000 * EORZEA_MULT / 3600;
 
 // ── 單位一：探索筆記的 timeEnd 是含該小時 ───────────────────
 {
-  const now = Date.now();
+  /* 用固定時刻（ET 12 點），不用 Date.now()（2026-11-24 改）：現在若剛好是 ET 0–4 點，window-calc 對跨午夜的 18–4
+     只回午夜後那一段（ws＝00:00、5 小時），這條就會掛——一天約 21% 的時間 CI 會紅。這條要驗的是「timeEnd +1」，
+     跟執行當下幾點無關。跨午夜「已開的窗起點被切在 00:00」是 window-calc 本身的行為，另案查（第五輪 §5）。 */
+  const ET_HOUR_MS = 3600 * 1000 / EORZEA_MULT;
+  let now = Date.UTC(2026, 10, 24, 0, 0, 0);
+  while (Math.floor(now / ET_HOUR_MS) % 24 !== 12) now += 60000;
   const cases = [
     [17, 17, 1, '17–17 是「17 點那一小時」，不是零長度'],
     [8, 11, 4, '8–11 含 11 點那一小時（8/9/10/11）'],
